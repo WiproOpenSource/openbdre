@@ -29,4 +29,8 @@ DROP TABLE bus_domain;
 DROP TABLE process_type;
 DROP TABLE workflow_type;
 DROP TABLE intermediate;
+DROP TABLE Docidsdb;
+DROP TABLE Pendingurlsdb;
+DROP TABLE Weburlsdb;
+DROP TABLE Statisticsdb;
 DROP SCHEMA BDRE;
