@@ -18,14 +18,14 @@
 
 package com.wipro.ats.bdre.flume.sink.hdfs;
 
-import java.io.IOException;
-
 import org.apache.flume.Event;
 import org.apache.flume.annotations.InterfaceAudience;
 import org.apache.flume.annotations.InterfaceStability;
 import org.apache.flume.conf.Configurable;
 import org.apache.hadoop.io.SequenceFile.CompressionType;
 import org.apache.hadoop.io.compress.CompressionCodec;
+
+import java.io.IOException;
 
 @InterfaceAudience.Private
 @InterfaceStability.Evolving

@@ -19,11 +19,6 @@
 package com.wipro.ats.bdre.flume.sink.hdfs;
 
 import com.google.common.base.Charsets;
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.util.zip.GZIPInputStream;
 import org.apache.commons.io.FileUtils;
 import org.apache.flume.Context;
 import org.apache.flume.EventDeliveryException;
@@ -35,13 +30,15 @@ import org.apache.hadoop.fs.FileStatus;
 import org.apache.hadoop.fs.FileSystem;
 import org.apache.hadoop.fs.Path;
 import org.apache.hadoop.hdfs.MiniDFSCluster;
-import org.junit.AfterClass;
-import org.junit.Assert;
-import org.junit.BeforeClass;
-import org.junit.Ignore;
-import org.junit.Test;
+import org.junit.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.util.zip.GZIPInputStream;
 
 /**
  * Unit tests that exercise BDREHDFSEventSink on an actual instance of HDFS.
@@ -79,7 +76,7 @@ public class TestHDFSEventSinkOnMiniCluster {
   /**
    * This is a very basic test that writes one event to HDFS and reads it back.
    */
-  @Test
+  @Test  @Ignore
   public void simpleHDFSTest() throws EventDeliveryException, IOException {
     cluster = new MiniDFSCluster(new Configuration(), 1, true, null);
     cluster.waitActive();
@@ -158,7 +155,7 @@ public class TestHDFSEventSinkOnMiniCluster {
   /**
    * Writes two events in GZIP-compressed serialize.
    */
-  @Test
+  @Test  @Ignore
   public void simpleHDFSGZipCompressedTest() throws EventDeliveryException, IOException {
     cluster = new MiniDFSCluster(new Configuration(), 1, true, null);
     cluster.waitActive();
@@ -255,7 +252,7 @@ public class TestHDFSEventSinkOnMiniCluster {
   /**
    * This is a very basic test that writes one event to HDFS and reads it back.
    */
-  @Test
+  @Test  @Ignore
   public void underReplicationTest() throws EventDeliveryException,
       IOException {
     Configuration conf = new Configuration();

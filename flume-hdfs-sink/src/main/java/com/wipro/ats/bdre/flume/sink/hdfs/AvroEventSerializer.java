@@ -18,33 +18,34 @@
  */
 package com.wipro.ats.bdre.flume.sink.hdfs;
 
-        import java.io.IOException;
-        import java.io.InputStream;
-        import java.io.OutputStream;
-        import java.net.URL;
-        import java.nio.ByteBuffer;
-        import java.util.HashMap;
-        import java.util.Locale;
-        import java.util.Map;
-        import org.apache.avro.AvroRuntimeException;
-        import org.apache.avro.Schema;
-        import org.apache.avro.file.CodecFactory;
-        import org.apache.avro.file.DataFileWriter;
-        import org.apache.avro.generic.GenericDatumWriter;
-        import org.apache.avro.io.DatumWriter;
-        import org.apache.flume.Context;
-        import org.apache.flume.Event;
-        import org.apache.flume.FlumeException;
-        import org.apache.flume.conf.Configurable;
-        import org.apache.flume.serialization.EventSerializer;
-        import org.apache.hadoop.conf.Configuration;
-        import org.apache.hadoop.fs.FSDataInputStream;
-        import org.apache.hadoop.fs.FileSystem;
-        import org.apache.hadoop.fs.Path;
-        import org.slf4j.Logger;
-        import org.slf4j.LoggerFactory;
+import org.apache.avro.AvroRuntimeException;
+import org.apache.avro.Schema;
+import org.apache.avro.file.CodecFactory;
+import org.apache.avro.file.DataFileWriter;
+import org.apache.avro.generic.GenericDatumWriter;
+import org.apache.avro.io.DatumWriter;
+import org.apache.flume.Context;
+import org.apache.flume.Event;
+import org.apache.flume.FlumeException;
+import org.apache.flume.conf.Configurable;
+import org.apache.flume.serialization.EventSerializer;
+import org.apache.hadoop.conf.Configuration;
+import org.apache.hadoop.fs.FSDataInputStream;
+import org.apache.hadoop.fs.FileSystem;
+import org.apache.hadoop.fs.Path;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-        import static org.apache.flume.serialization.AvroEventSerializerConfigurationConstants.*;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.net.URL;
+import java.nio.ByteBuffer;
+import java.util.HashMap;
+import java.util.Locale;
+import java.util.Map;
+
+import static org.apache.flume.serialization.AvroEventSerializerConfigurationConstants.*;
 
 /**
  * <p>

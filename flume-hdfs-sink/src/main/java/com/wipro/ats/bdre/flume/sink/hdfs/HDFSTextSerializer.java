@@ -19,11 +19,12 @@
 
 package com.wipro.ats.bdre.flume.sink.hdfs;
 
-import java.util.Collections;
 import org.apache.flume.Context;
 import org.apache.flume.Event;
-import org.apache.hadoop.io.Text;
 import org.apache.hadoop.io.LongWritable;
+import org.apache.hadoop.io.Text;
+
+import java.util.Collections;
 
 public class HDFSTextSerializer implements SequenceFileSerializer {
 

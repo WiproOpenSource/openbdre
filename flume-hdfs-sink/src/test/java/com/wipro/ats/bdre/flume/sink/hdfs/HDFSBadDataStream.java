@@ -19,8 +19,9 @@
 
 package com.wipro.ats.bdre.flume.sink.hdfs;
 
-import java.io.IOException;
 import org.apache.flume.Event;
+
+import java.io.IOException;
 
 public class HDFSBadDataStream extends HDFSDataStream {
   public class HDFSBadSeqWriter extends HDFSSequenceFile {
