@@ -37,6 +37,6 @@
         <sql-type jdbc-type="INTEGER" hibernate-type="java.lang.Integer"></sql-type>
         <sql-type jdbc-type="BIGINT" hibernate-type="java.lang.Long"></sql-type>
         <sql-type jdbc-type="TINYINT" hibernate-type="java.lang.Boolean"></sql-type>
-
+        <sql-type jdbc-type="SMALLINT" hibernate-type="java.lang.Short"></sql-type>
     </type-mapping>
 </hibernate-reverse-engineering>
