@@ -35,6 +35,7 @@ mysql -h $mysql_host -P $mysql_port -u $mysqluser --password=$mysqlpwd $dbname <
 mysql -h $mysql_host -P $mysql_port -u $mysqluser --password=$mysqlpwd $dbname < mysql/ddls/etlmd_process_log.sql
 mysql -h $mysql_host -P $mysql_port -u $mysqluser --password=$mysqlpwd $dbname < mysql/ddls/etlmd_etl_driver.sql
 mysql -h $mysql_host -P $mysql_port -u $mysqluser --password=$mysqlpwd $dbname < mysql/ddls/etlmd_etljob.sql
+mysql -h $mysql_host -P $mysql_port -u $mysqluser --password=$mysqlpwd $dbname < mysql/ddls/etlmd_crawler.sql
 
 # data lineage
 mysql -h $mysql_host -P $mysql_port -u $mysqluser --password=$mysqlpwd $dbname < mysql/ddls/etlmd_data_lineage.sql
