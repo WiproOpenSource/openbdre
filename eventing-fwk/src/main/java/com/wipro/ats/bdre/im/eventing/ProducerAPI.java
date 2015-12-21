@@ -32,7 +32,7 @@ public class ProducerAPI extends BaseStructure {
 
      static {
         Properties props = new Properties();
-        props.put("metadata.broker.list", IMConfig.getProperty("eventing.metadata-broker-list",null));
+        props.put("metadata.broker.list", IMConfig.getProperty("eventing.metadata-broker-list"));
         props.put("serializer.class", "kafka.serializer.StringEncoder");
         //props.put("partitioner.class", "example.producer.SimplePartitioner");
         props.put("request.required.acks", "1");

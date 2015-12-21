@@ -30,7 +30,7 @@ public class LineageDao {
 			try {
 				Class.forName(IMConstant.HIVE_DRIVER_NAME);
 //				String hiveConnectionString = MDConfig.getProperty("hive.hive-connection", null);
-				String hiveConnectionString = IMConfig.getProperty("etl.hive-connection", null);
+				String hiveConnectionString = IMConfig.getProperty("etl.hive-connection");
 				connection = DriverManager.getConnection(hiveConnectionString + dbName, "", "");
 
 			} catch (Exception e) {
