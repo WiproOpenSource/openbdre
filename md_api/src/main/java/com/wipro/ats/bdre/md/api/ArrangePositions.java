@@ -26,10 +26,7 @@ import org.springframework.beans.factory.config.AutowireCapableBeanFactory;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * Created by RI294200 on 10/6/2015.
@@ -57,8 +54,9 @@ public class ArrangePositions extends MetadataAPIBase {
         //Level and list of nodes map
         Map<Integer, List<PositionsInfo>> rankPositionsInfoMap = new HashMap<Integer, List<PositionsInfo>>();
         try {
+                java.util.Date date=new Date();
 
-
+                LOGGER.info("start time "+date);
             // List<Properties> propertiesList = new ArrayList<Properties>();
             //fetching parent process and adding it to the top of the list of processes that include sub-processes also.
             //process = s.selectOne("call_procedures.GetProcess", process);
@@ -92,6 +90,7 @@ public class ArrangePositions extends MetadataAPIBase {
             //  List<Process> processes = s.selectList("call_procedures.GetSubProcesses", process);
             List<com.wipro.ats.bdre.md.dao.jpa.Process> jpaSubProcesses = processDAO.subProcesslist(processId);
             List<Process> processes = new ArrayList<Process>();
+
             for (com.wipro.ats.bdre.md.dao.jpa.Process jpaSubProcess : jpaSubProcesses) {
                 Process subProcess = new Process();
                 subProcess.setDescription(jpaSubProcess.getDescription());
@@ -154,7 +153,9 @@ public class ArrangePositions extends MetadataAPIBase {
             arrangePositions(rankPositionsInfoMap);
             savePositionsInDB(rankPositionsInfoMap);
             LOGGER.info("Saved properties into DB");
+            java.util.Date date1=new Date();
 
+            LOGGER.info("end time"+date1);
         } catch (Exception e) {
             LOGGER.error("error occurred", e);
         }

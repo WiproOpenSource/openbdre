@@ -25,7 +25,7 @@ import java.util.Map;
 public class ArrangePositionsTest {
     private static final Logger LOGGER = Logger.getLogger(ArrangePositions.class);
 
-    @Ignore
+   // @Ignore
     @Test
     public void testGetListPositionInfo() throws Exception {
         ArrangePositions arrangePositions = new ArrangePositions();
