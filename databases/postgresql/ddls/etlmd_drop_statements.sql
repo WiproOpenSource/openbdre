@@ -28,3 +28,7 @@ DROP TABLE lineage_relation CASCADE;
 DROP TABLE process CASCADE;
 DROP TABLE process_deployment_queue CASCADE;
 DROP TABLE properties_template CASCADE;
+DROP TABLE Docidsdb CASCADE;
+DROP TABLE Pendingurlsdb CASCADE;
+DROP TABLE Weburlsdb CASCADE;
+DROP TABLE Statisticsdb CASCADE;

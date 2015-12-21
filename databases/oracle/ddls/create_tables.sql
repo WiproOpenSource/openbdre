@@ -655,13 +655,13 @@ CREATE TABLE process_deployment_queue(
 
 
 
-CREATE TABLE DocIDsDB (
+CREATE TABLE Docidsdb (
    docId number(10,0) not null ,
    url varchar(3000),
    primary key (docId)
 );
 
- CREATE SEQUENCE DocIDsDB_SEQ
+ CREATE SEQUENCE Docidsdb_SEQ
      MINVALUE 1
      MAXVALUE 9999999999
      START WITH 1
@@ -670,13 +670,13 @@ CREATE TABLE DocIDsDB (
 
 
 
-CREATE TABLE StatisticsDB (
+CREATE TABLE Statisticsdb (
    uniqid number(19,0) not null,
    value number(19,0),
    name varchar(255),
    primary key (uniqid)
 );
- CREATE SEQUENCE StatisticsDB_SEQ
+ CREATE SEQUENCE Statisticsdb_SEQ
       MINVALUE 1
       MAXVALUE 9999999999999999999
       START WITH 1
@@ -684,7 +684,7 @@ CREATE TABLE StatisticsDB (
       CACHE 2;
 
 
-CREATE TABLE PendingURLsDB (
+CREATE TABLE Pendingurlsdb (
    uniqid number(19,0) not null,
    pid number(19,0),
    instanceExecid number(19,0),
@@ -702,7 +702,7 @@ CREATE TABLE PendingURLsDB (
    primary key (uniqid)
 );
 
- CREATE SEQUENCE PendingURLsDB_SEQ
+ CREATE SEQUENCE Pendingurlsdb_SEQ
        MINVALUE 1
        MAXVALUE 9999999999999999999
        START WITH 1
@@ -711,7 +711,7 @@ CREATE TABLE PendingURLsDB (
 
 
 
-CREATE TABLE WebURLsDB (
+CREATE TABLE Weburlsdb (
    uniqid number(19,0) not null ,
    pid number(19,0),
    instanceExecid number(19,0),
@@ -729,7 +729,7 @@ CREATE TABLE WebURLsDB (
    primary key (uniqid)
 );
 
-CREATE SEQUENCE WebURLsDB_SEQ
+CREATE SEQUENCE Weburlsdb_SEQ
        MINVALUE 1
        MAXVALUE 9999999999999999999
        START WITH 1
