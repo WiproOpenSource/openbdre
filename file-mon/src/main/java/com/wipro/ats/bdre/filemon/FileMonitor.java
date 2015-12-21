@@ -25,31 +25,29 @@ import java.util.*;
 public class FileMonitor implements FileListener {
     private static final Logger LOGGER = Logger.getLogger(FileMonRunnableMain.class);
     private static FileMonitor fileMonitor = null;
-    private String env;
     private SimpleDateFormat sdf= new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
     //HashTable Contains key as Directory Path and values as List of FileMonInfo Objects
     private Hashtable<String, List<FileMonInfo>> fileSet = new Hashtable<String, List<FileMonInfo>>();
 
-    private FileMonitor(String env) {
-        this.env=env;
+    private FileMonitor() {
         init();
     }
 
     //Singleton pattern
-    public static FileMonitor getInstance(String env) {
+    public static FileMonitor getInstance() {
 
         if (fileMonitor == null) {
-            fileMonitor = new FileMonitor(env);
+            fileMonitor = new FileMonitor();
         }
         return fileMonitor;
     }
 
     //Read the monitored directories, file patterns, subprocessIds and serverIds and build the HashTable
     private void init() {
-        List<String> dirList = IMConfig.getPropertyList("file-mon.dirs", env);
-        List<String> filterList = IMConfig.getPropertyList("file-mon.filter", env);
-        List<String> subProcessList = IMConfig.getPropertyList("file-mon.sub-processIds", env);
-        List<String> serverIdList = IMConfig.getPropertyList("file-mon.serverIds", env);
+        List<String> dirList = IMConfig.getPropertyList("file-mon.dirs");
+        List<String> filterList = IMConfig.getPropertyList("file-mon.filter");
+        List<String> subProcessList = IMConfig.getPropertyList("file-mon.sub-processIds");
+        List<String> serverIdList = IMConfig.getPropertyList("file-mon.serverIds");
         List<FileMonInfo> fmInfoList = new ArrayList<FileMonInfo>();
         for (int i = 0; i < dirList.size(); i++) {
             if (!fileSet.containsKey(dirList.get(i))) {

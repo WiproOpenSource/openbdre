@@ -42,7 +42,6 @@ public class DataExportMain extends BaseStructure {
     private void execute(String[] params) {
         try {
             CommandLine commandLine = getCommandLine(params, PARAMS_STRUCTURE);
-            String env = commandLine.getOptionValue("environment-id");
             String processId = commandLine.getOptionValue("process-id");
             String configGroup = commandLine.getOptionValue("config-group");
             String batchId = commandLine.getOptionValue("batch-id");
@@ -51,7 +50,7 @@ public class DataExportMain extends BaseStructure {
             GetProperties getProperties = new GetProperties();
             Properties commonProperties = getProperties.getProperties(processId, configGroup);
 
-            String[] param = {processId, batchId,instanceExecId,env};
+            String[] param = {processId, batchId,instanceExecId};
             int result = 0;
             result = ToolRunner.run(new Configuration(), new HDFSExport(commonProperties), param);
 

@@ -30,10 +30,10 @@ public class SFTP2HDFS extends BaseStructure {
             {"maxB", "max-batch-id", "maximum batch id"}
     };
 
-    private static void loadToHDFS(String localFile, String hdfsFile, String env) {
+    private static void loadToHDFS(String localFile, String hdfsFile) {
         try {
             Configuration conf = new Configuration();
-            conf.set("fs.defaultFS", IMConfig.getProperty("common.default-fs-name", env));
+            conf.set("fs.defaultFS", IMConfig.getProperty("common.default-fs-name"));
             FileSystem fs = FileSystem.get(conf);
             Path hdfsPath = new Path(hdfsFile);
             Path localPath = new Path(localFile);
@@ -49,8 +49,6 @@ public class SFTP2HDFS extends BaseStructure {
         LOGGER.debug("minimum-batch-id is " + minBId);
         String maxBId = commandLine.getOptionValue("max-batch-id");
         LOGGER.debug("maximum-batch-id is " + maxBId);
-        String env = commandLine.getOptionValue("environment-id");
-        LOGGER.debug("environment-id is " + env);
         String[] args = {"--maxB", maxBId, "--minB", minBId};
         GetFiles getFiles = new GetFiles();
         List<FileInfo> fileInfos = getFiles.execute(args);
@@ -58,7 +56,7 @@ public class SFTP2HDFS extends BaseStructure {
         LOGGER.info("total files to be downloaded " + fileInfos.size());
         for (FileInfo fileInfo : fileInfos) {
             LOGGER.info("Starting download of " + fileInfo.getFilePath());
-            String localFile = IMConfig.getProperty("etl.local-download-directory", env) + fileInfo.getFilePath();
+            String localFile = IMConfig.getProperty("etl.local-download-directory") + fileInfo.getFilePath();
             File file = new File(localFile);
             if (!file.getParentFile().exists()) {
                 file.getParentFile().mkdirs();
@@ -70,9 +68,9 @@ public class SFTP2HDFS extends BaseStructure {
         }
         for (FileInfo fileInfo : fileInfos) {
             LOGGER.info("Uploading to HDFS: " + fileInfo.getFilePath());
-            String localFile = IMConfig.getProperty("etl.local-download-directory", env) + fileInfo.getFilePath();
-            String hdfsFile = IMConfig.getProperty("etl.hdfs-raw-directory", env) + fileInfo.getFilePath();
-            loadToHDFS(localFile, hdfsFile, env);
+            String localFile = IMConfig.getProperty("etl.local-download-directory") + fileInfo.getFilePath();
+            String hdfsFile = IMConfig.getProperty("etl.hdfs-raw-directory") + fileInfo.getFilePath();
+            loadToHDFS(localFile, hdfsFile);
 
         }
 

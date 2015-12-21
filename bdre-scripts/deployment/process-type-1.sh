@@ -22,7 +22,7 @@ cd $edgeNodeBDRERoot
 
 #Generating workflow
 
-java -cp "$pathForJars/flume-conf-generator-$bdreVersion.jar:$pathForWorkflowJars/*" com.wipro.ats.bdre.fcgen.FlumeConfGeneratorMain --parent-process-id $processId --environment-id $environment
+java -cp "$pathForJars/flume-conf-generator-$bdreVersion.jar:$pathForWorkflowJars/*" com.wipro.ats.bdre.fcgen.FlumeConfGeneratorMain --parent-process-id $processId
 if [ $? -eq 1 ]
 then exit 1
 fi

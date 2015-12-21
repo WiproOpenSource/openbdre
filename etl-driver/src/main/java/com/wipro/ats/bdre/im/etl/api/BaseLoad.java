@@ -39,22 +39,21 @@ public class BaseLoad extends ETLBase {
 
         String processId = commandLine.getOptionValue("process-id");
         String instanceExecId = commandLine.getOptionValue("instance-exec-id");
-        String env = commandLine.getOptionValue("environment-id");
-        init(processId, env);
+        init(processId);
         //Getting core table information
         String baseTableName = getBaseTable().getTableName();
         String baseTableDbName = getBaseTable().getDbName();
         String baseTableDdl = getBaseTable().getDdl();
 
-        processStage(baseTableDbName, baseTableName, instanceExecId, baseTableDdl, env);
+        processStage(baseTableDbName, baseTableName, instanceExecId, baseTableDdl);
     }
 
 
-    private void processStage(String dbName, String baseTableName, String instanceExecId, String ddl, String env) {
+    private void processStage(String dbName, String baseTableName, String instanceExecId, String ddl) {
         try {
 
             Configuration conf = new Configuration();
-            conf.set("fs.defaultFS", IMConfig.getProperty("common.default-fs-name",env));
+            conf.set("fs.defaultFS", IMConfig.getProperty("common.default-fs-name"));
             FileSystem fs = FileSystem.get(conf);
             String stageTableName =  baseTableName + "_" + instanceExecId;
             //Stage table is the source and base table is the destination

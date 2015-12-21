@@ -15,18 +15,16 @@ public class IMConfigTest {
     private Logger LOGGER=Logger.getLogger(IMConfigTest.class);
     @Test
     public void testGetProperty() throws Exception {
-        String env=null;
         String key = "etl.hive-connection";
 
-        LOGGER.info(key+"="+IMConfig.getProperty(key,env));
+        LOGGER.info(key+"="+IMConfig.getProperty(key));
     }
 
    @Test
     public void testGetProperty1() throws Exception {
-        String env=null;
         String key = "etl.hive-connection";
 
-        LOGGER.info(key+"="+IMConfig.getProperty(key,env));
+        LOGGER.info(key+"="+IMConfig.getProperty(key));
 
     }
 }

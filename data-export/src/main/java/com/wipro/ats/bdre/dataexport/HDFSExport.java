@@ -34,7 +34,6 @@ public class HDFSExport extends Configured implements Tool {
     private String processId;
     private String batchId;
     private String instanceExecId;
-    private String env;
     private String tableName;
 
 
@@ -47,7 +46,6 @@ public class HDFSExport extends Configured implements Tool {
         processId = param[0];
         batchId = param[1];
         instanceExecId = param[2];
-        env = param[3];
 
         tableName = commonProperties.getProperty("table");
         String driver = commonProperties.getProperty("driver");
@@ -66,8 +64,8 @@ public class HDFSExport extends Configured implements Tool {
             options.setDriverClassName(driver);
 
             //reading properties from IMConfig file
-            String jarOutputDir = IMConfig.getProperty("data-export.jar-output-dir", env) + "/" + processId + "/" + batchId;
-            String hadoopHome = IMConfig.getProperty("data-export.hadoop-home", env);
+            String jarOutputDir = IMConfig.getProperty("data-export.jar-output-dir") + "/" + processId + "/" + batchId;
+            String hadoopHome = IMConfig.getProperty("data-export.hadoop-home");
 
             //setting the parameters of sqoopOption
             options.setHadoopHome(hadoopHome);

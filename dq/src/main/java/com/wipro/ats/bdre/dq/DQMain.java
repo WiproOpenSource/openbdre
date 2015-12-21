@@ -33,7 +33,6 @@ public class DQMain extends BaseStructure {
     public static void main(String[] args) throws Exception {
         CommandLine commandLine = new DQMain().getCommandLine(args, PARAMS_STRUCTURE);
         String processId = commandLine.getOptionValue("process-id");
-        String env = commandLine.getOptionValue("environment-id");
         String sPath = commandLine.getOptionValue("source-file-path");
         String destDir = commandLine.getOptionValue("destination-directory");
 
@@ -41,11 +40,11 @@ public class DQMain extends BaseStructure {
         if(sPath.indexOf(';')!=-1 || sPath.indexOf(',')!=-1){
             String[] lof = sPath.split(";");
             String entries[] = lof[0].split(",");
-            String[] params = {processId, env, entries[2], destDir};
+            String[] params = {processId, entries[2], destDir};
             result = ToolRunner.run(new Configuration(),new DQDriver(), params);
 
         }else{
-            String[] params = {processId, env, sPath, destDir};
+            String[] params = {processId, sPath, destDir};
             result = ToolRunner.run(new Configuration(),new DQDriver(), params);
         }
 

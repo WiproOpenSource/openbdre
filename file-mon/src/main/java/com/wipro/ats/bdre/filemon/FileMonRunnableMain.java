@@ -30,14 +30,12 @@ public class FileMonRunnableMain extends ETLBase {
     private void execute(String[] params) {
         try {
             CommandLine commandLine = getCommandLine(params, PARAMS_STRUCTURE);
-            String env = commandLine.getOptionValue("environment-id");
 
             FileMonRunnable fileMonRunnable = new FileMonRunnable();
-            fileMonRunnable.setEnv(env);
             //mrt.setEnv(env);
             Thread t = new Thread(fileMonRunnable);
             t.start();
-            long sleepTime = Long.parseLong(IMConfig.getProperty("file-mon.thread-wait", env));
+            long sleepTime = Long.parseLong(IMConfig.getProperty("file-mon.thread-wait"));
             while (FileMonRunnable.runnableCount <= 10) {
                 try {
                     Thread.sleep(sleepTime);

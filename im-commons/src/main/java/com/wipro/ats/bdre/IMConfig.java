@@ -99,7 +99,7 @@ public class IMConfig {
 //
 //    }
 
-    public static List<String> getPropertyList(String key, String env) {
+    public static List<String> getPropertyList(String key) {
 
         LOGGER.debug("fetching for: " + key);
         GetGeneralConfig getGeneralConfig = new GetGeneralConfig();
@@ -113,7 +113,7 @@ public class IMConfig {
         return propetiesList;
     }
 
-    public static String getProperty(String key, String env) {
+    public static String getProperty(String key) {
 
         LOGGER.debug("fetching for: " + key);
         GetGeneralConfig getGeneralConfig = new GetGeneralConfig();
