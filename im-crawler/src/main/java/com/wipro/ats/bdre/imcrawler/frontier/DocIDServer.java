@@ -19,41 +19,37 @@ package com.wipro.ats.bdre.imcrawler.frontier;
 
 import com.wipro.ats.bdre.imcrawler.crawler.Configurable;
 import com.wipro.ats.bdre.imcrawler.crawler.CrawlConfig;
-import com.wipro.ats.bdre.imcrawler.model.DocIDsDB;
-import com.wipro.ats.bdre.imcrawler.model.PMF;
-import org.datanucleus.store.rdbms.query.ForwardQueryResult;
+import com.wipro.ats.bdre.imcrawler.jpa.Docidsdb;
+import com.wipro.ats.bdre.imcrawler.model.DocidsDBDao;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.config.AutowireCapableBeanFactory;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.support.ClassPathXmlApplicationContext;
 
-import javax.jdo.PersistenceManager;
-import javax.jdo.Query;
-import javax.jdo.Transaction;
 import java.util.List;
 
+
 /**
- * @author Yasser Ganjisaffar
+ * @author Yasser Ganjisaffar modified by AS294216
  */
 
 public class DocIDServer extends Configurable {
     private static final Logger logger = LoggerFactory.getLogger(DocIDServer.class);
-    PersistenceManager manager = PMF.getInstance().getPersistenceManager();
-
-    //  private final Database docIDsDB;
-    private DocIDsDB docIDsDB = new DocIDsDB();
+    //PersistenceManager manager = PMF.getInstance().getPersistenceManager();
+    private Docidsdb docIDsDB = new Docidsdb();
     private static final String DATABASE_NAME = "DocIDs";
-
     private final Object mutex = new Object();
-
     private int lastDocID;
 
     public DocIDServer(CrawlConfig config) {
         super(config);
-//    DatabaseConfig dbConfig = new DatabaseConfig();
-//    dbConfig.setAllowCreate(true);
-//    dbConfig.setTransactional(config.isResumableCrawling());
-//    dbConfig.setDeferredWrite(!config.isResumableCrawling());
-//    lastDocID = 0;
-//    docIDsDB = env.openDatabase(null, DATABASE_NAME, dbConfig);
+        /*Hibernate Auto-wire*/
+        ApplicationContext context = new ClassPathXmlApplicationContext("spring-dao.xml");
+        AutowireCapableBeanFactory acbFactory = context.getAutowireCapableBeanFactory();
+        acbFactory.autowireBean(this);
+
         if (config.isResumableCrawling()) {
             int docCount = getDocCount();
             if (docCount > 0) {
@@ -62,6 +58,9 @@ public class DocIDServer extends Configurable {
             }
         }
     }
+
+    @Autowired
+    DocidsDBDao docidsDBDao;
 
     /**
      * Returns the docid of an already seen url.
@@ -72,39 +71,23 @@ public class DocIDServer extends Configurable {
     public int getDocId(String url) {
         synchronized (mutex) {
             //search in DB for that url
-      /*
-      OperationStatus result = null;
-      DatabaseEntry value = new DatabaseEntry();
-      try {
-        DatabaseEntry key = new DatabaseEntry(url.getBytes());
-
-        result = docIDsDB.get(null, key, value, null);
-
-      } catch (Exception e) {
-        logger.error("Exception thrown while getting DocID", e);
-        return -1;
-      }
-
-      if ((result == OperationStatus.SUCCESS) && (value.getData().length > 0)) {
-        return Util.byteArray2Int(value.getData());
-      }
-*/
-
-            Query query = manager.newQuery(DocIDsDB.class);
+            //Query query = manager.newQuery(DocIDsDB.class);
             try {
-                ForwardQueryResult data = (ForwardQueryResult) query.execute();
-                for (int i = 0; i < data.size(); i++) {
-                    DocIDsDB info = (DocIDsDB) data.get(i);
+                //ForwardQueryResult data = (ForwardQueryResult) query.execute();
+                Long totalSize = docidsDBDao.totalRecordCount();
+//                for (int i = 1; i <= totalSize; i++) {
+                List<Docidsdb> docidsdbList = docidsDBDao.list(0, totalSize.intValue());
+                for (Docidsdb info:docidsdbList) {
+//                    Docidsdb info = docidsDBDao.get(i);
                     if (info.getUrl().equals(url)) {
                         return info.getDocId();
                     }
                 }
+//                }
             } catch (ClassCastException e) {
                 logger.debug("---ClassCastException---");
                 return -1;
             }
-            //     Object data = new Object();
-
             return -1;
         }
     }
@@ -118,29 +101,24 @@ public class DocIDServer extends Configurable {
                 if (docID > 0) {
                     return docID;
                 }
-
-//        docIDsDB.put(null, new DatabaseEntry(url.getBytes()), new DatabaseEntry(Util.int2ByteArray(lastDocID)));
-
-                Transaction tx = manager.currentTransaction();
-                tx.begin();
-//          logger.debug("lastDocId is:"+lastDocID);
-                //auto_incrementing the docid field in DB
-//        ++lastDocID;
+                /*  Transaction tx = manager.currentTransaction();
+                tx.begin();  */
                 if (url.length() < 3000) {
-//          docIDsDB.setDocId(lastDocID);
-                    Query q = manager.newQuery("javax.jdo.query.SQL", "INSERT INTO DOCIDSDB (URL) VALUES (?)");
-                    Long results = (Long) q.execute(url);
+                    /*  Query q = manager.newQuery("javax.jdo.query.SQL", "INSERT INTO DOCIDSDB (URL) VALUES (?)");
+                        Long results = (Long) q.execute(url);  */
+                    Docidsdb docidsdb = new Docidsdb();
+                    docidsdb.setUrl(url);
+                    docidsDBDao.insert(docidsdb);
                 } else {
-//          docIDsDB.setDocId(lastDocID);
-                    Query q = manager.newQuery("javax.jdo.query.SQL", "INSERT INTO DOCIDSDB (URL) VALUES (?)");
-                    Long results = (Long) q.execute("--long-url--");
-
+                    /*  Query q = manager.newQuery("javax.jdo.query.SQL", "INSERT INTO DOCIDSDB (URL) VALUES (?)");
+                        Long results = (Long) q.execute("--long-url--");  */
+                    Docidsdb docidsdb = new Docidsdb();
+                    docidsdb.setUrl("--long-url--");
+                    docidsDBDao.insert(docidsdb);
+                    logger.info("Long URL (>3000 characters) can't enter");
                 }
-//          manager.makePersistent(docIDsDB);
-                tx.commit();
-
+                //tx.commit();
                 lastDocID = getLastDocID();
-
                 return lastDocID;
             } catch (Exception e) {
                 logger.error("Exception thrown while getting new DocID", e);
@@ -163,17 +141,14 @@ public class DocIDServer extends Configurable {
                 }
                 throw new Exception("Doc id: " + prevDocid + " is already assigned to URL: " + url);
             }
-
-//      docIDsDB.put(null, new DatabaseEntry(url.getBytes()), new DatabaseEntry(Util.int2ByteArray(docId)));
-            Transaction tx = manager.currentTransaction();
-            tx.begin();
-//      docIDsDB.setDocId(docId);
-            Query q = manager.newQuery("javax.jdo.query.SQL", "INSERT INTO DOCIDSDB (URL) VALUES (?)");
-            Long results = (Long) q.execute(url);
-//      docIDsDB.setUrl(url);
-//      manager.makePersistent(docIDsDB);
-            tx.commit();
-
+            /*  Transaction tx = manager.currentTransaction();
+                tx.begin();
+                Query q = manager.newQuery("javax.jdo.query.SQL", "INSERT INTO DOCIDSDB (URL) VALUES (?)");
+                Long results = (Long) q.execute(url);
+                tx.commit();  */
+            Docidsdb docidsdb = new Docidsdb();
+            docidsdb.setUrl(url);
+            docidsDBDao.insert(docidsdb);
             lastDocID = getLastDocID();
         }
     }
@@ -184,47 +159,35 @@ public class DocIDServer extends Configurable {
 
     public final int getDocCount() {
         //get rows in DB
-    /*try {
-      return (int) docIDsDB.count();
-    } catch (DatabaseException e) {
-      logger.error("Exception thrown while getting DOC Count", e);
-      return -1;
-    }*/
-
-        Transaction tx = manager.currentTransaction();
-        tx.begin();
-        Query query = manager.newQuery(DocIDsDB.class);
-        ForwardQueryResult data = (ForwardQueryResult) query.execute();
-        tx.commit();
-
-        return data.size();
-
+        /*  Transaction tx = manager.currentTransaction();
+            tx.begin();
+            Query query = manager.newQuery(DocIDsDB.class);
+            ForwardQueryResult data = (ForwardQueryResult) query.execute();
+            tx.commit();  */
+        Long totalSize = docidsDBDao.totalRecordCount();
+        return totalSize.intValue();
     }
 
     public final int getLastDocID() {
         //get lastDocid
 
-        Transaction tx = manager.currentTransaction();
-        tx.begin();
-        Query query = manager.newQuery(DocIDsDB.class);
-        ForwardQueryResult data = (ForwardQueryResult) query.execute();
+        /*  Transaction tx = manager.currentTransaction();
+            tx.begin();
+            Query query = manager.newQuery(DocIDsDB.class);
+            ForwardQueryResult data = (ForwardQueryResult) query.execute();  */
+        Long totalSize = docidsDBDao.totalRecordCount();
+        Integer intTotalSize = new Integer(totalSize.intValue());
         int tobereturnedDocId;
-        if (data.size() > 0) {
-            DocIDsDB info = (DocIDsDB) data.get(data.size() - 1);
-            tobereturnedDocId = info.getDocId();
+        if (totalSize > 0) {
+            tobereturnedDocId = docidsDBDao.getLastElement().getDocId();
         } else {
             tobereturnedDocId = -1;
         }
-        tx.commit();
+        //tx.commit();
         return tobereturnedDocId;
     }
-
+    @Deprecated
     public void close() {
-//    try {
-//      docIDsDB.close();
-//    } catch (DatabaseException e) {
-//      logger.error("Exception thrown while closing DocIDServer", e);
-//    }
-//    manager.close();
+    //deprecated
     }
 }

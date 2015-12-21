@@ -26,7 +26,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * @author Yasser Ganjisaffar
+ * @author Yasser Ganjisaffar modified by AS294216
  */
 
 public class Frontier extends Configurable {

@@ -17,21 +17,20 @@
 
 package com.wipro.ats.bdre.imcrawler.crawler;
 
-import java.io.File;
-import java.util.ArrayList;
-import java.util.List;
-
 import com.wipro.ats.bdre.imcrawler.fetcher.PageFetcher;
+import com.wipro.ats.bdre.imcrawler.frontier.DocIDServer;
 import com.wipro.ats.bdre.imcrawler.frontier.Frontier;
 import com.wipro.ats.bdre.imcrawler.mr.CrawlRecordReader;
+import com.wipro.ats.bdre.imcrawler.robotstxt.RobotstxtServer;
+import com.wipro.ats.bdre.imcrawler.url.TLDList;
 import com.wipro.ats.bdre.imcrawler.url.URLCanonicalizer;
 import com.wipro.ats.bdre.imcrawler.url.WebURL;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import com.wipro.ats.bdre.imcrawler.frontier.DocIDServer;
-import com.wipro.ats.bdre.imcrawler.robotstxt.RobotstxtServer;
-import com.wipro.ats.bdre.imcrawler.url.TLDList;
-import com.wipro.ats.bdre.imcrawler.util.IO;
+
+import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * The controller that manages a crawling session. This class creates the

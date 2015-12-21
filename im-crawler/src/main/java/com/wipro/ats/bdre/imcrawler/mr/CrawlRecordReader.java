@@ -9,7 +9,6 @@ package com.wipro.ats.bdre.imcrawler.mr;/*
 import com.wipro.ats.bdre.imcrawler.crawler.PropertyConfig;
 import org.apache.hadoop.io.*;
 import org.apache.hadoop.mapreduce.InputSplit;
-import org.apache.hadoop.mapreduce.JobContext;
 import org.apache.hadoop.mapreduce.RecordReader;
 import org.apache.hadoop.mapreduce.TaskAttemptContext;
 import org.slf4j.Logger;
@@ -148,7 +147,8 @@ public class CrawlRecordReader
                 try {
                     Thread.sleep(1000);
                 } catch (InterruptedException e) {
-                    e.printStackTrace();
+                    logger.info("Thread Interrupted in CrawlRecordReader");
+                    throw new RuntimeException("Thread Interrupted"+e);
                 }
                 COUNTER_TO_CHECK_INFINITE_LOOP++;
                 if (COUNTER_TO_CHECK_INFINITE_LOOP > 600) {
