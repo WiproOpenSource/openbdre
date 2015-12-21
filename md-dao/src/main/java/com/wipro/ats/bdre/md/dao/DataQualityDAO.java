@@ -20,6 +20,7 @@ import com.wipro.ats.bdre.exception.MetadataException;
 import com.wipro.ats.bdre.md.beans.DQSetupInfo;
 import com.wipro.ats.bdre.md.dao.jpa.*;
 import com.wipro.ats.bdre.md.dao.jpa.Process;
+import com.wipro.ats.bdre.md.triggers.ProcessValidateInsert;
 import org.apache.log4j.Logger;
 import org.hibernate.Criteria;
 import org.hibernate.Session;
@@ -138,9 +139,24 @@ public class DataQualityDAO {
             jpaProcess.setNextProcessId(" ");
             WorkflowType workflowType = (WorkflowType) session.get(WorkflowType.class, 1);
             jpaProcess.setWorkflowType(workflowType);
-
-            Integer parentProcessId = (Integer) session.save(jpaProcess);
-
+            ProcessValidateInsert processValidateInsert=new ProcessValidateInsert();
+            boolean triggerCheck;
+            Integer parentProcessId;
+            if(jpaProcess.getProcess()!=null)
+            {
+                triggerCheck=processValidateInsert.ProcessTypeValidator(jpaProcess);
+                if(triggerCheck==true)
+                {
+                    parentProcessId = (Integer) session.save(jpaProcess);
+                }
+                else
+                {
+                    throw new MetadataException("error occured");
+                }
+            }
+            else {
+                parentProcessId = (Integer) session.save(jpaProcess);
+            }
             LOGGER.info("inserted ppid is " + parentProcessId);
 
             com.wipro.ats.bdre.md.dao.jpa.Process jpaProcessStep = new com.wipro.ats.bdre.md.dao.jpa.Process();
@@ -176,7 +192,23 @@ public class DataQualityDAO {
 
             //Parent process updated
             jpaProcess.setNextProcessId(subProcessId.toString());
-            session.update(jpaProcess);
+            if(jpaProcess.getProcess()!=null)
+            {
+                triggerCheck=processValidateInsert.ProcessTypeValidator(jpaProcess);
+                if(triggerCheck==true)
+                {
+                    session.update(jpaProcess);
+                }
+                else
+                {
+                    throw new MetadataException("error occured");
+                }
+            }
+            else
+            {
+                session.update(jpaProcess);
+            }
+
 
 
             Properties userName = new Properties();
