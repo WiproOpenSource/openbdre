@@ -22,6 +22,7 @@ import com.wipro.ats.bdre.md.dao.jpa.InstanceExec;
 import com.wipro.ats.bdre.md.dao.jpa.Process;
 import com.wipro.ats.bdre.md.dao.jpa.Properties;
 import com.wipro.ats.bdre.md.dao.jpa.PropertiesId;
+import com.wipro.ats.bdre.md.triggers.ProcessValidateInsert;
 import org.apache.log4j.Logger;
 import org.hibernate.Criteria;
 import org.hibernate.Session;
@@ -144,8 +145,20 @@ public class ProcessDAO {
         Integer id = null;
         try {
             session.beginTransaction();
-            id = (Integer) session.save(process);
-            session.getTransaction().commit();
+            ProcessValidateInsert processValidateInsert=new ProcessValidateInsert();
+            if(process.getProcess()!=null) {
+                boolean triggerCheck = processValidateInsert.ProcessTypeValidator(process);
+                if (triggerCheck == true) {
+                    id = (Integer) session.save(process);
+                    session.getTransaction().commit();
+                } else throw new MetadataException("error occured in exception");
+            }
+            else
+            {
+
+                id = (Integer) session.save(process);
+                session.getTransaction().commit();
+            }
         } catch (MetadataException e) {
             session.getTransaction().rollback();
             LOGGER.error(e);
