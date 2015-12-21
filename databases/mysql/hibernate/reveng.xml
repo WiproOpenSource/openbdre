@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  ~ Copyright 2015 Wipro Limited
+  ~
+  ~ Licensed under the Apache License, Version 2.0 (the "License");
+  ~ you may not use this file except in compliance with the License.
+  ~ You may obtain a copy of the License at
+  ~
+  ~     http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~ Unless required by applicable law or agreed to in writing, software
+  ~ distributed under the License is distributed on an "AS IS" BASIS,
+  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~ See the License for the specific language governing permissions and
+  ~ limitations under the License.
+  -->
+
+<!DOCTYPE hibernate-reverse-engineering PUBLIC
+        "-//Hibernate/Hibernate Reverse Engineering DTD 3.0//EN"
+        "http://hibernate.sourceforge.net/hibernate-reverse-engineering-3.0.dtd" >
+
+<hibernate-reverse-engineering>
+
+    <!--<table name="general_config" catalog="platmd">
+        <primary-key>
+                <key-column name="key" property="key" />
+                <key-column name="config_group"  />
+        </primary-key>
+        <column name="type" property="type" />
+        <column name="value" property="value"/>
+        <column name="default_value" property="defaultValue"/>
+        <column name="description" property="description"/>
+        <column name="enabled" property="enabled"/>
+        <column name="required" property="required"/>
+    </table>-->
+    <type-mapping>
+        <sql-type jdbc-type="INTEGER" hibernate-type="java.lang.Integer"></sql-type>
+        <sql-type jdbc-type="BIGINT" hibernate-type="java.lang.Long"></sql-type>
+        <sql-type jdbc-type="TINYINT" hibernate-type="java.lang.Boolean"></sql-type>
+
+    </type-mapping>
+</hibernate-reverse-engineering>

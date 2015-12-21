@@ -1,0 +1,23 @@
+1,'ingestion',null
+2, 'Semantic', null
+3, 'Export', null
+4, 'Data Extraction', null
+5, 'Hive Data Load', null
+6, 'Raw Load', 5
+7, 'Stage Load', 5
+8, 'Base Load', 5
+9, 'Hive Action', 2
+10, 'Pig Action', 2
+11, 'Map Reduce', 2
+12, 'SFTP', 1
+13, 'Data Import', 4
+14, 'Hive Generation', 18
+15, 'File Registration', null
+16, 'DQ', 19
+17, 'Data Export', 3
+18, 'Hive Generation_Parent', null
+19, 'DQ_Parent', null
+20, 'MQ_Parent', null
+21, 'MQ Step', 20
+22,'Shell Action',2
+23,'Flume Action',1

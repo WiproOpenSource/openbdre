@@ -1,0 +1,71 @@
+
+package com.wipro.ats.bdre.drool;
+
+function boolean isEmailAddress(String email) {
+	if(email.contains("@") && email.contains(".")){
+		return true;
+	}
+ 	return false;
+}
+
+function boolean isNumeric(String numStr){
+	if(numStr.matches("\\d{4}")){
+		return true;
+	}
+	return false;
+}
+
+function boolean isOnlyChar(String str){
+	if(str.matches("[a-zA-Z]")){
+		return true;
+	}
+	return false;
+}
+
+function boolean isValidMobileNumber(String mobileNum){
+	//validate phone numbers of format "1234567890"
+    if (mobileNum.matches("\\d{10}")) return true;
+    //validating phone number with -, . or spaces
+    else if(mobileNum.matches("\\d{3}[-\\.\\s]\\d{3}[-\\.\\s]\\d{4}")) return true;
+    //validating phone number with extension length from 3 to 5
+    else if(mobileNum.matches("\\d{3}-\\d{3}-\\d{4}\\s(x|(ext))\\d{3,5}")) return true;
+    //validating phone number where area code is in braces ()
+    else if(mobileNum.matches("\\(\\d{3}\\)-\\d{3}-\\d{4}")) return true;
+    //return false if nothing matches the input
+    else return false;
+}
+
+
+rule "DQ-Rule"
+dialect "java"
+no-loop
+when
+validator:DQDataModel(mRecord != null)
+value : String() from validator.getmColumns()
+then
+if(validator.getmColumns().size() != 5){
+	validator.setValidRecord(false);
+	validator.addInvalidRecordMessage("Invalid number of Records");
+}else{
+	
+	if(!isNumeric(validator.getColumn(0))){
+		validator.addInvalidRecordMessage("Not Valid id");
+	}
+	
+	if(!isEmailAddress(validator.getColumn(2))){
+		validator.addInvalidRecordMessage("Not Valid Email id");
+	}
+	
+	if(!isValidMobileNumber(validator.getColumn(3))){
+		validator.addInvalidRecordMessage("Not Valid Mobile Number");
+	}
+	
+	if(validator.getmInvalidRecordMessage() == null){
+		validator.setValidRecord(true);
+	}else{
+		validator.setValidRecord(false);
+	}
+ }
+update(validator);
+drools.halt();
+end

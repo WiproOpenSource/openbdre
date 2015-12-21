@@ -1,0 +1,64 @@
+10802,'BANK Core Workflow1 For India',current_timestamp,'BANK_CORE_IN_WF_1',1,2,null, 0,0,null,'10805,10806', 0,1,0,current_timestamp
+10806,'BANK_CORE_CUST_JOINT_INDVL_ACCT_JOIN_OPTIM',current_timestamp,'BANK_CORE_CUST_JOINT_INDVL_ACCT_JOIN_OPTIM',1,9,10802, 0,0,null,'10807,10808,10809,10810,10811,10812,10813', 0,0,0,current_timestamp
+10807,'BANK_CORE_SS_ACCT_JOIN_OPTIM',current_timestamp,'BANK_CORE_SS_ACCT_JOIN_OPTIM',1,9,10802, 0,0,null,'10814', 0,0,0,current_timestamp
+10808,'BANK_CORE_DD_ACCT_JOIN_OPTIM',current_timestamp,'BANK_CORE_DD_ACCT_JOIN_OPTIM',1,9,10802, 0,0,null,'10814', 0,0,0,current_timestamp
+10809,'BANK_CORE_CP_ACCT_JOIN_OPTIM',current_timestamp,'BANK_CORE_CP_ACCT_JOIN_OPTIM',1,9,10802, 0,0,null,'10814', 0,0,0,current_timestamp
+10810,'BANK_CORE_LS_ACCT_JOIN_OPTIM',current_timestamp,'BANK_CORE_LS_ACCT_JOIN_OPTIM',1,9,10802, 0,0,null,'10814', 0,0,0,current_timestamp
+10811,'BANK_CORE_PL_ACCT_JOIN_OPTIM',current_timestamp,'BANK_CORE_PL_ACCT_JOIN_OPTIM',1,9,10802, 0,0,null,'10814', 0,0,0,current_timestamp
+10812,'BANK_CORE_TC_ACCT_JOIN_OPTIM',current_timestamp,'BANK_CORE_TC_ACCT_JOIN_OPTIM',1,9,10802, 0,0,null,'10814', 0,0,0,current_timestamp
+10813,'BANK_CORE_TD_ACCT_JOIN_OPTIM',current_timestamp,'BANK_CORE_TD_ACCT_JOIN_OPTIM',1,9,10802, 0,0,null,'10814', 0,0,0,current_timestamp
+10814,'BANK_CORE_COMMON_J_I_JOIN',current_timestamp,'BANK_CORE_COMMON_J_I_JOIN',1,9,10802, 0,0,null,'10815,10816,10817,10818,10819,10820,10821,10822,10823,10824,10825,10826,10827,10828', 0,0,0,current_timestamp
+10815,'BANK_HUB_006_SS_CP_J',current_timestamp,'BANK_HUB_006_SS_CP_J',1,9,10802, 0,0,null,'10829', 0,0,0,current_timestamp
+10816,'BANK_HUB_014_SS_TD_J',current_timestamp,'BANK_HUB_014_SS_TD_J',1,9,10802, 0,0,null,'10829', 0,0,0,current_timestamp
+10817,'BANK_HUB_004_SS_DD_J',current_timestamp,'BANK_HUB_004_SS_DD_J',1,9,10802, 0,0,null,'10829', 0,0,0,current_timestamp
+10818,'BANK_HUB_010_SS_PL_J',current_timestamp,'BANK_HUB_010_SS_PL_J',1,9,10802, 0,0,null,'10829', 0,0,0,current_timestamp
+10819,'BANK_HUB_012_SS_TC_J',current_timestamp,'BANK_HUB_012_SS_TC_J',1,9,10802, 0,0,null,'10829', 0,0,0,current_timestamp
+10820,'BANK_HUB_008_SS_LS_J',current_timestamp,'BANK_HUB_008_SS_LS_J',1,9,10802, 0,0,null,'10829', 0,0,0,current_timestamp
+10821,'BANK_HUB_002_SS_SS_J',current_timestamp,'BANK_HUB_002_SS_SS_J',1,9,10802, 0,0,null,'10829', 0,0,0,current_timestamp
+10822,'BANK_HUB_006_SS_CP_I',current_timestamp,'BANK_HUB_006_SS_CP_I',1,9,10802, 0,0,null,'10829', 0,0,0,current_timestamp
+10823,'BANK_HUB_014_SS_TD_I',current_timestamp,'BANK_HUB_014_SS_TD_I',1,9,10802, 0,0,null,'10829', 0,0,0,current_timestamp
+10824,'BANK_HUB_004_SS_DD_I',current_timestamp,'BANK_HUB_004_SS_DD_I',1,9,10802, 0,0,null,'10829', 0,0,0,current_timestamp
+10825,'BANK_HUB_010_SS_PL_I',current_timestamp,'BANK_HUB_010_SS_PL_I',1,9,10802, 0,0,null,'10829', 0,0,0,current_timestamp
+10826,'BANK_HUB_012_SS_TC_I',current_timestamp,'BANK_HUB_012_SS_TC_I',1,9,10802, 0,0,null,'10829', 0,0,0,current_timestamp
+10827,'BANK_HUB_008_SS_LS_I',current_timestamp,'BANK_HUB_008_SS_LS_I',1,9,10802, 0,0,null,'10829', 0,0,0,current_timestamp
+10828,'BANK_HUB_002_SS_SS_I',current_timestamp,'BANK_HUB_002_SS_SS_I',1,9,10802, 0,0,null,'10829', 0,0,0,current_timestamp
+10829,'BANK_CORE_COMMON_FF_CREATE',current_timestamp,'BANK_CORE_COMMON_FF_CREATE',1,9,10802, 0,0,null,'10830', 0,0,0,current_timestamp
+10830,'BANK_HUB_020_LOB_SSGHCGP',current_timestamp,'BANK_HUB_020_LOB_SSGHCGP',1,9,10802, 0,0,null,'10831', 0,0,0,current_timestamp
+10831,'BANK_HUB_018_EXTREF_SSEANFP',current_timestamp,'BANK_HUB_018_EXTREF_SSEANFP',1,9,10802, 0,0,null,'10832', 0,0,0,current_timestamp
+10832,'BANK_HUB_016_F_C',current_timestamp,'BANK_HUB_016_F_C',1,9,10802, 0,0,null,'10833', 0,0,0,current_timestamp
+10833,'BANK_HUB_015_F_N_C',current_timestamp,'BANK_HUB_015_F_N_C',1,9,10802, 0,0,null,'10834', 0,0,0,current_timestamp
+10834,'BANK_HUB_019_EXTREF_EUSSCMP',current_timestamp,'BANK_HUB_019_EXTREF_EUSSCMP',1,9,10802, 0,0,null,'10835', 0,0,0,current_timestamp
+10835,'BANK_HUB_021_IBAN_DDIBANP',current_timestamp,'BANK_HUB_021_IBAN_DDIBANP',1,9,10802, 0,0,null,'10802', 0,0,0,current_timestamp
+10805,'BANK_CORE_CUST_INDVL_JOINT_ACCT_JOIN_OPTIM',current_timestamp,'BANK_CORE_CUST_INDVL_JOINT_ACCT_JOIN_OPTIM',1,9,10802, 0,0,null,'10807,10808,10809,10810,10811,10812,10813', 0,0,0,current_timestamp
+10802,'BANK Core Workflow1 For India',current_timestamp,'BANK_CORE_IN_WF_1',1,2,null,false,0,null,'10805,10806',false,1,0,null
+10806,'BANK_CORE_CUST_JOINT_INDVL_ACCT_JOIN_OPTIM',current_timestamp,'BANK_CORE_CUST_JOINT_INDVL_ACCT_JOIN_OPTIM',1,9,10802,false,0,null,'10807,10808,10809,10810,10811,10812,10813',false,0,0,null);
+10807,'BANK_CORE_SS_ACCT_JOIN_OPTIM',current_timestamp,'BANK_CORE_SS_ACCT_JOIN_OPTIM',1,9,10802,false,0,null,'10814',false,0,0,null
+10808,'BANK_CORE_DD_ACCT_JOIN_OPTIM',current_timestamp,'BANK_CORE_DD_ACCT_JOIN_OPTIM',1,9,10802,false,0,null,'10814',false,0,0,null
+10809,'BANK_CORE_CP_ACCT_JOIN_OPTIM',current_timestamp,'BANK_CORE_CP_ACCT_JOIN_OPTIM',1,9,10802,false,0,null,'10814',false,0,0,null
+10810,'BANK_CORE_LS_ACCT_JOIN_OPTIM',current_timestamp,'BANK_CORE_LS_ACCT_JOIN_OPTIM',1,9,10802,false,0,null,'10814',false,0,0,null
+10811,'BANK_CORE_PL_ACCT_JOIN_OPTIM',current_timestamp,'BANK_CORE_PL_ACCT_JOIN_OPTIM',1,9,10802,false,0,null,'10814',false,0,0,null
+10812,'BANK_CORE_TC_ACCT_JOIN_OPTIM',current_timestamp,'BANK_CORE_TC_ACCT_JOIN_OPTIM',1,9,10802,false,0,null,'10814',false,0,0,null
+10813,'BANK_CORE_TD_ACCT_JOIN_OPTIM',current_timestamp,'BANK_CORE_TD_ACCT_JOIN_OPTIM',1,9,10802,false,0,null,'10814',false,0,0,null
+10814,'BANK_CORE_COMMON_J_I_JOIN',current_timestamp,'BANK_CORE_COMMON_J_I_JOIN',1,9,10802,false,0,null,'10815,10816,10817,10818,10819,10820,10821,10822,10823,10824,10825,10826,10827,10828',false,0,0,null
+10815,'BANK_HUB_006_SS_CP_J',current_timestamp,'BANK_HUB_006_SS_CP_J',1,9,10802,false,0,null,'10829',false,0,0,null
+10816,'BANK_HUB_014_SS_TD_J',current_timestamp,'BANK_HUB_014_SS_TD_J',1,9,10802,false,0,null,'10829',false,0,0,null
+10817,'BANK_HUB_004_SS_DD_J',current_timestamp,'BANK_HUB_004_SS_DD_J',1,9,10802,false,0,null,'10829',false,0,0,null
+10818,'BANK_HUB_010_SS_PL_J',current_timestamp,'BANK_HUB_010_SS_PL_J',1,9,10802,false,0,null,'10829',false,0,0,null
+10819,'BANK_HUB_012_SS_TC_J',current_timestamp,'BANK_HUB_012_SS_TC_J',1,9,10802,false,0,null,'10829',false,0,0,null
+10820,'BANK_HUB_008_SS_LS_J',current_timestamp,'BANK_HUB_008_SS_LS_J',1,9,10802,false,0,null,'10829',false,0,0,null
+10821,'BANK_HUB_002_SS_SS_J',current_timestamp,'BANK_HUB_002_SS_SS_J',1,9,10802,false,0,null,'10829',false,0,0,null
+10822,'BANK_HUB_006_SS_CP_I',current_timestamp,'BANK_HUB_006_SS_CP_I',1,9,10802,false,0,null,'10829',false,0,0,null
+10823,'BANK_HUB_014_SS_TD_I',current_timestamp,'BANK_HUB_014_SS_TD_I',1,9,10802,false,0,null,'10829',false,0,0,null
+10824,'BANK_HUB_004_SS_DD_I',current_timestamp,'BANK_HUB_004_SS_DD_I',1,9,10802,false,0,null,'10829',false,0,0,null
+10825,'BANK_HUB_010_SS_PL_I',current_timestamp,'BANK_HUB_010_SS_PL_I',1,9,10802,false,0,null,'10829',false,0,0,null
+10826,'BANK_HUB_012_SS_TC_I',current_timestamp,'BANK_HUB_012_SS_TC_I',1,9,10802,false,0,null,'10829',false,0,0,null
+10827,'BANK_HUB_008_SS_LS_I',current_timestamp,'BANK_HUB_008_SS_LS_I',1,9,10802,false,0,null,'10829',false,0,0,null
+10828,'BANK_HUB_002_SS_SS_I',current_timestamp,'BANK_HUB_002_SS_SS_I',1,9,10802,false,0,null,'10829',false,0,0,null
+10829,'BANK_CORE_COMMON_FF_CREATE',current_timestamp,'BANK_CORE_COMMON_FF_CREATE',1,9,10802,false,0,null,'10830',false,0,0,null
+10830,'BANK_HUB_020_LOB_SSGHCGP',current_timestamp,'BANK_HUB_020_LOB_SSGHCGP',1,9,10802,false,0,null,'10831',false,0,0,null
+10831,'BANK_HUB_018_EXTREF_SSEANFP',current_timestamp,'BANK_HUB_018_EXTREF_SSEANFP',1,9,10802,false,0,null,'10832',false,0,0,null
+10832,'BANK_HUB_016_F_C',current_timestamp,'BANK_HUB_016_F_C',1,9,10802,false,0,null,'10833',false,0,0,null
+10833,'BANK_HUB_015_F_N_C',current_timestamp,'BANK_HUB_015_F_N_C',1,9,10802,false,0,null,'10834',false,0,0,null
+10834,'BANK_HUB_019_EXTREF_EUSSCMP',current_timestamp,'BANK_HUB_019_EXTREF_EUSSCMP',1,9,10802,false,0,null,'10835',false,0,0,null
+10835,'BANK_HUB_021_IBAN_DDIBANP',current_timestamp,'BANK_HUB_021_IBAN_DDIBANP',1,9,10802,false,0,null,'10802',false,0,0,null
+10805,'BANK_CORE_CUST_INDVL_JOINT_ACCT_JOIN_OPTIM',current_timestamp,'BANK_CORE_CUST_INDVL_JOINT_ACCT_JOIN_OPTIM',1,9,10802,false,0,null,'10807,10808,10809,10810,10811,10812,10813',false,0,0,null

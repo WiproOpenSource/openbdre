@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!--
+  ~ Copyright (c) 2014 Wipro Limited
+  ~ All Rights Reserved
+  ~
+  ~ This code is protected by copyright and distributed under
+  ~ licenses restricting copying, distribution and decompilation.
+  -->
+
+<configuration>
+<property>
+    <name>hive.exec.dynamic.partition.mode</name>
+    <value>nonstrict</value>
+    <description>Non Strict Mode</description>
+</property>
+
+
+<property>
+<name>hive.exec.dynamic.partition</name>
+<value>true</value>
+<description>Non Strict Mode</description>
+</property>
+
+<property>
+<name>hive.exec.max.dynamic.partitions.pernode</name>
+<value>1000</value>
+<description>Dynamic Partition Per Node</description>
+</property>
+</configuration>
