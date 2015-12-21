@@ -114,7 +114,7 @@ public class FileMonitor implements FileListener {
             Date dt=new Date(timeStamp);
             String strDate=sdf.format(dt);
             RegisterFile registerFile = new RegisterFile();
-            String[] params = {"-p", subProcessId, "-sId", serverId, "-path", path, "-fs", fileSize, "-fh", fileHash, "-cTS", strDate, "-bid", "0", "-env", env};
+            String[] params = {"-p", subProcessId, "-sId", serverId, "-path", path, "-fs", fileSize, "-fh", fileHash, "-cTS", strDate, "-bid", "0"};
             LOGGER.debug("executeRegisterFiles Invoked for "+path);
             registerFile.execute(params);
         } catch (Exception err) {

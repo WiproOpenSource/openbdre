@@ -27,7 +27,7 @@ public class GetLineageByBatchTest {
     @Test
     public void testExecute() throws Exception {
         GetLineageByBatch getLineageByBatch = new GetLineageByBatch();
-        String[] args = {"-bid", "2", "-env", null};
+        String[] args = {"-bid", "2"};
         List<GetLineageByBatchInfo> lineageByBatchInfos = getLineageByBatch.execute(args);
         System.out.println("lineageByBatchInfos = " + lineageByBatchInfos);
     }

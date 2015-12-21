@@ -32,7 +32,7 @@ public class BatchEnqueuerTest {
     @Ignore
     @Test
     public void testExecute() throws Exception {
-        String[] args = {"-cTS", "2014-12-11 11:56:17", "-fh", "1", "-sId", "123461", "-fs", "1", "-p", "1", "--path", "1", "-env", "vm", "--batch-id", "1", "-bm", "1"};
+        String[] args = {"-cTS", "2014-12-11 11:56:17", "-fh", "1", "-sId", "123461", "-fs", "1", "-p", "1", "--path", "1", "--batch-id", "1", "-bm", "1"};
         BatchEnqueuer be = new BatchEnqueuer();
         List<BatchConsumpQueue> info = be.execute(args);
         LOGGER.info(info.size());

@@ -74,8 +74,8 @@ public class BaseLoadActionNode extends GenericActionNode {
                 "            <arg>" + getId() + "</arg>\n" +
                 "            <arg>--instance-exec-id</arg>\n" +
                 "            <arg>${wf:actionData(\"init-job\")[\"instance-exec-id\"]}</arg>\n" +
-                "            <arg>--environment-id</arg>\n" +
-                "            <arg>${env}</arg>\n" +
+
+
                 "            <capture-output/>\n" +
                 "        </java>\n" +
                 "        <ok to=\"" + getToNode().getName() + "\"/>\n" +

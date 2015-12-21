@@ -27,7 +27,7 @@ public class RegisterFileTest {
     @Ignore
     @Test
     public void testExecute() throws Exception {
-        String[] args = {"-cTS", "2014-12-11 11:56:17", "-fh", "3", "-sId", "1", "-fs", "3", "-p", "134", "--path", "/home/cool5", "-env", "local", "--batch-id", "null"};
+        String[] args = {"-cTS", "2014-12-11 11:56:17", "-fh", "3", "-sId", "1", "-fs", "3", "-p", "134", "--path", "/home/cool5", "--batch-id", "null"};
         RegisterFile bs = new RegisterFile();
         RegisterFileInfo info = bs.execute(args);
         LOGGER.debug(info);

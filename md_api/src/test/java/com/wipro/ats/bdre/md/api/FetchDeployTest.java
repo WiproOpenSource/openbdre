@@ -33,7 +33,7 @@ public class FetchDeployTest {
     @Test
     public void testExecute() throws Exception {
         FetchDeploy fetchDeploy = new FetchDeploy();
-        String[] param = new String[]{"-num", "1", "-env", "madhav"};
+        String[] param = new String[]{"-num", "1"};
         List<ProcessDeploymentQueue> processDeploymentQueues = fetchDeploy.execute(param);
         LOGGER.info(processDeploymentQueues);
     }

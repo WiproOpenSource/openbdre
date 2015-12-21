@@ -42,7 +42,7 @@ public abstract class ETLBase extends BaseStructure{
         loadHiveTableInfo(processId, env);
     }
     private void loadHiveTableInfo(String processId,String env){
-        String[] hiveTableParams = {"-p", processId,"-env",env};
+        String[] hiveTableParams = {"-p", processId};
         GetHiveTables getHiveTables = new GetHiveTables();
         List<GetHiveTablesInfo> hiveTablesInfos = getHiveTables.execute(hiveTableParams);
        //TODO: THIS logic is wrong. The stageTable , view and coreTable may not be in order.

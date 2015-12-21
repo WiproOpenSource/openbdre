@@ -49,8 +49,8 @@ public class InitStepNode extends OozieNode {
                 "            <job-tracker>${jobTracker}</job-tracker>\n" +
                 "            <name-node>${nameNode}</name-node>\n" +
                 "            <main-class>com.wipro.ats.bdre.md.api.oozie.OozieInitStep</main-class>\n" +
-                "            <arg>--environment-id</arg>\n" +
-                "            <arg>${env}</arg>\n" +
+
+
                 "            <arg>--sub-process-id</arg>\n" +
                 "            <arg>" + getId() + "</arg>\n" +
                 "            <capture-output />\n" +

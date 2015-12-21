@@ -46,8 +46,8 @@ public class SFTP2HDFSMain extends BaseStructure {
         String destPrefix = IMConfig.getProperty("etl.hdfs-raw-directory", env);
 
         InitJob initJob = new InitJob();
-        String[] initJobParam = {"--max-batch", MAX_NUM_BATCH + "", "--process-id", pid, "-env", env};
-        String[] termJobParam = {"--process-id", pid, "-env", env};
+        String[] initJobParam = {"--max-batch", MAX_NUM_BATCH + "", "--process-id", pid};
+        String[] termJobParam = {"--process-id", pid};
 
         InitJobInfo initJobInfo = null;
         try {
@@ -64,7 +64,7 @@ public class SFTP2HDFSMain extends BaseStructure {
             throw new ETLException(e);
         }
 
-        String[] initHaltStepsParam = new String[]{"--sub-process-id", subPid, "-env", env};
+        String[] initHaltStepsParam = new String[]{"--sub-process-id", subPid};
 
         try {
             LOGGER.info("InitStep started for " + subPid);
@@ -82,7 +82,7 @@ public class SFTP2HDFSMain extends BaseStructure {
         }
         //maxB and minB are the same as it's one batch/file at a time
         String minB = initJobInfo.getMinBatchIdMap().get(subPid);
-        String[] sftpParam = {"--maxB", minB, "--minB", minB, "-env", env};
+        String[] sftpParam = {"--maxB", minB, "--minB", minB};
 
         try {
             LOGGER.info("Starting file download/upload job for " + pid);
@@ -91,7 +91,7 @@ public class SFTP2HDFSMain extends BaseStructure {
             Long targetBatchId = initJobInfo.getTargetBatchId();
 
             CopyFile copyFile = new CopyFile();
-            String[] param = new String[]{"-dsid", hdfsServerId, "-sbid", minB, "-dbid", targetBatchId.toString(), "-prefix", destPrefix, "-env", env};
+            String[] param = new String[]{"-dsid", hdfsServerId, "-sbid", minB, "-dbid", targetBatchId.toString(), "-prefix", destPrefix};
             FileInfo fileInfo = copyFile.execute(param);
             LOGGER.info("Copied file updated in metadata " + fileInfo);
 
@@ -129,7 +129,7 @@ public class SFTP2HDFSMain extends BaseStructure {
                 targetMarking = targetMarking + marking + ",";
             }
         }
-        String[] haltJobParam = {"--process-id", pid, "--batch-marking", targetMarking, "-env", env};
+        String[] haltJobParam = {"--process-id", pid, "--batch-marking", targetMarking};
 
         try {
             HaltJob haltJob = new HaltJob();

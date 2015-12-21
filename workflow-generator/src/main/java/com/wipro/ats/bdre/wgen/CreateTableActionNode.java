@@ -70,8 +70,8 @@ public class CreateTableActionNode extends GenericActionNode {
                 "            <main-class>com.wipro.ats.bdre.im.etl.api.oozie.OozieCreateRawBaseTable</main-class>\n" +
                 "            <arg>--process-id</arg>\n" +
                 "            <arg>" + getId() + "</arg>\n" +
-                "            <arg>--environment-id</arg>\n" +
-                "            <arg>${env}</arg>\n" +
+
+
                 "            <capture-output/>\n" +
                 "        </java>\n" +
                 "        <ok to=\"" + getToNode().getName() + "\"/>\n" +

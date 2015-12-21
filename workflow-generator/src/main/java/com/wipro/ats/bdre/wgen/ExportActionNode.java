@@ -61,8 +61,8 @@ public class ExportActionNode extends GenericActionNode {
                 "            <job-tracker>${jobTracker}</job-tracker>\n" +
                 "            <name-node>${nameNode}</name-node>\n" +
                 "            <main-class>com.wipro.ats.bdre.dataexport.DataExportMain</main-class>\n" +
-                "            <arg>--environment-id</arg>\n" +
-                "            <arg>${env}</arg>\n" +
+
+
                 "            <arg>--process-id</arg>\n" +
                 "            <arg>" + getId() + "</arg>\n" +
                 "            <arg>--batch-id</arg>\n" +

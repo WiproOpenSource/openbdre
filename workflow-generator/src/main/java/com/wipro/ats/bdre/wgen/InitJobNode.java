@@ -42,8 +42,8 @@ public class InitJobNode extends OozieNode {
                 "            <job-tracker>${jobTracker}</job-tracker>\n" +
                 "            <name-node>${nameNode}</name-node>\n" +
                 "            <main-class>com.wipro.ats.bdre.md.api.oozie.OozieInitJob</main-class>\n" +
-                "            <arg>--environment-id</arg>\n" +
-                "            <arg>${env}</arg>\n" +
+
+
                 "            <arg>--max-batch</arg>\n" +
                 "            <arg>1</arg>\n" +
                 "            <arg>--process-id</arg>\n" +
