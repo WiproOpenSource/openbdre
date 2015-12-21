@@ -80,8 +80,8 @@ public class RawLoadActionNode extends GenericActionNode {
                 "            <arg>" + getId() + "</arg>\n" +
                 "            <arg>--list-of-files</arg>\n" +
                 "            <arg>${wf:actionData(\"" + fileListNode.getName() + "\")[\"file-list\"]}</arg>\n" +
-                "            <arg>--environment-id</arg>\n" +
-                "            <arg>${env}</arg>\n" +
+
+
                 "            <capture-output/>\n" +
                 "        </java>\n" +
                 "        <ok to=\"" + getToNode().getName() + "\"/>\n" +

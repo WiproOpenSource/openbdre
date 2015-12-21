@@ -31,7 +31,7 @@ public class GetProcessDependencyTest {
     @Test
     public void testExecute() throws Exception {
 
-        String[] args = {"-p", "10802", "-env", null};
+        String[] args = {"-p", "10802"};
         GetProcessDependency bs = new GetProcessDependency();
         List<ProcessDependencyInfo> processDependencyInfoList = bs.execute(args);
         for (ProcessDependencyInfo info : processDependencyInfoList) {

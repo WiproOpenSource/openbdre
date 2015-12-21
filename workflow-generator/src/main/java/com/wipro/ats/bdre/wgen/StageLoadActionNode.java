@@ -78,8 +78,8 @@ public class StageLoadActionNode extends GenericActionNode {
                 "            <arg>${wf:actionData(\"init-job\")[\"min-batch-id-map." + getId() + "\"]}</arg>\n" +
                 "            <arg>--max-batch-id</arg>\n" +
                 "            <arg>${wf:actionData(\"init-job\")[\"max-batch-id-map." + getId() + "\"]}</arg>\n" +
-                "            <arg>--environment-id</arg>\n" +
-                "            <arg>${env}</arg>\n" +
+
+
                 "            <capture-output/>\n" +
                 "        </java>\n" +
                 "        <ok to=\"" + getToNode().getName() + "\"/>\n" +

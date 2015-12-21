@@ -63,8 +63,8 @@ public class FileRegistrationNode extends GenericActionNode {
                 "            <job-tracker>${jobTracker}</job-tracker>\n" +
                 "            <name-node>${nameNode}</name-node>\n" +
                 "            <main-class>com.wipro.ats.bdre.md.api.oozie.OozieRegisterFile</main-class>\n" +
-                "            <arg>--environment-id</arg>\n" +
-                "            <arg>${env}</arg>\n" +
+
+
                 "<arg>--sub-process-id</arg>" +
                 "<arg>${wf:actionData(\"" + node.getName() + "\")[\"sub-process-id\"]}</arg>" +
                 "            <arg>--path</arg>\n" +

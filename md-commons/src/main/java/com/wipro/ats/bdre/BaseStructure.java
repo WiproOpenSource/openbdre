@@ -76,40 +76,23 @@ public class BaseStructure {
             options.addOption(a);
         }
 
-        Option env = new Option("env", "environment-id", true, "Environment Id(dev, local, test, production etc");
-        env.setOptionalArg(true);
-        env.setRequired(false);
-        options.addOption(env);
+        //Option env = new Option("env", "environment-id", true, "Environment Id(dev, local, test, production etc");
+       // env.setOptionalArg(true);
+       // env.setRequired(false);
+       // options.addOption(env);
 
         CommandLineParser parser = new BasicParser();
         CommandLine cmd;
         try {
-            //This will take care of null environment value. Basically get rid of the null value if  -env followed by null
             ArrayList<String> newParams = new ArrayList<String>();
-            String strEnv = params[params.length - 1];
-            if (strEnv != null && (strEnv.equals("-env") || strEnv.equals("--environment-id"))) {
-                newParams.add("--environment-id");
-                newParams.add(getDefaultEnv());
-                LOGGER.debug("Last element is " + strEnv + " hence no env values, therefore adding --environment-id:" + getDefaultEnv());
-            }
-            boolean envParamExists = false;
+
             for (String param : params) {
                 if (param != null) {
                     newParams.add(param);
-                    if ((param.equals("-env") || param.equals("--environment-id"))) {
-                        envParamExists = true;
-                    }
-                } else {
-                    LOGGER.debug("env arg is null. therefore adding --environment-id:" + getDefaultEnv());
-                    newParams.add(getDefaultEnv());
                 }
 
             }
-            if (!envParamExists) {
-                newParams.add("--environment-id");
-                newParams.add(getDefaultEnv());
-                LOGGER.debug("-env param is not supplied, therefore adding --environment-id:" + getDefaultEnv());
-            }
+
             cmd = parser.parse(options, newParams.toArray(new String[]{}));
             return cmd;
 
@@ -121,23 +104,5 @@ public class BaseStructure {
         return null;
     }
 
-    //This is to add default option support for environment Option
-    private String defaultEnv = null;
 
-    protected String getDefaultEnv() {
-        if (defaultEnv != null) {
-            return defaultEnv;
-        }
-        Properties properties = new Properties();
-        try {
-
-            properties.load(BaseStructure.class.getResourceAsStream("/ENVIRONMENT"));
-            defaultEnv = properties.getProperty("environment");
-
-        } catch (IOException e) {
-            LOGGER.error("Please create ENVIRONMENT file in resources folder of md-commons project with content 'environment=env1' in it if env1 is your environment");
-
-        }
-        return defaultEnv;
-    }
 }

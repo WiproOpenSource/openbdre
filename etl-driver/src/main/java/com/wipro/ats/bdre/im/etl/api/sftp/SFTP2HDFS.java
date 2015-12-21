@@ -51,7 +51,7 @@ public class SFTP2HDFS extends BaseStructure {
         LOGGER.debug("maximum-batch-id is " + maxBId);
         String env = commandLine.getOptionValue("environment-id");
         LOGGER.debug("environment-id is " + env);
-        String[] args = {"--maxB", maxBId, "--minB", minBId, "-env", "env1"};
+        String[] args = {"--maxB", maxBId, "--minB", minBId};
         GetFiles getFiles = new GetFiles();
         List<FileInfo> fileInfos = getFiles.execute(args);
         SFTP sftp = new SFTP();

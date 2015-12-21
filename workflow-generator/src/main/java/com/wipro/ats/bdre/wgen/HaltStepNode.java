@@ -51,8 +51,8 @@ public class HaltStepNode extends OozieNode {
                 "            <job-tracker>${jobTracker}</job-tracker>\n" +
                 "            <name-node>${nameNode}</name-node>\n" +
                 "            <main-class>com.wipro.ats.bdre.md.api.oozie.OozieHaltStep</main-class>\n" +
-                "            <arg>--environment-id</arg>\n" +
-                "            <arg>${env}</arg>\n" +
+
+
                 "            <arg>--sub-process-id</arg>\n" +
                 "            <arg>" + getSid() + "</arg>\n" +
                 "            <capture-output />\n" +

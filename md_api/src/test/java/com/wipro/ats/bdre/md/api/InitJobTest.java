@@ -31,7 +31,7 @@ public class InitJobTest {
     @Ignore
     public void testExecute() throws Exception {
 
-        String[] args = {"--max-batch", "1", "--process-id", "10802", "--env", "ishita"};
+        String[] args = {"--max-batch", "1", "--process-id", "10802"};
         InitJob bs = new InitJob();
         List<InitJobRowInfo> initJobRowInfos = bs.execute(args);
         for (InitJobRowInfo initJobRowInfo : initJobRowInfos) {

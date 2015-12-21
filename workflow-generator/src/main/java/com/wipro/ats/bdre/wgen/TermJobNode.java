@@ -42,8 +42,8 @@ public class TermJobNode extends OozieNode {
                 "            <job-tracker>${jobTracker}</job-tracker>\n" +
                 "            <name-node>${nameNode}</name-node>\n" +
                 "            <main-class>com.wipro.ats.bdre.md.api.oozie.OozieTermJob</main-class>\n" +
-                "            <arg>--environment-id</arg>\n" +
-                "            <arg>${env}</arg>\n" +
+
+
                 "            <arg>--process-id</arg>\n" +
                 "            <arg>" + getId() + "</arg>\n" +
                 "        </java>\n" +

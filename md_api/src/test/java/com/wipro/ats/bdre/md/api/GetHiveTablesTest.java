@@ -26,7 +26,7 @@ public class GetHiveTablesTest {
     @Test
     public void testExecute() throws Exception {
         GetHiveTables getHiveTables = new GetHiveTables();
-        String[] args = {"--process-id", "1123", "--environment-id", "env1"};
+        String[] args = {"--process-id", "1123"};
         getHiveTables.execute(args);
         logger.debug("executed! ");
     }

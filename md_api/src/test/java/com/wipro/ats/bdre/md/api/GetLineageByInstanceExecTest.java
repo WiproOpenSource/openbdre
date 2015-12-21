@@ -30,7 +30,7 @@ public class GetLineageByInstanceExecTest {
     @Test
     public void testExecute() throws Exception {
         GetLineageByInstanceExec getLineageByInstanceExec = new GetLineageByInstanceExec();
-        String[] args = {"-eid", "1", "-env", null};
+        String[] args = {"-eid", "1"};
         List<GetLineageByInstanceExecInfo> lineageByInstanceExecInfoList = getLineageByInstanceExec.execute(args);
         System.out.println("lineageByInstanceExecInfoList = " + lineageByInstanceExecInfoList);
     }

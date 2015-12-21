@@ -28,7 +28,7 @@ public class CopyFileTest {
     @Test
     public void testExecute() throws Exception {
         CopyFile copyFile = new CopyFile();
-        String[] param = new String[]{"-dsid", "123461", "-sbid", "1", "-dbid", "2", "-prefix", "Test123", "-env", "madhav"};
+        String[] param = new String[]{"-dsid", "123461", "-sbid", "1", "-dbid", "2", "-prefix", "Test123"};
         FileInfo fileInfo = copyFile.execute(param);
         LOGGER.info(fileInfo);
     }

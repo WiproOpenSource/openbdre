@@ -29,7 +29,7 @@ public class GetFilesTest {
     @Ignore
     @Test
     public void testExecute() throws Exception {
-        String[] args = {"--maxB", "1", "--minB", "0", "-env", "madhav"};
+        String[] args = {"--maxB", "1", "--minB", "0"};
         GetFiles getFiles = new GetFiles();
         List<FileInfo> fileInfos = getFiles.execute(args);
 

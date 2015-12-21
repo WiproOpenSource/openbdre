@@ -75,8 +75,8 @@ public class DataQualityActionNode extends GenericActionNode {
                 "            <arg>${wf:actionData(\"" + fileListNode.getName() + "\")[\"file-list\"]}</arg>\n" +
                 "            <arg>--destination-directory</arg>\n" +
                 "            <arg>/raw/${wf:actionData(\"init-job\")[\"instance-exec-id\"]}</arg>\n" +
-                "            <arg>--environment-id</arg>\n" +
-                "            <arg>${env}</arg>\n" +
+
+
                 "            <capture-output/>\n" +
                 "        </java >\n" +
                 "        <ok to=\"" + getToNode().getName() + "\"/>\n" +
