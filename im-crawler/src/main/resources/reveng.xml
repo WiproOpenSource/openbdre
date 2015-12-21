@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+        <!DOCTYPE hibernate-reverse-engineering PUBLIC
+                "-//Hibernate/Hibernate Reverse Engineering DTD 3.0//EN"
+                "http://hibernate.sourceforge.net/hibernate-reverse-engineering-3.0.dtd" >
+
+<hibernate-reverse-engineering>
+    <schema-selection match-schema="platmd" match-table="Docidsdb"/>
+    <schema-selection match-schema="platmd" match-table="Pendingurlsdb"/>
+    <schema-selection match-schema="platmd" match-table="Statisticsdb"/>
+    <schema-selection match-schema="platmd" match-table="Weburlsdb"/>
+    <!--<table name="general_config" catalog="platmd">
+        <primary-key>
+                <key-column name="key" property="key" />
+                <key-column name="config_group"  />
+        </primary-key>
+        <column name="type" property="type" />
+        <column name="value" property="value"/>
+        <column name="default_value" property="defaultValue"/>
+        <column name="description" property="description"/>
+        <column name="enabled" property="enabled"/>
+        <column name="required" property="required"/>
+    </table>-->
+
+</hibernate-reverse-engineering>

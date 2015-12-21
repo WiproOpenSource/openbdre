@@ -22,23 +22,23 @@ import java.util.Map;
 
 import com.wipro.ats.bdre.imcrawler.crawler.CrawlConfig;
 import com.wipro.ats.bdre.imcrawler.crawler.Configurable;
-import com.wipro.ats.bdre.imcrawler.model.StatisticsDB;
-import com.wipro.ats.bdre.imcrawler.model.PMF;
-import org.datanucleus.store.rdbms.query.ForwardQueryResult;
+import com.wipro.ats.bdre.imcrawler.jpa.Statisticsdb;
+import com.wipro.ats.bdre.imcrawler.model.StatisticsDBDao;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import javax.jdo.Transaction;
-
-import javax.jdo.PersistenceManager;
-import javax.jdo.Query;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.config.AutowireCapableBeanFactory;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.support.ClassPathXmlApplicationContext;
 
 /**
- * @author Yasser Ganjisaffar
+ * @author Yasser Ganjisaffar modified by AS294216
  */
 public class Counters extends Configurable {
     private static final Logger logger = LoggerFactory.getLogger(Counters.class);
-    PersistenceManager manager = PMF.getInstance().getPersistenceManager();
+    @Autowired
+    StatisticsDBDao statisticsDBDao;
+    //PersistenceManager manager = PMF.getInstance().getPersistenceManager();
 
     public static class ReservedCounterNames {
         public static final String SCHEDULED_PAGES = "Scheduled-Pages";
@@ -46,64 +46,33 @@ public class Counters extends Configurable {
     }
 
     private static final String DATABASE_NAME = "Statistics";
-    //  protected Database statisticsDB = null;
-    protected StatisticsDB statisticsDB1 = new StatisticsDB();
-//  protected Environment env;
-
+    //protected StatisticsDB statisticsDB1 = new StatisticsDB();
     protected final Object mutex = new Object();
-
     protected Map<String, Long> counterValues;
-
     public Counters(CrawlConfig config) {
         super(config);
+        /*Hibernate Auto-wire*/
+        ApplicationContext context = new ClassPathXmlApplicationContext("spring-dao.xml");
+        AutowireCapableBeanFactory acbFactory = context.getAutowireCapableBeanFactory();
+        acbFactory.autowireBean(this);
 
-//    this.env = env;
         this.counterValues = new HashMap<>();
-
     /*
      * When crawling is set to be resumable, we have to keep the statistics
      * in a transactional database to make sure they are not lost if crawler
      * is crashed or terminated unexpectedly.
      */
         if (config.isResumableCrawling()) {
-      /*
-//      DatabaseConfig dbConfig = new DatabaseConfig();
-//      dbConfig.setAllowCreate(true);
-//      dbConfig.setTransactional(true);
-//      dbConfig.setDeferredWrite(false);
-      statisticsDB = env.openDatabase(null, DATABASE_NAME, dbConfig);
-
-      OperationStatus result;
-      DatabaseEntry key = new DatabaseEntry();
-      DatabaseEntry value = new DatabaseEntry();
-      Transaction tnx = env.beginTransaction(null, null);
-      Cursor cursor = statisticsDB.openCursor(tnx, null);
-      //Moves the cursor to the first key/data pair of the database, and returns that pair.
-      result = cursor.getFirst(key, value, null);
-    //put name and value in counterValues for all data in DB
-      while (result == OperationStatus.SUCCESS) {
-        if (value.getData().length > 0) {
-          String name = new String(key.getData());
-          long counterValue = Util.byteArray2Long(value.getData());
-          counterValues.put(name, counterValue);
-        }
-        //Moves the cursor to the next key/data pair and returns that pair.
-        result = cursor.getNext(key, value, null);
-      }
-      cursor.close();
-      tnx.commit();
-      */
-
-            Transaction tx = manager.currentTransaction();
-            tx.begin();
-            Query query = manager.newQuery(StatisticsDB.class);
-            ForwardQueryResult data = (ForwardQueryResult) query.execute();
-            for (int i = 0; i < data.size(); i++) {
-                StatisticsDB info = (StatisticsDB) data.get(i);
+            /*  Transaction tx = manager.currentTransaction();
+                tx.begin();
+                Query query = manager.newQuery(StatisticsDB.class);
+                ForwardQueryResult data = (ForwardQueryResult) query.execute();  */
+            Long totalSize = statisticsDBDao.totalRecordCount();
+            for (int i = 1; i <= totalSize; i++) {
+                Statisticsdb info = statisticsDBDao.get(i);
                 counterValues.put(info.getName(), info.getValue());
             }
-            tx.commit();
-
+            //tx.commit();
         }
     }
 
@@ -119,23 +88,16 @@ public class Counters extends Configurable {
 
     public void setValue(String name, long value) {
         synchronized (mutex) {
-    /*  try {
-        counterValues.put(name, value);
-        if (statisticsDB != null) {
-          Transaction txn = env.beginTransaction(null, null);
-          statisticsDB.put(txn, new DatabaseEntry(name.getBytes()), new DatabaseEntry(Util.long2ByteArray(value)));
-        }
-      } catch (Exception e) {
-        logger.error("Exception setting value", e);
-      }*/
-
-            Transaction tx = manager.currentTransaction();
-            tx.begin();
+            /*  Transaction tx = manager.currentTransaction();
+                tx.begin();
             statisticsDB1.setValue(value);
             statisticsDB1.setName(name);
             manager.makePersistent(statisticsDB1);
-            tx.commit();
-
+            tx.commit();  */
+            Statisticsdb statisticsdb = new Statisticsdb();
+            statisticsdb.setValue(value);
+            statisticsdb.setName(name);
+            statisticsDBDao.insert(statisticsdb);
         }
     }
 
@@ -149,15 +111,8 @@ public class Counters extends Configurable {
             setValue(name, prevValue + addition);
         }
     }
-
+    @Deprecated
     public void close() {
-//    try {
-//      if (statisticsDB != null) {
-//        statisticsDB.close();
-//      }
-//    } catch (DatabaseException e) {
-//      logger.error("Exception thrown while trying to close statisticsDB", e);
-//    }
-//    manager.close();
+
     }
 }

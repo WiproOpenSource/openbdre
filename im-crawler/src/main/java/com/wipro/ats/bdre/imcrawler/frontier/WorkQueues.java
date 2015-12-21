@@ -19,91 +19,54 @@ package com.wipro.ats.bdre.imcrawler.frontier;
 
 import java.util.ArrayList;
 import java.util.List;
-
-//import com.sleepycat.je.Cursor;
-//import com.sleepycat.je.DatabaseEntry;
-//import com.sleepycat.je.Environment;
-//import com.sleepycat.je.OperationStatus;
-import javax.jdo.Transaction;
-
+import com.wipro.ats.bdre.imcrawler.jpa.Pendingurlsdb;
+import com.wipro.ats.bdre.imcrawler.jpa.Weburlsdb;
+import com.wipro.ats.bdre.imcrawler.model.PendingUrlsDBDao;
+import com.wipro.ats.bdre.imcrawler.model.WebUrlsDBDao;
 import com.wipro.ats.bdre.imcrawler.url.WebURL;
-import com.wipro.ats.bdre.imcrawler.model.PMF;
-import com.wipro.ats.bdre.imcrawler.model.PendingURLsDB;
-import com.wipro.ats.bdre.imcrawler.model.WebURLsDB;
-import org.datanucleus.store.rdbms.query.ForwardQueryResult;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.config.AutowireCapableBeanFactory;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.support.ClassPathXmlApplicationContext;
 
-import javax.jdo.PersistenceManager;
-import javax.jdo.Query;
 
 /**
- * @author Yasser Ganjisaffar
+ * @author Yasser Ganjisaffar modified by AS294216
  */
 public class WorkQueues {
-    //    private final Database urlsDB;
-//    private WebURLsDB webURLsDB = new WebURLsDB();
     private String dbName;
-    //    private final Environment env;
-    PersistenceManager manager = PMF.getInstance().getPersistenceManager();
+    //PersistenceManager manager = PMF.getInstance().getPersistenceManager();
     private final boolean resumable;
-
-//    private final WebURLTupleBinding webURLBinding;
-
     protected final Object mutex = new Object();
 
     public WorkQueues(String dbName, boolean resumable) {
-//        this.env = env;
         this.dbName = dbName;
         this.resumable = resumable;
-//        DatabaseConfig dbConfig = new DatabaseConfig();
-//        dbConfig.setAllowCreate(true);
-//        dbConfig.setTransactional(resumable);
-//        dbConfig.setDeferredWrite(!resumable);
-//        urlsDB = env.openDatabase(null, dbName, dbConfig);
-//        webURLBinding = new WebURLTupleBinding();
+        /*Hibernate autowire*/
+        ApplicationContext context = new ClassPathXmlApplicationContext("spring-dao.xml");
+        AutowireCapableBeanFactory acbFactory = context.getAutowireCapableBeanFactory();
+        acbFactory.autowireBean(this);
     }
 
-//    protected Transaction beginTransaction() {
-//        return resumable ? env.beginTransaction(null, null) : null;
-//    }
-
-//    protected static void commit(Transaction tnx) {
-//        if (tnx != null) {
-//            tnx.commit();
-//        }
-//    }
-
-//    protected Cursor openCursor(Transaction txn) {
-//        return urlsDB.openCursor(txn, null);
-//    }
+    @Autowired
+    WebUrlsDBDao webUrlsDBDao;
+    @Autowired
+    PendingUrlsDBDao pendingUrlsDBDao;
 
     public List<WebURL> get(int max, String database, int pid) {
         synchronized (mutex) {
             List<WebURL> results = new ArrayList<>(max);
-            /*
-            DatabaseEntry key = new DatabaseEntry();
-            DatabaseEntry value = new DatabaseEntry();
-            Transaction txn = beginTransaction();
-            try (Cursor cursor = openCursor(txn)) {
-                OperationStatus result = cursor.getFirst(key, value, null);
-                int matches = 0;
-                while ((matches < max) && (result == OperationStatus.SUCCESS)) {
-                    if (value.getData().length > 0) {
-                        //convert value to URL
-                        results.add(webURLBinding.entryToObject(value));
-                        matches++;
-                    }
-                    result = cursor.getNext(key, value, null);
-                }
-            }
-            commit(txn);
-            */
+
             //get all rows limit max
             if (database.equals("InProcessPagesDB")) {
-                Query query = manager.newQuery(WebURLsDB.class);
-                ForwardQueryResult data = (ForwardQueryResult) query.execute();
-                if (max <= data.size()) {
-                    for (int i = 0; i < max; i++) {
-                        WebURLsDB info = (WebURLsDB) data.get(i);
+                //Query query = manager.newQuery(WebURLsDB.class);
+                //ForwardQueryResult data = (ForwardQueryResult) query.execute();
+                Long totalSize = webUrlsDBDao.totalRecordCount();
+                if (max <= totalSize) {
+//                    for (int i = 1; i <= max; i++) {
+                    List<Weburlsdb> weburlsdbList = webUrlsDBDao.list(0,max);
+//                        Weburlsdb info = webUrlsDBDao.get(i);
+                    for(Weburlsdb info:weburlsdbList) {
                         if (info.getPid() == pid) {
                             WebURL webURL = new WebURL();
                             webURL.setURL(info.getUrl());
@@ -120,9 +83,12 @@ public class WorkQueues {
                             results.add(webURL);
                         }
                     }
+//                    }
                 } else {
-                    for (int i = 0; i < data.size(); i++) {
-                        WebURLsDB info = (WebURLsDB) data.get(i);
+//                    for (int i = 1; i <= totalSize; i++) {
+                    List<Weburlsdb> weburlsdbList = webUrlsDBDao.list(0,totalSize.intValue());
+//                        Weburlsdb info = webUrlsDBDao.get(i);
+                    for(Weburlsdb info:weburlsdbList) {
                         if (info.getPid() == pid) {
                             WebURL webURL = new WebURL();
                             webURL.setURL(info.getUrl());
@@ -139,13 +105,17 @@ public class WorkQueues {
                             results.add(webURL);
                         }
                     }
+//                    }
                 }
             } else if (database.equals("PendingURLsDB")) {
-                Query query = manager.newQuery(PendingURLsDB.class);
-                ForwardQueryResult data = (ForwardQueryResult) query.execute();
-                if (max <= data.size()) {
-                    for (int i = 0; i < max; i++) {
-                        PendingURLsDB info = (PendingURLsDB) data.get(i);
+                //Query query = manager.newQuery(PendingURLsDB.class);
+                //ForwardQueryResult data = (ForwardQueryResult) query.execute();
+                Long totalSize = pendingUrlsDBDao.totalRecordCount();
+                if (max <= totalSize) {
+//                    for (int i = 1; i <= max; i++) {
+                    List<Pendingurlsdb> pendingurlsdbList = pendingUrlsDBDao.list(0,max);
+//                        Pendingurlsdb info = pendingUrlsDBDao.get(i);
+                    for (Pendingurlsdb info:pendingurlsdbList) {
                         if (info.getPid() == pid) {
                             WebURL webURL = new WebURL();
                             webURL.setURL(info.getUrl());
@@ -162,9 +132,12 @@ public class WorkQueues {
                             results.add(webURL);
                         }
                     }
+//                    }
                 } else {
-                    for (int i = 0; i < data.size(); i++) {
-                        PendingURLsDB info = (PendingURLsDB) data.get(i);
+//                    for (int i = 1; i <= totalSize; i++) {
+                    List<Pendingurlsdb> pendingurlsdbList = pendingUrlsDBDao.list(0,totalSize.intValue());
+//                        Pendingurlsdb info = pendingUrlsDBDao.get(i);
+                    for (Pendingurlsdb info:pendingurlsdbList) {
                         if (info.getPid() == pid) {
                             WebURL webURL = new WebURL();
                             webURL.setURL(info.getUrl());
@@ -181,6 +154,7 @@ public class WorkQueues {
                             results.add(webURL);
                         }
                     }
+//                    }
                 }
             }
             return results;
@@ -190,75 +164,43 @@ public class WorkQueues {
     public void delete(int count, String database) {
         synchronized (mutex) {
             //delete rows from starting in DB until count
-            /*
-            DatabaseEntry key = new DatabaseEntry();
-            DatabaseEntry value = new DatabaseEntry();
-            Transaction txn = beginTransaction();
-            try (Cursor cursor = openCursor(txn)) {
-                OperationStatus result = cursor.getFirst(key, value, null);
-                int matches = 0;
-                while ((matches < count) && (result == OperationStatus.SUCCESS)) {
-                    cursor.delete();
-                    matches++;
-                    result = cursor.getNext(key, value, null);
-                }
-            }
-            commit(txn);
-            */
-            Transaction tx = manager.currentTransaction();
-            tx.begin();
+            /*  Transaction tx = manager.currentTransaction();
+                tx.begin();   */
             if (database.equals("InProcessPagesDB")) {
-                Query query = manager.newQuery(WebURLsDB.class);
-                ForwardQueryResult data = (ForwardQueryResult) query.execute();
-                for (int i = 0; i < count; i++) {
-                    WebURLsDB info = (WebURLsDB) data.get(i);
-                    manager.deletePersistent(info);
+                /*  Query query = manager.newQuery(WebURLsDB.class);
+                    ForwardQueryResult data = (ForwardQueryResult) query.execute();  */
+                List<Weburlsdb> weburlsdbList = webUrlsDBDao.list(0,count);
+                for (Weburlsdb weburlsdb:weburlsdbList) {
+//                for (int i = 1; i <= count; i++) {
+                    /* WebURLsDB info = (WebURLsDB) data.get(i);
+                       manager.deletePersistent(info);  */
+                    webUrlsDBDao.delete(weburlsdb.getUniqid().intValue());
                 }
+//                }
             } else if (database.equals("PendingURLsDB")) {
-                Query query = manager.newQuery(PendingURLsDB.class);
-                ForwardQueryResult data = (ForwardQueryResult) query.execute();
-                for (int i = 0; i < count; i++) {
-                    PendingURLsDB info = (PendingURLsDB) data.get(i);
-                    manager.deletePersistent(info);
+                /*  Query query = manager.newQuery(PendingURLsDB.class);
+                    ForwardQueryResult data = (ForwardQueryResult) query.execute();  */
+                List<Pendingurlsdb> pendingurlsdbList = pendingUrlsDBDao.list(0,count);
+                for (Pendingurlsdb pendingurlsdb:pendingurlsdbList) {
+//                for (int i = 1; i <= count; i++) {
+                    /*  PendingURLsDB info = (PendingURLsDB) data.get(i);
+                        manager.deletePersistent(info);  */
+                    pendingUrlsDBDao.delete(pendingurlsdb.getUniqid().intValue());
                 }
+//                }
             }
-            tx.commit();
+            //tx.commit();
         }
     }
 
-    /*
-     * The key that is used for storing URLs determines the order
-     * they are crawled. Lower key values results in earlier crawling.
-     * Here our keys are 6 bytes. The first byte comes from the URL priority.
-     * The second byte comes from depth of crawl at which this URL is first found.
-     * The rest of the 4 bytes come from the docid of the URL. As a result,
-     * URLs with lower priority numbers will be crawled earlier. If priority
-     * numbers are the same, those found at lower depths will be crawled earlier.
-     * If depth is also equal, those found earlier (therefore, smaller docid) will
-     * be crawled earlier.
-     */
-//    protected static DatabaseEntry getDatabaseEntryKey(WebURL url) {
-//        byte[] keyData = new byte[6];
-//        keyData[0] = url.getPriority();
-//        keyData[1] = ((url.getDepth() > Byte.MAX_VALUE) ? Byte.MAX_VALUE : (byte) url.getDepth());
-//        Util.putIntInByteArray(url.getDocid(), keyData, 2);
-//        return new DatabaseEntry(keyData);
-//    }
-
     public void put(WebURL url, String database, int pid, long instanceExecid) {
-        /*
-        DatabaseEntry value = new DatabaseEntry();
-        webURLBinding.objectToEntry(url, value);
-        Transaction txn = beginTransaction();
-        urlsDB.put(txn, getDatabaseEntryKey(url), value);
-        commit(txn);*/
-
-        Transaction tx = manager.currentTransaction();
-        tx.begin();
+        /*  Transaction tx = manager.currentTransaction();
+            tx.begin();  */
         if (database.equals("InProcessPagesDB")) {
             if (url.getURL().length() < 2000) {
-                WebURLsDB webURLsDB = new WebURLsDB();
-                webURLsDB.setPid(pid);
+                Weburlsdb webURLsDB = new Weburlsdb();
+                long lpid = (long) pid;
+                webURLsDB.setPid(lpid);
                 webURLsDB.setInstanceExecid(instanceExecid);
                 webURLsDB.setUrl(url.getURL());
                 webURLsDB.setAnchor(url.getAnchor());
@@ -271,43 +213,45 @@ public class WorkQueues {
                 webURLsDB.setPriority(url.getPriority());
                 webURLsDB.setSubDomain(url.getSubDomain());
                 webURLsDB.setTag(url.getTag());
-                manager.makePersistent(webURLsDB);
+                webUrlsDBDao.insert(webURLsDB);
+                //manager.makePersistent(webURLsDB);
             }
         } else if (database.equals("PendingURLsDB")) {
             if (url.getURL().length() < 2000) {
-                PendingURLsDB webURLsDB = new PendingURLsDB();
-                webURLsDB.setPid(pid);
-                webURLsDB.setInstanceExecid(instanceExecid);
-                webURLsDB.setUrl(url.getURL());
-                webURLsDB.setAnchor(url.getAnchor());
-                webURLsDB.setDepth(url.getDepth());
-                webURLsDB.setDocid(url.getDocid());
-                webURLsDB.setDomain(url.getDomain());
-                webURLsDB.setParentDocid(url.getParentDocid());
-                webURLsDB.setParentUrl(url.getParentUrl());
-                webURLsDB.setPath(url.getPath());
-                webURLsDB.setPriority(url.getPriority());
-                webURLsDB.setSubDomain(url.getSubDomain());
-                webURLsDB.setTag(url.getTag());
-                manager.makePersistent(webURLsDB);
+                Pendingurlsdb pendingurlsdb = new Pendingurlsdb();
+                long lpid = (long) pid;
+                pendingurlsdb.setPid(lpid);
+                pendingurlsdb.setInstanceExecid(instanceExecid);
+                pendingurlsdb.setUrl(url.getURL());
+                pendingurlsdb.setAnchor(url.getAnchor());
+                pendingurlsdb.setDepth(url.getDepth());
+                pendingurlsdb.setDocid(url.getDocid());
+                pendingurlsdb.setDomain(url.getDomain());
+                pendingurlsdb.setParentDocid(url.getParentDocid());
+                pendingurlsdb.setParentUrl(url.getParentUrl());
+                pendingurlsdb.setPath(url.getPath());
+                pendingurlsdb.setPriority(url.getPriority());
+                pendingurlsdb.setSubDomain(url.getSubDomain());
+                pendingurlsdb.setTag(url.getTag());
+                pendingUrlsDBDao.insert(pendingurlsdb);
+                //manager.makePersistent(pendingURLsDB);
             }
         }
-        tx.commit();
+        //tx.commit();
     }
 
     public long getLength(String database) {
         if (database.equals("InProcessPagesDB")) {
-            Query query = manager.newQuery(WebURLsDB.class);
-            ForwardQueryResult data = (ForwardQueryResult) query.execute();
-            return (long) data.size();
+            /*  Query query = manager.newQuery(WebURLsDB.class);
+                ForwardQueryResult data = (ForwardQueryResult) query.execute();  */
+            return webUrlsDBDao.totalRecordCount();
         } else if (database.equals("PendingURLsDB")) {
-            Query query = manager.newQuery(PendingURLsDB.class);
-            ForwardQueryResult data = (ForwardQueryResult) query.execute();
-            return (long) data.size();
+            /*  Query query = manager.newQuery(PendingURLsDB.class);
+                ForwardQueryResult data = (ForwardQueryResult) query.execute();  */
+            return pendingUrlsDBDao.totalRecordCount();
         } else {
             return 0;
         }
-//        return urlsDB.count();
     }
 
     public void close() {

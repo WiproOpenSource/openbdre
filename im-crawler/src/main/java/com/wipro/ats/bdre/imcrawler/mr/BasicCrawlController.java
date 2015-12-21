@@ -17,7 +17,6 @@
 
 package com.wipro.ats.bdre.imcrawler.mr;
 
-import com.wipro.ats.bdre.BaseStructure;
 import com.wipro.ats.bdre.imcrawler.crawler.CrawlConfig;
 import com.wipro.ats.bdre.imcrawler.crawler.CrawlController;
 import com.wipro.ats.bdre.imcrawler.crawler.PropertyConfig;
@@ -146,8 +145,8 @@ public class BasicCrawlController implements Runnable {
         try {
             controller = new CrawlController(config, pageFetcher, robotstxtServer, pid, instanceExecid);
         } catch (Exception e) {
-            logger.debug("unable to create CrawlController object");
-            e.printStackTrace();
+            logger.info("unable to create CrawlController object");
+            throw new RuntimeException("unable to create CrawlController object"+e);
         }
 
     /*
@@ -158,7 +157,7 @@ public class BasicCrawlController implements Runnable {
 //    controller.addSeed("https://www.zomato.com/bangalore");
         String[] urlToCrawl = propertyConfig.getUrl().split(",");
         for (int linksToCrawl = 0; linksToCrawl < urlToCrawl.length; linksToCrawl++) {
-            controller.addSeed(urlToCrawl[linksToCrawl]);//TODO:add urls from properties comma seperated and split here in loop
+            controller.addSeed(urlToCrawl[linksToCrawl]);
         }
 
 

@@ -23,16 +23,11 @@ import com.wipro.ats.bdre.imcrawler.crawler.WebCrawler;
 import com.wipro.ats.bdre.imcrawler.parser.BinaryParseData;
 import com.wipro.ats.bdre.imcrawler.parser.HtmlParseData;
 import com.wipro.ats.bdre.imcrawler.url.WebURL;
-import org.apache.commons.io.FileUtils;
-import org.apache.commons.io.FilenameUtils;
-import org.apache.hadoop.io.BytesWritable;
 import org.apache.hadoop.io.Text;
 import org.apache.http.Header;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.File;
-import java.io.IOException;
 import java.nio.charset.Charset;
 import java.util.Set;
 import java.util.regex.Pattern;
@@ -42,19 +37,11 @@ import java.util.regex.Pattern;
  */
 public class BasicCrawler extends WebCrawler {
     private static final Logger logger = LoggerFactory.getLogger(BasicCrawler.class);
-    //public static String imageExtensions;
-    //public static boolean ignoreUrls;
-    //public static String urlsToSearch;
-    //public static String urlsNotToSearch;
-
     private PropertyConfig propertyConfig;
     private static Pattern urlPattern = null;
     private static Pattern urlNotPattern = null;
 
-
-
     public BasicCrawler(int pid) {
-
         propertyConfig = PropertyConfig.getPropertyConfig(pid);
         urlPattern = Pattern.compile(propertyConfig.getUrlsToSearch());
         urlNotPattern = Pattern.compile(propertyConfig.getUrlsNotToSearch());
@@ -64,9 +51,6 @@ public class BasicCrawler extends WebCrawler {
     public BasicCrawler() {
 
     }
-
-    //private static final Pattern IMAGE_EXTENSIONS = Pattern.compile(".*\\.("+ imageExtensions +")$");//TODO:Add to properties
-
 
     /**
      * You should implement this function to specify whether the given url

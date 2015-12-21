@@ -3,7 +3,7 @@ package com.wipro.ats.bdre.imcrawler.mr;
 import java.util.Arrays;
 
 /**
- * Created by cloudera on 9/24/15.
+ * Created by AS294216 on 9/24/15.
  */
 public class CrawlOutput {
     int docid;

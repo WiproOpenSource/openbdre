@@ -18,36 +18,40 @@
 package com.wipro.ats.bdre.imcrawler.frontier;
 
 
-import com.wipro.ats.bdre.imcrawler.model.PMF;
-import com.wipro.ats.bdre.imcrawler.model.WebURLsDB;
+import com.wipro.ats.bdre.imcrawler.jpa.Weburlsdb;
+import com.wipro.ats.bdre.imcrawler.model.WebUrlsDBDao;
 import com.wipro.ats.bdre.imcrawler.url.WebURL;
-import org.datanucleus.store.rdbms.query.ForwardQueryResult;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.config.AutowireCapableBeanFactory;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.support.ClassPathXmlApplicationContext;
 import java.lang.Byte;
+import java.util.List;
 
-import javax.jdo.Transaction;
-
-import javax.jdo.PersistenceManager;
-import javax.jdo.Query;
 
 /**
  * This class maintains the list of pages which are
  * assigned to crawlers but are not yet processed.
  * It is used for resuming a previous crawl.
  *
- * @author Yasser Ganjisaffar
+ * @author Yasser Ganjisaffar modified by AS294216
  */
 public class InProcessPagesDB extends WorkQueues {
     private static final Logger logger = LoggerFactory.getLogger(InProcessPagesDB.class);
 
     private static final String DATABASE_NAME = "InProcessPagesDB";
     public String database;                                 //pass the DB name to its object
-    PersistenceManager manager = PMF.getInstance().getPersistenceManager();
+    //PersistenceManager manager = PMF.getInstance().getPersistenceManager();
 
     public InProcessPagesDB() {
         super(DATABASE_NAME, true);
+        /*Hibernate Auto-wire*/
+        ApplicationContext context = new ClassPathXmlApplicationContext("spring-dao.xml");
+        AutowireCapableBeanFactory acbFactory = context.getAutowireCapableBeanFactory();
+        acbFactory.autowireBean(this);
+
         this.database = DATABASE_NAME;
         long docCount = getLength(DATABASE_NAME);
         if (docCount > 0) {
@@ -55,47 +59,33 @@ public class InProcessPagesDB extends WorkQueues {
         }
     }
 
+    @Autowired
+    WebUrlsDBDao webUrlsDBDao;
+
     public boolean removeURL(WebURL webUrl, int pid) {
         synchronized (mutex) {
-      /*
-      DatabaseEntry key = getDatabaseEntryKey(webUrl);
-      DatabaseEntry value = new DatabaseEntry();
-      Transaction txn = beginTransaction();
-      try (Cursor cursor = openCursor(txn)) {
-        OperationStatus result = cursor.getSearchKey(key, value, null);
-
-        if (result == OperationStatus.SUCCESS) {
-          result = cursor.delete();
-          if (result == OperationStatus.SUCCESS) {
-            return true;
-          }
-        }
-      } finally {
-        commit(txn);
-      }
-      */
-
-
-            Transaction tx = manager.currentTransaction();
-            tx.begin();
-            Query query = manager.newQuery(WebURLsDB.class);
-            ForwardQueryResult data = (ForwardQueryResult) query.execute();
-            for (int i = 0; i < data.size(); i++) {
-                WebURLsDB info = (WebURLsDB) data.get(i);
+            //Transaction tx = manager.currentTransaction();
+            //tx.begin();
+            //Query query = manager.newQuery(WebURLsDB.class);
+            //ForwardQueryResult data = (ForwardQueryResult) query.execute();
+            Long totalSize = webUrlsDBDao.totalRecordCount();
+            List<Weburlsdb> weburlsdbList = webUrlsDBDao.list(0,totalSize.intValue());
+//            for (int i = 1; i <= totalSize; i++) {
+//                Weburlsdb info = (Weburlsdb) webUrlsDBDao.get(i);
+            for (Weburlsdb info:weburlsdbList) {
                 Byte infobyte = new Byte(info.getPriority());
                 Byte weburlbyte = new Byte(webUrl.getPriority());
                 if ((webUrl.getDocid() == info.getDocid()) && (pid == info.getPid())) {
                     if ((webUrl.getDepth() == info.getDepth()) && (infobyte.compareTo(weburlbyte)) == 0) {
-                        manager.deletePersistent(info);
-                        tx.commit();
-
+                        webUrlsDBDao.delete(info.getUniqid().intValue());
+                        //manager.deletePersistent(info);
+                        //tx.commit();
                         return true;
                     }
                 }
             }
-            tx.commit();
-
-
+//            }
+            //tx.commit();
         }
         return false;
     }
