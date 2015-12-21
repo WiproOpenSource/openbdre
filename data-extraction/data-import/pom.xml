@@ -59,7 +59,7 @@
                         </transformers>
                         <shadedArtifactAttached>true</shadedArtifactAttached>
                         <shadedClassifierName>executable</shadedClassifierName>
-                        <finalName>data-import-${project.version}-jar-with-dependencies.jar</finalName>
+                        <finalName>data-import-${project.version}-jar-with-dependencies</finalName>
                         </configuration>
                     </execution>
                 </executions>
