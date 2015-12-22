@@ -128,12 +128,13 @@ public class FlumePropertiesAPI extends MetadataAPIBase {
             insertDaoProcess.setNextProcessId("0");
 
         }
+        insertDaoProcess.setDeleteFlag(false);
         insertDaoProcess.setDescription(desc);
         insertDaoProcess.setProcessName(name);
         insertDaoProcess.setCanRecover(true);
         insertDaoProcess.setEnqueuingProcessId(0);
         insertDaoProcess.setAddTs(DateConverter.stringToDate(process.getTableAddTS()));
-
+        process.setDeleteFlag(false);
         process.setBusDomainId(1);
         process.setProcessTypeId(ptId);
         process.setDescription(name);

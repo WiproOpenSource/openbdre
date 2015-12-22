@@ -74,6 +74,9 @@ public class ProcessDAOTest {
         BusDomain busDomain = busDomainDAO.get(1);
         ProcessType processType = processTypeDAO.get(1);
         Process process = new Process();
+        // Process parentProcess=new Process();
+        //parentProcess.setProcessId(10802);
+        //process.setProcess(parentProcess);
         process.setProcessName("Test");
         process.setDescription("Test Process");
         process.setBusDomain(busDomain);

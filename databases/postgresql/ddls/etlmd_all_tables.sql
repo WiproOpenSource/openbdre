@@ -305,7 +305,7 @@ DROP TABLE IF EXISTS etlstep;
 
 CREATE TABLE etlstep (
   uuid varchar(128) NOT NULL,
-  serial_number serial NOT NULL,
+  serial_number bigint NOT NULL,
   bus_domain_id int NOT NULL,
   process_name varchar(256) NOT NULL,
   description varchar(2048) NOT NULL,
@@ -409,7 +409,7 @@ CREATE TABLE lineage_query (
   query_type_id int NOT NULL references lineage_query_type(query_type_id) ON DELETE NO
 ACTION ON UPDATE NO ACTION,
   create_ts timestamp DEFAULT CURRENT_TIMESTAMP,
-  process_id int references process(process_id) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  process_id int ,
   instance_exec_id bigint DEFAULT NULL,
   PRIMARY KEY (query_id)
 
@@ -434,7 +434,8 @@ CREATE TABLE lineage_relation (
   relation_id varchar(100) NOT NULL,
   src_node_id varchar(100) DEFAULT NULL REFERENCES lineage_node(node_id) ON DELETE NO ACTION
 ON UPDATE NO ACTION,
-  target_node_id varchar(100) DEFAULT NULL,
+  target_node_id varchar(100) DEFAULT NULL REFERENCES lineage_node(node_id) ON DELETE NO ACTION
+  ON UPDATE NO ACTION,
   query_id varchar(100) NOT NULL REFERENCES lineage_query(query_id) ON DELETE NO ACTION ON
 UPDATE NO ACTION,
   dot_string text,

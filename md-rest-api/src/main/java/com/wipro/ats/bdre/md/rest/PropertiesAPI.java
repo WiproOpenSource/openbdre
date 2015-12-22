@@ -93,14 +93,14 @@ public class PropertiesAPI extends MetadataAPIBase {
 
         RestWrapper restWrapper = null;
         try {
-
+            Integer counter=propertiesDAO.totalRecordCount();
             List<Properties> getProperties = new ArrayList<Properties>();
             //List<Properties> getProperties = s.selectList("call_procedures.ListProperty", properties);
 
             for (Integer processId : propertiesDAO.list(startPage, pageSize)) {
                 com.wipro.ats.bdre.md.beans.table.Properties returnProperties = new com.wipro.ats.bdre.md.beans.table.Properties();
                 returnProperties.setProcessId(processId);
-                returnProperties.setCounter(propertiesDAO.totalRecordCount());
+                returnProperties.setCounter(counter);
                 getProperties.add(returnProperties);
             }
 
@@ -171,15 +171,18 @@ public class PropertiesAPI extends MetadataAPIBase {
             Process process = new Process();
             process.setProcessId(processId);
 
+            List<com.wipro.ats.bdre.md.dao.jpa.Properties> propertiesList1=new ArrayList<com.wipro.ats.bdre.md.dao.jpa.Properties>();
+                    propertiesList1=propertiesDAO.getByProcessId(process);
+            Integer counter=propertiesList1.size();
             // List<Properties> propertiesList = s.selectList("call_procedures.ListPropertiesOfProcess", properties);
-            for (com.wipro.ats.bdre.md.dao.jpa.Properties properties : propertiesDAO.getByProcessId(process)) {
+            for (com.wipro.ats.bdre.md.dao.jpa.Properties properties : propertiesList1) {
                 com.wipro.ats.bdre.md.beans.table.Properties returnProperties = new com.wipro.ats.bdre.md.beans.table.Properties();
                 returnProperties.setProcessId(properties.getProcess().getProcessId());
                 returnProperties.setConfigGroup(properties.getConfigGroup());
                 returnProperties.setKey(properties.getId().getPropKey());
                 returnProperties.setValue(properties.getPropValue());
                 returnProperties.setDescription(properties.getDescription());
-                returnProperties.setCounter(propertiesDAO.getByProcessId(process).size());
+                returnProperties.setCounter(counter);
                 propertiesList.add(returnProperties);
             }
 
@@ -212,15 +215,17 @@ public class PropertiesAPI extends MetadataAPIBase {
         try {
             List<Properties> propertiesList = new ArrayList<Properties>();
             //List<Properties> propertiesList = s.selectList("call_procedures.ListConfigGroup", properties);
-
-            for (com.wipro.ats.bdre.md.dao.jpa.Properties properties : propertiesDAO.getPropertiesForConfig(processId, configGroup)) {
+            List<com.wipro.ats.bdre.md.dao.jpa.Properties>jpaPropertiesList=new ArrayList<com.wipro.ats.bdre.md.dao.jpa.Properties>();
+                    jpaPropertiesList=propertiesDAO.getPropertiesForConfig(processId, configGroup);
+            Integer counter=jpaPropertiesList.size();
+            for (com.wipro.ats.bdre.md.dao.jpa.Properties properties : jpaPropertiesList) {
                 com.wipro.ats.bdre.md.beans.table.Properties returnProperties = new com.wipro.ats.bdre.md.beans.table.Properties();
                 returnProperties.setProcessId(properties.getProcess().getProcessId());
                 returnProperties.setConfigGroup(properties.getConfigGroup());
                 returnProperties.setKey(properties.getId().getPropKey());
                 returnProperties.setValue(properties.getPropValue());
                 returnProperties.setDescription(properties.getDescription());
-                returnProperties.setCounter(propertiesDAO.getPropertiesForConfig(processId, configGroup).size());
+                returnProperties.setCounter(counter);
                 propertiesList.add(returnProperties);
             }
             restWrapper = new RestWrapper(propertiesList, RestWrapper.OK);
@@ -358,15 +363,17 @@ public class PropertiesAPI extends MetadataAPIBase {
             List<Properties> propertiesList = new ArrayList<Properties>();
             Process process = new Process();
             process.setProcessId(parentProcessId);
-
-            for (com.wipro.ats.bdre.md.dao.jpa.Properties properties : propertiesDAO.getByProcessId(process)) {
+            List<com.wipro.ats.bdre.md.dao.jpa.Properties>jpaPropertiesList=new ArrayList<com.wipro.ats.bdre.md.dao.jpa.Properties>();
+            jpaPropertiesList=propertiesDAO.getByProcessId(process);
+            Integer counter=jpaPropertiesList.size();
+            for (com.wipro.ats.bdre.md.dao.jpa.Properties properties :jpaPropertiesList ) {
                 com.wipro.ats.bdre.md.beans.table.Properties returnProperties = new com.wipro.ats.bdre.md.beans.table.Properties();
                 returnProperties.setProcessId(properties.getProcess().getProcessId());
                 returnProperties.setConfigGroup(properties.getConfigGroup());
                 returnProperties.setKey(properties.getId().getPropKey());
                 returnProperties.setValue(properties.getPropValue());
                 returnProperties.setDescription(properties.getDescription());
-                returnProperties.setCounter(propertiesDAO.getByProcessId(process).size());
+                returnProperties.setCounter(counter);
                 propertiesList.add(returnProperties);
             }
 

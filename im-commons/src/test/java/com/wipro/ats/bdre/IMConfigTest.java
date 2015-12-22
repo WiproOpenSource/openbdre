@@ -15,7 +15,7 @@ public class IMConfigTest {
     private Logger LOGGER=Logger.getLogger(IMConfigTest.class);
     @Test
     public void testGetProperty() throws Exception {
-        String key = "etl.hive-connection";
+        String key = "data-import.hadoop-home";
 
         LOGGER.info(key+"="+IMConfig.getProperty(key));
     }
