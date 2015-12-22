@@ -51,8 +51,6 @@
         <module>hive-plugin</module>
         <!--<module>im-crawler</module>-->
         <module>flume-hdfs-sink</module>
-        <module>untitled</module>
-        <module>db-setup</module>
         <module>md-setup</module>
     </modules>
 

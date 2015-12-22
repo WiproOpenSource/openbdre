@@ -16,6 +16,7 @@
 
 package com.wipro.ats.bdre.md.setup;
 
+
 import com.wipro.ats.bdre.md.setup.beans.*;
 import com.wipro.ats.bdre.md.setup.beans.Process;
 import org.apache.log4j.Logger;
@@ -37,7 +38,6 @@ public class SetupDB {
     private static final Logger LOGGER = Logger.getLogger(SetupDB.class);
     @Autowired
     private SessionFactory sessionFactory;
-
     private Session session;
 
     public static void main(String[] args) {
@@ -46,7 +46,7 @@ public class SetupDB {
         try {
 
             setupDB.populateExecStatus("databases/setup/ExecStatus.csv");
-            /*setupDB.populateBatchStatus("databases/setup/BatchStatus.csv");
+            setupDB.populateBatchStatus("databases/setup/BatchStatus.csv");
             setupDB.populateDeployStatus("databases/setup/DeployStatus.csv");
             setupDB.populateProcessType("databases/setup/ProcessType.csv");
             setupDB.populateWorkflowType("databases/setup/WorkflowType.csv");
@@ -60,7 +60,7 @@ public class SetupDB {
             setupDB.populateProcess("databases/setup/Process.csv");
             setupDB.populateProperties("databases/setup/Properties.csv");
             setupDB.populateUsers("databases/setup/Users.csv");
-            setupDB.populateUserRoles("databases/setup/UserRoles.csv");*/
+            setupDB.populateUserRoles("databases/setup/UserRoles.csv");
 
 
             setupDB.halt();
@@ -76,7 +76,8 @@ public class SetupDB {
         ApplicationContext context = new ClassPathXmlApplicationContext("spring-dao.xml");
         AutowireCapableBeanFactory acbFactory = context.getAutowireCapableBeanFactory();
         acbFactory.autowireBean(this);
-
+        session = sessionFactory.openSession();
+        session.beginTransaction();
     }
 
     public void halt() {
@@ -210,8 +211,6 @@ public class SetupDB {
     private void populateExecStatus(String dataFile) throws Exception {
         String line = null;
         int lineNum =0;
-        session = sessionFactory.openSession();
-        session.beginTransaction();
 
         try {
             BufferedReader br = new BufferedReader(new FileReader(dataFile));
