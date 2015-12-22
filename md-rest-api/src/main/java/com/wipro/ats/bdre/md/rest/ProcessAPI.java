@@ -161,6 +161,7 @@ public class ProcessAPI extends MetadataAPIBase {
             if (pid == 0) {
                 pid = null;
             }
+            Integer counter=processDAO.totalRecordCount(pid);
             List<com.wipro.ats.bdre.md.dao.jpa.Process> processList = processDAO.list(pid, startPage, pageSize);
             List<Process> processes = new ArrayList<Process>();
             for (com.wipro.ats.bdre.md.dao.jpa.Process daoProcess : processList) {
@@ -188,7 +189,7 @@ public class ProcessAPI extends MetadataAPIBase {
                 tableProcess.setTableAddTS(DateConverter.dateToString(daoProcess.getAddTs()));
                 tableProcess.setTableEditTS(DateConverter.dateToString(daoProcess.getEditTs()));
                 tableProcess.setDeleteFlag(daoProcess.getDeleteFlag());
-                tableProcess.setCounter(processDAO.totalRecordCount(pid));
+                tableProcess.setCounter(counter);
                 processes.add(tableProcess);
             }
             // List<Process> processes = s.selectList("call_procedures.GetProcesses", process);

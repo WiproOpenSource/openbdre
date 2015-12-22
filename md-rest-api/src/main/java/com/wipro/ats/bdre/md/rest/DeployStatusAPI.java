@@ -118,13 +118,14 @@ public class DeployStatusAPI extends MetadataAPIBase {
                      @RequestParam(value = "size", defaultValue = "10") int pageSize, Principal principal) {
         RestWrapper restWrapper = null;
         try {
+            Integer counter=deployStatusDAO.totalRecordCount().intValue();
             List<com.wipro.ats.bdre.md.dao.jpa.DeployStatus> jpaDeployStatus = deployStatusDAO.list(startPage, pageSize);
             List<DeployStatus> deployStatuses = new ArrayList<DeployStatus>();
             for (com.wipro.ats.bdre.md.dao.jpa.DeployStatus deployStatus : jpaDeployStatus) {
                 DeployStatus returnDeployStatus = new DeployStatus();
                 returnDeployStatus.setDeployStatusId((int) deployStatus.getDeployStatusId());
                 returnDeployStatus.setDescription(deployStatus.getDescription());
-                returnDeployStatus.setCounter(deployStatusDAO.totalRecordCount().intValue());
+                returnDeployStatus.setCounter(counter);
                 deployStatuses.add(returnDeployStatus);
             }
             // List<DeployStatus> deployStatuses = s.selectList("call_procedures.GetDeployStatuses", deployStatus);
