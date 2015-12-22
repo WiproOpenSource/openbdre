@@ -143,6 +143,7 @@ public class FlumePropertiesAPI extends MetadataAPIBase {
         process.setWorkflowId(wfId);
         process.setEnqProcessId(0);
         process.setAddTS(DateConverter.stringToDate(process.getTableAddTS()));
+        process.setDeleteFlag(false);
         process.setCanRecover(true);
         try {
             LOGGER.debug("Process" + name + " is going to be inserted " + process.getProcessTypeId());
