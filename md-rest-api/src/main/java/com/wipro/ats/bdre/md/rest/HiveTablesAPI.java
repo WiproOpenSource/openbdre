@@ -126,6 +126,7 @@ public class HiveTablesAPI extends MetadataAPIBase {
         try {
             List<com.wipro.ats.bdre.md.dao.jpa.HiveTables> jpaHiveTablesList = hiveTablesDAO.list(startPage, pageSize);
             List<HiveTables> hiveTablesList = new ArrayList<HiveTables>();
+            Integer counter=jpaHiveTablesList.size();
             for (com.wipro.ats.bdre.md.dao.jpa.HiveTables hiveTable : jpaHiveTablesList) {
                 HiveTables returnHiveTable = new HiveTables();
                 returnHiveTable.setLocationType(hiveTable.getLocationType());
@@ -136,7 +137,7 @@ public class HiveTablesAPI extends MetadataAPIBase {
                 returnHiveTable.setTableId(hiveTable.getTableId());
                 returnHiveTable.setTableName(hiveTable.getTableName());
                 returnHiveTable.setType(hiveTable.getType());
-                returnHiveTable.setCounter(hiveTablesDAO.totalRecordCount().intValue());
+                returnHiveTable.setCounter(counter);
                 hiveTablesList.add(returnHiveTable);
             }
             // List<HiveTables> hiveTablesList = s.selectList("call_procedures.ListHiveTables", hiveTables);

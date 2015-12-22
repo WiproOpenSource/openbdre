@@ -120,12 +120,13 @@ public class ProcessTypeAPI extends MetadataAPIBase {
         try {
             List<com.wipro.ats.bdre.md.dao.jpa.ProcessType> jpaProcessTypes = processTypeDAO.listFull(startPage, pageSize);
             List<ProcessType> processTypes = new ArrayList<ProcessType>();
+            Integer totalRows=jpaProcessTypes.size();
             for (com.wipro.ats.bdre.md.dao.jpa.ProcessType processType : jpaProcessTypes) {
                 ProcessType returnProcessType = new ProcessType();
                 returnProcessType.setProcessTypeId(processType.getProcessTypeId());
                 returnProcessType.setParentProcessTypeId(processType.getParentProcessTypeId());
                 returnProcessType.setProcessTypeName(processType.getProcessTypeName());
-                returnProcessType.setCounter(processTypeDAO.totalRows());
+                returnProcessType.setCounter(totalRows);
                 processTypes.add(returnProcessType);
             }
             // List<ProcessType> processTypes = s.selectList("call_procedures.GetProcessTypes", processType);

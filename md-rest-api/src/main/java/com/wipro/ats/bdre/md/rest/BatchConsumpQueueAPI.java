@@ -143,6 +143,7 @@ public class BatchConsumpQueueAPI extends MetadataAPIBase {
         try {
             List<com.wipro.ats.bdre.md.dao.jpa.BatchConsumpQueue> jpaBcqList = batchConsumpQueueDAO.list(startPage, pageSize);
             List<BatchConsumpQueue> batchConsumpQueues = new ArrayList<BatchConsumpQueue>();
+            Integer counter=jpaBcqList.size();
             for (com.wipro.ats.bdre.md.dao.jpa.BatchConsumpQueue jpaBcq : jpaBcqList) {
                 BatchConsumpQueue batchConsumpQueue = new BatchConsumpQueue();
                 batchConsumpQueue.setQueueId(jpaBcq.getQueueId());
@@ -159,7 +160,7 @@ public class BatchConsumpQueueAPI extends MetadataAPIBase {
                 }
                 batchConsumpQueue.setBatchMarking(jpaBcq.getBatchMarking());
                 batchConsumpQueue.setBatchState(jpaBcq.getBatchStatus().getBatchStateId());
-                batchConsumpQueue.setCounter(batchConsumpQueueDAO.totalRecordCount().intValue());
+                batchConsumpQueue.setCounter(counter);
                 LOGGER.info(batchConsumpQueue.getCounter());
                 batchConsumpQueues.add(batchConsumpQueue);
             }

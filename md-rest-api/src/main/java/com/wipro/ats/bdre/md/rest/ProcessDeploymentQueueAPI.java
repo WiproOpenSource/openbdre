@@ -142,6 +142,7 @@ public class ProcessDeploymentQueueAPI extends MetadataAPIBase {
         try {
             List<com.wipro.ats.bdre.md.dao.jpa.ProcessDeploymentQueue> jpaPdqList = processDeploymentQueueDAO.list(startPage, pageSize);
             List<ProcessDeploymentQueue> processDeploymentQueues = new ArrayList<ProcessDeploymentQueue>();
+            Integer counter =jpaPdqList.size();
             for (com.wipro.ats.bdre.md.dao.jpa.ProcessDeploymentQueue pdq : jpaPdqList) {
                 ProcessDeploymentQueue processDeploymentQueue = new ProcessDeploymentQueue();
                 processDeploymentQueue.setDeploymentId(pdq.getDeploymentId());
@@ -154,7 +155,7 @@ public class ProcessDeploymentQueueAPI extends MetadataAPIBase {
                 processDeploymentQueue.setDeployScriptLocation(pdq.getDeployScriptLocation());
                 processDeploymentQueue.setUserName(pdq.getUserName());
                 processDeploymentQueue.setProcessId(pdq.getProcess().getProcessId());
-                processDeploymentQueue.setCounter(processDeploymentQueueDAO.totalRecordCount());
+                processDeploymentQueue.setCounter(counter);
                 processDeploymentQueues.add(processDeploymentQueue);
             }
             //  List<ProcessDeploymentQueue> processDeploymentQueues = s.selectList("call_procedures.GetProcessDeploymentQueues", processDeploymentQueue);

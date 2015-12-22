@@ -127,6 +127,7 @@ public class ServersAPI extends MetadataAPIBase {
         try {
             List<com.wipro.ats.bdre.md.dao.jpa.Servers> jpaServersList = serversDAO.list(startPage, pageSize);
             List<Servers> servers = new ArrayList<Servers>();
+            Integer count=jpaServersList.size();
             for (com.wipro.ats.bdre.md.dao.jpa.Servers server : jpaServersList) {
                 Servers returnServer = new Servers();
                 returnServer.setServerId(server.getServerId());
@@ -137,7 +138,7 @@ public class ServersAPI extends MetadataAPIBase {
                 returnServer.setServerMetaInfo(server.getServerMetainfo());
                 returnServer.setServerIp(server.getServerIp());
                 returnServer.setSshPrivateKey(server.getSshPrivateKey());
-                returnServer.setCounter(serversDAO.totalRecordCount());
+                returnServer.setCounter(count);
                 servers.add(returnServer);
             }
             //  List<Servers> servers = s.selectList("call_procedures.ListServers", server);

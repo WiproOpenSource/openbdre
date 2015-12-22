@@ -118,13 +118,14 @@ public class BusDomainAPI extends MetadataAPIBase {
         try {
             List<com.wipro.ats.bdre.md.dao.jpa.BusDomain> jpaBusDoaminList = busDomainDAO.list(startPage, pageSize);
             List<BusDomain> busDomains = new ArrayList<BusDomain>();
+            Integer counter =jpaBusDoaminList.size();
             for (com.wipro.ats.bdre.md.dao.jpa.BusDomain busDomain : jpaBusDoaminList) {
                 BusDomain returnBusDomain = new BusDomain();
                 returnBusDomain.setBusDomainId(busDomain.getBusDomainId());
                 returnBusDomain.setBusDomainName(busDomain.getBusDomainName());
                 returnBusDomain.setBusDomainOwner(busDomain.getBusDomainOwner());
                 returnBusDomain.setDescription(busDomain.getDescription());
-                returnBusDomain.setCounter(busDomainDAO.totalRecordCount().intValue());
+                returnBusDomain.setCounter(counter);
                 busDomains.add(returnBusDomain);
             }
             //List<BusDomain> busDomains = s.selectList("call_procedures.GetBusDomains", busDomain);
