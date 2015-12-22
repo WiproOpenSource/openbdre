@@ -120,6 +120,7 @@ public class ExecStatusAPI extends MetadataAPIBase {
         try {
             // execStatus.setPage(startPage);
             // List<ExecStatus> execStatuses = s.selectList("call_procedures.ListExecStatus", execStatus);
+            Integer counter=execStatusDAO.totalRecordCount().intValue();
             List<ExecStatus> execStatuses = new ArrayList<ExecStatus>();
             List<com.wipro.ats.bdre.md.dao.jpa.ExecStatus> jpaExecStatuses = execStatusDAO.list(startPage, pageSize);
 
@@ -127,7 +128,7 @@ public class ExecStatusAPI extends MetadataAPIBase {
                 ExecStatus returnExecStatus = new ExecStatus();
                 returnExecStatus.setExecStateId(execStatus.getExecStateId());
                 returnExecStatus.setDescription(execStatus.getDescription());
-                returnExecStatus.setCounter(execStatusDAO.totalRecordCount().intValue());
+                returnExecStatus.setCounter(counter);
                 execStatuses.add(returnExecStatus);
 
             }

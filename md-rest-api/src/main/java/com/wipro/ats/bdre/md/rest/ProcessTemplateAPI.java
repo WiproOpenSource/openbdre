@@ -148,10 +148,11 @@ public class ProcessTemplateAPI extends MetadataAPIBase {
             if (pid == 0) {
                 pid = null;
             }
+            Integer counter=processTemplateDAO.totalRecordCount();
             List<ProcessTemplate> processes = processTemplateDAO.list(startPage, pageSize, pid);
             // List<ProcessTemplate> processes = s.selectList("call_procedures.FG", processTemplate);
             for (ProcessTemplate p : processes) {
-                p.setCounter(processTemplateDAO.totalRecordCount());
+                p.setCounter(counter);
                 p.setTableAddTS(DateConverter.dateToString(p.getAddTS()));
             }
 

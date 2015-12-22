@@ -122,6 +122,7 @@ public class BatchAPI extends MetadataAPIBase {
                      @RequestParam(value = "size", defaultValue = "10") int pageSize, Principal principal) {
         RestWrapper restWrapper = null;
         try {
+            Integer counter=batchDAO.totalRecordCount();
             List<com.wipro.ats.bdre.md.dao.jpa.Batch> jpaBatchList = batchDAO.list(startPage, pageSize);
             List<Batch> batches = new ArrayList<Batch>();
             for (com.wipro.ats.bdre.md.dao.jpa.Batch batch : jpaBatchList) {
@@ -131,7 +132,7 @@ public class BatchAPI extends MetadataAPIBase {
                     returnBatch.setSourceInstanceExecId(batch.getInstanceExec().getInstanceExecId());
                 }
                 returnBatch.setBatchType(batch.getBatchType());
-                returnBatch.setCounter(batchDAO.totalRecordCount());
+                returnBatch.setCounter(counter);
                 batches.add(returnBatch);
 
             }

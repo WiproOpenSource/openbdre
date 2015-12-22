@@ -125,6 +125,7 @@ public class WorkflowTypeAPI extends MetadataAPIBase {
 
         RestWrapper restWrapper = null;
         try {
+            Integer counter=workflowTypeDAO.totalRecordCount();
             List<WorkflowType> workflowTypes = new ArrayList<WorkflowType>();
             List<com.wipro.ats.bdre.md.dao.jpa.WorkflowType> jpaWorkflowTypes = workflowTypeDAO.list(startPage, pageSize);
 
@@ -132,7 +133,7 @@ public class WorkflowTypeAPI extends MetadataAPIBase {
                 WorkflowType workflowType = new WorkflowType();
                 workflowType.setWorkflowId(wfType.getWorkflowId());
                 workflowType.setWorkflowTypeName(wfType.getWorkflowTypeName());
-                workflowType.setCounter(workflowTypeDAO.totalRecordCount());
+                workflowType.setCounter(counter);
                 workflowTypes.add(workflowType);
 
             }

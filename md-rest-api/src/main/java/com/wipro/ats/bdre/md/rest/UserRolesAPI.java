@@ -60,12 +60,13 @@ public class UserRolesAPI extends MetadataAPIBase {
         try {
             List<com.wipro.ats.bdre.md.dao.jpa.UserRoles> jpaUserRolesList = userRolesDAO.listByName(username);
             List<UserRoles> userRolesList = new ArrayList<UserRoles>();
+            Integer counter=jpaUserRolesList.size();
             for (com.wipro.ats.bdre.md.dao.jpa.UserRoles userRoles : jpaUserRolesList) {
                 UserRoles userRole = new UserRoles();
                 userRole.setUserRoleId(userRoles.getUserRoleId());
                 userRole.setUsername(userRoles.getUsers().getUsername());
                 userRole.setRole(userRoles.getRole());
-                userRole.setCounter(jpaUserRolesList.size());
+                userRole.setCounter(counter);
                 userRolesList.add(userRole);
             }
             //  List<UserRoles> userRolesList = s.selectList("call_procedures.ListUserRoles", userroles);
