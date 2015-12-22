@@ -64,6 +64,7 @@ public class SubProcessAPI extends MetadataAPIBase {
         RestWrapper restWrapper = null;
         try {
             List<com.wipro.ats.bdre.md.dao.jpa.Process> daoProcessList = processDAO.subProcesslist(processId);
+            Integer counter =daoProcessList.size();
 //            List<Process> processes = s.selectList("call_procedures.GetSubProcesses", process);
             List<Process> processes = new ArrayList<Process>();
             for (com.wipro.ats.bdre.md.dao.jpa.Process daoProcess : daoProcessList) {
@@ -91,7 +92,7 @@ public class SubProcessAPI extends MetadataAPIBase {
                 tableProcess.setTableAddTS(DateConverter.dateToString(daoProcess.getAddTs()));
                 tableProcess.setTableEditTS(DateConverter.dateToString(daoProcess.getEditTs()));
                 tableProcess.setDeleteFlag(daoProcess.getDeleteFlag());
-                tableProcess.setCounter(processDAO.totalRecordCount(processId));
+                tableProcess.setCounter(counter);
                 processes.add(tableProcess);
             }
             restWrapper = new RestWrapper(processes, RestWrapper.OK);
