@@ -14,8 +14,7 @@ import javax.persistence.Table;
  */
 @Entity
 @Table(name="PROPERTIES"
-    ,schema="BDRE"
-    ,catalog="BDRE"
+
 )
 public class Properties  implements java.io.Serializable {
 

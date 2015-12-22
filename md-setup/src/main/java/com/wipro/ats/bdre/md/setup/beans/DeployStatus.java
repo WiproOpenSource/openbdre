@@ -12,8 +12,7 @@ import javax.persistence.Table;
  */
 @Entity
 @Table(name="DEPLOY_STATUS"
-    ,schema="BDRE"
-    ,catalog="BDRE"
+
 )
 public class DeployStatus  implements java.io.Serializable {
 

@@ -12,8 +12,7 @@ import javax.persistence.Table;
  */
 @Entity
 @Table(name="LINEAGE_QUERY_TYPE"
-    ,schema="BDRE"
-    ,catalog="BDRE"
+
 )
 public class LineageQueryType  implements java.io.Serializable {
 

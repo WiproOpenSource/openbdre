@@ -12,8 +12,7 @@ import javax.persistence.Table;
  */
 @Entity
 @Table(name="USERS"
-    ,schema="BDRE"
-    ,catalog="BDRE"
+
 )
 public class Users  implements java.io.Serializable {
 

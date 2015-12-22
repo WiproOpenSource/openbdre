@@ -12,8 +12,7 @@ import javax.persistence.Table;
  */
 @Entity
 @Table(name="EXEC_STATUS"
-    ,schema="BDRE"
-    ,catalog="BDRE"
+
 )
 public class ExecStatus  implements java.io.Serializable {
 

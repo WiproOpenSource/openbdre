@@ -12,8 +12,7 @@ import javax.persistence.Table;
  */
 @Entity
 @Table(name="USER_ROLES"
-    ,schema="BDRE"
-    ,catalog="BDRE"
+
 )
 public class UserRoles  implements java.io.Serializable {
 

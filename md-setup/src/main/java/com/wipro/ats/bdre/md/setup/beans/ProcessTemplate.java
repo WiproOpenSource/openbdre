@@ -10,8 +10,7 @@ import java.util.Date;
  */
 @Entity
 @Table(name="PROCESS_TEMPLATE"
-    ,schema="BDRE"
-    ,catalog="BDRE"
+
 )
 public class ProcessTemplate  implements java.io.Serializable {
 

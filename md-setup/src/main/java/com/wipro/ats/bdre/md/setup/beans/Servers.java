@@ -12,8 +12,7 @@ import javax.persistence.Table;
  */
 @Entity
 @Table(name="SERVERS"
-    ,schema="BDRE"
-    ,catalog="BDRE"
+
 )
 public class Servers  implements java.io.Serializable {
 

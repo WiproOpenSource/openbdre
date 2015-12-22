@@ -12,8 +12,7 @@ import javax.persistence.Table;
  */
 @Entity
 @Table(name="BATCH_STATUS"
-    ,schema="BDRE"
-    ,catalog="BDRE"
+
 )
 public class BatchStatus  implements java.io.Serializable {
 

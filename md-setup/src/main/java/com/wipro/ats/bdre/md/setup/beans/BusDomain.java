@@ -12,8 +12,7 @@ import javax.persistence.Table;
  */
 @Entity
 @Table(name="BUS_DOMAIN"
-    ,schema="BDRE"
-    ,catalog="BDRE"
+
 )
 public class BusDomain  implements java.io.Serializable {
 

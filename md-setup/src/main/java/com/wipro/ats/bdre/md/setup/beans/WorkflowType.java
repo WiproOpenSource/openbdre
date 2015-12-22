@@ -12,8 +12,7 @@ import javax.persistence.Table;
  */
 @Entity
 @Table(name="WORKFLOW_TYPE"
-    ,schema="BDRE"
-    ,catalog="BDRE"
+
 )
 public class WorkflowType  implements java.io.Serializable {
 

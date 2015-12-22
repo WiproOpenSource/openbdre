@@ -9,8 +9,7 @@ import javax.persistence.*;
  */
 @Entity
 @Table(name="GENERAL_CONFIG"
-    ,schema="BDRE"
-    ,catalog="BDRE"
+
 )
 public class GeneralConfig  implements java.io.Serializable {
 

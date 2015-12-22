@@ -12,8 +12,7 @@ import javax.persistence.Table;
  */
 @Entity
 @Table(name="PROCESS_TYPE"
-    ,schema="BDRE"
-    ,catalog="BDRE"
+
 )
 public class ProcessType  implements java.io.Serializable {
 

@@ -20,6 +20,7 @@ package com.wipro.ats.bdre.md.setup;
 import com.wipro.ats.bdre.md.setup.beans.*;
 import com.wipro.ats.bdre.md.setup.beans.Process;
 import org.apache.log4j.Logger;
+import org.hibernate.CacheMode;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -41,26 +42,31 @@ public class SetupDB {
     private Session session;
 
     public static void main(String[] args) {
+        System.out.println("args = " + args[0]);
+        String projectRoot="";
+        if(args!=null && args.length != 0 && args[0]!=null && !args[0].isEmpty()){
+            projectRoot=args[0]+"/";
+        }
         SetupDB setupDB = new SetupDB();
         setupDB.init();
         try {
 
-            setupDB.populateExecStatus("databases/setup/ExecStatus.csv");
-            setupDB.populateBatchStatus("databases/setup/BatchStatus.csv");
-            setupDB.populateDeployStatus("databases/setup/DeployStatus.csv");
-            setupDB.populateProcessType("databases/setup/ProcessType.csv");
-            setupDB.populateWorkflowType("databases/setup/WorkflowType.csv");
-            setupDB.populateBusDomain("databases/setup/BusDomain.csv");
-            setupDB.populateBatch("databases/setup/Batch.csv");
-            setupDB.populateServers("databases/setup/Servers.csv");
-            setupDB.populateLineageNodeType("databases/setup/LineageNodeType.csv");
-            setupDB.populateLineageQueryType("databases/setup/LineageQueryType.csv");
-            setupDB.populateProcessTemplate("databases/setup/ProcessTemplate.csv");
-            setupDB.populateGeneralConfig("databases/setup/GeneralConfig.csv");
-            setupDB.populateProcess("databases/setup/Process.csv");
-            setupDB.populateProperties("databases/setup/Properties.csv");
-            setupDB.populateUsers("databases/setup/Users.csv");
-            setupDB.populateUserRoles("databases/setup/UserRoles.csv");
+            setupDB.populateExecStatus(projectRoot+"databases/setup/ExecStatus.csv");
+            setupDB.populateBatchStatus(projectRoot+"databases/setup/BatchStatus.csv");
+            setupDB.populateDeployStatus(projectRoot+"databases/setup/DeployStatus.csv");
+            setupDB.populateProcessType(projectRoot+"databases/setup/ProcessType.csv");
+            setupDB.populateWorkflowType(projectRoot+"databases/setup/WorkflowType.csv");
+            setupDB.populateBusDomain(projectRoot+"databases/setup/BusDomain.csv");
+            setupDB.populateBatch(projectRoot+"databases/setup/Batch.csv");
+            setupDB.populateServers(projectRoot+"databases/setup/Servers.csv");
+            setupDB.populateLineageNodeType(projectRoot+"databases/setup/LineageNodeType.csv");
+            setupDB.populateLineageQueryType(projectRoot+"databases/setup/LineageQueryType.csv");
+            setupDB.populateProcessTemplate(projectRoot+"databases/setup/ProcessTemplate.csv");
+            setupDB.populateGeneralConfig(projectRoot+"databases/setup/GeneralConfig.csv");
+            setupDB.populateProcess(projectRoot+"databases/setup/Process.csv");
+            setupDB.populateProperties(projectRoot+"databases/setup/Properties.csv");
+            setupDB.populateUsers(projectRoot+"databases/setup/Users.csv");
+            setupDB.populateUserRoles(projectRoot+"databases/setup/UserRoles.csv");
 
 
             setupDB.halt();
@@ -73,7 +79,7 @@ public class SetupDB {
 
 
     public void init() {
-        ApplicationContext context = new ClassPathXmlApplicationContext("spring-dao.xml");
+        ApplicationContext context = new ClassPathXmlApplicationContext("setup-dao.xml");
         AutowireCapableBeanFactory acbFactory = context.getAutowireCapableBeanFactory();
         acbFactory.autowireBean(this);
         session = sessionFactory.openSession();
@@ -122,7 +128,7 @@ public class SetupDB {
                 }
 
                 batch.setBatchType(cols[2]);
-                session.save(batch);
+                session.saveOrUpdate(batch);
 
             }
 
@@ -148,7 +154,7 @@ public class SetupDB {
                 BatchStatus batchStatus=new BatchStatus();
                 batchStatus.setBatchStateId(new Integer(cols[0]));
                 batchStatus.setDescription(cols[1]);
-                session.save(batchStatus);
+                session.saveOrUpdate(batchStatus);
             }
             //session.flush();;
         } catch (Exception e) {
@@ -174,7 +180,7 @@ public class SetupDB {
                 busDomain.setBusDomainName(cols[1]);
                 busDomain.setDescription(cols[2]);
                 busDomain.setBusDomainOwner(cols[3]);
-                session.save(busDomain);
+                session.saveOrUpdate(busDomain);
             }
             ////session.flush();;
         } catch (Exception e) {
@@ -198,7 +204,7 @@ public class SetupDB {
                 DeployStatus deployStatus=new DeployStatus();
                 deployStatus.setDeployStatusId(new Short(cols[0]));
                 deployStatus.setDescription(cols[1]);
-                session.save(deployStatus);
+                session.saveOrUpdate(deployStatus);
             }
             //session.flush();;
         } catch (Exception e) {
@@ -222,9 +228,9 @@ public class SetupDB {
                 ExecStatus execStatus=new ExecStatus();
                 execStatus.setExecStateId(new Integer(cols[0]));
                 execStatus.setDescription(cols[1]);
-                session.save(execStatus);
+                session.saveOrUpdate(execStatus);
             }
-            session.getTransaction().commit();
+
             //session.flush();;
         } catch (Exception e) {
             LOGGER.error("In File: "+dataFile+"; Bad Line: " + line);
@@ -247,7 +253,7 @@ public class SetupDB {
                 LineageNodeType lineageNodeType=new LineageNodeType();
                 lineageNodeType.setNodeTypeId(new Integer(cols[0]));
                 lineageNodeType.setNodeTypeName(cols[1]);
-                session.save(lineageNodeType);
+                session.saveOrUpdate(lineageNodeType);
             }
             //session.flush();;
         } catch (Exception e) {
@@ -271,7 +277,7 @@ public class SetupDB {
                 LineageQueryType lineageQueryType=new LineageQueryType();
                 lineageQueryType.setQueryTypeId(new Integer(cols[0]));
                 lineageQueryType.setQueryTypeName(cols[1]);
-                session.save(lineageQueryType);
+                session.saveOrUpdate(lineageQueryType);
             }
             //session.flush();;
         } catch (Exception e) {
@@ -297,7 +303,7 @@ public class SetupDB {
                 pType.setProcessTypeName(cols[1]);
                 if(!("null".equals(cols[2])))
                     pType.setParentProcessTypeId(new Integer(cols[2]));
-                session.save(pType);
+                session.saveOrUpdate(pType);
             }
             ////session.flush();;
         } catch (Exception e) {
@@ -340,7 +346,7 @@ public class SetupDB {
                 processTemplate.setDeleteFlag(new Boolean(cols[10]));
 
                 processTemplate.setWorkflowId(new Integer(cols[11]));
-                session.save(processTemplate);
+                session.saveOrUpdate(processTemplate);
             }
             //session.flush();;
         } catch (Exception e) {
@@ -388,7 +394,7 @@ public class SetupDB {
                     process.setProcessTemplateId(new Integer(cols[13]));
                 }
                 process.setEditTs(new Date());
-                session.save(process);
+                session.saveOrUpdate(process);
             }
             //session.flush();;
         } catch (Exception e) {
@@ -417,7 +423,7 @@ public class SetupDB {
                 properties.setConfigGroup(cols[1]);
                 properties.setPropValue(cols[3]);
                 properties.setDescription(cols[4]);
-                session.save(properties);
+                session.saveOrUpdate(properties);
             }
             //session.flush();;
         } catch (Exception e) {
@@ -447,7 +453,7 @@ public class SetupDB {
                 servers.setLoginPassword(cols[5]);
                 servers.setSshPrivateKey(cols[6]);
                 servers.setServerIp(cols[7]);
-                session.save(servers);
+                session.saveOrUpdate(servers);
             }
             //session.flush();;
         } catch (Exception e) {
@@ -472,7 +478,7 @@ public class SetupDB {
                 userRoles.setUserRoleId(new Integer(cols[0]));
                 userRoles.setUsername(cols[1]);
                 userRoles.setRole(cols[2]);
-                session.save(userRoles);
+                session.saveOrUpdate(userRoles);
             }
             //session.flush();;
         } catch (Exception e) {
@@ -498,7 +504,7 @@ public class SetupDB {
                 users.setPassword(cols[1]);
                 if("1".equals(cols[2])) cols[2]="true";
                 users.setEnabled(new Boolean(cols[2]));
-                session.save(users);
+                session.saveOrUpdate(users);
             }
             //session.flush();;
         } catch (Exception e) {
@@ -522,7 +528,7 @@ public class SetupDB {
                 WorkflowType workflowType=new WorkflowType();
                 workflowType.setWorkflowId(new Integer(cols[0]));
                 workflowType.setWorkflowTypeName(cols[1]);
-                session.save(workflowType);
+                session.saveOrUpdate(workflowType);
             }
             //session.flush();;
         } catch (Exception e) {
@@ -555,7 +561,7 @@ public class SetupDB {
                 generalConfig.setType(cols[6]);
                 if("1".equals(cols[7]))cols[7]="true";
                 generalConfig.setEnabled(new Boolean(cols[7]));
-                session.save(generalConfig);
+                session.saveOrUpdate(generalConfig);
             }
             //session.flush();;
         } catch (Exception e) {
