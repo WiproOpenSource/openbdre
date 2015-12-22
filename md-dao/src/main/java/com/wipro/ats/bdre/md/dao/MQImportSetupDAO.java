@@ -21,6 +21,7 @@ import com.wipro.ats.bdre.md.beans.MQImportInfo;
 import com.wipro.ats.bdre.md.beans.table.Properties;
 import com.wipro.ats.bdre.md.dao.jpa.*;
 import com.wipro.ats.bdre.md.dao.jpa.Process;
+import com.wipro.ats.bdre.md.triggers.ProcessValidateInsert;
 import org.apache.log4j.Logger;
 import org.hibernate.Criteria;
 import org.hibernate.Session;
@@ -54,6 +55,8 @@ public class MQImportSetupDAO {
     @Autowired
     PropertiesDAO propertiesDAO;
 
+    // @Autowired
+    // ProcessValidateInsert processValidateInsert;
     public List<Properties> list(int page, int numResults) {
         Session session = sessionFactory.openSession();
         List<Properties> propertiesList = new ArrayList<Properties>();
@@ -124,8 +127,23 @@ public class MQImportSetupDAO {
             process.setDeleteFlag(false);
             process.setEnqueuingProcessId(0);
             process.setNextProcessId(" ");
-
-            Integer parentProcessId = (Integer) session.save(process);
+            ProcessValidateInsert processValidateInsert=new ProcessValidateInsert();
+            Integer parentProcessId;
+            if(process.getProcess()!=null) {
+                boolean triggerCheck=processValidateInsert.ProcessTypeValidator(process);
+                if(triggerCheck==true)
+                {
+                    parentProcessId = (Integer) session.save(process);
+                }
+                else
+                {
+                    parentProcessId=null;
+                    throw new MetadataException("error occured");
+                }
+            }
+            else {
+                parentProcessId = (Integer) session.save(process);
+            }
             LOGGER.info("ProcessID of Process inserted is " + process.getProcessId());
 
             // ('MQ Import Step',current_timestamp, 'MQ Import Step',busdomainid,21,ppid,canrecover,0,null,ppid,0);

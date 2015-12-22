@@ -16,6 +16,7 @@
 
 package com.wipro.ats.bdre.md.api;
 
+import com.wipro.ats.bdre.md.beans.PositionsInfo;
 import org.apache.log4j.Logger;
 import org.junit.Ignore;
 import org.junit.Test;
@@ -25,12 +26,12 @@ import java.util.Map;
 public class ArrangePositionsTest {
     private static final Logger LOGGER = Logger.getLogger(ArrangePositions.class);
 
-    @Ignore
+   // @Ignore
     @Test
     public void testGetListPositionInfo() throws Exception {
         ArrangePositions arrangePositions = new ArrangePositions();
-        Map<String, ArrangePositions.PositionsInfo> positionsInfoList = arrangePositions.getListPositionInfo(10802);
-        for (ArrangePositions.PositionsInfo pinfo : positionsInfoList.values()) {
+        Map<String, PositionsInfo> positionsInfoList = arrangePositions.getListPositionInfo(10802);
+        for (PositionsInfo pinfo : positionsInfoList.values()) {
             LOGGER.info(pinfo.getProcessId() + " process id" + pinfo.getxPos() + "x pos" + pinfo.getyPos() + "y pos");
         }
     }
