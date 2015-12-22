@@ -20,6 +20,7 @@ import com.wipro.ats.bdre.md.beans.DQSetupInfo;
 import com.wipro.ats.bdre.md.beans.table.Properties;
 import org.apache.log4j.Logger;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.AutowireCapableBeanFactory;
@@ -43,7 +44,7 @@ public class DataQualityDAOTest {
 
     @Autowired
     DataQualityDAO dataQualityDAO;
-
+    @Ignore
     @Test
     public void InsertUpdateTest() {
         DQSetupInfo dqSetupInfo = new DQSetupInfo();
