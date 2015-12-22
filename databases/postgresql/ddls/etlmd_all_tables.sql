@@ -409,7 +409,7 @@ CREATE TABLE lineage_query (
   query_type_id int NOT NULL references lineage_query_type(query_type_id) ON DELETE NO
 ACTION ON UPDATE NO ACTION,
   create_ts timestamp DEFAULT CURRENT_TIMESTAMP,
-  process_id int references process(process_id) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  process_id int ,
   instance_exec_id bigint DEFAULT NULL,
   PRIMARY KEY (query_id)
 
