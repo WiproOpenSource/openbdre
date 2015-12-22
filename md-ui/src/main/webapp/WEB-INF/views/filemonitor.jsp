@@ -1,4 +1,5 @@
-<%@ taglib prefix="security"
+
+                    <%@ taglib prefix="security"
        uri="http://www.springframework.org/security/tags" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1"
@@ -38,64 +39,50 @@
 
   <body ng-app="myApp" ng-controller="myCtrl">
 
-  <div class="container container-table">
-      <div class="row vertical-center-row">
-          <div class="text-center col-md-8 col-md-offset-2">
-<h2>File Monitor Process Creation </h2>
-  <form class="form-horizontal" role="form" id="propertiesFieldsForm">
+                        <div class="row">&nbsp;</div>
+                        <div class="row">
+                            <div class="col-md-3"> </div>
+                            <div class="col-md-6 ">
+                                <div class="panel panel-primary">
+                                    <div class="panel-heading">File Monitoring Creating Process</div>
+                                    <div class="panel-body">
+                                        <form role="form" id="propertiesFieldsForm">
+                                            <div class="form-group">
+                                                <label >File Monitoring Dir Name</label>
+                                                <input type="text" class="form-control" name="monitoredDirName" placeholder="File Monitoring Dir Name" value=<%=System.getProperty("user.home")%> required>
+                                            </div>
+                                            <div class="form-group">
+                                                <label >file Pattern</label>
+                                                <input type="text" class="form-control" name="filePattern" value="*" placeholder="File Pattern Monitored" required>
+                                            </div>
+                                            <div class="form-group">
+                                                <label >Delete Copied Source</label>
+                                                <select class="form-control" name="deleteCopiedSource">
+                                                    <option value="true">Source Dir Delete</option>
+                                                    <option value="false">Archive Dir Delete</option>
 
-                          <div class="form-group">
-                              <label class="control-label col-sm-4">Monitored Dir Name:</label>
-                              <div class="col-sm-8">
-                                  <input required type="text" class="form-control" name="monitoredDirName" placeholder="Enter the dir name to be monitored" value=<%=System.getProperty("user.home")%>>
-                              </div>
-                          </div>
-                          <div class="form-group">
-                              <label class="control-label col-sm-4">File Pattern:</label>
-                              <div class="col-sm-8">
-                                  <input required type="text" class="form-control" name="filePattern" placeholder="Enter the file pattern" value="*" >
-                              </div>
-                          </div>
-                          <div class="form-group">
-                              <label class="control-label col-sm-4" >Delete Copied Source:</label>
-                              <div class="col-sm-8">
-                                  <select class="form-control" id="sel1" name="deleteCopiedSource">
-                                  <option value="true">Source Delete </option>
-                                  <option value="false">Move to Archive Dir</option>
-                                  </select>
-                              </div>
-                          </div>
-                          <div class="form-group">
-                              <label class="control-label col-sm-4" >HDFS Upload Dir:</label>
-                              <div class="col-sm-8">
-                                  <input type="text" required class="form-control" name="hdfsUploadDir" placeholder="Enter hdfs upload directory" >
-                              </div>
-                          </div>
-                          <div class="form-group">
-                              <label class="control-label col-sm-4" >SleepTime:</label>
-                              <div class="col-sm-8">
-                                  <input type="number" required class="form-control" placeholder="in milliseconds" name="sleepTime" value="500">
-                              </div>
-                          </div>
+                                                </select>
+                                            </div>
 
+                                            <div class="form-group">
+                                                <label >HDFS Upload Dir Name</label>
+                                                <input type="text" class="form-control" name="hdfsUploadDir" placeholder="HDFS Upload Directory Name" required>
+                                            </div>
 
-
-                      <!-- /btn-group -->
-
-                        <div class="form-group">
-
-                                                      <div class="col-sm-2 col-sm-offset-4">
-
-                                <button type="submit" ng-click="createJob()" class="btn btn-default form-control">submit</button>
-                             </div>
-                             </div>
+                                            <div class="form-group">
+                                                <label>Sleep Time</label>
+                                                <input type="number" class="form-control" name="sleepTime" value="500" placeholder="time in milliseconds" required>
+                                            </div>
+                                            <button type="submit" class="btn btn-primary" ng-click="createJob()" >Submit</button>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-3"> </div>
 
 
 
-                  </form>
-            </div>
-                  </div>
-              </div>
+
 
 
 
