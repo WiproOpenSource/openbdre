@@ -313,7 +313,7 @@ public class HistoryDataImportDAO {
 
                 PropertiesId propertiesIdRawName = new PropertiesId();
                 propertiesIdRawName.setProcessId(childDataImportProcess.getProcessId());
-                propertiesIdRawName.setPropKey(rawNameValue.getId().getInterKey());
+                propertiesIdRawName.setPropKey("table");
                 Properties rawNameProperties = new Properties();
                 rawNameProperties.setId(propertiesIdRawName);
                 rawNameProperties.setConfigGroup("imp-common");
@@ -334,7 +334,7 @@ public class HistoryDataImportDAO {
 
                 PropertiesId propertiesIdImport = new PropertiesId();
                 propertiesIdImport.setProcessId(childDataImportProcess.getProcessId());
-                propertiesIdImport.setPropKey("'import'");
+                propertiesIdImport.setPropKey("import");
                 Properties importProperties = new Properties();
                 importProperties.setId(propertiesIdImport);
                 importProperties.setConfigGroup("imp-common");
@@ -345,7 +345,7 @@ public class HistoryDataImportDAO {
 
                 PropertiesId propertiesIdMappers = new PropertiesId();
                 propertiesIdMappers.setProcessId(childDataImportProcess.getProcessId());
-                propertiesIdMappers.setPropKey("''mappers''");
+                propertiesIdMappers.setPropKey("mappers");
                 Properties mapeersProperties = new Properties();
                 mapeersProperties.setId(propertiesIdMappers);
                 mapeersProperties.setConfigGroup("imp-common");
@@ -363,7 +363,7 @@ public class HistoryDataImportDAO {
 
                 PropertiesId propertiesIdColumnList = new PropertiesId();
                 propertiesIdColumnList.setProcessId(childDataImportProcess.getProcessId());
-                propertiesIdColumnList.setPropKey("columns'");
+                propertiesIdColumnList.setPropKey("columns");
                 Properties columnListProperties = new Properties();
                 columnListProperties.setId(propertiesIdColumnList);
                 columnListProperties.setConfigGroup("imp-common");
