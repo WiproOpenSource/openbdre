@@ -18,6 +18,7 @@ package com.wipro.ats.bdre.md.rest.ext;
 
 import com.wipro.ats.bdre.md.api.ArrangePositions;
 import com.wipro.ats.bdre.md.api.base.MetadataAPIBase;
+import com.wipro.ats.bdre.md.beans.PositionsInfo;
 import com.wipro.ats.bdre.md.rest.RestWrapper;
 import org.apache.log4j.Logger;
 import org.springframework.stereotype.Controller;
@@ -54,7 +55,7 @@ public class ArrangePositionsAPI extends MetadataAPIBase {
     ) {
 
         ArrangePositions arrangePositions = new ArrangePositions();
-        Map<String, ArrangePositions.PositionsInfo> positionsInfoList = arrangePositions.getListPositionInfo(processId);
+        Map<String, PositionsInfo> positionsInfoList = arrangePositions.getListPositionInfo(processId);
         LOGGER.info("Record with ID:" + processId + " arranged by User:" + principal.getName());
         RestWrapper restWrapper = new RestWrapper(positionsInfoList, RestWrapper.OK);
         return restWrapper;
