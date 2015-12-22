@@ -171,15 +171,17 @@ public class PropertiesAPI extends MetadataAPIBase {
             Process process = new Process();
             process.setProcessId(processId);
 
+            List<com.wipro.ats.bdre.md.dao.jpa.Properties> propertiesList1=propertiesDAO.getByProcessId(process);
+            Integer counter=propertiesList1.size();
             // List<Properties> propertiesList = s.selectList("call_procedures.ListPropertiesOfProcess", properties);
-            for (com.wipro.ats.bdre.md.dao.jpa.Properties properties : propertiesDAO.getByProcessId(process)) {
+            for (com.wipro.ats.bdre.md.dao.jpa.Properties properties : propertiesList1) {
                 com.wipro.ats.bdre.md.beans.table.Properties returnProperties = new com.wipro.ats.bdre.md.beans.table.Properties();
                 returnProperties.setProcessId(properties.getProcess().getProcessId());
                 returnProperties.setConfigGroup(properties.getConfigGroup());
                 returnProperties.setKey(properties.getId().getPropKey());
                 returnProperties.setValue(properties.getPropValue());
                 returnProperties.setDescription(properties.getDescription());
-                returnProperties.setCounter(propertiesDAO.getByProcessId(process).size());
+                returnProperties.setCounter(counter);
                 propertiesList.add(returnProperties);
             }
 
