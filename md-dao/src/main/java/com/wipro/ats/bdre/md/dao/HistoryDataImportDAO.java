@@ -239,7 +239,7 @@ public class HistoryDataImportDAO {
 
                 PropertiesId propertiesIdRawName = new PropertiesId();
                 propertiesIdRawName.setProcessId(childDataImportProcess.getProcessId());
-                propertiesIdRawName.setPropKey(rawNameValue.getId().getInterKey());
+                propertiesIdRawName.setPropKey("table");
                 Properties rawNameProperties = new Properties();
                 rawNameProperties.setId(propertiesIdRawName);
                 rawNameProperties.setConfigGroup("imp-common");
