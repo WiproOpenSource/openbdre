@@ -51,6 +51,7 @@
         <module>hive-plugin</module>
         <!--<module>im-crawler</module>-->
         <module>flume-hdfs-sink</module>
+        <module>spark-core</module>
     </modules>
 
 
@@ -445,7 +446,12 @@
                 <artifactId>ojdbc6</artifactId>
                 <version>${oracle.version}</version>
             </dependency>
-
+            <!-- spark-core -->
+            <dependency>
+                <groupId>org.apache.spark</groupId>
+                <artifactId>spark-core_2.10</artifactId>
+                <version>${spark.core.version}</version>
+            </dependency>
         </dependencies>
     </dependencyManagement>
     <!--<distributionManagement>-->
