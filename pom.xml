@@ -54,7 +54,17 @@
         <module>spark-core</module>
     </modules>
 
-
+    <dependencies>
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>log4j</groupId>
+            <artifactId>log4j</artifactId>
+        </dependency>
+    </dependencies>
     <build>
         <!-- To define the plugin version in your parent POM -->
         <pluginManagement>
