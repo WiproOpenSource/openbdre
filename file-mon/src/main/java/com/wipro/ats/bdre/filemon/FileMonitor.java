@@ -66,7 +66,17 @@ public class FileMonitor implements FileListener {
             LOGGER.debug("Matched File Pattern by " + fileName);
             //TODO: Uncomment it
 
+
+
+
+
+
+
+
+
             executeRegisterFiles(fc, subProcessId, new Integer(123461).toString(), dirPath + "/" + fileName);
+
+
         }
 
     }
