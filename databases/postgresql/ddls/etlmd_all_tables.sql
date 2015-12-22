@@ -498,3 +498,62 @@ ON UPDATE NO ACTION,
   PRIMARY KEY (deployment_id)
 
 );
+
+/* etlmd_crawler.sql */
+
+DROP TABLE IF EXISTS Docidsdb;
+
+CREATE TABLE Docidsdb (
+   docId bigserial NOT NULL ,
+   url varchar(3000),
+   PRIMARY KEY (docId)
+);
+
+DROP TABLE IF EXISTS Statisticsdb;
+
+CREATE TABLE Statisticsdb (
+   uniqid bigserial NOT NULL,
+   value int,
+   name varchar(255),
+   PRIMARY KEY (uniqid)
+);
+
+DROP TABLE IF EXISTS Pendingurlsdb;
+
+CREATE TABLE Pendingurlsdb (
+   uniqid bigserial NOT NULL,
+   pid int,
+   instanceExecid int,
+   url varchar(3000),
+   docid int NOT NULL,
+   parentDocid int NOT NULL,
+   parentUrl varchar(1000),
+   depth int NOT NULL,
+   domain varchar(255),
+   subDomain varchar(255),
+   path varchar(1000),
+   anchor varchar(255),
+   priority int NOT NULL,
+   tag varchar(255),
+   PRIMARY KEY (uniqid)
+);
+
+DROP TABLE IF EXISTS Weburlsdb;
+
+CREATE TABLE Weburlsdb (
+   uniqid bigserial NOT NULL,
+   pid int,
+   instanceExecid int,
+   url varchar(3000),
+   docid int NOT NULL,
+   parentDocid int NOT NULL,
+   parentUrl varchar(1000),
+   depth int NOT NULL,
+   domain varchar(255),
+   subDomain varchar(255),
+   path varchar(1000),
+   anchor varchar(255),
+   priority int NOT NULL,
+   tag varchar(255),
+   PRIMARY KEY (uniqid)
+);

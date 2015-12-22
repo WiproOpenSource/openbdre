@@ -47,16 +47,14 @@ public class DQDriver extends Configured implements Tool {
 
     public int run(String[] arg) throws Exception {
         String processId = arg[0];
-        String env = arg[1];
-        String sPath = arg[2];
-        String destDir = arg[3];
+        String sPath = arg[1];
+        String destDir = arg[2];
 
         Properties props = new GetProperties().getProperties(processId, "dq");
         LOGGER.debug("props=" + props);
         Configuration conf = getConf();
 
         conf.set("dq.process.id", processId);
-        conf.set("dq.env.id", env);
         Job job = Job.getInstance(conf);
         job.setJobName("Data Quality " + processId);
         job.setJarByClass(DQDriver.class);

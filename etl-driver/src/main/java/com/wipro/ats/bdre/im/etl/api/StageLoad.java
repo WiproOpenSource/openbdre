@@ -38,11 +38,10 @@ public class StageLoad extends ETLBase {
 
         CommandLine commandLine = getCommandLine(params, PARAMS_STRUCTURE);
         String processId = commandLine.getOptionValue("process-id");
-        String env = commandLine.getOptionValue("environment-id");
         String instanceExecId = commandLine.getOptionValue("instance-exec-id");
         String minId = commandLine.getOptionValue("minId");
         String maxId = commandLine.getOptionValue("maxId");
-        init(processId, env);
+        init(processId);
 
         //Getting Stage view information
         String stageViewName = getRawView().getTableName();
@@ -53,7 +52,7 @@ public class StageLoad extends ETLBase {
         String baseDbName = getBaseTable().getDbName();
         String baseTableDdl = getBaseTable().getDdl();
 
-        processStageLoad(stageViewDbName, stageViewName, baseDbName, baseTableName, baseTableDdl, instanceExecId, minId, maxId, env);
+        processStageLoad(stageViewDbName, stageViewName, baseDbName, baseTableName, baseTableDdl, instanceExecId, minId, maxId);
     }
 
     //Read the partition keys from hive table
@@ -61,7 +60,7 @@ public class StageLoad extends ETLBase {
     //output - partition column names as comma seperated;
 
 
-    private void processStageLoad(String stageDbName, String viewName, String baseDbName, String baseTableName, String baseTableDdl, String instanceExecId, String minBatchId, String maxBatchId, String env) {
+    private void processStageLoad(String stageDbName, String viewName, String baseDbName, String baseTableName, String baseTableDdl, String instanceExecId, String minBatchId, String maxBatchId) {
         try {
 
             Connection rawCon = getHiveJDBCConnection(stageDbName);

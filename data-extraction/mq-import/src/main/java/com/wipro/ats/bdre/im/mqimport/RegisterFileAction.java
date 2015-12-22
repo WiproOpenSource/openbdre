@@ -39,14 +39,14 @@ public class RegisterFileAction implements RotationAction  {
         String path=filePath.getName();
         String fileHash=fileSystem.getFileChecksum(filePath).toString();
         LOG.debug("the path of current file is " + path);
-        String folderPath= IMConfig.getProperty("mq-import.target-directory", MQTopology.environment);
+        String folderPath= IMConfig.getProperty("mq-import.target-directory");
         String fPath;
         if(folderPath.charAt(folderPath.length()-1)=='/')
             fPath=folderPath;
         else
             fPath=folderPath+"/";
-        String fSUnits= IMConfig.getProperty("mq-import.file-size-units", MQTopology.environment);
-        String fileSize= IMConfig.getProperty("mq-import.rotation-file-size", MQTopology.environment);
+        String fSUnits= IMConfig.getProperty("mq-import.file-size-units");
+        String fileSize= IMConfig.getProperty("mq-import.rotation-file-size");
         if(fSUnits.toUpperCase().equals("KB")) {
             fileSize=(Long.parseLong(fileSize)*1024)+""; }
         else if (fSUnits.toUpperCase().equals("MB")) {

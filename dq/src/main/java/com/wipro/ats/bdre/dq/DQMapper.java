@@ -61,7 +61,7 @@ public class DQMapper extends Mapper<LongWritable, Text, Text, Text> {
     private KnowledgeBase buildKnowledgeBase() {
         KnowledgeBuilder kbuilder = KnowledgeBuilderFactory.newKnowledgeBuilder();
         UrlResource urlResource = new UrlResource(
-                IMConfig.getProperty("dq.drools-url-prefix", null) +
+                IMConfig.getProperty("dq.drools-url-prefix") +
                         props.getProperty("rules.package") + "/binary");
         LOGGER.info("urlResource=" + urlResource);
         urlResource.setBasicAuthentication("enabled");

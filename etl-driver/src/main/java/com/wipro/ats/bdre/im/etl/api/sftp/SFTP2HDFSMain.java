@@ -40,10 +40,9 @@ public class SFTP2HDFSMain extends BaseStructure {
         String pid = commandLine.getOptionValue("process-id");
         String subPid = commandLine.getOptionValue("sub-process-id");
         String hdfsServerId = commandLine.getOptionValue("hdfs-server-id");
-        String env = commandLine.getOptionValue("env");
 
 
-        String destPrefix = IMConfig.getProperty("etl.hdfs-raw-directory", env);
+        String destPrefix = IMConfig.getProperty("etl.hdfs-raw-directory");
 
         InitJob initJob = new InitJob();
         String[] initJobParam = {"--max-batch", MAX_NUM_BATCH + "", "--process-id", pid};

@@ -31,19 +31,18 @@ public class RawLoad extends ETLBase {
 
         CommandLine commandLine = getCommandLine(params, PARAMS_STRUCTURE);
         String processId = commandLine.getOptionValue("process-id");
-        String env = commandLine.getOptionValue("environment-id");
         String listOfFiles = commandLine.getOptionValue("list-of-files");
-        init(processId, env);
+        init(processId);
         //Getting raw table information
         String rawTableName = getRawTable().getTableName();
         String rawDbName = getRawTable().getDbName();
         String rawTableDdl = getRawTable().getDdl();
         //Now load file to table
-        loadRawLoadTable(rawDbName, rawTableName, rawTableDdl, listOfFiles, env);
+        loadRawLoadTable(rawDbName, rawTableName, rawTableDdl, listOfFiles);
 
     }
 
-    private void loadRawLoadTable(String dbName, String tableName, String ddl, String listOfFiles, String env) {
+    private void loadRawLoadTable(String dbName, String tableName, String ddl, String listOfFiles) {
         try {
             LOGGER.debug("Reading Hive Connection details from Properties File");
             String[] files = listOfFiles.split(IMConstant.FILE_ROW_SEPERATOR);

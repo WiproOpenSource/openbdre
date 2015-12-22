@@ -35,13 +35,11 @@ public abstract class ETLBase extends BaseStructure{
     private GetHiveTablesInfo baseTable;
     private GetHiveTablesInfo rawView;
     private String processId;
-    private String env;
 
-    protected void init(String processId,String env){
-        this.env=env;
-        loadHiveTableInfo(processId, env);
+    protected void init(String processId){
+        loadHiveTableInfo(processId);
     }
-    private void loadHiveTableInfo(String processId,String env){
+    private void loadHiveTableInfo(String processId){
         String[] hiveTableParams = {"-p", processId};
         GetHiveTables getHiveTables = new GetHiveTables();
         List<GetHiveTablesInfo> hiveTablesInfos = getHiveTables.execute(hiveTableParams);
@@ -53,7 +51,7 @@ public abstract class ETLBase extends BaseStructure{
     protected Connection getHiveJDBCConnection(String dbName){
         try {
             Class.forName(IMConstant.HIVE_DRIVER_NAME);
-            String hiveConnection = IMConfig.getProperty("etl.hive-connection", this.env);
+            String hiveConnection = IMConfig.getProperty("etl.hive-connection");
             Connection con = DriverManager.getConnection(hiveConnection + dbName, "", "");
 /*            con.createStatement().execute("set hive.exec.dynamic.partition.mode=nonstrict");
             con.createStatement().execute("set hive.exec.dynamic.partition=true");
@@ -74,7 +72,7 @@ public abstract class ETLBase extends BaseStructure{
         if(hclient ==null) {
             try {
                 HiveConf hiveConf = new HiveConf();
-                hiveConf.set("hive.metastore.uris", IMConfig.getProperty("etl.hive-metastore-uris", env));
+                hiveConf.set("hive.metastore.uris", IMConfig.getProperty("etl.hive-metastore-uris"));
                 hiveConf.set("hive.exec.dynamic.partition.mode", "nonstrict");
                 hiveConf.set("hive.exec.dynamic.partition", "true");
                 hiveConf.set("hive.exec.max.dynamic.partitions.pernode", "1000");

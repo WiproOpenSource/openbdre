@@ -28,10 +28,10 @@ DROP TABLE bus_domain;
 DROP TABLE process_type;
 DROP TABLE workflow_type;
 DROP TABLE intermediate;
-DROP TABLE DocIDsDB;
-DROP TABLE StatisticsDB;
-DROP TABLE PendingURLsDB;
-DROP TABLE WebURLsDB;
+DROP TABLE Docidsdb;
+DROP TABLE Statisticsdb;
+DROP TABLE Pendingurlsdb;
+DROP TABLE Weburlsdb;
 
 DROP SEQUENCE archive_consump_queue_seq;
 DROP SEQUENCE batch_consump_queue_seq;
@@ -47,10 +47,10 @@ DROP SEQUENCE process_seq;
 DROP SEQUENCE process_template_seq;
 DROP SEQUENCE servers_seq;
 DROP SEQUENCE user_roles_seq;
-DROP SEQUENCE DocIDsDB_seq;
-DROP SEQUENCE StatisticsDB_seq;
-DROP SEQUENCE PendingURLsDB_seq;
-DROP SEQUENCE WebURLsDB_seq;
+DROP SEQUENCE Docidsdb_seq;
+DROP SEQUENCE Statisticsdb_seq;
+DROP SEQUENCE Pendingurlsdb_seq;
+DROP SEQUENCE Weburlsdb_seq;
 
 
 DROP TRIGGER process_type_check_insert;

@@ -61,13 +61,10 @@ public class MQTopology extends MetadataAPIBase{
         sPId=subProcessId;
         String batchMarking = commandLine.getOptionValue("batch-marking");
         LOGGER.debug("batch marking is " + batchMarking);
-        String env = commandLine.getOptionValue("environment-id");
-        LOGGER.debug("environment-id is " + env);
-        environment=env;
 
-        String folderPath=IMConfig.getProperty("mq-import.target-directory",env);
-        String fileSizeUnits=IMConfig.getProperty("mq-import.file-size-units", env);
-        String fSize=IMConfig.getProperty("mq-import.rotation-file-size",env);
+        String folderPath=IMConfig.getProperty("mq-import.target-directory");
+        String fileSizeUnits=IMConfig.getProperty("mq-import.file-size-units");
+        String fSize=IMConfig.getProperty("mq-import.rotation-file-size");
         LOGGER.debug(folderPath+" =folderPath");
         LOGGER.debug(fileSizeUnits+" =fileSizeUnits");
         LOGGER.debug(fSize+" =fSize");
@@ -100,7 +97,7 @@ public class MQTopology extends MetadataAPIBase{
         FileNameFormat fileNameFormat = new DefaultFileNameFormat().withPath(folderPath);
         // Instantiate the HdfsBolt
         HdfsBolt bolt = new HdfsBolt()
-                .withFsUrl(IMConfig.getProperty("common.default-fs-name",env))
+                .withFsUrl(IMConfig.getProperty("common.default-fs-name"))
                 .withFileNameFormat(fileNameFormat)
                 .withRecordFormat(format)
                 .withRotationPolicy(rotationPolicy)

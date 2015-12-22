@@ -22,16 +22,15 @@ import java.util.List;
 public class FileMonRunnable implements Runnable {
     private static final Logger LOGGER = Logger.getLogger(FileMonRunnable.class);
     public static int runnableCount = 0;
-    private String env;
 
     @Override
     public void run() {
         try {
             FileSystemManager fsManager = VFS.getManager();
             //Reading directory paths and adding to the DefaultFileMonitor
-            List<String> dirPaths = IMConfig.getPropertyList("file-mon.dirs", env);
+            List<String> dirPaths = IMConfig.getPropertyList("file-mon.dirs");
 
-            DefaultFileMonitor fm = new DefaultFileMonitor(FileMonitor.getInstance(env));
+            DefaultFileMonitor fm = new DefaultFileMonitor(FileMonitor.getInstance());
             FileObject listendir = null;
             for (String dir : dirPaths) {
                 LOGGER.debug("Monitoring directories "+dir);
@@ -46,11 +45,5 @@ public class FileMonRunnable implements Runnable {
         }
     }
 
-    public String getEnv() {
-        return env;
-    }
 
-    public void setEnv(String env) {
-        this.env = env;
-    }
 }

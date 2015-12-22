@@ -29,9 +29,8 @@ public class CreateRawBaseTables extends ETLBase {
 
         CommandLine commandLine = getCommandLine(params, PARAMS_STRUCTURE);
         String processId = commandLine.getOptionValue("process-id");
-        String env = commandLine.getOptionValue("environment-id");
 
-        init(processId, env);
+        init(processId);
         //Getting stage table information
         String rawTableName = getRawTable().getTableName();
         String rawDbName = getRawTable().getDbName();
@@ -45,12 +44,12 @@ public class CreateRawBaseTables extends ETLBase {
         String baseTableDbName = getBaseTable().getDbName();
         String baseTableDdl = getBaseTable().getDdl();
         //Now create the tables/view if not exists.
-        checkAndCreateRawTable(rawDbName, rawTableName, rawTableDdl, env);
-        checkAndCreateRawView(rawViewDbName, rawViewName, rawViewDdl, env);
-        checkAndCreateBaseTable(baseTableDbName, baseTableName, baseTableDdl, env);
+        checkAndCreateRawTable(rawDbName, rawTableName, rawTableDdl);
+        checkAndCreateRawView(rawViewDbName, rawViewName, rawViewDdl);
+        checkAndCreateBaseTable(baseTableDbName, baseTableName, baseTableDdl);
     }
 
-    private void checkAndCreateRawTable(String dbName, String tableName, String ddl, String env) {
+    private void checkAndCreateRawTable(String dbName, String tableName, String ddl) {
         try {
             LOGGER.debug("Reading Hive Connection details from Properties File");
             Connection con = getHiveJDBCConnection(dbName);
@@ -73,7 +72,7 @@ public class CreateRawBaseTables extends ETLBase {
 
     }
 
-    private void checkAndCreateRawView(String dbName, String stageViewName, String ddl, String env) {
+    private void checkAndCreateRawView(String dbName, String stageViewName, String ddl) {
         try {
 
             Connection con = getHiveJDBCConnection(dbName);
@@ -91,7 +90,7 @@ public class CreateRawBaseTables extends ETLBase {
         }
     }
 
-    private void checkAndCreateBaseTable(String dbName, String baseTable, String ddl, String env) {
+    private void checkAndCreateBaseTable(String dbName, String baseTable, String ddl) {
         try {
 
             Connection con = getHiveJDBCConnection(dbName);

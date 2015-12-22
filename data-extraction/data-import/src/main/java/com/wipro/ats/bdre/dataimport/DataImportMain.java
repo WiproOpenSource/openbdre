@@ -44,7 +44,6 @@ public class DataImportMain extends BaseStructure {
         try {
 
             CommandLine commandLine = getCommandLine(params, PARAMS_STRUCTURE);
-            String env = commandLine.getOptionValue("environment-id");
             String processId = commandLine.getOptionValue("process-id");
             String configGroup = commandLine.getOptionValue("config-group");
             String batchId = commandLine.getOptionValue("batch-id");
@@ -63,7 +62,7 @@ public class DataImportMain extends BaseStructure {
                 columns=columnList.split(",");
             }
 
-            String[] param = {processId, batchId,instanceExecId,env};
+            String[] param = {processId, batchId,instanceExecId};
             int result = 0;
             result = ToolRunner.run(new Configuration(), new HDFSImport(commonProperties, columns), param);
 

@@ -41,7 +41,6 @@ public class HDFSImport extends Configured implements Tool {
     private String processId;
     private String batchId;
     private String instanceExecId;
-    private String env;
     private int size = 0;
     private String[] cols;
     private String tableName;
@@ -66,7 +65,6 @@ public class HDFSImport extends Configured implements Tool {
         processId = param[0];
         batchId = param[1];
         instanceExecId = param[2];
-        env = param[3];
 
         Configuration conf = getConf();
 
@@ -85,9 +83,9 @@ public class HDFSImport extends Configured implements Tool {
             options.setDriverClassName(driver);
 
             //reading properties from IMConfig file
-            String targetDir = IMConfig.getProperty("data-import.target-dir", env);
-            String jarOutputDir = IMConfig.getProperty("data-import.jar-output-dir", env) + "/" + processId + "/" + batchId;
-            String hadoopHome = IMConfig.getProperty("data-import.hadoop-home", env);
+            String targetDir = IMConfig.getProperty("data-import.target-dir");
+            String jarOutputDir = IMConfig.getProperty("data-import.jar-output-dir") + "/" + processId + "/" + batchId;
+            String hadoopHome = IMConfig.getProperty("data-import.hadoop-home");
 
             //setting the parameters of sqoopOption
             options.setHadoopHome(hadoopHome);

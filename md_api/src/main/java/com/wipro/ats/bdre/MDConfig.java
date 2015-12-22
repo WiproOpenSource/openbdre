@@ -134,7 +134,7 @@ public class MDConfig {
 //
 //    }
 //If the val is comma seperated the function will return it as a List<String>
-    public static List<String> getPropertyList(String key, String env) {
+    public static List<String> getPropertyList(String key) {
 
         LOGGER.debug("fetching for: " + key);
         GetGeneralConfig getGeneralConfig = new GetGeneralConfig();
