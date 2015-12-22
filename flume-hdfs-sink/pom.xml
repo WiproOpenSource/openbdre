@@ -37,7 +37,7 @@ limitations under the License.
     <!-- saving files to RDBMS-->
     <dependency>
       <groupId>com.wipro.ats.bdre</groupId>
-      <artifactId>mq-import</artifactId>
+      <artifactId>md_api</artifactId>
       <version>1.1-SNAPSHOT</version>
     </dependency>
 
