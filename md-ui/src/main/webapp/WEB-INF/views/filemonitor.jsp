@@ -66,14 +66,14 @@
 
                                             <div class="form-group">
                                                 <label >HDFS Upload Dir Name</label>
-                                                <input type="text" class="form-control" name="hdfsUploadDir" placeholder="HDFS Upload Directory Name" required>
+                                                <input type="text" class="form-control" name="hdfsUploadDir" id="hdfsUploadDir" placeholder="HDFS Upload Directory Name" required>
                                             </div>
 
                                             <div class="form-group">
                                                 <label>Sleep Time</label>
                                                 <input type="number" class="form-control" name="sleepTime" value="500" placeholder="time in milliseconds" required>
                                             </div>
-                                            <button type="submit" class="btn btn-primary" ng-click="createJob()" >Submit</button>
+                                            <input type="submit" id="createJobButton" class="btn btn-primary" ng-click="createJob()"/>
                                         </form>
 
                                     </div>
@@ -84,6 +84,7 @@
                     <div class="row">
                         <div class="col-md-3"> </div>
                         <div class="col-md-6 ">
+                            <span><div class="panel panel-success" name="successHeader" id="successHeader" style="visibility:hidden">Job Created Successfully</div> </span>
                             <div id="Process"></div>
                         </div>
                     </div>
@@ -92,9 +93,9 @@
                         var app = angular.module('myApp', []);
                         app.controller('myCtrl', function($scope) {
 
-                            $scope.createJob =function (){
+                                $scope.createJob =function (){
 
-                            $.ajax({
+                                $.ajax({
 
                                                         type: "POST",
                                                         url: "/mdrest/filemonitor",
@@ -111,6 +112,7 @@
                                                                     buttons: {
                                                                         "Ok": function() {
                                                                         $("#divEncloseHeading").hide();
+                                                                        $("#successHeader").show();
                                                                          createJobResult = data;
                                                                          displayProcess(createJobResult);
                                                                          $(this).dialog("close");
