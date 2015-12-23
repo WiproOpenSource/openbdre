@@ -146,7 +146,7 @@ public class RActionNode extends GenericActionNode {
         if (rScript.size() > 1) {
             throw new RuntimeException("Can Handle only 1 input file in R action, process type=" + processInfo.getProcessTypeId());
         } else if (rScript.size() == 0) {
-            addRScript.append("            <argument>" + getId() + ".R</argument>\n");
+            addRScript.append("            <argument>r/" + getId() + ".R</argument>\n");
         } else {
             while (e.hasMoreElements()) {
                 String key = (String) e.nextElement();

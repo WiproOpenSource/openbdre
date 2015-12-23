@@ -912,11 +912,11 @@ insert into general_config values('5','credential','Credential Configuration','C
 
 -- Hive Action
 insert into general_config values('9','param','Parameters','Additional parameters',true,'TRUE','text',true);
-insert into general_config values('9','query','Query file location','Query file location',true,'TRUE','file',true);
+insert into general_config values('9','query','Query file location','Query file location',true,'TRUE','hql',true);
 
 -- Pig Action
 insert into general_config values('10','param','Parameters','Additional parameters',true,'TRUE','text',true);
-insert into general_config values('10','script','Script location','Script location',true,'TRUE','file',true);
+insert into general_config values('10','script','Script location','Script location',true,'TRUE','pig',true);
 
 -- Map Reduce
 insert into general_config values('11','param','Parameters','Additional parameters',true,'TRUE','text',true);
@@ -958,7 +958,7 @@ insert into general_config values('21','mqimport','MQ Import Configuration','Mes
 
 -- Shell Action
 insert into general_config values('22','param','Parameters','Additional parameters',true,'TRUE','text',true);
-insert into general_config values('22','script','Script location','',true,'TRUE','file',true);
+insert into general_config values('22','script','Script location','',true,'TRUE','shell',true);
 
 -- Flume Action
 insert into general_config values('23','flume','Flume Configuration','Flume',true,'TRUE','text',true);
