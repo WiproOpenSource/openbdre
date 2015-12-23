@@ -13,6 +13,8 @@ import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+import java.io.File;
+
 /**
  * Created by MO335755 on 12/23/2015.
  */
@@ -43,6 +45,11 @@ public class FileCopyToHDFS {
             FileSystem fs = FileSystem.get(config);
             fs.copyFromLocalFile(false, true, new Path(fileCopying.getSrcLocation()),
                     new Path(fileCopying.getDstLocation()));
+            if(FileMonRunnableMain.isDeleteCopiedSrc()){
+                // move to given archive directory
+            }else{
+                new File(fileCopying.getSrcLocation()).delete();
+            }
             // calling register file
             executeRegisterFiles(fileCopying.getFileContent(), fileCopying.getSubProcessId(), fileCopying.getServerId(), fileCopying.getDstLocation() + "/" + key);
         }catch(IOException ioex){
