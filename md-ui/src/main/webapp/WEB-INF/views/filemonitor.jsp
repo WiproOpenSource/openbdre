@@ -42,7 +42,7 @@
                         <div class="row">&nbsp;</div>
                         <div class="row">
                             <div class="col-md-3"> </div>
-                            <div class="col-md-6 ">
+                            <div class="col-md-6" id="divEncloseHeading">
                                 <div class="panel panel-primary">
                                     <div class="panel-heading">File Monitoring Creating Process</div>
                                     <div class="panel-body">
@@ -75,17 +75,18 @@
                                             </div>
                                             <button type="submit" class="btn btn-primary" ng-click="createJob()" >Submit</button>
                                         </form>
+
                                     </div>
                                 </div>
                             </div>
                             <div class="col-md-3"> </div>
-
-
-
-
-
-
-
+                <div class="row">&nbsp;</div>
+                    <div class="row">
+                        <div class="col-md-3"> </div>
+                        <div class="col-md-6 ">
+                            <div id="Process"></div>
+                        </div>
+                    </div>
                <script>
                         var createJobResult;
                         var app = angular.module('myApp', []);
@@ -109,13 +110,14 @@
                                                                     modal: true,
                                                                     buttons: {
                                                                         "Ok": function() {
-                                                                            $(this).dialog("close");
+                                                                        $("#divEncloseHeading").hide();
+                                                                         createJobResult = data;
+                                                                         displayProcess(createJobResult);
+                                                                         $(this).dialog("close");
                                                                         }
                                                                     }
                                                                 }).text("Jobs successfully created.");
-                                                                createJobResult = data;
-                                                                displayProcess(createJobResult);
-                                                                $('#createProcess').hide();
+
                                                             }
                                                             else{
                                                             console.log("data not passed successfully");
@@ -144,7 +146,7 @@
                    <script>
                    function displayProcess(records) {
                        $('#Process').jtable({
-                           title: 'Data Ingestion Processes',
+                           title: 'File Monitor Processes',
                            paging: false,
                            sorting: false,
                            create: false,
@@ -357,5 +359,6 @@
                            </script>
 
 
-
+<div id="div-dialog-warning"/>
   </body>
+  </html>
