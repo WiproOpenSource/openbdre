@@ -20,7 +20,6 @@ package com.wipro.ats.bdre.md.setup;
 import com.wipro.ats.bdre.md.setup.beans.*;
 import com.wipro.ats.bdre.md.setup.beans.Process;
 import org.apache.log4j.Logger;
-import org.hibernate.CacheMode;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
