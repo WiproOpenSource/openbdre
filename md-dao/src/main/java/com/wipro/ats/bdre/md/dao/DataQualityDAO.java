@@ -187,10 +187,8 @@ public class DataQualityDAO {
             parentProcessStep.setProcessId(parentProcessId);
 
             jpaProcessStep.setProcess(parentProcessStep);
-            if (dqSetupInfo.getDeleteFlag() == null)
-                jpaProcessStep.setDeleteFlag(false);
-            else
-                jpaProcessStep.setDeleteFlag(dqSetupInfo.getDeleteFlag());
+            jpaProcessStep.setDeleteFlag(false);
+
             if (dqSetupInfo.getCanRecover() == null)
                 jpaProcessStep.setCanRecover(true);
             else
