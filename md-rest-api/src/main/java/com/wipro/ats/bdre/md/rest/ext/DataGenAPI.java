@@ -180,6 +180,7 @@ public class DataGenAPI extends MetadataAPIBase {
         } else {
             insertDaoProcess.setNextProcessId("0");
         }
+        insertDaoProcess.setDeleteFlag(false);
         insertDaoProcess.setDescription(desc);
         insertDaoProcess.setProcessName(name);
         insertDaoProcess.setCanRecover(true);

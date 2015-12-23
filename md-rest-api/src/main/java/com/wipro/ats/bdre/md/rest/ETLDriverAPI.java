@@ -133,6 +133,7 @@ public class ETLDriverAPI extends MetadataAPIBase {
 
         RestWrapper restWrapper = null;
         try {
+            Integer counter=etlDriverDAO.totalRecordCount().intValue();
             List<EtlDriver> jpaETLDriverList = etlDriverDAO.list(startPage, pageSize);
             List<ETLDriver> eTLDrivers = new ArrayList<ETLDriver>();
             for (EtlDriver jpaETLDriver : jpaETLDriverList) {
@@ -151,7 +152,7 @@ public class ETLDriverAPI extends MetadataAPIBase {
                 } else {
                     eTLDriver.setDropRaw(0);
                 }
-                eTLDriver.setCounter(etlDriverDAO.totalRecordCount().intValue());
+                eTLDriver.setCounter(counter);
                 eTLDrivers.add(eTLDriver);
             }
             // List<ETLDriver> eTLDrivers = s.selectList("call_procedures.GetETLDrivers", eTLDriver);
