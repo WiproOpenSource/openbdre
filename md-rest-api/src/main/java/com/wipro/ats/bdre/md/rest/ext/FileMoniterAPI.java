@@ -73,9 +73,9 @@ public class FileMoniterAPI {
         com.wipro.ats.bdre.md.beans.table.Process parentProcess = new com.wipro.ats.bdre.md.beans.table.Process();
         com.wipro.ats.bdre.md.beans.table.Process childProcess = new Process();
         //making process
-        parentProcess = insertProcess(2, null, "FIlemon", "File Monitoring", 2, principal);
-        childProcess = insertProcess(11, parentProcess.getProcessId(), "child of " + "FIlemon", "child of " + "File Monitoring", 0, principal);
-        parentProcess = updateProcess(parentProcess);
+        parentProcess = insertProcess(26, null, "FIlemon", "File Monitoring", 2, principal);
+        childProcess = insertProcess(27, parentProcess.getProcessId(), "child of " + "FIlemon", "child of " + "File Monitoring", 0, principal);
+
         //inserting in properties table
         insertProperties(childProcess.getProcessId(), "fileMon", "deleteCopiedSrc", fileMonitorInfo.getDeleteCopiedSource(), "Delete copied source");
         insertProperties(childProcess.getProcessId(), "fileMon", "filePattern", fileMonitorInfo.getFilePattern(), "pattern of file");
@@ -132,7 +132,7 @@ public class FileMoniterAPI {
             com.wipro.ats.bdre.md.dao.jpa.Process parentProcess = new com.wipro.ats.bdre.md.dao.jpa.Process();
             parentProcess.setProcessId(ppId);
             insertDaoProcess.setProcess(parentProcess);
-            insertDaoProcess.setNextProcessId(ppId.toString());
+            insertDaoProcess.setNextProcessId("0");
         } else {
             insertDaoProcess.setNextProcessId("0");
         }
@@ -154,61 +154,6 @@ public class FileMoniterAPI {
         }
         return process;
     }
-
-
-
-    private Process updateProcess(Process process) {
-        Integer npid = process.getProcessId() + 1;
-        process.setNextProcessIds(npid.toString());
-        try {
-            com.wipro.ats.bdre.md.dao.jpa.Process updateDaoProcess = new com.wipro.ats.bdre.md.dao.jpa.Process();
-            updateDaoProcess.setProcessId(process.getProcessId());
-            com.wipro.ats.bdre.md.dao.jpa.ProcessType daoProcessType = new com.wipro.ats.bdre.md.dao.jpa.ProcessType();
-            daoProcessType.setProcessTypeId(process.getProcessTypeId());
-            updateDaoProcess.setProcessType(daoProcessType);
-            if (process.getWorkflowId() != null) {
-                com.wipro.ats.bdre.md.dao.jpa.WorkflowType daoWorkflowType = new com.wipro.ats.bdre.md.dao.jpa.WorkflowType();
-                daoWorkflowType.setWorkflowId(process.getWorkflowId());
-                updateDaoProcess.setWorkflowType(daoWorkflowType);
-            }
-            com.wipro.ats.bdre.md.dao.jpa.BusDomain daoBusDomain = new com.wipro.ats.bdre.md.dao.jpa.BusDomain();
-            daoBusDomain.setBusDomainId(process.getBusDomainId());
-            updateDaoProcess.setBusDomain(daoBusDomain);
-            if (process.getProcessTemplateId() != null) {
-                com.wipro.ats.bdre.md.dao.jpa.ProcessTemplate daoProcessTemplate = new com.wipro.ats.bdre.md.dao.jpa.ProcessTemplate();
-                daoProcessTemplate.setProcessTemplateId(process.getProcessTemplateId());
-                updateDaoProcess.setProcessTemplate(daoProcessTemplate);
-            }
-            if (process.getParentProcessId() != null) {
-                com.wipro.ats.bdre.md.dao.jpa.Process parentProcess = new com.wipro.ats.bdre.md.dao.jpa.Process();
-                parentProcess.setProcessId(process.getParentProcessId());
-                updateDaoProcess.setProcess(parentProcess);
-            }
-            updateDaoProcess.setDescription(process.getDescription());
-            updateDaoProcess.setAddTs(DateConverter.stringToDate(process.getTableAddTS()));
-            updateDaoProcess.setProcessName(process.getProcessName());
-            updateDaoProcess.setCanRecover(process.getCanRecover());
-            updateDaoProcess.setEnqueuingProcessId(process.getEnqProcessId());
-            if (process.getBatchPattern() != null) {
-                updateDaoProcess.setBatchCutPattern(process.getBatchPattern());
-            }
-            updateDaoProcess.setNextProcessId(process.getNextProcessIds());
-            if (process.getDeleteFlag() != null) {
-                updateDaoProcess.setDeleteFlag(process.getDeleteFlag());
-            }
-            updateDaoProcess.setEditTs(DateConverter.stringToDate(process.getTableEditTS()));
-//            Process processes = s.selectOne("call_procedures.UpdateProcess", process);
-            updateDaoProcess = processDAO.update(updateDaoProcess);
-            process.setTableAddTS(DateConverter.dateToString(updateDaoProcess.getAddTs()));
-            process.setTableEditTS(DateConverter.dateToString(updateDaoProcess.getEditTs()));
-
-//        process = s.selectOne("call_procedures.UpdateProcess", process);
-        } catch (Exception e) {
-            LOGGER.debug("Error Occurred");
-        }
-        return process;
-    }
-
 
     private void insertProperties(Integer pid, String configGrp, String key, String value, String desc) {
 
