@@ -32,9 +32,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 /**
  * Created by KA294215 on 28-10-2015.
@@ -62,7 +60,7 @@ public class JobDAO {
             Criteria maxBatchNullCheckCriteria = session.createCriteria(Process.class);
             Process parentProcess = new Process();
             parentProcess.setProcessId(processId);
-            maxBatchNullCheckCriteria.add(Restrictions.eq("process", parentProcess)).add(Restrictions.eq("enqueuingProcessId", 0)).add(Restrictions.eq("deleteFlag", false));
+            maxBatchNullCheckCriteria.add(Restrictions.eq("process", parentProcess)).add(Restrictions.ne("enqueuingProcessId", 0)).add(Restrictions.eq("deleteFlag", false));
             Integer countOfProcWithBCP = maxBatchNullCheckCriteria.list().size();
             maxBatchNullCheckCriteria.add(Restrictions.isNotNull("batchCutPattern"));
             Integer countOfProcWithOutBCP = maxBatchNullCheckCriteria.list().size();
@@ -186,17 +184,21 @@ public class JobDAO {
                 }
             }
 
-            Integer bcqEntries = 0;
-            Integer processEntries = 0;
-            for (Object batchCheckObjectBCQ : maxBatchNullCheckCriteria.list()) {
-                Process batchCheckProcess = (Process) batchCheckObjectBCQ;
-                Criteria bcqEntriesCriteria = session.createCriteria(BatchConsumpQueue.class).add(Restrictions.eq("processId", batchCheckProcess.getProcessId()));
-                if (bcqEntriesCriteria.list().size() > 0) {
-                    processEntries++;
-                }
-
+            int bcqEntries = 0;
+            int processEntries = 0;
+            Criteria bcqCriteria= session.createCriteria(BatchConsumpQueue.class).add(Restrictions.in("process", listOfSubProcesses));
+            LOGGER.debug("bcqcriteria size= "+bcqCriteria.list().size());
+            Criteria processCriteria = session.createCriteria(Process.class).add(Restrictions.eq("process", parentProcess)).add(Restrictions.ne("enqueuingProcessId", 0)).add(Restrictions.eq("deleteFlag", false)).add(Restrictions.isNull("batchCutPattern"));
+            processEntries=processCriteria.list().size();
+            Set uniqueBatchEntries = new HashSet();
+            for (Object batchCheckObjectBCQ : bcqCriteria.list()) {
+                BatchConsumpQueue bcq = (BatchConsumpQueue) batchCheckObjectBCQ;
+                uniqueBatchEntries.add(bcq.getProcess().getProcessId());
             }
-            if (processEntries < maxBatchNullCheckCriteria.list().size()) {
+            bcqEntries=uniqueBatchEntries.size();
+            LOGGER.debug("no.of processes with non zero enq id and null bcp= "+processEntries);
+            LOGGER.debug("size of unique processes set = "+bcqEntries);
+            if (bcqEntries < processEntries) {
                 LOGGER.error("No batches present for one of the sub processes");
                 throw new MetadataException("No batches present for one of the sub processes");
             }
