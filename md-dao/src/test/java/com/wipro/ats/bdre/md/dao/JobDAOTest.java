@@ -42,7 +42,7 @@ public class JobDAOTest {
     JobDAO jobDAO;
     @Autowired
     StepDAO stepDAO;
-
+    @Ignore
     @Test
     public void testJobInitHalt() throws Exception {
         List<InitJobRowInfo> initJobRowInfos = jobDAO.initJob(10802, 1);

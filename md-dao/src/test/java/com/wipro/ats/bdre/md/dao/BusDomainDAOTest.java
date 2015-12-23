@@ -19,6 +19,7 @@ package com.wipro.ats.bdre.md.dao;
 import com.wipro.ats.bdre.md.dao.jpa.BusDomain;
 import org.apache.log4j.Logger;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.AutowireCapableBeanFactory;
@@ -49,12 +50,12 @@ public class BusDomainDAOTest {
     public void testTotalRecordCount() throws Exception {
         LOGGER.info("Size of Busdomain is: " + busDomainDAO.totalRecordCount());
     }
-
+    @Ignore
     @Test
     public void testGet() throws Exception {
         LOGGER.info("Busdomain(1) is: " + busDomainDAO.get(1).getBusDomainName());
     }
-
+    @Ignore
     @Test
     public void testInsertUpdateAndDelete() throws Exception {
         BusDomain busDomain = new BusDomain();
