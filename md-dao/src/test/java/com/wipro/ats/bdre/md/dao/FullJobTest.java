@@ -3,9 +3,13 @@ package com.wipro.ats.bdre.md.dao;
 import com.wipro.ats.bdre.md.beans.InitJobRowInfo;
 import com.wipro.ats.bdre.md.beans.table.*;
 import com.wipro.ats.bdre.md.dao.jpa.*;
+import com.wipro.ats.bdre.md.dao.jpa.Batch;
 import com.wipro.ats.bdre.md.dao.jpa.BusDomain;
+import com.wipro.ats.bdre.md.dao.jpa.ExecStatus;
+import com.wipro.ats.bdre.md.dao.jpa.InstanceExec;
 import com.wipro.ats.bdre.md.dao.jpa.Process;
 import com.wipro.ats.bdre.md.dao.jpa.ProcessType;
+import com.wipro.ats.bdre.md.dao.jpa.Properties;
 import com.wipro.ats.bdre.md.dao.jpa.WorkflowType;
 import org.apache.log4j.Logger;
 import org.hibernate.Criteria;
@@ -41,6 +45,14 @@ public class FullJobTest {
     @Autowired
     WorkflowTypeDAO workflowTypeDAO;
     @Autowired
+    PropertiesDAO propertiesDAO;
+    @Autowired
+    BatchDAO batchDAO;
+    @Autowired
+    ExecStatusDAO execStatusDAO;
+    @Autowired
+    InstanceExecDAO instanceExecDAO;
+    @Autowired
     JobDAO jobDAO;
     @Autowired
     StepDAO stepDAO;
@@ -63,14 +75,48 @@ public class FullJobTest {
        //fetching updated busDomain
           BusDomain updatedBusDomain=busDomainDAO.get(busDomainId);
 
-          assertEquals("update failed","updateDescription",updatedBusDomain.getDescription());
+          assertEquals("busDomain update failed","updateDescription",updatedBusDomain.getDescription());
 
-   /*
 
-         ProcessType processType = processTypeDAO.get(1);
-         ProcessType childProcessType = processTypeDAO.get(12);
-         WorkflowType workflowType=workflowTypeDAO.get(1);
-          WorkflowType childWworkflowType=workflowTypeDAO.get(0);
+        ProcessType processType = new ProcessType();
+        processType.setProcessTypeName("test");
+        processType.setProcessTypeId(100);
+   //   processType.setParentProcessTypeId(null);
+        //inserting new parent ProcessType
+        Integer parentProcessTypeId = processTypeDAO.insert(processType);
+        //updating  Process Type
+        processType.setProcessTypeName("updateProcessType");
+        processTypeDAO.update(processType);
+        //fetching Process Type
+        ProcessType updatedProcessType = processTypeDAO.get(parentProcessTypeId);
+        assertEquals("Process Type update failed","updateProcessType",updatedProcessType.getProcessTypeName());
+
+
+        ProcessType childProcessType = new ProcessType();
+        processType.setProcessTypeName("test");
+        processType.setProcessTypeId(101);
+        processType.setParentProcessTypeId(100);
+        Integer processTypeId = processTypeDAO.insert(processType);
+
+
+        WorkflowType workflowType = new WorkflowType();
+        workflowType.setWorkflowId(1);
+        workflowType.setWorkflowTypeName("Test");
+        //inserting new workflow type
+        Integer parentWorkflowTypeId = (Integer) workflowTypeDAO.insert(workflowType);
+        //updating  workflow type
+       workflowType.setWorkflowTypeName("updateWorkflowType");
+       workflowTypeDAO.update(workflowType);
+        //fetching workflow type
+        WorkflowType updatedWorkflowType = workflowTypeDAO.get(parentWorkflowTypeId);
+        assertEquals("workflow type update failed","updateWorkflowType",updatedWorkflowType.getWorkflowTypeName());
+
+
+        WorkflowType childWworkflowType= new WorkflowType();
+        workflowType.setWorkflowId(0);
+        workflowType.setWorkflowTypeName("Test");
+        Integer workflowTypeId = (Integer) workflowTypeDAO.insert(workflowType);
+
 
          Process subProcess1 = new Process();
          subProcess1.setProcessName("Test");
@@ -85,7 +131,10 @@ public class FullJobTest {
          subProcess1.setDeleteFlag(false);
          subProcess1.setEditTs(new Date());
         subProcess1.setWorkflowType(childWworkflowType);
+        //inserting sub process1
          Integer subProcessId1 = processDAO.insert(subProcess1);
+
+
 
          Process subProcess2 = new Process();
          subProcess2.setProcessName("Test");
@@ -100,6 +149,7 @@ public class FullJobTest {
          subProcess2.setDeleteFlag(false);
          subProcess2.setEditTs(new Date());
         subProcess2.setWorkflowType(childWworkflowType);
+        //inserting subProcess2
          Integer subProcessId2 = processDAO.insert(subProcess2);
 
         Process subProcess3 = new Process();
@@ -115,6 +165,7 @@ public class FullJobTest {
         subProcess3.setDeleteFlag(false);
         subProcess3.setEditTs(new Date());
         subProcess3.setWorkflowType(childWworkflowType);
+        //inserting subProcess3
         Integer subProcessId3 = processDAO.insert(subProcess3);
 
          Process parentProcess1 = new Process();
@@ -130,16 +181,25 @@ public class FullJobTest {
          parentProcess1.setDeleteFlag(false);
          parentProcess1.setEditTs(new Date());
         parentProcess1.setWorkflowType(workflowType);
+        //inserting parent process1
          Integer parentProcessId1 = processDAO.insert(parentProcess1);
 
-         parentProcess1=processDAO.get(parentProcessId1);
          parentProcess1.setNextProcessId(subProcessId1.toString()+","+subProcessId2.toString());
         processDAO.update(parentProcess1);
+        Process updatedParentProcess = processDAO.get(parentProcessId1);
+        assertEquals("next processId of parent process not update succesfully",subProcessId1.toString()+","+subProcessId2.toString(),updatedParentProcess.getNextProcessId());
 
          subProcess1=processDAO.get(subProcessId1);
          subProcess1.setProcess(parentProcess1);
          subProcess1.setNextProcessId(parentProcessId1.toString());
+        //updating process
          processDAO.update(subProcess1);
+
+        //fetching process
+        Process updatedProcess = processDAO.get(subProcessId1);
+        assertEquals("process update failed","updateDescription",updatedProcess.getDescription());
+        assertNotNull("editTs not null",subProcess1.getEditTs());
+        assertFalse(updatedProcess.getDeleteFlag());
 
          subProcess2=processDAO.get(subProcessId2);
          subProcess2.setProcess(parentProcess1);
@@ -167,6 +227,7 @@ public class FullJobTest {
         subProcess4.setDeleteFlag(false);
         subProcess4.setEditTs(new Date());
         subProcess4.setWorkflowType(childWworkflowType);
+        //inserting subProcess4
         Integer subProcessId4 = processDAO.insert(subProcess4);
 
         Process subProcess5 = new Process();
@@ -182,6 +243,7 @@ public class FullJobTest {
         subProcess5.setDeleteFlag(false);
         subProcess5.setEditTs(new Date());
         subProcess5.setWorkflowType(childWworkflowType);
+        //inserting subProcess5
         Integer subProcessId5 = processDAO.insert(subProcess5);
 
         Process parentProcess2 = new Process();
@@ -199,7 +261,7 @@ public class FullJobTest {
         parentProcess2.setWorkflowType(workflowType);
         Integer parentProcessId2 = processDAO.insert(parentProcess1);
 
-        parentProcess2=processDAO.get(parentProcessId2);
+//      parentProcess2=processDAO.get(parentProcessId2);
         parentProcess2.setNextProcessId(subProcessId4.toString()+","+subProcessId5.toString());
         processDAO.update(parentProcess2);
 
@@ -215,51 +277,105 @@ public class FullJobTest {
         subProcess5.setNextProcessId(parentProcessId2.toString());
         processDAO.update(subProcess5);
 
+        PropertiesId propertiesId = new PropertiesId();
+        propertiesId.setProcessId(subProcessId1);
+        propertiesId.setPropKey("Test key");
+        Properties properties = new Properties();
+        properties.setDescription("test Description");
+        properties.setConfigGroup("Test CG");
+        properties.setId(propertiesId);
+        properties.setProcess(subProcess1);
+        properties.setPropValue("Test Value");
+        //inserting properties
+        propertiesId = propertiesDAO.insert(properties);
+        //updating properties
+        properties.setDescription("updateDescription");
+        //fetching properties
+        Properties updatedProperties = propertiesDAO.get(propertiesId);
+        assertEquals("update properties failed","updateDescription",updatedProperties.getDescription());
+
+        List<Properties> propertiesList = propertiesDAO.getPropertiesForConfig(subProcessId1,"Test CG");
+        assertEquals("getPropertiesForConfig failed",propertiesList.get(0).getId().getPropKey(),"Test key");
+
+        Batch batch = new Batch();
+        batch.setBatchType("Test");
+        //inserting batch
+        Long batchId = batchDAO.insert(batch);
+        //updating  batch
+        batch.setBatchType("UpdateBatchType");
+        batchDAO.update(batch);
+        Batch updatedBatch = batchDAO.get(batchId);
+        assertEquals("updated Batch failure","UpdateBatchType",updatedBatch.getBatchType());
 
 
+        ExecStatus execStatus = new ExecStatus();
+        execStatus.setDescription("NOT RUNNING...");
+        execStatus.setExecStateId(1);
+        Integer execStatusId = execStatusDAO.insert(execStatus);
+        execStatus.setDescription("NOT RUNNING");
+        execStatusDAO.update(execStatus);
+        ExecStatus updatedExecStatus = execStatusDAO.get(execStatusId);
+        assertEquals("update exec status failed","NOT RUNNING",updatedExecStatus.getDescription());
+
+        ExecStatus execStatus2 = new ExecStatus();
+        execStatus.setDescription("RUNNING");
+        execStatus.setExecStateId(2);
+        execStatusDAO.insert(execStatus2);
+
+        ExecStatus execStatus3 = new ExecStatus();
+        execStatus.setDescription("SUCCESS");
+        execStatus.setExecStateId(3);
+        execStatusDAO.insert(execStatus3);
+
+        ExecStatus execStatus4 = new ExecStatus();
+        execStatus.setDescription("FAILED");
+        execStatus.setExecStateId(6);
+        execStatusDAO.insert(execStatus4);
 
 
-         List<InitJobRowInfo> initJobRowInfos1 = jobDAO.initJob(parentProcessId1, 1);
-        Long batchId1=initJobRowInfos1.get(0).getSourceBatchId();
-
+        List<InitJobRowInfo> initJobRowInfos1 = jobDAO.initJob(parentProcessId1, 1);
+        assertEquals(new Long(2),initJobRowInfos1.get(0).getInstanceExecId());
         Long sub_instance_exec_id1 = stepDAO.initStep(subProcessId1);
+        assertEquals(new Long(2),sub_instance_exec_id1);
         Long sub_instance_exec_id2 = stepDAO.initStep(subProcessId2);
-
+        assertEquals(new Long(2),sub_instance_exec_id2);
         Long sub_instance_exec_id3 = stepDAO.initStep(subProcessId3);
-        LOGGER.info("1st is "+sub_instance_exec_id1+"1st is "+sub_instance_exec_id2+"1st is "+sub_instance_exec_id3);
+        assertEquals(new Long(2),sub_instance_exec_id3);
+     //   LOGGER.info("1st is "+sub_instance_exec_id1+"1st is "+sub_instance_exec_id2+"1st is "+sub_instance_exec_id3);
 
         stepDAO.haltStep(subProcessId1);
+        InstanceExec instanceExec = instanceExecDAO.get(sub_instance_exec_id1);
+        assertEquals(new Long(3),instanceExec.getInstanceExecId());
 
         stepDAO.haltStep(subProcessId2);
-
         stepDAO.haltStep(subProcessId3);
 
         jobDAO.haltJob(parentProcessId1,"parentProcessFirst");
-
+        instanceExec = instanceExecDAO.get(initJobRowInfos1.get(0).getInstanceExecId());
+        assertEquals(new Long(3),instanceExec.getInstanceExecId());
 
         List<InitJobRowInfo> initJobRowInfos2 = jobDAO.initJob(parentProcessId2, 1);
+        assertEquals(new Long(2),initJobRowInfos2.get(0).getInstanceExecId());
         Long sub_instance_exec_id4 = stepDAO.initStep(subProcessId4);
-
+        assertEquals(new Long(2),sub_instance_exec_id4);
         Long sub_instance_exec_id5 = stepDAO.initStep(subProcessId5);
+        assertEquals(new Long(2),sub_instance_exec_id5);
         LOGGER.info(sub_instance_exec_id4+"1st is "+sub_instance_exec_id5);
         stepDAO.termStep(subProcessId4);
-
-
         stepDAO.haltStep(subProcessId5);
 
-
-
         //Long sub_instance_exec_id6 = stepDAO.initStep(subProcessId4);
-
        // stepDAO.haltStep(subProcessId4);
-
         jobDAO.haltJob(parentProcessId2,"parentProcessSecond");
-
         jobDAO.initJob(parentProcessId2, 1);
         Long sub_instance_exec_id6=stepDAO.initStep(subProcessId4);
         stepDAO.haltStep(subProcessId4);
        LOGGER.info("1st is "+sub_instance_exec_id6);
         jobDAO.haltJob(parentProcessId2,"parentProcessSecond");
+
+
+
+
 
        processDAO.delete(subProcessId1);
         processDAO.delete(subProcessId2);
@@ -269,7 +385,11 @@ public class FullJobTest {
         processDAO.delete(parentProcessId1);
         processDAO.delete(parentProcessId2);
         busDomainDAO.delete(busDomainId);
-*/
+        processTypeDAO.delete(processTypeId);
+        processTypeDAO.delete(parentProcessTypeId);
+        workflowTypeDAO.delete(workflowTypeId);
+        workflowTypeDAO.delete(parentWorkflowTypeId);
+
 
 
 

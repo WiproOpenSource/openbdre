@@ -65,6 +65,7 @@ public class PropertiesDAOTest {
 
     }
 
+    @Ignore
     @Test
     public void testInsertUpdateAndDelete() throws Exception {
         PropertiesId propertiesId = new PropertiesId();
@@ -87,6 +88,7 @@ public class PropertiesDAOTest {
         LOGGER.info("Deleted properties Entry with key:" + propertiesId.getPropKey());
     }
 
+    @Ignore
     @Test
     public void testGetPropertiesForConfig() throws Exception {
         for (Properties property : propertiesDAO.getPropertiesForConfig(10835, "PL_ACCOUNT_TABLE")) {

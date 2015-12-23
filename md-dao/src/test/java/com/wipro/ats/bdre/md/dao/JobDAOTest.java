@@ -42,6 +42,7 @@ public class JobDAOTest {
     JobDAO jobDAO;
     @Autowired
     StepDAO stepDAO;
+
     @Ignore
     @Test
     public void testJobInitHalt() throws Exception {
