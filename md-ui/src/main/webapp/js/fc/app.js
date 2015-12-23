@@ -200,11 +200,13 @@ angular.module('app', ['flowChart', ])
             var dataRecord = propertiesAC('/mdrest/properties/', 'GET', pid);
             if (dataRecord) {
                 jQuery.each(dataRecord, function(i, props) {
+                if(props!=null){
                     if (props.key == 'x') {
                         xpos = parseInt(props.value);
                     } else if (props.key == 'y') {
                         ypos = parseInt(props.value);
                     }
+                }
                 });
                 if (process.processId < 0) {
                     xpos = 10;
