@@ -19,15 +19,21 @@ import org.apache.log4j.Logger;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
+import org.apache.commons.collections4.map.LinkedMap;
+
 /**
  * Created by vishnu on 1/11/15.
  */
 public class FileMonitor implements FileListener {
     private static final Logger LOGGER = Logger.getLogger(FileMonRunnableMain.class);
     private static FileMonitor fileMonitor = null;
-    private SimpleDateFormat sdf= new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
     //HashTable Contains key as Directory Path and values as List of FileMonInfo Objects
     private Hashtable<String, List<FileMonInfo>> fileSet = new Hashtable<String, List<FileMonInfo>>();
+
+    /* this data structure is used to maintain order and getting eldest element
+    * Map contain Filename as key and FileCopyInfo as value    * */
+    public static LinkedMap<String, FileCopyInfo>fileToCopyMap =
+            new LinkedMap<String, FileCopyInfo>();
 
     private FileMonitor() {
         init();
@@ -83,13 +89,27 @@ public class FileMonitor implements FileListener {
         for (FileMonInfo fileMonInfo : fileMonInfoList) {
             //Checking if the file name matches with the given pattern
             if (fileName.matches(fileMonInfo.getFilePattern())) {
-                String subProcessId = fileMonInfo.getSubProcessId();
+               // String subProcessId = fileMonInfo.getSubProcessId();
                 FileContent fc = obj.getContent();
                 LOGGER.debug("Matched File Pattern");
-                executeRegisterFiles(fc, subProcessId, fileMonInfo.getServerId(), dirPath + "/" + fileName);
+                putEligibleFileInfoInMap(dirPath, fileName, fileMonInfo, fc);
                 break;
             }
         }
+    }
+
+    private void putEligibleFileInfoInMap(String dirPath, String fileName, FileMonInfo fileMonInfo, FileContent fc) {
+        // *Start*   Eligible files moved to data structure for ingestion to HDFS
+        FileCopyInfo fileCopyInfo = new FileCopyInfo();
+        fileCopyInfo.setFileName(fileName);
+        fileCopyInfo.setSubProcessId(fileMonInfo.getSubProcessId());
+        fileCopyInfo.setServerId(fileMonInfo.getServerId());
+        fileCopyInfo.setSrcLocation(dirPath);
+        // fileCopyInfo.setDstLocation(fileMonInfo.getDstLocation());
+        fileCopyInfo.setFileContent(fc);
+        // putting element to structure
+        fileToCopyMap.put(fileName, fileCopyInfo);
+        // *End*   Eligible files moved to data structure for ingestion to HDFS
     }
 
     @Override
@@ -101,24 +121,4 @@ public class FileMonitor implements FileListener {
     public void fileChanged(FileChangeEvent fileChangeEvent) throws Exception {
         //nothing to do
     }
-
-    //Calling the RegisterFile method in metadata API on file Creation.
-    private void executeRegisterFiles(FileContent fc, String subProcessId, String serverId, String path) {
-        try {
-            //getting the hashcode of the file
-            String fileHash =DigestUtils.md5Hex(fc.getInputStream());
-            String fileSize = String.valueOf(fc.getSize());
-            long timeStamp = fc.getLastModifiedTime();
-            Date dt=new Date(timeStamp);
-            String strDate=sdf.format(dt);
-            RegisterFile registerFile = new RegisterFile();
-            String[] params = {"-p", subProcessId, "-sId", serverId, "-path", path, "-fs", fileSize, "-fh", fileHash, "-cTS", strDate, "-bid", "0"};
-            LOGGER.debug("executeRegisterFiles Invoked for "+path);
-            registerFile.execute(params);
-        } catch (Exception err) {
-            LOGGER.error(err.getMessage());
-            throw new ETLException(err);
-        }
-    }
-
 }
