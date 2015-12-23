@@ -6,14 +6,12 @@
 
 package com.wipro.ats.bdre.filemon;
 
-import com.wipro.ats.bdre.IMConfig;
 import com.wipro.ats.bdre.im.etl.api.exception.ETLException;
 import org.apache.commons.vfs2.FileObject;
 import org.apache.commons.vfs2.FileSystemManager;
 import org.apache.commons.vfs2.VFS;
 import org.apache.commons.vfs2.impl.DefaultFileMonitor;
 import org.apache.log4j.Logger;
-import java.util.List;
 
 
 /**
@@ -28,16 +26,15 @@ public class FileMonRunnable implements Runnable {
         try {
             FileSystemManager fsManager = VFS.getManager();
             //Reading directory paths and adding to the DefaultFileMonitor
-            List<String> dirPaths = IMConfig.getPropertyList("file-mon.dirs");
+            String dir = FileMonRunnableMain.getMonitoredDirName();
 
             DefaultFileMonitor fm = new DefaultFileMonitor(FileMonitor.getInstance());
             FileObject listendir = null;
-            for (String dir : dirPaths) {
-                LOGGER.debug("Monitoring directories "+dir);
-                listendir = fsManager.resolveFile(dir);
-                fm.setRecursive(true);
-                fm.addFile(listendir);
-            }
+
+            LOGGER.debug("Monitoring directories " + dir);
+            listendir = fsManager.resolveFile(dir);
+            fm.setRecursive(true);
+            fm.addFile(listendir);
             fm.start();
         } catch (Exception err) {
             LOGGER.error(err.toString());
