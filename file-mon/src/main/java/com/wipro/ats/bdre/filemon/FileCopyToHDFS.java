@@ -36,26 +36,30 @@ public class FileCopyToHDFS {
     }
 
     private void executeCopyProcess() throws IOException{
-        String key = FileMonitor.fileToCopyMap.firstKey();
-        int index = FileMonitor.fileToCopyMap.indexOf(key);
-        fileCopying = FileMonitor.fileToCopyMap.getValue(index);
-        FileMonitor.fileToCopyMap.remove(index);
-        try{
-            // Copying file from local to HDFS overriding, if file already exists
-            FileSystem fs = FileSystem.get(config);
-            fs.copyFromLocalFile(false, true, new Path(fileCopying.getSrcLocation()),
-                    new Path(fileCopying.getDstLocation()));
-            if(FileMonRunnableMain.isDeleteCopiedSrc()){
-                // move to given archive directory
-            }else{
-                new File(fileCopying.getSrcLocation()).delete();
+        while(true) {
+            if (FileMonitor.fileToCopyMap.size()>0) {
+                String key = FileMonitor.fileToCopyMap.firstKey();
+                int index = FileMonitor.fileToCopyMap.indexOf(key);
+                fileCopying = FileMonitor.fileToCopyMap.getValue(index);
+                FileMonitor.fileToCopyMap.remove(index);
+                try {
+                    // Copying file from local to HDFS overriding, if file already exists
+                    FileSystem fs = FileSystem.get(config);
+                    fs.copyFromLocalFile(false, true, new Path(fileCopying.getSrcLocation()),
+                            new Path(fileCopying.getDstLocation()));
+                    if (FileMonRunnableMain.isDeleteCopiedSrc()) {
+                        // move to given archive directory
+                    } else {
+                        new File(fileCopying.getSrcLocation()).delete();
+                    }
+                    // calling register file
+                    executeRegisterFiles(fileCopying.getFileContent(), fileCopying.getSubProcessId(), fileCopying.getServerId(), fileCopying.getDstLocation() + "/" + key);
+                } catch (IOException ioex) {
+                    FileMonitor.fileToCopyMap.put(key, fileCopying);
+                    LOGGER.error("Error in executeCopyProcess method " + ioex);
+                    throw new IOException("Error in executeCopyProcess method " + ioex);
+                }
             }
-            // calling register file
-            executeRegisterFiles(fileCopying.getFileContent(), fileCopying.getSubProcessId(), fileCopying.getServerId(), fileCopying.getDstLocation() + "/" + key);
-        }catch(IOException ioex){
-            FileMonitor.fileToCopyMap.put(key, fileCopying);
-            LOGGER.error("Error in executeCopyProcess method " + ioex);
-            throw new IOException("Error in executeCopyProcess method " + ioex);
         }
     }
 
