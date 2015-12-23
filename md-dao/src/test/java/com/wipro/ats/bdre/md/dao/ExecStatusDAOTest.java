@@ -19,6 +19,7 @@ package com.wipro.ats.bdre.md.dao;
 import com.wipro.ats.bdre.md.dao.jpa.ExecStatus;
 import org.apache.log4j.Logger;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.AutowireCapableBeanFactory;
@@ -51,7 +52,7 @@ public class ExecStatusDAOTest {
     public void testTotalRecordCount() throws Exception {
         LOGGER.info("Size of ExecStatus is:" + execStatusDAO.totalRecordCount());
     }
-
+    @Ignore
     @Test
     public void testGet() throws Exception {
         LOGGER.info("Description of ExecStatusId(1) is:" + execStatusDAO.get(1).getDescription());
