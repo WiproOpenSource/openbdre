@@ -142,9 +142,14 @@ public class DataQualityDAO {
             ProcessValidateInsert processValidateInsert=new ProcessValidateInsert();
             boolean triggerCheck;
             Integer parentProcessId;
+
+            Process jpaProcessParent = null;
+            if (jpaProcess.getProcess() != null) {
+                jpaProcessParent = (Process) session.get(Process.class, jpaProcess.getProcess().getProcessId());
+            }
             if(jpaProcess.getProcess()!=null)
             {
-                triggerCheck=processValidateInsert.ProcessTypeValidator(jpaProcess);
+                triggerCheck=processValidateInsert.ProcessTypeValidator(jpaProcess,jpaProcessParent);
                 if(triggerCheck==true)
                 {
                     parentProcessId = (Integer) session.save(jpaProcess);
@@ -155,7 +160,15 @@ public class DataQualityDAO {
                 }
             }
             else {
-                parentProcessId = (Integer) session.save(jpaProcess);
+                triggerCheck=processValidateInsert.ProcessTypeValidator(jpaProcess,jpaProcessParent);
+                if(triggerCheck==true)
+                {
+                    parentProcessId = (Integer) session.save(jpaProcess);
+                }
+                else
+                {
+                    throw new MetadataException("error occured");
+                }
             }
             LOGGER.info("inserted ppid is " + parentProcessId);
 
@@ -174,10 +187,8 @@ public class DataQualityDAO {
             parentProcessStep.setProcessId(parentProcessId);
 
             jpaProcessStep.setProcess(parentProcessStep);
-            if (dqSetupInfo.getDeleteFlag() == null)
-                jpaProcessStep.setDeleteFlag(false);
-            else
-                jpaProcessStep.setDeleteFlag(dqSetupInfo.getDeleteFlag());
+            jpaProcessStep.setDeleteFlag(false);
+
             if (dqSetupInfo.getCanRecover() == null)
                 jpaProcessStep.setCanRecover(true);
             else
@@ -186,15 +197,46 @@ public class DataQualityDAO {
             jpaProcessStep.setNextProcessId(parentProcessId.toString());
             WorkflowType workflowTypeStep = (WorkflowType) session.get(WorkflowType.class, 1);
             jpaProcessStep.setWorkflowType(workflowTypeStep);
+            Integer subProcessId = null;
+            Process jpaProcessChild = null;
+            if (jpaProcessStep.getProcess() != null) {
+                jpaProcessChild = (Process) session.get(Process.class, jpaProcessStep.getProcess().getProcessId());
+            }
+            if(jpaProcessStep.getProcess()!=null)
+            {
+                triggerCheck=processValidateInsert.ProcessTypeValidator(jpaProcessStep,jpaProcessChild);
+                if(triggerCheck==true)
+                {
+                    parentProcessId = (Integer) session.save(jpaProcessStep);
+                }
+                else
+                {
+                    throw new MetadataException("error occured");
+                }
+            }
+            else {
+                triggerCheck=processValidateInsert.ProcessTypeValidator(jpaProcessStep,jpaProcessChild);
+                if(triggerCheck==true)
+                {
+                    parentProcessId = (Integer) session.save(jpaProcessStep);
+                }
+                else
+                {
+                    throw new MetadataException("error occured");
+                }
+            }
 
-            Integer subProcessId = (Integer) session.save(jpaProcessStep);
             LOGGER.info("inserted subProcessId is " + subProcessId);
 
             //Parent process updated
             jpaProcess.setNextProcessId(subProcessId.toString());
+            Process jpaProcessParentUpdate = null;
+            if (jpaProcess.getProcess() != null) {
+                jpaProcessParentUpdate = (Process) session.get(Process.class, jpaProcess.getProcess().getProcessId());
+            }
             if(jpaProcess.getProcess()!=null)
             {
-                triggerCheck=processValidateInsert.ProcessTypeValidator(jpaProcess);
+                triggerCheck=processValidateInsert.ProcessTypeValidator(jpaProcess,jpaProcessParentUpdate);
                 if(triggerCheck==true)
                 {
                     session.update(jpaProcess);
@@ -205,8 +247,15 @@ public class DataQualityDAO {
                 }
             }
             else
-            {
-                session.update(jpaProcess);
+            { triggerCheck=processValidateInsert.ProcessTypeValidator(jpaProcess,jpaProcessParentUpdate);
+                if(triggerCheck==true)
+                {
+                    session.update(jpaProcess);
+                }
+                else
+                {
+                    throw new MetadataException("error occured");
+                }
             }
 
 

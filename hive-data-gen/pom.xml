@@ -56,6 +56,22 @@
                         <goals>
                             <goal>shade</goal>
                         </goals>
+                        <configuration>
+                            <transformers>
+                                <transformer implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
+                                    <mainClass>com.wipro.ats.bdre.datagen.GeneratorMain</mainClass>
+                                </transformer>
+                                <transformer implementation="org.apache.maven.plugins.shade.resource.AppendingTransformer">
+                                    <resource>META-INF/spring.handlers</resource>
+                                </transformer>
+                                <transformer implementation="org.apache.maven.plugins.shade.resource.AppendingTransformer">
+                                    <resource>META-INF/spring.schemas</resource>
+                                </transformer>
+                            </transformers>
+                            <shadedArtifactAttached>true</shadedArtifactAttached>
+                            <shadedClassifierName>executable</shadedClassifierName>
+                            <finalName>hive-data-gen-${project.version}</finalName>
+                        </configuration>
                     </execution>
                 </executions>
             </plugin>
@@ -71,6 +87,7 @@
                         <configuration>
                             <outputDirectory>${project.parent.build.directory}/lib</outputDirectory>
                         </configuration>
+
                     </execution>
 
                     <execution>

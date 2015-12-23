@@ -44,7 +44,7 @@ public class MQImportSetupDAOTest {
 
     @Autowired
     MQImportSetupDAO mqImportSetupDAO;
-
+    @Ignore
     @Test
     public void InsertUpdateTest() {
         MQImportInfo mqImportInfo = new MQImportInfo();
