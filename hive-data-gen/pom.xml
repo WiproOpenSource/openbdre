@@ -71,6 +71,7 @@
                             <shadedArtifactAttached>true</shadedArtifactAttached>
                             <shadedClassifierName>executable</shadedClassifierName>
                             <finalName>hive-data-gen-${project.version}</finalName>
+                            <outputDirectory>${project.parent.build.directory}/lib</outputDirectory>
                         </configuration>
                     </execution>
                 </executions>
