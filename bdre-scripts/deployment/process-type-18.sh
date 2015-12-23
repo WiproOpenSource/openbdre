@@ -63,7 +63,7 @@ if [ $? -eq 1 ]
 then exit 1
 fi
 #copy generated jar for hive-data-gen
-hdfs dfs -put $pathToHiveDataGen/hive-data-gen-$bdreVersion.jar $hdfsPath/wf/$busDomainId/$processTypeId/$processId/lib/
+hdfs dfs -put $pathToHiveDataGen/hive-data-gen-$bdreVersion-executable.jar $hdfsPath/wf/$busDomainId/$processTypeId/$processId/lib/
 if [ $? -eq 1 ]
 then exit 1
 fi

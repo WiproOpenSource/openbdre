@@ -52,7 +52,7 @@ public class InstanceExecDAOTest {
 
     @Test
     public void testList() throws Exception {
-        LOGGER.info("Size of InstanceExec is atleast:" + instanceExecDAO.list(10802, 0, 10).size());
+        LOGGER.info("Size of InstanceExec is atleast:" + instanceExecDAO.list(null, 0, 10).size());
     }
 
     @Test

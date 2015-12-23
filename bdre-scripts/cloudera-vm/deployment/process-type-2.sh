@@ -47,6 +47,21 @@ if [ $? -eq 1 ]
 then exit 1
 fi
 
+mkdir -p BDRE/$busDomainId/$processTypeId/$processId/pig
+if [ $? -eq 1 ]
+then exit 1
+fi
+
+mkdir -p BDRE/$busDomainId/$processTypeId/$processId/shell
+if [ $? -eq 1 ]
+then exit 1
+fi
+
+mkdir -p BDRE/$busDomainId/$processTypeId/$processId/r
+if [ $? -eq 1 ]
+then exit 1
+fi
+
 mkdir -p BDRE/$busDomainId/$processTypeId/$processId/spark
 if [ $? -eq 1 ]
 then exit 1
@@ -80,6 +95,21 @@ then exit 1
 fi
 
 hdfs dfs -mkdir -p $hdfsPath/wf/$busDomainId/$processTypeId/$processId/hql
+if [ $? -eq 1 ]
+then exit 1
+fi
+
+hdfs dfs -mkdir -p $hdfsPath/wf/$busDomainId/$processTypeId/$processId/pig
+if [ $? -eq 1 ]
+then exit 1
+fi
+
+hdfs dfs -mkdir -p $hdfsPath/wf/$busDomainId/$processTypeId/$processId/shell
+if [ $? -eq 1 ]
+then exit 1
+fi
+
+hdfs dfs -mkdir -p $hdfsPath/wf/$busDomainId/$processTypeId/$processId/r
 if [ $? -eq 1 ]
 then exit 1
 fi
@@ -133,10 +163,10 @@ hdfs dfs -put BDRE/$busDomainId/$processTypeId/$processId/lib/mysql-connector-ja
 if [ $? -eq 1 ]
     then exit 1
 fi
-hdfs dfs -put BDRE/$busDomainId/$processTypeId/$processId/lib/mybatis-3.2.8.jar $hdfsPath/wf/$busDomainId/$processTypeId/$processId/lib
-if [ $? -eq 1 ]
-    then exit 1
-fi
+#hdfs dfs -put BDRE/$busDomainId/$processTypeId/$processId/lib/mybatis-3.2.8.jar $hdfsPath/wf/$busDomainId/$processTypeId/$processId/lib
+#if [ $? -eq 1 ]
+#    then exit 1
+#fi
 hdfs dfs -put BDRE/$busDomainId/$processTypeId/$processId/lib/md-commons-$bdreVersion.jar $hdfsPath/wf/$busDomainId/$processTypeId/$processId/lib
 if [ $? -eq 1 ]
     then exit 1
@@ -168,44 +198,120 @@ hdfs dfs -put $hadoopConfDir/hive-site.xml $hdfsPath/wf/$busDomainId/$processTyp
 if [ $? -eq 1 ]
 then exit 1
 fi
-#copy all developer checked in files to hdfs process dir
-if [ -d "$localPathForJars/$processId/hql" ]; then
-hql=($localPathForHQL/hql/*)
-if [ ${#hql[@]} -gt 0 ];   
+#copy all developer checked in hql files to hdfs process dir
+if [ -d "$localPathForDevFiles/$processId/hql" ]; then
+hql=`ls -l $localPathForDevFiles/$processId/hql | grep -v total | wc -l`
+if [ $hql -gt 0 ];   
  then
-        cp $localPathForHQL/$processId/hql/* BDRE/$busDomainId/$processTypeId/$processId/hql
+        cp $localPathForDevFiles/$processId/hql/* BDRE/$busDomainId/$processTypeId/$processId/hql
         if [ $? -eq 1 ]
             then exit 1
         fi
-        echo "file(s) copied"
+        echo "hql file(s) copied"
 fi
-fi
-#copy all developer checked in files to hdfs process dir
-if [ -d "$localPathForJars/$processId/spark" ]; then
-spark=($localPathForHQL/spark/*)
-if [ ${#spark[@]} -gt 0 ];
- then
-        cp $localPathForHQL/$processId/spark/* BDRE/$busDomainId/$processTypeId/$processId/spark
-        if [ $? -eq 1 ]
-            then exit 1
-        fi
-        echo "file(s) copied"
-fi
+else echo "no hql files to copy"
 fi
 
-# hdfs dfs -put developer-apps/busDomainId-$busDomainId/processTypeId-$processTypeId/processId-$processId/* $hdfsPath/wf/$busDomainId/$processTypeId/$processId/
-hqls=(BDRE/$busDomainId/$processTypeId/$processId/hql/*)
-if [ ${#hqls[@]} -gt 0 ];
+#copy all developer checked in pig files to hdfs process dir
+if [ -d "$localPathForDevFiles/$processId/pig" ]; then
+hql=`ls -l $localPathForDevFiles/$processId/pig | grep -v total | wc -l`
+if [ $hql -gt 0 ];   
+ then
+        cp $localPathForDevFiles/$processId/pig/* BDRE/$busDomainId/$processTypeId/$processId/pig
+        if [ $? -eq 1 ]
+            then exit 1
+        fi
+        echo "pig script(s) copied"
+fi
+else echo "no pig scripts to copy"
+fi
+
+#copy all developer checked in shell scripts to hdfs process dir
+if [ -d "$localPathForDevFiles/$processId/shell" ]; then
+hql=`ls -l $localPathForDevFiles/$processId/shell | grep -v total | wc -l`
+if [ $hql -gt 0 ];   
+ then
+        cp $localPathForDevFiles/$processId/shell/* BDRE/$busDomainId/$processTypeId/$processId/shell
+        if [ $? -eq 1 ]
+            then exit 1
+        fi
+        echo "shell script(s) copied"
+fi
+else echo "no shell scripts to copy"
+fi
+
+#copy all developer checked in r scripts to hdfs process dir
+if [ -d "$localPathForDevFiles/$processId/r" ]; then
+hql=`ls -l $localPathForDevFiles/$processId/r | grep -v total | wc -l`
+if [ $hql -gt 0 ];   
+ then
+        cp $localPathForDevFiles/$processId/r/* BDRE/$busDomainId/$processTypeId/$processId/r
+        if [ $? -eq 1 ]
+            then exit 1
+        fi
+        echo "r script(s) copied"
+fi
+else echo "no r scripts to copy"
+fi
+
+#copy all developer checked in spark files to hdfs process dir
+if [ -d "$localPathForDevFiles/$processId/spark" ]; then
+spark=`ls -l $localPathForDevFiles/$processId/spark | grep -v total | wc -l`
+if [ $spark -gt 0 ];
+ then
+        cp $localPathForDevFiles/$processId/spark/* BDRE/$busDomainId/$processTypeId/$processId/spark
+        if [ $? -eq 1 ]
+            then exit 1
+        fi
+        echo "spark file(s) copied"
+fi
+else echo "no spark files to copy"
+fi
+
+hqls=`ls -l BDRE/$busDomainId/$processTypeId/$processId/hql | grep -v total | wc -l`
+if [ $hqls -gt 0 ];
 then
+    echo "uploading $hqls hql files into hdfs"
     hdfs dfs -put BDRE/$busDomainId/$processTypeId/$processId/hql/* $hdfsPath/wf/$busDomainId/$processTypeId/$processId/hql
     if [ $? -eq 1 ]
     then exit 1
     fi
 fi
 
-sparkfiles=(BDRE/$busDomainId/$processTypeId/$processId/spark/*)
-if [ ${#sparkfiles[@]} -gt 0 ];
+pigscripts=`ls -l BDRE/$busDomainId/$processTypeId/$processId/pig | grep -v total | wc -l`
+if [ $pigscripts -gt 0 ];
 then
+    echo "uploading $pigscripts pig scripts into hdfs"
+    hdfs dfs -put BDRE/$busDomainId/$processTypeId/$processId/pig/* $hdfsPath/wf/$busDomainId/$processTypeId/$processId/pig
+    if [ $? -eq 1 ]
+    then exit 1
+    fi
+fi
+
+shellscripts=`ls -l BDRE/$busDomainId/$processTypeId/$processId/shell | grep -v total | wc -l`
+if [ $shellscripts -gt 0 ];
+then
+    echo "uploading $shellscripts shell scripts into hdfs"
+    hdfs dfs -put BDRE/$busDomainId/$processTypeId/$processId/shell/* $hdfsPath/wf/$busDomainId/$processTypeId/$processId/shell
+    if [ $? -eq 1 ]
+    then exit 1
+    fi
+fi
+
+rscripts=`ls -l BDRE/$busDomainId/$processTypeId/$processId/r | grep -v total | wc -l`
+if [ $rscripts -gt 0 ];
+then
+    echo "uploading $rscripts r scripts into hdfs"
+    hdfs dfs -put BDRE/$busDomainId/$processTypeId/$processId/r/* $hdfsPath/wf/$busDomainId/$processTypeId/$processId/r
+    if [ $? -eq 1 ]
+    then exit 1
+    fi
+fi
+
+sparkfiles=`ls -l BDRE/$busDomainId/$processTypeId/$processId/spark | grep -v total | wc -l`
+if [ $sparkfiles -gt 0 ];
+then
+    echo "uploading $sparkfiles spark application jars into hdfs"
     hdfs dfs -put BDRE/$busDomainId/$processTypeId/$processId/spark/* $hdfsPath/wf/$busDomainId/$processTypeId/$processId/spark
     if [ $? -eq 1 ]
     then exit 1

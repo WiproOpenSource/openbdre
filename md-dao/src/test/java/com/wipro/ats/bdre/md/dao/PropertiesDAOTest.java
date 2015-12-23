@@ -21,6 +21,7 @@ import com.wipro.ats.bdre.md.dao.jpa.Properties;
 import com.wipro.ats.bdre.md.dao.jpa.PropertiesId;
 import org.apache.log4j.Logger;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.AutowireCapableBeanFactory;
@@ -54,7 +55,7 @@ public class PropertiesDAOTest {
     public void testTotalRecordCount() throws Exception {
         LOGGER.info("Total Size of properties is:" + propertiesDAO.totalRecordCount());
     }
-
+    @Ignore
     @Test
     public void testGet() throws Exception {
         PropertiesId propertiesId = new PropertiesId();
