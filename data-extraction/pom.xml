@@ -20,7 +20,7 @@
     <packaging>pom</packaging>
     <modules>
         <module>data-import</module>
-        <module>mq-import</module>
+       <!-- <module>mq-import</module>-->
     </modules>
     <dependencies>
         <dependency>

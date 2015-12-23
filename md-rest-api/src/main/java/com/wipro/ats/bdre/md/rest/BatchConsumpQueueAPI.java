@@ -141,6 +141,7 @@ public class BatchConsumpQueueAPI extends MetadataAPIBase {
                      @RequestParam(value = "size", defaultValue = "10") int pageSize, Principal principal) {
         RestWrapper restWrapper = null;
         try {
+            Integer counter=batchConsumpQueueDAO.totalRecordCount().intValue();
             List<com.wipro.ats.bdre.md.dao.jpa.BatchConsumpQueue> jpaBcqList = batchConsumpQueueDAO.list(startPage, pageSize);
             List<BatchConsumpQueue> batchConsumpQueues = new ArrayList<BatchConsumpQueue>();
             for (com.wipro.ats.bdre.md.dao.jpa.BatchConsumpQueue jpaBcq : jpaBcqList) {
@@ -159,7 +160,7 @@ public class BatchConsumpQueueAPI extends MetadataAPIBase {
                 }
                 batchConsumpQueue.setBatchMarking(jpaBcq.getBatchMarking());
                 batchConsumpQueue.setBatchState(jpaBcq.getBatchStatus().getBatchStateId());
-                batchConsumpQueue.setCounter(batchConsumpQueueDAO.totalRecordCount().intValue());
+                batchConsumpQueue.setCounter(counter);
                 LOGGER.info(batchConsumpQueue.getCounter());
                 batchConsumpQueues.add(batchConsumpQueue);
             }

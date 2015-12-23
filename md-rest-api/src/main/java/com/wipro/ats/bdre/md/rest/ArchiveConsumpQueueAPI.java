@@ -143,6 +143,7 @@ public class ArchiveConsumpQueueAPI extends MetadataAPIBase {
                      @RequestParam(value = "size", defaultValue = "10") int pageSize, Principal principal) {
         RestWrapper restWrapper = null;
         try {
+            Integer counter=archiveConsumpQueueDAO.totalRecordCount().intValue();
             List<com.wipro.ats.bdre.md.dao.jpa.ArchiveConsumpQueue> jpaAcqList = archiveConsumpQueueDAO.list(startPage, pageSize);
             List<ArchiveConsumpQueue> archiveConsumpQueues = new ArrayList<ArchiveConsumpQueue>();
             for (com.wipro.ats.bdre.md.dao.jpa.ArchiveConsumpQueue jpaAcq : jpaAcqList) {
@@ -159,7 +160,7 @@ public class ArchiveConsumpQueueAPI extends MetadataAPIBase {
                 }
                 archiveConsumpQueue.setBatchMarking(jpaAcq.getBatchMarking());
                 archiveConsumpQueue.setBatchState(jpaAcq.getBatchStatus().getBatchStateId());
-                archiveConsumpQueue.setCounter(archiveConsumpQueueDAO.totalRecordCount().intValue());
+                archiveConsumpQueue.setCounter(counter);
                 archiveConsumpQueues.add(archiveConsumpQueue);
             }
             // List<ArchiveConsumpQueue> archiveConsumpQueues = s.selectList("call_procedures.GetArchiveConsumpQueues", archiveConsumpQueue);

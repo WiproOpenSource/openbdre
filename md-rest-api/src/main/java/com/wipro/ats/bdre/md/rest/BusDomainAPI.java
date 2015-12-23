@@ -116,6 +116,7 @@ public class BusDomainAPI extends MetadataAPIBase {
                      @RequestParam(value = "size", defaultValue = "10") int pageSize, Principal principal) {
         RestWrapper restWrapper = null;
         try {
+            Integer counter=busDomainDAO.totalRecordCount().intValue();
             List<com.wipro.ats.bdre.md.dao.jpa.BusDomain> jpaBusDoaminList = busDomainDAO.list(startPage, pageSize);
             List<BusDomain> busDomains = new ArrayList<BusDomain>();
             for (com.wipro.ats.bdre.md.dao.jpa.BusDomain busDomain : jpaBusDoaminList) {
@@ -124,7 +125,7 @@ public class BusDomainAPI extends MetadataAPIBase {
                 returnBusDomain.setBusDomainName(busDomain.getBusDomainName());
                 returnBusDomain.setBusDomainOwner(busDomain.getBusDomainOwner());
                 returnBusDomain.setDescription(busDomain.getDescription());
-                returnBusDomain.setCounter(busDomainDAO.totalRecordCount().intValue());
+                returnBusDomain.setCounter(counter);
                 busDomains.add(returnBusDomain);
             }
             //List<BusDomain> busDomains = s.selectList("call_procedures.GetBusDomains", busDomain);

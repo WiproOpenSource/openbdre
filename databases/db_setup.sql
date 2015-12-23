@@ -50,6 +50,8 @@ insert into process_type values (21, 'MQ Step', 20);
 insert into process_type values (22,'Shell Action',2);
 insert into process_type values (23,'Flume Action',1);
 insert into process_type values (24,"R Action",2);
+insert into process_type values (25,"Spark Action",2);
+
 
 -- populating workflow_type
 
@@ -964,6 +966,12 @@ insert into general_config values('23','flume','Flume Configuration','Flume',tru
 -- R Action
 insert into general_config values ('24', 'param', 'Parameters', 'Parameters', '1', 'TRUE', 'text', '1');
 insert into general_config values ('24', 'r-file', 'R file', 'R code', '1', 'TRUE', 'r', '1');
+
+-- Spark Action
+insert into general_config values ('25', 'spark-conf', 'Spark Job Configuration', 'Spark Job Configuration', '1', 'TRUE', 'text', '1');
+insert into general_config values ('25', 'spark-main', 'Spark Main Class', 'Spark Main Class', '1', 'TRUE', 'text', '1');
+insert into general_config values ('25', 'app-args', 'Application arguments', 'Application arguments', '1', 'TRUE', 'text', '1');
+insert into general_config values ('25', 'spark-jar', 'Spark jar', 'Spark Application jar', '1', 'TRUE', 'spark', '1');
 
 -- Populating general config for default insert properties
 
@@ -2433,7 +2441,7 @@ VALUES ('user1','090fdff55a94e1721a7936fad5fdbd8ae9ed2d04',  1);
 
 
 
---populating users for postgres
+-- populating users for postgres
 
 INSERT INTO users(username,password,enabled)
 VALUES ('admin','26952954eb652c3e797cf74b8e7b29bc9f447212',  true);

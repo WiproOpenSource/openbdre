@@ -21,6 +21,7 @@ import com.wipro.ats.bdre.md.beans.MQImportInfo;
 import com.wipro.ats.bdre.md.beans.table.Properties;
 import com.wipro.ats.bdre.md.dao.jpa.*;
 import com.wipro.ats.bdre.md.dao.jpa.Process;
+import com.wipro.ats.bdre.md.triggers.ProcessValidateInsert;
 import org.apache.log4j.Logger;
 import org.hibernate.Criteria;
 import org.hibernate.Session;
@@ -54,6 +55,8 @@ public class MQImportSetupDAO {
     @Autowired
     PropertiesDAO propertiesDAO;
 
+    // @Autowired
+    // ProcessValidateInsert processValidateInsert;
     public List<Properties> list(int page, int numResults) {
         Session session = sessionFactory.openSession();
         List<Properties> propertiesList = new ArrayList<Properties>();
@@ -124,8 +127,19 @@ public class MQImportSetupDAO {
             process.setDeleteFlag(false);
             process.setEnqueuingProcessId(0);
             process.setNextProcessId(" ");
+            ProcessValidateInsert processValidateInsert=new ProcessValidateInsert();
+            Integer parentProcessId;
+            boolean triggerCheck=processValidateInsert.ProcessTypeValidator(process,null);
+            if(triggerCheck==true)
+                {
+                    parentProcessId = (Integer) session.save(process);
+                }
+            else
+                {
+                    parentProcessId=null;
+                    throw new MetadataException("error occured");
+                }
 
-            Integer parentProcessId = (Integer) session.save(process);
             LOGGER.info("ProcessID of Process inserted is " + process.getProcessId());
 
             // ('MQ Import Step',current_timestamp, 'MQ Import Step',busdomainid,21,ppid,canrecover,0,null,ppid,0);
@@ -155,7 +169,18 @@ public class MQImportSetupDAO {
             subProcess.setEnqueuingProcessId(0);
             subProcess.setNextProcessId(parentProcessId.toString());
             subProcess.setDeleteFlag(false);
-            Integer subProcessId = (Integer) session.save(subProcess);
+            Integer subProcessId;
+            triggerCheck=processValidateInsert.ProcessTypeValidator(process,process);
+            if(triggerCheck==true)
+            {
+                subProcessId = (Integer) session.save(subProcess);
+            }
+            else
+            {
+                parentProcessId=null;
+                throw new MetadataException("error occured");
+            }
+
             LOGGER.info("sub process id" + subProcessId);
             LOGGER.info("ProcessID of SubProcess inserted is " + subProcess.getProcessId());
 
