@@ -87,8 +87,9 @@ public class FileMonitor implements FileListener {
         fileCopyInfo.setFileName(fileName);
         fileCopyInfo.setSubProcessId(FileMonRunnableMain.getSubProcessId());
         fileCopyInfo.setServerId(new Integer(123461).toString());
-        fileCopyInfo.setSrcLocation(dirPath);
-        // fileCopyInfo.setDstLocation(fileMonInfo.getDstLocation());
+        //TODO: Don't separateout file/directory
+        fileCopyInfo.setSrcLocation(dirPath+"/"+fileName);
+        fileCopyInfo.setDstLocation(FileMonRunnableMain.getHdfsUploadDir());
         fileCopyInfo.setFileContent(fc);
         // putting element to structure
         fileToCopyMap.put(fileName, fileCopyInfo);

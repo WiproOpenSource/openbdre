@@ -9,8 +9,14 @@ package com.wipro.ats.bdre.filemon;
 import com.wipro.ats.bdre.IMConfig;
 import com.wipro.ats.bdre.im.etl.api.base.ETLBase;
 import com.wipro.ats.bdre.im.etl.api.exception.ETLException;
+import com.wipro.ats.bdre.md.api.GetGeneralConfig;
 import com.wipro.ats.bdre.md.api.GetProperties;
+import com.wipro.ats.bdre.md.beans.table.GeneralConfig;
 import org.apache.commons.cli.CommandLine;
+import org.apache.commons.vfs2.FileObject;
+import org.apache.commons.vfs2.FileSystemManager;
+import org.apache.commons.vfs2.VFS;
+import org.apache.commons.vfs2.impl.DefaultFileMonitor;
 import org.apache.log4j.Logger;
 
 import java.util.Properties;
@@ -25,6 +31,18 @@ public class FileMonRunnableMain extends ETLBase {
     private static boolean deleteCopiedSrc = false;
     private static String hdfsUploadDir = "";
     private static String subProcessId = "";
+    private static long sleepTime;
+    private static String defaultFSName;
+
+    public static long getSleepTime() {
+        return sleepTime;
+    }
+
+    public static void setSleepTime(long sleepTime) {
+        FileMonRunnableMain.sleepTime = sleepTime;
+    }
+
+
 
     public static String getFilePattern() {
         return filePattern;
@@ -76,34 +94,48 @@ public class FileMonRunnableMain extends ETLBase {
         return subProcessId;
     }
 
+    public static String getDefaultFSName() {
+        return defaultFSName;
+    }
+
     private void execute(String[] params) {
         try {
             CommandLine commandLine = getCommandLine(params, PARAMS_STRUCTURE);
             GetProperties getProperties = new GetProperties();
             //LOGGER.info("property is "+commandLine.getOptionValue("p"));
-            Properties properties=getProperties.getProperties(commandLine.getOptionValue("p"), "fileMon");
+            String pid=commandLine.getOptionValue("p");
+            //TODO: This is wrong. You need to put the READ subpid that comes under pid
+            subProcessId=pid;
+            Properties properties=getProperties.getProperties(subProcessId, "fileMon");
             LOGGER.info("property is "+properties);
+            GetGeneralConfig generalConfig = new GetGeneralConfig();
+            GeneralConfig gc=generalConfig.byConigGroupAndKey("imconfig","common.default-fs-name");
 
-            //mrt.setEnv(env);
-
+            defaultFSName=gc.getDefaultVal();
             monitoredDirName=properties.getProperty("monitoredDirName");
             filePattern=properties.getProperty("filePattern");
             hdfsUploadDir=properties.getProperty("hdfsUploadDir");
-            subProcessId=properties.getProperty("subProcessId");
-            deleteCopiedSrc=Boolean.parseBoolean(properties.getProperty("deleteCopiedSrc"));
-            FileMonRunnable fileMonRunnable = new FileMonRunnable();
-            Thread t = new Thread(fileMonRunnable);
-            t.start();
-            long sleepTime = Long.parseLong(properties.getProperty("sleepTime"));
 
-            while (FileMonRunnable.runnableCount <= 10) {
-                try {
-                    Thread.sleep(sleepTime);
-                } catch (InterruptedException iex) {
-                    LOGGER.error(iex.getMessage());
-                    throw new ETLException(iex);
-                }
-            }
+            deleteCopiedSrc=Boolean.parseBoolean(properties.getProperty("deleteCopiedSrc"));
+            sleepTime = Long.parseLong(properties.getProperty("sleepTime"));
+
+            //Now run the monitoring thread
+            //This is a daemon thread
+            FileSystemManager fsManager = VFS.getManager();
+            //Reading directory paths and adding to the DefaultFileMonitor
+            String dir = FileMonRunnableMain.getMonitoredDirName();
+            DefaultFileMonitor fm = new DefaultFileMonitor(FileMonitor.getInstance());
+            FileObject listendir = fsManager.resolveFile(dir);;
+            LOGGER.debug("Monitoring directories " + dir);
+            LOGGER.info("Dir value"+ listendir);
+            fm.setRecursive(false);
+            fm.addFile(listendir);
+            fm.start();
+
+            //Now starting the consumer thread
+            Thread consumerThread = new Thread(new QueueConsumerRunnable());
+            consumerThread.start();
+
         } catch (Exception err) {
             LOGGER.error(err.getMessage());
             throw new ETLException(err);

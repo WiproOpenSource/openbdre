@@ -17,25 +17,18 @@ import org.apache.log4j.Logger;
 /**
  * Created by vishnu on 1/11/15.
  */
-public class FileMonRunnable implements Runnable {
-    private static final Logger LOGGER = Logger.getLogger(FileMonRunnable.class);
-    public static int runnableCount = 0;
+public class QueueConsumerRunnable implements Runnable {
+    private static final Logger LOGGER = Logger.getLogger(QueueConsumerRunnable.class);
 
     @Override
     public void run() {
         try {
-            FileSystemManager fsManager = VFS.getManager();
-            //Reading directory paths and adding to the DefaultFileMonitor
-            String dir = FileMonRunnableMain.getMonitoredDirName();
+           while(true){
+               QueuedFileUploader.executeCopyProcess();
+               //TODO: Use what u are capturing from the UI
+               Thread.sleep(1000);
+           }
 
-            DefaultFileMonitor fm = new DefaultFileMonitor(FileMonitor.getInstance());
-            FileObject listendir = null;
-
-            LOGGER.debug("Monitoring directories " + dir);
-            listendir = fsManager.resolveFile(dir);
-            fm.setRecursive(true);
-            fm.addFile(listendir);
-            fm.start();
         } catch (Exception err) {
             LOGGER.error(err.toString());
             throw new ETLException(err);
