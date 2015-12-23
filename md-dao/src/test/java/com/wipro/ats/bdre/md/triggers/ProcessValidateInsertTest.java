@@ -40,7 +40,7 @@ public class ProcessValidateInsertTest {
             Process parentProcessCheck =new Process();
             parentProcessCheck.setProcessId(10802);
             ProcessType parentProcessType=new ProcessType();
-            parentProcessType.setProcessTypeId(19);
+            parentProcessType.setProcessTypeId(18);
             parentProcessCheck.setProcessType(parentProcessType);
             parentProcessCheck.setProcess(null);
             ProcessValidateInsert processValidateInsert=new ProcessValidateInsert();
