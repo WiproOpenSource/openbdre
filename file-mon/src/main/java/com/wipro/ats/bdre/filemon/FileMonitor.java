@@ -73,7 +73,12 @@ public class FileMonitor implements FileListener {
             LOGGER.debug("Matched File Pattern by " + fileName);
             putEligibleFileInfoInMap(dirPath, fileName, fc);
         }
-        }
+
+
+
+        // executeRegisterFiles(fc, subProcessId, new Integer(123461).toString(), dirPath + "/" + fileName);
+
+    }
 
 
     private void putEligibleFileInfoInMap(String dirPath, String fileName, FileContent fc) {
