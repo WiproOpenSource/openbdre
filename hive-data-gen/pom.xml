@@ -70,7 +70,7 @@
                             </transformers>
                             <shadedArtifactAttached>true</shadedArtifactAttached>
                             <shadedClassifierName>executable</shadedClassifierName>
-                            <finalName>hive-data-gen-${project.version}-jar-with-dependencies</finalName>
+                            <finalName>hive-data-gen-${project.version}</finalName>
                         </configuration>
                     </execution>
                 </executions>
