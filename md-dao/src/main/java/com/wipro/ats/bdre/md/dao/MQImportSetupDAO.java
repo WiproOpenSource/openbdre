@@ -129,21 +129,17 @@ public class MQImportSetupDAO {
             process.setNextProcessId(" ");
             ProcessValidateInsert processValidateInsert=new ProcessValidateInsert();
             Integer parentProcessId;
-            if(process.getProcess()!=null) {
-                boolean triggerCheck=processValidateInsert.ProcessTypeValidator(process);
-                if(triggerCheck==true)
+            boolean triggerCheck=processValidateInsert.ProcessTypeValidator(process,null);
+            if(triggerCheck==true)
                 {
                     parentProcessId = (Integer) session.save(process);
                 }
-                else
+            else
                 {
                     parentProcessId=null;
                     throw new MetadataException("error occured");
                 }
-            }
-            else {
-                parentProcessId = (Integer) session.save(process);
-            }
+
             LOGGER.info("ProcessID of Process inserted is " + process.getProcessId());
 
             // ('MQ Import Step',current_timestamp, 'MQ Import Step',busdomainid,21,ppid,canrecover,0,null,ppid,0);
@@ -173,7 +169,18 @@ public class MQImportSetupDAO {
             subProcess.setEnqueuingProcessId(0);
             subProcess.setNextProcessId(parentProcessId.toString());
             subProcess.setDeleteFlag(false);
-            Integer subProcessId = (Integer) session.save(subProcess);
+            Integer subProcessId;
+            triggerCheck=processValidateInsert.ProcessTypeValidator(process,process);
+            if(triggerCheck==true)
+            {
+                subProcessId = (Integer) session.save(subProcess);
+            }
+            else
+            {
+                parentProcessId=null;
+                throw new MetadataException("error occured");
+            }
+
             LOGGER.info("sub process id" + subProcessId);
             LOGGER.info("ProcessID of SubProcess inserted is " + subProcess.getProcessId());
 

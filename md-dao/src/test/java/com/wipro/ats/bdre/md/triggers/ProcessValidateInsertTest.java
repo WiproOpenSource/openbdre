@@ -31,13 +31,20 @@ public class ProcessValidateInsertTest {
             Process process =new Process();
             process.setProcessId(10805);
             ProcessType processType=new ProcessType();
-            processType.setProcessTypeId(1);
+            processType.setProcessTypeId(14);
             Process parentProcess=new Process();
             parentProcess.setProcessId(10802);
             process.setProcessType(processType);
             process.setProcess(parentProcess);
+
+            Process parentProcessCheck =new Process();
+            parentProcessCheck.setProcessId(10802);
+            ProcessType parentProcessType=new ProcessType();
+            parentProcessType.setProcessTypeId(19);
+            parentProcessCheck.setProcessType(parentProcessType);
+            parentProcessCheck.setProcess(null);
             ProcessValidateInsert processValidateInsert=new ProcessValidateInsert();
-            processValidateInsert.ProcessTypeValidator(process);
+            processValidateInsert.ProcessTypeValidator(process,parentProcessCheck);
         }
         catch (MetadataException e)
         {
