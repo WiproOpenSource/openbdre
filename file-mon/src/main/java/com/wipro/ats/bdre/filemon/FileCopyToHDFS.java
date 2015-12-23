@@ -25,9 +25,12 @@ public class FileCopyToHDFS {
     private FileCopyInfo fileCopying;
     private static Configuration config = new Configuration();
 
-    public static void main(String args[]){
+    public static void main(String args[]) throws IOException{
         config.addResource("/etc/hadoop/conf/core-site.xml");
         config.addResource("/etc/hadoop/conf/hdfs-site.xml");
+
+        new FileCopyToHDFS().executeCopyProcess();
+
     }
 
     private void executeCopyProcess() throws IOException{
@@ -40,7 +43,6 @@ public class FileCopyToHDFS {
             FileSystem fs = FileSystem.get(config);
             fs.copyFromLocalFile(false, true, new Path(fileCopying.getSrcLocation()),
                     new Path(fileCopying.getDstLocation()));
-
             // calling register file
             executeRegisterFiles(fileCopying.getFileContent(), fileCopying.getSubProcessId(), fileCopying.getServerId(), fileCopying.getDstLocation() + "/" + key);
         }catch(IOException ioex){
