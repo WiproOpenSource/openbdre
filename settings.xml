@@ -41,7 +41,8 @@
                 <oozie.version>4.1.0</oozie.version>
                 <storm.version>0.9.3</storm.version>
                 <kafka.version>0.8.1.1</kafka.version>
-                <pig.version>0.15.0</pig.version> <flume.version>1.6.0</flume.version>
+                <pig.version>0.15.0</pig.version>
+                <flume.version>1.6.0</flume.version>
             </properties>
         </profile>
         <profile>
