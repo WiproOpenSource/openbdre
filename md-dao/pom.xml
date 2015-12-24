@@ -56,7 +56,7 @@
                             </components>
                             <componentProperties>
                                 <revengfile>../databases/${database}/hibernate/reveng.xml</revengfile>
-                                <propertyfile>${user.home}/db.properties</propertyfile>
+                                <propertyfile>src/main/resources/db.properties</propertyfile>
                                 <packagename>com.wipro.ats.bdre.md.dao.jpa</packagename>
                                 <jdk5>true</jdk5>
                                 <ejb3>true</ejb3>
@@ -116,47 +116,14 @@
                         </goals>
                         <configuration>
                             <files>
-                                <file>${user.home}/db.properties</file>
+                                <file>src/main/resources/db.properties</file>
                             </files>
                         </configuration>
                     </execution>
                 </executions>
             </plugin>
+    </plugins>
 
-            <plugin>
-                <artifactId>maven-resources-plugin</artifactId>
-                <version>2.7</version>
-                <executions>
-                    <execution>
-                        <id>copy-resources</id>
-                        <!-- here the phase you need -->
-                        <phase>clean</phase>
-                        <goals>
-                            <goal>copy-resources</goal>
-                        </goals>
-                        <configuration>
-                            <outputDirectory>${user.home}</outputDirectory>
-                            <resources>
-                                <resource>
-                                    <directory>${project.parent.basedir}/databases/h2</directory>
-                                    <includes>
-                                        <include>bdre.h2.db</include>
-                                        <include>bdre.trace.db</include>
-                                    </includes>
-                                </resource>
-                                <resource>
-                                    <directory>${project.basedir}/src/main/resources</directory>
-                                    <includes>
-                                        <include>db.properties</include>
-                                    </includes>
-                                </resource>
-                            </resources>
-                            <overwrite>false</overwrite>
-                        </configuration>
-                    </execution>
-                </executions>
-            </plugin>
-        </plugins>
     </build>
     <dependencies>
 
