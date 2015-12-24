@@ -10,7 +10,7 @@ spring-context-3.0.xsd
 http://www.springframework.org/schema/tool
 spring-tool-3.0.xsd">
     <context:annotation-config/>
-    <context:property-placeholder location="classpath*:../../../md-dao/src/main/resources/db.properties"/>
+    <context:property-placeholder location="classpath*:../../../../md-dao/src/main/resources/db.properties"/>
     <context:component-scan
             base-package="com.wipro.ats.bdre.imcrawler"/>
 

@@ -162,14 +162,37 @@
                 </execution></executions>
                 <dependencies>
                     <dependency>
+                        <groupId>org.apache.derby</groupId>
+                        <artifactId>derby</artifactId>
+                        <version>${derby.version}</version>
+                    </dependency>
+
+                    <dependency>
                         <groupId>mysql</groupId>
                         <artifactId>mysql-connector-java</artifactId>
                         <version>${mysql.connector.version}</version>
                     </dependency>
                     <dependency>
+                        <groupId>com.h2database</groupId>
+                        <artifactId>h2</artifactId>
+                        <version>${h2.version}</version>
+                    </dependency>
+                    <dependency>
+                        <groupId>com.oracle</groupId>
+                        <artifactId>ojdbc6</artifactId>
+                        <version>${oracle.version}</version>
+                    </dependency>
+
+                    <dependency>
+                        <groupId>postgresql</groupId>
+                        <artifactId>postgresql</artifactId>
+                        <version>${postgresql.version}</version>
+                    </dependency>
+
+                    <dependency>
                         <groupId>cglib</groupId>
                         <artifactId>cglib-nodep</artifactId>
-                        <version>2.2.2</version>
+                        <version>${cglib.version}</version>
                     </dependency>
                 </dependencies>
             </plugin>
