@@ -15,15 +15,15 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.AutowireCapableBeanFactory;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
-
+import static org.junit.Assert.*;
 import java.util.Date;
 import java.util.List;
 
 /**
  * Created by PR324290 on 12/17/2015.
  */
-public class ProcessTest {
-    private static final Logger LOGGER = Logger.getLogger(ProcessTest.class);
+public class FullJobTest {
+    private static final Logger LOGGER = Logger.getLogger(FullJobTest.class);
 
     @Before
     public void init() {
@@ -47,12 +47,26 @@ public class ProcessTest {
 
 
     @Test
-     public void completeJObTest() throws Exception {
+     public void completeJobTest() throws Exception {
+
+
          BusDomain busDomain=new BusDomain();
          busDomain.setBusDomainName("testName");
          busDomain.setDescription("testDescription");
          busDomain.setBusDomainOwner("testOwner");
+
+        //inserting new BusDomain
          int busDomainId = busDomainDAO.insert(busDomain);
+        //updating inserted BusDomain
+          busDomain.setDescription("updateDescription");
+          busDomainDAO.update(busDomain);
+       //fetching updated busDomain
+          BusDomain updatedBusDomain=busDomainDAO.get(busDomainId);
+
+          assertEquals("update failed","updateDescription",updatedBusDomain.getDescription());
+
+   /*
+
          ProcessType processType = processTypeDAO.get(1);
          ProcessType childProcessType = processTypeDAO.get(12);
          WorkflowType workflowType=workflowTypeDAO.get(1);
@@ -255,7 +269,7 @@ public class ProcessTest {
         processDAO.delete(parentProcessId1);
         processDAO.delete(parentProcessId2);
         busDomainDAO.delete(busDomainId);
-
+*/
 
 
 
