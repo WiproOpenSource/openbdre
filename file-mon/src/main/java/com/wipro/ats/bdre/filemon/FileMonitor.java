@@ -7,7 +7,6 @@
 package com.wipro.ats.bdre.filemon;
 
 import com.wipro.ats.bdre.im.etl.api.exception.ETLException;
-import com.wipro.ats.bdre.md.api.RegisterFile;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.commons.collections4.map.LinkedMap;
 import org.apache.commons.vfs2.FileChangeEvent;
@@ -17,7 +16,6 @@ import org.apache.commons.vfs2.FileObject;
 import org.apache.log4j.Logger;
 
 import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.Hashtable;
 import java.util.List;
 
@@ -29,12 +27,28 @@ public class FileMonitor implements FileListener {
     private static final Logger LOGGER = Logger.getLogger(FileMonRunnableMain.class);
     private static FileMonitor fileMonitor = null;
     private SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
-    //HashTable Contains key as Directory Path and values as List of FileMonInfo Objects
-    private Hashtable<String, List<FileMonInfo>> fileSet = new Hashtable<String, List<FileMonInfo>>();
+
+
+    public static synchronized FileCopyInfo getFileInfoFromQueue() {
+        String key = FileMonitor.fileToCopyMap.firstKey();
+        LOGGER.debug("********before get fileToCopyMap is"+fileToCopyMap);
+        FileCopyInfo fileCopyInfo=fileToCopyMap.remove(key);
+        LOGGER.debug("********after get fileToCopyMap is"+fileToCopyMap);
+        return fileCopyInfo;
+    }
+
+    public static synchronized void addToQueue(String fileName, FileCopyInfo fileCopyInfo) {
+        LOGGER.debug("********before add fileToCopyMap is"+fileToCopyMap);
+        fileToCopyMap.put(fileName, fileCopyInfo);
+        LOGGER.debug("********after add fileToCopyMap is"+fileToCopyMap);
+    }
+    public static synchronized int getQueueSize(){
+        return fileToCopyMap.size();
+    }
 
     /* this data structure is used to maintain order and getting eldest element
-   * Map contain Filename as key and FileCopyInfo as value    * */
-    public static LinkedMap<String, FileCopyInfo> fileToCopyMap =
+       * Map contain Filename as key and FileCopyInfo as value    * */
+    private static LinkedMap<String, FileCopyInfo> fileToCopyMap =
             new LinkedMap<String, FileCopyInfo>();
 
     private FileMonitor() {
@@ -64,33 +78,36 @@ public class FileMonitor implements FileListener {
         FileObject obj = fileChangeEvent.getFile();
         LOGGER.debug("File Created " + obj.getURL());
         String dirPath = obj.getParent().getName().getPath();
+        if(!dirPath.equals(FileMonRunnableMain.getMonitoredDirName())){
+            return;
+        }
         String fileName = obj.getName().getBaseName();
 
         //Checking if the file name matches with the given pattern
         if (fileName.matches(FileMonRunnableMain.getFilePattern())) {
-           FileContent fc = obj.getContent();
+            FileContent fc = obj.getContent();
             LOGGER.debug("Matched File Pattern by " + fileName);
             putEligibleFileInfoInMap(fileName, fc);
         }
- }
+    }
 
 
-    private void putEligibleFileInfoInMap(String fileName, FileContent fc) {
+    private static void putEligibleFileInfoInMap(String fileName, FileContent fc) {
         // *Start*   Eligible files moved to data structure for ingestion to HDFS
         FileCopyInfo fileCopyInfo = new FileCopyInfo();
         try {
             fileCopyInfo.setFileName(fileName);
-        fileCopyInfo.setSubProcessId(FileMonRunnableMain.getSubProcessId());
-        fileCopyInfo.setServerId(new Integer(123461).toString());
-        fileCopyInfo.setSrcLocation(fc.getFile().getURL().toString());
-        fileCopyInfo.setDstLocation(FileMonRunnableMain.getHdfsUploadDir());
-        fileCopyInfo.setFileHash(DigestUtils.md5Hex(fc.getInputStream()));
-        fileCopyInfo.setFileSize(fc.getSize());
-        fileCopyInfo.setTimeStamp(fc.getLastModifiedTime());
-        // putting element to structure
-        fileToCopyMap.put(fileName, fileCopyInfo);
+            fileCopyInfo.setSubProcessId(FileMonRunnableMain.getSubProcessId());
+            fileCopyInfo.setServerId(new Integer(123461).toString());
+            fileCopyInfo.setSrcLocation(fc.getFile().getName().getPath());
+            fileCopyInfo.setDstLocation(FileMonRunnableMain.getHdfsUploadDir());
+            fileCopyInfo.setFileHash(DigestUtils.md5Hex(fc.getInputStream()));
+            fileCopyInfo.setFileSize(fc.getSize());
+            fileCopyInfo.setTimeStamp(fc.getLastModifiedTime());
+            // putting element to structure
+           addToQueue(fileName,fileCopyInfo);
         } catch (Exception err) {
-            LOGGER.error(err.getMessage());
+            LOGGER.error("Error adding file"+err);
             throw new ETLException(err);
         }
         // *End*   Eligible files moved to data structure for ingestion to HDFS

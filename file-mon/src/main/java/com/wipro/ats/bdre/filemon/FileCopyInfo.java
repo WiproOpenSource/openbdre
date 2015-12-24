@@ -1,7 +1,5 @@
 package com.wipro.ats.bdre.filemon;
 
-import org.apache.commons.vfs2.FileContent;
-
 /**
  * Created by MO335755 on 12/22/2015.
  */

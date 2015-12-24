@@ -7,10 +7,6 @@
 package com.wipro.ats.bdre.filemon;
 
 import com.wipro.ats.bdre.im.etl.api.exception.ETLException;
-import org.apache.commons.vfs2.FileObject;
-import org.apache.commons.vfs2.FileSystemManager;
-import org.apache.commons.vfs2.VFS;
-import org.apache.commons.vfs2.impl.DefaultFileMonitor;
 import org.apache.log4j.Logger;
 
 
@@ -23,10 +19,10 @@ public class QueueConsumerRunnable implements Runnable {
     @Override
     public void run() {
         try {
-           while(true){
-               QueuedFileUploader.executeCopyProcess();
-               Thread.sleep(FileMonRunnableMain.getSleepTime());
-           }
+            while (true) {
+                QueuedFileUploader.executeCopyProcess();
+                Thread.sleep(FileMonRunnableMain.getSleepTime());
+            }
         } catch (Exception err) {
             LOGGER.error(err.toString());
             throw new ETLException(err);
