@@ -1,4 +1,4 @@
-#!/bin/sh
+rcmd#!/bin/sh
 source ./deploy-env.properties
 
 if [ -z "$1" ] || [ -z "$2" ] || [ -z "$3" ] ; then
@@ -36,11 +36,46 @@ fi
 if [ $? -eq 1 ]
 then exit 1
 fi
+
 #move generated conf to edge node process dir
 mv flume-$processId.conf BDRE/$busDomainId/$processTypeId/$processId
 if [ $? -eq 1 ]
 then exit 1
 fi
 
+#move generated jars in flume-ng lib
+sudo cp $pathForFlumeHDFSSinkJar/flume-hdfs-sink-$bdreVersion.jar $flumeLibDir
+if [ $? -eq 1 ]
+then exit 1
+fi
+
+sudo cp $pathForFlumeHDFSSinkJar/flume-ng-auth-1.6.0.jar $flumeLibDir
+if [ $? -eq 1 ]
+then exit 1
+fi
+
+sudo cp $pathForFlumeHDFSSinkJar/md_api-$bdreVersion.jar $flumeLibDir
+if [ $? -eq 1 ]
+then exit 1
+fi
+
+sudo cp $pathForFlumeHDFSSinkJar/md-commons-$bdreVersion.jar $flumeLibDir
+if [ $? -eq 1 ]
+then exit 1
+fi
 
 
+sudo cp $pathForFlumeHDFSSinkJar/mysql-connector-java-5.1.34.jar $flumeLibDir
+if [ $? -eq 1 ]
+then exit 1
+fi
+
+sudo cp $pathForFlumeHDFSSinkJar/slf4j-api-1.7.10.jar $flumeLibDir
+if [ $? -eq 1 ]
+then exit 1
+fi
+
+sudo cp $pathForFlumeHDFSSinkJar/slf4j-log4j12-1.7.5.jar $flumeLibDir
+if [ $? -eq 1 ]
+then exit 1
+fi
