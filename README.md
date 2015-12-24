@@ -1,16 +1,17 @@
-If you can see this page then you are added to the BDRE project. This document will help you build BDRE from source. Audience for this document are developers and architects who want be part of BDRE framework development or may just want to test it by running the UI. Please read [this document](https://gitlab.com/bdre/documentation/wikis/list-of-things-to-learn-for-BDRE-framework-development) and understand the skillset needed (or to be learned) for contributing to BDRE.
+### Overview
+
+This document will help you build BDRE from source. Audience for this document are developers and architects who want be part of BDRE framework development or may just want to test it by running the UI. Please read [this document](https://gitlab.com/bdre/documentation/wikis/list-of-things-to-learn-for-BDRE-framework-development) and understand the skillset needed (or to be learned) for contributing to BDRE.
 
 ### Setup
 
 * Install Git, MVN and Oracle JDK 7 if you haven't already. In Windows be sure add git and other bash tools in the commandline path during installation. To get started download and install following free, safe and open source software.
 
- - Oracle JDK 7 [Download for Windows](https://s3.amazonaws.com/bdre-public/software/jdk-7u79-windows-x64.exe)
+ - Oracle JDK 7 
  - Git Command line Client (For Windows - GitBash)[Download for Windows](https://git-scm.com/download/win)
  - Maven [Download for Windows](http://apache.mirrors.pair.com/maven/maven-3/3.3.3/binaries/apache-maven-3.3.3-bin.zip)
- - IntelliJ Idea (download Community edition)[Download for Windows](https://www.jetbrains.com/idea/download/)
+ - IntelliJ Idea (download Community edition)[Download](https://www.jetbrains.com/idea/download/)
  - MySQL 5.6 [Download for Windows](https://s3.amazonaws.com/bdre-public/software/mysql-installer-community-5.6.25.0.msi)
 
-Alternatively you can look into our shared folder \\\\D-113074428\bdre\Software if you are within Wipro backbone and download the software from there.
 
 For complete software requirement read [this](https://gitlab.com/bdre/documentation/wikis/software-requirement-for-bdre-development). You don't need to download all software to run the UI in the browser. Git, Maven, MySQL and Intellij should be enough.
 
@@ -20,7 +21,7 @@ After installing Git first set your full name (like John Doe) and email id in gi
 
 `git config --global user.name "Your Name"`
 
-`git config --global user.email "your_email@wipro.com"`
+`git config --global user.email "your_email@company.com"`
 
 Replace *Your Name* and *your_email* with your real name and Wipro email.
 * Add `jdk` location in the PATH env variable.
@@ -32,34 +33,35 @@ Replace *Your Name* and *your_email* with your real name and Wipro email.
 
 ### Proxy setup while working inside Wipro network
 
-- If you are working from Wipro office and behind Wipro proxy then you need to setup proxy for command line operations. The easiest way to do that would be adding 3 environment variables before performing any git operations. If you want to set proxy permanently then [read this](http://www.microsoft.com/resources/documentation/windows/xp/all/proddocs/en-us/sysdm_advancd_environmnt_addchange_variable.mspx?mfr=true).
+- If you are behind proxy then you need to setup proxy for command line operations. The easiest way to do that would be adding 3 environment variables before performing any git operations. If you want to set proxy permanently then [read this](http://www.microsoft.com/resources/documentation/windows/xp/all/proddocs/en-us/sysdm_advancd_environmnt_addchange_variable.mspx?mfr=true).
 
 
 ```shell
 In Linux use this:
-export http_proxy=http://<wipro_ad_id>:<ad_pwd>@proxy1.wipro.com:8080
+export http_proxy=http://<proxy username>:<proxy password>@<your proxy server>:<proxy port>
 export https_proxy=http://<wipro_ad_id>:<ad_pwd>@proxy1.wipro.com:8080
 export no_proxy=localhost
 
-Or you can use this in Windows:
-set http_proxy=http://<wipro_ad_id>:<ad_pwd>@proxy1.wipro.com:8080
-set https_proxy=http://<wipro_ad_id>:<ad_pwd>@proxy1.wipro.com:8080
-set no_proxy=localhost
 ```
+Replace `export` with `set` if you are working in Windows.
 
-### Test your git access:
-
-**Git Proxy Setting:** When you are working behind a proxy, git needs proxy configuration to connect to repositories.
+**Git Proxy Setting:** Git sometimes needs separate proxy configuration to connect to repositories.
 
 For e.g. to set proxy:
 
-`git config --global https.proxy https://WIPRO\username:password@proxy1.wipro.com:8080`
-`git config --global http.proxy http://WIPRO\username:password@proxy1.wipro.com:8080`
+`git config --global https.proxy https://username:password@proxy1.wipro.com:8080`
+`git config --global http.proxy http://username:password@proxy1.wipro.com:8080`
+
+Note: If your proxy uses Active Directory authentication then you need to add `DOMAIN\` before the username
 
 To reset:
 
 `git config --global --unset https.proxy`
 `git config --global --unset http.proxy`
+
+### Test your git access:
+
+
 
 
 You may skip this section if you are familiar with Git version control or in hurry :-).

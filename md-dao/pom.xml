@@ -33,7 +33,6 @@
 
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>hibernate3-maven-plugin</artifactId>
-                <version>2.2</version>
                 <executions>
                     <execution>
                         <id>hbm2java</id>
@@ -189,10 +188,10 @@
             <artifactId>h2</artifactId>
             <version>1.4.190</version>
         </dependency>
+
         <dependency>
             <groupId>org.hibernate.javax.persistence</groupId>
-            <artifactId>hibernate-jpa-2.0-api</artifactId>
-            <version>1.0.1.Final</version>
+            <artifactId>hibernate-jpa-2.1-api</artifactId>
         </dependency>
 
         <dependency>
@@ -209,12 +208,10 @@
         <dependency>
             <groupId>org.hibernate</groupId>
             <artifactId>hibernate-entitymanager</artifactId>
-            <version>4.2.0.Final</version>
         </dependency>
         <dependency>
             <groupId>org.hibernate</groupId>
             <artifactId>hibernate-core</artifactId>
-            <version>4.2.0.Final</version>
         </dependency>
 
         <dependency>
