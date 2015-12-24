@@ -41,7 +41,6 @@ public class SetupDB {
     private Session session;
 
     public static void main(String[] args) {
-        System.out.println("args = " + args[0]);
         String projectRoot="";
         if(args!=null && args.length != 0 && args[0]!=null && !args[0].isEmpty()){
             projectRoot=args[0]+"/";
