@@ -37,7 +37,6 @@
         <module>flume-conf-generator</module>
         <module>jaas-login</module>
         <module>md-ear</module>
-        <module>rest-exec</module>
         <module>etl-driver</module>
         <module>data-extraction</module>
         <module>data-export</module>
