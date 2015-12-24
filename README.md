@@ -86,13 +86,7 @@ Once you are able to access git and became familiar, please checkout three BDRE 
 
 `git clone https://<yourid>gitlab.com/bdre/bdre-app.git`
 
-You can proceed to 'Building' section if you just want to run the UI. You do not need to clone or build the Jack repo to run the UI.
-
-
-### Jack Repository:
-
-`git clone https://<yourid>@gitlab.com/bdre/jack.git`
-
+You can proceed to 'Building' section if you just want to run the UI.
 
 
 **Important:** Dealing with line endings
@@ -110,9 +104,9 @@ For further changes to convert CRLF to LF when you are using linux systems refer
 
 * Open your settings.xml. It’s in **~/.m2/settings.xml**. If not present please create it. Alternatively you can right click any .pom in IntelliJ Idea and open/create **settings.xml**.
 
-* Obtain the [settings.xml](https://gitlab.com/bdre/jack/raw/develop/installer/guestfiles/maven/settings.xml) from Jack/installer/guestfiles/maven/ and replace your local **~/.m2/settings.xml**.
+* Use the settings.xml which is present in bdre-app repo and replace your local **~/.m2/settings.xml**.
 
-* NOTE : Add or change the jar versions in settings.xml according to your need but pasting [settings.xml](https://gitlab.com/bdre/jack/raw/develop/installer/guestfiles/maven/settings.xml) AS IS should be fine.
+* NOTE : Add or change the jar versions in settings.xml according to your need.
 *If you have proxied internet access then [configure proxy](http://maven.apache.org/guides/mini/guide-proxies.html)
 
 Behind proxied networks, placing following in settings.xml should work.
