@@ -56,7 +56,7 @@
                             </components>
                             <componentProperties>
                                 <revengfile>../databases/${database}/hibernate/reveng.xml</revengfile>
-                                <propertyfile>${user.home}/db.properties</propertyfile>
+                                <propertyfile>src/main/resources/db.properties</propertyfile>
                                 <packagename>com.wipro.ats.bdre.md.dao.jpa</packagename>
                                 <jdk5>true</jdk5>
                                 <ejb3>true</ejb3>
@@ -116,54 +116,20 @@
                         </goals>
                         <configuration>
                             <files>
-                                <file>${user.home}/db.properties</file>
+                                <file>src/main/resources/db.properties</file>
                             </files>
                         </configuration>
                     </execution>
                 </executions>
             </plugin>
+    </plugins>
 
-            <plugin>
-                <artifactId>maven-resources-plugin</artifactId>
-                <version>2.7</version>
-                <executions>
-                    <execution>
-                        <id>copy-resources</id>
-                        <!-- here the phase you need -->
-                        <phase>clean</phase>
-                        <goals>
-                            <goal>copy-resources</goal>
-                        </goals>
-                        <configuration>
-                            <outputDirectory>${user.home}</outputDirectory>
-                            <resources>
-                                <resource>
-                                    <directory>${project.parent.basedir}/databases/h2</directory>
-                                    <includes>
-                                        <include>bdre.h2.db</include>
-                                        <include>bdre.trace.db</include>
-                                    </includes>
-                                </resource>
-                                <resource>
-                                    <directory>${project.basedir}/src/main/resources</directory>
-                                    <includes>
-                                        <include>db.properties</include>
-                                    </includes>
-                                </resource>
-                            </resources>
-                            <overwrite>false</overwrite>
-                        </configuration>
-                    </execution>
-                </executions>
-            </plugin>
-        </plugins>
     </build>
     <dependencies>
 
         <dependency>
             <groupId>org.apache.derby</groupId>
             <artifactId>derby</artifactId>
-            <version>10.11.1.1</version>
         </dependency>
 
         <dependency>
@@ -175,18 +141,15 @@
         <dependency>
             <groupId>com.oracle</groupId>
             <artifactId>ojdbc6</artifactId>
-            <version>11.2.0.3</version>
         </dependency>
 
         <dependency>
             <groupId>postgresql</groupId>
             <artifactId>postgresql</artifactId>
-            <version>9.1-901.jdbc4</version>
         </dependency>
         <dependency>
             <groupId>com.h2database</groupId>
             <artifactId>h2</artifactId>
-            <version>1.4.190</version>
         </dependency>
 
         <dependency>
@@ -197,12 +160,10 @@
         <dependency>
             <groupId>log4j</groupId>
             <artifactId>log4j</artifactId>
-            <version>${log4j.version}</version>
         </dependency>
         <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
-            <version>${junit.version}</version>
             <scope>test</scope>
         </dependency>
         <dependency>
@@ -213,13 +174,10 @@
             <groupId>org.hibernate</groupId>
             <artifactId>hibernate-core</artifactId>
         </dependency>
-
         <dependency>
             <groupId>commons-dbcp</groupId>
             <artifactId>commons-dbcp</artifactId>
-            <version>1.4</version>
         </dependency>
-
         <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-orm</artifactId>
@@ -227,21 +185,16 @@
         <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-jdbc</artifactId>
-
         </dependency>
-
         <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-web</artifactId>
-
         </dependency>
         <dependency>
             <groupId>${project.groupId}</groupId>
             <artifactId>md-commons</artifactId>
             <version>${project.version}</version>
         </dependency>
-
-
     </dependencies>
 
 </project>
