@@ -23,15 +23,15 @@ After installing Git first set your full name (like John Doe) and email id in gi
 
 `git config --global user.email "your_email@company.com"`
 
-Replace *Your Name* and *your_email* with your real name and your email.
+Replace *Your Name* and *your_email* with your real name and your real email.
 * Add `jdk` location in the PATH env variable.
 * Add `JAVA_HOME` env variable with your installed jdk location.
 * Add `mvn` location in the PATH env variable.
 * Add `M2_HOME` env variable with your installed maven location.
-* To use git from Command line, add `git` in the PATH env variable.
-* Add `mysql` location in the PATH env variable.
+* To use git from Command line, add `git` location in the PATH env variable.
+* To use mysql from Command Line, add `mysql` location in the PATH env variable.
 
-### Proxy setup while working inside Wipro network
+### Proxy setup while working behind a proxy network
 
 - If you are behind proxy then you need to setup proxy for command line operations. The easiest way to do that would be adding 3 environment variables before performing any git operations. If you want to set proxy permanently then [read this](http://www.microsoft.com/resources/documentation/windows/xp/all/proddocs/en-us/sysdm_advancd_environmnt_addchange_variable.mspx?mfr=true).
 
@@ -39,7 +39,7 @@ Replace *Your Name* and *your_email* with your real name and your email.
 ```shell
 In Linux use this:
 export http_proxy=http://<proxy username>:<proxy password>@<your proxy server>:<proxy port>
-export https_proxy=http://<wipro_ad_id>:<ad_pwd>@proxy1.wipro.com:8080
+export https_proxy=http://<proxy username>:<proxy password>@<your proxy server>:<proxy port>
 export no_proxy=localhost
 
 ```
@@ -49,26 +49,28 @@ Replace `export` with `set` if you are working in Windows.
 
 For e.g. to set proxy:
 
-`git config --global https.proxy https://username:password@proxy1.wipro.com:8080`
-`git config --global http.proxy http://username:password@proxy1.wipro.com:8080`
+`git config --global https.proxy https://<proxy username>:<proxy password>@<your proxy server>:<proxy port>`
+
+`git config --global http.proxy http://<proxy username>:<proxy password>@<your proxy server>:<proxy port>`
 
 Note: If your proxy uses Active Directory authentication then you need to add `DOMAIN\` before the username
 
-To reset:
+To reset configured proxy use this:
 
 `git config --global --unset https.proxy`
+
 `git config --global --unset http.proxy`
 
+
+
 ### Test your git access:
-
-
-
 
 You may skip this section if you are familiar with Git version control or in hurry :-).
 
 Please clone the following **test repo** in Gitlab and create your branch , make and push your change and test anything you want. You need to create a ssh key to make changes. Contact @bdremishi, @bdrearijit, @bdreharsha, @bdrekapil if you face any issues.
 
-Test this: `git clone http://wosggitlab.wipro.com/bdre/gitlabtest.git`
+Test this: `git clone https://<yourid>@gitlab.com/bdre/test.git`.
+Where *yourid* is your gitlab user id (like bdrejohn).
 
 If you are not familiar with Git version control, please read the following Git tutorials.
 
@@ -80,37 +82,18 @@ BDRE quick git head start - [bdre_getting_started.pptx](https://gitlab.com/bdre/
 
 Once you are able to access git and became familiar, please checkout three BDRE repositories.
 
-### MD Repository (metadata_management)
+### `bdre-app` Repository
 
-`git clone http://wosggitlab.wipro.com/bdre/metadata_management.git`
+`git clone https://<yourid>gitlab.com/bdre/bdre-app.git`
 
-```
-You can proceed to 'Building' section if you just want to run the UI. You do not need to clone or build the IM, Application or Jack repo to run the UI.
+You can proceed to 'Building' section if you just want to run the UI. You do not need to clone or build the Jack repo to run the UI.
 
-```
-
-### IM Repository (im_framework)
-
-`git clone http://wosggitlab.wipro.com/bdre/im_framework.git`
 
 ### Jack Repository:
 
-`git clone http://wosggitlab.wipro.com/bdre/jack.git`
+`git clone https://<yourid>@gitlab.com/bdre/jack.git`
 
-```
-**Note:**
 
-If you are part of BDRE Contributors and have access to Gitlab, then use the following git urls in place of the previous ones:
-
-* Gitlab Test: `git clone https://YOURID@gitlab.com/bdre/test.git`.
-Where *YOURID* is your gitlab user id (like bdrejohn).
-
-* MD Repository (metadata_management): `git clone https://<yourid>@gitlab.com/bdre/metadata_management.git`.
-
-* IM Repository (im_framework): `git clone https://<yourid>@gitlab.com/bdre/im_framework.git`.
-
-* Jack Repository: `git clone https://<yourid>@gitlab.com/bdre/jack.git`.
-```
 
 **Important:** Dealing with line endings
 
@@ -126,7 +109,7 @@ For further changes to convert CRLF to LF when you are using linux systems refer
 ## Building
 
 * You need to create your own environment. To create your environments, edit
- - metadata_management/md-commons/src/main/resources/mybatis-config.xml
+ - bdre-app/md-commons/src/main/resources/mybatis-config.xml
 
 You can setup an environment called `local` and assuming you are running MySQL server with default port configuration `localhost:3306`. Later you'd set the credentials of the DB. If `local` already exists then edit it or create it by coping an existing entry.
 
@@ -153,49 +136,49 @@ You can setup an environment called `local` and assuming you are running MySQL s
 environment=local
 ```
 
-* Open your settings.xml. It’s in **~/.m2/settings.xml**. If not present please create it. Alternatively you can right click any .pom in Idea and open/create **settings.xml**.
+* Open your settings.xml. It’s in **~/.m2/settings.xml**. If not present please create it. Alternatively you can right click any .pom in IntelliJ Idea and open/create **settings.xml**.
 
 * Obtain the [settings.xml](https://gitlab.com/bdre/jack/raw/develop/installer/guestfiles/maven/settings.xml) from Jack/installer/guestfiles/maven/ and replace your local **~/.m2/settings.xml**.
 
 * NOTE : Add or change the jar versions in settings.xml according to your need but pasting [settings.xml](https://gitlab.com/bdre/jack/raw/develop/installer/guestfiles/maven/settings.xml) AS IS should be fine.
 *If you have proxied internet access then [configure proxy](http://maven.apache.org/guides/mini/guide-proxies.html)
 
-In Wipro office, placing following in settings.xml should work.
+Behind proxied networks, placing following in settings.xml should work.
 
 ```xml
 <proxies>
         <proxy>
-            <id>wipro-proxy</id>
+            <id>your-proxy</id>
             <active>true</active>
             <protocol>http</protocol>
             <username>yourUserName</username>
             <password>yourPassword</password>
-            <host>proxy1.wipro.com</host>
-            <port>8080</port>
+            <host>proxyHost</host>
+            <port>proxyPort</port>
             <nonProxyHosts>localhost</nonProxyHosts>
         </proxy>
 </proxies>
 ```
-* Perform a mvn clean install in MD(first) and IM projects only.
+* Perform a mvn clean install in bdre-app project only.
+
+* Two additional jars are required for *flume-source* and JSON *SerDe*. For this to be done, download the zip from [here](https://github.com/cloudera/cdh-twitter-example.git) as these jars are still not available in the maven repository, they need to be custom built. 
+    - Goto *flume-sources* inside the folder and do `mvn clean install`.
+    - Goto *hive-serdes* inside the folder and do `mvn clean install`.
+    - From inside the flume-sources/target folder copy the `flume-sources-1.0-SNAPSHOT` jar to bdre-app/target/lib.
+    - From inside the hive-serdes/target folder copy the `hive-serdes-1.0-SNAPSHOT` jar to bdre-app/target/lib.
 
 ## Running the BDRE Web UI
 
-* Start MySQL 5.6 server and setup *platmd* DB and MySQL credentials
+* Start MySQL 5.6 server and create *platmd* DB and MySQL credentials
 
-  `mysql -uroot -e "create database platmd;"`
+  `mysql -u root -e "create database platmd;"`
 
   `mysqladmin -u root password 'root'`
 
-* create the tables and procs using metadata_management/mysql/scripts
-  - cd into metadata_management folder and execute following scripts
+* create the tables and procs using bdre-app/databases/mysql/ddls `drop-tables.sql` and`create-tables.sql` inside the various DB folders. Copy the commands and run in your specific DataBase GUI.
+  
 
-  `sh <YourPath>\metadata_management\mysql\scripts\create-tables.sh <database_user>
-<database_password> <database_name> <databse_server_hostname> <database_server_port>`
-
-  `sh <yourpath>\metadata_management\mysql\scripts\create-procs.sh <database_user>
-<database_password> <database_name> <databse_server_hostname> <database_server_port>`
-
-* After a successful build of both the MD and IM projects, cd into md-rest-api folder and start the Jetty server using metadata_management/md-rest-api/quick-run.bat (or .sh if you are using Unix)(Make sure the Batch Scripts Support for Windows or Bash Support for Unix plugin is installed)
+* After a successful build of bdre-app project, cd into md-rest-api folder and start the Jetty server using quick-run.bat (or .sh if you are using Unix)(Make sure the Batch Scripts Support for Windows or Bash Support for Unix plugin is installed)
 * Use Chrome browser and open http://localhost:9999/mdui/pages/content.page
 * Login using admin/zaq1xsw2
 * BDRE home page looks like [this](https://gitlab.com/bdre/documentation/uploads/6d1699cdbdb15648ba0b849dd1923367/bdress.png)
@@ -212,11 +195,11 @@ In Wipro office, placing following in settings.xml should work.
 ## Open the projects in IntelliJ Idea
 
 * We strongly recommend using IntelliJ Idea to develop BDRE. However BDRE should work fine with other Java IDEs
-* Start Idea and go to **File > Open ...** and then browse to the three repo folders from three separate Idea windows.
-* Idea will automatically detect the maven projects and prompt to *Import Changes*. Import changes. [Here](https://gitlab.com/bdre/documentation/uploads/5578910e1812ce684dd70b73fe345f0c/BDRE_idea.png) is how the metadata_management project looks while opened in Idea.
+* Start Idea and go to **File > Open ...** and then browse to the repo folder and open it.
+* Idea will automatically detect the maven projects and prompt to *Import Changes*. Import changes. [Here](https://gitlab.com/bdre/documentation/uploads/5578910e1812ce684dd70b73fe345f0c/BDRE_idea.png) is how the bdre-app project looks while opened in Idea.
 * After completion of import, open the terminal window and perform usual git and mvn operations.
   - e.g. mvn clean install
-* You *must* now create your own branch in all three projects when you are ready to contribute to BDRE. **Note:** Never modify code in develop branch.
+* You *must* now create your own branch in the project when you are ready to contribute to BDRE. * **Note:** Never modify code in develop branch.*
 * Please use [git properly](https://gitlab.com/bdre/documentation/uploads/af02e6fef5ef1137429561877703fcb4/bdre_getting_started.pptx) and contribute to the development.
 * For completed, committed and pushed changes, open *Merge Request* from gitlab.com.
 * Good luck!
