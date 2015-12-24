@@ -209,30 +209,21 @@ After making entries into metadata related to your process, you have to deploy t
 ### Steps to deploy your process
 1. Click deploy button on process page corresponding to the process you want to deploy. ( Deploy button will show status regarding deployment of process, when you hover over the button.)
 
-2. You have to copy [deploy-env.properties](https://gitlab.com/bdre/jack/tree/develop/installer/guestfiles/deploy/deploy-env.properties) file and [process-deploy.sh](https://gitlab.com/bdre/applications/blob/develop/app-commons/scripts/process-deploy.sh) file from application repositories and put properties file in same directory from where you are running the .sh file. You have to provide executable permissions to every shell script.
+2. You have to provide executable permissions to every shell script present in home folder.
 
 3. You have to edit deploy-env.properties. Set all properties based on your environment.
 
 4. Process Deploy main class calls deploy script based on type of container process. For Example for process type 1 it will call process-type-1.sh script.
 
-5. You have to specify path of your process-type-n.sh script in administration -> settings -> mdconfig -> deploy.script-path as `process-type-`.
-You have to provide executable permissions to every shell script.
-
-6. You have to setup a crontab in your environment. Crontab will run process-deploy.sh script.
+5. You have to setup a crontab in your environment. Crontab will run process-deploy.sh script present in home folder.
 for example `*/5 * * * * /home/cloudera/process-deploy.sh`.
 
-7. After the deployment is complete and in UI the status for the process is deployed (turns green), you have to execute it.
+6. After the deployment is complete and in UI the status for the process is deployed (turns green), you have to execute it.
 
-8. Download [Workflow.py](https://gitlab.com/bdre/applications/blob/develop/app-commons/scripts/Workflow.py) and [flume.sh](https://gitlab.com/bdre/applications/blob/develop/app-commons/scripts/flume.sh). Update Workflow.py and flume.sh according to your environment.
+7. Update Workflow.py and flume.sh according to your environment present in home folder.
+ Update hostname variable in Workflow.py.
+ Update `pathForFlumeng`, `pathForFlumeconf`, `pathForFlumeconfFile` variables in flume.sh.
 
-9. Update hostname variable in Workflow.py.
+8. To store logs for execution, you have to create log directory as mentioned in administration -> settings -> mdconfig -> execute.log-path. create directory and give permission for every user to write into it. `chmod -R 777 <folderName>`
 
-10. Update `pathForFlumeng`, `pathForFlumeconf`, `pathForFlumeconfFile` variables in flume.sh.
-
-11. To store logs for execution, you have to create log directory as mentioned in administration -> settings -> mdconfig -> execute.log-path. create directory and give permission for every user to write into it. `chmod -R 777 <folderName>`
-
-12. Also update path in administration -> settings -> mdconfig -> execute.oozie-script-path tags for Workflow.py. And under administration -> settings -> mdconfig -> execute.standalone-script-path for flume.sh.
-
-13. You have to start a jetty server on your hadoop environment. You will need rest-exec module in metadata_management repository. cd into rest-exec and run executor.sh to start the server. Then you have to specify the url of this server to administration -> settings -> mdconfig -> execute.rest-exec-url.
-
-14. By default server will start at 7777 port. You can change it, based on which port is open for you by updating executor.sh.
+9. Also update path in administration -> settings -> mdconfig -> execute.oozie-script-path tags for Workflow.py. And under administration -> settings -> mdconfig -> execute.standalone-script-path for flume.sh.
