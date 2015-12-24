@@ -17,19 +17,19 @@
 
     </mirrors>
 
-   <!-- <proxies>
+    <!--<proxies>
 
         <proxy>
             <id>optional</id>
             <active>true</active>
             <protocol>http</protocol>
-            <username>yourUsername</username>
+            <username>yourUserName</username>
             <password>yourPassword</password>
             <host>yourProxyHost</host>
             <port>yourProxyPort</port>
             <nonProxyHosts>www.google.com|*.example.com</nonProxyHosts>
         </proxy>
-    </proxies>  -->
+    </proxies> -->
 
     <profiles>
         <profile>
@@ -147,7 +147,7 @@
                 <mockito.version>1.9.0</mockito.version>
                 <commons.lang.version>2.5</commons.lang.version>
                 <hibernate.jpa.version>1.0.0.Final</hibernate.jpa.version>
-
+                <commons.dbcp.version>1.4</commons.dbcp.version>
             </properties>
         </profile>
         <profile>
