@@ -122,7 +122,7 @@ public class FileAPI extends MetadataAPIBase {
             List<com.wipro.ats.bdre.md.dao.jpa.File> jpaFileList = fileDAO.list(startPage, pageSize);
             LOGGER.info("size of the jpaFiles is " + jpaFileList.size());
             List<File> files = new ArrayList<File>();
-            Integer counter=jpaFileList.size();
+
             for (com.wipro.ats.bdre.md.dao.jpa.File jpaFile : jpaFileList) {
                 File tableFile = new File();
                 tableFile.setBatchId(jpaFile.getId().getBatchId());

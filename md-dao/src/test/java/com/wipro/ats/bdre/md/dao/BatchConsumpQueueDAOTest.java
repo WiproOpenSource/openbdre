@@ -71,6 +71,7 @@ public class BatchConsumpQueueDAOTest {
 
     @Test
     public void testInsertUpdateAndDelete() throws Exception {
+        
         com.wipro.ats.bdre.md.dao.jpa.Process process = processDAO.get(10835);
         Batch batch = batchDAO.get((long) 0);
         BatchStatus batchStatus = batchStatusDAO.get(0);

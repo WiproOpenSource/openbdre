@@ -8,6 +8,8 @@ CREATE TABLE  bus_domain  (
   PRIMARY KEY ( bus_domain_id )
 );
 
+
+
 CREATE TABLE  batch_status  (
    batch_state_id  integer NOT NULL,
    description  varchar(45) NOT NULL,
@@ -148,6 +150,9 @@ CREATE TABLE batch (
   PRIMARY KEY (batch_id),
   CONSTRAINT instance_exec_id FOREIGN KEY (source_instance_exec_id) REFERENCES instance_exec (instance_exec_id) ON DELETE NO ACTION ON UPDATE NO ACTION
 );
+
+
+
 CREATE TABLE file (
   batch_id bigint NOT NULL,
   server_id int NOT NULL,

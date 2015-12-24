@@ -144,7 +144,6 @@ public class BatchConsumpQueueAPI extends MetadataAPIBase {
             Integer counter=batchConsumpQueueDAO.totalRecordCount().intValue();
             List<com.wipro.ats.bdre.md.dao.jpa.BatchConsumpQueue> jpaBcqList = batchConsumpQueueDAO.list(startPage, pageSize);
             List<BatchConsumpQueue> batchConsumpQueues = new ArrayList<BatchConsumpQueue>();
-            Integer counter=jpaBcqList.size();
             for (com.wipro.ats.bdre.md.dao.jpa.BatchConsumpQueue jpaBcq : jpaBcqList) {
                 BatchConsumpQueue batchConsumpQueue = new BatchConsumpQueue();
                 batchConsumpQueue.setQueueId(jpaBcq.getQueueId());

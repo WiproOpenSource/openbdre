@@ -164,7 +164,7 @@ public class ProcessAPI extends MetadataAPIBase {
             Integer counter=processDAO.totalRecordCount(pid);
             List<com.wipro.ats.bdre.md.dao.jpa.Process> processList = processDAO.list(pid, startPage, pageSize);
             List<Process> processes = new ArrayList<Process>();
-            Integer counter=processList.size();
+
             for (com.wipro.ats.bdre.md.dao.jpa.Process daoProcess : processList) {
                 Process tableProcess = new Process();
                 tableProcess.setProcessId(daoProcess.getProcessId());

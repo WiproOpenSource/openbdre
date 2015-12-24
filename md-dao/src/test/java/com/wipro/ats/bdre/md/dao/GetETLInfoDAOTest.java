@@ -19,6 +19,7 @@ package com.wipro.ats.bdre.md.dao;
 import com.wipro.ats.bdre.md.beans.GetETLDriverInfo;
 import org.apache.log4j.Logger;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.AutowireCapableBeanFactory;
@@ -43,7 +44,7 @@ public class GetETLInfoDAOTest {
 
     @Autowired
     GetETLInfoDAO getETLInfoDAO;
-
+    @Ignore
     @Test
     public void testGetETLDriverInfos() throws Exception {
         List<GetETLDriverInfo> getETLDriverInfoList = getETLInfoDAO.getETLInfo(-1, 55);

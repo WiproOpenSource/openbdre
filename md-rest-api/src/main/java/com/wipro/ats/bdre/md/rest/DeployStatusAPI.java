@@ -121,7 +121,7 @@ public class DeployStatusAPI extends MetadataAPIBase {
             Integer counter=deployStatusDAO.totalRecordCount().intValue();
             List<com.wipro.ats.bdre.md.dao.jpa.DeployStatus> jpaDeployStatus = deployStatusDAO.list(startPage, pageSize);
             List<DeployStatus> deployStatuses = new ArrayList<DeployStatus>();
-            Integer counter =jpaDeployStatus.size();
+
             for (com.wipro.ats.bdre.md.dao.jpa.DeployStatus deployStatus : jpaDeployStatus) {
                 DeployStatus returnDeployStatus = new DeployStatus();
                 returnDeployStatus.setDeployStatusId((int) deployStatus.getDeployStatusId());

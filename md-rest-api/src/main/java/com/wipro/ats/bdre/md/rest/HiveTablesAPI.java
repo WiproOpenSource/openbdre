@@ -128,7 +128,7 @@ public class HiveTablesAPI extends MetadataAPIBase {
             Integer counter=hiveTablesDAO.totalRecordCount().intValue();
             List<com.wipro.ats.bdre.md.dao.jpa.HiveTables> jpaHiveTablesList = hiveTablesDAO.list(startPage, pageSize);
             List<HiveTables> hiveTablesList = new ArrayList<HiveTables>();
-            Integer counter=jpaHiveTablesList.size();
+
             for (com.wipro.ats.bdre.md.dao.jpa.HiveTables hiveTable : jpaHiveTablesList) {
                 HiveTables returnHiveTable = new HiveTables();
                 returnHiveTable.setLocationType(hiveTable.getLocationType());

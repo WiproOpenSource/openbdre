@@ -21,6 +21,7 @@ import com.wipro.ats.bdre.md.beans.table.PropertiesTemplate;
 import com.wipro.ats.bdre.md.dao.jpa.ProcessTemplate;
 import org.apache.log4j.Logger;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.AutowireCapableBeanFactory;
@@ -58,7 +59,7 @@ public class ProcessTemplateDAOTest {
         LOGGER.info("Size of ProcessTemplate is:" + processTemplateDAO.totalRecordCount());
     }
 
-
+    @Ignore
     @Test
     public void testGet() throws Exception {
 

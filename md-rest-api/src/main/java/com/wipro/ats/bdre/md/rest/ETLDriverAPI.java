@@ -136,7 +136,7 @@ public class ETLDriverAPI extends MetadataAPIBase {
             Integer counter=etlDriverDAO.totalRecordCount().intValue();
             List<EtlDriver> jpaETLDriverList = etlDriverDAO.list(startPage, pageSize);
             List<ETLDriver> eTLDrivers = new ArrayList<ETLDriver>();
-            Integer counter=jpaETLDriverList.size();
+
             for (EtlDriver jpaETLDriver : jpaETLDriverList) {
                 ETLDriver eTLDriver = new ETLDriver();
                 eTLDriver.seteTLProcessId(jpaETLDriver.getEtlProcessId());

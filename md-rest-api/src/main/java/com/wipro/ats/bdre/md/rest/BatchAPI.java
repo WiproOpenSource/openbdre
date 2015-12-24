@@ -124,7 +124,7 @@ public class BatchAPI extends MetadataAPIBase {
         try {
             Integer counter=batchDAO.totalRecordCount();
             List<com.wipro.ats.bdre.md.dao.jpa.Batch> jpaBatchList = batchDAO.list(startPage, pageSize);
-            Integer counter=jpaBatchList.size();
+
             List<Batch> batches = new ArrayList<Batch>();
             for (com.wipro.ats.bdre.md.dao.jpa.Batch batch : jpaBatchList) {
                 Batch returnBatch = new Batch();

@@ -127,7 +127,6 @@ public class UsersAPI extends MetadataAPIBase {
             Integer counter=usersDAO.totalRecordCount();
             List<com.wipro.ats.bdre.md.dao.jpa.Users> jpaUsers = usersDAO.list(startPage, pageSize);
             List<Users> usersList = new ArrayList<Users>();
-            Integer counter=jpaUsers.size();
             for (com.wipro.ats.bdre.md.dao.jpa.Users users : jpaUsers) {
                 Users returnUsers = new Users();
                 returnUsers.setUsername(users.getUsername());

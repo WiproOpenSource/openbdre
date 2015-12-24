@@ -131,7 +131,7 @@ public class BatchStatusAPI extends MetadataAPIBase {
             Integer counter=batchStatusDAO.totalRecordCount().intValue();
             List<com.wipro.ats.bdre.md.dao.jpa.BatchStatus> jpaBatchStatuses = batchStatusDAO.list(startPage, pageSize);
             List<BatchStatus> batchStatuses = new ArrayList<BatchStatus>();
-            Integer counter=jpaBatchStatuses.size();
+
             for (com.wipro.ats.bdre.md.dao.jpa.BatchStatus batchStatus : jpaBatchStatuses) {
                 BatchStatus returnBatchStatus = new BatchStatus();
                 returnBatchStatus.setBatchStateId(batchStatus.getBatchStateId());

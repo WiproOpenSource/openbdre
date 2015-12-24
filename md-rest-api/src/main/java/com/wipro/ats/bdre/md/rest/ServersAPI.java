@@ -139,11 +139,8 @@ public class ServersAPI extends MetadataAPIBase {
                 returnServer.setServerMetaInfo(server.getServerMetainfo());
                 returnServer.setServerIp(server.getServerIp());
                 returnServer.setSshPrivateKey(server.getSshPrivateKey());
-<<<<<<< HEAD
-                returnServer.setCounter(count);
-=======
+
                 returnServer.setCounter(counter);
->>>>>>> develop
                 servers.add(returnServer);
             }
             //  List<Servers> servers = s.selectList("call_procedures.ListServers", server);
