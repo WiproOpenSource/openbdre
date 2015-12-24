@@ -140,6 +140,7 @@ public class ProcessDeploymentQueueAPI extends MetadataAPIBase {
 
         RestWrapper restWrapper = null;
         try {
+            Integer counter=processDeploymentQueueDAO.totalRecordCount();
             List<com.wipro.ats.bdre.md.dao.jpa.ProcessDeploymentQueue> jpaPdqList = processDeploymentQueueDAO.list(startPage, pageSize);
             List<ProcessDeploymentQueue> processDeploymentQueues = new ArrayList<ProcessDeploymentQueue>();
             Integer counter =jpaPdqList.size();

@@ -19,6 +19,7 @@ package com.wipro.ats.bdre.md.dao;
 import com.wipro.ats.bdre.md.dao.jpa.LineageQueryType;
 import org.apache.log4j.Logger;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.AutowireCapableBeanFactory;
@@ -51,6 +52,7 @@ public class LineageQueryTypeDAOTest {
         LOGGER.info("Size of LineageQueryType is:" + lineageQueryTypeDAO.totalRecordCount());
     }
 
+    @Ignore
     @Test
     public void testGet() throws Exception {
         LOGGER.info("LineageQueryType(0) type name :" + lineageQueryTypeDAO.get(Integer.valueOf(1)).getQueryTypeName());

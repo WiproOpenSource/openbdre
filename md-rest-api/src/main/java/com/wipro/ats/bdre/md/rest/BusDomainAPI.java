@@ -116,6 +116,7 @@ public class BusDomainAPI extends MetadataAPIBase {
                      @RequestParam(value = "size", defaultValue = "10") int pageSize, Principal principal) {
         RestWrapper restWrapper = null;
         try {
+            Integer counter=busDomainDAO.totalRecordCount().intValue();
             List<com.wipro.ats.bdre.md.dao.jpa.BusDomain> jpaBusDoaminList = busDomainDAO.list(startPage, pageSize);
             List<BusDomain> busDomains = new ArrayList<BusDomain>();
             Integer counter =jpaBusDoaminList.size();

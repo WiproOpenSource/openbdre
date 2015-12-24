@@ -141,6 +141,7 @@ public class BatchConsumpQueueAPI extends MetadataAPIBase {
                      @RequestParam(value = "size", defaultValue = "10") int pageSize, Principal principal) {
         RestWrapper restWrapper = null;
         try {
+            Integer counter=batchConsumpQueueDAO.totalRecordCount().intValue();
             List<com.wipro.ats.bdre.md.dao.jpa.BatchConsumpQueue> jpaBcqList = batchConsumpQueueDAO.list(startPage, pageSize);
             List<BatchConsumpQueue> batchConsumpQueues = new ArrayList<BatchConsumpQueue>();
             Integer counter=jpaBcqList.size();

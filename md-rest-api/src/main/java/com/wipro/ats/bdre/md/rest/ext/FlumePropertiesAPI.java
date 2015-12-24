@@ -128,12 +128,13 @@ public class FlumePropertiesAPI extends MetadataAPIBase {
             insertDaoProcess.setNextProcessId("0");
 
         }
+        insertDaoProcess.setDeleteFlag(false);
         insertDaoProcess.setDescription(desc);
         insertDaoProcess.setProcessName(name);
         insertDaoProcess.setCanRecover(true);
         insertDaoProcess.setEnqueuingProcessId(0);
         insertDaoProcess.setAddTs(DateConverter.stringToDate(process.getTableAddTS()));
-
+        process.setDeleteFlag(false);
         process.setBusDomainId(1);
         process.setProcessTypeId(ptId);
         process.setDescription(name);
@@ -143,6 +144,7 @@ public class FlumePropertiesAPI extends MetadataAPIBase {
         process.setWorkflowId(wfId);
         process.setEnqProcessId(0);
         process.setAddTS(DateConverter.stringToDate(process.getTableAddTS()));
+        process.setDeleteFlag(false);
         process.setCanRecover(true);
         try {
             LOGGER.debug("Process" + name + " is going to be inserted " + process.getProcessTypeId());

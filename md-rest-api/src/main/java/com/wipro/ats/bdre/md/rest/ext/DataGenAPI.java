@@ -65,7 +65,7 @@ public class DataGenAPI extends MetadataAPIBase {
         Process childProcess = new Process();
         parentProcess = insertProcess(18, null, "Data gen Parent", "Data Generation Parent", 1, principal);
         childProcess = insertProcess(14, parentProcess.getProcessId(), "child of Data gen Parent", "child of Data Generation Parent", 0, principal);
-        parentProcess = updateProcess(parentProcess);
+        parentProcess = updateProcess(parentProcess,childProcess.getProcessId());
 
         StringBuffer tableSchema = new StringBuffer("");
         //to handle argument id's in sequence if rows are deleted and added in UI
@@ -152,6 +152,7 @@ public class DataGenAPI extends MetadataAPIBase {
         process.setEnqProcessId(0);
         process.setAddTS(DateConverter.stringToDate(process.getTableAddTS()));
         process.setCanRecover(true);
+        process.setProcessTemplateId(0);
 
         com.wipro.ats.bdre.md.dao.jpa.Process insertDaoProcess = new com.wipro.ats.bdre.md.dao.jpa.Process();
         com.wipro.ats.bdre.md.dao.jpa.ProcessType daoProcessType = new com.wipro.ats.bdre.md.dao.jpa.ProcessType();
@@ -168,6 +169,7 @@ public class DataGenAPI extends MetadataAPIBase {
         com.wipro.ats.bdre.md.dao.jpa.ProcessTemplate daoProcessTemplate = new com.wipro.ats.bdre.md.dao.jpa.ProcessTemplate();
         daoProcessTemplate.setProcessTemplateId(0);
         insertDaoProcess.setProcessTemplate(daoProcessTemplate);
+        LOGGER.info("ppId is" + ppId);
 
         if (ppId != null) {
             com.wipro.ats.bdre.md.dao.jpa.Process parentProcess = new com.wipro.ats.bdre.md.dao.jpa.Process();
@@ -178,13 +180,15 @@ public class DataGenAPI extends MetadataAPIBase {
         } else {
             insertDaoProcess.setNextProcessId("0");
         }
+        insertDaoProcess.setDeleteFlag(false);
         insertDaoProcess.setDescription(desc);
         insertDaoProcess.setProcessName(name);
         insertDaoProcess.setCanRecover(true);
         insertDaoProcess.setEnqueuingProcessId(0);
+        insertDaoProcess.setDeleteFlag(false);
         insertDaoProcess.setAddTs(DateConverter.stringToDate(process.getTableAddTS()));
         try {
-            LOGGER.debug("Process" + name + " is going to be inserted " + process.getProcessTypeId());
+            LOGGER.info("Process" + name + " is going to be inserted " + process.getProcessTypeId());
 //            process = s.selectOne("call_procedures.InsertProcess", process);
             Integer processId = processDAO.insert(insertDaoProcess);
             process.setProcessId(processId);
@@ -196,11 +200,11 @@ public class DataGenAPI extends MetadataAPIBase {
         } catch (Exception e) {
             LOGGER.debug("Error Occurred");
         }
+
         return process;
     }
 
-    private Process updateProcess(Process process) {
-        Integer npid = process.getProcessId() + 1;
+    private Process updateProcess(Process process, Integer npid) {
         process.setNextProcessIds(npid.toString());
         try {
             com.wipro.ats.bdre.md.dao.jpa.Process updateDaoProcess = new com.wipro.ats.bdre.md.dao.jpa.Process();
@@ -235,9 +239,7 @@ public class DataGenAPI extends MetadataAPIBase {
                 updateDaoProcess.setBatchCutPattern(process.getBatchPattern());
             }
             updateDaoProcess.setNextProcessId(process.getNextProcessIds());
-            if (process.getDeleteFlag() != null) {
-                updateDaoProcess.setDeleteFlag(process.getDeleteFlag());
-            }
+            updateDaoProcess.setDeleteFlag(false);
             updateDaoProcess.setEditTs(DateConverter.stringToDate(process.getTableEditTS()));
 //            Process processes = s.selectOne("call_procedures.UpdateProcess", process);
             updateDaoProcess = processDAO.update(updateDaoProcess);

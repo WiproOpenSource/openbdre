@@ -121,9 +121,14 @@ public class HistoryDataImportDAO {
                 dataLoadParent.setDeleteFlag(false);
                 dataLoadParent.setWorkflowType(oozieType);
 
+                Process parentProcessCheckDataLoadParent = null;
+                if (dataLoadParent.getProcess() != null) {
+                    parentProcessCheckDataLoadParent = (Process) session.get(Process.class, dataLoadParent.getProcess().getProcessId());
+                }
+
                 if(dataLoadParent.getProcess()!=null)
                 {
-                    triggerCheck=processValidateInsert.ProcessTypeValidator(dataLoadParent);
+                    triggerCheck=processValidateInsert.ProcessTypeValidator(dataLoadParent,parentProcessCheckDataLoadParent);
                     if(triggerCheck==true)
                     {
                         session.save(dataLoadParent);
@@ -135,7 +140,15 @@ public class HistoryDataImportDAO {
                 }
                 else
                 {
-                    session.save(dataLoadParent);
+                    triggerCheck=processValidateInsert.ProcessTypeValidator(dataLoadParent,parentProcessCheckDataLoadParent);
+                    if(triggerCheck==true)
+                    {
+                        session.save(dataLoadParent);
+                    }
+                    else
+                    {
+                        throw new MetadataException("error ocured in trigger check");
+                    }
                 }
 
                 LOGGER.info("the inserted data load parent is " + dataLoadParent.getProcessId());
@@ -155,9 +168,14 @@ public class HistoryDataImportDAO {
                 dataImportProcess.setWorkflowType(oozieType);
                 dataImportProcess.setDeleteFlag(false);
 
+                Process parentProcessCheckDataImportProcess = null;
+                if (dataImportProcess.getProcess() != null) {
+                    parentProcessCheckDataImportProcess = (Process) session.get(Process.class, dataImportProcess.getProcess().getProcessId());
+                }
+
                 if(dataImportProcess.getProcess()!=null)
                 {
-                    triggerCheck=processValidateInsert.ProcessTypeValidator(dataImportProcess);
+                    triggerCheck=processValidateInsert.ProcessTypeValidator(dataImportProcess,parentProcessCheckDataImportProcess);
                     if(triggerCheck==true)
                     {
                         session.save(dataImportProcess);
@@ -168,8 +186,15 @@ public class HistoryDataImportDAO {
                     }
                 }
                 else
-                {
-                    session.save(dataImportProcess);
+                { triggerCheck=processValidateInsert.ProcessTypeValidator(dataImportProcess,parentProcessCheckDataImportProcess);
+                    if(triggerCheck==true)
+                    {
+                        session.save(dataImportProcess);
+                    }
+                    else
+                    {
+                        throw new MetadataException("error ocured in trigger check");
+                    }
                 }
 
                 //
@@ -191,9 +216,14 @@ public class HistoryDataImportDAO {
                 childDataImportProcess.setWorkflowType(actionType);
                 childDataImportProcess.setDeleteFlag(false);
 
-                if(dataLoadParent.getProcess()!=null)
+                Process parentProcessCheckDataImportChild = null;
+                if (childDataImportProcess.getProcess() != null) {
+                    parentProcessCheckDataImportChild = (Process) session.get(Process.class, childDataImportProcess.getProcess().getProcessId());
+                }
+
+                if(childDataImportProcess.getProcess()!=null)
                 {
-                    triggerCheck=processValidateInsert.ProcessTypeValidator(dataLoadParent);
+                    triggerCheck=processValidateInsert.ProcessTypeValidator(childDataImportProcess,parentProcessCheckDataImportChild);
                     if(triggerCheck==true)
                     {
                         session.save(childDataImportProcess);
@@ -205,17 +235,29 @@ public class HistoryDataImportDAO {
                 }
                 else
                 {
-                    session.save(childDataImportProcess);
+                    triggerCheck=processValidateInsert.ProcessTypeValidator(childDataImportProcess,parentProcessCheckDataImportChild);
+                    if(triggerCheck==true)
+                    {
+                        session.save(childDataImportProcess);
+                    }
+                    else
+                    {
+                        throw new MetadataException("error ocured in trigger check");
+                    }
                 }
 
 
 
                 LOGGER.info("the inserted data import is " + childDataImportProcess.getProcessId());
                 dataImportProcess.setNextProcessId(childDataImportProcess.getProcessId().toString());
+                Process parentProcessCheckDataImportProcessUpdate = null;
+                if (dataImportProcess.getProcess() != null) {
+                    parentProcessCheckDataImportProcessUpdate = (Process) session.get(Process.class, dataImportProcess.getProcess().getProcessId());
+                }
 
-                if(dataLoadParent.getProcess()!=null)
+                if(dataImportProcess.getProcess()!=null)
                 {
-                    triggerCheck=processValidateInsert.ProcessTypeValidator(dataLoadParent);
+                    triggerCheck=processValidateInsert.ProcessTypeValidator(dataLoadParent,parentProcessCheckDataImportProcessUpdate);
                     if(triggerCheck==true)
                     {
                         session.update(dataImportProcess);
@@ -226,8 +268,15 @@ public class HistoryDataImportDAO {
                     }
                 }
                 else
-                {
-                    session.update(dataImportProcess);
+                {triggerCheck=processValidateInsert.ProcessTypeValidator(dataLoadParent,parentProcessCheckDataImportProcessUpdate);
+                    if(triggerCheck==true)
+                    {
+                        session.update(dataImportProcess);
+                    }
+                    else
+                    {
+                        throw new MetadataException("error ocured in trigger check");
+                    }
                 }
 
 
@@ -313,7 +362,7 @@ public class HistoryDataImportDAO {
 
                 PropertiesId propertiesIdRawName = new PropertiesId();
                 propertiesIdRawName.setProcessId(childDataImportProcess.getProcessId());
-                propertiesIdRawName.setPropKey(rawNameValue.getId().getInterKey());
+                propertiesIdRawName.setPropKey("table");
                 Properties rawNameProperties = new Properties();
                 rawNameProperties.setId(propertiesIdRawName);
                 rawNameProperties.setConfigGroup("imp-common");
@@ -334,7 +383,7 @@ public class HistoryDataImportDAO {
 
                 PropertiesId propertiesIdImport = new PropertiesId();
                 propertiesIdImport.setProcessId(childDataImportProcess.getProcessId());
-                propertiesIdImport.setPropKey("'import'");
+                propertiesIdImport.setPropKey("import");
                 Properties importProperties = new Properties();
                 importProperties.setId(propertiesIdImport);
                 importProperties.setConfigGroup("imp-common");
@@ -345,7 +394,7 @@ public class HistoryDataImportDAO {
 
                 PropertiesId propertiesIdMappers = new PropertiesId();
                 propertiesIdMappers.setProcessId(childDataImportProcess.getProcessId());
-                propertiesIdMappers.setPropKey("''mappers''");
+                propertiesIdMappers.setPropKey("mappers");
                 Properties mapeersProperties = new Properties();
                 mapeersProperties.setId(propertiesIdMappers);
                 mapeersProperties.setConfigGroup("imp-common");
@@ -363,7 +412,7 @@ public class HistoryDataImportDAO {
 
                 PropertiesId propertiesIdColumnList = new PropertiesId();
                 propertiesIdColumnList.setProcessId(childDataImportProcess.getProcessId());
-                propertiesIdColumnList.setPropKey("columns'");
+                propertiesIdColumnList.setPropKey("columns");
                 Properties columnListProperties = new Properties();
                 columnListProperties.setId(propertiesIdColumnList);
                 columnListProperties.setConfigGroup("imp-common");
@@ -429,7 +478,35 @@ public class HistoryDataImportDAO {
                     file2Raw.setBatchCutPattern(null);
                     file2Raw.setDeleteFlag(false);
                     file2Raw.setWorkflowType(actionType);
-                    session.save(file2Raw);
+                    Process fil2RawParent = null;
+                    if (file2Raw.getProcess() != null) {
+                        fil2RawParent = (Process) session.get(Process.class, file2Raw.getProcess().getProcessId());
+                    }
+
+                    if(file2Raw.getProcess()!=null)
+                    {
+                        triggerCheck=processValidateInsert.ProcessTypeValidator(file2Raw,fil2RawParent);
+                        if(triggerCheck==true)
+                        {
+                            session.save(file2Raw);
+                        }
+                        else
+                        {
+                            throw new MetadataException("error ocured in trigger check");
+                        }
+                    }
+                    else
+                    {
+                        triggerCheck=processValidateInsert.ProcessTypeValidator(file2Raw,fil2RawParent);
+                        if(triggerCheck==true)
+                        {
+                            session.save(file2Raw);
+                        }
+                        else
+                        {
+                            throw new MetadataException("error ocured in trigger check");
+                        }
+                    }
 
                     nextProcessForDataLoadParent += file2Raw.getProcessId().toString() + ",";
 
@@ -446,7 +523,35 @@ public class HistoryDataImportDAO {
                     raw2Stage.setBatchCutPattern(null);
                     raw2Stage.setDeleteFlag(false);
                     raw2Stage.setWorkflowType(actionType);
-                    session.save(raw2Stage);
+                    Process raw2StageParent = null;
+                    if (raw2Stage.getProcess() != null) {
+                        raw2StageParent = (Process) session.get(Process.class, raw2Stage.getProcess().getProcessId());
+                    }
+
+                    if(raw2Stage.getProcess()!=null)
+                    {
+                        triggerCheck=processValidateInsert.ProcessTypeValidator(raw2Stage,raw2StageParent);
+                        if(triggerCheck==true)
+                        {
+                            session.save(raw2Stage);
+                        }
+                        else
+                        {
+                            throw new MetadataException("error ocured in trigger check");
+                        }
+                    }
+                    else
+                    {
+                        triggerCheck=processValidateInsert.ProcessTypeValidator(raw2Stage,raw2StageParent);
+                        if(triggerCheck==true)
+                        {
+                            session.save(raw2Stage);
+                        }
+                        else
+                        {
+                            throw new MetadataException("error ocured in trigger check");
+                        }
+                    }
 
                     nextProcessForF2R += raw2Stage.getProcessId().toString() + ",";
 
@@ -464,7 +569,35 @@ public class HistoryDataImportDAO {
                     stage2Base.setNextProcessId("");
                     stage2Base.setWorkflowType(actionType);
                     stage2Base.setNextProcessId(dataLoadParent.getProcessId().toString());
-                    session.save(stage2Base);
+                    Process stage2BaseParent = null;
+                    if (stage2Base.getProcess() != null) {
+                        stage2BaseParent = (Process) session.get(Process.class, stage2Base.getProcess().getProcessId());
+                    }
+
+                    if(stage2Base.getProcess()!=null)
+                    {
+                        triggerCheck=processValidateInsert.ProcessTypeValidator(stage2Base,stage2BaseParent);
+                        if(triggerCheck==true)
+                        {
+                            session.save(stage2Base);
+                        }
+                        else
+                        {
+                            throw new MetadataException("error ocured in trigger check");
+                        }
+                    }
+                    else
+                    {
+                        triggerCheck=processValidateInsert.ProcessTypeValidator(stage2Base,stage2BaseParent);
+                        if(triggerCheck==true)
+                        {
+                            session.save(stage2Base);
+                        }
+                        else
+                        {
+                            throw new MetadataException("error ocured in trigger check");
+                        }
+                    }
 
                     nextProcessForR2S += stage2Base.getProcessId() + ",";
 
@@ -589,9 +722,14 @@ public class HistoryDataImportDAO {
                 nextProcessForR2S = nextProcessForR2S.substring(0, nextProcessForR2S.length() - 1);
                 dataLoadParent.setNextProcessId(nextProcessForDataLoadParent);
 
+                Process parentProcessCheckDataLoadProcessUpdate = null;
+                if (dataLoadParent.getProcess() != null) {
+                    parentProcessCheckDataLoadProcessUpdate = (Process) session.get(Process.class, dataLoadParent.getProcess().getProcessId());
+                }
+
                 if(dataLoadParent.getProcess()!=null)
                 {
-                    triggerCheck=processValidateInsert.ProcessTypeValidator(dataLoadParent);
+                    triggerCheck=processValidateInsert.ProcessTypeValidator(dataLoadParent,parentProcessCheckDataLoadProcessUpdate);
                     if(triggerCheck==true)
                     {
                         session.update(dataLoadParent);
@@ -602,8 +740,15 @@ public class HistoryDataImportDAO {
                     }
                 }
                 else
-                {
-                    session.update(dataLoadParent);
+                {triggerCheck=processValidateInsert.ProcessTypeValidator(dataLoadParent,parentProcessCheckDataLoadProcessUpdate);
+                    if(triggerCheck==true)
+                    {
+                        session.update(dataLoadParent);
+                    }
+                    else
+                    {
+                        throw new MetadataException("error ocured in trigger check");
+                    }
                 }
 
 

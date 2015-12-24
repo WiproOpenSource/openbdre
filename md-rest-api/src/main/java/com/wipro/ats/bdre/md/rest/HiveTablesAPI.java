@@ -16,6 +16,7 @@
 
 package com.wipro.ats.bdre.md.rest;
 
+import com.wipro.ats.bdre.md.api.Intermediate;
 import com.wipro.ats.bdre.md.api.base.MetadataAPIBase;
 import com.wipro.ats.bdre.md.beans.table.HiveTables;
 import com.wipro.ats.bdre.md.dao.HiveTablesDAO;
@@ -124,6 +125,7 @@ public class HiveTablesAPI extends MetadataAPIBase {
 
         RestWrapper restWrapper = null;
         try {
+            Integer counter=hiveTablesDAO.totalRecordCount().intValue();
             List<com.wipro.ats.bdre.md.dao.jpa.HiveTables> jpaHiveTablesList = hiveTablesDAO.list(startPage, pageSize);
             List<HiveTables> hiveTablesList = new ArrayList<HiveTables>();
             Integer counter=jpaHiveTablesList.size();

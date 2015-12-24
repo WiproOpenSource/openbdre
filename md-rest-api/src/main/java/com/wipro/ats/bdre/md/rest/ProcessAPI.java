@@ -17,7 +17,6 @@
 package com.wipro.ats.bdre.md.rest;
 
 import com.wipro.ats.bdre.MDConfig;
-import com.wipro.ats.bdre.exception.MetadataException;
 import com.wipro.ats.bdre.md.api.base.MetadataAPIBase;
 import com.wipro.ats.bdre.md.beans.ExecutionInfo;
 import com.wipro.ats.bdre.md.beans.table.Process;
@@ -39,16 +38,15 @@ import org.springframework.ui.ModelMap;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.client.RestTemplate;
 
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import java.io.File;
 import java.lang.reflect.Field;
-import java.lang.reflect.Method;
-import java.nio.file.Paths;
 import java.security.Principal;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
 
 /**
  * Created by arijit on 1/9/15.
@@ -163,6 +161,7 @@ public class ProcessAPI extends MetadataAPIBase {
             if (pid == 0) {
                 pid = null;
             }
+            Integer counter=processDAO.totalRecordCount(pid);
             List<com.wipro.ats.bdre.md.dao.jpa.Process> processList = processDAO.list(pid, startPage, pageSize);
             List<Process> processes = new ArrayList<Process>();
             Integer counter=processList.size();
@@ -698,6 +697,7 @@ public class ProcessAPI extends MetadataAPIBase {
                                @Valid Process process, BindingResult bindingResult, Principal principal) {
         RestWrapper restWrapper = null;
         ExecutionInfo executionInfo = new ExecutionInfo();
+        executionInfo.setProcessId(process.getProcessId());
         try {
             String[] command = null;
             if (process.getWorkflowId()==1) {
@@ -727,7 +727,7 @@ public class ProcessAPI extends MetadataAPIBase {
                 executionInfo.setOSProcessId(-1);
                 LOGGER.error("Setting OS Process ID failed " + executionInfo.getOSProcessId());
             }
-            restWrapper = new RestWrapper(process, RestWrapper.OK);
+            restWrapper = new RestWrapper(executionInfo, RestWrapper.OK);
         } catch (Exception e) {
             LOGGER.error("Executing workflow failed " +e.getCause());
             restWrapper = new RestWrapper(e.getMessage(), RestWrapper.ERROR);

@@ -133,6 +133,7 @@ public class ETLDriverAPI extends MetadataAPIBase {
 
         RestWrapper restWrapper = null;
         try {
+            Integer counter=etlDriverDAO.totalRecordCount().intValue();
             List<EtlDriver> jpaETLDriverList = etlDriverDAO.list(startPage, pageSize);
             List<ETLDriver> eTLDrivers = new ArrayList<ETLDriver>();
             Integer counter=jpaETLDriverList.size();

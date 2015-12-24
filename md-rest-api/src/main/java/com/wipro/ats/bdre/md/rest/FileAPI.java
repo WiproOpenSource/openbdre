@@ -117,6 +117,7 @@ public class FileAPI extends MetadataAPIBase {
             file.setPage(startPage);
             file.setPageSize(pageSize);
             file.setCreationTS(DateConverter.stringToDate(file.getTableCreationTS()));
+            Integer counter=fileDAO.totalRecordCount().intValue();
             // List<File> files = s.selectList("call_procedures.ListFiles", file);
             List<com.wipro.ats.bdre.md.dao.jpa.File> jpaFileList = fileDAO.list(startPage, pageSize);
             LOGGER.info("size of the jpaFiles is " + jpaFileList.size());

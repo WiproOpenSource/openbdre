@@ -109,7 +109,7 @@ public class ShellActionNode extends GenericActionNode {
         if (scriptPath.size() > 1) {
             throw new RuntimeException("Can Handle only 1 script in shell action processInfo.getProcessTypeId()=" + processInfo.getProcessTypeId());
         } else if (scriptPath.size() == 0) {
-            addScriptPath.append("            <exec>script" + getId() + ".sh</exec>\n");
+            addScriptPath.append("            <exec>shell/script" + getId() + ".sh</exec>\n");
         } else {
             while (e.hasMoreElements()) {
                 String key = (String) e.nextElement();

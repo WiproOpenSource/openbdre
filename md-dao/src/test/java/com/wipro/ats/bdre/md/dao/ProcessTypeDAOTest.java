@@ -19,6 +19,7 @@ package com.wipro.ats.bdre.md.dao;
 import com.wipro.ats.bdre.md.dao.jpa.ProcessType;
 import org.apache.log4j.Logger;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.AutowireCapableBeanFactory;
@@ -50,7 +51,7 @@ public class ProcessTypeDAOTest {
     public void testTotalRecordCount() throws Exception {
         LOGGER.info("Size of ProcessType is:" + processTypeDAO.totalRecordCount(null));
     }
-
+    @Ignore
     @Test
     public void testGet() throws Exception {
         LOGGER.info("ProcessType(1) Name is:" + processTypeDAO.get(1).getProcessTypeName());

@@ -60,6 +60,7 @@ public class ProcessLogAPI extends MetadataAPIBase {
         try {
             // SqlSessionFactory sqlSessionFactory = getSqlSessionFactory(null);
             // s = sqlSessionFactory.openSession();
+            Integer counter=processLogDAO.totalRecordCount();
             ProcessLogInfo processLogInfo = new ProcessLogInfo();
             if (pid == 0) {
                 pid = null;
@@ -71,7 +72,7 @@ public class ProcessLogAPI extends MetadataAPIBase {
             List<ProcessLogInfo> listLog = processLogDAO.listLog(processLogInfo);
             for (ProcessLogInfo processLogInfo1 : listLog) {
                 processLogInfo1.setProcessId(processLogInfo1.getParentProcessId());
-                processLogInfo1.setCounter(processLogDAO.totalRecordCount());
+                processLogInfo1.setCounter(counter);
             }
 
             //s.close();

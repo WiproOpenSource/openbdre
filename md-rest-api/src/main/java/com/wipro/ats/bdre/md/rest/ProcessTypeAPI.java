@@ -118,6 +118,7 @@ public class ProcessTypeAPI extends MetadataAPIBase {
                      @RequestParam(value = "size", defaultValue = "10") int pageSize, Principal principal) {
         RestWrapper restWrapper = null;
         try {
+            Integer counter=processTypeDAO.totalRows();
             List<com.wipro.ats.bdre.md.dao.jpa.ProcessType> jpaProcessTypes = processTypeDAO.listFull(startPage, pageSize);
             List<ProcessType> processTypes = new ArrayList<ProcessType>();
             Integer totalRows=jpaProcessTypes.size();
@@ -126,7 +127,7 @@ public class ProcessTypeAPI extends MetadataAPIBase {
                 returnProcessType.setProcessTypeId(processType.getProcessTypeId());
                 returnProcessType.setParentProcessTypeId(processType.getParentProcessTypeId());
                 returnProcessType.setProcessTypeName(processType.getProcessTypeName());
-                returnProcessType.setCounter(totalRows);
+                returnProcessType.setCounter(counter);
                 processTypes.add(returnProcessType);
             }
             // List<ProcessType> processTypes = s.selectList("call_procedures.GetProcessTypes", processType);
