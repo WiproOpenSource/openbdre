@@ -388,7 +388,7 @@
             <dependency>
                 <groupId>commons-dbcp</groupId>
                 <artifactId>commons-dbcp</artifactId>
-                <version>${commons.dbcp}</version>
+                <version>${commons.dbcp.version}</version>
             </dependency>
 
             <dependency>
