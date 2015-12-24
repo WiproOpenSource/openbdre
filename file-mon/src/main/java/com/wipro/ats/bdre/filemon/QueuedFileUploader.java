@@ -21,15 +21,9 @@ import java.io.File;
 public class QueuedFileUploader {
 
     private static final Logger LOGGER = Logger.getLogger(QueuedFileUploader.class);
-
-    /* this variable is used to keep details of file being currently copying */
     private static SimpleDateFormat sdf= new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
-    //private
-    private static Configuration config = new Configuration();
-    static{
-        /*config.addResource("/etc/hadoop/conf/core-site.xml");
-        config.addResource("/etc/hadoop/conf/hdfs-site.xml");*/
-    }
+     private static Configuration config = new Configuration();
+
     private static void hdfsCopy(FileCopyInfo fileCopying) throws IOException{
 
         try {
@@ -50,6 +44,7 @@ public class QueuedFileUploader {
     }
 
     public static void executeCopyProcess() {
+        /* this variable is used to keep details of file being currently copying */
         FileCopyInfo fileCopying=null;
             if (FileMonitor.fileToCopyMap.size()>0) {
                 String key = FileMonitor.fileToCopyMap.firstKey();
@@ -59,24 +54,26 @@ public class QueuedFileUploader {
                 try {
                     hdfsCopy(fileCopying);
 
-                    //TODO: Enable it
-                    //executeRegisterFiles(fileCopying.getFileContent(), fileCopying.getSubProcessId(), fileCopying.getServerId(), fileCopying.getDstLocation() + "/" + key);
+                   // calling register file
+                    executeRegisterFiles(fileCopying);
                 } catch (IOException e) {
                     //TODO: Write log
                 }
-                // calling register file
 
             }
 
     }
 
     //Calling the RegisterFile method in metadata API on file Creation.
-    private static void executeRegisterFiles(FileContent fc, String subProcessId, String serverId, String path) {
+    private static void executeRegisterFiles(FileCopyInfo fileCopying) {
         try {
             //getting the hashcode of the file
-            String fileHash = DigestUtils.md5Hex(fc.getInputStream());
-            String fileSize = String.valueOf(fc.getSize());
-            long timeStamp = fc.getLastModifiedTime();
+            String subProcessId = fileCopying.getSubProcessId();
+            String serverId = fileCopying.getServerId();
+            String path = fileCopying.getSrcLocation();
+            String fileHash = fileCopying.getFileHash();
+            String fileSize = String.valueOf(fileCopying.getFileSize());
+            long timeStamp = fileCopying.getTimeStamp();
             Date dt=new Date(timeStamp);
             String strDate=sdf.format(dt);
             RegisterFile registerFile = new RegisterFile();

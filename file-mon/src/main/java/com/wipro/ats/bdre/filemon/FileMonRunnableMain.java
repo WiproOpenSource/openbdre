@@ -12,6 +12,8 @@ import com.wipro.ats.bdre.im.etl.api.exception.ETLException;
 import com.wipro.ats.bdre.md.api.GetGeneralConfig;
 import com.wipro.ats.bdre.md.api.GetProperties;
 import com.wipro.ats.bdre.md.beans.table.GeneralConfig;
+import com.wipro.ats.bdre.md.dao.ProcessDAO;
+import com.wipro.ats.bdre.md.dao.jpa.Process;
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.vfs2.FileObject;
 import org.apache.commons.vfs2.FileSystemManager;
@@ -19,6 +21,7 @@ import org.apache.commons.vfs2.VFS;
 import org.apache.commons.vfs2.impl.DefaultFileMonitor;
 import org.apache.log4j.Logger;
 
+import java.util.List;
 import java.util.Properties;
 
 /**
@@ -84,8 +87,6 @@ public class FileMonRunnableMain extends ETLBase {
     };
 
     public static void main(String[] args) {
-
-
         FileMonRunnableMain f2SFileMonitorMain = new FileMonRunnableMain();
         f2SFileMonitorMain.execute(args);
     }
@@ -104,8 +105,11 @@ public class FileMonRunnableMain extends ETLBase {
             GetProperties getProperties = new GetProperties();
             //LOGGER.info("property is "+commandLine.getOptionValue("p"));
             String pid=commandLine.getOptionValue("p");
-            //TODO: This is wrong. You need to put the READ subpid that comes under pid
-            subProcessId=pid;
+            // getting subpid that comes under pid
+            ProcessDAO processDAO = new ProcessDAO();
+            List<Process> subProcessList = processDAO.subProcesslist(Integer.parseInt(pid));
+            subProcessId = subProcessList.get(0).getProcessId().toString();
+
             Properties properties=getProperties.getProperties(subProcessId, "fileMon");
             LOGGER.info("property is "+properties);
             GetGeneralConfig generalConfig = new GetGeneralConfig();
@@ -133,9 +137,11 @@ public class FileMonRunnableMain extends ETLBase {
             fm.start();
 
             //Now starting the consumer thread
-            Thread consumerThread = new Thread(new QueueConsumerRunnable());
-            consumerThread.start();
+            Thread consumerThread1 = new Thread(new QueueConsumerRunnable());
+            consumerThread1.start();
 
+            Thread consumerThread2 = new Thread(new QueueConsumerRunnable());
+            consumerThread2.start();
         } catch (Exception err) {
             LOGGER.error(err.getMessage());
             throw new ETLException(err);

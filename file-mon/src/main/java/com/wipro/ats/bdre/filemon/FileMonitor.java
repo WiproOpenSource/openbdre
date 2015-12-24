@@ -68,31 +68,31 @@ public class FileMonitor implements FileListener {
 
         //Checking if the file name matches with the given pattern
         if (fileName.matches(FileMonRunnableMain.getFilePattern())) {
-            // String subProcessId = fileMonInfo.getSubProcessId();
-            FileContent fc = obj.getContent();
+           FileContent fc = obj.getContent();
             LOGGER.debug("Matched File Pattern by " + fileName);
-            putEligibleFileInfoInMap(dirPath, fileName, fc);
+            putEligibleFileInfoInMap(fileName, fc);
         }
+ }
 
 
-
-        // executeRegisterFiles(fc, subProcessId, new Integer(123461).toString(), dirPath + "/" + fileName);
-
-    }
-
-
-    private void putEligibleFileInfoInMap(String dirPath, String fileName, FileContent fc) {
+    private void putEligibleFileInfoInMap(String fileName, FileContent fc) {
         // *Start*   Eligible files moved to data structure for ingestion to HDFS
         FileCopyInfo fileCopyInfo = new FileCopyInfo();
-        fileCopyInfo.setFileName(fileName);
+        try {
+            fileCopyInfo.setFileName(fileName);
         fileCopyInfo.setSubProcessId(FileMonRunnableMain.getSubProcessId());
         fileCopyInfo.setServerId(new Integer(123461).toString());
-        //TODO: Don't separateout file/directory
-        fileCopyInfo.setSrcLocation(dirPath+"/"+fileName);
+        fileCopyInfo.setSrcLocation(fc.getFile().getURL().toString());
         fileCopyInfo.setDstLocation(FileMonRunnableMain.getHdfsUploadDir());
-        fileCopyInfo.setFileContent(fc);
+        fileCopyInfo.setFileHash(DigestUtils.md5Hex(fc.getInputStream()));
+        fileCopyInfo.setFileSize(fc.getSize());
+        fileCopyInfo.setTimeStamp(fc.getLastModifiedTime());
         // putting element to structure
         fileToCopyMap.put(fileName, fileCopyInfo);
+        } catch (Exception err) {
+            LOGGER.error(err.getMessage());
+            throw new ETLException(err);
+        }
         // *End*   Eligible files moved to data structure for ingestion to HDFS
     }
 

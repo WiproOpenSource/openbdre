@@ -11,7 +11,17 @@ public class FileCopyInfo {
     private String serverId;
     private String srcLocation;
     private String dstLocation;
-    private FileContent fileContent;
+    private String fileHash;
+    private long fileSize;
+    private long timeStamp;
+
+    public long getTimeStamp() {
+        return timeStamp;
+    }
+
+    public void setTimeStamp(long timeStamp) {
+        this.timeStamp = timeStamp;
+    }
 
     public String getFileName() {
         return fileName;
@@ -53,11 +63,19 @@ public class FileCopyInfo {
         this.dstLocation = dstLocation;
     }
 
-    public FileContent getFileContent() {
-        return fileContent;
+    public String getFileHash() {
+        return fileHash;
     }
 
-    public void setFileContent(FileContent fileContent) {
-        this.fileContent = fileContent;
+    public void setFileHash(String fileHash) {
+        this.fileHash = fileHash;
+    }
+
+    public long getFileSize() {
+        return fileSize;
+    }
+
+    public void setFileSize(long fileSize) {
+        this.fileSize = fileSize;
     }
 }

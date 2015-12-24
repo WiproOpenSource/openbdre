@@ -25,10 +25,8 @@ public class QueueConsumerRunnable implements Runnable {
         try {
            while(true){
                QueuedFileUploader.executeCopyProcess();
-               //TODO: Use what u are capturing from the UI
-               Thread.sleep(1000);
+               Thread.sleep(FileMonRunnableMain.getSleepTime());
            }
-
         } catch (Exception err) {
             LOGGER.error(err.toString());
             throw new ETLException(err);
