@@ -57,6 +57,7 @@ public class BatchDAOTest {
         LOGGER.info("Batch(0) type:" + batchDAO.get(Long.valueOf(0)).getBatchType());
     }
 
+    @Ignore
     @Test
     public void testInsertUpdateAndDelete() throws Exception {
         Batch batch = new Batch();

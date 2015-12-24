@@ -58,7 +58,6 @@ public class ProcessTypeDAOTest {
 
     }
 
-    @Ignore
     @Test
     public void testInsertUpdateAndDelete() throws Exception {
         ProcessType processType = new ProcessType();

@@ -149,13 +149,17 @@ public class ProcessDAO {
             Process parentProcess = null;
             if (process.getProcess() != null) {
                 parentProcess = (Process) session.get(Process.class, process.getProcess().getProcessId());
-            }
-                boolean triggerCheck = processValidateInsert.ProcessTypeValidator(process,parentProcess);
+
+                boolean triggerCheck = processValidateInsert.ProcessTypeValidator(process, parentProcess);
                 if (triggerCheck == true) {
                     id = (Integer) session.save(process);
                     session.getTransaction().commit();
                 } else throw new MetadataException("error occured in exception");
-
+            }
+            else
+            {
+                session.save(process);
+            }
         } catch (MetadataException e) {
             session.getTransaction().rollback();
             LOGGER.error(e);
