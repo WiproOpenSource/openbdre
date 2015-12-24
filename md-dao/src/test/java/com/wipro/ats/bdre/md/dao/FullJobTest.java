@@ -10,6 +10,7 @@ import com.wipro.ats.bdre.md.dao.jpa.InstanceExec;
 import com.wipro.ats.bdre.md.dao.jpa.Process;
 import com.wipro.ats.bdre.md.dao.jpa.ProcessType;
 import com.wipro.ats.bdre.md.dao.jpa.Properties;
+import com.wipro.ats.bdre.md.dao.jpa.Servers;
 import com.wipro.ats.bdre.md.dao.jpa.WorkflowType;
 import org.apache.log4j.Logger;
 import org.hibernate.Criteria;
@@ -56,7 +57,36 @@ public class FullJobTest {
     JobDAO jobDAO;
     @Autowired
     StepDAO stepDAO;
+    @Autowired
+    ServersDAO serversDAO;
 
+
+    @Test
+    public void testInsertUpdateAndDeleteServers() throws Exception {
+        Servers servers = new Servers();
+        servers.setServerType("Test");
+        servers.setServerName("Test");
+        int serversId = (Integer) serversDAO.insert(servers);
+        LOGGER.info("New Servers added with ID:" + serversId);
+        servers.setServerName("Test_update");
+        serversDAO.update(servers);
+        servers = serversDAO.get(serversId);
+        LOGGER.info("Updated servers with name:" + servers.getServerName());
+        ;
+        serversDAO.delete(serversId);
+        LOGGER.info("Servers Deleted with ID:" + serversId);
+    }
+
+
+    @Test
+    public void testTotalRecordCountServers() throws Exception {
+        LOGGER.info("Size of Servers is:" + serversDAO.totalRecordCount());
+    }
+
+    @Test
+    public void testList() throws Exception {
+        LOGGER.info("Size of Servers is atleast:" + serversDAO.list(0, 10).size());
+    }
 
     @Test
      public void completeJobTest() throws Exception {
@@ -80,7 +110,7 @@ public class FullJobTest {
 
         ProcessType processType = new ProcessType();
         processType.setProcessTypeName("test");
-        processType.setProcessTypeId(100);
+        processType.setProcessTypeId(1);
    //   processType.setParentProcessTypeId(null);
         //inserting new parent ProcessType
         Integer parentProcessTypeId = processTypeDAO.insert(processType);

@@ -149,13 +149,18 @@ public class ProcessDAO {
             Process parentProcess = null;
             if (process.getProcess() != null) {
                 parentProcess = (Process) session.get(Process.class, process.getProcess().getProcessId());
-            }
-                boolean triggerCheck = processValidateInsert.ProcessTypeValidator(process,parentProcess);
+
+                boolean triggerCheck = processValidateInsert.ProcessTypeValidator(process, parentProcess);
                 if (triggerCheck == true) {
                     id = (Integer) session.save(process);
                     session.getTransaction().commit();
                 } else throw new MetadataException("error occured in exception");
-
+            }
+            else
+            {
+                id=(Integer)session.save(process);
+                session.getTransaction().commit();
+            }
         } catch (MetadataException e) {
             session.getTransaction().rollback();
             LOGGER.error(e);
@@ -227,7 +232,8 @@ public class ProcessDAO {
                 triggerCheck=processValidateInsert.ProcessTypeValidator(process,parentProcess);
                 if(triggerCheck==true)
                 {
-                    session.update(process);
+                    session.delete(process);
+                    session.getTransaction().commit();
                 }
                 else
                 {
@@ -235,11 +241,12 @@ public class ProcessDAO {
                 }
             }
             else {
-                session.update(process);
+                session.delete(process);
+                session.getTransaction().commit();
             }
 
            // session.update(process);
-            session.getTransaction().commit();
+//            session.getTransaction().commit();
         } catch (MetadataException e) {
             session.getTransaction().rollback();
             LOGGER.error(e);

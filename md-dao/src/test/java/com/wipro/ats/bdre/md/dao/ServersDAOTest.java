@@ -44,12 +44,12 @@ public class ServersDAOTest {
 
     @Autowired
     ServersDAO serversDAO;
-
+    @Ignore
     @Test
     public void testList() throws Exception {
         LOGGER.info("Size of Servers is atleast:" + serversDAO.list(0, 10).size());
     }
-
+    @Ignore
     @Test
     public void testTotalRecordCount() throws Exception {
         LOGGER.info("Size of Servers is:" + serversDAO.totalRecordCount());
@@ -62,7 +62,7 @@ public class ServersDAOTest {
         LOGGER.info("Servers(123461) name:" + serversDAO.get(123461).getServerName());
     }
 
-
+    @Ignore
     @Test
     public void testInsertUpdateAndDelete() throws Exception {
         Servers servers = new Servers();
