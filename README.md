@@ -136,7 +136,7 @@ Behind proxied networks, placing following in settings.xml should work.
     - Oracle: The DDL's are located at *bdre-app/databases/oracle/ddls*.
     - PostgreSQL: The DDL's are located at *bdre-app/databases/postgresql/ddls*.
     - MySQL: The DDL's are located at *bdre-app/databases/mysql/ddls*.
-* You will need to modify the *db.properties* for the appropriate DB selected.
+* When maven build is done it by default copies the *db.properties* present in *bdre-app/databases* folder into the *md-dao/src/main/resources*. You will need to modify the *db.properties* present in *md-dao/src/main/resources* for the appropriate DB selected. But if you want to modify the DB before building, then you need to copy that *db.properties* manually and put inside *md-dao/src/main/resources* and modify it according to your needs. *  **Note:** Do not modify the db.properties present inside the databases folder  *
 * `create-tables.sql` and `drop-tables.sql` are located inside each ddls folder corresponding to the DB. According to the DB that you are using run appropriate ddls in your Database GUI. In the next step an example is shown for MySQL.
 
 * Using MySQL, the steps to be performed are as shown:
@@ -146,7 +146,7 @@ Behind proxied networks, placing following in settings.xml should work.
 
       `mysqladmin -u root password 'root'`
 
-    - create the tables and procs using bdre-app/databases/mysql/ddls `drop-tables.sql` and`create-tables.sql` inside the various DB folders. Copy the commands and run in your specific DataBase GUI.
+    - create the tables and procs using bdre-app/databases/mysql/ddls `drop-tables.sql` and`create-tables.sql` inside the various DB folders. Copy the commands and run in your specific DataBase GUI, in this case in MySQL Workbench.
   
 
 * Two additional jars are required for *flume-source* and JSON *SerDe*. For this to be done, download the zip from [here](https://github.com/cloudera/cdh-twitter-example.git) as these jars are still not available in the maven repository, they need to be custom built. 
