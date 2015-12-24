@@ -40,7 +40,7 @@ public class SetupDB {
     private SessionFactory sessionFactory;
     private Session session;
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws Exception{
         String projectRoot="";
         if(args!=null && args.length != 0 && args[0]!=null && !args[0].isEmpty()){
             projectRoot=args[0]+"/";
@@ -71,6 +71,9 @@ public class SetupDB {
         } catch (Exception e) {
             LOGGER.error("Error Occurred",e);
             setupDB.term();
+            throw e;
+        }finally{
+
         }
 
     }
@@ -86,10 +89,12 @@ public class SetupDB {
 
     public void halt() {
         session.getTransaction().commit();
+        session.close();
     }
 
     public void term() {
         session.getTransaction().rollback();
+        session.close();
     }
 
     private String[] getColumns(String line) {
