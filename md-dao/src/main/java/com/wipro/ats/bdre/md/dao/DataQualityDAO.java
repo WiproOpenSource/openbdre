@@ -218,7 +218,7 @@ public class DataQualityDAO {
                 triggerCheck=processValidateInsert.ProcessTypeValidator(jpaProcessStep,jpaProcessChild);
                 if(triggerCheck==true)
                 {
-                    parentProcessId = (Integer) session.save(jpaProcessStep);
+                    subProcessId = (Integer) session.save(jpaProcessStep);
                 }
                 else
                 {

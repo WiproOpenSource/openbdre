@@ -49,17 +49,17 @@
                                         <form role="form" id="propertiesFieldsForm">
                                             <div class="form-group">
                                                 <label >File Monitoring Dir Name</label>
-                                                <input type="text" class="form-control" name="monitoredDirName" placeholder="File Monitoring Dir Name" value=<%=System.getProperty("user.home")%> required>
+                                                <input type="text" class="form-control" name="monitoredDirName" placeholder="File Monitoring Dir Name" value=<%=System.getProperty("user.home")+"/mondir"%> required>
                                             </div>
                                             <div class="form-group">
-                                                <label >file Pattern</label>
-                                                <input type="text" class="form-control" name="filePattern" value="*" placeholder="File Pattern Monitored" required>
+                                                <label >File Pattern</label>
+                                                <input type="text" class="form-control" name="filePattern" value=".+" placeholder="File Pattern Monitored" required>
                                             </div>
                                             <div class="form-group">
-                                                <label >Delete Copied Source</label>
+                                                <label >Copied Source File Action</label>
                                                 <select class="form-control" name="deleteCopiedSource">
-                                                    <option value="true">Source Dir Delete</option>
-                                                    <option value="false">Archive Dir Delete</option>
+                                                    <option value="true">Source File Delete</option>
+                                                    <option value="false">Move Archive Dir </option>
 
                                                 </select>
                                             </div>
@@ -70,7 +70,7 @@
                                             </div>
 
                                             <div class="form-group">
-                                                <label>Sleep Time</label>
+                                                <label>Polling Interval</label>
                                                 <input type="number" class="form-control" name="sleepTime" value="500" placeholder="time in milliseconds" required>
                                             </div>
                                             <input type="submit" id="createJobButton" class="btn btn-primary" ng-click="createJob()"/>
@@ -84,11 +84,14 @@
                     <div class="row">
                         <div class="col-md-3"> </div>
                         <div class="col-md-6 ">
-                            <span><div class="panel panel-success" name="successHeader" id="successHeader" style="visibility:hidden">Job Created Successfully</div> </span>
+                        <div class="panel panel-success">
+                            <div class="panel-heading" name="successHeader" id="successHeader">Job Created Successfully</div>
                             <div id="Process"></div>
+                        </div>
                         </div>
                     </div>
                <script>
+               $("#successHeader").hide();
                         var createJobResult;
                         var app = angular.module('myApp', []);
                         app.controller('myCtrl', function($scope) {
