@@ -70,7 +70,7 @@
                                             </div>
 
                                             <div class="form-group">
-                                                <label>Polling Interval</label>
+                                                <label>Polling Interval(in milliseconds)</label>
                                                 <input type="number" class="form-control" name="sleepTime" value="500" placeholder="time in milliseconds" required>
                                             </div>
                                             <input type="submit" id="createJobButton" class="btn btn-primary" ng-click="createJob()"/>
