@@ -239,7 +239,7 @@
                                                     </div>
                                                 </div>
                                                 <hr/>
-                                                <form class="form-horizontal" role="form" ng-if="genConfig.type != 'file' && genConfig.type != 'r'  && genConfig.type != 'spark'">
+                                                <form class="form-horizontal" role="form" ng-if="genConfig.type != 'hql' && genConfig.type != 'r'  && genConfig.type != 'spark' && genConfig.type != 'pig' && genConfig.type != 'shell'">
                                                     <div class="form-group">
                                                         <label class="control-label col-sm-2" for="{{genConfig.key}}-propkey">Name:</label>
                                                         <div class="col-sm-10">
@@ -254,9 +254,9 @@
                                                     </div>
                                                     <button type="submit" ng-click="insertProp(genConfig)" class="btn btn-primary  pull-right">Add {{genConfig.value}}</button>
                                                 </form>
-                                                <form class="form-horizontal" role="form" ng-if="genConfig.type == 'file'">
+                                                <form class="form-horizontal" role="form" ng-if="genConfig.type == 'hql'">
                                                     <div class="form-group">
-                                                        <label class="control-label col-sm-3" for="{{genConfig.key}}-propkey">Select file :</label>
+                                                        <label class="control-label col-sm-3" for="{{genConfig.key}}-propkey">Select HQL file :</label>
                                                     </div>
                                                     <div class="form-group">
                                                         <div class="col-sm-10">
@@ -269,7 +269,7 @@
                                                 </form>
                                                  <form class="form-horizontal" role="form" ng-if="genConfig.type == 'r'">
                                                     <div class="form-group">
-                                                        <label class="control-label col-sm-3" for="{{genConfig.key}}-propkey">Select file :</label>
+                                                        <label class="control-label col-sm-3" for="{{genConfig.key}}-propkey">Select R file :</label>
                                                     </div>
                                                     <div class="form-group">
                                                         <div class="col-sm-10">
@@ -280,9 +280,35 @@
                                                         <button type="upload" ng-click="uploadFile(chartViewModel.selectedProcess.processId,chartViewModel.selectedProcess.parentProcessId,'r',genConfig.key)" class="btn btn-primary  pull-right">Upload {{genConfig.key}}</button>
                                                     </div>
                                                 </form>
+                                                <form class="form-horizontal" role="form" ng-if="genConfig.type == 'shell'">
+                                                    <div class="form-group">
+                                                        <label class="control-label col-sm-3" for="{{genConfig.key}}-propkey">Select shell script :</label>
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <div class="col-sm-10">
+                                                            <input type="file" name="file" class="form-control" id="{{genConfig.key}}-propval" required>
+                                                        </div>
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <button type="upload" ng-click="uploadFile(chartViewModel.selectedProcess.processId,chartViewModel.selectedProcess.parentProcessId,'shell',genConfig.key)" class="btn btn-primary  pull-right">Upload {{genConfig.key}}</button>
+                                                    </div>
+                                                </form>
+                                                <form class="form-horizontal" role="form" ng-if="genConfig.type == 'pig'">
+                                                    <div class="form-group">
+                                                        <label class="control-label col-sm-3" for="{{genConfig.key}}-propkey">Select pig script :</label>
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <div class="col-sm-10">
+                                                            <input type="file" name="file" class="form-control" id="{{genConfig.key}}-propval" required>
+                                                        </div>
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <button type="upload" ng-click="uploadFile(chartViewModel.selectedProcess.processId,chartViewModel.selectedProcess.parentProcessId,'pig',genConfig.key)" class="btn btn-primary  pull-right">Upload {{genConfig.key}}</button>
+                                                    </div>
+                                                </form>
                                                 <form class="form-horizontal" role="form" ng-if="genConfig.type == 'spark'">
                                                     <div class="form-group">
-                                                        <label class="control-label col-sm-3" for="{{genConfig.key}}-propkey">Select jar file :</label>
+                                                        <label class="control-label col-sm-3" for="{{genConfig.key}}-propkey">Select spark jar:</label>
                                                     </div>
                                                     <div class="form-group">
                                                         <div class="col-sm-10">

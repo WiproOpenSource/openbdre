@@ -62,21 +62,18 @@ public class ProcessDAOTest {
     public void testTotalRecordCount() throws Exception {
         LOGGER.info("Total Process is:" + processDAO.totalRecordCount(10802));
     }
-
+    @Ignore
     @Test
     public void testGet() throws Exception {
         LOGGER.info("Process(10835) Name:" + processDAO.get(10835).getProcess().getProcessId());
 
     }
-
+    @Ignore
     @Test
     public void testInsertUpdateAndDelete() throws Exception {
         BusDomain busDomain = busDomainDAO.get(1);
         ProcessType processType = processTypeDAO.get(1);
         Process process = new Process();
-        // Process parentProcess=new Process();
-        //parentProcess.setProcessId(10802);
-        //process.setProcess(parentProcess);
         process.setProcessName("Test");
         process.setDescription("Test Process");
         process.setBusDomain(busDomain);

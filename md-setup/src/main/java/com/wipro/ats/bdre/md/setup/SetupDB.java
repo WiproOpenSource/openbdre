@@ -20,7 +20,6 @@ package com.wipro.ats.bdre.md.setup;
 import com.wipro.ats.bdre.md.setup.beans.*;
 import com.wipro.ats.bdre.md.setup.beans.Process;
 import org.apache.log4j.Logger;
-import org.hibernate.CacheMode;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -42,7 +41,6 @@ public class SetupDB {
     private Session session;
 
     public static void main(String[] args) {
-        System.out.println("args = " + args[0]);
         String projectRoot="";
         if(args!=null && args.length != 0 && args[0]!=null && !args[0].isEmpty()){
             projectRoot=args[0]+"/";

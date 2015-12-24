@@ -20,6 +20,7 @@ import com.wipro.ats.bdre.md.dao.jpa.UserRoles;
 import com.wipro.ats.bdre.md.dao.jpa.Users;
 import org.apache.log4j.Logger;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.AutowireCapableBeanFactory;
@@ -58,7 +59,7 @@ public class UserRolesDAOTest {
         LOGGER.info("Size of UserRoles is:" + userRolesDAO.totalRecordCount());
     }
 
-
+    @Ignore
     @Test
     public void testGet() throws Exception {
 
