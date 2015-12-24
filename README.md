@@ -4,7 +4,7 @@ This document will help you build BDRE from source. Audience for this document a
 
 ### Setup
 
-* Install Git, MVN and Oracle JDK 7 if you haven't already. In Windows be sure add git and other bash tools in the commandline path during installation. To get started download and install following free, safe and open source software.
+* Install Git, MVN and Oracle JDK 7(and up) if you haven't already. In Windows be sure to add git and other bash tools in the commandline path during installation. To get started download and install following free, safe and open source software.
 
  - Oracle JDK 7 
  - Git Command line Client (For Windows - GitBash)[Download for Windows](https://git-scm.com/download/win)
@@ -23,7 +23,7 @@ After installing Git first set your full name (like John Doe) and email id in gi
 
 `git config --global user.email "your_email@company.com"`
 
-Replace *Your Name* and *your_email* with your real name and Wipro email.
+Replace *Your Name* and *your_email* with your real name and your email.
 * Add `jdk` location in the PATH env variable.
 * Add `JAVA_HOME` env variable with your installed jdk location.
 * Add `mvn` location in the PATH env variable.
