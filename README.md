@@ -108,34 +108,6 @@ For further changes to convert CRLF to LF when you are using linux systems refer
 
 ## Building
 
-* You need to create your own environment. To create your environments, edit
- - bdre-app/md-commons/src/main/resources/mybatis-config.xml
-
-You can setup an environment called `local` and assuming you are running MySQL server with default port configuration `localhost:3306`. Later you'd set the credentials of the DB. If `local` already exists then edit it or create it by coping an existing entry.
-
-#### mybatis-config.xml
-
-```xml
-<environment id="local">
-            <transactionManager type="JDBC"/>
-            <dataSource type="POOLED">
-                <property name="driver" value="com.mysql.jdbc.Driver"/>
-                <property name="url" value="jdbc:mysql://localhost:3306/platmd"/>
-                <property name="username" value="root"/>
-                <property name="password" value="root"/>
-            </dataSource>
-</environment>
-```
-
-#### ENVIRONMENT file
-
-* Create a file called ENVIRONMENT in md_commons and im_commons resources directory. Sample [ENVIRONMENT](https://gitlab.com/bdre/documentation/uploads/e9500dec3cb508d4839d6c9a7edcfea5/ENVIRONMENT) file.
-* This file is in git ignore so does not get checked in. It must point to your environment code.
-
-```
-environment=local
-```
-
 * Open your settings.xml. It’s in **~/.m2/settings.xml**. If not present please create it. Alternatively you can right click any .pom in IntelliJ Idea and open/create **settings.xml**.
 
 * Obtain the [settings.xml](https://gitlab.com/bdre/jack/raw/develop/installer/guestfiles/maven/settings.xml) from Jack/installer/guestfiles/maven/ and replace your local **~/.m2/settings.xml**.
@@ -159,7 +131,23 @@ Behind proxied networks, placing following in settings.xml should work.
         </proxy>
 </proxies>
 ```
-* Perform a mvn clean install in bdre-app project only.
+* Perform a mvn clean install in bdre-app project only. By default BDRE comes with H2 database which works on single node clusters. But when using bigger (more node) systems, a production scale database is required. BDRE currently supports 3 more databases:
+    - H2: The DDL's are located at *bdre-app/databases/h2/ddls*.
+    - Oracle: The DDL's are located at *bdre-app/databases/oracle/ddls*.
+    - PostgreSQL: The DDL's are located at *bdre-app/databases/postgresql/ddls*.
+    - MySQL: The DDL's are located at *bdre-app/databases/mysql/ddls*.
+* You will need to modify the *db.properties* for the appropriate DB selected.
+* `create-tables.sql` and `drop-tables.sql` are located inside each ddls folder corresponding to the DB. According to the DB that you are using run appropriate ddls in your Database GUI. In the next step an example is shown for MySQL.
+
+* Using MySQL, the steps to be performed are as shown:
+    - Start MySQL 5.6 server and create *platmd* DB and MySQL credentials
+
+      `mysql -u root -e "create database platmd;"`
+
+      `mysqladmin -u root password 'root'`
+
+    - create the tables and procs using bdre-app/databases/mysql/ddls `drop-tables.sql` and`create-tables.sql` inside the various DB folders. Copy the commands and run in your specific DataBase GUI.
+  
 
 * Two additional jars are required for *flume-source* and JSON *SerDe*. For this to be done, download the zip from [here](https://github.com/cloudera/cdh-twitter-example.git) as these jars are still not available in the maven repository, they need to be custom built. 
     - Goto *flume-sources* inside the folder and do `mvn clean install`.
@@ -168,15 +156,6 @@ Behind proxied networks, placing following in settings.xml should work.
     - From inside the hive-serdes/target folder copy the `hive-serdes-1.0-SNAPSHOT` jar to bdre-app/target/lib.
 
 ## Running the BDRE Web UI
-
-* Start MySQL 5.6 server and create *platmd* DB and MySQL credentials
-
-  `mysql -u root -e "create database platmd;"`
-
-  `mysqladmin -u root password 'root'`
-
-* create the tables and procs using bdre-app/databases/mysql/ddls `drop-tables.sql` and`create-tables.sql` inside the various DB folders. Copy the commands and run in your specific DataBase GUI.
-  
 
 * After a successful build of bdre-app project, cd into md-rest-api folder and start the Jetty server using quick-run.bat (or .sh if you are using Unix)(Make sure the Batch Scripts Support for Windows or Bash Support for Unix plugin is installed)
 * Use Chrome browser and open http://localhost:9999/mdui/pages/content.page
