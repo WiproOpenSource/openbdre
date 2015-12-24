@@ -63,6 +63,7 @@ public class WorkflowTypeDAOTest {
     }
 
 
+    @Ignore
     @Test
     public void testInsertUpdateAndDelete() throws Exception {
         WorkflowType workflowType = new WorkflowType();

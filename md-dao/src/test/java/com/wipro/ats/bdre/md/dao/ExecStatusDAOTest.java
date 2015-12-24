@@ -59,6 +59,7 @@ public class ExecStatusDAOTest {
 
     }
 
+    @Ignore
     @Test
     public void testInsertUpdateAndDelete() throws Exception {
         ExecStatus execStatus = new ExecStatus();
