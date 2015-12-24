@@ -25,12 +25,13 @@
     <packaging>pom</packaging>
     <version>1.1-SNAPSHOT</version>
     <modules>
-        <module>md-dao</module>
-        <module>md_api</module>
+        <module>md-setup</module>
         <module>workflow-generator</module>
         <module>md-commons</module>
         <module>md-rest-api</module>
         <module>md-ui</module>
+        <module>md-dao</module>
+        <module>md_api</module>
         <module>login-module</module>
         <module>auth-rest-api</module>
         <module>process-deploy</module>
@@ -50,7 +51,6 @@
         <module>hive-plugin</module>
         <module>im-crawler</module>
         <module>flume-hdfs-sink</module>
-        <module>md-setup</module>
         <module>spark-core</module>
     </modules>
 
