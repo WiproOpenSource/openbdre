@@ -44,7 +44,7 @@
         <module>eventing-fwk</module>
         <module>hive-data-gen</module>
         <module>dq</module>
-        <module>hive-io</module>
+       <!-- <module>hive-io</module>-->
         <module>data-lineage</module>
         <module>hive-plugin</module>
         <!--<module>im-crawler</module>-->
