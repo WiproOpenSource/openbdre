@@ -383,7 +383,7 @@
                                             url: "crawler.page",
                                             children: []
 					}, {
-                                               label: "New File Monitor",
+                                               label: "New File Ingestion",
                                                collapse: "1",
                                                url: "filemonitor.page",
                                                children: []
