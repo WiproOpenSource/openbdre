@@ -2,43 +2,44 @@
 
 This document will help you build BDRE from source. Audience for this document are developers and architects who want be part of BDRE framework development or may just want to test it by running the UI. 
 
-### Setup
-
 * Install Git, MVN and Oracle JDK 7(and up) if you haven't already. In Windows be sure to add git and other bash tools in the commandline path during installation. To get started download and install following software.
-
  - Oracle JDK 7 
  - Git Command line Client [Download](https://git-scm.com/download)
  - Maven [Download](http://apache.mirrors.pair.com/maven/maven-3/3.3.3/binaries/apache-maven-3.3.3-bin.zip)
  - IntelliJ Idea [Download](https://www.jetbrains.com/idea/download/)
+ 
+`Note` while installing git in `Windows` (Gitbash) please select following options
 
-BDRE is by default configured to run with H2 embedded database which is okay for evauating and testing jobs in a single node cluster. For production use BDRE currently supports following production scale databases.
+- Checkout Windows-style commit unix-style line endings
+- Run git and included Unix tools from the Windows command prompt
 
- - MySQL Server
- - Oracle 11g Server
- - PostgreSql
+
+BDRE is by default configured to run with H2 embedded database which is okay for evaluating and testing jobs in a single node cluster. For production use BDRE currently supports following production scale databases.
+
+  - MySQL Server
+  - Oracle 11g Server
+  - PostgreSql
 
  In this guide we are going to show you how to build and install BDRE in a Cloudera QuickStart Hadoop VM which is Linux based. You should be able to do the same in Mac or Windows but note that setting up a Hadoop cluster might be tricky. You should be able to launch the BDRE user interface in Windows and design various jobs. However to deploy and run the jobs we recommend a Linux system with Hadoop installed. BDRE is typically installed in Hadoop edge node in a multi-node cluster.
 
-**Important:**
+### Setup
+
+Since a few people experienced problems with basic setup - following information might be helpful.
 
 After installing Git first set your full name (like John Doe) and email id in git config using following command.
 
 `git config --global user.name "Your Name"`
-
 `git config --global user.email "your_email@company.com"`
 
 Replace *Your Name* and *your_email* with your real name and your real email.
-* Add `jdk` location in the PATH env variable.
+* Add `jdk` bin directory to the PATH env variable.
 * Add `JAVA_HOME` env variable with your installed jdk location.
-* Add `mvn` location in the PATH env variable.
+* Add `mvn` bin directory to the PATH env variable.
 * Add `M2_HOME` env variable with your installed maven location.
-* To use git from Command line, add `git` location in the PATH env variable.
-* To use mysql from Command Line, add `mysql` location in the PATH env variable.
 
-### Proxy setup while working behind a proxy network
+Proxy setup while working behind a proxy network
 
-- If you are behind proxy then you need to setup proxy for command line operations. The easiest way to do that would be adding 3 environment variables before performing any git operations. If you want to set proxy permanently then [read this](http://www.microsoft.com/resources/documentation/windows/xp/all/proddocs/en-us/sysdm_advancd_environmnt_addchange_variable.mspx?mfr=true).
-
+- If you are behind proxy then you need to setup proxy for command line operations. The easiest way to do that would be adding 3 environment variables before performing any git operations.
 
 ```shell
 In Linux use this:
@@ -49,7 +50,7 @@ export no_proxy=localhost
 ```
 Replace `export` with `set` if you are working in Windows.
 
-**Git Proxy Setting:** Git sometimes needs separate proxy configuration to connect to repositories.
+Git sometimes needs separate proxy configuration to connect to repositories.
 
 For e.g. to set proxy:
 
@@ -57,14 +58,13 @@ For e.g. to set proxy:
 
 `git config --global http.proxy http://<proxy username>:<proxy password>@<your proxy server>:<proxy port>`
 
-Note: If your proxy uses Active Directory authentication then you need to add `DOMAIN\` before the username
+Note: If your proxy uses Active Directory authentication then you may have to add `DOMAIN\` before the username.
 
 To reset configured proxy use this:
 
 `git config --global --unset https.proxy`
 
 `git config --global --unset http.proxy`
-
 
 
 ### Test your git access:
