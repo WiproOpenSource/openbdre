@@ -35,9 +35,8 @@ git config --global user.email "your_email@company.com"
 ```
 Replace *Your Name* and *your_email* with your real name and your real email.
 
-Linux and Windows differ in how they handle line endings.
+Linux and Windows differ in how they handle line endings. The `git config core.autocrlf` command is used to change how Git handles line endings. It takes a single argument. So it is better to set the `autocrlf` in git accordingly to avoid further complications.
 
-The `git config core.autocrlf` command is used to change how Git handles line endings. It takes a single argument. So it is better to set the `autocrlf` in git accordingly to avoid further complications.
 ```shell
 Windows:
 git config --global core.autocrlf true
@@ -83,6 +82,40 @@ git config --global --unset http.proxy
 * Add `mvn` bin directory to the PATH env variable.
 * Add `M2_HOME` env variable with your installed maven location.
 
+#### Maven
+
+BDRE is built using Maven build tool. BDRE specific maven settings.xml is part of BDRE source code. Make your environment specific changes in $M2_HOME/conf/settings.xml.
+For example if you are behind a proxy or you want a mirror repo, you can use following in $M2_HOME/conf/settings.xml
+
+```xml
+<?xml version="1.0" encoding="UTF-8"?>
+<settings xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+          xmlns="http://maven.apache.org/SETTINGS/1.0.0"
+          xsi:schemaLocation="http://maven.apache.org/SETTINGS/1.0.0 http://maven.apache.org/xsd/settings-1.0.0.xsd">
+    <mirrors>
+        <mirror>
+            <id>repo.maven.apache.org</id>
+            <name>repo.maven.apache.org</name>
+            <url>https://repo.maven.apache.org/maven2</url>
+            <mirrorOf>central</mirrorOf>
+        </mirror>
+    </mirrors>
+    <proxies>
+        <proxy>
+            <id>optional</id>
+            <active>true</active>
+            <protocol>http</protocol>
+            <username>yourUserName</username>
+            <password>yourPassword</password>
+            <host>yourProxyHost</host>
+            <port>yourProxyPort</port>
+            <nonProxyHosts>localhost</nonProxyHosts>
+        </proxy>
+    </proxies>
+</settings>
+
+```
+
 ### `bdre-app` Repository
 
 `git clone https://<yourid>gitlab.com/bdre/bdre-app.git`
@@ -93,11 +126,8 @@ You can proceed to 'Building' section if you just want to run the UI.
 **Important:** Dealing with line endings
 
 
-## Building
+### Building BDRE from source
 
-* Open your settings.xml. It’s in **~/.m2/settings.xml**. If not present please create it. Alternatively you can right click any .pom in IntelliJ Idea and open/create **settings.xml**.
-
-* Use the settings.xml which is present in bdre-app repo and replace your local **~/.m2/settings.xml**.
 
 * NOTE : Add or change the jar versions in settings.xml according to your need.
 *If you have proxied internet access then [configure proxy](http://maven.apache.org/guides/mini/guide-proxies.html)
