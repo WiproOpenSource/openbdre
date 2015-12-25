@@ -23,9 +23,7 @@ public class QueuedFileUploader {
     private static Configuration config = new Configuration();
 
     private static void hdfsCopy(FileCopyInfo fileCopying) throws IOException {
-
         try {
-
             // Copying file from local to HDFS overriding, if file already exists
             config.set("fs.defaultFS", FileMonRunnableMain.getDefaultFSName());
             FileSystem fs = FileSystem.get(config);
@@ -41,18 +39,15 @@ public class QueuedFileUploader {
                 File destinationDir = new File(destDir);
                 FileUtils.moveFileToDirectory(sourceFile, destinationDir, true);
             }
-
         } catch (Exception e) {
             FileMonitor.addToQueue(fileCopying.getFileName(), fileCopying);
             LOGGER.error("Error in executeCopyProcess method. Requeuing file " + fileCopying.getFileName(), e);
             throw new IOException(e);
         }
-
     }
 
     public static void executeCopyProcess() {
-        /* this variable is used to keep details of file being currently copying */
-
+        // this variable is used to keep details of file being currently copying
         if (FileMonitor.getQueueSize() > 0) {
             FileCopyInfo fileCopying = FileMonitor.getFileInfoFromQueue();
             try {
@@ -60,18 +55,15 @@ public class QueuedFileUploader {
                 // calling register file
                 executeRegisterFiles(fileCopying);
             } catch (Exception err) {
-                LOGGER.error(err);
+                LOGGER.error("Error in execute copy process ", err);
                 throw new ETLException(err);
             }
-
         }
-
     }
 
     //Calling the RegisterFile method in metadata API on file Creation.
     private static void executeRegisterFiles(FileCopyInfo fileCopying) {
         try {
-            //getting the hashcode of the file
             String subProcessId = fileCopying.getSubProcessId();
             String serverId = fileCopying.getServerId();
             String path = fileCopying.getDstLocation();
@@ -85,7 +77,7 @@ public class QueuedFileUploader {
             LOGGER.debug("executeRegisterFiles Invoked for " + path);
             registerFile.execute(params);
         } catch (Exception err) {
-            LOGGER.error(err.getMessage());
+            LOGGER.error("Error execute register files ", err);
             throw new ETLException(err);
         }
     }

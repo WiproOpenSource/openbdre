@@ -148,6 +148,7 @@
                 <commons.lang.version>2.5</commons.lang.version>
                 <hibernate.jpa.version>1.0.0.Final</hibernate.jpa.version>
                 <commons.dbcp.version>1.4</commons.dbcp.version>
+                <apache.commons.collections4.version>4.0</apache.commons.collections4.version>
             </properties>
         </profile>
         <profile>

@@ -8,7 +8,7 @@ import org.apache.log4j.Logger;
 import java.io.File;
 
 /**
- * Created by cloudera on 12/24/15.
+ * Created by MO335755 on 12/24/15.
  */
 public class FileScan {
 
@@ -16,17 +16,16 @@ public class FileScan {
 
     public static void scanAndAddToQueue() {
         try {
-            String monitorDir = FileMonRunnableMain.getMonitoredDirName();
-
-
-            File dir = new File(monitorDir);
+            String scanDir = FileMonRunnableMain.getMonitoredDirName();
+            LOGGER.debug("Scanning directory: "+ scanDir);
+            File dir = new File(scanDir);
             File[] listOfFiles = dir.listFiles();
             String fhash = "";
             for (File file : listOfFiles) {
                 if (file.isFile()) {//Checking if the file name matches with the given pattern
                     String fileName = file.getName();
                     if (fileName.matches(FileMonRunnableMain.getFilePattern())) {
-                        LOGGER.debug("Matched File Pattern by " + fileName);
+                        LOGGER.debug("Matched File Pattern by :" + fileName);
                         fhash = DigestUtils.md5Hex(FileUtils.readFileToByteArray(file));
                         FileCopyInfo fileCopyInfo = new FileCopyInfo();
                         fileCopyInfo.setFileName(fileName);
@@ -41,9 +40,8 @@ public class FileScan {
                     }
                 }
             }
-
         } catch (Exception err) {
-            LOGGER.error(err.toString(), err);
+            LOGGER.error("Error in scan directory ", err);
             throw new ETLException(err);
         }
     }

@@ -78,6 +78,13 @@ public class FileMonRunnableMain extends ETLBase {
         FileMonRunnableMain.hdfsUploadDir = hdfsUploadDir;
     }
 
+    public static String getSubProcessId() {
+        return subProcessId;
+    }
+
+    public static String getDefaultFSName() {
+        return defaultFSName;
+    }
 
     //Created a dummy PARAMS_STRUCTURE variable to get the environment value.
     private static final String[][] PARAMS_STRUCTURE = {
@@ -88,14 +95,6 @@ public class FileMonRunnableMain extends ETLBase {
     public static void main(String[] args) {
         FileMonRunnableMain f2SFileMonitorMain = new FileMonRunnableMain();
         f2SFileMonitorMain.execute(args);
-    }
-
-    public static String getSubProcessId() {
-        return subProcessId;
-    }
-
-    public static String getDefaultFSName() {
-        return defaultFSName;
     }
 
     private void execute(String[] params) {
@@ -129,11 +128,10 @@ public class FileMonRunnableMain extends ETLBase {
             //Reading directory paths and adding to the DefaultFileMonitor
             String dir = FileMonRunnableMain.getMonitoredDirName();
             DefaultFileMonitor fm = new DefaultFileMonitor(FileMonitor.getInstance());
-            FileObject listendir = fsManager.resolveFile(dir);
+            FileObject listenDir = fsManager.resolveFile(dir);
             LOGGER.debug("Monitoring directories " + dir);
-            LOGGER.info("Dir value" + listendir);
             fm.setRecursive(false);
-            fm.addFile(listendir);
+            fm.addFile(listenDir);
             fm.start();
             //Now scan the mondir for existing files and add to queue
             FileScan.scanAndAddToQueue();
@@ -143,7 +141,6 @@ public class FileMonRunnableMain extends ETLBase {
 
             Thread consumerThread2 = new Thread(new QueueConsumerRunnable());
             consumerThread2.start();
-
         } catch (Exception err) {
             LOGGER.error(err);
             throw new ETLException(err);

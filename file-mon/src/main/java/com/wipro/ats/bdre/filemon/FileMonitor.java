@@ -16,8 +16,6 @@ import org.apache.commons.vfs2.FileObject;
 import org.apache.log4j.Logger;
 
 import java.text.SimpleDateFormat;
-import java.util.Hashtable;
-import java.util.List;
 
 
 /**
@@ -28,19 +26,14 @@ public class FileMonitor implements FileListener {
     private static FileMonitor fileMonitor = null;
     private SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
 
-
     public static synchronized FileCopyInfo getFileInfoFromQueue() {
         String key = FileMonitor.fileToCopyMap.firstKey();
-        LOGGER.debug("********before get fileToCopyMap is"+fileToCopyMap);
         FileCopyInfo fileCopyInfo=fileToCopyMap.remove(key);
-        LOGGER.debug("********after get fileToCopyMap is"+fileToCopyMap);
         return fileCopyInfo;
     }
 
     public static synchronized void addToQueue(String fileName, FileCopyInfo fileCopyInfo) {
-        LOGGER.debug("********before add fileToCopyMap is"+fileToCopyMap);
         fileToCopyMap.put(fileName, fileCopyInfo);
-        LOGGER.debug("********after add fileToCopyMap is"+fileToCopyMap);
     }
     public static synchronized int getQueueSize(){
         return fileToCopyMap.size();
@@ -57,7 +50,6 @@ public class FileMonitor implements FileListener {
 
     //Singleton pattern
     public static FileMonitor getInstance() {
-
         if (fileMonitor == null) {
             fileMonitor = new FileMonitor();
         }
@@ -66,7 +58,6 @@ public class FileMonitor implements FileListener {
 
     //Read the monitored directories, file patterns, subprocessIds and serverIds and build the HashTable
     private void init() {
-
         String dirList = FileMonRunnableMain.getMonitoredDirName();
         String filePattern = FileMonRunnableMain.getFilePattern();
     }
@@ -74,7 +65,6 @@ public class FileMonitor implements FileListener {
     //This method will get invoked when a file created in the directory.
     @Override
     public void fileCreated(FileChangeEvent fileChangeEvent) throws Exception {
-
         FileObject obj = fileChangeEvent.getFile();
         LOGGER.debug("File Created " + obj.getURL());
         String dirPath = obj.getParent().getName().getPath();
@@ -91,7 +81,6 @@ public class FileMonitor implements FileListener {
         }
     }
 
-
     private static void putEligibleFileInfoInMap(String fileName, FileContent fc) {
         // *Start*   Eligible files moved to data structure for ingestion to HDFS
         FileCopyInfo fileCopyInfo = new FileCopyInfo();
@@ -107,7 +96,7 @@ public class FileMonitor implements FileListener {
             // putting element to structure
            addToQueue(fileName,fileCopyInfo);
         } catch (Exception err) {
-            LOGGER.error("Error adding file"+err);
+            LOGGER.error("Error adding file to queue ", err);
             throw new ETLException(err);
         }
         // *End*   Eligible files moved to data structure for ingestion to HDFS
@@ -120,7 +109,7 @@ public class FileMonitor implements FileListener {
 
     @Override
     public void fileChanged(FileChangeEvent fileChangeEvent) throws Exception {
-
+        //nothing to do
     }
 
 

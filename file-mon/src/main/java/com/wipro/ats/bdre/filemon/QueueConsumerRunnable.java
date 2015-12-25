@@ -24,7 +24,7 @@ public class QueueConsumerRunnable implements Runnable {
                 Thread.sleep(FileMonRunnableMain.getSleepTime());
             }
         } catch (Exception err) {
-            LOGGER.error(err.toString());
+            LOGGER.error("Error in Queue consumer ", err);
             throw new ETLException(err);
         }
     }
