@@ -19,7 +19,7 @@ BDRE is by default configured to run with H2 embedded database which is okay for
 
 ### Setup
 
-Since a few people experienced problems with basic setup - following information might be helpful.
+This section is applicable for those who need with Git or Maven setup. You may skip the setup section if you already have git/maven set up and properly working.
 
 #### Git
 
@@ -125,7 +125,8 @@ For example if you are behind a proxy or you want a mirror repo, you can use fol
 
 ```git clone <BDRE git URL>```
 * Now ```cd``` to the bdre source code folder that git created.
-#### Database Setup (Optional section)
+
+### Database Setup (Optional section)
 * As mentioned before you's be able to build BDRE and run it with a H2 embedded database backend and hence no detabase setup is required if you want to test BDRE. However, here we'll demonstrate how to configure BDRE with MySQL backend.
   - Create `db.properties` inside `md-dao/src/main/resources`
   - Open newly created `md-dao/src/main/resources/db.properties` in a text editor and have following
@@ -175,7 +176,7 @@ hibernate.default_schema=platmd
 * Use Chrome browser and open http://localhost:9999/mdui/pages/content.page
 * Login using admin/zaq1xsw2
 
-## Creating a test job
+### Creating a test job
 
 * Create a RDBMS data import job from *Job Setup From Template > New RDBMS Import Job*
 * Change the JDBC URL/credentials to your localhost MySQL platmd DB that contains BDRE metadata.
@@ -184,7 +185,7 @@ hibernate.default_schema=platmd
 * Create the jobs and see the pipeline.
 * Click *XML* , *Details* etc and check the generated Oozie workflow.
 
-## Open the projects in IntelliJ Idea
+### Open the projects in IntelliJ Idea
 
 * We strongly recommend using IntelliJ Idea to develop BDRE. However BDRE should work fine with other Java IDEs
 * Start Idea and go to **File > Open ...** and then browse to the repo folder and open it.
@@ -193,7 +194,7 @@ hibernate.default_schema=platmd
 * For completed, committed and pushed changes, open *Merge Request*.
 * Good luck!
 
-## How to Deploy Process in your hadoop environment
+### How to Deploy Process in your hadoop environment
 After making entries into metadata related to your process, you have to deploy this process in your hadoop environment.
 ### Steps to deploy your process
 1. Click deploy button on process page corresponding to the process you want to deploy. ( Deploy button will show status regarding deployment of process, when you hover over the button.)
