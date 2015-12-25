@@ -704,7 +704,12 @@ public class ProcessAPI extends MetadataAPIBase {
                 command = new String[]{System.getProperty("user.home") + "/Workflow.py", process.getBusDomainId().toString(), process.getProcessTypeId().toString(), process.getProcessId().toString()};
 
             } else if (process.getWorkflowId()==2) {
+                if (process.getProcessTypeId()==26) {
 
+                    command = new String[]{System.getProperty("user.home") + "/filemonitor.sh", process.getNextProcessIds()};
+
+                }
+                 else
                 command = new String[]{System.getProperty("user.home") + "/flume.sh", process.getBusDomainId().toString(), process.getProcessTypeId().toString(), process.getProcessId().toString()};
 
             }
