@@ -17,9 +17,9 @@
 
 package com.wipro.ats.bdre.imcrawler.fetcher;
 
-import java.util.concurrent.TimeUnit;
-
 import org.apache.http.impl.conn.PoolingHttpClientConnectionManager;
+
+import java.util.concurrent.TimeUnit;
 
 public class IdleConnectionMonitorThread extends Thread {
 

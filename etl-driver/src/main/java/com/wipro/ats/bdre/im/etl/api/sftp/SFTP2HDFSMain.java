@@ -18,10 +18,10 @@ import com.wipro.ats.bdre.BaseStructure;
 import com.wipro.ats.bdre.IMConfig;
 import com.wipro.ats.bdre.im.etl.api.exception.ETLException;
 import com.wipro.ats.bdre.md.api.*;
+import com.wipro.ats.bdre.md.beans.FileInfo;
 import com.wipro.ats.bdre.md.beans.InitJobInfo;
 import com.wipro.ats.bdre.md.beans.InitJobRowInfo;
 import com.wipro.ats.bdre.md.beans.InitStepInfo;
-import com.wipro.ats.bdre.md.beans.FileInfo;
 import org.apache.commons.cli.CommandLine;
 import org.apache.log4j.Logger;
 

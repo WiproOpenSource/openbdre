@@ -18,7 +18,6 @@ import com.wipro.ats.bdre.md.beans.PositionsInfo;
 import com.wipro.ats.bdre.md.beans.table.Process;
 import com.wipro.ats.bdre.md.dao.ProcessDAO;
 import com.wipro.ats.bdre.md.dao.PropertiesDAO;
-import com.wipro.ats.bdre.md.dao.jpa.PropertiesId;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.AutowireCapableBeanFactory;
@@ -160,28 +159,28 @@ public class ArrangePositions extends MetadataAPIBase {
         return positionsInfoMap;
     }
 
-    private void savePositionsInDB(Map<Integer,List<PositionsInfo>> rankPositionsInfoMap) {
+    private void savePositionsInDB(Map<Integer, List<PositionsInfo>> rankPositionsInfoMap) {
 
-        java.util.Date date= new java.util.Date();
+        java.util.Date date = new java.util.Date();
 
-        LOGGER.info("start time save positions in db"+date);
+        LOGGER.info("start time save positions in db" + date);
         try {
-            List<PositionsInfo> allPositionsInfoList=new ArrayList<PositionsInfo>();
-            for(int level: rankPositionsInfoMap.keySet()){
-                List<PositionsInfo> positionsInfoList=rankPositionsInfoMap.get(level);
+            List<PositionsInfo> allPositionsInfoList = new ArrayList<PositionsInfo>();
+            for (int level : rankPositionsInfoMap.keySet()) {
+                List<PositionsInfo> positionsInfoList = rankPositionsInfoMap.get(level);
 
                 //adding levelWise list to allList
                 allPositionsInfoList.addAll(positionsInfoList);
             }
 
-            if(allPositionsInfoList.size()>0) {
+            if (allPositionsInfoList.size() > 0) {
                 //calling updateArrangePositions
-                propertiesDAO.updateArrangePositions(allPositionsInfoList.get(0).getProcessId(),allPositionsInfoList);
-                java.util.Date date1= new java.util.Date();
-                LOGGER.info("close time save positions in db"+date);
+                propertiesDAO.updateArrangePositions(allPositionsInfoList.get(0).getProcessId(), allPositionsInfoList);
+                java.util.Date date1 = new java.util.Date();
+                LOGGER.info("close time save positions in db" + date);
             }
         } catch (Exception e) {
-            LOGGER.error("error occurred in addToDatabase function",e);
+            LOGGER.error("error occurred in addToDatabase function", e);
         }
     }
 
@@ -227,7 +226,6 @@ public class ArrangePositions extends MetadataAPIBase {
         }
         rankPositionsInfoMap.get(0).get(0).setxPos(startX);
     }
-
 
 
     @Override

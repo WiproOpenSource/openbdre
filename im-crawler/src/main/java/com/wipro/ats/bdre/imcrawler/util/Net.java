@@ -1,11 +1,11 @@
 package com.wipro.ats.bdre.imcrawler.util;
 
+import com.wipro.ats.bdre.imcrawler.url.WebURL;
+
 import java.util.HashSet;
 import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
-import com.wipro.ats.bdre.imcrawler.url.WebURL;
 
 /**
  * Created by Avi Hayun on 9/22/2014.

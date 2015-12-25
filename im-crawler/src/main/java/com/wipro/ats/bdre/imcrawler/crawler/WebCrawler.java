@@ -17,10 +17,10 @@
 
 package com.wipro.ats.bdre.imcrawler.crawler;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Locale;
-
+import com.wipro.ats.bdre.imcrawler.crawler.exceptions.ContentFetchException;
+import com.wipro.ats.bdre.imcrawler.crawler.exceptions.PageBiggerThanMaxSizeException;
+import com.wipro.ats.bdre.imcrawler.crawler.exceptions.ParseException;
+import com.wipro.ats.bdre.imcrawler.crawler.exceptions.RedirectException;
 import com.wipro.ats.bdre.imcrawler.fetcher.PageFetchResult;
 import com.wipro.ats.bdre.imcrawler.fetcher.PageFetcher;
 import com.wipro.ats.bdre.imcrawler.frontier.DocIDServer;
@@ -28,18 +28,17 @@ import com.wipro.ats.bdre.imcrawler.frontier.Frontier;
 import com.wipro.ats.bdre.imcrawler.parser.NotAllowedContentException;
 import com.wipro.ats.bdre.imcrawler.parser.ParseData;
 import com.wipro.ats.bdre.imcrawler.parser.Parser;
+import com.wipro.ats.bdre.imcrawler.robotstxt.RobotstxtServer;
 import com.wipro.ats.bdre.imcrawler.url.WebURL;
 import org.apache.http.HttpStatus;
 import org.apache.http.impl.EnglishReasonPhraseCatalog;
-
-import com.wipro.ats.bdre.imcrawler.crawler.exceptions.ContentFetchException;
-import com.wipro.ats.bdre.imcrawler.crawler.exceptions.PageBiggerThanMaxSizeException;
-import com.wipro.ats.bdre.imcrawler.crawler.exceptions.ParseException;
-import com.wipro.ats.bdre.imcrawler.crawler.exceptions.RedirectException;
-import com.wipro.ats.bdre.imcrawler.robotstxt.RobotstxtServer;
 import uk.org.lidalia.slf4jext.Level;
 import uk.org.lidalia.slf4jext.Logger;
 import uk.org.lidalia.slf4jext.LoggerFactory;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Locale;
 
 /**
  * WebCrawler class is the Runnable class that is executed by each crawler thread.

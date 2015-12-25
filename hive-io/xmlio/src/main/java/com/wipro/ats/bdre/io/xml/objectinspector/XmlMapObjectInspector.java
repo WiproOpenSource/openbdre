@@ -16,14 +16,14 @@
 
 package com.wipro.ats.bdre.io.xml.objectinspector;
 
-import java.util.HashMap;
-import java.util.Map;
-
 import com.wipro.ats.bdre.io.xml.processor.XmlProcessor;
 import org.apache.hadoop.hive.serde2.objectinspector.ObjectInspector;
 import org.apache.hadoop.hive.serde2.objectinspector.PrimitiveObjectInspector;
 import org.apache.hadoop.hive.serde2.objectinspector.PrimitiveObjectInspector.PrimitiveCategory;
 import org.apache.hadoop.hive.serde2.objectinspector.StandardMapObjectInspector;
+
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * The map object inspector

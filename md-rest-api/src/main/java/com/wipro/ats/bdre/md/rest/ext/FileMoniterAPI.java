@@ -14,17 +14,12 @@
 
 package com.wipro.ats.bdre.md.rest.ext;
 
-import com.wipro.ats.bdre.md.beans.CrawlerInfo;
 import com.wipro.ats.bdre.md.beans.FileMonitorInfo;
-import com.wipro.ats.bdre.md.beans.table.*;
-import com.wipro.ats.bdre.md.beans.table.BusDomain;
 import com.wipro.ats.bdre.md.beans.table.Process;
-import com.wipro.ats.bdre.md.beans.table.ProcessTemplate;
 import com.wipro.ats.bdre.md.beans.table.Properties;
-import com.wipro.ats.bdre.md.beans.table.WorkflowType;
 import com.wipro.ats.bdre.md.dao.ProcessDAO;
 import com.wipro.ats.bdre.md.dao.PropertiesDAO;
-import com.wipro.ats.bdre.md.dao.jpa.*;
+import com.wipro.ats.bdre.md.dao.jpa.PropertiesId;
 import com.wipro.ats.bdre.md.rest.RestWrapper;
 import com.wipro.ats.bdre.md.rest.util.DateConverter;
 import org.apache.log4j.Logger;

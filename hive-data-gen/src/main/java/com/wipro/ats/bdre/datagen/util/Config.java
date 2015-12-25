@@ -16,9 +16,6 @@ package com.wipro.ats.bdre.datagen.util;
 
 import com.wipro.ats.bdre.md.api.GetProperties;
 
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.InputStream;
 import java.util.Properties;
 
 /**

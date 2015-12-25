@@ -17,9 +17,9 @@
 
 package com.wipro.ats.bdre.imcrawler.parser;
 
-import java.util.Set;
-
 import com.wipro.ats.bdre.imcrawler.url.WebURL;
+
+import java.util.Set;
 
 public interface ParseData {
 

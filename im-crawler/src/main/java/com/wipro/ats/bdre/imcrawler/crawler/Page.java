@@ -17,15 +17,14 @@
 
 package com.wipro.ats.bdre.imcrawler.crawler;
 
-import java.nio.charset.Charset;
-
+import com.wipro.ats.bdre.imcrawler.parser.ParseData;
 import com.wipro.ats.bdre.imcrawler.url.WebURL;
 import org.apache.http.Header;
 import org.apache.http.HttpEntity;
 import org.apache.http.entity.ContentType;
 import org.apache.http.util.EntityUtils;
 
-import com.wipro.ats.bdre.imcrawler.parser.ParseData;
+import java.nio.charset.Charset;
 
 /**
  * This class contains the data for a fetched and parsed page.

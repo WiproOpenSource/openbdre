@@ -15,21 +15,16 @@
 */
 package com.wipro.ats.bdre.io.xml.processor;
 
-import java.io.InputStream;
-import java.io.StringReader;
-import java.util.Deque;
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
-
-import javax.xml.parsers.SAXParser;
-import javax.xml.parsers.SAXParserFactory;
-
 import org.xml.sax.Attributes;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 import org.xml.sax.helpers.DefaultHandler;
+
+import javax.xml.parsers.SAXParser;
+import javax.xml.parsers.SAXParserFactory;
+import java.io.InputStream;
+import java.io.StringReader;
+import java.util.*;
 
 /**
  * Defines an XML node

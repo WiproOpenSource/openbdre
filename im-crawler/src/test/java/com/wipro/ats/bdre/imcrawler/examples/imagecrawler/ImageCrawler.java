@@ -17,17 +17,16 @@
 
 package com.wipro.ats.bdre.imcrawler.examples.imagecrawler;
 
-import java.io.File;
-import java.io.IOException;
-import java.util.UUID;
-import java.util.regex.Pattern;
-
 import com.google.common.io.Files;
-
 import com.wipro.ats.bdre.imcrawler.crawler.Page;
 import com.wipro.ats.bdre.imcrawler.crawler.WebCrawler;
 import com.wipro.ats.bdre.imcrawler.parser.BinaryParseData;
 import com.wipro.ats.bdre.imcrawler.url.WebURL;
+
+import java.io.File;
+import java.io.IOException;
+import java.util.UUID;
+import java.util.regex.Pattern;
 
 /**
  * @author Yasser Ganjisaffar

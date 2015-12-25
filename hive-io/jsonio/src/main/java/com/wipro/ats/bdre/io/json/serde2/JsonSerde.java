@@ -3,6 +3,9 @@
  */
 package com.wipro.ats.bdre.io.json.serde2;
 
+import com.wipro.ats.bdre.io.json.JSONArray;
+import com.wipro.ats.bdre.io.json.JSONException;
+import com.wipro.ats.bdre.io.json.JSONObject;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.hadoop.conf.Configuration;
@@ -17,9 +20,6 @@ import org.apache.hadoop.hive.serde2.typeinfo.TypeInfo;
 import org.apache.hadoop.hive.serde2.typeinfo.TypeInfoUtils;
 import org.apache.hadoop.io.Text;
 import org.apache.hadoop.io.Writable;
-import com.wipro.ats.bdre.io.json.JSONArray;
-import com.wipro.ats.bdre.io.json.JSONException;
-import com.wipro.ats.bdre.io.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.Arrays;

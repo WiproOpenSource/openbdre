@@ -125,18 +125,15 @@ public class MQImportSetupDAO {
             process.setDeleteFlag(false);
             process.setEnqueuingProcessId(0);
             process.setNextProcessId(" ");
-            ProcessValidateInsert processValidateInsert=new ProcessValidateInsert();
+            ProcessValidateInsert processValidateInsert = new ProcessValidateInsert();
             Integer parentProcessId;
-            boolean triggerCheck=processValidateInsert.ProcessTypeValidator(process,null);
-            if(triggerCheck==true)
-                {
-                    parentProcessId = (Integer) session.save(process);
-                }
-            else
-                {
-                    parentProcessId=null;
-                    throw new MetadataException("error occured");
-                }
+            boolean triggerCheck = processValidateInsert.ProcessTypeValidator(process, null);
+            if (triggerCheck == true) {
+                parentProcessId = (Integer) session.save(process);
+            } else {
+                parentProcessId = null;
+                throw new MetadataException("error occured");
+            }
 
             LOGGER.info("ProcessID of Process inserted is " + process.getProcessId());
 
@@ -168,14 +165,11 @@ public class MQImportSetupDAO {
             subProcess.setNextProcessId(parentProcessId.toString());
             subProcess.setDeleteFlag(false);
             Integer subProcessId;
-            triggerCheck=processValidateInsert.ProcessTypeValidator(process,process);
-            if(triggerCheck==true)
-            {
+            triggerCheck = processValidateInsert.ProcessTypeValidator(process, process);
+            if (triggerCheck == true) {
                 subProcessId = (Integer) session.save(subProcess);
-            }
-            else
-            {
-                parentProcessId=null;
+            } else {
+                parentProcessId = null;
                 throw new MetadataException("error occured");
             }
 

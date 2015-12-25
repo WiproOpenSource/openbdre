@@ -13,7 +13,6 @@
  */
 package com.wipro.ats.bdre.pdeploy;
 
-import com.wipro.ats.bdre.MDConfig;
 import com.wipro.ats.bdre.exception.MetadataException;
 import com.wipro.ats.bdre.md.api.HaltDeploy;
 import com.wipro.ats.bdre.md.api.InitDeploy;

@@ -17,17 +17,8 @@
 
 package com.wipro.ats.bdre.imcrawler.url;
 
-import java.net.MalformedURLException;
-import java.net.URI;
-import java.net.URISyntaxException;
-import java.net.URL;
-import java.net.URLDecoder;
-import java.net.URLEncoder;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Objects;
-import java.util.SortedMap;
-import java.util.TreeMap;
+import java.net.*;
+import java.util.*;
 
 /**
  * See http://en.wikipedia.org/wiki/URL_normalization for a reference Note: some

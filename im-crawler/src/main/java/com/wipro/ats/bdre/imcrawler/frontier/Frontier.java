@@ -17,13 +17,13 @@
 
 package com.wipro.ats.bdre.imcrawler.frontier;
 
-import java.util.List;
-
-import com.wipro.ats.bdre.imcrawler.crawler.CrawlConfig;
 import com.wipro.ats.bdre.imcrawler.crawler.Configurable;
+import com.wipro.ats.bdre.imcrawler.crawler.CrawlConfig;
 import com.wipro.ats.bdre.imcrawler.url.WebURL;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.util.List;
 
 /**
  * @author Yasser Ganjisaffar modified by AS294216

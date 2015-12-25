@@ -16,10 +16,8 @@
 
 package com.wipro.ats.bdre.io.xml.objectinspector;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import com.wipro.ats.bdre.io.xml.processor.SerDeArray;
+import com.wipro.ats.bdre.io.xml.processor.XmlProcessor;
 import org.apache.hadoop.hive.serde2.objectinspector.ObjectInspector;
 import org.apache.hadoop.hive.serde2.objectinspector.PrimitiveObjectInspector;
 import org.apache.hadoop.hive.serde2.objectinspector.PrimitiveObjectInspector.PrimitiveCategory;
@@ -27,7 +25,8 @@ import org.apache.hadoop.hive.serde2.objectinspector.StandardStructObjectInspect
 import org.apache.hadoop.hive.serde2.objectinspector.StructField;
 import org.apache.log4j.Logger;
 
-import com.wipro.ats.bdre.io.xml.processor.XmlProcessor;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * The struct object inspector

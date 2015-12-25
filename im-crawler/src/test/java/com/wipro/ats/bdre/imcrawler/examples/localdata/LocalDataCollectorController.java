@@ -17,18 +17,17 @@
 
 package com.wipro.ats.bdre.imcrawler.examples.localdata;
 
-import java.util.List;
-
 import com.wipro.ats.bdre.BaseStructure;
 import com.wipro.ats.bdre.imcrawler.crawler.CrawlConfig;
 import com.wipro.ats.bdre.imcrawler.crawler.CrawlController;
 import com.wipro.ats.bdre.imcrawler.fetcher.PageFetcher;
 import com.wipro.ats.bdre.imcrawler.robotstxt.RobotstxtConfig;
+import com.wipro.ats.bdre.imcrawler.robotstxt.RobotstxtServer;
 import org.apache.commons.cli.CommandLine;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.wipro.ats.bdre.imcrawler.robotstxt.RobotstxtServer;
+import java.util.List;
 
 public class LocalDataCollectorController extends BaseStructure {
     private static final Logger logger = LoggerFactory.getLogger(LocalDataCollectorController.class);

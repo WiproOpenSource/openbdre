@@ -1,10 +1,10 @@
 package com.wipro.ats.bdre.imcrawler.tests;
 
-import static org.junit.Assert.assertEquals;
-
 import com.wipro.ats.bdre.imcrawler.url.URLCanonicalizer;
 import org.junit.Assert;
 import org.junit.Test;
+
+import static org.junit.Assert.assertEquals;
 
 public class URLCanonicalizerTest {
 

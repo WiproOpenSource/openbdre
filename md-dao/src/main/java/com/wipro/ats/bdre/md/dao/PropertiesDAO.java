@@ -16,8 +16,9 @@ package com.wipro.ats.bdre.md.dao;
 
 import com.wipro.ats.bdre.exception.MetadataException;
 import com.wipro.ats.bdre.md.beans.PositionsInfo;
-import com.wipro.ats.bdre.md.dao.jpa.*;
 import com.wipro.ats.bdre.md.dao.jpa.Process;
+import com.wipro.ats.bdre.md.dao.jpa.Properties;
+import com.wipro.ats.bdre.md.dao.jpa.PropertiesId;
 import org.apache.log4j.Logger;
 import org.hibernate.Criteria;
 import org.hibernate.Query;
@@ -178,19 +179,19 @@ public class PropertiesDAO {
         session.close();
         return propertiesList;
     }
-    public void updateArrangePositions(Integer parentPid,List<PositionsInfo> positionsInfoList)
-    {
-        Session session=sessionFactory.openSession();
-        try {
-            java.util.Date date= new java.util.Date();
 
-            LOGGER.info("start time"+date);
+    public void updateArrangePositions(Integer parentPid, List<PositionsInfo> positionsInfoList) {
+        Session session = sessionFactory.openSession();
+        try {
+            java.util.Date date = new java.util.Date();
+
+            LOGGER.info("start time" + date);
             session.beginTransaction();
             Integer parentProcessId = positionsInfoList.get(0).getProcessId();
             String deletePropsQuery = "delete from Properties props where props.process.processId in (select processId from Process where process.processId= :pid or processId= :pid) " +
                     "and props.configGroup = 'position'";
             Query query = session.createQuery(deletePropsQuery);
-            query.setParameter("pid",parentPid);
+            query.setParameter("pid", parentPid);
             int result = query.executeUpdate();
             LOGGER.info("Rows affected: " + result);
 
@@ -200,7 +201,7 @@ public class PropertiesDAO {
                 //Inserting new Positions
                 for (PositionsInfo positionsInfo : positionsInfoList) {
                     com.wipro.ats.bdre.md.dao.jpa.Properties propertiesX = new com.wipro.ats.bdre.md.dao.jpa.Properties();
-                    com.wipro.ats.bdre.md.dao.jpa.Process process= new Process();
+                    com.wipro.ats.bdre.md.dao.jpa.Process process = new Process();
                     process.setProcessId(positionsInfo.getProcessId());
                     PropertiesId propertiesIdForX = new PropertiesId();
                     propertiesIdForX.setProcessId(positionsInfo.getProcessId());
@@ -235,12 +236,12 @@ public class PropertiesDAO {
 
             }
             session.getTransaction().commit();
-        }catch (MetadataException e){
+        } catch (MetadataException e) {
             session.getTransaction().rollback();
             LOGGER.error(e);
-        }finally {
-            java.util.Date date= new java.util.Date();
-            LOGGER.info("closing time"+date);
+        } finally {
+            java.util.Date date = new java.util.Date();
+            LOGGER.info("closing time" + date);
             session.close();
         }
     }

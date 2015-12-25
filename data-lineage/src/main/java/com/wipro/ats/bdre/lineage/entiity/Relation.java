@@ -17,7 +17,10 @@ package com.wipro.ats.bdre.lineage.entiity;
 import com.wipro.ats.bdre.lineage.type.EntityType;
 import org.apache.log4j.Logger;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.UUID;
 
 /**
  * Created by jayabroto on 24-04-2015.

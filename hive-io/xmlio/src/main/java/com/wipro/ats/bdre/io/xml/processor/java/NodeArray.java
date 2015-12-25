@@ -16,12 +16,12 @@
 
 package com.wipro.ats.bdre.io.xml.processor.java;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import com.wipro.ats.bdre.io.xml.processor.SerDeArray;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Some DOM nodes implement Node and NodeList interfaces. We have to distinguish between the two.

@@ -17,14 +17,6 @@
 
 package com.wipro.ats.bdre.imcrawler.robotstxt;
 
-import java.net.MalformedURLException;
-import java.net.SocketException;
-import java.net.SocketTimeoutException;
-import java.net.URL;
-import java.net.UnknownHostException;
-import java.util.HashMap;
-import java.util.Map;
-
 import com.wipro.ats.bdre.imcrawler.crawler.Page;
 import com.wipro.ats.bdre.imcrawler.crawler.exceptions.PageBiggerThanMaxSizeException;
 import com.wipro.ats.bdre.imcrawler.fetcher.PageFetchResult;
@@ -35,6 +27,10 @@ import org.apache.http.HttpStatus;
 import org.apache.http.NoHttpResponseException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.net.*;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * @author Yasser Ganjisaffar

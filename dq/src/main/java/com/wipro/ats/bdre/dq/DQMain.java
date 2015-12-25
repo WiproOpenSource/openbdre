@@ -19,8 +19,6 @@ import org.apache.commons.cli.CommandLine;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.util.ToolRunner;
 
-import java.util.HashMap;
-
 /**
  * Created by arijit on 2/27/15.
  */

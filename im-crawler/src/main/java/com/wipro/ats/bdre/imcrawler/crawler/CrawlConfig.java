@@ -17,15 +17,14 @@
 
 package com.wipro.ats.bdre.imcrawler.crawler;
 
+import com.wipro.ats.bdre.imcrawler.crawler.authentication.AuthInfo;
+import org.apache.http.Header;
+import org.apache.http.message.BasicHeader;
+
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
-
-import org.apache.http.Header;
-import org.apache.http.message.BasicHeader;
-
-import com.wipro.ats.bdre.imcrawler.crawler.authentication.AuthInfo;
 
 public class CrawlConfig {
 

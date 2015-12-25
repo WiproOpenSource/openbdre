@@ -17,27 +17,17 @@
 
 package com.wipro.ats.bdre.imcrawler.fetcher;
 
-import java.io.IOException;
-import java.io.UnsupportedEncodingException;
-import java.net.InetAddress;
-import java.net.UnknownHostException;
-import java.security.cert.X509Certificate;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-
-import javax.net.ssl.SSLContext;
-
+import com.wipro.ats.bdre.imcrawler.crawler.Configurable;
 import com.wipro.ats.bdre.imcrawler.crawler.CrawlConfig;
 import com.wipro.ats.bdre.imcrawler.crawler.authentication.AuthInfo;
+import com.wipro.ats.bdre.imcrawler.crawler.authentication.BasicAuthInfo;
+import com.wipro.ats.bdre.imcrawler.crawler.authentication.FormAuthInfo;
 import com.wipro.ats.bdre.imcrawler.crawler.authentication.NtAuthInfo;
 import com.wipro.ats.bdre.imcrawler.crawler.exceptions.PageBiggerThanMaxSizeException;
-import com.wipro.ats.bdre.imcrawler.crawler.Configurable;
 import com.wipro.ats.bdre.imcrawler.url.URLCanonicalizer;
 import com.wipro.ats.bdre.imcrawler.url.WebURL;
 import org.apache.http.Header;
 import org.apache.http.HttpHost;
-import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.HttpStatus;
 import org.apache.http.NameValuePair;
 import org.apache.http.auth.AuthScope;
@@ -48,6 +38,7 @@ import org.apache.http.client.CredentialsProvider;
 import org.apache.http.client.config.CookieSpecs;
 import org.apache.http.client.config.RequestConfig;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
+import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.client.methods.HttpUriRequest;
@@ -67,8 +58,15 @@ import org.apache.http.ssl.SSLContexts;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.wipro.ats.bdre.imcrawler.crawler.authentication.BasicAuthInfo;
-import com.wipro.ats.bdre.imcrawler.crawler.authentication.FormAuthInfo;
+import javax.net.ssl.SSLContext;
+import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+import java.net.InetAddress;
+import java.net.UnknownHostException;
+import java.security.cert.X509Certificate;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
 
 /**
  * @author Yasser Ganjisaffar

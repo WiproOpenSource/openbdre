@@ -15,33 +15,20 @@
 package com.wipro.ats.bdre.md.dao;
 
 import com.wipro.ats.bdre.md.beans.InitJobRowInfo;
-import com.wipro.ats.bdre.md.beans.table.*;
 import com.wipro.ats.bdre.md.dao.jpa.*;
-import com.wipro.ats.bdre.md.dao.jpa.Batch;
-import com.wipro.ats.bdre.md.dao.jpa.BatchStatus;
-import com.wipro.ats.bdre.md.dao.jpa.BusDomain;
-import com.wipro.ats.bdre.md.dao.jpa.DeployStatus;
-import com.wipro.ats.bdre.md.dao.jpa.ExecStatus;
-import com.wipro.ats.bdre.md.dao.jpa.InstanceExec;
 import com.wipro.ats.bdre.md.dao.jpa.Process;
-import com.wipro.ats.bdre.md.dao.jpa.ProcessType;
-import com.wipro.ats.bdre.md.dao.jpa.Properties;
-import com.wipro.ats.bdre.md.dao.jpa.UserRoles;
-import com.wipro.ats.bdre.md.dao.jpa.Users;
-import com.wipro.ats.bdre.md.dao.jpa.WorkflowType;
 import org.apache.log4j.Logger;
-import org.hibernate.Criteria;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.AutowireCapableBeanFactory;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
-import static org.junit.Assert.*;
-import static org.junit.Assert.assertNotNull;
 
 import java.util.Date;
 import java.util.List;
+
+import static org.junit.Assert.*;
 
 /**
  * Created by PR324290 on 12/17/2015.
@@ -76,12 +63,11 @@ public class FullJobTest {
     StepDAO stepDAO;
 
 
-
     @Test
     public void completeJobTest() throws Exception {
 
 
-        BusDomain busDomain=new BusDomain();
+        BusDomain busDomain = new BusDomain();
         busDomain.setBusDomainName("testName");
         busDomain.setDescription("testDescription");
         busDomain.setBusDomainOwner("testOwner");
@@ -92,16 +78,16 @@ public class FullJobTest {
         busDomain.setDescription("updateDescription");
         busDomainDAO.update(busDomain);
         //fetching updated busDomain
-        BusDomain updatedBusDomain=busDomainDAO.get(busDomainId);
+        BusDomain updatedBusDomain = busDomainDAO.get(busDomainId);
 
-        assertEquals("busDomain update failed","updateDescription",updatedBusDomain.getDescription());
+        assertEquals("busDomain update failed", "updateDescription", updatedBusDomain.getDescription());
 
 
         ProcessType processType = processTypeDAO.get(1);
         ProcessType childProcessType = processTypeDAO.get(6);
 
         WorkflowType workflowType = workflowTypeDAO.get(0);
-        WorkflowType childWworkflowType= workflowTypeDAO.get(1);
+        WorkflowType childWworkflowType = workflowTypeDAO.get(1);
 
         Process parentProcess1 = new Process();
         parentProcess1.setProcessName("Test");
@@ -120,7 +106,6 @@ public class FullJobTest {
         Integer parentProcessId1 = processDAO.insert(parentProcess1);
 
 
-
         Process subProcess1 = new Process();
         subProcess1.setProcessName("Test");
         subProcess1.setDescription("Test Process");
@@ -137,9 +122,9 @@ public class FullJobTest {
         //inserting sub process1
         Integer subProcessId1 = processDAO.insert(subProcess1);
         //fetching process
-        LOGGER.info("sub pid "+subProcessId1);
+        LOGGER.info("sub pid " + subProcessId1);
         Process updatedProcess = processDAO.get(subProcessId1);
-        assertNotNull("editTs not null",subProcess1.getEditTs());
+        assertNotNull("editTs not null", subProcess1.getEditTs());
         assertFalse(updatedProcess.getDeleteFlag());
 
 
@@ -176,10 +161,10 @@ public class FullJobTest {
         Integer subProcessId3 = processDAO.insert(subProcess3);
 
 
-        parentProcess1.setNextProcessId(subProcessId1.toString()+","+subProcessId2.toString());
+        parentProcess1.setNextProcessId(subProcessId1.toString() + "," + subProcessId2.toString());
         processDAO.update(parentProcess1);
         Process updatedParentProcess = processDAO.get(parentProcessId1);
-        assertEquals("next processId of parent process not update succesfully",subProcessId1.toString()+","+subProcessId2.toString(),updatedParentProcess.getNextProcessId());
+        assertEquals("next processId of parent process not update succesfully", subProcessId1.toString() + "," + subProcessId2.toString(), updatedParentProcess.getNextProcessId());
 
 
         Process parentProcess2 = new Process();
@@ -232,7 +217,7 @@ public class FullJobTest {
 
 
 //      parentProcess2=processDAO.get(parentProcessId2);
-        parentProcess2.setNextProcessId(subProcessId4.toString()+","+subProcessId5.toString());
+        parentProcess2.setNextProcessId(subProcessId4.toString() + "," + subProcessId5.toString());
         processDAO.update(parentProcess2);
 
 
@@ -251,10 +236,10 @@ public class FullJobTest {
         properties.setDescription("updateDescription");
         //fetching properties
         Properties updatedProperties = propertiesDAO.get(propertiesId);
-        assertEquals("update properties failed","test Description",updatedProperties.getDescription());
+        assertEquals("update properties failed", "test Description", updatedProperties.getDescription());
 
-        List<Properties> propertiesList = propertiesDAO.getPropertiesForConfig(subProcessId1,"Test CG");
-        assertEquals("getPropertiesForConfig failed",propertiesList.get(0).getId().getPropKey(),"Test key");
+        List<Properties> propertiesList = propertiesDAO.getPropertiesForConfig(subProcessId1, "Test CG");
+        assertEquals("getPropertiesForConfig failed", propertiesList.get(0).getId().getPropKey(), "Test key");
 
         Batch batch = new Batch();
         batch.setBatchType("Test");
@@ -264,14 +249,13 @@ public class FullJobTest {
         batch.setBatchType("UpdateBatchType");
         batchDAO.update(batch);
         Batch updatedBatch = batchDAO.get(batchId);
-        assertEquals("updated Batch failure","UpdateBatchType",updatedBatch.getBatchType());
-
+        assertEquals("updated Batch failure", "UpdateBatchType", updatedBatch.getBatchType());
 
 
         List<InitJobRowInfo> initJobRowInfos1 = jobDAO.initJob(parentProcessId1, 1);
         assertNotNull(initJobRowInfos1.get(0).getInstanceExecId());
         Long sub_instance_exec_id1 = stepDAO.initStep(subProcessId1);
-        assertNotNull( sub_instance_exec_id1);
+        assertNotNull(sub_instance_exec_id1);
         Long sub_instance_exec_id2 = stepDAO.initStep(subProcessId2);
         assertNotNull(sub_instance_exec_id2);
         Long sub_instance_exec_id3 = stepDAO.initStep(subProcessId3);
@@ -285,7 +269,7 @@ public class FullJobTest {
         stepDAO.haltStep(subProcessId2);
         stepDAO.haltStep(subProcessId3);
 
-        jobDAO.haltJob(parentProcessId1,"parentProcessFirst");
+        jobDAO.haltJob(parentProcessId1, "parentProcessFirst");
         instanceExec = instanceExecDAO.get(initJobRowInfos1.get(0).getInstanceExecId());
         assertNotNull(instanceExec.getInstanceExecId());
 
@@ -295,19 +279,18 @@ public class FullJobTest {
         assertNotNull(sub_instance_exec_id4);
         Long sub_instance_exec_id5 = stepDAO.initStep(subProcessId5);
         assertNotNull(sub_instance_exec_id5);
-        LOGGER.info(sub_instance_exec_id4+"1st is "+sub_instance_exec_id5);
+        LOGGER.info(sub_instance_exec_id4 + "1st is " + sub_instance_exec_id5);
         stepDAO.termStep(subProcessId4);
         stepDAO.haltStep(subProcessId5);
 
         //Long sub_instance_exec_id6 = stepDAO.initStep(subProcessId4);
         // stepDAO.haltStep(subProcessId4);
-        jobDAO.haltJob(parentProcessId2,"parentProcessSecond");
+        jobDAO.haltJob(parentProcessId2, "parentProcessSecond");
         jobDAO.initJob(parentProcessId2, 1);
-        Long sub_instance_exec_id6=stepDAO.initStep(subProcessId4);
+        Long sub_instance_exec_id6 = stepDAO.initStep(subProcessId4);
         stepDAO.haltStep(subProcessId4);
-        LOGGER.info("1st is "+sub_instance_exec_id6);
-        jobDAO.haltJob(parentProcessId2,"parentProcessSecond");
-
+        LOGGER.info("1st is " + sub_instance_exec_id6);
+        jobDAO.haltJob(parentProcessId2, "parentProcessSecond");
 
 
         propertiesDAO.delete(propertiesId);

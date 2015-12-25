@@ -17,10 +17,10 @@
 
 package com.wipro.ats.bdre.imcrawler.util;
 
-import java.io.File;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.io.File;
 
 /**
  * @author Yasser Ganjisaffar

@@ -17,14 +17,12 @@ package com.wipro.ats.bdre.datagen.mr;
 import com.wipro.ats.bdre.datagen.Table;
 import com.wipro.ats.bdre.datagen.util.Config;
 import com.wipro.ats.bdre.datagen.util.TableUtil;
-import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.io.LongWritable;
 import org.apache.hadoop.io.NullWritable;
 import org.apache.hadoop.io.Text;
 import org.apache.hadoop.mapreduce.Mapper;
 
 import java.io.IOException;
-import java.util.List;
 
 /**
  * The Mapper class that given a row number, will generate the appropriate

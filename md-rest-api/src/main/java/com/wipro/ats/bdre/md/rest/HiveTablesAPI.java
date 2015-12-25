@@ -14,7 +14,6 @@
 
 package com.wipro.ats.bdre.md.rest;
 
-import com.wipro.ats.bdre.md.api.Intermediate;
 import com.wipro.ats.bdre.md.api.base.MetadataAPIBase;
 import com.wipro.ats.bdre.md.beans.table.HiveTables;
 import com.wipro.ats.bdre.md.dao.HiveTablesDAO;

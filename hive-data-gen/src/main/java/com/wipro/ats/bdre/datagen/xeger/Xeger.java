@@ -16,12 +16,12 @@
 package com.wipro.ats.bdre.datagen.xeger;
 
 import dk.brics.automaton.Automaton;
+import dk.brics.automaton.RegExp;
 import dk.brics.automaton.State;
 import dk.brics.automaton.Transition;
-import dk.brics.automaton.RegExp;
 
-import java.util.Random;
 import java.util.List;
+import java.util.Random;
 
 /**
  * An object that will generate text from a regular expression. In a way, it's the opposite of a regular expression

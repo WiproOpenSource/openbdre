@@ -22,11 +22,10 @@ import com.wipro.ats.bdre.imcrawler.crawler.CrawlConfig;
 import com.wipro.ats.bdre.imcrawler.crawler.CrawlController;
 import com.wipro.ats.bdre.imcrawler.fetcher.PageFetcher;
 import com.wipro.ats.bdre.imcrawler.robotstxt.RobotstxtConfig;
+import com.wipro.ats.bdre.imcrawler.robotstxt.RobotstxtServer;
 import org.apache.commons.cli.CommandLine;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import com.wipro.ats.bdre.imcrawler.robotstxt.RobotstxtServer;
 
 /**
  * @author Yasser Ganjisaffar

@@ -17,15 +17,14 @@
 
 package com.wipro.ats.bdre.imcrawler.examples.statushandler;
 
-import java.util.regex.Pattern;
-
+import com.wipro.ats.bdre.imcrawler.crawler.Page;
 import com.wipro.ats.bdre.imcrawler.crawler.WebCrawler;
 import com.wipro.ats.bdre.imcrawler.url.WebURL;
 import org.apache.http.HttpStatus;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.wipro.ats.bdre.imcrawler.crawler.Page;
+import java.util.regex.Pattern;
 
 /**
  * @author Yasser Ganjisaffar

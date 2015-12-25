@@ -16,12 +16,13 @@
 
 package com.wipro.ats.bdre.io.xml.processor.java;
 
-import java.io.StringReader;
-import java.io.StringWriter;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import com.wipro.ats.bdre.io.xml.processor.*;
+import org.apache.hadoop.hive.serde2.objectinspector.PrimitiveObjectInspector.PrimitiveCategory;
+import org.w3c.dom.Document;
+import org.w3c.dom.NamedNodeMap;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
+import org.xml.sax.InputSource;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -34,20 +35,12 @@ import javax.xml.xpath.XPath;
 import javax.xml.xpath.XPathConstants;
 import javax.xml.xpath.XPathExpression;
 import javax.xml.xpath.XPathFactory;
-
-import com.wipro.ats.bdre.io.xml.processor.XmlMapFacet;
-import com.wipro.ats.bdre.io.xml.processor.XmlUtils;
-import org.apache.hadoop.hive.serde2.objectinspector.PrimitiveObjectInspector.PrimitiveCategory;
-import org.w3c.dom.Document;
-import org.w3c.dom.NamedNodeMap;
-import org.w3c.dom.Node;
-import org.w3c.dom.NodeList;
-import org.xml.sax.InputSource;
-
-import com.wipro.ats.bdre.io.xml.processor.XmlMapEntry;
-import com.wipro.ats.bdre.io.xml.processor.XmlProcessor;
-import com.wipro.ats.bdre.io.xml.processor.XmlProcessorContext;
-import com.wipro.ats.bdre.io.xml.processor.XmlQuery;
+import java.io.StringReader;
+import java.io.StringWriter;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * The XML processor implementation based on the javax.xml.xpath.XPath

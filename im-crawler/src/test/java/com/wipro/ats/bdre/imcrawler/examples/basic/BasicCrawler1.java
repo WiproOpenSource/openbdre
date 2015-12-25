@@ -17,12 +17,6 @@
 
 package com.wipro.ats.bdre.imcrawler.examples.basic;
 
-import java.io.File;
-import java.io.IOException;
-import java.util.Set;
-import java.util.regex.Pattern;
-
-
 import com.wipro.ats.bdre.imcrawler.crawler.Page;
 import com.wipro.ats.bdre.imcrawler.crawler.WebCrawler;
 import com.wipro.ats.bdre.imcrawler.parser.BinaryParseData;
@@ -31,6 +25,11 @@ import com.wipro.ats.bdre.imcrawler.url.WebURL;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.http.Header;
+
+import java.io.File;
+import java.io.IOException;
+import java.util.Set;
+import java.util.regex.Pattern;
 
 /**
  * @author Yasser Ganjisaffar

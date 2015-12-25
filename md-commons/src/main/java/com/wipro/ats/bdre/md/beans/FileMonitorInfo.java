@@ -14,7 +14,10 @@
 
 package com.wipro.ats.bdre.md.beans;
 
-import javax.validation.constraints.*;
+import javax.validation.constraints.Max;
+import javax.validation.constraints.Min;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 
 /**
  * Created by PR324290 on 12/22/2015.

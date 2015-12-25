@@ -17,14 +17,14 @@
 
 package com.wipro.ats.bdre.imcrawler.fetcher;
 
-import java.io.IOException;
-
 import com.wipro.ats.bdre.imcrawler.crawler.Page;
 import org.apache.http.Header;
 import org.apache.http.HttpEntity;
 import org.apache.http.util.EntityUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.io.IOException;
 
 /**
  * @author Yasser Ganjisaffar

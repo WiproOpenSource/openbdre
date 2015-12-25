@@ -14,11 +14,8 @@ import kafka.javaapi.producer.Producer;
 import kafka.producer.KeyedMessage;
 import kafka.producer.ProducerConfig;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.*;
 
-import java.util.Date;
 import java.util.Properties;
-import java.util.Random;
 
 /**
  * Created by arijit on 1/9/15.

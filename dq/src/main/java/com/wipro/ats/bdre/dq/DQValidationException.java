@@ -14,8 +14,6 @@
 
 package com.wipro.ats.bdre.dq;
 
-import com.wipro.ats.bdre.dq.rule.CommonDQFunctions;
-
 /**
  * Created by arijit on 3/6/15.
  */

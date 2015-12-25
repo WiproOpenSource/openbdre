@@ -16,10 +16,10 @@
 
 package com.wipro.ats.bdre.io.xml.processor;
 
+import org.apache.hadoop.hive.serde2.objectinspector.PrimitiveObjectInspector.PrimitiveCategory;
+
 import java.util.List;
 import java.util.Map;
-
-import org.apache.hadoop.hive.serde2.objectinspector.PrimitiveObjectInspector.PrimitiveCategory;
 
 /**
  * Defines an interface for the XML processors

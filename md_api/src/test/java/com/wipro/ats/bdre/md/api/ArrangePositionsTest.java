@@ -16,7 +16,6 @@ package com.wipro.ats.bdre.md.api;
 
 import com.wipro.ats.bdre.md.beans.PositionsInfo;
 import org.apache.log4j.Logger;
-import org.junit.Ignore;
 import org.junit.Test;
 
 import java.util.Map;

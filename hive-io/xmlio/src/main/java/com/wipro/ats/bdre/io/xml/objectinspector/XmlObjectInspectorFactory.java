@@ -16,19 +16,14 @@
 
 package com.wipro.ats.bdre.io.xml.objectinspector;
 
-import java.util.ArrayList;
-import java.util.List;
-
+import com.wipro.ats.bdre.io.xml.processor.XmlProcessor;
 import org.apache.hadoop.hive.serde2.objectinspector.ObjectInspector;
 import org.apache.hadoop.hive.serde2.objectinspector.StructObjectInspector;
 import org.apache.hadoop.hive.serde2.objectinspector.primitive.PrimitiveObjectInspectorFactory;
-import org.apache.hadoop.hive.serde2.typeinfo.ListTypeInfo;
-import org.apache.hadoop.hive.serde2.typeinfo.MapTypeInfo;
-import org.apache.hadoop.hive.serde2.typeinfo.PrimitiveTypeInfo;
-import org.apache.hadoop.hive.serde2.typeinfo.StructTypeInfo;
-import org.apache.hadoop.hive.serde2.typeinfo.TypeInfo;
+import org.apache.hadoop.hive.serde2.typeinfo.*;
 
-import com.wipro.ats.bdre.io.xml.processor.XmlProcessor;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * The XML object inspector factory

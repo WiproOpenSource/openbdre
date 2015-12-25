@@ -17,10 +17,10 @@
 
 package com.wipro.ats.bdre.imcrawler.parser;
 
+import com.wipro.ats.bdre.imcrawler.url.WebURL;
+
 import java.util.Map;
 import java.util.Set;
-
-import com.wipro.ats.bdre.imcrawler.url.WebURL;
 
 public class HtmlParseData implements ParseData {
 

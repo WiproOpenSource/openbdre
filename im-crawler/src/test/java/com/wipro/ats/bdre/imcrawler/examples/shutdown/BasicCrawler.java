@@ -17,16 +17,15 @@
 
 package com.wipro.ats.bdre.imcrawler.examples.shutdown;
 
-import java.util.Set;
-import java.util.regex.Pattern;
-
 import com.wipro.ats.bdre.imcrawler.crawler.Page;
+import com.wipro.ats.bdre.imcrawler.crawler.WebCrawler;
 import com.wipro.ats.bdre.imcrawler.parser.HtmlParseData;
 import com.wipro.ats.bdre.imcrawler.url.WebURL;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.wipro.ats.bdre.imcrawler.crawler.WebCrawler;
+import java.util.Set;
+import java.util.regex.Pattern;
 
 /**
  * @author Yasser Ganjisaffar

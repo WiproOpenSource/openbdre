@@ -17,16 +17,13 @@
 
 package com.wipro.ats.bdre.imcrawler.parser;
 
-import java.io.ByteArrayInputStream;
-import java.io.InputStream;
-import java.io.UnsupportedEncodingException;
-import java.util.HashSet;
-import java.util.Set;
-
 import com.wipro.ats.bdre.imcrawler.crawler.Configurable;
+import com.wipro.ats.bdre.imcrawler.crawler.CrawlConfig;
 import com.wipro.ats.bdre.imcrawler.crawler.Page;
+import com.wipro.ats.bdre.imcrawler.crawler.exceptions.ParseException;
 import com.wipro.ats.bdre.imcrawler.url.URLCanonicalizer;
 import com.wipro.ats.bdre.imcrawler.url.WebURL;
+import com.wipro.ats.bdre.imcrawler.util.Net;
 import com.wipro.ats.bdre.imcrawler.util.Util;
 import org.apache.tika.language.LanguageIdentifier;
 import org.apache.tika.metadata.DublinCore;
@@ -36,9 +33,11 @@ import org.apache.tika.parser.html.HtmlParser;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.wipro.ats.bdre.imcrawler.crawler.CrawlConfig;
-import com.wipro.ats.bdre.imcrawler.crawler.exceptions.ParseException;
-import com.wipro.ats.bdre.imcrawler.util.Net;
+import java.io.ByteArrayInputStream;
+import java.io.InputStream;
+import java.io.UnsupportedEncodingException;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * @author Yasser Ganjisaffar

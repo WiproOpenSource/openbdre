@@ -17,11 +17,9 @@ package com.wipro.ats.bdre;
 import org.apache.commons.cli.*;
 import org.apache.log4j.Logger;
 
-import java.io.IOException;
 import java.io.OutputStream;
 import java.io.PrintWriter;
 import java.util.ArrayList;
-import java.util.Properties;
 
 /**
  * Created by arijit on 12/8/14.

@@ -1,8 +1,7 @@
 package com.wipro.ats.bdre.imcrawler.crawler.authentication;
 
-import java.net.MalformedURLException;
-
 import javax.swing.text.html.FormSubmitEvent.MethodType;
+import java.net.MalformedURLException;
 
 /**
  * Created by Avi Hayun on 11/25/2014.

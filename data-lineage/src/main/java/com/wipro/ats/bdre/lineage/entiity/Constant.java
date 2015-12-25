@@ -14,7 +14,6 @@
 
 package com.wipro.ats.bdre.lineage.entiity;
 
-import com.wipro.ats.bdre.lineage.type.UniqueList;
 import org.apache.log4j.Logger;
 
 import java.util.List;

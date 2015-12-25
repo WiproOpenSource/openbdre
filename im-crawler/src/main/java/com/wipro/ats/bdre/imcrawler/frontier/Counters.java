@@ -17,11 +17,8 @@
 
 package com.wipro.ats.bdre.imcrawler.frontier;
 
-import java.util.HashMap;
-import java.util.Map;
-
-import com.wipro.ats.bdre.imcrawler.crawler.CrawlConfig;
 import com.wipro.ats.bdre.imcrawler.crawler.Configurable;
+import com.wipro.ats.bdre.imcrawler.crawler.CrawlConfig;
 import com.wipro.ats.bdre.imcrawler.jpa.Statisticsdb;
 import com.wipro.ats.bdre.imcrawler.model.StatisticsDBDao;
 import org.slf4j.Logger;
@@ -30,6 +27,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.AutowireCapableBeanFactory;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
+
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * @author Yasser Ganjisaffar modified by AS294216

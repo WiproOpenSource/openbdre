@@ -16,15 +16,14 @@
 
 package com.wipro.ats.bdre.io.xml.objectinspector;
 
-import java.util.ArrayList;
-import java.util.List;
-
+import com.wipro.ats.bdre.io.xml.processor.XmlProcessor;
 import org.apache.hadoop.hive.serde2.objectinspector.ObjectInspector;
 import org.apache.hadoop.hive.serde2.objectinspector.PrimitiveObjectInspector;
 import org.apache.hadoop.hive.serde2.objectinspector.PrimitiveObjectInspector.PrimitiveCategory;
 import org.apache.hadoop.hive.serde2.objectinspector.StandardListObjectInspector;
 
-import com.wipro.ats.bdre.io.xml.processor.XmlProcessor;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * The list object inspector

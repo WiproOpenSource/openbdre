@@ -31,7 +31,8 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.*;
-import static org.apache.hadoop.hive.ql.parse.BaseSemanticAnalyzer.*;
+
+import static org.apache.hadoop.hive.ql.parse.BaseSemanticAnalyzer.getUnescapedName;
 
 /**
  * Created by jayabroto on 22-04-2015.

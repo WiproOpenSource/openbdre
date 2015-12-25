@@ -17,8 +17,6 @@
 
 package com.wipro.ats.bdre.imcrawler.frontier;
 
-import java.util.ArrayList;
-import java.util.List;
 import com.wipro.ats.bdre.imcrawler.jpa.Pendingurlsdb;
 import com.wipro.ats.bdre.imcrawler.jpa.Weburlsdb;
 import com.wipro.ats.bdre.imcrawler.model.PendingUrlsDBDao;
@@ -28,6 +26,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.AutowireCapableBeanFactory;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
+
+import java.util.ArrayList;
+import java.util.List;
 
 
 /**
