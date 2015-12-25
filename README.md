@@ -127,8 +127,8 @@ For example if you are behind a proxy or you want a mirror repo, you can use fol
 * Now ```cd``` to the bdre source code folder that git created.
 
 * As mentioned before you's be able to build BDRE and run it with a H2 embedded database backend and hence no detabase setup is required if you want to test BDRE. Here we'll demonstrate how to configure BDRE with MySQL backend(optional).
-  - Create db.properties` inside `md-dao/src/main/resources`
-  - Open `md-dao/src/main/resources/db.properties` in a text editor and have following
+  - Create `db.properties` inside `md-dao/src/main/resources`
+  - Open newly created `md-dao/src/main/resources/db.properties` in a text editor and have following
 
 ```properties
 ##### Common entries #####
@@ -146,26 +146,19 @@ hibernate.connection.password=root
 hibernate.dialect=org.hibernate.dialect.MySQLDialect
 hibernate.default_schema=platmd
 ```
-
- - **Note:** Do not modify the `database/db.properties` as it copied the template.
- 
-
+ - Similarly to use Oracle or PostgreSQL find the appropriate settings from the `databases/db.properties`
+ -Start MySQL 5.6 server and create *platmd* DB and MySQL credentials
+  ```sql
+      `mysql -u root -e "create database platmd;"`
+      `mysqladmin -u root password 'root'`
+  ```
+ - Run the create table DDL script in `databases/mysql/ddls/create-tables.sql`
+     
+* Now build BDRE using 
 
 ```mvn -s settings.xml clean install```
-When maven build is done it copies *db.properties* present from *databases* folder into *md-dao/src/main/resources*. This file contains the BDRE backend configuration. It also copied
 
-
-* `create-tables.sql` and `drop-tables.sql` are located inside each ddls folder corresponding to the DB. According to the DB that you are using run appropriate ddls in your Database GUI. In the next step an example is shown for MySQL.
-
-* Using MySQL, the steps to be performed are as shown:
-    - Start MySQL 5.6 server and create *platmd* DB and MySQL credentials
-
-      `mysql -u root -e "create database platmd;"`
-
-      `mysqladmin -u root password 'root'`
-
-    - create the tables and procs using bdre-app/databases/mysql/ddls `drop-tables.sql` and`create-tables.sql` inside the various DB folders. Copy the commands and run in your specific DataBase GUI, in this case in MySQL Workbench.
-  
+### Additional Setup
 
 * Two additional jars are required for *flume-source* and JSON *SerDe*. For this to be done, download the zip from [here](https://github.com/cloudera/cdh-twitter-example.git) as these jars are still not available in the maven repository, they need to be custom built. 
     - Goto *flume-sources* inside the folder and do `mvn clean install`.
