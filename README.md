@@ -26,27 +26,35 @@ BDRE is by default configured to run with H2 embedded database which is okay for
 
 Since a few people experienced problems with basic setup - following information might be helpful.
 
+#### Git
+
 After installing Git first set your full name (like John Doe) and email id in git config using following command.
-
-`git config --global user.name "Your Name"`
-`git config --global user.email "your_email@company.com"`
-
+```shell
+git config --global user.name "Your Name"
+git config --global user.email "your_email@company.com"
+```
 Replace *Your Name* and *your_email* with your real name and your real email.
-* Add `jdk` bin directory to the PATH env variable.
-* Add `JAVA_HOME` env variable with your installed jdk location.
-* Add `mvn` bin directory to the PATH env variable.
-* Add `M2_HOME` env variable with your installed maven location.
+
+Linux and Windows differ in how they handle line endings.
+
+The `git config core.autocrlf` command is used to change how Git handles line endings. It takes a single argument. So it is better to set the `autocrlf` in git accordingly to avoid further complications.
+```shell
+Windows:
+git config --global core.autocrlf true
+Linux:
+git config --global core.autocrlf input
+```
+
+For further changes to convert CRLF to LF when you are using Linux systems refer to this link (https://help.github.com/articles/dealing-with-line-endings/)
 
 Proxy setup while working behind a proxy network
 
 - If you are behind proxy then you need to setup proxy for command line operations. The easiest way to do that would be adding 3 environment variables before performing any git operations.
 
 ```shell
-In Linux use this:
 export http_proxy=http://<proxy username>:<proxy password>@<your proxy server>:<proxy port>
 export https_proxy=http://<proxy username>:<proxy password>@<your proxy server>:<proxy port>
 export no_proxy=localhost
-
 ```
 Replace `export` with `set` if you are working in Windows.
 
@@ -54,37 +62,26 @@ Git sometimes needs separate proxy configuration to connect to repositories.
 
 For e.g. to set proxy:
 
-`git config --global https.proxy https://<proxy username>:<proxy password>@<your proxy server>:<proxy port>`
-
-`git config --global http.proxy http://<proxy username>:<proxy password>@<your proxy server>:<proxy port>`
+```shell
+git config --global https.proxy https://<proxy username>:<proxy password>@<your proxy server>:<proxy port>
+git config --global http.proxy http://<proxy username>:<proxy password>@<your proxy server>:<proxy port>
+```
 
 Note: If your proxy uses Active Directory authentication then you may have to add `DOMAIN\` before the username.
 
 To reset configured proxy use this:
 
-`git config --global --unset https.proxy`
+```shell
+git config --global --unset https.proxy
+git config --global --unset http.proxy
+```
 
-`git config --global --unset http.proxy`
+#### Environment setup
 
-
-### Test your git access:
-
-You may skip this section if you are familiar with Git version control or in hurry :-).
-
-Please clone the following **test repo** in Gitlab and create your branch , make and push your change and test anything you want. You need to create a ssh key to make changes. Contact @bdremishi, @bdrearijit, @bdreharsha, @bdrekapil if you face any issues.
-
-Test this: `git clone https://<yourid>@gitlab.com/bdre/test.git`.
-Where *yourid* is your gitlab user id (like bdrejohn).
-
-If you are not familiar with Git version control, please read the following Git tutorials.
-
-BDRE quick git head start - [bdre_getting_started.pptx](https://gitlab.com/bdre/documentation/uploads/af02e6fef5ef1137429561877703fcb4/bdre_getting_started.pptx)
-
-[Git Tutorials](https://www.atlassian.com/git/tutorials/) (note we are not using Atlassian git but git command line tutorial is same for all git providers)
-
-[Watch Git Video Tutorial](https://www.youtube.com/watch?v=7p0hrpNaJ14)
-
-Once you are able to access git and became familiar, please checkout three BDRE repositories.
+* Add `jdk` bin directory to the PATH env variable.
+* Add `JAVA_HOME` env variable with your installed jdk location.
+* Add `mvn` bin directory to the PATH env variable.
+* Add `M2_HOME` env variable with your installed maven location.
 
 ### `bdre-app` Repository
 
@@ -95,14 +92,6 @@ You can proceed to 'Building' section if you just want to run the UI.
 
 **Important:** Dealing with line endings
 
-Linux and Windows differ in how they handle line endings.
-
-The `git config core.autocrlf` command is used to change how Git handles line endings. It takes a single argument. So it is better to set the `autocrlf` in git accordingly to avoid further complications.
-
-* In Windows use: `git config --global core.autocrlf true`.
-* In Linux use: `git config --global core.autocrlf input`.
-
-For further changes to convert CRLF to LF when you are using linux systems refer to this link (https://help.github.com/articles/dealing-with-line-endings/)
 
 ## Building
 
