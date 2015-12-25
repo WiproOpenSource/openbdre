@@ -107,6 +107,25 @@
                     </execution>
                 </executions>
             </plugin>
+            <!-- maven-read-plugin-->
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>properties-maven-plugin</artifactId>
+                <version>1.0.0</version>
+                <executions>
+                    <execution>
+                        <phase>initialize</phase>
+                        <goals>
+                            <goal>read-project-properties</goal>
+                        </goals>
+                        <configuration>
+                            <files>
+                                <file>../md-dao/src/main/resources/db.properties</file>
+                            </files>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
             <!--avro plugin-->
             <!--Hibernate plugin-->
             <plugin>
@@ -133,8 +152,8 @@
                             </component>
                         </components>
                         <componentProperties>
-                            <revengfile>src/main/resources/reveng.xml</revengfile>
-                            <propertyfile>src/main/resources/database.properties</propertyfile>
+                            <revengfile>../databases/${database}/hibernate/reveng.xml</revengfile>
+                            <propertyfile>../md-dao/src/main/resources/db.properties</propertyfile>
                             <packagename>com.wipro.ats.bdre.imcrawler.jpa</packagename>
                             <jdk5>true</jdk5>
                             <ejb3>true</ejb3>
@@ -143,12 +162,37 @@
                 </execution></executions>
                 <dependencies>
                     <dependency>
+                        <groupId>org.apache.derby</groupId>
+                        <artifactId>derby</artifactId>
+                        <version>${derby.version}</version>
+                    </dependency>
+
+                    <dependency>
                         <groupId>mysql</groupId>
                         <artifactId>mysql-connector-java</artifactId>
+                        <version>${mysql.connector.version}</version>
                     </dependency>
+                    <dependency>
+                        <groupId>com.h2database</groupId>
+                        <artifactId>h2</artifactId>
+                        <version>${h2.version}</version>
+                    </dependency>
+                    <dependency>
+                        <groupId>com.oracle</groupId>
+                        <artifactId>ojdbc6</artifactId>
+                        <version>${oracle.version}</version>
+                    </dependency>
+
+                    <dependency>
+                        <groupId>postgresql</groupId>
+                        <artifactId>postgresql</artifactId>
+                        <version>${postgresql.version}</version>
+                    </dependency>
+
                     <dependency>
                         <groupId>cglib</groupId>
                         <artifactId>cglib-nodep</artifactId>
+                        <version>${cglib.version}</version>
                     </dependency>
                 </dependencies>
             </plugin>

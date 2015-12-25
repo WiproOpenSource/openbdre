@@ -2,34 +2,6 @@
 <settings xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
           xmlns="http://maven.apache.org/SETTINGS/1.0.0"
           xsi:schemaLocation="http://maven.apache.org/SETTINGS/1.0.0 http://maven.apache.org/xsd/settings-1.0.0.xsd">
-    <mirrors>
-
-        <mirror>
-
-            <id>repo.maven.apache.org</id>
-            <name>repo.maven.apache.org</name>
-
-            <url>https://repo.maven.apache.org/maven2</url>
-
-            <mirrorOf>central</mirrorOf>
-
-        </mirror>
-
-    </mirrors>
-
-    <!--<proxies>
-
-        <proxy>
-            <id>optional</id>
-            <active>true</active>
-            <protocol>http</protocol>
-            <username>yourUserName</username>
-            <password>yourPassword</password>
-            <host>yourProxyHost</host>
-            <port>yourProxyPort</port>
-            <nonProxyHosts>www.google.com|*.example.com</nonProxyHosts>
-        </proxy>
-    </proxies> -->
 
     <profiles>
         <profile>
@@ -148,6 +120,7 @@
                 <commons.lang.version>2.5</commons.lang.version>
                 <hibernate.jpa.version>1.0.0.Final</hibernate.jpa.version>
                 <commons.dbcp.version>1.4</commons.dbcp.version>
+                <apache.commons.collections4.version>4.0</apache.commons.collections4.version>
             </properties>
         </profile>
         <profile>

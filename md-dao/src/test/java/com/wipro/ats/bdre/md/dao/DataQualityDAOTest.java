@@ -44,6 +44,7 @@ public class DataQualityDAOTest {
 
     @Autowired
     DataQualityDAO dataQualityDAO;
+
     @Ignore
     @Test
     public void InsertUpdateTest() {

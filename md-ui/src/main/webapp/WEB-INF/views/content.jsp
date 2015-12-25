@@ -383,6 +383,11 @@
                                             url: "crawler.page",
                                             children: []
 					}, {
+                                               label: "New File Ingestion",
+                                               collapse: "1",
+                                               url: "filemonitor.page",
+                                               children: []
+                    },  {
                                             label: "Test Data Manufacturer",
                                             collapse: "1",
                                             url: "datagen.page",
