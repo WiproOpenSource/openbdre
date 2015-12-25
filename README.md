@@ -7,12 +7,7 @@ This document will help you build BDRE from source. Audience for this document a
  - Git Command line Client [Download](https://git-scm.com/download)
  - Maven [Download](http://apache.mirrors.pair.com/maven/maven-3/3.3.3/binaries/apache-maven-3.3.3-bin.zip)
  - IntelliJ Idea [Download](https://www.jetbrains.com/idea/download/)
- 
-`Note` while installing git in `Windows` (Gitbash) please select following options
-
-- Checkout Windows-style commit unix-style line endings
-- Run git and included Unix tools from the Windows command prompt
-
+ - VirtualBox and Cloudera QuickStart VM 5.2 for VirtualBox
 
 BDRE is by default configured to run with H2 embedded database which is okay for evaluating and testing jobs in a single node cluster. For production use BDRE currently supports following production scale databases.
 
@@ -27,6 +22,12 @@ BDRE is by default configured to run with H2 embedded database which is okay for
 Since a few people experienced problems with basic setup - following information might be helpful.
 
 #### Git
+
+
+`Note` while installing git in `Windows` (Gitbash) please select following options
+
+- Checkout Windows-style commit unix-style line endings
+- Run git and included Unix tools from the Windows command prompt
 
 After installing Git first set your full name (like John Doe) and email id in git config using following command.
 ```shell
@@ -116,44 +117,44 @@ For example if you are behind a proxy or you want a mirror repo, you can use fol
 
 ```
 
-### `bdre-app` Repository
-
-`git clone https://<yourid>gitlab.com/bdre/bdre-app.git`
-
-You can proceed to 'Building' section if you just want to run the UI.
-
-
-**Important:** Dealing with line endings
-
-
 ### Building BDRE from source
 
+* Login to the Cloudera QuickStart VM.
+* Navigate to folder where you want to download BDRE source code and build it.
+* Pull BDRE source from this git repository. To find out your repository link navigate to the repository in this website and copy the https repo URL.
 
-* NOTE : Add or change the jar versions in settings.xml according to your need.
-*If you have proxied internet access then [configure proxy](http://maven.apache.org/guides/mini/guide-proxies.html)
+```git clone <BDRE git URL>```
+* Now ```cd``` to the bdre source code folder that git created.
 
-Behind proxied networks, placing following in settings.xml should work.
+* As mentioned before you's be able to build BDRE and run it with a H2 embedded database backend and hence no detabase setup is required if you want to test BDRE. Here we'll demonstrate how to configure BDRE with MySQL backend(optional).
+  - Create db.properties` inside `md-dao/src/main/resources`
+  - Open `md-dao/src/main/resources/db.properties` in a text editor and have following
 
-```xml
-<proxies>
-        <proxy>
-            <id>your-proxy</id>
-            <active>true</active>
-            <protocol>http</protocol>
-            <username>yourUserName</username>
-            <password>yourPassword</password>
-            <host>proxyHost</host>
-            <port>proxyPort</port>
-            <nonProxyHosts>localhost</nonProxyHosts>
-        </proxy>
-</proxies>
+```properties
+##### Common entries #####
+hibernate.current_session_context_class=thread
+hibernate.transaction.factory_class=org.hibernate.transaction.JDBCTransactionFactory
+hibernate.show_sql=true
+
+#####Configuration for mysql#####
+
+database=mysql
+hibernate.connection.driver_class=com.mysql.jdbc.Driver
+hibernate.connection.url=jdbc:mysql://localhost:3306/platmd
+hibernate.connection.username=root
+hibernate.connection.password=root
+hibernate.dialect=org.hibernate.dialect.MySQLDialect
+hibernate.default_schema=platmd
 ```
-* Perform a mvn clean install in bdre-app project only. By default BDRE comes with H2 database which works on single node clusters. But when using bigger (more node) systems, a production scale database is required. BDRE currently supports 3 more databases:
-    - H2: The DDL's are located at *bdre-app/databases/h2/ddls*.
-    - Oracle: The DDL's are located at *bdre-app/databases/oracle/ddls*.
-    - PostgreSQL: The DDL's are located at *bdre-app/databases/postgresql/ddls*.
-    - MySQL: The DDL's are located at *bdre-app/databases/mysql/ddls*.
-* When maven build is done it by default copies the *db.properties* present in *bdre-app/databases* folder into the *md-dao/src/main/resources*. You will need to modify the *db.properties* present in *md-dao/src/main/resources* for the appropriate DB selected. But if you want to modify the DB before building, then you need to copy that *db.properties* manually and put inside *md-dao/src/main/resources* and modify it according to your needs. *  **Note:** Do not modify the db.properties present inside the databases folder  *
+
+ - **Note:** Do not modify the `database/db.properties` as it copied the template.
+ 
+
+
+```mvn -s settings.xml clean install```
+When maven build is done it copies *db.properties* present from *databases* folder into *md-dao/src/main/resources*. This file contains the BDRE backend configuration. It also copied
+
+
 * `create-tables.sql` and `drop-tables.sql` are located inside each ddls folder corresponding to the DB. According to the DB that you are using run appropriate ddls in your Database GUI. In the next step an example is shown for MySQL.
 
 * Using MySQL, the steps to be performed are as shown:
