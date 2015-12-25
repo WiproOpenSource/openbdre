@@ -1,19 +1,23 @@
 ### Overview
 
-This document will help you build BDRE from source. Audience for this document are developers and architects who want be part of BDRE framework development or may just want to test it by running the UI. Please read [this document](https://gitlab.com/bdre/documentation/wikis/list-of-things-to-learn-for-BDRE-framework-development) and understand the skillset needed (or to be learned) for contributing to BDRE.
+This document will help you build BDRE from source. Audience for this document are developers and architects who want be part of BDRE framework development or may just want to test it by running the UI. 
 
 ### Setup
 
-* Install Git, MVN and Oracle JDK 7(and up) if you haven't already. In Windows be sure to add git and other bash tools in the commandline path during installation. To get started download and install following free, safe and open source software.
+* Install Git, MVN and Oracle JDK 7(and up) if you haven't already. In Windows be sure to add git and other bash tools in the commandline path during installation. To get started download and install following software.
 
  - Oracle JDK 7 
- - Git Command line Client (For Windows - GitBash)[Download for Windows](https://git-scm.com/download/win)
- - Maven [Download for Windows](http://apache.mirrors.pair.com/maven/maven-3/3.3.3/binaries/apache-maven-3.3.3-bin.zip)
- - IntelliJ Idea (download Community edition)[Download](https://www.jetbrains.com/idea/download/)
- - MySQL 5.6 [Download for Windows](https://s3.amazonaws.com/bdre-public/software/mysql-installer-community-5.6.25.0.msi)
+ - Git Command line Client [Download](https://git-scm.com/download)
+ - Maven [Download](http://apache.mirrors.pair.com/maven/maven-3/3.3.3/binaries/apache-maven-3.3.3-bin.zip)
+ - IntelliJ Idea [Download](https://www.jetbrains.com/idea/download/)
 
+BDRE is by default configured to run with H2 embedded database which is okay for evauating and testing jobs in a single node cluster. For production use BDRE currently supports following production scale databases.
 
-For complete software requirement read [this](https://gitlab.com/bdre/documentation/wikis/software-requirement-for-bdre-development). You don't need to download all software to run the UI in the browser. Git, Maven, MySQL and Intellij should be enough.
+ - MySQL Server
+ - Oracle 11g Server
+ - PostgreSql
+
+ In this guide we are going to show you how to build and install BDRE in a Cloudera QuickStart Hadoop VM which is Linux based. You should be able to do the same in Mac or Windows but note that setting up a Hadoop cluster might be tricky. You should be able to launch the BDRE user interface in Windows and design various jobs. However to deploy and run the jobs we recommend a Linux system with Hadoop installed. BDRE is typically installed in Hadoop edge node in a multi-node cluster.
 
 **Important:**
 
