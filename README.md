@@ -125,8 +125,8 @@ For example if you are behind a proxy or you want a mirror repo, you can use fol
 
 ```git clone <BDRE git URL>```
 * Now ```cd``` to the bdre source code folder that git created.
-
-* As mentioned before you's be able to build BDRE and run it with a H2 embedded database backend and hence no detabase setup is required if you want to test BDRE. Here we'll demonstrate how to configure BDRE with MySQL backend(optional).
+#### Database Setup (Optional section)
+* As mentioned before you's be able to build BDRE and run it with a H2 embedded database backend and hence no detabase setup is required if you want to test BDRE. However, here we'll demonstrate how to configure BDRE with MySQL backend.
   - Create `db.properties` inside `md-dao/src/main/resources`
   - Open newly created `md-dao/src/main/resources/db.properties` in a text editor and have following
 
@@ -147,12 +147,14 @@ hibernate.dialect=org.hibernate.dialect.MySQLDialect
 hibernate.default_schema=platmd
 ```
  - Similarly to use Oracle or PostgreSQL find the appropriate settings from the `databases/db.properties`
- -Start MySQL 5.6 server and create *platmd* DB and MySQL credentials
+ - Cloudera VM already has MySQL server installed so create `platmd` DB and MySQL credentials
+ - As root type
   ```sql
-      `mysql -u root -e "create database platmd;"`
-      `mysqladmin -u root password 'root'`
+      mysql -u root -e "create database platmd;
+      mysqladmin -u root password 'root'
+      mysql -u root -p root platmd < databases/mysql/ddls/create-tables.sql
   ```
- - Run the create table DDL script in `databases/mysql/ddls/create-tables.sql`
+#### Building
      
 * Now build BDRE using 
 
@@ -166,32 +168,29 @@ hibernate.default_schema=platmd
     - From inside the flume-sources/target folder copy the `flume-sources-1.0-SNAPSHOT` jar to bdre-app/target/lib.
     - From inside the hive-serdes/target folder copy the `hive-serdes-1.0-SNAPSHOT` jar to bdre-app/target/lib.
 
-## Running the BDRE Web UI
+### Running the BDRE Web UI
 
-* After a successful build of bdre-app project, cd into md-rest-api folder and start the Jetty server using quick-run.bat (or .sh if you are using Unix)(Make sure the Batch Scripts Support for Windows or Bash Support for Unix plugin is installed)
+* After a successful build, cd into md-rest-api folder and start the BDRE UI using 
+```shell sh ./quick-run.sh```
 * Use Chrome browser and open http://localhost:9999/mdui/pages/content.page
 * Login using admin/zaq1xsw2
-* BDRE home page looks like [this](https://gitlab.com/bdre/documentation/uploads/6d1699cdbdb15648ba0b849dd1923367/bdress.png)
 
 ## Creating a test job
 
 * Create a RDBMS data import job from *Job Setup From Template > New RDBMS Import Job*
 * Change the JDBC URL/credentials to your localhost MySQL platmd DB that contains BDRE metadata.
 * Click test connection
-* Select 2 - 3 tables with columns like [this](https://gitlab.com/bdre/documentation/uploads/d93c5de43dbf79502226d7227a7b46ae/rdbms_import.png)
-* Create the jobs and see the [pipeline](https://gitlab.com/bdre/documentation/uploads/3bce103069908d065beb8d04b15f7cc7/pipeline.png).
-* Click *XML* , *Details* etc and checkout the generated workflow.
+* Expand and select 2 - 3 tables.
+* Create the jobs and see the pipeline.
+* Click *XML* , *Details* etc and check the generated Oozie workflow.
 
 ## Open the projects in IntelliJ Idea
 
 * We strongly recommend using IntelliJ Idea to develop BDRE. However BDRE should work fine with other Java IDEs
 * Start Idea and go to **File > Open ...** and then browse to the repo folder and open it.
-* Idea will automatically detect the maven projects and prompt to *Import Changes*. Import changes. [Here](https://gitlab.com/bdre/documentation/uploads/5578910e1812ce684dd70b73fe345f0c/BDRE_idea.png) is how the bdre-app project looks while opened in Idea.
-* After completion of import, open the terminal window and perform usual git and mvn operations.
-  - e.g. mvn clean install
-* You *must* now create your own branch in the project when you are ready to contribute to BDRE. * **Note:** Never modify code in develop branch.*
-* Please use [git properly](https://gitlab.com/bdre/documentation/uploads/af02e6fef5ef1137429561877703fcb4/bdre_getting_started.pptx) and contribute to the development.
-* For completed, committed and pushed changes, open *Merge Request* from gitlab.com.
+* Idea will automatically detect the maven projects and prompt to *Import Changes*. Import changes.
+* You *must* now create your own branch in the project when you are ready to contribute to BDRE.
+* For completed, committed and pushed changes, open *Merge Request*.
 * Good luck!
 
 ## How to Deploy Process in your hadoop environment
