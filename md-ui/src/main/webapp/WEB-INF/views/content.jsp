@@ -139,7 +139,7 @@
                         </button>
 
                         <a class="navbar-brand" href="#">
-                            <img alt="Wipro Technologies" height="30" width="40" src="../css/images/wipro-logo.png">
+                            <img alt="Bigdata Ready Enterprise" height="30" width="40" src="../css/images/bdre-logo.png">
                         </a>
 
                     </div>

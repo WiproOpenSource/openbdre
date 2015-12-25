@@ -46,7 +46,7 @@
 
 
 	<h1 class="text-center text-info">  Welcome to Big Data Ready Enterprise  </h1>
-	<img id="logo" class="center-block img-responsive" src="../../css/images/wipro-logo.png"/>
+	<img id="logo" class="center-block img-responsive" src="../../css/images/bdre-logo.png"/>
 	<div id="login-box" class="center-block">
 
 	    <p class="lead text-info">Please login </p>

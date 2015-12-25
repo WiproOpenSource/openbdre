@@ -16,5 +16,5 @@
 <!DOCTYPE Configure PUBLIC "-//Mort Bay Consulting//DTD Configure//EN" "http://jetty.mortbay.org/configure.dtd">
 <Configure class="org.eclipse.jetty.webapp.WebAppContext">
     <Set name="contextPath">/auth</Set>
-    <Set name="war">../auth-rest-api/src/main/webapp</Set>
+    <Set name="war">auth-rest-api/src/main/webapp</Set>
 </Configure>
