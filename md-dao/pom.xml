@@ -69,7 +69,7 @@
                     <dependency>
                         <groupId>org.apache.derby</groupId>
                         <artifactId>derby</artifactId>
-                        <version>10.11.1.1</version>
+                        <version>${derby.version}</version>
                     </dependency>
 
                     <dependency>
@@ -80,25 +80,25 @@
                     <dependency>
                         <groupId>com.h2database</groupId>
                         <artifactId>h2</artifactId>
-                        <version>1.4.190</version>
+                        <version>${h2.version}</version>
                     </dependency>
                     <dependency>
                         <groupId>com.oracle</groupId>
                         <artifactId>ojdbc6</artifactId>
-                        <version>11.2.0.3</version>
+                        <version>${oracle.version}</version>
                     </dependency>
 
                     <dependency>
                         <groupId>postgresql</groupId>
                         <artifactId>postgresql</artifactId>
-                        <version>9.1-901.jdbc4</version>
+                        <version>${postgresql.version}</version>
                     </dependency>
 
 
                     <dependency>
                         <groupId>cglib</groupId>
                         <artifactId>cglib-nodep</artifactId>
-                        <version>2.2.2</version>
+                        <version>${cglib.version}</version>
                     </dependency>
 
 
