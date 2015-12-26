@@ -7,8 +7,9 @@ This document will help you build BDRE from source. Audience for this document a
  - Git Command line Client [Download](https://git-scm.com/download)
  - Maven [Download](http://apache.mirrors.pair.com/maven/maven-3/3.3.3/binaries/apache-maven-3.3.3-bin.zip)
  - IntelliJ Idea [Download](https://www.jetbrains.com/idea/download/)
- - VirtualBox and Cloudera QuickStart VM 5.2 for VirtualBox
-
+ - VirtualBox [Download](https://www.virtualbox.org/wiki/Downloads) and Cloudera QuickStart VM 5.2 for VirtualBox
+ - Google Chrome Browser
+ 
 BDRE is by default configured to run with H2 embedded database which is okay for evaluating and testing jobs in a single node cluster. For production use BDRE currently supports following production scale databases.
 
   - MySQL Server
@@ -161,6 +162,35 @@ hibernate.default_schema=platmd
 
 ```mvn -s settings.xml clean install```
 
+
+### Running the BDRE Web UI
+
+* After a successful build, cd into md-rest-api folder and start the BDRE UI using 
+```shell sh ./quick-run.sh```
+* Use Google Chrome browser and open http://localhost:9999/mdui/pages/content.page
+* Login using admin/zaq1xsw2
+
+#### Creating a test job
+
+* Create a RDBMS data import job from *Job Setup From Template > New RDBMS Import Job*
+* Change the JDBC URL/credentials to your localhost MySQL platmd DB that contains BDRE metadata.
+* Click *Test Connection*
+* Expand and select 2 - 3 tables (be sure to expand the tables before selecting).
+* Create the jobs and see the pipeline.
+* Click *XML* , *Diagram* etc and check the generated Oozie workflow XML and diagram.
+* Click deploy button on process page corresponding to the process you want to deploy. ( Deploy button will show status regarding deployment of process, when you hover over the button.)
+* You have to provide executable permissions to every shell script present in home folder.
+* You have to edit deploy-env.properties. Set all properties based on your environment.
+* Process Deploy main class calls deploy script based on type of container process. For Example for process type 1 it will call process-type-1.sh script.
+* You have to setup a crontab in your environment. Crontab will run process-deploy.sh script present in home folder.
+    * for example `*/5 * * * * /home/cloudera/process-deploy.sh`.
+*After the deployment is complete and in UI the status for the process is deployed (turns green), you have to execute it.
+*Update Workflow.py and flume.sh according to your environment present in home folder.
+    *Update hostname variable in Workflow.py.
+    *Update `pathForFlumeng`, `pathForFlumeconf`, `pathForFlumeconfFile` variables in flume.sh.
+*To store logs for execution, you have to create log directory as mentioned in administration -> settings -> mdconfig -> execute.log-path. create directory and give permission for every user to write into it. `chmod -R 777 <folderName>`
+*Also update path in administration -> settings -> mdconfig -> execute.oozie-script-path tags for Workflow.py. And under administration -> settings -> mdconfig -> execute.standalone-script-path for flume.sh.
+
 ### Additional Setup
 
 * Two additional jars are required for *flume-source* and JSON *SerDe*. For this to be done, download the zip from [here](https://github.com/cloudera/cdh-twitter-example.git) as these jars are still not available in the maven repository, they need to be custom built. 
@@ -168,22 +198,6 @@ hibernate.default_schema=platmd
     - Goto *hive-serdes* inside the folder and do `mvn clean install`.
     - From inside the flume-sources/target folder copy the `flume-sources-1.0-SNAPSHOT` jar to bdre-app/target/lib.
     - From inside the hive-serdes/target folder copy the `hive-serdes-1.0-SNAPSHOT` jar to bdre-app/target/lib.
-
-### Running the BDRE Web UI
-
-* After a successful build, cd into md-rest-api folder and start the BDRE UI using 
-```shell sh ./quick-run.sh```
-* Use Chrome browser and open http://localhost:9999/mdui/pages/content.page
-* Login using admin/zaq1xsw2
-
-### Creating a test job
-
-* Create a RDBMS data import job from *Job Setup From Template > New RDBMS Import Job*
-* Change the JDBC URL/credentials to your localhost MySQL platmd DB that contains BDRE metadata.
-* Click test connection
-* Expand and select 2 - 3 tables.
-* Create the jobs and see the pipeline.
-* Click *XML* , *Details* etc and check the generated Oozie workflow.
 
 ### Open the projects in IntelliJ Idea
 
@@ -194,26 +208,3 @@ hibernate.default_schema=platmd
 * For completed, committed and pushed changes, open *Merge Request*.
 * Good luck!
 
-### How to Deploy Process in your hadoop environment
-After making entries into metadata related to your process, you have to deploy this process in your hadoop environment.
-### Steps to deploy your process
-1. Click deploy button on process page corresponding to the process you want to deploy. ( Deploy button will show status regarding deployment of process, when you hover over the button.)
-
-2. You have to provide executable permissions to every shell script present in home folder.
-
-3. You have to edit deploy-env.properties. Set all properties based on your environment.
-
-4. Process Deploy main class calls deploy script based on type of container process. For Example for process type 1 it will call process-type-1.sh script.
-
-5. You have to setup a crontab in your environment. Crontab will run process-deploy.sh script present in home folder.
-for example `*/5 * * * * /home/cloudera/process-deploy.sh`.
-
-6. After the deployment is complete and in UI the status for the process is deployed (turns green), you have to execute it.
-
-7. Update Workflow.py and flume.sh according to your environment present in home folder.
- Update hostname variable in Workflow.py.
- Update `pathForFlumeng`, `pathForFlumeconf`, `pathForFlumeconfFile` variables in flume.sh.
-
-8. To store logs for execution, you have to create log directory as mentioned in administration -> settings -> mdconfig -> execute.log-path. create directory and give permission for every user to write into it. `chmod -R 777 <folderName>`
-
-9. Also update path in administration -> settings -> mdconfig -> execute.oozie-script-path tags for Workflow.py. And under administration -> settings -> mdconfig -> execute.standalone-script-path for flume.sh.
