@@ -1,5 +1,8 @@
 #!/bin/sh
-source ./deploy-env.properties
+. ../env.properties
+. ../common.sh
+cd $BDRE_APPS_HOME
+
 if [ -z "$1" ] || [ -z "$2" ] || [ -z "$3" ] ; then
         echo Insufficient parameters !
         exit 1
@@ -10,55 +13,46 @@ processTypeId=$2
 processId=$3
 
 
-edgeNodeBDRERoot=/home/$bdreLinuxUserName
-hdfsPath=/user/$bdreLinuxUserName
-nameNode=hdfs://$hostName:$nameNodePort
-jobTracker=$hostName:$jobTrackerPort
-hadoopConfDir=/etc/hive/$hiveConfDir
-bdreVersion=1.1-SNAPSHOT
-cd $edgeNodeBDRERoot
-
-
 #Generating workflow
 
-java -cp "$pathForWorkflowMainJar/workflow-generator-$bdreVersion.jar:$pathForWorkflowJars/*" com.wipro.ats.bdre.wgen.WorkflowGenerator --parent-process-id $processId --file-name workflow-$processId.xml
+java -cp "$BDRE_HOME/lib/*" com.wipro.ats.bdre.wgen.WorkflowGenerator --parent-process-id $processId --file-name workflow-$processId.xml
 if [ $? -eq 1 ]
 then exit 1
 fi
 
 #clean edgenode process directory, if exists
- rm -r -f BDRE/$busDomainId/$processTypeId/$processId
+ rm -r -f $BDRE_APPS_HOME/$busDomainId/$processTypeId/$processId
 if [ $? -eq 1 ]
 then exit 1
 fi
 
-mkdir -p BDRE/$busDomainId/$processTypeId/$processId
+mkdir -p $BDRE_APPS_HOME/$busDomainId/$processTypeId/$processId
 if [ $? -eq 1 ]
 then exit 1
 fi
 
-mkdir -p BDRE/$busDomainId/$processTypeId/$processId/lib
+mkdir -p $BDRE_APPS_HOME/$busDomainId/$processTypeId/$processId/lib
 if [ $? -eq 1 ]
 then exit 1
 fi
 
-mkdir -p BDRE/$busDomainId/$processTypeId/$processId/hql
+mkdir -p $BDRE_APPS_HOME/$busDomainId/$processTypeId/$processId/hql
 if [ $? -eq 1 ]
 then exit 1
 fi
 
-mkdir -p BDRE/$busDomainId/$processTypeId/$processId/spark
+mkdir -p $BDRE_APPS_HOME/$busDomainId/$processTypeId/$processId/spark
 if [ $? -eq 1 ]
 then exit 1
 fi
 
 #move generated workflow to edge node process dir
-mv  workflow-$processId.xml BDRE/$busDomainId/$processTypeId/$processId
+mv  workflow-$processId.xml $BDRE_APPS_HOME/$busDomainId/$processTypeId/$processId
 if [ $? -eq 1 ]
 then exit 1
 fi
 
-mv  workflow-$processId.xml.dot BDRE/$busDomainId/$processTypeId/$processId/
+mv  workflow-$processId.xml.dot $BDRE_APPS_HOME/$busDomainId/$processTypeId/$processId/
 if [ $? -eq 1 ]
 then exit 1
 fi
@@ -74,62 +68,21 @@ if [ $? -eq 1 ]
 then exit 1
 fi
 
-hdfs dfs -mkdir -p $hdfsPath/wf/$busDomainId/$processTypeId/$processId/lib
-if [ $? -eq 1 ]
-then exit 1
-fi
-
-hdfs dfs -mkdir -p $hdfsPath/wf/$busDomainId/$processTypeId/$processId/hql
-if [ $? -eq 1 ]
-then exit 1
-fi
-
-hdfs dfs -mkdir -p $hdfsPath/wf/$busDomainId/$processTypeId/$processId/spark
-if [ $? -eq 1 ]
-then exit 1
-fi
-
-#copy generated workflow to hdfs process dir
-hdfs dfs -put BDRE/$busDomainId/$processTypeId/$processId/workflow-$processId.xml $hdfsPath/wf/$busDomainId/$processTypeId/$processId
-if [ $? -eq 1 ]
-then exit 1
-fi
-#copy generated jar for data-lineage
-if ssh $remoteUserName@$remoteHostPublicIp "test -e '$localPathForJars/$processId/lib'";
-then
-    if [ hostname = $remoteUserName ]
-    then
-        cp $localPathForJars/$processId/jar/* BDRE/$busDomainId/$processTypeId/$processId/lib
-        if [ $? -eq 1 ]
-            then exit 1
-        fi
-        "file(s) copied"
-    else
-        scp $remoteUserName@$remoteHostPublicIp:$localPathForJars/$processId/lib/* BDRE/$busDomainId/$processTypeId/$processId/lib
-        if [ $? -eq 1 ]
-          then exit 1
-        fi
-        "file(s) copied"
-    fi
-else
-  echo "empty (or does not exist)"
-fi
-
 #copying hive-plugin jar
-cp $pathForHivePlugin/hive-plugin-$bdreVersion-jar-with-dependencies.jar BDRE/$busDomainId/$processTypeId/$processId/lib
+cp $BDRE_HOME/lib/hive-plugin-$bdreVersion-jar-with-dependencies.jar $BDRE_APPS_HOME/$busDomainId/$processTypeId/$processId/lib
 if [ $? -eq 1 ]
     then exit 1
 fi
 
 #copying spark-core jar
-cp $pathForSparkCoreJar/spark-core-$bdreVersion.jar BDRE/$busDomainId/$processTypeId/$processId/lib
+cp $BDRE_HOME/lib/spark-core-$bdreVersion.jar $BDRE_APPS_HOME/$busDomainId/$processTypeId/$processId/lib
 if [ $? -eq 1 ]
     then exit 1
 fi
 
 
 # copying metadata jars
-cp $pathForJars/* BDRE/$busDomainId/$processTypeId/$processId/lib
+cp $BDRE_HOME/lib/md_api-$bdreVersion.jar $BDRE_APPS_HOME/$busDomainId/$processTypeId/$processId/lib
 
 #copying jars to hdfs
 hdfs dfs -put BDRE/$busDomainId/$processTypeId/$processId/lib/data-lineage-$bdreVersion.jar $hdfsPath/wf/$busDomainId/$processTypeId/$processId/lib

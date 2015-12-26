@@ -8,15 +8,7 @@ fi
 busDomainId=$1
 processTypeId=$2
 processId=$3
-bdreLinuxUserName=dropuser
 
-edgeNodeBDRERoot=/home/$bdreLinuxUserName
-hdfsPath=/user/$bdreLinuxUserName
-nameNode=hdfs://$hostName:$nameNodePort
-jobTracker=$hostName:$jobTrackerPort
-hadoopConfDir=/etc/hive/$hiveConfDir
-bdreVersion=1.1-SNAPSHOT
-cd $edgeNodeBDRERoot
 
 
 #Generating workflow

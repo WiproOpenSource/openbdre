@@ -11,13 +11,6 @@ busDomainId=$1
 processTypeId=$2
 processId=$3
 
-edgeNodeBDRERoot=/home/$bdreLinuxUserName
-hdfsPath=/user/$bdreLinuxUserName
-nameNode=hdfs://$hostName:$nameNodePort
-jobTracker=$hostName:$jobTrackerPort
-hadoopConfDir=/etc/hive/$hiveConfDir
-bdreVersion=1.1-SNAPSHOT
-cd $edgeNodeBDRERoot
 
 #Generating workflow
 
@@ -63,7 +56,7 @@ if [ $? -eq 1 ]
 then exit 1
 fi
 #copy generated jar for hive-data-gen
-hdfs dfs -put $pathToHiveDataGen/hive-data-gen-$bdreVersion.jar $hdfsPath/wf/$busDomainId/$processTypeId/$processId/lib/
+hdfs dfs -put $pathToHiveDataGen/hive-data-gen-$bdreVersion-executable.jar $hdfsPath/wf/$busDomainId/$processTypeId/$processId/lib/
 if [ $? -eq 1 ]
 then exit 1
 fi
@@ -79,7 +72,6 @@ echo oozie.use.system.libpath=true >> BDRE/$busDomainId/$processTypeId/$processI
 echo oozie.libpath=/user/oozie/bdre/lib/ >> BDRE/$busDomainId/$processTypeId/$processId/job-$processId.properties
 echo queueName=default >> BDRE/$busDomainId/$processTypeId/$processId/job-$processId.properties
 echo examplesRoot=example >> BDRE/$busDomainId/$processTypeId/$processId/job-$processId.properties
-echo env=$environment >> BDRE/$busDomainId/$processTypeId/$processId/job-$processId.properties
 echo oozie.wf.application.path=$nameNode$hdfsPath/wf/$busDomainId/$processTypeId/$processId/workflow-$processId.xml >> BDRE/$busDomainId/$processTypeId/$processId/job-$processId.properties
 echo oozie.wf.validate.ForkJoin=false >> BDRE/$busDomainId/$processTypeId/$processId/job-$processId.properties 
 

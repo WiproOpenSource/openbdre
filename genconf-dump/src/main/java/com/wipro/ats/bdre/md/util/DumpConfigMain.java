@@ -11,7 +11,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
+package com.wipro.ats.bdre.md.util;
 import com.wipro.ats.bdre.BaseStructure;
 import com.wipro.ats.bdre.md.api.GetGeneralConfig;
 import com.wipro.ats.bdre.md.beans.table.GeneralConfig;
@@ -33,7 +33,7 @@ public class DumpConfigMain extends BaseStructure{
             {"cg", "config-group", "Config group to dump"},
             {"f", "output-file", "Output file path"},
     };
-    private static final Logger LOGGER = Logger.getLogger(DumpConfigMain.class);
+    private final Logger LOGGER = Logger.getLogger(DumpConfigMain.class);
 
     public static void main(String[] args) throws IOException {
         new DumpConfigMain().execute(args);

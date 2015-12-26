@@ -555,23 +555,23 @@
 'crawler','urlsToSearch','urls to search','urls to search',1,'.*','text', 1
 'crawler','urlsNotToSearch','urls not to search','urls not to search',1,'.*\\\\.(bmp|gif|jpg|png)$','text', 1
 #For deploy and execution scripts
-'mdconfig', 'bdreLinuxUserName', '-','-' , 1, 'dropuser', 'text' , 1
-'mdconfig', 'hostName', '-','-' , 1, 'ip-10-0-0-214.ec2.internal', 'text' , 1
-'mdconfig', 'nameNodePort', '-','-' , 1, '8020', 'text' , 1
-'mdconfig', 'jobTrackerPort', '-','-' , 1, '8032', 'text' , 1
-'mdconfig', 'hiveConfDir', '-','-' , 1, 'conf.cloudera.hive', 'text' , 1
-'mdconfig', 'flumeLibDir', '-','-' , 1, '/usr/lib/flume-ng/lib', 'text' , 1
-'mdconfig', 'pathForJars', '-','-' , 1, 'BDRE/target/lib', 'text' , 1
-'mdconfig', 'pathForWorkflowMainJar', '-','-' , 1, 'BDRE/workflow-generator/target', 'text' , 1
-'mdconfig', 'pathForWorkflowJars', '-','-' , 1, 'BDRE/workflow-generator/target/lib', 'text' , 1
-'mdconfig', 'pathForHivePlugin', '-','-' , 1, 'BDRE/hive-plugin/target', 'text' , 1
-'mdconfig', 'pathToHiveDataGen', '-','-' , 1, 'BDRE/target/lib', 'text' , 1
-'mdconfig', 'pathToSparkCoreJar', '-','-' , 1, 'BDRE/spark-core/target', 'text' , 1
-'mdconfig', 'pathForFlumeHDFSSinkJar', '-','-' , 1, 'BDRE/target/lib', 'text' , 1
-'mdconfig', 'remoteUserName', '-','-' , 1, 'ec2-user', 'text' , 1
-'mdconfig', 'remoteHostPublicIp', '-','-' , 1, '54.173.62.30', 'text' , 1
-'mdconfig', 'localPathForHQL', '-','-' , 1, '/usr/share/apache-tomcat-7.0.59/webapps/mdrest', 'text' , 1
-'mdconfig', 'localPathForJars', '-','-' , 1, '/usr/share/apache-tomcat-7.0.59/webapps/mdrest', 'text' , 1
-'mdconfig', 'pathForProcessDeployJar', '-','-' , 1, 'BDRE/target/lib', 'text' , 1
-'mdconfig', 'pathForAllMDJars', '-','-' , 1, 'BDRE/target/lib', 'text' , 1
-'mdconfig', 'bdreVersion', '-','-' , 1, '1.1-SNAPSHOT', 'text' , 1
+'scripts_config', 'bdreLinuxUserName', '-','-' , 1, 'dropuser', 'text' , 1
+'scripts_config', 'hostName', '-','-' , 1, 'ip-10-0-0-214.ec2.internal', 'text' , 1
+'scripts_config', 'nameNodePort', '-','-' , 1, '8020', 'text' , 1
+'scripts_config', 'jobTrackerPort', '-','-' , 1, '8032', 'text' , 1
+'scripts_config', 'hiveConfDir', '-','-' , 1, 'conf.cloudera.hive', 'text' , 1
+'scripts_config', 'flumeLibDir', '-','-' , 1, '/usr/lib/flume-ng/lib', 'text' , 1
+'scripts_config', 'pathForJars', '-','-' , 1, 'BDRE/target/lib', 'text' , 1
+'scripts_config', 'pathForWorkflowMainJar', '-','-' , 1, 'BDRE/workflow-generator/target', 'text' , 1
+'scripts_config', 'pathForWorkflowJars', '-','-' , 1, 'BDRE/workflow-generator/target/lib', 'text' , 1
+'scripts_config', 'pathForHivePlugin', '-','-' , 1, 'BDRE/hive-plugin/target', 'text' , 1
+'scripts_config', 'pathToHiveDataGen', '-','-' , 1, 'BDRE/target/lib', 'text' , 1
+'scripts_config', 'pathToSparkCoreJar', '-','-' , 1, 'BDRE/spark-core/target', 'text' , 1
+'scripts_config', 'pathForFlumeHDFSSinkJar', '-','-' , 1, 'BDRE/target/lib', 'text' , 1
+'scripts_config', 'remoteUserName', '-','-' , 1, 'ec2-user', 'text' , 1
+'scripts_config', 'remoteHostPublicIp', '-','-' , 1, '54.173.62.30', 'text' , 1
+'scripts_config', 'localPathForHQL', '-','-' , 1, '/usr/share/apache-tomcat-7.0.59/webapps/mdrest', 'text' , 1
+'scripts_config', 'localPathForJars', '-','-' , 1, '/usr/share/apache-tomcat-7.0.59/webapps/mdrest', 'text' , 1
+'scripts_config', 'pathForProcessDeployJar', '-','-' , 1, 'BDRE/target/lib', 'text' , 1
+'scripts_config', 'pathForAllMDJars', '-','-' , 1, 'BDRE/target/lib', 'text' , 1
+'scripts_config', 'bdreVersion', '-','-' , 1, '1.1-SNAPSHOT', 'text' , 1
