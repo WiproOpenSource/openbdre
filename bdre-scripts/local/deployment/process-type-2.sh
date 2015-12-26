@@ -21,63 +21,63 @@ processId=$3
 #Generating workflow
 
 java -cp "$BDRE_HOME/lib/workflow-generator/*" com.wipro.ats.bdre.wgen.WorkflowGenerator --parent-process-id $processId --file-name workflow-$processId.xml
-if [ $? -eq 1 ]
+if [ $? -ne 0 ]
 then exit 1
 fi
 
 #clean edgenode process directory, if exists
  rm -r -f $BDRE_APPS_HOME/$busDomainId/$processTypeId/$processId
-if [ $? -eq 1 ]
+if [ $? -ne 0 ]
 then exit 1
 fi
 
 mkdir -p $BDRE_APPS_HOME/$busDomainId/$processTypeId/$processId
-if [ $? -eq 1 ]
+if [ $? -ne 0 ]
 then exit 1
 fi
 
 mkdir -p $BDRE_APPS_HOME/$busDomainId/$processTypeId/$processId/lib
-if [ $? -eq 1 ]
+if [ $? -ne 0 ]
 then exit 1
 fi
 
 mkdir -p $BDRE_APPS_HOME/$busDomainId/$processTypeId/$processId/hql
-if [ $? -eq 1 ]
+if [ $? -ne 0 ]
 then exit 1
 fi
 
 mkdir -p $BDRE_APPS_HOME/$busDomainId/$processTypeId/$processId/spark
-if [ $? -eq 1 ]
+if [ $? -ne 0 ]
 then exit 1
 fi
 
 #move generated workflow to edge node process dir
 mv  workflow-$processId.xml $BDRE_APPS_HOME/$busDomainId/$processTypeId/$processId
-if [ $? -eq 1 ]
+if [ $? -ne 0 ]
 then exit 1
 fi
 
 mv  workflow-$processId.xml.dot $BDRE_APPS_HOME/$busDomainId/$processTypeId/$processId/
-if [ $? -eq 1 ]
+if [ $? -ne 0 ]
 then exit 1
 fi
 
 
 #copying hive-plugin jar
 cp $BDRE_HOME/lib/hive-plugin/hive-plugin-$bdreVersion.jar $BDRE_APPS_HOME/$busDomainId/$processTypeId/$processId/lib
-if [ $? -eq 1 ]
+if [ $? -ne 0 ]
     then exit 1
 fi
 
 #copying spark-core jar
 cp $BDRE_HOME/lib/spark-core/spark-core-$bdreVersion.jar $BDRE_APPS_HOME/$busDomainId/$processTypeId/$processId/lib
-if [ $? -eq 1 ]
+if [ $? -ne 0 ]
     then exit 1
 fi
 
 # copying metadata jars
 cp $BDRE_HOME/lib/md_api/md_api-$bdreVersion.jar $BDRE_APPS_HOME/$busDomainId/$processTypeId/$processId/lib
-if [ $? -eq 1 ]
+if [ $? -ne 0 ]
     then exit 1
 fi
 
@@ -89,32 +89,32 @@ cp -r $localPathForHQL/$processId/* $BDRE_APPS_HOME/$busDomainId/$processTypeId/
 #copy hive-site.xml
 
 cp $hadoopConfDir/hive-site.xml $BDRE_APPS_HOME/$busDomainId/$processTypeId/$processId
-if [ $? -eq 1 ]
+if [ $? -ne 0 ]
 then exit 1
 fi
 
 #create/clean hdfs process directory
 hdfs dfs -mkdir -p $hdfsPath/wf/$busDomainId/$processTypeId/$processId
-if [ $? -eq 1 ]
+if [ $? -ne 0 ]
 then exit 1
 fi
 
 hdfs dfs -rm -r -f $hdfsPath/wf/$busDomainId/$processTypeId/$processId/*
-if [ $? -eq 1 ]
+if [ $? -ne 0 ]
 then exit 1
 fi
 
 #copying files to hdfs
 
 hdfs dfs -put $BDRE_APPS_HOME/$busDomainId/$processTypeId/$processId/* $hdfsPath/wf/$busDomainId/$processTypeId/$processId
-if [ $? -eq 1 ]
+if [ $? -ne 0 ]
     then exit 1
 fi
 
 #List HDFS process dir structure
 
 hdfs dfs -ls -R $hdfsPath/wf/$busDomainId/$processTypeId/$processId/
-if [ $? -eq 1 ]
+if [ $? -ne 0 ]
 then exit 1
 fi
 

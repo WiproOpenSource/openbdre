@@ -11,6 +11,7 @@ rm -f -r ~/bdre
 mkdir -p ~/bdre/bdre-scripts
 mkdir -p ~/bdre/lib
 mkdir -p ~/bdre_apps
+mkdir ~/bdre-wfd
 
 cp -f -r bdre-scripts/$1/* ~/bdre/bdre-scripts
 
