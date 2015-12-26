@@ -206,6 +206,7 @@ public class HistoryDataImportDAO {
                 Process childDataImportProcess = new Process();
                 childDataImportProcess.setDescription("Child Of  Data Import");
                 childDataImportProcess.setProcessName("child of  data import");
+                childDataImportProcess.setAddTs(new Date());
                 childDataImportProcess.setProcess(dataImportProcess);
                 childDataImportProcess.setBusDomain(busDomain);
                 childDataImportProcess.setProcessType(childDataImportProcessType);
