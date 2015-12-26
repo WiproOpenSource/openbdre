@@ -1,4 +1,4 @@
-java -jar md-rest-api/target/dependency/jetty-runner.jar --port 9999 ^
+java -jar md-rest-api/target/dependency/jetty-runner.jar --port 28850 ^
   --classes md-rest-api/target/classes ^
   --classes md-ui/target/classes ^
   --classes auth-rest-api/target/classes ^
