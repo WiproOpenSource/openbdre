@@ -4,8 +4,8 @@
 BDRE_HOME=~/bdre
 BDRE_APPS_HOME=~/bdre_apps
 hdfsPath=/user/$bdreLinuxUserName
-nameNode=hdfs://$hostName:$nameNodePort
-jobTracker=$hostName:$dataNodePort
+nameNode=hdfs://$nameNodeHostName:$nameNodePort
+jobTracker=$jobTrackerHostName:$jobTrackerPort
 hadoopConfDir=/etc/hive/$hiveConfDir
 cd $BDRE_APPS_HOME
 
@@ -73,12 +73,9 @@ if [ $? -eq 1 ]
 then exit 1
 fi
 #Create job.properties
-echo nameNode=$nameNode > BDRE/$busDomainId/$processTypeId/$processId/job-$processId.properties
-echo jobTracker=$jobTracker >> BDRE/$busDomainId/$processTypeId/$processId/job-$processId.properties
-echo oozie.use.system.libpath=true >> BDRE/$busDomainId/$processTypeId/$processId/job-$processId.properties
-echo oozie.libpath=/user/oozie/bdre/lib/ >> BDRE/$busDomainId/$processTypeId/$processId/job-$processId.properties
-echo queueName=default >> BDRE/$busDomainId/$processTypeId/$processId/job-$processId.properties
-echo examplesRoot=example >> BDRE/$busDomainId/$processTypeId/$processId/job-$processId.properties
-echo oozie.wf.application.path=$nameNode$hdfsPath/wf/$busDomainId/$processTypeId/$processId/workflow-$processId.xml >> BDRE/$busDomainId/$processTypeId/$processId/job-$processId.properties
-echo oozie.wf.validate.ForkJoin=false >> BDRE/$busDomainId/$processTypeId/$processId/job-$processId.properties 
-
+echo nameNode=$nameNode > $BDRE_APPS_HOME/$busDomainId/$processTypeId/$processId/job-$processId.properties
+echo jobTracker=$jobTracker >> $BDRE_APPS_HOME/$busDomainId/$processTypeId/$processId/job-$processId.properties
+echo oozie.use.system.libpath=true >> $BDRE_APPS_HOME/$busDomainId/$processTypeId/$processId/job-$processId.properties
+echo queueName=default >> $BDRE_APPS_HOME/$busDomainId/$processTypeId/$processId/job-$processId.properties
+echo oozie.wf.application.path=$hdfsPath/wf/$busDomainId/$processTypeId/$processId/workflow-$processId.xml >> $BDRE_APPS_HOME/$busDomainId/$processTypeId/$processId/job-$processId.properties
+echo oozie.wf.validate.ForkJoin=false >> $BDRE_APPS_HOME/$busDomainId/$processTypeId/$processId/job-$processId.properties

@@ -3,8 +3,8 @@
 BDRE_HOME=~/bdre
 BDRE_APPS_HOME=~/bdre_apps
 hdfsPath=/user/$bdreLinuxUserName
-nameNode=hdfs://$hostName:$nameNodePort
-jobTracker=$hostName:$dataNodePort
+nameNode=hdfs://$nameNodeHostName:$nameNodePort
+jobTracker=$jobTrackerHostName:$jobTrackerPort
 hadoopConfDir=/etc/hive/$hiveConfDir
 cd $BDRE_APPS_HOME
 
@@ -83,7 +83,7 @@ fi
 
 #copy all developer checked in files
 
-cp -r $localPathForHQL/$processId/* $BDRE_APPS_HOME/$busDomainId/$processTypeId/$processId
+cp -r $uploadBaseDir/$processId/* $BDRE_APPS_HOME/$busDomainId/$processTypeId/$processId
 
 
 #copy hive-site.xml

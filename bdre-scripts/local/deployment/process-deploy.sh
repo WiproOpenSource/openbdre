@@ -1,4 +1,6 @@
 #!/usr/bin/env bash
 
-source ../env.properties
-java -cp "../../lib/*" com.wipro.ats.bdre.pdeploy.ProcessDeployMain --num 5
+BDRE_HOME=~/bdre
+BDRE_APPS_HOME=~/bdre_apps
+
+java -cp "$BDRE_HOME/lib/process-deploy/*" com.wipro.ats.bdre.pdeploy.ProcessDeployMain --num 5

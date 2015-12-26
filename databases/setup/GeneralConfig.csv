@@ -518,7 +518,7 @@
 'mdconfig', 'execute.oozie-script-path', 'Oozie Script Path', 'Oozie workflow script path',  1, '/home/cloudera/Workflow.py', 'text', 1
 'mdconfig', 'execute.standalone-script-path', 'Flume Script Path', 'Flume script path for standalone purpose',  1, '/home/cloudera/flume.sh', 'text', 1
 'mdconfig', 'execute.rest-exec-url', 'Execute URL', 'URL where your execute jetty server is running',  1, 'http://localhost:7777/execute/', 'text', 1
-'mdconfig', 'upload.base-directory', 'Base Directory For Upload', 'Base Directory where you want to upload jars and hqls',  1, 'target', 'text', 1
+'mdconfig', 'upload.base-directory', 'Base Directory For Upload', 'Base Directory where you want to upload jars and hqls',  1, '~/bdre-wfd', 'text', 1
 'mdconfig', 'r.shell-script', 'Location of R shell script', 'Location of R shell script', 1, '/tmp/Rhadoop.sh', 'text', 1
 'imconfig', 'common.default-fs-name', 'Default file system name','Default file system name', 1, 'hdfs://localhost:8020', 'text', 1
 'imconfig', 'etl.hive-connection', 'URL of Hive connection','URL of Hive connection', 1, 'jdbc:hive2://localhost:10000', 'text', 1
@@ -556,13 +556,13 @@
 'crawler','urlsNotToSearch','urls not to search','urls not to search',1,'.*\\\\.(bmp|gif|jpg|png)$','text', 1
 #For deploy and execution scripts
 'scripts_config', 'bdreLinuxUserName', '-','-' , 1, 'cloudera', 'text' , 1
-'scripts_config', 'hostName', '-','-' , 1, 'quickstart.cloudera', 'text' , 1
+'scripts_config', 'nameNodeHostName', '-','-' , 1, 'quickstart.cloudera', 'text' , 1
 'scripts_config', 'nameNodePort', '-','-' , 1, '8020', 'text' , 1
+'scripts_config', 'jobTrackerHostName', '-','-' , 1, 'quickstart.cloudera', 'text' , 1
 'scripts_config', 'jobTrackerPort', '-','-' , 1, '8032', 'text' , 1
 'scripts_config', 'hiveConfDir', '-','-' , 1, 'conf', 'text' , 1
 'scripts_config', 'flumeLibDir', '-','-' , 1, '/usr/lib/flume-ng/lib', 'text' , 1
-'scripts_config', 'pathForJars', '-','-' , 1, 'BDRE/target/lib', 'text' , 1
 'scripts_config', 'remoteUserName', '-','-' , 1, 'ec2-user', 'text' , 1
 'scripts_config', 'remoteHostPublicIp', '-','-' , 1, '127.0.0.1', 'text' , 1
-'scripts_config', 'localPathForHQL', '-','-' , 1, '~/bdre-wfd', 'text' , 1
+'scripts_config', 'uploadBaseDir', '-','-' , 1, '~/bdre-wfd', 'text' , 1
 'scripts_config', 'bdreVersion', '-','-' , 1, '1.1-SNAPSHOT', 'text' , 1
