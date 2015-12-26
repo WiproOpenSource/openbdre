@@ -8,6 +8,7 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ taglib prefix="security"
 	   uri="http://www.springframework.org/security/tags" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html >
@@ -574,6 +575,7 @@ isInit=true;
                                         }
                                     }
                                 }).text("Test Connection Successful !");
+
                             }
                           }
                   });
@@ -591,20 +593,23 @@ isInit=true;
 				<h3 >Database</h3 >
 				<section >
 					<div >
+					<fmt:bundle basename="db">
+
+
 						<label for = "dbURL" >Database URL</label >
-						<input id = "dbURL" onchange = "treeData=null;" name = "common_dbURL" type = "text" class = "form-control" value = "jdbc:mysql://10.0.0.108:3306/platmd" />
+						<input id = "dbURL" onchange = "treeData=null;" name = "common_dbURL" type = "text" class = "form-control" value = "<fmt:message key='hibernate.connection.url' />" />
 						<label for = "dbUser" >Database User</label >
-						<input id = "dbUser" onchange = "treeData=null;" name = "common_dbUser" type = "text" class = "form-control" value = "mduser" />
+						<input id = "dbUser" onchange = "treeData=null;" name = "common_dbUser" type = "text" class = "form-control" value = "<fmt:message key='hibernate.connection.username' />" />
 						<label for = "dbPassword" >Database Password</label >
-						<input id = "dbPassword" onchange = "treeData=null;" name = "common_dbPassword" type = "password" class = "form-control" value = "zaq1xsw2" />
+						<input id = "dbPassword" onchange = "treeData=null;" name = "common_dbPassword" type = "password" class = "form-control" value = "<fmt:message key='hibernate.connection.password' />" />
 						<label for = "dbDriver" >Database Driver</label >
-						<input id = "dbDriver" onchange = "treeData=null;" name = "common_dbDriver" type = "text" class = "form-control" value = "com.mysql.jdbc.Driver" />
+						<input id = "dbDriver" onchange = "treeData=null;" name = "common_dbDriver" type = "text" class = "form-control" value = "<fmt:message key='hibernate.connection.driver_class' />" />
 						<div ><br /></div >
 						<button class = "btn btn-default  btn-success" type = "button" onClick = "verifyConnection()" href = "#" >
 							Test Connection
 						</button >
 					</div >
-
+                    </fmt:bundle>
 				</section >
 				<h3 >Table and Columns</h3 >
 				<section style = "display: block; overflow: scroll;" >
