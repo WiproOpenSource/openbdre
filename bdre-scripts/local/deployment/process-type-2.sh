@@ -84,9 +84,7 @@ fi
 #copy all developer checked in files
 
 cp -r $localPathForHQL/$processId/* $BDRE_APPS_HOME/$busDomainId/$processTypeId/$processId
-if [ $? -eq 1 ]
-    then exit 1
-fi
+
 
 #copy hive-site.xml
 

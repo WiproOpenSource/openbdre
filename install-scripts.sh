@@ -15,4 +15,4 @@ mkdir -p ~/bdre_apps
 cp -f -r bdre-scripts/$1/* ~/bdre/bdre-scripts
 
 cp -r -f target/lib/* ~/bdre/lib
-java -cp "target/lib/*" com.wipro.ats.bdre.md.util.DumpConfigMain -cg scripts_config -f ~/bdre/bdre-scripts/env.properties
+java -cp "target/lib/genconf-dump/*" com.wipro.ats.bdre.md.util.DumpConfigMain -cg scripts_config -f ~/bdre/bdre-scripts/env.properties
