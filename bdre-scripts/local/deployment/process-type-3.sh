@@ -1,5 +1,14 @@
 #!/bin/sh
-source ./deploy-env.properties
+
+. $(dirname $0)/../env.properties
+BDRE_HOME=~/bdre
+BDRE_APPS_HOME=~/bdre_apps
+hdfsPath=/user/$bdreLinuxUserName
+nameNode=hdfs://$hostName:$nameNodePort
+jobTracker=$hostName:$dataNodePort
+hadoopConfDir=/etc/hive/$hiveConfDir
+cd $BDRE_APPS_HOME
+
 if [ -z "$1" ] || [ -z "$2" ] || [ -z "$3" ] ; then
         echo Insufficient parameters !
         exit 1

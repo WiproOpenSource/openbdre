@@ -454,7 +454,7 @@ wizard = $(document).ready(function() {
 		},
 		onFinished: function(event, currentIndex) {
 			if(created == 1) {
-				location.href = '<c:url value="/pages/content.page"/>';
+				location.href = '<c:url value="/pages/process.page"/>';
 			} else {
 				$("#div-dialog-warning").dialog({
 					title: "",

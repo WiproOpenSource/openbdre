@@ -1,6 +1,5 @@
 #!/bin/sh
-pwd
-. ../env.properties
+. $(dirname $0)/../env.properties
 BDRE_HOME=~/bdre
 BDRE_APPS_HOME=~/bdre_apps
 hdfsPath=/user/$bdreLinuxUserName
@@ -21,7 +20,7 @@ processId=$3
 
 #Generating flume conf
 
-java -cp "$BDRE_HOME/lib/*" com.wipro.ats.bdre.fcgen.FlumeConfGeneratorMain --parent-process-id $processId
+java -cp "$BDRE_HOME/lib/flume-conf-generator/*" com.wipro.ats.bdre.fcgen.FlumeConfGeneratorMain --parent-process-id $processId
 if [ $? -eq 1 ]
 then exit 1
 fi
@@ -43,39 +42,3 @@ if [ $? -eq 1 ]
 then exit 1
 fi
 
-#move generated jars in flume-ng lib
-sudo cp $BDRE_HOME/lib/flume-hdfs-sink-$bdreVersion.jar $flumeLibDir
-if [ $? -eq 1 ]
-then exit 1
-fi
-
-sudo cp $BDRE_HOME/lib/flume-ng-auth-1.6.0.jar $flumeLibDir
-if [ $? -eq 1 ]
-then exit 1
-fi
-
-sudo cp $BDRE_HOME/lib/md_api-$bdreVersion.jar $flumeLibDir
-if [ $? -eq 1 ]
-then exit 1
-fi
-
-sudo cp $BDRE_HOME/lib/md-commons-$bdreVersion.jar $flumeLibDir
-if [ $? -eq 1 ]
-then exit 1
-fi
-
-
-sudo cp $BDRE_HOME/lib/mysql-connector-java-5.1.34.jar $flumeLibDir
-if [ $? -eq 1 ]
-then exit 1
-fi
-
-sudo cp $BDRE_HOME/lib/slf4j-api-1.7.10.jar $flumeLibDir
-if [ $? -eq 1 ]
-then exit 1
-fi
-
-sudo cp $BDRE_HOME/lib/slf4j-log4j12-1.7.5.jar $flumeLibDir
-if [ $? -eq 1 ]
-then exit 1
-fi
