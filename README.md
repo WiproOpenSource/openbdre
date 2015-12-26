@@ -156,7 +156,7 @@ hibernate.default_schema=platmd
       mysqladmin -u root password 'root'
       mysql -u root -p root platmd < databases/mysql/ddls/create-tables.sql
   ```
-#### Building
+### Building
      
 * Now build BDRE using 
 
@@ -170,7 +170,7 @@ hibernate.default_schema=platmd
 * Use Google Chrome browser and open http://localhost:9999/mdui/pages/content.page
 * Login using admin/zaq1xsw2
 
-#### Creating a test job
+### Creating a Test Job
 
 * Create a RDBMS data import job from *Job Setup From Template > New RDBMS Import Job*
 * Change the JDBC URL/credentials to your localhost MySQL platmd DB that contains BDRE metadata.
@@ -184,12 +184,12 @@ hibernate.default_schema=platmd
 * Process Deploy main class calls deploy script based on type of container process. For Example for process type 1 it will call process-type-1.sh script.
 * You have to setup a crontab in your environment. Crontab will run process-deploy.sh script present in home folder.
     * for example `*/5 * * * * /home/cloudera/process-deploy.sh`.
-*After the deployment is complete and in UI the status for the process is deployed (turns green), you have to execute it.
-*Update Workflow.py and flume.sh according to your environment present in home folder.
-    *Update hostname variable in Workflow.py.
-    *Update `pathForFlumeng`, `pathForFlumeconf`, `pathForFlumeconfFile` variables in flume.sh.
-*To store logs for execution, you have to create log directory as mentioned in administration -> settings -> mdconfig -> execute.log-path. create directory and give permission for every user to write into it. `chmod -R 777 <folderName>`
-*Also update path in administration -> settings -> mdconfig -> execute.oozie-script-path tags for Workflow.py. And under administration -> settings -> mdconfig -> execute.standalone-script-path for flume.sh.
+* After the deployment is complete and in UI the status for the process is deployed (turns green), you have to execute it.
+* Update Workflow.py and flume.sh according to your environment present in home folder.
+    * Update hostname variable in Workflow.py.
+    * Update `pathForFlumeng`, `pathForFlumeconf`, `pathForFlumeconfFile` variables in flume.sh.
+* To store logs for execution, you have to create log directory as mentioned in administration -> settings -> mdconfig -> execute.log-path. create directory and give permission for every user to write into it. `chmod -R 777 <folderName>`
+* Also update path in administration -> settings -> mdconfig -> execute.oozie-script-path tags for Workflow.py. And under administration -> settings -> mdconfig -> execute.standalone-script-path for flume.sh.
 
 ### Additional Setup
 
@@ -199,7 +199,7 @@ hibernate.default_schema=platmd
     - From inside the flume-sources/target folder copy the `flume-sources-1.0-SNAPSHOT` jar to bdre-app/target/lib.
     - From inside the hive-serdes/target folder copy the `hive-serdes-1.0-SNAPSHOT` jar to bdre-app/target/lib.
 
-### Open the projects in IntelliJ Idea
+### Open Project in IntelliJ Idea
 
 * We strongly recommend using IntelliJ Idea to develop BDRE. However BDRE should work fine with other Java IDEs
 * Start Idea and go to **File > Open ...** and then browse to the repo folder and open it.
