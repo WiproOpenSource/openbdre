@@ -50,6 +50,7 @@
         <!--<module>im-crawler</module>-->
         <module>flume-hdfs-sink</module>
         <module>spark-core</module>
+        <module>genconf-dump</module>
     </modules>
 
     <dependencies>

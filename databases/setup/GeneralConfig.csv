@@ -554,3 +554,24 @@
 'crawler','url','url','urls to crawl',1,'https://www.dmoz.org,https://www.zomato.com/mumbai','text', 1
 'crawler','urlsToSearch','urls to search','urls to search',1,'.*','text', 1
 'crawler','urlsNotToSearch','urls not to search','urls not to search',1,'.*\\\\.(bmp|gif|jpg|png)$','text', 1
+#For deploy and execution scripts
+'imconfig', 'bdreLinuxUserName', '-','-' , 1, 'dropuser', 'text' , 1
+'imconfig', 'hostName', '-','-' , 1, 'ip-10-0-0-214.ec2.internal', 'text' , 1
+'imconfig', 'nameNodePort', '-','-' , 1, '8020', 'text' , 1
+'imconfig', 'jobTrackerPort', '-','-' , 1, '8032', 'text' , 1
+'imconfig', 'hiveConfDir', '-','-' , 1, 'conf.cloudera.hive', 'text' , 1
+'imconfig', 'flumeLibDir', '-','-' , 1, '/usr/lib/flume-ng/lib', 'text' , 1
+'imconfig', 'pathForJars', '-','-' , 1, 'BDRE/target/lib', 'text' , 1
+'imconfig', 'pathForWorkflowMainJar', '-','-' , 1, 'BDRE/workflow-generator/target', 'text' , 1
+'imconfig', 'pathForWorkflowJars', '-','-' , 1, 'BDRE/workflow-generator/target/lib', 'text' , 1
+'imconfig', 'pathForHivePlugin', '-','-' , 1, 'BDRE/hive-plugin/target', 'text' , 1
+'imconfig', 'pathToHiveDataGen', '-','-' , 1, 'BDRE/target/lib', 'text' , 1
+'imconfig', 'pathToSparkCoreJar', '-','-' , 1, 'BDRE/spark-core/target', 'text' , 1
+'imconfig', 'pathForFlumeHDFSSinkJar', '-','-' , 1, 'BDRE/target/lib', 'text' , 1
+'imconfig', 'remoteUserName', '-','-' , 1, 'ec2-user', 'text' , 1
+'imconfig', 'remoteHostPublicIp', '-','-' , 1, '54.173.62.30', 'text' , 1
+'imconfig', 'localPathForHQL', '-','-' , 1, '/usr/share/apache-tomcat-7.0.59/webapps/mdrest', 'text' , 1
+'imconfig', 'localPathForJars', '-','-' , 1, '/usr/share/apache-tomcat-7.0.59/webapps/mdrest', 'text' , 1
+'imconfig', 'pathForProcessDeployJar', '-','-' , 1, 'BDRE/target/lib', 'text' , 1
+'imconfig', 'pathForAllMDJars', '-','-' , 1, 'BDRE/target/lib', 'text' , 1
+'imconfig', 'bdreVersion', '-','-' , 1, '1.1-SNAPSHOT', 'text' , 1
