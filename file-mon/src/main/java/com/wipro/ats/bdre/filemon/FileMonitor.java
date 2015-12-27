@@ -14,7 +14,7 @@
 
 package com.wipro.ats.bdre.filemon;
 
-import com.wipro.ats.bdre.im.etl.api.exception.ETLException;
+import com.wipro.ats.bdre.exception.BDREException;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.commons.collections4.map.LinkedMap;
 import org.apache.commons.vfs2.FileChangeEvent;
@@ -105,7 +105,7 @@ public class FileMonitor implements FileListener {
            addToQueue(fileName,fileCopyInfo);
         } catch (Exception err) {
             LOGGER.error("Error adding file to queue ", err);
-            throw new ETLException(err);
+            throw new BDREException(err);
         }
         // *End*   Eligible files moved to data structure for ingestion to HDFS
     }

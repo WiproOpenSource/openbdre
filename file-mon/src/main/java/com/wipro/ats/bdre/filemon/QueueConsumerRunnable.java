@@ -14,7 +14,7 @@
 
 package com.wipro.ats.bdre.filemon;
 
-import com.wipro.ats.bdre.im.etl.api.exception.ETLException;
+import com.wipro.ats.bdre.exception.BDREException;
 import org.apache.log4j.Logger;
 
 
@@ -33,7 +33,7 @@ public class QueueConsumerRunnable implements Runnable {
             }
         } catch (Exception err) {
             LOGGER.error("Error in Queue consumer ", err);
-            throw new ETLException(err);
+            throw new BDREException(err);
         }
     }
 
