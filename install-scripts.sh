@@ -22,4 +22,4 @@ java -cp "target/lib/genconf-dump/*" com.wipro.ats.bdre.md.util.DumpConfigMain -
 
 
 #Install crontab for deployment daemon * * * * * - every min
-(crontab -l ; echo "* * * * * $BDRE_HOME/bdre-scripts/deployment/process-deploy.sh -num 10") 2>&1 | grep -v "no crontab" | sort | uniq | crontab -
+(crontab -l ; echo "* * * * * sh $BDRE_HOME/bdre-scripts/deployment/process-deploy.sh") 2>&1 | grep -v "no crontab" | sort | uniq | crontab -
