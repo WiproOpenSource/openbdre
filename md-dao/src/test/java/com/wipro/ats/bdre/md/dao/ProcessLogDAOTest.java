@@ -65,7 +65,7 @@ public class ProcessLogDAOTest {
         LOGGER.info("ProcessLog(0) message:" + processLogDAO.get(Long.valueOf(2)).getMessage());
     }
 
-    @Test
+    @Test @Ignore
     public void testInsertUpdateAndDelete() throws Exception {
         Process process = processDAO.get(10805);
         ProcessLog processLog = new ProcessLog();
@@ -101,6 +101,7 @@ public class ProcessLogDAOTest {
     }
 
     @Test
+    @Ignore
     public void testGetLastValue() throws Exception {
         ProcessLogInfo processLogInfo = new ProcessLogInfo();
         processLogInfo.setProcessId(10805);
@@ -114,7 +115,7 @@ public class ProcessLogDAOTest {
         ;
     }
 
-    @Test
+    @Test @Ignore
     public void testlistLog() {
         ProcessLogInfo processLogInfo = new ProcessLogInfo();
         processLogInfo.setProcessId(10805);
@@ -130,6 +131,7 @@ public class ProcessLogDAOTest {
     }
 
     @Test
+    @Ignore
     public void testGetProcessLog() {
         ProcessLogInfo processLogInfo = new ProcessLogInfo();
         processLogInfo.setProcessId(10805);

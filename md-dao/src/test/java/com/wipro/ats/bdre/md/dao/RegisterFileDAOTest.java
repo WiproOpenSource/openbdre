@@ -19,6 +19,7 @@ import com.wipro.ats.bdre.md.dao.jpa.*;
 import com.wipro.ats.bdre.md.dao.jpa.Process;
 import org.apache.log4j.Logger;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.AutowireCapableBeanFactory;
@@ -57,6 +58,7 @@ public class RegisterFileDAOTest {
     ProcessDAO processDAO;
 
     @Test
+    @Ignore
     public void registerFileTest() {
 
         com.wipro.ats.bdre.md.dao.jpa.Process parentProcess = new Process();
