@@ -6,8 +6,8 @@ if [ $# -ne 1 ]
     exit 1
 fi
 
-BDRE_HOME=$BDRE_HOME
-BDRE_APPS_HOME=$BDRE_HOME_apps
+BDRE_HOME=~/bdre
+BDRE_APPS_HOME=~/bdre_apps
 
 rm -f -r $BDRE_HOME
 mkdir -p $BDRE_HOME/bdre-scripts
@@ -22,4 +22,4 @@ java -cp "target/lib/genconf-dump/*" com.wipro.ats.bdre.md.util.DumpConfigMain -
 
 
 #Install crontab for deployment daemon * * * * * - every min
-(crontab -l ; echo "* * * * * $BDRE_HOME/bdre-scripts/deployment/process-deploy.sh") 2>&1 | grep -v "no crontab" | sort | uniq | crontab -
+(crontab -l ; echo "* * * * * $BDRE_HOME/bdre-scripts/deployment/process-deploy.sh -num 10") 2>&1 | grep -v "no crontab" | sort | uniq | crontab -
