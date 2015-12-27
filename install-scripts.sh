@@ -20,6 +20,9 @@ cp -f -r bdre-scripts/$1/* $BDRE_HOME/bdre-scripts
 cp -r -f target/lib/* $BDRE_HOME/lib
 java -cp "target/lib/genconf-dump/*" com.wipro.ats.bdre.md.util.DumpConfigMain -cg scripts_config -f $BDRE_HOME/bdre-scripts/env.properties
 
+#Adding sudo because its a non user dir
+sudo cp target/lib/flume-hdfs-sink/* $flumeLibDir
 
 #Install crontab for deployment daemon * * * * * - every min
-(crontab -l ; echo "* * * * * sh $BDRE_HOME/bdre-scripts/deployment/process-deploy.sh") 2>&1 | grep -v "no crontab" | sort | uniq | crontab -
+chmod +x $BDRE_HOME/bdre-scripts/deployment/process-deploy.sh
+(crontab -l ; echo "* * * * * $BDRE_HOME/bdre-scripts/deployment/process-deploy.sh") 2>&1 | grep -v "no crontab" | sort | uniq | crontab -
