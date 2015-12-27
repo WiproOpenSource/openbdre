@@ -44,13 +44,13 @@ public class JobDAOTest {
     @Ignore
     @Test
     public void testJobInitHalt() throws Exception {
-        List<InitJobRowInfo> initJobRowInfos = jobDAO.initJob(10802, 1);
+        List<InitJobRowInfo> initJobRowInfos = jobDAO.initJob(1, 1);
         LOGGER.info("count is:" + initJobRowInfos.size());
 
-        Long sub_instance_exec_id = stepDAO.initStep(10805);
-        stepDAO.haltStep(10805);
+        Long sub_instance_exec_id = stepDAO.initStep(2);
+        stepDAO.haltStep(2);
 
-        jobDAO.haltJob(10802, "@a");
+        jobDAO.haltJob(2, "@a");
         LOGGER.info("The sub process halt step test executed");
 
         LOGGER.info("The sub process init step test executed with instance-exec-id :" + sub_instance_exec_id);
@@ -60,12 +60,12 @@ public class JobDAOTest {
     @Ignore
     @Test
     public void testHaltJob() throws Exception {
-        jobDAO.haltJob(10802, "@a");
+        jobDAO.haltJob(1, "@a");
     }
 
     @Ignore
     @Test
     public void testTermJob() throws Exception {
-        jobDAO.termJob(10802);
+        jobDAO.termJob(1);
     }
 }
