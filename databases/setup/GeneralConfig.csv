@@ -566,3 +566,5 @@
 'scripts_config', 'remoteHostPublicIp', '-','-' , 1, '127.0.0.1', 'text' , 1
 'scripts_config', 'uploadBaseDir', '-','-' , 1, '~/bdre-wfd', 'text' , 1
 'scripts_config', 'bdreVersion', '-','-' , 1, '1.1-SNAPSHOT', 'text' , 1
+'scripts_config', 'oozieHost', '-','-' , 1, ' localhost', 'text' , 1
+'scripts_config', 'ooziePort', '-','-' , 1, ' 11000', 'text' , 1
