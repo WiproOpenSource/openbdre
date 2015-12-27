@@ -73,7 +73,7 @@
                         </transformers>
                         <shadedArtifactAttached>true</shadedArtifactAttached>
                         <shadedClassifierName>executable</shadedClassifierName>
-                        <outputDirectory>${project.parent.build.directory}/../../target/lib/${project.artifactId}</outputDirectory>
+                        <outputDirectory>${project.parent.basedir}/../target/lib/${project.artifactId}</outputDirectory>
                         <finalName>data-import-${project.version}-jar-with-dependencies</finalName>
                         </configuration>
                     </execution>
@@ -88,7 +88,7 @@
                             <goal>copy-dependencies</goal>
                         </goals>
                         <configuration>
-                            <outputDirectory>${project.parent.build.directory}/../../target/lib/${project.artifactId}</outputDirectory>
+                            <outputDirectory>${project.parent.basedir}/../target/lib/${project.artifactId}</outputDirectory>
                         </configuration>
                     </execution>
                     <execution>
@@ -106,7 +106,7 @@
                                     <type>${project.packaging}</type>
                                 </artifactItem>
                             </artifactItems>
-                            <outputDirectory>${project.parent.build.directory}/../../target/lib/${project.artifactId}</outputDirectory>
+                            <outputDirectory>${project.parent.basedir}/../target/lib/${project.artifactId}</outputDirectory>
                         </configuration>
                     </execution>
                 </executions>
