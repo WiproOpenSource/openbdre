@@ -120,12 +120,14 @@ public class ProcessTemplateDAOTest {
     }
 
     @Test
+    @Ignore
     public void testSelectMissingSubPList() throws Exception {
         List<com.wipro.ats.bdre.md.beans.table.ProcessTemplate> returnedList = processTemplateDAO.selectMissingSubPList(10802, null);
         LOGGER.info("size of returned list is " + returnedList.size());
     }
 
     @Test
+    @Ignore
     public void testSelectMissingSubTList() throws Exception {
         List<com.wipro.ats.bdre.md.beans.table.ProcessTemplate> returnedList = processTemplateDAO.selectMissingSubTList(10802, null);
         LOGGER.info("size of returned list is " + returnedList.size());

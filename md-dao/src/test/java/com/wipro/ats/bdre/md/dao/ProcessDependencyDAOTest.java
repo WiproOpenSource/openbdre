@@ -17,6 +17,7 @@ package com.wipro.ats.bdre.md.dao;
 import com.wipro.ats.bdre.md.beans.ProcessDependencyInfo;
 import org.apache.log4j.Logger;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.AutowireCapableBeanFactory;
@@ -40,6 +41,7 @@ public class ProcessDependencyDAOTest {
     ProcessDependencyDAO processDependencyDAO;
 
     @Test
+    @Ignore
     public void testListUD() throws Exception {
         List<ProcessDependencyInfo> upstreamDownstreamProcessList = new ArrayList<ProcessDependencyInfo>();
         upstreamDownstreamProcessList = processDependencyDAO.listUD(10802);

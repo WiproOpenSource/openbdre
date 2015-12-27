@@ -16,6 +16,7 @@ package com.wipro.ats.bdre.md.api;
 
 import com.wipro.ats.bdre.md.beans.PositionsInfo;
 import org.apache.log4j.Logger;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import java.util.Map;
@@ -23,7 +24,7 @@ import java.util.Map;
 public class ArrangePositionsTest {
     private static final Logger LOGGER = Logger.getLogger(ArrangePositions.class);
 
-   // @Ignore
+    @Ignore
     @Test
     public void testGetListPositionInfo() throws Exception {
         ArrangePositions arrangePositions = new ArrangePositions();

@@ -79,6 +79,7 @@ public class ProcessDeploymentQueueDAOTest {
     }
 
     @Test
+    @Ignore
     public void testInsertUpdateAndDelete() throws Exception {
         Process process = processDAO.get(10802);
         BusDomain busDomain = busDomainDAO.get(1);

@@ -17,6 +17,7 @@ package com.wipro.ats.bdre.md.dao;
 import com.wipro.ats.bdre.md.beans.ProcessAncestorsInfo;
 import com.wipro.ats.bdre.md.beans.table.Process;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.AutowireCapableBeanFactory;
@@ -39,6 +40,7 @@ public class ProcessAncestorsDAOTest {
     ProcessAncestorsDAO processAncestorsDAO;
 
     @Test
+    @Ignore
     public void testListUpstreams() throws Exception {
         List<Process> upstreamProcessList = processAncestorsDAO.listUpstreams(10802);
         LOGGER.info("Total number of upstream processes:" + upstreamProcessList.size());
@@ -49,6 +51,7 @@ public class ProcessAncestorsDAOTest {
     }
 
     @Test
+    @Ignore
     public void testFetchDetails() throws Exception {
         ProcessAncestorsInfo processAncestorsInfo = processAncestorsDAO.fetchDetails(10802);
         LOGGER.info("process deploy details:" + processAncestorsInfo);
