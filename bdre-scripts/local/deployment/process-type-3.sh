@@ -58,11 +58,13 @@ hdfs dfs -mkdir -p $hdfsPath/wf/${busDomainId}/${processTypeId}/${processId}/lib
 if [ $? -eq 1 ]
 then exit 1
 fi
+
 #copy generated workflow to hdfs process dir
 hdfs dfs -put BDRE/${busDomainId}/${processTypeId}/${processId}/workflow-${processId}.xml $hdfsPath/wf/${busDomainId}/${processTypeId}/${processId}
 if [ $? -eq 1 ]
 then exit 1
 fi
+
 #copy generated jar for data-export
 hdfs dfs -put BDRE/data-export/target/data-export-$bdreVersion-jar-with-dependencies.jar $hdfsPath/wf/${busDomainId}/${processTypeId}/${processId}/lib/
 if [ $? -eq 1 ]
