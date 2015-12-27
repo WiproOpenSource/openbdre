@@ -54,7 +54,7 @@ fi
 
 
 #copy generated jar for data-import
-hdfs dfs -put $BDRE_HOME/lib/data-import/data-import-$bdreVersion-jar-with-dependencies.jar $BDRE_APPS_HOME/$busDomainId/$processTypeId/$processId/
+cp -f $BDRE_HOME/lib/data-import/data-import-$bdreVersion-jar-with-dependencies.jar $BDRE_APPS_HOME/$busDomainId/$processTypeId/$processId/lib
 if [ $? -eq 1 ]
 then exit 1
 fi

@@ -19,6 +19,7 @@ cp -f -r bdre-scripts/$1/* $BDRE_HOME/bdre-scripts
 
 cp -r -f target/lib/* $BDRE_HOME/lib
 java -cp "target/lib/genconf-dump/*" com.wipro.ats.bdre.md.util.DumpConfigMain -cg scripts_config -f $BDRE_HOME/bdre-scripts/env.properties
+. $BDRE_HOME/bdre-scripts/env.properties
 
 #Adding sudo because its a non user dir
 sudo cp target/lib/flume-hdfs-sink/* $flumeLibDir
