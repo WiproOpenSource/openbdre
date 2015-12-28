@@ -80,7 +80,7 @@ public class DocIDServer extends Configurable {
                 for (Docidsdb info:docidsdbList) {
 //                    Docidsdb info = docidsDBDao.get(i);
                     if (info.getUrl().equals(url)) {
-                        return info.getDocId();
+                        return info.getDocid().intValue();
                     }
                 }
 //                }
@@ -179,7 +179,7 @@ public class DocIDServer extends Configurable {
         Integer intTotalSize = new Integer(totalSize.intValue());
         int tobereturnedDocId;
         if (totalSize > 0) {
-            tobereturnedDocId = docidsDBDao.getLastElement().getDocId();
+            tobereturnedDocId = docidsDBDao.getLastElement().getDocid().intValue();
         } else {
             tobereturnedDocId = -1;
         }

@@ -576,11 +576,11 @@ CREATE TABLE `process_deployment_queue` (
 
 
 
-CREATE TABLE Docidsdb (docId int not null auto_increment, url varchar(3000), primary key (docId));
+CREATE TABLE Docidsdb (docid int not null auto_increment, url varchar(3000), primary key (docid));
 
 CREATE TABLE Statisticsdb (uniqid bigint not null auto_increment, value bigint, name varchar(255), primary key (uniqid));
 
-CREATE TABLE Pendingurlsdb (uniqid bigint not null auto_increment, pid bigint, instanceExecid bigint, url varchar(3000), docid int not null, parentDocid int not null, parentUrl varchar(1000), depth smallint not null, domain varchar(255), subDomain varchar(255), path varchar(1000), anchor varchar(255),priority tinyint not null, tag varchar(255), primary key (uniqid));
+CREATE TABLE Pendingurlsdb (uniqid bigint not null auto_increment, pid bigint, instanceexecid bigint, url varchar(3000), docid int not null, parentdocid int not null, parenturl varchar(1000), depth smallint not null, domain varchar(255), subdomain varchar(255), path varchar(1000), anchor varchar(255),priority tinyint not null, tag varchar(255), primary key (uniqid));
 
-CREATE TABLE Weburlsdb (uniqid bigint not null auto_increment, pid bigint, instanceExecid bigint, url varchar(3000), docid int not null, parentDocid int not null, parentUrl varchar(1000), depth smallint not null, domain varchar(255), subDomain varchar(255), path varchar(1000), anchor varchar(255),priority tinyint not null, tag varchar(255), primary key (uniqid));
+CREATE TABLE Weburlsdb (uniqid bigint not null auto_increment, pid bigint, instanceexecid bigint, url varchar(3000), docid int not null, parentdocid int not null, parenturl varchar(1000), depth smallint not null, domain varchar(255), subdomain varchar(255), path varchar(1000), anchor varchar(255),priority tinyint not null, tag varchar(255), primary key (uniqid));
 

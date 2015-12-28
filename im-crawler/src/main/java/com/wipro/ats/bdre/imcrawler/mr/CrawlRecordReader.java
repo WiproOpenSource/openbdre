@@ -6,6 +6,8 @@ package com.wipro.ats.bdre.imcrawler.mr;/*
  * licenses restricting copying, distribution and decompilation.
  */
 
+import com.wipro.ats.bdre.imcrawler.crawler.PropertyConfig;
+import org.apache.hadoop.io.*;
 import org.apache.hadoop.mapreduce.InputSplit;
 import org.apache.hadoop.mapreduce.RecordReader;
 import org.apache.hadoop.mapreduce.TaskAttemptContext;

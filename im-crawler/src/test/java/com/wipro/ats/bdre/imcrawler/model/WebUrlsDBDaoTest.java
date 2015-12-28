@@ -46,16 +46,16 @@ public class WebUrlsDBDaoTest {
     public void testInsert() throws Exception {
         weburlsdb = new Weburlsdb();
         weburlsdb.setAnchor("anchor");
-        weburlsdb.setDepth((short) 1);
+        weburlsdb.setDepth(1);
         weburlsdb.setDocid(2);
         weburlsdb.setDomain("domain");
-        weburlsdb.setInstanceExecid(new Long (3));
-        weburlsdb.setParentDocid(3);
-        weburlsdb.setParentUrl("parenturl");
+        weburlsdb.setInstanceexecid(new Long (3));
+        weburlsdb.setParentdocid(3);
+        weburlsdb.setParenturl("parenturl");
         weburlsdb.setPath("ssh");
         weburlsdb.setPid(new Long(6));
-        weburlsdb.setPriority((byte) 1);
-        weburlsdb.setSubDomain("subdomain");
+        weburlsdb.setPriority(1);
+        weburlsdb.setSubdomain("subdomain");
         weburlsdb.setTag("tag");
         weburlsdb.setUniqid(new Long(4));
         weburlsdb.setUrl("url1");

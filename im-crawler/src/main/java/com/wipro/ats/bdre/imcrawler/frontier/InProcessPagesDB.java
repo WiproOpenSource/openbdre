@@ -73,7 +73,7 @@ public class InProcessPagesDB extends WorkQueues {
 //            for (int i = 1; i <= totalSize; i++) {
 //                Weburlsdb info = (Weburlsdb) webUrlsDBDao.get(i);
             for (Weburlsdb info:weburlsdbList) {
-                Byte infobyte = new Byte(info.getPriority());
+                Byte infobyte = new Byte(info.getPriority().byteValue());
                 Byte weburlbyte = new Byte(webUrl.getPriority());
                 if ((webUrl.getDocid() == info.getDocid()) && (pid == info.getPid())) {
                     if ((webUrl.getDepth() == info.getDepth()) && (infobyte.compareTo(weburlbyte)) == 0) {
