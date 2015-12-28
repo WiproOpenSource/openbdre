@@ -1,140 +1,137 @@
-CREATE TABLE `bus_domain` (
-  `bus_domain_id` int(11) NOT NULL AUTO_INCREMENT,
-  `description` varchar(256) NOT NULL,
-  `bus_domain_name` varchar(45) NOT NULL,
-  `bus_domain_owner` varchar(45) NOT NULL,
-  PRIMARY KEY (`bus_domain_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=13 DEFAULT CHARSET=utf8;
+CREATE TABLE BUS_DOMAIN (
+  BUS_DOMAIN_ID INT(11) NOT NULL AUTO_INCREMENT,
+  DESCRIPTION VARCHAR(256) NOT NULL,
+  BUS_DOMAIN_NAME VARCHAR(45) NOT NULL,
+  BUS_DOMAIN_OWNER VARCHAR(45) NOT NULL,
+  PRIMARY KEY (BUS_DOMAIN_ID)
+) ENGINE=INNODB AUTO_INCREMENT=13 DEFAULT CHARSET=UTF8;
 
-CREATE TABLE `batch_status` (
-  `batch_state_id` int(11) NOT NULL,
-  `description` varchar(45) NOT NULL,
-  PRIMARY KEY (`batch_state_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
-
-CREATE TABLE `process_type` (
-  `process_type_id` int(11) NOT NULL,
-  `process_type_name` varchar(45) NOT NULL,
-  `parent_process_type_id` int(11),
-  PRIMARY KEY (`process_type_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+CREATE TABLE BATCH_STATUS (
+  BATCH_STATE_ID INT(11) NOT NULL,
+  DESCRIPTION VARCHAR(45) NOT NULL,
+  PRIMARY KEY (BATCH_STATE_ID)
+) ENGINE=INNODB DEFAULT CHARSET=UTF8;
 
 
-CREATE TABLE `exec_status` (
-  `exec_state_id` int(11) NOT NULL,
-  `description` varchar(45) NOT NULL,
-  PRIMARY KEY (`exec_state_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+CREATE TABLE PROCESS_TYPE (
+  PROCESS_TYPE_ID INT(11) NOT NULL,
+  PROCESS_TYPE_NAME VARCHAR(45) NOT NULL,
+  PARENT_PROCESS_TYPE_ID INT(11),
+  PRIMARY KEY (PROCESS_TYPE_ID)
+) ENGINE=INNODB DEFAULT CHARSET=UTF8;
 
 
-CREATE TABLE `workflow_type` (
-  `workflow_id` int(11) NOT NULL,
-    `workflow_type_name` varchar(45) NOT NULL,
-    PRIMARY KEY (`workflow_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+CREATE TABLE EXEC_STATUS (
+  EXEC_STATE_ID INT(11) NOT NULL,
+  DESCRIPTION VARCHAR(45) NOT NULL,
+  PRIMARY KEY (EXEC_STATE_ID)
+) ENGINE=INNODB DEFAULT CHARSET=UTF8;
 
 
-CREATE  TABLE users (
-  username VARCHAR(45) NOT NULL ,
-  password VARCHAR(45) NOT NULL ,
-  enabled TINYINT(1) DEFAULT '1' ,
- PRIMARY KEY (username));
+CREATE TABLE WORKFLOW_TYPE (
+  WORKFLOW_ID INT(11) NOT NULL,
+    WORKFLOW_TYPE_NAME VARCHAR(45) NOT NULL,
+    PRIMARY KEY (WORKFLOW_ID)
+) ENGINE=INNODB DEFAULT CHARSET=UTF8;
 
 
-CREATE TABLE user_roles (
-  user_role_id INT(11) NOT NULL AUTO_INCREMENT,
-  username VARCHAR(45) NOT NULL,
+CREATE  TABLE USERS (
+  USERNAME VARCHAR(45) NOT NULL ,
+  PASSWORD VARCHAR(45) NOT NULL ,
+  ENABLED TINYINT(1) DEFAULT 1 ,
+ PRIMARY KEY (USERNAME)
+ )ENGINE=INNODB DEFAULT CHARSET=UTF8;
+
+
+CREATE TABLE USER_ROLES (
+  USER_ROLE_ID INT(11) NOT NULL AUTO_INCREMENT,
+  USERNAME VARCHAR(45) NOT NULL,
   ROLE VARCHAR(45) NOT NULL,
-  PRIMARY KEY (user_role_id),
-  UNIQUE KEY uni_username_role (ROLE,username),
-  KEY fk_username_idx (username),
-  CONSTRAINT fk_username FOREIGN KEY (username) REFERENCES users (username));
+  PRIMARY KEY (USER_ROLE_ID),
+  CONSTRAINT FK_USERNAME1 FOREIGN KEY (USERNAME) REFERENCES USERS (USERNAME)
+  )
+  ENGINE=INNODB DEFAULT CHARSET=UTF8;
 
 
 
-CREATE TABLE `hive_tables` (
-  `table_id` int(11) NOT NULL auto_increment,
-  `comments` varchar(256) NOT NULL,
-  `location_type` varchar(45) NOT NULL,
-  `dbname` varchar(45) DEFAULT NULL,
-  `batch_id_partition_col` varchar(45) DEFAULT NULL,
-  `table_name` varchar(45) NOT NULL,
-  `type` varchar(45) NOT NULL,
-  `ddl` varchar(2048) NOT NULL,
-  PRIMARY KEY (`table_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+CREATE TABLE HIVE_TABLES (
+  TABLE_ID INT(11) NOT NULL AUTO_INCREMENT,
+  COMMENTS VARCHAR(256) NOT NULL,
+  LOCATION_TYPE VARCHAR(45) NOT NULL,
+  DBNAME VARCHAR(45) DEFAULT NULL,
+  BATCH_ID_PARTITION_COL VARCHAR(45) DEFAULT NULL,
+  TABLE_NAME VARCHAR(45) NOT NULL,
+  TYPE VARCHAR(45) NOT NULL,
+  DDL VARCHAR(2048) NOT NULL,
+  PRIMARY KEY (TABLE_ID)
+) ENGINE=INNODB DEFAULT CHARSET=UTF8;
 
 
-CREATE TABLE `servers` (
-  `server_id` int(11) NOT NULL AUTO_INCREMENT,
-  `server_type` varchar(45) NOT NULL,
-  `server_name` varchar(45) NOT NULL,
-  `server_metainfo` varchar(45) DEFAULT NULL,
-  `login_user` varchar(45) DEFAULT NULL,
-  `login_password` varchar(45) DEFAULT NULL,
-  `ssh_private_key` varchar(512) DEFAULT NULL,
-  `server_ip` varchar(45) DEFAULT NULL,
-  PRIMARY KEY (`server_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=123459 DEFAULT CHARSET=utf8;
+CREATE TABLE SERVERS (
+  SERVER_ID INT(11) NOT NULL AUTO_INCREMENT,
+  SERVER_TYPE VARCHAR(45) NOT NULL,
+  SERVER_NAME VARCHAR(45) NOT NULL,
+  SERVER_METAINFO VARCHAR(45) DEFAULT NULL,
+  LOGIN_USER VARCHAR(45) DEFAULT NULL,
+  LOGIN_PASSWORD VARCHAR(45) DEFAULT NULL,
+  SSH_PRIVATE_KEY VARCHAR(512) DEFAULT NULL,
+  SERVER_IP VARCHAR(45) DEFAULT NULL,
+  PRIMARY KEY (SERVER_ID)
+) ENGINE=INNODB AUTO_INCREMENT=123459 DEFAULT CHARSET=UTF8;
 
-CREATE TABLE `process_template` (
-  `process_template_id` int(11) NOT NULL AUTO_INCREMENT,
-  `description` varchar(256) NOT NULL,
-  `add_ts` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  `process_name` varchar(45) NOT NULL,
-  `bus_domain_id` int(11) NOT NULL,
-  `process_type_id` int(11) NOT NULL,
-  `parent_process_id` int(11) DEFAULT NULL,
-  `can_recover` tinyint(1) DEFAULT '1',
-  `batch_cut_pattern` varchar(45) DEFAULT NULL,
-  `next_process_template_id` VARCHAR(256) DEFAULT '' NOT NULL,
-  `delete_flag` tinyint(1) DEFAULT '0',
-  `workflow_id` int(11) DEFAULT '1',
-  PRIMARY KEY (`process_template_id`),
-  KEY `bus_domain_id_template` (`bus_domain_id`),
-  KEY `process_type_id1_template` (`process_type_id`),
-  KEY `original_process_id1_template` (`parent_process_id`),
-  CONSTRAINT `bus_domain_id_template` FOREIGN KEY (`bus_domain_id`) REFERENCES `bus_domain` (`bus_domain_id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
-  CONSTRAINT `original_process_id1_template` FOREIGN KEY (`parent_process_id`) REFERENCES `process_template` (`process_template_id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
-  CONSTRAINT `workflow_id_template` FOREIGN KEY (`workflow_id`) REFERENCES `workflow_type` (`workflow_id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
-  CONSTRAINT `process_type_id1_template` FOREIGN KEY (`process_type_id`) REFERENCES `process_type` (`process_type_id`) ON DELETE NO ACTION ON UPDATE NO ACTION
+CREATE TABLE PROCESS_TEMPLATE (
+  PROCESS_TEMPLATE_ID INT(11) NOT NULL AUTO_INCREMENT,
+  DESCRIPTION VARCHAR(256) NOT NULL,
+  ADD_TS TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  PROCESS_NAME VARCHAR(45) NOT NULL,
+  BUS_DOMAIN_ID INT(11) NOT NULL,
+  PROCESS_TYPE_ID INT(11) NOT NULL,
+  PARENT_PROCESS_ID INT(11) DEFAULT NULL,
+  CAN_RECOVER TINYINT(1) DEFAULT '1',
+  BATCH_CUT_PATTERN VARCHAR(45) DEFAULT NULL,
+  NEXT_PROCESS_TEMPLATE_ID VARCHAR(256) DEFAULT '' NOT NULL,
+  DELETE_FLAG TINYINT(1) DEFAULT '0',
+  WORKFLOW_ID INT(11) DEFAULT '1',
+  PRIMARY KEY (PROCESS_TEMPLATE_ID),
+  KEY BUS_DOMAIN_ID_TEMPLATE (BUS_DOMAIN_ID),
+  KEY PROCESS_TYPE_ID1_TEMPLATE (PROCESS_TYPE_ID),
+  KEY ORIGINAL_PROCESS_ID1_TEMPLATE (PARENT_PROCESS_ID),
+  CONSTRAINT BUS_DOMAIN_ID_TEMPLATE FOREIGN KEY (BUS_DOMAIN_ID) REFERENCES BUS_DOMAIN (BUS_DOMAIN_ID) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  CONSTRAINT ORIGINAL_PROCESS_ID1_TEMPLATE FOREIGN KEY (PARENT_PROCESS_ID) REFERENCES PROCESS_TEMPLATE (PROCESS_TEMPLATE_ID) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  CONSTRAINT WORKFLOW_ID_TEMPLATE FOREIGN KEY (WORKFLOW_ID) REFERENCES WORKFLOW_TYPE (WORKFLOW_ID) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  CONSTRAINT PROCESS_TYPE_ID1_TEMPLATE FOREIGN KEY (PROCESS_TYPE_ID) REFERENCES PROCESS_TYPE (PROCESS_TYPE_ID) ON DELETE NO ACTION ON UPDATE NO ACTION
 
-) ENGINE=InnoDB AUTO_INCREMENT=122 DEFAULT CHARSET=utf8;
+) ENGINE=INNODB AUTO_INCREMENT=122 DEFAULT CHARSET=UTF8;
 
 DELIMITER $$
 
-CREATE TRIGGER process_template_type_check_insert
-     BEFORE INSERT ON `process_template` FOR EACH ROW
+CREATE TRIGGER PROCESS_TEMPLATE_TYPE_CHECK_INSERT
+     BEFORE INSERT ON PROCESS_TEMPLATE FOR EACH ROW
      BEGIN
-          IF NEW.process_type_id IN (1,2,3,4,5) AND NEW.parent_process_id IS NOT NULL
+          IF NEW.PROCESS_TYPE_ID IN (1,2,3,4,5) AND NEW.PARENT_PROCESS_ID IS NOT NULL
           THEN
-               SIGNAL SQLSTATE '45000'
-  SET MESSAGE_TEXT = '1,2,3,4,5 process types are applicable for parent processes only' ;
+               CALL RAISE_ERROR;
           END IF;
 
- IF NEW.process_type_id IN (6,7,8,9,10,11,12) AND NEW.parent_process_id IS NULL
+ IF NEW.PROCESS_TYPE_ID IN (6,7,8,9,10,11,12) AND NEW.PARENT_PROCESS_ID IS NULL
           THEN
-               SIGNAL SQLSTATE '45001'
-  SET MESSAGE_TEXT = '6,7,8,9,10,11,12 process types are applicable for sub processes only' ;
+               CALL RAISE_ERROR;
           END IF;
--- if new rows parent does not belong to etl group where the new row type are 6,7,8 throw error
- IF NEW.process_type_id IN (6,7,8) AND (SELECT process_type_id from process_template where process_template_id=NEW.parent_process_id) != 5
+-- IF NEW ROWS PARENT DOES NOT BELONG TO ETL GROUP WHERE THE NEW ROW TYPE ARE 6,7,8 THROW ERROR
+ IF NEW.PROCESS_TYPE_ID IN (6,7,8) AND (SELECT PROCESS_TYPE_ID FROM PROCESS_TEMPLATE WHERE PROCESS_TEMPLATE_ID=NEW.PARENT_PROCESS_ID) != 5
           THEN
-               SIGNAL SQLSTATE '45002'
-  SET MESSAGE_TEXT = '6,7,8 process types should have etl process type(5) parent' ;
+               CALL RAISE_ERROR;
           END IF;
--- if new rows parent does not belong to semantic group where the new row type are 6,7,8 throw error
- IF NEW.process_type_id IN (9,10,11) AND (SELECT process_type_id from process_template where process_template_id=NEW.parent_process_id) != 2
+-- IF NEW ROWS PARENT DOES NOT BELONG TO SEMANTIC GROUP WHERE THE NEW ROW TYPE ARE 6,7,8 THROW ERROR
+ IF NEW.PROCESS_TYPE_ID IN (9,10,11) AND (SELECT PROCESS_TYPE_ID FROM PROCESS_TEMPLATE WHERE PROCESS_TEMPLATE_ID=NEW.PARENT_PROCESS_ID) != 2
           THEN
-               SIGNAL SQLSTATE '45003'
-  SET MESSAGE_TEXT = '9,10,11 process types should have semantic process type(2) parent' ;
+               CALL RAISE_ERROR;
           END IF;
--- if new rows parent does not belong to semantic group where the new row type are 6,7,8 throw error
- IF NEW.process_type_id IN (12) AND (SELECT process_type_id from process_template where process_template_id=NEW.parent_process_id) != 1
+-- IF NEW ROWS PARENT DOES NOT BELONG TO SEMANTIC GROUP WHERE THE NEW ROW TYPE ARE 6,7,8 THROW ERROR
+ IF NEW.PROCESS_TYPE_ID IN (12) AND (SELECT PROCESS_TYPE_ID FROM PROCESS_TEMPLATE WHERE PROCESS_TEMPLATE_ID=NEW.PARENT_PROCESS_ID) != 1
           THEN
-               SIGNAL SQLSTATE '45003'
-  SET MESSAGE_TEXT = '12 process types should have semantic process type(2) parent' ;
+               CALL RAISE_ERROR;
           END IF;
      END $$
 DELIMITER ;
@@ -143,121 +140,110 @@ DELIMITER ;
 
 DELIMITER $$
 
-CREATE TRIGGER process_template_type_check_update
-     BEFORE UPDATE ON `process_template` FOR EACH ROW
+CREATE TRIGGER PROCESS_TEMPLATE_TYPE_CHECK_UPDATE
+     BEFORE UPDATE ON PROCESS_TEMPLATE FOR EACH ROW
      BEGIN
-          IF NEW.process_type_id IN (1,2,3,4,5) AND NEW.parent_process_id IS NOT NULL
+          IF NEW.PROCESS_TYPE_ID IN (1,2,3,4,5) AND NEW.PARENT_PROCESS_ID IS NOT NULL
           THEN
-               SIGNAL SQLSTATE '45000'
-
-			   SET MESSAGE_TEXT = '1,2,3,4,5 process types are applicable for parent processes only' ;
+               CALL RAISE_ERROR;
           END IF;
 
-		  IF NEW.process_type_id IN (6,7,8,9,10,11,12) AND NEW.parent_process_id IS NULL
+		  IF NEW.PROCESS_TYPE_ID IN (6,7,8,9,10,11,12) AND NEW.PARENT_PROCESS_ID IS NULL
           THEN
-               SIGNAL SQLSTATE '45001'
-			   SET MESSAGE_TEXT = '6,7,8,9,10,11,12 process types are applicable for sub processes only' ;
+               CALL RAISE_ERROR;
           END IF;
--- if new rows parent does not belong to etl group where the new row type are 6,7,8 throw error
-		  IF NEW.process_type_id IN (6,7,8) AND (SELECT process_type_id from process_template where process_template_id=NEW.parent_process_id) != 5
+-- IF NEW ROWS PARENT DOES NOT BELONG TO ETL GROUP WHERE THE NEW ROW TYPE ARE 6,7,8 THROW ERROR
+		  IF NEW.PROCESS_TYPE_ID IN (6,7,8) AND (SELECT PROCESS_TYPE_ID FROM PROCESS_TEMPLATE WHERE PROCESS_TEMPLATE_ID=NEW.PARENT_PROCESS_ID) != 5
           THEN
-               SIGNAL SQLSTATE '45002'
-			   SET MESSAGE_TEXT = '6,7,8 process types should have etl process type(5) parent' ;
+               CALL RAISE_ERROR;
           END IF;
--- if new rows parent does not belong to semantic group where the new row type are 6,7,8 throw error
-		  IF NEW.process_type_id IN (9,10,11) AND (SELECT process_type_id from process_template where process_template_id=NEW.parent_process_id) != 2
+-- IF NEW ROWS PARENT DOES NOT BELONG TO SEMANTIC GROUP WHERE THE NEW ROW TYPE ARE 6,7,8 THROW ERROR
+		  IF NEW.PROCESS_TYPE_ID IN (9,10,11) AND (SELECT PROCESS_TYPE_ID FROM PROCESS_TEMPLATE WHERE PROCESS_TEMPLATE_ID=NEW.PARENT_PROCESS_ID) != 2
           THEN
-               SIGNAL SQLSTATE '45003'
-			   SET MESSAGE_TEXT = '9,10,11 process types should have semantic process type(2) parent' ;
+               CALL RAISE_ERROR;
           END IF;
--- if new rows parent does not belong to semantic group where the new row type are 6,7,8 throw error
-		  IF NEW.process_type_id IN (12) AND (SELECT process_type_id from process_template where process_template_id=NEW.parent_process_id) != 1
+-- IF NEW ROWS PARENT DOES NOT BELONG TO SEMANTIC GROUP WHERE THE NEW ROW TYPE ARE 6,7,8 THROW ERROR
+		  IF NEW.PROCESS_TYPE_ID IN (12) AND (SELECT PROCESS_TYPE_ID FROM PROCESS_TEMPLATE WHERE PROCESS_TEMPLATE_ID=NEW.PARENT_PROCESS_ID) != 1
           THEN
-               SIGNAL SQLSTATE '45003'
-			   SET MESSAGE_TEXT = '12 process types should have semantic process type(2) parent' ;
+               CALL RAISE_ERROR;
           END IF;
      END;
 $$
 DELIMITER ;
 
-SET GLOBAL sql_mode='NO_AUTO_VALUE_ON_ZERO';
+SET GLOBAL SQL_MODE='NO_AUTO_VALUE_ON_ZERO';
 
 
-CREATE TABLE `properties_template` (
-  `process_template_id` int(11) NOT NULL,
-  `config_group` varchar(10) NOT NULL,
-  `prop_temp_key` varchar(128) NOT NULL,
-  `prop_temp_value` varchar(2048) NOT NULL,
-  `description` varchar(1028) NOT NULL,
-  PRIMARY KEY (`process_template_id`,`prop_temp_key`),
-  CONSTRAINT `process_template_id5` FOREIGN KEY (`process_template_id`) REFERENCES `process_template` (`process_template_id`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+CREATE TABLE PROPERTIES_TEMPLATE (
+  PROCESS_TEMPLATE_ID INT(11) NOT NULL,
+  CONFIG_GROUP VARCHAR(10) NOT NULL,
+  PROP_TEMP_KEY VARCHAR(128) NOT NULL,
+  PROP_TEMP_VALUE VARCHAR(2048) NOT NULL,
+  DESCRIPTION VARCHAR(1028) NOT NULL,
+  PRIMARY KEY (PROCESS_TEMPLATE_ID,PROP_TEMP_KEY),
+  CONSTRAINT PROCESS_TEMPLATE_ID5 FOREIGN KEY (PROCESS_TEMPLATE_ID) REFERENCES PROCESS_TEMPLATE (PROCESS_TEMPLATE_ID) ON DELETE NO ACTION ON UPDATE NO ACTION
+) ENGINE=INNODB DEFAULT CHARSET=UTF8;
 
 
 
-CREATE TABLE `process` (
-  `process_id` int(11) NOT NULL AUTO_INCREMENT,
-  `description` varchar(256) NOT NULL,
-  `add_ts` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  `process_name` varchar(45) NOT NULL,
-  `bus_domain_id` int(11) NOT NULL,
-  `process_type_id` int(11) NOT NULL,
-  `parent_process_id` int(11) DEFAULT NULL,
-  `can_recover` tinyint(1) DEFAULT '1',
-  `enqueuing_process_id` int(11) NOT NULL DEFAULT '0',
-  `batch_cut_pattern` varchar(45) DEFAULT NULL,
-  `next_process_id` varchar(256) NOT NULL DEFAULT '',
-  `delete_flag` tinyint(1) DEFAULT '0',
-  `workflow_id` int(11) DEFAULT '1',
-  `process_template_id` int(11) DEFAULT '0',
-  `edit_ts` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  PRIMARY KEY (`process_id`),
-  KEY `bus_domain_id` (`bus_domain_id`),
-  KEY `process_type_id1` (`process_type_id`),
-  KEY `original_process_id1` (`parent_process_id`),
-  KEY `workflow_id` (`workflow_id`),
-  KEY `process_template_id` (`process_template_id`),
-  CONSTRAINT `bus_domain_id` FOREIGN KEY (`bus_domain_id`) REFERENCES `bus_domain` (`bus_domain_id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
-  CONSTRAINT `original_process_id1` FOREIGN KEY (`parent_process_id`) REFERENCES `process` (`process_id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
-  CONSTRAINT `process_ibfk_1` FOREIGN KEY (`process_template_id`) REFERENCES `process_template` (`process_template_id`),
-  CONSTRAINT `process_type_id1` FOREIGN KEY (`process_type_id`) REFERENCES `process_type` (`process_type_id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
-  CONSTRAINT `workflow_id` FOREIGN KEY (`workflow_id`) REFERENCES `workflow_type` (`workflow_id`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB AUTO_INCREMENT=122 DEFAULT CHARSET=utf8;
+CREATE TABLE PROCESS (
+  PROCESS_ID INT(11) NOT NULL AUTO_INCREMENT,
+  DESCRIPTION VARCHAR(256) NOT NULL,
+  ADD_TS TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  PROCESS_NAME VARCHAR(45) NOT NULL,
+  BUS_DOMAIN_ID INT(11) NOT NULL,
+  PROCESS_TYPE_ID INT(11) NOT NULL,
+  PARENT_PROCESS_ID INT(11) DEFAULT NULL,
+  CAN_RECOVER TINYINT(1) DEFAULT '1',
+  ENQUEUING_PROCESS_ID INT(11) NOT NULL DEFAULT '0',
+  BATCH_CUT_PATTERN VARCHAR(45) DEFAULT NULL,
+  NEXT_PROCESS_ID VARCHAR(256) NOT NULL DEFAULT '',
+  DELETE_FLAG TINYINT(1) DEFAULT '0',
+  WORKFLOW_ID INT(11) DEFAULT '1',
+  PROCESS_TEMPLATE_ID INT(11) DEFAULT '0',
+  EDIT_TS TIMESTAMP NOT NULL,
+  PRIMARY KEY (PROCESS_ID),
+  KEY BUS_DOMAIN_ID (BUS_DOMAIN_ID),
+  KEY PROCESS_TYPE_ID1 (PROCESS_TYPE_ID),
+  KEY ORIGINAL_PROCESS_ID1 (PARENT_PROCESS_ID),
+  KEY WORKFLOW_ID (WORKFLOW_ID),
+  KEY PROCESS_TEMPLATE_ID (PROCESS_TEMPLATE_ID),
+  CONSTRAINT BUS_DOMAIN_ID FOREIGN KEY (BUS_DOMAIN_ID) REFERENCES BUS_DOMAIN (BUS_DOMAIN_ID) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  CONSTRAINT ORIGINAL_PROCESS_ID1 FOREIGN KEY (PARENT_PROCESS_ID) REFERENCES PROCESS (PROCESS_ID) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  CONSTRAINT PROCESS_IBFK_1 FOREIGN KEY (PROCESS_TEMPLATE_ID) REFERENCES PROCESS_TEMPLATE (PROCESS_TEMPLATE_ID),
+  CONSTRAINT PROCESS_TYPE_ID1 FOREIGN KEY (PROCESS_TYPE_ID) REFERENCES PROCESS_TYPE (PROCESS_TYPE_ID) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  CONSTRAINT WORKFLOW_ID FOREIGN KEY (WORKFLOW_ID) REFERENCES WORKFLOW_TYPE (WORKFLOW_ID) ON DELETE NO ACTION ON UPDATE NO ACTION
+) ENGINE=INNODB AUTO_INCREMENT=122 DEFAULT CHARSET=UTF8;
 
 
 DELIMITER $$
 
-CREATE TRIGGER process_type_check_insert
-     BEFORE INSERT ON `process` FOR EACH ROW
+CREATE TRIGGER PROCESS_TYPE_CHECK_INSERT
+     BEFORE INSERT ON PROCESS FOR EACH ROW
      BEGIN
-          IF NEW.process_type_id IN (1,2,3,4,5) AND NEW.parent_process_id IS NOT NULL
+          IF NEW.PROCESS_TYPE_ID IN (1,2,3,4,5) AND NEW.PARENT_PROCESS_ID IS NOT NULL
           THEN
-               SIGNAL SQLSTATE '45000'
-  SET MESSAGE_TEXT = '1,2,3,4,5 process types are applicable for parent processes only' ;
+               CALL RAISE_ERROR;
           END IF;
 
- IF NEW.process_type_id IN (6,7,8,9,10,11,12) AND NEW.parent_process_id IS NULL
+ IF NEW.PROCESS_TYPE_ID IN (6,7,8,9,10,11,12) AND NEW.PARENT_PROCESS_ID IS NULL
           THEN
-               SIGNAL SQLSTATE '45001'
-  SET MESSAGE_TEXT = '6,7,8,9,10,11,12 process types are applicable for sub processes only' ;
+               CALL RAISE_ERROR;
           END IF;
--- if new rows parent does not belong to etl group where the new row type are 6,7,8 throw error
- IF NEW.process_type_id IN (6,7,8) AND (SELECT process_type_id from process where process_id=NEW.parent_process_id) != 5
+-- IF NEW ROWS PARENT DOES NOT BELONG TO ETL GROUP WHERE THE NEW ROW TYPE ARE 6,7,8 THROW ERROR
+ IF NEW.PROCESS_TYPE_ID IN (6,7,8) AND (SELECT PROCESS_TYPE_ID FROM PROCESS WHERE PROCESS_ID=NEW.PARENT_PROCESS_ID) != 5
           THEN
-               SIGNAL SQLSTATE '45002'
-  SET MESSAGE_TEXT = '6,7,8 process types should have etl process type(5) parent' ;
+               CALL RAISE_ERROR;
           END IF;
--- if new rows parent does not belong to semantic group where the new row type are 6,7,8 throw error
- IF NEW.process_type_id IN (9,10,11) AND (SELECT process_type_id from process where process_id=NEW.parent_process_id) != 2
+-- IF NEW ROWS PARENT DOES NOT BELONG TO SEMANTIC GROUP WHERE THE NEW ROW TYPE ARE 6,7,8 THROW ERROR
+ IF NEW.PROCESS_TYPE_ID IN (9,10,11) AND (SELECT PROCESS_TYPE_ID FROM PROCESS WHERE PROCESS_ID=NEW.PARENT_PROCESS_ID) != 2
           THEN
-               SIGNAL SQLSTATE '45003'
-  SET MESSAGE_TEXT = '9,10,11 process types should have semantic process type(2) parent' ;
+               CALL RAISE_ERROR;
           END IF;
--- if new rows parent does not belong to semantic group where the new row type are 6,7,8 throw error
- IF NEW.process_type_id IN (12) AND (SELECT process_type_id from process where process_id=NEW.parent_process_id) != 1
+-- IF NEW ROWS PARENT DOES NOT BELONG TO SEMANTIC GROUP WHERE THE NEW ROW TYPE ARE 6,7,8 THROW ERROR
+ IF NEW.PROCESS_TYPE_ID IN (12) AND (SELECT PROCESS_TYPE_ID FROM PROCESS WHERE PROCESS_ID=NEW.PARENT_PROCESS_ID) != 1
           THEN
-               SIGNAL SQLSTATE '45003'
-  SET MESSAGE_TEXT = '12 process types should have semantic process type(2) parent' ;
+               CALL RAISE_ERROR;
           END IF;
      END $$
 DELIMITER ;
@@ -265,41 +251,35 @@ DELIMITER ;
 
 DELIMITER $$
 
-CREATE TRIGGER process_type_check_update
-     BEFORE UPDATE ON `process` FOR EACH ROW
+CREATE TRIGGER PROCESS_TYPE_CHECK_UPDATE
+     BEFORE UPDATE ON PROCESS FOR EACH ROW
      BEGIN
 
-      SET NEW.edit_ts = current_timestamp;
+      SET NEW.EDIT_TS = CURRENT_TIMESTAMP;
 
-          IF NEW.process_type_id IN (1,2,3,4,5) AND NEW.parent_process_id IS NOT NULL
+          IF NEW.PROCESS_TYPE_ID IN (1,2,3,4,5) AND NEW.PARENT_PROCESS_ID IS NOT NULL
           THEN
-               SIGNAL SQLSTATE '45000'
-
-			   SET MESSAGE_TEXT = '1,2,3,4,5 process types are applicable for parent processes only' ;
+               CALL RAISE_ERROR;
           END IF;
 
-		  IF NEW.process_type_id IN (6,7,8,9,10,11,12) AND NEW.parent_process_id IS NULL
+		  IF NEW.PROCESS_TYPE_ID IN (6,7,8,9,10,11,12) AND NEW.PARENT_PROCESS_ID IS NULL
           THEN
-               SIGNAL SQLSTATE '45001'
-			   SET MESSAGE_TEXT = '6,7,8,9,10,11,12 process types are applicable for sub processes only' ;
+               CALL RAISE_ERROR;
           END IF;
--- if new rows parent does not belong to etl group where the new row type are 6,7,8 throw error
-		  IF NEW.process_type_id IN (6,7,8) AND (SELECT process_type_id from process where process_id=NEW.parent_process_id) != 5
+-- IF NEW ROWS PARENT DOES NOT BELONG TO ETL GROUP WHERE THE NEW ROW TYPE ARE 6,7,8 THROW ERROR
+		  IF NEW.PROCESS_TYPE_ID IN (6,7,8) AND (SELECT PROCESS_TYPE_ID FROM PROCESS WHERE PROCESS_ID=NEW.PARENT_PROCESS_ID) != 5
           THEN
-               SIGNAL SQLSTATE '45002'
-			   SET MESSAGE_TEXT = '6,7,8 process types should have etl process type(5) parent' ;
+               CALL RAISE_ERROR;
           END IF;
--- if new rows parent does not belong to semantic group where the new row type are 6,7,8 throw error
-		  IF NEW.process_type_id IN (9,10,11) AND (SELECT process_type_id from process where process_id=NEW.parent_process_id) != 2
+-- IF NEW ROWS PARENT DOES NOT BELONG TO SEMANTIC GROUP WHERE THE NEW ROW TYPE ARE 6,7,8 THROW ERROR
+		  IF NEW.PROCESS_TYPE_ID IN (9,10,11) AND (SELECT PROCESS_TYPE_ID FROM PROCESS WHERE PROCESS_ID=NEW.PARENT_PROCESS_ID) != 2
           THEN
-               SIGNAL SQLSTATE '45003'
-			   SET MESSAGE_TEXT = '9,10,11 process types should have semantic process type(2) parent' ;
+               CALL RAISE_ERROR;
           END IF;
--- if new rows parent does not belong to semantic group where the new row type are 6,7,8 throw error
-		  IF NEW.process_type_id IN (12) AND (SELECT process_type_id from process where process_id=NEW.parent_process_id) != 1
+-- IF NEW ROWS PARENT DOES NOT BELONG TO SEMANTIC GROUP WHERE THE NEW ROW TYPE ARE 6,7,8 THROW ERROR
+		  IF NEW.PROCESS_TYPE_ID IN (12) AND (SELECT PROCESS_TYPE_ID FROM PROCESS WHERE PROCESS_ID=NEW.PARENT_PROCESS_ID) != 1
           THEN
-               SIGNAL SQLSTATE '45003'
-			   SET MESSAGE_TEXT = '12 process types should have semantic process type(2) parent' ;
+               CALL RAISE_ERROR;
           END IF;
 
      END;
@@ -307,280 +287,279 @@ $$
 DELIMITER ;
 
 
-CREATE TABLE `properties` (
-  `process_id` int(11) NOT NULL,
-  `config_group` varchar(10) NOT NULL,
-  `prop_key` varchar(128) NOT NULL,
-  `prop_value` varchar(2048) NOT NULL,
-  `description` varchar(1028) NOT NULL,
-  PRIMARY KEY (`process_id`,`prop_key`),
-  CONSTRAINT `process_id4` FOREIGN KEY (`process_id`) REFERENCES `process` (`process_id`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+CREATE TABLE PROPERTIES (
+  PROCESS_ID INT(11) NOT NULL,
+  CONFIG_GROUP VARCHAR(10) NOT NULL,
+  PROP_KEY VARCHAR(128) NOT NULL,
+  PROP_VALUE VARCHAR(2048) NOT NULL,
+  DESCRIPTION VARCHAR(1028) NOT NULL,
+  PRIMARY KEY (PROCESS_ID,PROP_KEY),
+  CONSTRAINT PROCESS_ID4 FOREIGN KEY (PROCESS_ID) REFERENCES PROCESS (PROCESS_ID) ON DELETE NO ACTION ON UPDATE NO ACTION
+) ENGINE=INNODB DEFAULT CHARSET=UTF8;
 
 
-CREATE TABLE IF NOT EXISTS `etl_driver` (
-  `etl_process_id` INT NOT NULL,
-  `raw_table_id` INT NOT NULL,
-  `base_table_id` INT NULL COMMENT 'Core may be null if we don\'t want to do R2B',
-  `insert_type` SMALLINT NULL,
-  `drop_raw` TINYINT(1) DEFAULT '0',
-  `raw_view_id` INT NOT NULL,
-  PRIMARY KEY (`etl_process_id`),
-
-  CONSTRAINT `table_id_etl_driver` FOREIGN KEY (`raw_table_id`) REFERENCES `hive_tables` (`table_id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
-  CONSTRAINT `table_id2_etl_driver` FOREIGN KEY (`base_table_id`) REFERENCES `hive_tables` (`table_id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
-  CONSTRAINT `batch_id_etl_driver` FOREIGN KEY (`etl_process_id`) REFERENCES `process` (`process_id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
-  CONSTRAINT `view_id_etl_driver` FOREIGN KEY (`raw_view_id`) REFERENCES `hive_tables` (`table_id`)  ON DELETE NO ACTION ON UPDATE NO ACTION)
-  ENGINE=InnoDB AUTO_INCREMENT=122 DEFAULT CHARSET=utf8;
-
-
-CREATE TABLE `instance_exec` (
-  `instance_exec_id` bigint(20) NOT NULL AUTO_INCREMENT,
-  `process_id` int(11) NOT NULL,
-  `start_ts` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  `end_ts` timestamp NULL DEFAULT NULL,
-  `exec_state` int(11) NOT NULL,
-  PRIMARY KEY (`instance_exec_id`),
-  KEY `process_id_instance_exec` (`process_id`),
-  KEY `exec_state_instance_exec` (`exec_state`),
-  CONSTRAINT `process_id_instance_exec` FOREIGN KEY (`process_id`) REFERENCES `process` (`process_id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
-  CONSTRAINT `exec_state_instance_exec` FOREIGN KEY (`exec_state`) REFERENCES `exec_status` (`exec_state_id`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB AUTO_INCREMENT=174 DEFAULT CHARSET=utf8;
+CREATE TABLE ETL_DRIVER (
+  ETL_PROCESS_ID INT NOT NULL,
+  RAW_TABLE_ID INT NOT NULL,
+  BASE_TABLE_ID INT NULL COMMENT 'CORE MAY BE NULL IF WE DONT WANT TO DO R2B',
+  INSERT_TYPE SMALLINT NULL,
+  DROP_RAW TINYINT(1) DEFAULT 0,
+  RAW_VIEW_ID INT NOT NULL,
+  PRIMARY KEY (ETL_PROCESS_ID),
+  CONSTRAINT TABLE_ID_ETL_DRIVER FOREIGN KEY (RAW_TABLE_ID) REFERENCES HIVE_TABLES (TABLE_ID) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  CONSTRAINT TABLE_ID2_ETL_DRIVER FOREIGN KEY (BASE_TABLE_ID) REFERENCES HIVE_TABLES (TABLE_ID) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  CONSTRAINT BATCH_ID_ETL_DRIVER FOREIGN KEY (ETL_PROCESS_ID) REFERENCES PROCESS (PROCESS_ID) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  CONSTRAINT VIEW_ID_ETL_DRIVER FOREIGN KEY (RAW_VIEW_ID) REFERENCES HIVE_TABLES (TABLE_ID)  ON DELETE NO ACTION ON UPDATE NO ACTION)
+  ENGINE=INNODB AUTO_INCREMENT=122 DEFAULT CHARSET=UTF8;
 
 
-CREATE TABLE `batch` (
-  `batch_id` bigint(20) NOT NULL AUTO_INCREMENT,
-  `source_instance_exec_id` bigint(20) DEFAULT NULL,
-  `batch_type` varchar(45) NOT NULL,
-  PRIMARY KEY (`batch_id`),
-  KEY `instance_exec_id` (`source_instance_exec_id`),
-  CONSTRAINT `instance_exec_id` FOREIGN KEY (`source_instance_exec_id`) REFERENCES `instance_exec` (`instance_exec_id`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB AUTO_INCREMENT=212 DEFAULT CHARSET=utf8;
+CREATE TABLE INSTANCE_EXEC (
+  INSTANCE_EXEC_ID BIGINT(20) NOT NULL AUTO_INCREMENT,
+  PROCESS_ID INT(11) NOT NULL,
+  START_TS TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  END_TS TIMESTAMP NULL DEFAULT NULL,
+  EXEC_STATE INT(11) NOT NULL,
+  PRIMARY KEY (INSTANCE_EXEC_ID),
+  KEY PROCESS_ID_INSTANCE_EXEC (PROCESS_ID),
+  KEY EXEC_STATE_INSTANCE_EXEC (EXEC_STATE),
+  CONSTRAINT PROCESS_ID_INSTANCE_EXEC FOREIGN KEY (PROCESS_ID) REFERENCES PROCESS (PROCESS_ID) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  CONSTRAINT EXEC_STATE_INSTANCE_EXEC FOREIGN KEY (EXEC_STATE) REFERENCES EXEC_STATUS (EXEC_STATE_ID) ON DELETE NO ACTION ON UPDATE NO ACTION
+) ENGINE=INNODB AUTO_INCREMENT=174 DEFAULT CHARSET=UTF8;
 
 
-CREATE TABLE `file` (
-  `batch_id` bigint(20) NOT NULL,
-  `server_id` int(11) NOT NULL,
-  `path` varchar(256) NOT NULL,
-  `file_size` bigint(20) NOT NULL,
-  `file_hash` varchar(100) DEFAULT NULL,
-  `creation_ts` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-  KEY `server_id` (`server_id`),
-  KEY `unique_batch` (`batch_id`),
-  CONSTRAINT `server_id` FOREIGN KEY (`server_id`) REFERENCES `servers` (`server_id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
-  CONSTRAINT `unique_batch` FOREIGN KEY (`batch_id`) REFERENCES `batch` (`batch_id`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+CREATE TABLE BATCH (
+  BATCH_ID BIGINT(20) NOT NULL AUTO_INCREMENT,
+  SOURCE_INSTANCE_EXEC_ID BIGINT(20) DEFAULT NULL,
+  BATCH_TYPE VARCHAR(45) NOT NULL,
+  PRIMARY KEY (BATCH_ID),
+  KEY INSTANCE_EXEC_ID (SOURCE_INSTANCE_EXEC_ID),
+  CONSTRAINT INSTANCE_EXEC_ID FOREIGN KEY (SOURCE_INSTANCE_EXEC_ID) REFERENCES INSTANCE_EXEC (INSTANCE_EXEC_ID) ON DELETE NO ACTION ON UPDATE NO ACTION
+) ENGINE=INNODB AUTO_INCREMENT=212 DEFAULT CHARSET=UTF8;
 
 
-CREATE TABLE `batch_consump_queue` (
-  `source_batch_id` bigint(20) NOT NULL,
-  `target_batch_id` bigint(20) DEFAULT NULL,
-  `queue_id` bigint(20) NOT NULL AUTO_INCREMENT,
-  `insert_ts` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-  `source_process_id` int(11) DEFAULT NULL,
-  `start_ts` timestamp NULL DEFAULT NULL,
-  `end_ts` timestamp NULL DEFAULT NULL,
-  `batch_state` int(11) NOT NULL,
-  `batch_marking` varchar(45) DEFAULT NULL,
-  `process_id` int(11) NOT NULL,
-  PRIMARY KEY (`queue_id`),
-  KEY `source_batch_bcq` (`source_batch_id`),
-  KEY `target_batch_bcq` (`target_batch_id`),
-  KEY `batch_state_bcq` (`batch_state`),
-  KEY `process_id_bcq` (`process_id`),
-  CONSTRAINT `batch_state_bcq` FOREIGN KEY (`batch_state`) REFERENCES `batch_status` (`batch_state_id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
-  CONSTRAINT `process_id_bcq` FOREIGN KEY (`process_id`) REFERENCES `process` (`process_id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
-  CONSTRAINT `source_batch_bcq` FOREIGN KEY (`source_batch_id`) REFERENCES `batch` (`batch_id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
-  CONSTRAINT `target_batch_bcq` FOREIGN KEY (`target_batch_id`) REFERENCES `batch` (`batch_id`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB AUTO_INCREMENT=1330 DEFAULT CHARSET=utf8;
+CREATE TABLE FILE (
+  BATCH_ID BIGINT(20) NOT NULL,
+  SERVER_ID INT(11) NOT NULL,
+  PATH VARCHAR(256) NOT NULL,
+  FILE_SIZE BIGINT(20) NOT NULL,
+  FILE_HASH VARCHAR(100) DEFAULT NULL,
+  CREATION_TS TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  KEY SERVER_ID (SERVER_ID),
+  KEY UNIQUE_BATCH (BATCH_ID),
+  CONSTRAINT SERVER_ID FOREIGN KEY (SERVER_ID) REFERENCES SERVERS (SERVER_ID) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  CONSTRAINT UNIQUE_BATCH FOREIGN KEY (BATCH_ID) REFERENCES BATCH (BATCH_ID) ON DELETE NO ACTION ON UPDATE NO ACTION
+) ENGINE=INNODB DEFAULT CHARSET=UTF8;
 
 
-CREATE TABLE `archive_consump_queue` (
-  `source_batch_id` bigint(20) NOT NULL,
-  `target_batch_id` bigint(20) DEFAULT NULL,
-  `queue_id` bigint(20) NOT NULL auto_increment,
-  `insert_ts` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-  `source_process_id` int(11) DEFAULT NULL,
-  `start_ts` timestamp NULL DEFAULT NULL,
-  `end_ts` timestamp NULL DEFAULT NULL,
-  `batch_state` int(11) NOT NULL,
-  `batch_marking` varchar(45) DEFAULT NULL,
-  `process_id` int(11) NOT NULL,
-  PRIMARY KEY (`queue_id`),
-  KEY `source_batch_archive_consump_queue` (`source_batch_id`),
-  KEY `target_batch_archive_consump_queue` (`target_batch_id`),
-  KEY `batch_state_archive_consump_queue` (`batch_state`),
-  CONSTRAINT `process_id_archive_consump_queue` FOREIGN KEY (`process_id`) REFERENCES `process` (`process_id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
-  CONSTRAINT `batch_state_archive_consump_queue` FOREIGN KEY (`batch_state`) REFERENCES `batch_status` (`batch_state_id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
-  CONSTRAINT `source_batch_archive_consump_queue` FOREIGN KEY (`source_batch_id`) REFERENCES `batch` (`batch_id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
-  CONSTRAINT `target_batch_archive_consump_queue` FOREIGN KEY (`target_batch_id`) REFERENCES `batch` (`batch_id`) ON DELETE NO ACTION ON UPDATE NO ACTION
-
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
-
-CREATE TABLE `etlstep` (
-  `uuid` varchar(128) NOT NULL,
-  `serial_number` bigint(20) NOT NULL,
-  `bus_domain_id` int(11) NOT NULL,
-  `process_name` varchar(256) NOT NULL,
-  `description` varchar(2048) NOT NULL,
-  `base_table_name` varchar(45) DEFAULT NULL,
-  `raw_table_name` varchar(45) DEFAULT NULL,
-  `raw_view_name` varchar(45) DEFAULT NULL,
-  `base_db_name` varchar(45) DEFAULT NULL,
-  `raw_db_name` varchar(45) DEFAULT NULL,
-  `base_table_ddl` varchar(2048) DEFAULT NULL,
-  `raw_table_ddl` varchar(2048) DEFAULT NULL,
-  `raw_view_ddl` varchar(2048) DEFAULT NULL,
-  `raw_partition_col` varchar(45) DEFAULT NULL,
-  `drop_raw` tinyint(1) DEFAULT NULL,
-  `enq_id` int(11) DEFAULT NULL,
-  `column_info` varchar(2048) DEFAULT NULL,
-  `serde_properties` varchar(2048) DEFAULT NULL,
-  `table_properties` varchar(2048) DEFAULT NULL,
-  `input_format` varchar(2048) DEFAULT NULL,
-  PRIMARY KEY (`serial_number`,`uuid`)
-) ENGINE=InnoDB AUTO_INCREMENT=30 DEFAULT CHARSET=utf8;
+CREATE TABLE BATCH_CONSUMP_QUEUE (
+  SOURCE_BATCH_ID BIGINT(20) NOT NULL,
+  TARGET_BATCH_ID BIGINT(20) DEFAULT NULL,
+  QUEUE_ID BIGINT(20) NOT NULL AUTO_INCREMENT,
+  INSERT_TS TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  SOURCE_PROCESS_ID INT(11) DEFAULT NULL,
+  START_TS TIMESTAMP NULL DEFAULT NULL,
+  END_TS TIMESTAMP NULL DEFAULT NULL,
+  BATCH_STATE INT(11) NOT NULL,
+  BATCH_MARKING VARCHAR(45) DEFAULT NULL,
+  PROCESS_ID INT(11) NOT NULL,
+  PRIMARY KEY (QUEUE_ID),
+  KEY SOURCE_BATCH_BCQ (SOURCE_BATCH_ID),
+  KEY TARGET_BATCH_BCQ (TARGET_BATCH_ID),
+  KEY BATCH_STATE_BCQ (BATCH_STATE),
+  KEY PROCESS_ID_BCQ (PROCESS_ID),
+  CONSTRAINT BATCH_STATE_BCQ FOREIGN KEY (BATCH_STATE) REFERENCES BATCH_STATUS (BATCH_STATE_ID) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  CONSTRAINT PROCESS_ID_BCQ FOREIGN KEY (PROCESS_ID) REFERENCES PROCESS (PROCESS_ID) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  CONSTRAINT SOURCE_BATCH_BCQ FOREIGN KEY (SOURCE_BATCH_ID) REFERENCES BATCH (BATCH_ID) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  CONSTRAINT TARGET_BATCH_BCQ FOREIGN KEY (TARGET_BATCH_ID) REFERENCES BATCH (BATCH_ID) ON DELETE NO ACTION ON UPDATE NO ACTION
+) ENGINE=INNODB AUTO_INCREMENT=1330 DEFAULT CHARSET=UTF8;
 
 
-CREATE TABLE `intermediate` (
-  `uuid` varchar(64) NOT NULL,
-  `inter_key` varchar(128) NOT NULL,
-  `inter_value` varchar(2048) NOT NULL,
-  PRIMARY KEY (`inter_key`,`uuid`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+CREATE TABLE ARCHIVE_CONSUMP_QUEUE (
+  SOURCE_BATCH_ID BIGINT(20) NOT NULL,
+  TARGET_BATCH_ID BIGINT(20) DEFAULT NULL,
+  QUEUE_ID BIGINT(20) NOT NULL AUTO_INCREMENT,
+  INSERT_TS TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  SOURCE_PROCESS_ID INT(11) DEFAULT NULL,
+  START_TS TIMESTAMP NULL DEFAULT NULL,
+  END_TS TIMESTAMP NULL DEFAULT NULL,
+  BATCH_STATE INT(11) NOT NULL,
+  BATCH_MARKING VARCHAR(45) DEFAULT NULL,
+  PROCESS_ID INT(11) NOT NULL,
+  PRIMARY KEY (QUEUE_ID),
+  KEY SOURCE_BATCH_ARCHIVE_CONSUMP_QUEUE (SOURCE_BATCH_ID),
+  KEY TARGET_BATCH_ARCHIVE_CONSUMP_QUEUE (TARGET_BATCH_ID),
+  KEY BATCH_STATE_ARCHIVE_CONSUMP_QUEUE (BATCH_STATE),
+  CONSTRAINT PROCESS_ID_ARCHIVE_CONSUMP_QUEUE FOREIGN KEY (PROCESS_ID) REFERENCES PROCESS (PROCESS_ID) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  CONSTRAINT BATCH_STATE_ARCHIVE_CONSUMP_QUEUE FOREIGN KEY (BATCH_STATE) REFERENCES BATCH_STATUS (BATCH_STATE_ID) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  CONSTRAINT SOURCE_BATCH_ARCHIVE_CONSUMP_QUEUE FOREIGN KEY (SOURCE_BATCH_ID) REFERENCES BATCH (BATCH_ID) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  CONSTRAINT TARGET_BATCH_ARCHIVE_CONSUMP_QUEUE FOREIGN KEY (TARGET_BATCH_ID) REFERENCES BATCH (BATCH_ID) ON DELETE NO ACTION ON UPDATE NO ACTION
+
+) ENGINE=INNODB DEFAULT CHARSET=UTF8;
 
 
+CREATE TABLE ETLSTEP (
+  UUID VARCHAR(128) NOT NULL,
+  SERIAL_NUMBER BIGINT(20) NOT NULL,
+  BUS_DOMAIN_ID INT(11) NOT NULL,
+  PROCESS_NAME VARCHAR(256) NOT NULL,
+  DESCRIPTION VARCHAR(2048) NOT NULL,
+  BASE_TABLE_NAME VARCHAR(45) DEFAULT NULL,
+  RAW_TABLE_NAME VARCHAR(45) DEFAULT NULL,
+  RAW_VIEW_NAME VARCHAR(45) DEFAULT NULL,
+  BASE_DB_NAME VARCHAR(45) DEFAULT NULL,
+  RAW_DB_NAME VARCHAR(45) DEFAULT NULL,
+  BASE_TABLE_DDL VARCHAR(2048) DEFAULT NULL,
+  RAW_TABLE_DDL VARCHAR(2048) DEFAULT NULL,
+  RAW_VIEW_DDL VARCHAR(2048) DEFAULT NULL,
+  RAW_PARTITION_COL VARCHAR(45) DEFAULT NULL,
+  DROP_RAW TINYINT(1) DEFAULT NULL,
+  ENQ_ID INT(11) DEFAULT NULL,
+  COLUMN_INFO VARCHAR(2048) DEFAULT NULL,
+  SERDE_PROPERTIES VARCHAR(2048) DEFAULT NULL,
+  TABLE_PROPERTIES VARCHAR(2048) DEFAULT NULL,
+  INPUT_FORMAT VARCHAR(2048) DEFAULT NULL,
+  PRIMARY KEY (SERIAL_NUMBER,UUID)
+) ENGINE=INNODB AUTO_INCREMENT=30 DEFAULT CHARSET=UTF8;
 
 
-
-CREATE TABLE `process_log` (
-  `log_id` bigint(20) NOT NULL AUTO_INCREMENT,
-  `add_ts` timestamp,
-  `process_id` int(11) NOT NULL,
-  `log_category` varchar(10) NOT NULL,
-  `message_id` varchar(128) NOT NULL,
-  `message` varchar(1024) NOT NULL,
-  `instance_ref` bigint(20),
-  PRIMARY KEY (`log_id`),
-  CONSTRAINT `process_id` FOREIGN KEY (`process_id`) REFERENCES `process` (`process_id`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+CREATE TABLE INTERMEDIATE (
+  UUID VARCHAR(64) NOT NULL,
+  INTER_KEY VARCHAR(128) NOT NULL,
+  INTER_VALUE VARCHAR(2048) NOT NULL,
+  PRIMARY KEY (INTER_KEY,UUID)
+) ENGINE=INNODB DEFAULT CHARSET=UTF8;
 
 
 
 
 
--- lineage table ddls
-
-CREATE TABLE `lineage_node_type` (
-  `node_type_id` int(11) NOT NULL,
-  `node_type_name` varchar(45) NOT NULL,
-  PRIMARY KEY (`node_type_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
-CREATE TABLE `lineage_query_type` (
-  `query_type_id` INT(11) NOT NULL,
-  `query_type_name` varchar(255) NOT NULL,
-  PRIMARY KEY (`query_type_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
-CREATE TABLE `lineage_query` (
-  `query_id` varchar(100) NOT NULL,
-  `query_string` longtext ,
-  `query_type_id` int(11) NOT NULL,
-  `create_ts` timestamp DEFAULT CURRENT_TIMESTAMP,
-  `process_id` int(11),
-  `instance_exec_id` bigint(20) DEFAULT NULL,
-  PRIMARY KEY (`query_id`),
-  KEY `process_id` (`process_id`),
-  KEY `query_type_id` (`query_type_id`),
-  -- CONSTRAINT `process_id` FOREIGN KEY (`process_id`) REFERENCES `process` (`process_id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
-  CONSTRAINT `query_type_id` FOREIGN KEY (`query_type_id`) REFERENCES `lineage_query_type` (`query_type_id`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
-CREATE TABLE `lineage_node` (
-  `node_id` varchar(100) NOT NULL,
-  `node_type_id` int(11) NOT NULL,
-  `container_node_id` varchar(100) DEFAULT NULL,
-  `node_order` int(11) DEFAULT '0',
-  `insert_ts` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  `update_ts` timestamp NULL DEFAULT NULL,
-  `dot_string` longtext,
-  `dot_label` longtext,
-  `display_name` varchar(256) DEFAULT NULL,
-  PRIMARY KEY (`node_id`),
-  KEY `node_type` (`node_type_id`),
-  KEY `conatiner_node_id` (`container_node_id`),
-  CONSTRAINT `conatiner_node_id` FOREIGN KEY (`container_node_id`) REFERENCES `lineage_node` (`node_id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
-  CONSTRAINT `node_type` FOREIGN KEY (`node_type_id`) REFERENCES `lineage_node_type` (`node_type_id`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
-CREATE TABLE `lineage_relation` (
-  `relation_id` varchar(100) NOT NULL,
-  `src_node_id` varchar(100) DEFAULT NULL,
-  `target_node_id` varchar(100) DEFAULT NULL,
-  `query_id` varchar(100) NOT NULL,
-  `dot_string` longtext,
-  PRIMARY KEY (`relation_id`),
-  KEY `src_node_id` (`src_node_id`),
-  KEY `target_node_id` (`target_node_id`),
-  KEY `query_id` (`query_id`),
-  CONSTRAINT `src_node_id` FOREIGN KEY (`src_node_id`) REFERENCES `lineage_node` (`node_id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
-  CONSTRAINT `target_node_id` FOREIGN KEY (`target_node_id`) REFERENCES `lineage_node` (`node_id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
-  CONSTRAINT `query_id` FOREIGN KEY (`query_id`) REFERENCES `lineage_query` (`query_id`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
-
-CREATE TABLE `deploy_status` (
-  `deploy_status_id` smallint NOT NULL,
-  `description` varchar(45) NOT NULL,
-  PRIMARY KEY (`deploy_status_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
-
-CREATE TABLE `general_config` (
-  `config_group` varchar(128) NOT NULL,
-  `gc_key` varchar(128) NOT NULL,
-  `gc_value` varchar(2048)  NULL,
-  `description` varchar(1028) NOT NULL,
-  `required` tinyint(1)  DEFAULT '0',
-  `default_val` varchar(2048)  NULL,
-  `type` varchar(20) NOT NULL DEFAULT 'text',
-  `enabled` tinyint(1) DEFAULT '1',
-  PRIMARY KEY (`config_group`,`gc_key`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
-
-CREATE TABLE `process_deployment_queue` (
-   `deployment_id` bigint(20) NOT NULL AUTO_INCREMENT,
-   `process_id` int(11) NOT NULL ,
-   `start_ts` timestamp NULL DEFAULT NULL,
-   `insert_ts` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
-   `end_ts` timestamp NULL DEFAULT NULL,
-   `deploy_status_id` smallint NOT NULL DEFAULT 1,
-   `user_name` varchar(45) NOT NULL,
-   `bus_domain_id` int(11) NOT NULL,
-   `process_type_id` int(11) NOT NULL,
-   `deploy_script_location` varchar(1000) DEFAULT NULL,
-  PRIMARY KEY (`deployment_id`),
-  KEY `deploy_status_id` (`deploy_status_id`),
-  KEY `deploy_process_id` (`process_id`),
-  KEY `deploy_process_type_id` (`process_type_id`),
-  KEY `deploy_bus_domain_id` (`bus_domain_id`),
-  CONSTRAINT `deploy_status_id` FOREIGN KEY (`deploy_status_id`) REFERENCES `deploy_status` (`deploy_status_id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
-  CONSTRAINT `deploy_process_id` FOREIGN KEY (`process_id`) REFERENCES `process` (`process_id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
-  CONSTRAINT `deploy_process_type_id` FOREIGN KEY (`process_type_id`) REFERENCES `process_type` (`process_type_id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
-  CONSTRAINT `deploy_bus_domain_id` FOREIGN KEY (`bus_domain_id`) REFERENCES `bus_domain` (`bus_domain_id`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+CREATE TABLE PROCESS_LOG (
+  LOG_ID BIGINT(20) NOT NULL AUTO_INCREMENT,
+  ADD_TS TIMESTAMP,
+  PROCESS_ID INT(11) NOT NULL,
+  LOG_CATEGORY VARCHAR(10) NOT NULL,
+  MESSAGE_ID VARCHAR(128) NOT NULL,
+  MESSAGE VARCHAR(1024) NOT NULL,
+  INSTANCE_REF BIGINT(20),
+  PRIMARY KEY (LOG_ID),
+  CONSTRAINT PROCESS_ID FOREIGN KEY (PROCESS_ID) REFERENCES PROCESS (PROCESS_ID) ON DELETE NO ACTION ON UPDATE NO ACTION
+) ENGINE=INNODB DEFAULT CHARSET=UTF8;
 
 
 
 
-CREATE TABLE Docidsdb (docId int not null auto_increment, url varchar(3000), primary key (docId));
 
-CREATE TABLE Statisticsdb (uniqid bigint not null auto_increment, value bigint, name varchar(255), primary key (uniqid));
+-- LINEAGE TABLE DDLS
 
-CREATE TABLE Pendingurlsdb (uniqid bigint not null auto_increment, pid bigint, instanceExecid bigint, url varchar(3000), docid int not null, parentDocid int not null, parentUrl varchar(1000), depth smallint not null, domain varchar(255), subDomain varchar(255), path varchar(1000), anchor varchar(255),priority tinyint not null, tag varchar(255), primary key (uniqid));
+CREATE TABLE LINEAGE_NODE_TYPE (
+  NODE_TYPE_ID INT(11) NOT NULL,
+  NODE_TYPE_NAME VARCHAR(45) NOT NULL,
+  PRIMARY KEY (NODE_TYPE_ID)
+) ENGINE=INNODB DEFAULT CHARSET=UTF8;
 
-CREATE TABLE Weburlsdb (uniqid bigint not null auto_increment, pid bigint, instanceExecid bigint, url varchar(3000), docid int not null, parentDocid int not null, parentUrl varchar(1000), depth smallint not null, domain varchar(255), subDomain varchar(255), path varchar(1000), anchor varchar(255),priority tinyint not null, tag varchar(255), primary key (uniqid));
+CREATE TABLE LINEAGE_QUERY_TYPE (
+  QUERY_TYPE_ID INT(11) NOT NULL,
+  QUERY_TYPE_NAME VARCHAR(255) NOT NULL,
+  PRIMARY KEY (QUERY_TYPE_ID)
+) ENGINE=INNODB DEFAULT CHARSET=UTF8;
+
+CREATE TABLE LINEAGE_QUERY (
+  QUERY_ID VARCHAR(100) NOT NULL,
+  QUERY_STRING LONGTEXT ,
+  QUERY_TYPE_ID INT(11) NOT NULL,
+  CREATE_TS TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  PROCESS_ID INT(11),
+  INSTANCE_EXEC_ID BIGINT(20) DEFAULT NULL,
+  PRIMARY KEY (QUERY_ID),
+  KEY PROCESS_ID (PROCESS_ID),
+  KEY QUERY_TYPE_ID (QUERY_TYPE_ID),
+  -- CONSTRAINT PROCESS_ID FOREIGN KEY (PROCESS_ID) REFERENCES PROCESS (PROCESS_ID) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  CONSTRAINT QUERY_TYPE_ID FOREIGN KEY (QUERY_TYPE_ID) REFERENCES LINEAGE_QUERY_TYPE (QUERY_TYPE_ID) ON DELETE NO ACTION ON UPDATE NO ACTION
+) ENGINE=INNODB DEFAULT CHARSET=UTF8;
+
+CREATE TABLE LINEAGE_NODE (
+  NODE_ID VARCHAR(100) NOT NULL,
+  NODE_TYPE_ID INT(11) NOT NULL,
+  CONTAINER_NODE_ID VARCHAR(100) DEFAULT NULL,
+  NODE_ORDER INT(11) DEFAULT '0',
+  INSERT_TS TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  UPDATE_TS TIMESTAMP NULL DEFAULT NULL,
+  DOT_STRING LONGTEXT,
+  DOT_LABEL LONGTEXT,
+  DISPLAY_NAME VARCHAR(256) DEFAULT NULL,
+  PRIMARY KEY (NODE_ID),
+  KEY NODE_TYPE (NODE_TYPE_ID),
+  KEY CONATINER_NODE_ID (CONTAINER_NODE_ID),
+  CONSTRAINT CONATINER_NODE_ID FOREIGN KEY (CONTAINER_NODE_ID) REFERENCES LINEAGE_NODE (NODE_ID) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  CONSTRAINT NODE_TYPE FOREIGN KEY (NODE_TYPE_ID) REFERENCES LINEAGE_NODE_TYPE (NODE_TYPE_ID) ON DELETE NO ACTION ON UPDATE NO ACTION
+) ENGINE=INNODB DEFAULT CHARSET=UTF8;
+
+CREATE TABLE LINEAGE_RELATION (
+  RELATION_ID VARCHAR(100) NOT NULL,
+  SRC_NODE_ID VARCHAR(100) DEFAULT NULL,
+  TARGET_NODE_ID VARCHAR(100) DEFAULT NULL,
+  QUERY_ID VARCHAR(100) NOT NULL,
+  DOT_STRING LONGTEXT,
+  PRIMARY KEY (RELATION_ID),
+  KEY SRC_NODE_ID (SRC_NODE_ID),
+  KEY TARGET_NODE_ID (TARGET_NODE_ID),
+  KEY QUERY_ID (QUERY_ID),
+  CONSTRAINT SRC_NODE_ID FOREIGN KEY (SRC_NODE_ID) REFERENCES LINEAGE_NODE (NODE_ID) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  CONSTRAINT TARGET_NODE_ID FOREIGN KEY (TARGET_NODE_ID) REFERENCES LINEAGE_NODE (NODE_ID) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  CONSTRAINT QUERY_ID FOREIGN KEY (QUERY_ID) REFERENCES LINEAGE_QUERY (QUERY_ID) ON DELETE NO ACTION ON UPDATE NO ACTION
+) ENGINE=INNODB DEFAULT CHARSET=UTF8;
+
+
+CREATE TABLE DEPLOY_STATUS (
+  DEPLOY_STATUS_ID SMALLINT NOT NULL,
+  DESCRIPTION VARCHAR(45) NOT NULL,
+  PRIMARY KEY (DEPLOY_STATUS_ID)
+) ENGINE=INNODB DEFAULT CHARSET=UTF8;
+
+
+CREATE TABLE GENERAL_CONFIG (
+  CONFIG_GROUP VARCHAR(128) NOT NULL,
+  GC_KEY VARCHAR(128) NOT NULL,
+  GC_VALUE VARCHAR(2048)  NULL,
+  DESCRIPTION VARCHAR(1028) NOT NULL,
+  REQUIRED TINYINT(1)  DEFAULT '0',
+  DEFAULT_VAL VARCHAR(2048)  NULL,
+  TYPE VARCHAR(20) NOT NULL DEFAULT 'TEXT',
+  ENABLED TINYINT(1) DEFAULT '1',
+  PRIMARY KEY (CONFIG_GROUP,GC_KEY)
+) ENGINE=INNODB DEFAULT CHARSET=UTF8;
+
+
+CREATE TABLE PROCESS_DEPLOYMENT_QUEUE (
+   DEPLOYMENT_ID BIGINT(20) NOT NULL AUTO_INCREMENT,
+   PROCESS_ID INT(11) NOT NULL ,
+   START_TS TIMESTAMP NULL DEFAULT NULL,
+   INSERT_TS TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+   END_TS TIMESTAMP NULL DEFAULT NULL,
+   DEPLOY_STATUS_ID SMALLINT NOT NULL DEFAULT 1,
+   USER_NAME VARCHAR(45) NOT NULL,
+   BUS_DOMAIN_ID INT(11) NOT NULL,
+   PROCESS_TYPE_ID INT(11) NOT NULL,
+   DEPLOY_SCRIPT_LOCATION VARCHAR(1000) DEFAULT NULL,
+  PRIMARY KEY (DEPLOYMENT_ID),
+  KEY DEPLOY_STATUS_ID (DEPLOY_STATUS_ID),
+  KEY DEPLOY_PROCESS_ID (PROCESS_ID),
+  KEY DEPLOY_PROCESS_TYPE_ID (PROCESS_TYPE_ID),
+  KEY DEPLOY_BUS_DOMAIN_ID (BUS_DOMAIN_ID),
+  CONSTRAINT DEPLOY_STATUS_ID FOREIGN KEY (DEPLOY_STATUS_ID) REFERENCES DEPLOY_STATUS (DEPLOY_STATUS_ID) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  CONSTRAINT DEPLOY_PROCESS_ID FOREIGN KEY (PROCESS_ID) REFERENCES PROCESS (PROCESS_ID) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  CONSTRAINT DEPLOY_PROCESS_TYPE_ID FOREIGN KEY (PROCESS_TYPE_ID) REFERENCES PROCESS_TYPE (PROCESS_TYPE_ID) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  CONSTRAINT DEPLOY_BUS_DOMAIN_ID FOREIGN KEY (BUS_DOMAIN_ID) REFERENCES BUS_DOMAIN (BUS_DOMAIN_ID) ON DELETE NO ACTION ON UPDATE NO ACTION
+) ENGINE=INNODB DEFAULT CHARSET=UTF8;
+
+
+
+
+CREATE TABLE DOCIDSDB (DOCID INT NOT NULL AUTO_INCREMENT, URL VARCHAR(3000), PRIMARY KEY (DOCID) )ENGINE=INNODB DEFAULT CHARSET=UTF8;
+
+CREATE TABLE STATISTICSDB (UNIQID BIGINT NOT NULL AUTO_INCREMENT, VALUE BIGINT, NAME VARCHAR(255), PRIMARY KEY (UNIQID))ENGINE=INNODB DEFAULT CHARSET=UTF8;
+
+CREATE TABLE PENDINGURLSDB (UNIQID BIGINT NOT NULL AUTO_INCREMENT, PID BIGINT, INSTANCEEXECID BIGINT, URL VARCHAR(3000), DOCID INT NOT NULL, PARENTDOCID INT NOT NULL, PARENTURL VARCHAR(1000), DEPTH SMALLINT NOT NULL, DOMAIN VARCHAR(255), SUBDOMAIN VARCHAR(255), PATH VARCHAR(1000), ANCHOR VARCHAR(255),PRIORITY TINYINT NOT NULL, TAG VARCHAR(255), PRIMARY KEY (UNIQID))ENGINE=INNODB DEFAULT CHARSET=UTF8;
+
+CREATE TABLE WEBURLSDB (UNIQID BIGINT NOT NULL AUTO_INCREMENT, PID BIGINT, INSTANCEEXECID BIGINT, URL VARCHAR(3000), DOCID INT NOT NULL, PARENTDOCID INT NOT NULL, PARENTURL VARCHAR(1000), DEPTH SMALLINT NOT NULL, DOMAIN VARCHAR(255), SUBDOMAIN VARCHAR(255), PATH VARCHAR(1000), ANCHOR VARCHAR(255),PRIORITY TINYINT NOT NULL, TAG VARCHAR(255), PRIMARY KEY (UNIQID)) ENGINE=INNODB DEFAULT CHARSET=UTF8;
 
