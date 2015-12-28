@@ -82,8 +82,8 @@ public class CrawlerAPI extends MetadataAPIBase {
         com.wipro.ats.bdre.md.beans.table.Process parentProcess = new com.wipro.ats.bdre.md.beans.table.Process();
         Process childProcess = new Process();
         //making process
-        parentProcess = insertProcess(2, null, crawlerInfo.getProcessName(), crawlerInfo.getProcessDescription(), 1, principal);
-        childProcess = insertProcess(11, parentProcess.getProcessId(), "child of " + crawlerInfo.getProcessName(), "child of " + crawlerInfo.getProcessDescription(), 0, principal);
+        parentProcess = insertProcess(28, null, crawlerInfo.getProcessName(), crawlerInfo.getProcessDescription(), 1, principal);
+        childProcess = insertProcess(29, parentProcess.getProcessId(), "child of " + crawlerInfo.getProcessName(), "child of " + crawlerInfo.getProcessDescription(), 0, principal);
         parentProcess = updateProcess(parentProcess);
         //inserting in properties table
         insertProperties(childProcess.getProcessId(), "crawler", "politenessDelay", crawlerInfo.getPolitenessDelay().toString(), "Delay between requests");
@@ -112,9 +112,9 @@ public class CrawlerAPI extends MetadataAPIBase {
         insertProperties(childProcess.getProcessId(), "crawler", "urlsToSearch", crawlerInfo.getUrlsToSearch(), "urls to include in search");
         insertProperties(childProcess.getProcessId(), "crawler", "urlsNotToSearch", crawlerInfo.getUrlsNotToSearch(), "urls not to include in search");
         insertProperties(childProcess.getProcessId(), "crawler", "numberOfMappers", crawlerInfo.getNumMappers().toString(), "number of mappers to run");
-        insertProperties(childProcess.getProcessId(), "program", "mainClass", "com.wipro.ats.bdre.imcrawler.mr.MRMain", "location of main class");
-        insertProperties(childProcess.getProcessId(), "param", "sub-process-id", childProcess.getProcessId().toString(), "param subPid for mainclass");
-        insertProperties(childProcess.getProcessId(), "param", "instance-exec-id", "${wf:actionData(\"init-job\")[\"instance-exec-id\"]}", "param instanceExecId for mainclass");
+        //insertProperties(childProcess.getProcessId(), "program", "mainClass", "com.wipro.ats.bdre.imcrawler.mr.MRMain", "location of main class");
+        //insertProperties(childProcess.getProcessId(), "param", "sub-process-id", childProcess.getProcessId().toString(), "param subPid for mainclass");
+        //insertProperties(childProcess.getProcessId(), "param", "instance-exec-id", "${wf:actionData(\"init-job\")[\"instance-exec-id\"]}", "param instanceExecId for mainclass");
 
 
         List<Process> processList = new ArrayList<Process>();

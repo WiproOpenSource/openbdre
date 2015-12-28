@@ -58,6 +58,10 @@ public class ActionNode extends OozieNode {
     public static final int R_ACTION = 24;
     public static final int SPARK_ACTION = 25;
 
+    //Adding crawler Action
+    public static final int CRAWLER_PARENT_ACTION = 28;
+    public static final int CRAWLER_CHILD_ACTION = 29;
+
     private ProcessInfo processInfo = new ProcessInfo();
     private List<GenericActionNode> containingNodes = new ArrayList<GenericActionNode>();
 
@@ -179,6 +183,11 @@ public class ActionNode extends OozieNode {
             lofActionNode.setToNode(sparkActionNode);
             containingNodes.add(lofActionNode);
             containingNodes.add(sparkActionNode);
+        } else if (processInfo.getProcessTypeId() == CRAWLER_PARENT_ACTION) {
+
+        } else if (processInfo.getProcessTypeId() == CRAWLER_CHILD_ACTION) {
+            CrawlerActionNode crawlerActionNode = new CrawlerActionNode(this);
+            containingNodes.add(crawlerActionNode);
         } else {
             throw new RuntimeException("Don't know how to handle processInfo.getProcessTypeId()=" + processInfo.getProcessTypeId());
         }

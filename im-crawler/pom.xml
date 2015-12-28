@@ -79,6 +79,7 @@
                                     <shadedPattern>com.wipro.ats.bdre.org.apache.http</shadedPattern>
                                 </relocation>
                             </relocations>
+                            <outputDirectory>${project.parent.build.directory}/lib/${project.artifactId}</outputDirectory>
                             <finalName>im-crawler-${project.version}-shaded</finalName>
 
                             <filters>
