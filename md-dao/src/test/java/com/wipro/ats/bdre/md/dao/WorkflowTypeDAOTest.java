@@ -23,7 +23,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.AutowireCapableBeanFactory;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
-
+import static org.junit.Assert.*;
 /**
  * Created by PR324290 on 10/28/2015.
  */
@@ -42,12 +42,12 @@ public class WorkflowTypeDAOTest {
 
     @Autowired
     WorkflowTypeDAO workflowTypeDAO;
-
+    @Ignore
     @Test
     public void testList() throws Exception {
         LOGGER.info("Size of WorkflowType is atleast:" + workflowTypeDAO.list(0, 10).size());
     }
-
+    @Ignore
     @Test
     public void testTotalRecordCount() throws Exception {
         LOGGER.info("Size of WorkflowType is:" + workflowTypeDAO.totalRecordCount());
@@ -61,7 +61,7 @@ public class WorkflowTypeDAOTest {
     }
 
 
-    @Ignore
+
     @Test
     public void testInsertUpdateAndDelete() throws Exception {
         WorkflowType workflowType = new WorkflowType();
@@ -72,8 +72,12 @@ public class WorkflowTypeDAOTest {
         workflowType.setWorkflowTypeName("Test_updated");
         workflowTypeDAO.update(workflowType);
         workflowType = workflowTypeDAO.get(workflowTypeId);
+        assertEquals("Test_updated",workflowType.getWorkflowTypeName());
         LOGGER.info("Updated workflowType with name:" + workflowType.getWorkflowTypeName());
+        assertNotNull(workflowTypeDAO.list(0, 10));
         workflowTypeDAO.delete(workflowTypeId);
         LOGGER.info("WorkflowType Deleted with ID:" + workflowTypeId);
+        LOGGER.info("Size of WorkflowType is:" + workflowTypeDAO.totalRecordCount());
+      //  LOGGER.info("Size of WorkflowType is atleast:" + workflowTypeDAO.list(0, 10).size());
     }
 }
