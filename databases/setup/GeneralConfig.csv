@@ -477,9 +477,7 @@
 'mdconfig', 'status-notification.term-queue', 'Term Queue', 'Term Queue info for status notification',  1, 'Failure', 'text', 1
 'mdconfig', 'deploy.script-path', 'Deployment script path', 'Deployment script path',  1, '/home/cloudera/bdre/bdre-scripts/deployment', 'text', 1
 'mdconfig', 'execute.log-path', 'Log File Location', 'Path for log file',  1, '/var/log/BDRE/logfile-', 'text', 1
-'mdconfig', 'execute.oozie-script-path', 'Oozie Script Path', 'Oozie workflow script path',  1, '/home/cloudera/Workflow.py', 'text', 1
-'mdconfig', 'execute.standalone-script-path', 'Flume Script Path', 'Flume script path for standalone purpose',  1, '/home/cloudera/flume.sh', 'text', 1
-'mdconfig', 'execute.rest-exec-url', 'Execute URL', 'URL where your execute jetty server is running',  1, 'http://localhost:7777/execute/', 'text', 1
+'mdconfig', 'execute.script-path', 'Process Execute Script Path', 'Execute workflow script path',  1, '/home/cloudera/bdre/bdre-scripts/execution', 'text', 1
 'mdconfig', 'upload.base-directory', 'Base Directory For Upload', 'Base Directory where you want to upload jars and hqls',  1, '/home/cloudera/bdre-wfd', 'text', 1
 'mdconfig', 'r.shell-script', 'Location of R shell script', 'Location of R shell script', 1, '/tmp/Rhadoop.sh', 'text', 1
 'imconfig', 'common.default-fs-name', 'Default file system name','Default file system name', 1, 'hdfs://localhost:8020', 'text', 1
