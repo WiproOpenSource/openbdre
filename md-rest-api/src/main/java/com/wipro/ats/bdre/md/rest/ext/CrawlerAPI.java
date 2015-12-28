@@ -224,9 +224,8 @@ public class CrawlerAPI extends MetadataAPIBase {
                 updateDaoProcess.setBatchCutPattern(process.getBatchPattern());
             }
             updateDaoProcess.setNextProcessId(process.getNextProcessIds());
-            if (process.getDeleteFlag() != null) {
-                updateDaoProcess.setDeleteFlag(process.getDeleteFlag());
-            }
+            updateDaoProcess.setDeleteFlag(false);
+
             updateDaoProcess.setEditTs(DateConverter.stringToDate(process.getTableEditTS()));
 //            Process processes = s.selectOne("call_procedures.UpdateProcess", process);
             updateDaoProcess = processDAO.update(updateDaoProcess);

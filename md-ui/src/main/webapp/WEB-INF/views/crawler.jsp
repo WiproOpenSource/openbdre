@@ -8,6 +8,7 @@
 <html>
 
 <head>
+    <title>BDRE | Bigdata Ready Enterprise</title>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     <script src="../js/jquery.min.js"></script>
     <link href="../css/jquery-ui-1.10.3.custom.css" rel="stylesheet">
@@ -77,63 +78,63 @@
                     <!-- btn-group -->
                     <div id="crawlerFields">
                         <div class="form-group">
-                            <label class="control-label col-sm-2" for="url">Urls to crawl:</label>
-                            <div class="col-sm-10">
+                            <label class="control-label col-sm-3" for="url">Urls to crawl:</label>
+                            <div class="col-sm-9">
                                 <input type="text" class="form-control" name="url" placeholder="Enter Urls to crawl (comma seperated)" value="{{ crawlerMap['url'].defaultVal }}">
                             </div>
                         </div>
                         <div class="form-group">
-                            <label class="control-label col-sm-2" for="urlsToSearch">Regex Pattern to search:</label>
-                            <div class="col-sm-10">
+                            <label class="control-label col-sm-3" for="urlsToSearch">Regex Pattern to search:</label>
+                            <div class="col-sm-9">
                                 <input type="text" class="form-control" name="urlsToSearch" placeholder="Enter Regex Pattern to search" value="{{ crawlerMap['urlsToSearch'].defaultVal }}">
                             </div>
                         </div>
                         <div class="form-group">
-                            <label class="control-label col-sm-2" for="urlsNotToSearch">Regex Pattern not to search:</label>
-                            <div class="col-sm-10">
+                            <label class="control-label col-sm-3" for="urlsNotToSearch">Regex Pattern not to search:</label>
+                            <div class="col-sm-9">
                                 <input type="text" class="form-control" name="urlsNotToSearch" placeholder="Enter Regex Pattern not to search" value="{{ crawlerMap['urlsNotToSearch'].defaultVal }}">
                             </div>
                         </div>
                         <div class="form-group">
-                            <label class="control-label col-sm-2" for="politenessDelay">Politeness Delay:</label>
-                            <div class="col-sm-10">
+                            <label class="control-label col-sm-3" for="politenessDelay">Politeness Delay:</label>
+                            <div class="col-sm-9">
                                 <input type="number" class="form-control" id="politenessDelay" value="{{ crawlerMap['politenessDelay'].defaultVal }}" name="politenessDelay" placeholder="Enter Politeness Delay" >
                             </div>
                         </div>
                         <div class="form-group">
-                            <label class="control-label col-sm-2" for="maxDepthOfCrawling">Max depth of crawling:</label>
-                            <div class="col-sm-10">
+                            <label class="control-label col-sm-3" for="maxDepthOfCrawling">Max depth of crawling:</label>
+                            <div class="col-sm-9">
                                 <input type="number" class="form-control" id="maxDepthOfCrawling" placeholder="Enter max depth of crawling" value="{{ crawlerMap['maxDepthOfCrawling'].defaultVal }}" name="maxDepthOfCrawling">
                             </div>
                         </div>
                         <div class="form-group">
-                            <label class="control-label col-sm-2" for="maxPagesToFetch">Max pages to fetch:</label>
-                            <div class="col-sm-10">
+                            <label class="control-label col-sm-3" for="maxPagesToFetch">Max pages to fetch:</label>
+                            <div class="col-sm-9">
                                 <input type="number" class="form-control" id="maxPagesToFetch" placeholder="Enter max pages to fetch" value="{{ crawlerMap['maxPagesToFetch'].defaultVal }}" name="maxPagesToFetch">
                             </div>
                         </div>
                         <div class="form-group">
-                            <label class="control-label col-sm-2" for="includeBinaryContent">Include binary content:</label>
-                            <div class="col-sm-10">
+                            <label class="control-label col-sm-3" for="includeBinaryContent">Include binary content:</label>
+                            <div class="col-sm-9">
                                 <input type="text" class="form-control" id="includeBinaryContent" name="includeBinaryContent" value="{{crawlerMap['includeBinaryContentInCrawling'].defaultVal}}" >
                             </div>
                         </div>
                        
                         <div class="form-group">
-                            <label class="control-label col-sm-2" for="resumableCrawling">Resumable crawling:</label>
-                            <div class="col-sm-10">
+                            <label class="control-label col-sm-3" for="resumableCrawling">Resumable crawling:</label>
+                            <div class="col-sm-9">
                                 <input type="text" class="form-control" id="resumableCrawling" name="resumableCrawling" placeholder="Crawling should be resumable?" value="{{ crawlerMap['resumableCrawling'].defaultVal }}">
                             </div>
                         </div>
                         <div class="form-group">
-                            <label class="control-label col-sm-2" for="userAgentString">User agent string:</label>
-                            <div class="col-sm-10">
+                            <label class="control-label col-sm-3" for="userAgentString">User agent string:</label>
+                            <div class="col-sm-9">
                                 <input type="text" class="form-control" name="userAgentString" placeholder="Enter user agent string" value="{{ crawlerMap['userAgentString'].defaultVal }}">
                             </div>
                         </div>
                         <div class="form-group">
-                            <label class="control-label col-sm-2" for="noOfMappers">Number of mappers:</label>
-                            <div class="col-sm-10">
+                            <label class="control-label col-sm-3" for="noOfMappers">Number of mappers:</label>
+                            <div class="col-sm-9">
                                 <input type="number" class="form-control" name="numMappers" placeholder="Enter number of mappers" value="{{ crawlerMap['numberOfMappers'].defaultVal }}">
                             </div>
                         </div>
@@ -304,7 +305,27 @@
             bodyTag: "section",
             transitionEffect: "slideLeft",
             stepsOrientation: "vertical",
-            enableCancelButton: true
+            enableCancelButton: true,
+            onFinished: function(event, currentIndex) {
+                                if(created == 1) {
+                                    location.href = '<c:url value="/pages/process.page"/>';
+                                } else {
+                                    $("#div-dialog-warning").dialog({
+                                        title: "",
+                                        resizable: false,
+                                        height: 'auto',
+                                        modal: true,
+                                        buttons: {
+                                            "Ok": function() {
+                                                $(this).dialog("close");
+                                            }
+                                        }
+                                    }).text("Jobs have not been created.");
+                                }
+                },
+            onCanceled: function(event) {
+            location.href = '<c:url value="/pages/crawler.page"/>';
+            }
 
         });
     
