@@ -25,15 +25,15 @@ processId=$3
 if [ processTypeId -eq 1 ]; then
     sh $(dirname $0)/flume.sh $busDomainId $processTypeId $processId
 elif [ processTypeId -eq 2 ]; then
-    python $(dirname $0)/workflow.py $busDomainId $processTypeId $processId
+    python $(dirname $0)/Workflow.py $busDomainId $processTypeId $processId
 elif [ processTypeId -eq 4 ]; then
-    python $(dirname $0)/workflow.py $busDomainId $processTypeId $processId
+    python $(dirname $0)/Workflow.py $busDomainId $processTypeId $processId
 elif [ processTypeId -eq 5 ]; then
-    python $(dirname $0)/workflow.py $busDomainId $processTypeId $processId
+    python $(dirname $0)/Workflow.py $busDomainId $processTypeId $processId
 elif [ processTypeId -eq 18 ]; then
-    python $(dirname $0)/workflow.py $busDomainId $processTypeId $processId
+    python $(dirname $0)/Workflow.py $busDomainId $processTypeId $processId
 elif [ processTypeId -eq 19 ]; then
-    python $(dirname $0)/workflow.py $busDomainId $processTypeId $processId
+    python $(dirname $0)/Workflow.py $busDomainId $processTypeId $processId
 elif [ processTypeId -eq 26 ]; then
     sh $(dirname $0)/filemonitor.sh $processId
 fi
