@@ -617,7 +617,7 @@ $(document).ready(function() {
 			dataType: 'json',
 			success: function(data) {
 				var root = 'Records';
-				var ul = $('#sinkDropdown').siblings()[1];
+				var ul = $('#sinkDropdown').parent().find($("ul"));
 				$(ul).empty();
 				$.each(data[root], function(i, v) {
 					$(ul).append('<li><a href="#">' + v.value + '</a></li>');
@@ -653,7 +653,7 @@ $(document).ready(function() {
 			dataType: 'json',
 			success: function(data) {
 				var root = 'Records';
-				var ul = $('#chanDropdown').siblings()[1];
+				var ul = $('#chanDropdown').parent().find($("ul"));
 				$(ul).empty();
 				$.each(data[root], function(i, v) {
 					$(ul).append('<li><a href="#">' + v.value + '</a></li>');
@@ -689,7 +689,7 @@ $(document).ready(function() {
 			dataType: 'json',
 			success: function(data) {
 				var root = 'Records';
-				var ul = $('#srcDropdown').siblings()[1];
+				var ul = $('#srcDropdown').parent().find($("ul"));
 				$(ul).empty();
 				$.each(data[root], function(i, v) {
 					$(ul).append('<li><a href="#">' + v.value + '</a></li>');
