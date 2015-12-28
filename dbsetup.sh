@@ -113,12 +113,12 @@ elif [ $var_dbtype -eq 3 ]; then
 
 
     database=mysql
-    hibernate_connection_driver_class=com.mysql.jdbc.Driver
-    hibernate_connection_url=jdbc:mysql://$var_host:$var_port/$var_dbname
-    hibernate_connection_username=$var_username
-    hibernate_connection_password=$var_password
-    hibernate_dialect=org.hibernate.dialect.MySQLDialect
-    hibernate_default_schema=$var_schema
+    hibernate_connection_driver_class="com.mysql.jdbc.Driver"
+    hibernate_connection_url="jdbc:mysql://$var_host:$var_port/$var_dbname"
+    hibernate_connection_username="$var_username"
+    hibernate_connection_password="$var_password"
+    hibernate_dialect="org.hibernate.dialect.MySQLDialect"
+    hibernate_default_schema="$var_schema"
 
 elif [ $var_dbtype -eq 4 ]; then
    read -p "Enter DB hostname (Type db hostname or leave it blank for default 'localhost'): " var_host
@@ -145,30 +145,30 @@ elif [ $var_dbtype -eq 4 ]; then
         var_schema=$var_username
      fi
    database=postgresql
-   hibernate_connection_driver_class=org.postgresql.Driver
-   hibernate_connection_url=jdbc:postgresql://$var_host:$var_port/$var_dbname
-   hibernate_connection_username=$var_username
-   hibernate_connection_password=$var_password
-   hibernate_dialect=org.hibernate.dialect.PostgreSQLDialect
-   hibernate_default_schema=$var_schema
+   hibernate_connection_driver_class="org.postgresql.Driver"
+   hibernate_connection_url="jdbc:postgresql://$var_host:$var_port/$var_dbname"
+   hibernate_connection_username="$var_username"
+   hibernate_connection_password="$var_password"
+   hibernate_dialect="org.hibernate.dialect.PostgreSQLDialect"
+   hibernate_default_schema="$var_schema"
 else
-   read -p "Enter DB file name (Type db name or leave it blank for default '~/bdre'): " var_dbname
-
+   read -p "Enter DB file name (Type db file location for embedded H2 DB or leave it blank for default '~/bdre'): " var_dbname
+    read -p "Enter DB schema (Type schema or leave it blank for default 'BDRE'): " var_schema
     if [ -n "$var_dbname" ]; then
         echo
     else
-        var_dbname='~bdre'
+        var_dbname='~/bdre'
     fi
     if [ -z "$var_schema" ]; then
-        var_schema=$var_username
+        var_schema="BDRE"
     fi
     database=h2
-    hibernate_connection_driver_class=org_h2_Driver
-    hibernate_connection_url=jdbc:h2:$var_dbname
+    hibernate_connection_driver_class="org.h2.Driver"
+    hibernate_connection_url="jdbc:h2:$var_dbname"
     hibernate_connection_username=$var_username
     hibernate_connection_password=$var_password
-    hibernate_dialect=org_hibernate_dialect_H2Dialect
-    hibernate_default_schema=$var_schema
+    hibernate_dialect="org.hibernate.dialect.H2Dialect"
+    hibernate_default_schema="$var_schema"
 fi
 
 echo "Please confirm:"

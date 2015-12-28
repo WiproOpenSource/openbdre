@@ -83,18 +83,18 @@
 'Sink_Type','org.apache.flume.sink.kite.DatasetSink','Dataset Sink','Experimental sink that writes events to a Kite Dataset. This sink will deserialize the body of each incoming event and store the resulting record in a Kite Dataset. It determines target Dataset by loading a dataset by URI', 0,'org.apache.flume.sink.kite.DatasetSink','text', 1
 'Sink_Type','org.apache.flume.sink.kafka.KafkaSink','Kafka Sink','This is a Flume Sink implementation that can publish data to a Kafka topic', 0,'org.apache.flume.sink.kafka.KafkaSink','text', 1
 'Sink_Type','FQCN','FQCN','A custom sink is your own implementation of the Sink interface. A custom sink’s class and its dependencies must be included in the agent’s classpath when starting the Flume agent.', 0,'FQCN','text', 1
-'com.wipro.ats.bdre.flume.sink.hdfs.BDREHDFSEventSink_Sink','hdfs.path','HDFS Path','Path is HDFS where you want to put files',1,'/user/bdreusr/flume/%H','text', 1
+'com.wipro.ats.bdre.flume.sink.hdfs.BDREHDFSEventSink_Sink','hdfs.path','HDFS Path','Path is HDFS where you want to put files',1,'/user/cloudera/flume/%H','text', 1
 'com.wipro.ats.bdre.flume.sink.hdfs.BDREHDFSEventSink_Sink','hdfs.filePrefix','File Prefix','Name prefixed to files created by Flume in hdfs directory', 0,'IngestedData','text', 1
 'com.wipro.ats.bdre.flume.sink.hdfs.BDREHDFSEventSink_Sink','hdfs.fileSuffix','File Suffix','Name suffixed to files created by Flume in hdfs directory', 0,'%H%M%S','text', 1
 'com.wipro.ats.bdre.flume.sink.hdfs.BDREHDFSEventSink_Sink','hdfs.inUsePrefix','In Use Prefix','Prefix that is used for temporal files that flume actively writes into', 0,null,'text', 1
 'com.wipro.ats.bdre.flume.sink.hdfs.BDREHDFSEventSink_Sink','hdfs.inUseSuffix','In Use Suffix','Prefix that is used for temporal files that flume actively writes into', 0,'.tmp','text', 1
 'com.wipro.ats.bdre.flume.sink.hdfs.BDREHDFSEventSink_Sink','hdfs.rollInterval','Roll Interval','Number of seconds to wait before rolling current file (0 = never roll based on time interval)', 0,'0','text', 1
-'com.wipro.ats.bdre.flume.sink.hdfs.BDREHDFSEventSink_Sink','hdfs.rollSize','Roll Size','File size to trigger roll, in bytes (0: never roll based on file size)', 0,'0','text', 1
+'com.wipro.ats.bdre.flume.sink.hdfs.BDREHDFSEventSink_Sink','hdfs.rollSize','Roll Size','File size to trigger roll, in bytes (0: never roll based on file size)', 0,'5000','text', 1
 'com.wipro.ats.bdre.flume.sink.hdfs.BDREHDFSEventSink_Sink','hdfs.rollCount','Roll Count','Number of events written to file before it rolled (0 = never roll based on number of events)', 0,'0','text', 1
 'com.wipro.ats.bdre.flume.sink.hdfs.BDREHDFSEventSink_Sink','hdfs.idleTimeout','Idle TimeOut','Timeout after which inactive files get closed (0 = disable automatic closing of idle files)', 0,'0','text', 1
 'com.wipro.ats.bdre.flume.sink.hdfs.BDREHDFSEventSink_Sink','hdfs.batchSize','Batch Size','number of events written to file before it is flushed to HDFS', 0,'100','text', 1
 'com.wipro.ats.bdre.flume.sink.hdfs.BDREHDFSEventSink_Sink','hdfs.codeC','Codec','Compression codec. one of following : gzip, bzip2, lzo, lzop, snappy', 0,null,'text', 1
-'com.wipro.ats.bdre.flume.sink.hdfs.BDREHDFSEventSink_Sink','hdfs.fileType','File Type','File format: currently SequenceFile, DataStream or CompressedStream (1)DataStream will not compress output file and please don’t set codeC (2)CompressedStream requires set hdfs.codeC with an available codeC', 0,'SequenceFile','text', 1
+'com.wipro.ats.bdre.flume.sink.hdfs.BDREHDFSEventSink_Sink','hdfs.fileType','File Type','File format: currently SequenceFile, DataStream or CompressedStream (1)DataStream will not compress output file and please don’t set codeC (2)CompressedStream requires set hdfs.codeC with an available codeC', 0,'DataStream','text', 1
 'com.wipro.ats.bdre.flume.sink.hdfs.BDREHDFSEventSink_Sink','hdfs.maxOpenFiles','Max Open Files','Allow only this number of open files. If this number is exceeded, the oldest file is closed.', 0,'5000','text', 1
 'com.wipro.ats.bdre.flume.sink.hdfs.BDREHDFSEventSink_Sink','hdfs.minBlockReplicas','Min Block Replicas','Specify minimum number of replicas per HDFS block. If not specified, it comes from the default Hadoop config in the classpath.', 0,null,'text', 1
 'com.wipro.ats.bdre.flume.sink.hdfs.BDREHDFSEventSink_Sink','hdfs.writeFormat','Write Format','Format for sequence file records. One of “Text” or “Writable” (the default).', 0,null,'text', 1
@@ -170,7 +170,7 @@
 'irc_Sink','name','Name',' ', 0,null,'text', 1
 'irc_Sink','splitlines','Split Lines','(boolean)', 0,null,'text', 1
 'irc_Sink','splitchars','Split Chars','line separator (if you were to enter the default value into the config file, then you would need to escape the backslash, like this: “\n”)', 0,'n','text', 1
-'file_roll_Sink','sink.directory','Sink Directory','The directory where files will be stored', 1,'/home/bdreusr/file_roll','text', 1
+'file_roll_Sink','sink.directory','Sink Directory','The directory where files will be stored', 1,'/home/cloudera/file_roll','text', 1
 'file_roll_Sink','sink.rollInterval','Sink Rollinterval','Roll the file every 30 seconds. Specifying 0 will disable rolling and cause all events to be written to a single file.', 0,'30','text', 1
 'file_roll_Sink','sink.serializer','Sink Serializer','Other possible options include avro_event or the FQCN of an implementation of EventSerializer.Builder interface.', 0,'TEXT','text', 1
 'file_roll_Sink','batchSize','Batch Size','Batch Size when file will close', 0,'100','text', 1
@@ -337,7 +337,7 @@
 'thrift_Source','kerberos','Kerberos','Set to  1 to enable kerberos authentication. In kerberos mode, agent-principal and agent-keytab are required for successful authentication. The Thrift source in secure mode, will accept connections only from Thrift clients that have kerberos enabled and are successfully authenticated to the kerberos KDC.', 0,'false','text', 1
 'thrift_Source','agent-principal','Agent Principal','The kerberos principal used by the Thrift Source to authenticate to the kerberos KDC.', 0,null,'text', 1
 'thrift_Source','agent-keytab','Agent Keytab','The keytab location used by the Thrift Source in combination with the agent-principal to authenticate to the kerberos KDC.', 0,null,'text', 1
-'exec_Source','command','Command','The command to execute',1,'cat /home/bdreusr/flume/flume-test.txt','text', 1
+'exec_Source','command','Command','The command to execute',1,'cat /home/cloudera/flume/flume-test.txt','text', 1
 'exec_Source','shell','Shell','A shell invocation used to run the command. e.g. /bin/sh -c. Required only for commands relying on shell features like wildcards, back ticks, pipes etc.', 0,null,'text', 1
 'exec_Source','restartThrottle','Restart Throttle','Amount of time (in millis) to wait before attempting a restart', 0,'10000','text', 1
 'exec_Source','restart','Restart','Whether the executed cmd should be restarted if it dies', 0,'false','text', 1
@@ -360,7 +360,7 @@
 'jms_Source','converter.type','Converter Type','Class to use to convert messages to flume events. See below.', 0,null,'text', 1
 'jms_Source','converter.*','Converter.*','Converter properties.', 0,null,'text', 1
 'jms_Source','converter.charset','Converter Charset','Default converter only. Charset to use when converting JMS TextMessages to byte arrays.', 0,null,'text', 1
-'spooldir_Source','spoolDir','Spool Dir','The directory from which to read files from.',1,'/home/bdreusr/flume','text', 1
+'spooldir_Source','spoolDir','Spool Dir','The directory from which to read files from.',1,'/home/cloudera/flume','text', 1
 'spooldir_Source','fileSuffix','File Suffix','Suffix to append to completely ingested files', 0,'.COMPLETED','text', 1
 'spooldir_Source','deletePolicy','Delete Policy','When to delete completed files: never or immediate', 0,'never','text', 1
 'spooldir_Source','fileHeader','File Header','Whether to add a header storing the absolute path filename.', 0,'false','text', 1

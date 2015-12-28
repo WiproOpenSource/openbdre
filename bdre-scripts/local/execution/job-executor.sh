@@ -21,20 +21,20 @@ fi
 busDomainId=$1
 processTypeId=$2
 processId=$3
-
-if [ processTypeId -eq 1 ]; then
+echo "busDomainId=$1 , processTypeId=$2 , processId=$3"
+if [ $processTypeId -eq 1 ]; then
     sh $(dirname $0)/flume.sh $busDomainId $processTypeId $processId
-elif [ processTypeId -eq 2 ]; then
+elif [ $processTypeId -eq 2 ]; then
     python $(dirname $0)/Workflow.py $busDomainId $processTypeId $processId
-elif [ processTypeId -eq 4 ]; then
+elif [ $processTypeId -eq 4 ]; then
     python $(dirname $0)/Workflow.py $busDomainId $processTypeId $processId
-elif [ processTypeId -eq 5 ]; then
+elif [ $processTypeId -eq 5 ]; then
     python $(dirname $0)/Workflow.py $busDomainId $processTypeId $processId
-elif [ processTypeId -eq 18 ]; then
+elif [ $processTypeId -eq 18 ]; then
     python $(dirname $0)/Workflow.py $busDomainId $processTypeId $processId
-elif [ processTypeId -eq 19 ]; then
+elif [ $processTypeId -eq 19 ]; then
     python $(dirname $0)/Workflow.py $busDomainId $processTypeId $processId
-elif [ processTypeId -eq 26 ]; then
+elif [ $processTypeId -eq 26 ]; then
     sh $(dirname $0)/filemonitor.sh $processId
 fi
 
