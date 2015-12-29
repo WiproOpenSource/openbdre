@@ -23,7 +23,6 @@ import org.apache.hadoop.hive.metastore.api.FieldSchema;
 import org.apache.hadoop.hive.metastore.api.StorageDescriptor;
 import org.apache.hadoop.hive.metastore.api.Table;
 import org.apache.log4j.Logger;
-import org.apache.hive.jdbc.HiveConnection;
 
 import java.sql.Connection;
 import java.sql.ResultSet;
