@@ -32,6 +32,9 @@ chmod +x $BDRE_HOME/bdre-scripts/execution/*
 echo " installing crontab for $BDRE_HOME/bdre-scripts/deployment/process-deploy.sh"
 (crontab -l ; echo "* * * * * $BDRE_HOME/bdre-scripts/deployment/process-deploy.sh") 2>&1 | grep -v "no crontab" | sort | uniq | crontab -
 
+#Create usual hive DBs
+hive -e "create database if not exists raw;create database if not exists base;"
+
 #Create log dir
 sudo mkdir /var/log/BDRE
 sudo chown cloudera:cloudera /var/log/BDRE

@@ -83,7 +83,7 @@
 'Sink_Type','org.apache.flume.sink.kite.DatasetSink','Dataset Sink','Experimental sink that writes events to a Kite Dataset. This sink will deserialize the body of each incoming event and store the resulting record in a Kite Dataset. It determines target Dataset by loading a dataset by URI', 0,'org.apache.flume.sink.kite.DatasetSink','text', 1
 'Sink_Type','org.apache.flume.sink.kafka.KafkaSink','Kafka Sink','This is a Flume Sink implementation that can publish data to a Kafka topic', 0,'org.apache.flume.sink.kafka.KafkaSink','text', 1
 'Sink_Type','FQCN','FQCN','A custom sink is your own implementation of the Sink interface. A custom sink’s class and its dependencies must be included in the agent’s classpath when starting the Flume agent.', 0,'FQCN','text', 1
-'com.wipro.ats.bdre.flume.sink.hdfs.BDREHDFSEventSink_Sink','hdfs.path','HDFS Path','Path is HDFS where you want to put files',1,'/user/cloudera/flume/%H','text', 1
+'com.wipro.ats.bdre.flume.sink.hdfs.BDREHDFSEventSink_Sink','hdfs.path','HDFS Path','Path is HDFS where you want to put files',1,'/user/cloudera/mytable/datehour=%H','text', 1
 'com.wipro.ats.bdre.flume.sink.hdfs.BDREHDFSEventSink_Sink','hdfs.filePrefix','File Prefix','Name prefixed to files created by Flume in hdfs directory', 0,'IngestedData','text', 1
 'com.wipro.ats.bdre.flume.sink.hdfs.BDREHDFSEventSink_Sink','hdfs.fileSuffix','File Suffix','Name suffixed to files created by Flume in hdfs directory', 0,'%H%M%S','text', 1
 'com.wipro.ats.bdre.flume.sink.hdfs.BDREHDFSEventSink_Sink','hdfs.inUsePrefix','In Use Prefix','Prefix that is used for temporal files that flume actively writes into', 0,null,'text', 1
