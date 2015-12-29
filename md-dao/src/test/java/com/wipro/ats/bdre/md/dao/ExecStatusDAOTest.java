@@ -23,7 +23,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.AutowireCapableBeanFactory;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
-
+import static org.junit.Assert.*;
 /**
  * Created by MR299389 on 10/15/2015.
  */
@@ -40,12 +40,12 @@ public class ExecStatusDAOTest {
 
     @Autowired
     ExecStatusDAO execStatusDAO;
-
+    @Ignore
     @Test
     public void testList() throws Exception {
         LOGGER.info("Size of ExecStatus is atleast:" + execStatusDAO.list(0, 10).size());
     }
-
+    @Ignore
     @Test
     public void testTotalRecordCount() throws Exception {
         LOGGER.info("Size of ExecStatus is:" + execStatusDAO.totalRecordCount());
@@ -57,7 +57,7 @@ public class ExecStatusDAOTest {
 
     }
 
-    @Ignore
+
     @Test
     public void testInsertUpdateAndDelete() throws Exception {
         ExecStatus execStatus = new ExecStatus();
@@ -68,8 +68,12 @@ public class ExecStatusDAOTest {
         execStatus.setDescription("Test ExecStatus");
         execStatusDAO.update(execStatus);
         execStatus = execStatusDAO.get(execStatusId);
+        assertEquals("Test ExecStatus",execStatus.getDescription());
         LOGGER.info("Updated Description is:" + execStatus.getDescription());
+        assertNotNull(execStatusDAO.list(0, 10));
         execStatusDAO.delete(execStatusId);
         LOGGER.info("Deleted ExecStatus Entry with ID" + execStatusId);
+       // LOGGER.info("Size of ExecStatus is atleast:" + execStatusDAO.list(0, 10).size());
+        LOGGER.info("Size of ExecStatus is:" + execStatusDAO.totalRecordCount());
     }
 }
