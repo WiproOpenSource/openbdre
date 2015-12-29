@@ -1,7 +1,7 @@
 package com.wipro.ats.bdre.imcrawler.model;
 
 
-import com.wipro.ats.bdre.imcrawler.jpa.Docidsdb;
+import com.wipro.ats.bdre.md.dao.jpa.Docidsdb;
 import org.apache.log4j.Logger;
 import org.hibernate.Criteria;
 import org.hibernate.Query;

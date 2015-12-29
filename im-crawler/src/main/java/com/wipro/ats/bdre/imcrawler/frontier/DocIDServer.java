@@ -19,7 +19,7 @@ package com.wipro.ats.bdre.imcrawler.frontier;
 
 import com.wipro.ats.bdre.imcrawler.crawler.Configurable;
 import com.wipro.ats.bdre.imcrawler.crawler.CrawlConfig;
-import com.wipro.ats.bdre.imcrawler.jpa.Docidsdb;
+import com.wipro.ats.bdre.md.dao.jpa.Docidsdb;
 import com.wipro.ats.bdre.imcrawler.model.DocidsDBDao;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

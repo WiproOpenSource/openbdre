@@ -18,7 +18,7 @@
 package com.wipro.ats.bdre.imcrawler.frontier;
 
 
-import com.wipro.ats.bdre.imcrawler.jpa.Weburlsdb;
+import com.wipro.ats.bdre.md.dao.jpa.Weburlsdb;
 import com.wipro.ats.bdre.imcrawler.model.WebUrlsDBDao;
 import com.wipro.ats.bdre.imcrawler.url.WebURL;
 import org.slf4j.Logger;

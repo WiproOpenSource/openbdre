@@ -17,8 +17,8 @@
 
 package com.wipro.ats.bdre.imcrawler.frontier;
 
-import com.wipro.ats.bdre.imcrawler.jpa.Pendingurlsdb;
-import com.wipro.ats.bdre.imcrawler.jpa.Weburlsdb;
+import com.wipro.ats.bdre.md.dao.jpa.Pendingurlsdb;
+import com.wipro.ats.bdre.md.dao.jpa.Weburlsdb;
 import com.wipro.ats.bdre.imcrawler.model.PendingUrlsDBDao;
 import com.wipro.ats.bdre.imcrawler.model.WebUrlsDBDao;
 import com.wipro.ats.bdre.imcrawler.url.WebURL;
