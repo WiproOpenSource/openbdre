@@ -23,7 +23,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.AutowireCapableBeanFactory;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
-
+import static org.junit.Assert.*;
 /**
  * Created by MR299389 on 10/16/2015.
  */
@@ -39,12 +39,12 @@ public class ProcessTypeDAOTest {
 
     @Autowired
     ProcessTypeDAO processTypeDAO;
-
+    @Ignore
     @Test
     public void testList() throws Exception {
         LOGGER.info("Size of ProcessType is atleast:" + processTypeDAO.list(null, 0, 10).size());
     }
-
+    @Ignore
     @Test
     public void testTotalRecordCount() throws Exception {
         LOGGER.info("Size of ProcessType is:" + processTypeDAO.totalRecordCount(null));
@@ -56,7 +56,7 @@ public class ProcessTypeDAOTest {
 
     }
 
-    @Ignore
+
     @Test
     public void testInsertUpdateAndDelete() throws Exception {
         ProcessType processType = new ProcessType();
@@ -68,11 +68,18 @@ public class ProcessTypeDAOTest {
         processType.setProcessTypeName("Test ProcessType");
         processTypeDAO.update(processType);
         processType = processTypeDAO.get(id);
+        assertEquals("Test ProcessType", processType.getProcessTypeName());
         LOGGER.info("Updated ProcessTypeName is:" + processType.getProcessTypeName());
+        assertNotNull(processTypeDAO.listFull(0, 10));
+
         processTypeDAO.delete(id);
         LOGGER.info("Deleted ProcessType Entry with ID:" + id);
-    }
+       // LOGGER.info("Size of ProcessType is atleast:" + processTypeDAO.listFull(0, 10).size());
+        LOGGER.info("Size of ProcessType is atleast:" + processTypeDAO.list(null, 0, 10).size());
+        LOGGER.info("Size of ProcessType is:" + processTypeDAO.totalRecordCount(null));
 
+    }
+    @Ignore
     @Test
     public void testListFull() throws Exception {
         LOGGER.info("Size of ProcessType is atleast:" + processTypeDAO.listFull(0, 10).size());

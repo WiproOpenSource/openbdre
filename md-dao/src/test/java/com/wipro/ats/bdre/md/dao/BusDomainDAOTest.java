@@ -23,6 +23,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.AutowireCapableBeanFactory;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
+import static org.junit.Assert.*;
 
 public class BusDomainDAOTest {
     private static final Logger LOGGER = Logger.getLogger(BusDomainDAOTest.class);
@@ -39,11 +40,12 @@ public class BusDomainDAOTest {
     @Autowired()
     BusDomainDAO busDomainDAO;
 
+    @Ignore
     @Test
     public void testList() throws Exception {
         LOGGER.info("Size of Busdomain is atleast: " + busDomainDAO.list(0, 10).size());
     }
-
+    @Ignore
     @Test
     public void testTotalRecordCount() throws Exception {
         LOGGER.info("Size of Busdomain is: " + busDomainDAO.totalRecordCount());
@@ -53,6 +55,7 @@ public class BusDomainDAOTest {
     public void testGet() throws Exception {
         LOGGER.info("Busdomain(1) is: " + busDomainDAO.get(1).getBusDomainName());
     }
+
     @Ignore
     @Test
     public void testInsertUpdateAndDelete() throws Exception {
@@ -65,8 +68,13 @@ public class BusDomainDAOTest {
         busDomain.setBusDomainOwner("Jane Doe");
         busDomainDAO.update(busDomain);
         busDomain = busDomainDAO.get(busDomainId);
+        assertEquals("Jane Doe",busDomain.getBusDomainOwner());
         LOGGER.info("New BusDomain updated with new owner: " + busDomain.getBusDomainOwner());
+        assertNotNull(busDomainDAO.list(0, 10));
         busDomainDAO.delete(busDomainId);
         LOGGER.info("Deleted busdomain");
+       // LOGGER.info("Size of Busdomain is atleast: " + busDomainDAO.list(0, 10).size());
+        LOGGER.info("Size of Busdomain is: " + busDomainDAO.totalRecordCount());
+
     }
 }

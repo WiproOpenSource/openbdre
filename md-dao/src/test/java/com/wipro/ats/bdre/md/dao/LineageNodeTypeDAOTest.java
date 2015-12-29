@@ -23,7 +23,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.AutowireCapableBeanFactory;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
-
+import static org.junit.Assert.*;
 /**
  * Created by PR324290 on 10/28/2015.
  */
@@ -40,12 +40,12 @@ public class LineageNodeTypeDAOTest {
 
     @Autowired
     LineageNodeTypeDAO lineageNodeTypeDAO;
-
+    @Ignore
     @Test
     public void testList() throws Exception {
         LOGGER.info("Size of LineageNodeType is atleast:" + lineageNodeTypeDAO.list(0, 10).size());
     }
-
+    @Ignore
     @Test
     public void testTotalRecordCount() throws Exception {
         LOGGER.info("Size of LineageNodeType is:" + lineageNodeTypeDAO.totalRecordCount());
@@ -66,8 +66,13 @@ public class LineageNodeTypeDAOTest {
         lineageNodeType.setNodeTypeName("Updated Test");
         lineageNodeTypeDAO.update(lineageNodeType);
         lineageNodeType = lineageNodeTypeDAO.get(lineageNodeTypeId);
+        assertEquals("Updated Test",lineageNodeType.getNodeTypeName());
         LOGGER.info("Updated lineageNodeType with typename:" + lineageNodeType.getNodeTypeName());
+        assertNotNull(lineageNodeTypeDAO.list(0, 10));
         lineageNodeTypeDAO.delete(lineageNodeTypeId);
+
         LOGGER.info("LineageNodeType Deleted with ID:" + lineageNodeTypeId);
+       // LOGGER.info("Size of LineageNodeType is atleast:" + lineageNodeTypeDAO.list(0, 10).size());
+        LOGGER.info("Size of LineageNodeType is:" + lineageNodeTypeDAO.totalRecordCount());
     }
 }

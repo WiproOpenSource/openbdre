@@ -23,6 +23,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.AutowireCapableBeanFactory;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
+import static org.junit.Assert.*;
 
 /**
  * Created by MR299389 on 10/15/2015.
@@ -40,11 +41,12 @@ public class BatchStatusDAOTest {
     @Autowired
     BatchStatusDAO batchStatusDAO;
 
+    @Ignore
     @Test
     public void testList() throws Exception {
         LOGGER.info("Size of BatchStatus is atleast:" + batchStatusDAO.list(0, 10).size());
     }
-
+    @Ignore
     @Test
     public void testTotalRecordCount() throws Exception {
         LOGGER.info("Size of BatchStatus is:" + batchStatusDAO.totalRecordCount());
@@ -67,8 +69,12 @@ public class BatchStatusDAOTest {
         batchStatus.setDescription("Test BatchSatus");
         batchStatusDAO.update(batchStatus);
         batchStatus = batchStatusDAO.get(batchStatusId);
+        assertEquals("Test BatchSatus",batchStatus.getDescription());
         LOGGER.info("Updated Description is:" + batchStatus.getDescription());
+        assertNotNull(batchStatusDAO.list(0, 10));
         batchStatusDAO.delete(batchStatusId);
         LOGGER.info("Deleted BatchStatus Entry with ID" + batchStatusId);
+        LOGGER.info("Size of BatchStatus is:" + batchStatusDAO.totalRecordCount());
+      //  LOGGER.info("Size of BatchStatus is atleast:" + batchStatusDAO.list(0, 10).size());
     }
 }

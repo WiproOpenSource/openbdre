@@ -697,21 +697,7 @@ public class ProcessAPI extends MetadataAPIBase {
         ExecutionInfo executionInfo = new ExecutionInfo();
         executionInfo.setProcessId(process.getProcessId());
         try {
-            String[] command = null;
-            if (process.getWorkflowId()==1) {
-
-                command = new String[]{System.getProperty("user.home") + "/Workflow.py", process.getBusDomainId().toString(), process.getProcessTypeId().toString(), process.getProcessId().toString()};
-
-            } else if (process.getWorkflowId()==2) {
-                if (process.getProcessTypeId()==26) {
-
-                    command = new String[]{System.getProperty("user.home") + "/filemonitor.sh", process.getNextProcessIds()};
-
-                }
-                 else
-                command = new String[]{System.getProperty("user.home") + "/flume.sh", process.getBusDomainId().toString(), process.getProcessTypeId().toString(), process.getProcessId().toString()};
-
-            }
+            String[] command = {MDConfig.getProperty("execute.script-path") + "/job-executor.sh",process.getBusDomainId().toString(), process.getProcessTypeId().toString(), process.getProcessId().toString()};
             LOGGER.info("Running the command : -- " + command[0] + " " + command[1] + " " + command[2] + " " + command[3]);
             ProcessBuilder processBuilder = new ProcessBuilder(command[0], command[1],command[2],command[3]);
             processBuilder.redirectOutput(new File(MDConfig.getProperty("execute.log-path") + process.getProcessId().toString()));
