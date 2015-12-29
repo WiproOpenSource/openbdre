@@ -1,10 +1,3 @@
-<!--
-  ~ Copyright (c) 2014 Wipro Limited
-  ~ All Rights Reserved
-  ~
-  ~ This code is protected by copyright and distributed under
-  ~ licenses restricting copying, distribution and decompilation.
-  -->
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ taglib prefix="security"
 	   uri="http://www.springframework.org/security/tags" %>
@@ -461,7 +454,7 @@ wizard = $(document).ready(function() {
 		},
 		onFinished: function(event, currentIndex) {
 			if(created == 1) {
-				location.href = '<c:url value="/pages/content.page"/>';
+				location.href = '<c:url value="/pages/process.page"/>';
 			} else {
 				$("#div-dialog-warning").dialog({
 					title: "",
@@ -499,7 +492,9 @@ wizard = $(document).ready(function() {
 					</div>
 					<!-- btn-group -->
 					<div class="btn-group">
-						<button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="false" aria-expanded="true" id="srcDropdown"><span>Select Source</span><span class="caret"></span></button>
+						<button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="false" aria-expanded="true" id="srcDropdown">
+							<span>Select Source</span><span class="caret"></span>
+						</button>
 						<ul class="dropdown-menu" aria-labelledby="srcDropdown">
 							<li>
 								<a href="#"></a>
@@ -622,7 +617,7 @@ $(document).ready(function() {
 			dataType: 'json',
 			success: function(data) {
 				var root = 'Records';
-				var ul = $('#sinkDropdown').siblings();
+				var ul = $('#sinkDropdown').parent().find($("ul"));
 				$(ul).empty();
 				$.each(data[root], function(i, v) {
 					$(ul).append('<li><a href="#">' + v.value + '</a></li>');
@@ -658,7 +653,7 @@ $(document).ready(function() {
 			dataType: 'json',
 			success: function(data) {
 				var root = 'Records';
-				var ul = $('#chanDropdown').siblings();
+				var ul = $('#chanDropdown').parent().find($("ul"));
 				$(ul).empty();
 				$.each(data[root], function(i, v) {
 					$(ul).append('<li><a href="#">' + v.value + '</a></li>');
@@ -694,7 +689,7 @@ $(document).ready(function() {
 			dataType: 'json',
 			success: function(data) {
 				var root = 'Records';
-				var ul = $('#srcDropdown').siblings();
+				var ul = $('#srcDropdown').parent().find($("ul"));
 				$(ul).empty();
 				$.each(data[root], function(i, v) {
 					$(ul).append('<li><a href="#">' + v.value + '</a></li>');

@@ -14,8 +14,8 @@
 
 package com.wipro.ats.bdre.filemon;
 
-import com.wipro.ats.bdre.im.etl.api.base.ETLBase;
-import com.wipro.ats.bdre.im.etl.api.exception.ETLException;
+import com.wipro.ats.bdre.BaseStructure;
+import com.wipro.ats.bdre.exception.BDREException;
 import com.wipro.ats.bdre.md.api.GetGeneralConfig;
 import com.wipro.ats.bdre.md.api.GetProcess;
 import com.wipro.ats.bdre.md.api.GetProperties;
@@ -34,7 +34,7 @@ import java.util.Properties;
 /**
  * Created by vishnu on 1/11/15.
  */
-public class FileMonRunnableMain extends ETLBase {
+public class FileMonRunnableMain extends BaseStructure {
 
     private static final Logger LOGGER = Logger.getLogger(FileMonRunnableMain.class);
     private static String monitoredDirName = "";
@@ -151,7 +151,7 @@ public class FileMonRunnableMain extends ETLBase {
             consumerThread2.start();
         } catch (Exception err) {
             LOGGER.error(err);
-            throw new ETLException(err);
+            throw new BDREException(err);
         }
     }
 }

@@ -61,174 +61,168 @@ public class FullJobTest {
     JobDAO jobDAO;
     @Autowired
     StepDAO stepDAO;
+    @Autowired
+    BatchConsumpQueueDAO batchConsumpQueueDAO;
 
 
     @Test
     public void completeJobTest() throws Exception {
 
-
+        Integer busDomainId = null;
+        PropertiesId propertiesId = null;
+        Integer firstParentProcessId = null;
+        Integer firstChildOfParentProcess1Id = null;
+        Integer secondChildOfParentProcess1Id = null;
+        Integer secondParentProcessId = null;
+        Integer firstChildOfParentProcess2Id = null;
+        Integer secondChildOfParentProcess2Id = null;
+        Integer flag = 0;
+    try{
         BusDomain busDomain = new BusDomain();
         busDomain.setBusDomainName("testName");
         busDomain.setDescription("testDescription");
         busDomain.setBusDomainOwner("testOwner");
 
         //inserting new BusDomain
-        int busDomainId = busDomainDAO.insert(busDomain);
+         busDomainId = busDomainDAO.insert(busDomain);
         //updating inserted BusDomain
         busDomain.setDescription("updateDescription");
         busDomainDAO.update(busDomain);
         //fetching updated busDomain
         BusDomain updatedBusDomain = busDomainDAO.get(busDomainId);
-
         assertEquals("busDomain update failed", "updateDescription", updatedBusDomain.getDescription());
 
 
-        ProcessType processType = processTypeDAO.get(1);
-        ProcessType childProcessType = processTypeDAO.get(6);
+        ProcessType parentProcessType = processTypeDAO.get(1);
+        ProcessType childProcessType = processTypeDAO.get(12);
 
-        WorkflowType workflowType = workflowTypeDAO.get(0);
-        WorkflowType childWworkflowType = workflowTypeDAO.get(1);
+        WorkflowType parentWorkflowType = workflowTypeDAO.get(0);
+        WorkflowType childWorkflowType = workflowTypeDAO.get(1);
 
-        Process parentProcess1 = new Process();
-        parentProcess1.setProcessName("Test");
-        parentProcess1.setDescription("Test Process");
-        parentProcess1.setBusDomain(busDomain);
-        parentProcess1.setProcessType(processTypeDAO.get(1));
-        parentProcess1.setAddTs(new Date());
-        parentProcess1.setCanRecover(true);
-        parentProcess1.setEnqueuingProcessId(0);
-        parentProcess1.setProcess(null);
-        parentProcess1.setNextProcessId("1");
-        parentProcess1.setDeleteFlag(false);
-        parentProcess1.setEditTs(new Date());
-        parentProcess1.setWorkflowType(workflowType);
+        Process firstParentProcess = new Process();
+        firstParentProcess.setProcessName("Test");
+        firstParentProcess.setDescription("Test Process");
+        firstParentProcess.setBusDomain(busDomain);
+        firstParentProcess.setProcessType(parentProcessType);
+        firstParentProcess.setAddTs(new Date());
+        firstParentProcess.setCanRecover(true);
+        firstParentProcess.setEnqueuingProcessId(0);
+        firstParentProcess.setProcess(null);
+        firstParentProcess.setNextProcessId("1");
+        firstParentProcess.setDeleteFlag(false);
+        firstParentProcess.setEditTs(new Date());
+        firstParentProcess.setWorkflowType(parentWorkflowType);
         //inserting parent process1
-        Integer parentProcessId1 = processDAO.insert(parentProcess1);
+         firstParentProcessId = processDAO.insert(firstParentProcess);
 
 
-        Process subProcess1 = new Process();
-        subProcess1.setProcessName("Test");
-        subProcess1.setDescription("Test Process");
-        subProcess1.setBusDomain(busDomain);
-        subProcess1.setProcessType(processTypeDAO.get(12));
-        subProcess1.setAddTs(new Date());
-        subProcess1.setCanRecover(true);
-        subProcess1.setEnqueuingProcessId(0);
-        subProcess1.setProcess(parentProcess1);
-        subProcess1.setNextProcessId(parentProcessId1.toString());
-        subProcess1.setDeleteFlag(false);
-        subProcess1.setEditTs(new Date());
-        subProcess1.setWorkflowType(childWworkflowType);
+        Process firstChildOfParentProcess1 = new Process();
+        firstChildOfParentProcess1.setProcessName("Test");
+        firstChildOfParentProcess1.setDescription("Test Process");
+        firstChildOfParentProcess1.setBusDomain(busDomain);
+        firstChildOfParentProcess1.setProcessType(childProcessType);
+        firstChildOfParentProcess1.setAddTs(new Date());
+        firstChildOfParentProcess1.setCanRecover(true);
+        firstChildOfParentProcess1.setEnqueuingProcessId(0);
+        firstChildOfParentProcess1.setProcess(firstParentProcess);
+        firstChildOfParentProcess1.setNextProcessId(firstParentProcessId.toString());
+        firstChildOfParentProcess1.setDeleteFlag(false);
+        firstChildOfParentProcess1.setEditTs(new Date());
+        firstChildOfParentProcess1.setWorkflowType(childWorkflowType);
         //inserting sub process1
-        Integer subProcessId1 = processDAO.insert(subProcess1);
+         firstChildOfParentProcess1Id = processDAO.insert(firstChildOfParentProcess1);
         //fetching process
-        LOGGER.info("sub pid " + subProcessId1);
-        Process updatedProcess = processDAO.get(subProcessId1);
-        assertNotNull("editTs not null", subProcess1.getEditTs());
+        LOGGER.info("sub pid " + firstChildOfParentProcess1Id);
+        Process updatedProcess = processDAO.get(firstChildOfParentProcess1Id);
+        assertNotNull("editTs not null", firstChildOfParentProcess1.getEditTs());
         assertFalse(updatedProcess.getDeleteFlag());
 
 
-        Process subProcess2 = new Process();
-        subProcess2.setProcessName("Test");
-        subProcess2.setDescription("Test Process");
-        subProcess2.setBusDomain(busDomain);
-        subProcess2.setProcessType(processTypeDAO.get(12));
-        subProcess2.setAddTs(new Date());
-        subProcess2.setCanRecover(true);
-        subProcess2.setEnqueuingProcessId(0);
-        subProcess2.setProcess(parentProcess1);
-        subProcess2.setNextProcessId(parentProcessId1.toString());
-        subProcess2.setDeleteFlag(false);
-        subProcess2.setEditTs(new Date());
-        subProcess2.setWorkflowType(childWworkflowType);
-        //inserting subProcess2
-        Integer subProcessId2 = processDAO.insert(subProcess2);
-
-        Process subProcess3 = new Process();
-        subProcess3.setProcessName("Test");
-        subProcess3.setDescription("Test Process");
-        subProcess3.setBusDomain(busDomain);
-        subProcess3.setProcessType(processTypeDAO.get(12));
-        subProcess3.setAddTs(new Date());
-        subProcess3.setCanRecover(true);
-        subProcess3.setEnqueuingProcessId(0);
-        subProcess3.setProcess(parentProcess1);
-        subProcess3.setNextProcessId(parentProcessId1.toString());
-        subProcess3.setDeleteFlag(false);
-        subProcess3.setEditTs(new Date());
-        subProcess3.setWorkflowType(childWworkflowType);
-        //inserting subProcess3
-        Integer subProcessId3 = processDAO.insert(subProcess3);
+        Process secondChildOfParentProcess1 = new Process();
+        secondChildOfParentProcess1.setProcessName("Test");
+        secondChildOfParentProcess1.setDescription("Test Process");
+        secondChildOfParentProcess1.setBusDomain(busDomain);
+        secondChildOfParentProcess1.setProcessType(childProcessType);
+        secondChildOfParentProcess1.setAddTs(new Date());
+        secondChildOfParentProcess1.setCanRecover(true);
+        secondChildOfParentProcess1.setEnqueuingProcessId(0);
+        secondChildOfParentProcess1.setProcess(firstParentProcess);
+        secondChildOfParentProcess1.setNextProcessId(firstParentProcessId.toString());
+        secondChildOfParentProcess1.setDeleteFlag(false);
+        secondChildOfParentProcess1.setEditTs(new Date());
+        secondChildOfParentProcess1.setWorkflowType(childWorkflowType);
+        //inserting secondChildOfParentProcess1
+         secondChildOfParentProcess1Id = processDAO.insert(secondChildOfParentProcess1);
 
 
-        parentProcess1.setNextProcessId(subProcessId1.toString() + "," + subProcessId2.toString());
-        processDAO.update(parentProcess1);
-        Process updatedParentProcess = processDAO.get(parentProcessId1);
-        assertEquals("next processId of parent process not update succesfully", subProcessId1.toString() + "," + subProcessId2.toString(), updatedParentProcess.getNextProcessId());
+        firstParentProcess.setNextProcessId(firstChildOfParentProcess1Id.toString() + "," + secondChildOfParentProcess1Id.toString());
+        processDAO.update(firstParentProcess);
+        Process updatedParentProcess = processDAO.get(firstParentProcessId);
+        assertEquals("next processId of parent process not update succesfully", firstChildOfParentProcess1Id.toString() + "," + secondChildOfParentProcess1Id.toString(), updatedParentProcess.getNextProcessId());
 
 
-        Process parentProcess2 = new Process();
-        parentProcess2.setProcessName("Test");
-        parentProcess2.setDescription("Test Process");
-        parentProcess2.setBusDomain(busDomain);
-        parentProcess2.setProcessType(processTypeDAO.get(1));
-        parentProcess2.setAddTs(new Date());
-        parentProcess2.setCanRecover(true);
-        parentProcess2.setEnqueuingProcessId(0);
-        parentProcess2.setProcess(null);
-        parentProcess2.setNextProcessId("1");
-        parentProcess2.setDeleteFlag(false);
-        parentProcess2.setEditTs(new Date());
-        parentProcess2.setWorkflowType(workflowType);
-        Integer parentProcessId2 = processDAO.insert(parentProcess2);
+        Process secondParentProcess = new Process();
+        secondParentProcess.setProcessName("Test");
+        secondParentProcess.setDescription("Test Process");
+        secondParentProcess.setBusDomain(busDomain);
+        secondParentProcess.setProcessType(parentProcessType);
+        secondParentProcess.setAddTs(new Date());
+        secondParentProcess.setCanRecover(true);
+        secondParentProcess.setEnqueuingProcessId(0);
+        secondParentProcess.setProcess(null);
+        secondParentProcess.setNextProcessId("1");
+        secondParentProcess.setDeleteFlag(false);
+        secondParentProcess.setEditTs(new Date());
+        secondParentProcess.setWorkflowType(parentWorkflowType);
+         secondParentProcessId = processDAO.insert(secondParentProcess);
 
 
-        Process subProcess4 = new Process();
-        subProcess4.setProcessName("Test");
-        subProcess4.setDescription("Test Process");
-        subProcess4.setBusDomain(busDomain);
-        subProcess4.setProcessType(processTypeDAO.get(12));
-        subProcess4.setAddTs(new Date());
-        subProcess4.setCanRecover(true);
-        subProcess4.setEnqueuingProcessId(parentProcessId1);
-        subProcess4.setProcess(parentProcess2);
-        subProcess4.setNextProcessId("1");
-        subProcess4.setDeleteFlag(false);
-        subProcess4.setEditTs(new Date());
-        subProcess4.setWorkflowType(childWworkflowType);
-        //inserting subProcess4
-        Integer subProcessId4 = processDAO.insert(subProcess4);
+        Process firstChildOfParentProcess2 = new Process();
+        firstChildOfParentProcess2.setProcessName("Test");
+        firstChildOfParentProcess2.setDescription("Test Process");
+        firstChildOfParentProcess2.setBusDomain(busDomain);
+        firstChildOfParentProcess2.setProcessType(childProcessType);
+        firstChildOfParentProcess2.setAddTs(new Date());
+        firstChildOfParentProcess2.setCanRecover(true);
+        firstChildOfParentProcess2.setEnqueuingProcessId(firstParentProcessId);
+        firstChildOfParentProcess2.setProcess(secondParentProcess);
+        firstChildOfParentProcess2.setNextProcessId("1");
+        firstChildOfParentProcess2.setDeleteFlag(false);
+        firstChildOfParentProcess2.setEditTs(new Date());
+        firstChildOfParentProcess2.setWorkflowType(childWorkflowType);
+        //inserting firstChildOfParentProcess2
+         firstChildOfParentProcess2Id = processDAO.insert(firstChildOfParentProcess2);
 
-        Process subProcess5 = new Process();
-        subProcess5.setProcessName("Test");
-        subProcess5.setDescription("Test Process");
-        subProcess5.setBusDomain(busDomain);
-        subProcess5.setProcessType(processTypeDAO.get(12));
-        subProcess5.setAddTs(new Date());
-        subProcess5.setCanRecover(true);
-        subProcess5.setEnqueuingProcessId(parentProcessId1);
-        subProcess5.setProcess(parentProcess2);
-        subProcess5.setNextProcessId(parentProcessId2.toString());
-        subProcess5.setDeleteFlag(false);
-        subProcess5.setEditTs(new Date());
-        subProcess5.setWorkflowType(childWworkflowType);
-        //inserting subProcess5
-        Integer subProcessId5 = processDAO.insert(subProcess5);
-
-
-//      parentProcess2=processDAO.get(parentProcessId2);
-        parentProcess2.setNextProcessId(subProcessId4.toString() + "," + subProcessId5.toString());
-        processDAO.update(parentProcess2);
+        Process secondChildOfParentProcess2 = new Process();
+        secondChildOfParentProcess2.setProcessName("Test");
+        secondChildOfParentProcess2.setDescription("Test Process");
+        secondChildOfParentProcess2.setBusDomain(busDomain);
+        secondChildOfParentProcess2.setProcessType(childProcessType);
+        secondChildOfParentProcess2.setAddTs(new Date());
+        secondChildOfParentProcess2.setCanRecover(true);
+        secondChildOfParentProcess2.setEnqueuingProcessId(firstParentProcessId);
+        secondChildOfParentProcess2.setProcess(secondParentProcess);
+        secondChildOfParentProcess2.setNextProcessId(secondParentProcessId.toString());
+        secondChildOfParentProcess2.setDeleteFlag(false);
+        secondChildOfParentProcess2.setEditTs(new Date());
+        secondChildOfParentProcess2.setWorkflowType(childWorkflowType);
+        //inserting secondChildOfParentProcess2
+         secondChildOfParentProcess2Id = processDAO.insert(secondChildOfParentProcess2);
 
 
-        PropertiesId propertiesId = new PropertiesId();
-        propertiesId.setProcessId(subProcessId1);
+//      secondParentProcess=processDAO.get(secondParentProcessId);
+        secondParentProcess.setNextProcessId(firstChildOfParentProcess2Id.toString() + "," + secondChildOfParentProcess2Id.toString());
+        processDAO.update(secondParentProcess);
+
+
+        propertiesId = new PropertiesId();
+        propertiesId.setProcessId(firstChildOfParentProcess1Id);
         propertiesId.setPropKey("Test key");
         Properties properties = new Properties();
         properties.setDescription("test Description");
         properties.setConfigGroup("Test CG");
         properties.setId(propertiesId);
-        properties.setProcess(subProcess1);
+        properties.setProcess(firstChildOfParentProcess1);
         properties.setPropValue("Test Value");
         //inserting properties
         propertiesId = propertiesDAO.insert(properties);
@@ -238,73 +232,137 @@ public class FullJobTest {
         Properties updatedProperties = propertiesDAO.get(propertiesId);
         assertEquals("update properties failed", "test Description", updatedProperties.getDescription());
 
-        List<Properties> propertiesList = propertiesDAO.getPropertiesForConfig(subProcessId1, "Test CG");
+        List<Properties> propertiesList = propertiesDAO.getPropertiesForConfig(firstChildOfParentProcess1Id, "Test CG");
         assertEquals("getPropertiesForConfig failed", propertiesList.get(0).getId().getPropKey(), "Test key");
 
-        Batch batch = new Batch();
-        batch.setBatchType("Test");
-        //inserting batch
-        Long batchId = batchDAO.insert(batch);
-        //updating  batch
-        batch.setBatchType("UpdateBatchType");
-        batchDAO.update(batch);
-        Batch updatedBatch = batchDAO.get(batchId);
-        assertEquals("updated Batch failure", "UpdateBatchType", updatedBatch.getBatchType());
+        //bcq is null before starting processes
+        assertNotNull(batchConsumpQueueDAO.list(0, 10));
+
+        List<InitJobRowInfo> initJobRowInfos1 = jobDAO.initJob(firstParentProcessId, 1);
+        Long parentInstanceExecId1 = initJobRowInfos1.get(0).getInstanceExecId();
+        assertEquals(new Integer(2), instanceExecDAO.get(parentInstanceExecId1).getExecStatus().getExecStateId());
+
+        Long subInstanceExecId1 = stepDAO.initStep(firstChildOfParentProcess1Id);
+        assertEquals(new Integer(2), instanceExecDAO.get(subInstanceExecId1).getExecStatus().getExecStateId());
+
+        Long subInstanceExecId2 = stepDAO.initStep(secondChildOfParentProcess1Id);
+        assertEquals(new Integer(2), instanceExecDAO.get(subInstanceExecId2).getExecStatus().getExecStateId());
+
+        stepDAO.haltStep(firstChildOfParentProcess1Id);
+        assertEquals(new Integer(3), instanceExecDAO.get(subInstanceExecId1).getExecStatus().getExecStateId());
 
 
-        List<InitJobRowInfo> initJobRowInfos1 = jobDAO.initJob(parentProcessId1, 1);
-        assertNotNull(initJobRowInfos1.get(0).getInstanceExecId());
-        Long sub_instance_exec_id1 = stepDAO.initStep(subProcessId1);
-        assertNotNull(sub_instance_exec_id1);
-        Long sub_instance_exec_id2 = stepDAO.initStep(subProcessId2);
-        assertNotNull(sub_instance_exec_id2);
-        Long sub_instance_exec_id3 = stepDAO.initStep(subProcessId3);
-        assertNotNull(sub_instance_exec_id3);
-        //   LOGGER.info("1st is "+sub_instance_exec_id1+"1st is "+sub_instance_exec_id2+"1st is "+sub_instance_exec_id3);
-
-        stepDAO.haltStep(subProcessId1);
-        InstanceExec instanceExec = instanceExecDAO.get(sub_instance_exec_id1);
-        assertNotNull(instanceExec.getInstanceExecId());
-
-        stepDAO.haltStep(subProcessId2);
-        stepDAO.haltStep(subProcessId3);
-
-        jobDAO.haltJob(parentProcessId1, "parentProcessFirst");
-        instanceExec = instanceExecDAO.get(initJobRowInfos1.get(0).getInstanceExecId());
-        assertNotNull(instanceExec.getInstanceExecId());
-
-        List<InitJobRowInfo> initJobRowInfos2 = jobDAO.initJob(parentProcessId2, 1);
-        assertNotNull(initJobRowInfos2.get(0).getInstanceExecId());
-        Long sub_instance_exec_id4 = stepDAO.initStep(subProcessId4);
-        assertNotNull(sub_instance_exec_id4);
-        Long sub_instance_exec_id5 = stepDAO.initStep(subProcessId5);
-        assertNotNull(sub_instance_exec_id5);
-        LOGGER.info(sub_instance_exec_id4 + "1st is " + sub_instance_exec_id5);
-        stepDAO.termStep(subProcessId4);
-        stepDAO.haltStep(subProcessId5);
-
-        //Long sub_instance_exec_id6 = stepDAO.initStep(subProcessId4);
-        // stepDAO.haltStep(subProcessId4);
-        jobDAO.haltJob(parentProcessId2, "parentProcessSecond");
-        jobDAO.initJob(parentProcessId2, 1);
-        Long sub_instance_exec_id6 = stepDAO.initStep(subProcessId4);
-        stepDAO.haltStep(subProcessId4);
-        LOGGER.info("1st is " + sub_instance_exec_id6);
-        jobDAO.haltJob(parentProcessId2, "parentProcessSecond");
+        stepDAO.haltStep(secondChildOfParentProcess1Id);
+        assertEquals(new Integer(3), instanceExecDAO.get(subInstanceExecId2).getExecStatus().getExecStateId());
 
 
-        propertiesDAO.delete(propertiesId);
-        processDAO.delete(subProcessId1);
-        processDAO.delete(subProcessId2);
-        processDAO.delete(subProcessId3);
-        processDAO.delete(subProcessId4);
-        processDAO.delete(subProcessId5);
-        processDAO.delete(parentProcessId1);
-        processDAO.delete(parentProcessId2);
-        busDomainDAO.delete(busDomainId);
+        jobDAO.haltJob(firstParentProcessId, "parentProcessFirst");
+        assertEquals(new Integer(3), instanceExecDAO.get(parentInstanceExecId1).getExecStatus().getExecStateId());
 
-        batchDAO.delete(batchId);
+//  checking for record in bcq
+        assertEquals(new Long(2), batchConsumpQueueDAO.totalRecordCount());
+        assertNotNull(batchConsumpQueueDAO.list(0, 10));
 
+        List<InitJobRowInfo> initJobRowInfos2 = jobDAO.initJob(secondParentProcessId, 1);
+        Long parentInstanceExecId2 = initJobRowInfos2.get(0).getInstanceExecId();
+        assertEquals(new Integer(2), instanceExecDAO.get(parentInstanceExecId2).getExecStatus().getExecStateId());
+
+        Long subInstanceExecId4 = stepDAO.initStep(firstChildOfParentProcess2Id);
+        assertEquals(new Integer(2), instanceExecDAO.get(subInstanceExecId4).getExecStatus().getExecStateId());
+
+        Long subInstanceExecId5 = stepDAO.initStep(secondChildOfParentProcess2Id);
+        assertEquals(new Integer(2), instanceExecDAO.get(subInstanceExecId5).getExecStatus().getExecStateId());
+
+        stepDAO.haltStep(firstChildOfParentProcess2Id);
+        assertEquals(new Integer(3), instanceExecDAO.get(subInstanceExecId4).getExecStatus().getExecStateId());
+
+        stepDAO.termStep(secondChildOfParentProcess2Id);
+        assertEquals(new Integer(6), instanceExecDAO.get(subInstanceExecId5).getExecStatus().getExecStateId());
+
+        jobDAO.termJob(secondParentProcessId);
+        assertEquals(new Integer(6), instanceExecDAO.get(parentInstanceExecId2).getExecStatus().getExecStateId());
+//checking bcq
+        assertEquals(new Long(2), batchConsumpQueueDAO.totalRecordCount());
+
+        List<InitJobRowInfo> initJobRowInfos3 = jobDAO.initJob(secondParentProcessId, 1);
+        Long parentInstanceExecId3 = initJobRowInfos3.get(0).getInstanceExecId();
+        assertEquals(new Integer(2), instanceExecDAO.get(parentInstanceExecId3).getExecStatus().getExecStateId());
+
+        Long subInstanceExecId6 = stepDAO.initStep(firstChildOfParentProcess2Id);
+        assertEquals(new Integer(2), instanceExecDAO.get(subInstanceExecId6).getExecStatus().getExecStateId());
+        Long subInstanceExecId7 = stepDAO.initStep(secondChildOfParentProcess2Id);
+        assertEquals(new Integer(2), instanceExecDAO.get(subInstanceExecId7).getExecStatus().getExecStateId());
+        stepDAO.haltStep(firstChildOfParentProcess2Id);
+        assertEquals(new Integer(3), instanceExecDAO.get(subInstanceExecId6).getExecStatus().getExecStateId());
+        stepDAO.haltStep(secondChildOfParentProcess2Id);
+        assertEquals(new Integer(3), instanceExecDAO.get(subInstanceExecId7).getExecStatus().getExecStateId());
+
+        jobDAO.haltJob(secondParentProcessId, "parentProcessSecond");
+        assertEquals(new Integer(3), instanceExecDAO.get(parentInstanceExecId3).getExecStatus().getExecStateId());
+
+        assertEquals(new Long(0), batchConsumpQueueDAO.totalRecordCount());
+    }
+    finally
+
+    {
+        try {
+            propertiesDAO.delete(propertiesId);
+        }catch (Exception e) {
+            LOGGER.info("unable to delete properties");
+            flag = 1;
+        }
+
+        try {
+            processDAO.delete(firstChildOfParentProcess1Id);
+        }catch (Exception e) {
+            LOGGER.info("unable to delete firstChildOfParentProcess1");
+            flag = 1;
+        }
+
+        try {
+            processDAO.delete(secondChildOfParentProcess1Id);
+        }catch (Exception e) {
+            LOGGER.info("unable to delete secondChildOfParentProcess1");
+            flag = 1;
+        }
+
+        try {
+            processDAO.delete(firstChildOfParentProcess2Id);
+        }catch (Exception e) {
+            LOGGER.info("unable to delete firstChildOfParentProcess2");
+            flag = 1;
+        }
+
+        try {
+            processDAO.delete(secondChildOfParentProcess2Id);
+        }catch (Exception e) {
+            LOGGER.info("unable to delete secondChildOfParentProcess2");
+            flag = 1;
+        }
+
+        try {
+            processDAO.delete(firstParentProcessId);
+        }catch (Exception e) {
+            LOGGER.info("unable to delete firstParentProcess");
+            flag = 1;
+        }
+
+        try {
+            processDAO.delete(secondParentProcessId);
+        }catch (Exception e) {
+            LOGGER.info("unable to delete secondParentProcess");
+            flag = 1;
+        }
+
+        try {
+            busDomainDAO.delete(busDomainId);
+        }catch (Exception e) {
+            LOGGER.info("unable to delete busDomain");
+            flag = 1;
+        }
+        assertEquals(new Integer(0),flag);
+    }
 
     }
 }
+

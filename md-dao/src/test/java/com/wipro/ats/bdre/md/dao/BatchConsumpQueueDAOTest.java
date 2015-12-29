@@ -68,6 +68,7 @@ public class BatchConsumpQueueDAOTest {
     }
 
     @Test
+    @Ignore
     public void testInsertUpdateAndDelete() throws Exception {
         
         com.wipro.ats.bdre.md.dao.jpa.Process process = processDAO.get(10835);

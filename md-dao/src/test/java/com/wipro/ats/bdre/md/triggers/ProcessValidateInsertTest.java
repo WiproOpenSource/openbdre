@@ -19,6 +19,7 @@ import com.wipro.ats.bdre.md.dao.jpa.Process;
 import com.wipro.ats.bdre.md.dao.jpa.ProcessType;
 import org.apache.log4j.Logger;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.springframework.beans.factory.config.AutowireCapableBeanFactory;
 import org.springframework.context.ApplicationContext;
@@ -35,6 +36,7 @@ public class ProcessValidateInsertTest {
     }
 
     @Test
+    @Ignore
     public void testProcessVal() throws Exception {
 
         try {

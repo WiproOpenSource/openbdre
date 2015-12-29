@@ -14,7 +14,7 @@
 
 package com.wipro.ats.bdre.filemon;
 
-import com.wipro.ats.bdre.im.etl.api.exception.ETLException;
+import com.wipro.ats.bdre.exception.BDREException;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.commons.io.FileUtils;
 import org.apache.log4j.Logger;
@@ -56,7 +56,7 @@ public class FileScan {
             }
         } catch (Exception err) {
             LOGGER.error("Error in scan directory ", err);
-            throw new ETLException(err);
+            throw new BDREException(err);
         }
     }
 }

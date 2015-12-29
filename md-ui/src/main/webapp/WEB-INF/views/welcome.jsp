@@ -23,7 +23,7 @@
 	<div class="container-fluid" ng-app="myApp" ng-controller="myCtrl">
 	<div class="jumbotron  alert-info">
         <h1>Bigdata Ready Enterprise</h1>
-        <p>Our product attempts to make big data technology simpler by optimizing and integrating various big data solutions and providing them under one integrated package, Big Data Ready Enterprises, or BDRE. BDRE is a Bigdata/Hadoop unified framework developed in Wipro Bigdata Practice Lab with the goal of drastically minimizing development time.</p>
+        <p>Our product attempts to make big data technology simpler by optimizing and integrating various big data solutions and providing them under one integrated package, Big Data Ready Enterprises, or BDRE. BDRE is a Bigdata/Hadoop unified framework developed with the goal of drastically minimizing development time.</p>
       </div>
 
 	    <div class="row ">

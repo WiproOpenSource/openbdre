@@ -14,7 +14,7 @@
 
 package com.wipro.ats.bdre.filemon;
 
-import com.wipro.ats.bdre.im.etl.api.exception.ETLException;
+import com.wipro.ats.bdre.exception.BDREException;
 import com.wipro.ats.bdre.md.api.RegisterFile;
 import org.apache.commons.io.FileUtils;
 import org.apache.hadoop.conf.Configuration;
@@ -70,7 +70,7 @@ public class QueuedFileUploader {
                 executeRegisterFiles(fileCopying);
             } catch (Exception err) {
                 LOGGER.error("Error in execute copy process ", err);
-                throw new ETLException(err);
+                throw new BDREException(err);
             }
         }
     }
@@ -92,7 +92,7 @@ public class QueuedFileUploader {
             registerFile.execute(params);
         } catch (Exception err) {
             LOGGER.error("Error execute register files ", err);
-            throw new ETLException(err);
+            throw new BDREException(err);
         }
     }
 

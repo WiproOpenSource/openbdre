@@ -67,6 +67,7 @@ public class ETLDriverDAOTest {
     }
 
     @Test
+    @Ignore
     public void testInsertUpdateAndDelete() throws Exception {
         EtlDriver etlDriver = new EtlDriver();
         etlDriver.setEtlProcessId(10805);
@@ -99,6 +100,7 @@ public class ETLDriverDAOTest {
 
 
     @Test
+    @Ignore
     public void testGetETLDriverTables() throws Exception {
         try {
             List<GetHiveTablesInfo> hiveTablesList = etlDriverDAO.getETLDriverTables(10849);

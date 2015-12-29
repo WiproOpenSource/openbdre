@@ -52,11 +52,13 @@ public class ProcessDAOTest {
     ProcessTypeDAO processTypeDAO;
 
     @Test
+    @Ignore
     public void testList() throws Exception {
         LOGGER.info("Size of Process list is atleast:" + processDAO.list(10802, 0, 10).size());
     }
 
     @Test
+    @Ignore
     public void testTotalRecordCount() throws Exception {
         LOGGER.info("Total Process is:" + processDAO.totalRecordCount(10802));
     }
@@ -93,11 +95,13 @@ public class ProcessDAOTest {
     }
 
     @Test
+    @Ignore
     public void testSubProcesslist() throws Exception {
         LOGGER.info("Total Sub Process count is:" + processDAO.subProcesslist(10802).size());
     }
 
     @Test
+    @Ignore
     public void testSelectProcessList() throws Exception {
         LOGGER.info("Total sub process along with parent process count is:" + processDAO.selectProcessList(10802).size());
     }

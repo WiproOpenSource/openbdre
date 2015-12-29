@@ -5,8 +5,15 @@ import os
 import sys
 import commands
 import time
-hostname = "localhost"
-output = commands.getstatusoutput('oozie job -run -config BDRE/'+sys.argv[1]+'/'+sys.argv[2]+'/'+sys.argv[3]+'/job-' + sys.argv[3] + '.properties -oozie http://'+hostname+':11000/oozie')
+import subprocess
+
+import ConfigParser
+config = ConfigParser.RawConfigParser()
+config.read('$(dirname $0)/../env.properties')
+BDRE_HOME = '~/bdre'
+BDRE_APPS_HOME = '~/bdre_apps'
+OOZIE_URL = 'http://localhost:11000/oozie'
+output = commands.getstatusoutput('oozie job -run -config ' + BDRE_APPS_HOME + '/'+sys.argv[1]+'/'+sys.argv[2]+'/'+sys.argv[3]+'/job-' + sys.argv[3] + '.properties -oozie ' + OOZIE_URL)
 print output
 jobidstring = output[1]
 print jobidstring
@@ -14,7 +21,7 @@ jobidparsed = jobidstring.split(":")
 jobid = jobidparsed[1].strip()
 print jobid
 while True:
-        req = urllib2.Request(' http://'+hostname+':11000/oozie/v1/jobs?jobtype=wf')
+        req = urllib2.Request(OOZIE_URL +'/v1/jobs?jobtype=wf')
         response = urllib2.urlopen(req)
         output = response.read()
         j=json.loads(output)

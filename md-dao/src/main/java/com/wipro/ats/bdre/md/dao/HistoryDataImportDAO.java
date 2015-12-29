@@ -375,7 +375,7 @@ public class HistoryDataImportDAO {
                 Properties fileLayoutProperties = new Properties();
                 fileLayoutProperties.setId(propertiesIdFileLayout);
                 fileLayoutProperties.setConfigGroup("imp-common");
-                fileLayoutProperties.setPropValue("textFile");
+                fileLayoutProperties.setPropValue("TextFile");
                 fileLayoutProperties.setDescription("properties for  data import");
                 session.save(fileLayoutProperties);
 

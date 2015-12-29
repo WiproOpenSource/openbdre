@@ -66,6 +66,7 @@ public class InstanceExecDAOTest {
     }
 
     @Test
+    @Ignore
     public void testInsertUpdateAndDelete() throws Exception {
         ExecStatus execStatus = execStatusDAO.get(1);
         Process process = processDAO.get(10835);

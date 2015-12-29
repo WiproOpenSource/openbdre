@@ -412,11 +412,11 @@ public class SetupDB {
                 process.setCanRecover(new Boolean(cols[7]));
 
                 process.setEnqueuingProcessId(new Integer(cols[8]));
+                if (!"null".equals(cols[9])) ;
                 process.setBatchCutPattern(cols[9]);
                 process.setNextProcessId(cols[10]);
                 if ("1".equals(cols[11])) cols[11] = "true";
                 process.setDeleteFlag(new Boolean(cols[11]));
-
 
                 process.setWorkflowId(new Integer(cols[12]));
                 if (!("null".equals(cols[13]))) {
@@ -600,11 +600,14 @@ public class SetupDB {
                 generalConfigId.setGcKey(cols[1]);
                 GeneralConfig generalConfig = new GeneralConfig();
                 generalConfig.setId(generalConfigId);
-                generalConfig.setGcValue(cols[2]);
-                generalConfig.setDescription(cols[3]);
+                if (!"null".equals(cols[2]))
+                    generalConfig.setGcValue(cols[2]);
+                if (!"null".equals(cols[3]))
+                    generalConfig.setDescription(cols[3]);
                 if ("1".equals(cols[4])) cols[4] = "true";
                 generalConfig.setRequired(new Boolean(cols[4]));
-                generalConfig.setDefaultVal(cols[5]);
+                if (!"null".equals(cols[5]))
+                    generalConfig.setDefaultVal(cols[5]);
                 generalConfig.setType(cols[6]);
                 if ("1".equals(cols[7])) cols[7] = "true";
                 generalConfig.setEnabled(new Boolean(cols[7]));

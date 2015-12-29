@@ -16,6 +16,7 @@ package com.wipro.ats.bdre.md.api;
 
 import com.wipro.ats.bdre.md.beans.ProcessDependencyInfo;
 import org.apache.log4j.Logger;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import java.util.List;
@@ -25,7 +26,7 @@ import java.util.List;
 public class GetProcessDependencyTest {
     private static final Logger LOGGER = Logger.getLogger(GetProcessDependencyTest.class);
 
-    //@Ignore
+    @Ignore
     @Test
     public void testExecute() throws Exception {
 

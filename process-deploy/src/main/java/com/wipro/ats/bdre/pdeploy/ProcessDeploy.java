@@ -13,6 +13,7 @@
  */
 package com.wipro.ats.bdre.pdeploy;
 
+import com.wipro.ats.bdre.MDConfig;
 import com.wipro.ats.bdre.exception.MetadataException;
 import com.wipro.ats.bdre.md.api.HaltDeploy;
 import com.wipro.ats.bdre.md.api.InitDeploy;
@@ -55,7 +56,7 @@ public class ProcessDeploy implements Runnable {
         //obtain the script path from the bean, if null then fetch  the default script (busdomainId/processTypeId/fetch the script name from config file)
         LOGGER.debug("PDQ in run:" + pdq.getDeploymentId());
         if (pdq.getDeployScriptLocation() == null) {
-            pdq.setDeployScriptLocation(System.getProperty("user.home")+"/process-type-" + pdq.getProcessTypeId() + ".sh");
+            pdq.setDeployScriptLocation(MDConfig.getProperty("deploy.script-path") + "/job-deployer.sh");
             LOGGER.debug(pdq.getDeployScriptLocation());
         }
         String[] params = {"--deployment-id", pdq.getDeploymentId().toString()};
