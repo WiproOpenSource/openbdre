@@ -198,6 +198,6 @@ if [ $var_dbtype -eq 3 ]; then
     fi
 elif [ $var_dbtype -eq 1 ]; then
     sudo mkdir -p $var_dbname
-    sudo chmod 777 $var_dbname
-    cp databases/h2/*.db $var_dbname
+    sudo cp databases/h2/*.db $var_dbname
+    sudo chmod -R 777 $var_dbname
 fi
