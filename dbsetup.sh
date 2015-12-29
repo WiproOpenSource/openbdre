@@ -90,7 +90,7 @@ elif [ $var_dbtype -eq 3 ]; then
     read -p "Enter DB hostname (Type db hostname or leave it blank for default 'localhost'): " var_host
     read -p "Enter DB port (Type db port or leave it blank for default '3306'): " var_port
     read -p "Enter DB name (Type db name or leave it blank for default 'bdre'): " var_dbname
-    read -p "Enter DB schema (Type schema or leave it blank for default '$var_dbname'): " var_schema
+
 
     if [ -n "$var_host" ]; then
         echo
@@ -107,6 +107,7 @@ elif [ $var_dbtype -eq 3 ]; then
     else
         var_dbname='bdre'
     fi
+    read -p "Enter DB schema (Type schema or leave it blank for default '$var_dbname'): " var_schema
     if [ -z "$var_schema" ]; then
         var_schema=$var_dbname
     fi
