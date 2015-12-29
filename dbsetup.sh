@@ -23,7 +23,7 @@ function writeDBConf {
 }
 
 echo Supported DB
-echo "1) H2 (Default - Good for running BDRE user interface only. )"
+echo "1) Embedded (Default - Good for running BDRE user interface only. )"
 echo "2) Oracle"
 echo "3) MySQL"
 echo "4) PostgreSQL"
@@ -37,20 +37,19 @@ else
     var_dbtype=1
 fi
 
-
-read -p "Enter DB username (Type username or leave it blank for default 'root'): " var_username
-read -p "Enter DB password (Type username or leave it blank for default 'root'): " var_password
-
-
-if [ -n "$var_username" ]; then
-    echo
-else
-    var_username='root'
-fi
-if [ -n "$var_password" ]; then
-    echo
-else
-    var_password='root'
+if [ $var_dbtype -ne 1]; then
+    read -p "Enter DB username (Type username or leave it blank for default 'root'): " var_username
+    read -p "Enter DB password (Type username or leave it blank for default 'root'): " var_password
+    if [ -n "$var_username" ]; then
+        echo
+    else
+        var_username='root'
+    fi
+    if [ -n "$var_password" ]; then
+        echo
+    else
+        var_password='root'
+    fi
 fi
 
 if [ $var_dbtype -eq 2 ]; then
@@ -152,21 +151,16 @@ elif [ $var_dbtype -eq 4 ]; then
    hibernate_dialect="org.hibernate.dialect.PostgreSQLDialect"
    hibernate_default_schema="$var_schema"
 else
-   read -p "Enter DB file name (Type db file location for embedded H2 DB or leave it blank for default '~/bdre'): " var_dbname
-    read -p "Enter DB schema (Type schema or leave it blank for default 'BDRE'): " var_schema
-    if [ -n "$var_dbname" ]; then
-        echo
-    else
-        var_dbname='~/bdre'
-    fi
-    if [ -z "$var_schema" ]; then
-        var_schema="BDRE"
-    fi
+    #read -p "Enter DB file name (Type db file location for embedded H2 DB or leave it blank for default '~/bdre'): " var_dbname
+    #read -p "Enter DB schema (Type schema or leave it blank for default 'BDRE'): " var_schema
+    var_dbname='/etc/bdre'
+    var_schema="BDRE"
+
     database=h2
     hibernate_connection_driver_class="org.h2.Driver"
-    hibernate_connection_url="jdbc:h2:$var_dbname"
-    hibernate_connection_username=$var_username
-    hibernate_connection_password=$var_password
+    hibernate_connection_url="jdbc:h2:$var_dbname/bdre"
+    hibernate_connection_username=root
+    hibernate_connection_password=root
     hibernate_dialect="org.hibernate.dialect.H2Dialect"
     hibernate_default_schema="$var_schema"
 fi
@@ -194,12 +188,16 @@ elif [ "$var_confirm" == "n" ]; then
 else
     echo "Exiting. Please run this script again"
 fi
-
+echo "Will create DB and tables"
 if [ $var_dbtype -eq 3 ]; then
     mysql -p$var_password -u$var_username -e "create database if not exists $var_dbname"
     mysql -p$var_password -u$var_username $var_dbname < $(dirname $0)/databases/mysql/ddls/drop_tables.sql
     mysql -p$var_password -u$var_username $var_dbname < $(dirname $0)/databases/mysql/ddls/create_tables.sql
     if [ $? -eq 0 ]; then
-        echo "Tables created successfully in MySQL $var_dbnam DB"
+        echo "Tables created successfully in MySQL $var_dbname DB"
     fi
+elif [ $var_dbtype -eq 1 ]; then
+    sudo mkdir -p $var_dbname
+    sudo chmod 777 $var_dbname
+    cp databases/h2/*.db $var_dbname
 fi

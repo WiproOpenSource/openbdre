@@ -123,53 +123,7 @@
                     </arguments>
                 </configuration>
             </plugin>
-            <plugin>
-                <artifactId>maven-resources-plugin</artifactId>
-                <version>2.7</version>
-                <executions>
-                    <execution>
-                        <id>copy-resources1</id>
-                        <!-- here the phase you need -->
-                        <phase>clean</phase>
-                        <goals>
-                            <goal>copy-resources</goal>
-                        </goals>
-                        <configuration>
-                            <outputDirectory>${user.home}</outputDirectory>
-                            <resources>
-                                <resource>
-                                    <directory>${project.parent.basedir}/databases/h2</directory>
-                                    <includes>
-                                        <include>bdre.h2.db</include>
-                                        <include>bdre.trace.db</include>
-                                    </includes>
-                                </resource>
-                            </resources>
-                            <overwrite>false</overwrite>
-                        </configuration>
-                    </execution>
-                    <execution>
-                        <id>copy-resources2</id>
-                        <!-- here the phase you need -->
-                        <phase>clean</phase>
-                        <goals>
-                            <goal>copy-resources</goal>
-                        </goals>
-                        <configuration>
-                            <outputDirectory>${project.parent.basedir}/md-dao/src/main/resources</outputDirectory>
-                            <resources>
-                                <resource>
-                                    <directory>${project.parent.basedir}/databases</directory>
-                                    <includes>
-                                        <include>db.properties</include>
-                                    </includes>
-                                </resource>
-                            </resources>
-                            <overwrite>false</overwrite>
-                        </configuration>
-                    </execution>
-                </executions>
-            </plugin>
+
 
         </plugins>
     </build>
