@@ -40,7 +40,7 @@ var_username=''
 var_password=''
 if [ $var_dbtype -ne 1 ]; then
     read -p "Enter DB username (Type username or leave it blank for default 'root'): " var_username
-    read -p "Enter DB password (Type username or leave it blank for default 'root'): " var_password
+    read -p "Enter DB password (Type password or leave it blank for default 'cloudera'): " var_password
     if [ -n "$var_username" ]; then
         echo
     else
@@ -49,7 +49,7 @@ if [ $var_dbtype -ne 1 ]; then
     if [ -n "$var_password" ]; then
         echo
     else
-        var_password='root'
+        var_password='cloudera'
     fi
 fi
 
@@ -89,7 +89,7 @@ if [ $var_dbtype -eq 2 ]; then
 elif [ $var_dbtype -eq 3 ]; then
     read -p "Enter DB hostname (Type db hostname or leave it blank for default 'localhost'): " var_host
     read -p "Enter DB port (Type db port or leave it blank for default '3306'): " var_port
-    read -p "Enter DB name (Type db name or leave it blank for default 'platmd'): " var_dbname
+    read -p "Enter DB name (Type db name or leave it blank for default 'bdre'): " var_dbname
     read -p "Enter DB schema (Type schema or leave it blank for default '$var_dbname'): " var_schema
 
     if [ -n "$var_host" ]; then
@@ -105,7 +105,7 @@ elif [ $var_dbtype -eq 3 ]; then
     if [ -n "$var_dbname" ]; then
         echo
     else
-        var_dbname='platmd'
+        var_dbname='bdre'
     fi
     if [ -z "$var_schema" ]; then
         var_schema=$var_dbname
@@ -123,7 +123,7 @@ elif [ $var_dbtype -eq 3 ]; then
 elif [ $var_dbtype -eq 4 ]; then
    read -p "Enter DB hostname (Type db hostname or leave it blank for default 'localhost'): " var_host
    read -p "Enter DB port (Type db port or leave it blank for default '5432'): " var_port
-   read -p "Enter DB name (Type db name or leave it blank for default 'platmd'): " var_dbname
+   read -p "Enter DB name (Type db name or leave it blank for default 'bdre'): " var_dbname
    read -p "Enter DB schema (Type schema or leave it blank for default '$var_username'): " var_schema
 
     if [ -n "$var_host" ]; then
@@ -139,7 +139,7 @@ elif [ $var_dbtype -eq 4 ]; then
     if [ -n "$var_dbname" ]; then
         echo
     else
-        var_dbname='platmd'
+        var_dbname='bdre'
     fi
      if [ -z "$var_schema" ]; then
         var_schema=$var_username
@@ -186,8 +186,10 @@ elif [ "$var_confirm" == "y" ]; then
     echo "Database configuration written to $(dirname $0)/md-dao/src/main/resources/db.properties"
 elif [ "$var_confirm" == "n" ]; then
     echo "Exiting. Please run this script again"
+    exit 0
 else
     echo "Exiting. Please run this script again"
+    exit 0
 fi
 echo "Will create DB and tables"
 if [ $var_dbtype -eq 3 ]; then
