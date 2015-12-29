@@ -24,6 +24,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.AutowireCapableBeanFactory;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
+import static org.junit.Assert.*;
 
 import java.util.Date;
 
@@ -45,11 +46,13 @@ public class LineageNodeDAOTest {
     @Autowired
     LineageNodeDAO lineageNodeDAO;
 
+    @Ignore
     @Test
     public void testList() throws Exception {
         LOGGER.info("Size of LineageNode is atleast:" + lineageNodeDAO.list(0, 10).size());
     }
 
+    @Ignore
     @Test
     public void testTotalRecordCount() throws Exception {
         LOGGER.info("Size of LineageNode is:" + lineageNodeDAO.totalRecordCount());
@@ -68,17 +71,22 @@ public class LineageNodeDAOTest {
     public void testInsertUpdateAndDelete() throws Exception {
         LineageNode lineageNode = new LineageNode();
         lineageNode.setNodeId("Test2");
+        lineageNode.setDisplayName("test");
         lineageNode.setLineageNodeType(new LineageNodeType(1, "table"));
         lineageNode.setInsertTs(new Date());
         String lineageNodeId = lineageNodeDAO.insert(lineageNode);
         LOGGER.info("New LineageNode added with ID:" + lineageNodeId);
-
+        lineageNode.setDisplayName("test update");
         lineageNode.setInsertTs(new Date());
         lineageNodeDAO.update(lineageNode);
         lineageNode = lineageNodeDAO.get(lineageNodeId);
+        assertEquals("test update",lineageNode.getDisplayName());
+        assertNotNull(lineageNodeDAO.list(0,10));
         LOGGER.info("Updated lineageNode with Inset Time:" + lineageNode.getInsertTs());
         lineageNodeDAO.delete(lineageNodeId);
         LOGGER.info("LineageNode Deleted with ID:" + lineageNodeId);
+        LOGGER.info("Size of LineageNode is:" + lineageNodeDAO.totalRecordCount());
+
     }
 
 }

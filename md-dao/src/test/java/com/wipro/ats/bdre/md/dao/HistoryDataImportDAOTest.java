@@ -41,11 +41,13 @@ public class HistoryDataImportDAOTest {
     @Autowired
     IntermediateDAO intermediateDAO;
 
+    @Ignore
     @Test
     public void testList() throws Exception {
         LOGGER.info("Size of intermediate is atleast:" + intermediateDAO.list(0, 10).size());
     }
 
+    @Ignore
     @Test
     public void testTotalRecordCount() throws Exception {
         LOGGER.info("Size of intermediate is:" + intermediateDAO.totalRecordCount());

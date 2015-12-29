@@ -49,11 +49,13 @@ public class ETLDriverDAOTest {
     @Autowired
     ProcessDAO processDAO;
 
+    @Ignore
     @Test
     public void testList() throws Exception {
         LOGGER.info("Size of EtlDriver list is atleast:" + etlDriverDAO.list(0, 10).size());
     }
 
+    @Ignore
     @Test
     public void testTotalRecordCount() throws Exception {
         LOGGER.info("Total EtlDriver is:" + etlDriverDAO.totalRecordCount());

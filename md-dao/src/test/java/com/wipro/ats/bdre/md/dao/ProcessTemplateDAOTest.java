@@ -46,12 +46,14 @@ public class ProcessTemplateDAOTest {
     @Autowired
     ProcessTemplateDAO processTemplateDAO;
 
+    @Ignore
     @Test
     public void testList() throws Exception {
 
         LOGGER.info("Size of ProcessTemplate is atleast:" + processTemplateDAO.list(0, 10, 1).size());
     }
 
+    @Ignore
     @Test
     public void testTotalRecordCount() throws Exception {
         LOGGER.info("Size of ProcessTemplate is:" + processTemplateDAO.totalRecordCount());

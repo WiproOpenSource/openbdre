@@ -44,11 +44,13 @@ public class PropertiesDAOTest {
     @Autowired
     ProcessDAO processDAO;
 
+    @Ignore
     @Test
     public void testList() throws Exception {
         LOGGER.info("Size of properties is atleast:" + propertiesDAO.list(0, 10).size());
     }
 
+    @Ignore
     @Test
     public void testTotalRecordCount() throws Exception {
         LOGGER.info("Total Size of properties is:" + propertiesDAO.totalRecordCount());

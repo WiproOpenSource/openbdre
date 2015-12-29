@@ -48,11 +48,13 @@ public class InstanceExecDAOTest {
     @Autowired
     ExecStatusDAO execStatusDAO;
 
+    @Ignore
     @Test
     public void testList() throws Exception {
         LOGGER.info("Size of InstanceExec is atleast:" + instanceExecDAO.list(null, 0, 10).size());
     }
 
+    @Ignore
     @Test
     public void testTotalRecordCount() throws Exception {
         LOGGER.info("Size of InstanceExec is:" + instanceExecDAO.totalRecordCount());

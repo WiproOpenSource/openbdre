@@ -46,6 +46,7 @@ public class BatchEnqueuerDAOTest {
     @Autowired
     BatchEnqueuerDAO batchEnqueuerDAO;
 
+
     @Test
     public void batchEnqueuerTest() throws Exception {
 
