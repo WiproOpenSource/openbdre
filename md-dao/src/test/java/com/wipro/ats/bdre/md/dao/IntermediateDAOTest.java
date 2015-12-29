@@ -39,11 +39,13 @@ public class IntermediateDAOTest {
     @Autowired
     private IntermediateDAO intermediateDAO;
 
+    @Ignore
     @Test
     public void testList() throws Exception {
         LOGGER.info("Size of intermediate list is atleast:" + intermediateDAO.list(0, 10).size());
     }
 
+    @Ignore
     @Test
     public void testTotalRecordCount() throws Exception {
         LOGGER.info("Total intermediate is:" + intermediateDAO.totalRecordCount());

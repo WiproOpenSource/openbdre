@@ -26,6 +26,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.AutowireCapableBeanFactory;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
+import static org.junit.Assert.*;
 
 import java.util.List;
 
@@ -48,11 +49,13 @@ public class PropertiesTemplateDAOTest {
     @Autowired
     ProcessTemplateDAO processTemplateDAO;
 
+    @Ignore
     @Test
     public void testList() throws Exception {
         LOGGER.info("Size of PropertiesTemplate is atleast:" + propertiesTemplateDAO.list(0, 10).size());
     }
 
+    @Ignore
     @Test
     public void testTotalRecordCount() throws Exception {
         LOGGER.info("Total Size of PropertiesTemplate is:" + propertiesTemplateDAO.totalRecordCount());
@@ -85,9 +88,13 @@ public class PropertiesTemplateDAOTest {
         propertiesTemplate.setDescription("Updated Description");
         propertiesTemplateDAO.update(propertiesTemplate);
         propertiesTemplate = propertiesTemplateDAO.get(propertiesTemplateId);
+        assertEquals("Updated Description",propertiesTemplate.getDescription());
+        assertNotNull(propertiesTemplateDAO.list(0,10));
         LOGGER.info("Updated Description is:" + propertiesTemplate.getDescription());
         propertiesTemplateDAO.delete(propertiesTemplateId);
         LOGGER.info("Deleted PropertiesTemplate Entry with ID:" + propertiesTemplateId.getProcessTemplateId());
+        LOGGER.info("Total Size of PropertiesTemplate is:" + propertiesTemplateDAO.totalRecordCount());
+
     }
 
 

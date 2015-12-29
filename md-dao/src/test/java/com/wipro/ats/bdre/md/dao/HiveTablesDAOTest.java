@@ -40,11 +40,13 @@ public class HiveTablesDAOTest {
     @Autowired
     HiveTablesDAO hiveTablesDAO;
 
+    @Ignore
     @Test
     public void testList() throws Exception {
         LOGGER.info("Size of hiveTables is atleast:" + hiveTablesDAO.list(0, 10).size());
     }
 
+    @Ignore
     @Test
     public void testTotalRecordCount() throws Exception {
         LOGGER.info("Size of hiveTables is:" + hiveTablesDAO.totalRecordCount());

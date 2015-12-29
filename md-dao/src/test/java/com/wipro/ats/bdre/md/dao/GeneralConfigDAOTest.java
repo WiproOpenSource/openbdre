@@ -24,6 +24,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.AutowireCapableBeanFactory;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
+import static org.junit.Assert.*;
 
 import java.util.List;
 
@@ -43,11 +44,13 @@ public class GeneralConfigDAOTest {
     @Autowired
     GeneralConfigDAO generalConfigDAO;
 
+    @Ignore
     @Test
     public void testList() throws Exception {
         LOGGER.info("Size of GeneralConfig is atleast:" + generalConfigDAO.list(0, 10).size());
     }
 
+    @Ignore
     @Test
     public void testTotalRecordCount() throws Exception {
         LOGGER.info("Size of GeneralConfig is:" + generalConfigDAO.totalRecordCount());
@@ -78,9 +81,13 @@ public class GeneralConfigDAOTest {
         generalConfig.setDescription("Test General Config");
         generalConfigDAO.update(generalConfig);
         generalConfig = generalConfigDAO.get(generalConfigId);
+        assertEquals("Test General Config",generalConfig.getDescription());
         LOGGER.info("Updated Description is:" + generalConfig.getDescription());
+        assertNotNull(generalConfigDAO.list(0,10));
         generalConfigDAO.delete(generalConfigId);
         LOGGER.info("Deleted General Config Entry with Key:" + generalConfigId.getGcKey());
+        LOGGER.info("Size of GeneralConfig is:" + generalConfigDAO.totalRecordCount());
+
     }
 
     @Test

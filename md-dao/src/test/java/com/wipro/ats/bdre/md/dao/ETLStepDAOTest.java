@@ -42,11 +42,13 @@ public class ETLStepDAOTest {
     @Autowired
     ETLStepDAO etlstepDAO;
 
+    @Ignore
     @Test
     public void testList() throws Exception {
         LOGGER.info("Size of Etlstep is atleast:" + etlstepDAO.list(0, 10).size());
     }
 
+    @Ignore
     @Test
     public void testTotalRecordCount() throws Exception {
         LOGGER.info("Size of Etlstep is:" + etlstepDAO.totalRecordCount());

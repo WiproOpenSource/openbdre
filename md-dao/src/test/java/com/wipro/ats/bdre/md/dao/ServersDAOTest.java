@@ -23,6 +23,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.AutowireCapableBeanFactory;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
+import static org.junit.Assert.*;
 
 /**
  * Created by PR324290 on 10/28/2015.
@@ -60,7 +61,7 @@ public class ServersDAOTest {
         LOGGER.info("Servers(123461) name:" + serversDAO.get(123461).getServerName());
     }
 
-    @Ignore
+
     @Test
     public void testInsertUpdateAndDelete() throws Exception {
         Servers servers = new Servers();
@@ -72,8 +73,11 @@ public class ServersDAOTest {
         serversDAO.update(servers);
         servers = serversDAO.get(serversId);
         LOGGER.info("Updated servers with name:" + servers.getServerName());
-        ;
+        assertEquals("Test_update",servers.getServerName());
+        assertNotNull(serversDAO.list(0,10));
         serversDAO.delete(serversId);
         LOGGER.info("Servers Deleted with ID:" + serversId);
+        LOGGER.info("Size of Servers is:" + serversDAO.totalRecordCount());
+
     }
 }

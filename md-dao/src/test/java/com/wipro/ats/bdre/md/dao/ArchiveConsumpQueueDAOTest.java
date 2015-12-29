@@ -50,11 +50,13 @@ public class ArchiveConsumpQueueDAOTest {
     @Autowired
     BatchStatusDAO batchStatusDAO;
 
+    @Ignore
     @Test
     public void testList() throws Exception {
         LOGGER.info("Size of ArchiveConsumpQueue is atleast: " + archiveConsumpQueueDAO.list(0, 10).size());
     }
 
+    @Ignore
     @Test
     public void testTotalRecordCount() throws Exception {
         LOGGER.info("Size of ArchiveConsumpQueue is: " + archiveConsumpQueueDAO.totalRecordCount());
