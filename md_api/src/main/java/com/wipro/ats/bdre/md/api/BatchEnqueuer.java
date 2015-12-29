@@ -24,6 +24,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.AutowireCapableBeanFactory;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
+import org.springframework.stereotype.Component;
 
 import java.sql.Timestamp;
 import java.util.List;
@@ -31,11 +32,12 @@ import java.util.List;
 /**
  * Created by SR294224 on 5/29/2015.
  */
+@Component
 public class BatchEnqueuer extends MetadataAPIBase {
     public BatchEnqueuer() {
-        ApplicationContext context = new ClassPathXmlApplicationContext("spring-dao.xml");
+        /*ApplicationContext context = new ClassPathXmlApplicationContext("spring-dao.xml");
         AutowireCapableBeanFactory acbFactory = context.getAutowireCapableBeanFactory();
-        acbFactory.autowireBean(this);
+        acbFactory.autowireBean(this);*/
     }
 
     @Autowired
