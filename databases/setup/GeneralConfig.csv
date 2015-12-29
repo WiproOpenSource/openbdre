@@ -476,7 +476,7 @@
 'mdconfig', 'status-notification.halt-queue', 'Halt Queue', 'Halt Queue info for status notification',  1, 'Success', 'text', 1
 'mdconfig', 'status-notification.term-queue', 'Term Queue', 'Term Queue info for status notification',  1, 'Failure', 'text', 1
 'mdconfig', 'deploy.script-path', 'Deployment script path', 'Deployment script path',  1, '/home/cloudera/bdre/bdre-scripts/deployment', 'text', 1
-'mdconfig', 'execute.log-path', 'Log File Location', 'Path for log file',  1, '/var/log/BDRE/logfile-', 'text', 1
+'mdconfig', 'execute.log-path', 'Log File Location', 'Path for log file',  1, '/tmp/logfile-', 'text', 1
 'mdconfig', 'execute.script-path', 'Process Execute Script Path', 'Execute workflow script path',  1, '/home/cloudera/bdre/bdre-scripts/execution', 'text', 1
 'mdconfig', 'upload.base-directory', 'Base Directory For Upload', 'Base Directory where you want to upload jars and hqls',  1, '/home/cloudera/bdre-wfd', 'text', 1
 'mdconfig', 'r.shell-script', 'Location of R shell script', 'Location of R shell script', 1, '/tmp/Rhadoop.sh', 'text', 1

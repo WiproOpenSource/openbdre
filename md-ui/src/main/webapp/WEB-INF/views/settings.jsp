@@ -113,6 +113,7 @@ function buildFormDisplay(configGroup, typeDiv) {
     						<option value="" disabled selected>Select your option</option>
     						<option value="mdconfig">mdconfig</option>
     						<option value="imconfig">imconfig</option>
+    						<option value="scripts_config">scriptsconfig</option>
 						</select>
 					</form>
 					</div>

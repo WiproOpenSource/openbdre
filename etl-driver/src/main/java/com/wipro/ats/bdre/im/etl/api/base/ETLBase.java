@@ -58,7 +58,7 @@ public abstract class ETLBase extends BaseStructure{
         try {
             Class.forName(IMConstant.HIVE_DRIVER_NAME);
             String hiveConnection = IMConfig.getProperty("etl.hive-connection");
-            Connection con = DriverManager.getConnection(hiveConnection + dbName, "", "");
+            Connection con = DriverManager.getConnection(hiveConnection + "/" + dbName, "", "");
 /*            con.createStatement().execute("set hive.exec.dynamic.partition.mode=nonstrict");
             con.createStatement().execute("set hive.exec.dynamic.partition=true");
             con.createStatement().execute("set hive.exec.max.dynamic.partitions.pernode=1000");*/

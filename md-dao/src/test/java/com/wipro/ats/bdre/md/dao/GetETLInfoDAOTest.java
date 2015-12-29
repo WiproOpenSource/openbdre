@@ -45,8 +45,8 @@ public class GetETLInfoDAOTest {
     @Ignore
     @Test
     public void testGetETLDriverInfos() throws Exception {
-        List<GetETLDriverInfo> getETLDriverInfoList = getETLInfoDAO.getETLInfo(-1, 55);
-        LOGGER.info("Size of the list is " + getETLDriverInfoList.size());
+        List<GetETLDriverInfo> getETLDriverInfoList = getETLInfoDAO.getETLInfo(260, 260);
+        LOGGER.info("Size of the list is " + getETLDriverInfoList.get(0).getFileList());
 
     }
 }

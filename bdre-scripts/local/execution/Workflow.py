@@ -6,10 +6,6 @@ import sys
 import commands
 import time
 import subprocess
-
-import ConfigParser
-config = ConfigParser.RawConfigParser()
-config.read('$(dirname $0)/../env.properties')
 BDRE_HOME = '~/bdre'
 BDRE_APPS_HOME = '~/bdre_apps'
 OOZIE_URL = 'http://localhost:11000/oozie'
