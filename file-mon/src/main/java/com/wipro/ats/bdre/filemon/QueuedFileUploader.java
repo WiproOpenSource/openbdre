@@ -80,7 +80,7 @@ public class QueuedFileUploader {
         try {
             String subProcessId = fileCopying.getSubProcessId();
             String serverId = fileCopying.getServerId();
-            String path = fileCopying.getDstLocation();
+            String path = fileCopying.getDstLocation()+"/"+fileCopying.getFileName();
             String fileHash = fileCopying.getFileHash();
             String fileSize = String.valueOf(fileCopying.getFileSize());
             long timeStamp = fileCopying.getTimeStamp();
