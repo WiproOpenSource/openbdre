@@ -68,8 +68,7 @@
 'default_val.21','num.spouts','mqimport','Number of spouts/parallel message consumer',1,'1','text', 1
 'default_val.21','queue.name','mqimport','Name of the Queue of ActiveMQ',1,'default_QueueName','text', 1
 'default_val.1','password_enabled','credential','Credentials for authentication', 1,'true','text', 1
-'Sink_Type','hdfs','HDFS','Data will be stored in hdfs', 0,'hdfs','text', 1
-'Sink_Type','com.wipro.ats.bdre.flume.sink.hdfs.BDREHDFSEventSink','BDRE HDFS','Data will be stored in hdfs and output file will be registered in BDRE metadata', 0,'com.wipro.ats.bdre.flume.sink.hdfs.BDREHDFSEventSink','text', 1
+'Sink_Type','com.wipro.ats.bdre.flume.sink.hdfs.BDREHDFSEventSink','HDFS','Data will be stored in hdfs and output file will be registered in BDRE metadata', 0,'com.wipro.ats.bdre.flume.sink.hdfs.BDREHDFSEventSink','text', 1
 'Sink_Type','hive','HIVE','Data will be stored in hive', 0,'hive','text', 1
 'Sink_Type','logger','Logger','Sink is used for testing and debuggin purpose', 0,'logger','text', 1
 'Sink_Type','avro','Avro',' Flume events sent to this sink are turned into Avro events and sent to the configured hostname / port pair.', 0,'avro','text', 1
@@ -84,47 +83,18 @@
 'Sink_Type','org.apache.flume.sink.kite.DatasetSink','Dataset Sink','Experimental sink that writes events to a Kite Dataset. This sink will deserialize the body of each incoming event and store the resulting record in a Kite Dataset. It determines target Dataset by loading a dataset by URI', 0,'org.apache.flume.sink.kite.DatasetSink','text', 1
 'Sink_Type','org.apache.flume.sink.kafka.KafkaSink','Kafka Sink','This is a Flume Sink implementation that can publish data to a Kafka topic', 0,'org.apache.flume.sink.kafka.KafkaSink','text', 1
 'Sink_Type','FQCN','FQCN','A custom sink is your own implementation of the Sink interface. A custom sink’s class and its dependencies must be included in the agent’s classpath when starting the Flume agent.', 0,'FQCN','text', 1
-'hdfs_Sink','hdfs.path','HDFS Path','Path is HDFS where you want to put files',1,'/user/bdreusr/flume/%H','text', 1
-'hdfs_Sink','hdfs.filePrefix','File Prefix','Name prefixed to files created by Flume in hdfs directory', 0,'IngestedData','text', 1
-'hdfs_Sink','hdfs.fileSuffix','File Suffix','Name suffixed to files created by Flume in hdfs directory', 0,'%H%M%S','text', 1
-'hdfs_Sink','hdfs.inUsePrefix','In Use Prefix','Prefix that is used for temporal files that flume actively writes into', 0,null,'text', 1
-'hdfs_Sink','hdfs.inUseSuffix','In Use Suffix','Prefix that is used for temporal files that flume actively writes into', 0,'.tmp','text', 1
-'hdfs_Sink','hdfs.rollInterval','Roll Interval','Number of seconds to wait before rolling current file (0 = never roll based on time interval)', 0,'0','text', 1
-'hdfs_Sink','hdfs.rollSize','Roll Size','File size to trigger roll, in bytes (0: never roll based on file size)', 0,'0','text', 1
-'hdfs_Sink','hdfs.rollCount','Roll Count','Number of events written to file before it rolled (0 = never roll based on number of events)', 0,'0','text', 1
-'hdfs_Sink','hdfs.idleTimeout','Idle TimeOut','Timeout after which inactive files get closed (0 = disable automatic closing of idle files)', 0,'0','text', 1
-'hdfs_Sink','hdfs.batchSize','Batch Size','number of events written to file before it is flushed to HDFS', 0,'100','text', 1
-'hdfs_Sink','hdfs.codeC','Codec','Compression codec. one of following : gzip, bzip2, lzo, lzop, snappy', 0,null,'text', 1
-'hdfs_Sink','hdfs.fileType','File Type','File format: currently SequenceFile, DataStream or CompressedStream (1)DataStream will not compress output file and please don’t set codeC (2)CompressedStream requires set hdfs.codeC with an available codeC', 0,'SequenceFile','text', 1
-'hdfs_Sink','hdfs.maxOpenFiles','Max Open Files','Allow only this number of open files. If this number is exceeded, the oldest file is closed.', 0,'5000','text', 1
-'hdfs_Sink','hdfs.minBlockReplicas','Min Block Replicas','Specify minimum number of replicas per HDFS block. If not specified, it comes from the default Hadoop config in the classpath.', 0,null,'text', 1
-'hdfs_Sink','hdfs.writeFormat','Write Format','Format for sequence file records. One of “Text” or “Writable” (the default).', 0,null,'text', 1
-'hdfs_Sink','hdfs.callTimeout','Call Timeout','Number of milliseconds allowed for HDFS operations, such as open, write, flush, close. This number should be increased if many HDFS timeout operations are occurring.', 0,'10000','text', 1
-'hdfs_Sink','hdfs.threadsPoolSize','Threads Pool Size','Number of threads per HDFS sink for HDFS IO ops (open, write, etc.)', 0,'10','text', 1
-'hdfs_Sink','hdfs.rollTimerPoolSize','Roll Timer Pool Size','Number of threads per HDFS sink for scheduling timed file rolling', 0,'1','text', 1
-'hdfs_Sink','hdfs.kerberosPrincipal','Kerberos Principal','Kerberos user principal for accessing secure HDFS', 0,null,'text', 1
-'hdfs_Sink','hdfs.kerberosKeytab','Kerberos Keytab','Kerberos keytab for accessing secure HDFS', 0,null,'text', 1
-'hdfs_Sink','hdfs.proxyUser','HDFS Proxy User','HDFS proxy user', 0,null,'text', 1
-'hdfs_Sink','hdfs.round','HDFS Round','Should the timestamp be rounded down (if  1, affects all time based escape sequences except %t)', 0,'false','text', 1
-'hdfs_Sink','hdfs.roundValue','HDFS Round Value','Rounded down to the highest multiple of this (in the unit configured using hdfs.roundUnit), less than current time.', 0,'1','text', 1
-'hdfs_Sink','hdfs.roundUnit','HDFS Round Unit','The unit of the round down value - second, minute or hour.', 0,'second','text', 1
-'hdfs_Sink','hdfs.timeZone','HDFS Time Zone','Name of the timezone that should be used for resolving the directory path', 0,'Local Time','text', 1
-'hdfs_Sink','hdfs.useLocalTimeStamp','Local Time Stamp','Use the local time (instead of the timestamp from the event header) while replacing the escape sequences.', 0,'true','text', 1
-'hdfs_Sink','hdfs.closeTries','Close Tries','Number of times the sink must try renaming a file, after initiating a close attempt. If set to 1, this sink will not re-try a failed rename (due to, for example, NameNode or DataNode failure), and may leave the file in an open state with a .tmp extension. If set to 0, the sink will try to rename the file until the file is eventually renamed (there is no limit on the number of times it would try). The file may still remain open if the close call fails but the data will be intact and in this case, the file will be closed only after a Flume restart.', 0,'0','text', 1
-'hdfs_Sink','hdfs.retryInterval','Retry Interval','Time in seconds between consecutive attempts to close a file. Each close call costs multiple RPC round-trips to the Namenode, so setting this too low can cause a lot of load on the name node. If set to 0 or less, the sink will not attempt to close the file if the first attempt fails, and may leave the file open or with a ”.tmp” extension.', 0,'180','text', 1
-'hdfs_Sink','serializer','Serializer','Other possible options include avro_event or the fully-qualified class name of an implementation of the EventSerializer.Builder interface.', 0,'TEXT','text', 1
-'com.wipro.ats.bdre.flume.sink.hdfs.BDREHDFSEventSink_Sink','hdfs.path','HDFS Path','Path is HDFS where you want to put files',1,'/user/bdreusr/flume/%H','text', 1
+'com.wipro.ats.bdre.flume.sink.hdfs.BDREHDFSEventSink_Sink','hdfs.path','HDFS Path','Path is HDFS where you want to put files',1,'/user/cloudera/flume/%H','text', 1
 'com.wipro.ats.bdre.flume.sink.hdfs.BDREHDFSEventSink_Sink','hdfs.filePrefix','File Prefix','Name prefixed to files created by Flume in hdfs directory', 0,'IngestedData','text', 1
 'com.wipro.ats.bdre.flume.sink.hdfs.BDREHDFSEventSink_Sink','hdfs.fileSuffix','File Suffix','Name suffixed to files created by Flume in hdfs directory', 0,'%H%M%S','text', 1
 'com.wipro.ats.bdre.flume.sink.hdfs.BDREHDFSEventSink_Sink','hdfs.inUsePrefix','In Use Prefix','Prefix that is used for temporal files that flume actively writes into', 0,null,'text', 1
 'com.wipro.ats.bdre.flume.sink.hdfs.BDREHDFSEventSink_Sink','hdfs.inUseSuffix','In Use Suffix','Prefix that is used for temporal files that flume actively writes into', 0,'.tmp','text', 1
 'com.wipro.ats.bdre.flume.sink.hdfs.BDREHDFSEventSink_Sink','hdfs.rollInterval','Roll Interval','Number of seconds to wait before rolling current file (0 = never roll based on time interval)', 0,'0','text', 1
-'com.wipro.ats.bdre.flume.sink.hdfs.BDREHDFSEventSink_Sink','hdfs.rollSize','Roll Size','File size to trigger roll, in bytes (0: never roll based on file size)', 0,'0','text', 1
+'com.wipro.ats.bdre.flume.sink.hdfs.BDREHDFSEventSink_Sink','hdfs.rollSize','Roll Size','File size to trigger roll, in bytes (0: never roll based on file size)', 0,'5000','text', 1
 'com.wipro.ats.bdre.flume.sink.hdfs.BDREHDFSEventSink_Sink','hdfs.rollCount','Roll Count','Number of events written to file before it rolled (0 = never roll based on number of events)', 0,'0','text', 1
 'com.wipro.ats.bdre.flume.sink.hdfs.BDREHDFSEventSink_Sink','hdfs.idleTimeout','Idle TimeOut','Timeout after which inactive files get closed (0 = disable automatic closing of idle files)', 0,'0','text', 1
 'com.wipro.ats.bdre.flume.sink.hdfs.BDREHDFSEventSink_Sink','hdfs.batchSize','Batch Size','number of events written to file before it is flushed to HDFS', 0,'100','text', 1
 'com.wipro.ats.bdre.flume.sink.hdfs.BDREHDFSEventSink_Sink','hdfs.codeC','Codec','Compression codec. one of following : gzip, bzip2, lzo, lzop, snappy', 0,null,'text', 1
-'com.wipro.ats.bdre.flume.sink.hdfs.BDREHDFSEventSink_Sink','hdfs.fileType','File Type','File format: currently SequenceFile, DataStream or CompressedStream (1)DataStream will not compress output file and please don’t set codeC (2)CompressedStream requires set hdfs.codeC with an available codeC', 0,'SequenceFile','text', 1
+'com.wipro.ats.bdre.flume.sink.hdfs.BDREHDFSEventSink_Sink','hdfs.fileType','File Type','File format: currently SequenceFile, DataStream or CompressedStream (1)DataStream will not compress output file and please don’t set codeC (2)CompressedStream requires set hdfs.codeC with an available codeC', 0,'DataStream','text', 1
 'com.wipro.ats.bdre.flume.sink.hdfs.BDREHDFSEventSink_Sink','hdfs.maxOpenFiles','Max Open Files','Allow only this number of open files. If this number is exceeded, the oldest file is closed.', 0,'5000','text', 1
 'com.wipro.ats.bdre.flume.sink.hdfs.BDREHDFSEventSink_Sink','hdfs.minBlockReplicas','Min Block Replicas','Specify minimum number of replicas per HDFS block. If not specified, it comes from the default Hadoop config in the classpath.', 0,null,'text', 1
 'com.wipro.ats.bdre.flume.sink.hdfs.BDREHDFSEventSink_Sink','hdfs.writeFormat','Write Format','Format for sequence file records. One of “Text” or “Writable” (the default).', 0,null,'text', 1
@@ -200,7 +170,7 @@
 'irc_Sink','name','Name',' ', 0,null,'text', 1
 'irc_Sink','splitlines','Split Lines','(boolean)', 0,null,'text', 1
 'irc_Sink','splitchars','Split Chars','line separator (if you were to enter the default value into the config file, then you would need to escape the backslash, like this: “\n”)', 0,'n','text', 1
-'file_roll_Sink','sink.directory','Sink Directory','The directory where files will be stored', 1,'/home/bdreusr/file_roll','text', 1
+'file_roll_Sink','sink.directory','Sink Directory','The directory where files will be stored', 1,'/home/cloudera/file_roll','text', 1
 'file_roll_Sink','sink.rollInterval','Sink Rollinterval','Roll the file every 30 seconds. Specifying 0 will disable rolling and cause all events to be written to a single file.', 0,'30','text', 1
 'file_roll_Sink','sink.serializer','Sink Serializer','Other possible options include avro_event or the FQCN of an implementation of EventSerializer.Builder interface.', 0,'TEXT','text', 1
 'file_roll_Sink','batchSize','Batch Size','Batch Size when file will close', 0,'100','text', 1
@@ -269,7 +239,7 @@
 'memory_Channel','transactionCapacity','Transaction capacity','The maximum number of events the channel will take from a source or give to a sink per transaction', 0,'100','text', 1
 'memory_Channel','keep-alive','Keep Alive','Timeout in seconds for adding or removing an event', 0,'3','text', 1
 'memory_Channel','byteCapacityBufferPercentage','Byte capacity buffer percentage','Defines the percent of buffer between byteCapacity and the estimated total size of all events in the channel, to account for data in headers. See below.', 0,'20','text', 1
-'memory_Channel','byteCapacity','Byte capacity','Maximum total bytes of memory allowed as a sum of all events in this channel. The implementation only counts the Event body, which is the reason for providing the byteCapacityBufferPercentage configuration parameter as well. Defaults to a computed value equal to 80% of the maximum memory available to the JVM (i.e. 80% of the -Xmx value passed on the command line). Note that if you have multiple memory channels on a single JVM, and they happen to hold the same physical events (i.e. if you are using a replicating channel selector from a single source) then those event sizes may be double-counted for channel byteCapacity purposes. Setting this value to 0 will cause this value to fall back to a hard internal limit of about 200 GB.', 0,'see description','text', 1
+'memory_Channel','byteCapacity','Byte capacity','Maximum total bytes of memory allowed as a sum of all events in this channel. The implementation only counts the Event body, which is the reason for providing the byteCapacityBufferPercentage configuration parameter as well. Defaults to a computed value equal to 80% of the maximum memory available to the JVM (i.e. 80% of the -Xmx value passed on the command line). Note that if you have multiple memory channels on a single JVM, and they happen to hold the same physical events (i.e. if you are using a replicating channel selector from a single source) then those event sizes may be double-counted for channel byteCapacity purposes. Setting this value to 0 will cause this value to fall back to a hard internal limit of about 200 GB.', 0,'','text', 1
 'jdbc_Channel','db.type','Db Type','Database vendor, needs to be DERBY.', 0,'DERBY','text', 1
 'jdbc_Channel','driver.class','Driver Class','Class for vendor’s JDBC driver', 0,'org.apache.derby.jdbc.EmbeddedDriver','text', 1
 'jdbc_Channel','driver.url','Driver Url','JDBC connection URL', 0,'(constructed from other properties)','text', 1
@@ -315,7 +285,7 @@
 'SPILLABLEMEMORY_Channel','overflowCapacity','Over flow capacity','Maximum number of events stored in overflow disk (i.e File channel). To disable use of overflow, set this to zero.', 0,'100000000','text', 1
 'SPILLABLEMEMORY_Channel','overflowTimeout','Over flow timeout','The number of seconds to wait before enabling disk overflow when memory fills up.', 0,'3','text', 1
 'SPILLABLEMEMORY_Channel','byteCapacityBufferPercentage','Byte capacity buffer percentage','Defines the percent of buffer between byteCapacity and the estimated total size of all events in the channel, to account for data in headers. See below.', 0,'20','text', 1
-'SPILLABLEMEMORY_Channel','byteCapacity','Byte capacity','Maximum bytes of memory allowed as a sum of all events in the memory queue. The implementation only counts the Event body, which is the reason for providing the byteCapacityBufferPercentage configuration parameter as well. Defaults to a computed value equal to 80% of the maximum memory available to the JVM (i.e. 80% of the -Xmx value passed on the command line). Note that if you have multiple memory channels on a single JVM, and they happen to hold the same physical events (i.e. if you are using a replicating channel selector from a single source) then those event sizes may be double-counted for channel byteCapacity purposes. Setting this value to 0 will cause this value to fall back to a hard internal limit of about 200 GB.', 0,'see description','text', 1
+'SPILLABLEMEMORY_Channel','byteCapacity','Byte capacity','Maximum bytes of memory allowed as a sum of all events in the memory queue. The implementation only counts the Event body, which is the reason for providing the byteCapacityBufferPercentage configuration parameter as well. Defaults to a computed value equal to 80% of the maximum memory available to the JVM (i.e. 80% of the -Xmx value passed on the command line). Note that if you have multiple memory channels on a single JVM, and they happen to hold the same physical events (i.e. if you are using a replicating channel selector from a single source) then those event sizes may be double-counted for channel byteCapacity purposes. Setting this value to 0 will cause this value to fall back to a hard internal limit of about 200 GB.', 0,'','text', 1
 'SPILLABLEMEMORY_Channel','avgEventSize','Avg event size','Estimated average size of events, in bytes, going into the channel', 0,'500','text', 1
 'SPILLABLEMEMORY_Channel','<file channel properties>','<File Channel Properties>','Any file channel property with the exception of ‘keep-alive’ and ‘capacity’ can be used. The keep-alive of file channel is managed by Spillable Memory Channel. Use ‘overflowCapacity’ to set the File channel’s capacity.', 0,'see file channel','text', 1
 'org.apache.flume.channel.PseudoTxnMemoryChannel_Channel','capacity','Capacity','The max number of events stored in the channel', 0,'50','text', 1
@@ -325,8 +295,7 @@
 'Source_Type','exec','Exec','Runs a given Unix command on start-up and expects that process to continuously produce data on standard out', 0,'exec','text', 1
 'Source_Type','jms','JMS','Source reads messages from a JMS destination such as a queue or topic', 0,'jms','text', 1
 'Source_Type','spooldir','Spooling Directory','Spooling directory on disk as source', 0,'spooldir','text', 1
-'Source_Type','org.apache.flume.source.twitter.TwitterSource','Twitter flume','Source that connects via Streaming API to the 1% sample twitter firehose', 0,'org.apache.flume.source.twitter.TwitterSource','text', 1
-'Source_Type','com.cloudera.flume.source.TwitterSource','Twitter BDRE','Source that connects via Streaming API to twitter and generate events in JSON format', 0,'com.cloudera.flume.source.TwitterSource','text', 1
+'Source_Type','com.cloudera.flume.source.TwitterSource','Twitter','Source that connects via Streaming API to twitter and generate events in JSON format', 0,'com.cloudera.flume.source.TwitterSource','text', 1
 'Source_Type','org.apache.flume.source.kafka.KafkaSource','Kafka','Source is an Apache Kafka consumer that reads messages from a Kafka topic', 0,'org.apache.flume.source.kafka.KafkaSource','text', 1
 'Source_Type','netcat','NetCat','Source that listens on a given port and turns each line of text into an event', 0,'netcat','text', 1
 'Source_Type','seq','Sequence Generator','Source continuously generates events with a counter that starts from 0 and increments by 1', 0,'seq','text', 1
@@ -368,7 +337,7 @@
 'thrift_Source','kerberos','Kerberos','Set to  1 to enable kerberos authentication. In kerberos mode, agent-principal and agent-keytab are required for successful authentication. The Thrift source in secure mode, will accept connections only from Thrift clients that have kerberos enabled and are successfully authenticated to the kerberos KDC.', 0,'false','text', 1
 'thrift_Source','agent-principal','Agent Principal','The kerberos principal used by the Thrift Source to authenticate to the kerberos KDC.', 0,null,'text', 1
 'thrift_Source','agent-keytab','Agent Keytab','The keytab location used by the Thrift Source in combination with the agent-principal to authenticate to the kerberos KDC.', 0,null,'text', 1
-'exec_Source','command','Command','The command to execute',1,'cat /home/bdreusr/flume/flume-test.txt','text', 1
+'exec_Source','command','Command','The command to execute',1,'cat /home/cloudera/flume/flume-test.txt','text', 1
 'exec_Source','shell','Shell','A shell invocation used to run the command. e.g. /bin/sh -c. Required only for commands relying on shell features like wildcards, back ticks, pipes etc.', 0,null,'text', 1
 'exec_Source','restartThrottle','Restart Throttle','Amount of time (in millis) to wait before attempting a restart', 0,'10000','text', 1
 'exec_Source','restart','Restart','Whether the executed cmd should be restarted if it dies', 0,'false','text', 1
@@ -391,7 +360,7 @@
 'jms_Source','converter.type','Converter Type','Class to use to convert messages to flume events. See below.', 0,null,'text', 1
 'jms_Source','converter.*','Converter.*','Converter properties.', 0,null,'text', 1
 'jms_Source','converter.charset','Converter Charset','Default converter only. Charset to use when converting JMS TextMessages to byte arrays.', 0,null,'text', 1
-'spooldir_Source','spoolDir','Spool Dir','The directory from which to read files from.',1,'/home/bdreusr/flume','text', 1
+'spooldir_Source','spoolDir','Spool Dir','The directory from which to read files from.',1,'/home/cloudera/flume','text', 1
 'spooldir_Source','fileSuffix','File Suffix','Suffix to append to completely ingested files', 0,'.COMPLETED','text', 1
 'spooldir_Source','deletePolicy','Delete Policy','When to delete completed files: never or immediate', 0,'never','text', 1
 'spooldir_Source','fileHeader','File Header','Whether to add a header storing the absolute path filename.', 0,'false','text', 1
@@ -413,13 +382,6 @@
 'spooldir_Source','selector.*','Selector.*','Depends on the selector.type value', 0,null,'text', 1
 'spooldir_Source','interceptors','Interceptors','Space-separated list of interceptors', 0,null,'text', 1
 'spooldir_Source','interceptors.*','Interceptors.*','Interceptors', 0,null,'text', 1
-'org.apache.flume.source.twitter.TwitterSource_Source','consumerKey','Consumerkey','OAuth consumer key', 1,'your key','text', 1
-'org.apache.flume.source.twitter.TwitterSource_Source','consumerSecret','Consumersecret','OAuth consumer secret', 1,'your secret','text', 1
-'org.apache.flume.source.twitter.TwitterSource_Source','accessToken','Accesstoken','OAuth access token', 1,'your access token','text', 1
-'org.apache.flume.source.twitter.TwitterSource_Source','accessTokenSecret','Accesstokensecret','OAuth toekn secret', 1,'your acces secret','text', 1
-'org.apache.flume.source.twitter.TwitterSource_Source','keywords','HASHTAGS','keywords based on which you want filter your tweets', 1,'#BigData','text', 1
-'org.apache.flume.source.twitter.TwitterSource_Source','maxBatchSize','Maxbatchsize','Maximum number of twitter messages to put in a single batch', 0,'1000','text', 1
-'org.apache.flume.source.twitter.TwitterSource_Source','maxBatchDurationMillis','Maxbatchdurationmillis','Maximum number of milliseconds to wait before closing a batch', 0,'1000','text', 1
 'com.cloudera.flume.source.TwitterSource_Source','consumerKey','Consumerkey','OAuth consumer key', 1,'your key','text', 1
 'com.cloudera.flume.source.TwitterSource_Source','consumerSecret','Consumersecret','OAuth consumer secret', 1,'your secret','text', 1
 'com.cloudera.flume.source.TwitterSource_Source','accessToken','Accesstoken','OAuth access token', 1,'your access token','text', 1
@@ -515,9 +477,7 @@
 'mdconfig', 'status-notification.term-queue', 'Term Queue', 'Term Queue info for status notification',  1, 'Failure', 'text', 1
 'mdconfig', 'deploy.script-path', 'Deployment script path', 'Deployment script path',  1, '/home/cloudera/bdre/bdre-scripts/deployment', 'text', 1
 'mdconfig', 'execute.log-path', 'Log File Location', 'Path for log file',  1, '/var/log/BDRE/logfile-', 'text', 1
-'mdconfig', 'execute.oozie-script-path', 'Oozie Script Path', 'Oozie workflow script path',  1, '/home/cloudera/Workflow.py', 'text', 1
-'mdconfig', 'execute.standalone-script-path', 'Flume Script Path', 'Flume script path for standalone purpose',  1, '/home/cloudera/flume.sh', 'text', 1
-'mdconfig', 'execute.rest-exec-url', 'Execute URL', 'URL where your execute jetty server is running',  1, 'http://localhost:7777/execute/', 'text', 1
+'mdconfig', 'execute.script-path', 'Process Execute Script Path', 'Execute workflow script path',  1, '/home/cloudera/bdre/bdre-scripts/execution', 'text', 1
 'mdconfig', 'upload.base-directory', 'Base Directory For Upload', 'Base Directory where you want to upload jars and hqls',  1, '/home/cloudera/bdre-wfd', 'text', 1
 'mdconfig', 'r.shell-script', 'Location of R shell script', 'Location of R shell script', 1, '/tmp/Rhadoop.sh', 'text', 1
 'imconfig', 'common.default-fs-name', 'Default file system name','Default file system name', 1, 'hdfs://localhost:8020', 'text', 1
@@ -561,7 +521,7 @@
 'scripts_config', 'jobTrackerHostName', '-','-' , 1, 'quickstart.cloudera', 'text' , 1
 'scripts_config', 'jobTrackerPort', '-','-' , 1, '8032', 'text' , 1
 'scripts_config', 'hiveConfDir', '-','-' , 1, 'conf', 'text' , 1
-'scripts_config', 'flumeLibDir', '-','-' , 1, '/usr/lib/flume-ng/lib', 'text' , 1
+'scripts_config', 'flumeLibDir', '-','-' , 1, '/usr/lib/flume-ng', 'text' , 1
 'scripts_config', 'remoteUserName', '-','-' , 1, 'ec2-user', 'text' , 1
 'scripts_config', 'remoteHostPublicIp', '-','-' , 1, '127.0.0.1', 'text' , 1
 'scripts_config', 'uploadBaseDir', '-','-' , 1, '~/bdre-wfd', 'text' , 1

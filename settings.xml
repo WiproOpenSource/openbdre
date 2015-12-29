@@ -151,13 +151,14 @@
 
             <id>repositories</id>
             <repositories>
-                <repository>
-                    <id>maven-repo</id>
-                    <url>http://repo.maven.org/maven2/</url>
-                </repository>
+
                 <repository>
                     <id>maven-central</id>
                     <url>http://repo1.maven.org/maven2/</url>
+                </repository>
+                <repository>
+                    <id>maven-repo</id>
+                    <url>http://repo.maven.org/maven2/</url>
                 </repository>
                 <repository>
                     <id>clojars</id>
