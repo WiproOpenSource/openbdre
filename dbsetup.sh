@@ -195,3 +195,11 @@ else
     echo "Exiting. Please run this script again"
 fi
 
+if [ $var_dbtype -eq 3 ]; then
+    mysql -p$var_password -u$var_username -e "create database if not exists $var_dbname"
+    mysql -p$var_password -u$var_username $var_dbname < $(dirname $0)/databases/mysql/ddls/drop_tables.sql
+    mysql -p$var_password -u$var_username $var_dbname < $(dirname $0)/databases/mysql/ddls/create_tables.sql
+    if [ $? -eq 0 ]; then
+        echo "Tables created successfully in MySQL $var_dbnam DB"
+    fi
+fi
