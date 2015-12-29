@@ -23,7 +23,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.AutowireCapableBeanFactory;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
-
+import static org.junit.Assert.*;
 /**
  * Created by PR324290 on 10/28/2015.
  */
@@ -39,12 +39,12 @@ public class LineageQueryTypeDAOTest {
 
     @Autowired
     LineageQueryTypeDAO lineageQueryTypeDAO;
-
+    @Ignore
     @Test
     public void testList() throws Exception {
         LOGGER.info("Size of LineageQueryType is atleast:" + lineageQueryTypeDAO.list(0, 10).size());
     }
-
+    @Ignore
     @Test
     public void testTotalRecordCount() throws Exception {
         LOGGER.info("Size of LineageQueryType is:" + lineageQueryTypeDAO.totalRecordCount());
@@ -58,6 +58,7 @@ public class LineageQueryTypeDAOTest {
 
     @Test
     public void testInsertUpdateAndDelete() throws Exception {
+
         LineageQueryType lineageQueryType = new LineageQueryType();
         lineageQueryType.setQueryTypeId(0);
         lineageQueryType.setQueryTypeName("Test");
@@ -65,9 +66,11 @@ public class LineageQueryTypeDAOTest {
         LOGGER.info("New LineageQueryType added with ID:" + lineageQueryTypeId);
         lineageQueryType.setQueryTypeName("Test updated");
         lineageQueryTypeDAO.update(lineageQueryType);
-        lineageQueryType = lineageQueryTypeDAO.get(lineageQueryTypeId);
+        assertEquals("Test updated", lineageQueryTypeDAO.get(lineageQueryTypeId).getQueryTypeName());
         LOGGER.info("Updated lineageQueryType with type name :" + lineageQueryType.getQueryTypeName());
+        assertNotNull(lineageQueryTypeDAO.list(0,10));
         lineageQueryTypeDAO.delete(lineageQueryTypeId);
         LOGGER.info("LineageQueryType Deleted with ID:" + lineageQueryTypeId);
+        LOGGER.info("Size of LineageQueryType is:" + lineageQueryTypeDAO.totalRecordCount());
     }
 }
