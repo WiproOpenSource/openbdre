@@ -16,8 +16,13 @@ package com.wipro.ats.bdre.md.api;
 
 import com.wipro.ats.bdre.md.beans.table.BatchConsumpQueue;
 import org.apache.log4j.Logger;
+import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.config.AutowireCapableBeanFactory;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.support.ClassPathXmlApplicationContext;
 
 import java.util.List;
 
@@ -26,12 +31,18 @@ import java.util.List;
  */
 public class BatchEnqueuerTest {
     private static final Logger LOGGER = Logger.getLogger(BatchEnqueuerTest.class);
-
+    @Before
+    public void init() {
+        ApplicationContext context = new ClassPathXmlApplicationContext("spring-dao.xml");
+        AutowireCapableBeanFactory acbFactory = context.getAutowireCapableBeanFactory();
+        acbFactory.autowireBean(this);
+    }
+    @Autowired
+    BatchEnqueuer be;
     @Ignore
     @Test
     public void testExecute() throws Exception {
         String[] args = {"-cTS", "2014-12-11 11:56:17", "-fh", "1", "-sId", "123461", "-fs", "1", "-p", "1", "--path", "1", "--batch-id", "1", "-bm", "1"};
-        BatchEnqueuer be = new BatchEnqueuer();
         List<BatchConsumpQueue> info = be.execute(args);
         LOGGER.info(info.size());
     }
