@@ -30,6 +30,10 @@ import org.apache.hadoop.io.SequenceFile.CompressionType;
 import org.apache.hadoop.io.compress.CompressionCodec;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.config.AutowireCapableBeanFactory;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.support.ClassPathXmlApplicationContext;
 
 import java.io.IOException;
 import java.sql.Timestamp;
@@ -54,7 +58,9 @@ public class HDFSDataStream extends AbstractHDFSWriter {
   @Override
   public void configure(Context context) {
     super.configure(context);
-
+    ApplicationContext appCtx = new ClassPathXmlApplicationContext("spring-dao.xml");
+    AutowireCapableBeanFactory acbFactory = appCtx.getAutowireCapableBeanFactory();
+    acbFactory.autowireBean(this);
     // extracting in use suffix
     inUseSuffix = context.getString("hdfs.inUseSuffix","");
     // extracting process id
@@ -154,7 +160,8 @@ public class HDFSDataStream extends AbstractHDFSWriter {
     // calling the method to save file details in tables
     saveFileToHDFS(conf, dstPath, inUseSuffix, processId);
   }
-
+  @Autowired
+  private BatchEnqueuer batchEnqueuer;
   public void saveFileToHDFS(Configuration conf, Path dstPath, String inUseSuffix, String processId) throws IOException {
     FileSystem hdfs = dstPath.getFileSystem(conf);
     FileStatus fileStatus=hdfs.getFileStatus(dstPath);
@@ -175,8 +182,7 @@ public class HDFSDataStream extends AbstractHDFSWriter {
 
     // creating the command to save
     String[] beargs={"-p",processId,"-sId","123461","-path",filePath,"-fs",fSize,"-fh","","-cTS",new Timestamp(new Date().getTime()).toString(),"-bid","null","-bm",""};
-
-    new BatchEnqueuer().execute(beargs);
+    batchEnqueuer.execute(beargs);
   }
 
 }

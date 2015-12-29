@@ -33,17 +33,9 @@ chmod +x $BDRE_HOME/bdre-scripts/execution/*
 (crontab -l ; echo "* * * * * $BDRE_HOME/bdre-scripts/deployment/process-deploy.sh") 2>&1 | grep -v "no crontab" | sort | uniq | crontab -
 
 
-cd
-CDH_TWITTER=~/cdh-twitter-example
-if [ -d "$CDH_TWITTER" ]; then
-    echo "already cloned"
-else
-    git clone https://github.com/cloudera/cdh-twitter-example.git
-    cd cdh-twitter-example/flume-sources
-    mvn package
-    sudo mkdir -p $flumeLibDir/plugins.d/twitter/lib
-    sudo cp target/flume-sources-1.0-SNAPSHOT.jar $flumeLibDir/plugins.d/twitter/lib
-fi
+
+
+
 
 
 

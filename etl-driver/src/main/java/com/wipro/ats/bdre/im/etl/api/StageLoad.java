@@ -23,6 +23,7 @@ import org.apache.hadoop.hive.metastore.api.FieldSchema;
 import org.apache.hadoop.hive.metastore.api.StorageDescriptor;
 import org.apache.hadoop.hive.metastore.api.Table;
 import org.apache.log4j.Logger;
+import org.apache.hive.jdbc.HiveConnection;
 
 import java.sql.Connection;
 import java.sql.ResultSet;
@@ -73,9 +74,9 @@ public class StageLoad extends ETLBase {
 
             Connection rawCon = getHiveJDBCConnection(stageDbName);
             Connection baseCon = getHiveJDBCConnection(baseDbName);
-            baseCon.setClientInfo("hive.exec.dynamic.partition.mode", "nonstrict");
+/*            baseCon.setClientInfo("hive.exec.dynamic.partition.mode", "nonstrict");
             baseCon.setClientInfo("hive.exec.dynamic.partition", "true");
-            baseCon.setClientInfo("hive.exec.max.dynamic.partitions.pernode", "1000");
+            baseCon.setClientInfo("hive.exec.max.dynamic.partitions.pernode", "1000")*/;
             Statement rawConStatement = rawCon.createStatement();
             Statement baseConStatement = baseCon.createStatement();
 
@@ -121,7 +122,7 @@ public class StageLoad extends ETLBase {
 
         } catch (Exception e) {
 
-            LOGGER.error("Error " + e);
+            LOGGER.error(e);
             throw new ETLException(e);
         }
     }

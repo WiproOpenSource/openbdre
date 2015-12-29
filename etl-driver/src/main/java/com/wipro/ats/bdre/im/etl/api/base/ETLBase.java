@@ -51,17 +51,17 @@ public abstract class ETLBase extends BaseStructure{
         List<GetHiveTablesInfo> hiveTablesInfos = getHiveTables.execute(hiveTableParams);
        //TODO: THIS logic is wrong. The stageTable , view and coreTable may not be in order.
         rawTable =hiveTablesInfos.get(0);
-        rawView =hiveTablesInfos.get(1);
-        baseTable =hiveTablesInfos.get(2);
+        rawView =hiveTablesInfos.get(2);
+        baseTable =hiveTablesInfos.get(1);
     }
     protected Connection getHiveJDBCConnection(String dbName){
         try {
             Class.forName(IMConstant.HIVE_DRIVER_NAME);
             String hiveConnection = IMConfig.getProperty("etl.hive-connection");
             Connection con = DriverManager.getConnection(hiveConnection + "/" + dbName, "", "");
-/*            con.createStatement().execute("set hive.exec.dynamic.partition.mode=nonstrict");
+            con.createStatement().execute("set hive.exec.dynamic.partition.mode=nonstrict");
             con.createStatement().execute("set hive.exec.dynamic.partition=true");
-            con.createStatement().execute("set hive.exec.max.dynamic.partitions.pernode=1000");*/
+            con.createStatement().execute("set hive.exec.max.dynamic.partitions.pernode=1000");
             return con;
         } catch (ClassNotFoundException e) {
             LOGGER.error(e);

@@ -24,17 +24,17 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.AutowireCapableBeanFactory;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
+import org.springframework.stereotype.Component;
 
 import java.sql.Timestamp;
 
 /**
  * Created by arijit on 12/8/14.
  */
+@Component
 public class RegisterFile extends MetadataAPIBase {
     public RegisterFile() {
-        ApplicationContext context = new ClassPathXmlApplicationContext("spring-dao.xml");
-        AutowireCapableBeanFactory acbFactory = context.getAutowireCapableBeanFactory();
-        acbFactory.autowireBean(this);
+
     }
 
     private static final Logger LOGGER = Logger.getLogger(RegisterFile.class);
