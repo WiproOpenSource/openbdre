@@ -76,7 +76,7 @@ if [ $? -ne 0 ]
 fi
 
 # copying metadata jars
-cp $BDRE_HOME/lib/md_api/md_api-$bdreVersion.jar $BDRE_APPS_HOME/$busDomainId/$processTypeId/$processId/lib
+cp $BDRE_HOME/lib/md_api/md_api-$bdreVersion-executable.jar $BDRE_APPS_HOME/$busDomainId/$processTypeId/$processId/lib
 if [ $? -ne 0 ]
     then exit 1
 fi

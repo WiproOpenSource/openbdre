@@ -14,12 +14,16 @@
 
 package com.wipro.ats.bdre.md.dao;
 
+import com.sun.org.apache.regexp.internal.RE;
 import com.wipro.ats.bdre.exception.MetadataException;
+import com.wipro.ats.bdre.md.dao.jpa.Batch;
 import com.wipro.ats.bdre.md.dao.jpa.BatchConsumpQueue;
+import com.wipro.ats.bdre.md.dao.jpa.Process;
 import org.apache.log4j.Logger;
 import org.hibernate.Criteria;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
+import org.hibernate.criterion.Restrictions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -113,5 +117,22 @@ public class BatchConsumpQueueDAO {
         } finally {
             session.close();
         }
+    }
+
+    public Integer getBCQForProcessId(Process process) {
+        Session session = sessionFactory.openSession();
+        Integer size = null;
+        try {
+            session.beginTransaction();
+            Criteria getBCQTargetBatchIdCriteria = session.createCriteria(BatchConsumpQueue.class).add(Restrictions.eq("process", process));
+            size = getBCQTargetBatchIdCriteria.list().size();
+            session.getTransaction().commit();
+        } catch (MetadataException e) {
+            session.getTransaction().rollback();
+            LOGGER.error(e);
+        } finally {
+            session.close();
+        }
+        return size;
     }
 }

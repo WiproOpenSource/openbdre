@@ -235,8 +235,6 @@ public class FullJobTest {
         List<Properties> propertiesList = propertiesDAO.getPropertiesForConfig(firstChildOfParentProcess1Id, "Test CG");
         assertEquals("getPropertiesForConfig failed", propertiesList.get(0).getId().getPropKey(), "Test key");
 
-        //bcq is null before starting processes
-        assertNotNull(batchConsumpQueueDAO.list(0, 10));
 
         List<InitJobRowInfo> initJobRowInfos1 = jobDAO.initJob(firstParentProcessId, 1);
         Long parentInstanceExecId1 = initJobRowInfos1.get(0).getInstanceExecId();
@@ -259,8 +257,9 @@ public class FullJobTest {
         jobDAO.haltJob(firstParentProcessId, "parentProcessFirst");
         assertEquals(new Integer(3), instanceExecDAO.get(parentInstanceExecId1).getExecStatus().getExecStateId());
 
-//  checking for record in bcq
-        assertEquals(new Long(2), batchConsumpQueueDAO.totalRecordCount());
+        //  checking for record in bcq
+        Integer numOfEntires = batchConsumpQueueDAO.getBCQForProcessId(firstChildOfParentProcess2);
+        assertEquals(new Long(1),new Long(numOfEntires));
         assertNotNull(batchConsumpQueueDAO.list(0, 10));
 
         List<InitJobRowInfo> initJobRowInfos2 = jobDAO.initJob(secondParentProcessId, 1);
@@ -282,7 +281,8 @@ public class FullJobTest {
         jobDAO.termJob(secondParentProcessId);
         assertEquals(new Integer(6), instanceExecDAO.get(parentInstanceExecId2).getExecStatus().getExecStateId());
 //checking bcq
-        assertEquals(new Long(2), batchConsumpQueueDAO.totalRecordCount());
+        numOfEntires = batchConsumpQueueDAO.getBCQForProcessId(firstChildOfParentProcess2);
+        assertEquals(new Long(1),new Long(numOfEntires));
 
         List<InitJobRowInfo> initJobRowInfos3 = jobDAO.initJob(secondParentProcessId, 1);
         Long parentInstanceExecId3 = initJobRowInfos3.get(0).getInstanceExecId();
@@ -300,7 +300,8 @@ public class FullJobTest {
         jobDAO.haltJob(secondParentProcessId, "parentProcessSecond");
         assertEquals(new Integer(3), instanceExecDAO.get(parentInstanceExecId3).getExecStatus().getExecStateId());
 
-        assertEquals(new Long(0), batchConsumpQueueDAO.totalRecordCount());
+        numOfEntires = batchConsumpQueueDAO.getBCQForProcessId(firstChildOfParentProcess2);
+        assertEquals(new Long(0),new Long(numOfEntires));
     }
     finally
 
