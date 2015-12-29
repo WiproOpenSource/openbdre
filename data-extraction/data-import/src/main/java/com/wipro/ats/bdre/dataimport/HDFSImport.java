@@ -97,8 +97,9 @@ public class HDFSImport extends Configured implements Tool {
             //create if this directory does not exist
             if(!jod.exists())
             {
-                jod.mkdirs();
-                LOGGER.info("Jar output dir created "+jarOutputDir);
+                LOGGER.info("Creating jar output dir"+jarOutputDir);
+                boolean created=jod.mkdirs();
+                LOGGER.info("Is directory created?"+created);
             }
 
             //setting the parameters of sqoopOption
