@@ -36,8 +36,9 @@ if [ -n "$var_dbtype" ]; then
 else
     var_dbtype=1
 fi
-
-if [ $var_dbtype -ne 1]; then
+var_username=''
+var_password=''
+if [ $var_dbtype -ne 1 ]; then
     read -p "Enter DB username (Type username or leave it blank for default 'root'): " var_username
     read -p "Enter DB password (Type username or leave it blank for default 'root'): " var_password
     if [ -n "$var_username" ]; then
