@@ -53,11 +53,13 @@ public class ProcessDeploymentQueueDAOTest {
     @Autowired
     DeployStatusDAO deployStatusDAO;
 
+    @Ignore
     @Test
     public void testList() throws Exception {
         LOGGER.info("Size of ProcessDeploymentQueue is atleast:" + processDeploymentQueueDAO.list(0, 10).size());
     }
 
+    @Ignore
     @Test
     public void testTotalRecordCount() throws Exception {
         LOGGER.info("Size of ProcessDeploymentQueue is:" + processDeploymentQueueDAO.totalRecordCount());
@@ -79,9 +81,8 @@ public class ProcessDeploymentQueueDAOTest {
     }
 
     @Test
-    @Ignore
     public void testInsertUpdateAndDelete() throws Exception {
-        Process process = processDAO.get(10802);
+        Process process = processDAO.get(1);
         BusDomain busDomain = busDomainDAO.get(1);
         ProcessType processType = processTypeDAO.get(2);
         DeployStatus deployStatus = deployStatusDAO.get((short) 1);

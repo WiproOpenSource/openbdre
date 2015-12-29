@@ -137,7 +137,7 @@ public class ETLDriverDAO {
                 tableIdList.add(etlDriverList.get(0).getHiveTablesByBaseTableId().getTableId());
                 tableIdList.add(etlDriverList.get(0).getHiveTablesByRawTableId().getTableId());
                 tableIdList.add(etlDriverList.get(0).getHiveTablesByRawViewId().getTableId());
-                Criteria fetchHiveTablesCriteria = session.createCriteria(HiveTables.class).add(Restrictions.in("tableId", tableIdList)).addOrder(Order.asc("tableId")).addOrder(Order.asc("etlDriversForRawViewId")).addOrder(Order.asc("etlDriversForRawTableId")).addOrder(Order.asc("etlDriversForBaseTableId"));
+                Criteria fetchHiveTablesCriteria = session.createCriteria(HiveTables.class).add(Restrictions.in("tableId", tableIdList)).addOrder(Order.asc("tableId"));
                 Integer hiveTablesCount = fetchHiveTablesCriteria.list().size();
                 if (hiveTablesCount != 0) {
                     List<HiveTables> hiveTablesList = fetchHiveTablesCriteria.list();

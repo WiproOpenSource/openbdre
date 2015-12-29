@@ -165,7 +165,7 @@ public class MQImportSetupDAO {
             subProcess.setNextProcessId(parentProcessId.toString());
             subProcess.setDeleteFlag(false);
             Integer subProcessId;
-            triggerCheck = processValidateInsert.ProcessTypeValidator(process, process);
+            triggerCheck = processValidateInsert.ProcessTypeValidator(subProcess, process);
             if (triggerCheck == true) {
                 subProcessId = (Integer) session.save(subProcess);
             } else {

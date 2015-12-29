@@ -51,11 +51,13 @@ public class FileDAOTest {
     @Autowired
     ServersDAO serversDAO;
 
+    @Ignore
     @Test
     public void testList() throws Exception {
         LOGGER.info("Size of File is atleast:" + fileDAO.list(0, 10).size());
     }
 
+    @Ignore
     @Test
     public void testTotalRecordCount() throws Exception {
         LOGGER.info("Total Size of File is:" + fileDAO.totalRecordCount());

@@ -24,6 +24,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.AutowireCapableBeanFactory;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
+import static org.junit.Assert.*;
 
 import java.util.List;
 
@@ -47,11 +48,13 @@ public class UserRolesDAOTest {
     @Autowired
     UsersDAO usersDAO;
 
+    @Ignore
     @Test
     public void testList() throws Exception {
         LOGGER.info("Size of UserRoles is atleast:" + userRolesDAO.list(0, 10).size());
     }
 
+    @Ignore
     @Test
     public void testTotalRecordCount() throws Exception {
         LOGGER.info("Size of UserRoles is:" + userRolesDAO.totalRecordCount());
@@ -76,9 +79,13 @@ public class UserRolesDAOTest {
         userRoles.setRole("Role_updated");
         userRolesDAO.update(userRoles);
         userRoles = userRolesDAO.get(userRolesId);
+        assertEquals("Role_updated",userRoles.getRole());
         LOGGER.info("Updated userRoles with role:" + userRoles.getRole());
+        assertNotNull(userRolesDAO.list(0,10));
         userRolesDAO.delete(userRolesId);
         LOGGER.info("UserRoles Deleted with ID:" + userRolesId);
+        LOGGER.info("Size of UserRoles is:" + userRolesDAO.totalRecordCount());
+
     }
 
     @Test
