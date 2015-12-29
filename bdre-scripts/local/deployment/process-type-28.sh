@@ -19,31 +19,48 @@ processTypeId=$2
 processId=$3
 
 
+
 #Generating workflow
 
-java -cp "$pathForWorkflowMainJar/workflow-generator-$bdreVersion.jar:$pathForWorkflowJars/*" com.wipro.ats.bdre.wgen.WorkflowGenerator --parent-process-id $processId --file-name workflow-$processId.xml
+java -cp "$BDRE_HOME/lib/workflow-generator/*" com.wipro.ats.bdre.wgen.WorkflowGenerator --parent-process-id $processId --file-name workflow-$processId.xml
+if [ $? -ne 0 ]
+then exit 1
+fi
 
-if [ $? -eq 1 ] 
-then exit 1
-fi
+
 #clean edgenode process directory, if exists
- rm -r -f BDRE/$busDomainId/$processTypeId/$processId
-if [ $? -eq 1 ] 
+rm -r -f $BDRE_APPS_HOME/$busDomainId/$processTypeId/$processId
+if [ $? -ne 0 ]
 then exit 1
 fi
-mkdir -p BDRE/$busDomainId/$processTypeId/$processId
-if [ $? -eq 1 ]
+
+mkdir -p $BDRE_APPS_HOME/$busDomainId/$processTypeId/$processId
+if [ $? -ne 0 ]
 then exit 1
 fi
+
+mkdir -p $BDRE_APPS_HOME/$busDomainId/$processTypeId/$processId/lib
+if [ $? -ne 0 ]
+then exit 1
+fi
+
 #move generated workflow to edge node process dir
-mv  workflow-$processId.xml BDRE/$busDomainId/$processTypeId/$processId/
+mv  workflow-$processId.xml $BDRE_APPS_HOME/$busDomainId/$processTypeId/$processId
+if [ $? -ne 0 ]
+then exit 1
+fi
+
+mv  workflow-$processId.xml.dot $BDRE_APPS_HOME/$busDomainId/$processTypeId/$processId/
+if [ $? -ne 0 ]
+then exit 1
+fi
+
+#copy generated jar for data-import
+cp -f $BDRE_HOME/lib/im-crawler/im-crawler-$bdreVersion-shaded.jar $BDRE_APPS_HOME/$busDomainId/$processTypeId/$processId/lib
 if [ $? -eq 1 ]
 then exit 1
 fi
-mv  workflow-$processId.xml.dot BDRE/$busDomainId/$processTypeId/$processId/
-if [ $? -eq 1 ]
-then exit 1
-fi
+
 #create/clean hdfs process directory
 hdfs dfs -mkdir -p $hdfsPath/wf/$busDomainId/$processTypeId/$processId
 if [ $? -eq 1 ]
@@ -57,16 +74,14 @@ hdfs dfs -mkdir -p $hdfsPath/wf/$busDomainId/$processTypeId/$processId/lib
 if [ $? -eq 1 ]
 then exit 1
 fi
-#copy generated workflow to hdfs process dir
-hdfs dfs -put BDRE/$busDomainId/$processTypeId/$processId/workflow-$processId.xml $hdfsPath/wf/$busDomainId/$processTypeId/$processId
-if [ $? -eq 1 ]
-then exit 1
+
+#copying files to hdfs
+
+hdfs dfs -put $BDRE_APPS_HOME/$busDomainId/$processTypeId/$processId/* $hdfsPath/wf/$busDomainId/$processTypeId/$processId
+if [ $? -ne 0 ]
+    then exit 1
 fi
-#copy generated jar for hive-data-gen
-hdfs dfs -put $pathToHiveDataGen/im-crawler-$bdreVersion-shaded.jar $hdfsPath/wf/$busDomainId/$processTypeId/$processId/lib/
-if [ $? -eq 1 ]
-then exit 1
-fi
+
 #List HDFS process dir structure
 hdfs dfs -ls -R $hdfsPath/wf/$busDomainId/$processTypeId/$processId/
 if [ $? -eq 1 ]
