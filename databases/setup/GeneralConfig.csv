@@ -528,3 +528,4 @@
 'scripts_config', 'bdreVersion', '-','-' , 1, '1.1-SNAPSHOT', 'text' , 1
 'scripts_config', 'oozieHost', '-','-' , 1, 'localhost', 'text' , 1
 'scripts_config', 'ooziePort', '-','-' , 1, '11000', 'text' , 1
+'scripts_config', 'logDir', '-','-' , 1, '/var/log/BDRE', 'text' , 1

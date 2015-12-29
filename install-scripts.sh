@@ -29,12 +29,15 @@ chmod +x $BDRE_HOME/bdre-scripts/deployment/*
 chmod +x $BDRE_HOME/bdre-scripts/execution/*
 
 #Install crontab for deployment daemon * * * * * - every min
-
+echo " installing crontab for $BDRE_HOME/bdre-scripts/deployment/process-deploy.sh"
 (crontab -l ; echo "* * * * * $BDRE_HOME/bdre-scripts/deployment/process-deploy.sh") 2>&1 | grep -v "no crontab" | sort | uniq | crontab -
 
 #Create log dir
 sudo mkdir /var/log/BDRE
 sudo chown cloudera:cloudera /var/log/BDRE
+
+#Update java softlink
+sudo ln -s -f /usr/java/jdk1.7.0_67-cloudera/bin/java /usr/bin/java
 
 cd $BDRE_HOME
 rm -r -f cdh-twitter-example
