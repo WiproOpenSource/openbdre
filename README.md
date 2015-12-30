@@ -27,8 +27,10 @@ It's also quite easy to run BDRE for HortonWorks Sandbox. You can download Horto
     * Navigate to folder where you want to download BDRE source code and build it.
     * Pull BDRE source from this git repository. To find out your repository link navigate to the repository in this website and copy the https repo URL.
 
-    ```git clone https://gitlab.com/bdre/openbdre.git```
-    * Now cd to the bdre source code folder that git created.
+    ```git clone https://gitlab.com/bdre/openbdre.git
+       cd openbdre
+    ```
+   
 
 2. Database Setup 
     * Execute the dbsetup.sh script without any parameters as shown below. In this example, we are going to use MySQL as BDRE backend as it's already available in the QuickStart VM. If you would like to use another database please select it accordingly.
