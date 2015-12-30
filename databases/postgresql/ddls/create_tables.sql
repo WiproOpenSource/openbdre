@@ -1,5 +1,5 @@
 /*etlmd_bus_domain.sql  */
-DROP TABLE IF EXISTS bus_domain;
+
 
 CREATE TABLE bus_domain (
   bus_domain_id SERIAL NOT NULL,
@@ -11,7 +11,7 @@ CREATE TABLE bus_domain (
 
 /* etlmd_batch_status.sql */
 
-DROP TABLE IF EXISTS batch_status;
+
 
 CREATE TABLE batch_status (
   batch_state_id INT NOT NULL,
@@ -22,7 +22,7 @@ CREATE TABLE batch_status (
 /* etlmd_process_type.sql */
 
 
-DROP TABLE IF EXISTS process_type;
+
 
 CREATE TABLE process_type (
   process_type_id int NOT NULL,
@@ -36,7 +36,7 @@ CREATE TABLE process_type (
 /* etlmd_exec_status.sql */
 
 
-DROP TABLE IF EXISTS exec_status;
+
 
 CREATE TABLE exec_status (
   exec_state_id int NOT NULL,
@@ -46,7 +46,7 @@ CREATE TABLE exec_status (
 
 
 /*etlmd_workflow_type.sql*/
-DROP TABLE IF EXISTS workflow_type;
+
 
 CREATE TABLE workflow_type (
   workflow_id INT NOT NULL,
@@ -57,7 +57,7 @@ CREATE TABLE workflow_type (
 /* etlmd_servers.sql */
 
 
-DROP TABLE IF EXISTS servers;
+
 
 
 CREATE TABLE servers (
@@ -75,7 +75,7 @@ CREATE TABLE servers (
 
 /* etlmd_process_template.sql */
 
-DROP TABLE IF EXISTS process_template;
+
 
 CREATE TABLE process_template (
   process_template_id serial NOT NULL,
@@ -103,7 +103,7 @@ UPDATE NO ACTION,
 /* etlmd_properties_template.sql */
 
 
-DROP TABLE if exists properties_template;
+
 
 CREATE TABLE properties_template (
   process_template_id int NOT NULL references process_template(process_template_id) ON
@@ -120,7 +120,7 @@ DELETE NO ACTION ON UPDATE NO ACTION,
 /* etlmd_process.sql */
 
 
-DROP TABLE IF EXISTS process;
+
 
 CREATE TABLE process (
   process_id serial NOT NULL,
@@ -150,7 +150,7 @@ DELETE NO ACTION ON UPDATE NO ACTION,
 
 /* etlmd_properties.sql */
 
-DROP TABLE IF EXISTS properties;
+
 
 CREATE TABLE properties (
   process_id int NOT NULL references process(process_id) ON DELETE NO ACTION ON UPDATE NO
@@ -166,7 +166,7 @@ ACTION,
 
 /* etlmd_hive_tables.sql */
 
-DROP TABLE IF EXISTS hive_tables;
+
 
 
 CREATE TABLE hive_tables (
@@ -184,7 +184,7 @@ CREATE TABLE hive_tables (
 
 /* etlmd_etl_driver.sql */
 
-DROP TABLE IF EXISTS etl_driver;
+
 
 
 CREATE TABLE IF NOT EXISTS etl_driver (
@@ -205,7 +205,7 @@ ACTION,
 /* etlmd_instance_exec.sql */
 
 
-DROP TABLE IF EXISTS instance_exec;
+
 
 
 CREATE TABLE instance_exec (
@@ -221,7 +221,7 @@ UPDATE NO ACTION,
 
 /* etlmd_batch.sql */
 
-DROP TABLE IF EXISTS batch;
+
 
 CREATE TABLE batch (
   batch_id BIGSERIAL NOT NULL,
@@ -236,7 +236,7 @@ DELETE NO ACTION ON UPDATE NO ACTION,
 
 /* etlmd_file.sql */
 
-DROP TABLE IF EXISTS file;
+
 
 CREATE TABLE file (
   batch_id bigint NOT NULL REFERENCES batch(batch_id) ON DELETE NO ACTION ON UPDATE NO
@@ -253,7 +253,7 @@ ACTION,
 
 /* etlmd_batch_consump_queue.sql */
 
-DROP TABLE IF EXISTS batch_consump_queue;
+
 
 
 CREATE TABLE batch_consump_queue (
@@ -277,7 +277,7 @@ ACTION,
 
 /* etlmd_archive_consump_queue.sql */
 
-DROP TABLE IF EXISTS archive_consump_queue;
+
 
 CREATE TABLE archive_consump_queue (
   source_batch_id bigint NOT NULL references batch(batch_id) ON DELETE NO ACTION ON UPDATE
@@ -300,7 +300,7 @@ ACTION,
 
 /* etlmd_etljob.sql */
 
-DROP TABLE IF EXISTS etlstep;
+
 
 
 CREATE TABLE etlstep (
@@ -330,8 +330,8 @@ CREATE TABLE etlstep (
 
 /*etlmd_user.sql*/
 
-DROP TABLE IF EXISTS user_roles;
-DROP TABLE IF EXISTS users;
+
+
 
 CREATE  TABLE users (
   username VARCHAR(45) NOT NULL ,
@@ -351,7 +351,7 @@ CREATE TABLE user_roles (
 
 /* etlmd_process_log.sql */
 
-DROP TABLE IF EXISTS process_log;
+
 
 CREATE TABLE process_log (
   log_id bigserial NOT NULL,
@@ -369,7 +369,7 @@ ACTION,
 
 /* etlmd_intermediate.sql */
 
-DROP TABLE IF EXISTS intermediate;
+
 
 CREATE TABLE intermediate (
   uuid varchar(64) NOT NULL,
@@ -383,11 +383,11 @@ CREATE TABLE intermediate (
 
 
 
-DROP TABLE IF EXISTS lineage_relation;
-DROP TABLE IF EXISTS lineage_node;
-DROP TABLE IF EXISTS lineage_query;
-DROP TABLE IF EXISTS lineage_query_type;
-DROP TABLE IF EXISTS lineage_node_type;
+
+
+
+
+
 
 -- lineage table ddls
 
@@ -445,7 +445,7 @@ UPDATE NO ACTION,
 
 /* etlmd_deploy_status.sql */
 
-DROP TABLE IF EXISTS deploy_status;
+
 
 CREATE TABLE deploy_status (
   deploy_status_id smallint NOT NULL,
@@ -458,7 +458,7 @@ CREATE TABLE deploy_status (
 /* etlmd_general_config.sql */
 
 
-DROP TABLE IF EXISTS general_config;
+
 
 CREATE TABLE general_config(
   config_group varchar(128) NOT NULL,
@@ -478,7 +478,7 @@ CREATE TABLE general_config(
 /* etlmd_process_deployment_queue.sql */
 
 
-DROP TABLE IF EXISTS process_deployment_queue;
+
 
 CREATE TABLE process_deployment_queue (
    deployment_id bigserial NOT NULL ,
@@ -499,9 +499,9 @@ ON UPDATE NO ACTION,
 
 );
 
-/* etlmd_crawler.sql */
+/* etlmd_crawler.sql  */
 
-DROP TABLE IF EXISTS Docidsdb;
+
 
 CREATE TABLE Docidsdb (
    docid bigserial NOT NULL ,
@@ -509,7 +509,7 @@ CREATE TABLE Docidsdb (
    PRIMARY KEY (docid)
 );
 
-DROP TABLE IF EXISTS Statisticsdb;
+
 
 CREATE TABLE Statisticsdb (
    uniqid bigserial NOT NULL,
@@ -518,7 +518,7 @@ CREATE TABLE Statisticsdb (
    PRIMARY KEY (uniqid)
 );
 
-DROP TABLE IF EXISTS Pendingurlsdb;
+
 
 CREATE TABLE Pendingurlsdb (
    uniqid bigserial NOT NULL,
@@ -538,7 +538,7 @@ CREATE TABLE Pendingurlsdb (
    PRIMARY KEY (uniqid)
 );
 
-DROP TABLE IF EXISTS Weburlsdb;
+
 
 CREATE TABLE Weburlsdb (
    uniqid bigserial NOT NULL,
