@@ -41,7 +41,7 @@ public class HistoryDataImportDAO {
     private static final Logger LOGGER = Logger.getLogger(HistoryDataImportDAO.class);
     @Autowired
     SessionFactory sessionFactory;
-
+    Process dummyProcess=new Process();
     public List<com.wipro.ats.bdre.md.beans.table.Process> historyDataImport(IntermediateInfo intermediateInfo) throws Exception {
         Session session = sessionFactory.openSession();
         List<com.wipro.ats.bdre.md.beans.table.Process> createdProcesses = new ArrayList<com.wipro.ats.bdre.md.beans.table.Process>();
@@ -256,9 +256,10 @@ public class HistoryDataImportDAO {
 
                 if(dataImportProcess.getProcess()!=null)
                 {
-                    triggerCheck=processValidateInsert.ProcessTypeValidator(dataLoadParent,parentProcessCheckDataImportProcessUpdate);
+                    triggerCheck=processValidateInsert.ProcessTypeValidator(dataImportProcess,parentProcessCheckDataImportProcessUpdate);
                     if(triggerCheck==true)
                     {
+                        dataImportProcess.setEditTs(new Date());
                         session.update(dataImportProcess);
                     }
                     else
@@ -267,9 +268,10 @@ public class HistoryDataImportDAO {
                     }
                 }
                 else
-                {triggerCheck=processValidateInsert.ProcessTypeValidator(dataLoadParent,parentProcessCheckDataImportProcessUpdate);
+                {triggerCheck=processValidateInsert.ProcessTypeValidator(dataImportProcess,parentProcessCheckDataImportProcessUpdate);
                     if(triggerCheck==true)
                     {
+                        dataImportProcess.setEditTs(new Date());
                         session.update(dataImportProcess);
                     }
                     else
@@ -296,8 +298,10 @@ public class HistoryDataImportDAO {
                 dbProperties.setConfigGroup("imp-common");
                 dbProperties.setPropValue(dbValue.getInterValue());
                 dbProperties.setDescription("properties for  data import");
+                dummyProcess=dbProperties.getProcess();
                 session.save(dbProperties);
-
+                dummyProcess.setEditTs(new Date());
+                session.update(dummyProcess);
 
                 IntermediateId intermediateIdDriver = new IntermediateId();
                 intermediateIdDriver.setUuid(intermediateInfo.getUuid());
@@ -314,7 +318,10 @@ public class HistoryDataImportDAO {
                 driverProperties.setConfigGroup("imp-common");
                 driverProperties.setPropValue(driverValue.getInterValue());
                 driverProperties.setDescription("properties for  data import");
+                dummyProcess=driverProperties.getProcess();
                 session.save(driverProperties);
+                dummyProcess.setEditTs(new Date());
+                session.update(dummyProcess);
 
                 IntermediateId intermediateIdPassword = new IntermediateId();
                 intermediateIdPassword.setUuid(intermediateInfo.getUuid());
@@ -331,8 +338,10 @@ public class HistoryDataImportDAO {
                 passwordProperties.setConfigGroup("imp-common");
                 passwordProperties.setPropValue(passwordValue.getInterValue());
                 passwordProperties.setDescription("properties for  data import");
+                dummyProcess=passwordProperties.getProcess();
                 session.save(passwordProperties);
-
+                dummyProcess.setEditTs(new Date());
+                session.update(dummyProcess);
 
                 IntermediateId intermediateIdUserName = new IntermediateId();
                 intermediateIdUserName.setUuid(intermediateInfo.getUuid());
@@ -349,8 +358,10 @@ public class HistoryDataImportDAO {
                 userNameProperties.setConfigGroup("imp-common");
                 userNameProperties.setPropValue(userNameValue.getInterValue());
                 userNameProperties.setDescription("properties for  data import");
+                dummyProcess=userNameProperties.getProcess();
                 session.save(userNameProperties);
-
+                dummyProcess.setEditTs(new Date());
+                session.update(dummyProcess);
 
                 IntermediateId intermediateIdRawName = new IntermediateId();
                 intermediateIdRawName.setUuid(intermediateInfo.getUuid());
@@ -367,7 +378,10 @@ public class HistoryDataImportDAO {
                 rawNameProperties.setConfigGroup("imp-common");
                 rawNameProperties.setPropValue(rawNameValue.getInterValue());
                 rawNameProperties.setDescription("properties for  data import");
+                dummyProcess=rawNameProperties.getProcess();
                 session.save(rawNameProperties);
+                dummyProcess.setEditTs(new Date());
+                session.update(dummyProcess);
 
                 PropertiesId propertiesIdFileLayout = new PropertiesId();
                 propertiesIdFileLayout.setProcessId(childDataImportProcess.getProcessId());
@@ -377,7 +391,10 @@ public class HistoryDataImportDAO {
                 fileLayoutProperties.setConfigGroup("imp-common");
                 fileLayoutProperties.setPropValue("TextFile");
                 fileLayoutProperties.setDescription("properties for  data import");
+                dummyProcess=fileLayoutProperties.getProcess();
                 session.save(fileLayoutProperties);
+                dummyProcess.setEditTs(new Date());
+                session.update(dummyProcess);
 
 
                 PropertiesId propertiesIdImport = new PropertiesId();
@@ -388,7 +405,10 @@ public class HistoryDataImportDAO {
                 importProperties.setConfigGroup("imp-common");
                 importProperties.setPropValue("1");
                 importProperties.setDescription("properties for  data import");
+                dummyProcess=importProperties.getProcess();
                 session.save(importProperties);
+                dummyProcess.setEditTs(new Date());
+                session.update(dummyProcess);
 
 
                 PropertiesId propertiesIdMappers = new PropertiesId();
@@ -399,7 +419,10 @@ public class HistoryDataImportDAO {
                 mapeersProperties.setConfigGroup("imp-common");
                 mapeersProperties.setPropValue("1");
                 mapeersProperties.setDescription("properties for  data import");
+                dummyProcess=mapeersProperties.getProcess();
                 session.save(mapeersProperties);
+                dummyProcess.setEditTs(new Date());
+                session.update(dummyProcess);
 
 
                 IntermediateId intermediateIdColumnList = new IntermediateId();
@@ -417,7 +440,10 @@ public class HistoryDataImportDAO {
                 columnListProperties.setConfigGroup("imp-common");
                 columnListProperties.setPropValue(columnListValue.getInterValue());
                 columnListProperties.setDescription("properties for  data import");
+                dummyProcess=columnListProperties.getProcess();
                 session.save(columnListProperties);
+                dummyProcess.setEditTs(new Date());
+                session.update(dummyProcess);
 
 
                 IntermediateId intermediateIdIncrementType = new IntermediateId();
@@ -435,7 +461,10 @@ public class HistoryDataImportDAO {
                 incrementTypeProperties.setConfigGroup("imp-common");
                 incrementTypeProperties.setPropValue(incrementTypeValue.getInterValue());
                 incrementTypeProperties.setDescription("properties for  data import");
+                dummyProcess=incrementTypeProperties.getProcess();
                 session.save(incrementTypeProperties);
+                dummyProcess.setEditTs(new Date());
+                session.update(dummyProcess);
 
 
                 IntermediateId intermediateIdCheckCol = new IntermediateId();
@@ -453,7 +482,10 @@ public class HistoryDataImportDAO {
                 checkColProperties.setConfigGroup("imp-common");
                 checkColProperties.setPropValue(checkColValue.getInterValue());
                 checkColProperties.setDescription("properties for  data import");
+                dummyProcess=checkColProperties.getProcess();
                 session.save(checkColProperties);
+                dummyProcess.setEditTs(new Date());
+                session.update(dummyProcess);
 
                 String ingestOnlyCount = "ingestOnly_" + i;
                 IntermediateId intermediateIdLoadOrNot = new IntermediateId();
@@ -731,6 +763,7 @@ public class HistoryDataImportDAO {
                     triggerCheck=processValidateInsert.ProcessTypeValidator(dataLoadParent,parentProcessCheckDataLoadProcessUpdate);
                     if(triggerCheck==true)
                     {
+                        dataLoadParent.setEditTs(new Date());
                         session.update(dataLoadParent);
                     }
                     else
@@ -742,6 +775,8 @@ public class HistoryDataImportDAO {
                 {triggerCheck=processValidateInsert.ProcessTypeValidator(dataLoadParent,parentProcessCheckDataLoadProcessUpdate);
                     if(triggerCheck==true)
                     {
+                        dataLoadParent.setEditTs(new Date());
+
                         session.update(dataLoadParent);
                     }
                     else
@@ -758,7 +793,37 @@ public class HistoryDataImportDAO {
                 for (Object fileToRawObject : fileToRawCriteria.list()) {
                     Process fileToRaw = (Process) fileToRawObject;
                     fileToRaw.setNextProcessId(nextProcessForF2R);
-                    session.update(fileToRaw);
+                    parentProcessCheckDataLoadProcessUpdate = null;
+                    if (fileToRaw.getProcess() != null) {
+                        parentProcessCheckDataLoadProcessUpdate = (Process) session.get(Process.class, fileToRaw.getProcess().getProcessId());
+                    }
+                    if(fileToRaw.getProcess()!=null)
+                    {
+                        triggerCheck=processValidateInsert.ProcessTypeValidator(fileToRaw,parentProcessCheckDataLoadProcessUpdate);
+                        if(triggerCheck==true)
+                        {
+                            fileToRaw.setEditTs(new Date());
+                            session.update(fileToRaw);
+                        }
+                        else
+                        {
+                            throw new MetadataException("error ocured in trigger check");
+                        }
+                    }
+                    else
+                    {triggerCheck=processValidateInsert.ProcessTypeValidator(fileToRaw,parentProcessCheckDataLoadProcessUpdate);
+                        if(triggerCheck==true)
+                        {
+                            fileToRaw.setEditTs(new Date());
+
+                            session.update(fileToRaw);
+                        }
+                        else
+                        {
+                            throw new MetadataException("error ocured in trigger check");
+                        }
+                    }
+
                 }
 
                 Criteria rawToStageCriteria = session.createCriteria(Process.class).add(Restrictions.eq("processType", raw2StageType))
@@ -766,7 +831,37 @@ public class HistoryDataImportDAO {
                 for (Object rawToStageObject : rawToStageCriteria.list()) {
                     Process rawToStage = (Process) rawToStageObject;
                     rawToStage.setNextProcessId(nextProcessForR2S);
-                    session.update(rawToStage);
+                    parentProcessCheckDataLoadProcessUpdate = null;
+                    if (rawToStage.getProcess() != null) {
+                        parentProcessCheckDataLoadProcessUpdate = (Process) session.get(Process.class, rawToStage.getProcess().getProcessId());
+                    }
+                    if(rawToStage.getProcess()!=null)
+                    {
+                        triggerCheck=processValidateInsert.ProcessTypeValidator(dataLoadParent,parentProcessCheckDataLoadProcessUpdate);
+                        if(triggerCheck==true)
+                        {
+                            rawToStage.setEditTs(new Date());
+                            session.update(rawToStage);
+                        }
+                        else
+                        {
+                            throw new MetadataException("error ocured in trigger check");
+                        }
+                    }
+                    else
+                    {triggerCheck=processValidateInsert.ProcessTypeValidator(dataLoadParent,parentProcessCheckDataLoadProcessUpdate);
+                        if(triggerCheck==true)
+                        {
+                            rawToStage.setEditTs(new Date());
+
+                            session.update(rawToStage);
+                        }
+                        else
+                        {
+                            throw new MetadataException("error ocured in trigger check");
+                        }
+                    }
+
                 }
                 if (parentProcessIdList.size() != 0) {
                     Criteria parentProcessCriteria = session.createCriteria(Process.class).add(Restrictions.in("processId", parentProcessIdList));

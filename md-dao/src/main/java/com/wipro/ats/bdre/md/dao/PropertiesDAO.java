@@ -31,6 +31,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -42,7 +43,7 @@ public class PropertiesDAO {
     private static final Logger LOGGER = Logger.getLogger(PropertiesDAO.class);
     @Autowired
     SessionFactory sessionFactory;
-
+    Process dummyProcess=new Process();
     public List<Integer> list(Integer pageNum, Integer numResults) {
         Session session = sessionFactory.openSession();
         session.beginTransaction();
@@ -107,7 +108,10 @@ public class PropertiesDAO {
         Session session = sessionFactory.openSession();
         try {
             session.beginTransaction();
+            dummyProcess=properties.getProcess();
             session.update(properties);
+            dummyProcess.setEditTs(new Date());
+            session.update(dummyProcess);
             session.getTransaction().commit();
         } catch (MetadataException e) {
             session.getTransaction().rollback();
@@ -211,8 +215,10 @@ public class PropertiesDAO {
                     propertiesX.setPropValue(positionsInfo.getxPos().toString());
                     propertiesX.setDescription("xposition");
                     propertiesX.setId(propertiesIdForX);
-
+                    dummyProcess=propertiesX.getProcess();
                     session.save(propertiesX);
+                    dummyProcess.setEditTs(new Date());
+                    session.update(dummyProcess);
 
                     LOGGER.info("Property inserted:" + propertiesX.getId().getPropKey());
 
@@ -227,7 +233,10 @@ public class PropertiesDAO {
                     propertiesY.setDescription("yposition");
                     propertiesY.setId(propertiesIdForY);
                     propertiesY.setProcess(process);
+                    dummyProcess=propertiesY.getProcess();
                     session.save(propertiesY);
+                    dummyProcess.setEditTs(new Date());
+                    session.update(dummyProcess);
 
                     LOGGER.info("Property inserted:" + propertiesY.getId().getPropKey());
 

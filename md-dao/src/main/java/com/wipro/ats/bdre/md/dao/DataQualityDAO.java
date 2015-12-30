@@ -44,7 +44,7 @@ public class DataQualityDAO {
     private static final Logger LOGGER = Logger.getLogger(DataQualityDAO.class);
     @Autowired
     SessionFactory sessionFactory;
-
+    Process dummyProcess=new Process();
     public void deleteDQSetup(int pid) {
         Session session = sessionFactory.openSession();
         try {
@@ -219,6 +219,7 @@ public class DataQualityDAO {
             if (jpaProcess.getProcess() != null) {
                 triggerCheck = processValidateInsert.ProcessTypeValidator(jpaProcess, jpaProcessParentUpdate);
                 if (triggerCheck == true) {
+                    jpaProcess.setEditTs(new Date());
                     session.update(jpaProcess);
                 } else {
                     throw new MetadataException("error occured");
@@ -226,6 +227,7 @@ public class DataQualityDAO {
             } else {
                 triggerCheck = processValidateInsert.ProcessTypeValidator(jpaProcess, jpaProcessParentUpdate);
                 if (triggerCheck == true) {
+                    jpaProcess.setEditTs(new Date());
                     session.update(jpaProcess);
                 } else {
                     throw new MetadataException("error occured");
@@ -244,10 +246,12 @@ public class DataQualityDAO {
 
             userName.setId(propertiesId);
             userName.setPropValue(dqSetupInfo.getRulesUserNameValue());
-
+            dummyProcess=userName.getProcess();
 
             //inserting rules username
             session.save(userName);
+            dummyProcess.setEditTs(new Date());
+            session.update(dummyProcess);
             LOGGER.info("user name properties inserted");
             Properties password = new Properties();
 
@@ -262,7 +266,10 @@ public class DataQualityDAO {
 
 
             //inserting rules password
+            dummyProcess=password.getProcess();
             session.save(password);
+            dummyProcess.setEditTs(new Date());
+            session.update(dummyProcess);
             LOGGER.info("password properties inserted");
 
             Properties rulesPackage = new Properties();
@@ -276,7 +283,10 @@ public class DataQualityDAO {
             rulesPackage.setId(propertiesId2);
             rulesPackage.setPropValue(dqSetupInfo.getRulesPackageValue());
             //inserting rules package
+            dummyProcess=rulesPackage.getProcess();
             session.save(rulesPackage);
+            dummyProcess.setEditTs(new Date());
+            session.update(dummyProcess);
 
             Properties delimiter = new Properties();
 
@@ -289,7 +299,10 @@ public class DataQualityDAO {
             delimiter.setId(propertiesId3);
             delimiter.setPropValue(dqSetupInfo.getFileDelimiterRegexValue());
             // inserting file delimiter property
+            dummyProcess=delimiter.getProcess();
             session.save(delimiter);
+            dummyProcess.setEditTs(new Date());
+            session.update(dummyProcess);
 
             Properties threshold = new Properties();
 
@@ -302,8 +315,10 @@ public class DataQualityDAO {
             threshold.setId(propertiesId4);
             threshold.setPropValue(dqSetupInfo.getMinPassThresholdPercentValue());
             // inserting threshold property
+            dummyProcess=threshold.getProcess();
             session.save(threshold);
-
+            dummyProcess.setEditTs(new Date());
+            session.update(dummyProcess);
 
             Criteria countCriteria = session.createCriteria(Properties.class).add(Restrictions.eq("id.processId", subProcessId));
             countCriteria.add(Restrictions.eq("configGroup", dqSetupInfo.getConfigGroup()));
@@ -355,7 +370,10 @@ public class DataQualityDAO {
             LOGGER.info("updating propertiy is " + updatingProperties1);
             updatingProperties1.setPropValue(dqSetupInfo.getRulesUserNameValue());
             updatingProperties1.setDescription(dqSetupInfo.getDescription());
+            Process process=updatingProperties1.getProcess();
             session.update(updatingProperties1);
+            process.setEditTs(new Date());
+            session.update(process);
 
             PropertiesId propertiesId2 = new PropertiesId();
             propertiesId2.setProcessId(dqSetupInfo.getSubProcessId());
@@ -365,7 +383,10 @@ public class DataQualityDAO {
             Properties updatingProperties2 = (Properties) updatePropertiesCriteria2.uniqueResult();
             updatingProperties2.setPropValue(dqSetupInfo.getRulesPasswordValue());
             updatingProperties2.setDescription(dqSetupInfo.getDescription());
+            process=updatingProperties2.getProcess();
             session.update(updatingProperties2);
+            process.setEditTs(new Date());
+            session.update(process);
 
             PropertiesId propertiesId3 = new PropertiesId();
             propertiesId3.setProcessId(dqSetupInfo.getSubProcessId());
@@ -375,7 +396,10 @@ public class DataQualityDAO {
             Properties updatingProperties3 = (Properties) updatePropertiesCriteria3.uniqueResult();
             updatingProperties3.setPropValue(dqSetupInfo.getRulesPackageValue());
             updatingProperties3.setDescription(dqSetupInfo.getDescription());
+            process=updatingProperties3.getProcess();
             session.update(updatingProperties3);
+            process.setEditTs(new Date());
+            session.update(process);
 
             PropertiesId propertiesId4 = new PropertiesId();
             propertiesId4.setProcessId(dqSetupInfo.getSubProcessId());
@@ -385,7 +409,10 @@ public class DataQualityDAO {
             Properties updatingProperties4 = (Properties) updatePropertiesCriteria4.uniqueResult();
             updatingProperties4.setPropValue(dqSetupInfo.getFileDelimiterRegexValue());
             updatingProperties4.setDescription(dqSetupInfo.getDescription());
+            process=updatingProperties4.getProcess();
             session.update(updatingProperties4);
+            process.setEditTs(new Date());
+            session.update(process);
 
             PropertiesId propertiesId5 = new PropertiesId();
             propertiesId5.setProcessId(dqSetupInfo.getSubProcessId());
@@ -395,7 +422,10 @@ public class DataQualityDAO {
             Properties updatingProperties5 = (Properties) updatePropertiesCriteria5.uniqueResult();
             updatingProperties5.setPropValue(dqSetupInfo.getMinPassThresholdPercentValue());
             updatingProperties5.setDescription(dqSetupInfo.getDescription());
+            process=updatingProperties5.getProcess();
             session.update(updatingProperties5);
+            process.setEditTs(new Date());
+            session.update(process);
 
             Criteria countCriteria = session.createCriteria(Properties.class).add(Restrictions.eq("process.processId", dqSetupInfo.getSubProcessId()));
             countCriteria.add(Restrictions.eq("configGroup", dqSetupInfo.getConfigGroup()));
