@@ -77,14 +77,6 @@ It's also quite easy to run BDRE for HortonWorks Sandbox. You can download Horto
     ```shell
     $ mvn -s settings.xml clean install
     [INFO] Scanning for projects...
-    [WARNING]
-    [WARNING] Some problems were encountered while building the effective model for com.wipro.ats.bdre:md-ui:war:1.1-SNAPSHOT
-    [WARNING] 'build.plugins.plugin.version' for org.apache.maven.plugins:maven-war-plugin is missing. @ line 275, column 21
-    [WARNING]
-    [WARNING] It is highly recommended to fix these problems because they threaten the stability of your build.
-    [WARNING]
-    [WARNING] For this reason, future Maven versions might no longer support building such malformed projects.
-    [WARNING]
     [INFO] ------------------------------------------------------------------------
     [INFO] Reactor Build Order:
         .......blah blah.........
