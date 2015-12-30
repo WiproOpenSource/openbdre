@@ -36,21 +36,6 @@ if [ $? -ne 0 ]
 then exit 1
 fi
 
-mkdir -p $BDRE_APPS_HOME/$busDomainId/$processTypeId/$processId/lib
-if [ $? -ne 0 ]
-then exit 1
-fi
-
-mkdir -p $BDRE_APPS_HOME/$busDomainId/$processTypeId/$processId/hql
-if [ $? -ne 0 ]
-then exit 1
-fi
-
-mkdir -p $BDRE_APPS_HOME/$busDomainId/$processTypeId/$processId/spark
-if [ $? -ne 0 ]
-then exit 1
-fi
-
 #move generated workflow to edge node process dir
 mv  workflow-$processId.xml $BDRE_APPS_HOME/$busDomainId/$processTypeId/$processId
 if [ $? -ne 0 ]
@@ -62,9 +47,15 @@ if [ $? -ne 0 ]
 then exit 1
 fi
 
+#copying data-lineage jar
+cp $BDRE_HOME/lib/hive-plugin/hive-plugin-$bdreVersion-executable.jar $BDRE_APPS_HOME/$busDomainId/$processTypeId/$processId/lib
+if [ $? -ne 0 ]
+    then exit 1
+fi
+
 
 #copying hive-plugin jar
-cp $BDRE_HOME/lib/hive-plugin/hive-plugin-$bdreVersion.jar $BDRE_APPS_HOME/$busDomainId/$processTypeId/$processId/lib
+cp $BDRE_HOME/lib/data-lineage/data-lineage-$bdreVersion.jar $BDRE_APPS_HOME/$busDomainId/$processTypeId/$processId/lib
 if [ $? -ne 0 ]
     then exit 1
 fi
