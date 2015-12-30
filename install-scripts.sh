@@ -36,8 +36,9 @@ echo " installing crontab for $BDRE_HOME/bdre-scripts/deployment/process-deploy.
 hive -e "create database if not exists raw;create database if not exists base;"
 
 #Create log dir
+bdre_user=`whoami`
 sudo mkdir /var/log/BDRE
-sudo chown cloudera:cloudera /var/log/BDRE
+sudo chown $bdre_user:$bdre_user /var/log/BDRE
 
 
 #Update java softlink
