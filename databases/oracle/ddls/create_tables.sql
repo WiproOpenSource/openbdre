@@ -594,7 +594,7 @@ CREATE TABLE Pendingurlsdb (
    subdomain varchar(255),
    path varchar(1000),
    anchor varchar(255),
-   priority number(3,0) not null,
+   priority number(10,0) not null,
    tag varchar(255),
    primary key (uniqid)
 );
@@ -621,7 +621,7 @@ CREATE TABLE Weburlsdb (
    subdomain varchar(255),
    path varchar(1000),
    anchor varchar(255),
-   priority number(3,0) not null,
+   priority number(10,0) not null,
    tag varchar(255),
    primary key (uniqid)
 );

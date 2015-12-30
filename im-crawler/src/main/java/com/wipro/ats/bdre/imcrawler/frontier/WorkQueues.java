@@ -72,7 +72,7 @@ public class WorkQueues {
                             WebURL webURL = new WebURL();
                             webURL.setURL(info.getUrl());
                             webURL.setAnchor(info.getAnchor());
-                            webURL.setDepth(info.getDepth().shortValue());
+                            webURL.setDepth(info.getDepth());
                             webURL.setDocid(info.getDocid());
                             webURL.setDomain(info.getDomain());
                             webURL.setParentDocid(info.getParentdocid());
@@ -94,7 +94,7 @@ public class WorkQueues {
                             WebURL webURL = new WebURL();
                             webURL.setURL(info.getUrl());
                             webURL.setAnchor(info.getAnchor());
-                            webURL.setDepth(info.getDepth().shortValue());
+                            webURL.setDepth(info.getDepth());
                             webURL.setDocid(info.getDocid());
                             webURL.setDomain(info.getDomain());
                             webURL.setParentDocid(info.getParentdocid());
@@ -121,7 +121,7 @@ public class WorkQueues {
                             WebURL webURL = new WebURL();
                             webURL.setURL(info.getUrl());
                             webURL.setAnchor(info.getAnchor());
-                            webURL.setDepth(info.getDepth().shortValue());
+                            webURL.setDepth(info.getDepth());
                             webURL.setDocid(info.getDocid());
                             webURL.setDomain(info.getDomain());
                             webURL.setParentDocid(info.getParentdocid());
@@ -143,7 +143,7 @@ public class WorkQueues {
                             WebURL webURL = new WebURL();
                             webURL.setURL(info.getUrl());
                             webURL.setAnchor(info.getAnchor());
-                            webURL.setDepth(info.getDepth().shortValue());
+                            webURL.setDepth(info.getDepth());
                             webURL.setDocid(info.getDocid());
                             webURL.setDomain(info.getDomain());
                             webURL.setParentDocid(info.getParentdocid());
@@ -205,7 +205,7 @@ public class WorkQueues {
                 webURLsDB.setInstanceexecid(instanceExecid);
                 webURLsDB.setUrl(url.getURL());
                 webURLsDB.setAnchor(url.getAnchor());
-                webURLsDB.setDepth(new Integer(url.getDepth()));
+                webURLsDB.setDepth(url.getDepth());
                 webURLsDB.setDocid(url.getDocid());
                 webURLsDB.setDomain(url.getDomain());
                 webURLsDB.setParentdocid(url.getParentDocid());
@@ -225,7 +225,7 @@ public class WorkQueues {
                 pendingurlsdb.setInstanceexecid(instanceExecid);
                 pendingurlsdb.setUrl(url.getURL());
                 pendingurlsdb.setAnchor(url.getAnchor());
-                pendingurlsdb.setDepth(new Integer(url.getDepth()));
+                pendingurlsdb.setDepth(url.getDepth());
                 pendingurlsdb.setDocid(url.getDocid());
                 pendingurlsdb.setDomain(url.getDomain());
                 pendingurlsdb.setParentdocid(url.getParentDocid());
