@@ -53,6 +53,4 @@ DROP SEQUENCE Pendingurlsdb_seq;
 DROP SEQUENCE Weburlsdb_seq;
 
 
-DROP TRIGGER process_type_check_insert;
-DROP TRIGGER process_type_check_update;
 commit;

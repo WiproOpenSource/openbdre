@@ -75,7 +75,7 @@ public class RegisterFileDAOTest {
         parentProcess.setProcessType(processType);
         parentProcess.setCanRecover(false);
         parentProcess.setEnqueuingProcessId(0);
-        parentProcess.setNextProcessId("");
+        parentProcess.setNextProcessId(" ");
         parentProcess.setWorkflowType(workflowType);
         parentProcess.setDeleteFlag(false);
         parentProcess.setProcessTemplate(processTemplate);
