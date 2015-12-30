@@ -39,8 +39,10 @@ hive -e "create database if not exists raw;create database if not exists base;"
 sudo mkdir /var/log/BDRE
 sudo chown cloudera:cloudera /var/log/BDRE
 
+
 #Update java softlink
-sudo ln -s -f /usr/java/jdk1.7.0_67-cloudera/bin/java /usr/bin/java
+right_java=`which java`
+sudo ln -s -f $right_java /usr/bin/java
 
 cd $BDRE_HOME
 rm -r -f cdh-twitter-example
