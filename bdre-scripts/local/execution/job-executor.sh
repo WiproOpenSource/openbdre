@@ -34,7 +34,11 @@ elif [ $processTypeId -eq 18 ]; then
     python $(dirname $0)/Workflow.py $busDomainId $processTypeId $processId
 elif [ $processTypeId -eq 19 ]; then
     python $(dirname $0)/Workflow.py $busDomainId $processTypeId $processId
+elif [ $processTypeId -eq 28 ]; then
+    python $(dirname $0)/Workflow.py $busDomainId $processTypeId $processId
 elif [ $processTypeId -eq 26 ]; then
     sh $(dirname $0)/filemonitor.sh $processId
+else
+    echo "Don't know how to execute busDomainId=$1 , processTypeId=$2 , processId=$3"
 fi
 

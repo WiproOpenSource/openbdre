@@ -14,8 +14,8 @@ public class PropertyConfig {
     private int politenessDelay;
     private int maxDepthOfCrawling;
     private int maxPagesToFetch;
-    private boolean includeBinaryContentInCrawling;
-    private boolean resumableCrawling;
+    private int includeBinaryContentInCrawling;
+    private int resumableCrawling;
     private String userAgentString;
     private String proxyHost;
     private int proxyPort;
@@ -58,11 +58,11 @@ public class PropertyConfig {
         return maxPagesToFetch;
     }
 
-    public boolean isIncludeBinaryContentInCrawling() {
+    public int isIncludeBinaryContentInCrawling() {
         return includeBinaryContentInCrawling;
     }
 
-    public boolean isResumableCrawling() {
+    public int isResumableCrawling() {
         return resumableCrawling;
     }
 
@@ -104,14 +104,14 @@ public class PropertyConfig {
             maxPagesToFetch = 5;
         }
         if (listForParams.getProperty("includeBinaryContentInCrawling") != null) {
-            includeBinaryContentInCrawling = Boolean.parseBoolean(listForParams.getProperty("includeBinaryContentInCrawling"));
+            includeBinaryContentInCrawling = Integer.parseInt(listForParams.getProperty("includeBinaryContentInCrawling"));
         } else {
-            includeBinaryContentInCrawling = false;
+            includeBinaryContentInCrawling = 0;
         }
         if (listForParams.getProperty("resumableCrawling") != null) {
-            resumableCrawling = Boolean.parseBoolean(listForParams.getProperty("resumableCrawling"));
+            resumableCrawling = Integer.parseInt(listForParams.getProperty("resumableCrawling"));
         } else {
-            resumableCrawling = false;
+            resumableCrawling = 0;
         }
         if (listForParams.getProperty("userAgentString") != null) {
             userAgentString = listForParams.getProperty("userAgentString");

@@ -19,7 +19,7 @@ package com.wipro.ats.bdre.imcrawler.frontier;
 
 import com.wipro.ats.bdre.imcrawler.crawler.Configurable;
 import com.wipro.ats.bdre.imcrawler.crawler.CrawlConfig;
-import com.wipro.ats.bdre.imcrawler.jpa.Docidsdb;
+import com.wipro.ats.bdre.md.dao.jpa.Docidsdb;
 import com.wipro.ats.bdre.imcrawler.model.DocidsDBDao;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -80,7 +80,7 @@ public class DocIDServer extends Configurable {
                 for (Docidsdb info:docidsdbList) {
 //                    Docidsdb info = docidsDBDao.get(i);
                     if (info.getUrl().equals(url)) {
-                        return info.getDocId();
+                        return info.getDocid().intValue();
                     }
                 }
 //                }
@@ -179,7 +179,7 @@ public class DocIDServer extends Configurable {
         Integer intTotalSize = new Integer(totalSize.intValue());
         int tobereturnedDocId;
         if (totalSize > 0) {
-            tobereturnedDocId = docidsDBDao.getLastElement().getDocId();
+            tobereturnedDocId = docidsDBDao.getLastElement().getDocid().intValue();
         } else {
             tobereturnedDocId = -1;
         }

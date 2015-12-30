@@ -95,7 +95,10 @@ public class BasicCrawlController implements Runnable {
          * Do you want crawler4j to crawl also binary data ?
          * example: the contents of pdf, or the metadata of images etc
          */
-        config.setIncludeBinaryContentInCrawling(propertyConfig.isIncludeBinaryContentInCrawling());
+        if (propertyConfig.isIncludeBinaryContentInCrawling() == 0)
+            config.setIncludeBinaryContentInCrawling(false);
+        else
+            config.setIncludeBinaryContentInCrawling(true);
 
     /*
      * Do you need to set a proxy? If so, you can use:
@@ -124,7 +127,11 @@ public class BasicCrawlController implements Runnable {
      * want to start a fresh crawl, you need to delete the contents of
      * rootFolder manually.
      */
-        config.setResumableCrawling(propertyConfig.isResumableCrawling());
+        if(propertyConfig.isResumableCrawling() == 0)
+            config.setResumableCrawling(false);
+        else
+            config.setResumableCrawling(true);
+
         config.setOnlineTldListUpdate(false);
         config.setUserAgentString(propertyConfig.getUserAgentString());
     /*

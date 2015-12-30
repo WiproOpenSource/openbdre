@@ -553,9 +553,9 @@ CREATE TABLE process_deployment_queue(
 
 
 CREATE TABLE Docidsdb (
-   docId number(10,0) not null ,
+   docid number(19,0) not null ,
    url varchar(3000),
-   primary key (docId)
+   primary key (docid)
 );
 
  CREATE SEQUENCE Docidsdb_SEQ
@@ -584,17 +584,17 @@ CREATE TABLE Statisticsdb (
 CREATE TABLE Pendingurlsdb (
    uniqid number(19,0) not null,
    pid number(19,0),
-   instanceExecid number(19,0),
+   instanceexecid number(19,0),
    url varchar(3000),
    docid number(10,0) not null,
-   parentDocid number(10,0) not null,
-   parentUrl varchar(1000),
+   parentdocid number(10,0) not null,
+   parenturl varchar(1000),
    depth number(5,0) not null,
    domain varchar(255),
-   subDomain varchar(255),
+   subdomain varchar(255),
    path varchar(1000),
    anchor varchar(255),
-   priority number(3,0) not null,
+   priority number(10,0) not null,
    tag varchar(255),
    primary key (uniqid)
 );
@@ -611,17 +611,17 @@ CREATE TABLE Pendingurlsdb (
 CREATE TABLE Weburlsdb (
    uniqid number(19,0) not null ,
    pid number(19,0),
-   instanceExecid number(19,0),
+   instanceexecid number(19,0),
    url varchar(3000),
    docid number(10,0) not null,
-   parentDocid number(10,0) not null,
-   parentUrl varchar(1000),
+   parentdocid number(10,0) not null,
+   parenturl varchar(1000),
    depth number(5,0) not null,
    domain varchar(255),
-   subDomain varchar(255),
+   subdomain varchar(255),
    path varchar(1000),
    anchor varchar(255),
-   priority number(3,0) not null,
+   priority number(10,0) not null,
    tag varchar(255),
    primary key (uniqid)
 );

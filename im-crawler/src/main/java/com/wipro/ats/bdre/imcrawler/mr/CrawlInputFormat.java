@@ -8,7 +8,8 @@ package com.wipro.ats.bdre.imcrawler.mr;/*
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-
+import org.apache.hadoop.io.*;
+import org.apache.hadoop.mapreduce.*;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;

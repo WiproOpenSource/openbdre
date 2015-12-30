@@ -8,6 +8,7 @@
 <html>
 
 <head>
+    <title>BDRE | Bigdata Ready Enterprise</title>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     <script src="../js/jquery.min.js"></script>
     <link href="../css/jquery-ui-1.10.3.custom.css" rel="stylesheet">

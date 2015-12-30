@@ -160,7 +160,7 @@ else
 
     database=h2
     hibernate_connection_driver_class="org.h2.Driver"
-    hibernate_connection_url="jdbc:h2:$var_dbname/bdre"
+    hibernate_connection_url="jdbc:h2:~/bdre"
     hibernate_connection_username=root
     hibernate_connection_password=root
     hibernate_dialect="org.hibernate.dialect.H2Dialect"
@@ -201,7 +201,44 @@ if [ $var_dbtype -eq 3 ]; then
         echo "Tables created successfully in MySQL $var_dbname DB"
     fi
 elif [ $var_dbtype -eq 1 ]; then
-    sudo mkdir -p $var_dbname
-    sudo cp databases/h2/*.db $var_dbname
-    sudo chmod -R 777 $var_dbname
+
+#Check for windows/linux/mac and copy h2 files accordingly
+case "$(uname -s)" in
+
+   Darwin)
+     echo 'Mac OS X'
+     sudo mkdir -p $var_dbname
+     sudo cp databases/h2/*.db $var_dbname
+     sudo chmod -R 777 $var_dbname
+     if [ $? -eq 0 ]; then
+             echo "Enbedded DB created"
+     fi
+     ;;
+
+   Linux)
+     echo 'Linux'
+     sudo mkdir -p $var_dbname
+     sudo cp databases/h2/*.db $var_dbname
+     sudo chmod -R 777 $var_dbname
+     if [ $? -eq 0 ]; then
+          echo "Enbedded DB created"
+     fi
+     ;;
+
+   CYGWIN*|MINGW32*|MSYS*)
+     echo 'MS Windows'
+     cp databases/h2/*.db ~
+      if [ $? -eq 0 ]; then
+         echo "Enbedded DB created"
+      fi
+     ;;
+
+   # Add here more strings to compare
+   # See correspondence table at the bottom of this answer
+
+   *)
+     echo 'other OS'
+     ;;
+esac
+
 fi
