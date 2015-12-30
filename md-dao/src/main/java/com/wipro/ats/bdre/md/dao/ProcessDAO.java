@@ -183,6 +183,7 @@ public class ProcessDAO {
                 triggerCheck=processValidateInsert.ProcessTypeValidator(process,parentProcess);
                 if(triggerCheck==true)
                 {
+                    process.setEditTs(new Date());
                     session.update(process);
                 }
                 else
@@ -194,6 +195,7 @@ public class ProcessDAO {
                 triggerCheck=processValidateInsert.ProcessTypeValidator(process,parentProcess);
                 if(triggerCheck==true)
                 {
+                    process.setEditTs(new Date());
                     session.update(process);
                 }
                 else
@@ -308,6 +310,7 @@ public class ProcessDAO {
                         triggerCheck=processValidateInsert.ProcessTypeValidator(updateProcess,parentProcessCheck);
                         if(triggerCheck==true)
                         {
+                            updateProcess.setEditTs(new Date());
                             session.update(updateProcess);
                         }
                         else
@@ -319,6 +322,7 @@ public class ProcessDAO {
                         triggerCheck=processValidateInsert.ProcessTypeValidator(updateProcess,parentProcessCheck);
                         if(triggerCheck==true)
                         {
+                            updateProcess.setEditTs(new Date());
                             session.update(updateProcess);
                         }
                         else
@@ -353,6 +357,7 @@ public class ProcessDAO {
                 triggerCheck=processValidateInsert.ProcessTypeValidator(oldProcess,parentProcessCheck);
                 if(triggerCheck==true)
                 {
+                    oldProcess.setEditTs(new Date());
                     session.update(oldProcess);
                 }
                 else
@@ -364,6 +369,7 @@ public class ProcessDAO {
                 triggerCheck=processValidateInsert.ProcessTypeValidator(oldProcess,parentProcessCheck);
                 if(triggerCheck==true)
                 {
+                    oldProcess.setEditTs(new Date());
                     session.update(oldProcess);
                 }
                 else
@@ -390,6 +396,7 @@ public class ProcessDAO {
        /* insert into process (description,process_name, bus_domain_id, process_type_id, parent_process_id, can_recover, enqueuing_process_id, batch_cut_pattern, next_process_id, workflow_id,process_template_id)
         select  description,concat(process_name, ' - copy'), bus_domain_id, process_type_id, parent_process_id, can_recover,0, batch_cut_pattern, '0', workflow_id,process_template_id from process where (process_id = p_id and delete_flag != 1)  ;
 */
+        Process dummyProcess=new Process();
 
         try {
             session.beginTransaction();
@@ -462,8 +469,10 @@ public class ProcessDAO {
                     property.setConfigGroup(insertProperty.getConfigGroup());
                     property.setPropValue(insertProperty.getPropValue());
                     property.setDescription(insertProperty.getDescription());
-
+                    dummyProcess=property.getProcess();
                     session.save(property);
+                    dummyProcess.setEditTs(new Date());
+                    session.update(dummyProcess);
                 }
             }
             session.getTransaction().commit();
