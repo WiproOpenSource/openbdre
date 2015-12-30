@@ -553,7 +553,7 @@ CREATE TABLE process_deployment_queue(
 
 
 CREATE TABLE Docidsdb (
-   docid number(10,0) not null ,
+   docid number(19,0) not null ,
    url varchar(3000),
    primary key (docid)
 );
@@ -568,7 +568,7 @@ CREATE TABLE Docidsdb (
 
 
 CREATE TABLE Statisticsdb (
-   uniqid number(10,0) not null,
+   uniqid number(19,0) not null,
    value number(19,0),
    name varchar(255),
    primary key (uniqid)
@@ -582,7 +582,7 @@ CREATE TABLE Statisticsdb (
 
 
 CREATE TABLE Pendingurlsdb (
-   uniqid number(10,0) not null,
+   uniqid number(19,0) not null,
    pid number(19,0),
    instanceexecid number(19,0),
    url varchar(3000),
@@ -609,7 +609,7 @@ CREATE TABLE Pendingurlsdb (
 
 
 CREATE TABLE Weburlsdb (
-   uniqid number(10,0) not null ,
+   uniqid number(19,0) not null ,
    pid number(19,0),
    instanceexecid number(19,0),
    url varchar(3000),
