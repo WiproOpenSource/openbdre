@@ -504,7 +504,7 @@ ON UPDATE NO ACTION,
 DROP TABLE IF EXISTS Docidsdb;
 
 CREATE TABLE Docidsdb (
-   docId bigserial NOT NULL ,
+   docId serial NOT NULL ,
    url varchar(3000),
    PRIMARY KEY (docId)
 );
@@ -512,7 +512,7 @@ CREATE TABLE Docidsdb (
 DROP TABLE IF EXISTS Statisticsdb;
 
 CREATE TABLE Statisticsdb (
-   uniqid bigserial NOT NULL,
+   uniqid serial NOT NULL,
    value int,
    name varchar(255),
    PRIMARY KEY (uniqid)
@@ -521,7 +521,7 @@ CREATE TABLE Statisticsdb (
 DROP TABLE IF EXISTS Pendingurlsdb;
 
 CREATE TABLE Pendingurlsdb (
-   uniqid bigserial NOT NULL,
+   uniqid serial NOT NULL,
    pid int,
    instanceExecid int,
    url varchar(3000),
@@ -541,7 +541,7 @@ CREATE TABLE Pendingurlsdb (
 DROP TABLE IF EXISTS Weburlsdb;
 
 CREATE TABLE Weburlsdb (
-   uniqid bigserial NOT NULL,
+   uniqid serial NOT NULL,
    pid int,
    instanceExecid int,
    url varchar(3000),
