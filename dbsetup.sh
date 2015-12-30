@@ -201,6 +201,15 @@ if [ $var_dbtype -eq 3 ]; then
         echo "Tables created successfully in MySQL $var_dbname DB"
     fi
 
+elif [ $var_dbtype -eq 4 ]; then
+    psql -U $var_username -d $var_dbname -a -f  $(dirname $0)/databases/postgresql/ddls/drop_tables.sql
+
+    psql -U $var_username -d $var_dbname -a -f  $(dirname $0)/databases/postgresql/ddls/create_tables.sql
+
+      if [ $? -eq 0 ]; then
+        echo "Tables created successfully in Postgres $var_dbname DB"
+    fi
+
  elif [ $var_dbtype -eq 2 ]; then
     sqlplus -s $var_username/$var_password < $(dirname $0)/databases/oracle/ddls/drop_tables.sql
     sqlplus -s $var_username/$var_password < $(dirname $0)/databases/oracle/ddls/create_tables.sql
