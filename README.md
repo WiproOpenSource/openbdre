@@ -124,5 +124,6 @@ It's also quite easy to run BDRE for HortonWorks Sandbox. You can download Horto
 * Wait for 2 minutes and the deployment will be completed by then.
 * After the deployment is complete and in UI the status for the process is deployed (turns green).
 * Click the execution button to execute the workflow.
+* Check the process in Oozie console *http://<VM IP>:11000/oozie*
 
 
