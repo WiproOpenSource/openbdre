@@ -101,7 +101,7 @@ public class MQImportSetupDAO {
     public List<Properties> insert(MQImportInfo mqImportInfo) {
         Session session = sessionFactory.openSession();
         List<Properties> propertiesList = new ArrayList<Properties>();
-        Process dummyProcess=new Process();
+
         try {
 
             session.beginTransaction();
@@ -178,7 +178,6 @@ public class MQImportSetupDAO {
 
             //update process set next_process_id= spid where process_id=ppid;
             process.setNextProcessId(subProcessId.toString());
-            process.setEditTs(new Date());
             session.update(process);
 
         /*insert into properties (process_id,config_group,prop_key,prop_value,description) values (spid,cnfg_group,broker_url,broker_url_value,'Broker URL of Active MQ ');
@@ -199,10 +198,7 @@ public class MQImportSetupDAO {
             propertiesBrokerURL.setDescription("Broker URL of Active MQ ");
 
             //inserting Broker URL
-            dummyProcess=propertiesBrokerURL.getProcess();
             session.save(propertiesBrokerURL);
-            dummyProcess.setEditTs(new Date());
-            session.update(dummyProcess);
             LOGGER.info("Property key of inserted Broker URL: " + propertiesBrokerURL.getId().getPropKey());
 
             com.wipro.ats.bdre.md.dao.jpa.Properties propertiesNameQueue = new com.wipro.ats.bdre.md.dao.jpa.Properties();
@@ -214,10 +210,7 @@ public class MQImportSetupDAO {
             propertiesNameQueue.setPropValue(mqImportInfo.getQueueNameValue());
             propertiesNameQueue.setDescription("Name of the Queue of ActiveMQ ");
             //inserting Name of the Queue
-            dummyProcess=propertiesNameQueue.getProcess();
             session.save(propertiesNameQueue);
-            dummyProcess.setEditTs(new Date());
-            session.update(dummyProcess);
             LOGGER.info("Property key of inserted NameQueueL: " + propertiesNameQueue.getId().getPropKey());
 
 
@@ -230,10 +223,7 @@ public class MQImportSetupDAO {
             propertiesSpouts.setPropValue(String.valueOf(mqImportInfo.getNumSpoutsValue()));
             propertiesSpouts.setDescription("Number of spouts/parallel message consumers ");
             //inserting Number of spouts
-            dummyProcess=propertiesSpouts.getProcess();
             session.save(propertiesSpouts);
-            dummyProcess.setEditTs(new Date());
-            session.update(dummyProcess);
             LOGGER.info("Property key of inserted Spouts: " + propertiesSpouts.getId().getPropKey());
 
             com.wipro.ats.bdre.md.dao.jpa.Properties propertiesBolts = new com.wipro.ats.bdre.md.dao.jpa.Properties();
@@ -245,10 +235,7 @@ public class MQImportSetupDAO {
             propertiesBolts.setPropValue(String.valueOf(mqImportInfo.getNumBoltsValue()));
             propertiesBolts.setDescription("Number of bolts/parallel message processors ");
             //inserting Number of bolts
-            dummyProcess=propertiesBolts.getProcess();
             session.save(propertiesBolts);
-            dummyProcess.setEditTs(new Date());
-            session.update(dummyProcess);
             LOGGER.info("Property key of inserted Bolts: " + propertiesBolts.getId().getPropKey());
 
             Criteria counterCriteria = session.createCriteria(com.wipro.ats.bdre.md.dao.jpa.Properties.class).add(Restrictions.eq("id.processId", subProcessId)).add(Restrictions.eq("configGroup", mqImportInfo.getConfigGroup()));
@@ -305,7 +292,6 @@ public class MQImportSetupDAO {
     public List<Properties> update(MQImportInfo mqImportInfo) {
         Session session = sessionFactory.openSession();
         List<Properties> propertiesList = new ArrayList<Properties>();
-        Process dummyProcess=new Process();
 
         try {
             session.beginTransaction();
@@ -321,10 +307,7 @@ public class MQImportSetupDAO {
                 brokerUrlUpdatingProperties.setDescription("Broker URL of Active MQ ");
 
                 //updating broker url
-                dummyProcess=brokerUrlUpdatingProperties.getProcess();
                 session.update(brokerUrlUpdatingProperties);
-                dummyProcess.setEditTs(new Date());
-                session.update(dummyProcess);
                 LOGGER.info("Value of Updated Broker Url property" + brokerUrlUpdatingProperties.getPropValue());
             }
 
@@ -334,11 +317,7 @@ public class MQImportSetupDAO {
                 queueUpdatingProperties.setPropValue(mqImportInfo.getQueueNameValue());
                 queueUpdatingProperties.setDescription("Name of the Queue of ActiveMQ");
                 //updating Name of Queue
-
-                dummyProcess=queueUpdatingProperties.getProcess();
                 session.update(queueUpdatingProperties);
-                dummyProcess.setEditTs(new Date());
-                session.update(dummyProcess);
                 LOGGER.info("Value of Updated Broker Url property" + queueUpdatingProperties.getPropValue());
             }
 
@@ -348,10 +327,7 @@ public class MQImportSetupDAO {
                 spoutsUpdatingProperties.setPropValue(String.valueOf(mqImportInfo.getNumSpoutsValue()));
                 spoutsUpdatingProperties.setDescription("Number of spouts/parallel message consumer");
                 //updating spouts
-                dummyProcess=spoutsUpdatingProperties.getProcess();
                 session.update(spoutsUpdatingProperties);
-                dummyProcess.setEditTs(new Date());
-                session.update(dummyProcess);
                 LOGGER.info("Value of Updated Broker Url property" + spoutsUpdatingProperties.getPropValue());
             }
 
@@ -361,10 +337,7 @@ public class MQImportSetupDAO {
                 boltsUpdatingProperties.setPropValue(String.valueOf(mqImportInfo.getNumBoltsValue()));
                 boltsUpdatingProperties.setDescription("Number of bolts/parallel message processors");
                 //updating Bolts
-                dummyProcess=boltsUpdatingProperties.getProcess();
                 session.update(boltsUpdatingProperties);
-                dummyProcess.setEditTs(new Date());
-                session.update(dummyProcess);
                 LOGGER.info("Value of Updated Broker Url property" + boltsUpdatingProperties.getPropValue());
             }
 

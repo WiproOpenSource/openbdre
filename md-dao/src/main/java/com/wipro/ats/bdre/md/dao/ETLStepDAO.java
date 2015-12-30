@@ -42,9 +42,6 @@ public class ETLStepDAO {
     private static final Logger LOGGER = Logger.getLogger(ETLStepDAO.class);
     @Autowired
     SessionFactory sessionFactory;
-    Process parentTrigger = new Process();
-    Process dummyProcess = new Process();
-
 
     public List<Etlstep> list(Integer pageNum, Integer numResults) {
         Session session = sessionFactory.openSession();
@@ -483,7 +480,6 @@ public class ETLStepDAO {
             nextProcessForF2R = nextProcessForF2R.substring(0, nextProcessForF2R.length() - 1);
             nextProcessForR2S = nextProcessForR2S.substring(0, nextProcessForR2S.length() - 1);
             dataLoadParent.setNextProcessId(nextProcessForParent);
-            dataLoadParent.setEditTs(new Date());
             session.update(dataLoadParent);
 
 
