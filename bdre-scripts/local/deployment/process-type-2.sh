@@ -36,6 +36,21 @@ if [ $? -ne 0 ]
 then exit 1
 fi
 
+mkdir -p $BDRE_APPS_HOME/$busDomainId/$processTypeId/$processId/lib
+if [ $? -ne 0 ]
+then exit 1
+fi
+
+mkdir -p $BDRE_APPS_HOME/$busDomainId/$processTypeId/$processId/hql
+if [ $? -ne 0 ]
+then exit 1
+fi
+
+mkdir -p $BDRE_APPS_HOME/$busDomainId/$processTypeId/$processId/spark
+if [ $? -ne 0 ]
+then exit 1
+fi
+
 #move generated workflow to edge node process dir
 mv  workflow-$processId.xml $BDRE_APPS_HOME/$busDomainId/$processTypeId/$processId
 if [ $? -ne 0 ]
@@ -72,6 +87,7 @@ if [ $? -ne 0 ]
     then exit 1
 fi
 
+
 #copy all developer checked in files
 
 cp -r $uploadBaseDir/$processId/* $BDRE_APPS_HOME/$busDomainId/$processTypeId/$processId
@@ -100,6 +116,17 @@ fi
 hdfs dfs -put $BDRE_APPS_HOME/$busDomainId/$processTypeId/$processId/* $hdfsPath/wf/$busDomainId/$processTypeId/$processId
 if [ $? -ne 0 ]
     then exit 1
+fi
+
+# deleting and copying R shell script in /tmp folder
+hdfs dfs -rm -r -f /tmp/run_r_hadoop.sh
+if [ $? -ne 0 ]
+then exit 1
+fi
+
+hdfs dfs -put $BDRE_HOME/bdre-scripts/deployment/run_r_hadoop.sh /tmp
+if [ $? -ne 0 ]
+then exit 1
 fi
 
 #List HDFS process dir structure

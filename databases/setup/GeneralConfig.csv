@@ -479,7 +479,7 @@
 'mdconfig', 'execute.log-path', 'Log File Location', 'Path for log file',  1, '/tmp/logfile-', 'text', 1
 'mdconfig', 'execute.script-path', 'Process Execute Script Path', 'Execute workflow script path',  1, '/home/cloudera/bdre/bdre-scripts/execution', 'text', 1
 'mdconfig', 'upload.base-directory', 'Base Directory For Upload', 'Base Directory where you want to upload jars and hqls',  1, '/home/cloudera/bdre-wfd', 'text', 1
-'mdconfig', 'r.shell-script', 'Location of R shell script', 'Location of R shell script', 1, '/tmp/Rhadoop.sh', 'text', 1
+'mdconfig', 'r.shell-script', 'Location of R shell script', 'Location of R shell script', 1, '/tmp/run_r_hadoop.sh', 'text', 1
 'imconfig', 'common.default-fs-name', 'Default file system name','Default file system name', 1, 'hdfs://quickstart.cloudera:8020', 'text', 1
 'imconfig', 'etl.hive-connection', 'URL of Hive connection','URL of Hive connection', 1, 'jdbc:hive2://localhost:10000', 'text', 1
 'imconfig', 'etl.hdfs-raw-directory', 'Hadoop raw directory','Hadoop raw directory' , 1, '/raw', 'text', 1
