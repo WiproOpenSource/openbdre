@@ -108,7 +108,8 @@ public class PropertiesDAO {
         Session session = sessionFactory.openSession();
         try {
             session.beginTransaction();
-            dummyProcess=properties.getProcess();
+            dummyProcess=(Process)session.get(Process.class,properties.getId().getProcessId());
+            LOGGER.info("process add ts"+dummyProcess.getAddTs());
             session.update(properties);
             dummyProcess.setEditTs(new Date());
             session.update(dummyProcess);
