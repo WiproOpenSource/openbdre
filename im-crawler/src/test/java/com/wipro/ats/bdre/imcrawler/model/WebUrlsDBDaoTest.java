@@ -46,7 +46,7 @@ public class WebUrlsDBDaoTest {
     public void testInsert() throws Exception {
         weburlsdb = new Weburlsdb();
         weburlsdb.setAnchor("anchor");
-        weburlsdb.setDepth(1);
+        weburlsdb.setDepth((short)1);
         weburlsdb.setDocid(2);
         weburlsdb.setDomain("domain");
         weburlsdb.setInstanceexecid(new Long (3));
