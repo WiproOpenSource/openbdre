@@ -1,16 +1,6 @@
 ### Overview
 
-This document will help you build BDRE from source. Audience for this document are developers and architects who want be part of BDRE framework development or may just want to test it by running the UI. 
-
-* Install Git, MVN and Oracle JDK 7(and up) if you haven't already. In Windows be sure to add git and other bash tools in the commandline path during installation. To get started download and install following software.
- - Oracle JDK 7 
- - Git Command line Client [Download](https://git-scm.com/download)
- - Maven [Download](http://apache.mirrors.pair.com/maven/maven-3/3.3.3/binaries/apache-maven-3.3.3-bin.zip)
- - IntelliJ Idea [Download](https://www.jetbrains.com/idea/download/)
- - VirtualBox [Download](https://www.virtualbox.org/wiki/Downloads) and Cloudera QuickStart VM 5.2 for VirtualBox
- - Google Chrome Browser
- 
-BDRE is by default configured to run with H2 embedded database which is okay for evaluating and testing jobs in a single node cluster. For production use BDRE currently supports following production scale databases.
+This document will help you build BDRE from source. Audience for this document are developers and architects who want be part of BDRE framework development or may just want to test it by running the UI. Install Git, Maven and Oracle JDK 7(and up) if you haven't already. In Windows be sure to add git and other bash tools in the commandline path during installation. In this example, we are going to use *Cloudera Quickstart VM* with *VirtualBox* software because all the required software are already installed and configured. BDRE is shipped with an embedded database which is okay for running the UI and evaluating and testing jobs in a single node cluster. For production use BDRE currently supports following production scale databases.
 
   - MySQL Server
   - Oracle 11g Server
@@ -18,10 +8,16 @@ BDRE is by default configured to run with H2 embedded database which is okay for
 
  In this guide we are going to show you how to build and install BDRE in a Cloudera QuickStart Hadoop VM which is Linux based with a MySQL database. You should be able to do the same in Mac or Windows but note that setting up a Hadoop cluster might be tricky in Windows and might more involvement. You should be able to launch the BDRE user interface in Windows and design various jobs. However to deploy and run the jobs we recommend a Linux system with Hadoop installed. BDRE is typically installed in Hadoop edge node in a multi-node cluster.
 
+
 ### Preparation
 
 This section is applicable for those who need with Git or Maven setup. You may skip the **Preparation** section if you already have Java/Git/Maven etc set up and properly working.
 
+### Without using Cloudera VM
+#### Hadoop
+- Install Hadoop 2.5
+- Install Hive 0.13
+- Install compatible Pig
 #### Git
 
 
@@ -221,4 +217,10 @@ For example if you are behind a proxy or you want a mirror repo, you can use fol
 * You *must* now create your own branch in the project when you are ready to contribute to BDRE.
 * For completed, committed and pushed changes, open *Merge Request*.
 * Good luck!
+
+ - Oracle JDK 7 
+ - Git Command line Client [Download](https://git-scm.com/download)
+ - Maven [Download](http://apache.mirrors.pair.com/maven/maven-3/3.3.3/binaries/apache-maven-3.3.3-bin.zip)
+ - VirtualBox [Download](https://www.virtualbox.org/wiki/Downloads) and Cloudera QuickStart VM 5.2 for VirtualBox
+ - Google Chrome Browser
 
