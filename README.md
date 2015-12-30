@@ -108,7 +108,7 @@ It's also quite easy to run BDRE for HortonWorks Sandbox. You can download Horto
 
 ```shell sh ./quick-run.sh```
 
-* Use Google Chrome browser from the host machine and open *http://<VM IP>:288503/mdui/pages/content.page*
+* Use *Google Chrome browser* from the host machine and open *http://VM_IP:288503/mdui/pages/content.page*
 * Login using admin/zaq1xsw2
 
 ### Creating, Deploying and Running a Test Job
@@ -124,6 +124,6 @@ It's also quite easy to run BDRE for HortonWorks Sandbox. You can download Horto
 * Wait for 2 minutes and the deployment will be completed by then.
 * After the deployment is complete and in UI the status for the process is deployed (turns green).
 * Click the execution button to execute the workflow.
-* Check the process in Oozie console *http://<VM IP>:11000/oozie*
+* Check the process in Oozie console *http://VM_IP:11000/oozie*
 
 
