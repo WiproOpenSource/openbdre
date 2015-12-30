@@ -16,11 +16,11 @@ BDRE is by default configured to run with H2 embedded database which is okay for
   - Oracle 11g Server
   - PostgreSql
 
- In this guide we are going to show you how to build and install BDRE in a Cloudera QuickStart Hadoop VM which is Linux based. You should be able to do the same in Mac or Windows but note that setting up a Hadoop cluster might be tricky. You should be able to launch the BDRE user interface in Windows and design various jobs. However to deploy and run the jobs we recommend a Linux system with Hadoop installed. BDRE is typically installed in Hadoop edge node in a multi-node cluster.
+ In this guide we are going to show you how to build and install BDRE in a Cloudera QuickStart Hadoop VM which is Linux based with a MySQL database. You should be able to do the same in Mac or Windows but note that setting up a Hadoop cluster might be tricky in Windows and might more involvement. You should be able to launch the BDRE user interface in Windows and design various jobs. However to deploy and run the jobs we recommend a Linux system with Hadoop installed. BDRE is typically installed in Hadoop edge node in a multi-node cluster.
 
-### Setup
+### Preparation
 
-This section is applicable for those who need with Git or Maven setup. You may skip the setup section if you already have git/maven set up and properly working.
+This section is applicable for those who need with Git or Maven setup. You may skip the **Preparation** section if you already have Java/Git/Maven etc set up and properly working.
 
 #### Git
 
@@ -86,8 +86,10 @@ git config --global --unset http.proxy
 
 #### Maven
 
-BDRE is built using Maven build tool. BDRE specific maven settings.xml is part of BDRE source code. Make your environment specific changes in $M2_HOME/conf/settings.xml.
-For example if you are behind a proxy or you want a mirror repo, you can use following in $M2_HOME/conf/settings.xml
+BDRE is built using Maven build tool. BDRE specific maven settings.xml is part of BDRE source code. Make your environment specific changes in $MAVEN_HOME/conf/settings.xml.
+For example if you are behind a proxy or you want a mirror repo, you can use following in $MAVEN_HOME/conf/settings.xml. 
+
+`Cloudera VM already has Maven installed and the settings is located at /usr/local/apache-maven/apache-maven-3.0.4/conf/settings.xml`
 
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>
@@ -118,52 +120,64 @@ For example if you are behind a proxy or you want a mirror repo, you can use fol
 
 ```
 
-### Building BDRE from source
+## Building BDRE from source
 
-* Login to the Cloudera QuickStart VM.
-* Navigate to folder where you want to download BDRE source code and build it.
-* Pull BDRE source from this git repository. To find out your repository link navigate to the repository in this website and copy the https repo URL.
+1. Obtain the source code
+    * Login to the Cloudera QuickStart VM.
+    * Navigate to folder where you want to download BDRE source code and build it.
+    * Pull BDRE source from this git repository. To find out your repository link navigate to the repository in this website and copy the https repo URL.
 
-```git clone <BDRE git URL>```
-* Now ```cd``` to the bdre source code folder that git created.
+    ```git clone <BDRE git URL>```
+    * Now ```cd``` to the bdre source code folder that git created.
 
-### Database Setup (Optional section)
-* As mentioned before you's be able to build BDRE and run it with a H2 embedded database backend and hence no detabase setup is required if you want to test BDRE. However, here we'll demonstrate how to configure BDRE with MySQL backend.
-  - Create `db.properties` inside `md-dao/src/main/resources`
-  - Open newly created `md-dao/src/main/resources/db.properties` in a text editor and have following
+2. Database Setup 
+    
+    * Execute the `dbsetup.sh` script without any parameters as shown below. In this example, we are going to use MySQL as BDRE backend as it's already available in the QuickStart VM. If you would like to use another database please select it accordingly.
 
-```properties
-##### Common entries #####
-hibernate.current_session_context_class=thread
-hibernate.transaction.factory_class=org.hibernate.transaction.JDBCTransactionFactory
-hibernate.show_sql=true
+    ```shell
+    $ sh dbsetup.sh
+    Supported DB
+    1) Embedded (Default - Good for running BDRE user interface only. )
+    2) Oracle
+    3) MySQL
+    4) PostgreSQL
+    
+    Select Database Type(Enter 1, 2, 3 , 4 or leave empty and press empty to select the default DB):3
+    
+    Enter DB username (Type username or leave it blank for default 'root'):⏎
+    Enter DB password (Type password or leave it blank for default 'cloudera'):⏎
+    Enter DB hostname (Type db hostname or leave it blank for default 'localhost'):⏎
+    Enter DB port (Type db port or leave it blank for default '3306'):⏎
+    Enter DB name (Type db name or leave it blank for default 'bdre'):⏎
+    Enter DB schema (Type schema or leave it blank for default 'bdre'):⏎
+    Please confirm:
+    
+    Database Type: mysql
+    JDBC Driver Class: com.mysql.jdbc.Driver
+    JDBC Connection URL: jdbc:mysql://localhost:3306/bdre
+    Database Username: root
+    Database Password: cloudera
+    Hibernate Dialect: org.hibernate.dialect.MySQLDialect
+    Database Schema: bdre
+    Are those correct? (type y or n - default y): y⏎
+    Database configuration written to ./md-dao/src/main/resources/db.properties
+    Will create DB and tables
+    Tables successfully created in MySQL bdre database.
+    ```
 
-#####Configuration for mysql#####
-
-database=mysql
-hibernate.connection.driver_class=com.mysql.jdbc.Driver
-hibernate.connection.url=jdbc:mysql://localhost:3306/platmd
-hibernate.connection.username=root
-hibernate.connection.password=root
-hibernate.dialect=org.hibernate.dialect.MySQLDialect
-hibernate.default_schema=platmd
-```
- - Similarly to use Oracle or PostgreSQL find the appropriate settings from the `databases/db.properties`
- - Cloudera VM already has MySQL server installed so create `platmd` DB and MySQL credentials
- - As root type
-  ```sql
-      mysql -u root -e "create database platmd;
-      mysqladmin -u root password 'root'
-      mysql -u root -p root platmd < databases/mysql/ddls/create-tables.sql
-  ```
-### Building
+3. Building
      
-* Now build BDRE using 
+* Now build BDRE using (note BDRE may not compile if the `settings.xml` is not passed from the commandline so be sure to use the `-s` option
 
-```mvn -s settings.xml clean install```
+    ```mvn -s settings.xml clean install```
+    When building for the first time, it might take a while as maven resolves and downloads the jar libraries from diffrent repositories.
 
+4. Installing BDRE
+    * After building BDRE successfully run `sh install-scripts.sh local`
+    * It'll install the BDRE scripts and artifacts in <user home>/bdre (/home/cloudera/bdre in this example)
+    
 
-### Running the BDRE Web UI
+### Using BDRE
 
 * After a successful build, cd into md-rest-api folder and start the BDRE UI using 
 ```shell sh ./quick-run.sh```
