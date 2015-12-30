@@ -99,8 +99,7 @@ public class RegisterFileDAO {
 
         } catch (MetadataException e) {
             session.getTransaction().rollback();
-            LOGGER.info("Error " + e);
-            return null;
+            throw e;
         } finally {
             session.close();
         }

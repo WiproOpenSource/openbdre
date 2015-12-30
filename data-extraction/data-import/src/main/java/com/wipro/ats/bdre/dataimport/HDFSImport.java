@@ -31,6 +31,7 @@ import org.apache.hadoop.util.Tool;
 import org.apache.log4j.Logger;
 import org.apache.sqoop.tool.ImportTool;
 
+import java.io.File;
 import java.sql.Timestamp;
 import java.util.Date;
 import java.util.Properties;
@@ -92,6 +93,14 @@ public class HDFSImport extends Configured implements Tool {
             String targetDir = IMConfig.getProperty("data-import.target-dir");
             String jarOutputDir = IMConfig.getProperty("data-import.jar-output-dir") + "/" + processId + "/" + batchId;
             String hadoopHome = IMConfig.getProperty("data-import.hadoop-home");
+            File jod=new File(jarOutputDir);
+            //create if this directory does not exist
+            if(!jod.exists())
+            {
+                LOGGER.info("Creating jar output dir"+jarOutputDir);
+                boolean created=jod.mkdirs();
+                LOGGER.info("Is directory created?"+created);
+            }
 
             //setting the parameters of sqoopOption
             options.setHadoopHome(hadoopHome);

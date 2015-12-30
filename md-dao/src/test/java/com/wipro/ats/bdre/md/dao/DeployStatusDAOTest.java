@@ -23,6 +23,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.AutowireCapableBeanFactory;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
+import static org.junit.Assert.*;
 
 /**
  * Created by MR299389 on 10/15/2015.
@@ -41,11 +42,13 @@ public class DeployStatusDAOTest {
     @Autowired
     DeployStatusDAO deployStatusDAO;
 
+    @Ignore
     @Test
     public void testList() throws Exception {
         LOGGER.info("Size of DeployStatus is atleast:" + deployStatusDAO.list(0, 10).size());
     }
 
+    @Ignore
     @Test
     public void testTotalRecordCount() throws Exception {
         LOGGER.info("Size of DeployStatus is:" + deployStatusDAO.totalRecordCount());
@@ -60,15 +63,19 @@ public class DeployStatusDAOTest {
     @Test
     public void testInsertUpdateAndDelete() throws Exception {
         DeployStatus deployStatus = new DeployStatus();
-        deployStatus.setDeployStatusId((short) 6);
+        deployStatus.setDeployStatusId((short) 7);
         deployStatus.setDescription("Test");
         Short deployStatusId = deployStatusDAO.insert(deployStatus);
         LOGGER.info("deployStatus is added with Id:" + deployStatusId);
         deployStatus.setDescription("Test BatchSatus");
         deployStatusDAO.update(deployStatus);
         deployStatus = deployStatusDAO.get(deployStatusId);
+        assertEquals("Test BatchSatus",deployStatus.getDescription());
+        assertNotNull(deployStatusDAO.list(0,10));
         LOGGER.info("Updated Description is:" + deployStatus.getDescription());
         deployStatusDAO.delete(deployStatusId);
         LOGGER.info("Deleted BatchStatus Entry with ID:" + deployStatusId);
+        LOGGER.info("Size of DeployStatus is:" + deployStatusDAO.totalRecordCount());
+
     }
 }

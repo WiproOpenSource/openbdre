@@ -367,28 +367,28 @@
                                     label: "Data Ingestion",
                                     collapse: "1",
                                     children: [{
-                                            label: "New Data Load Job",
+                                            label: "Load File in Hive",
                                             collapse: "1",
                                             url: "etlform.page",
                                             children: []
 					}, {
-                                            label: "New RDBMS Import Job",
+                                            label: "Import from RDBMS",
                                             collapse: "1",
                                             url: "dataimportwizard.page",
                                             children: []
 					},
                                         {
-                                            label: "New Web Crawler",
+                                            label: "Web Crawl and Ingest",
                                             collapse: "1",
                                             url: "crawler.page",
                                             children: []
 					}, {
-                                               label: "New File Ingestion",
+                                               label: "Monitor Directory & Ingest",
                                                collapse: "1",
                                                url: "filemonitor.page",
                                                children: []
                     },  {
-                                            label: "Test Data Manufacturer",
+                                            label: "Generate Bulk Data",
                                             collapse: "1",
                                             url: "datagen.page",
                                             children: []
@@ -398,7 +398,7 @@
                                             url: "dqprocess.page",
                                             children: []
 					}, {
-                                            label: "New Ingestion Process",
+                                            label: "Ingest from Streams",
                                             collapse: "1",
                                             url: "flumepropertieswizard.page",
                                             children: []

@@ -12,14 +12,7 @@
 # limitations under the License.
 #
 
-### Do not modify the db.properties in databases dir as it gets copied as db.properties under md-dao's resource directory after a maven build
-## and fetched from there.
-## For first time build embedded H2 DB will be used by default. Default db.properties would be created.
-## Along with that H2 DB files will get copied into <user home> directory.
-## To use another DB please update the md-dao/src/main/resources/db.properties and do a build again.
-## Note: db.properties and .db files do not get overwritten if already found in md-dao/src/main/resources and <user home> respectively.
-## To reset BDRE metadata DB to factory default please remove the db.properties and h2 .db files from
-## md-dao/src/main/resources and <user home> respectively.
+#This file is for reference only
 
 
 ##### Common entries #####

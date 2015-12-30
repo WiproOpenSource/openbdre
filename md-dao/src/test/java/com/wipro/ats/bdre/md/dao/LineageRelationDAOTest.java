@@ -25,6 +25,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.AutowireCapableBeanFactory;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
+import static org.junit.Assert.*;
 
 import java.util.Date;
 
@@ -50,11 +51,13 @@ public class LineageRelationDAOTest {
     @Autowired
     LineageQueryDAO lineageQueryDAO;
 
+    @Ignore
     @Test
     public void testList() throws Exception {
         LOGGER.info("Size of LineageRelation is atleast:" + lineageRelationDAO.list(0, 10).size());
     }
 
+    @Ignore
     @Test
     public void testTotalRecordCount() throws Exception {
         LOGGER.info("Size of LineageRelation is:" + lineageRelationDAO.totalRecordCount());
@@ -86,8 +89,12 @@ public class LineageRelationDAOTest {
         lineageRelationDAO.update(lineageRelation);
         lineageRelation = lineageRelationDAO.get(lineageRelationId);
         LOGGER.info("Updated LineageRelation's Dot string is:" + lineageRelation.getDotString());
+        assertEquals("Test Dot String",lineageRelation.getDotString());
+        assertNotNull(lineageRelationDAO.list(0,10));
         lineageRelationDAO.delete(lineageRelationId);
         lineageQueryDAO.delete(lineageQueryId);
         LOGGER.info("LineageRelation Deleted with ID:" + lineageRelationId);
+        LOGGER.info("Size of LineageRelation is:" + lineageRelationDAO.totalRecordCount());
+
     }
 }

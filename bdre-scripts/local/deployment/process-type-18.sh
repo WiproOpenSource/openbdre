@@ -54,7 +54,7 @@ if [ $? -ne 0 ]
 then exit 1
 fi
 
-#copy generated jar for data-import
+#copy generated jar for hive-data-gen
 cp -f $BDRE_HOME/lib/hive-data-gen/hive-data-gen-$bdreVersion-executable.jar $BDRE_APPS_HOME/$busDomainId/$processTypeId/$processId/lib
 if [ $? -eq 1 ]
 then exit 1

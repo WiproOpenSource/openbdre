@@ -25,8 +25,8 @@ http://www.springframework.org/schema/context/spring-context-3.0.xsd">
     <context:property-placeholder location="classpath*:db.properties"/>
 
     <context:component-scan
-            base-package="com.wipro.ats.bdre.md.dao"/>
-
+            base-package="com.wipro.ats.bdre.md.dao,com.wipro.ats.bdre.md.api,com.wipro.ats.bdre.imcrawler.model"/>
+    
     <bean id="sessionFactory"
           class="org.springframework.orm.hibernate4.LocalSessionFactoryBean">
         <property name="dataSource" ref="dataSource"/>

@@ -504,7 +504,7 @@ ON UPDATE NO ACTION,
 DROP TABLE IF EXISTS Docidsdb;
 
 CREATE TABLE Docidsdb (
-   docid serial NOT NULL ,
+   docid bigserial NOT NULL ,
    url varchar(3000),
    PRIMARY KEY (docid)
 );
@@ -512,8 +512,8 @@ CREATE TABLE Docidsdb (
 DROP TABLE IF EXISTS Statisticsdb;
 
 CREATE TABLE Statisticsdb (
-   uniqid serial NOT NULL,
-   value int,
+   uniqid bigserial NOT NULL,
+   value bigint,
    name varchar(255),
    PRIMARY KEY (uniqid)
 );
@@ -521,14 +521,14 @@ CREATE TABLE Statisticsdb (
 DROP TABLE IF EXISTS Pendingurlsdb;
 
 CREATE TABLE Pendingurlsdb (
-   uniqid serial NOT NULL,
-   pid int,
-   instanceexecid int,
+   uniqid bigserial NOT NULL,
+   pid bigint,
+   instanceexecid bigint,
    url varchar(3000),
    docid int NOT NULL,
    parentdocid int NOT NULL,
    parenturl varchar(1000),
-   depth int NOT NULL,
+   depth smallint NOT NULL,
    domain varchar(255),
    subdomain varchar(255),
    path varchar(1000),
@@ -541,14 +541,14 @@ CREATE TABLE Pendingurlsdb (
 DROP TABLE IF EXISTS Weburlsdb;
 
 CREATE TABLE Weburlsdb (
-   uniqid serial NOT NULL,
-   pid int,
-   instanceexecid int,
+   uniqid bigserial NOT NULL,
+   pid bigint,
+   instanceexecid bigint,
    url varchar(3000),
    docid int NOT NULL,
    parentdocid int NOT NULL,
    parenturl varchar(1000),
-   depth int NOT NULL,
+   depth smallint NOT NULL,
    domain varchar(255),
    subdomain varchar(255),
    path varchar(1000),
