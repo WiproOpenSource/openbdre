@@ -28,10 +28,13 @@ It's also quite easy to run BDRE for HortonWorks Sandbox. You can download Horto
     * Pull BDRE source from this git repository. To find out your repository link navigate to the repository in this website and copy the https repo URL.
 
     ```git clone <BDRE git URL>```
-    * Now ```cd``` to the bdre source code folder that git created.
+    * Now cd to the bdre source code folder that git created.
 
 2. Database Setup 
-    * Execute the `dbsetup.sh` script without any parameters as shown below. In this example, we are going to use MySQL as BDRE backend as it's already available in the QuickStart VM. If you would like to use another database please select it accordingly.
+    * Execute the dbsetup.sh script without any parameters as shown below. In this example, we are going to use MySQL as BDRE backend as it's already available in the QuickStart VM. If you would like to use another database please select it accordingly.
+    
+    ```sh dbsetup.sh```
+    
     ```shell
     $ sh dbsetup.sh
     Supported DB
@@ -62,12 +65,14 @@ It's also quite easy to run BDRE for HortonWorks Sandbox. You can download Horto
     Will create DB and tables
     Tables successfully created in MySQL bdre database.
     ```
+    
 3. Building
-     
-* Now build BDRE using (note BDRE may not compile if the `settings.xml` is not passed from the commandline so be sure to use the `-s` option. When building for the first time, it might take a while as maven resolves and downloads the jar libraries from diffrent repositories.
-    `mvn -s settings.xml clean install`
+    * Now build BDRE using (note BDRE may not compile if the **settings.xml** is not passed from the commandline so be sure to use the *-s* option. When building for the first time, it might take a while as maven resolves and downloads the jar libraries from diffrent repositories.
+    
+    ```mvn -s settings.xml clean install```
+    
     ```shell
-    [cloudera@quickstart bdre-app]$ mvn -s settings.xml clean install
+    $ mvn -s settings.xml clean install
     [INFO] Scanning for projects...
     [WARNING]
     [WARNING] Some problems were encountered while building the effective model for com.wipro.ats.bdre:md-ui:war:1.1-SNAPSHOT
@@ -89,15 +94,21 @@ It's also quite easy to run BDRE for HortonWorks Sandbox. You can download Horto
     [INFO] Final Memory: 127M/2296M
     [INFO] ------------------------------------------------------------------------
     ```
+
 4. Installing BDRE
     * After building BDRE successfully run 
-        `sh install-scripts.sh local`
+    
+    ```sh install-scripts.sh local```
+    
     * It'll install the BDRE scripts and artifacts in <user home>/bdre (/home/cloudera/bdre in this example)
+
 ### Using BDRE
 
 * After a successful build, cd into md-rest-api folder and start the BDRE UI using 
+
 ```shell sh ./quick-run.sh```
-* Use Google Chrome browser from the host machine and open `http://<VM IP>:288503/mdui/pages/content.page`
+
+* Use Google Chrome browser from the host machine and open *http://<VM IP>:288503/mdui/pages/content.page*
 * Login using admin/zaq1xsw2
 
 ### Creating, Deploying and Running a Test Job
