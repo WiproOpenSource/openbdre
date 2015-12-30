@@ -24,6 +24,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.AutowireCapableBeanFactory;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
+import static org.junit.Assert.*;
 
 import java.util.Date;
 
@@ -45,11 +46,13 @@ public class LineageQueryDAOTest {
     @Autowired
     private LineageQueryDAO lineageQueryDAO;
 
+    @Ignore
     @Test
     public void testList() throws Exception {
         LOGGER.info("Size of LineageQuery is atleast:" + lineageQueryDAO.list(0, 10).size());
     }
 
+    @Ignore
     @Test
     public void testTotalRecordCount() throws Exception {
         LOGGER.info("Size of LineageQuery is:" + lineageQueryDAO.totalRecordCount());
@@ -78,12 +81,16 @@ public class LineageQueryDAOTest {
         String lineageQueryId = lineageQueryDAO.insert(lineageQuery);
         LOGGER.info("New LineageQuery added with ID:" + lineageQueryId);
         lineageQuery.setCreateTs(new Date());
+        lineageQuery.setQueryString("Updatetest");
         lineageQueryDAO.update(lineageQuery);
-
         lineageQuery = lineageQueryDAO.get(lineageQueryId);
         LOGGER.info("Updated lineageQuery with Create time :" + lineageQuery.getCreateTs());
+        assertEquals("Updatetest",lineageQuery.getQueryString());
+        assertNotNull(lineageQueryDAO.list(0,10));
         lineageQueryDAO.delete(lineageQueryId);
         LOGGER.info("LineageQuery Deleted with ID:" + lineageQueryId);
+        LOGGER.info("Size of LineageQuery is:" + lineageQueryDAO.totalRecordCount());
+
     }
 
 }

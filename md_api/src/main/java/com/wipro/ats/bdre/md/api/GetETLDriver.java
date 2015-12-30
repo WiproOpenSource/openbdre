@@ -25,6 +25,8 @@ import org.springframework.beans.factory.config.AutowireCapableBeanFactory;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
+import java.util.List;
+
 /**
  * Created by arijit on 12/8/14.
  */
@@ -64,8 +66,9 @@ public class GetETLDriver extends MetadataAPIBase {
 
 
 //            s.selectOne("call_procedures.GetETLInfo", getETLDriverInfo);
-            getETLInfoDAO.getETLInfo(Long.parseLong(minBId), Long.parseLong(maxBId));
-            return getETLDriverInfo;
+            List<GetETLDriverInfo> getETLDriverInfoList = getETLInfoDAO.getETLInfo(Long.parseLong(minBId), Long.parseLong(maxBId));
+            LOGGER.info("list of File is " + getETLDriverInfoList.get(0).getFileList());
+            return getETLDriverInfoList.get(0);
         } catch (Exception e) {
             LOGGER.error("Error occurred", e);
             throw new MetadataException(e);

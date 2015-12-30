@@ -29,9 +29,18 @@ chmod +x $BDRE_HOME/bdre-scripts/deployment/*
 chmod +x $BDRE_HOME/bdre-scripts/execution/*
 
 #Install crontab for deployment daemon * * * * * - every min
-
+echo " installing crontab for $BDRE_HOME/bdre-scripts/deployment/process-deploy.sh"
 (crontab -l ; echo "* * * * * $BDRE_HOME/bdre-scripts/deployment/process-deploy.sh") 2>&1 | grep -v "no crontab" | sort | uniq | crontab -
 
+#Create usual hive DBs
+hive -e "create database if not exists raw;create database if not exists base;"
+
+#Create log dir
+sudo mkdir /var/log/BDRE
+sudo chown cloudera:cloudera /var/log/BDRE
+
+#Update java softlink
+sudo ln -s -f /usr/java/jdk1.7.0_67-cloudera/bin/java /usr/bin/java
 
 cd $BDRE_HOME
 rm -r -f cdh-twitter-example
@@ -40,6 +49,14 @@ cd cdh-twitter-example/flume-sources
 mvn package
 sudo mkdir -p $flumeLibDir/plugins.d/twitter/lib
 sudo cp target/flume-sources-1.0-SNAPSHOT.jar $flumeLibDir/plugins.d/twitter/lib
+sudo cp target/flume-sources-1.0-SNAPSHOT.jar $BDRE_HOME/lib
+cd ../hive-serdes
+mvn package
+sudo cp target/hive-serdes-1.0-SNAPSHOT.jar $BDRE_HOME/lib
+echo "add jar $BDRE_HOME/lib/hive-serdes-1.0-SNAPSHOT.jar" > ~/.hiverc
+cd $BDRE_HOME
+rm -r -f cdh-twitter-example
+
 
 
 

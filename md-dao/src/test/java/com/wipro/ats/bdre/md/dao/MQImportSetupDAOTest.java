@@ -42,7 +42,7 @@ public class MQImportSetupDAOTest {
 
     @Autowired
     MQImportSetupDAO mqImportSetupDAO;
-
+    @Ignore
     @Test
     public void InsertUpdateTest() {
         MQImportInfo mqImportInfo = new MQImportInfo();
@@ -56,11 +56,15 @@ public class MQImportSetupDAOTest {
 
         List<Properties> propertiesList = mqImportSetupDAO.insert(mqImportInfo);
         LOGGER.info("Broker URl of Properties Inserted :" + mqImportInfo.getBrokerUrlValue());
+        Integer parentProcessId=propertiesList.get(0).getParentProcessId();
+
+        LOGGER.info(propertiesList.size());
 
         mqImportInfo.setBrokerUrlValue("updated BrokerUrl value");
         List<Properties> updatedPropertiesList = mqImportSetupDAO.update(mqImportInfo);
         LOGGER.info("Updated Broker Url :" + mqImportInfo.getBrokerUrlValue());
 
+        mqImportSetupDAO.delete(parentProcessId);
 
     }
 
@@ -72,7 +76,7 @@ public class MQImportSetupDAOTest {
         mqImportSetupDAO.delete(processId);
         LOGGER.info("processId of property deleted" + processId);
     }
-
+    @Ignore
     @Test
     public void listTest() {
         List<Properties> tableProperties = mqImportSetupDAO.list(0, 10);

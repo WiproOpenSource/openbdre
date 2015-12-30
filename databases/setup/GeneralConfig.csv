@@ -83,7 +83,7 @@
 'Sink_Type','org.apache.flume.sink.kite.DatasetSink','Dataset Sink','Experimental sink that writes events to a Kite Dataset. This sink will deserialize the body of each incoming event and store the resulting record in a Kite Dataset. It determines target Dataset by loading a dataset by URI', 0,'org.apache.flume.sink.kite.DatasetSink','text', 1
 'Sink_Type','org.apache.flume.sink.kafka.KafkaSink','Kafka Sink','This is a Flume Sink implementation that can publish data to a Kafka topic', 0,'org.apache.flume.sink.kafka.KafkaSink','text', 1
 'Sink_Type','FQCN','FQCN','A custom sink is your own implementation of the Sink interface. A custom sink’s class and its dependencies must be included in the agent’s classpath when starting the Flume agent.', 0,'FQCN','text', 1
-'com.wipro.ats.bdre.flume.sink.hdfs.BDREHDFSEventSink_Sink','hdfs.path','HDFS Path','Path is HDFS where you want to put files',1,'/user/cloudera/flume/%H','text', 1
+'com.wipro.ats.bdre.flume.sink.hdfs.BDREHDFSEventSink_Sink','hdfs.path','HDFS Path','Path is HDFS where you want to put files',1,'/user/cloudera/mytable/datehour=%H','text', 1
 'com.wipro.ats.bdre.flume.sink.hdfs.BDREHDFSEventSink_Sink','hdfs.filePrefix','File Prefix','Name prefixed to files created by Flume in hdfs directory', 0,'IngestedData','text', 1
 'com.wipro.ats.bdre.flume.sink.hdfs.BDREHDFSEventSink_Sink','hdfs.fileSuffix','File Suffix','Name suffixed to files created by Flume in hdfs directory', 0,'%H%M%S','text', 1
 'com.wipro.ats.bdre.flume.sink.hdfs.BDREHDFSEventSink_Sink','hdfs.inUsePrefix','In Use Prefix','Prefix that is used for temporal files that flume actively writes into', 0,null,'text', 1
@@ -382,10 +382,10 @@
 'spooldir_Source','selector.*','Selector.*','Depends on the selector.type value', 0,null,'text', 1
 'spooldir_Source','interceptors','Interceptors','Space-separated list of interceptors', 0,null,'text', 1
 'spooldir_Source','interceptors.*','Interceptors.*','Interceptors', 0,null,'text', 1
-'com.cloudera.flume.source.TwitterSource_Source','consumerKey','Consumerkey','OAuth consumer key', 1,'your key','text', 1
-'com.cloudera.flume.source.TwitterSource_Source','consumerSecret','Consumersecret','OAuth consumer secret', 1,'your secret','text', 1
-'com.cloudera.flume.source.TwitterSource_Source','accessToken','Accesstoken','OAuth access token', 1,'your access token','text', 1
-'com.cloudera.flume.source.TwitterSource_Source','accessTokenSecret','Accesstokensecret','OAuth toekn secret', 1,'your acces secret','text', 1
+'com.cloudera.flume.source.TwitterSource_Source','consumerKey','Consumerkey','OAuth consumer key', 1,'','text', 1
+'com.cloudera.flume.source.TwitterSource_Source','consumerSecret','Consumersecret','OAuth consumer secret', 1,'','text', 1
+'com.cloudera.flume.source.TwitterSource_Source','accessToken','Accesstoken','OAuth access token', 1,'','text', 1
+'com.cloudera.flume.source.TwitterSource_Source','accessTokenSecret','Accesstokensecret','OAuth toekn secret', 1,'','text', 1
 'com.cloudera.flume.source.TwitterSource_Source','keywords','HASHTAGS','keywords based on which you want filter your tweets', 1,'#BigData','text', 1
 'com.cloudera.flume.source.TwitterSource_Source','maxBatchSize','Maxbatchsize','Maximum number of twitter messages to put in a single batch', 0,'1000','text', 1
 'com.cloudera.flume.source.TwitterSource_Source','maxBatchDurationMillis','Maxbatchdurationmillis','Maximum number of milliseconds to wait before closing a batch', 0,'1000','text', 1
@@ -476,11 +476,11 @@
 'mdconfig', 'status-notification.halt-queue', 'Halt Queue', 'Halt Queue info for status notification',  1, 'Success', 'text', 1
 'mdconfig', 'status-notification.term-queue', 'Term Queue', 'Term Queue info for status notification',  1, 'Failure', 'text', 1
 'mdconfig', 'deploy.script-path', 'Deployment script path', 'Deployment script path',  1, '/home/cloudera/bdre/bdre-scripts/deployment', 'text', 1
-'mdconfig', 'execute.log-path', 'Log File Location', 'Path for log file',  1, '/var/log/BDRE/logfile-', 'text', 1
+'mdconfig', 'execute.log-path', 'Log File Location', 'Path for log file',  1, '/tmp/logfile-', 'text', 1
 'mdconfig', 'execute.script-path', 'Process Execute Script Path', 'Execute workflow script path',  1, '/home/cloudera/bdre/bdre-scripts/execution', 'text', 1
 'mdconfig', 'upload.base-directory', 'Base Directory For Upload', 'Base Directory where you want to upload jars and hqls',  1, '/home/cloudera/bdre-wfd', 'text', 1
 'mdconfig', 'r.shell-script', 'Location of R shell script', 'Location of R shell script', 1, '/tmp/Rhadoop.sh', 'text', 1
-'imconfig', 'common.default-fs-name', 'Default file system name','Default file system name', 1, 'hdfs://localhost:8020', 'text', 1
+'imconfig', 'common.default-fs-name', 'Default file system name','Default file system name', 1, 'hdfs://quickstart.cloudera:8020', 'text', 1
 'imconfig', 'etl.hive-connection', 'URL of Hive connection','URL of Hive connection', 1, 'jdbc:hive2://localhost:10000', 'text', 1
 'imconfig', 'etl.hdfs-raw-directory', 'Hadoop raw directory','Hadoop raw directory' , 1, '/raw', 'text', 1
 'imconfig', 'etl.hive-metastore-uris', 'URL of Hive metastore','URL of Hive metastore', 1, 'thrift://localhost:9083', 'text', 1
@@ -492,13 +492,13 @@
 'imconfig', 'file-mon.serverIds', 'Server IDs','Server IDs', 1, '100,200', 'text', 1
 'imconfig', 'dq.drools-url-prefix', 'URL prefix for drools','URL prefix for drools', 1, 'http://localhost:8080/guvnor56/rest/packages/', 'text', 1
 'imconfig', 'data-import.hadoop-home', 'Hadoop home directory for exporting','Hadoop home directory for exporting', 1, '/usr/lib/hadoop', 'text', 1
-'imconfig', 'data-import.target-dir', 'Target direcotry to store imported data','Target direcotry to store imported data', 1, 'hdfs://localhost:8020/user/dropuser/import', 'text', 1
-'imconfig', 'data-import.jar-output-dir', 'Jar output directory for importing','Jar output directory for importing', 1, '/home/cloudera/outputdir/jar-output', 'text', 1
+'imconfig', 'data-import.target-dir', 'Target direcotry to store imported data','Target direcotry to store imported data', 1, 'hdfs://quickstart.cloudera:8020/user/dropuser/import', 'text', 1
+'imconfig', 'data-import.jar-output-dir', 'Jar output directory for importing','Jar output directory for importing', 1, '/tmp/bdre/sqoop/jar-output', 'text', 1
 'imconfig', 'mq-import.file-size-units', 'File sizes unit','File sizes unit', 1, 'KB', 'text', 1
 'imconfig', 'mq-import.rotation-file-size', 'Rotation file size','Rotation file size', 1, '10', 'text', 1
 'imconfig', 'mq-import.target-directory', 'Directory to import MQ file','Directory to import MQ file', 1, 'hdfs://localhost:8020/user/dropuser/mq-import', 'text', 1
 'imconfig', 'data-export.hadoop-home', 'Hadoop home directory for exporting','Hadoop home directory for exporting', 1, '/usr/lib/hadoop', 'text', 1
-'imconfig', 'data-export.jar-output-dir', 'Jar output directory for exporting','Jar output directory for exporting', 1, '/home/cloudera/outputdir/jar-output', 'text', 1
+'imconfig', 'data-export.jar-output-dir', 'Jar output directory for exporting','Jar output directory for exporting', 1, '/tmp/bdre/sqoop/jar-output', 'text', 1
 'imconfig', 'eventing.metadata-broker-list', 'Metadata Brokers URL','Metadata Brokers URL', 1, 'localhost://:9092', 'text', 1
 'crawler','numberOfMappers','no of mappers','Number of Mappers',1,'2','text', 1
 'crawler','politenessDelay','Politeness Delay','Politeness Delay',1,'200','text', 1
@@ -528,3 +528,4 @@
 'scripts_config', 'bdreVersion', '-','-' , 1, '1.1-SNAPSHOT', 'text' , 1
 'scripts_config', 'oozieHost', '-','-' , 1, 'localhost', 'text' , 1
 'scripts_config', 'ooziePort', '-','-' , 1, '11000', 'text' , 1
+'scripts_config', 'logDir', '-','-' , 1, '/var/log/BDRE', 'text' , 1

@@ -24,6 +24,7 @@ import org.apache.hadoop.util.Tool;
 import org.apache.log4j.Logger;
 import org.apache.sqoop.tool.ExportTool;
 
+import java.io.File;
 import java.sql.Timestamp;
 import java.util.Date;
 import java.util.Properties;
@@ -71,6 +72,13 @@ public class HDFSExport extends Configured implements Tool {
 
             //reading properties from IMConfig file
             String jarOutputDir = IMConfig.getProperty("data-export.jar-output-dir") + "/" + processId + "/" + batchId;
+            File jod=new File(jarOutputDir);
+            //create if this directory does not exist
+            if(!jod.exists())
+            {
+                jod.mkdirs();
+                LOGGER.info("Jar output dir created "+jarOutputDir);
+            }
             String hadoopHome = IMConfig.getProperty("data-export.hadoop-home");
 
             //setting the parameters of sqoopOption

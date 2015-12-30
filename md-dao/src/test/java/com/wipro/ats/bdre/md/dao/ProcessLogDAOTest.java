@@ -47,11 +47,13 @@ public class ProcessLogDAOTest {
     @Autowired
     ProcessDAO processDAO;
 
+    @Ignore
     @Test
     public void testList() throws Exception {
         LOGGER.info("Size of ProcessLog is atleast:" + processLogDAO.list(0, 10).size());
     }
 
+    @Ignore
     @Test
     public void testTotalRecordCount() throws Exception {
         LOGGER.info("Size of ProcessLog is:" + processLogDAO.totalRecordCount());
@@ -65,9 +67,9 @@ public class ProcessLogDAOTest {
         LOGGER.info("ProcessLog(0) message:" + processLogDAO.get(Long.valueOf(2)).getMessage());
     }
 
-    @Test @Ignore
+    @Test
     public void testInsertUpdateAndDelete() throws Exception {
-        Process process = processDAO.get(10805);
+        Process process = processDAO.get(1);
         ProcessLog processLog = new ProcessLog();
 
         processLog.setProcess(process);

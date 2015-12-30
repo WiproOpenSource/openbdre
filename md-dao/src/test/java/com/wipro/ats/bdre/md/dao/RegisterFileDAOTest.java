@@ -58,7 +58,6 @@ public class RegisterFileDAOTest {
     ProcessDAO processDAO;
 
     @Test
-    @Ignore
     public void registerFileTest() {
 
         com.wipro.ats.bdre.md.dao.jpa.Process parentProcess = new Process();
@@ -76,7 +75,7 @@ public class RegisterFileDAOTest {
         parentProcess.setProcessType(processType);
         parentProcess.setCanRecover(false);
         parentProcess.setEnqueuingProcessId(0);
-        parentProcess.setNextProcessId("10805");
+        parentProcess.setNextProcessId("");
         parentProcess.setWorkflowType(workflowType);
         parentProcess.setDeleteFlag(false);
         parentProcess.setProcessTemplate(processTemplate);

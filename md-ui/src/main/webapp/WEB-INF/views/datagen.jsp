@@ -96,7 +96,7 @@ function formIntoMap(typeProp, typeOf) {
                     <!-- btn-group -->
                     <div class="form-group" id="formGroup1" >
                         <div class="col-md-3">
-                            <input type="text" class="form-control input-sm" id="fieldName.1" value="" name="fieldName" placeholder="Table Field Name" />
+                            <input type="text" class="form-control input-sm" id="fieldName.1" value="" name="fieldName" placeholder="Column Name : Column Type" />
                         </div>
                         <div class="col-md-3">
                             <select class="form-control input-sm" id="generatedType.1" name="generatedType.1">

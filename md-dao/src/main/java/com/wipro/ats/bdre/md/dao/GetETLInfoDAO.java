@@ -61,7 +61,7 @@ public class GetETLInfoDAO {
             }
             for (File file : fileList) {
                 GetETLDriverInfo getETLDriverInfo = new GetETLDriverInfo();
-                getETLDriverInfo.setFileList(String.valueOf(file.getBatch().getBatchId()) + String.valueOf(file.getServers().getServerId()) + file.getId().getPath() + String.valueOf(file.getId().getFileSize() + file.getId().getFileHash() + file.getId().getCreationTs()));
+                getETLDriverInfo.setFileList(String.valueOf(file.getBatch().getBatchId()) + "," + String.valueOf(file.getServers().getServerId()) + "," + file.getId().getPath() + "," + String.valueOf(file.getId().getFileSize() + "," + file.getId().getFileHash() + "," + file.getId().getCreationTs()));
                 getETLDriverInfoList.add(getETLDriverInfo);
 
             }

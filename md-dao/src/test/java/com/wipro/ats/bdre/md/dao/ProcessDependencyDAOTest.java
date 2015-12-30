@@ -44,7 +44,7 @@ public class ProcessDependencyDAOTest {
     @Ignore
     public void testListUD() throws Exception {
         List<ProcessDependencyInfo> upstreamDownstreamProcessList = new ArrayList<ProcessDependencyInfo>();
-        upstreamDownstreamProcessList = processDependencyDAO.listUD(10802);
+        upstreamDownstreamProcessList = processDependencyDAO.listUD(1);
         for (ProcessDependencyInfo pdInfo : upstreamDownstreamProcessList) {
             LOGGER.info(pdInfo + "\n");
         }

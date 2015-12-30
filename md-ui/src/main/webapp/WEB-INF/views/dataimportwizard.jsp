@@ -39,7 +39,8 @@
     TIMESTAMP: "Timestamp",
     BIT: "Boolean",
     SMALLINT: "SmallInt",
-    INTEGER: "Int"
+    INTEGER: "Int",
+    TINYINT: "tinyInt"
 };
 		function displayProcess (records){
                                 $('#Container').jtable(

@@ -40,11 +40,13 @@ public class BatchDAOTest {
     @Autowired
     BatchDAO batchDAO;
 
+    @Ignore
     @Test
     public void testList() throws Exception {
         LOGGER.info("Size of Batch is atleast:" + batchDAO.list(0, 10).size());
     }
 
+    @Ignore
     @Test
     public void testTotalRecordCount() throws Exception {
         LOGGER.info("Size of Batch is:" + batchDAO.totalRecordCount());

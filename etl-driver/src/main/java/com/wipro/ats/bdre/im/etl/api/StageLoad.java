@@ -73,9 +73,9 @@ public class StageLoad extends ETLBase {
 
             Connection rawCon = getHiveJDBCConnection(stageDbName);
             Connection baseCon = getHiveJDBCConnection(baseDbName);
-            baseCon.setClientInfo("hive.exec.dynamic.partition.mode", "nonstrict");
+/*            baseCon.setClientInfo("hive.exec.dynamic.partition.mode", "nonstrict");
             baseCon.setClientInfo("hive.exec.dynamic.partition", "true");
-            baseCon.setClientInfo("hive.exec.max.dynamic.partitions.pernode", "1000");
+            baseCon.setClientInfo("hive.exec.max.dynamic.partitions.pernode", "1000")*/;
             Statement rawConStatement = rawCon.createStatement();
             Statement baseConStatement = baseCon.createStatement();
 
@@ -121,7 +121,7 @@ public class StageLoad extends ETLBase {
 
         } catch (Exception e) {
 
-            LOGGER.error("Error " + e);
+            LOGGER.error(e);
             throw new ETLException(e);
         }
     }
