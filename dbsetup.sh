@@ -200,6 +200,16 @@ if [ $var_dbtype -eq 3 ]; then
     if [ $? -eq 0 ]; then
         echo "Tables created successfully in MySQL $var_dbname DB"
     fi
+
+elif [ $var_dbtype -eq 4 ]; then
+    psql -U $var_username -d $var_dbname -a -f  $(dirname $0)/databases/postgresql/ddls/etlmd_drop_statements.sql
+
+    psql -U $var_username -d $var_dbname -a -f  $(dirname $0)/databases/postgresql/ddls/etlmd_all_tables.sql
+
+      if [ $? -eq 0 ]; then
+        echo "Tables created successfully in Postgres $var_dbname DB"
+    fi
+
 elif [ $var_dbtype -eq 1 ]; then
 
 #Check for windows/linux/mac and copy h2 files accordingly
