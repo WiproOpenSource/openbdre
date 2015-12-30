@@ -6,9 +6,9 @@ CREATE TABLE bus_domain (
   PRIMARY KEY (bus_domain_id)
 );
   CREATE SEQUENCE bus_domain_seq
-  MINVALUE 1
+  MINVALUE 2
   MAXVALUE 9999999999
-  START WITH 1
+  START WITH 2
   INCREMENT BY 1
   CACHE 2;
 
@@ -143,9 +143,9 @@ CREATE TABLE properties_template (
    ) ;
 
     CREATE SEQUENCE process_seq
-     MINVALUE 1
+     MINVALUE 36
      MAXVALUE 9999999999
-     START WITH 1
+     START WITH 36
      INCREMENT BY 1
      CACHE 2;
 
