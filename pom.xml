@@ -47,7 +47,7 @@
        <!-- <module>hive-io</module>-->
         <module>data-lineage</module>
         <module>hive-plugin</module>
-        <!--<module>im-crawler</module>-->
+        <module>im-crawler</module>
         <module>flume-hdfs-sink</module>
         <module>spark-core</module>
         <module>genconf-dump</module>

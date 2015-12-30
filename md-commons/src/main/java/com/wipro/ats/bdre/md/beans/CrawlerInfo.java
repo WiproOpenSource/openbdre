@@ -43,9 +43,9 @@ public class CrawlerInfo {
     @NotNull
     private Integer maxPagesToFetch;
     @NotNull
-    private Boolean includeBinaryContentInCrawling = false;
+    private Integer includeBinaryContentInCrawling = 0;
     @NotNull
-    private Boolean resumableCrawling = false;
+    private Integer resumableCrawling = 0;
     @NotNull
     private String userAgentString;
     private String proxyHost;
@@ -126,19 +126,19 @@ public class CrawlerInfo {
         this.maxPagesToFetch = maxPagesToFetch;
     }
 
-    public Boolean getIncludeBinaryContentInCrawling() {
+    public Integer getIncludeBinaryContentInCrawling() {
         return includeBinaryContentInCrawling;
     }
 
-    public void setIncludeBinaryContentInCrawling(Boolean includeBinaryContentInCrawling) {
+    public void setIncludeBinaryContentInCrawling(Integer includeBinaryContentInCrawling) {
         this.includeBinaryContentInCrawling = includeBinaryContentInCrawling;
     }
 
-    public Boolean getResumableCrawling() {
+    public Integer getResumableCrawling() {
         return resumableCrawling;
     }
 
-    public void setResumableCrawling(Boolean resumableCrawling) {
+    public void setResumableCrawling(Integer resumableCrawling) {
         this.resumableCrawling = resumableCrawling;
     }
 

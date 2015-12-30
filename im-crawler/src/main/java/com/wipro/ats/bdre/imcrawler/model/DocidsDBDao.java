@@ -1,7 +1,7 @@
 package com.wipro.ats.bdre.imcrawler.model;
 
 
-import com.wipro.ats.bdre.imcrawler.jpa.Docidsdb;
+import com.wipro.ats.bdre.md.dao.jpa.Docidsdb;
 import org.apache.log4j.Logger;
 import org.hibernate.Criteria;
 import org.hibernate.Query;
@@ -47,7 +47,8 @@ public class DocidsDBDao {
     public Docidsdb get(Integer id) {
         Session session = sessionFactory.getCurrentSession();
         session.beginTransaction();
-        Docidsdb docidsdb =(Docidsdb)session.get(Docidsdb.class,id);
+        Long longid = new Long (id.intValue());
+        Docidsdb docidsdb =(Docidsdb)session.get(Docidsdb.class,longid);
         session.getTransaction().commit();
         return docidsdb;
     }
@@ -55,7 +56,7 @@ public class DocidsDBDao {
     public Docidsdb getLastElement() {
         Session session = sessionFactory.getCurrentSession();
         session.beginTransaction();
-        Criteria getLastElementCriteria = session.createCriteria(Docidsdb.class).addOrder(Order.desc("docId"));
+        Criteria getLastElementCriteria = session.createCriteria(Docidsdb.class).addOrder(Order.desc("docid"));
         Docidsdb docidsdb = (Docidsdb) getLastElementCriteria.list().get(0);
         session.getTransaction().commit();
         return docidsdb;
@@ -75,9 +76,9 @@ public class DocidsDBDao {
     public Integer insert(Docidsdb docidsdb) {
         Session session = sessionFactory.getCurrentSession();
         session.beginTransaction();
-        Integer id=(Integer)session.save(docidsdb);
+        Long id=(Long)session.save(docidsdb);
         session.getTransaction().commit();
-        return id;
+        return new Integer(id.intValue());
     }
 
     public void update(Docidsdb docidsdb) {
@@ -90,7 +91,8 @@ public class DocidsDBDao {
     public void delete(Integer id) {
         Session session = sessionFactory.getCurrentSession();
         session.beginTransaction();
-        Docidsdb docidsdb=(Docidsdb)session.get(Docidsdb.class,id);
+        Long longid = new Long (id.intValue());
+        Docidsdb docidsdb=(Docidsdb)session.get(Docidsdb.class,longid);
         session.delete(docidsdb);
         session.getTransaction().commit();
     }
