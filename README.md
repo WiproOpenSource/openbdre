@@ -27,7 +27,7 @@ It's also quite easy to run BDRE for HortonWorks Sandbox. You can download Horto
     * Navigate to folder where you want to download BDRE source code and build it.
     * Pull BDRE source from this git repository. To find out your repository link navigate to the repository in this website and copy the https repo URL.
 
-    ```git clone <BDRE git URL>```
+    ```git clone https://gitlab.com/bdre/openbdre.git```
     * Now cd to the bdre source code folder that git created.
 
 2. Database Setup 
