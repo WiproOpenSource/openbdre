@@ -24,8 +24,43 @@
     <modelVersion>4.0.0</modelVersion>
 
     <artifactId>spark-core</artifactId>
+    <dependencies>
+        <dependency>
+            <groupId>org.apache.spark</groupId>
+            <artifactId>spark-core_2.10</artifactId>
+        </dependency>
+    </dependencies>
 <build>
     <plugins>
+        <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-shade-plugin</artifactId>
+            <version>2.4.2</version>
+            <executions>
+                <execution>
+                    <phase>package</phase>
+                    <goals>
+                        <goal>shade</goal>
+                    </goals>
+                    <configuration>
+                        <filters>
+                            <filter>
+                                <artifact>*:*</artifact>
+                                <excludes>
+                                    <exclude>META-INF/**</exclude>
+                                </excludes>
+                            </filter>
+                        </filters>
+                        <transformers>
+                            <transformer implementation="org.apache.maven.plugins.shade.resource.AppendingTransformer">
+                                <resource>reference.conf</resource>
+                            </transformer>
+                        </transformers>
+                        <outputDirectory>${project.parent.build.directory}/lib/${project.artifactId}</outputDirectory>
+                    </configuration>
+                </execution>
+            </executions>
+        </plugin>
         <plugin>
             <artifactId>maven-dependency-plugin</artifactId>
             <executions>
@@ -37,7 +72,9 @@
                     <configuration>
                         <outputDirectory>${project.parent.build.directory}/lib/${project.artifactId}</outputDirectory>
                     </configuration>
+
                 </execution>
+
                 <execution>
                     <id>copy-installed</id>
                     <phase>install</phase>
@@ -56,6 +93,7 @@
                         <outputDirectory>${project.parent.build.directory}/lib/${project.artifactId}</outputDirectory>
                     </configuration>
                 </execution>
+
             </executions>
         </plugin>
     </plugins>
