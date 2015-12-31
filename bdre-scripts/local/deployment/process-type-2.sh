@@ -100,6 +100,12 @@ if [ $? -ne 0 ]
 then exit 1
 fi
 
+#copy R shell script
+cp $BDRE_HOME/bdre-scripts/deployment/Rhadoop.sh $BDRE_APPS_HOME/$busDomainId/$processTypeId/$processId
+if [ $? -ne 0 ]
+then exit 1
+fi
+
 #create/clean hdfs process directory
 hdfs dfs -mkdir -p $hdfsPath/wf/$busDomainId/$processTypeId/$processId
 if [ $? -ne 0 ]
@@ -118,16 +124,17 @@ if [ $? -ne 0 ]
     then exit 1
 fi
 
-# deleting and copying R shell script in /tmp folder
-hdfs dfs -rm -r -f /tmp/run_r_hadoop.sh
-if [ $? -ne 0 ]
-then exit 1
-fi
-
-hdfs dfs -put $BDRE_HOME/bdre-scripts/deployment/run_r_hadoop.sh /tmp
-if [ $? -ne 0 ]
-then exit 1
-fi
+#These lines don't make sense as the R shell script is in the application dir
+## deleting and copying R shell script in /tmp folder
+#hdfs dfs -rm -r -f /tmp/run_r_hadoop.sh
+#if [ $? -ne 0 ]
+#then exit 1
+#fi
+#
+#hdfs dfs -put $BDRE_HOME/bdre-scripts/deployment/run_r_hadoop.sh /tmp
+#if [ $? -ne 0 ]
+#then exit 1
+#fi
 
 #List HDFS process dir structure
 

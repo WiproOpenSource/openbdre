@@ -45,7 +45,7 @@ public class LineageByInstanceExecDAOTest {
     @Test
     public void LineageByInstanceExec() {
         GetLineageByInstanceExecInfo getLineageByInstanceExecInfo = new GetLineageByInstanceExecInfo();
-        getLineageByInstanceExecInfo.setInstanceExecId(1);
+        getLineageByInstanceExecInfo.setInstanceExecId(196);
         List<GetLineageByInstanceExecInfo> outputlist = lineageByInstanceExecDAO.LineageByInstanceExec(getLineageByInstanceExecInfo);
         LOGGER.info("returned object is " + outputlist);
     }
