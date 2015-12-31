@@ -19,8 +19,10 @@ import com.wipro.ats.bdre.md.beans.GetLineageByInstanceExecInfo;
 import com.wipro.ats.bdre.md.dao.jpa.*;
 import com.wipro.ats.bdre.md.dao.jpa.Process;
 import org.apache.log4j.Logger;
+import org.hibernate.Criteria;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
+import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Restrictions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -47,56 +49,58 @@ public class LineageByInstanceExecDAO {
         try {
             session.beginTransaction();
             //Batch batch=(Batch)session.get(Batch.class,getLineageByInstanceExecInfo.getInstanceExecId());
+            Long targetBatchId;
             List<Batch> batches = new ArrayList<Batch>();
             if (session.get(InstanceExec.class, getLineageByInstanceExecInfo.getInstanceExecId()) != null) {
-                batches = session.createCriteria(Batch.class).add(Restrictions.eq("instanceExec", session.get(InstanceExec.class, getLineageByInstanceExecInfo.getInstanceExecId()))).list();
-                LOGGER.info("Total number os batches satisfying the given condition is " + batches.size());
+                Criteria fetchBatchId= session.createCriteria(Batch.class).add(Restrictions.eq("instanceExec.instanceExecId",getLineageByInstanceExecInfo.getInstanceExecId())).setProjection(Projections.property("batchId"));
+                targetBatchId=(Long)fetchBatchId.uniqueResult();
+
                 InstanceExec instanceExec = (InstanceExec) session.get(InstanceExec.class, getLineageByInstanceExecInfo.getInstanceExecId());
+
                 Process process = (Process) session.get(Process.class, instanceExec.getProcess().getProcessId());
                 LOGGER.info("processid of the process is" + instanceExec.getProcess().getProcessId());
-                Iterator iterator1 = batches.iterator();
 
-                while (iterator1.hasNext()) {
-                    Batch batch = (Batch) iterator1.next();
-                    List<BatchConsumpQueue> listbcq = session.createCriteria(BatchConsumpQueue.class).add(Restrictions.eq("batchByTargetBatchId", batch)).list();
-                    Iterator iterator = listbcq.iterator();
-                    while (iterator.hasNext()) {
-                        BatchConsumpQueue batchConsumpQueue = (BatchConsumpQueue) iterator.next();
+
+                    List<BatchConsumpQueue> listbcq = session.createCriteria(BatchConsumpQueue.class).add(Restrictions.eq("batchByTargetBatchId.batchId", targetBatchId)).list();
+                  for(BatchConsumpQueue bcq:listbcq){
+
                         GetLineageByInstanceExecInfo getLineageByInstanceExecInfo1 = new GetLineageByInstanceExecInfo();
                         getLineageByInstanceExecInfo1.setExecState(instanceExec.getExecStatus().getExecStateId());
                         getLineageByInstanceExecInfo1.setInstanceExecId(instanceExec.getInstanceExecId());
                         getLineageByInstanceExecInfo1.setProcessDesc(process.getDescription());
                         getLineageByInstanceExecInfo1.setProcessName(process.getProcessName());
                         getLineageByInstanceExecInfo1.setProcessId(process.getProcessId());
-                        getLineageByInstanceExecInfo1.setTargetBatchId(getLineageByInstanceExecInfo.getTargetBatchId());
-                        getLineageByInstanceExecInfo1.setSourceBatchId(batchConsumpQueue.getBatchBySourceBatchId().getBatchId());
-                        getLineageByInstanceExecInfo1.setStartTime(new java.sql.Timestamp(batch.getInstanceExec().getStartTs().getTime()));
-                        if (batch.getInstanceExec().getEndTs() != null)
-                            getLineageByInstanceExecInfo1.setEndTime(new java.sql.Timestamp(batch.getInstanceExec().getEndTs().getTime()));
+                        getLineageByInstanceExecInfo1.setTargetBatchId(targetBatchId);
+                        getLineageByInstanceExecInfo1.setSourceBatchId(bcq.getBatchBySourceBatchId().getBatchId());
+                        if(instanceExec.getStartTs()!=null)
+                        getLineageByInstanceExecInfo1.setStartTime(new java.sql.Timestamp(instanceExec.getStartTs().getTime()));
+                        if(instanceExec.getEndTs()!=null)
+                        getLineageByInstanceExecInfo1.setEndTime(new java.sql.Timestamp(instanceExec.getEndTs().getTime()));
                         outputlist.add(getLineageByInstanceExecInfo1);
                     }
 
 
-                    List<ArchiveConsumpQueue> listacq = session.createCriteria(ArchiveConsumpQueue.class).add(Restrictions.eq("batchByTargetBatchId", batch)).list();
-                    Iterator iterator2 = listacq.iterator();
-                    while (iterator2.hasNext()) {
-                        ArchiveConsumpQueue archiveConsumpQueue = (ArchiveConsumpQueue) iterator2.next();
+                    List<ArchiveConsumpQueue> listacq = session.createCriteria(ArchiveConsumpQueue.class).add(Restrictions.eq("batchByTargetBatchId.batchId",targetBatchId)).list();
+                    for(ArchiveConsumpQueue acq:listacq){
+
                         GetLineageByInstanceExecInfo getLineageByInstanceExecInfo1 = new GetLineageByInstanceExecInfo();
                         getLineageByInstanceExecInfo1.setExecState(instanceExec.getExecStatus().getExecStateId());
                         getLineageByInstanceExecInfo1.setInstanceExecId(instanceExec.getInstanceExecId());
                         getLineageByInstanceExecInfo1.setProcessDesc(process.getDescription());
                         getLineageByInstanceExecInfo1.setProcessName(process.getProcessName());
                         getLineageByInstanceExecInfo1.setProcessId(process.getProcessId());
-                        getLineageByInstanceExecInfo1.setTargetBatchId(getLineageByInstanceExecInfo.getTargetBatchId());
-                        getLineageByInstanceExecInfo1.setSourceBatchId(archiveConsumpQueue.getBatchBySourceBatchId().getBatchId());
-                        getLineageByInstanceExecInfo1.setStartTime(new java.sql.Timestamp(batch.getInstanceExec().getStartTs().getTime()));
-                        getLineageByInstanceExecInfo1.setEndTime(new java.sql.Timestamp(batch.getInstanceExec().getEndTs().getTime()));
+                        getLineageByInstanceExecInfo1.setTargetBatchId(targetBatchId);
+                        getLineageByInstanceExecInfo1.setSourceBatchId(acq.getBatchBySourceBatchId().getBatchId());
+                        if(instanceExec.getStartTs()!=null)
+                            getLineageByInstanceExecInfo1.setStartTime(new java.sql.Timestamp(instanceExec.getStartTs().getTime()));
+                        if(instanceExec.getEndTs()!=null)
+                            getLineageByInstanceExecInfo1.setEndTime(new java.sql.Timestamp(instanceExec.getEndTs().getTime()));
                         outputlist.add(getLineageByInstanceExecInfo1);
                     }
                 }
                 LOGGER.info("Total size of returnig beans is" + outputlist.size());
                 session.getTransaction().commit();
-            }
+            
         } catch (MetadataException e) {
             session.getTransaction().rollback();
             LOGGER.error(e);

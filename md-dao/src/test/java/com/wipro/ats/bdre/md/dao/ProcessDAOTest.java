@@ -116,7 +116,7 @@ public class ProcessDAOTest {
     @Test
     @Ignore
     public void testSelectProcessListWithExec() throws Exception {
-        List<ProcessInfo> processInfoList = processDAO.selectProcessListWithExec(2, 175l);
+        List<ProcessInfo> processInfoList = processDAO.selectProcessListWithExec(10802 ,196l);
         for (ProcessInfo processInfo : processInfoList) {
             LOGGER.info(processInfo + "\n");
         }

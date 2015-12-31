@@ -498,11 +498,12 @@ public class ProcessDAO {
             Criteria checkProcessIdWithIEId = session.createCriteria(InstanceExec.class).add(Restrictions.eq("instanceExecId", instanceExecId));
             InstanceExec instanceExec = (InstanceExec) checkProcessIdWithIEId.uniqueResult();
             Integer processIdWithIEId = null;
-            if (checkProcessIdWithIEId.list().size() != 0) {
+            if (instanceExec!=null) {
                 processIdWithIEId = instanceExec.getProcess().getProcessId();
                 LOGGER.info("processIdWithIEId:" + processIdWithIEId);
             }
-            if (processIdWithIEId == processId) {
+            if (processId.equals(processIdWithIEId)) {
+
                 vStartTs = instanceExec.getStartTs();
                 vEndTs = instanceExec.getEndTs();
 
@@ -546,7 +547,7 @@ public class ProcessDAO {
                         processInfo.setDeleteFlag(process.getDeleteFlag());
 
                         for (InstanceExec instanceExec1 : instanceExecList) {
-                            if (instanceExec1.getProcess().getProcessId() == process.getProcessId()) {
+                            if (process.getProcessId().equals(instanceExec1.getProcess().getProcessId())){
 
                                 processInfo.setInstanceExecId(instanceExec1.getInstanceExecId());
                                 processInfo.setStartTs(instanceExec1.getStartTs());
