@@ -18,9 +18,15 @@ This document will help you build BDRE from source. Audience for this document a
 * Download and install VirtualBox from https://www.virtualbox.org/
 * Download and install HortonWorks Sandbox 2.2 Virtual Box image from http://hortonworks.com/products/releases/hdp-2-2/#install 
 * Setup a 'Host-Only Adapter' for network to enable communication between Host and Guest OS.
-* Now ssh into the sandbox using root@VM_IP (password hadoop)
+* Now ssh into the sandbox using *root@VM_IP* (password hadoop)
     - The VM_IP is usually something between 192.168.56.101 - 192.168.56.109 
-    
+* Start Oozie as the Oozie user and check if Oozie has started.
+
+    ```shell
+    su - oozie -c "cd /grid/0/var/log/oozie; /usr/hdp/current/oozie/oozie-server/bin/catalina.sh /usr/hdp/current/oozie/oozie-server/bin/setclasspath.sh /usr/hdp/current/oozie-server/bin/oozied.sh start"
+    ps -ef | grep -i oozie
+    ```
+* Now create *openbdre* user account.
     ```shell
     [root@sandbox ~]# adduser -m -s /bin/bash openbdre
     [root@sandbox ~]# passwd openbdre
@@ -59,24 +65,32 @@ This document will help you build BDRE from source. Audience for this document a
 ## Building BDRE from source
 
 1. Obtain the source code
-    * Login to the HDP Sandbox with the newly created openbdre user. You can perform a `su openbdre` to switch to this account.
-    * cd to the home directory of openbdre ```cd ~```
+    * Login to the HDP Sandbox with the newly created openbdre user. You can perform a **su openbdre** to switch to this account.
+    ```
+    su openbdre
+    ```
+    * cd to the home directory of openbdre.
+    ```
+    cd ~
+    ```
     * Pull BDRE source from this git repository. To find out your repository link navigate to the repository in this website and copy the https repo URL.
-
-    ```git clone https://gitlab.com/bdre/openbdre.git```
+    ```
+    git clone https://gitlab.com/bdre/openbdre.git
+    ```
     If you want to be a non-annonymous user then change the URL format to https://GIT_USER:GIT_PASSWORD@gitlab.com/bdre/openbdre.git
-    * cd to the cloned source dir
+    * cd to the cloned source dir (so you can be in /home/openbdre/openbdre)
+    ```
+    cd openbdre
+    ```
     
-    ```cd openbdre```
-    
-
 2. Database Setup 
-    * Execute the dbsetup.sh script without any parameters as shown below. In this example, we are going to use MySQL as BDRE backend as it's already available in the QuickStart VM. If you would like to use another database please select it accordingly.
-    
-    ```sh dbsetup.sh```
+    * Execute the dbsetup.sh script without any parameters as shown below. In this example, we are going to use MySQL as BDRE backend as it's already available in the HDP Sandbox. If you would like to use another database please select it accordingly.
+    ```
+    sh dbsetup.sh
+    ```
     
     ```shell
-    $ sh dbsetup.sh
+    [openbdre@sandbox openbdre]$ sh dbsetup.sh⏎
     Supported DB
     1) Embedded (Default - Good for running BDRE user interface only. )
     2) Oracle
@@ -97,22 +111,22 @@ This document will help you build BDRE from source. Audience for this document a
     JDBC Driver Class: com.mysql.jdbc.Driver
     JDBC Connection URL: jdbc:mysql://localhost:3306/bdre
     Database Username: root
-    Database Password: 
+    Database Password:
     Hibernate Dialect: org.hibernate.dialect.MySQLDialect
     Database Schema: bdre
-    Are those correct? (type y or n - default y): y⏎
+    Are those correct? (type y or n - default y):y⏎
     Database configuration written to ./md-dao/src/main/resources/db.properties
     Will create DB and tables
-    Tables successfully created in MySQL bdre database.
+    Tables created successfully in MySQL bdre DB
     ```
     
 3. Building
     * Now build BDRE using (note BDRE may not compile if the **settings.xml** is not passed from the commandline so be sure to use the *-s* option. When building for the first time, it might take a while as maven resolves and downloads the jar libraries from diffrent repositories.
     
-    ```mvn -s settings.xml clean install -P hdp```
+    ```mvn -s settings.xml clean install -P hdp22```
     
     ```shell
-    $ mvn -s settings.xml clean install -P hdp
+    $ mvn -s settings.xml clean install -P hdp22
     [INFO] Scanning for projects...
     [INFO] ------------------------------------------------------------------------
     [INFO] Reactor Build Order:
