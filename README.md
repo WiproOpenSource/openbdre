@@ -4,13 +4,13 @@ Released under Apache Public License 2.0. You can get a copy for the license at 
 
 ## Overview
 
-This document will help you build BDRE from source. Audience for this document are developers and architects who want be part of BDRE framework development or may just want to test it by running the UI. Install Git, Maven and Oracle JDK 7(and up) if you haven't already. In Windows be sure to add git and other bash tools in the commandline path during installation. In this example, we are going to use *Cloudera Quickstart VM* with *VirtualBox* software because all the required software are already installed and configured. BDRE is shipped with an embedded database which is okay for running the UI and evaluating and testing jobs in a single node cluster. For production use BDRE currently supports following production scale databases.
+This document will help you build BDRE from source. Audience for this document are developers and architects who want be part of BDRE framework development or may just want to test it by running the UI. Install Git, Maven and Oracle JDK 7(and up) if you haven't already. In Windows be sure to add git and other bash tools in the commandline path during installation. In this example, we are going to use *HortonWorks Sandbox* with *VirtualBox* software because all the required software are mostly installed and configured. BDRE is shipped with an embedded database which is okay for running the UI and evaluating and testing jobs in a single node cluster. For production use BDRE currently supports following production scale databases.
 
   - MySQL Server
   - Oracle 11g Server
   - PostgreSql
 
- In this guide we are going to show you how to build and install BDRE in a Cloudera QuickStart Hadoop VM which is Linux based with a MySQL database. You should be able to do the same in Mac or Windows but note that setting up a Hadoop cluster might be tricky in Windows and might more involvement. You should be able to launch the BDRE user interface in Windows and design various jobs. However to deploy and run the jobs we recommend a Linux system with Hadoop installed. BDRE is typically installed in Hadoop edge node in a multi-node cluster.
+ In this guide we are going to show you how to build and install BDRE in a CentOS VM with a MySQL database. You should be able to do the same in Mac or Windows but note that setting up a Hadoop cluster might be tricky in Windows and might more involvement. You should be able to launch the BDRE user interface in Windows and design various jobs. However to deploy and run the jobs we recommend a Linux system with Hadoop installed. BDRE is typically installed in Hadoop edge node in a multi-node cluster.
 
 
 ## Preparation
@@ -37,10 +37,11 @@ This document will help you build BDRE from source. Audience for this document a
 
     ```openbdre ALL=(ALL) NOPASSWD:ALL```
 
-    It's also quite easy to run BDRE for CDH Sandbox. You can download Cloudera Quickstart VM and build BDRE after enabling the CDH profile in settings.xml (included with BDRE source code). 
+    It's also quite easy to run BDRE for CDH VM. You can download Cloudera Quickstart VM and build BDRE after enabling the CDH profile in settings.xml (included with BDRE source code). 
 * Edit /etc/hosts file and add a mapping for openbdre.org and <VM_PRIVATE_IP>. The IP should be the same one sandbox.hortonworks.com is mapped to.
     - It should look like below
-    ```
+    
+    ```shell
     # File is generated from /usr/lib/hue/tools/start_scripts/gen_hosts.sh
     # Do not remove the following line, or various programs
     # that require network functionality will fail.
@@ -82,10 +83,10 @@ This document will help you build BDRE from source. Audience for this document a
     3) MySQL
     4) PostgreSQL
     
-    Select Database Type(Enter 1, 2, 3 , 4 or leave empty and press empty to select the default DB):3
+    Select Database Type(Enter 1, 2, 3 , 4 or leave empty and press empty to select the default DB):3⏎
     
     Enter DB username (Type username or leave it blank for default 'root'):⏎
-    Enter DB password (Type password or leave it blank for default 'cloudera'):⏎
+    Enter DB password (Type password or leave it blank for default '<blank>'):⏎
     Enter DB hostname (Type db hostname or leave it blank for default 'localhost'):⏎
     Enter DB port (Type db port or leave it blank for default '3306'):⏎
     Enter DB name (Type db name or leave it blank for default 'bdre'):⏎
@@ -96,7 +97,7 @@ This document will help you build BDRE from source. Audience for this document a
     JDBC Driver Class: com.mysql.jdbc.Driver
     JDBC Connection URL: jdbc:mysql://localhost:3306/bdre
     Database Username: root
-    Database Password: cloudera
+    Database Password: 
     Hibernate Dialect: org.hibernate.dialect.MySQLDialect
     Database Schema: bdre
     Are those correct? (type y or n - default y): y⏎
@@ -108,10 +109,10 @@ This document will help you build BDRE from source. Audience for this document a
 3. Building
     * Now build BDRE using (note BDRE may not compile if the **settings.xml** is not passed from the commandline so be sure to use the *-s* option. When building for the first time, it might take a while as maven resolves and downloads the jar libraries from diffrent repositories.
     
-    ```mvn -s settings.xml clean install```
+    ```mvn -s settings.xml clean install -P hdp```
     
     ```shell
-    $ mvn -s settings.xml clean install
+    $ mvn -s settings.xml clean install -P hdp
     [INFO] Scanning for projects...
     [INFO] ------------------------------------------------------------------------
     [INFO] Reactor Build Order:
@@ -131,7 +132,7 @@ This document will help you build BDRE from source. Audience for this document a
     
     ```sh install-scripts.sh local```
     
-    * It'll install the BDRE scripts and artifacts in <user home>/bdre (/home/cloudera/bdre in this example)
+    * It'll install the BDRE scripts and artifacts in /home/openbdre/bdre
 
 ### Using BDRE
 
