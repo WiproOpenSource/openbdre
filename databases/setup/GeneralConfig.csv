@@ -83,7 +83,7 @@
 'Sink_Type','org.apache.flume.sink.kite.DatasetSink','Dataset Sink','Experimental sink that writes events to a Kite Dataset. This sink will deserialize the body of each incoming event and store the resulting record in a Kite Dataset. It determines target Dataset by loading a dataset by URI', 0,'org.apache.flume.sink.kite.DatasetSink','text', 1
 'Sink_Type','org.apache.flume.sink.kafka.KafkaSink','Kafka Sink','This is a Flume Sink implementation that can publish data to a Kafka topic', 0,'org.apache.flume.sink.kafka.KafkaSink','text', 1
 'Sink_Type','FQCN','FQCN','A custom sink is your own implementation of the Sink interface. A custom sink’s class and its dependencies must be included in the agent’s classpath when starting the Flume agent.', 0,'FQCN','text', 1
-'com.wipro.ats.bdre.flume.sink.hdfs.BDREHDFSEventSink_Sink','hdfs.path','HDFS Path','Path is HDFS where you want to put files',1,'/user/openbdre/mytable/datehour=%H','text', 1
+'com.wipro.ats.bdre.flume.sink.hdfs.BDREHDFSEventSink_Sink','hdfs.path','HDFS Path','Path is HDFS where you want to put files',1,'hdfs://openbdre.org:8020/user/openbdre/mytable/datehour=%H','text', 1
 'com.wipro.ats.bdre.flume.sink.hdfs.BDREHDFSEventSink_Sink','hdfs.filePrefix','File Prefix','Name prefixed to files created by Flume in hdfs directory', 0,'IngestedData','text', 1
 'com.wipro.ats.bdre.flume.sink.hdfs.BDREHDFSEventSink_Sink','hdfs.fileSuffix','File Suffix','Name suffixed to files created by Flume in hdfs directory', 0,'%H%M%S','text', 1
 'com.wipro.ats.bdre.flume.sink.hdfs.BDREHDFSEventSink_Sink','hdfs.inUsePrefix','In Use Prefix','Prefix that is used for temporal files that flume actively writes into', 0,null,'text', 1
@@ -492,11 +492,11 @@
 'imconfig', 'file-mon.serverIds', 'Server IDs','Server IDs', 1, '100,200', 'text', 1
 'imconfig', 'dq.drools-url-prefix', 'URL prefix for drools','URL prefix for drools', 1, 'http://openbdre.org:8080/guvnor56/rest/packages/', 'text', 1
 'imconfig', 'data-import.hadoop-home', 'Hadoop home directory for exporting','Hadoop home directory for exporting', 1, '/usr/lib/hadoop', 'text', 1
-'imconfig', 'data-import.target-dir', 'Target direcotry to store imported data','Target direcotry to store imported data', 1, '/user/openbdre/import', 'text', 1
+'imconfig', 'data-import.target-dir', 'Target direcotry to store imported data','Target direcotry to store imported data', 1, 'hdfs://openbdre.org:8020/user/openbdre/import', 'text', 1
 'imconfig', 'data-import.jar-output-dir', 'Jar output directory for importing','Jar output directory for importing', 1, '/tmp/bdre/sqoop/jar-output', 'text', 1
 'imconfig', 'mq-import.file-size-units', 'File sizes unit','File sizes unit', 1, 'KB', 'text', 1
 'imconfig', 'mq-import.rotation-file-size', 'Rotation file size','Rotation file size', 1, '10', 'text', 1
-'imconfig', 'mq-import.target-directory', 'Directory to import MQ file','Directory to import MQ file', 1, '/user/openbdre/mq-import', 'text', 1
+'imconfig', 'mq-import.target-directory', 'Directory to import MQ file','Directory to import MQ file', 1, 'hdfs://openbdre.org:8020/user/openbdre/mq-import', 'text', 1
 'imconfig', 'data-export.hadoop-home', 'Hadoop home directory for exporting','Hadoop home directory for exporting', 1, '/usr/lib/hadoop', 'text', 1
 'imconfig', 'data-export.jar-output-dir', 'Jar output directory for exporting','Jar output directory for exporting', 1, '/tmp/bdre/sqoop/jar-output', 'text', 1
 'imconfig', 'eventing.metadata-broker-list', 'Metadata Brokers URL','Metadata Brokers URL', 1, 'localhost://:9092', 'text', 1
@@ -519,7 +519,8 @@
 'scripts_config', 'nameNodeHostName', '-','-' , 1, 'openbdre.org', 'text' , 1
 'scripts_config', 'nameNodePort', '-','-' , 1, '8020', 'text' , 1
 'scripts_config', 'jobTrackerHostName', '-','-' , 1, 'openbdre.org', 'text' , 1
-'scripts_config', 'jobTrackerPort', '-','-' , 1, '8032', 'text' , 1
+#For cloudera this is 8032
+'scripts_config', 'jobTrackerPort', '-','-' , 1, '8050', 'text' , 1
 'scripts_config', 'hiveConfDir', '-','-' , 1, 'conf', 'text' , 1
 'scripts_config', 'flumeLibDir', '-','-' , 1, '/usr/lib/flume-ng', 'text' , 1
 'scripts_config', 'remoteUserName', '-','-' , 1, 'ec2-user', 'text' , 1
