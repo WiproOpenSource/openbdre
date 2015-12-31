@@ -35,3 +35,4 @@ glassfish-web.xml
 /md-ui/src/main/webapp/css/handsontable.full.css
 .derbydb
 /md-dao/src/main/resources/db.properties
+spark-core/dependency-reduced-pom.xml

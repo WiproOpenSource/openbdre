@@ -120,6 +120,7 @@
                     <mainClass>com.wipro.ats.bdre.md.setup.SetupDB</mainClass>
                     <arguments>
                         <argument>${project.basedir}/..</argument>
+                        <argument>${selected.profile}</argument>
                     </arguments>
                 </configuration>
             </plugin>
