@@ -9,4 +9,4 @@ fi
 processId=$1
 echo $0
 #creating flume command for
-java -cp "$BDRE_APPS_HOME/lib/file-mon/*" com.wipro.ats.bdre.filemon.FileMonRunnableMain -p $processId
+java -cp "$BDRE_HOME/lib/file-mon/*" com.wipro.ats.bdre.filemon.FileMonRunnableMain -p $processId
