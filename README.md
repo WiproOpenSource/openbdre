@@ -76,7 +76,7 @@ This document will help you build BDRE from source. Audience for this document a
     ```sh dbsetup.sh```
     
     ```shell
-    $ sh dbsetup.sh
+    [openbdre@sandbox openbdre]$ sh dbsetup.sh⏎
     Supported DB
     1) Embedded (Default - Good for running BDRE user interface only. )
     2) Oracle
@@ -97,13 +97,13 @@ This document will help you build BDRE from source. Audience for this document a
     JDBC Driver Class: com.mysql.jdbc.Driver
     JDBC Connection URL: jdbc:mysql://localhost:3306/bdre
     Database Username: root
-    Database Password: 
+    Database Password:
     Hibernate Dialect: org.hibernate.dialect.MySQLDialect
     Database Schema: bdre
-    Are those correct? (type y or n - default y): y⏎
+    Are those correct? (type y or n - default y):y⏎
     Database configuration written to ./md-dao/src/main/resources/db.properties
     Will create DB and tables
-    Tables successfully created in MySQL bdre database.
+    Tables created successfully in MySQL bdre DB
     ```
     
 3. Building
