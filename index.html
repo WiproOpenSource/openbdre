@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html lang="en-us">
+  <head>
+    <meta charset="UTF-8">
+    <title>Bigdata Ready Enterprise by WiproOpenSourcePractice</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" type="text/css" href="stylesheets/normalize.css" media="screen">
+    <link href='https://fonts.googleapis.com/css?family=Open+Sans:400,700' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" type="text/css" href="stylesheets/stylesheet.css" media="screen">
+    <link rel="stylesheet" type="text/css" href="stylesheets/github-light.css" media="screen">
+  </head>
+  <body>
+    <section class="page-header">
+      <h1 class="project-name">Bigdata Ready Enterprise</h1>
+      <h2 class="project-tagline">BDRE, Wipro, OpenBdre, Apache Public License, Hadoop, Spark, Sqoop, Flume, Metadata Managent</h2>
+      <a href="https://github.com/WiproOpenSourcePractice/openbdre" class="btn">View on GitHub</a>
+      <a href="https://github.com/WiproOpenSourcePractice/openbdre/zipball/master" class="btn">Download .zip</a>
+      <a href="https://github.com/WiproOpenSourcePractice/openbdre/tarball/master" class="btn">Download .tar.gz</a>
+    </section>
+
+    <section class="main-content">
+      <h1>
+<a id="bigdata-ready-enterpise-open-source-software" class="anchor" href="#bigdata-ready-enterpise-open-source-software" aria-hidden="true"><span class="octicon octicon-link"></span></a>Bigdata Ready Enterpise Open Source Software</h1>
+
+<p>Released under Apache Public License 2.0. You can get a copy for the license at <a href="http://www.apache.org/licenses/LICENSE-2.0">http://www.apache.org/licenses/LICENSE-2.0</a>.</p>
+
+<h2>
+<a id="overview" class="anchor" href="#overview" aria-hidden="true"><span class="octicon octicon-link"></span></a>Overview</h2>
+
+<p>This document will help you build BDRE from source. Audience for this document are developers and architects who want be part of BDRE framework development or may just want to test it by running the UI. Install Git, Maven and Oracle JDK 7(and up) if you haven't already. In Windows be sure to add git and other bash tools in the commandline path during installation. In this example, we are going to use <em>HortonWorks Sandbox</em> with <em>VirtualBox</em> software because all the required software are mostly installed and configured. BDRE is shipped with an embedded database which is okay for running the UI and evaluating and testing jobs in a single node cluster. For production use BDRE currently supports following production scale databases.</p>
+
+<ul>
+<li>MySQL Server</li>
+<li>Oracle 11g Server</li>
+<li>
+<p>PostgreSql</p>
+
+<p>In this guide we are going to show you how to build and install BDRE in a CentOS VM with a MySQL database. You should be able to do the same in Mac or Windows but note that setting up a Hadoop cluster might be tricky in Windows and might more involvement. You should be able to launch the BDRE user interface in Windows and design various jobs. However to deploy and run the jobs we recommend a Linux system with Hadoop installed. BDRE is typically installed in Hadoop edge node in a multi-node cluster.</p>
+</li>
+</ul>
+
+<h2>
+<a id="preparation" class="anchor" href="#preparation" aria-hidden="true"><span class="octicon octicon-link"></span></a>Preparation</h2>
+
+<ul>
+<li>Download and install VirtualBox from <a href="https://www.virtualbox.org/">https://www.virtualbox.org/</a>
+</li>
+<li>Download and install HortonWorks Sandbox 2.2 Virtual Box image from <a href="http://hortonworks.com/products/releases/hdp-2-2/#install">http://hortonworks.com/products/releases/hdp-2-2/#install</a> </li>
+<li>Setup a 'Host-Only Adapter' for network to enable communication between Host and Guest OS.</li>
+<li>Now ssh into the sandbox using <em>root@VM_IP</em> (password hadoop)
+
+<ul>
+<li>The VM_IP is usually something between 192.168.56.101 - 192.168.56.109 </li>
+</ul>
+</li>
+<li>
+<p>Start Oozie as the Oozie user and check if Oozie has started.</p>
+
+<div class="highlight highlight-source-shell"><pre>su - oozie -c <span class="pl-s"><span class="pl-pds">"</span>cd /grid/0/var/log/oozie; /usr/hdp/current/oozie/oozie-server/bin/catalina.sh /usr/hdp/current/oozie/oozie-server/bin/setclasspath.sh /usr/hdp/current/oozie-server/bin/oozied.sh start<span class="pl-pds">"</span></span>
+ps -ef <span class="pl-k">|</span> grep -i oozie</pre></div>
+</li>
+<li>Now create <em>openbdre</em> user account.
+<code>shell
+[root@sandbox ~]# adduser -m -s /bin/bash openbdre
+[root@sandbox ~]# passwd openbdre
+Changing password for user openbdre.
+New password:
+Retype new password:
+passwd: all authentication tokens updated successfully.
+[root@sandbox ~]#
+[root@sandbox ~]# su openbdre
+[openbdre@sandbox root]$ cd
+[openbdre@sandbox ~]$
+</code>
+</li>
+<li>
+<p>Edit /etc/sudoers and append following line at the bottom. It's a readonly file so you need to save it with <code>wq!</code> in vi. This will allow openbdre to perform <code>sudo</code>.</p>
+
+<p><code>openbdre ALL=(ALL) NOPASSWD:ALL</code></p>
+
+<p>It's also quite easy to run BDRE for CDH VM. You can download Cloudera Quickstart VM and build BDRE after enabling the CDH profile in settings.xml (included with BDRE source code). </p>
+</li>
+<li>
+<p>Edit /etc/hosts file and add a mapping for openbdre.org and . The IP should be the same one sandbox.hortonworks.com is mapped to.</p>
+
+<ul>
+<li>It should look like below</li>
+</ul>
+
+<div class="highlight highlight-source-shell"><pre><span class="pl-c"># File is generated from /usr/lib/hue/tools/start_scripts/gen_hosts.sh</span>
+<span class="pl-c"># Do not remove the following line, or various programs</span>
+<span class="pl-c"># that require network functionality will fail.</span>
+127.0.0.1               localhost.localdomain localhost
+10.0.2.15       sandbox.hortonworks.com sandbox ambari.hortonworks.com
+10.0.2.15       openbdre.org</pre></div>
+</li>
+<li>Download Maven from a mirror and unpack
+<code>
+wget http://www.us.apache.org/dist/maven/maven-3/3.3.9/binaries/apache-maven-3.3.9-bin.zip
+unzip apache-maven-3.3.9-bin.zip
+export PATH=$PATH:/home/openbdre/apache-maven-3.3.9/bin
+</code>
+</li>
+</ul>
+
+<h2>
+<a id="building-bdre-from-source" class="anchor" href="#building-bdre-from-source" aria-hidden="true"><span class="octicon octicon-link"></span></a>Building BDRE from source</h2>
+
+<ol>
+<li>
+<p>Obtain the source code</p>
+
+<ul>
+<li>Login to the HDP Sandbox with the newly created openbdre user. You can perform a <strong>su openbdre</strong> to switch to this account.</li>
+</ul>
+
+<pre><code>su openbdre
+</code></pre>
+
+<ul>
+<li>cd to the home directory of openbdre.</li>
+</ul>
+
+<pre><code>cd ~
+</code></pre>
+
+<ul>
+<li>Pull BDRE source from this git repository. To find out your repository link navigate to the repository in this website and copy the https repo URL.</li>
+</ul>
+
+<pre><code>git clone https://gitlab.com/bdre/openbdre.git
+</code></pre>
+
+<p>If you want to be a non-annonymous user then change the URL format to https://GIT_USER:<a href="mailto:GIT_PASSWORD@gitlab.com">GIT_PASSWORD@gitlab.com</a>/bdre/openbdre.git</p>
+
+<ul>
+<li>cd to the cloned source dir (so you can be in /home/openbdre/openbdre)</li>
+</ul>
+
+<pre><code>cd openbdre
+</code></pre>
+</li>
+<li>
+<p>Database Setup </p>
+
+<ul>
+<li>Execute the dbsetup.sh script without any parameters as shown below. In this example, we are going to use MySQL as BDRE backend as it's already available in the HDP Sandbox. If you would like to use another database please select it accordingly.</li>
+</ul>
+
+<pre><code>sh dbsetup.sh
+</code></pre>
+
+<div class="highlight highlight-source-shell"><pre>[openbdre@sandbox openbdre]$ sh dbsetup.sh⏎
+Supported DB
+1) Embedded (Default - Good <span class="pl-k">for</span> running BDRE user interface only. )
+2) Oracle
+3) MySQL
+4) PostgreSQL
+
+Select Database Type(Enter 1, 2, 3 , 4 or leave empty and press empty to <span class="pl-k">select</span> <span class="pl-smi">the</span> default DB):3⏎
+
+Enter DB username (Type username or leave it blank <span class="pl-k">for</span> default <span class="pl-s"><span class="pl-pds">'</span>root<span class="pl-pds">'</span></span>):⏎
+Enter DB password (Type password or leave it blank <span class="pl-k">for</span> default <span class="pl-s"><span class="pl-pds">'</span>&lt;blank&gt;<span class="pl-pds">'</span></span>):⏎
+Enter DB hostname (Type db hostname or leave it blank <span class="pl-k">for</span> default <span class="pl-s"><span class="pl-pds">'</span>localhost<span class="pl-pds">'</span></span>):⏎
+Enter DB port (Type db port or leave it blank <span class="pl-k">for</span> default <span class="pl-s"><span class="pl-pds">'</span>3306<span class="pl-pds">'</span></span>):⏎
+Enter DB name (Type db name or leave it blank <span class="pl-k">for</span> default <span class="pl-s"><span class="pl-pds">'</span>bdre<span class="pl-pds">'</span></span>):⏎
+Enter DB schema (Type schema or leave it blank <span class="pl-k">for</span> default <span class="pl-s"><span class="pl-pds">'</span>bdre<span class="pl-pds">'</span></span>):⏎
+Please confirm:
+
+Database Type: mysql
+JDBC Driver Class: com.mysql.jdbc.Driver
+JDBC Connection URL: jdbc:mysql://localhost:3306/bdre
+Database Username: root
+Database Password:
+Hibernate Dialect: org.hibernate.dialect.MySQLDialect
+Database Schema: bdre
+Are those correct<span class="pl-k">?</span> (<span class="pl-c1">type</span> y or n - default y):y⏎
+Database configuration written to ./md-dao/src/main/resources/db.properties
+Will create DB and tables
+Tables created successfully <span class="pl-k">in</span> MySQL bdre DB</pre></div>
+</li>
+<li>
+<p>Building</p>
+
+<ul>
+<li>Now build BDRE using (note BDRE may not compile if the <strong>settings.xml</strong> is not passed from the commandline so be sure to use the <em>-s</em> option. When building for the first time, it might take a while as maven resolves and downloads the jar libraries from diffrent repositories.</li>
+</ul>
+
+<p><code>mvn -s settings.xml clean install -P hdp22</code></p>
+
+<div class="highlight highlight-source-shell"><pre>$ mvn -s settings.xml clean install -P hdp22
+[INFO] Scanning <span class="pl-k">for</span> projects...
+[INFO] ------------------------------------------------------------------------
+[INFO] Reactor Build Order:
+    .......blah blah.........
+    .......blah blah.........
+[INFO] ------------------------------------------------------------------------
+[INFO] BUILD SUCCESS
+[INFO] ------------------------------------------------------------------------
+[INFO] Total <span class="pl-k">time</span>: 3:39.479s
+[INFO] Finished at: Wed Dec 30 01:50:02 PST 2015
+[INFO] Final Memory: 127M/2296M
+[INFO] ------------------------------------------------------------------------</pre></div>
+</li>
+<li>
+<p>Installing BDRE</p>
+
+<ul>
+<li>After building BDRE successfully run </li>
+</ul>
+
+<p><code>sh install-scripts.sh local</code></p>
+
+<ul>
+<li>It'll install the BDRE scripts and artifacts in /home/openbdre/bdre</li>
+</ul>
+</li>
+</ol>
+
+<h3>
+<a id="using-bdre" class="anchor" href="#using-bdre" aria-hidden="true"><span class="octicon octicon-link"></span></a>Using BDRE</h3>
+
+<ul>
+<li>After a successful build, cd into md-rest-api folder and start the BDRE UI using </li>
+</ul>
+
+<p><code>shell sh ./quick-run.sh</code></p>
+
+<ul>
+<li>Use <em>Google Chrome browser</em> from the host machine and open <em>http://VM_IP:288503/mdui/pages/content.page</em>
+</li>
+<li>Login using admin/zaq1xsw2</li>
+</ul>
+
+<h3>
+<a id="creating-deploying-and-running-a-test-job" class="anchor" href="#creating-deploying-and-running-a-test-job" aria-hidden="true"><span class="octicon octicon-link"></span></a>Creating, Deploying and Running a Test Job</h3>
+
+<ul>
+<li>Create a RDBMS data import job from <em>Job Setup From Template &gt; Import from RDBMS</em>
+</li>
+<li>Change the JDBC URL/credentials to your local MySQL retail_db DB that contains some sample retail data metadata.</li>
+<li>Click <em>Test Connection</em>
+</li>
+<li>Expand and select 1 table (be sure to expand the tables before selecting).</li>
+<li>Create the jobs and see the pipeline.</li>
+<li>Click <em>XML</em> , <em>Diagram</em> etc and check the generated Oozie workflow XML and diagram.</li>
+<li>Search for 'Process' in the search window and open the 'Process' page</li>
+<li>Click deploy button on process page corresponding to the process you want to deploy. ( Deploy button will show status regarding deployment of process, when you hover over the button.)</li>
+<li>Wait for 2 minutes and the deployment will be completed by then.</li>
+<li>After the deployment is complete and in UI the status for the process is deployed (turns green).</li>
+<li>Click the execution button to execute the workflow.</li>
+<li>Check the process in Oozie console <em>http://VM_IP:11000/oozie</em>
+</li>
+</ul>
+
+      <footer class="site-footer">
+        <span class="site-footer-owner"><a href="https://github.com/WiproOpenSourcePractice/openbdre">Bigdata Ready Enterprise</a> is maintained by <a href="https://github.com/WiproOpenSourcePractice">WiproOpenSourcePractice</a>.</span>
+
+        <span class="site-footer-credits">This page was generated by <a href="https://pages.github.com">GitHub Pages</a> using the <a href="https://github.com/jasonlong/cayman-theme">Cayman theme</a> by <a href="https://twitter.com/jasonlong">Jason Long</a>.</span>
+      </footer>
+
+    </section>
+
+  
+  </body>
+</html>
