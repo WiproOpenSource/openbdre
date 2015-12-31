@@ -83,7 +83,7 @@
 'Sink_Type','org.apache.flume.sink.kite.DatasetSink','Dataset Sink','Experimental sink that writes events to a Kite Dataset. This sink will deserialize the body of each incoming event and store the resulting record in a Kite Dataset. It determines target Dataset by loading a dataset by URI', 0,'org.apache.flume.sink.kite.DatasetSink','text', 1
 'Sink_Type','org.apache.flume.sink.kafka.KafkaSink','Kafka Sink','This is a Flume Sink implementation that can publish data to a Kafka topic', 0,'org.apache.flume.sink.kafka.KafkaSink','text', 1
 'Sink_Type','FQCN','FQCN','A custom sink is your own implementation of the Sink interface. A custom sink’s class and its dependencies must be included in the agent’s classpath when starting the Flume agent.', 0,'FQCN','text', 1
-'com.wipro.ats.bdre.flume.sink.hdfs.BDREHDFSEventSink_Sink','hdfs.path','HDFS Path','Path is HDFS where you want to put files',1,'/user/cloudera/mytable/datehour=%H','text', 1
+'com.wipro.ats.bdre.flume.sink.hdfs.BDREHDFSEventSink_Sink','hdfs.path','HDFS Path','Path is HDFS where you want to put files',1,'/user/openbdre/mytable/datehour=%H','text', 1
 'com.wipro.ats.bdre.flume.sink.hdfs.BDREHDFSEventSink_Sink','hdfs.filePrefix','File Prefix','Name prefixed to files created by Flume in hdfs directory', 0,'IngestedData','text', 1
 'com.wipro.ats.bdre.flume.sink.hdfs.BDREHDFSEventSink_Sink','hdfs.fileSuffix','File Suffix','Name suffixed to files created by Flume in hdfs directory', 0,'%H%M%S','text', 1
 'com.wipro.ats.bdre.flume.sink.hdfs.BDREHDFSEventSink_Sink','hdfs.inUsePrefix','In Use Prefix','Prefix that is used for temporal files that flume actively writes into', 0,null,'text', 1
@@ -112,7 +112,7 @@
 'com.wipro.ats.bdre.flume.sink.hdfs.BDREHDFSEventSink_Sink','hdfs.closeTries','Close Tries','Number of times the sink must try renaming a file, after initiating a close attempt. If set to 1, this sink will not re-try a failed rename (due to, for example, NameNode or DataNode failure), and may leave the file in an open state with a .tmp extension. If set to 0, the sink will try to rename the file until the file is eventually renamed (there is no limit on the number of times it would try). The file may still remain open if the close call fails but the data will be intact and in this case, the file will be closed only after a Flume restart.', 0,'0','text', 1
 'com.wipro.ats.bdre.flume.sink.hdfs.BDREHDFSEventSink_Sink','hdfs.retryInterval','Retry Interval','Time in seconds between consecutive attempts to close a file. Each close call costs multiple RPC round-trips to the Namenode, so setting this too low can cause a lot of load on the name node. If set to 0 or less, the sink will not attempt to close the file if the first attempt fails, and may leave the file open or with a ”.tmp” extension.', 0,'180','text', 1
 'com.wipro.ats.bdre.flume.sink.hdfs.BDREHDFSEventSink_Sink','serializer','Serializer','Other possible options include avro_event or the fully-qualified class name of an implementation of the EventSerializer.Builder interface.', 0,'TEXT','text', 1
-'hive_Sink','hive.metastore','Hive MetaStore','Hive metastore URI ',1,'thrift://localhost:9083 ','text', 1
+'hive_Sink','hive.metastore','Hive MetaStore','Hive metastore URI ',1,'thrift://openbdre.org:9083 ','text', 1
 'hive_Sink','hive.database','Hive Database','Hive Database name',1,'base','text', 1
 'hive_Sink','hive.table','Hive Table','Hive Table name',1,'ingested_data','text', 1
 'hive_Sink','hive.partition','Hive Partition','Comma separate list of partition VALUES identifying the partition to write to', 0,null,'text', 1
@@ -170,7 +170,7 @@
 'irc_Sink','name','Name',' ', 0,null,'text', 1
 'irc_Sink','splitlines','Split Lines','(boolean)', 0,null,'text', 1
 'irc_Sink','splitchars','Split Chars','line separator (if you were to enter the default value into the config file, then you would need to escape the backslash, like this: “\n”)', 0,'n','text', 1
-'file_roll_Sink','sink.directory','Sink Directory','The directory where files will be stored', 1,'/home/cloudera/file_roll','text', 1
+'file_roll_Sink','sink.directory','Sink Directory','The directory where files will be stored', 1,'/home/openbdre/file_roll','text', 1
 'file_roll_Sink','sink.rollInterval','Sink Rollinterval','Roll the file every 30 seconds. Specifying 0 will disable rolling and cause all events to be written to a single file.', 0,'30','text', 1
 'file_roll_Sink','sink.serializer','Sink Serializer','Other possible options include avro_event or the FQCN of an implementation of EventSerializer.Builder interface.', 0,'TEXT','text', 1
 'file_roll_Sink','batchSize','Batch Size','Batch Size when file will close', 0,'100','text', 1
@@ -209,7 +209,7 @@
 'org.apache.flume.sink.elasticsearch.ElasticSearchSink_Sink','ttl','Ttl','TTL in days, when set will cause the expired documents to be deleted automatically, if not set documents will never be automatically deleted. TTL is accepted both in the earlier form of integer only e.g. a1.sinks.k1.ttl = 5 and also with a qualifier ms (millisecond), s (second), m (minute), h (hour), d (day) and w (week). Example a1.sinks.k1.ttl = 5d will set TTL to 5 days. Follow http://www.elasticsearch.org/guide/reference/mapping/ttl-field/ for more information.', 0,null,'text', 1
 'org.apache.flume.sink.elasticsearch.ElasticSearchSink_Sink','serializer','Serializer','The ElasticSearchIndexRequestBuilderFactory or ElasticSearchEventSerializer to use. Implementations of either class are accepted but ElasticSearchIndexRequestBuilderFactory is preferred.', 0,'org.apache.flume.sink.elasticsearch.ElasticSearchLogStashEventSerializer','text', 1
 'org.apache.flume.sink.elasticsearch.ElasticSearchSink_Sink','serializer.*','Serializer','Properties to be passed to the serializer.', 0,null,'text', 1
-'org.apache.flume.sink.kite.DatasetSink_Sink','kite.dataset.uri','Kite Dataset Uri','URI of the dataset to open', 1,'hdfs://localhost:8020','text', 1
+'org.apache.flume.sink.kite.DatasetSink_Sink','kite.dataset.uri','Kite Dataset Uri','URI of the dataset to open', 1,'hdfs://openbdre.org:8020','text', 1
 'org.apache.flume.sink.kite.DatasetSink_Sink','kite.repo.uri','Kite Repo Uri','URI of the repository to open (deprecated; use kite.dataset.uri instead)', 0,null,'text', 1
 'org.apache.flume.sink.kite.DatasetSink_Sink','kite.dataset.namespace','Kite Dataset Namespace','Namespace of the Dataset where records will be written (deprecated; use kite.dataset.uri instead)', 0,null,'text', 1
 'org.apache.flume.sink.kite.DatasetSink_Sink','kite.dataset.name','Kite Dataset Name','Name of the Dataset where records will be written (deprecated; use kite.dataset.uri instead)', 0,null,'text', 1
@@ -337,7 +337,7 @@
 'thrift_Source','kerberos','Kerberos','Set to  1 to enable kerberos authentication. In kerberos mode, agent-principal and agent-keytab are required for successful authentication. The Thrift source in secure mode, will accept connections only from Thrift clients that have kerberos enabled and are successfully authenticated to the kerberos KDC.', 0,'false','text', 1
 'thrift_Source','agent-principal','Agent Principal','The kerberos principal used by the Thrift Source to authenticate to the kerberos KDC.', 0,null,'text', 1
 'thrift_Source','agent-keytab','Agent Keytab','The keytab location used by the Thrift Source in combination with the agent-principal to authenticate to the kerberos KDC.', 0,null,'text', 1
-'exec_Source','command','Command','The command to execute',1,'cat /home/cloudera/flume/flume-test.txt','text', 1
+'exec_Source','command','Command','The command to execute',1,'cat /home/openbdre/test.txt','text', 1
 'exec_Source','shell','Shell','A shell invocation used to run the command. e.g. /bin/sh -c. Required only for commands relying on shell features like wildcards, back ticks, pipes etc.', 0,null,'text', 1
 'exec_Source','restartThrottle','Restart Throttle','Amount of time (in millis) to wait before attempting a restart', 0,'10000','text', 1
 'exec_Source','restart','Restart','Whether the executed cmd should be restarted if it dies', 0,'false','text', 1
@@ -360,7 +360,7 @@
 'jms_Source','converter.type','Converter Type','Class to use to convert messages to flume events. See below.', 0,null,'text', 1
 'jms_Source','converter.*','Converter.*','Converter properties.', 0,null,'text', 1
 'jms_Source','converter.charset','Converter Charset','Default converter only. Charset to use when converting JMS TextMessages to byte arrays.', 0,null,'text', 1
-'spooldir_Source','spoolDir','Spool Dir','The directory from which to read files from.',1,'/home/cloudera/flume','text', 1
+'spooldir_Source','spoolDir','Spool Dir','The directory from which to read files from.',1,'/home/openbdre/spool','text', 1
 'spooldir_Source','fileSuffix','File Suffix','Suffix to append to completely ingested files', 0,'.COMPLETED','text', 1
 'spooldir_Source','deletePolicy','Delete Policy','When to delete completed files: never or immediate', 0,'never','text', 1
 'spooldir_Source','fileHeader','File Header','Whether to add a header storing the absolute path filename.', 0,'false','text', 1
@@ -475,28 +475,28 @@
 'mdconfig', 'status-notification.provider-url', 'Notification Provider URL', 'MQ server address for status notification',  1, 'tcp://localhost:61616', 'text', 1
 'mdconfig', 'status-notification.halt-queue', 'Halt Queue', 'Halt Queue info for status notification',  1, 'Success', 'text', 1
 'mdconfig', 'status-notification.term-queue', 'Term Queue', 'Term Queue info for status notification',  1, 'Failure', 'text', 1
-'mdconfig', 'deploy.script-path', 'Deployment script path', 'Deployment script path',  1, '/home/cloudera/bdre/bdre-scripts/deployment', 'text', 1
+'mdconfig', 'deploy.script-path', 'Deployment script path', 'Deployment script path',  1, '/home/openbdre/bdre/bdre-scripts/deployment', 'text', 1
 'mdconfig', 'execute.log-path', 'Log File Location', 'Path for log file',  1, '/tmp/logfile-', 'text', 1
-'mdconfig', 'execute.script-path', 'Process Execute Script Path', 'Execute workflow script path',  1, '/home/cloudera/bdre/bdre-scripts/execution', 'text', 1
-'mdconfig', 'upload.base-directory', 'Base Directory For Upload', 'Base Directory where you want to upload jars and hqls',  1, '/home/cloudera/bdre-wfd', 'text', 1
+'mdconfig', 'execute.script-path', 'Process Execute Script Path', 'Execute workflow script path',  1, '/home/openbdre/bdre/bdre-scripts/execution', 'text', 1
+'mdconfig', 'upload.base-directory', 'Base Directory For Upload', 'Base Directory where you want to upload jars and hqls',  1, '/home/openbdre/bdre-wfd', 'text', 1
 'mdconfig', 'r.shell-script', 'Location of R shell script', 'Location of R shell script', 1, '/tmp/run_r_hadoop.sh', 'text', 1
-'imconfig', 'common.default-fs-name', 'Default file system name','Default file system name', 1, 'hdfs://quickstart.cloudera:8020', 'text', 1
-'imconfig', 'etl.hive-connection', 'URL of Hive connection','URL of Hive connection', 1, 'jdbc:hive2://localhost:10000', 'text', 1
+'imconfig', 'common.default-fs-name', 'Default file system name','Default file system name', 1, 'hdfs://openbdre.org:8020', 'text', 1
+'imconfig', 'etl.hive-connection', 'URL of Hive connection','URL of Hive connection', 1, 'jdbc:hive2://openbdre.org:10000', 'text', 1
 'imconfig', 'etl.hdfs-raw-directory', 'Hadoop raw directory','Hadoop raw directory' , 1, '/raw', 'text', 1
-'imconfig', 'etl.hive-metastore-uris', 'URL of Hive metastore','URL of Hive metastore', 1, 'thrift://localhost:9083', 'text', 1
+'imconfig', 'etl.hive-metastore-uris', 'URL of Hive metastore','URL of Hive metastore', 1, 'thrift://openbdre.org:9083', 'text', 1
 'imconfig', 'etl.local-download-directory', 'Directory to store downloaded files','Directory to store downloaded files', 1, '/home/user/Downloads', 'text', 1
 'imconfig', 'file-mon.thread-wait', 'Thread waiting time','Thread waiting time', 1, '500', 'text', 1
-'imconfig', 'file-mon.dirs', 'Monitoring files directory list','Monitoring files directory list', 1, '/home/cloudera/oozies,/home/cloudera/datasets', 'text', 1
+'imconfig', 'file-mon.dirs', 'Monitoring files directory list','Monitoring files directory list', 1, '/home/openbdre/oozies,/home/openbdre/datasets', 'text', 1
 'imconfig', 'file-mon.filter', 'Filter Information','Filter Information', 1, 'merchant\\s[0-9],test\\s[0-9]', 'text', 1
 'imconfig', 'file-mon.sub-processIds', 'Sub process IDs','Sub process IDs', 1, '1,2', 'text', 1
 'imconfig', 'file-mon.serverIds', 'Server IDs','Server IDs', 1, '100,200', 'text', 1
-'imconfig', 'dq.drools-url-prefix', 'URL prefix for drools','URL prefix for drools', 1, 'http://localhost:8080/guvnor56/rest/packages/', 'text', 1
+'imconfig', 'dq.drools-url-prefix', 'URL prefix for drools','URL prefix for drools', 1, 'http://openbdre.org:8080/guvnor56/rest/packages/', 'text', 1
 'imconfig', 'data-import.hadoop-home', 'Hadoop home directory for exporting','Hadoop home directory for exporting', 1, '/usr/lib/hadoop', 'text', 1
-'imconfig', 'data-import.target-dir', 'Target direcotry to store imported data','Target direcotry to store imported data', 1, 'hdfs://quickstart.cloudera:8020/user/cloudera/import', 'text', 1
+'imconfig', 'data-import.target-dir', 'Target direcotry to store imported data','Target direcotry to store imported data', 1, '/user/openbdre/import', 'text', 1
 'imconfig', 'data-import.jar-output-dir', 'Jar output directory for importing','Jar output directory for importing', 1, '/tmp/bdre/sqoop/jar-output', 'text', 1
 'imconfig', 'mq-import.file-size-units', 'File sizes unit','File sizes unit', 1, 'KB', 'text', 1
 'imconfig', 'mq-import.rotation-file-size', 'Rotation file size','Rotation file size', 1, '10', 'text', 1
-'imconfig', 'mq-import.target-directory', 'Directory to import MQ file','Directory to import MQ file', 1, 'hdfs://localhost:8020/user/cloudera/mq-import', 'text', 1
+'imconfig', 'mq-import.target-directory', 'Directory to import MQ file','Directory to import MQ file', 1, '/user/openbdre/mq-import', 'text', 1
 'imconfig', 'data-export.hadoop-home', 'Hadoop home directory for exporting','Hadoop home directory for exporting', 1, '/usr/lib/hadoop', 'text', 1
 'imconfig', 'data-export.jar-output-dir', 'Jar output directory for exporting','Jar output directory for exporting', 1, '/tmp/bdre/sqoop/jar-output', 'text', 1
 'imconfig', 'eventing.metadata-broker-list', 'Metadata Brokers URL','Metadata Brokers URL', 1, 'localhost://:9092', 'text', 1
@@ -515,10 +515,10 @@
 'crawler','urlsToSearch','urls to search','urls to search',1,'.*','text', 1
 'crawler','urlsNotToSearch','urls not to search','urls not to search',1,'.*\\\\.(bmp|gif|jpg|png)$','text', 1
 #For deploy and execution scripts
-'scripts_config', 'bdreLinuxUserName', '-','-' , 1, 'cloudera', 'text' , 1
-'scripts_config', 'nameNodeHostName', '-','-' , 1, 'quickstart.cloudera', 'text' , 1
+'scripts_config', 'bdreLinuxUserName', '-','-' , 1, 'openbdre', 'text' , 1
+'scripts_config', 'nameNodeHostName', '-','-' , 1, 'openbdre.org', 'text' , 1
 'scripts_config', 'nameNodePort', '-','-' , 1, '8020', 'text' , 1
-'scripts_config', 'jobTrackerHostName', '-','-' , 1, 'quickstart.cloudera', 'text' , 1
+'scripts_config', 'jobTrackerHostName', '-','-' , 1, 'openbdre.org', 'text' , 1
 'scripts_config', 'jobTrackerPort', '-','-' , 1, '8032', 'text' , 1
 'scripts_config', 'hiveConfDir', '-','-' , 1, 'conf', 'text' , 1
 'scripts_config', 'flumeLibDir', '-','-' , 1, '/usr/lib/flume-ng', 'text' , 1
@@ -526,6 +526,6 @@
 'scripts_config', 'remoteHostPublicIp', '-','-' , 1, '127.0.0.1', 'text' , 1
 'scripts_config', 'uploadBaseDir', '-','-' , 1, '~/bdre-wfd', 'text' , 1
 'scripts_config', 'bdreVersion', '-','-' , 1, '1.1-SNAPSHOT', 'text' , 1
-'scripts_config', 'oozieHost', '-','-' , 1, 'localhost', 'text' , 1
+'scripts_config', 'oozieHost', '-','-' , 1, 'openbdre.org', 'text' , 1
 'scripts_config', 'ooziePort', '-','-' , 1, '11000', 'text' , 1
 'scripts_config', 'logDir', '-','-' , 1, '/var/log/BDRE', 'text' , 1

@@ -40,17 +40,13 @@ var_username=''
 var_password=''
 if [ $var_dbtype -ne 1 ]; then
     read -p "Enter DB username (Type username or leave it blank for default 'root'): " var_username
-    read -p "Enter DB password (Type password or leave it blank for default 'cloudera'): " var_password
+    read -p "Enter DB password (Type password or leave it blank for default '<blank>'): " var_password
     if [ -n "$var_username" ]; then
         echo
     else
         var_username='root'
     fi
-    if [ -n "$var_password" ]; then
-        echo
-    else
-        var_password='cloudera'
-    fi
+
 fi
 
 if [ $var_dbtype -eq 2 ]; then
@@ -194,9 +190,13 @@ else
 fi
 echo "Will create DB and tables"
 if [ $var_dbtype -eq 3 ]; then
-    mysql -p$var_password -u$var_username -e "create database if not exists $var_dbname"
-    mysql -p$var_password -u$var_username $var_dbname < $(dirname $0)/databases/mysql/ddls/drop_tables.sql
-    mysql -p$var_password -u$var_username $var_dbname < $(dirname $0)/databases/mysql/ddls/create_tables.sql
+var_user_pwd="-p$var_password -u$var_username"
+    if [ -z $var_password ];then
+        var_user_pwd="-u$var_username"
+    fi
+    mysql  $var_user_pwd -e "create database if not exists $var_dbname"
+    mysql  $var_user_pwd $var_dbname < $(dirname $0)/databases/mysql/ddls/drop_tables.sql
+    mysql  $var_user_pwd $var_dbname < $(dirname $0)/databases/mysql/ddls/create_tables.sql
     if [ $? -eq 0 ]; then
         echo "Tables created successfully in MySQL $var_dbname DB"
     fi
