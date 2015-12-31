@@ -12,7 +12,7 @@ function writeDBConf {
 
      echo "hibernate.current_session_context_class=thread" > $(dirname $0)/md-dao/src/main/resources/db.properties
      echo "hibernate.transaction.factory_class=org.hibernate.transaction.JDBCTransactionFactory" >> $(dirname $0)/md-dao/src/main/resources/db.properties
-     echo "hibernate.show_sql=true" >> $(dirname $0)/md-dao/src/main/resources/db.properties
+     echo "hibernate.show_sql=false" >> $(dirname $0)/md-dao/src/main/resources/db.properties
      echo database=$database >> $(dirname $0)/md-dao/src/main/resources/db.properties
      echo hibernate.connection.driver_class=$hibernate_connection_driver_class >> $(dirname $0)/md-dao/src/main/resources/db.properties
      echo hibernate.connection.url=$hibernate_connection_url >> $(dirname $0)/md-dao/src/main/resources/db.properties
