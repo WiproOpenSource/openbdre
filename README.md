@@ -59,17 +59,23 @@ This document will help you build BDRE from source. Audience for this document a
 ## Building BDRE from source
 
 1. Obtain the source code
-    * Login to the HDP Sandbox with the newly created openbdre user. You can perform a `su openbdre` to switch to this account.
-    * cd to the home directory of openbdre ```cd ~```
+    * Login to the HDP Sandbox with the newly created openbdre user. You can perform a **su openbdre** to switch to this account.
+       
+       ```su openbdre```
+       
+    * cd to the home directory of openbdre 
+    
+        ```cd ~openbdre```
+    
     * Pull BDRE source from this git repository. To find out your repository link navigate to the repository in this website and copy the https repo URL.
 
-    ```git clone https://gitlab.com/bdre/openbdre.git```
+        ```git clone https://gitlab.com/bdre/openbdre.git```
+    
     If you want to be a non-annonymous user then change the URL format to https://GIT_USER:GIT_PASSWORD@gitlab.com/bdre/openbdre.git
-    * cd to the cloned source dir
+    * cd to the cloned source dir (so you can be in /home/openbdre/openbdre)
     
-    ```cd openbdre```
+        ```cd openbdre```
     
-
 2. Database Setup 
     * Execute the dbsetup.sh script without any parameters as shown below. In this example, we are going to use MySQL as BDRE backend as it's already available in the QuickStart VM. If you would like to use another database please select it accordingly.
     
@@ -109,7 +115,7 @@ This document will help you build BDRE from source. Audience for this document a
 3. Building
     * Now build BDRE using (note BDRE may not compile if the **settings.xml** is not passed from the commandline so be sure to use the *-s* option. When building for the first time, it might take a while as maven resolves and downloads the jar libraries from diffrent repositories.
     
-    ```mvn -s settings.xml clean install -P hdp```
+    ```mvn -s settings.xml clean install -P hdp22```
     
     ```shell
     $ mvn -s settings.xml clean install -P hdp
