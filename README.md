@@ -15,19 +15,45 @@ This document will help you build BDRE from source. Audience for this document a
 
 ## Preparation
 
-* Download VirtualBox from https://www.virtualbox.org/
-* Download Cloudera Quickstart VM 5.2 
+* Download and install VirtualBox from https://www.virtualbox.org/
+* Download and install HortonWorks Sandbox 2.2 Virtual Box image from http://hortonworks.com/products/releases/hdp-2-2/#install 
+* Setup a 'Host-Only Adapter' for network to enable communication between Host and Guest OS.
+* Now ssh into the sandbox using root@VM_IP (password hadoop)
+    - The VM_IP is usually something between 192.168.56.101 - 192.168.56.109 
+    
+    ```shell
+    [root@sandbox ~]# adduser -m -s /bin/bash openbdre
+    [root@sandbox ~]# passwd openbdre
+    Changing password for user openbdre.
+    New password:
+    Retype new password:
+    passwd: all authentication tokens updated successfully.
+    [root@sandbox ~]#
+    [root@sandbox ~]# su openbdre
+    [openbdre@sandbox root]$ cd
+    [openbdre@sandbox ~]$
+    ```
+* Edit /etc/sudoers and append following line at the bottom. It's a readonly file so you need to save it with `wq!` in vi. This will allow openbdre to perform `sudo`.
 
-It's also quite easy to run BDRE for HortonWorks Sandbox. You can download HortonWorks Sandbox and build BDRE after enabling the HDP profile in settings.xml (included with BDRE source code). 
+    ```openbdre ALL=(ALL) NOPASSWD:ALL```
 
+    It's also quite easy to run BDRE for CDH Sandbox. You can download Cloudera Quickstart VM and build BDRE after enabling the CDH profile in settings.xml (included with BDRE source code). 
+* Download Maven from a mirror and unpack
+    ```
+    wget http://www.us.apache.org/dist/maven/maven-3/3.3.9/binaries/apache-maven-3.3.9-bin.zip
+    unzip apache-maven-3.3.9-bin.zip
+    export PATH=$PATH:/home/openbdre/apache-maven-3.3.9/bin
+    ```
+    
 ## Building BDRE from source
 
 1. Obtain the source code
-    * Login to the Cloudera QuickStart VM.
-    * Navigate to folder where you want to download BDRE source code and build it.
+    * Login to the HDP Sandbox with the newly created openbdre user. You can perform a `su openbdre` to switch to this account.
+    * cd to the home directory of openbdre ```cd ~```
     * Pull BDRE source from this git repository. To find out your repository link navigate to the repository in this website and copy the https repo URL.
 
     ```git clone https://gitlab.com/bdre/openbdre.git```
+    If you want to be a non-annonymous user then change the URL format to https://GIT_USER:GIT_PASSWORD@gitlab.com/bdre/openbdre.git
     * cd to the cloned source dir
     
     ```cd openbdre```
