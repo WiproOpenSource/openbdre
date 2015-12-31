@@ -43,7 +43,6 @@ public class PropertiesDAO {
     private static final Logger LOGGER = Logger.getLogger(PropertiesDAO.class);
     @Autowired
     SessionFactory sessionFactory;
-    Process dummyProcess=new Process();
     public List<Integer> list(Integer pageNum, Integer numResults) {
         Session session = sessionFactory.openSession();
         session.beginTransaction();
@@ -93,7 +92,14 @@ public class PropertiesDAO {
         PropertiesId propertiesId = null;
         try {
             session.beginTransaction();
+            Process updateProcess=new Process();
+
             propertiesId = (PropertiesId) session.save(properties);
+            updateProcess=(Process)session.get(Process.class,properties.getId().getProcessId());
+            LOGGER.info("process add ts"+updateProcess.getAddTs());
+            session.update(properties);
+            updateProcess.setEditTs(new Date());
+            session.update(updateProcess);
             session.getTransaction().commit();
         } catch (MetadataException e) {
             session.getTransaction().rollback();
@@ -108,11 +114,13 @@ public class PropertiesDAO {
         Session session = sessionFactory.openSession();
         try {
             session.beginTransaction();
-            dummyProcess=(Process)session.get(Process.class,properties.getId().getProcessId());
-            LOGGER.info("process add ts"+dummyProcess.getAddTs());
+            Process updateProcess=new Process();
+
+            updateProcess=(Process)session.get(Process.class,properties.getId().getProcessId());
+            LOGGER.info("process add ts"+updateProcess.getAddTs());
             session.update(properties);
-            dummyProcess.setEditTs(new Date());
-            session.update(dummyProcess);
+            updateProcess.setEditTs(new Date());
+            session.update(updateProcess);
             session.getTransaction().commit();
         } catch (MetadataException e) {
             session.getTransaction().rollback();
@@ -216,10 +224,8 @@ public class PropertiesDAO {
                     propertiesX.setPropValue(positionsInfo.getxPos().toString());
                     propertiesX.setDescription("xposition");
                     propertiesX.setId(propertiesIdForX);
-                    dummyProcess=propertiesX.getProcess();
                     session.save(propertiesX);
-                    dummyProcess.setEditTs(new Date());
-                    session.update(dummyProcess);
+
 
                     LOGGER.info("Property inserted:" + propertiesX.getId().getPropKey());
 
@@ -234,10 +240,7 @@ public class PropertiesDAO {
                     propertiesY.setDescription("yposition");
                     propertiesY.setId(propertiesIdForY);
                     propertiesY.setProcess(process);
-                    dummyProcess=propertiesY.getProcess();
                     session.save(propertiesY);
-                    dummyProcess.setEditTs(new Date());
-                    session.update(dummyProcess);
 
                     LOGGER.info("Property inserted:" + propertiesY.getId().getPropKey());
 
