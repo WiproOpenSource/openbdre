@@ -38,6 +38,16 @@ This document will help you build BDRE from source. Audience for this document a
     ```openbdre ALL=(ALL) NOPASSWD:ALL```
 
     It's also quite easy to run BDRE for CDH Sandbox. You can download Cloudera Quickstart VM and build BDRE after enabling the CDH profile in settings.xml (included with BDRE source code). 
+* Edit /etc/hosts file and add a mapping for openbdre.org and <VM_PRIVATE_IP>. The IP should be the same one sandbox.hortonworks.com is mapped to.
+    - It should look like below
+    ```
+    # File is generated from /usr/lib/hue/tools/start_scripts/gen_hosts.sh
+    # Do not remove the following line, or various programs
+    # that require network functionality will fail.
+    127.0.0.1               localhost.localdomain localhost
+    10.0.2.15       sandbox.hortonworks.com sandbox ambari.hortonworks.com
+    10.0.2.15       openbdre.org
+    ```
 * Download Maven from a mirror and unpack
     ```
     wget http://www.us.apache.org/dist/maven/maven-3/3.3.9/binaries/apache-maven-3.3.9-bin.zip
