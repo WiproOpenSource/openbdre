@@ -18,9 +18,15 @@ This document will help you build BDRE from source. Audience for this document a
 * Download and install VirtualBox from https://www.virtualbox.org/
 * Download and install HortonWorks Sandbox 2.2 Virtual Box image from http://hortonworks.com/products/releases/hdp-2-2/#install 
 * Setup a 'Host-Only Adapter' for network to enable communication between Host and Guest OS.
-* Now ssh into the sandbox using root@VM_IP (password hadoop)
+* Now ssh into the sandbox using *root@VM_IP* (password hadoop)
     - The VM_IP is usually something between 192.168.56.101 - 192.168.56.109 
-    
+* Start Oozie as the Oozie user and check if Oozie has started.
+
+    ```shell
+    su - oozie -c "cd /grid/0/var/log/oozie; /usr/hdp/current/oozie/oozie-server/bin/catalina.sh /usr/hdp/current/oozie/oozie-server/bin/setclasspath.sh /usr/hdp/current/oozie-server/bin/oozied.sh start"
+    ps -ef | grep -i oozie
+    ```
+* Now create *openbdre* user account.
     ```shell
     [root@sandbox ~]# adduser -m -s /bin/bash openbdre
     [root@sandbox ~]# passwd openbdre
