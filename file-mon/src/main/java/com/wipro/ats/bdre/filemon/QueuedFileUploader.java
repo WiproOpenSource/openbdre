@@ -86,7 +86,7 @@ public class QueuedFileUploader {
             long timeStamp = fileCopying.getTimeStamp();
             Date dt = new Date(timeStamp);
             String strDate = sdf.format(dt);
-            RegisterFile registerFile = new RegisterFile();
+            RegisterFile registerFile = RegisterFile.getAutowiredRegisterFile();
             String[] params = {"-p", subProcessId, "-sId", serverId, "-path", path, "-fs", fileSize, "-fh", fileHash, "-cTS", strDate, "-bid", "0"};
             LOGGER.debug("executeRegisterFiles Invoked for " + path);
             registerFile.execute(params);
