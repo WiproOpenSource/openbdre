@@ -111,8 +111,8 @@ public class FileMonRunnableMain extends BaseStructure {
 
             GetProcess getProcess = new GetProcess();
             List<ProcessInfo> subProcessList = getProcess.execute(params);
-            subProcessId = subProcessList.get(1).getProcessId().toString();
-
+            subProcessId = subProcessList.get(0).getProcessId().toString();
+            LOGGER.info("subProcessId="+subProcessId);
             GetProperties getProperties = new GetProperties();
             Properties properties = getProperties.getProperties(subProcessId, "fileMon");
             LOGGER.info("property is " + properties);
