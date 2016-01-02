@@ -68,7 +68,7 @@ public class MetadataPersistenceTrigger implements PreUpdateEventListener, PreIn
     }
     private void processTypeValidator(Object object) {
         Process process = (Process) object;
-        LOGGER.info("Attempting to insert process " + ReflectionToStringBuilder.toString(process));
+        LOGGER.info("Attempting to insert process " + process.getProcessName());
         Integer processTypeId = process.getProcessType().getProcessTypeId();
         Process parentProcess = process.getProcess();
         if (parentProcess == null) {
@@ -81,7 +81,7 @@ public class MetadataPersistenceTrigger implements PreUpdateEventListener, PreIn
                 throw new MetadataException(processTypeId + " process type is not applicable for sub processes. " + process.getProcessId() + " seems to be a subprocess with parent " + parentProcess.getProcessId());
             }else if(processTypeMap.get(processTypeId)!=parentProcessTypeId)
             {
-                throw new MetadataException(processTypeId + " should have a parent with process type=" + parentProcessTypeId);
+                throw new MetadataException(processTypeId + " should have a parent with process type=" + processTypeMap.get(processTypeId) + " but it set parent proces type="+parentProcessTypeId);
             }
         }
     }
