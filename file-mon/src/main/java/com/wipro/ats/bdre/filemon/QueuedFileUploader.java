@@ -41,6 +41,9 @@ public class QueuedFileUploader {
             // Copying file from local to HDFS overriding, if file already exists
             config.set("fs.defaultFS", FileMonRunnableMain.getDefaultFSName());
             FileSystem fs = FileSystem.get(config);
+            if(!fs.exists(new Path(fileCopying.getDstLocation()) )){
+                LOGGER.info("Creating HDFS dest dir "+new Path(fileCopying.getDstLocation())+ " Success="+fs.mkdirs(new Path(fileCopying.getDstLocation())));
+            }
             if(FileMonRunnableMain.isDeleteCopiedSrc()) {
                 fs.copyFromLocalFile(true, true, new Path(fileCopying.getSrcLocation()),
                         new Path(fileCopying.getDstLocation()));
