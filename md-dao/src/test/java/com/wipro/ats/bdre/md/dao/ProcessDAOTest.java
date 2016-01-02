@@ -97,13 +97,21 @@ public class ProcessDAOTest {
     @Test
     @Ignore
     public void testSubProcesslist() throws Exception {
-        LOGGER.info("Total Sub Process count is:" + processDAO.subProcesslist(10802).size());
+        for(Process process: processDAO.subProcesslist(1))
+        {
+            LOGGER.info("process "+process.getProcessId() + " is "+process.getProcessName());
+        }
+        LOGGER.info("Total Sub Process count is:" + processDAO.subProcesslist(1).size());
     }
 
     @Test
     @Ignore
     public void testSelectProcessList() throws Exception {
-        LOGGER.info("Total sub process along with parent process count is:" + processDAO.selectProcessList(10802).size());
+        for(Process process: processDAO.selectProcessList(1))
+        {
+            LOGGER.info("process "+process.getProcessId() + " is "+process.getProcessName());
+        }
+        LOGGER.info("Total sub process along with parent process count is:" + processDAO.selectProcessList(1).size());
     }
 
     @Ignore
