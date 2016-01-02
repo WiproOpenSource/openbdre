@@ -86,7 +86,6 @@ public class MetadataPersistenceTrigger implements PreUpdateEventListener, PreIn
         }
     }
 
-
     @Override
     public boolean onPreUpdate(PreUpdateEvent event) {
         if (event.getEntity() instanceof Process) {
