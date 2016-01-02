@@ -26,6 +26,7 @@ import com.wipro.ats.bdre.md.dao.jpa.ProcessType;
 import com.wipro.ats.bdre.md.dao.jpa.Properties;
 import com.wipro.ats.bdre.md.dao.jpa.WorkflowType;
 import com.wipro.ats.bdre.md.rest.RestWrapper;
+import com.wipro.ats.bdre.md.rest.util.Dao2TableUtil;
 import com.wipro.ats.bdre.md.rest.util.DateConverter;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -77,25 +78,25 @@ public class FileMoniterAPI {
             return restWrapper;
         }
         //making process
-        Process parentProcess = buildJPAProcess(26, null, "Filemon", "File Monitoring", 2);
+        Process parentProcess = Dao2TableUtil.buildJPAProcess(26, null, "Filemon", "File Monitoring", 2);
         Integer parentPid = processDAO.insert(parentProcess);
         parentProcess.setProcessId(parentPid);
-        Process childProcess = buildJPAProcess(27, parentProcess, "child of " + "Filemon", "child of " + "File Monitoring", 0);
+        Process childProcess = Dao2TableUtil.buildJPAProcess(27, parentProcess, "child of " + "Filemon", "child of " + "File Monitoring", 0);
         childProcess.setNextProcessId(parentPid.toString());
         Integer childPid = processDAO.insert(childProcess);
         parentProcess.setNextProcessId(childPid.toString());
 
         childProcess.setProcessId(childPid);
         //inserting in properties table
-        Properties jpaProperties = buildJPAProperties(childProcess.getProcessId(), "fileMon", "deleteCopiedSrc", fileMonitorInfo.getDeleteCopiedSource(), "Delete copied source");
+        Properties jpaProperties = Dao2TableUtil.buildJPAProperties(childProcess.getProcessId(), "fileMon", "deleteCopiedSrc", fileMonitorInfo.getDeleteCopiedSource(), "Delete copied source");
         propertiesDAO.insert(jpaProperties);
-        jpaProperties = buildJPAProperties(childProcess.getProcessId(), "fileMon", "filePattern", fileMonitorInfo.getFilePattern(), "pattern of file");
+        jpaProperties = Dao2TableUtil.buildJPAProperties(childProcess.getProcessId(), "fileMon", "filePattern", fileMonitorInfo.getFilePattern(), "pattern of file");
         propertiesDAO.insert(jpaProperties);
-        jpaProperties = buildJPAProperties(childProcess.getProcessId(), "fileMon", "hdfsUploadDir", fileMonitorInfo.getHdfsUploadDir(), "hdfc upload dir");
+        jpaProperties = Dao2TableUtil.buildJPAProperties(childProcess.getProcessId(), "fileMon", "hdfsUploadDir", fileMonitorInfo.getHdfsUploadDir(), "hdfc upload dir");
         propertiesDAO.insert(jpaProperties);
-        jpaProperties = buildJPAProperties(childProcess.getProcessId(), "fileMon", "monitoredDirName", fileMonitorInfo.getMonitoredDirName(), "file monitored dir");
+        jpaProperties = Dao2TableUtil.buildJPAProperties(childProcess.getProcessId(), "fileMon", "monitoredDirName", fileMonitorInfo.getMonitoredDirName(), "file monitored dir");
         propertiesDAO.insert(jpaProperties);
-        jpaProperties = buildJPAProperties(childProcess.getProcessId(), "fileMon", "sleepTime", Integer.toString(fileMonitorInfo.getSleepTime()), "sleeptime of thread");
+        jpaProperties = Dao2TableUtil.buildJPAProperties(childProcess.getProcessId(), "fileMon", "sleepTime", Integer.toString(fileMonitorInfo.getSleepTime()), "sleeptime of thread");
         propertiesDAO.insert(jpaProperties);
 
         List<Process> processList = new ArrayList<Process>();
@@ -107,85 +108,5 @@ public class FileMoniterAPI {
         return restWrapper;
     }
 
-    private com.wipro.ats.bdre.md.beans.table.Process jpa2TableProcess(Process jpaProcess) {
-        com.wipro.ats.bdre.md.beans.table.Process tableProcess = new com.wipro.ats.bdre.md.beans.table.Process();
-        tableProcess.setProcessId(jpaProcess.getProcessId());
-        tableProcess.setProcessName(jpaProcess.getProcessName());
-        tableProcess.setAddTS(jpaProcess.getAddTs());
-        tableProcess.setEditTS(jpaProcess.getEditTs());
-        tableProcess.setCanRecover(jpaProcess.getCanRecover());
-        tableProcess.setBusDomainId(jpaProcess.getBusDomain().getBusDomainId());
-        tableProcess.setBatchPattern(jpaProcess.getBatchCutPattern());
-        tableProcess.setProcessTypeId(jpaProcess.getProcessType().getProcessTypeId());
-        tableProcess.setWorkflowId(jpaProcess.getWorkflowType().getWorkflowId());
-        tableProcess.setDeleteFlag(jpaProcess.getDeleteFlag());
-        tableProcess.setDescription(jpaProcess.getDescription());
-        tableProcess.setEnqProcessId(jpaProcess.getEnqueuingProcessId());
-        if(jpaProcess.getProcess()!=null)
-            tableProcess.setParentProcessId(jpaProcess.getProcess().getProcessId());
-        return tableProcess;
-    }
-    private com.wipro.ats.bdre.md.beans.table.Properties jpa2TableProperties(Properties jpaProperties){
-        com.wipro.ats.bdre.md.beans.table.Properties tableProperties=new com.wipro.ats.bdre.md.beans.table.Properties();
-        tableProperties.setProcessId(jpaProperties.getProcess().getProcessId());
-        tableProperties.setDescription(jpaProperties.getDescription());
-        tableProperties.setConfigGroup(jpaProperties.getConfigGroup());
-        tableProperties.setKey(jpaProperties.getId().getPropKey());
-        tableProperties.setValue(jpaProperties.getPropValue());
-        return tableProperties;
-    }
-    private Process buildJPAProcess(Integer ptId, Process parentProcess, String name, String desc, Integer wfId) {
-        Process daoProcess = new Process();
-        ProcessType daoProcessType = new ProcessType();
-        daoProcessType.setProcessTypeId(ptId);
-        daoProcess.setProcessType(daoProcessType);
-        if (wfId != null) {
-            com.wipro.ats.bdre.md.dao.jpa.WorkflowType daoWorkflowType = new com.wipro.ats.bdre.md.dao.jpa.WorkflowType();
-            daoWorkflowType.setWorkflowId(wfId);
-            daoProcess.setWorkflowType(daoWorkflowType);
-        }
-        com.wipro.ats.bdre.md.dao.jpa.BusDomain daoBusDomain = new com.wipro.ats.bdre.md.dao.jpa.BusDomain();
-        daoBusDomain.setBusDomainId(1);
-        daoProcess.setBusDomain(daoBusDomain);
-        ProcessTemplate daoProcessTemplate = new ProcessTemplate();
-        daoProcessTemplate.setProcessTemplateId(0);
-        daoProcess.setProcessTemplate(daoProcessTemplate);
 
-        if (parentProcess != null) {
-            daoProcess.setProcess(parentProcess);
-            daoProcess.setNextProcessId("0");
-        } else {
-            daoProcess.setNextProcessId("0");
-        }
-        daoProcess.setDescription(desc);
-        daoProcess.setProcessName(name);
-        daoProcess.setCanRecover(true);
-        daoProcess.setDeleteFlag(false);
-        daoProcess.setEnqueuingProcessId(0);
-        daoProcess.setAddTs(new Date());
-        daoProcess.setEditTs(new Date());
-
-        return daoProcess;
-    }
-
-
-    private Properties buildJPAProperties(Integer pid, String configGrp, String key, String value, String desc) {
-        Properties properties = new Properties();
-        try {
-            Process process = new Process();
-            process.setProcessId(pid);
-            properties.setProcess(process);
-            properties.setConfigGroup(configGrp);
-            properties.setPropValue(value);
-            PropertiesId propertiesId = new PropertiesId();
-            propertiesId.setProcessId(pid);
-            propertiesId.setPropKey(key);
-            properties.setId(propertiesId);
-            properties.setDescription(desc);
-
-        } catch (Exception e) {
-            LOGGER.error(e);
-        }
-        return properties;
-    }
 }
