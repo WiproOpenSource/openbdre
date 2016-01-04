@@ -31,12 +31,10 @@ import java.sql.Timestamp;
 /**
  * Created by arijit on 12/8/14.
  */
-//@Component
+@Component
 public class RegisterFile extends MetadataAPIBase {
     public RegisterFile() {
-        ApplicationContext appCtx = new ClassPathXmlApplicationContext("spring-dao.xml");
-        AutowireCapableBeanFactory acbFactory = appCtx.getAutowireCapableBeanFactory();
-        acbFactory.autowireBean(this);
+
     }
 
     private static final Logger LOGGER = Logger.getLogger(RegisterFile.class);

@@ -16,11 +16,13 @@ package com.wipro.ats.bdre.filemon;
 
 import com.wipro.ats.bdre.exception.BDREException;
 import com.wipro.ats.bdre.md.api.RegisterFile;
+import com.wipro.ats.bdre.md.StaticContextAccessor;
 import org.apache.commons.io.FileUtils;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.FileSystem;
 import org.apache.hadoop.fs.Path;
 import org.apache.log4j.Logger;
+
 
 import java.io.File;
 import java.io.IOException;
@@ -75,7 +77,6 @@ public class QueuedFileUploader {
         }
     }
 
-    //Calling the RegisterFile method in metadata API on file Creation.
     private static void executeRegisterFiles(FileCopyInfo fileCopying) {
         try {
             String subProcessId = fileCopying.getSubProcessId();
@@ -86,10 +87,11 @@ public class QueuedFileUploader {
             long timeStamp = fileCopying.getTimeStamp();
             Date dt = new Date(timeStamp);
             String strDate = sdf.format(dt);
-            RegisterFile registerFile = new RegisterFile();
             String[] params = {"-p", subProcessId, "-sId", serverId, "-path", path, "-fs", fileSize, "-fh", fileHash, "-cTS", strDate, "-bid", "0"};
             LOGGER.debug("executeRegisterFiles Invoked for " + path);
-            registerFile.execute(params);
+            /* In static method direct autowire of instance is not possible,
+            thatswhy used StaticContextAccessor class to get autowired object*/
+            StaticContextAccessor.getBean(RegisterFile.class).execute(params);
         } catch (Exception err) {
             LOGGER.error("Error execute register files ", err);
             throw new BDREException(err);
