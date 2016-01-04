@@ -79,6 +79,7 @@ public class Dao2TableUtil {
         ProcessTemplate daoProcessTemplate = new ProcessTemplate();
         daoProcessTemplate.setProcessTemplateId(0);
         daoProcess.setProcessTemplate(daoProcessTemplate);
+        daoProcess.setNextProcessId("0");
 
         daoProcess.setDescription(desc);
         daoProcess.setProcessName(name);

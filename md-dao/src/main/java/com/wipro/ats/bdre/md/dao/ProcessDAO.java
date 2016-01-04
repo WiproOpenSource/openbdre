@@ -450,12 +450,12 @@ public List<Process> createOneChildJob(Process parentProcess, Process childProce
         parentPid = (Integer) session.save(parentProcess);
         parentProcess.setProcessId(parentPid);
         childProcess.setProcess(parentProcess);
+        childProcess.setNextProcessId(parentPid.toString());
+
         childPid= (Integer) session.save(childProcess);
         parentProcess.setNextProcessId(childPid.toString());
-        childProcess.setNextProcessId(parentPid.toString());
         childProcess.setProcessId(childPid);
         session.update(parentProcess);
-        session.update(childProcess);
         if(parentProps!=null && !parentProps.isEmpty()){
             for(Properties properties: parentProps){
                 properties.setProcess(parentProcess);

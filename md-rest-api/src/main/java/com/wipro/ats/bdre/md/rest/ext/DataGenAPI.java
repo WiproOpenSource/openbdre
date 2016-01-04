@@ -62,17 +62,11 @@ public class DataGenAPI extends MetadataAPIBase {
         RestWrapper restWrapper = null;
         Process parentProcess = null;
         Process childProcess = null;
-        Properties properties=null;
+        Properties jpaProperties=null;
 
-        parentProcess = Dao2TableUtil.buildJPAProcess(18, null, "Data gen Parent", "Data Generation Parent", 1);
-        Integer parentProcessId = processDAO.insert(parentProcess);
-        parentProcess.setProcessId(parentProcessId);
-        childProcess = Dao2TableUtil.buildJPAProcess(14, parentProcess, "child of Data gen Parent", "child of Data Generation Parent", 0);
-        Integer childProcessId = processDAO.insert(parentProcess);
-        childProcess.setProcessId(childProcessId);
-        parentProcess.setProcess(childProcess);
-        childProcess.setProcess(parentProcess);
-        processDAO.update(childProcess);
+        parentProcess = Dao2TableUtil.buildJPAProcess(18,"Data gen Parent", "Data Generation Parent", 1);
+        childProcess = Dao2TableUtil.buildJPAProcess(14,  "child of Data gen Parent", "child of Data Generation Parent", 0);
+
 
         StringBuffer tableSchema = new StringBuffer("");
         //to handle argument id's in sequence if rows are deleted and added in UI
@@ -82,6 +76,9 @@ public class DataGenAPI extends MetadataAPIBase {
         String[] dateContent;
         StringBuffer unifiedDate = new StringBuffer("");
         Date date = null, date2 = null;
+
+        List<Properties> childProps=new ArrayList<>();
+        //inserting in properties table
         for (String string : map.keySet()) {
             LOGGER.debug("String is" + string);
             if (map.get(string) == null || ("").equals(map.get(string))) {
@@ -106,15 +103,17 @@ public class DataGenAPI extends MetadataAPIBase {
                         e.printStackTrace();
                     }
                     unifiedDate.append(date.getTime() + "," + date2.getTime() + "," + dateContent[2]);
-                    properties =Dao2TableUtil.buildJPAProperties(childProcess.getProcessId(), "data", "args." + fieldArgCounter, unifiedDate.toString(), "Generated Argument");
-                    propertiesDAO.insert(properties);
-                    properties =Dao2TableUtil.buildJPAProperties(childProcess.getProcessId(), "data", "data-gen-id." + fieldArgCounter, map.get("type_generatedType." + fieldTypeCounter), "Generated Type");
-                    propertiesDAO.insert(properties);
+                    jpaProperties =Dao2TableUtil.buildJPAProperties(childProcess.getProcessId(), "data", "args." + fieldArgCounter, unifiedDate.toString(), "Generated Argument");
+                    childProps.add(jpaProperties );
+                    jpaProperties  =Dao2TableUtil.buildJPAProperties(childProcess.getProcessId(), "data", "data-gen-id." + fieldArgCounter, map.get("type_generatedType." + fieldTypeCounter), "Generated Type");
+                    childProps.add(jpaProperties );
+
                 } else {
-                    properties =Dao2TableUtil.buildJPAProperties(childProcess.getProcessId(), "data", "args." + fieldArgCounter, map.get(string), "Generated Argument");
-                    propertiesDAO.insert(properties);
-                    properties =Dao2TableUtil.buildJPAProperties(childProcess.getProcessId(), "data", "data-gen-id." + fieldArgCounter, map.get("type_generatedType." + fieldTypeCounter), "Generated Type");
-                    propertiesDAO.insert(properties);
+                    jpaProperties =Dao2TableUtil.buildJPAProperties(childProcess.getProcessId(), "data", "args." + fieldArgCounter, map.get(string), "Generated Argument");
+                    childProps.add(jpaProperties );
+                    jpaProperties =Dao2TableUtil.buildJPAProperties(childProcess.getProcessId(), "data", "data-gen-id." + fieldArgCounter, map.get("type_generatedType." + fieldTypeCounter), "Generated Type");
+                    childProps.add(jpaProperties );
+
                 }
                 fieldArgCounter++;
             } else if (string.startsWith("type_fieldName")) {
@@ -122,29 +121,30 @@ public class DataGenAPI extends MetadataAPIBase {
                 tableSchema.append(map.get(string) + ":" + fieldCounter++ + ",");
             } else if (string.startsWith("other_numRows")) {
                 LOGGER.debug("other_numRows" + map.get(string));
-                properties =Dao2TableUtil.buildJPAProperties(childProcess.getProcessId(), "data", key, map.get(string), "number of rows");
-                propertiesDAO.insert(properties);
+                jpaProperties =Dao2TableUtil.buildJPAProperties(childProcess.getProcessId(), "data", key, map.get(string), "number of rows");
+                childProps.add(jpaProperties );
             } else if (string.startsWith("other_numSplits")) {
                 LOGGER.debug("other_numSplits" + map.get(string));
-                properties =Dao2TableUtil.buildJPAProperties(childProcess.getProcessId(), "data", key, map.get(string), "number of splits");
-                propertiesDAO.insert(properties);
+                jpaProperties =Dao2TableUtil.buildJPAProperties(childProcess.getProcessId(), "data", key, map.get(string), "number of splits");
+                childProps.add(jpaProperties );
             } else if (string.startsWith("other_tableName")) {
                 LOGGER.debug("other_tableName" + map.get(string));
-                properties =Dao2TableUtil.buildJPAProperties(childProcess.getProcessId(), "table", key, map.get(string), "Table Name");
-                propertiesDAO.insert(properties);
+                jpaProperties =Dao2TableUtil.buildJPAProperties(childProcess.getProcessId(), "table", key, map.get(string), "Table Name");
+                childProps.add(jpaProperties );
             } else if (string.startsWith("other_separator")) {
                 LOGGER.debug("other_separator" + map.get(string));
-                properties =Dao2TableUtil.buildJPAProperties(childProcess.getProcessId(), "table", key, map.get(string), "Separator");
-                propertiesDAO.insert(properties);
+                jpaProperties =Dao2TableUtil.buildJPAProperties(childProcess.getProcessId(), "table", key, map.get(string), "Separator");
+                childProps.add(jpaProperties );
             }
         }
+
+
         //remove last : in tableSchema String
         tableSchema.deleteCharAt(tableSchema.length() - 1);
-        properties =Dao2TableUtil.buildJPAProperties(childProcess.getProcessId(), "table", "tableSchema", tableSchema.toString(), "Table Schema");
-        propertiesDAO.insert(properties);
-        List<Process> processList = new ArrayList<Process>();
-        processList.add(parentProcess);
-        processList.add(childProcess);
+        jpaProperties =Dao2TableUtil.buildJPAProperties(childProcess.getProcessId(), "table", "tableSchema", tableSchema.toString(), "Table Schema");
+        childProps.add(jpaProperties );
+        //creating parent and child processes and inserting properties
+        List<Process> processList = processDAO.createOneChildJob(parentProcess,childProcess,null,childProps);
         restWrapper = new RestWrapper(processList, RestWrapper.OK);
         return restWrapper;
     }
