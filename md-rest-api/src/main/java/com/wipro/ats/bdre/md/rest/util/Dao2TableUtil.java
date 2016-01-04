@@ -18,7 +18,9 @@ import com.wipro.ats.bdre.md.dao.jpa.*;
 import com.wipro.ats.bdre.md.dao.jpa.Process;
 import org.apache.log4j.Logger;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 /**
  * Created by AR288503 on 1/2/2016.
@@ -43,6 +45,15 @@ public class Dao2TableUtil {
             tableProcess.setParentProcessId(jpaProcess.getProcess().getProcessId());
         return tableProcess;
     }
+
+    public static List<com.wipro.ats.bdre.md.beans.table.Process> jpaList2TableProcessList(List<com.wipro.ats.bdre.md.dao.jpa.Process> jpaProcessList) {
+        List<com.wipro.ats.bdre.md.beans.table.Process> tableProcessList = new ArrayList<>();
+        for (com.wipro.ats.bdre.md.dao.jpa.Process jpaProcess : jpaProcessList) {
+            tableProcessList.add(jpa2TableProcess(jpaProcess));
+        }
+        return tableProcessList;
+    }
+
     public static com.wipro.ats.bdre.md.beans.table.Properties jpa2TableProperties(Properties jpaProperties){
         com.wipro.ats.bdre.md.beans.table.Properties tableProperties=new com.wipro.ats.bdre.md.beans.table.Properties();
         tableProperties.setProcessId(jpaProperties.getProcess().getProcessId());
@@ -52,14 +63,14 @@ public class Dao2TableUtil {
         tableProperties.setValue(jpaProperties.getPropValue());
         return tableProperties;
     }
-    public static Process buildJPAProcess(Integer ptId, Process parentProcess, String name, String desc, Integer wfId) {
+    public static Process buildJPAProcess(Integer processTypeId, String name, String desc, Integer workflowTypeId) {
         Process daoProcess = new Process();
         ProcessType daoProcessType = new ProcessType();
-        daoProcessType.setProcessTypeId(ptId);
+        daoProcessType.setProcessTypeId(processTypeId);
         daoProcess.setProcessType(daoProcessType);
-        if (wfId != null) {
+        if (workflowTypeId != null) {
             com.wipro.ats.bdre.md.dao.jpa.WorkflowType daoWorkflowType = new com.wipro.ats.bdre.md.dao.jpa.WorkflowType();
-            daoWorkflowType.setWorkflowId(wfId);
+            daoWorkflowType.setWorkflowId(workflowTypeId);
             daoProcess.setWorkflowType(daoWorkflowType);
         }
         com.wipro.ats.bdre.md.dao.jpa.BusDomain daoBusDomain = new com.wipro.ats.bdre.md.dao.jpa.BusDomain();
@@ -69,12 +80,14 @@ public class Dao2TableUtil {
         daoProcessTemplate.setProcessTemplateId(0);
         daoProcess.setProcessTemplate(daoProcessTemplate);
 
+
         if (parentProcess != null) {
             daoProcess.setProcess(parentProcess);
             daoProcess.setNextProcessId(parentProcess.getProcessId().toString());
         } else {
             daoProcess.setNextProcessId("0");
         }
+
         daoProcess.setDescription(desc);
         daoProcess.setProcessName(name);
         daoProcess.setCanRecover(true);

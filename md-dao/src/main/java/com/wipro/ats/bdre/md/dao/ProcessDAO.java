@@ -440,7 +440,47 @@ public class ProcessDAO {
         return returnProcessList;
     }
 
+public List<Process> createOneChildJob(Process parentProcess, Process childProcess, List<Properties> parentProps, List<Properties> childProps ){
+    Session session = sessionFactory.openSession();
+    Integer parentPid = null;
+    Integer childPid = null;
+    List<Process> processList=new ArrayList<>();
+    try {
+        session.beginTransaction();
+        parentPid = (Integer) session.save(parentProcess);
+        parentProcess.setProcessId(parentPid);
+        childProcess.setProcess(parentProcess);
+        childPid= (Integer) session.save(childProcess);
+        parentProcess.setNextProcessId(childPid.toString());
+        childProcess.setNextProcessId(parentPid.toString());
+        childProcess.setProcessId(childPid);
+        session.update(parentProcess);
+        session.update(childProcess);
+        if(parentProps!=null && !parentProps.isEmpty()){
+            for(Properties properties: parentProps){
+                properties.setProcess(parentProcess);
+                session.save(properties);
+            }
+        }
 
+        if(childProps!=null && !childProps.isEmpty()){
+            for(Properties properties: childProps){
+                properties.setProcess(childProcess);
+                session.save(properties);
+            }
+        }
+        processList.add(parentProcess);
+        processList.add(childProcess);
+        session.getTransaction().commit();
+
+    } catch (MetadataException e) {
+        session.getTransaction().rollback();
+        LOGGER.error(e);
+    } finally {
+        session.close();
+    }
+    return processList;
+}
 
 
 }

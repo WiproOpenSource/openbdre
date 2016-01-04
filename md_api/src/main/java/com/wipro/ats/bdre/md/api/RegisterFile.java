@@ -33,6 +33,9 @@ import java.sql.Timestamp;
  */
 @Component
 public class RegisterFile extends MetadataAPIBase {
+    public RegisterFile() {
+
+    }
 
     private static final Logger LOGGER = Logger.getLogger(RegisterFile.class);
     private static final String[][] PARAMS_STRUCTURE = {

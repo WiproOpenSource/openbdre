@@ -78,32 +78,21 @@ public class FileMoniterAPI {
             return restWrapper;
         }
         //making process
-        Process parentProcess = Dao2TableUtil.buildJPAProcess(26, null, "Filemon", "File Monitoring", 2);
-        Integer parentPid = processDAO.insert(parentProcess);
-        parentProcess.setProcessId(parentPid);
-        Process childProcess = Dao2TableUtil.buildJPAProcess(27, parentProcess, "child of " + "Filemon", "child of " + "File Monitoring", 0);
-        childProcess.setNextProcessId(parentPid.toString());
-        Integer childPid = processDAO.insert(childProcess);
-        parentProcess.setNextProcessId(childPid.toString());
-
-        childProcess.setProcessId(childPid);
+        Process parentProcess = Dao2TableUtil.buildJPAProcess(26, "Filemon", "File Monitoring", 2);
+        Process childProcess = Dao2TableUtil.buildJPAProcess(27, "child of " + "Filemon", "child of " + "File Monitoring", 0);
+        List<Properties> childProps=new ArrayList<>();
         //inserting in properties table
         Properties jpaProperties = Dao2TableUtil.buildJPAProperties(childProcess.getProcessId(), "fileMon", "deleteCopiedSrc", fileMonitorInfo.getDeleteCopiedSource(), "Delete copied source");
-        propertiesDAO.insert(jpaProperties);
+        childProps.add(jpaProperties);
         jpaProperties = Dao2TableUtil.buildJPAProperties(childProcess.getProcessId(), "fileMon", "filePattern", fileMonitorInfo.getFilePattern(), "pattern of file");
-        propertiesDAO.insert(jpaProperties);
+        childProps.add(jpaProperties);
         jpaProperties = Dao2TableUtil.buildJPAProperties(childProcess.getProcessId(), "fileMon", "hdfsUploadDir", fileMonitorInfo.getHdfsUploadDir(), "hdfc upload dir");
-        propertiesDAO.insert(jpaProperties);
+        childProps.add(jpaProperties);
         jpaProperties = Dao2TableUtil.buildJPAProperties(childProcess.getProcessId(), "fileMon", "monitoredDirName", fileMonitorInfo.getMonitoredDirName(), "file monitored dir");
-        propertiesDAO.insert(jpaProperties);
+        childProps.add(jpaProperties);
         jpaProperties = Dao2TableUtil.buildJPAProperties(childProcess.getProcessId(), "fileMon", "sleepTime", Integer.toString(fileMonitorInfo.getSleepTime()), "sleeptime of thread");
-        propertiesDAO.insert(jpaProperties);
-
-        List<Process> processList = new ArrayList<Process>();
-        //parentProcess.setCounter(2);
-        //childProcess.setCounter(2);
-        processList.add(parentProcess);
-        processList.add(childProcess);
+        childProps.add(jpaProperties);
+        List<Process> processList = processDAO.createOneChildJob(parentProcess,childProcess,null,childProps);
         restWrapper = new RestWrapper(processList, RestWrapper.OK);
         return restWrapper;
     }
