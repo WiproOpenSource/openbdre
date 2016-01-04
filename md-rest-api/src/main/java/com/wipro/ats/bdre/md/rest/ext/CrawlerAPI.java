@@ -80,16 +80,11 @@ public class CrawlerAPI extends MetadataAPIBase {
             return restWrapper;
         }
 
-        /*  com.wipro.ats.bdre.md.beans.table.Process parentProcess = new com.wipro.ats.bdre.md.beans.table.Process();
-        Process childProcess = new Process();  */
 
         //making process
         com.wipro.ats.bdre.md.dao.jpa.Process parentProcess = Dao2TableUtil.buildJPAProcess(28, crawlerInfo.getProcessName(), crawlerInfo.getProcessDescription(), 1);
         com.wipro.ats.bdre.md.dao.jpa.Process childProcess = Dao2TableUtil.buildJPAProcess(29, "child of " + crawlerInfo.getProcessName(), "child of " + crawlerInfo.getProcessDescription(), 0);
         List<com.wipro.ats.bdre.md.dao.jpa.Properties> childProps=new ArrayList<>();
-        /*  parentProcess = insertProcess(28, null, crawlerInfo.getProcessName(), crawlerInfo.getProcessDescription(), 1, principal);
-        childProcess = insertProcess(29, parentProcess.getProcessId(), "child of " + crawlerInfo.getProcessName(), "child of " + crawlerInfo.getProcessDescription(), 0, principal);
-        parentProcess = updateProcess(parentProcess);  */
 
         //inserting in properties table
         com.wipro.ats.bdre.md.dao.jpa.Properties jpaProperties = Dao2TableUtil.buildJPAProperties(childProcess.getProcessId(), "crawler", "politenessDelay", crawlerInfo.getPolitenessDelay().toString(), "Delay between requests");
@@ -104,29 +99,19 @@ public class CrawlerAPI extends MetadataAPIBase {
         childProps.add(jpaProperties);
         jpaProperties = Dao2TableUtil.buildJPAProperties(childProcess.getProcessId(), "crawler", "userAgentString", crawlerInfo.getUserAgentString(), "User agent string");
         childProps.add(jpaProperties);
-        /*  insertProperties(childProcess.getProcessId(), "crawler", "politenessDelay", crawlerInfo.getPolitenessDelay().toString(), "Delay between requests");
-        insertProperties(childProcess.getProcessId(), "crawler", "maxDepthOfCrawling", crawlerInfo.getMaxDepthOfCrawling().toString(), "Depth of crawling");
-        insertProperties(childProcess.getProcessId(), "crawler", "maxPagesToFetch", crawlerInfo.getMaxPagesToFetch().toString(), "no. of pages to fetch");
-        insertProperties(childProcess.getProcessId(), "crawler", "includeBinaryContentInCrawling", crawlerInfo.getIncludeBinaryContentInCrawling().toString(), "to include binary content");
-        insertProperties(childProcess.getProcessId(), "crawler", "resumableCrawling", crawlerInfo.getResumableCrawling().toString(), "set resumable crawling");
-        insertProperties(childProcess.getProcessId(), "crawler", "userAgentString", crawlerInfo.getUserAgentString(), "User agent string");  */
 
         if (crawlerInfo.getProxyHost() != null && crawlerInfo.getProxyHost() != "") {
             jpaProperties = Dao2TableUtil.buildJPAProperties(childProcess.getProcessId(), "crawler", "proxyHost", crawlerInfo.getProxyHost(), "Proxy Host");
             childProps.add(jpaProperties);
-            //insertProperties(childProcess.getProcessId(), "crawler", "proxyHost", crawlerInfo.getProxyHost(), "Proxy host");
             if (crawlerInfo.getProxyPort() != null && crawlerInfo.getProxyPort() != 0) {
                 jpaProperties = Dao2TableUtil.buildJPAProperties(childProcess.getProcessId(), "crawler", "proxyPort", crawlerInfo.getProxyPort().toString(), "Proxy Port");
                 childProps.add(jpaProperties);
-                //insertProperties(childProcess.getProcessId(), "crawler", "proxyPort", crawlerInfo.getProxyPort().toString(), "Proxy Port");
                 if (crawlerInfo.getProxyUserName() != null && crawlerInfo.getProxyUserName() != "") {
                     jpaProperties = Dao2TableUtil.buildJPAProperties(childProcess.getProcessId(), "crawler", "proxyUsername", crawlerInfo.getProxyUserName(), "Proxy Username");
                     childProps.add(jpaProperties);
-                    //insertProperties(childProcess.getProcessId(), "crawler", "proxyUsername", crawlerInfo.getProxyUserName(), "Proxy username");
                     if (crawlerInfo.getProxyPassword() != null && crawlerInfo.getProxyPassword() != "") {
                         jpaProperties = Dao2TableUtil.buildJPAProperties(childProcess.getProcessId(), "crawler", "proxyPassword", crawlerInfo.getProxyPassword(), "Proxy Password");
                         childProps.add(jpaProperties);
-                        //insertProperties(childProcess.getProcessId(), "crawler", "proxyPassword", crawlerInfo.getProxyPassword(), "Proxy password");
                     }
                 }
 
@@ -141,17 +126,13 @@ public class CrawlerAPI extends MetadataAPIBase {
         childProps.add(jpaProperties);
         jpaProperties = Dao2TableUtil.buildJPAProperties(childProcess.getProcessId(), "crawler", "numberOfMappers", crawlerInfo.getNumMappers().toString(), "number of mappers to run");
         childProps.add(jpaProperties);
-        /* insertProperties(childProcess.getProcessId(), "crawler", "url", crawlerInfo.getUrl(), "Base Url to crawl");
-        insertProperties(childProcess.getProcessId(), "crawler", "urlsToSearch", crawlerInfo.getUrlsToSearch(), "urls to include in search");
-        insertProperties(childProcess.getProcessId(), "crawler", "urlsNotToSearch", crawlerInfo.getUrlsNotToSearch(), "urls not to include in search");
-        insertProperties(childProcess.getProcessId(), "crawler", "numberOfMappers", crawlerInfo.getNumMappers().toString(), "number of mappers to run");  */
 
         List<com.wipro.ats.bdre.md.dao.jpa.Process> processList = processDAO.createOneChildJob(parentProcess,childProcess,null,childProps);
-        /*  List<Process> processList = new ArrayList<Process>();
-        parentProcess.setCounter(2);
-        childProcess.setCounter(2);
-        processList.add(parentProcess);
-        processList.add(childProcess);  */
+        List<Process> tableProcessList = Dao2TableUtil.jpaList2TableProcessList(processList);
+        Integer counter = tableProcessList.size();
+        for (Process process:tableProcessList) {
+            process.setCounter(counter);
+        }
         restWrapper = new RestWrapper(processList, RestWrapper.OK);
         return restWrapper;
     }
