@@ -93,6 +93,13 @@ public class FileMoniterAPI {
         jpaProperties = Dao2TableUtil.buildJPAProperties(childProcess.getProcessId(), "fileMon", "sleepTime", Integer.toString(fileMonitorInfo.getSleepTime()), "sleeptime of thread");
         childProps.add(jpaProperties);
         List<Process> processList = processDAO.createOneChildJob(parentProcess,childProcess,null,childProps);
+        List<com.wipro.ats.bdre.md.beans.table.Process>tableProcessList=Dao2TableUtil.jpaList2TableProcessList(processList);
+        Integer counter=tableProcessList.size();
+        for(com.wipro.ats.bdre.md.beans.table.Process process:tableProcessList){
+            process.setCounter(counter);
+            process.setTableAddTS(DateConverter.dateToString(process.getAddTS()));
+            process.setTableEditTS(DateConverter.dateToString(process.getEditTS()));
+        }
         restWrapper = new RestWrapper(processList, RestWrapper.OK);
         return restWrapper;
     }

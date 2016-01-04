@@ -145,7 +145,14 @@ public class DataGenAPI extends MetadataAPIBase {
         childProps.add(jpaProperties );
         //creating parent and child processes and inserting properties
         List<Process> processList = processDAO.createOneChildJob(parentProcess,childProcess,null,childProps);
-        restWrapper = new RestWrapper(processList, RestWrapper.OK);
+        List<com.wipro.ats.bdre.md.beans.table.Process>tableProcessList=Dao2TableUtil.jpaList2TableProcessList(processList);
+        Integer counter=tableProcessList.size();
+        for(com.wipro.ats.bdre.md.beans.table.Process process:tableProcessList){
+            process.setCounter(counter);
+            process.setTableAddTS(DateConverter.dateToString(process.getAddTS()));
+            process.setTableEditTS(DateConverter.dateToString(process.getEditTS()));
+        }
+        restWrapper = new RestWrapper(tableProcessList, RestWrapper.OK);
         return restWrapper;
     }
 
