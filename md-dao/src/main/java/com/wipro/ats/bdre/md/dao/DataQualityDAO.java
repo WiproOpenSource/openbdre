@@ -18,7 +18,6 @@ import com.wipro.ats.bdre.exception.MetadataException;
 import com.wipro.ats.bdre.md.beans.DQSetupInfo;
 import com.wipro.ats.bdre.md.dao.jpa.*;
 import com.wipro.ats.bdre.md.dao.jpa.Process;
-import com.wipro.ats.bdre.md.triggers.ProcessValidateInsert;
 import org.apache.log4j.Logger;
 import org.hibernate.Criteria;
 import org.hibernate.Session;
@@ -137,29 +136,9 @@ public class DataQualityDAO {
             jpaProcess.setNextProcessId(" ");
             WorkflowType workflowType = (WorkflowType) session.get(WorkflowType.class, 1);
             jpaProcess.setWorkflowType(workflowType);
-            ProcessValidateInsert processValidateInsert = new ProcessValidateInsert();
-            boolean triggerCheck;
-            Integer parentProcessId;
 
-            Process jpaProcessParent = null;
-            if (jpaProcess.getProcess() != null) {
-                jpaProcessParent = (Process) session.get(Process.class, jpaProcess.getProcess().getProcessId());
-            }
-            if (jpaProcess.getProcess() != null) {
-                triggerCheck = processValidateInsert.ProcessTypeValidator(jpaProcess, jpaProcessParent);
-                if (triggerCheck == true) {
-                    parentProcessId = (Integer) session.save(jpaProcess);
-                } else {
-                    throw new MetadataException("error occured");
-                }
-            } else {
-                triggerCheck = processValidateInsert.ProcessTypeValidator(jpaProcess, jpaProcessParent);
-                if (triggerCheck == true) {
-                    parentProcessId = (Integer) session.save(jpaProcess);
-                } else {
-                    throw new MetadataException("error occured");
-                }
-            }
+            Integer parentProcessId = (Integer) session.save(jpaProcess);
+
             LOGGER.info("inserted ppid is " + parentProcessId);
 
             com.wipro.ats.bdre.md.dao.jpa.Process jpaProcessStep = new com.wipro.ats.bdre.md.dao.jpa.Process();
@@ -187,52 +166,12 @@ public class DataQualityDAO {
             jpaProcessStep.setNextProcessId(parentProcessId.toString());
             WorkflowType workflowTypeStep = (WorkflowType) session.get(WorkflowType.class, 1);
             jpaProcessStep.setWorkflowType(workflowTypeStep);
-            Integer subProcessId = null;
-            Process jpaProcessChild = null;
-            if (jpaProcessStep.getProcess() != null) {
-                jpaProcessChild = (Process) session.get(Process.class, jpaProcessStep.getProcess().getProcessId());
-            }
-            if (jpaProcessStep.getProcess() != null) {
-                triggerCheck = processValidateInsert.ProcessTypeValidator(jpaProcessStep, jpaProcessChild);
-                if (triggerCheck == true) {
-                    parentProcessId = (Integer) session.save(jpaProcessStep);
-                } else {
-                    throw new MetadataException("error occured");
-                }
-            } else {
-                triggerCheck = processValidateInsert.ProcessTypeValidator(jpaProcessStep, jpaProcessChild);
-                if (triggerCheck == true) {
-                    subProcessId = (Integer) session.save(jpaProcessStep);
-                } else {
-                    throw new MetadataException("error occured");
-                }
-            }
-
+            Integer subProcessId = (Integer) session.save(jpaProcessStep);
             LOGGER.info("inserted subProcessId is " + subProcessId);
 
             //Parent process updated
             jpaProcess.setNextProcessId(subProcessId.toString());
-            Process jpaProcessParentUpdate = null;
-            if (jpaProcess.getProcess() != null) {
-                jpaProcessParentUpdate = (Process) session.get(Process.class, jpaProcess.getProcess().getProcessId());
-            }
-            if (jpaProcess.getProcess() != null) {
-                triggerCheck = processValidateInsert.ProcessTypeValidator(jpaProcess, jpaProcessParentUpdate);
-                if (triggerCheck == true) {
-                    session.update(jpaProcess);
-                } else {
-                    throw new MetadataException("error occured");
-                }
-            } else {
-                triggerCheck = processValidateInsert.ProcessTypeValidator(jpaProcess, jpaProcessParentUpdate);
-                if (triggerCheck == true) {
-                    session.update(jpaProcess);
-                } else {
-                    throw new MetadataException("error occured");
-                }
-            }
-
-
+            session.update(jpaProcess);
             Properties userName = new Properties();
 
             userName.setProcess(jpaProcessStep);

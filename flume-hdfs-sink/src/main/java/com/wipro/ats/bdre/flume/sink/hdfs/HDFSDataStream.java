@@ -54,13 +54,21 @@ public class HDFSDataStream extends AbstractHDFSWriter {
   private Path dstPath;
   private String inUseSuffix;
   private String processId;
-
-  @Override
-  public void configure(Context context) {
-    super.configure(context);
+  protected HDFSDataStream(){
+    logger.info("Init HDFSDataStream");
     ApplicationContext appCtx = new ClassPathXmlApplicationContext("spring-dao.xml");
     AutowireCapableBeanFactory acbFactory = appCtx.getAutowireCapableBeanFactory();
     acbFactory.autowireBean(this);
+  }
+  private static HDFSDataStream hdfsDataStream;
+  public static HDFSDataStream getHDFSDataStream(){
+    if(hdfsDataStream==null)hdfsDataStream=new HDFSDataStream();
+    return hdfsDataStream;
+  }
+  @Override
+  public void configure(Context context) {
+    super.configure(context);
+
     // extracting in use suffix
     inUseSuffix = context.getString("hdfs.inUseSuffix","");
     // extracting process id

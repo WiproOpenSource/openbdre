@@ -65,7 +65,7 @@ public class GetProcess extends MetadataAPIBase {
 
             CommandLine commandLine = getCommandLine(params, PARAMS_STRUCTURE);
             String subPid = commandLine.getOptionValue("parent-process-id");
-            LOGGER.debug("Pid is " + subPid);
+            LOGGER.info("Parent Pid is " + subPid);
 
             //Calling proc select-process-list
             List<com.wipro.ats.bdre.md.dao.jpa.Process> jpaProcessList = processDAO.selectProcessList(Integer.parseInt(subPid));
@@ -100,7 +100,43 @@ public class GetProcess extends MetadataAPIBase {
         }
 
     }
+    public List<ProcessInfo> getSubProcesses(String[] params) {
+        List<ProcessInfo> processInfoList = new ArrayList<ProcessInfo>();
+        try {
 
+            CommandLine commandLine = getCommandLine(params, PARAMS_STRUCTURE);
+            String subPid = commandLine.getOptionValue("parent-process-id");
+            LOGGER.info("Parent Pid is " + subPid);
+
+            //Calling proc select-process-list
+            List<com.wipro.ats.bdre.md.dao.jpa.Process> jpaProcessList = processDAO.subProcesslist(Integer.parseInt(subPid));
+            for (Process process : jpaProcessList) {
+                ProcessInfo processInfo = new ProcessInfo();
+
+                processInfo.setProcessId(process.getProcessId());
+                processInfo.setBusDomainId(process.getBusDomain().getBusDomainId());
+                processInfo.setProcessTypeId(process.getProcessType().getProcessTypeId());
+                processInfo.setCanRecover(process.getCanRecover());
+                processInfo.setDescription(process.getDescription());
+                if (process.getProcess() != null) {
+                    processInfo.setParentProcessId(process.getProcess().getProcessId());
+                }
+                processInfo.setProcessName(process.getProcessName());
+                processInfo.setEnqProcessId(process.getEnqueuingProcessId());
+                processInfo.setNextProcessIds(process.getNextProcessId());
+                processInfo.setWorkflowId(process.getWorkflowType().getWorkflowId());
+                processInfo.setBatchCutPattern(process.getBatchCutPattern());
+                processInfo.setDeleteFlag(process.getDeleteFlag());
+                processInfoList.add(processInfo);
+            }
+
+            // List<ProcessInfo> processInfos = s.selectList("call_procedures.select-process-list", processInfo);
+            return processInfoList;
+        } catch (Exception e) {
+            LOGGER.error("Error occurred", e);
+            throw new MetadataException(e);
+        }
+    }
     public List<ProcessInfo> execInfo(String[] params) {
 
         try {

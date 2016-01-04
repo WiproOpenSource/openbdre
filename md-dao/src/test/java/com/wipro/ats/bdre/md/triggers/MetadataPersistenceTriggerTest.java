@@ -25,8 +25,8 @@ import org.springframework.beans.factory.config.AutowireCapableBeanFactory;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
-public class ProcessValidateInsertTest {
-    private static final Logger LOGGER = Logger.getLogger(ProcessValidateInsertTest.class);
+public class MetadataPersistenceTriggerTest {
+    private static final Logger LOGGER = Logger.getLogger(MetadataPersistenceTriggerTest.class);
 
     @Before
     public void init() {
@@ -55,8 +55,7 @@ public class ProcessValidateInsertTest {
             parentProcessType.setProcessTypeId(18);
             parentProcessCheck.setProcessType(parentProcessType);
             parentProcessCheck.setProcess(null);
-            ProcessValidateInsert processValidateInsert = new ProcessValidateInsert();
-            processValidateInsert.ProcessTypeValidator(process, parentProcessCheck);
+
         } catch (MetadataException e) {
             LOGGER.info("error in testing " + e);
         }

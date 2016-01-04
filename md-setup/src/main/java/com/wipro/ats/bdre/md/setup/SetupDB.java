@@ -17,6 +17,7 @@ package com.wipro.ats.bdre.md.setup;
 
 import com.wipro.ats.bdre.md.setup.beans.*;
 import com.wipro.ats.bdre.md.setup.beans.Process;
+import com.wipro.ats.bdre.md.setup.beans.Properties;
 import org.apache.log4j.Logger;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
@@ -26,8 +27,11 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
 import java.io.BufferedReader;
+import java.io.FileInputStream;
 import java.io.FileReader;
-import java.util.Date;
+import java.util.*;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * Created by AR288503 on 12/15/2015.
@@ -37,16 +41,19 @@ public class SetupDB {
     @Autowired
     private SessionFactory sessionFactory;
     private Session session;
-
+    private static java.util.Properties map;
     public static void main(String[] args) throws Exception {
-        String projectRoot = "";
-        if (args != null && args.length != 0 && args[0] != null && !args[0].isEmpty()) {
-            projectRoot = args[0] + "/";
+        if (args == null || args.length != 2) {
+            System.out.println("Usage SetupDB <CSV file base dir> <profile>");
         }
+        String projectRoot = args[0] + "/";
+        String profile = args[1];
+
         SetupDB setupDB = new SetupDB();
         setupDB.init();
         try {
-
+            map =new java.util.Properties();
+            map.load(new FileInputStream(projectRoot + "databases/setup/profile."+profile+".properties"));
             setupDB.populateExecStatus(projectRoot + "databases/setup/ExecStatus.csv");
             setupDB.populateBatchStatus(projectRoot + "databases/setup/BatchStatus.csv");
             setupDB.populateDeployStatus(projectRoot + "databases/setup/DeployStatus.csv");
@@ -94,12 +101,31 @@ public class SetupDB {
         session.getTransaction().rollback();
         session.close();
     }
+    private static Pattern pattern = Pattern.compile("\\$\\{(?<key>[^}]*)\\}");
 
-    private String[] getColumns(String line) {
+    public static String replaceVars(String line) throws Exception {
+        StringBuffer sb = new StringBuffer();
+        Matcher m = pattern.matcher(line);
+        while (m.find()) {
+            String key = m.group("key");
+            if (map.containsKey(key)) {//replace if founded key exists in map
+                m.appendReplacement(sb, map.get(key).toString());
+            }
+            else{
+                throw new Exception("There is no variable defined for ${"+key+"} for line: "+line);
+            }
+        }
+        m.appendTail(sb);
+
+        return sb.toString();
+    }
+    private String[] getColumns(String line) throws Exception {
         if (line.trim().isEmpty() || line.trim().startsWith("--") || line.trim().startsWith("#")) {
             LOGGER.info("Ignoring comment:" + line);
             return null;
         }
+        //replace the variables
+        line=replaceVars(line);
         //This will split the line by , but ignore if ' is within single quote(e.g. in the data)
         String[] cols = line.split(",(?=([^']*'[^']*')*[^']*$)");
         for (int i = 0; i < cols.length; i++) {

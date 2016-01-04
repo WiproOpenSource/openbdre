@@ -33,7 +33,7 @@ public class HDFSWriterFactory {
     if (fileType.equalsIgnoreCase(SequenceFileType)) {
       return new HDFSSequenceFile();
     } else if (fileType.equalsIgnoreCase(DataStreamType)) {
-      return new HDFSDataStream();
+      return HDFSDataStream.getHDFSDataStream();
     } else if (fileType.equalsIgnoreCase(CompStreamType)) {
       return new HDFSCompressedDataStream();
     } else {

@@ -136,6 +136,6 @@ public class HDFSSequenceFile extends AbstractHDFSWriter {
     unregisterCurrentStream();
 
     // calling the method to save file details in tables
-    new HDFSDataStream().saveFileToHDFS(conf, dstPath, inUseSuffix, processId);
+    HDFSDataStream.getHDFSDataStream().saveFileToHDFS(conf, dstPath, inUseSuffix, processId);
   }
 }

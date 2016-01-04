@@ -20,6 +20,7 @@
     <profiles>
         <profile>
             <id>cdh52</id>
+            <activation><activeByDefault>false</activeByDefault></activation>
             <properties>
                 <hadoop.version>2.5.0</hadoop.version>
                 <hive.version>0.13.1-cdh5.2.0</hive.version>
@@ -30,10 +31,12 @@
                 <pig.version>0.15.0</pig.version>
                 <flume.version>1.6.0</flume.version>
                 <spark.core.version>1.5.2</spark.core.version>
+                <selected.profile>cdh52</selected.profile>
             </properties>
         </profile>
         <profile>
             <id>hdp22</id>
+            <activation><activeByDefault>false</activeByDefault></activation>
             <properties>
                 <hadoop.version>2.6.0</hadoop.version>
                 <hive.version>0.14.0.2.2.4.10-2</hive.version>
@@ -43,6 +46,8 @@
                 <kafka.version>0.8.1.1</kafka.version>
                 <pig.version>0.15.0</pig.version>
                 <flume.version>1.6.0</flume.version>
+                <spark.core.version>1.5.2</spark.core.version>
+                <selected.profile>hdp22</selected.profile>
             </properties>
         </profile>
         <profile>
@@ -158,7 +163,7 @@
                     <url>http://repo1.maven.org/maven2/</url>
                 </repository>
                 <repository>
-                    <id>maven-repo</id>
+                    <id>central</id>
                     <url>http://repo.maven.org/maven2/</url>
                 </repository>
                 <repository>
@@ -181,12 +186,12 @@
             </repositories>
             <pluginRepositories>
                 <pluginRepository>
-                    <id>maven-repo</id>
-                    <url>http://repo.maven.org/maven2/</url>
-                </pluginRepository>
-                <pluginRepository>
                     <id>maven-central</id>
                     <url>http://repo1.maven.org/maven2/</url>
+                </pluginRepository>
+                <pluginRepository>
+                    <id>central</id>
+                    <url>http://repo.maven.org/maven2/</url>
                 </pluginRepository>
                 <pluginRepository>
                     <id>clojars</id>
@@ -209,8 +214,8 @@
         </profile>
 
     </profiles>
+
     <activeProfiles>
-        <activeProfile>cdh52</activeProfile>
         <activeProfile>spring</activeProfile>
         <activeProfile>javax</activeProfile>
         <activeProfile>maven</activeProfile>
