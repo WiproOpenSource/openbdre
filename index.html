@@ -1,25 +1,36 @@
-<!DOCTYPE html>
-<html lang="en-us">
+<!doctype html>
+<html>
   <head>
-    <meta charset="UTF-8">
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
     <title>Bigdata Ready Enterprise by WiproOpenSourcePractice</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="stylesheet" type="text/css" href="stylesheets/normalize.css" media="screen">
-    <link href='https://fonts.googleapis.com/css?family=Open+Sans:400,700' rel='stylesheet' type='text/css'>
-    <link rel="stylesheet" type="text/css" href="stylesheets/stylesheet.css" media="screen">
-    <link rel="stylesheet" type="text/css" href="stylesheets/github-light.css" media="screen">
+
+    <link rel="stylesheet" href="stylesheets/styles.css">
+    <link rel="stylesheet" href="stylesheets/github-light.css">
+    <script src="javascripts/scale.fix.js"></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+    <!--[if lt IE 9]>
+    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
   </head>
   <body>
-    <section class="page-header">
-      <h1 class="project-name">Bigdata Ready Enterprise</h1>
-      <h2 class="project-tagline">BDRE, Wipro, OpenBdre, Apache Public License, Hadoop, Spark, Sqoop, Flume, Metadata Managent</h2>
-      <a href="https://github.com/WiproOpenSourcePractice/openbdre" class="btn">View on GitHub</a>
-      <a href="https://github.com/WiproOpenSourcePractice/openbdre/zipball/master" class="btn">Download .zip</a>
-      <a href="https://github.com/WiproOpenSourcePractice/openbdre/tarball/master" class="btn">Download .tar.gz</a>
-    </section>
+    <div class="wrapper">
+      <header>
+        <h1 class="header">Bigdata Ready Enterprise</h1>
+        <p class="header">BDRE, Wipro, OpenBdre, Apache Public License, Hadoop, Spark, Sqoop, Flume, Metadata Managent</p>
 
-    <section class="main-content">
-      <h1>
+        <ul>
+          <li class="download"><a class="buttons" href="https://github.com/WiproOpenSourcePractice/openbdre/zipball/master">Download ZIP</a></li>
+          <li class="download"><a class="buttons" href="https://github.com/WiproOpenSourcePractice/openbdre/tarball/master">Download TAR</a></li>
+          <li><a class="buttons github" href="https://github.com/WiproOpenSourcePractice/openbdre">View On GitHub</a></li>
+        </ul>
+
+        <p class="header">This project is maintained by <a class="header name" href="https://github.com/WiproOpenSourcePractice">WiproOpenSourcePractice</a></p>
+
+
+      </header>
+      <section>
+        <h1>
 <a id="bigdata-ready-enterpise-open-source-software" class="anchor" href="#bigdata-ready-enterpise-open-source-software" aria-hidden="true"><span class="octicon octicon-link"></span></a>Bigdata Ready Enterpise Open Source Software</h1>
 
 <p>Released under Apache Public License 2.0. You can get a copy for the license at <a href="http://www.apache.org/licenses/LICENSE-2.0">http://www.apache.org/licenses/LICENSE-2.0</a>.</p>
@@ -54,52 +65,39 @@
 </ul>
 </li>
 <li>
-<p>Start Oozie as the Oozie user and check if Oozie has started.</p>
+<p>Start Oozie as the Oozie user and Oozie isn't already started. <code>ps -ef | grep -i oozie</code> will help determine status of Oozie.</p>
 
-<div class="highlight highlight-source-shell"><pre>su - oozie -c <span class="pl-s"><span class="pl-pds">"</span>cd /grid/0/var/log/oozie; /usr/hdp/current/oozie/oozie-server/bin/catalina.sh /usr/hdp/current/oozie/oozie-server/bin/setclasspath.sh /usr/hdp/current/oozie-server/bin/oozied.sh start<span class="pl-pds">"</span></span>
+<div class="highlight highlight-source-shell"><pre>su - oozie -c <span class="pl-s"><span class="pl-pds">"</span>/usr/hdp/current/oozie-server/bin/oozie-start.sh<span class="pl-pds">"</span></span>
 ps -ef <span class="pl-k">|</span> grep -i oozie</pre></div>
 </li>
-<li>Now create <em>openbdre</em> user account.
-<code>shell
-[root@sandbox ~]# adduser -m -s /bin/bash openbdre
-[root@sandbox ~]# passwd openbdre
-Changing password for user openbdre.
+<li>
+<p>Now create <em>openbdre</em> user account.</p>
+
+<div class="highlight highlight-source-shell"><pre>[root@sandbox <span class="pl-k">~</span>]# adduser -m -s /bin/bash openbdre
+[root@sandbox <span class="pl-k">~</span>]# passwd openbdre
+Changing password <span class="pl-k">for</span> user openbdre.
 New password:
 Retype new password:
-passwd: all authentication tokens updated successfully.
-[root@sandbox ~]#
-[root@sandbox ~]# su openbdre
-[openbdre@sandbox root]$ cd
-[openbdre@sandbox ~]$
-</code>
+passwd: all authentication tokens updated successfully.</pre></div>
 </li>
 <li>
-<p>Edit /etc/sudoers and append following line at the bottom. It's a readonly file so you need to save it with <code>wq!</code> in vi. This will allow openbdre to perform <code>sudo</code>.</p>
+<p>As root edit /etc/sudoers and allow openbdre to perform <code>sudo</code>. Below will do it</p>
 
-<p><code>openbdre ALL=(ALL) NOPASSWD:ALL</code></p>
-
-<p>It's also quite easy to run BDRE for CDH VM. You can download Cloudera Quickstart VM and build BDRE after enabling the CDH profile in settings.xml (included with BDRE source code). </p>
+<div class="highlight highlight-source-shell"><pre><span class="pl-c1">echo</span> <span class="pl-s"><span class="pl-pds">"</span>openbdre ALL=(ALL) NOPASSWD:ALL<span class="pl-pds">"</span></span> <span class="pl-k">&gt;&gt;</span> /etc/sudoers</pre></div>
 </li>
 <li>
-<p>Edit /etc/hosts file and add a mapping for openbdre.org and . The IP should be the same one sandbox.hortonworks.com is mapped to.</p>
+<p>Login to the HDP Sandbox with the newly created openbdre user. You can perform a <strong>su openbdre</strong> to switch to this account. </p>
 
-<ul>
-<li>It should look like below</li>
-</ul>
-
-<div class="highlight highlight-source-shell"><pre><span class="pl-c"># File is generated from /usr/lib/hue/tools/start_scripts/gen_hosts.sh</span>
-<span class="pl-c"># Do not remove the following line, or various programs</span>
-<span class="pl-c"># that require network functionality will fail.</span>
-127.0.0.1               localhost.localdomain localhost
-10.0.2.15       sandbox.hortonworks.com sandbox ambari.hortonworks.com
-10.0.2.15       openbdre.org</pre></div>
+<div class="highlight highlight-source-shell"><pre>[root@sandbox <span class="pl-k">~</span>]# su openbdre
+[openbdre@sandbox root]$ <span class="pl-c1">cd</span> <span class="pl-k">~</span>
+[openbdre@sandbox <span class="pl-k">~</span>]$</pre></div>
 </li>
-<li>Download Maven from a mirror and unpack
-<code>
-wget http://www.us.apache.org/dist/maven/maven-3/3.3.9/binaries/apache-maven-3.3.9-bin.zip
-unzip apache-maven-3.3.9-bin.zip
-export PATH=$PATH:/home/openbdre/apache-maven-3.3.9/bin
-</code>
+<li>
+<p>Download Maven from a mirror, unpack and add to the PATH.</p>
+
+<div class="highlight highlight-source-shell"><pre>[root@sandbox <span class="pl-k">~</span>]# wget http://www.us.apache.org/dist/maven/maven-3/3.3.9/binaries/apache-maven-3.3.9-bin.zip
+[root@sandbox <span class="pl-k">~</span>]# unzip apache-maven-3.3.9-bin.zip
+[root@sandbox <span class="pl-k">~</span>]# <span class="pl-k">export</span> PATH=<span class="pl-smi">$PATH</span>:/home/openbdre/apache-maven-3.3.9/bin</pre></div>
 </li>
 </ul>
 
@@ -111,34 +109,22 @@ export PATH=$PATH:/home/openbdre/apache-maven-3.3.9/bin
 <p>Obtain the source code</p>
 
 <ul>
-<li>Login to the HDP Sandbox with the newly created openbdre user. You can perform a <strong>su openbdre</strong> to switch to this account.</li>
+<li>
+<p>cd to the home directory of openbdre.</p>
+
+<div class="highlight highlight-source-shell"><pre>[root@sandbox <span class="pl-k">~</span>]# <span class="pl-c1">cd</span> <span class="pl-k">~</span></pre></div>
+</li>
+<li>
+<p>Pull BDRE source from this git repository. To find out your repository link navigate to the repository in this website and copy the https repo URL.</p>
+
+<div class="highlight highlight-source-shell"><pre>[root@sandbox <span class="pl-k">~</span>]# git clone https://github.com/WiproOpenSourcePractice/openbdre.git</pre></div>
+</li>
+<li>
+<p>cd to the cloned source dir (so you can be in /home/openbdre/openbdre)</p>
+
+<div class="highlight highlight-source-shell"><pre>[root@sandbox <span class="pl-k">~</span>]# <span class="pl-c1">cd</span> openbdre</pre></div>
+</li>
 </ul>
-
-<pre><code>su openbdre
-</code></pre>
-
-<ul>
-<li>cd to the home directory of openbdre.</li>
-</ul>
-
-<pre><code>cd ~
-</code></pre>
-
-<ul>
-<li>Pull BDRE source from this git repository. To find out your repository link navigate to the repository in this website and copy the https repo URL.</li>
-</ul>
-
-<pre><code>git clone https://gitlab.com/bdre/openbdre.git
-</code></pre>
-
-<p>If you want to be a non-annonymous user then change the URL format to https://GIT_USER:<a href="mailto:GIT_PASSWORD@gitlab.com">GIT_PASSWORD@gitlab.com</a>/bdre/openbdre.git</p>
-
-<ul>
-<li>cd to the cloned source dir (so you can be in /home/openbdre/openbdre)</li>
-</ul>
-
-<pre><code>cd openbdre
-</code></pre>
 </li>
 <li>
 <p>Database Setup </p>
@@ -147,8 +133,7 @@ export PATH=$PATH:/home/openbdre/apache-maven-3.3.9/bin
 <li>Execute the dbsetup.sh script without any parameters as shown below. In this example, we are going to use MySQL as BDRE backend as it's already available in the HDP Sandbox. If you would like to use another database please select it accordingly.</li>
 </ul>
 
-<pre><code>sh dbsetup.sh
-</code></pre>
+<div class="highlight highlight-source-shell"><pre>[root@sandbox <span class="pl-k">~</span>]# sh dbsetup.sh</pre></div>
 
 <div class="highlight highlight-source-shell"><pre>[openbdre@sandbox openbdre]$ sh dbsetup.sh⏎
 Supported DB
@@ -183,35 +168,54 @@ Tables created successfully <span class="pl-k">in</span> MySQL bdre DB</pre></di
 <p>Building</p>
 
 <ul>
-<li>Now build BDRE using (note BDRE may not compile if the <strong>settings.xml</strong> is not passed from the commandline so be sure to use the <em>-s</em> option. When building for the first time, it might take a while as maven resolves and downloads the jar libraries from diffrent repositories.</li>
+<li>
+<p>Now build BDRE using (note BDRE may not compile if the <strong>settings.xml</strong> is not passed from the commandline so be sure to use the <em>-s</em> option. When building for the first time, it might take a while as maven resolves and downloads the jar libraries from diffrent repositories.</p>
+
+<div class="highlight highlight-source-shell"><pre>mvn -s settings.xml clean install -P hdp22</pre></div>
+</li>
+<li>
+<p><em>Note:</em> Selecting hdp22 will compile BDRE with HDP 2.2 libraries and automatically configure BDRE with Hortonworks Sandbox 2.2.0. Similarly one should be able to build this using -P cdh52 which will configure BDRE for CDH 5.2 Quickstart VM. During building it'll pickup the environment specific configurations from /databases/setup/profile.<em>hdp22</em>.properties.</p>
+
+<p>Content of databases/setup/profile.hdp22.properties</p>
+</li>
 </ul>
 
-<p><code>mvn -s settings.xml clean install -P hdp22</code></p>
+<div class="highlight highlight-source-ini"><pre>  <span class="pl-k">bdre_user_name</span>=openbdre
+  <span class="pl-k">name_node_hostname</span>=sandbox.hortonworks.com
+  <span class="pl-k">name_node_port</span>=8020
+  <span class="pl-k">job_tracker_port</span>=8050
+  <span class="pl-k">flume_path</span>=/usr/hdp/current/flume-server
+  <span class="pl-k">oozie_host</span>=sandbox.hortonworks.com
+  <span class="pl-k">oozie_port</span>=11000
+  <span class="pl-k">thrift_hostname</span>=sandbox.hortonworks.com
+  <span class="pl-k">hive_server_hostname</span>=sandbox.hortonworks.com
+  <span class="pl-k">drools_hostname</span>=sandbox.hortonworks.com
+  <span class="pl-k">hive_jdbc_user</span>=openbdre
+  <span class="pl-k">hive_jdbc_password</span>=openbdre</pre></div>
 
-<div class="highlight highlight-source-shell"><pre>$ mvn -s settings.xml clean install -P hdp22
-[INFO] Scanning <span class="pl-k">for</span> projects...
-[INFO] ------------------------------------------------------------------------
-[INFO] Reactor Build Order:
-    .......blah blah.........
-    .......blah blah.........
-[INFO] ------------------------------------------------------------------------
-[INFO] BUILD SUCCESS
-[INFO] ------------------------------------------------------------------------
-[INFO] Total <span class="pl-k">time</span>: 3:39.479s
-[INFO] Finished at: Wed Dec 30 01:50:02 PST 2015
-[INFO] Final Memory: 127M/2296M
-[INFO] ------------------------------------------------------------------------</pre></div>
+<div class="highlight highlight-source-shell"><pre>  $ mvn -s settings.xml clean install -P hdp22
+  [INFO] Scanning <span class="pl-k">for</span> projects...
+  [INFO] ------------------------------------------------------------------------
+  [INFO] Reactor Build Order:
+      .......blah blah.........
+      .......blah blah.........
+  [INFO] ------------------------------------------------------------------------
+  [INFO] BUILD SUCCESS
+  [INFO] ------------------------------------------------------------------------
+  [INFO] Total <span class="pl-k">time</span>: 3:39.479s
+  [INFO] Finished at: Wed Dec 30 01:50:02 PST 2015
+  [INFO] Final Memory: 127M/2296M
+  [INFO] ------------------------------------------------------------------------</pre></div>
 </li>
 <li>
 <p>Installing BDRE</p>
 
 <ul>
-<li>After building BDRE successfully run </li>
-</ul>
+<li>
+<p>After building BDRE successfully run </p>
 
-<p><code>sh install-scripts.sh local</code></p>
-
-<ul>
+<div class="highlight highlight-source-shell"><pre>sh install-scripts.sh <span class="pl-k">local</span></pre></div>
+</li>
 <li>It'll install the BDRE scripts and artifacts in /home/openbdre/bdre</li>
 </ul>
 </li>
@@ -221,10 +225,10 @@ Tables created successfully <span class="pl-k">in</span> MySQL bdre DB</pre></di
 <a id="using-bdre" class="anchor" href="#using-bdre" aria-hidden="true"><span class="octicon octicon-link"></span></a>Using BDRE</h3>
 
 <ul>
-<li>After a successful build, cd into md-rest-api folder and start the BDRE UI using </li>
+<li>After a successful build, start the BDRE UI using </li>
 </ul>
 
-<p><code>shell sh ./quick-run.sh</code></p>
+<div class="highlight highlight-source-shell"><pre> /home/openbdre/bdre/bdre-scripts/execution/run-ui.sh</pre></div>
 
 <ul>
 <li>Use <em>Google Chrome browser</em> from the host machine and open <em>http://VM_IP:288503/mdui/pages/content.page</em>
@@ -238,7 +242,7 @@ Tables created successfully <span class="pl-k">in</span> MySQL bdre DB</pre></di
 <ul>
 <li>Create a RDBMS data import job from <em>Job Setup From Template &gt; Import from RDBMS</em>
 </li>
-<li>Change the JDBC URL/credentials to your local MySQL retail_db DB that contains some sample retail data metadata.</li>
+<li>Change the JDBC URL/credentials to your local MySQL DB that contains some data.</li>
 <li>Click <em>Test Connection</em>
 </li>
 <li>Expand and select 1 table (be sure to expand the tables before selecting).</li>
@@ -248,19 +252,17 @@ Tables created successfully <span class="pl-k">in</span> MySQL bdre DB</pre></di
 <li>Click deploy button on process page corresponding to the process you want to deploy. ( Deploy button will show status regarding deployment of process, when you hover over the button.)</li>
 <li>Wait for 2 minutes and the deployment will be completed by then.</li>
 <li>After the deployment is complete and in UI the status for the process is deployed (turns green).</li>
-<li>Click the execution button to execute the workflow.</li>
+<li>Click the execution button to execute the <em>Import job</em>.</li>
 <li>Check the process in Oozie console <em>http://VM_IP:11000/oozie</em>
 </li>
+<li>When the import job is complete start the <em>data load job</em>.</li>
 </ul>
-
-      <footer class="site-footer">
-        <span class="site-footer-owner"><a href="https://github.com/WiproOpenSourcePractice/openbdre">Bigdata Ready Enterprise</a> is maintained by <a href="https://github.com/WiproOpenSourcePractice">WiproOpenSourcePractice</a>.</span>
-
-        <span class="site-footer-credits">This page was generated by <a href="https://pages.github.com">GitHub Pages</a> using the <a href="https://github.com/jasonlong/cayman-theme">Cayman theme</a> by <a href="https://twitter.com/jasonlong">Jason Long</a>.</span>
+      </section>
+      <footer>
+        <p><small>Hosted on <a href="https://pages.github.com">GitHub Pages</a> using the Dinky theme</small></p>
       </footer>
-
-    </section>
-
-  
+    </div>
+    <!--[if !IE]><script>fixScale(document);</script><![endif]-->
+		
   </body>
 </html>
