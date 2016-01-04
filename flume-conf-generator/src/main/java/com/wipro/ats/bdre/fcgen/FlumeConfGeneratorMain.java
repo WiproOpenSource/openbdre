@@ -58,6 +58,7 @@ public class FlumeConfGeneratorMain extends BaseStructure {
                         String key = (String) e.nextElement();
                         addFlumeProperties.append(key + "=" + flumeProperties.get(key) + "\n");
                     }
+                    addFlumeProperties.append("agent.sinks.sink.hdfs.processId="+pid+"\n");
                     // writing flume conf properties in flum.conf file
 
                 }

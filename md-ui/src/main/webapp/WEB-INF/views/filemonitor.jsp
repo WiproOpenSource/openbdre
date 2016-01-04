@@ -117,6 +117,7 @@
                                                                         $("#divEncloseHeading").hide();
                                                                         $("#successHeader").show();
                                                                          createJobResult = data;
+                                                                         displayProcess(createJobResult);
                                                                          $(this).dialog("close");
                                                                         }
                                                                     }
@@ -343,7 +344,16 @@
                                    options: '/mdrest/processtype/optionslist'
 
                                },
-
+                               ProcessPipelineButton: {
+                                   title: 'Pipeline',
+                                   sorting: false,
+                                   width: '2%',
+                                   listClass: 'bdre-jtable-button',
+                                   create: false,
+                                   edit: false,
+                                   display: function(data) {
+                                       return '<span class="label label-primary" onclick="fetchPipelineInfo(' + data.record.processId + ')"></span> ';
+                                   },
                                }
                            }
                        });
