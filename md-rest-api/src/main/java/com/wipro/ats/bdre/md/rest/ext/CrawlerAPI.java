@@ -21,6 +21,7 @@ import com.wipro.ats.bdre.md.dao.ProcessDAO;
 import com.wipro.ats.bdre.md.dao.PropertiesDAO;
 import com.wipro.ats.bdre.md.rest.RestWrapper;
 import com.wipro.ats.bdre.md.rest.util.Dao2TableUtil;
+import com.wipro.ats.bdre.md.rest.util.DateConverter;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
@@ -112,7 +113,9 @@ public class CrawlerAPI extends MetadataAPIBase {
             }
 
         }
-        jpaProperties = Dao2TableUtil.buildJPAProperties(childProcess.getProcessId(), "crawler", "url", crawlerInfo.getUrl(), "Base Url to crawl");
+        jpaProperties = Dao2TableUtil.buildJPAProperties(childProcess.getProcessId()
+
+                , "crawler", "url", crawlerInfo.getUrl(), "Base Url to crawl");
         childProps.add(jpaProperties);
         jpaProperties = Dao2TableUtil.buildJPAProperties(childProcess.getProcessId(), "crawler", "urlsToSearch", crawlerInfo.getUrlsToSearch(), "urls to include in search");
         childProps.add(jpaProperties);

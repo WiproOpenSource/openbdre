@@ -118,6 +118,8 @@ public class FlumePropertiesAPI extends MetadataAPIBase {
         Integer counter = tableProcessList.size();
         for (Process process:tableProcessList) {
             process.setCounter(counter);
+            process.setTableAddTS(DateConverter.dateToString(process.getAddTS()));
+            process.setTableEditTS(DateConverter.dateToString(process.getEditTS()));
         }
         restWrapper = new RestWrapper(tableProcessList, RestWrapper.OK);
         return restWrapper;
