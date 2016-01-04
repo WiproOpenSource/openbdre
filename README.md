@@ -20,10 +20,10 @@ This document will help you build BDRE from source. Audience for this document a
 * Setup a 'Host-Only Adapter' for network to enable communication between Host and Guest OS.
 * Now ssh into the sandbox using *root@VM_IP* (password hadoop)
     - The VM_IP is usually something between 192.168.56.101 - 192.168.56.109 
-* Start Oozie as the Oozie user and check if Oozie has started.
+* Start Oozie as the Oozie user and Oozie isn't already started. ```ps -ef | grep -i oozie``` will help determine status of Oozie.
 
     ```shell
-    su - oozie -c "cd /grid/0/var/log/oozie; /usr/hdp/current/oozie/oozie-server/bin/catalina.sh /usr/hdp/current/oozie/oozie-server/bin/setclasspath.sh /usr/hdp/current/oozie-server/bin/oozied.sh start"
+    su - oozie -c "/usr/hdp/current/oozie-server/bin/oozie-start.sh"
     ps -ef | grep -i oozie
     ```
 * Now create *openbdre* user account.
