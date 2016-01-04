@@ -63,7 +63,7 @@ public class Dao2TableUtil {
         tableProperties.setValue(jpaProperties.getPropValue());
         return tableProperties;
     }
-    public static Process buildJPAProcess(Integer processTypeId, String name, String desc, Integer workflowTypeId) {
+    public static Process buildJPAProcess(Integer processTypeId,Process parentProcess, String name, String desc, Integer workflowTypeId) {
         Process daoProcess = new Process();
         ProcessType daoProcessType = new ProcessType();
         daoProcessType.setProcessTypeId(processTypeId);
