@@ -25,6 +25,7 @@ import com.wipro.ats.bdre.md.dao.jpa.ProcessTemplate;
 import com.wipro.ats.bdre.md.dao.jpa.PropertiesId;
 import com.wipro.ats.bdre.md.dao.jpa.WorkflowType;
 import com.wipro.ats.bdre.md.rest.RestWrapper;
+import com.wipro.ats.bdre.md.rest.util.Dao2TableUtil;
 import com.wipro.ats.bdre.md.rest.util.DateConverter;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -79,49 +80,78 @@ public class CrawlerAPI extends MetadataAPIBase {
             return restWrapper;
         }
 
-        com.wipro.ats.bdre.md.beans.table.Process parentProcess = new com.wipro.ats.bdre.md.beans.table.Process();
-        Process childProcess = new Process();
+        /*  com.wipro.ats.bdre.md.beans.table.Process parentProcess = new com.wipro.ats.bdre.md.beans.table.Process();
+        Process childProcess = new Process();  */
+
         //making process
-        parentProcess = insertProcess(28, null, crawlerInfo.getProcessName(), crawlerInfo.getProcessDescription(), 1, principal);
+        com.wipro.ats.bdre.md.dao.jpa.Process parentProcess = Dao2TableUtil.buildJPAProcess(28, crawlerInfo.getProcessName(), crawlerInfo.getProcessDescription(), 1);
+        com.wipro.ats.bdre.md.dao.jpa.Process childProcess = Dao2TableUtil.buildJPAProcess(29, "child of " + crawlerInfo.getProcessName(), "child of " + crawlerInfo.getProcessDescription(), 0);
+        List<com.wipro.ats.bdre.md.dao.jpa.Properties> childProps=new ArrayList<>();
+        /*  parentProcess = insertProcess(28, null, crawlerInfo.getProcessName(), crawlerInfo.getProcessDescription(), 1, principal);
         childProcess = insertProcess(29, parentProcess.getProcessId(), "child of " + crawlerInfo.getProcessName(), "child of " + crawlerInfo.getProcessDescription(), 0, principal);
-        parentProcess = updateProcess(parentProcess);
+        parentProcess = updateProcess(parentProcess);  */
+
         //inserting in properties table
-        insertProperties(childProcess.getProcessId(), "crawler", "politenessDelay", crawlerInfo.getPolitenessDelay().toString(), "Delay between requests");
+        com.wipro.ats.bdre.md.dao.jpa.Properties jpaProperties = Dao2TableUtil.buildJPAProperties(childProcess.getProcessId(), "crawler", "politenessDelay", crawlerInfo.getPolitenessDelay().toString(), "Delay between requests");
+        childProps.add(jpaProperties);
+        jpaProperties = Dao2TableUtil.buildJPAProperties(childProcess.getProcessId(), "crawler", "maxDepthOfCrawling", crawlerInfo.getMaxDepthOfCrawling().toString(), "Depth of crawling");
+        childProps.add(jpaProperties);
+        jpaProperties = Dao2TableUtil.buildJPAProperties(childProcess.getProcessId(), "crawler", "maxPagesToFetch", crawlerInfo.getMaxPagesToFetch().toString(), "no. of pages to fetch");
+        childProps.add(jpaProperties);
+        jpaProperties = Dao2TableUtil.buildJPAProperties(childProcess.getProcessId(), "crawler", "includeBinaryContentInCrawling", crawlerInfo.getIncludeBinaryContentInCrawling().toString(), "to include binary content");
+        childProps.add(jpaProperties);
+        jpaProperties = Dao2TableUtil.buildJPAProperties(childProcess.getProcessId(), "crawler", "resumableCrawling", crawlerInfo.getResumableCrawling().toString(), "set resumable crawling");
+        childProps.add(jpaProperties);
+        jpaProperties = Dao2TableUtil.buildJPAProperties(childProcess.getProcessId(), "crawler", "userAgentString", crawlerInfo.getUserAgentString(), "User agent string");
+        childProps.add(jpaProperties);
+        /*  insertProperties(childProcess.getProcessId(), "crawler", "politenessDelay", crawlerInfo.getPolitenessDelay().toString(), "Delay between requests");
         insertProperties(childProcess.getProcessId(), "crawler", "maxDepthOfCrawling", crawlerInfo.getMaxDepthOfCrawling().toString(), "Depth of crawling");
         insertProperties(childProcess.getProcessId(), "crawler", "maxPagesToFetch", crawlerInfo.getMaxPagesToFetch().toString(), "no. of pages to fetch");
         insertProperties(childProcess.getProcessId(), "crawler", "includeBinaryContentInCrawling", crawlerInfo.getIncludeBinaryContentInCrawling().toString(), "to include binary content");
         insertProperties(childProcess.getProcessId(), "crawler", "resumableCrawling", crawlerInfo.getResumableCrawling().toString(), "set resumable crawling");
-        insertProperties(childProcess.getProcessId(), "crawler", "userAgentString", crawlerInfo.getUserAgentString(), "User agent string");
+        insertProperties(childProcess.getProcessId(), "crawler", "userAgentString", crawlerInfo.getUserAgentString(), "User agent string");  */
 
         if (crawlerInfo.getProxyHost() != null && crawlerInfo.getProxyHost() != "") {
-            insertProperties(childProcess.getProcessId(), "crawler", "proxyHost", crawlerInfo.getProxyHost(), "Proxy host");
+            jpaProperties = Dao2TableUtil.buildJPAProperties(childProcess.getProcessId(), "crawler", "proxyHost", crawlerInfo.getProxyHost(), "Proxy Host");
+            childProps.add(jpaProperties);
+            //insertProperties(childProcess.getProcessId(), "crawler", "proxyHost", crawlerInfo.getProxyHost(), "Proxy host");
             if (crawlerInfo.getProxyPort() != null && crawlerInfo.getProxyPort() != 0) {
-                insertProperties(childProcess.getProcessId(), "crawler", "proxyPort", crawlerInfo.getProxyPort().toString(), "Proxy host");
+                jpaProperties = Dao2TableUtil.buildJPAProperties(childProcess.getProcessId(), "crawler", "proxyPort", crawlerInfo.getProxyPort().toString(), "Proxy Port");
+                childProps.add(jpaProperties);
+                //insertProperties(childProcess.getProcessId(), "crawler", "proxyPort", crawlerInfo.getProxyPort().toString(), "Proxy Port");
                 if (crawlerInfo.getProxyUserName() != null && crawlerInfo.getProxyUserName() != "") {
-                    insertProperties(childProcess.getProcessId(), "crawler", "proxyUsername", crawlerInfo.getProxyUserName(), "Proxy username");
+                    jpaProperties = Dao2TableUtil.buildJPAProperties(childProcess.getProcessId(), "crawler", "proxyUsername", crawlerInfo.getProxyUserName(), "Proxy Username");
+                    childProps.add(jpaProperties);
+                    //insertProperties(childProcess.getProcessId(), "crawler", "proxyUsername", crawlerInfo.getProxyUserName(), "Proxy username");
                     if (crawlerInfo.getProxyPassword() != null && crawlerInfo.getProxyPassword() != "") {
-                        insertProperties(childProcess.getProcessId(), "crawler", "proxyPassword", crawlerInfo.getProxyPassword(), "Proxy password");
+                        jpaProperties = Dao2TableUtil.buildJPAProperties(childProcess.getProcessId(), "crawler", "proxyPassword", crawlerInfo.getProxyPassword(), "Proxy Password");
+                        childProps.add(jpaProperties);
+                        //insertProperties(childProcess.getProcessId(), "crawler", "proxyPassword", crawlerInfo.getProxyPassword(), "Proxy password");
                     }
                 }
 
             }
 
         }
-
-        insertProperties(childProcess.getProcessId(), "crawler", "url", crawlerInfo.getUrl(), "Base Url to crawl");
+        jpaProperties = Dao2TableUtil.buildJPAProperties(childProcess.getProcessId(), "crawler", "url", crawlerInfo.getUrl(), "Base Url to crawl");
+        childProps.add(jpaProperties);
+        jpaProperties = Dao2TableUtil.buildJPAProperties(childProcess.getProcessId(), "crawler", "urlsToSearch", crawlerInfo.getUrlsToSearch(), "urls to include in search");
+        childProps.add(jpaProperties);
+        jpaProperties = Dao2TableUtil.buildJPAProperties(childProcess.getProcessId(), "crawler", "urlsNotToSearch", crawlerInfo.getUrlsNotToSearch(), "urls not to include in search");
+        childProps.add(jpaProperties);
+        jpaProperties = Dao2TableUtil.buildJPAProperties(childProcess.getProcessId(), "crawler", "numberOfMappers", crawlerInfo.getNumMappers().toString(), "number of mappers to run");
+        childProps.add(jpaProperties);
+        /* insertProperties(childProcess.getProcessId(), "crawler", "url", crawlerInfo.getUrl(), "Base Url to crawl");
         insertProperties(childProcess.getProcessId(), "crawler", "urlsToSearch", crawlerInfo.getUrlsToSearch(), "urls to include in search");
         insertProperties(childProcess.getProcessId(), "crawler", "urlsNotToSearch", crawlerInfo.getUrlsNotToSearch(), "urls not to include in search");
-        insertProperties(childProcess.getProcessId(), "crawler", "numberOfMappers", crawlerInfo.getNumMappers().toString(), "number of mappers to run");
-        //insertProperties(childProcess.getProcessId(), "program", "mainClass", "com.wipro.ats.bdre.imcrawler.mr.MRMain", "location of main class");
-        //insertProperties(childProcess.getProcessId(), "param", "sub-process-id", childProcess.getProcessId().toString(), "param subPid for mainclass");
-        //insertProperties(childProcess.getProcessId(), "param", "instance-exec-id", "${wf:actionData(\"init-job\")[\"instance-exec-id\"]}", "param instanceExecId for mainclass");
+        insertProperties(childProcess.getProcessId(), "crawler", "numberOfMappers", crawlerInfo.getNumMappers().toString(), "number of mappers to run");  */
 
-
-        List<Process> processList = new ArrayList<Process>();
+        List<com.wipro.ats.bdre.md.dao.jpa.Process> processList = processDAO.createOneChildJob(parentProcess,childProcess,null,childProps);
+        /*  List<Process> processList = new ArrayList<Process>();
         parentProcess.setCounter(2);
         childProcess.setCounter(2);
         processList.add(parentProcess);
-        processList.add(childProcess);
+        processList.add(childProcess);  */
         restWrapper = new RestWrapper(processList, RestWrapper.OK);
         return restWrapper;
     }
