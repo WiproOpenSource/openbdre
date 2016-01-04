@@ -448,16 +448,21 @@ public List<Process> createOneChildJob(Process parentProcess, Process childProce
     try {
         session.beginTransaction();
         parentPid = (Integer) session.save(parentProcess);
+        LOGGER.info("parent processId:"+parentPid);
         parentProcess.setProcessId(parentPid);
         childProcess.setProcess(parentProcess);
         childProcess.setNextProcessId(parentPid.toString());
 
         childPid= (Integer) session.save(childProcess);
+        LOGGER.info("child processId:"+childPid);
+
         parentProcess.setNextProcessId(childPid.toString());
         childProcess.setProcessId(childPid);
         session.update(parentProcess);
         if(parentProps!=null && !parentProps.isEmpty()){
             for(Properties properties: parentProps){
+
+                properties.getId().setProcessId(parentPid);
                 properties.setProcess(parentProcess);
                 session.save(properties);
             }
@@ -465,6 +470,7 @@ public List<Process> createOneChildJob(Process parentProcess, Process childProce
 
         if(childProps!=null && !childProps.isEmpty()){
             for(Properties properties: childProps){
+                properties.getId().setProcessId(childPid);
                 properties.setProcess(childProcess);
                 session.save(properties);
             }
