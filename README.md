@@ -20,13 +20,14 @@ This document will help you build BDRE from source. Audience for this document a
 * Setup a 'Host-Only Adapter' for network to enable communication between Host and Guest OS.
 * Now ssh into the sandbox using *root@VM_IP* (password hadoop)
     - The VM_IP is usually something between 192.168.56.101 - 192.168.56.109 
-* Start Oozie as the Oozie user and check if Oozie has started.
+* Start Oozie as the Oozie user and Oozie isn't already started. ```ps -ef | grep -i oozie``` will help determine status of Oozie.
 
     ```shell
-    su - oozie -c "cd /grid/0/var/log/oozie; /usr/hdp/current/oozie/oozie-server/bin/catalina.sh /usr/hdp/current/oozie/oozie-server/bin/setclasspath.sh /usr/hdp/current/oozie-server/bin/oozied.sh start"
+    su - oozie -c "/usr/hdp/current/oozie-server/bin/oozie-start.sh"
     ps -ef | grep -i oozie
     ```
 * Now create *openbdre* user account.
+
     ```shell
     [root@sandbox ~]# adduser -m -s /bin/bash openbdre
     [root@sandbox ~]# passwd openbdre
@@ -34,61 +35,57 @@ This document will help you build BDRE from source. Audience for this document a
     New password:
     Retype new password:
     passwd: all authentication tokens updated successfully.
-    [root@sandbox ~]#
+    ```
+* As root edit /etc/sudoers and allow openbdre to perform `sudo`. Below will do it
+
+    ```shell
+    echo "openbdre ALL=(ALL) NOPASSWD:ALL" >> /etc/sudoers
+    ```
+    
+* Login to the HDP Sandbox with the newly created openbdre user. You can perform a **su openbdre** to switch to this account. 
+
+    ```shell
     [root@sandbox ~]# su openbdre
-    [openbdre@sandbox root]$ cd
+    [openbdre@sandbox root]$ cd ~
     [openbdre@sandbox ~]$
     ```
-* Edit /etc/sudoers and append following line at the bottom. It's a readonly file so you need to save it with `wq!` in vi. This will allow openbdre to perform `sudo`.
-
-    ```openbdre ALL=(ALL) NOPASSWD:ALL```
-
-    It's also quite easy to run BDRE for CDH VM. You can download Cloudera Quickstart VM and build BDRE after enabling the CDH profile in settings.xml (included with BDRE source code). 
-* Edit /etc/hosts file and add a mapping for openbdre.org and <VM_PRIVATE_IP>. The IP should be the same one sandbox.hortonworks.com is mapped to.
-    - It should look like below
     
+* Download Maven from a mirror, unpack and add to the PATH.
+
     ```shell
-    # File is generated from /usr/lib/hue/tools/start_scripts/gen_hosts.sh
-    # Do not remove the following line, or various programs
-    # that require network functionality will fail.
-    127.0.0.1               localhost.localdomain localhost
-    10.0.2.15       sandbox.hortonworks.com sandbox ambari.hortonworks.com
-    10.0.2.15       openbdre.org
-    ```
-* Download Maven from a mirror and unpack
-    ```
-    wget http://www.us.apache.org/dist/maven/maven-3/3.3.9/binaries/apache-maven-3.3.9-bin.zip
-    unzip apache-maven-3.3.9-bin.zip
-    export PATH=$PATH:/home/openbdre/apache-maven-3.3.9/bin
+    [root@sandbox ~]# wget http://www.us.apache.org/dist/maven/maven-3/3.3.9/binaries/apache-maven-3.3.9-bin.zip
+    [root@sandbox ~]# unzip apache-maven-3.3.9-bin.zip
+    [root@sandbox ~]# export PATH=$PATH:/home/openbdre/apache-maven-3.3.9/bin
     ```
     
 ## Building BDRE from source
 
 1. Obtain the source code
-    * Login to the HDP Sandbox with the newly created openbdre user. You can perform a **su openbdre** to switch to this account.
+ * cd to the home directory of openbdre.
+
+    ```shell
+    [root@sandbox ~]# cd ~
     ```
-    su openbdre
+
+ * Pull BDRE source from this git repository. To find out your repository link navigate to the repository in this website and copy the https repo URL.
+   
+    ```shell
+    [root@sandbox ~]# git clone https://github.com/WiproOpenSourcePractice/openbdre.git
     ```
-    * cd to the home directory of openbdre.
+
+ * cd to the cloned source dir (so you can be in /home/openbdre/openbdre)
+
+    ```shell
+    [root@sandbox ~]# cd openbdre
     ```
-    cd ~
-    ```
-    * Pull BDRE source from this git repository. To find out your repository link navigate to the repository in this website and copy the https repo URL.
-    ```
-    git clone https://gitlab.com/bdre/openbdre.git
-    ```
-    If you want to be a non-annonymous user then change the URL format to https://GIT_USER:GIT_PASSWORD@gitlab.com/bdre/openbdre.git
-    * cd to the cloned source dir (so you can be in /home/openbdre/openbdre)
-    ```
-    cd openbdre
-    ```
-    
+
 2. Database Setup 
     * Execute the dbsetup.sh script without any parameters as shown below. In this example, we are going to use MySQL as BDRE backend as it's already available in the HDP Sandbox. If you would like to use another database please select it accordingly.
-    ```
-    sh dbsetup.sh
-    ```
     
+    ```shell
+    [root@sandbox ~]# sh dbsetup.sh
+    ```
+
     ```shell
     [openbdre@sandbox openbdre]$ sh dbsetup.sh⏎
     Supported DB
@@ -124,6 +121,8 @@ This document will help you build BDRE from source. Audience for this document a
     * Now build BDRE using (note BDRE may not compile if the **settings.xml** is not passed from the commandline so be sure to use the *-s* option. When building for the first time, it might take a while as maven resolves and downloads the jar libraries from diffrent repositories.
     
     ```mvn -s settings.xml clean install -P hdp22```
+    
+    *Note:* Selecting hdp22 will compile BDRE with HDP 2.2 libraries and automatically configure BDRE with Hortonworks Sandbox 2.2.0. Similarly one should be able to build this using -P cdh52 which will configure BDRE for CDH 5.2 Quickstart VM.
     
     ```shell
     $ mvn -s settings.xml clean install -P hdp22
