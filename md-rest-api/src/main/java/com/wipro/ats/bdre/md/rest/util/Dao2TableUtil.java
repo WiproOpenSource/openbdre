@@ -48,24 +48,8 @@ public class Dao2TableUtil {
 
     public static List<com.wipro.ats.bdre.md.beans.table.Process> jpaList2TableProcessList(List<com.wipro.ats.bdre.md.dao.jpa.Process> jpaProcessList) {
         List<com.wipro.ats.bdre.md.beans.table.Process> tableProcessList = new ArrayList<>();
-        com.wipro.ats.bdre.md.beans.table.Process tableProcess = null;
         for (com.wipro.ats.bdre.md.dao.jpa.Process jpaProcess : jpaProcessList) {
-            tableProcess = new com.wipro.ats.bdre.md.beans.table.Process();
-            tableProcess.setProcessId(jpaProcess.getProcessId());
-            tableProcess.setProcessName(jpaProcess.getProcessName());
-            tableProcess.setAddTS(jpaProcess.getAddTs());
-            tableProcess.setEditTS(jpaProcess.getEditTs());
-            tableProcess.setCanRecover(jpaProcess.getCanRecover());
-            tableProcess.setBusDomainId(jpaProcess.getBusDomain().getBusDomainId());
-            tableProcess.setBatchPattern(jpaProcess.getBatchCutPattern());
-            tableProcess.setProcessTypeId(jpaProcess.getProcessType().getProcessTypeId());
-            tableProcess.setWorkflowId(jpaProcess.getWorkflowType().getWorkflowId());
-            tableProcess.setDeleteFlag(jpaProcess.getDeleteFlag());
-            tableProcess.setDescription(jpaProcess.getDescription());
-            tableProcess.setEnqProcessId(jpaProcess.getEnqueuingProcessId());
-            if (jpaProcess.getProcess() != null)
-                tableProcess.setParentProcessId(jpaProcess.getProcess().getProcessId());
-            tableProcessList.add(tableProcess);
+            tableProcessList.add(jpa2TableProcess(jpaProcess));
         }
         return tableProcessList;
     }
