@@ -47,7 +47,16 @@ public class RegisterFile extends MetadataAPIBase {
             {"cTS", "creation-timestamp", "creation timestamp"},
             {"bid", "batch-id", "Batch id(use null for auto-generated batchid)"}
     };
-
+    private static RegisterFile registerFile;
+    public static RegisterFile getAutowiredRegisterFile(){
+        if(registerFile==null){
+            registerFile=new RegisterFile();
+            ApplicationContext appCtx = new ClassPathXmlApplicationContext("spring-dao.xml");
+            AutowireCapableBeanFactory acbFactory = appCtx.getAutowireCapableBeanFactory();
+            acbFactory.autowireBean(registerFile);
+        }
+        return registerFile;
+    }
     /**
      * This method runs RegisterFileProc proc in mysql and returns the input data back.
      *

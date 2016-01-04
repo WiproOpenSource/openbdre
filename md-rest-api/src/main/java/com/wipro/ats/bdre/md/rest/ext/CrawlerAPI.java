@@ -17,15 +17,10 @@ package com.wipro.ats.bdre.md.rest.ext;
 import com.wipro.ats.bdre.md.api.base.MetadataAPIBase;
 import com.wipro.ats.bdre.md.beans.CrawlerInfo;
 import com.wipro.ats.bdre.md.beans.table.Process;
-import com.wipro.ats.bdre.md.beans.table.Properties;
 import com.wipro.ats.bdre.md.dao.ProcessDAO;
 import com.wipro.ats.bdre.md.dao.PropertiesDAO;
-import com.wipro.ats.bdre.md.dao.jpa.BusDomain;
-import com.wipro.ats.bdre.md.dao.jpa.ProcessTemplate;
-import com.wipro.ats.bdre.md.dao.jpa.PropertiesId;
-import com.wipro.ats.bdre.md.dao.jpa.WorkflowType;
 import com.wipro.ats.bdre.md.rest.RestWrapper;
-import com.wipro.ats.bdre.md.rest.util.DateConverter;
+import com.wipro.ats.bdre.md.rest.util.Dao2TableUtil;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
@@ -79,194 +74,63 @@ public class CrawlerAPI extends MetadataAPIBase {
             return restWrapper;
         }
 
-        com.wipro.ats.bdre.md.beans.table.Process parentProcess = new com.wipro.ats.bdre.md.beans.table.Process();
-        Process childProcess = new Process();
+
         //making process
-        parentProcess = insertProcess(28, null, crawlerInfo.getProcessName(), crawlerInfo.getProcessDescription(), 1, principal);
-        childProcess = insertProcess(29, parentProcess.getProcessId(), "child of " + crawlerInfo.getProcessName(), "child of " + crawlerInfo.getProcessDescription(), 0, principal);
-        parentProcess = updateProcess(parentProcess);
+        com.wipro.ats.bdre.md.dao.jpa.Process parentProcess = Dao2TableUtil.buildJPAProcess(28, crawlerInfo.getProcessName(), crawlerInfo.getProcessDescription(), 1);
+        com.wipro.ats.bdre.md.dao.jpa.Process childProcess = Dao2TableUtil.buildJPAProcess(29, "child of " + crawlerInfo.getProcessName(), "child of " + crawlerInfo.getProcessDescription(), 0);
+        List<com.wipro.ats.bdre.md.dao.jpa.Properties> childProps=new ArrayList<>();
+
         //inserting in properties table
-        insertProperties(childProcess.getProcessId(), "crawler", "politenessDelay", crawlerInfo.getPolitenessDelay().toString(), "Delay between requests");
-        insertProperties(childProcess.getProcessId(), "crawler", "maxDepthOfCrawling", crawlerInfo.getMaxDepthOfCrawling().toString(), "Depth of crawling");
-        insertProperties(childProcess.getProcessId(), "crawler", "maxPagesToFetch", crawlerInfo.getMaxPagesToFetch().toString(), "no. of pages to fetch");
-        insertProperties(childProcess.getProcessId(), "crawler", "includeBinaryContentInCrawling", crawlerInfo.getIncludeBinaryContentInCrawling().toString(), "to include binary content");
-        insertProperties(childProcess.getProcessId(), "crawler", "resumableCrawling", crawlerInfo.getResumableCrawling().toString(), "set resumable crawling");
-        insertProperties(childProcess.getProcessId(), "crawler", "userAgentString", crawlerInfo.getUserAgentString(), "User agent string");
+        com.wipro.ats.bdre.md.dao.jpa.Properties jpaProperties = Dao2TableUtil.buildJPAProperties(childProcess.getProcessId(), "crawler", "politenessDelay", crawlerInfo.getPolitenessDelay().toString(), "Delay between requests");
+        childProps.add(jpaProperties);
+        jpaProperties = Dao2TableUtil.buildJPAProperties(childProcess.getProcessId(), "crawler", "maxDepthOfCrawling", crawlerInfo.getMaxDepthOfCrawling().toString(), "Depth of crawling");
+        childProps.add(jpaProperties);
+        jpaProperties = Dao2TableUtil.buildJPAProperties(childProcess.getProcessId(), "crawler", "maxPagesToFetch", crawlerInfo.getMaxPagesToFetch().toString(), "no. of pages to fetch");
+        childProps.add(jpaProperties);
+        jpaProperties = Dao2TableUtil.buildJPAProperties(childProcess.getProcessId(), "crawler", "includeBinaryContentInCrawling", crawlerInfo.getIncludeBinaryContentInCrawling().toString(), "to include binary content");
+        childProps.add(jpaProperties);
+        jpaProperties = Dao2TableUtil.buildJPAProperties(childProcess.getProcessId(), "crawler", "resumableCrawling", crawlerInfo.getResumableCrawling().toString(), "set resumable crawling");
+        childProps.add(jpaProperties);
+        jpaProperties = Dao2TableUtil.buildJPAProperties(childProcess.getProcessId(), "crawler", "userAgentString", crawlerInfo.getUserAgentString(), "User agent string");
+        childProps.add(jpaProperties);
 
         if (crawlerInfo.getProxyHost() != null && crawlerInfo.getProxyHost() != "") {
-            insertProperties(childProcess.getProcessId(), "crawler", "proxyHost", crawlerInfo.getProxyHost(), "Proxy host");
+            jpaProperties = Dao2TableUtil.buildJPAProperties(childProcess.getProcessId(), "crawler", "proxyHost", crawlerInfo.getProxyHost(), "Proxy Host");
+            childProps.add(jpaProperties);
             if (crawlerInfo.getProxyPort() != null && crawlerInfo.getProxyPort() != 0) {
-                insertProperties(childProcess.getProcessId(), "crawler", "proxyPort", crawlerInfo.getProxyPort().toString(), "Proxy host");
+                jpaProperties = Dao2TableUtil.buildJPAProperties(childProcess.getProcessId(), "crawler", "proxyPort", crawlerInfo.getProxyPort().toString(), "Proxy Port");
+                childProps.add(jpaProperties);
                 if (crawlerInfo.getProxyUserName() != null && crawlerInfo.getProxyUserName() != "") {
-                    insertProperties(childProcess.getProcessId(), "crawler", "proxyUsername", crawlerInfo.getProxyUserName(), "Proxy username");
+                    jpaProperties = Dao2TableUtil.buildJPAProperties(childProcess.getProcessId(), "crawler", "proxyUsername", crawlerInfo.getProxyUserName(), "Proxy Username");
+                    childProps.add(jpaProperties);
                     if (crawlerInfo.getProxyPassword() != null && crawlerInfo.getProxyPassword() != "") {
-                        insertProperties(childProcess.getProcessId(), "crawler", "proxyPassword", crawlerInfo.getProxyPassword(), "Proxy password");
+                        jpaProperties = Dao2TableUtil.buildJPAProperties(childProcess.getProcessId(), "crawler", "proxyPassword", crawlerInfo.getProxyPassword(), "Proxy Password");
+                        childProps.add(jpaProperties);
                     }
                 }
 
             }
 
         }
+        jpaProperties = Dao2TableUtil.buildJPAProperties(childProcess.getProcessId(), "crawler", "url", crawlerInfo.getUrl(), "Base Url to crawl");
+        childProps.add(jpaProperties);
+        jpaProperties = Dao2TableUtil.buildJPAProperties(childProcess.getProcessId(), "crawler", "urlsToSearch", crawlerInfo.getUrlsToSearch(), "urls to include in search");
+        childProps.add(jpaProperties);
+        jpaProperties = Dao2TableUtil.buildJPAProperties(childProcess.getProcessId(), "crawler", "urlsNotToSearch", crawlerInfo.getUrlsNotToSearch(), "urls not to include in search");
+        childProps.add(jpaProperties);
+        jpaProperties = Dao2TableUtil.buildJPAProperties(childProcess.getProcessId(), "crawler", "numberOfMappers", crawlerInfo.getNumMappers().toString(), "number of mappers to run");
+        childProps.add(jpaProperties);
 
-        insertProperties(childProcess.getProcessId(), "crawler", "url", crawlerInfo.getUrl(), "Base Url to crawl");
-        insertProperties(childProcess.getProcessId(), "crawler", "urlsToSearch", crawlerInfo.getUrlsToSearch(), "urls to include in search");
-        insertProperties(childProcess.getProcessId(), "crawler", "urlsNotToSearch", crawlerInfo.getUrlsNotToSearch(), "urls not to include in search");
-        insertProperties(childProcess.getProcessId(), "crawler", "numberOfMappers", crawlerInfo.getNumMappers().toString(), "number of mappers to run");
-        //insertProperties(childProcess.getProcessId(), "program", "mainClass", "com.wipro.ats.bdre.imcrawler.mr.MRMain", "location of main class");
-        //insertProperties(childProcess.getProcessId(), "param", "sub-process-id", childProcess.getProcessId().toString(), "param subPid for mainclass");
-        //insertProperties(childProcess.getProcessId(), "param", "instance-exec-id", "${wf:actionData(\"init-job\")[\"instance-exec-id\"]}", "param instanceExecId for mainclass");
-
-
-        List<Process> processList = new ArrayList<Process>();
-        parentProcess.setCounter(2);
-        childProcess.setCounter(2);
-        processList.add(parentProcess);
-        processList.add(childProcess);
-        restWrapper = new RestWrapper(processList, RestWrapper.OK);
+        List<com.wipro.ats.bdre.md.dao.jpa.Process> processList = processDAO.createOneChildJob(parentProcess,childProcess,null,childProps);
+        List<Process> tableProcessList = Dao2TableUtil.jpaList2TableProcessList(processList);
+        Integer counter = tableProcessList.size();
+        for (Process process:tableProcessList) {
+            process.setCounter(counter);
+        }
+        restWrapper = new RestWrapper(tableProcessList, RestWrapper.OK);
         return restWrapper;
     }
 
-    private Process insertProcess(Integer ptId, Integer ppId, String name, String desc, Integer wfId, Principal principal) {
-        Process process = new Process();
-        process.setBusDomainId(1);
-        process.setProcessTypeId(ptId);
-        process.setDescription(desc);
-        process.setParentProcessId(ppId);
-        if (ppId != null) {
-            process.setNextProcessIds(ppId.toString());
-        } else {
-            process.setNextProcessIds("0");
-        }
-
-        process.setProcessName(name);
-        process.setWorkflowId(wfId);
-        process.setEnqProcessId(0);
-        process.setAddTS(DateConverter.stringToDate(process.getTableAddTS()));
-        process.setCanRecover(true);
-
-        com.wipro.ats.bdre.md.dao.jpa.Process insertDaoProcess = new com.wipro.ats.bdre.md.dao.jpa.Process();
-        com.wipro.ats.bdre.md.dao.jpa.ProcessType daoProcessType = new com.wipro.ats.bdre.md.dao.jpa.ProcessType();
-        daoProcessType.setProcessTypeId(ptId);
-        insertDaoProcess.setProcessType(daoProcessType);
-        if (wfId != null) {
-            com.wipro.ats.bdre.md.dao.jpa.WorkflowType daoWorkflowType = new com.wipro.ats.bdre.md.dao.jpa.WorkflowType();
-            daoWorkflowType.setWorkflowId(wfId);
-            insertDaoProcess.setWorkflowType(daoWorkflowType);
-        }
-        com.wipro.ats.bdre.md.dao.jpa.BusDomain daoBusDomain = new com.wipro.ats.bdre.md.dao.jpa.BusDomain();
-        daoBusDomain.setBusDomainId(1);
-        insertDaoProcess.setBusDomain(daoBusDomain);
-        com.wipro.ats.bdre.md.dao.jpa.ProcessTemplate daoProcessTemplate = new com.wipro.ats.bdre.md.dao.jpa.ProcessTemplate();
-        daoProcessTemplate.setProcessTemplateId(0);
-        insertDaoProcess.setProcessTemplate(daoProcessTemplate);
-
-        if (ppId != null) {
-            com.wipro.ats.bdre.md.dao.jpa.Process parentProcess = new com.wipro.ats.bdre.md.dao.jpa.Process();
-            parentProcess.setProcessId(ppId);
-            insertDaoProcess.setProcess(parentProcess);
-            insertDaoProcess.setNextProcessId(ppId.toString());
-        } else {
-            insertDaoProcess.setNextProcessId("0");
-        }
-        insertDaoProcess.setDeleteFlag(false);
-        insertDaoProcess.setDescription(desc);
-        insertDaoProcess.setProcessName(name);
-        insertDaoProcess.setCanRecover(true);
-        insertDaoProcess.setEnqueuingProcessId(0);
-        insertDaoProcess.setAddTs(DateConverter.stringToDate(process.getTableAddTS()));
-        try {
-            LOGGER.debug("Process" + name + " is going to be inserted " + process.getProcessTypeId());
-//            process = s.selectOne("call_procedures.InsertProcess", process);
-            Integer processId = processDAO.insert(insertDaoProcess);
-            process.setProcessId(processId);
-            process.setTableAddTS(DateConverter.dateToString(insertDaoProcess.getAddTs()));
-            process.setTableEditTS(DateConverter.dateToString(insertDaoProcess.getEditTs()));
-            LOGGER.info("Record with ID:" + process.getProcessId() + " inserted in Process by User:" + principal.getName() + process);
-        } catch (Exception e) {
-            LOGGER.debug("Error Occurred");
-        }
-        return process;
-    }
-
-    private Process updateProcess(Process process) {
-        Integer npid = process.getProcessId() + 1;
-        process.setNextProcessIds(npid.toString());
-        try {
-            com.wipro.ats.bdre.md.dao.jpa.Process updateDaoProcess = new com.wipro.ats.bdre.md.dao.jpa.Process();
-            updateDaoProcess.setProcessId(process.getProcessId());
-            com.wipro.ats.bdre.md.dao.jpa.ProcessType daoProcessType = new com.wipro.ats.bdre.md.dao.jpa.ProcessType();
-            daoProcessType.setProcessTypeId(process.getProcessTypeId());
-            updateDaoProcess.setProcessType(daoProcessType);
-            if (process.getWorkflowId() != null) {
-                WorkflowType daoWorkflowType = new WorkflowType();
-                daoWorkflowType.setWorkflowId(process.getWorkflowId());
-                updateDaoProcess.setWorkflowType(daoWorkflowType);
-            }
-            BusDomain daoBusDomain = new BusDomain();
-            daoBusDomain.setBusDomainId(process.getBusDomainId());
-            updateDaoProcess.setBusDomain(daoBusDomain);
-            if (process.getProcessTemplateId() != null) {
-                ProcessTemplate daoProcessTemplate = new ProcessTemplate();
-                daoProcessTemplate.setProcessTemplateId(process.getProcessTemplateId());
-                updateDaoProcess.setProcessTemplate(daoProcessTemplate);
-            }
-            if (process.getParentProcessId() != null) {
-                com.wipro.ats.bdre.md.dao.jpa.Process parentProcess = new com.wipro.ats.bdre.md.dao.jpa.Process();
-                parentProcess.setProcessId(process.getParentProcessId());
-                updateDaoProcess.setProcess(parentProcess);
-            }
-            updateDaoProcess.setDescription(process.getDescription());
-            updateDaoProcess.setAddTs(DateConverter.stringToDate(process.getTableAddTS()));
-            updateDaoProcess.setProcessName(process.getProcessName());
-            updateDaoProcess.setCanRecover(process.getCanRecover());
-            updateDaoProcess.setEnqueuingProcessId(process.getEnqProcessId());
-            if (process.getBatchPattern() != null) {
-                updateDaoProcess.setBatchCutPattern(process.getBatchPattern());
-            }
-            updateDaoProcess.setNextProcessId(process.getNextProcessIds());
-            updateDaoProcess.setDeleteFlag(false);
-
-            updateDaoProcess.setEditTs(DateConverter.stringToDate(process.getTableEditTS()));
-//            Process processes = s.selectOne("call_procedures.UpdateProcess", process);
-            updateDaoProcess = processDAO.update(updateDaoProcess);
-            process.setTableAddTS(DateConverter.dateToString(updateDaoProcess.getAddTs()));
-            process.setTableEditTS(DateConverter.dateToString(updateDaoProcess.getEditTs()));
-
-//        process = s.selectOne("call_procedures.UpdateProcess", process);
-        } catch (Exception e) {
-            LOGGER.debug("Error Occurred");
-        }
-        return process;
-    }
-
-    private void insertProperties(Integer pid, String configGrp, String key, String value, String desc) {
-
-        try {
-            Properties properties = new Properties();
-            properties.setProcessId(pid);
-            properties.setConfigGroup(configGrp);
-            properties.setKey(key);
-            properties.setValue(value);
-            properties.setDescription(desc);
-//            s.selectOne("call_procedures.InsertProperties", properties);
-
-            com.wipro.ats.bdre.md.dao.jpa.Properties insertProperties = new com.wipro.ats.bdre.md.dao.jpa.Properties();
-            PropertiesId propertiesId = new PropertiesId();
-            propertiesId.setPropKey(properties.getKey());
-            propertiesId.setProcessId(properties.getProcessId());
-            insertProperties.setId(propertiesId);
-            com.wipro.ats.bdre.md.dao.jpa.Process process = new com.wipro.ats.bdre.md.dao.jpa.Process();
-            process.setProcessId(properties.getProcessId());
-            insertProperties.setProcess(process);
-            insertProperties.setConfigGroup(properties.getConfigGroup());
-            insertProperties.setPropValue(properties.getValue());
-            insertProperties.setDescription(properties.getDescription());
-            propertiesDAO.insert(insertProperties);
-        } catch (Exception e) {
-            LOGGER.debug("Error Occurred");
-        }
-
-    }
 
     @Override
     public Object execute(String[] params) {
