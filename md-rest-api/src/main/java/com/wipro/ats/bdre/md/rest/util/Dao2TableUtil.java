@@ -71,7 +71,7 @@ public class Dao2TableUtil {
 
         if (parentProcess != null) {
             daoProcess.setProcess(parentProcess);
-            daoProcess.setNextProcessId("0");
+            daoProcess.setNextProcessId(parentProcess.getProcessId().toString());
         } else {
             daoProcess.setNextProcessId("0");
         }

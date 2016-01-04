@@ -68,11 +68,10 @@ public class DataGenAPI extends MetadataAPIBase {
         Integer parentProcessId = processDAO.insert(parentProcess);
         parentProcess.setProcessId(parentProcessId);
         childProcess = Dao2TableUtil.buildJPAProcess(14, parentProcess, "child of Data gen Parent", "child of Data Generation Parent", 0);
-        Integer childProcessId = processDAO.insert(parentProcess);
+        Integer childProcessId = processDAO.insert(childProcess);
         childProcess.setProcessId(childProcessId);
-        parentProcess.setProcess(childProcess);
-        childProcess.setProcess(parentProcess);
-        processDAO.update(childProcess);
+        parentProcess.setNextProcessId(childProcessId.toString());
+        processDAO.update(parentProcess);
 
         StringBuffer tableSchema = new StringBuffer("");
         //to handle argument id's in sequence if rows are deleted and added in UI
