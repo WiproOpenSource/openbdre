@@ -27,6 +27,7 @@ public class MRDriver extends Configured implements Tool {
         String processId = args[0];
         String instanceExecId = args[1];
         String mapperCount = args[2];
+        String outputPath = args[3];
         
         //set conf for the mappers to use
         conf.setInt("sub.process.id", Integer.parseInt(processId));
@@ -45,7 +46,7 @@ public class MRDriver extends Configured implements Tool {
 
         job.setInputFormatClass(CrawlInputFormat.class);
 
-        FileOutputFormat.setOutputPath(job, new Path("output"+instanceExecId));
+        FileOutputFormat.setOutputPath(job, new Path(outputPath+instanceExecId));
         job.waitForCompletion(true);
         return 0;
     }
