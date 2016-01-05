@@ -306,6 +306,24 @@
             transitionEffect: "slideLeft",
             stepsOrientation: "vertical",
             enableCancelButton: true,
+            onStepChanging: function(event, currentIndex, newIndex) {
+            			console.log(currentIndex + 'current ' + newIndex + 'process Name');
+            			if(currentIndex == 2 && newIndex == 3 && document.getElementById('processFieldsForm1').elements[0].value == "" && document.getElementById('processFieldsForm1').elements[1].value == "") {
+            				$("#div-dialog-warning").dialog({
+            					title: "",
+            					resizable: false,
+            					height: 'auto',
+            					modal: true,
+            					buttons: {
+            						"Ok": function() {
+            							$(this).dialog("close");
+            						}
+            					}
+            				}).text("Please Enter Process Name and Description");
+            				return false;
+            			}
+            			return true;
+            },
             onFinished: function(event, currentIndex) {
                                 if(created == 1) {
                                     location.href = '<c:url value="/pages/process.page"/>';
