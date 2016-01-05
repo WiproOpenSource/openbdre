@@ -658,6 +658,35 @@ isInit=true;
 
 				</section >
 
+				 <h3>Process Details</h3>
+                                                            <section>
+                                                                <form class="form-horizontal" role="form" id="processFieldsForm3">
+                                                                    <div id="processDetails">
+                                                                        <div class="alert alert-info" role="alert">
+                                                                            Application requires process details to create process entries in metadata
+                                                                        </div>
+                                                                        <!-- btn-group -->
+                                                                        <div id="processFields">
+
+                                                                            <div class="form-group">
+                                                                                <label class="control-label col-sm-2" for="processName">Process Name:</label>
+                                                                                <div class="col-sm-10">
+                                                                                    <input type="text" class="form-control"  id="processName" name="processName" placeholder="Enter Process Name" required>
+                                                                                </div>
+                                                                            </div>
+                                                                            <div class="form-group">
+                                                                                <label class="control-label col-sm-2" for="processDescription">Process Description:</label>
+                                                                                <div class="col-sm-10">
+                                                                                    <input type="text" class="form-control" id="processDescription" name="processDescription" placeholder="Enter Process Description" required>
+                                                                                </div>
+                                                                            </div>
+
+                                                                        </div>
+                                                                        <!-- /btn-group -->
+                                                                    </div>
+                                                                    </form>
+                                                                    </section>
+
 				<h3 >Submission</h3 >
 
 				<section >
@@ -692,6 +721,8 @@ isInit=true;
 
 					<input type = "submit" class = "btn btn-warning" value = "Create Data import Jobs" >
 				</section >
+
+
 
 				<h3 >Confirm</h3 >
 				<section >
