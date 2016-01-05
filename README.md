@@ -1,4 +1,4 @@
-# Bigdata Ready Enterpise Open Source Software 
+# Bigdata Ready Enterprise Open Source Software 
 
 Released under Apache Public License 2.0. You can get a copy for the license at http://www.apache.org/licenses/LICENSE-2.0.
 
@@ -53,9 +53,9 @@ This document will help you build BDRE from source. Audience for this document a
 * Download Maven from a mirror, unpack and add to the PATH.
 
     ```shell
-    [root@sandbox ~]# wget http://www.us.apache.org/dist/maven/maven-3/3.3.9/binaries/apache-maven-3.3.9-bin.zip
-    [root@sandbox ~]# unzip apache-maven-3.3.9-bin.zip
-    [root@sandbox ~]# export PATH=$PATH:/home/openbdre/apache-maven-3.3.9/bin
+    [openbdre@sandbox ~]# wget http://www.us.apache.org/dist/maven/maven-3/3.3.9/binaries/apache-maven-3.3.9-bin.zip
+    [openbdre@sandbox ~]# unzip apache-maven-3.3.9-bin.zip
+    [openbdre@sandbox ~]# export PATH=$PATH:/home/openbdre/apache-maven-3.3.9/bin
     ```
     
 ## Building BDRE from source
@@ -64,26 +64,26 @@ This document will help you build BDRE from source. Audience for this document a
  * cd to the home directory of openbdre.
 
     ```shell
-    [root@sandbox ~]# cd ~
+    [openbdre@sandbox ~]# cd ~
     ```
 
  * Pull BDRE source from this git repository. To find out your repository link navigate to the repository in this website and copy the https repo URL.
    
     ```shell
-    [root@sandbox ~]# git clone https://github.com/WiproOpenSourcePractice/openbdre.git
+    [openbdre@sandbox ~]# git clone https://github.com/WiproOpenSourcePractice/openbdre.git
     ```
 
  * cd to the cloned source dir (so you can be in /home/openbdre/openbdre)
 
     ```shell
-    [root@sandbox ~]# cd openbdre
+    [openbdre@sandbox ~]# cd openbdre
     ```
 
 2. Database Setup 
     * Execute the dbsetup.sh script without any parameters as shown below. In this example, we are going to use MySQL as BDRE backend as it's already available in the HDP Sandbox. If you would like to use another database please select it accordingly.
     
     ```shell
-    [root@sandbox ~]# sh dbsetup.sh
+    [openbdre@sandbox ~]# sh dbsetup.sh
     ```
 
     ```shell
