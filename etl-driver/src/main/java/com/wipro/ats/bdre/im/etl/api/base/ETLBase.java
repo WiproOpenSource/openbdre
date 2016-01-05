@@ -18,17 +18,17 @@ import com.wipro.ats.bdre.BaseStructure;
 import com.wipro.ats.bdre.IMConfig;
 import com.wipro.ats.bdre.im.IMConstant;
 import com.wipro.ats.bdre.im.etl.api.exception.ETLException;
-import com.wipro.ats.bdre.md.api.GetHiveTables;
 import com.wipro.ats.bdre.md.beans.GetHiveTablesInfo;
+import com.wipro.ats.bdre.md.dao.ProcessDAO;
 import org.apache.hadoop.hive.conf.HiveConf;
 import org.apache.hadoop.hive.metastore.HiveMetaStoreClient;
 import org.apache.hadoop.hive.metastore.api.MetaException;
 import org.apache.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
-import java.util.List;
 
 /**
  * Created by arijit on 12/28/14.
@@ -40,19 +40,29 @@ public abstract class ETLBase extends BaseStructure{
     private GetHiveTablesInfo rawTable;
     private GetHiveTablesInfo baseTable;
     private GetHiveTablesInfo rawView;
+    protected com.wipro.ats.bdre.md.dao.jpa.Process rawLoad;
+    protected com.wipro.ats.bdre.md.dao.jpa.Process stgLoad;
+    protected com.wipro.ats.bdre.md.dao.jpa.Process baseLoad;
     private String processId;
+
+    @Autowired
+    ProcessDAO processDAO;
 
     protected void init(String processId){
         loadHiveTableInfo(processId);
     }
     private void loadHiveTableInfo(String processId){
-        String[] hiveTableParams = {"-p", processId};
+       /* String[] hiveTableParams = {"-p", processId};
         GetHiveTables getHiveTables = new GetHiveTables();
         List<GetHiveTablesInfo> hiveTablesInfos = getHiveTables.execute(hiveTableParams);
        //TODO: THIS logic is wrong. The stageTable , view and coreTable may not be in order.
         rawTable =hiveTablesInfos.get(0);
         rawView =hiveTablesInfos.get(2);
-        baseTable =hiveTablesInfos.get(1);
+        baseTable =hiveTablesInfos.get(1);*/
+        Integer pid = Integer.parseInt(processId);
+        rawLoad = processDAO.subProcesslist(pid).get(0);
+        stgLoad = processDAO.subProcesslist(pid).get(1);
+        baseLoad = processDAO.subProcesslist(pid).get(2);
     }
     protected Connection getHiveJDBCConnection(String dbName){
         try {

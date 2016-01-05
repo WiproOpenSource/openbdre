@@ -16,12 +16,16 @@ package com.wipro.ats.bdre.im.etl.api;
 
 import com.wipro.ats.bdre.im.etl.api.base.ETLBase;
 import com.wipro.ats.bdre.im.etl.api.exception.ETLException;
+import com.wipro.ats.bdre.md.api.GetProperties;
 import org.apache.commons.cli.CommandLine;
 import org.apache.log4j.Logger;
 
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.Statement;
+import java.util.ArrayList;
+import java.util.Enumeration;
+import java.util.List;
 
 /**
  * Created by vishnu on 12/14/14.
@@ -32,17 +36,115 @@ public class CreateRawBaseTables extends ETLBase {
     private static final String[][] PARAMS_STRUCTURE = {
             {"p", "process-id", " Process id of ETLDriver"}
     };
-
     public void execute(String[] params) {
 
         CommandLine commandLine = getCommandLine(params, PARAMS_STRUCTURE);
         String processId = commandLine.getOptionValue("process-id");
 
         init(processId);
-        //Getting stage table information
-        String rawTableName = getRawTable().getTableName();
-        String rawDbName = getRawTable().getDbName();
-        String rawTableDdl = getRawTable().getDdl();
+        //Getting raw table information
+        Integer rawLoadProcessId = rawLoad.getProcessId();
+
+        GetProperties getPropertiesOfRawTable = new GetProperties();
+        java.util.Properties rawPropertiesOfTable = getPropertiesOfRawTable.getProperties(rawLoadProcessId.toString(), "raw-table");
+        String rawTableName = rawPropertiesOfTable.getProperty("table-name");
+        String rawDbName = rawPropertiesOfTable.getProperty("table-db");
+        String rawInputFormat = rawPropertiesOfTable.getProperty("input-format");
+        String rawOutputFormat = rawPropertiesOfTable.getProperty("output-format");
+        String rawSerdeClass = rawPropertiesOfTable.getProperty("serde");
+        String rawSerdeProperties="";
+        String rawTableProperties="";
+        String rawColumnList="";
+        GetProperties getPropertiesOfRawColumns = new GetProperties();
+        java.util.Properties rawPropertiesOfColumns = getPropertiesOfRawColumns.getProperties(rawLoadProcessId.toString(), "raw-table");
+        Enumeration columns = rawPropertiesOfColumns.propertyNames();
+        List<String> rawColumns = new ArrayList<>();
+        if (rawPropertiesOfColumns.size() != 0) {
+            while (columns.hasMoreElements()) {
+                String key = (String) columns.nextElement();
+                rawColumns.add(rawPropertiesOfColumns.getProperty(key));
+            }
+        }
+
+        GetProperties getPropertiesOfRawDataTypes = new GetProperties();
+        java.util.Properties rawPropertiesOfDataTypes = getPropertiesOfRawDataTypes.getProperties(rawLoadProcessId.toString(), "raw-data-types");
+        Enumeration dataTypes = rawPropertiesOfDataTypes.propertyNames();
+        List<String> rawDataTypes = new ArrayList<>();
+        if (rawPropertiesOfColumns.size() != 0) {
+            while (dataTypes.hasMoreElements()) {
+                String key = (String) dataTypes.nextElement();
+                rawDataTypes.add(rawPropertiesOfDataTypes.getProperty(key));
+            }
+        }
+
+
+        for(int i=0; i<rawColumns.size();i++){
+            rawColumnList+=rawColumns.get(i)+" "+rawDataTypes.get(i)+",";
+        }
+        String rawColumnsWithDataTypes = rawColumnList.substring(0,rawColumnList.length()-1);
+        if(rawInputFormat.equalsIgnoreCase("delimited")){
+            StringBuilder sList = new StringBuilder();
+            GetProperties getSerdeProperties = new GetProperties();
+            java.util.Properties listForRawSerdeProps = getSerdeProperties.getProperties(rawLoadProcessId.toString(),"raw-serde-props");
+            Enumeration e = listForRawSerdeProps.propertyNames();
+            if (listForRawSerdeProps.size() != 0) {
+                while (e.hasMoreElements()) {
+                    String key = (String) e.nextElement();
+                    sList.append("'"+key  + "' = '" + listForRawSerdeProps.getProperty(key) + "',");
+                }
+            }
+            rawSerdeProperties=sList.substring(0, sList.length() - 1);
+            LOGGER.debug("rawSerdeProperties = " + rawSerdeProperties);
+        }
+        else if(rawInputFormat.equalsIgnoreCase("xml")){
+            StringBuilder sList = new StringBuilder();
+            GetProperties getSerdeProperties = new GetProperties();
+            java.util.Properties listForRawSerdeProps = getSerdeProperties.getProperties(rawLoadProcessId.toString(),"raw-serde-props");
+            Enumeration e = listForRawSerdeProps.propertyNames();
+            if (listForRawSerdeProps.size() != 0) {
+                while (e.hasMoreElements()) {
+                    String key = (String) e.nextElement();
+                    sList.append("\"" + key + "\" = \"" + listForRawSerdeProps.getProperty(key) + "\",");
+                }
+            }
+            rawSerdeProperties=sList.substring(0, sList.length() - 1);
+            LOGGER.debug("rawSerdeProperties = " + rawSerdeProperties);
+        }
+
+        StringBuilder tList = new StringBuilder();
+        GetProperties getTableProperties = new GetProperties();
+        java.util.Properties listForRawTableProps = getTableProperties.getProperties(rawLoadProcessId.toString(),"raw-table-props");
+        Enumeration e = listForRawTableProps.propertyNames();
+        if (listForRawTableProps.size() != 0) {
+            while (e.hasMoreElements()) {
+                String key = (String) e.nextElement();
+                tList.append("\"" + key + "\" = \"" + listForRawTableProps.getProperty(key) + "\",");
+            }
+        }
+        rawTableProperties=tList.substring(0, tList.length() - 1);
+        LOGGER.debug("rawTableProperties = " + rawTableProperties);
+
+        String rawTableDdl = "";
+        if(rawInputFormat.equalsIgnoreCase("delimited")) {
+            rawTableDdl += "CREATE TABLE IF NOT EXISTS " + rawDbName + "." + rawTableName + " ( " + rawColumnsWithDataTypes + " ) " +
+                    " partitioned by (batchid bigint) ROW FORMAT SERDE 'org.apache.hadoop.hive.serde2.lazy.LazySimpleSerDe'  WITH SERDEPROPERTIES (" + rawSerdeProperties + " ) STORED AS INPUTFORMAT 'org.apache.hadoop.mapred.TextInputFormat'" +
+                    " OUTPUTFORMAT 'org.apache.hadoop.hive.ql.io.HiveIgnoreKeyTextOutputFormat'";
+
+            LOGGER.debug("rawTableDdl= " + rawTableDdl);
+        }
+        else if(rawInputFormat.equalsIgnoreCase("xml")){
+            rawTableDdl += "CREATE TABLE IF NOT EXISTS " + rawDbName + "." + rawTableName + " ( " + rawColumnsWithDataTypes + " )" +
+                    " partitioned by (batchid bigint) ROW FORMAT SERDE 'com.wipro.ats.bdre.io.xml.XmlSerDe' WITH SERDEPROPERTIES " +
+                    " ( " + rawSerdeProperties + " ) STORED AS INPUTFORMAT 'com.wipro.ats.bdre.io.xml.XmlInputFormat' OUTPUTFORMAT 'org.apache.hadoop.hive.ql.io.IgnoreKeyTextOutputFormat' " +
+                    "TBLPROPERTIES ( " + rawTableProperties + " )";
+            LOGGER.debug("rawTableDdl= " + rawTableDdl);
+        }
+
+
+
+
+
+
         //Getting Stage view information
         String rawViewName = getRawView().getTableName();
         String rawViewDbName = getRawView().getDbName();
