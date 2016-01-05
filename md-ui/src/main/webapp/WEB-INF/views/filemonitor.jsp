@@ -49,7 +49,7 @@
                                         <form role="form" id="propertiesFieldsForm">
                                             <div class="form-group">
                                                 <label >File Monitoring Dir Name</label>
-                                                <input type="text" class="form-control" name="monitoredDirName" placeholder="File Monitoring Dir Name" value=<%=System.getProperty("user.home")+"\\mondir"%> required>
+                                                <input type="text" class="form-control" name="monitoredDirName" placeholder="File Monitoring Dir Name" value=<%=System.getProperty("user.home")+"/mondir"%> required>
                                             </div>
                                             <div class="form-group">
                                                 <label >File Pattern</label>
@@ -352,7 +352,7 @@
                                    create: false,
                                    edit: false,
                                    display: function(data) {
-                                       return '<span class="label label-primary" onclick="fetchPipelineInfo(' + data.record.processId + ')">Display</span> ';
+                                       return '<span class="label label-primary" onclick="fetchPipelineInfo(' + data.record.processId + ')"></span> ';
                                    },
                                }
                            }
