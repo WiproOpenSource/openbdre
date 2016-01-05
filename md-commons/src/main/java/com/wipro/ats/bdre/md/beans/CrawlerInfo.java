@@ -48,6 +48,8 @@ public class CrawlerInfo {
     private Integer resumableCrawling = 0;
     @NotNull
     private String userAgentString;
+    @NotNull
+    private String outputPath;
     private String proxyHost;
     private Integer proxyPort;
     private String proxyUserName;
@@ -76,6 +78,14 @@ public class CrawlerInfo {
 
     public Integer getPolitenessDelay() {
         return politenessDelay;
+    }
+
+    public String getOutputPath() {
+        return outputPath;
+    }
+
+    public void setOutputPath(String outputPath) {
+        this.outputPath = outputPath;
     }
 
     public String getProcessName() {
