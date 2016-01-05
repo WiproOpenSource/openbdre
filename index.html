@@ -31,9 +31,11 @@
       </header>
       <section>
         <h1>
-<a id="bigdata-ready-enterpise-open-source-software" class="anchor" href="#bigdata-ready-enterpise-open-source-software" aria-hidden="true"><span class="octicon octicon-link"></span></a>Bigdata Ready Enterpise Open Source Software</h1>
+<a id="bigdata-ready-enterprise-open-source-software" class="anchor" href="#bigdata-ready-enterprise-open-source-software" aria-hidden="true"><span class="octicon octicon-link"></span></a>Bigdata Ready Enterprise Open Source Software</h1>
 
 <p>Released under Apache Public License 2.0. You can get a copy for the license at <a href="http://www.apache.org/licenses/LICENSE-2.0">http://www.apache.org/licenses/LICENSE-2.0</a>.</p>
+
+<hr>
 
 <h2>
 <a id="overview" class="anchor" href="#overview" aria-hidden="true"><span class="octicon octicon-link"></span></a>Overview</h2>
@@ -86,7 +88,7 @@ passwd: all authentication tokens updated successfully.</pre></div>
 <div class="highlight highlight-source-shell"><pre><span class="pl-c1">echo</span> <span class="pl-s"><span class="pl-pds">"</span>openbdre ALL=(ALL) NOPASSWD:ALL<span class="pl-pds">"</span></span> <span class="pl-k">&gt;&gt;</span> /etc/sudoers</pre></div>
 </li>
 <li>
-<p>Login to the HDP Sandbox with the newly created openbdre user. You can perform a <strong>su openbdre</strong> to switch to this account. </p>
+<p>Login to the HDP Sandbox with the newly created openbdre user. You can perform a <strong>su openbdre</strong> to switch to this account. Please make sure you are not root user beyond this point.</p>
 
 <div class="highlight highlight-source-shell"><pre>[root@sandbox <span class="pl-k">~</span>]# su openbdre
 [openbdre@sandbox root]$ <span class="pl-c1">cd</span> <span class="pl-k">~</span>
@@ -95,9 +97,9 @@ passwd: all authentication tokens updated successfully.</pre></div>
 <li>
 <p>Download Maven from a mirror, unpack and add to the PATH.</p>
 
-<div class="highlight highlight-source-shell"><pre>[root@sandbox <span class="pl-k">~</span>]# wget http://www.us.apache.org/dist/maven/maven-3/3.3.9/binaries/apache-maven-3.3.9-bin.zip
-[root@sandbox <span class="pl-k">~</span>]# unzip apache-maven-3.3.9-bin.zip
-[root@sandbox <span class="pl-k">~</span>]# <span class="pl-k">export</span> PATH=<span class="pl-smi">$PATH</span>:/home/openbdre/apache-maven-3.3.9/bin</pre></div>
+<div class="highlight highlight-source-shell"><pre>[openbdre@sandbox <span class="pl-k">~</span>]# wget http://www.us.apache.org/dist/maven/maven-3/3.3.9/binaries/apache-maven-3.3.9-bin.zip
+[openbdre@sandbox <span class="pl-k">~</span>]# unzip apache-maven-3.3.9-bin.zip
+[openbdre@sandbox <span class="pl-k">~</span>]# <span class="pl-k">export</span> PATH=<span class="pl-smi">$PATH</span>:/home/openbdre/apache-maven-3.3.9/bin</pre></div>
 </li>
 </ul>
 
@@ -112,17 +114,17 @@ passwd: all authentication tokens updated successfully.</pre></div>
 <li>
 <p>cd to the home directory of openbdre.</p>
 
-<div class="highlight highlight-source-shell"><pre>[root@sandbox <span class="pl-k">~</span>]# <span class="pl-c1">cd</span> <span class="pl-k">~</span></pre></div>
+<div class="highlight highlight-source-shell"><pre>[openbdre@sandbox <span class="pl-k">~</span>]# <span class="pl-c1">cd</span> <span class="pl-k">~</span></pre></div>
 </li>
 <li>
 <p>Pull BDRE source from this git repository. To find out your repository link navigate to the repository in this website and copy the https repo URL.</p>
 
-<div class="highlight highlight-source-shell"><pre>[root@sandbox <span class="pl-k">~</span>]# git clone https://github.com/WiproOpenSourcePractice/openbdre.git</pre></div>
+<div class="highlight highlight-source-shell"><pre>[openbdre@sandbox <span class="pl-k">~</span>]# git clone https://github.com/WiproOpenSourcePractice/openbdre.git</pre></div>
 </li>
 <li>
 <p>cd to the cloned source dir (so you can be in /home/openbdre/openbdre)</p>
 
-<div class="highlight highlight-source-shell"><pre>[root@sandbox <span class="pl-k">~</span>]# <span class="pl-c1">cd</span> openbdre</pre></div>
+<div class="highlight highlight-source-shell"><pre>[openbdre@sandbox <span class="pl-k">~</span>]# <span class="pl-c1">cd</span> openbdre</pre></div>
 </li>
 </ul>
 </li>
@@ -133,7 +135,7 @@ passwd: all authentication tokens updated successfully.</pre></div>
 <li>Execute the dbsetup.sh script without any parameters as shown below. In this example, we are going to use MySQL as BDRE backend as it's already available in the HDP Sandbox. If you would like to use another database please select it accordingly.</li>
 </ul>
 
-<div class="highlight highlight-source-shell"><pre>[root@sandbox <span class="pl-k">~</span>]# sh dbsetup.sh</pre></div>
+<div class="highlight highlight-source-shell"><pre>[openbdre@sandbox <span class="pl-k">~</span>]# sh dbsetup.sh</pre></div>
 
 <div class="highlight highlight-source-shell"><pre>[openbdre@sandbox openbdre]$ sh dbsetup.sh⏎
 Supported DB
