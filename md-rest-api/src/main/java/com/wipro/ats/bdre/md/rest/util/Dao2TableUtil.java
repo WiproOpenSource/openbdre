@@ -93,16 +93,14 @@ public class Dao2TableUtil {
     }
 
 
-    public static Properties buildJPAProperties(Integer pid, String configGrp, String key, String value, String desc) {
+    public static Properties buildJPAProperties(String configGrp, String key, String value, String desc) {
         Properties properties = new Properties();
         try {
             Process process = new Process();
-            process.setProcessId(pid);
             properties.setProcess(process);
             properties.setConfigGroup(configGrp);
             properties.setPropValue(value);
             PropertiesId propertiesId = new PropertiesId();
-            propertiesId.setProcessId(pid);
             propertiesId.setPropKey(key);
             properties.setId(propertiesId);
             properties.setDescription(desc);
