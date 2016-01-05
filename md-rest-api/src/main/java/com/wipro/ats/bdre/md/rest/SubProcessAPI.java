@@ -17,6 +17,7 @@ package com.wipro.ats.bdre.md.rest;
 import com.wipro.ats.bdre.md.api.base.MetadataAPIBase;
 import com.wipro.ats.bdre.md.beans.table.Process;
 import com.wipro.ats.bdre.md.dao.ProcessDAO;
+import com.wipro.ats.bdre.md.dao.ProcessTypeDAO;
 import com.wipro.ats.bdre.md.dao.jpa.BusDomain;
 import com.wipro.ats.bdre.md.dao.jpa.ProcessTemplate;
 import com.wipro.ats.bdre.md.dao.jpa.WorkflowType;
@@ -159,8 +160,7 @@ public class SubProcessAPI extends MetadataAPIBase {
         try {
             com.wipro.ats.bdre.md.dao.jpa.Process updateDaoProcess = new com.wipro.ats.bdre.md.dao.jpa.Process();
             updateDaoProcess.setProcessId(process.getProcessId());
-            com.wipro.ats.bdre.md.dao.jpa.ProcessType daoProcessType = new com.wipro.ats.bdre.md.dao.jpa.ProcessType();
-            daoProcessType.setProcessTypeId(process.getProcessTypeId());
+            com.wipro.ats.bdre.md.dao.jpa.ProcessType daoProcessType =processTypeDAO.get(process.getProcessTypeId());
             updateDaoProcess.setProcessType(daoProcessType);
             if (process.getWorkflowId() != null) {
                 WorkflowType daoWorkflowType = new WorkflowType();
@@ -176,8 +176,7 @@ public class SubProcessAPI extends MetadataAPIBase {
                 updateDaoProcess.setProcessTemplate(daoProcessTemplate);
             }
             if (process.getParentProcessId() != null) {
-                com.wipro.ats.bdre.md.dao.jpa.Process parentProcess = new com.wipro.ats.bdre.md.dao.jpa.Process();
-                parentProcess.setProcessId(process.getParentProcessId());
+                com.wipro.ats.bdre.md.dao.jpa.Process parentProcess =processDAO.get(process.getParentProcessId());
                 updateDaoProcess.setProcess(parentProcess);
             }
             updateDaoProcess.setDescription(process.getDescription());
@@ -218,6 +217,9 @@ public class SubProcessAPI extends MetadataAPIBase {
         return restWrapper;
     }
 
+    @Autowired
+    ProcessTypeDAO processTypeDAO;
+
     /**
      * This method calls proc InsertProcess and adds a record in process table. it also validates the values passed.
      *
@@ -247,9 +249,10 @@ public class SubProcessAPI extends MetadataAPIBase {
         }
         try {
             com.wipro.ats.bdre.md.dao.jpa.Process insertDaoProcess = new com.wipro.ats.bdre.md.dao.jpa.Process();
-            com.wipro.ats.bdre.md.dao.jpa.ProcessType daoProcessType = new com.wipro.ats.bdre.md.dao.jpa.ProcessType();
-            daoProcessType.setProcessTypeId(process.getProcessTypeId());
+            com.wipro.ats.bdre.md.dao.jpa.ProcessType daoProcessType =processTypeDAO.get(process.getProcessTypeId());
             insertDaoProcess.setProcessType(daoProcessType);
+
+            LOGGER.info("process type:"+daoProcessType.getParentProcessTypeId());
             if (process.getWorkflowId() != null) {
                 WorkflowType daoWorkflowType = new WorkflowType();
                 daoWorkflowType.setWorkflowId(process.getWorkflowId());
@@ -264,9 +267,10 @@ public class SubProcessAPI extends MetadataAPIBase {
                 insertDaoProcess.setProcessTemplate(daoProcessTemplate);
             }
             if (process.getParentProcessId() != null) {
-                com.wipro.ats.bdre.md.dao.jpa.Process parentProcess = new com.wipro.ats.bdre.md.dao.jpa.Process();
-                parentProcess.setProcessId(process.getParentProcessId());
+                com.wipro.ats.bdre.md.dao.jpa.Process parentProcess = processDAO.get(process.getParentProcessId());
                 insertDaoProcess.setProcess(parentProcess);
+                LOGGER.info("Parent process Id:"+parentProcess.getProcessId());
+
             }
             insertDaoProcess.setDescription(process.getDescription());
             insertDaoProcess.setAddTs(DateConverter.stringToDate(process.getTableAddTS()));
@@ -289,6 +293,7 @@ public class SubProcessAPI extends MetadataAPIBase {
             else
                 insertDaoProcess.setDeleteFlag(process.getDeleteFlag());
             insertDaoProcess.setEditTs(DateConverter.stringToDate(process.getTableEditTS()));
+            LOGGER.info("inserting subprocess");
             Integer processId = processDAO.insert(insertDaoProcess);
             process.setProcessId(processId);
             process.setTableAddTS(DateConverter.dateToString(insertDaoProcess.getAddTs()));
