@@ -25,7 +25,8 @@ http://www.springframework.org/schema/context/spring-context-3.0.xsd">
     <context:property-placeholder location="classpath*:db.properties"/>
 
     <context:component-scan
-            base-package="com.wipro.ats.bdre.md,com.wipro.ats.bdre.md.dao,com.wipro.ats.bdre.md.api,com.wipro.ats.bdre.imcrawler.model"/>
+            base-package="com.wipro.ats.bdre.md.dao,com.wipro.ats.bdre.md.api,com.wipro.ats.bdre.imcrawler.model,com.wipro.ats.bdre.md.triggers"/>
+
 
     <bean id="sessionFactory"
           class="org.springframework.orm.hibernate4.LocalSessionFactoryBean">
@@ -44,7 +45,7 @@ http://www.springframework.org/schema/context/spring-context-3.0.xsd">
     <bean id="transactionManager" class="org.springframework.orm.hibernate4.HibernateTransactionManager">
         <property name="sessionFactory" ref="sessionFactory"/>
     </bean>
-
+    <bean id="metadataPersistenceTrigger" class="com.wipro.ats.bdre.md.triggers.MetadataPersistenceTrigger"/>
 
     <bean id="dataSource"
           class="org.springframework.jdbc.datasource.DriverManagerDataSource">

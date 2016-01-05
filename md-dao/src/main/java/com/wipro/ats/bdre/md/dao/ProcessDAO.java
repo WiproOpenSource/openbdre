@@ -20,7 +20,6 @@ import com.wipro.ats.bdre.md.dao.jpa.InstanceExec;
 import com.wipro.ats.bdre.md.dao.jpa.Process;
 import com.wipro.ats.bdre.md.dao.jpa.Properties;
 import com.wipro.ats.bdre.md.dao.jpa.PropertiesId;
-import com.wipro.ats.bdre.md.triggers.ProcessValidateInsert;
 import org.apache.log4j.Logger;
 import org.hibernate.Criteria;
 import org.hibernate.Session;
@@ -143,22 +142,8 @@ public class ProcessDAO {
         Integer id = null;
         try {
             session.beginTransaction();
-            ProcessValidateInsert processValidateInsert=new ProcessValidateInsert();
-            Process parentProcess = null;
-            if (process.getProcess() != null) {
-                parentProcess = (Process) session.get(Process.class, process.getProcess().getProcessId());
-
-                boolean triggerCheck = processValidateInsert.ProcessTypeValidator(process, parentProcess);
-                if (triggerCheck == true) {
-                    id = (Integer) session.save(process);
-                    session.getTransaction().commit();
-                } else throw new MetadataException("error occured in exception");
-            }
-            else
-            {
-                id=(Integer)session.save(process);
-                session.getTransaction().commit();
-            }
+            id = (Integer) session.save(process);
+            session.getTransaction().commit();
         } catch (MetadataException e) {
             session.getTransaction().rollback();
             LOGGER.error(e);
@@ -172,39 +157,9 @@ public class ProcessDAO {
         Session session = sessionFactory.openSession();
         try {
             session.beginTransaction();
-            boolean triggerCheck;
-            ProcessValidateInsert processValidateInsert=new ProcessValidateInsert();
-            Process parentProcess = null;
-            if (process.getProcess() != null) {
-                parentProcess = (Process) session.get(Process.class, process.getProcess().getProcessId());
-            }
-            if(process.getProcess()!=null)
-            {
-                triggerCheck=processValidateInsert.ProcessTypeValidator(process,parentProcess);
-                if(triggerCheck==true)
-                {
-                    process.setEditTs(new Date());
-                    session.update(process);
-                }
-                else
-                {
-                    throw new MetadataException("error occured trigger violation");
-                }
-            }
-            else {
-                triggerCheck=processValidateInsert.ProcessTypeValidator(process,parentProcess);
-                if(triggerCheck==true)
-                {
-                    process.setEditTs(new Date());
-                    session.update(process);
-                }
-                else
-                {
-                    throw new MetadataException("error occured trigger violation");
-                }
-
-            }
-                session.getTransaction().commit();
+            process.setEditTs(new Date());
+            session.update(process);
+            session.getTransaction().commit();
         } catch (MetadataException e) {
             session.getTransaction().rollback();
             LOGGER.error(e);
@@ -220,33 +175,8 @@ public class ProcessDAO {
             session.beginTransaction();
             Process process = (Process) session.get(Process.class, id);
             process.setDeleteFlag(true);
-
-            boolean triggerCheck;
-            ProcessValidateInsert processValidateInsert=new ProcessValidateInsert();
-            Process parentProcess = null;
-            if (process.getProcess() != null) {
-                parentProcess = (Process) session.get(Process.class, process.getProcess().getProcessId());
-            }
-            if(process.getProcess()!=null)
-            {
-                triggerCheck=processValidateInsert.ProcessTypeValidator(process,parentProcess);
-                if(triggerCheck==true)
-                {
-                    session.delete(process);
-                    session.getTransaction().commit();
-                }
-                else
-                {
-                    throw new MetadataException("error occured trigger violation");
-                }
-            }
-            else {
-                session.delete(process);
-                session.getTransaction().commit();
-            }
-
-           // session.update(process);
-//            session.getTransaction().commit();
+            session.delete(process);
+            session.getTransaction().commit();
         } catch (MetadataException e) {
             session.getTransaction().rollback();
             LOGGER.error(e);
@@ -295,43 +225,12 @@ public class ProcessDAO {
             nullProcess.setProcessId(null);
             Criteria updateProcessCriteria = session.createCriteria(Process.class).add(Restrictions.eq("process", parentProcess));
             if (parentProcess.getProcess().getProcessId() == null) {
-                boolean triggerCheck;
-                ProcessValidateInsert processValidateInsert=new ProcessValidateInsert();
                 List<Process> updateProcessList = updateProcessCriteria.list();
+
                 for (Process updateProcess : updateProcessList) {
                     updateProcess.setProcess(nullProcess);
-                    Process parentProcessCheck = null;
-                    if (updateProcess.getProcess() != null) {
-                        parentProcessCheck = (Process) session.get(Process.class, updateProcess.getProcess().getProcessId());
-                    }
-
-                    if(updateProcess.getProcess()!=null)
-                    {
-                        triggerCheck=processValidateInsert.ProcessTypeValidator(updateProcess,parentProcessCheck);
-                        if(triggerCheck==true)
-                        {
-                            updateProcess.setEditTs(new Date());
-                            session.update(updateProcess);
-                        }
-                        else
-                        {
-                            throw new MetadataException("error occured trigger violation");
-                        }
-                    }
-                    else {
-                        triggerCheck=processValidateInsert.ProcessTypeValidator(updateProcess,parentProcessCheck);
-                        if(triggerCheck==true)
-                        {
-                            updateProcess.setEditTs(new Date());
-                            session.update(updateProcess);
-                        }
-                        else
-                        {
-                            throw new MetadataException("error occured trigger violation");
-                        }
-                    }
-
-
+                    updateProcess.setEditTs(new Date());
+                    session.update(updateProcess);
                 }
             }
             Criteria deletePropCriteria = session.createCriteria(Properties.class).add(Restrictions.eq("process", parentProcess));
@@ -344,42 +243,8 @@ public class ProcessDAO {
             }
             Process oldProcess = (Process) session.get(Process.class, oldProcessId);
             oldProcess.setProcessId(newProcessId);
-
-
-            boolean triggerCheck;
-            ProcessValidateInsert processValidateInsert=new ProcessValidateInsert();
-            Process parentProcessCheck = null;
-            if (oldProcess.getProcess() != null) {
-                parentProcessCheck = (Process) session.get(Process.class, oldProcess.getProcess().getProcessId());
-            }
-            if(oldProcess.getProcess()!=null)
-            {
-                triggerCheck=processValidateInsert.ProcessTypeValidator(oldProcess,parentProcessCheck);
-                if(triggerCheck==true)
-                {
-                    oldProcess.setEditTs(new Date());
-                    session.update(oldProcess);
-                }
-                else
-                {
-                    throw new MetadataException("error occured trigger violation");
-                }
-            }
-            else {
-                triggerCheck=processValidateInsert.ProcessTypeValidator(oldProcess,parentProcessCheck);
-                if(triggerCheck==true)
-                {
-                    oldProcess.setEditTs(new Date());
-                    session.update(oldProcess);
-                }
-                else
-                {
-                    throw new MetadataException("error occured trigger violation");
-                }
-            }
-
-
-
+            oldProcess.setEditTs(new Date());
+            session.update(oldProcess);
             session.getTransaction().commit();
         } catch (MetadataException e) {
             session.getTransaction().rollback();
@@ -420,37 +285,7 @@ public class ProcessDAO {
                 newProcess.setBatchCutPattern(referencedProcess.getBatchCutPattern());
                 newProcess.setDeleteFlag(referencedProcess.getDeleteFlag());
 
-
-                boolean triggerCheck;
-                ProcessValidateInsert processValidateInsert=new ProcessValidateInsert();
-                Process parentProcessCheck = null;
-                if (newProcess.getProcess() != null) {
-                    parentProcessCheck = (Process) session.get(Process.class, newProcess.getProcess().getProcessId());
-                }
-                if(newProcess.getProcess()!=null)
-                {
-                    triggerCheck=processValidateInsert.ProcessTypeValidator(newProcess,parentProcessCheck);
-                    if(triggerCheck==true)
-                    {
-                        newProcessId = (Integer) session.save(newProcess);
-                    }
-                    else
-                    {
-                        throw new MetadataException("error occured trigger violation");
-                    }
-                }
-                else {
-                    triggerCheck=processValidateInsert.ProcessTypeValidator(newProcess,parentProcessCheck);
-                    if(triggerCheck==true)
-                    {
-                        newProcessId = (Integer) session.save(newProcess);
-                    }
-                    else
-                    {
-                        throw new MetadataException("error occured trigger violation");
-                    }
-                }
-
+                newProcessId = (Integer) session.save(newProcess);
 
 
                 //insert into properties (process_id,config_group,prop_key,prop_value,description) select (select last_insert_id() from process limit 1),config_group,prop_key,prop_value,description  from properties where process_id=p_id ;
@@ -605,7 +440,53 @@ public class ProcessDAO {
         return returnProcessList;
     }
 
+public List<Process> createOneChildJob(Process parentProcess, Process childProcess, List<Properties> parentProps, List<Properties> childProps ){
+    Session session = sessionFactory.openSession();
+    Integer parentPid = null;
+    Integer childPid = null;
+    List<Process> processList=new ArrayList<>();
+    try {
+        session.beginTransaction();
+        parentPid = (Integer) session.save(parentProcess);
+        LOGGER.info("parent processId:"+parentPid);
+        parentProcess.setProcessId(parentPid);
+        childProcess.setProcess(parentProcess);
+        childProcess.setNextProcessId(parentPid.toString());
 
+        childPid= (Integer) session.save(childProcess);
+        LOGGER.info("child processId:"+childPid);
+
+        parentProcess.setNextProcessId(childPid.toString());
+        childProcess.setProcessId(childPid);
+        session.update(parentProcess);
+        if(parentProps!=null && !parentProps.isEmpty()){
+            for(Properties properties: parentProps){
+
+                properties.getId().setProcessId(parentPid);
+                properties.setProcess(parentProcess);
+                session.save(properties);
+            }
+        }
+
+        if(childProps!=null && !childProps.isEmpty()){
+            for(Properties properties: childProps){
+                properties.getId().setProcessId(childPid);
+                properties.setProcess(childProcess);
+                session.save(properties);
+            }
+        }
+        processList.add(parentProcess);
+        processList.add(childProcess);
+        session.getTransaction().commit();
+
+    } catch (MetadataException e) {
+        session.getTransaction().rollback();
+        LOGGER.error(e);
+    } finally {
+        session.close();
+    }
+    return processList;
+}
 
 
 }

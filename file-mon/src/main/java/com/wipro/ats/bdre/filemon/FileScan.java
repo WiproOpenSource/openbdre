@@ -33,6 +33,13 @@ public class FileScan {
             String scanDir = FileMonRunnableMain.getMonitoredDirName();
             LOGGER.debug("Scanning directory: "+ scanDir);
             File dir = new File(scanDir);
+            if(!dir.exists()){
+                LOGGER.info("Created monitoring dir "+dir+ " success="+dir.mkdirs());
+            }
+            File arcDir = new File(scanDir+"/_archive");
+            if(!arcDir.exists()){
+                LOGGER.info("Created monitoring dir " + arcDir + " success=" + arcDir.mkdirs());
+            }
             File[] listOfFiles = dir.listFiles();
             String fhash = "";
             for (File file : listOfFiles) {

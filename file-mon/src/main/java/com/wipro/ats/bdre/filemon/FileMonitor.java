@@ -17,10 +17,7 @@ package com.wipro.ats.bdre.filemon;
 import com.wipro.ats.bdre.exception.BDREException;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.commons.collections4.map.LinkedMap;
-import org.apache.commons.vfs2.FileChangeEvent;
-import org.apache.commons.vfs2.FileContent;
-import org.apache.commons.vfs2.FileListener;
-import org.apache.commons.vfs2.FileObject;
+import org.apache.commons.vfs2.*;
 import org.apache.log4j.Logger;
 
 import java.text.SimpleDateFormat;
@@ -77,6 +74,14 @@ public class FileMonitor implements FileListener {
         LOGGER.debug("File Created " + obj.getURL());
         String dirPath = obj.getParent().getName().getPath();
         if(!dirPath.equals(FileMonRunnableMain.getMonitoredDirName())){
+            return;
+        }
+        //Don't process anything with _archive
+        if(dirPath.endsWith("_archive")){
+            return;
+        }
+        //Don't process directory
+        if(obj.getType() == FileType.FOLDER){
             return;
         }
         String fileName = obj.getName().getBaseName();

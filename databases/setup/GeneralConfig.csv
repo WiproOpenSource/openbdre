@@ -482,6 +482,8 @@
 'mdconfig', 'r.shell-script', 'Location of R shell script', 'Location of R shell script', 1, 'Rhadoop.sh', 'text', 1
 'imconfig', 'common.default-fs-name', 'Default file system name','Default file system name', 1, 'hdfs://${name_node_hostname}:${name_node_port}', 'text', 1
 'imconfig', 'etl.hive-connection', 'URL of Hive connection','URL of Hive connection', 1, 'jdbc:hive2://${hive_server_hostname}:10000', 'text', 1
+'imconfig', 'etl.hive-jdbcuser', 'Hive JDBC User','Hive JDBC User', 1, '${hive_jdbc_user}', 'text', 1
+'imconfig', 'etl.hive-jdbcpassword', 'Hive JDBC Pwd','Hive JDBC Pwd', 1, '${hive_jdbc_password}', 'text', 1
 'imconfig', 'etl.hdfs-raw-directory', 'Hadoop raw directory','Hadoop raw directory' , 1, '/raw', 'text', 1
 'imconfig', 'etl.hive-metastore-uris', 'URL of Hive metastore','URL of Hive metastore', 1, 'thrift://${thrift_hostname}:9083', 'text', 1
 'imconfig', 'etl.local-download-directory', 'Directory to store downloaded files','Directory to store downloaded files', 1, '/home/user/Downloads', 'text', 1
