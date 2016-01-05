@@ -1,17 +1,62 @@
 # Bigdata Ready Enterprise Open Source Software 
 
+# Table of Contents
+
+[License](#License)
+[Objective](#Objective)
+[Installation](#Installation)
+[License](#License)
+[License](#License)
+
+# License
 Released under Apache Public License 2.0. You can get a copy for the license at http://www.apache.org/licenses/LICENSE-2.0.
+# Objective 
+Goal of BDRE is to give Bigdata implementation a significant acceleration by supplying the essential frameworks which are most likely to be written anyway. It'll drastically eliminate hundreds of man hours of effort in operational framework development.
+
+BDRE currently implements:
+
+- Operational Metadata Management
+ - Registry of all workflow processes/templates
+ - Parameters/configuration(key/val) for processes
+ - Dependency information (upstream/downstream)
+ - Batch management/tracking. Batch concept in BDRE is for tracking the data flow between workflow processes.  
+ - Run control (for delta processing/dependency check)
+ - Execution status for jobs(dynamic metadata - with step level granularity)
+ - File registry - can be used to register e.g. ingested files or a raw file as an output of an upstream.
+ - Execution statistics logging (key/value)
+ - Executed hive queries and data lineage information.
+ - Java APIs that ingrates with Bigdata with non-bigdata applications alike.
+ - Job monitoring and proactive/reactive alerting 
+- Data ingestion framework
+ - Tabular data from RDBMS
+ - Streaming data from 16 types of sources (including logs, message queues and Twitter)
+ - Arbitrary file ingestion by directory monitoring
+- Web Crawler
+- Distributed Data Manufacturing framework
+ - Generate billons of records based on patterns and ranges
+- Semantic Layer Building Framework
+ - Build the sematic layer using visual workflow creator using the data you ingested.
+ - Supports Hive, Pig, Mapreduce, Spark , R etc
+ - Generates Oozie workflows
+- Data Quality Framework
+ - Validates your data using your rules in a distributed way
+ - Integrated with Drools rule engine
+- HTML5 User Interface
+ - Create ingestion, data generation, Crawler jobs or create Oozie workflows graphically without writing any code
+ - One click deploy and execute jobs without SSH into the edge node.
+ 
+
+# Installation
 
 ## Overview
 
-This document will help you build BDRE from source. Audience for this document are developers and architects who want be part of BDRE framework development or may just want to test it by running the UI. Install Git, Maven and Oracle JDK 7(and up) if you haven't already. In Windows be sure to add git and other bash tools in the commandline path during installation. In this example, we are going to use *HortonWorks Sandbox* with *VirtualBox* software because all the required software are mostly installed and configured. BDRE is shipped with an embedded database which is okay for running the UI and evaluating and testing jobs in a single node cluster. For production use BDRE currently supports following production scale databases.
+This section will help you build BDRE from source. Audience for this document are developers and architects who want be part of BDRE framework development or may just want to test it by running the UI. Install Git, Maven and Oracle JDK 7(and up) if you haven't already. In Windows be sure to add git and other bash tools in the commandline path during installation. In this example, we are going to use *HortonWorks Sandbox* with *VirtualBox* software because all the required software are mostly installed and configured. BDRE is shipped with an embedded database which is okay for running the UI and evaluating and testing jobs in a single node cluster. For production use BDRE currently supports following production scale databases.
 
   - MySQL Server
   - Oracle 11g Server
   - PostgreSql
 
  In this guide we are going to show you how to build and install BDRE in a CentOS VM with a MySQL database. You should be able to do the same in Mac or Windows but note that setting up a Hadoop cluster might be tricky in Windows and might more involvement. You should be able to launch the BDRE user interface in Windows and design various jobs. However to deploy and run the jobs we recommend a Linux system with Hadoop installed. BDRE is typically installed in Hadoop edge node in a multi-node cluster.
-
 
 ## Preparation
 
