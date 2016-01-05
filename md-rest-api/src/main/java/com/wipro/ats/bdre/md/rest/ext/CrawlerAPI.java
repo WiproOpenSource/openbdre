@@ -94,6 +94,8 @@ public class CrawlerAPI extends MetadataAPIBase {
         childProps.add(jpaProperties);
         jpaProperties = Dao2TableUtil.buildJPAProperties("crawler", "userAgentString", crawlerInfo.getUserAgentString(), "User agent string");
         childProps.add(jpaProperties);
+        jpaProperties = Dao2TableUtil.buildJPAProperties("crawler", "outputPath", crawlerInfo.getOutputPath(), "HDFS output path");
+        childProps.add(jpaProperties);
 
         if (crawlerInfo.getProxyHost() != null && crawlerInfo.getProxyHost() != "") {
             jpaProperties = Dao2TableUtil.buildJPAProperties("crawler", "proxyHost", crawlerInfo.getProxyHost(), "Proxy Host");
@@ -113,9 +115,7 @@ public class CrawlerAPI extends MetadataAPIBase {
             }
 
         }
-        jpaProperties = Dao2TableUtil.buildJPAProperties(
-
-                "crawler", "url", crawlerInfo.getUrl(), "Base Url to crawl");
+        jpaProperties = Dao2TableUtil.buildJPAProperties("crawler", "url", crawlerInfo.getUrl(), "Base Url to crawl");
         childProps.add(jpaProperties);
         jpaProperties = Dao2TableUtil.buildJPAProperties("crawler", "urlsToSearch", crawlerInfo.getUrlsToSearch(), "urls to include in search");
         childProps.add(jpaProperties);

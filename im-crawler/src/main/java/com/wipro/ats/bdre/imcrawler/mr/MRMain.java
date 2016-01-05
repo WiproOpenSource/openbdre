@@ -23,17 +23,12 @@ public class MRMain extends BaseStructure {
         CommandLine commandLine = new MRMain().getCommandLine(args, PARAMS_STRUCTURE);
         String processId = commandLine.getOptionValue("sub-process-id");
         String instanceExecId = commandLine.getOptionValue("instance-exec-id");
-        /*try {
-            Class.forName("org.datanucleus.api.jdo.JDOPersistenceManagerFactory");
-        } catch (ClassNotFoundException e) {
-            System.err.println(e.getMessage());
-            e.printStackTrace();
-        }*/
         PropertyConfig propertyConfig = PropertyConfig.getPropertyConfig(Integer.parseInt(processId));
         String numMappers = propertyConfig.getNumMappers().toString();
-        logger.info("Arguments:- sub Process Id: "+ processId + "instance-exec-id:"+ instanceExecId + "number of mappers:"+numMappers);
+        String outPath = propertyConfig.getOutputPath();
+        logger.info("Arguments:- sub Process Id: "+ processId + "instance-exec-id:"+ instanceExecId + "number of mappers:"+numMappers + "HDFS output Path: "+outPath);
         //String numThreads = commandLine.getOptionValue("num-threads");
-        String params[] = new String[]{processId, instanceExecId, numMappers};
+        String params[] = new String[]{processId, instanceExecId, numMappers, outPath};
         int res = ToolRunner.run(new Configuration(), new MRDriver(), params);
         System.exit(res);
     }
