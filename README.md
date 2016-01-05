@@ -1,4 +1,4 @@
-# Bigdata Ready Enterpise Open Source Software 
+# Bigdata Ready Enterprise Open Source Software
 
 Released under Apache Public License 2.0. You can get a copy for the license at http://www.apache.org/licenses/LICENSE-2.0.
 
