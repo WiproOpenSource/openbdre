@@ -1,6 +1,6 @@
 # Bigdata Ready Enterprise Open Source Software 
 
-# Table of Contents
+## Table of Contents
 
 [License](#license)
 ***
@@ -8,9 +8,9 @@
 ***
 [Features](#features)
 ***
-[Architecture](#architecture)
-***
 [Installation](#installation)
+***
+[Architecture](#architecture)
 ***
 [Data Ingestion](#data-ingestion)
 ***
@@ -270,21 +270,6 @@ You should be able to do the same in Mac or Windows but note that setting up a H
 * Click the execution button to execute the *Import job*.
 * Check the process in Oozie console *http://VM_IP:11000/oozie*
 * When the import job is complete start the *data load job*.
-
-# Data Ingestion
-
-## RDBMS Data Ingestion
-TDB
-## Streaming Data Ingestion
-TBD
-## Directory Monitoring and File Ingestion
-TBD
-# Workflow Builder
-TBD
-# Bulk Data Manufacturing
-TBD
-# Web Crawler
-TBD
 
 # Operational Metadata Management System
 
