@@ -72,9 +72,8 @@ public class RActionNode extends GenericActionNode {
                 "            <job-tracker>${jobTracker}</job-tracker>\n" +
                 "            <name-node>${nameNode}</name-node>\n");
         ret.append("            <exec>Rhadoop.sh</exec>\n");
-        ret.append(getInputFile("param"));
         ret.append("            <argument>"+getRFile(getId(), "r-file").replace("r/","")+"</argument>\n");
-        ret.append(getOutputFile("param"));
+        ret.append(getArguments("param"));
         ret.append("            <file>Rhadoop.sh</file>\n");
         ret.append("            <file>" +getRFile(getId(), "r-file")+"</file>\n");
         ret.append("        </shell>\n" +
@@ -86,34 +85,21 @@ public class RActionNode extends GenericActionNode {
     }
 
     /**
-     * This method gets the required input file for running the R Script
+     * This method gets the required arguments for running the R Script
      *
-     * @param configGroup config_group entry in properties table "input" for arguments
+     * @param configGroup config_group entry in properties table for arguments
      * @return String containing arguments to be appended to workflow string.
      */
-    public String getInputFile(String configGroup) {
+    public String getArguments(String configGroup) {
         GetProperties getProperties = new GetProperties();
-        java.util.Properties inputFile = getProperties.getProperties(getId().toString(), configGroup);
-        String inputFilePath = "            <argument>" + inputFile.getProperty("input") + "</argument>\n";
+        java.util.Properties argumentProperty = getProperties.getProperties(getId().toString(), configGroup);
 
-        return inputFilePath;
-    }
+        String arguments="";
+        if(!argumentProperty.isEmpty()) {
 
-    /**
-     * This method gets the required output file for running the R Script
-     *
-     * @param configGroup config_group entry in properties table "output" for arguments
-     * @return String containing arguments to be appended to workflow string.
-     */
-    public String getOutputFile(String configGroup) {
-        GetProperties getProperties = new GetProperties();
-        java.util.Properties outputFile = getProperties.getProperties(getId().toString(), configGroup);
-        String output = outputFile.getProperty("output");
-        String outputFilePath;
-        if (output == null)
-            outputFilePath = "            <argument>/tmp/R-Output/" + this.getId() + "/${wf:actionData(\"init-job\")[\"instance-exec-id\"]}</argument>\n";
-        else outputFilePath = "            <argument>" + output + "</argument>\n";
-        return outputFilePath;
+            arguments = "            <argument>" + argumentProperty.values().toString().substring(1, argumentProperty.values().toString().length() - 1) + "</argument>\n";
+        }
+        return arguments;
     }
 
     /**
