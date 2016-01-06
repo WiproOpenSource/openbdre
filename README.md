@@ -14,13 +14,13 @@
 ***
 [Data Ingestion](#data-ingestion)
 ***
-[Workflow Builder](#Workflow Builder)
+[Workflow Builder](#workflow-builder)
 ***
-[Operational Metadata Management](#Operational Metadata Management)
-***
-[Bulk Data Manufacturing](#Bulk Data Manufacturing)
+[Bulk Data Manufacturing](#bulk-data-manufacturing)
 ***
 [Web Crawler](#Web Crawler)
+***
+[Operational Metadata Management](#operational-metadata-management)
 ***
 # License
 Released under Apache Public License 2.0. You can get a copy for the license at http://www.apache.org/licenses/LICENSE-2.0.
@@ -63,7 +63,10 @@ BDRE provides a uniﬁed framework for a Hadoop implementation that can drastica
 - HTML5 User Interface
  - Create ingestion, data generation, Crawler jobs or create Oozie workflows graphically without writing any code
  - One click deploy and execute jobs without SSH into the edge node.
- 
+
+# Architecture
+
+![image](/uploads/2da234c2bb3000a4107f32d9efd733c1/image.png)
 
 # Installation
 
