@@ -274,11 +274,11 @@ You should be able to do the same in Mac or Windows but note that setting up a H
 # Data Ingestion
 
 ## RDBMS Data Ingestion
-
+TDB
 ## Streaming Data Ingestion
-
+TBD
 ## Directory Monitoring and File Ingestion
-
+TBD
 # Operational Metadata Management System
 
 ### Operational Metadata Management
