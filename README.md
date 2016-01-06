@@ -8,9 +8,9 @@
 ***
 [Features](#features)
 ***
-[Installation](#installation)
-***
 [Architecture](#architecture)
+***
+[Installation](#installation)
 ***
 [Data Ingestion](#data-ingestion)
 ***
@@ -270,6 +270,14 @@ You should be able to do the same in Mac or Windows but note that setting up a H
 * Click the execution button to execute the *Import job*.
 * Check the process in Oozie console *http://VM_IP:11000/oozie*
 * When the import job is complete start the *data load job*.
+
+# Data Ingestion
+
+## RDBMS Data Ingestion
+
+## Streaming Data Ingestion
+
+## Directory Monitoring and File Ingestion
 
 # Operational Metadata Management System
 
