@@ -85,20 +85,21 @@ public class RActionNode extends GenericActionNode {
     }
 
     /**
-     * This method gets the required input file for running the R Script
+     * This method gets the required arguments for running the R Script
      *
-     * @param configGroup config_group entry in properties table "input" for arguments
+     * @param configGroup config_group entry in properties table for arguments
      * @return String containing arguments to be appended to workflow string.
      */
     public String getArguments(String configGroup) {
         GetProperties getProperties = new GetProperties();
-        java.util.Properties argumentList = getProperties.getProperties(getId().toString(), configGroup);
-
-        String ar = "            <argument>" + inputFile.getProperty("input") + "</argument>\n";
-
-        return inputFilePath;
+        java.util.Properties argumentProperty = getProperties.getProperties(getId().toString(), configGroup);
+        String value=argumentProperty.values().toString();
+        String arguments=null;
+        if(!argumentProperty.isEmpty()){
+            arguments = "            <argument>" + value.substring(1,value.length()-1) + "</argument>\n";
+        }
+        return arguments;
     }
-
 
     /**
      * This method gets the required R Script file for running the R Script
