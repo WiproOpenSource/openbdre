@@ -8,9 +8,9 @@
 ***
 [Features](#features)
 ***
-[Installation](#installation)
-***
 [Architecture](#architecture)
+***
+[Installation](#installation)
 ***
 [Data Ingestion](#data-ingestion)
 ***
@@ -271,6 +271,21 @@ You should be able to do the same in Mac or Windows but note that setting up a H
 * Check the process in Oozie console *http://VM_IP:11000/oozie*
 * When the import job is complete start the *data load job*.
 
+# Data Ingestion
+
+## RDBMS Data Ingestion
+TDB
+## Streaming Data Ingestion
+TBD
+## Directory Monitoring and File Ingestion
+TBD
+# Workflow Builder
+TBD
+# Bulk Data Manufacturing
+TBD
+# Web Crawler
+TBD
+
 # Operational Metadata Management System
 
 ### Operational Metadata Management
@@ -284,4 +299,3 @@ BDRE provides complete job/operational metadata management solution for Hadoop. 
 BDRE uses RDBMS database to store all job related metadata. A set of stored procedures are there to interface will the tables which are exposed via Java APIs to manage/create/update the static and run time metadata information. Below is the data model for BDRE metadata operational database.
 
 ![eer](http://wiproopensourcepractice.github.io/openbdre/bdreimages/eer.png)
-
