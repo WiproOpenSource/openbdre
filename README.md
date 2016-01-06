@@ -31,6 +31,7 @@ Big Data implementations however, require specialized skills, signiﬁcant devel
 Big Data Ready Enterprise (BDRE)makes big data technology adoption simpler by optimizing and integrating various big data solutions and providing them under one integrated package. 
 BDRE provides a uniﬁed framework for a Hadoop implementation that can drastically minimize time development and fasttrack the Hadoop implementation. It comprises a reusable framework that can be customized as per the enterprise eco system. The components are loosely integrated and can be de-coupled or replaced easily with alternatives.
 
+
 # Features
 
 - Operational Metadata Management
@@ -267,5 +268,17 @@ You should be able to do the same in Mac or Windows but note that setting up a H
 * Check the process in Oozie console *http://VM_IP:11000/oozie*
 * When the import job is complete start the *data load job*.
 
+# Operational Metadata Management System
 
+### Operational Metadata Management
+
+BDRE provides complete job/operational metadata management solution for Hadoop. At its core acts as a registry and tracker for different types of jobs running in different Hadoop clusters or as a standalone. It provides APIs to integrate with virtually any jobs. 
+
+
+![image](https://gitlab.com/bdre/documentation/uploads/74c553d0165d7b1cd445c9e4c324b72a/image.png)
+
+
+BDRE uses RDBMS database to store all job related metadata. A set of stored procedures are there to interface will the tables which are exposed via Java APIs to manage/create/update the static and run time metadata information. Below is the data model for BDRE metadata operational database.
+
+![dm](https://gitlab.com/bdre/documentation/uploads/4a1e49fb12628d66396c20802b04ab0d/dm.png)
 
