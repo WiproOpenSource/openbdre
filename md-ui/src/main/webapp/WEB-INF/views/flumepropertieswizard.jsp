@@ -13,7 +13,7 @@
 		<script src="../js/jquery-ui-1.10.3.custom.js"></script>
 		<script src="../js/jquery.steps.min.js"></script>
 		<link rel="stylesheet" href="../css/jquery.steps.css" />
-
+		<script src="../js/angular.min.js" type="text/javascript"></script>
 		<script src="../js/bootstrap.js" type="text/javascript"></script>
 		<script src="../js/jquery.jtable.js" type="text/javascript"></script>
 		<link href="../css/jtables-bdre.css" rel="stylesheet" type="text/css" />
@@ -36,6 +36,8 @@ var sourceFlag;
 var created = 0;
 
 		</script>
+
+
 		<script type="text/javascript">
 function addDataToJson(properties) {
 	console.log(properties);
@@ -412,6 +414,7 @@ wizard = $(document).ready(function() {
 					formIntoMap('source_', 'sourceRequiredFieldsForm');
 					formIntoMap('channel_', 'channelRequiredFieldsForm');
 					formIntoMap('sink_', 'sinkRequiredFieldsForm');
+					formIntoMap('sink_','processFieldsForm1');
 					map['source_type'] = selectedSourceType;
 					map['channel_type'] = selectedChannelType;
 					map['sink_type'] = selectedSinkType;
@@ -480,7 +483,7 @@ wizard = $(document).ready(function() {
 
 	</head>
 
-	<body>
+	<body ng-app="myApp" ng-controller="myCtrl">
 
 		<div id="bdre-flume-ingestion" ng-controller="myCtrl">
 			<h3>Select Source Type</h3>
@@ -598,6 +601,44 @@ wizard = $(document).ready(function() {
 				<div id='sinkAdvancedFields'></div>
 
 			</section>
+ <h3>Process Details</h3>
+                <section>
+                    <form class="form-horizontal" role="form" id="processFieldsForm1">
+                        <div id="processDetails">
+                            <div class="alert alert-info" role="alert">
+                                Application requires process details to create process entries in metadata
+                            </div>
+                            <!-- btn-group -->
+                            <div id="processFields">
+
+                                <div class="form-group">
+                                    <label class="control-label col-sm-2" for="processName">Process Name:</label>
+                                    <div class="col-sm-10">
+                                        <input type="text" class="form-control"  id="processName" name="processName" placeholder="Enter Process Name" required>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="control-label col-sm-2" for="processDescription">Process Description:</label>
+                                    <div class="col-sm-10">
+                                        <input type="text" class="form-control" id="processDescription" name="processDescription" placeholder="Enter Process Description" required>
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <label class="control-label col-sm-2" for="busDomainId">Bus Domain Id:</label>
+                                    <div class="col-sm-10">
+                                        <select class="form-control" id="busDomainId" name="busDomainId">
+                                            <option ng-repeat="busDomain in busDomains.Options" value="{{busDomain.Value}}" name="busDomainId">{{busDomain.DisplayText}}</option>
+
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- /btn-group -->
+                        </div>
+                        </form>
+                        </section>
+
 			<h3>Confirm</h3>
 			<section>
 				<div id="Process">
@@ -719,6 +760,26 @@ $(document).ready(function() {
 });
 
 		</script>
+			<script>
+                                var app = angular.module('myApp', []);
+                                app.controller('myCtrl', function($scope) {
+
+                                    $scope.busDomains = {};
+                                    $.ajax({
+                                    url: '/mdrest/busdomain/options/',
+                                        type: 'POST',
+                                        dataType: 'json',
+                                        async: false,
+                                        success: function (data) {
+                                            $scope.busDomains = data;
+                                        },
+                                        error: function () {
+                                            alert('danger');
+                                        }
+                                    });
+                                    });
+            </script>
+
 		<script type="text/javascript">
 function loadJTable(typeValue, typeOf, typeDiv) {
 	console.log('type value' + typeValue + 'type of ' + typeOf + 'type Div' + typeDiv);

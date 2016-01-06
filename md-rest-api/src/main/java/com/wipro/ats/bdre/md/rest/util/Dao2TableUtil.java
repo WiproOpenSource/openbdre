@@ -74,8 +74,7 @@ public class Dao2TableUtil {
             daoProcess.setWorkflowType(daoWorkflowType);
         }
         com.wipro.ats.bdre.md.dao.jpa.BusDomain daoBusDomain = new com.wipro.ats.bdre.md.dao.jpa.BusDomain();
-        //TODO: change bus domain id
-        daoBusDomain.setBusDomainId(1);
+        daoBusDomain.setBusDomainId(busDomainId);
         daoProcess.setBusDomain(daoBusDomain);
         ProcessTemplate daoProcessTemplate = new ProcessTemplate();
         daoProcessTemplate.setProcessTemplateId(0);

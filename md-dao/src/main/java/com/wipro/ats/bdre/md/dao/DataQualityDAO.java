@@ -122,8 +122,8 @@ public class DataQualityDAO {
             com.wipro.ats.bdre.md.dao.jpa.Process jpaProcess = new com.wipro.ats.bdre.md.dao.jpa.Process();
             jpaProcess.setAddTs(new Date());
             jpaProcess.setEditTs(new Date());
-            jpaProcess.setDescription("Data Quality Job");
-            jpaProcess.setProcessName("DQ Job");
+            jpaProcess.setDescription( dqSetupInfo.getDescription()+"_job");
+            jpaProcess.setProcessName( dqSetupInfo.getProcessName()+"_job");
             BusDomain busDomain = new BusDomain();
             busDomain.setBusDomainId(dqSetupInfo.getBusDomainId());
             jpaProcess.setBusDomain(busDomain);
@@ -144,8 +144,8 @@ public class DataQualityDAO {
             com.wipro.ats.bdre.md.dao.jpa.Process jpaProcessStep = new com.wipro.ats.bdre.md.dao.jpa.Process();
             jpaProcessStep.setAddTs(new Date());
             jpaProcessStep.setEditTs(new Date());
-            jpaProcessStep.setDescription("Data Quality Step");
-            jpaProcessStep.setProcessName("DQ Step");
+            jpaProcessStep.setDescription(dqSetupInfo.getDescription() +"_Step");
+            jpaProcessStep.setProcessName(dqSetupInfo.getProcessName()+"_Step");
             BusDomain busDomainStep = new BusDomain();
             busDomainStep.setBusDomainId(dqSetupInfo.getBusDomainId());
             jpaProcessStep.setBusDomain(busDomainStep);

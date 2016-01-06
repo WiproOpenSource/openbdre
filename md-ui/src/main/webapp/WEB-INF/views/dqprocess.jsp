@@ -169,6 +169,7 @@
                                     busDomainId: $("#busDomainId").val(),
                                     canRecover: $("#canRecover").val(),
                                     enqId: $("#enqId").val(),
+                                    processName: $("#processName").val(),
                                     description: $("#description").val()
                                 });
                                 console.log(postData);

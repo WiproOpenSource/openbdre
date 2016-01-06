@@ -658,7 +658,7 @@ isInit=true;
 
 				</section >
 
-				 <h3>Process Details</h3>
+                                                        <h3>Process Details</h3>
                                                             <section>
                                                                 <form class="form-horizontal" role="form" id="processFieldsForm3">
                                                                     <div id="processDetails">
@@ -687,7 +687,7 @@ isInit=true;
                                                                     </form>
                                                                     </section>
 
-				<h3 >Submission</h3 >
+				                                        <h3 >Submission</h3 >
 
 				<section >
 					<table id = "tree0" class = "table-striped" width = "290px" >
