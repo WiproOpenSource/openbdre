@@ -66,7 +66,7 @@ BDRE provides a uniﬁed framework for a Hadoop implementation that can drastica
 
 # Architecture
 
-![image](/uploads/2da234c2bb3000a4107f32d9efd733c1/image.png)
+![image](http://wiproopensourcepractice.github.io/openbdre/bdreimages/architecture.png)
 
 # Installation
 
@@ -278,10 +278,10 @@ You should be able to do the same in Mac or Windows but note that setting up a H
 BDRE provides complete job/operational metadata management solution for Hadoop. At its core acts as a registry and tracker for different types of jobs running in different Hadoop clusters or as a standalone. It provides APIs to integrate with virtually any jobs. 
 
 
-![image](https://gitlab.com/bdre/documentation/uploads/74c553d0165d7b1cd445c9e4c324b72a/image.png)
+![image](http://wiproopensourcepractice.github.io/openbdre/bdreimages/mdgraph.png)
 
 
 BDRE uses RDBMS database to store all job related metadata. A set of stored procedures are there to interface will the tables which are exposed via Java APIs to manage/create/update the static and run time metadata information. Below is the data model for BDRE metadata operational database.
 
-![dm](https://gitlab.com/bdre/documentation/uploads/4a1e49fb12628d66396c20802b04ab0d/dm.png)
+![eer](http://wiproopensourcepractice.github.io/openbdre/bdreimages/eer.png)
 
