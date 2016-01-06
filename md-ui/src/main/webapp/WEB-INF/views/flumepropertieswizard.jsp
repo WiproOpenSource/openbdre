@@ -26,6 +26,7 @@
 var selectedSourceType = '';
 var selectedChannelType = '';
 var selectedSinkType = '';
+var selectedprocessFieldsFormType='';
 var jsonObj = {
 	"Result": "OK"
 }
@@ -414,15 +415,18 @@ wizard = $(document).ready(function() {
 					formIntoMap('source_', 'sourceRequiredFieldsForm');
 					formIntoMap('channel_', 'channelRequiredFieldsForm');
 					formIntoMap('sink_', 'sinkRequiredFieldsForm');
-					formIntoMap('sink_','processFieldsForm1');
+					formIntoMap('process_','processFieldsForm');
 					map['source_type'] = selectedSourceType;
 					map['channel_type'] = selectedChannelType;
 					map['sink_type'] = selectedSinkType;
+					map['process_type']=selectedprocessFieldsFormType;
 
 					$('#createjobs').on('click', function(e) {
+
 						console.log(selectedSourceType);
 						console.log(selectedChannelType);
 						console.log(selectedSinkType);
+						console.log(selectedprocessFieldsFormType);
 
 						$.ajax({
 							type: "POST",
@@ -601,43 +605,43 @@ wizard = $(document).ready(function() {
 				<div id='sinkAdvancedFields'></div>
 
 			</section>
- <h3>Process Details</h3>
-                <section>
-                    <form class="form-horizontal" role="form" id="processFieldsForm1">
-                        <div id="processDetails">
-                            <div class="alert alert-info" role="alert">
-                                Application requires process details to create process entries in metadata
-                            </div>
-                            <!-- btn-group -->
-                            <div id="processFields">
+ 						<h3>Process Details</h3>
+                             <section>
+                                 <form class="form-horizontal" role="form" id="processFieldsForm">
+                                     <div id="processDetails">
+                                         <div class="alert alert-info" role="alert">
+                                             Application requires process details to create process entries in metadata
+                                         </div>
+                                         <!-- btn-group -->
+                                         <div id="processFields">
 
-                                <div class="form-group">
-                                    <label class="control-label col-sm-2" for="processName">Process Name:</label>
-                                    <div class="col-sm-10">
-                                        <input type="text" class="form-control"  id="processName" name="processName" placeholder="Enter Process Name" required>
-                                    </div>
-                                </div>
-                                <div class="form-group">
-                                    <label class="control-label col-sm-2" for="processDescription">Process Description:</label>
-                                    <div class="col-sm-10">
-                                        <input type="text" class="form-control" id="processDescription" name="processDescription" placeholder="Enter Process Description" required>
-                                    </div>
-                                </div>
+                                             <div class="form-group">
+                                                 <label class="control-label col-sm-2" for="processName">Process Name:</label>
+                                                 <div class="col-sm-10">
+                                                     <input type="text" class="form-control"  id="processName" name="processName" placeholder="Enter Process Name" value="processName" required>
+                                                 </div>
+                                             </div>
+                                             <div class="form-group">
+                                                 <label class="control-label col-sm-2" for="processDescription">Process Description:</label>
+                                                 <div class="col-sm-10">
+                                                     <input type="text" class="form-control" id="processDescription" name="processDescription" placeholder="Enter Process Description" value="processDescription" required>
+                                                 </div>
+                                             </div>
+                                             <div class="form-group">
+                                                 <label class="control-label col-sm-2" for="busDomainId">Bus Domain Id:</label>
+                                                 <div class="col-sm-10">
+                                                     <select class="form-control" id="busDomainId" name="busDomainId">
+                                                         <option ng-repeat="busDomain in busDomains.Options" value="{{busDomain.Value}}" name="busDomainId">{{busDomain.DisplayText}} </option>
 
-                                <div class="form-group">
-                                    <label class="control-label col-sm-2" for="busDomainId">Bus Domain Id:</label>
-                                    <div class="col-sm-10">
-                                        <select class="form-control" id="busDomainId" name="busDomainId">
-                                            <option ng-repeat="busDomain in busDomains.Options" value="{{busDomain.Value}}" name="busDomainId">{{busDomain.DisplayText}}</option>
+                                                     </select>
+                                                 </div>
+                                             </div>
+                                         </div>
+                                         <!-- /btn-group -->
+                                     </div>
+                                     </form>
+                                     </section>
 
-                                        </select>
-                                    </div>
-                                </div>
-                            </div>
-                            <!-- /btn-group -->
-                        </div>
-                        </form>
-                        </section>
 
 			<h3>Confirm</h3>
 			<section>
@@ -954,6 +958,8 @@ function formIntoMap(typeProp, typeOf) {
 	for(i = 0; i < x.length; i++) {
 		map[typeProp + x.elements[i].name] = x.elements[i].value;
 	}
+
+
 }
 
 		</script>

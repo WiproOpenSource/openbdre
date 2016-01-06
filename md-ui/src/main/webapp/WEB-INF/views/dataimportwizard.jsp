@@ -406,6 +406,16 @@
             myObject.value=$("#busDomainId")[0].value;
             list.push(myObject);
 
+          var myObject = new Object();
+                    myObject.name=$("#processName")[0].name;
+                    myObject.value=$("#processName")[0].value;
+                    list.push(myObject);
+
+          var myObject = new Object();
+                    myObject.name=$("#processDescription")[0].name;
+                    myObject.value=$("#processDescription")[0].value;
+                    list.push(myObject);
+
 
 
 
@@ -658,36 +668,7 @@ isInit=true;
 
 				</section >
 
-                                                        <h3>Process Details</h3>
-                                                            <section>
-                                                                <form class="form-horizontal" role="form" id="processFieldsForm3">
-                                                                    <div id="processDetails">
-                                                                        <div class="alert alert-info" role="alert">
-                                                                            Application requires process details to create process entries in metadata
-                                                                        </div>
-                                                                        <!-- btn-group -->
-                                                                        <div id="processFields">
-
-                                                                            <div class="form-group">
-                                                                                <label class="control-label col-sm-2" for="processName">Process Name:</label>
-                                                                                <div class="col-sm-10">
-                                                                                    <input type="text" class="form-control"  id="processName" name="processName" placeholder="Enter Process Name" required>
-                                                                                </div>
-                                                                            </div>
-                                                                            <div class="form-group">
-                                                                                <label class="control-label col-sm-2" for="processDescription">Process Description:</label>
-                                                                                <div class="col-sm-10">
-                                                                                    <input type="text" class="form-control" id="processDescription" name="processDescription" placeholder="Enter Process Description" required>
-                                                                                </div>
-                                                                            </div>
-
-                                                                        </div>
-                                                                        <!-- /btn-group -->
-                                                                    </div>
-                                                                    </form>
-                                                                    </section>
-
-				                                        <h3 >Submission</h3 >
+				<h3 >Submission</h3 >
 
 				<section >
 					<table id = "tree0" class = "table-striped" width = "290px" >
@@ -702,6 +683,29 @@ isInit=true;
                                 </td >
                             </tr >
                             </tbody >
+
+                             <th ><label for = "processName" >Process Name</label ></th >
+                                                        </tr >
+                                                        </thead >
+                                                        <tbody >
+                                                        <tr >
+                                                            <td >
+                                                                <input id = "processName" name = "common_processName" type = "text" class = "form-control" size = "180"  />
+                                                            </td >
+                                                        </tr >
+                                                        </tbody >
+
+                               <th ><label for = "processDescription" > Process Description</label ></th >
+                                                          </tr >
+                                                          </thead >
+                                                          <tbody >
+                                                          <tr >
+                                                              <td >
+                                                                  <input id = "processDescription" name = "common_processDescription" type = "text" class = "form-control" size = "180" />
+                                                              </td >
+                                                          </tr >
+                                                          </tbody >
+
 					</table >
 					<p >Pressing 'Create Job' will make the system build following job workflows</p >
 

@@ -81,14 +81,14 @@ public class FlumePropertiesAPI extends MetadataAPIBase {
             } else if (string.startsWith("sink_")) {
                 jpaProperties = Dao2TableUtil.buildJPAProperties("flume", "agent.sinks.sink." + key, map.get(string), "Properties for sink");
                 childProps.add(jpaProperties);
-            }else if (string.startsWith("sink_processName")) {
-                LOGGER.debug("sink_processName" + map.get(string));
+            }else if (string.startsWith("process_processName")) {
+                LOGGER.debug("process_processName" + map.get(string));
                 processName = map.get(string);
-            }else if (string.startsWith("sink_processDescription")) {
-                LOGGER.debug("sink_processDescription" + map.get(string));
+            }else if (string.startsWith("process_processDescription")) {
+                LOGGER.debug("process_processDescription" + map.get(string));
                 processDescription = map.get(string);
-            }else if (string.startsWith("sink_busDomainId")) {
-                LOGGER.debug("sink_busDomainId" + map.get(string));
+            }else if (string.startsWith("process_busDomainId")) {
+                LOGGER.debug("process_busDomainId" + map.get(string));
                 busDomainId = new Integer(map.get(string));
             }
         }
