@@ -94,7 +94,7 @@ public class RActionNode extends GenericActionNode {
         GetProperties getProperties = new GetProperties();
         java.util.Properties argumentProperty = getProperties.getProperties(getId().toString(), configGroup);
         String value=argumentProperty.values().toString();
-        String arguments=null;
+        String arguments="";
         if(!argumentProperty.isEmpty()){
             arguments = "            <argument>" + value.substring(1,value.length()-1) + "</argument>\n";
         }
