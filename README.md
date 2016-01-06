@@ -279,6 +279,13 @@ TDB
 TBD
 ## Directory Monitoring and File Ingestion
 TBD
+# Workflow Builder
+TBD
+# Bulk Data Manufacturing
+TBD
+# Web Crawler
+TBD
+
 # Operational Metadata Management System
 
 ### Operational Metadata Management
