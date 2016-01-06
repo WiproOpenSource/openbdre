@@ -66,7 +66,7 @@ BDRE provides a uniﬁed framework for a Hadoop implementation that can drastica
 
 # Architecture
 
-![image](http://wiproopensourcepractice.github.io/openbdre/bdreimages/architecture.png)
+![image](http://wiproopensourcepractice.github.io/openbdre/bdreimages/architecture.PNG)
 
 # Installation
 
