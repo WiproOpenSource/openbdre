@@ -63,7 +63,7 @@ public class Dao2TableUtil {
         tableProperties.setValue(jpaProperties.getPropValue());
         return tableProperties;
     }
-    public static Process buildJPAProcess(Integer processTypeId, String name, String desc, Integer workflowTypeId) {
+    public static Process buildJPAProcess(Integer processTypeId, String name, String desc, Integer workflowTypeId,Integer busDomainId) {
         Process daoProcess = new Process();
         ProcessType daoProcessType = new ProcessType();
         daoProcessType.setProcessTypeId(processTypeId);
@@ -74,7 +74,7 @@ public class Dao2TableUtil {
             daoProcess.setWorkflowType(daoWorkflowType);
         }
         com.wipro.ats.bdre.md.dao.jpa.BusDomain daoBusDomain = new com.wipro.ats.bdre.md.dao.jpa.BusDomain();
-        daoBusDomain.setBusDomainId(1);
+        daoBusDomain.setBusDomainId(busDomainId);
         daoProcess.setBusDomain(daoBusDomain);
         ProcessTemplate daoProcessTemplate = new ProcessTemplate();
         daoProcessTemplate.setProcessTemplateId(0);
