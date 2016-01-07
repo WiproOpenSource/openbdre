@@ -149,7 +149,7 @@ public class DataGenAPI extends MetadataAPIBase {
 
         }
         parentProcess = Dao2TableUtil.buildJPAProcess(18,processName, processDescription, 1,busDomainId);
-        childProcess = Dao2TableUtil.buildJPAProcess(14, "subProcess_"+processName, "subProcess_"+processDescription, 0,busDomainId);
+        childProcess = Dao2TableUtil.buildJPAProcess(14, "subProcess of "+processName, processDescription, 0,busDomainId);
 
 
         //remove last : in tableSchema String

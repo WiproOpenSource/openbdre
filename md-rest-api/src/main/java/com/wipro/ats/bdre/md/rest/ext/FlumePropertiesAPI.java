@@ -105,7 +105,7 @@ public class FlumePropertiesAPI extends MetadataAPIBase {
         childProps.add(jpaProperties);
 
         com.wipro.ats.bdre.md.dao.jpa.Process parentProcess = Dao2TableUtil.buildJPAProcess(1, processName, processDescription, 2,busDomainId);
-        com.wipro.ats.bdre.md.dao.jpa.Process childProcess = Dao2TableUtil.buildJPAProcess(23, processName , processDescription, 0,busDomainId);
+        com.wipro.ats.bdre.md.dao.jpa.Process childProcess = Dao2TableUtil.buildJPAProcess(23, "subProcess of "+processName , processDescription, 0,busDomainId);
 
         List<com.wipro.ats.bdre.md.dao.jpa.Process> processList = processDAO.createOneChildJob(parentProcess,childProcess,null,childProps);
         List<Process> tableProcessList = Dao2TableUtil.jpaList2TableProcessList(processList);

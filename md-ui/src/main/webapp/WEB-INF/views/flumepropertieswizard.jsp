@@ -618,13 +618,13 @@ wizard = $(document).ready(function() {
                                              <div class="form-group">
                                                  <label class="control-label col-sm-2" for="processName">Process Name:</label>
                                                  <div class="col-sm-10">
-                                                     <input type="text" class="form-control"  id="processName" name="processName" placeholder="Enter Process Name" value="processName" required>
+                                                     <input type="text" class="form-control"  id="processName" name="processName" placeholder="Enter Process Name"  required>
                                                  </div>
                                              </div>
                                              <div class="form-group">
                                                  <label class="control-label col-sm-2" for="processDescription">Process Description:</label>
                                                  <div class="col-sm-10">
-                                                     <input type="text" class="form-control" id="processDescription" name="processDescription" placeholder="Enter Process Description" value="processDescription" required>
+                                                     <input type="text" class="form-control" id="processDescription" name="processDescription" placeholder="Enter Process Description" required>
                                                  </div>
                                              </div>
                                              <div class="form-group">
@@ -957,8 +957,9 @@ function formIntoMap(typeProp, typeOf) {
 	var i;
 	for(i = 0; i < x.length; i++) {
 		map[typeProp + x.elements[i].name] = x.elements[i].value;
+		console.log(map[typeProp + x.elements[i].name]);
+		console.log(x.elements[i].value);
 	}
-
 
 }
 

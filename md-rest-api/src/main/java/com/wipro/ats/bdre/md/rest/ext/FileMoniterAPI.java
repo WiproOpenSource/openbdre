@@ -72,7 +72,7 @@ public class FileMoniterAPI {
         }
         //making process
         Process parentProcess = Dao2TableUtil.buildJPAProcess(26, fileMonitorInfo.getProcessName(), fileMonitorInfo.getProcessDescription(), 2,fileMonitorInfo.getBusDomainId());
-        Process childProcess = Dao2TableUtil.buildJPAProcess(27, "subProcess_" + fileMonitorInfo.getProcessName(), "subProcess_" + fileMonitorInfo.getProcessDescription(), 0,fileMonitorInfo.getBusDomainId());
+        Process childProcess = Dao2TableUtil.buildJPAProcess(27, "subProcess of " + fileMonitorInfo.getProcessName(), fileMonitorInfo.getProcessDescription(), 0,fileMonitorInfo.getBusDomainId());
         List<Properties> childProps=new ArrayList<>();
         //inserting in properties table
         Properties jpaProperties = Dao2TableUtil.buildJPAProperties("fileMon", "deleteCopiedSrc", fileMonitorInfo.getDeleteCopiedSource(), "Delete copied source");
