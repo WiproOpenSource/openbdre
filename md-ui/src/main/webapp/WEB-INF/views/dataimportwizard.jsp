@@ -407,14 +407,24 @@
             list.push(myObject);
 
           var myObject = new Object();
-                    myObject.name=$("#processName")[0].name;
-                    myObject.value=$("#processName")[0].value;
+                    myObject.name=$("#dataLoadProcessName")[0].name;
+                    myObject.value=$("#dataLoadProcessName")[0].value;
+                    list.push(myObject);
+
+           var myObject = new Object();
+                              myObject.name=$("#importProcessName")[0].name;
+                              myObject.value=$("#importProcessName")[0].value;
+                              list.push(myObject);
+
+          var myObject = new Object();
+                    myObject.name=$("#dataLoadProcessDescription")[0].name;
+                    myObject.value=$("#dataLoadProcessDescription")[0].value;
                     list.push(myObject);
 
           var myObject = new Object();
-                    myObject.name=$("#processDescription")[0].name;
-                    myObject.value=$("#processDescription")[0].value;
-                    list.push(myObject);
+                              myObject.name=$("#importProcessDescription")[0].name;
+                              myObject.value=$("#importProcessDescription")[0].value;
+                              list.push(myObject);
 
 
 
@@ -684,27 +694,51 @@ isInit=true;
                             </tr >
                             </tbody >
 
-                             <th ><label for = "processName" >Process Name</label ></th >
+                                                                        <th ><label for = "dataLoadProcessName" >Process Name</label ></th >
+                                                                                     </tr >
+                                                                                     </thead >
+                                                                                     <tbody >
+                                                                                     <tr >
+                                                                                         <td >
+                                                                                             <input id = "dataLoadProcessName" name = "common_dataLoadProcessName" type = "text" class = "form-control" size = "180"  />
+                                                                                         </td >
+                                                                                     </tr >
+                                                                                     </tbody >
+
+                             <th ><label for = "importProcessName" >Process Name</label ></th >
                                                         </tr >
                                                         </thead >
                                                         <tbody >
                                                         <tr >
                                                             <td >
-                                                                <input id = "processName" name = "common_processName" type = "text" class = "form-control" size = "180"  />
+                                                                <input id = "importProcessName" name = "common_importProcessName" type = "text" class = "form-control" size = "180"  />
                                                             </td >
                                                         </tr >
                                                         </tbody >
 
-                               <th ><label for = "processDescription" > Process Description</label ></th >
+
+
+                               <th ><label for = "dataLoadProcessDescription" > Process Description</label ></th >
                                                           </tr >
                                                           </thead >
                                                           <tbody >
                                                           <tr >
                                                               <td >
-                                                                  <input id = "processDescription" name = "common_processDescription" type = "text" class = "form-control" size = "180" />
+                                                                  <input id = "dataLoadProcessDescription" name = "common_dataLoadProcessDescription" type = "text" class = "form-control" size = "180" />
                                                               </td >
                                                           </tr >
                                                           </tbody >
+
+                                 <th ><label for = "importProcessDescription" > Process Description</label ></th >
+                                                                                          </tr >
+                                                                                          </thead >
+                                                                                          <tbody >
+                                                                                          <tr >
+                                                                                              <td >
+                                                                                                  <input id = "importProcessDescription" name = "common_importProcessDescription" type = "text" class = "form-control" size = "180" />
+                                                                                              </td >
+                                                                                          </tr >
+                                                                                          </tbody >
 
 					</table >
 					<p >Pressing 'Create Job' will make the system build following job workflows</p >

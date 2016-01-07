@@ -145,7 +145,7 @@ public class DataQualityDAO {
             jpaProcessStep.setAddTs(new Date());
             jpaProcessStep.setEditTs(new Date());
             jpaProcessStep.setDescription(dqSetupInfo.getDescription() );
-            jpaProcessStep.setProcessName("subProcess of "+dqSetupInfo.getProcessName());
+            jpaProcessStep.setProcessName("SubProcess of "+dqSetupInfo.getProcessName());
             BusDomain busDomainStep = new BusDomain();
             busDomainStep.setBusDomainId(dqSetupInfo.getBusDomainId());
             jpaProcessStep.setBusDomain(busDomainStep);

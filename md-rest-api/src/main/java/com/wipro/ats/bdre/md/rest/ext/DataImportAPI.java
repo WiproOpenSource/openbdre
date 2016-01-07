@@ -68,8 +68,11 @@ public class DataImportAPI extends MetadataAPIBase {
         String dbUser = request.getParameter("common_dbUser");
         String dbPassword = request.getParameter("common_dbPassword");
         String busDomainId = request.getParameter("common_busDomainId");
-        String processName = request.getParameter("common_processName");
-        String processDescription = request.getParameter("common_processDescription");
+        String dataLoadProcessName = request.getParameter("common_dataLoadProcessName");
+        String importProcessName = request.getParameter("common_importProcessName");
+        String dataLoadProcessDescription = request.getParameter("common_dataLoadProcessDescription");
+        String importProcessDescription = request.getParameter("common_importProcessDescription");
+
 
         String uuid = UUID.randomUUID().toString();
         //this goes to hive_tables , same for all tables being imported
@@ -81,8 +84,10 @@ public class DataImportAPI extends MetadataAPIBase {
         pushToIntermediate(uuid, "username", dbUser);
         pushToIntermediate(uuid, "password", dbPassword);
         pushToIntermediate(uuid, "busdomainid", busDomainId);
-        pushToIntermediate(uuid, "processName",processName);
-        pushToIntermediate(uuid, "processDescription",processDescription);
+        pushToIntermediate(uuid, "dataLoadProcessName",dataLoadProcessName);
+        pushToIntermediate(uuid, "importProcessName",importProcessName);
+        pushToIntermediate(uuid, "dataLoadProcessDescription",dataLoadProcessDescription);
+        pushToIntermediate(uuid, "importProcessDescription",importProcessDescription);
 
 
         //pushing other non variable request params
