@@ -249,8 +249,7 @@ public class ProcessAPI extends MetadataAPIBase {
                 updateDaoProcess.setProcessTemplate(daoProcessTemplate);
             }
             if (process.getParentProcessId() != null) {
-                com.wipro.ats.bdre.md.dao.jpa.Process parentProcess = new com.wipro.ats.bdre.md.dao.jpa.Process();
-                parentProcess.setProcessId(process.getParentProcessId());
+                com.wipro.ats.bdre.md.dao.jpa.Process parentProcess =processDAO.get(process.getParentProcessId());
                 updateDaoProcess.setProcess(parentProcess);
             }
             updateDaoProcess.setDescription(process.getDescription());
@@ -329,8 +328,7 @@ public class ProcessAPI extends MetadataAPIBase {
                 insertDaoProcess.setProcessTemplate(daoProcessTemplate);
             }
             if (process.getParentProcessId() != null) {
-                com.wipro.ats.bdre.md.dao.jpa.Process parentProcess = new com.wipro.ats.bdre.md.dao.jpa.Process();
-                parentProcess.setProcessId(process.getParentProcessId());
+                com.wipro.ats.bdre.md.dao.jpa.Process parentProcess =processDAO.get(process.getParentProcessId());
                 insertDaoProcess.setProcess(parentProcess);
             }
             insertDaoProcess.setDescription(process.getDescription());

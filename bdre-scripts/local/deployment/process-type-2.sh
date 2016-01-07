@@ -106,6 +106,8 @@ if [ $? -ne 0 ]
 then exit 1
 fi
 
+dos2unix $BDRE_APPS_HOME/$busDomainId/$processTypeId/$processId/Rhadoop.sh
+
 #create/clean hdfs process directory
 hdfs dfs -mkdir -p $hdfsPath/wf/$busDomainId/$processTypeId/$processId
 if [ $? -ne 0 ]

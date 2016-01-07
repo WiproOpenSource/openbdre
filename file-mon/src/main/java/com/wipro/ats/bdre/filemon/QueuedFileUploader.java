@@ -14,6 +14,7 @@
 
 package com.wipro.ats.bdre.filemon;
 
+import com.wipro.ats.bdre.ResolvePath;
 import com.wipro.ats.bdre.exception.BDREException;
 import com.wipro.ats.bdre.md.api.RegisterFile;
 import com.wipro.ats.bdre.md.StaticContextAccessor;
@@ -43,20 +44,22 @@ public class QueuedFileUploader {
             // Copying file from local to HDFS overriding, if file already exists
             config.set("fs.defaultFS", FileMonRunnableMain.getDefaultFSName());
             FileSystem fs = FileSystem.get(config);
-            if(!fs.exists(new Path(fileCopying.getDstLocation()) )){
-                LOGGER.info("Creating HDFS dest dir "+new Path(fileCopying.getDstLocation())+ " Success="+fs.mkdirs(new Path(fileCopying.getDstLocation())));
+            String destDir = fileCopying.getDstLocation();
+            Path destPath = new Path(ResolvePath.replaceVars(destDir));
+            if(!fs.exists(destPath)){
+                LOGGER.info("Creating HDFS dest dir "+destPath+ " Success="+fs.mkdirs(destPath));
             }
             if(FileMonRunnableMain.isDeleteCopiedSrc()) {
                 fs.copyFromLocalFile(true, true, new Path(fileCopying.getSrcLocation()),
-                        new Path(fileCopying.getDstLocation()));
+                        destPath);
             }else{
                 fs.copyFromLocalFile(false, true, new Path(fileCopying.getSrcLocation()),
-                        new Path(fileCopying.getDstLocation()));
+                        destPath);
 
                 File sourceFile = new File(fileCopying.getSrcLocation());
-                String destDir = sourceFile.getParent()+"/_archive";
-                File destinationDir = new File(destDir);
-                FileUtils.moveFileToDirectory(sourceFile, destinationDir, true);
+                String arcDir = sourceFile.getParent()+"/_archive";
+                File arcDirFile = new File(arcDir);
+                FileUtils.moveFileToDirectory(sourceFile, arcDirFile, true);
             }
         } catch (Exception e) {
             FileMonitor.addToQueue(fileCopying.getFileName(), fileCopying);
@@ -90,7 +93,7 @@ public class QueuedFileUploader {
             long timeStamp = fileCopying.getTimeStamp();
             Date dt = new Date(timeStamp);
             String strDate = sdf.format(dt);
-            RegisterFile registerFile = RegisterFile.getAutowiredRegisterFile();
+            //RegisterFile registerFile = RegisterFile.getAutowiredRegisterFile();
             String[] params = {"-p", subProcessId, "-sId", serverId, "-path", path, "-fs", fileSize, "-fh", fileHash, "-cTS", strDate, "-bid", "0"};
             LOGGER.debug("executeRegisterFiles Invoked for " + path);
             /* In static method direct autowire of instance is not possible,

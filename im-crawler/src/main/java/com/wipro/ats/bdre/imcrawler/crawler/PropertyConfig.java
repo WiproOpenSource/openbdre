@@ -19,6 +19,7 @@ public class PropertyConfig {
     private String userAgentString;
     private String proxyHost;
     private int proxyPort;
+    private String outputPath;
     private String proxyUserName;
     private String proxyPassword;
     private String url;
@@ -40,6 +41,10 @@ public class PropertyConfig {
 
     public String getUrl() {
         return url;
+    }
+
+    public String getOutputPath() {
+        return outputPath;
     }
 
     public String getProxyPassword() {
@@ -131,6 +136,7 @@ public class PropertyConfig {
             proxyPassword = listForParams.getProperty("proxyPassword");
         }
 
+        outputPath = listForParams.getProperty("outputPath");
         url = listForParams.getProperty("url");
         urlsToSearch = listForParams.getProperty("urlsToSearch");
         urlsNotToSearch = listForParams.getProperty("urlsNotToSearch");
@@ -142,7 +148,7 @@ public class PropertyConfig {
                 " maxPagesToFetch: " + maxPagesToFetch + " includeBinaryContentInCrawling: " + includeBinaryContentInCrawling +
                 " resumableCrawling: " + resumableCrawling + " userAgentString: " + userAgentString + " proxyHost: " + proxyHost +
                 " proxyPort: " + proxyPort + " proxyUserName: " + proxyUserName + " url(comma seperated): " + url +
-                " urlsToSearch Pattern: "+ urlsToSearch+ " urlsNotToSearch Pattern: "+urlsNotToSearch);
+                " urlsToSearch Pattern: "+ urlsToSearch+ " urlsNotToSearch Pattern: "+urlsNotToSearch + " outputPath: "+outputPath);
     }
 
 
