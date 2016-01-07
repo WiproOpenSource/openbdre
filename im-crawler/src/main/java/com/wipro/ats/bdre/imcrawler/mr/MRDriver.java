@@ -47,7 +47,7 @@ public class MRDriver extends Configured implements Tool {
 
         job.setInputFormatClass(CrawlInputFormat.class);
 
-        FileOutputFormat.setOutputPath(job, new Path( ResolvePath.replaceVars(outputPath)+instanceExecId));
+        FileOutputFormat.setOutputPath(job, new Path( ResolvePath.replaceVars(outputPath)));
         job.waitForCompletion(true);
         return 0;
     }
