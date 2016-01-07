@@ -186,6 +186,12 @@ function formIntoMap(typeProp, typeOf) {
                                                 </div>
                                             </div>
                                             <div class="form-group">
+                                                <label class="control-label col-sm-2" for="outputPath">HDFS Output Path:</label>
+                                                <div class="col-sm-10">
+                                                    <input type="text" class="form-control" id="outputPath" name="outputPath" placeholder="Enter the absolute Output Path" required>
+                                                </div>
+                                            </div>
+                                            <div class="form-group">
                                                 <label class="control-label col-sm-2" for="busDomainId">Bus Domain Id:</label>
                                                 <div class="col-sm-10">
                                                     <select class="form-control" id="busDomainId" name="busDomainId">
