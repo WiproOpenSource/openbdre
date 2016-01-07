@@ -1,4 +1,6 @@
+
 # Bigdata Ready Enterprise Open Source Software 
+
 
 # Table of Contents
 
@@ -23,6 +25,7 @@
 [Web Crawler](#Web Crawler)
 ***
 # License
+
 Released under Apache Public License 2.0. You can get a copy for the license at http://www.apache.org/licenses/LICENSE-2.0.
 # Objective 
 Goal of BDRE is to give Bigdata implementation a significant acceleration by supplying the essential frameworks which are most likely to be written anyway. 

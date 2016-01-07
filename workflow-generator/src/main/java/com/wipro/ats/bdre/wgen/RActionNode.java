@@ -14,10 +14,8 @@
 
 package com.wipro.ats.bdre.wgen;
 
-import com.wipro.ats.bdre.md.api.GetGeneralConfig;
 import com.wipro.ats.bdre.md.api.GetProperties;
 import com.wipro.ats.bdre.md.beans.ProcessInfo;
-import com.wipro.ats.bdre.md.beans.table.GeneralConfig;
 import org.apache.log4j.Logger;
 
 import java.util.Enumeration;
@@ -73,10 +71,11 @@ public class RActionNode extends GenericActionNode {
                 "        <shell xmlns=\"uri:oozie:shell-action:0.1\">\n" +
                 "            <job-tracker>${jobTracker}</job-tracker>\n" +
                 "            <name-node>${nameNode}</name-node>\n");
-        ret.append(getScriptPath());
-        ret.append(getInputFile("param"));
-        ret.append(getRFile(getId(), "r-file"));
-        ret.append(getOutputFile("param"));
+        ret.append("            <exec>Rhadoop.sh</exec>\n");
+        ret.append("            <argument>"+getRFile(getId(), "r-file").replace("r/","")+"</argument>\n");
+        ret.append(getArguments("param"));
+        ret.append("            <file>Rhadoop.sh</file>\n");
+        ret.append("            <file>" +getRFile(getId(), "r-file")+"</file>\n");
         ret.append("        </shell>\n" +
                 "        <ok to=\"" + getToNode().getName() + "\"/>\n" +
                 "        <error to=\"" + getTermNode().getName() + "\"/>\n" +
@@ -86,46 +85,21 @@ public class RActionNode extends GenericActionNode {
     }
 
     /**
-     * This method gets path for Shell Script from mdconfig settings
+     * This method gets the required arguments for running the R Script
      *
-     * @return String containing script path to be appended to workflow string
-     */
-    public String getScriptPath() {
-        GetGeneralConfig getGeneralConfig = new GetGeneralConfig();
-        GeneralConfig generalConfig = getGeneralConfig.byConigGroupAndKey("mdconfig", "r.shell-script");
-        String scriptPath = "            <exec>" + generalConfig.getDefaultVal() + "</exec>\n";
-        return scriptPath;
-    }
-
-    /**
-     * This method gets the required input file for running the R Script
-     *
-     * @param configGroup config_group entry in properties table "input" for arguments
+     * @param configGroup config_group entry in properties table for arguments
      * @return String containing arguments to be appended to workflow string.
      */
-    public String getInputFile(String configGroup) {
+    public String getArguments(String configGroup) {
         GetProperties getProperties = new GetProperties();
-        java.util.Properties inputFile = getProperties.getProperties(getId().toString(), configGroup);
-        String inputFilePath = "            <argument>" + inputFile.getProperty("input") + "</argument>\n";
+        java.util.Properties argumentProperty = getProperties.getProperties(getId().toString(), configGroup);
 
-        return inputFilePath;
-    }
+        String arguments="";
+        if(!argumentProperty.isEmpty()) {
 
-    /**
-     * This method gets the required output file for running the R Script
-     *
-     * @param configGroup config_group entry in properties table "output" for arguments
-     * @return String containing arguments to be appended to workflow string.
-     */
-    public String getOutputFile(String configGroup) {
-        GetProperties getProperties = new GetProperties();
-        java.util.Properties outputFile = getProperties.getProperties(getId().toString(), configGroup);
-        String output = outputFile.getProperty("output");
-        String outputFilePath;
-        if (output == null)
-            outputFilePath = "            <argument>/tmp/R-Output/" + this.getId() + "/${wf:actionData(\"init-job\")[\"instance-exec-id\"]}</argument>\n";
-        else outputFilePath = "            <argument>" + output + "</argument>\n";
-        return outputFilePath;
+            arguments = "            <argument>" + argumentProperty.values().toString().substring(1, argumentProperty.values().toString().length() - 1) + "</argument>\n";
+        }
+        return arguments;
     }
 
     /**
@@ -144,11 +118,11 @@ public class RActionNode extends GenericActionNode {
         if (rScript.size() > 1) {
             throw new RuntimeException("Can Handle only 1 input file in R action, process type=" + processInfo.getProcessTypeId());
         } else if (rScript.size() == 0) {
-            addRScript.append("            <argument>r/" + getId() + ".R</argument>\n");
+            addRScript.append("r/" + getId() + ".R");
         } else {
             while (e.hasMoreElements()) {
                 String key = (String) e.nextElement();
-                addRScript.append("            <argument>" + rScript.getProperty(key) + "</argument>\n");
+                addRScript.append(rScript.getProperty(key));
             }
         }
 
