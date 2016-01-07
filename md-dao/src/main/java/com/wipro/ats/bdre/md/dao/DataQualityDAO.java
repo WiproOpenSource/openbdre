@@ -122,8 +122,8 @@ public class DataQualityDAO {
             com.wipro.ats.bdre.md.dao.jpa.Process jpaProcess = new com.wipro.ats.bdre.md.dao.jpa.Process();
             jpaProcess.setAddTs(new Date());
             jpaProcess.setEditTs(new Date());
-            jpaProcess.setDescription("Data Quality Job");
-            jpaProcess.setProcessName("DQ Job");
+            jpaProcess.setDescription( dqSetupInfo.getDescription());
+            jpaProcess.setProcessName( dqSetupInfo.getProcessName());
             BusDomain busDomain = new BusDomain();
             busDomain.setBusDomainId(dqSetupInfo.getBusDomainId());
             jpaProcess.setBusDomain(busDomain);
@@ -144,16 +144,15 @@ public class DataQualityDAO {
             com.wipro.ats.bdre.md.dao.jpa.Process jpaProcessStep = new com.wipro.ats.bdre.md.dao.jpa.Process();
             jpaProcessStep.setAddTs(new Date());
             jpaProcessStep.setEditTs(new Date());
-            jpaProcessStep.setDescription("Data Quality Step");
-            jpaProcessStep.setProcessName("DQ Step");
+            jpaProcessStep.setDescription(dqSetupInfo.getDescription() );
+            jpaProcessStep.setProcessName("subProcess of "+dqSetupInfo.getProcessName());
             BusDomain busDomainStep = new BusDomain();
             busDomainStep.setBusDomainId(dqSetupInfo.getBusDomainId());
             jpaProcessStep.setBusDomain(busDomainStep);
             ProcessType processTypeStep = new ProcessType();
             processTypeStep.setProcessTypeId(16);
             jpaProcessStep.setProcessType(processTypeStep);
-            Process parentProcessStep = new Process();
-            parentProcessStep.setProcessId(parentProcessId);
+            Process parentProcessStep = (Process)session.get(Process.class,parentProcessId);
 
             jpaProcessStep.setProcess(parentProcessStep);
             jpaProcessStep.setDeleteFlag(false);

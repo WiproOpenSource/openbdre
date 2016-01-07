@@ -64,9 +64,10 @@ public class DataGenAPI extends MetadataAPIBase {
         Process childProcess = null;
         Properties jpaProperties=null;
 
-        parentProcess = Dao2TableUtil.buildJPAProcess(18,"Data gen Parent", "Data Generation Parent", 1);
-        childProcess = Dao2TableUtil.buildJPAProcess(14,  "child of Data gen Parent", "child of Data Generation Parent", 0);
 
+        String processName = null;
+        String processDescription = null;
+        Integer busDomainId = null;
 
         StringBuffer tableSchema = new StringBuffer("");
         //to handle argument id's in sequence if rows are deleted and added in UI
@@ -135,8 +136,20 @@ public class DataGenAPI extends MetadataAPIBase {
                 LOGGER.debug("other_separator" + map.get(string));
                 jpaProperties =Dao2TableUtil.buildJPAProperties("table", key, map.get(string), "Separator");
                 childProps.add(jpaProperties );
+            }else if (string.startsWith("process_processName")) {
+                LOGGER.debug("process_processName" + map.get(string));
+                processName = map.get(string);
+            }else if (string.startsWith("process_processDescription")) {
+                LOGGER.debug("process_processDescription" + map.get(string));
+                processDescription = map.get(string);
+            }else if (string.startsWith("process_busDomainId")) {
+                LOGGER.debug("process_busDomainId" + map.get(string));
+                busDomainId = new Integer(map.get(string));
             }
+
         }
+        parentProcess = Dao2TableUtil.buildJPAProcess(18,processName, processDescription, 1,busDomainId);
+        childProcess = Dao2TableUtil.buildJPAProcess(14, "subProcess of "+processName, processDescription, 0,busDomainId);
 
 
         //remove last : in tableSchema String
