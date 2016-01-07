@@ -75,34 +75,20 @@ public class HistoryDataImportDAO {
             BusDomain busDomain = new BusDomain();
             busDomain.setBusDomainId(busDomainId);
 
-            IntermediateId getdataLoadProcessName = new IntermediateId();
-            getdataLoadProcessName.setInterKey("dataLoadProcessName");
-            getdataLoadProcessName.setUuid(intermediateInfo.getUuid());
-            Criteria getdataLoadProcessNameCriteria = session.createCriteria(Intermediate.class).add(Restrictions.eq("id", getdataLoadProcessName));
-            Intermediate dataLoadProcessNameRow = (Intermediate) getdataLoadProcessNameCriteria.list().get(0);
-            String dataLoadProcessName = dataLoadProcessNameRow.getInterValue();
-
-            IntermediateId getimportProcessName = new IntermediateId();
-            getimportProcessName.setInterKey("importProcessName");
-            getimportProcessName.setUuid(intermediateInfo.getUuid());
-            Criteria getimportProcessNameCriteria = session.createCriteria(Intermediate.class).add(Restrictions.eq("id", getimportProcessName));
-            Intermediate importProcessNameRow = (Intermediate) getimportProcessNameCriteria.list().get(0);
-            String importProcessName = importProcessNameRow.getInterValue();
+            IntermediateId getProcessName = new IntermediateId();
+            getProcessName.setInterKey("processName");
+            getProcessName.setUuid(intermediateInfo.getUuid());
+            Criteria getProcessNameCriteria = session.createCriteria(Intermediate.class).add(Restrictions.eq("id", getProcessName));
+            Intermediate processNameRow = (Intermediate) getProcessNameCriteria.list().get(0);
+            String processName = processNameRow.getInterValue();
 
 
-            IntermediateId getdataLoadProcessDescription = new IntermediateId();
-            getdataLoadProcessDescription.setInterKey("dataLoadProcessDescription");
-            getdataLoadProcessDescription.setUuid(intermediateInfo.getUuid());
-            Criteria getdataLoadProcessDescriptionCriteria = session.createCriteria(Intermediate.class).add(Restrictions.eq("id", getdataLoadProcessDescription));
-            Intermediate dataLoadProcessDescriptionRow = (Intermediate) getdataLoadProcessDescriptionCriteria.list().get(0);
-            String dataLoadProcessDescription = dataLoadProcessDescriptionRow.getInterValue();
-
-            IntermediateId getimportProcessDescription = new IntermediateId();
-            getimportProcessDescription.setInterKey("importProcessDescription");
-            getimportProcessDescription.setUuid(intermediateInfo.getUuid());
-            Criteria getimportProcessDescriptionCriteria = session.createCriteria(Intermediate.class).add(Restrictions.eq("id", getimportProcessDescription));
-            Intermediate importProcessDescriptionRow = (Intermediate) getimportProcessDescriptionCriteria.list().get(0);
-            String importProcessDescription = importProcessDescriptionRow.getInterValue();
+            IntermediateId getProcessDescription = new IntermediateId();
+            getProcessDescription.setInterKey("processDescription");
+            getProcessDescription.setUuid(intermediateInfo.getUuid());
+            Criteria getProcessDescriptionCriteria = session.createCriteria(Intermediate.class).add(Restrictions.eq("id", getProcessDescription));
+            Intermediate processDescriptionRow = (Intermediate) getProcessDescriptionCriteria.list().get(0);
+            String processDescription = processDescriptionRow.getInterValue();
 
 
             ProcessType dataLoadProcessType = new ProcessType();
@@ -136,9 +122,9 @@ public class HistoryDataImportDAO {
 
 
             if (flag == 1) {
-                dataLoadParent.setDescription(dataLoadProcessDescription);
+                dataLoadParent.setDescription(processDescription+"_Load");
                 dataLoadParent.setAddTs(new Date());
-                dataLoadParent.setProcessName(dataLoadProcessName);
+                dataLoadParent.setProcessName(processName+"_Load");
                 dataLoadParent.setBusDomain(busDomain);
                 dataLoadParent.setProcessType(dataLoadProcessType);
                 dataLoadParent.setNextProcessId("");
@@ -154,9 +140,9 @@ public class HistoryDataImportDAO {
             }
             for (int i = 1; i <= intermediateList.size(); i++) {
                 Process dataImportProcess = new Process();
-                dataImportProcess.setDescription(importProcessDescription + i);
+                dataImportProcess.setDescription(processDescription+"_Import" + i);
                 dataImportProcess.setAddTs(new Date());
-                dataImportProcess.setProcessName(importProcessName + i);
+                dataImportProcess.setProcessName(processName+"_Import" + i);
                 dataImportProcess.setBusDomain(busDomain);
                 dataImportProcess.setProcessType(dataImportProcessType);
                 dataImportProcess.setNextProcessId("");
@@ -176,8 +162,8 @@ public class HistoryDataImportDAO {
                 }
 
                 Process childDataImportProcess = new Process();
-                childDataImportProcess.setDescription(importProcessDescription);
-                childDataImportProcess.setProcessName("SubProcess of "+importProcessName);
+                childDataImportProcess.setDescription(processDescription+"_Import");
+                childDataImportProcess.setProcessName("SubProcess of "+processName+"_Import");
                 childDataImportProcess.setAddTs(new Date());
                 childDataImportProcess.setProcess(dataImportProcess);
                 childDataImportProcess.setBusDomain(busDomain);
@@ -381,9 +367,9 @@ public class HistoryDataImportDAO {
                 LOGGER.debug("loadOrNotValue " + loadOrNotValue.getInterValue());
                 if ("false".equals(loadOrNotValue.getInterValue())) {
                     Process file2Raw = new Process();
-                    file2Raw.setDescription(dataLoadProcessDescription+"_'File2Raw'");
+                    file2Raw.setDescription(processDescription+"_'File2Raw'");
                     file2Raw.setAddTs(new Date());
-                    file2Raw.setProcessName(dataLoadProcessName+"_Data Load-F2R");
+                    file2Raw.setProcessName(processName+"_Data Load-F2R");
                     file2Raw.setBusDomain(busDomain);
                     file2Raw.setProcessType(file2RawType);
                     file2Raw.setNextProcessId("");
@@ -398,9 +384,9 @@ public class HistoryDataImportDAO {
                     nextProcessForDataLoadParent += file2Raw.getProcessId().toString() + ",";
 
                     Process raw2Stage = new Process();
-                    raw2Stage.setDescription(dataLoadProcessDescription+"_''Raw2Stage''");
+                    raw2Stage.setDescription(processDescription+"_''Raw2Stage''");
                     raw2Stage.setAddTs(new Date());
-                    raw2Stage.setProcessName(dataLoadProcessName+"_Data Load-R2S");
+                    raw2Stage.setProcessName(processName+"_Data Load-R2S");
                     raw2Stage.setBusDomain(busDomain);
                     raw2Stage.setProcessType(raw2StageType);
                     raw2Stage.setProcess(dataLoadParent);
@@ -415,9 +401,9 @@ public class HistoryDataImportDAO {
                     nextProcessForF2R += raw2Stage.getProcessId().toString() + ",";
 
                     Process stage2Base = new Process();
-                    stage2Base.setDescription(dataLoadProcessDescription+"_'''Stage2Base'''");
+                    stage2Base.setDescription(processDescription+"_'''Stage2Base'''");
                     stage2Base.setAddTs(new Date());
-                    stage2Base.setProcessName(dataLoadProcessName+"_Data Load-S2B");
+                    stage2Base.setProcessName(processName+"_Data Load-S2B");
                     stage2Base.setBusDomain(busDomain);
                     stage2Base.setProcessType(stage2BaseType);
                     stage2Base.setProcess(dataLoadParent);
