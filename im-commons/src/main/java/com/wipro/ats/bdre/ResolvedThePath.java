@@ -25,8 +25,8 @@ import java.util.regex.Pattern;
 /**
  * Created by AS294216 on 1/5/2016.
  */
-public class ResolvePath {
-    private static Logger LOGGER = Logger.getLogger(ResolvePath.class);
+public class ResolvedThePath {
+    private static Logger LOGGER = Logger.getLogger(ResolvedThePath.class);
 
 
     private static Pattern pattern = Pattern.compile("%(.)");
