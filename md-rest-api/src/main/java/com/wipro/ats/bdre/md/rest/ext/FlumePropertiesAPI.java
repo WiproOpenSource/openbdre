@@ -56,8 +56,11 @@ public class FlumePropertiesAPI extends MetadataAPIBase {
         LOGGER.debug(" value of map is " + map.size());
         RestWrapper restWrapper = null;
 
-        com.wipro.ats.bdre.md.dao.jpa.Process parentProcess = Dao2TableUtil.buildJPAProcess(1, "flume action Parent", "Data Ingestion Parent", 2);
-        com.wipro.ats.bdre.md.dao.jpa.Process childProcess = Dao2TableUtil.buildJPAProcess(23, "child of " + "flume action", "child of " + "flume action", 0);
+        String processName = null;
+        String processDescription = null;
+        Integer busDomainId = null;
+
+
         List<com.wipro.ats.bdre.md.dao.jpa.Properties> childProps=new ArrayList<>();
         com.wipro.ats.bdre.md.dao.jpa.Properties jpaProperties=null;
 
@@ -78,6 +81,15 @@ public class FlumePropertiesAPI extends MetadataAPIBase {
             } else if (string.startsWith("sink_")) {
                 jpaProperties = Dao2TableUtil.buildJPAProperties("flume", "agent.sinks.sink." + key, map.get(string), "Properties for sink");
                 childProps.add(jpaProperties);
+            }else if (string.startsWith("process_processName")) {
+                LOGGER.debug("process_processName" + map.get(string));
+                processName = map.get(string);
+            }else if (string.startsWith("process_processDescription")) {
+                LOGGER.debug("process_processDescription" + map.get(string));
+                processDescription = map.get(string);
+            }else if (string.startsWith("process_busDomainId")) {
+                LOGGER.debug("process_busDomainId" + map.get(string));
+                busDomainId = new Integer(map.get(string));
             }
         }
 
@@ -92,6 +104,8 @@ public class FlumePropertiesAPI extends MetadataAPIBase {
         jpaProperties = Dao2TableUtil.buildJPAProperties("flume", "agent.sinks.sink.channel", "channel", "Channel name for sink");
         childProps.add(jpaProperties);
 
+        com.wipro.ats.bdre.md.dao.jpa.Process parentProcess = Dao2TableUtil.buildJPAProcess(1, processName, processDescription, 2,busDomainId);
+        com.wipro.ats.bdre.md.dao.jpa.Process childProcess = Dao2TableUtil.buildJPAProcess(23, "SubProcess of "+processName , processDescription, 0,busDomainId);
 
         List<com.wipro.ats.bdre.md.dao.jpa.Process> processList = processDAO.createOneChildJob(parentProcess,childProcess,null,childProps);
         List<Process> tableProcessList = Dao2TableUtil.jpaList2TableProcessList(processList);
