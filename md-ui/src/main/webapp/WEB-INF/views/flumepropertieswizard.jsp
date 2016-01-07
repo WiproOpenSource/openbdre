@@ -957,8 +957,9 @@ function formIntoMap(typeProp, typeOf) {
 	var i;
 	for(i = 0; i < x.length; i++) {
 		map[typeProp + x.elements[i].name] = x.elements[i].value;
+		console.log(map[typeProp + x.elements[i].name]);
+		console.log(x.elements[i].value);
 	}
-
 
 }
 
