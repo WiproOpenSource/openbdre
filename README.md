@@ -1,19 +1,96 @@
+# Bigdata Ready Enterprise Open Source Software
 
-# Bigdata Ready Enterprise Open Source Software 
+## Table of Contents
 
-
+[License](#license)
+***
+[Objective](#objective)
+***
+[Features](#features)
+***
+[Architecture](#architecture)
+***
+[Installation](#installation)
+***
+[Data Ingestion](#data-ingestion)
+***
+[Workflow Builder](#workflow-builder)
+***
+[Bulk Data Manufacturing](#bulk-data-manufacturing)
+***
+[Web Crawler](#Web Crawler)
+***
+[Operational Metadata Management](#operational-metadata-management)
+***
+# License
 Released under Apache Public License 2.0. You can get a copy for the license at http://www.apache.org/licenses/LICENSE-2.0.
+# Objective 
+Goal of BDRE is to give Bigdata implementation a significant acceleration by supplying the essential frameworks which are most likely to be written anyway. 
+It'll drastically eliminate hundreds of man hours of effort in operational framework development.
+Big Data implementations however, require specialized skills, signiﬁcant development effort on data loading, semantic processing, DQ, code deployment across environments etc.
+Big Data Ready Enterprise (BDRE)makes big data technology adoption simpler by optimizing and integrating various big data solutions and providing them under one integrated package. 
+BDRE provides a uniﬁed framework for a Hadoop implementation that can drastically minimize time development and fasttrack the Hadoop implementation. It comprises a reusable framework that can be customized as per the enterprise eco system. The components are loosely integrated and can be de-coupled or replaced easily with alternatives.
+
+
+# Features
+
+- Operational Metadata Management
+ - Registry of all workflow processes/templates
+ - Parameters/configuration(key/val) for processes
+ - Dependency information (upstream/downstream)
+ - Batch management/tracking. Batch concept in BDRE is for tracking the data flow between workflow processes.  
+ - Run control (for delta processing/dependency check)
+ - Execution status for jobs(dynamic metadata - with step level granularity)
+ - File registry - can be used to register e.g. ingested files or a raw file as an output of an upstream.
+ - Execution statistics logging (key/value)
+ - Executed hive queries and data lineage information.
+ - Java APIs that ingrates with Bigdata with non-bigdata applications alike.
+ - Job monitoring and proactive/reactive alerting 
+- Data ingestion framework
+ - Tabular data from RDBMS
+ - Streaming data from 16 types of sources (including logs, message queues and Twitter)
+ - Arbitrary file ingestion by directory monitoring
+- Web Crawler
+- Distributed Data Manufacturing framework
+ - Generate billons of records based on patterns and ranges
+- Semantic Layer Building Framework
+ - Build the sematic layer using visual workflow creator using the data you ingested.
+ - Supports Hive, Pig, Mapreduce, Spark , R etc
+ - Generates Oozie workflows
+- Data Quality Framework
+ - Validates your data using your rules in a distributed way
+ - Integrated with Drools rule engine
+- HTML5 User Interface
+ - Create ingestion, data generation, Crawler jobs or create Oozie workflows graphically without writing any code
+ - One click deploy and execute jobs without SSH into the edge node.
+
+# Architecture
+
+![image](http://wiproopensourcepractice.github.io/openbdre/bdreimages/architecture.PNG)
+
+# Installation
 
 ## Overview
 
-This document will help you build BDRE from source. Audience for this document are developers and architects who want be part of BDRE framework development or may just want to test it by running the UI. Install Git, Maven and Oracle JDK 7(and up) if you haven't already. In Windows be sure to add git and other bash tools in the commandline path during installation. In this example, we are going to use *HortonWorks Sandbox* with *VirtualBox* software because all the required software are mostly installed and configured. BDRE is shipped with an embedded database which is okay for running the UI and evaluating and testing jobs in a single node cluster. For production use BDRE currently supports following production scale databases.
+This section will help you build BDRE from source. Audience for this document are developers and architects who want be part of BDRE framework development or may just want to evaluate it. 
 
-  - MySQL Server
-  - Oracle 11g Server
+### General Prerequisit
+
+For testing/development perpose and to save time use the fully loaded Hadoop VMs from Cloudera or Hortonworks because all the required software are mostly installed and configured.
+
+- A Hadoop Cluster
+ - In this section we are using *HortonWorks Sandbox 2.2.0*
+- Git 1.9 and up
+- Maven 3 and up
+- Oracle JDK 7(and up) 
+- BDRE is shipped with an embedded database which is okay for running the UI and evaluating and testing jobs in a single node cluster. 
+For production use BDRE currently supports following production scale databases.)
+  - MySQL Server 5.1 and up
+  - Oracle 11g Server or better
   - PostgreSql
+- Google Chrome browser
 
- In this guide we are going to show you how to build and install BDRE in a CentOS VM with a MySQL database. You should be able to do the same in Mac or Windows but note that setting up a Hadoop cluster might be tricky in Windows and might more involvement. You should be able to launch the BDRE user interface in Windows and design various jobs. However to deploy and run the jobs we recommend a Linux system with Hadoop installed. BDRE is typically installed in Hadoop edge node in a multi-node cluster.
-
+You should be able to do the same in Mac or Windows but note that setting up a Hadoop cluster might be tricky in Windows and might more involvement. However to deploy and run the jobs we recommend a Linux system. BDRE is typically installed in Hadoop edge node in a multi-node cluster.
 
 ## Preparation
 
@@ -194,5 +271,31 @@ This document will help you build BDRE from source. Audience for this document a
 * Check the process in Oozie console *http://VM_IP:11000/oozie*
 * When the import job is complete start the *data load job*.
 
+# Data Ingestion
+
+## RDBMS Data Ingestion
+TDB
+## Streaming Data Ingestion
+TBD
+## Directory Monitoring and File Ingestion
+TBD
+# Workflow Builder
+TBD
+# Bulk Data Manufacturing
+TBD
+# Web Crawler
+TBD
+
+# Operational Metadata Management Systemit
+
+### Operational Metadata Management
+
+BDRE provides complete job/operational metadata management solution for Hadoop. At its core acts as a registry and tracker for different types of jobs running in different Hadoop clusters or as a standalone. It provides APIs to integrate with virtually any jobs. 
 
 
+![image](http://wiproopensourcepractice.github.io/openbdre/bdreimages/mdgraph.png)
+
+
+BDRE uses RDBMS database to store all job related metadata. A set of stored procedures are there to interface will the tables which are exposed via Java APIs to manage/create/update the static and run time metadata information. Below is the data model for BDRE metadata operational database.
+
+![eer](http://wiproopensourcepractice.github.io/openbdre/bdreimages/eer.png)
