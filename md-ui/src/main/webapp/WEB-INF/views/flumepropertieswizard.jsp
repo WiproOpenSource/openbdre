@@ -26,7 +26,7 @@
 var selectedSourceType = '';
 var selectedChannelType = '';
 var selectedSinkType = '';
-var selectedprocessFieldsFormType='';
+
 var jsonObj = {
 	"Result": "OK"
 }
@@ -407,7 +407,7 @@ wizard = $(document).ready(function() {
 		},
 		onStepChanged: function(event, currentIndex, priorIndex) {
 			console.log(currentIndex + " " + priorIndex);
-			if(currentIndex == 9 && priorIndex == 8) {
+			if(currentIndex == 10 && priorIndex == 9) {
 				{
 					jtableIntoMap('source_', 'sourceAdvancedFields');
 					jtableIntoMap('channel_', 'channelAdvancedFields');
@@ -419,14 +419,14 @@ wizard = $(document).ready(function() {
 					map['source_type'] = selectedSourceType;
 					map['channel_type'] = selectedChannelType;
 					map['sink_type'] = selectedSinkType;
-					map['process_type']=selectedprocessFieldsFormType;
+
 
 					$('#createjobs').on('click', function(e) {
 
 						console.log(selectedSourceType);
 						console.log(selectedChannelType);
 						console.log(selectedSinkType);
-						console.log(selectedprocessFieldsFormType);
+
 
 						$.ajax({
 							type: "POST",
@@ -442,6 +442,7 @@ wizard = $(document).ready(function() {
 										modal: true,
 										buttons: {
 											"Ok": function() {
+												$("#createjobs").hide();
 												$(this).dialog("close");
 											}
 										}

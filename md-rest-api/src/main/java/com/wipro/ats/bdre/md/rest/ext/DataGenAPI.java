@@ -67,6 +67,7 @@ public class DataGenAPI extends MetadataAPIBase {
 
         String processName = null;
         String processDescription = null;
+        String outputPath = null;
         Integer busDomainId = null;
 
         StringBuffer tableSchema = new StringBuffer("");
@@ -139,6 +140,11 @@ public class DataGenAPI extends MetadataAPIBase {
             }else if (string.startsWith("process_processName")) {
                 LOGGER.debug("process_processName" + map.get(string));
                 processName = map.get(string);
+            }else if (string.startsWith("process_outputPath")) {
+                LOGGER.debug("process_outputPath" + map.get(string));
+                //outputPath = map.get(string);
+                jpaProperties =Dao2TableUtil.buildJPAProperties("table", key, map.get(string), "Output path");
+                childProps.add(jpaProperties );
             }else if (string.startsWith("process_processDescription")) {
                 LOGGER.debug("process_processDescription" + map.get(string));
                 processDescription = map.get(string);
