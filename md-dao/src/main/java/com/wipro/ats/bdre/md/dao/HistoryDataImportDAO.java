@@ -84,7 +84,7 @@ public class HistoryDataImportDAO {
 
 
             IntermediateId getProcessDescription = new IntermediateId();
-            getProcessDescription.setInterKey("processName");
+            getProcessDescription.setInterKey("processDescription");
             getProcessDescription.setUuid(intermediateInfo.getUuid());
             Criteria getProcessDescriptionCriteria = session.createCriteria(Intermediate.class).add(Restrictions.eq("id", getProcessDescription));
             Intermediate processDescriptionRow = (Intermediate) getProcessDescriptionCriteria.list().get(0);
@@ -122,9 +122,9 @@ public class HistoryDataImportDAO {
 
 
             if (flag == 1) {
-                dataLoadParent.setDescription(processDescription+"_Data Load Parent");
+                dataLoadParent.setDescription(processDescription);
                 dataLoadParent.setAddTs(new Date());
-                dataLoadParent.setProcessName(processName+"_Data Load");
+                dataLoadParent.setProcessName(processName);
                 dataLoadParent.setBusDomain(busDomain);
                 dataLoadParent.setProcessType(dataLoadProcessType);
                 dataLoadParent.setNextProcessId("");
@@ -140,9 +140,9 @@ public class HistoryDataImportDAO {
             }
             for (int i = 1; i <= intermediateList.size(); i++) {
                 Process dataImportProcess = new Process();
-                dataImportProcess.setDescription(processDescription+"_Data Import" + i);
+                dataImportProcess.setDescription(processDescription + i);
                 dataImportProcess.setAddTs(new Date());
-                dataImportProcess.setProcessName(processName+"_Data Import" + i);
+                dataImportProcess.setProcessName(processName + i);
                 dataImportProcess.setBusDomain(busDomain);
                 dataImportProcess.setProcessType(dataImportProcessType);
                 dataImportProcess.setNextProcessId("");
@@ -162,8 +162,8 @@ public class HistoryDataImportDAO {
                 }
 
                 Process childDataImportProcess = new Process();
-                childDataImportProcess.setDescription(processDescription+"_Child Of  Data Import");
-                childDataImportProcess.setProcessName(processName+"_child of  data import");
+                childDataImportProcess.setDescription(processDescription);
+                childDataImportProcess.setProcessName("subprocess of "+processName);
                 childDataImportProcess.setAddTs(new Date());
                 childDataImportProcess.setProcess(dataImportProcess);
                 childDataImportProcess.setBusDomain(busDomain);
