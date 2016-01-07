@@ -15,6 +15,7 @@
 package com.wipro.ats.bdre.md.beans;
 
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 
 /**
  * Created by KA294215 on 12-03-2015.
@@ -42,6 +43,9 @@ public class DQSetupInfo {
     private static String configGroup = "dq";
     @NotNull
     private String description;
+    @NotNull
+    @Size(min = 1, max = 45)
+    private String processName;
     private Integer busDomainId;
     private Boolean canRecover;
 
@@ -79,6 +83,14 @@ public class DQSetupInfo {
                 " configGroup:" + configGroup + " description:" + description.substring(0, Math.min(description.length(), 45)) +
                 " busDomainId:" + busDomainId + " canRecover:" + canRecover + " enqId:" + enqId + " page:" + page + " subProcessId:" + subProcessId +
                 " parentProcessId:" + parentProcessId;
+    }
+
+    public String getProcessName() {
+        return processName;
+    }
+
+    public void setProcessName(String processName) {
+        this.processName = processName;
     }
 
     public Integer getParentProcessId() {

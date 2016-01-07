@@ -73,6 +73,22 @@
                                                 <label>Polling Interval(in milliseconds)</label>
                                                 <input type="number" class="form-control" name="sleepTime" value="500" placeholder="time in milliseconds" required>
                                             </div>
+
+                                             <div class="form-group">
+                                                 <label>Process Name:</label>
+                                                 <input type="text" class="form-control"  id="processName" name="processName" placeholder="Enter Process Name" required>
+                                             </div>
+                                             <div class="form-group">
+                                                 <label>Process Description:</label>
+                                                  <input type="text" class="form-control" id="processDescription" name="processDescription" placeholder="Enter Process Description" required>
+                                             </div>
+                                             <div class="form-group">
+                                                  <label>Bus Domain Id:</label>
+                                                   <select class="form-control" id="busDomainId" name="busDomainId">
+                                                    <option ng-repeat="busDomain in busDomains.Options" value="{{busDomain.Value}}" name="busDomainId">{{busDomain.DisplayText}}</option>
+                                                    </select>
+                                             </div>
+
                                             <input type="submit" id="createJobButton" class="btn btn-primary" ng-click="createJob()"/>
                                         </form>
 
@@ -95,6 +111,19 @@
                         var createJobResult;
                         var app = angular.module('myApp', []);
                         app.controller('myCtrl', function($scope) {
+                        $scope.busDomains = {};
+                                    $.ajax({
+                                    url: '/mdrest/busdomain/options/',
+                                        type: 'POST',
+                                        dataType: 'json',
+                                        async: false,
+                                        success: function (data) {
+                                            $scope.busDomains = data;
+                                        },
+                                        error: function () {
+                                            alert('danger');
+                                        }
+                                    });
 
                                 $scope.createJob =function (){
 

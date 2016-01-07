@@ -129,6 +129,10 @@ public class DQSetupAPI extends MetadataAPIBase {
                     count++;
                     LOGGER.debug("threshold count :" + count);
 
+                } else if (properties.getKey().equals(dqSetup.getProcessName())) {
+                    dqSetups.get(i).setProcessName(properties.getValue());
+                    LOGGER.debug("process name :" + dqSetups.get(i).getProcessName());
+
                 }
                 //ensuring each process should have 5 properties each
                 if (count % 5 == 0) {
@@ -223,6 +227,10 @@ public class DQSetupAPI extends MetadataAPIBase {
                     count++;
                     LOGGER.debug("threshold count :" + count);
 
+                }else if (properties.getKey().equals(dqSetup.getProcessName())) {
+                    dqSetups.get(i).setProcessName(properties.getValue());
+                    LOGGER.debug("process name :" + dqSetups.get(i).getProcessName());
+
                 }
                 if (count % 5 == 0) {
                     LOGGER.debug("The value of if statement is" + count);
@@ -315,6 +323,11 @@ public class DQSetupAPI extends MetadataAPIBase {
                     LOGGER.debug("UN count :" + dqSetups.get(i).getMinPassThresholdPercentValue());
                     count++;
                     LOGGER.debug("threshold count :" + count);
+
+                }else if (properties.getKey().equals(dqSetup.getProcessName())) {
+                    dqSetups.get(i).setProcessName(properties.getValue());
+                    LOGGER.debug("process name :" + dqSetups.get(i).getProcessName());
+
 
                 }
                 if (count % 5 == 0) {

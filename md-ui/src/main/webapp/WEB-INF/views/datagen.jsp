@@ -162,6 +162,44 @@ function formIntoMap(typeProp, typeOf) {
                 
             </form>
             </section>
+
+            <h3>Process Details</h3>
+                            <section>
+                                <form class="form-horizontal" role="form" id="processFieldsForm3">
+                                    <div id="processDetails">
+                                        <div class="alert alert-info" role="alert">
+                                            Application requires process details to create process entries in metadata
+                                        </div>
+                                        <!-- btn-group -->
+                                        <div id="processFields">
+
+                                            <div class="form-group">
+                                                <label class="control-label col-sm-2" for="processName">Process Name:</label>
+                                                <div class="col-sm-10">
+                                                    <input type="text" class="form-control"  id="processName" name="processName" placeholder="Enter Process Name" required>
+                                                </div>
+                                            </div>
+                                            <div class="form-group">
+                                                <label class="control-label col-sm-2" for="processDescription">Process Description:</label>
+                                                <div class="col-sm-10">
+                                                    <input type="text" class="form-control" id="processDescription" name="processDescription" placeholder="Enter Process Description" required>
+                                                </div>
+                                            </div>
+                                            <div class="form-group">
+                                                <label class="control-label col-sm-2" for="busDomainId">Bus Domain Id:</label>
+                                                <div class="col-sm-10">
+                                                    <select class="form-control" id="busDomainId" name="busDomainId">
+                                                        <option ng-repeat="busDomain in busDomains.Options" value="{{busDomain.Value}}" name="busDomainId">{{busDomain.DisplayText}}</option>
+
+                                                    </select>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <!-- /btn-group -->
+                                    </div>
+                                    </form>
+                                    </section>
+
             <h3>Confirm</h3>
             <section>
             <div id="createProcess">
@@ -241,26 +279,39 @@ function getGenTypes(){
     <script>
         var app = angular.module('myApp', []);
         app.controller('myCtrl', function($scope) {
-            $scope.crawlerMap = getGenConfigMap('crawler');
+            $scope.crawlerMap = getGenConfigMap('datagen');
             $scope.generatedType = {};
+             $.ajax({
+                        url: '/mdrest/genconfig/testDataGen/',
+                            type: 'GET',
+                            dataType: 'json',
+                            async: false,
+                            success: function (data) {
+                                $scope.generatedType = data;
+                                console.log(data);
+                            },
+                            error: function () {
+                                alert('danger');
+                            }
+                        });
+            $scope.busDomains={};
             $.ajax({
-            url: '/mdrest/genconfig/testDataGen/',
-                type: 'GET',
-                dataType: 'json',
-                async: false,
-                success: function (data) {
-                    $scope.generatedType = data;
-                    console.log(data);
-                },
-                error: function () {
-                    alert('danger');
-                }
-            });
-            
+                        url: '/mdrest/busdomain/options/',
+                            type: 'POST',
+                            dataType: 'json',
+                            async: false,
+                            success: function (data) {
+                                $scope.busDomains = data;
+                            },
+                            error: function () {
+                                alert('danger');
+                            }
+                        });
 
             $scope.createJob =function (){
                 formIntoMap('type_','processFieldsForm1');
             formIntoMap('other_','processFieldsForm2');
+            formIntoMap('process_','processFieldsForm3');
                 console.log(map2);
             $.ajax({                    
                                         
