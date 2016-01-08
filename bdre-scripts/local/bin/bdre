@@ -34,10 +34,11 @@ start() {
         fi
         rm -f $PIDFILE
         /sbin/runuser -s /bin/bash $USER -c "$DAEMON $DAEMON_OPTS"
+        cat $PIDFILE
 	    ret=$?
         base=$(basename $0)
         if [ $ret -eq 0 ]; then
-            new_pid=`$PIDFILE`
+            new_pid=`cat $PIDFILE`
             echo "BDRE UI Started with PID $new_pid"
         fi
         return $ret
