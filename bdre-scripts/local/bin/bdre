@@ -33,7 +33,7 @@ start() {
             fi
         fi
         echo "Running /sbin/runuser -s /bin/bash $USER -c \"$DAEMON $DAEMON_OPTS/service.log\" > /dev/null 2>&1 & echo $! &"
-        new_pid=`/sbin/runuser -s /bin/bash $USER -c "$DAEMON $DAEMON_OPTS/service.log" > /dev/null 2>&1 & echo $!`
+        new_pid=`/sbin/runuser -s /bin/bash $USER -c "$DAEMON $DAEMON_OPTS/service.log > /dev/null 2>&1 & echo $!"`
 	    ret=$?
         base=$(basename $0)
         if [ $ret -eq 0 ]; then
