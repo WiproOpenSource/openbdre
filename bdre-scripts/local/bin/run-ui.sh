@@ -6,7 +6,7 @@ BDRE_APPS_HOME=~/bdre_apps
 LOG_FILE="$1"
 if [ -z "$1" ]; then
         echo Log file path not provided.
-        LOG_FILE = "/dev/stdout"
+        LOG_FILE="/dev/stdout"
 fi
 echo "writing logs to $LOG_FILE"
 
