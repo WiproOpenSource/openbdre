@@ -23,7 +23,7 @@ start() {
         chown -R $USER $pid_dir
 
 	# Check if already running
-        if [ -e $PIDFILE ]; then
+        if [ -f $PIDFILE ]; then
             pid=`cat $PIDFILE`
             returnPid=`ps -o pid= -p $pid`
             if [ -n $returnPid ];then
@@ -45,7 +45,7 @@ start() {
 }
 # Restart the service bdre
 stop() {
-	 if [ ! -e $PIDFILE ]; then
+	 if [ ! -f $PIDFILE ]; then
             success "bdre is not running"
             return 0
         fi
