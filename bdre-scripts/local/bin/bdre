@@ -25,7 +25,6 @@ start() {
 	# Check if already running
         if [ -f $PIDFILE ]; then
             pid=`cat $PIDFILE`
-            echo PIDFILE found with pid $pid
             returnPid=`ps -o pid= -p $pid`
             if [ -n $returnPid ];then
                 echo "BDRE already running with pid $returnPid"
@@ -34,12 +33,23 @@ start() {
         fi
         rm -f $PIDFILE
         /sbin/runuser -s /bin/bash $USER -c "$DAEMON $DAEMON_OPTS > /dev/null 2>&1"
-        cat $PIDFILE
 	    ret=$?
         base=$(basename $0)
         if [ $ret -eq 0 ]; then
             new_pid=`cat $PIDFILE`
-            echo "BDRE UI Started with PID $new_pid"
+            echo "BDRE UI initiated with PID $new_pid. Please wait for some time for it to start."
+            wait_timeout=120
+            until $(curl --output /dev/null --silent --head --fail http://localhost:28850); do
+                echo 'Waiting'
+                sleep 10
+                wait_timeout=wait_timeout-10
+                if [ $wait_timeout -le 0 ]; then
+                    echo "BDRE has not yet started in 120 seconds. Stopping to poll."
+                    return 1
+                fi
+            done
+            echo "BDRE UI started."
+            success
         fi
         return $ret
 
@@ -47,11 +57,12 @@ start() {
 # Restart the service bdre
 stop() {
 	 if [ ! -f $PIDFILE ]; then
-            success "bdre is not running"
+	        echo "BDRE is not running"
+            success
             return 0
         fi
 
-        echo -n "Shutting down bdre: "
+        echo -n "Shutting down BDRE UI:"
 
         bdre_pid=`cat $PIDFILE`
         if [ -n "$bdre_pid" ]; then
@@ -62,9 +73,9 @@ stop() {
           done
           kill -KILL ${bdre_pid} &>/dev/null
         fi
-        echo
+        ret=$?
         rm -f $PIDFILE
-        return 0
+        return $ret
 }
 
 restart() {
@@ -81,7 +92,7 @@ case "$1" in
         stop
         ;;
   status)
-        status -p $PIDFILE bdre
+        status -p $PIDFILE BDRE
         ;;
   restart)
         restart
