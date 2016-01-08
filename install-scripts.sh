@@ -60,6 +60,10 @@ echo "add jar $BDRE_HOME/lib/hive-serdes-1.0-SNAPSHOT.jar" > ~/.hiverc
 cd $BDRE_HOME
 rm -r -f cdh-twitter-example
 
+#add bdre as a service
+sed s/%USER%/$bdre_user/ $BDRE_HOME/bdre-scripts/bin/bdre > /etc/rc.d/init.d/bdre
+chmod +x /etc/rc.d/init.d/bdre
+
 
 
 
