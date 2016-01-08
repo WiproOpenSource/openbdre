@@ -10,4 +10,4 @@ if [ -z "$1" ]; then
 fi
 echo "writing logs to $1"
 
-java -jar  $BDRE_HOME/lib/webapps/jetty-runner.jar $LOG_FILE_OPTION --port 28850 --path /mdui $BDRE_HOME/lib/webapps/md-ui-$bdreVersion.war --path /mdrest $BDRE_HOME/lib/webapps/md-rest-api-$bdreVersion.war --path /auth  $BDRE_HOME/lib/webapps/auth-rest-api-$bdreVersion.war &
+java -jar  $BDRE_HOME/lib/webapps/jetty-runner.jar $LOG_FILE_OPTION --port 28850 --path /mdui $BDRE_HOME/lib/webapps/md-ui-$bdreVersion.war --path /mdrest $BDRE_HOME/lib/webapps/md-rest-api-$bdreVersion.war --path /auth  $BDRE_HOME/lib/webapps/auth-rest-api-$bdreVersion.war
