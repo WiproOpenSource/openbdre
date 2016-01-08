@@ -32,8 +32,9 @@ start() {
                 return 0
             fi
         fi
-        echo "su $USER -c \"$DAEMON $DAEMON_OPTS/service.log & echo $!\""
-        new_pid=`su $USER -c "$DAEMON $DAEMON_OPTS/service.log & echo $!"`
+        su $USER
+        $DAEMON $DAEMON_OPTS/service.log &
+        new_pid=$!
 	    ret=$?
         base=$(basename $0)
         if [ $ret -eq 0 ]; then
