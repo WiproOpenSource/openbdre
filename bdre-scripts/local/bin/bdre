@@ -1,7 +1,5 @@
 #!/bin/bash
 #
-# chkconfig: 35 90 12
-# description: Foo server
 #
 # Get function from functions library
 . /etc/init.d/functions
@@ -9,10 +7,10 @@
 USER=%USER%
 BDRE_HOME=~$USER/bdre
 BDRE_APPS_HOME=~$USER/bdre_apps
-LOCKFILE=/var/lock/subsys/bdre
+
 DAEMON=$BDRE_HOME/bdre-scripts/bin/run-ui.sh # Introduce the bdre's location here
-LOGDIR=/var/log/bdre  # Log directory to use
-PIDFILE=/var/run/bdre/supervisor.pid
+LOGDIR=/var/log/BDRE  # Log directory to use
+PIDFILE=/var/run/BDRE/supervisor.pid
 
 DAEMON_OPTS="-p $PIDFILE $LOGDIR"
 BDRE_SHUTDOWN_TIMEOUT=15
@@ -20,32 +18,27 @@ BDRE_SHUTDOWN_TIMEOUT=15
 
 start() {
         echo -n "Starting bdre: "
-        for dir in $(dirname $PIDFILE)
-        do
-            mkdir -p $dir
-            chown -R $USER $dir
-        done
+        dir = $(dirname $PIDFILE)
+        mkdir -p $dir
+        chown -R $USER $dir
+
 	# Check if already running
-        if [ -e $PIDFILE ] && checkpid $(cat $PIDFILE) ; then
-            echo "already running"
-            return 0
+        if [ -e $PIDFILE ]; then
+            pid = `cat $PIDFILE`
+            returnPid = `ps -o pid= -p $pid`
+            if [ -n $returnPid ];then
+                echo "already running with pid $returnPid"
+                return 0
+            fi
         fi
-	# the supervisor itself will setuid down to $USER
-        sudo /sbin/runuser -s /bin/bash $USER -c "$DAEMON $DAEMON_OPTS/service.log"
+        /sbin/runuser -s /bin/bash $USER -c "$DAEMON $DAEMON_OPTS/service.log" &
 	    ret=$?
+	    new_pid = $!
         base=$(basename $0)
         if [ $ret -eq 0 ]; then
-            sleep 5
-            test -e $PIDFILE && checkpid $(cat $PIDFILE)
-            ret=$?
+            echo $new_pid > $PIDFILE
+            echo 'BDRE UI Started with PID $new_pid'
         fi
-        if [ $ret -eq 0 ]; then
-            touch $LOCKFILE
-            success $"$base startup"
-        else
-            failure $"$base startup"
-        fi
-        echo
         return $ret
 
 }
@@ -58,17 +51,17 @@ stop() {
 
         echo -n "Shutting down bdre: "
 
-        BDRE_PID=`cat $PIDFILE 2>/dev/null`
-        if [ -n "$BDRE_PID" ]; then
-          kill -TERM ${BDRE_PID} &>/dev/null
+        bdre_pid=`cat $PIDFILE 2>/dev/null`
+        if [ -n "$bdre_pid" ]; then
+          kill -TERM ${bdre_pid} &>/dev/null
           for i in `seq 1 ${BDRE_SHUTDOWN_TIMEOUT}` ; do
-            kill -0 ${BDRE_PID} &>/dev/null || break
+            kill -0 ${bdre_pid} &>/dev/null || break
             sleep 1
           done
-          kill -KILL ${BDRE_PID} &>/dev/null
+          kill -KILL ${bdre_pid} &>/dev/null
         fi
         echo
-        rm -f $LOCKFILE $PIDFILE
+        rm -f $PIDFILE
         return 0
 }
 
@@ -86,16 +79,13 @@ case "$1" in
         stop
         ;;
   status)
-        status -p $PIDFILE supervisor
+        status -p $PIDFILE bdre
         ;;
-  restart|reload)
+  restart)
         restart
         ;;
-  condrestart)
-        [ -f $LOCKFILE ] && restart || :
-        ;;
     *)
-        echo "Usage: bdre {start|stop|status|reload|restart|condrestart"
+        echo "Usage: bdre {start|stop|status|restart"
         exit 1
         ;;
 
