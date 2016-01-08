@@ -33,7 +33,7 @@ public class GeneratorMain extends BaseStructure {
         String processId = commandLine.getOptionValue("sub-process-id");
 
         GetProperties getProperties=new GetProperties();
-        java.util.Properties listForParams= getProperties.getProperties(processId,"data");
+        java.util.Properties listForParams= getProperties.getProperties(processId,"table");
          String outputDir=listForParams.getProperty("outputPath");
 
         String params[] =new String[]{processId,outputDir};
