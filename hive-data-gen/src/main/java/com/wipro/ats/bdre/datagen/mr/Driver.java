@@ -50,8 +50,10 @@ public class Driver extends Configured implements Tool {
         Configuration conf = getConf();
 
         String processId = args[0];
+
         Path outputDir = new Path(ResolvePath.replaceVars(args[1]));
-        FileSystem srcFs = outputDir.getFileSystem(getConf());
+
+
 
         Properties dataProps = Config.getDataProperties(processId);
         Properties tableProps = Config.getTableProperties(processId);
@@ -70,6 +72,7 @@ public class Driver extends Configured implements Tool {
         Path mrOutputPath = new Path(outputDir.toString() + "/MROUT/" + table.getTableName());
         LOGGER.info("mrOutputPath="+mrOutputPath.toString());
         //If the parent dir does not exist then create it. mkdirs does not throw error is the folder exists.
+        FileSystem srcFs = outputDir.getFileSystem(getConf());
         boolean mkdirSuccess = srcFs.mkdirs(new Path(outputDir.toString() + "/MROUT/"));
         LOGGER.info("Creating mrdir=" + new Path(outputDir.toString() + "/MROUT/") + " ; success=" + mkdirSuccess);
         FileOutputFormat.setOutputPath(job, mrOutputPath);
@@ -84,6 +87,7 @@ public class Driver extends Configured implements Tool {
         job.waitForCompletion(true);
 
         //merge and create a single file
+
         FileSystem destFs = outputDir.getFileSystem(getConf());
         Path srcDir = mrOutputPath;
         Path destFile = new Path(outputDir.toString() + "/" + table.getTableName());
