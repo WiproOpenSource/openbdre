@@ -18,8 +18,9 @@ import com.wipro.ats.bdre.BaseStructure;
 import com.wipro.ats.bdre.IMConfig;
 import com.wipro.ats.bdre.im.IMConstant;
 import com.wipro.ats.bdre.im.etl.api.exception.ETLException;
-import com.wipro.ats.bdre.md.api.GetHiveTables;
-import com.wipro.ats.bdre.md.beans.GetHiveTablesInfo;
+import com.wipro.ats.bdre.md.api.GetProcess;
+import com.wipro.ats.bdre.md.api.GetProperties;
+import com.wipro.ats.bdre.md.beans.ProcessInfo;
 import org.apache.hadoop.hive.conf.HiveConf;
 import org.apache.hadoop.hive.metastore.HiveMetaStoreClient;
 import org.apache.hadoop.hive.metastore.api.MetaException;
@@ -37,22 +38,41 @@ public abstract class ETLBase extends BaseStructure{
     private static final Logger LOGGER = Logger.getLogger(ETLBase.class);
 
 
-    private GetHiveTablesInfo rawTable;
-    private GetHiveTablesInfo baseTable;
-    private GetHiveTablesInfo rawView;
+    protected ProcessInfo rawLoad;
+    protected ProcessInfo stgLoad;
+    protected ProcessInfo baseLoad;
+    protected String rawTable;
+    protected String rawDb;
+    protected String stgView;
+    protected String stgDb;
+    protected String baseTable;
+    protected String baseDb;
     private String processId;
 
     protected void init(String processId){
         loadHiveTableInfo(processId);
     }
     private void loadHiveTableInfo(String processId){
-        String[] hiveTableParams = {"-p", processId};
-        GetHiveTables getHiveTables = new GetHiveTables();
-        List<GetHiveTablesInfo> hiveTablesInfos = getHiveTables.execute(hiveTableParams);
-       //TODO: THIS logic is wrong. The stageTable , view and coreTable may not be in order.
-        rawTable =hiveTablesInfos.get(0);
-        rawView =hiveTablesInfos.get(2);
-        baseTable =hiveTablesInfos.get(1);
+        String[] processParams = {"-p", processId};
+        GetProcess getProcess = new GetProcess();
+        List<ProcessInfo> subProcessList=getProcess.getSubProcesses(processParams);
+       for(ProcessInfo subprocess:subProcessList){
+           if(subprocess.getProcessTypeId()==6) rawLoad = subprocess;
+           else if(subprocess.getProcessTypeId()==7) stgLoad = subprocess;
+           else if (subprocess.getProcessTypeId()==8) baseLoad = subprocess;
+           else throw new ETLException("Not a valid hive load process");
+       }
+        GetProperties getPropertiesOfRawTable = new GetProperties();
+        java.util.Properties rawPropertiesOfTable = getPropertiesOfRawTable.getProperties(rawLoad.getProcessId().toString(), "raw-table");
+        rawTable = rawPropertiesOfTable.getProperty("table-name");
+        rawDb = rawPropertiesOfTable.getProperty("table-db");
+        stgView = rawTable+"_view";
+        stgDb=rawDb;
+
+        GetProperties getPropertiesOfBaseTable = new GetProperties();
+        java.util.Properties basePropertiesOfTable = getPropertiesOfBaseTable.getProperties(baseLoad.getProcessId().toString(), "base-table");
+        baseTable = basePropertiesOfTable.getProperty("table-name");
+        baseDb = basePropertiesOfTable.getProperty("table-db");
     }
     protected Connection getHiveJDBCConnection(String dbName){
         try {
@@ -93,7 +113,7 @@ public abstract class ETLBase extends BaseStructure{
         }
         return hclient;
     }
-    protected GetHiveTablesInfo getRawTable() {
+ /*   protected GetHiveTablesInfo getRawTable() {
 
         return rawTable;
     }
@@ -106,7 +126,7 @@ public abstract class ETLBase extends BaseStructure{
 
     protected GetHiveTablesInfo getRawView() {
         return rawView;
-    }
+    }*/
 
 
 }

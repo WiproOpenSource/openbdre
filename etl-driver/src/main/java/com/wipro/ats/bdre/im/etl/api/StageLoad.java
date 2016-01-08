@@ -20,12 +20,10 @@ import com.wipro.ats.bdre.im.etl.api.exception.ETLException;
 import org.apache.commons.cli.CommandLine;
 import org.apache.hadoop.hive.metastore.HiveMetaStoreClient;
 import org.apache.hadoop.hive.metastore.api.FieldSchema;
-import org.apache.hadoop.hive.metastore.api.StorageDescriptor;
 import org.apache.hadoop.hive.metastore.api.Table;
 import org.apache.log4j.Logger;
 
 import java.sql.Connection;
-import java.sql.ResultSet;
 import java.sql.Statement;
 import java.util.List;
 
@@ -52,15 +50,15 @@ public class StageLoad extends ETLBase {
         init(processId);
 
         //Getting Stage view information
-        String stageViewName = getRawView().getTableName();
-        String stageViewDbName = getRawView().getDbName();
+        String stageViewName =stgView;
+        String stageViewDbName = stgDb;
 
         //Getting base table info
-        String baseTableName = getBaseTable().getTableName();
-        String baseDbName = getBaseTable().getDbName();
-        String baseTableDdl = getBaseTable().getDdl();
+        String baseTableName = baseTable;
+        String baseDbName = baseDb;
+      //  String baseTableDdl = getBaseTable().getDdl();
 
-        processStageLoad(stageViewDbName, stageViewName, baseDbName, baseTableName, baseTableDdl, instanceExecId, minId, maxId);
+        processStageLoad(stageViewDbName, stageViewName, baseDbName, baseTableName,instanceExecId, minId, maxId);
     }
 
     //Read the partition keys from hive table
@@ -68,7 +66,7 @@ public class StageLoad extends ETLBase {
     //output - partition column names as comma seperated;
 
 
-    private void processStageLoad(String stageDbName, String viewName, String baseDbName, String baseTableName, String baseTableDdl, String instanceExecId, String minBatchId, String maxBatchId) {
+    private void processStageLoad(String stageDbName, String viewName, String baseDbName, String baseTableName, String instanceExecId, String minBatchId, String maxBatchId) {
         try {
 
             Connection rawCon = getHiveJDBCConnection(stageDbName);
@@ -80,10 +78,10 @@ public class StageLoad extends ETLBase {
             Statement baseConStatement = baseCon.createStatement();
 
             String stageTableName = baseTableName + "_"+ instanceExecId;
-            //checking if stage table exists. If not create one
+         //stage table creation moved to rawload
+            /*   //checking if stage table exists. If not create one
             String stQuery = "SHOW TABLES LIKE '" + stageTableName + "'";
             LOGGER.info("stQuery="+stQuery);
-            //TODO:Replace this with Metastore API.
             ResultSet rs = baseConStatement.executeQuery(stQuery);
 
             if (!rs.next()) {
@@ -95,8 +93,7 @@ public class StageLoad extends ETLBase {
                 storageDescriptor.setLocation(storageDescriptor.getLocation() + "_" + instanceExecId);
                 etlStageTable.setSd(storageDescriptor);
                 getMetaStoreClient().createTable(etlStageTable);
-
-            }
+            }*/
 
             LOGGER.debug("Reading fields from stage table");
             String fieldNames = getColumnNames(baseDbName, stageTableName);
