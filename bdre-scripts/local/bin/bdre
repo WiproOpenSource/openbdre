@@ -25,6 +25,7 @@ start() {
 	# Check if already running
         if [ -f $PIDFILE ]; then
             pid=`cat $PIDFILE`
+            echo PIDFILE found with pid $pid
             returnPid=`ps -o pid= -p $pid`
             if [ -n $returnPid ];then
                 echo "BDRE already running with pid $returnPid"
