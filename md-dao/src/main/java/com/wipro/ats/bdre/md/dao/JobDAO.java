@@ -428,8 +428,15 @@ public class JobDAO {
                     }
                     Criteria fileBatchCriteria = session.createCriteria(File.class).add(Restrictions.eq("id.batchId", resultBCQ.getBatchBySourceBatchId().getBatchId()));
                     if (fileBatchCriteria.list().size() > 0) {
-                        File fileBatch = (File) fileBatchCriteria.list().get(0);
-                        initJobRowInfo.setFileList(fileBatch.getId().getPath());
+                        StringBuilder fileList=new StringBuilder();
+                        StringBuilder batchList=new StringBuilder();
+                        for(Object fileBatch:fileBatchCriteria.list()) {
+                            File file = (File)fileBatch;
+                            fileList.append(file.getId().getPath()+",");
+                            batchList.append(file.getId().getBatchId()+",");
+                        }
+                        initJobRowInfo.setFileList(fileList.substring(0,fileList.length()-1).toString());
+                        initJobRowInfo.setBatchList(batchList.substring(0,batchList.length()-1).toString());
                     }
                     initJobRowInfos.add(initJobRowInfo);
                 }

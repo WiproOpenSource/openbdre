@@ -49,15 +49,15 @@ public class BaseLoad extends ETLBase {
         String instanceExecId = commandLine.getOptionValue("instance-exec-id");
         init(processId);
         //Getting core table information
-        String baseTableName = getBaseTable().getTableName();
-        String baseTableDbName = getBaseTable().getDbName();
-        String baseTableDdl = getBaseTable().getDdl();
+        String baseTableName = baseTable;
+        String baseTableDbName = baseDb;
+      //  String baseTableDdl = getBaseTable().getDdl();
 
-        processStage(baseTableDbName, baseTableName, instanceExecId, baseTableDdl);
+        processStage(baseTableDbName, baseTableName, instanceExecId);
     }
 
 
-    private void processStage(String dbName, String baseTableName, String instanceExecId, String ddl) {
+    private void processStage(String dbName, String baseTableName, String instanceExecId) {
         try {
 
             Configuration conf = new Configuration();
