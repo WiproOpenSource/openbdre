@@ -46,8 +46,10 @@ right_java=`which java`
 sudo ln -s -f $right_java /usr/bin/java
 
 #add bdre as a service
-sudo sed s/%USER%/$bdre_user/ $BDRE_HOME/bdre-scripts/bin/bdre > /etc/init.d/bdre
-sudo chmod +x /etc/rc.d/init.d/bdre
+sed s/%USER%/$bdre_user/ $BDRE_HOME/bdre-scripts/bin/bdre > bdre.service
+sudo mv bdre.service /etc/init.d/bdre
+sudo chmod +x /etc/init.d/bdre
+
 
 cd $BDRE_HOME
 rm -r -f cdh-twitter-example
