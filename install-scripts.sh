@@ -50,7 +50,8 @@ sudo ln -s -f $right_java /usr/bin/java
 sed s/%USER%/$bdre_user/ $BDRE_HOME/bdre-scripts/bin/bdre > bdre.service
 sudo mv bdre.service /etc/init.d/bdre
 sudo chmod +x /etc/init.d/bdre
-
+#Making bdre autostart
+sudo chkconfig bdre on
 
 cd $BDRE_HOME
 if [[ ! -f $flumeLibDir/plugins.d/twitter/lib/flume-sources-1.0-SNAPSHOT.jar || ! -f $BDRE_HOME/lib/hive-serdes-1.0-SNAPSHOT.jar ]] ; then
