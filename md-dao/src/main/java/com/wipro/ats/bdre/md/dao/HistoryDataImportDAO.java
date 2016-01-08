@@ -116,18 +116,19 @@ public class HistoryDataImportDAO {
             Process dataLoadParent = new Process();
 
 
-            String nextProcessForDataLoadParent = "";
-            String nextProcessForF2R = "";
-            String nextProcessForR2S = "";
+            String nextProcessForDataLoadParent = "0";
+            String nextProcessForF2R = "0";
+            String nextProcessForR2S = "0";
 
 
             if (flag == 1) {
                 dataLoadParent.setDescription(processDescription+"_Load");
                 dataLoadParent.setAddTs(new Date());
+                dataLoadParent.setEditTs(new Date());
                 dataLoadParent.setProcessName(processName+"_Load");
                 dataLoadParent.setBusDomain(busDomain);
                 dataLoadParent.setProcessType(dataLoadProcessType);
-                dataLoadParent.setNextProcessId("");
+                dataLoadParent.setNextProcessId("0");
                 dataLoadParent.setCanRecover(false);
                 dataLoadParent.setEnqueuingProcessId(0);
                 dataLoadParent.setBatchCutPattern(null);
@@ -136,16 +137,19 @@ public class HistoryDataImportDAO {
                 session.save(dataLoadParent);
 
                 LOGGER.info("the inserted data load parent is " + dataLoadParent.getProcessId());
+                LOGGER.info("name "+dataLoadParent.getProcessName());
+                LOGGER.info(dataLoadParent.getNextProcessId());
                 parentProcessIdList.add(dataLoadParent.getProcessId());
             }
             for (int i = 1; i <= intermediateList.size(); i++) {
                 Process dataImportProcess = new Process();
                 dataImportProcess.setDescription(processDescription+"_Import" + i);
                 dataImportProcess.setAddTs(new Date());
+                dataImportProcess.setEditTs(new Date());
                 dataImportProcess.setProcessName(processName+"_Import" + i);
                 dataImportProcess.setBusDomain(busDomain);
                 dataImportProcess.setProcessType(dataImportProcessType);
-                dataImportProcess.setNextProcessId("");
+                dataImportProcess.setNextProcessId("0");
                 dataImportProcess.setCanRecover(false);
                 dataImportProcess.setEnqueuingProcessId(0);
                 dataImportProcess.setBatchCutPattern(null);
@@ -155,6 +159,8 @@ public class HistoryDataImportDAO {
 
                 //
                 LOGGER.info("the inserted data import parent is " + dataImportProcess.getProcessId());
+                LOGGER.info("name: "+dataImportProcess.getProcessName());
+                LOGGER.info(dataImportProcess.getNextProcessId());
                 parentProcessIdList.add(dataImportProcess.getProcessId());
 
                 if (i == 1) {
@@ -165,6 +171,7 @@ public class HistoryDataImportDAO {
                 childDataImportProcess.setDescription(processDescription+"_Import");
                 childDataImportProcess.setProcessName("SubProcess of "+processName+"_Import");
                 childDataImportProcess.setAddTs(new Date());
+                childDataImportProcess.setEditTs(new Date());
                 childDataImportProcess.setProcess(dataImportProcess);
                 childDataImportProcess.setBusDomain(busDomain);
                 childDataImportProcess.setProcessType(childDataImportProcessType);
@@ -172,6 +179,7 @@ public class HistoryDataImportDAO {
                 childDataImportProcess.setNextProcessId(dataImportProcess.getProcessId().toString());
                 childDataImportProcess.setWorkflowType(actionType);
                 childDataImportProcess.setDeleteFlag(false);
+                childDataImportProcess.setCanRecover(false);
 
                 Process parentProcessCheckDataImportChild = null;
                 if (childDataImportProcess.getProcess() != null) {
@@ -179,9 +187,14 @@ public class HistoryDataImportDAO {
                 }
 
                 session.save(childDataImportProcess);
-                session.update(dataImportProcess);
+
                 LOGGER.info("the inserted data import is " + childDataImportProcess.getProcessId());
+                LOGGER.info("name: "+childDataImportProcess.getProcessName());
+                LOGGER.info(childDataImportProcess.getNextProcessId());
                 dataImportProcess.setNextProcessId(childDataImportProcess.getProcessId().toString());
+                session.update(dataImportProcess);
+
+                LOGGER.info(dataImportProcess.getNextProcessId());
 
                 IntermediateId intermediateIdDB = new IntermediateId();
                 intermediateIdDB.setUuid(intermediateInfo.getUuid());
@@ -369,10 +382,11 @@ public class HistoryDataImportDAO {
                     Process file2Raw = new Process();
                     file2Raw.setDescription(processDescription+"_'File2Raw'");
                     file2Raw.setAddTs(new Date());
+                    file2Raw.setEditTs(new Date());
                     file2Raw.setProcessName(processName+"_Data Load-F2R");
                     file2Raw.setBusDomain(busDomain);
                     file2Raw.setProcessType(file2RawType);
-                    file2Raw.setNextProcessId("");
+                    file2Raw.setNextProcessId("0");
                     file2Raw.setProcess(dataLoadParent);
                     file2Raw.setCanRecover(false);
                     file2Raw.setEnqueuingProcessId(dataImportProcess.getProcessId());
@@ -386,12 +400,13 @@ public class HistoryDataImportDAO {
                     Process raw2Stage = new Process();
                     raw2Stage.setDescription(processDescription+"_''Raw2Stage''");
                     raw2Stage.setAddTs(new Date());
+                    raw2Stage.setEditTs(new Date());
                     raw2Stage.setProcessName(processName+"_Data Load-R2S");
                     raw2Stage.setBusDomain(busDomain);
                     raw2Stage.setProcessType(raw2StageType);
                     raw2Stage.setProcess(dataLoadParent);
                     raw2Stage.setCanRecover(false);
-                    raw2Stage.setNextProcessId("");
+                    raw2Stage.setNextProcessId("0");
                     raw2Stage.setEnqueuingProcessId(dataImportProcess.getProcessId());
                     raw2Stage.setBatchCutPattern(null);
                     raw2Stage.setDeleteFlag(false);
@@ -403,6 +418,7 @@ public class HistoryDataImportDAO {
                     Process stage2Base = new Process();
                     stage2Base.setDescription(processDescription+"_'''Stage2Base'''");
                     stage2Base.setAddTs(new Date());
+                    stage2Base.setEditTs(new Date());
                     stage2Base.setProcessName(processName+"_Data Load-S2B");
                     stage2Base.setBusDomain(busDomain);
                     stage2Base.setProcessType(stage2BaseType);
@@ -411,7 +427,7 @@ public class HistoryDataImportDAO {
                     stage2Base.setEnqueuingProcessId(0);
                     stage2Base.setBatchCutPattern(null);
                     stage2Base.setDeleteFlag(false);
-                    stage2Base.setNextProcessId("");
+                    stage2Base.setNextProcessId("0");
                     stage2Base.setWorkflowType(actionType);
                     stage2Base.setNextProcessId(dataLoadParent.getProcessId().toString());
                     Process stage2BaseParent = null;
@@ -566,6 +582,7 @@ public class HistoryDataImportDAO {
                         createdProcess.setProcessId(resultProcess.getProcessId());
                         createdProcess.setDescription(resultProcess.getDescription());
                         createdProcess.setAddTS(resultProcess.getAddTs());
+                        createdProcess.setEditTS(resultProcess.getEditTs());
                         createdProcess.setProcessName(resultProcess.getProcessName());
                         createdProcess.setBusDomainId(resultProcess.getBusDomain().getBusDomainId());
                         createdProcess.setProcessTypeId(resultProcess.getProcessType().getProcessTypeId());
@@ -573,6 +590,10 @@ public class HistoryDataImportDAO {
                             createdProcess.setParentProcessId(resultProcess.getProcess().getProcessId());
                         }
                         createdProcess.setCanRecover(resultProcess.getCanRecover());
+                        if(resultProcess.getCanRecover() == null){
+                            createdProcess.setCanRecover(false);
+                        }
+
                         createdProcess.setEnqProcessId(resultProcess.getEnqueuingProcessId());
                         if (resultProcess.getBatchCutPattern() != null) {
                             createdProcess.setBatchPattern(resultProcess.getBatchCutPattern());
@@ -598,6 +619,7 @@ public class HistoryDataImportDAO {
                         createdProcess.setProcessId(resultProcess.getProcessId());
                         createdProcess.setDescription(resultProcess.getDescription());
                         createdProcess.setAddTS(resultProcess.getAddTs());
+                        createdProcess.setEditTS(resultProcess.getEditTs());
                         createdProcess.setProcessName(resultProcess.getProcessName());
                         createdProcess.setBusDomainId(resultProcess.getBusDomain().getBusDomainId());
                         createdProcess.setProcessTypeId(resultProcess.getProcessType().getProcessTypeId());
@@ -605,6 +627,9 @@ public class HistoryDataImportDAO {
                             createdProcess.setParentProcessId(resultProcess.getProcess().getProcessId());
                         }
                         createdProcess.setCanRecover(resultProcess.getCanRecover());
+                        if(resultProcess.getCanRecover() == null){
+                            createdProcess.setCanRecover(false);
+                        }
                         createdProcess.setEnqProcessId(resultProcess.getEnqueuingProcessId());
                         if (resultProcess.getBatchCutPattern() != null) {
                             createdProcess.setBatchPattern(resultProcess.getBatchCutPattern());

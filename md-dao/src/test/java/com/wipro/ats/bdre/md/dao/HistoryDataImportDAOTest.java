@@ -14,6 +14,7 @@
 
 package com.wipro.ats.bdre.md.dao;
 
+import com.wipro.ats.bdre.md.beans.table.IntermediateInfo;
 import com.wipro.ats.bdre.md.dao.jpa.Intermediate;
 import com.wipro.ats.bdre.md.dao.jpa.IntermediateId;
 import org.apache.log4j.Logger;
@@ -40,6 +41,9 @@ public class HistoryDataImportDAOTest {
 
     @Autowired
     IntermediateDAO intermediateDAO;
+
+    @Autowired
+    HistoryDataImportDAO historyDataImportDAO;
 
     @Ignore
     @Test
@@ -79,5 +83,15 @@ public class HistoryDataImportDAOTest {
         LOGGER.info("Updated value is:" + intermediate.getInterValue());
         intermediateDAO.delete(intermediateId);
         LOGGER.info("Deleted intermediate Entry with Key:" + intermediateId.getInterKey());
+    }
+
+    @Ignore
+    @Test
+    public void testHistoryDataImport() throws Exception{
+        IntermediateInfo intermediateInfo = new IntermediateInfo();
+        intermediateInfo.setUuid("Test UUID");
+
+
+         historyDataImportDAO.historyDataImport(intermediateInfo);
     }
 }
