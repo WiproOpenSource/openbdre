@@ -13,7 +13,8 @@ rm -f -r $BDRE_HOME
 mkdir -p $BDRE_HOME/bdre-scripts
 mkdir -p $BDRE_HOME/lib
 mkdir -p $BDRE_APPS_HOME
-mkdir $BDRE_HOME-wfd
+mkdir -p $BDRE_HOME-wfd
+
 #Stop BDRE if running
 sudo service bdre stop
 cp -f -r bdre-scripts/$1/* $BDRE_HOME/bdre-scripts
