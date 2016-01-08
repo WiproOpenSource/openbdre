@@ -14,7 +14,10 @@
 
 package com.wipro.ats.bdre.wgen;
 
+import com.wipro.ats.bdre.md.api.GetProperties;
 import com.wipro.ats.bdre.md.beans.ProcessInfo;
+
+import java.util.Enumeration;
 
 /**
  * Created by IshitaParekh on 04-03-2015.
@@ -70,8 +73,6 @@ public class DataGenerationNode extends GenericActionNode {
 
                 "            <arg>--sub-process-id</arg>\n" +
                 "            <arg>" + getId() + "</arg>\n" +
-                "            <arg>--output-path</arg>\n" +
-                "            <arg>/raw/${wf:actionData(\"init-job\")[\"instance-exec-id\"]}</arg>\n" +
                 "            <capture-output />\n" +
                 "        </java>\n" +
                 "        <ok to=\"" + getToNode().getName() + "\"/>\n" +
@@ -79,4 +80,6 @@ public class DataGenerationNode extends GenericActionNode {
                 "    </action>");
         return ret.toString();
     }
+
+
 }
