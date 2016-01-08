@@ -14,6 +14,7 @@
 
 package com.wipro.ats.bdre.datagen.mr;
 
+import com.wipro.ats.bdre.ResolvePath;
 import com.wipro.ats.bdre.datagen.Table;
 import com.wipro.ats.bdre.datagen.util.Config;
 import com.wipro.ats.bdre.datagen.util.TableUtil;
@@ -48,11 +49,15 @@ public class Driver extends Configured implements Tool {
         Configuration conf = getConf();
 
         String processId = args[0];
-        Path outputDir = new Path(args[1]);
+        Path outputDir = new Path(ResolvePath.replaceVars(args[1]));
         if (outputDir.getFileSystem(getConf()).exists(outputDir)) {
             throw new IOException("Output directory " + outputDir +
                     " already exists.");
         }
+        Path parentDir=outputDir.getParent();
+        FileSystem srcFs = outputDir.getFileSystem(getConf());
+        //If the parent dir does not exist then create it. mkdirs does not throw error is the folder exists.
+        srcFs.mkdirs(parentDir);
         Properties dataProps = Config.getDataProperties(processId);
         Properties tableProps = Config.getTableProperties(processId);
         TableUtil tableUtil = new TableUtil();
@@ -79,7 +84,6 @@ public class Driver extends Configured implements Tool {
         job.waitForCompletion(true);
 
         //merge and create a single file
-        FileSystem srcFs = outputDir.getFileSystem(getConf());
         FileSystem destFs = outputDir.getFileSystem(getConf());
         Path srcDir = mrOutputPath;
         Path destFile = new Path(outputDir.toString() + "/" + table.getTableName());

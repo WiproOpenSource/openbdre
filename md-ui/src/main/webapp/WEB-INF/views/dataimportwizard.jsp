@@ -406,6 +406,16 @@
             myObject.value=$("#busDomainId")[0].value;
             list.push(myObject);
 
+          var myObject = new Object();
+                    myObject.name=$("#processName")[0].name;
+                    myObject.value=$("#processName")[0].value;
+                    list.push(myObject);
+
+          var myObject = new Object();
+                    myObject.name=$("#processDescription")[0].name;
+                    myObject.value=$("#processDescription")[0].value;
+                    list.push(myObject);
+
 
 
 
@@ -673,6 +683,29 @@ isInit=true;
                                 </td >
                             </tr >
                             </tbody >
+
+                             <th ><label for = "processName" >Process Name</label ></th >
+                                                        </tr >
+                                                        </thead >
+                                                        <tbody >
+                                                        <tr >
+                                                            <td >
+                                                                <input id = "processName" name = "common_processName" type = "text" class = "form-control" size = "180"  />
+                                                            </td >
+                                                        </tr >
+                                                        </tbody >
+
+                               <th ><label for = "processDescription" > Process Description</label ></th >
+                                                          </tr >
+                                                          </thead >
+                                                          <tbody >
+                                                          <tr >
+                                                              <td >
+                                                                  <input id = "processDescription" name = "common_processDescription" type = "text" class = "form-control" size = "180" />
+                                                              </td >
+                                                          </tr >
+                                                          </tbody >
+
 					</table >
 					<p >Pressing 'Create Job' will make the system build following job workflows</p >
 
@@ -692,6 +725,8 @@ isInit=true;
 
 					<input type = "submit" class = "btn btn-warning" value = "Create Data import Jobs" >
 				</section >
+
+
 
 				<h3 >Confirm</h3 >
 				<section >

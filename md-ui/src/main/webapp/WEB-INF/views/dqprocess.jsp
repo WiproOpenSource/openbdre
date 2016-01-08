@@ -106,6 +106,10 @@
                                             <input type="text" class="form-control" id="enqId">
                                         </div>
                                         <div class="form-group">
+                                            <label for="processName">Process Name</label>
+                                            <input type="text" class="form-control" id="processName">
+                                        </div>
+                                        <div class="form-group">
                                             <label for="description">Description</label>
                                             <input type="text" class="form-control" id="description">
                                         </div>
@@ -165,6 +169,7 @@
                                     busDomainId: $("#busDomainId").val(),
                                     canRecover: $("#canRecover").val(),
                                     enqId: $("#enqId").val(),
+                                    processName: $("#processName").val(),
                                     description: $("#description").val()
                                 });
                                 console.log(postData);
