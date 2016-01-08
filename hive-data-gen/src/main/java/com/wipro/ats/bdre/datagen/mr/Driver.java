@@ -51,7 +51,7 @@ public class Driver extends Configured implements Tool {
 
         Configuration conf = getConf();
         GetGeneralConfig generalConfig = new GetGeneralConfig();
-        GeneralConfig gc = generalConfig.byConigGroupAndKey("imconfig", "fs.defaultFS");
+        GeneralConfig gc = generalConfig.byConigGroupAndKey("imconfig", "common.default-fs-name");
         conf.set("fs.defaultFS", gc.getDefaultVal());
 
         String processId = args[0];
