@@ -52,23 +52,23 @@ sudo chmod +x /etc/init.d/bdre
 
 
 cd $BDRE_HOME
-rm -r -f cdh-twitter-example
-git clone https://github.com/cloudera/cdh-twitter-example.git
-cd cdh-twitter-example/flume-sources
-mvn package
-sudo mkdir -p $flumeLibDir/plugins.d/twitter/lib
-sudo cp target/flume-sources-1.0-SNAPSHOT.jar $flumeLibDir/plugins.d/twitter/lib
-sudo cp target/flume-sources-1.0-SNAPSHOT.jar $BDRE_HOME/lib
-cd ../hive-serdes
-mvn package
-sudo cp target/hive-serdes-1.0-SNAPSHOT.jar $BDRE_HOME/lib
-echo "add jar $BDRE_HOME/lib/hive-serdes-1.0-SNAPSHOT.jar" > ~/.hiverc
-cd $BDRE_HOME
+if [ -n $flumeLibDir/plugins.d/twitter/lib/flume-sources-1.0-SNAPSHOT.jar ] || [-n $BDRE_HOME/lib/hive-serdes-1.0-SNAPSHOT.jar ]; then
+  git clone https://github.com/cloudera/cdh-twitter-example.git
+  cd cdh-twitter-example/flume-sources
+  mvn package
+  sudo mkdir -p $flumeLibDir/plugins.d/twitter/lib
+  sudo cp target/flume-sources-1.0-SNAPSHOT.jar $flumeLibDir/plugins.d/twitter/lib
+  sudo cp target/flume-sources-1.0-SNAPSHOT.jar $BDRE_HOME/lib
+  cd ../hive-serdes
+  mvn package
+  sudo cp target/hive-serdes-1.0-SNAPSHOT.jar $BDRE_HOME/lib
+  echo "add jar $BDRE_HOME/lib/hive-serdes-1.0-SNAPSHOT.jar" > ~/.hiverc
+  cd $BDRE_HOME
+  rm -r -f cdh-twitter-example
+fi
+
 #Create usual hive DBs
 hive -e "create database if not exists raw;create database if not exists base;"
-rm -r -f cdh-twitter-example
-
-
 
 
 
