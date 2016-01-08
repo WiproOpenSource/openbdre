@@ -10,7 +10,7 @@ USER=%USER%
 BDRE_HOME=~$USER/bdre
 BDRE_APPS_HOME=~$USER/bdre_apps
 LOCKFILE=/var/lock/subsys/bdre
-DAEMON=$BDRE_HOME/bdre-scripts/execution/run-ui.sh # Introduce the bdre's location here
+DAEMON=$BDRE_HOME/bdre-scripts/bin/run-ui.sh # Introduce the bdre's location here
 LOGDIR=/var/log/bdre  # Log directory to use
 PIDFILE=/var/run/bdre/supervisor.pid
 
