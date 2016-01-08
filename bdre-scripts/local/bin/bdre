@@ -39,11 +39,10 @@ start() {
             new_pid=`cat $PIDFILE`
             echo "BDRE UI initiated with PID $new_pid. Please wait for some time for it to start."
             wait_timeout=120
-            until $(curl --output /dev/null --silent --head --fail http://localhost:28850); do
-                echo 'Waiting'
+            until $(curl --output /dev/null --silent --head http://localhost:28850); do
+                printf '.'
                 sleep 5
                 wait_timeout=$((wait_timeout - 5))
-                echo "Timeout in $wait_timeout sec"
                 if [ $wait_timeout -le 0 ]; then
                     echo "BDRE has not yet started in 120 seconds. Giving up."
                     return 1
