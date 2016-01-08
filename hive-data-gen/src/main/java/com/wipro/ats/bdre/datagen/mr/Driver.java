@@ -31,6 +31,7 @@ import org.apache.hadoop.mapreduce.Job;
 import org.apache.hadoop.mapreduce.lib.output.FileOutputFormat;
 import org.apache.hadoop.mapreduce.lib.output.TextOutputFormat;
 import org.apache.hadoop.util.Tool;
+import org.apache.log4j.Logger;
 
 import java.io.IOException;
 import java.sql.Timestamp;
@@ -39,7 +40,7 @@ import java.util.Properties;
 
 
 public class Driver extends Configured implements Tool {
-
+    private static final Logger LOGGER = Logger.getLogger(Driver.class);
     /**
      * @param args the cli arguments
      */
@@ -50,14 +51,8 @@ public class Driver extends Configured implements Tool {
 
         String processId = args[0];
         Path outputDir = new Path(ResolvePath.replaceVars(args[1]));
-        if (outputDir.getFileSystem(getConf()).exists(outputDir)) {
-            throw new IOException("Output directory " + outputDir +
-                    " already exists.");
-        }
-        Path parentDir=outputDir.getParent();
         FileSystem srcFs = outputDir.getFileSystem(getConf());
-        //If the parent dir does not exist then create it. mkdirs does not throw error is the folder exists.
-        srcFs.mkdirs(parentDir);
+
         Properties dataProps = Config.getDataProperties(processId);
         Properties tableProps = Config.getTableProperties(processId);
         TableUtil tableUtil = new TableUtil();
@@ -71,7 +66,12 @@ public class Driver extends Configured implements Tool {
         conf.setInt(Config.NUM_SPLITS_KEY, Integer.parseInt(dataProps.getProperty("numSplits")));
 
         Job job = Job.getInstance(new Cluster(conf), conf);
+
         Path mrOutputPath = new Path(outputDir.toString() + "/MROUT/" + table.getTableName());
+        LOGGER.info("mrOutputPath="+mrOutputPath.toString());
+        //If the parent dir does not exist then create it. mkdirs does not throw error is the folder exists.
+        boolean mkdirSuccess = srcFs.mkdirs(new Path(outputDir.toString() + "/MROUT/"));
+        LOGGER.info("Creating mrdir=" + new Path(outputDir.toString() + "/MROUT/") + " ; success=" + mkdirSuccess);
         FileOutputFormat.setOutputPath(job, mrOutputPath);
         job.setJobName("Datagen-" + table.getTableName());
         job.setJarByClass(Driver.class);
