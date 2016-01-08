@@ -32,7 +32,7 @@ start() {
             fi
         fi
         echo "Running $DAEMON $DAEMON_OPTS/service.log"
-        /sbin/runuser -s /bin/bash $USER -c "$DAEMON $DAEMON_OPTS/service.log" > /dev/null &
+        /sbin/runuser -s /bin/bash $USER -c "$DAEMON $DAEMON_OPTS/service.log" > /dev/null 2>/dev/null
         new_pid=$!
 	    ret=$?
         base=$(basename $0)
