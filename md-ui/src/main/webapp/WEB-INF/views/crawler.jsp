@@ -260,7 +260,7 @@
 
             $scope.createJob =function (){
                 
-            $.ajax({                    
+                $.ajax({
                                         
                                         type: "POST",
                                         url: "/mdrest/crawler",
@@ -299,7 +299,7 @@
                                             console.log(createJobResult);
                                         }
 
-                                    });
+                });
             }
         });
     </script>
