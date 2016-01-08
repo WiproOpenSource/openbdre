@@ -52,7 +52,7 @@ sudo chmod +x /etc/init.d/bdre
 
 
 cd $BDRE_HOME
-if [ ! -f $flumeLibDir/plugins.d/twitter/lib/flume-sources-1.0-SNAPSHOT.jar ] || [ ! -f $BDRE_HOME/lib/hive-serdes-1.0-SNAPSHOT.jar ]; then
+if [[ ! -f $flumeLibDir/plugins.d/twitter/lib/flume-sources-1.0-SNAPSHOT.jar ] || [ ! -f $BDRE_HOME/lib/hive-serdes-1.0-SNAPSHOT.jar ]]; then
   echo $flumeLibDir/plugins.d/twitter/lib/flume-sources-1.0-SNAPSHOT.jar or $BDRE_HOME/lib/hive-serdes-1.0-SNAPSHOT.jar not installed.
   git clone https://github.com/cloudera/cdh-twitter-example.git
   cd cdh-twitter-example/flume-sources
