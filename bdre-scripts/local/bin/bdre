@@ -42,7 +42,7 @@ start() {
             until $(curl --output /dev/null --silent --head --fail http://localhost:28850); do
                 echo 'Waiting'
                 sleep 5
-                wait_timeout=$(wait_timeout - 5)
+                wait_timeout=$((wait_timeout - 5))
                 echo "Timeout in $wait_timeout sec"
                 if [ $wait_timeout -le 0 ]; then
                     echo "BDRE has not yet started in 120 seconds. Giving up."
