@@ -1,5 +1,13 @@
 #!/bin/bash
 #
+# /etc/init.d/bdre
+# Subsystem file for "BDRE" server
+#
+# chkconfig: 2345 95 05
+# description: bdre server daemon
+#
+# processname: BDRE
+# pidfile: /var/run/BDRE/bdre.pid
 #
 # Get function from functions library
 . /etc/init.d/functions
