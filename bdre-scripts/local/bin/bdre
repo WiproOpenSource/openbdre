@@ -48,9 +48,9 @@ start() {
                     return 1
                 fi
             done
-            echo
-            echo "BDRE UI initiated with PID $new_pid."
             success
+            echo "BDRE UI initiated with PID $new_pid."
+
         fi
         return $ret
 
