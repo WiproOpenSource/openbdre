@@ -33,7 +33,7 @@ start() {
             fi
         fi
         rm -f $PIDFILE
-        /sbin/runuser -s /bin/bash $USER -c "$DAEMON $DAEMON_OPTS"
+        /sbin/runuser -s /bin/bash $USER -c "$DAEMON $DAEMON_OPTS > /dev/null 2>$1"
         cat $PIDFILE
 	    ret=$?
         base=$(basename $0)
