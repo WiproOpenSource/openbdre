@@ -10,7 +10,7 @@ BDRE_APPS_HOME=~$USER/bdre_apps
 
 DAEMON=$BDRE_HOME/bdre-scripts/bin/run-ui.sh # Introduce the bdre's location here
 LOGDIR=/var/log/BDRE  # Log directory to use
-PIDFILE=/var/run/BDRE/supervisor.pid
+PIDFILE=/var/run/BDRE/bdre.pid
 
 DAEMON_OPTS="-p $PIDFILE $LOGDIR"
 BDRE_SHUTDOWN_TIMEOUT=15
@@ -18,14 +18,14 @@ BDRE_SHUTDOWN_TIMEOUT=15
 
 start() {
         echo -n "Starting bdre: "
-        dir = $(dirname $PIDFILE)
-        mkdir -p $dir
-        chown -R $USER $dir
+        pid_dir=$(dirname $PIDFILE)
+        mkdir -p $pid_dir
+        chown -R $USER $pid_dir
 
 	# Check if already running
         if [ -e $PIDFILE ]; then
-            pid = `cat $PIDFILE`
-            returnPid = `ps -o pid= -p $pid`
+            pid=`cat $PIDFILE`
+            returnPid=`ps -o pid= -p $pid`
             if [ -n $returnPid ];then
                 echo "already running with pid $returnPid"
                 return 0
@@ -33,7 +33,7 @@ start() {
         fi
         /sbin/runuser -s /bin/bash $USER -c "$DAEMON $DAEMON_OPTS/service.log" &
 	    ret=$?
-	    new_pid = $!
+	    new_pid=$!
         base=$(basename $0)
         if [ $ret -eq 0 ]; then
             echo $new_pid > $PIDFILE
@@ -51,7 +51,7 @@ stop() {
 
         echo -n "Shutting down bdre: "
 
-        bdre_pid=`cat $PIDFILE 2>/dev/null`
+        bdre_pid=`cat $PIDFILE`
         if [ -n "$bdre_pid" ]; then
           kill -TERM ${bdre_pid} &>/dev/null
           for i in `seq 1 ${BDRE_SHUTDOWN_TIMEOUT}` ; do
