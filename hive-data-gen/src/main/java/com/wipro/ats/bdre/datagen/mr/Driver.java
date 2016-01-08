@@ -31,7 +31,6 @@ import org.apache.hadoop.mapreduce.lib.output.FileOutputFormat;
 import org.apache.hadoop.mapreduce.lib.output.TextOutputFormat;
 import org.apache.hadoop.util.Tool;
 
-
 import java.io.IOException;
 import java.sql.Timestamp;
 import java.util.Date;
@@ -49,8 +48,7 @@ public class Driver extends Configured implements Tool {
         Configuration conf = getConf();
 
         String processId = args[0];
-        String outputPath= ResolvePath.replaceVars(args[1]);
-        Path outputDir = new Path(outputPath);
+        Path outputDir = new Path(args[1]);
         if (outputDir.getFileSystem(getConf()).exists(outputDir)) {
             throw new IOException("Output directory " + outputDir +
                     " already exists.");
