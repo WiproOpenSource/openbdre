@@ -33,8 +33,8 @@ start() {
         fi
         echo "Running $DAEMON $DAEMON_OPTS/service.log"
         nohup /sbin/runuser -s /bin/bash $USER -c "$DAEMON $DAEMON_OPTS/service.log" > /dev/null &
+        new_pid=$!
 	    ret=$?
-	    new_pid=$!
         base=$(basename $0)
         if [ $ret -eq 0 ]; then
             echo $new_pid > $PIDFILE
