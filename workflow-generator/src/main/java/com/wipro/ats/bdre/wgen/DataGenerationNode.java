@@ -73,8 +73,6 @@ public class DataGenerationNode extends GenericActionNode {
 
                 "            <arg>--sub-process-id</arg>\n" +
                 "            <arg>" + getId() + "</arg>\n" +
-                "            <arg>--output-path</arg>\n" +
-                "            <arg>"+getOutputPath()+"</arg>\n" +
                 "            <capture-output />\n" +
                 "        </java>\n" +
                 "        <ok to=\"" + getToNode().getName() + "\"/>\n" +
@@ -83,9 +81,5 @@ public class DataGenerationNode extends GenericActionNode {
         return ret.toString();
     }
 
-    private String getOutputPath() {
-        GetProperties getProperties = new GetProperties();
-        java.util.Properties genProps = getProperties.getProperties(getId().toString(), "table");
-        return genProps.getProperty("outputPath")==null?"/raw/${wf:actionData(\"init-job\")[\"instance-exec-id\"]}":genProps.getProperty("outputPath");
-    }
+
 }
