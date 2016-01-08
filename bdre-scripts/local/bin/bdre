@@ -27,7 +27,7 @@ start() {
             pid=`cat $PIDFILE`
             returnPid=`ps -o pid= -p $pid`
             if [ -n $returnPid ];then
-                echo "already running with pid $returnPid"
+                echo "BDRE already running with pid $returnPid"
                 return 0
             fi
         fi
@@ -37,7 +37,7 @@ start() {
         base=$(basename $0)
         if [ $ret -eq 0 ]; then
             echo $new_pid > $PIDFILE
-            echo 'BDRE UI Started with PID $new_pid'
+            echo "BDRE UI Started with PID $new_pid"
         fi
         return $ret
 
