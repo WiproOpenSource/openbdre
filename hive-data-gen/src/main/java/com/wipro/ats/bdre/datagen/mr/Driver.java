@@ -50,31 +50,25 @@ public class Driver extends Configured implements Tool {
         Configuration conf = getConf();
 
         String processId = args[0];
-
         Path outputDir = new Path(ResolvePath.replaceVars(args[1]));
-
-
 
         Properties dataProps = Config.getDataProperties(processId);
         Properties tableProps = Config.getTableProperties(processId);
+
         TableUtil tableUtil = new TableUtil();
         Table table = tableUtil.formTableFromConfig(processId);
-
-
+        FileSystem fs=FileSystem.get(conf);
+        LOGGER.info("Default FS ="+conf.get("fs.defaultFS"));
         //set in the conf for mappers to use
         conf.set(Config.SEPARATOR_KEY, tableProps.getProperty("separator"));
         conf.set(Config.PID_KEY,processId);
         conf.setLong(Config.NUM_ROWS_KEY, Long.parseLong(dataProps.getProperty("numRows")));
         conf.setInt(Config.NUM_SPLITS_KEY, Integer.parseInt(dataProps.getProperty("numSplits")));
 
-        Job job = Job.getInstance(new Cluster(conf), conf);
-
+        Job job = Job.getInstance(conf);
         Path mrOutputPath = new Path(outputDir.toString() + "/MROUT/" + table.getTableName());
-        LOGGER.info("mrOutputPath="+mrOutputPath.toString());
-        //If the parent dir does not exist then create it. mkdirs does not throw error is the folder exists.
-        FileSystem srcFs = outputDir.getFileSystem(getConf());
-        boolean mkdirSuccess = srcFs.mkdirs(new Path(outputDir.toString() + "/MROUT/"));
-        LOGGER.info("Creating mrdir=" + new Path(outputDir.toString() + "/MROUT/") + " ; success=" + mkdirSuccess);
+
+
         FileOutputFormat.setOutputPath(job, mrOutputPath);
         job.setJobName("Datagen-" + table.getTableName());
         job.setJarByClass(Driver.class);
@@ -88,10 +82,9 @@ public class Driver extends Configured implements Tool {
 
         //merge and create a single file
 
-        FileSystem destFs = outputDir.getFileSystem(getConf());
         Path srcDir = mrOutputPath;
         Path destFile = new Path(outputDir.toString() + "/" + table.getTableName());
-        FileUtil.copyMerge(srcFs, srcDir, destFs, destFile, true, conf, "");
+        FileUtil.copyMerge(fs, srcDir, fs, destFile, true, conf, "");
 
         //Return file info oozie params
         RegisterFileInfo registerFileInfo=new RegisterFileInfo();
