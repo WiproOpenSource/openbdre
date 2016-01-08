@@ -12,7 +12,7 @@ DAEMON=$BDRE_HOME/bdre-scripts/bin/run-ui.sh # Introduce the bdre's location her
 LOGDIR=/var/log/BDRE  # Log directory to use
 PIDFILE=/var/run/BDRE/bdre.pid
 
-DAEMON_OPTS="-p $PIDFILE $LOGDIR"
+DAEMON_OPTS="$LOGDIR"
 BDRE_SHUTDOWN_TIMEOUT=15
 
 
@@ -31,7 +31,8 @@ start() {
                 return 0
             fi
         fi
-        /sbin/runuser -s /bin/bash $USER -c "$DAEMON $DAEMON_OPTS/service.log" &
+        echo "Running $DAEMON $DAEMON_OPTS/service.log"
+        nohup /sbin/runuser -s /bin/bash $USER -c "$DAEMON $DAEMON_OPTS/service.log" > /dev/null &
 	    ret=$?
 	    new_pid=$!
         base=$(basename $0)
