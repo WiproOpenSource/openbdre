@@ -18,7 +18,9 @@ import com.wipro.ats.bdre.ResolvePath;
 import com.wipro.ats.bdre.datagen.Table;
 import com.wipro.ats.bdre.datagen.util.Config;
 import com.wipro.ats.bdre.datagen.util.TableUtil;
+import com.wipro.ats.bdre.md.api.GetGeneralConfig;
 import com.wipro.ats.bdre.md.beans.RegisterFileInfo;
+import com.wipro.ats.bdre.md.beans.table.GeneralConfig;
 import com.wipro.ats.bdre.util.OozieUtil;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.conf.Configured;
@@ -48,6 +50,9 @@ public class Driver extends Configured implements Tool {
             throws IOException, InterruptedException, ClassNotFoundException {
 
         Configuration conf = getConf();
+        GetGeneralConfig generalConfig = new GetGeneralConfig();
+        GeneralConfig gc = generalConfig.byConigGroupAndKey("imconfig", "fs.defaultFS");
+        conf.set("fs.defaultFS", gc.getDefaultVal());
 
         String processId = args[0];
         Path outputDir = new Path(ResolvePath.replaceVars(args[1]));
