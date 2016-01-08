@@ -37,7 +37,7 @@ start() {
         base=$(basename $0)
         if [ $ret -eq 0 ]; then
             new_pid=`cat $PIDFILE`
-            echo "BDRE UI initiated with PID $new_pid. Please wait for some time for it to start."
+            echo
             wait_timeout=120
             until $(curl --output /dev/null --silent --head http://localhost:28850); do
                 printf '.'
@@ -48,7 +48,8 @@ start() {
                     return 1
                 fi
             done
-            echo "BDRE UI started."
+            echo
+            echo "BDRE UI initiated with PID $new_pid."
             success
         fi
         return $ret
