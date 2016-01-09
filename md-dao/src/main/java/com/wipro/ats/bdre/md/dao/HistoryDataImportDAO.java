@@ -137,8 +137,6 @@ public class HistoryDataImportDAO {
                 session.save(dataLoadParent);
 
                 LOGGER.info("the inserted data load parent is " + dataLoadParent.getProcessId());
-                LOGGER.info("name "+dataLoadParent.getProcessName());
-                LOGGER.info(dataLoadParent.getNextProcessId());
                 parentProcessIdList.add(dataLoadParent.getProcessId());
             }
             for (int i = 1; i <= intermediateList.size(); i++) {
@@ -159,8 +157,6 @@ public class HistoryDataImportDAO {
 
                 //
                 LOGGER.info("the inserted data import parent is " + dataImportProcess.getProcessId());
-                LOGGER.info("name: "+dataImportProcess.getProcessName());
-                LOGGER.info(dataImportProcess.getNextProcessId());
                 parentProcessIdList.add(dataImportProcess.getProcessId());
 
                 if (i == 1) {
@@ -189,8 +185,6 @@ public class HistoryDataImportDAO {
                 session.save(childDataImportProcess);
 
                 LOGGER.info("the inserted data import is " + childDataImportProcess.getProcessId());
-                LOGGER.info("name: "+childDataImportProcess.getProcessName());
-                LOGGER.info(childDataImportProcess.getNextProcessId());
                 dataImportProcess.setNextProcessId(childDataImportProcess.getProcessId().toString());
                 session.update(dataImportProcess);
 

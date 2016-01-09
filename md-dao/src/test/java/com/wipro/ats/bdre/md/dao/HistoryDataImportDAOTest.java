@@ -85,13 +85,4 @@ public class HistoryDataImportDAOTest {
         LOGGER.info("Deleted intermediate Entry with Key:" + intermediateId.getInterKey());
     }
 
-    @Ignore
-    @Test
-    public void testHistoryDataImport() throws Exception{
-        IntermediateInfo intermediateInfo = new IntermediateInfo();
-        intermediateInfo.setUuid("Test UUID");
-
-
-         historyDataImportDAO.historyDataImport(intermediateInfo);
-    }
 }
