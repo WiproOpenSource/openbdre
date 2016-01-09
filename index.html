@@ -68,7 +68,7 @@
 
 <hr>
 
-<p><a href="#Web%20Crawler">Web Crawler</a></p>
+<p><a href="#web-crawler">Web Crawler</a></p>
 
 <hr>
 
@@ -84,10 +84,10 @@
 <h1>
 <a id="objective" class="anchor" href="#objective" aria-hidden="true"><span class="octicon octicon-link"></span></a>Objective</h1>
 
-<p>Goal of BDRE is to give Bigdata implementation a significant acceleration by supplying the essential frameworks which are most likely to be written anyway. 
+<p>Goal of BDRE is to give Bigdata implementation a significant acceleration by supplying the essential frameworks which are most likely to be written anyway.
 It'll drastically eliminate hundreds of man hours of effort in operational framework development.
 Big Data implementations however, require specialized skills, signiﬁcant development effort on data loading, semantic processing, DQ, code deployment across environments etc.
-Big Data Ready Enterprise (BDRE)makes big data technology adoption simpler by optimizing and integrating various big data solutions and providing them under one integrated package. 
+Big Data Ready Enterprise (BDRE)makes big data technology adoption simpler by optimizing and integrating various big data solutions and providing them under one integrated package.
 BDRE provides a uniﬁed framework for a Hadoop implementation that can drastically minimize time development and fasttrack the Hadoop implementation. It comprises a reusable framework that can be customized as per the enterprise eco system. The components are loosely integrated and can be de-coupled or replaced easily with alternatives.</p>
 
 <h1>
@@ -100,15 +100,14 @@ BDRE provides a uniﬁed framework for a Hadoop implementation that can drastica
 <li>Registry of all workflow processes/templates</li>
 <li>Parameters/configuration(key/val) for processes</li>
 <li>Dependency information (upstream/downstream)</li>
-<li>Batch management/tracking. Batch concept in BDRE is for tracking the data flow between workflow processes.<br>
-</li>
+<li>Batch management/tracking. Batch concept in BDRE is for tracking the data flow between workflow processes.</li>
 <li>Run control (for delta processing/dependency check)</li>
 <li>Execution status for jobs(dynamic metadata - with step level granularity)</li>
 <li>File registry - can be used to register e.g. ingested files or a raw file as an output of an upstream.</li>
 <li>Execution statistics logging (key/value)</li>
 <li>Executed hive queries and data lineage information.</li>
 <li>Java APIs that ingrates with Bigdata with non-bigdata applications alike.</li>
-<li>Job monitoring and proactive/reactive alerting </li>
+<li>Job monitoring and proactive/reactive alerting</li>
 </ul>
 </li>
 <li>Data ingestion framework
@@ -161,7 +160,7 @@ BDRE provides a uniﬁed framework for a Hadoop implementation that can drastica
 <h2>
 <a id="overview" class="anchor" href="#overview" aria-hidden="true"><span class="octicon octicon-link"></span></a>Overview</h2>
 
-<p>This section will help you build BDRE from source. Audience for this document are developers and architects who want be part of BDRE framework development or may just want to evaluate it. </p>
+<p>This section will help you build BDRE from source. Audience for this document are developers and architects who want be part of BDRE framework development or may just want to evaluate it.</p>
 
 <h3>
 <a id="general-prerequisit" class="anchor" href="#general-prerequisit" aria-hidden="true"><span class="octicon octicon-link"></span></a>General Prerequisit</h3>
@@ -178,8 +177,8 @@ BDRE provides a uniﬁed framework for a Hadoop implementation that can drastica
 </li>
 <li>Git 1.9 and up</li>
 <li>Maven 3 and up</li>
-<li>Oracle JDK 7(and up) </li>
-<li>BDRE is shipped with an embedded database which is okay for running the UI and evaluating and testing jobs in a single node cluster. 
+<li>Oracle JDK 7(and up)</li>
+<li>BDRE is shipped with an embedded database which is okay for running the UI and evaluating and testing jobs in a single node cluster.
 For production use BDRE currently supports following production scale databases.)
 
 <ul>
@@ -199,12 +198,13 @@ For production use BDRE currently supports following production scale databases.
 <ul>
 <li>Download and install VirtualBox from <a href="https://www.virtualbox.org/">https://www.virtualbox.org/</a>
 </li>
-<li>Download and install HortonWorks Sandbox 2.2 Virtual Box image from <a href="http://hortonworks.com/products/releases/hdp-2-2/#install">http://hortonworks.com/products/releases/hdp-2-2/#install</a> </li>
+<li>Download and install HortonWorks Sandbox 2.2 Virtual Box image from <a href="http://hortonworks.com/products/releases/hdp-2-2/#install">http://hortonworks.com/products/releases/hdp-2-2/#install</a>
+</li>
 <li>Setup a 'Host-Only Adapter' for network to enable communication between Host and Guest OS.</li>
 <li>Now ssh into the sandbox using <em>root@VM_IP</em> (password hadoop)
 
 <ul>
-<li>The VM_IP is usually something between 192.168.56.101 - 192.168.56.109 </li>
+<li>The VM_IP is usually something between 192.168.56.101 - 192.168.56.109</li>
 </ul>
 </li>
 <li>
@@ -229,7 +229,7 @@ passwd: all authentication tokens updated successfully.</pre></div>
 <div class="highlight highlight-source-shell"><pre><span class="pl-c1">echo</span> <span class="pl-s"><span class="pl-pds">"</span>openbdre ALL=(ALL) NOPASSWD:ALL<span class="pl-pds">"</span></span> <span class="pl-k">&gt;&gt;</span> /etc/sudoers</pre></div>
 </li>
 <li>
-<p>Login to the HDP Sandbox with the newly created openbdre user. You can perform a <strong>su openbdre</strong> to switch to this account. </p>
+<p>Login to the HDP Sandbox with the newly created openbdre user. You can perform a <strong>su openbdre</strong> to switch to this account. Please make sure you are not root user beyond this point.</p>
 
 <div class="highlight highlight-source-shell"><pre>[root@sandbox <span class="pl-k">~</span>]# su openbdre
 [openbdre@sandbox root]$ <span class="pl-c1">cd</span> <span class="pl-k">~</span>
@@ -270,7 +270,7 @@ passwd: all authentication tokens updated successfully.</pre></div>
 </ul>
 </li>
 <li>
-<p>Database Setup </p>
+<p>Database Setup</p>
 
 <ul>
 <li>Execute the dbsetup.sh script without any parameters as shown below. In this example, we are going to use MySQL as BDRE backend as it's already available in the HDP Sandbox. If you would like to use another database please select it accordingly.</li>
@@ -355,7 +355,7 @@ Tables created successfully <span class="pl-k">in</span> MySQL bdre DB</pre></di
 
 <ul>
 <li>
-<p>After building BDRE successfully run </p>
+<p>After building BDRE successfully run</p>
 
 <div class="highlight highlight-source-shell"><pre>sh install-scripts.sh <span class="pl-k">local</span></pre></div>
 </li>
@@ -368,10 +368,10 @@ Tables created successfully <span class="pl-k">in</span> MySQL bdre DB</pre></di
 <a id="using-bdre" class="anchor" href="#using-bdre" aria-hidden="true"><span class="octicon octicon-link"></span></a>Using BDRE</h3>
 
 <ul>
-<li>After a successful build, start the BDRE UI using </li>
+<li>After a successful build, start the BDRE UI service</li>
 </ul>
 
-<div class="highlight highlight-source-shell"><pre> /home/openbdre/bdre/bdre-scripts/execution/run-ui.sh</pre></div>
+<div class="highlight highlight-source-shell"><pre> sudo service bdre start</pre></div>
 
 <ul>
 <li>Use <em>Google Chrome browser</em> from the host machine and open <em>http://VM_IP:288503/mdui/pages/content.page</em>
@@ -440,7 +440,7 @@ Tables created successfully <span class="pl-k">in</span> MySQL bdre DB</pre></di
 <h3>
 <a id="operational-metadata-management" class="anchor" href="#operational-metadata-management" aria-hidden="true"><span class="octicon octicon-link"></span></a>Operational Metadata Management</h3>
 
-<p>BDRE provides complete job/operational metadata management solution for Hadoop. At its core acts as a registry and tracker for different types of jobs running in different Hadoop clusters or as a standalone. It provides APIs to integrate with virtually any jobs. </p>
+<p>BDRE provides complete job/operational metadata management solution for Hadoop. At its core acts as a registry and tracker for different types of jobs running in different Hadoop clusters or as a standalone. It provides APIs to integrate with virtually any jobs.</p>
 
 <p><img src="http://wiproopensourcepractice.github.io/openbdre/bdreimages/mdgraph.png" alt="image"></p>
 
