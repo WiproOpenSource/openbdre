@@ -79,7 +79,7 @@
 <h1>
 <a id="license" class="anchor" href="#license" aria-hidden="true"><span class="octicon octicon-link"></span></a>License</h1>
 
-<p>Released under Apache Public License 2.0. You can get a copy for the license at <a href="http://www.apache.org/licenses/LICENSE-2.0">http://www.apache.org/licenses/LICENSE-2.0</a>.</p>
+<p>Released under Apache Public License 2.0. You can get a copy of the license at <a href="http://www.apache.org/licenses/LICENSE-2.0">http://www.apache.org/licenses/LICENSE-2.0</a>.</p>
 
 <h1>
 <a id="objective" class="anchor" href="#objective" aria-hidden="true"><span class="octicon octicon-link"></span></a>Objective</h1>
@@ -201,17 +201,12 @@ For production use BDRE currently supports following production scale databases.
 <li>Download and install HortonWorks Sandbox 2.2 Virtual Box image from <a href="http://hortonworks.com/products/releases/hdp-2-2/#install">http://hortonworks.com/products/releases/hdp-2-2/#install</a>
 </li>
 <li>Setup a 'Host-Only Adapter' for network to enable communication between Host and Guest OS.</li>
-<li>Now ssh into the sandbox using <em>root@VM_IP</em> (password hadoop)
+<li>
+<p>Now ssh into the sandbox using <em>root@VM_IP</em> (password hadoop)</p>
 
 <ul>
 <li>The VM_IP is usually something between 192.168.56.101 - 192.168.56.109</li>
 </ul>
-</li>
-<li>
-<p>Start Oozie as the Oozie user and Oozie isn't already started. <code>ps -ef | grep -i oozie</code> will help determine status of Oozie.</p>
-
-<div class="highlight highlight-source-shell"><pre>su - oozie -c <span class="pl-s"><span class="pl-pds">"</span>/usr/hdp/current/oozie-server/bin/oozie-start.sh<span class="pl-pds">"</span></span>
-ps -ef <span class="pl-k">|</span> grep -i oozie</pre></div>
 </li>
 <li>
 <p>Now create <em>openbdre</em> user account.</p>
@@ -374,7 +369,13 @@ Tables created successfully <span class="pl-k">in</span> MySQL bdre DB</pre></di
 <div class="highlight highlight-source-shell"><pre> sudo service bdre start</pre></div>
 
 <ul>
-<li>Use <em>Google Chrome browser</em> from the host machine and open <em>http://VM_IP:288503/mdui/pages/content.page</em>
+<li>
+<p>Start Oozie as the Oozie user incase Oozie isn't already started. <code>ps -ef | grep -i oozie</code> will help determine status of Oozie.</p>
+
+<div class="highlight highlight-source-shell"><pre>su - oozie -c <span class="pl-s"><span class="pl-pds">"</span>/usr/hdp/current/oozie-server/bin/oozie-start.sh<span class="pl-pds">"</span></span>
+ps -ef <span class="pl-k">|</span> grep -i oozie</pre></div>
+</li>
+<li>Use <em>Google Chrome browser</em> from the host machine and open <em>http://VM_IP:28850/mdui/pages/content.page</em>
 </li>
 <li>Login using admin/zaq1xsw2</li>
 </ul>
@@ -417,7 +418,7 @@ Tables created successfully <span class="pl-k">in</span> MySQL bdre DB</pre></di
 <h2>
 <a id="directory-monitoring-and-file-ingestion" class="anchor" href="#directory-monitoring-and-file-ingestion" aria-hidden="true"><span class="octicon octicon-link"></span></a>Directory Monitoring and File Ingestion</h2>
 
-<p>TBD</p>
+<p><a href="http://www.youtube.com/watch?v=IhDMYase1fU" target="_blank"><img src="http://img.youtube.com/vi/IhDMYase1fU/0.jpg" alt="BDRE File ingestion demo video" width="240" height="180" border="10"></a></p>
 
 <h1>
 <a id="workflow-builder" class="anchor" href="#workflow-builder" aria-hidden="true"><span class="octicon octicon-link"></span></a>Workflow Builder</h1>
