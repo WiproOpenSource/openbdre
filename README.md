@@ -252,7 +252,7 @@ You should be able to do the same in Mac or Windows but note that setting up a H
  sudo service bdre start
 ```
 
-* Use *Google Chrome browser* from the host machine and open *http://VM_IP:288503/mdui/pages/content.page*
+* Use *Google Chrome browser* from the host machine and open *http://VM_IP:28850/mdui/pages/content.page*
 * Login using admin/zaq1xsw2
 
 ### Creating, Deploying and Running a Test Job
@@ -278,7 +278,10 @@ TDB
 ## Streaming Data Ingestion
 TBD
 ## Directory Monitoring and File Ingestion
-TBD
+
+<a href="http://www.youtube.com/watch?feature=player_embedded&v=IhDMYase1fU" target="_blank"><img src="http://img.youtube.com/vi/IhDMYase1fU/0.jpg" 
+alt="BDRE File ingestion demo video" width="240" height="180" border="10" /></a>
+
 # Workflow Builder
 TBD
 # Bulk Data Manufacturing
