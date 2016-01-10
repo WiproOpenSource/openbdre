@@ -99,12 +99,7 @@ You should be able to do the same in Mac or Windows but note that setting up a H
 * Setup a 'Host-Only Adapter' for network to enable communication between Host and Guest OS.
 * Now ssh into the sandbox using *root@VM_IP* (password hadoop)
     - The VM_IP is usually something between 192.168.56.101 - 192.168.56.109
-* Start Oozie as the Oozie user and Oozie isn't already started. ```ps -ef | grep -i oozie``` will help determine status of Oozie.
 
-    ```shell
-    su - oozie -c "/usr/hdp/current/oozie-server/bin/oozie-start.sh"
-    ps -ef | grep -i oozie
-    ```
 * Now create *openbdre* user account.
 
     ```shell
@@ -251,7 +246,12 @@ You should be able to do the same in Mac or Windows but note that setting up a H
 ```shell
  sudo service bdre start
 ```
+* Start Oozie as the Oozie user incase Oozie isn't already started. ```ps -ef | grep -i oozie``` will help determine status of Oozie.
 
+    ```shell
+    su - oozie -c "/usr/hdp/current/oozie-server/bin/oozie-start.sh"
+    ps -ef | grep -i oozie
+    ```
 * Use *Google Chrome browser* from the host machine and open *http://VM_IP:28850/mdui/pages/content.page*
 * Login using admin/zaq1xsw2
 
