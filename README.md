@@ -279,7 +279,7 @@ TDB
 TBD
 ## Directory Monitoring and File Ingestion
 
-<a href="http://www.youtube.com/watch?feature=player_embedded&v=IhDMYase1fU" target="_blank"><img src="http://img.youtube.com/vi/IhDMYase1fU/0.jpg" 
+<a href="http://www.youtube.com/watch?v=IhDMYase1fU" target="_blank"><img src="http://img.youtube.com/vi/IhDMYase1fU/0.jpg" 
 alt="BDRE File ingestion demo video" width="240" height="180" border="10" /></a>
 
 # Workflow Builder
