@@ -23,7 +23,7 @@
 [Operational Metadata Management](#operational-metadata-management)
 ***
 # License
-Released under Apache Public License 2.0. You can get a copy for the license at http://www.apache.org/licenses/LICENSE-2.0.
+Released under Apache Public License 2.0. You can get a copy of the license at http://www.apache.org/licenses/LICENSE-2.0.
 # Objective
 Goal of BDRE is to give Bigdata implementation a significant acceleration by supplying the essential frameworks which are most likely to be written anyway.
 It'll drastically eliminate hundreds of man hours of effort in operational framework development.
