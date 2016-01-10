@@ -10,8 +10,6 @@
 #19, 'DQ_Parent', null
 #26,'Filemon Parent',null
 
-BDRE_HOME=~/bdre
-BDRE_APPS_HOME=~/bdre_apps
 
 if [ -z "$1" ] || [ -z "$2" ] || [ -z "$3" ] ; then
         echo Insufficient parameters !
@@ -22,4 +20,4 @@ busDomainId=$1
 processTypeId=$2
 processId=$3
 
-ssh biadmin@169.55.78.217 sh $(dirname $0)/process-type-$processTypeId.sh $busDomainId $processTypeId $processId
+ssh biadmin@169.55.78.217 sh /home/biadmin/bdre/bdre-scripts/deployment/process-type-$processTypeId.sh $busDomainId $processTypeId $processId

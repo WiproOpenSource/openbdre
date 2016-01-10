@@ -10,8 +10,7 @@
 #19, 'DQ_Parent', null
 #26,'Filemon Parent',null
 
-BDRE_HOME=~/bdre
-BDRE_APPS_HOME=~/bdre_apps
+BIADMIN_DIRNAME=/home/biadmin/bdre/bdre-scripts/execution
 
 if [ -z "$1" ] || [ -z "$2" ] || [ -z "$3" ] ; then
         echo Insufficient parameters !
@@ -23,21 +22,21 @@ processTypeId=$2
 processId=$3
 echo "busDomainId=$1 , processTypeId=$2 , processId=$3"
 if [ $processTypeId -eq 1 ]; then
-    ssh biadmin@169.55.78.217 sh $(dirname $0)/flume.sh $busDomainId $processTypeId $processId
+    ssh biadmin@169.55.78.217 sh $BIADMIN_DIRNAME/flume.sh $busDomainId $processTypeId $processId
 elif [ $processTypeId -eq 2 ]; then
-    ssh biadmin@169.55.78.217 python $(dirname $0)/Workflow.py $busDomainId $processTypeId $processId
+    ssh biadmin@169.55.78.217 python $BIADMIN_DIRNAME/Workflow.py $busDomainId $processTypeId $processId
 elif [ $processTypeId -eq 4 ]; then
-    ssh biadmin@169.55.78.217 python $(dirname $0)/Workflow.py $busDomainId $processTypeId $processId
+    ssh biadmin@169.55.78.217 python $BIADMIN_DIRNAME/Workflow.py $busDomainId $processTypeId $processId
 elif [ $processTypeId -eq 5 ]; then
-    ssh biadmin@169.55.78.217 python $(dirname $0)/Workflow.py $busDomainId $processTypeId $processId
+    ssh biadmin@169.55.78.217 python $BIADMIN_DIRNAME/Workflow.py $busDomainId $processTypeId $processId
 elif [ $processTypeId -eq 18 ]; then
-    ssh biadmin@169.55.78.217 python $(dirname $0)/Workflow.py $busDomainId $processTypeId $processId
+    ssh biadmin@169.55.78.217 python $$BIADMIN_DIRNAME/Workflow.py $busDomainId $processTypeId $processId
 elif [ $processTypeId -eq 19 ]; then
-    ssh biadmin@169.55.78.217 python $(dirname $0)/Workflow.py $busDomainId $processTypeId $processId
+    ssh biadmin@169.55.78.217 python $BIADMIN_DIRNAME/Workflow.py $busDomainId $processTypeId $processId
 elif [ $processTypeId -eq 28 ]; then
-    ssh biadmin@169.55.78.217 python $(dirname $0)/Workflow.py $busDomainId $processTypeId $processId
+    ssh biadmin@169.55.78.217 python $BIADMIN_DIRNAME/Workflow.py $busDomainId $processTypeId $processId
 elif [ $processTypeId -eq 26 ]; then
-    ssh biadmin@169.55.78.217 sh $(dirname $0)/filemonitor.sh $processId
+    ssh biadmin@169.55.78.217 sh $BIADMIN_DIRNAME/filemonitor.sh $processId
 else
     echo "Don't know how to execute busDomainId=$1 , processTypeId=$2 , processId=$3"
 fi
