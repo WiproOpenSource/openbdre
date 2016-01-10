@@ -274,20 +274,24 @@ You should be able to do the same in Mac or Windows but note that setting up a H
 # Data Ingestion
 
 ## RDBMS Data Ingestion
-TDB
+
+<a href="http://www.youtube.com/watch?v=JcbYU7oEmxc" target="_blank"><img src="http://img.youtube.com/vi/JcbYU7oEmxc/0.jpg" 
+alt="BDRE RDBMS data ingestion demo video" width="240" height="180" border="10" /></a>
+
+
 ## Streaming Data Ingestion
-TBD
+Demo video TBD
 ## Directory Monitoring and File Ingestion
 
 <a href="http://www.youtube.com/watch?v=IhDMYase1fU" target="_blank"><img src="http://img.youtube.com/vi/IhDMYase1fU/0.jpg" 
 alt="BDRE File ingestion demo video" width="240" height="180" border="10" /></a>
 
 # Workflow Builder
-TBD
+Demo video TBD
 # Bulk Data Manufacturing
-TBD
+Demo video TBD
 # Web Crawler
-TBD
+Demo video TBD
 
 # Operational Metadata Management System
 
