@@ -10,6 +10,8 @@
 #19, 'DQ_Parent', null
 #26,'Filemon Parent',null
 
+BDRE_HOME=~/bdre
+BDRE_APPS_HOME=~/bdre_apps
 BIADMIN_DIRNAME=/home/biadmin/bdre/bdre-scripts/execution
 
 if [ -z "$1" ] || [ -z "$2" ] || [ -z "$3" ] ; then
@@ -36,7 +38,7 @@ elif [ $processTypeId -eq 19 ]; then
 elif [ $processTypeId -eq 28 ]; then
     ssh biadmin@169.55.78.217 python $BIADMIN_DIRNAME/Workflow.py $busDomainId $processTypeId $processId
 elif [ $processTypeId -eq 26 ]; then
-    ssh biadmin@169.55.78.217 sh $BIADMIN_DIRNAME/filemonitor.sh $processId
+    sh $(dirname $0)/filemonitor.sh $processId
 else
     echo "Don't know how to execute busDomainId=$1 , processTypeId=$2 , processId=$3"
 fi
