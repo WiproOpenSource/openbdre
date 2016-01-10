@@ -22,6 +22,9 @@
 ***
 [Operational Metadata Management](#operational-metadata-management)
 ***
+[How To Contribute](#how-to-contribute)
+***
+
 # License
 Released under Apache Public License 2.0. You can get a copy of the license at http://www.apache.org/licenses/LICENSE-2.0.
 # Objective
