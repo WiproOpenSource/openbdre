@@ -275,7 +275,7 @@ You should be able to do the same in Mac or Windows but note that setting up a H
 
 ## RDBMS Data Ingestion
 
-<a href="http://www.youtube.com/watch?v=JcbYU7oEmxc" target="_blank"><img src="http://img.youtube.com/vi/JcbYU7oEmxc/0.jpg" 
+<a href="http://www.youtube.com/watch?v=JcbYU7oEmxc" target="_blank"><img src="http://img.youtube.com/vi/JcbYU7oEmxc/1.jpg" 
 alt="BDRE RDBMS data ingestion demo video" width="240" height="180" border="10" /></a>
 
 
@@ -306,3 +306,8 @@ BDRE provides complete job/operational metadata management solution for Hadoop. 
 BDRE uses RDBMS database to store all job related metadata. A set of stored procedures are there to interface will the tables which are exposed via Java APIs to manage/create/update the static and run time metadata information. Below is the data model for BDRE metadata operational database.
 
 ![eer](http://wiproopensourcepractice.github.io/openbdre/bdreimages/eer.png)
+
+# How To Contribute
+
+Contribution for the betterment of BDRE is extreamly welcome and humbly requested by us. To contribute please navigate to our Github peoject page to fork the repository. You can make changes to your own forked repository and then open a pull request to merge your change.
+
