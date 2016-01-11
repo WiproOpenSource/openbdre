@@ -20,4 +20,4 @@ busDomainId=$1
 processTypeId=$2
 processId=$3
 
-sh /home/biadmin/bdre/bdre-scripts/deployment/process-type-$processTypeId.sh $busDomainId $processTypeId $processId
+ssh biadmin@169.55.78.217 sh /home/biadmin/bdre/bdre-scripts/deployment/process-type-$processTypeId.sh $busDomainId $processTypeId $processId
