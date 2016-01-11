@@ -71,7 +71,7 @@ public class StatisticsDBDao {
         Long longid = new Long(id.intValue());
         Statisticsdb statisticsdb=(Statisticsdb)session.get(Statisticsdb.class,longid);
         //delete only if it is present from before i.e. not deleted by other mapper
-        if(statisticsdb != null)
+//        if(statisticsdb != null)
             session.delete(statisticsdb);
         session.getTransaction().commit();
     }
