@@ -53,6 +53,21 @@
             <artifactId>im-commons</artifactId>
             <version>${project.version}</version>
         </dependency>
+        <dependency>
+            <groupId>com.wipro.ats.bdre</groupId>
+            <artifactId>md_api</artifactId>
+            <version>1.1-SNAPSHOT</version>
+        </dependency>
+        <dependency>
+            <groupId>com.wipro.ats.bdre</groupId>
+            <artifactId>data-export</artifactId>
+            <version>1.1-SNAPSHOT</version>
+        </dependency>
+        <dependency>
+            <groupId>com.wipro.ats.bdre</groupId>
+            <artifactId>data-export</artifactId>
+            <version>1.1-SNAPSHOT</version>
+        </dependency>
     </dependencies>
     <build>
 

@@ -1,8 +1,7 @@
+# Bigdata Ready Enterprise Open Source Software
 
-# Bigdata Ready Enterprise Open Source Software 
+## Table of Contents
 
-
-# Table of Contents
 
 [License](#license)
 ***
@@ -10,29 +9,30 @@
 ***
 [Features](#features)
 ***
-[Installation](#installation)
-***
 [Architecture](#architecture)
+***
+[Installation](#installation)
 ***
 [Data Ingestion](#data-ingestion)
 ***
-[Workflow Builder](#Workflow Builder)
+[Workflow Builder](#workflow-builder)
 ***
-[Operational Metadata Management](#Operational Metadata Management)
+[Bulk Data Manufacturing](#bulk-data-manufacturing)
 ***
-[Bulk Data Manufacturing](#Bulk Data Manufacturing)
+[Web Crawler](#web-crawler)
 ***
-[Web Crawler](#Web Crawler)
+[Operational Metadata Management](#operational-metadata-management)
 ***
 # License
 
 Released under Apache Public License 2.0. You can get a copy for the license at http://www.apache.org/licenses/LICENSE-2.0.
-# Objective 
-Goal of BDRE is to give Bigdata implementation a significant acceleration by supplying the essential frameworks which are most likely to be written anyway. 
+# Objective
+Goal of BDRE is to give Bigdata implementation a significant acceleration by supplying the essential frameworks which are most likely to be written anyway.
 It'll drastically eliminate hundreds of man hours of effort in operational framework development.
 Big Data implementations however, require specialized skills, signiﬁcant development effort on data loading, semantic processing, DQ, code deployment across environments etc.
-Big Data Ready Enterprise (BDRE)makes big data technology adoption simpler by optimizing and integrating various big data solutions and providing them under one integrated package. 
+Big Data Ready Enterprise (BDRE)makes big data technology adoption simpler by optimizing and integrating various big data solutions and providing them under one integrated package.
 BDRE provides a uniﬁed framework for a Hadoop implementation that can drastically minimize time development and fasttrack the Hadoop implementation. It comprises a reusable framework that can be customized as per the enterprise eco system. The components are loosely integrated and can be de-coupled or replaced easily with alternatives.
+
 
 # Features
 
@@ -40,14 +40,14 @@ BDRE provides a uniﬁed framework for a Hadoop implementation that can drastica
  - Registry of all workflow processes/templates
  - Parameters/configuration(key/val) for processes
  - Dependency information (upstream/downstream)
- - Batch management/tracking. Batch concept in BDRE is for tracking the data flow between workflow processes.  
+ - Batch management/tracking. Batch concept in BDRE is for tracking the data flow between workflow processes.
  - Run control (for delta processing/dependency check)
  - Execution status for jobs(dynamic metadata - with step level granularity)
  - File registry - can be used to register e.g. ingested files or a raw file as an output of an upstream.
  - Execution statistics logging (key/value)
  - Executed hive queries and data lineage information.
  - Java APIs that ingrates with Bigdata with non-bigdata applications alike.
- - Job monitoring and proactive/reactive alerting 
+ - Job monitoring and proactive/reactive alerting
 - Data ingestion framework
  - Tabular data from RDBMS
  - Streaming data from 16 types of sources (including logs, message queues and Twitter)
@@ -65,13 +65,16 @@ BDRE provides a uniﬁed framework for a Hadoop implementation that can drastica
 - HTML5 User Interface
  - Create ingestion, data generation, Crawler jobs or create Oozie workflows graphically without writing any code
  - One click deploy and execute jobs without SSH into the edge node.
- 
+
+# Architecture
+
+![image](http://wiproopensourcepractice.github.io/openbdre/bdreimages/architecture.PNG)
 
 # Installation
 
 ## Overview
 
-This section will help you build BDRE from source. Audience for this document are developers and architects who want be part of BDRE framework development or may just want to evaluate it. 
+This section will help you build BDRE from source. Audience for this document are developers and architects who want be part of BDRE framework development or may just want to evaluate it.
 
 ### General Prerequisit
 
@@ -81,8 +84,8 @@ For testing/development perpose and to save time use the fully loaded Hadoop VMs
  - In this section we are using *HortonWorks Sandbox 2.2.0*
 - Git 1.9 and up
 - Maven 3 and up
-- Oracle JDK 7(and up) 
-- BDRE is shipped with an embedded database which is okay for running the UI and evaluating and testing jobs in a single node cluster. 
+- Oracle JDK 7(and up)
+- BDRE is shipped with an embedded database which is okay for running the UI and evaluating and testing jobs in a single node cluster.
 For production use BDRE currently supports following production scale databases.)
   - MySQL Server 5.1 and up
   - Oracle 11g Server or better
@@ -94,10 +97,10 @@ You should be able to do the same in Mac or Windows but note that setting up a H
 ## Preparation
 
 * Download and install VirtualBox from https://www.virtualbox.org/
-* Download and install HortonWorks Sandbox 2.2 Virtual Box image from http://hortonworks.com/products/releases/hdp-2-2/#install 
+* Download and install HortonWorks Sandbox 2.2 Virtual Box image from http://hortonworks.com/products/releases/hdp-2-2/#install
 * Setup a 'Host-Only Adapter' for network to enable communication between Host and Guest OS.
 * Now ssh into the sandbox using *root@VM_IP* (password hadoop)
-    - The VM_IP is usually something between 192.168.56.101 - 192.168.56.109 
+    - The VM_IP is usually something between 192.168.56.101 - 192.168.56.109
 * Start Oozie as the Oozie user and Oozie isn't already started. ```ps -ef | grep -i oozie``` will help determine status of Oozie.
 
     ```shell
@@ -119,15 +122,15 @@ You should be able to do the same in Mac or Windows but note that setting up a H
     ```shell
     echo "openbdre ALL=(ALL) NOPASSWD:ALL" >> /etc/sudoers
     ```
-    
-* Login to the HDP Sandbox with the newly created openbdre user. You can perform a **su openbdre** to switch to this account. 
+
+* Login to the HDP Sandbox with the newly created openbdre user. You can perform a **su openbdre** to switch to this account. Please make sure you are not root user beyond this point.
 
     ```shell
     [root@sandbox ~]# su openbdre
     [openbdre@sandbox root]$ cd ~
     [openbdre@sandbox ~]$
     ```
-    
+
 * Download Maven from a mirror, unpack and add to the PATH.
 
     ```shell
@@ -135,7 +138,7 @@ You should be able to do the same in Mac or Windows but note that setting up a H
     [openbdre@sandbox ~]# unzip apache-maven-3.3.9-bin.zip
     [openbdre@sandbox ~]# export PATH=$PATH:/home/openbdre/apache-maven-3.3.9/bin
     ```
-    
+
 ## Building BDRE from source
 
 1. Obtain the source code
@@ -146,7 +149,7 @@ You should be able to do the same in Mac or Windows but note that setting up a H
     ```
 
  * Pull BDRE source from this git repository. To find out your repository link navigate to the repository in this website and copy the https repo URL.
-   
+
     ```shell
     [openbdre@sandbox ~]# git clone https://github.com/WiproOpenSourcePractice/openbdre.git
     ```
@@ -157,9 +160,9 @@ You should be able to do the same in Mac or Windows but note that setting up a H
     [openbdre@sandbox ~]# cd openbdre
     ```
 
-2. Database Setup 
+2. Database Setup
     * Execute the dbsetup.sh script without any parameters as shown below. In this example, we are going to use MySQL as BDRE backend as it's already available in the HDP Sandbox. If you would like to use another database please select it accordingly.
-    
+
     ```shell
     [openbdre@sandbox ~]# sh dbsetup.sh
     ```
@@ -171,9 +174,9 @@ You should be able to do the same in Mac or Windows but note that setting up a H
     2) Oracle
     3) MySQL
     4) PostgreSQL
-    
+
     Select Database Type(Enter 1, 2, 3 , 4 or leave empty and press empty to select the default DB):3⏎
-    
+
     Enter DB username (Type username or leave it blank for default 'root'):⏎
     Enter DB password (Type password or leave it blank for default '<blank>'):⏎
     Enter DB hostname (Type db hostname or leave it blank for default 'localhost'):⏎
@@ -181,7 +184,7 @@ You should be able to do the same in Mac or Windows but note that setting up a H
     Enter DB name (Type db name or leave it blank for default 'bdre'):⏎
     Enter DB schema (Type schema or leave it blank for default 'bdre'):⏎
     Please confirm:
-    
+
     Database Type: mysql
     JDBC Driver Class: com.mysql.jdbc.Driver
     JDBC Connection URL: jdbc:mysql://localhost:3306/bdre
@@ -194,15 +197,15 @@ You should be able to do the same in Mac or Windows but note that setting up a H
     Will create DB and tables
     Tables created successfully in MySQL bdre DB
     ```
-    
+
 3. Building
  * Now build BDRE using (note BDRE may not compile if the **settings.xml** is not passed from the commandline so be sure to use the *-s* option. When building for the first time, it might take a while as maven resolves and downloads the jar libraries from diffrent repositories.
-    
+
     ```shell
     mvn -s settings.xml clean install -P hdp22
     ```
  * *Note:* Selecting hdp22 will compile BDRE with HDP 2.2 libraries and automatically configure BDRE with Hortonworks Sandbox 2.2.0. Similarly one should be able to build this using -P cdh52 which will configure BDRE for CDH 5.2 Quickstart VM. During building it'll pickup the environment specific configurations from <source root>/databases/setup/profile.*hdp22*.properties.
- 
+
     Content of databases/setup/profile.hdp22.properties
  ```properties
     bdre_user_name=openbdre
@@ -218,7 +221,7 @@ You should be able to do the same in Mac or Windows but note that setting up a H
     hive_jdbc_user=openbdre
     hive_jdbc_password=openbdre
  ```
-    
+
     ```shell
     $ mvn -s settings.xml clean install -P hdp22
     [INFO] Scanning for projects...
@@ -236,8 +239,8 @@ You should be able to do the same in Mac or Windows but note that setting up a H
     ```
 
 4. Installing BDRE
- * After building BDRE successfully run 
-    
+ * After building BDRE successfully run
+
     ```shell
     sh install-scripts.sh local
     ```
@@ -245,10 +248,10 @@ You should be able to do the same in Mac or Windows but note that setting up a H
 
 ### Using BDRE
 
-* After a successful build, start the BDRE UI using 
+* After a successful build, start the BDRE UI service
 
 ```shell
- /home/openbdre/bdre/bdre-scripts/execution/run-ui.sh
+ sudo service bdre start
 ```
 
 * Use *Google Chrome browser* from the host machine and open *http://VM_IP:288503/mdui/pages/content.page*
@@ -270,5 +273,31 @@ You should be able to do the same in Mac or Windows but note that setting up a H
 * Check the process in Oozie console *http://VM_IP:11000/oozie*
 * When the import job is complete start the *data load job*.
 
+# Data Ingestion
+
+## RDBMS Data Ingestion
+TDB
+## Streaming Data Ingestion
+TBD
+## Directory Monitoring and File Ingestion
+TBD
+# Workflow Builder
+TBD
+# Bulk Data Manufacturing
+TBD
+# Web Crawler
+TBD
+
+# Operational Metadata Management System
+
+### Operational Metadata Management
+
+BDRE provides complete job/operational metadata management solution for Hadoop. At its core acts as a registry and tracker for different types of jobs running in different Hadoop clusters or as a standalone. It provides APIs to integrate with virtually any jobs.
 
 
+![image](http://wiproopensourcepractice.github.io/openbdre/bdreimages/mdgraph.png)
+
+
+BDRE uses RDBMS database to store all job related metadata. A set of stored procedures are there to interface will the tables which are exposed via Java APIs to manage/create/update the static and run time metadata information. Below is the data model for BDRE metadata operational database.
+
+![eer](http://wiproopensourcepractice.github.io/openbdre/bdreimages/eer.png)
