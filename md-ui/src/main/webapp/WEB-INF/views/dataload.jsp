@@ -25,9 +25,7 @@
         		</script >
 		<script>
 
-var jsonObj = {
-	"Result": "OK"
-}
+var jsonObj = {"Result":"OK","Records":[],"Message":null,"TotalRecordCount":0,"Record":[]};
 var map = new Object();
 var createJobResult;
 var requiredProperties;
@@ -390,26 +388,10 @@ wizard = $(document).ready(function() {
             				}
 			}
 			if(currentIndex == 1 && newIndex == 2) {
-			    buildForm(document.getElementById('rawTableDetails').elements[2].value);
-					testNullValues('rawTableDetails');
-				if(sourceFlag == 1) {
-					$("#div-dialog-warning").dialog({
-						title: "",
-						resizable: false,
-						height: 'auto',
-						modal: true,
-						buttons: {
-							"Ok": function() {
-								$(this).dialog("close");
-							}
-						}
-					}).text("Please Provide Value For Required Fields");
-					return false;
-				}
+			console.log(document.getElementById('rawTableDetails').elements[0].value);
+			    buildForm(document.getElementById('rawTableDetails').elements[0].value);
+			    jTableForRawColumns('rawTableColumnDetails');
 			}
-
-
-
 			return true;
 		},
 		onStepChanged: function(event, currentIndex, priorIndex) {
@@ -641,7 +623,7 @@ wizard = $(document).ready(function() {
 		<script>
                 var app = angular.module('myApp', []);
                 app.controller('myCtrl', function($scope) {
-                    $scope.tableformats= getGenConfigMap('table_format');
+                    $scope.fileformats= getGenConfigMap('file_format');
                     $scope.formatMap=null;
                     $scope.busDomains = {};
                     $.ajax({
@@ -677,13 +659,13 @@ wizard = $(document).ready(function() {
                                 <div class="form-group">
                                     <label class="control-label col-sm-2" for="processName">Process Name:</label>
                                     <div class="col-sm-10">
-                                        <input type="text" class="form-control"  id="processName" name="processName" placeholder="Enter Process Name" required>
+                                        <input type="text" class="form-control"  id="processName" name="processName" placeholder="Enter Process Name" value="remove me" required>
                                     </div>
                                 </div>
                                 <div class="form-group">
                                     <label class="control-label col-sm-2" for="processDescription">Process Description:</label>
                                     <div class="col-sm-10">
-                                        <input type="text" class="form-control" id="processDescription" name="processDescription" placeholder="Enter Process Description" required>
+                                        <input type="text" class="form-control" id="processDescription" name="processDescription" placeholder="Enter Process Description" value="remove me" required>
                                     </div>
                                 </div>
                                 <div class="form-group">
@@ -705,28 +687,15 @@ wizard = $(document).ready(function() {
             <form class="form-horizontal" role="form" id="rawTableDetails">
                                     <div id="rawTableDetailsDiv">
                                         <div class="alert alert-info" role="alert">
-                                            Application requires process details to create process entries in metadata
+                                            Type of file you want to load in hive
                                         </div>
                                         <!-- btn-group -->
                                         <div id="rawTablDetailsDB">
-
                                             <div class="form-group">
-                                                <label class="control-label col-sm-2" for="rawDBName">RAW DB Name:</label>
+                                                <label class="control-label col-sm-2" for="fileformat">File Format:</label>
                                                 <div class="col-sm-10">
-                                                    <input type="text" class="form-control"  id="rawDBName" name="rawDBName" placeholder="Enter RAW DB Name" required>
-                                                </div>
-                                            </div>
-                                            <div class="form-group">
-                                                <label class="control-label col-sm-2" for="rawTableName">Raw Table Name:</label>
-                                                <div class="col-sm-10">
-                                                    <input type="text" class="form-control" id="rawTableName" name="rawTableName" placeholder="Enter RAW TABLE NAME" required>
-                                                </div>
-                                            </div>
-                                            <div class="form-group">
-                                                <label class="control-label col-sm-2" for="tableformat">Table Format:</label>
-                                                <div class="col-sm-10">
-                                                    <select class="form-control" id="tableformat" name="tableformat" >
-                                                        <option ng-repeat="tableformat in tableformats" value="{{tableformat.defaultVal}}" name="tableformat">{{tableformat.value}}</option>
+                                                    <select class="form-control" id="fileformat" name="fileformat" >
+                                                        <option ng-repeat="fileformat in fileformats" value="{{fileformat.defaultVal}}" name="fileformat">{{fileformat.value}}</option>
 
                                                     </select>
                                                 </div>
@@ -738,39 +707,8 @@ wizard = $(document).ready(function() {
             			</section>
 			<h3>Raw Table Properties</h3>
 			<section>
-			    <div id="rawTableColumnDetails">
-                        <form class="form-horizontal" role="form" name="rawTable" id="rawTableColumn">
-                            <div id="rawDescription">
-                                <div class="alert alert-info" role="alert">
-                                    <div style="font-size:24px;" ><b>How To:</b> </div>
-                                    <b>nter Column name and dataType for table columns</b>
-                                    <br>
-
-                                </div>
-
-                                <!-- btn-group -->
-                                <div class="form-group" id="rawFormGroup1">
-                                    <div class="col-md-3">
-                                        <input type="text" class="form-control input-sm" id="rawColName.1" value="" name="rawColName.1" placeholder="Column Name" />
-                                    </div>
-                                    <div class="col-md-3">
-                                        <input type="text" class="form-control input-sm" id="rawDataType.1" value="" name="rawDataType.1" placeholder="Data Type" />
-                                    </div>
-                                    <button id="rawRemove1" class="btn btn-danger remove-me"><span class="glyphicon glyphicon-trash"></span></button>
-
-
-                                </div>
-                                <!-- /btn-group -->
-                            </div>
-                            <div class="col-md-2" id="rawDeleteDiv">
-                                        <button id="rawButton1" class="btn btn-primary add-more">
-                                            <span class="glyphicon glyphicon-plus" style="font-size:large"></span>
-                                        </button>
-                            </div>
-
-                        </form>
-                 </div>
-                        </section>
+			    <div id="rawTableColumnDetails"></div>
+            </section>
 
 			<h3>Serde, OutPut and Input Format</h3>
             <section>
@@ -1005,50 +943,51 @@ $(document).ready(function() {
 
 		</script>
 		<script type="text/javascript">
-function loadJTable(typeValue, typeOf, typeDiv) {
-	console.log('type value' + typeValue + 'type of ' + typeOf + 'type Div' + typeDiv);
+function jTableForRawColumns(divName) {
+	console.log('div value' + divName);
 	var div = '';
-	div = document.getElementById(typeDiv);
+	div = document.getElementById(divName);
 	$(div).jtable({
-		title: 'Additional Configurations For ' + typeValue,
+		title: 'Enter  Column and data type ',
 		paging: false,
 		sorting: false,
 		create: false,
 		edit: false,
 		actions: {
 			listAction: function(postData, jtParams) {
-				return $.Deferred(function($dfd) {
-					$.ajax({
-						url: '/mdrest/genconfig/' + typeOf + '/?required=0',
-						type: 'GET',
-						data: postData,
-						dataType: 'json',
-						success: function(data) {
-							$dfd.resolve(data);
-						},
-						error: function() {
-							$dfd.reject();
-						}
-					});
-				});
+				return jsonObj;
 			},
 			createAction: function(postData) {
-				console.log(postData);
-				return $.Deferred(function($dfd) {
-					$.ajax({
-						url: '/mdrest/flumeproperties',
-						type: 'PUT',
-						data: postData,
-						dataType: 'json',
-						success: function(data) {
-							$dfd.resolve(data);
-						},
-						error: function() {
-							$dfd.reject();
-						}
-					});
-				});
-			},
+			console.log(postData);
+			var splitedPostData = postData.split("&");
+			var jsonedPostData = '[{';
+            			for (i=0; i < splitedPostData.length ; i++)
+            			{
+                            console.log("data is " + splitedPostData[i]);
+                            jsonedPostData += '"';
+            			    jsonedPostData += splitedPostData[i].split("=")[0];
+            			    jsonedPostData += '"';
+            			    jsonedPostData += ":";
+            			    jsonedPostData += '"';
+            			    jsonedPostData += splitedPostData[i].split("=")[1];
+            			    jsonedPostData += '"';
+            			    jsonedPostData += ',';
+            			    console.log("json is" + jsonedPostData);
+            			}
+            			var lastIndex = jsonedPostData.lastIndexOf(",");
+            			jsonedPostData = jsonedPostData.substring(0,lastIndex);
+            			jsonedPostData +=  "}";
+            			jsonedPostData +=  "]";
+            			console.log(jsonedPostData);
+
+
+            			var returnObj={
+                            "Result": "OK",
+                            "Record": jsonedPostData
+                       }
+                       return returnObj;
+
+				},
 
 			updateAction: function(postData) {
 
@@ -1067,28 +1006,15 @@ function loadJTable(typeValue, typeOf, typeDiv) {
 		},
 		fields: {
 
-			description: {
-				title: 'Description',
+			columnName: {
+				title: 'Column Name',
 				width: '50%',
 				edit: false
 			},
-			key: {
+			dataType: {
 				key: true,
 				create: true,
-				title: 'Configuration'
-			},
-			defaultVal: {
-				title: 'Value'
-			},
-			configGroup: {
-				type: 'hidden',
-				create: true,
-				edit: false,
-				title: 'Config Group'
-			},
-			required: {
-				type: 'hidden',
-				defaultVal: '0'
+				title: 'Data Type'
 			}
 		}
 	});
@@ -1103,12 +1029,12 @@ function loadJTable(typeValue, typeOf, typeDiv) {
 
 
 		<script>
-function buildForm(tableformat) {
+function buildForm(fileformat) {
 	console.log('inside the function');
 
 	$.ajax({
 		type: "GET",
-		url: "/mdrest/genconfig/" + tableformat + "/?required=1",
+		url: "/mdrest/genconfig/" + fileformat + "/?required=1",
 		dataType: 'json',
 		success: function(data) {
 			var root = 'Records';

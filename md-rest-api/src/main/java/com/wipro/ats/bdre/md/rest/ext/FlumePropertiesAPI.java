@@ -61,7 +61,7 @@ public class FlumePropertiesAPI extends MetadataAPIBase {
         Integer busDomainId = null;
 
 
-        List<com.wipro.ats.bdre.md.dao.jpa.Properties> childProps=new ArrayList<>();
+        List<com.wipro.ats.bdre.md.dao.jpa.Properties> childProps=new ArrayList<com.wipro.ats.bdre.md.dao.jpa.Properties>();
         com.wipro.ats.bdre.md.dao.jpa.Properties jpaProperties=null;
 
         for (String string : map.keySet()) {
