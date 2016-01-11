@@ -10,4 +10,4 @@ new_date=`date +"%s"`
 
 java -cp "$BDRE_HOME/lib/process-deploy/*" com.wipro.ats.bdre.pdeploy.ProcessDeployMain --num 5 >> $logDir/process-deploy$new_date.log 2>> $logDir/process-deploy-error$new_date.log
 
-find $logDir/process-deploy/* -ctime +1 -exec rm -rf {} \
+find $logDir/process-deploy* -mmin +60 -delete
