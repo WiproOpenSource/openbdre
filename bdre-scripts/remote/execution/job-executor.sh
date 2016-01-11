@@ -38,7 +38,7 @@ elif [ $processTypeId -eq 19 ]; then
 elif [ $processTypeId -eq 28 ]; then
     ssh biadmin@169.55.78.217 python $BIADMIN_DIRNAME/Workflow.py $busDomainId $processTypeId $processId
 elif [ $processTypeId -eq 26 ]; then
-    sh $(dirname $0)/filemonitor.sh $processId
+    ssh biadmin@169.55.78.217 sh $BIADMIN_DIRNAME/filemonitor.sh $processId
 else
     echo "Don't know how to execute busDomainId=$1 , processTypeId=$2 , processId=$3"
 fi
