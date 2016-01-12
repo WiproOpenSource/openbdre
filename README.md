@@ -316,7 +316,7 @@ BDRE uses RDBMS database to store all job related metadata. A set of stored proc
 
 # How to Contribute
 
-Contribution for the enhancements in BDRE are welcome and humbly requested by us. To contribute, please navigate to our GitHub project page to fork the repository. You can make changes to your own forked repository and then open a pull request to merge your change.
+Contribution for the enhancements in BDRE are welcome and humbly requested by us. To contribute, please navigate to our GitHub project page and click the 'Fork' button fork the repository under your own account. You can make changes to your own forked repository and then open a pull request to merge your change.
 
-<a class="buttons github" href="https://github.com/WiproOpenSourcePractice/openbdre">Fork from GitHub</a>
+<a class="buttons github" href="https://github.com/WiproOpenSourcePractice/openbdre">Goto BDRE@GitHub</a>
 
