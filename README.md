@@ -294,7 +294,10 @@ Demo video TBD
 # Bulk Data Manufacturing
 Demo video TBD
 # Web Crawler
-Demo video TBD
+
+<a href="http://www.youtube.com/watch?v=0b6dWGxin4Y" target="_blank"><img src="http://img.youtube.com/vi/0b6dWGxin4Y/0.jpg" 
+alt="BDRE Web Crawling" width="240" height="180" border="10" /></a>
+
 
 # Operational Metadata Management System
 
