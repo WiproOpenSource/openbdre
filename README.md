@@ -284,7 +284,7 @@ alt="BDRE RDBMS data ingestion demo video" width="240" height="180" border="10" 
 
 ## Streaming Data Ingestion
 
-<a href="http://www.youtube.com/watch?v=1yqoAVENrjo" target="_blank"><img src="http://img.youtube.com/vi/1yqoAVENrjo/0.jpg" 
+<a href="http://www.youtube.com/watch?v=1yqoAVENrjo" target="_blank"><img src="http://img.youtube.com/vi/1yqoAVENrjo/1.jpg" 
 alt="BDRE Twitter Ingestion demo video" width="240" height="180" border="10" /></a>
 
 
