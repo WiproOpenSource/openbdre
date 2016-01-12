@@ -33,22 +33,168 @@
         <h1>
 <a id="bigdata-ready-enterprise-open-source-software" class="anchor" href="#bigdata-ready-enterprise-open-source-software" aria-hidden="true"><span class="octicon octicon-link"></span></a>Bigdata Ready Enterprise Open Source Software</h1>
 
-<p>Released under Apache Public License 2.0. You can get a copy for the license at <a href="http://www.apache.org/licenses/LICENSE-2.0">http://www.apache.org/licenses/LICENSE-2.0</a>.</p>
+<h2>
+<a id="table-of-contents" class="anchor" href="#table-of-contents" aria-hidden="true"><span class="octicon octicon-link"></span></a>Table of Contents</h2>
+
+<p><a href="#license">License</a></p>
+
+<hr>
+
+<p><a href="#objective">Objective</a></p>
+
+<hr>
+
+<p><a href="#features">Features</a></p>
+
+<hr>
+
+<p><a href="#architecture">Architecture</a></p>
+
+<hr>
+
+<p><a href="#installation">Installation</a></p>
+
+<hr>
+
+<p><a href="#data-ingestion">Data Ingestion</a></p>
+
+<hr>
+
+<p><a href="#workflow-builder">Workflow Builder</a></p>
+
+<hr>
+
+<p><a href="#bulk-data-manufacturing">Bulk Data Manufacturing</a></p>
+
+<hr>
+
+<p><a href="#web-crawler">Web Crawler</a></p>
+
+<hr>
+
+<p><a href="#operational-metadata-management">Operational Metadata Management</a></p>
+
+<hr>
+
+<p><a href="#how-to-contribute">How To Contribute</a></p>
+
+<hr>
+
+<h1>
+<a id="license" class="anchor" href="#license" aria-hidden="true"><span class="octicon octicon-link"></span></a>License</h1>
+
+<p>Released under Apache Public License 2.0. You can get a copy of the license at <a href="http://www.apache.org/licenses/LICENSE-2.0">http://www.apache.org/licenses/LICENSE-2.0</a>.</p>
+
+<h1>
+<a id="objective" class="anchor" href="#objective" aria-hidden="true"><span class="octicon octicon-link"></span></a>Objective</h1>
+
+<p>Goal of BDRE is to give Bigdata implementation a significant acceleration by supplying the essential frameworks which are most likely to be written anyway.
+It'll drastically eliminate hundreds of man hours of effort in operational framework development.
+Big Data implementations however, require specialized skills, signiﬁcant development effort on data loading, semantic processing, DQ, code deployment across environments etc.
+Big Data Ready Enterprise (BDRE)makes big data technology adoption simpler by optimizing and integrating various big data solutions and providing them under one integrated package.
+BDRE provides a uniﬁed framework for a Hadoop implementation that can drastically minimize time development and fasttrack the Hadoop implementation. It comprises a reusable framework that can be customized as per the enterprise eco system. The components are loosely integrated and can be de-coupled or replaced easily with alternatives.</p>
+
+<h1>
+<a id="features" class="anchor" href="#features" aria-hidden="true"><span class="octicon octicon-link"></span></a>Features</h1>
+
+<ul>
+<li>Operational Metadata Management
+
+<ul>
+<li>Registry of all workflow processes/templates</li>
+<li>Parameters/configuration(key/val) for processes</li>
+<li>Dependency information (upstream/downstream)</li>
+<li>Batch management/tracking. Batch concept in BDRE is for tracking the data flow between workflow processes.</li>
+<li>Run control (for delta processing/dependency check)</li>
+<li>Execution status for jobs(dynamic metadata - with step level granularity)</li>
+<li>File registry - can be used to register e.g. ingested files or a raw file as an output of an upstream.</li>
+<li>Execution statistics logging (key/value)</li>
+<li>Executed hive queries and data lineage information.</li>
+<li>Java APIs that ingrates with Bigdata with non-bigdata applications alike.</li>
+<li>Job monitoring and proactive/reactive alerting</li>
+</ul>
+</li>
+<li>Data ingestion framework
+
+<ul>
+<li>Tabular data from RDBMS</li>
+<li>Streaming data from 16 types of sources (including logs, message queues and Twitter)</li>
+<li>Arbitrary file ingestion by directory monitoring</li>
+</ul>
+</li>
+<li>Web Crawler</li>
+<li>Distributed Data Manufacturing framework
+
+<ul>
+<li>Generate billons of records based on patterns and ranges</li>
+</ul>
+</li>
+<li>Semantic Layer Building Framework
+
+<ul>
+<li>Build the sematic layer using visual workflow creator using the data you ingested.</li>
+<li>Supports Hive, Pig, Mapreduce, Spark , R etc</li>
+<li>Generates Oozie workflows</li>
+</ul>
+</li>
+<li>Data Quality Framework
+
+<ul>
+<li>Validates your data using your rules in a distributed way</li>
+<li>Integrated with Drools rule engine</li>
+</ul>
+</li>
+<li>HTML5 User Interface
+
+<ul>
+<li>Create ingestion, data generation, Crawler jobs or create Oozie workflows graphically without writing any code</li>
+<li>One click deploy and execute jobs without SSH into the edge node.</li>
+</ul>
+</li>
+</ul>
+
+<h1>
+<a id="architecture" class="anchor" href="#architecture" aria-hidden="true"><span class="octicon octicon-link"></span></a>Architecture</h1>
+
+<p><img src="http://wiproopensourcepractice.github.io/openbdre/bdreimages/architecture.PNG" alt="image"></p>
+
+<h1>
+<a id="installation" class="anchor" href="#installation" aria-hidden="true"><span class="octicon octicon-link"></span></a>Installation</h1>
 
 <h2>
 <a id="overview" class="anchor" href="#overview" aria-hidden="true"><span class="octicon octicon-link"></span></a>Overview</h2>
 
-<p>This document will help you build BDRE from source. Audience for this document are developers and architects who want be part of BDRE framework development or may just want to test it by running the UI. Install Git, Maven and Oracle JDK 7(and up) if you haven't already. In Windows be sure to add git and other bash tools in the commandline path during installation. In this example, we are going to use <em>HortonWorks Sandbox</em> with <em>VirtualBox</em> software because all the required software are mostly installed and configured. BDRE is shipped with an embedded database which is okay for running the UI and evaluating and testing jobs in a single node cluster. For production use BDRE currently supports following production scale databases.</p>
+<p>This section will help you build BDRE from source. Audience for this document are developers and architects who want be part of BDRE framework development or may just want to evaluate it.</p>
+
+<h3>
+<a id="general-prerequisit" class="anchor" href="#general-prerequisit" aria-hidden="true"><span class="octicon octicon-link"></span></a>General Prerequisit</h3>
+
+<p>For testing/development perpose and to save time use the fully loaded Hadoop VMs from Cloudera or Hortonworks because all the required software are mostly installed and configured.</p>
 
 <ul>
-<li>MySQL Server</li>
-<li>Oracle 11g Server</li>
-<li>
-<p>PostgreSql</p>
+<li>A Hadoop Cluster
 
-<p>In this guide we are going to show you how to build and install BDRE in a CentOS VM with a MySQL database. You should be able to do the same in Mac or Windows but note that setting up a Hadoop cluster might be tricky in Windows and might more involvement. You should be able to launch the BDRE user interface in Windows and design various jobs. However to deploy and run the jobs we recommend a Linux system with Hadoop installed. BDRE is typically installed in Hadoop edge node in a multi-node cluster.</p>
+<ul>
+<li>In this section we are using <em>HortonWorks Sandbox 2.2.0</em>
 </li>
 </ul>
+</li>
+<li>Git 1.9 and up</li>
+<li>Maven 3 and up</li>
+<li>Oracle JDK 7(and up)</li>
+<li>BDRE is shipped with an embedded database which is okay for running the UI and evaluating and testing jobs in a single node cluster.
+For production use BDRE currently supports following production scale databases.)
+
+<ul>
+<li>MySQL Server 5.1 and up</li>
+<li>Oracle 11g Server or better</li>
+<li>PostgreSql</li>
+</ul>
+</li>
+<li>Google Chrome browser</li>
+</ul>
+
+<p>You should be able to do the same in Mac or Windows but note that setting up a Hadoop cluster might be tricky in Windows and might more involvement. However to deploy and run the jobs we recommend a Linux system. BDRE is typically installed in Hadoop edge node in a multi-node cluster.</p>
 
 <h2>
 <a id="preparation" class="anchor" href="#preparation" aria-hidden="true"><span class="octicon octicon-link"></span></a>Preparation</h2>
@@ -56,19 +202,15 @@
 <ul>
 <li>Download and install VirtualBox from <a href="https://www.virtualbox.org/">https://www.virtualbox.org/</a>
 </li>
-<li>Download and install HortonWorks Sandbox 2.2 Virtual Box image from <a href="http://hortonworks.com/products/releases/hdp-2-2/#install">http://hortonworks.com/products/releases/hdp-2-2/#install</a> </li>
+<li>Download and install HortonWorks Sandbox 2.2 Virtual Box image from <a href="http://hortonworks.com/products/releases/hdp-2-2/#install">http://hortonworks.com/products/releases/hdp-2-2/#install</a>
+</li>
 <li>Setup a 'Host-Only Adapter' for network to enable communication between Host and Guest OS.</li>
-<li>Now ssh into the sandbox using <em>root@VM_IP</em> (password hadoop)
+<li>
+<p>Now ssh into the sandbox using <em>root@VM_IP</em> (password hadoop)</p>
 
 <ul>
-<li>The VM_IP is usually something between 192.168.56.101 - 192.168.56.109 </li>
+<li>The VM_IP is usually something between 192.168.56.101 - 192.168.56.109</li>
 </ul>
-</li>
-<li>
-<p>Start Oozie as the Oozie user and Oozie isn't already started. <code>ps -ef | grep -i oozie</code> will help determine status of Oozie.</p>
-
-<div class="highlight highlight-source-shell"><pre>su - oozie -c <span class="pl-s"><span class="pl-pds">"</span>/usr/hdp/current/oozie-server/bin/oozie-start.sh<span class="pl-pds">"</span></span>
-ps -ef <span class="pl-k">|</span> grep -i oozie</pre></div>
 </li>
 <li>
 <p>Now create <em>openbdre</em> user account.</p>
@@ -127,7 +269,7 @@ passwd: all authentication tokens updated successfully.</pre></div>
 </ul>
 </li>
 <li>
-<p>Database Setup </p>
+<p>Database Setup</p>
 
 <ul>
 <li>Execute the dbsetup.sh script without any parameters as shown below. In this example, we are going to use MySQL as BDRE backend as it's already available in the HDP Sandbox. If you would like to use another database please select it accordingly.</li>
@@ -212,7 +354,7 @@ Tables created successfully <span class="pl-k">in</span> MySQL bdre DB</pre></di
 
 <ul>
 <li>
-<p>After building BDRE successfully run </p>
+<p>After building BDRE successfully run</p>
 
 <div class="highlight highlight-source-shell"><pre>sh install-scripts.sh <span class="pl-k">local</span></pre></div>
 </li>
@@ -225,13 +367,19 @@ Tables created successfully <span class="pl-k">in</span> MySQL bdre DB</pre></di
 <a id="using-bdre" class="anchor" href="#using-bdre" aria-hidden="true"><span class="octicon octicon-link"></span></a>Using BDRE</h3>
 
 <ul>
-<li>After a successful build, start the BDRE UI using </li>
+<li>After a successful build, start the BDRE UI service</li>
 </ul>
 
-<div class="highlight highlight-source-shell"><pre> /home/openbdre/bdre/bdre-scripts/execution/run-ui.sh</pre></div>
+<div class="highlight highlight-source-shell"><pre> sudo service bdre start</pre></div>
 
 <ul>
-<li>Use <em>Google Chrome browser</em> from the host machine and open <em>http://VM_IP:288503/mdui/pages/content.page</em>
+<li>
+<p>Start Oozie as the Oozie user incase Oozie isn't already started. <code>ps -ef | grep -i oozie</code> will help determine status of Oozie.</p>
+
+<div class="highlight highlight-source-shell"><pre>su - oozie -c <span class="pl-s"><span class="pl-pds">"</span>/usr/hdp/current/oozie-server/bin/oozie-start.sh<span class="pl-pds">"</span></span>
+ps -ef <span class="pl-k">|</span> grep -i oozie</pre></div>
+</li>
+<li>Use <em>Google Chrome browser</em> from the host machine and open <em>http://VM_IP:28850/mdui/pages/content.page</em>
 </li>
 <li>Login using admin/zaq1xsw2</li>
 </ul>
@@ -257,6 +405,58 @@ Tables created successfully <span class="pl-k">in</span> MySQL bdre DB</pre></di
 </li>
 <li>When the import job is complete start the <em>data load job</em>.</li>
 </ul>
+
+<h1>
+<a id="data-ingestion" class="anchor" href="#data-ingestion" aria-hidden="true"><span class="octicon octicon-link"></span></a>Data Ingestion</h1>
+
+<h2>
+<a id="rdbms-data-ingestion" class="anchor" href="#rdbms-data-ingestion" aria-hidden="true"><span class="octicon octicon-link"></span></a>RDBMS Data Ingestion</h2>
+
+<p><a href="http://www.youtube.com/watch?v=JcbYU7oEmxc" target="_blank"><img src="http://img.youtube.com/vi/JcbYU7oEmxc/1.jpg" alt="BDRE RDBMS data ingestion demo video" width="240" height="180" border="10"></a></p>
+
+<h2>
+<a id="streaming-data-ingestion" class="anchor" href="#streaming-data-ingestion" aria-hidden="true"><span class="octicon octicon-link"></span></a>Streaming Data Ingestion</h2>
+
+<p><a href="http://www.youtube.com/watch?v=1yqoAVENrjo" target="_blank"><img src="http://img.youtube.com/vi/1yqoAVENrjo/1.jpg" alt="BDRE Twitter Ingestion demo video" width="240" height="180" border="10"></a></p>
+
+<h2>
+<a id="directory-monitoring-and-file-ingestion" class="anchor" href="#directory-monitoring-and-file-ingestion" aria-hidden="true"><span class="octicon octicon-link"></span></a>Directory Monitoring and File Ingestion</h2>
+
+<p><a href="http://www.youtube.com/watch?v=IhDMYase1fU" target="_blank"><img src="http://img.youtube.com/vi/IhDMYase1fU/0.jpg" alt="BDRE File ingestion demo video" width="240" height="180" border="10"></a></p>
+
+<h1>
+<a id="workflow-builder" class="anchor" href="#workflow-builder" aria-hidden="true"><span class="octicon octicon-link"></span></a>Workflow Builder</h1>
+
+<p>Demo video TBD</p>
+
+<h1>
+<a id="bulk-data-manufacturing" class="anchor" href="#bulk-data-manufacturing" aria-hidden="true"><span class="octicon octicon-link"></span></a>Bulk Data Manufacturing</h1>
+
+<p>Demo video TBD</p>
+
+<h1>
+<a id="web-crawler" class="anchor" href="#web-crawler" aria-hidden="true"><span class="octicon octicon-link"></span></a>Web Crawler</h1>
+
+<p><a href="http://www.youtube.com/watch?v=0b6dWGxin4Y" target="_blank"><img src="http://img.youtube.com/vi/0b6dWGxin4Y/0.jpg" alt="BDRE Web Crawling" width="240" height="180" border="10"></a></p>
+
+<h1>
+<a id="operational-metadata-management-system" class="anchor" href="#operational-metadata-management-system" aria-hidden="true"><span class="octicon octicon-link"></span></a>Operational Metadata Management System</h1>
+
+<h3>
+<a id="operational-metadata-management" class="anchor" href="#operational-metadata-management" aria-hidden="true"><span class="octicon octicon-link"></span></a>Operational Metadata Management</h3>
+
+<p>BDRE provides complete job/operational metadata management solution for Hadoop. At its core acts as a registry and tracker for different types of jobs running in different Hadoop clusters or as a standalone. It provides APIs to integrate with virtually any jobs.</p>
+
+<p><img src="http://wiproopensourcepractice.github.io/openbdre/bdreimages/mdgraph.png" alt="image"></p>
+
+<p>BDRE uses RDBMS database to store all job related metadata. A set of stored procedures are there to interface will the tables which are exposed via Java APIs to manage/create/update the static and run time metadata information. Below is the data model for BDRE metadata operational database.</p>
+
+<p><img src="http://wiproopensourcepractice.github.io/openbdre/bdreimages/eer.png" alt="eer"></p>
+
+<h1>
+<a id="how-to-contribute" class="anchor" href="#how-to-contribute" aria-hidden="true"><span class="octicon octicon-link"></span></a>How To Contribute</h1>
+
+<p>Contribution for the betterment of BDRE is extreamly welcome and humbly requested by us. To contribute please navigate to our Github peoject page to fork the repository. You can make changes to your own forked repository and then open a pull request to merge your change.</p>
       </section>
       <footer>
         <p><small>Hosted on <a href="https://pages.github.com">GitHub Pages</a> using the Dinky theme</small></p>
