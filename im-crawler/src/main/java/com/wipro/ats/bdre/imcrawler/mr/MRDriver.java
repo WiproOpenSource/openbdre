@@ -3,6 +3,7 @@ package com.wipro.ats.bdre.imcrawler.mr; /**
  */
 
 
+import com.wipro.ats.bdre.ResolvePath;
 import org.apache.avro.Schema;
 import org.apache.avro.Schema.Type;
 import org.apache.avro.mapred.AvroWrapper;
@@ -46,7 +47,7 @@ public class MRDriver extends Configured implements Tool {
 
         job.setInputFormatClass(CrawlInputFormat.class);
 
-        FileOutputFormat.setOutputPath(job, new Path(outputPath+instanceExecId));
+        FileOutputFormat.setOutputPath(job, new Path( ResolvePath.replaceVars(outputPath)));
         job.waitForCompletion(true);
         return 0;
     }
