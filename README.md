@@ -291,7 +291,10 @@ alt="BDRE Twitter Ingestion demo video" width="240" height="180" border="10" /><
 alt="BDRE File ingestion demo video" width="240" height="180" border="10" /></a>
 
 # Workflow Builder
-Demo video TBD
+
+<a href="http://www.youtube.com/watch?v=PG6Qvg-pKO0" target="_blank"><img src="http://img.youtube.com/vi/PG6Qvg-pKO0/1.jpg" 
+alt="BDRE Workflow Designer demo video" width="240" height="180" border="10" /></a>
+
 # Bulk Data Manufacturing
 Demo video TBD
 # Web Crawler
