@@ -26,17 +26,17 @@ echo "busDomainId=$1 , processTypeId=$2 , processId=$3"
 if [ $processTypeId -eq 1 ]; then
     ssh biadmin@169.55.78.217 sh $BIADMIN_DIRNAME/flume.sh $busDomainId $processTypeId $processId
 elif [ $processTypeId -eq 2 ]; then
-    ssh biadmin@169.55.78.217 python $BIADMIN_DIRNAME/Workflow.py $busDomainId $processTypeId $processId
+    ssh biadmin@169.55.78.217 sh $BIADMIN_DIRNAME/workflow.sh $busDomainId $processTypeId $processId
 elif [ $processTypeId -eq 4 ]; then
-    ssh biadmin@169.55.78.217 python $BIADMIN_DIRNAME/Workflow.py $busDomainId $processTypeId $processId
+    ssh biadmin@169.55.78.217 sh $BIADMIN_DIRNAME/workflow.sh $busDomainId $processTypeId $processId
 elif [ $processTypeId -eq 5 ]; then
-    ssh biadmin@169.55.78.217 python $BIADMIN_DIRNAME/Workflow.py $busDomainId $processTypeId $processId
+    ssh biadmin@169.55.78.217 sh $BIADMIN_DIRNAME/workflow.sh $busDomainId $processTypeId $processId
 elif [ $processTypeId -eq 18 ]; then
-    ssh biadmin@169.55.78.217 python $$BIADMIN_DIRNAME/Workflow.py $busDomainId $processTypeId $processId
+    ssh biadmin@169.55.78.217 sh $$BIADMIN_DIRNAME/workflow.sh $busDomainId $processTypeId $processId
 elif [ $processTypeId -eq 19 ]; then
-    ssh biadmin@169.55.78.217 python $BIADMIN_DIRNAME/Workflow.py $busDomainId $processTypeId $processId
+    ssh biadmin@169.55.78.217 sh $BIADMIN_DIRNAME/workflow.sh $busDomainId $processTypeId $processId
 elif [ $processTypeId -eq 28 ]; then
-    ssh biadmin@169.55.78.217 python $BIADMIN_DIRNAME/Workflow.py $busDomainId $processTypeId $processId
+    ssh biadmin@169.55.78.217 sh $BIADMIN_DIRNAME/workflow.sh $busDomainId $processTypeId $processId
 elif [ $processTypeId -eq 26 ]; then
     ssh biadmin@169.55.78.217 sh $BIADMIN_DIRNAME/filemonitor.sh $processId
 else
