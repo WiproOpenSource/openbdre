@@ -283,7 +283,11 @@ alt="BDRE RDBMS data ingestion demo video" width="240" height="180" border="10" 
 
 
 ## Streaming Data Ingestion
-Demo video TBD
+
+<a href="http://www.youtube.com/watch?v=1yqoAVENrjo" target="_blank"><img src="http://img.youtube.com/vi/1yqoAVENrjo/0.jpg" 
+alt="BDRE Twitter Ingestion demo video" width="240" height="180" border="10" /></a>
+
+
 ## Directory Monitoring and File Ingestion
 
 <a href="http://www.youtube.com/watch?v=IhDMYase1fU" target="_blank"><img src="http://img.youtube.com/vi/IhDMYase1fU/0.jpg" 
