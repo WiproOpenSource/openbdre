@@ -28,12 +28,9 @@
 # License
 Released under Apache Public License 2.0. You can get a copy of the license at http://www.apache.org/licenses/LICENSE-2.0.
 # Objective
-Goal of BDRE is to give Big Data implementation a significant acceleration by supplying the essential frameworks which are most likely to be written anyway.
-It'll drastically eliminate hundreds of man hours of effort in operational framework development.
-Big Data implementations however, require specialized skills, signiﬁcant development effort on data loading, semantic processing, DQ, code deployment across environments etc.
-Big Data Ready Enterprise (BDRE) makes big data technology adoption simpler by optimizing and integrating various big data solutions and providing them under one integrated package.
-BDRE provides a uniﬁed framework for a Hadoop implementation that can drastically minimize time development and fast track the Hadoop implementation. It comprises a reusable framework that can be customized as per the enterprise eco system. The components are loosely integrated and can be de-coupled or replaced easily with alternatives.
-
+Big Data Ready Enterprise (BDRE)makes big data technology adoption simpler by optimizing and integrating various big data solutions and providing them under one integrated package. BDRE provides a uniﬁed framework for a Hadoop implementation that can drastically minimize development time and fast track the Hadoop implementation. It comprises a reusable framework that can be customized as per the enterprise ecosystem. The components are loosely integrated and can be de-coupled or replaced easily with alternatives.
+ 
+The primary goal of BDRE is to accelerate Bigdata implementations by supplying the essential frameworks that are most likely to be written from scratch. It can drastically reduce effort by eliminating hundreds of man hours in operational framework development. Big Data implementations however, require specialized skills, signiﬁcant development effort on data loading, semantic processing, DQ, code deployment across environments etc.
 
 # Features
 
@@ -47,7 +44,7 @@ BDRE provides a uniﬁed framework for a Hadoop implementation that can drastica
  - File registry - can be used to register e.g. ingested files or a raw file as an output of an upstream.
  - Execution statistics logging (key/value)
  - Executed hive queries and data lineage information.
- - Java APIs that ingrates with Big Data with non-Big Data applications alike.
+ - Java APIs that integrates with Big Data with non-Big Data applications alike.
  - Job monitoring and proactive/reactive alerting
 - Data ingestion framework
  - Tabular data from RDBMS
@@ -79,7 +76,7 @@ This section will help you build BDRE from source. Audience for this document ar
 
 ### General Prerequisite
 
-For testing/development purpose and to save time use the fully loaded Hadoop VMs from Cloudera or Hortonworks because all the required software are mostly installed and configured.
+For testing/development purpose and to save time, use the fully loaded Hadoop VMs from Cloudera or Hortonworks because all the required software are typically installed and configured.
 
 - A Hadoop Cluster
  - In this section we are using *Hortonworks Sandbox 2.2.0*
@@ -319,5 +316,5 @@ BDRE uses RDBMS database to store all job related metadata. A set of stored proc
 
 # How to Contribute
 
-Contribution for the betterment of BDRE is extremely welcome and humbly requested by us. To contribute please navigate to our GitHub project page to fork the repository. You can make changes to your own forked repository and then open a pull request to merge your change.
+Contribution for the enhancements in BDRE are welcome and humbly requested by us. To contribute, please navigate to our GitHub project page to fork the repository. You can make changes to your own forked repository and then open a pull request to merge your change.
 
