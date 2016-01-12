@@ -88,11 +88,9 @@
 <h1>
 <a id="objective" class="anchor" href="#objective" aria-hidden="true"><span class="octicon octicon-link"></span></a>Objective</h1>
 
-<p>Goal of BDRE is to give Bigdata implementation a significant acceleration by supplying the essential frameworks which are most likely to be written anyway.
-It'll drastically eliminate hundreds of man hours of effort in operational framework development.
-Big Data implementations however, require specialized skills, signiﬁcant development effort on data loading, semantic processing, DQ, code deployment across environments etc.
-Big Data Ready Enterprise (BDRE)makes big data technology adoption simpler by optimizing and integrating various big data solutions and providing them under one integrated package.
-BDRE provides a uniﬁed framework for a Hadoop implementation that can drastically minimize time development and fasttrack the Hadoop implementation. It comprises a reusable framework that can be customized as per the enterprise eco system. The components are loosely integrated and can be de-coupled or replaced easily with alternatives.</p>
+<p>Big Data Ready Enterprise (BDRE)makes big data technology adoption simpler by optimizing and integrating various big data solutions and providing them under one integrated package. BDRE provides a uniﬁed framework for a Hadoop implementation that can drastically minimize development time and fast track the Hadoop implementation. It comprises a reusable framework that can be customized as per the enterprise ecosystem. The components are loosely integrated and can be de-coupled or replaced easily with alternatives.</p>
+
+<p>The primary goal of BDRE is to accelerate Bigdata implementations by supplying the essential frameworks that are most likely to be written from scratch. It can drastically reduce effort by eliminating hundreds of man hours in operational framework development. Big Data implementations however, require specialized skills, signiﬁcant development effort on data loading, semantic processing, DQ, code deployment across environments etc.</p>
 
 <h1>
 <a id="features" class="anchor" href="#features" aria-hidden="true"><span class="octicon octicon-link"></span></a>Features</h1>
@@ -102,7 +100,7 @@ BDRE provides a uniﬁed framework for a Hadoop implementation that can drastica
 
 <ul>
 <li>Registry of all workflow processes/templates</li>
-<li>Parameters/configuration(key/val) for processes</li>
+<li>Parameters/configuration(key/value) for processes</li>
 <li>Dependency information (upstream/downstream)</li>
 <li>Batch management/tracking. Batch concept in BDRE is for tracking the data flow between workflow processes.</li>
 <li>Run control (for delta processing/dependency check)</li>
@@ -110,7 +108,7 @@ BDRE provides a uniﬁed framework for a Hadoop implementation that can drastica
 <li>File registry - can be used to register e.g. ingested files or a raw file as an output of an upstream.</li>
 <li>Execution statistics logging (key/value)</li>
 <li>Executed hive queries and data lineage information.</li>
-<li>Java APIs that ingrates with Bigdata with non-bigdata applications alike.</li>
+<li>Java APIs that integrates with Big Data with non-Big Data applications alike.</li>
 <li>Job monitoring and proactive/reactive alerting</li>
 </ul>
 </li>
@@ -133,7 +131,7 @@ BDRE provides a uniﬁed framework for a Hadoop implementation that can drastica
 
 <ul>
 <li>Build the sematic layer using visual workflow creator using the data you ingested.</li>
-<li>Supports Hive, Pig, Mapreduce, Spark , R etc</li>
+<li>Supports Hive, Pig, MapReduce, Spark, R etc.</li>
 <li>Generates Oozie workflows</li>
 </ul>
 </li>
@@ -167,15 +165,15 @@ BDRE provides a uniﬁed framework for a Hadoop implementation that can drastica
 <p>This section will help you build BDRE from source. Audience for this document are developers and architects who want be part of BDRE framework development or may just want to evaluate it.</p>
 
 <h3>
-<a id="general-prerequisit" class="anchor" href="#general-prerequisit" aria-hidden="true"><span class="octicon octicon-link"></span></a>General Prerequisit</h3>
+<a id="general-prerequisite" class="anchor" href="#general-prerequisite" aria-hidden="true"><span class="octicon octicon-link"></span></a>General Prerequisite</h3>
 
-<p>For testing/development perpose and to save time use the fully loaded Hadoop VMs from Cloudera or Hortonworks because all the required software are mostly installed and configured.</p>
+<p>For testing/development purpose and to save time, use the fully loaded Hadoop VMs from Cloudera or Hortonworks because all the required software are typically installed and configured.</p>
 
 <ul>
 <li>A Hadoop Cluster
 
 <ul>
-<li>In this section we are using <em>HortonWorks Sandbox 2.2.0</em>
+<li>In this section we are using <em>Hortonworks Sandbox 2.2.0</em>
 </li>
 </ul>
 </li>
@@ -188,7 +186,7 @@ For production use BDRE currently supports following production scale databases.
 <ul>
 <li>MySQL Server 5.1 and up</li>
 <li>Oracle 11g Server or better</li>
-<li>PostgreSql</li>
+<li>PostgreSQL</li>
 </ul>
 </li>
 <li>Google Chrome browser</li>
@@ -202,7 +200,7 @@ For production use BDRE currently supports following production scale databases.
 <ul>
 <li>Download and install VirtualBox from <a href="https://www.virtualbox.org/">https://www.virtualbox.org/</a>
 </li>
-<li>Download and install HortonWorks Sandbox 2.2 Virtual Box image from <a href="http://hortonworks.com/products/releases/hdp-2-2/#install">http://hortonworks.com/products/releases/hdp-2-2/#install</a>
+<li>Download and install Hortonworks Sandbox 2.2 Virtual Box image from <a href="http://hortonworks.com/products/releases/hdp-2-2/#install">http://hortonworks.com/products/releases/hdp-2-2/#install</a>
 </li>
 <li>Setup a 'Host-Only Adapter' for network to enable communication between Host and Guest OS.</li>
 <li>
@@ -311,12 +309,12 @@ Tables created successfully <span class="pl-k">in</span> MySQL bdre DB</pre></di
 
 <ul>
 <li>
-<p>Now build BDRE using (note BDRE may not compile if the <strong>settings.xml</strong> is not passed from the commandline so be sure to use the <em>-s</em> option. When building for the first time, it might take a while as maven resolves and downloads the jar libraries from diffrent repositories.</p>
+<p>Now build BDRE using (note BDRE may not compile if the <strong>settings.xml</strong> is not passed from the command line so be sure to use the <em>-s</em> option. When building for the first time, it might take a while as maven resolves and downloads the jar libraries from different repositories.</p>
 
 <div class="highlight highlight-source-shell"><pre>mvn -s settings.xml clean install -P hdp22</pre></div>
 </li>
 <li>
-<p><em>Note:</em> Selecting hdp22 will compile BDRE with HDP 2.2 libraries and automatically configure BDRE with Hortonworks Sandbox 2.2.0. Similarly one should be able to build this using -P cdh52 which will configure BDRE for CDH 5.2 Quickstart VM. During building it'll pickup the environment specific configurations from /databases/setup/profile.<em>hdp22</em>.properties.</p>
+<p><em>Note:</em> Selecting hdp22 will compile BDRE with HDP 2.2 libraries and automatically configure BDRE with Hortonworks Sandbox 2.2.0. Similarly one should be able to build this using -P cdh52 which will configure BDRE for CDH 5.2 QuickStart VM. During building it'll pick up the environment specific configurations from /databases/setup/profile.<em>hdp22</em>.properties.</p>
 
 <p>Content of databases/setup/profile.hdp22.properties</p>
 </li>
@@ -395,9 +393,9 @@ ps -ef <span class="pl-k">|</span> grep -i oozie</pre></div>
 </li>
 <li>Expand and select 1 table (be sure to expand the tables before selecting).</li>
 <li>Create the jobs and see the pipeline.</li>
-<li>Click <em>XML</em> , <em>Diagram</em> etc and check the generated Oozie workflow XML and diagram.</li>
+<li>Click <em>XML</em>, <em>Diagram</em> etc. and check the generated Oozie workflow XML and diagram.</li>
 <li>Search for 'Process' in the search window and open the 'Process' page</li>
-<li>Click deploy button on process page corresponding to the process you want to deploy. ( Deploy button will show status regarding deployment of process, when you hover over the button.)</li>
+<li>Click deploy button on process page corresponding to the process you want to deploy. (Deploy button will show status regarding deployment of process, when you hover over the button.)</li>
 <li>Wait for 2 minutes and the deployment will be completed by then.</li>
 <li>After the deployment is complete and in UI the status for the process is deployed (turns green).</li>
 <li>Click the execution button to execute the <em>Import job</em>.</li>
@@ -454,9 +452,11 @@ ps -ef <span class="pl-k">|</span> grep -i oozie</pre></div>
 <p><img src="http://wiproopensourcepractice.github.io/openbdre/bdreimages/eer.png" alt="eer"></p>
 
 <h1>
-<a id="how-to-contribute" class="anchor" href="#how-to-contribute" aria-hidden="true"><span class="octicon octicon-link"></span></a>How To Contribute</h1>
+<a id="how-to-contribute" class="anchor" href="#how-to-contribute" aria-hidden="true"><span class="octicon octicon-link"></span></a>How to Contribute</h1>
 
-<p>Contribution for the betterment of BDRE is extreamly welcome and humbly requested by us. To contribute please navigate to our Github peoject page to fork the repository. You can make changes to your own forked repository and then open a pull request to merge your change.</p>
+<p>Contribution for the enhancements in BDRE are welcome and humbly requested by us. To contribute, please navigate to our GitHub project page and click the 'Fork' button fork the repository under your own account. You can make changes to your own forked repository and then open a pull request to merge your change.</p>
+
+<p><a href="https://github.com/WiproOpenSourcePractice/openbdre">Goto BDRE@GitHub</a></p>
       </section>
       <footer>
         <p><small>Hosted on <a href="https://pages.github.com">GitHub Pages</a> using the Dinky theme</small></p>
