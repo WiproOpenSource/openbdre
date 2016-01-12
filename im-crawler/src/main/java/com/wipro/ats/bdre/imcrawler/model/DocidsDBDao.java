@@ -94,7 +94,7 @@ public class DocidsDBDao {
         Long longid = new Long (id.intValue());
         Docidsdb docidsdb=(Docidsdb)session.get(Docidsdb.class,longid);
         //delete only if it is present from before i.e. not deleted by other mapper
-        if(docidsdb != null)
+        //if(docidsdb != null)
             session.delete(docidsdb);
         session.getTransaction().commit();
     }
