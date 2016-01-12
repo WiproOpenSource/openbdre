@@ -14,10 +14,13 @@
 
 package com.wipro.ats.bdre.datagen.mr;
 
+import com.wipro.ats.bdre.ResolvePath;
 import com.wipro.ats.bdre.datagen.Table;
 import com.wipro.ats.bdre.datagen.util.Config;
 import com.wipro.ats.bdre.datagen.util.TableUtil;
+import com.wipro.ats.bdre.md.api.GetGeneralConfig;
 import com.wipro.ats.bdre.md.beans.RegisterFileInfo;
+import com.wipro.ats.bdre.md.beans.table.GeneralConfig;
 import com.wipro.ats.bdre.util.OozieUtil;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.conf.Configured;
@@ -30,6 +33,7 @@ import org.apache.hadoop.mapreduce.Job;
 import org.apache.hadoop.mapreduce.lib.output.FileOutputFormat;
 import org.apache.hadoop.mapreduce.lib.output.TextOutputFormat;
 import org.apache.hadoop.util.Tool;
+import org.apache.log4j.Logger;
 
 import java.io.IOException;
 import java.sql.Timestamp;
@@ -38,7 +42,7 @@ import java.util.Properties;
 
 
 public class Driver extends Configured implements Tool {
-
+    private static final Logger LOGGER = Logger.getLogger(Driver.class);
     /**
      * @param args the cli arguments
      */
@@ -46,27 +50,30 @@ public class Driver extends Configured implements Tool {
             throws IOException, InterruptedException, ClassNotFoundException {
 
         Configuration conf = getConf();
+        GetGeneralConfig generalConfig = new GetGeneralConfig();
+        GeneralConfig gc = generalConfig.byConigGroupAndKey("imconfig", "common.default-fs-name");
+        conf.set("fs.defaultFS", gc.getDefaultVal());
 
         String processId = args[0];
-        Path outputDir = new Path(args[1]);
-        if (outputDir.getFileSystem(getConf()).exists(outputDir)) {
-            throw new IOException("Output directory " + outputDir +
-                    " already exists.");
-        }
+        Path outputDir = new Path(ResolvePath.replaceVars(args[1]));
+
         Properties dataProps = Config.getDataProperties(processId);
         Properties tableProps = Config.getTableProperties(processId);
+
         TableUtil tableUtil = new TableUtil();
         Table table = tableUtil.formTableFromConfig(processId);
-
-
+        FileSystem fs=FileSystem.get(conf);
+        LOGGER.info("Default FS ="+conf.get("fs.defaultFS"));
         //set in the conf for mappers to use
         conf.set(Config.SEPARATOR_KEY, tableProps.getProperty("separator"));
         conf.set(Config.PID_KEY,processId);
         conf.setLong(Config.NUM_ROWS_KEY, Long.parseLong(dataProps.getProperty("numRows")));
         conf.setInt(Config.NUM_SPLITS_KEY, Integer.parseInt(dataProps.getProperty("numSplits")));
 
-        Job job = Job.getInstance(new Cluster(conf), conf);
+        Job job = Job.getInstance(conf);
         Path mrOutputPath = new Path(outputDir.toString() + "/MROUT/" + table.getTableName());
+
+
         FileOutputFormat.setOutputPath(job, mrOutputPath);
         job.setJobName("Datagen-" + table.getTableName());
         job.setJarByClass(Driver.class);
@@ -79,11 +86,10 @@ public class Driver extends Configured implements Tool {
         job.waitForCompletion(true);
 
         //merge and create a single file
-        FileSystem srcFs = outputDir.getFileSystem(getConf());
-        FileSystem destFs = outputDir.getFileSystem(getConf());
+
         Path srcDir = mrOutputPath;
         Path destFile = new Path(outputDir.toString() + "/" + table.getTableName());
-        FileUtil.copyMerge(srcFs, srcDir, destFs, destFile, true, conf, "");
+        FileUtil.copyMerge(fs, srcDir, fs, destFile, true, conf, "");
 
         //Return file info oozie params
         RegisterFileInfo registerFileInfo=new RegisterFileInfo();
