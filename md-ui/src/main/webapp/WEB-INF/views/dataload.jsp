@@ -57,6 +57,8 @@ return map;
 };
 
 		</script>
+
+
 		<script type="text/javascript">
 function addDataToJson(properties) {
 	console.log(properties);
@@ -338,6 +340,7 @@ wizard = $(document).ready(function() {
 		onStepChanging: function(event, currentIndex, newIndex) {
 			console.log(currentIndex + 'current ' + newIndex );
 			if(currentIndex == 0 && newIndex == 1 && document.getElementById('processFieldsForm1').elements[0].value == "" && document.getElementById('processFieldsForm1').elements[1].value == "") {
+			    jTableForBaseColumns();
 				$("#div-dialog-warning").dialog({
 					title: "",
 					resizable: false,
@@ -370,7 +373,6 @@ wizard = $(document).ready(function() {
                 				}
 			}
 			if(currentIndex == 6 && newIndex == 7) {
-			copyForm();
 			testNullValues('baseTableDetails');
             				if(sourceFlag == 1) {
             					$("#div-dialog-warning").dialog({
@@ -388,9 +390,8 @@ wizard = $(document).ready(function() {
             				}
 			}
 			if(currentIndex == 1 && newIndex == 2) {
-			console.log(document.getElementById('rawTableDetails').elements[0].value);
-			    buildForm(document.getElementById('rawTableDetails').elements[0].value);
-			    jTableForRawColumns('rawTableColumnDetails');
+			console.log(document.getElementById('fileFormat').elements[0].value);
+			    buildForm(document.getElementById('fileFormat').elements[0].value);
 			}
 			return true;
 		},
@@ -398,15 +399,15 @@ wizard = $(document).ready(function() {
 			console.log(currentIndex + " " + priorIndex);
 			if(currentIndex == 9 && priorIndex == 8) {
 				{
-					jtableIntoMap('source_', 'sourceAdvancedFields');
-					jtableIntoMap('channel_', 'channelAdvancedFields');
-					jtableIntoMap('sink_', 'sinkAdvancedFields');
-					formIntoMap('source_', 'sourceRequiredFieldsForm');
-					formIntoMap('channel_', 'channelRequiredFieldsForm');
-					formIntoMap('sink_', 'sinkRequiredFieldsForm');
-					map['source_type'] = selectedSourceType;
-					map['channel_type'] = selectedChannelType;
-					map['sink_type'] = selectedSinkType;
+
+					formIntoMap('process_', 'processFieldsForm1');
+					formIntoMap('fileformat_', 'fileFormat');
+					jtableIntoMap('rawtablecolumn_', 'rawTableColumnDetails');
+					formIntoMap('fileformatdetails_', 'fileFormatDetails');
+					formIntoMap('serdeproperties_', 'serdeProperties');
+					formIntoMap('tableproperties_', 'tableProperties');
+					formIntoMap('basetable_', 'baseTableDetails');
+					jtableIntoMap('basetablecolumn_', 'baseTableColumnDetails');
 
 					$('#createjobs').on('click', function(e) {
 						console.log(selectedSourceType);
@@ -415,7 +416,7 @@ wizard = $(document).ready(function() {
 
 						$.ajax({
 							type: "POST",
-							url: "/mdrest/flumeproperties/createjobs",
+							url: "/mdrest/dataload/createjobs",
 							data: jQuery.param(map),
 							success: function(data) {
 								if(data.Result == "OK") {
@@ -684,8 +685,8 @@ wizard = $(document).ready(function() {
 			</section>
 			<h3>Raw Table Details</h3>
             			<section>
-            <form class="form-horizontal" role="form" id="rawTableDetails">
-                                    <div id="rawTableDetailsDiv">
+            <form class="form-horizontal" role="form" id="fileFormat">
+                                    <div id="fileFormatDiv">
                                         <div class="alert alert-info" role="alert">
                                             Type of file you want to load in hive
                                         </div>
@@ -708,11 +709,12 @@ wizard = $(document).ready(function() {
 			<h3>Raw Table Properties</h3>
 			<section>
 			    <div id="rawTableColumnDetails"></div>
+
             </section>
 
 			<h3>Serde, OutPut and Input Format</h3>
             <section>
-                  <div id="serde"></div>
+                  <div id="fileFormatDetails"></div>
             </section>
 
 
@@ -742,7 +744,7 @@ wizard = $(document).ready(function() {
                                             <!-- /btn-group -->
                                         </div>
                                         <div class="col-md-2" id="serdePropDiv">
-                                                    <button id="b2" class="btn btn-primary add-more">
+                                                    <button id="serdeButton1" class="btn btn-primary add-more">
                                                         <span class="glyphicon glyphicon-plus" style="font-size:large"></span>
                                                     </button>
                                         </div>
@@ -777,7 +779,7 @@ wizard = $(document).ready(function() {
                                                         <!-- /btn-group -->
                                                     </div>
                                                     <div class="col-md-2" id="tablePropDiv">
-                                                                <button id="b2" class="btn btn-primary add-more">
+                                                                <button id="tableButton1" class="btn btn-primary add-more">
                                                                     <span class="glyphicon glyphicon-plus" style="font-size:large"></span>
                                                                 </button>
                                                     </div>
@@ -816,10 +818,7 @@ wizard = $(document).ready(function() {
                 			</section>
                 <h3>Base Table Details</h3>
                             <section>
-                                  <div id="baseTableColumnDetails">
-                                    <form id="baseTableColumn">
-                                    </form>
-                                   </div>
+                                <div id="baseTableColumnDetails"> </div>
                             </section>
 			<h3>Confirm</h3>
 			<section>
@@ -943,12 +942,9 @@ $(document).ready(function() {
 
 		</script>
 		<script type="text/javascript">
-function jTableForRawColumns(divName) {
-	console.log('div value' + divName);
-	var div = '';
-	div = document.getElementById(divName);
-	$(div).jtable({
-		title: 'Enter  Column and data type ',
+	$(document).ready(function () {
+	$('#rawTableColumnDetails').jtable({
+		title: 'Raw Table Column ',
 		paging: false,
 		sorting: false,
 		create: false,
@@ -958,34 +954,41 @@ function jTableForRawColumns(divName) {
 				return jsonObj;
 			},
 			createAction: function(postData) {
-			console.log(postData);
-			var splitedPostData = postData.split("&");
-			var jsonedPostData = '[{';
-            			for (i=0; i < splitedPostData.length ; i++)
-            			{
-                            console.log("data is " + splitedPostData[i]);
-                            jsonedPostData += '"';
-            			    jsonedPostData += splitedPostData[i].split("=")[0];
-            			    jsonedPostData += '"';
-            			    jsonedPostData += ":";
-            			    jsonedPostData += '"';
-            			    jsonedPostData += splitedPostData[i].split("=")[1];
-            			    jsonedPostData += '"';
-            			    jsonedPostData += ',';
-            			    console.log("json is" + jsonedPostData);
-            			}
-            			var lastIndex = jsonedPostData.lastIndexOf(",");
-            			jsonedPostData = jsonedPostData.substring(0,lastIndex);
-            			jsonedPostData +=  "}";
-            			jsonedPostData +=  "]";
-            			console.log(jsonedPostData);
+                console.log(postData);
+                var serialnumber = 1;
+                var rawSplitedPostData = postData.split("&");
+                var rawJSONedPostData = '{';
+                rawJSONedPostData += '"serialNumber":"';
+                rawJSONedPostData += serialnumber;
+                serialnumber += 1;
+                rawJSONedPostData += '"';
+                rawJSONedPostData += ',';
+                for (i=0; i < rawSplitedPostData.length ; i++)
+                {
+                    console.log("data is " + rawSplitedPostData[i]);
+                    rawJSONedPostData += '"';
+                    rawJSONedPostData += rawSplitedPostData[i].split("=")[0];
+                    rawJSONedPostData += '"';
+                    rawJSONedPostData += ":";
+                    rawJSONedPostData += '"';
+                    rawJSONedPostData += rawSplitedPostData[i].split("=")[1];
+                    rawJSONedPostData += '"';
+                    rawJSONedPostData += ',';
+                    console.log("json is" + rawJSONedPostData);
+                }
+                var rawLastIndex = rawJSONedPostData.lastIndexOf(",");
+                rawJSONedPostData = rawJSONedPostData.substring(0,rawLastIndex);
+                rawJSONedPostData +=  "}";
+                console.log(rawJSONedPostData);
 
 
-            			var returnObj={
-                            "Result": "OK",
-                            "Record": jsonedPostData
-                       }
-                       return returnObj;
+               var rawReturnObj='{"Result":"OK","Record":' + rawJSONedPostData + '}';
+               var rawJSONedReturn = $.parseJSON(rawReturnObj);
+
+               return $.Deferred(function($dfd) {
+                                console.log(rawJSONedReturn);
+                                $dfd.resolve(rawJSONedReturn);
+                            });
 
 				},
 
@@ -1005,26 +1008,192 @@ function jTableForRawColumns(divName) {
 
 		},
 		fields: {
+		    serialNumber:{
+		        key : true,
+		        list:false,
+		        create : false,
+		        edit:false
+		    },
 
 			columnName: {
 				title: 'Column Name',
 				width: '50%',
-				edit: false
+				edit: true,
+				create:true
 			},
 			dataType: {
-				key: true,
+
 				create: true,
-				title: 'Data Type'
+				title: 'Data Type',
+				edit: true
 			}
-		}
+		},
+
+        recordAdded: function(event, data){
+                //after record insertion, reload the records
+                console.log("inserting data into base table "+ {record: JSON.stringify(data.record) });
+
+                $('#baseTableColumnDetails').jtable('addRecord', {
+                record: data.record
+                });
+        },
+        recordUpdated: function(event, data){
+                //after record insertion, reload the records
+                console.log("updating data into base table "+ {record: JSON.stringify(data.record) });
+
+                $('#baseTableColumnDetails').jtable('updateRecord', {
+                record: data.record,
+                clientOnly:true
+                });
+        },
+        recordDeleted: function(event, data){
+                //after record insertion, reload the records
+                console.log("inserting data into base table "+ {record: JSON.stringify(data.record) });
+
+                $('#baseTableColumnDetails').jtable('deleteRecord', {
+                    key: data.record.serialNumber,
+                    clientOnly:true
+                });
+        }
+
 	});
 
-	$(div).jtable('load');
 
-};
+
+	$('#rawTableColumnDetails').jtable('load');
+
+});
 
 		</script>
+<script type="text/javascript">
 
+
+	 $(document).ready(function () {
+        	    $('#baseTableColumnDetails').jtable({
+        	    title: 'Base Table Column',
+        		    paging: false,
+                    sorting: false,
+                    create: false,
+                    edit: false,
+        		    actions: {
+                        listAction: function (postData, jtParams) {
+                            return jsonObj;
+                        },
+
+                        createAction:function (postData, jtParams) {
+                            console.log(postData);
+                            var baseSplitedPostData = postData.split("&");
+                            var baseJSONedPostData = '{';
+                            for (i=0; i < baseSplitedPostData.length ; i++)
+                            {
+                                console.log("data is " + baseSplitedPostData[i]);
+                                baseJSONedPostData += '"';
+                                baseJSONedPostData += baseSplitedPostData[i].split("=")[0];
+                                baseJSONedPostData += '"';
+                                baseJSONedPostData += ":";
+                                baseJSONedPostData += '"';
+                                baseJSONedPostData += baseSplitedPostData[i].split("=")[1];
+                                baseJSONedPostData += '"';
+                                baseJSONedPostData += ',';
+                                console.log("json is" + baseJSONedPostData);
+                            }
+                            if (baseJSONedPostData.indexOf("transformation") == -1){
+                                baseJSONedPostData +=  '"transformations":"'+baseSplitedPostData[1].split("=")[1]+'"}';
+                            }else{
+                                var baseLastIndex = baseJSONedPostData.lastIndexOf(",");
+                                baseJSONedPostData = baseJSONedPostData.substring(0,baseLastIndex);
+                                baseJSONedPostData +=  "}";
+                            }
+                            console.log(baseJSONedPostData);
+
+
+                           var baseReturnObj='{"Result":"OK","Record":' + baseJSONedPostData + '}';
+                           var baseJSONedReturn = $.parseJSON(baseReturnObj);
+
+                           return $.Deferred(function($dfd) {
+                                console.log(baseJSONedReturn);
+                                $dfd.resolve(baseJSONedReturn);
+                            });
+        		    },
+        			   	updateAction: function(postData) {
+                        console.log(postData);
+                                                                                var baseUpdateSplitedPostData = postData.split("&");
+                                                                                var baseUpdateJSONedPostData = '{';
+                                                                                for (i=0; i < baseUpdateSplitedPostData.length ; i++)
+                                                                                {
+                                                                                    console.log("data is " + baseUpdateSplitedPostData[i]);
+                                                                                    baseUpdateJSONedPostData += '"';
+                                                                                    baseUpdateJSONedPostData += baseUpdateSplitedPostData[i].split("=")[0];
+                                                                                    baseUpdateJSONedPostData += '"';
+                                                                                    baseUpdateJSONedPostData += ":";
+                                                                                    baseUpdateJSONedPostData += '"';
+                                                                                    baseUpdateJSONedPostData += baseUpdateSplitedPostData[i].split("=")[1];
+                                                                                    baseUpdateJSONedPostData += '"';
+                                                                                    baseUpdateJSONedPostData += ',';
+                                                                                    console.log("json is" + baseUpdateJSONedPostData);
+                                                                                }
+                                                                                if (baseUpdateJSONedPostData.indexOf("transformation") == -1){
+                                                                                    baseUpdateJSONedPostData +=  '"transformations":"'+baseUpdateSplitedPostData[1].split("=")[1]+'"}';
+                                                                                }else{
+                                                                                    var baseUpdateLastIndex = baseUpdateJSONedPostData.lastIndexOf(",");
+                                                                                    baseUpdateJSONedPostData = baseUpdateJSONedPostData.substring(0,baseUpdateLastIndex);
+                                                                                    baseUpdateJSONedPostData +=  "}";
+                                                                                }
+                                                                                console.log(baseUpdateJSONedPostData);
+
+
+                                                                               var baseUpdateReturnObj='{"Result":"OK","Record":' + baseUpdateJSONedPostData + '}';
+                                                                               var baseupdateJSONedReturn = $.parseJSON(baseUpdateReturnObj);
+
+                                                                           return $.Deferred(function($dfd) {
+                                                                           					console.log(baseUpdateReturnObj);
+                                                                           					$dfd.resolve(baseupdateJSONedReturn);
+                                                                           				});
+
+                        },
+                        deleteAction: function() {
+                            return $.Deferred(function($dfd) {
+                                $dfd.resolve(jsonObj);
+                            });
+                        }
+
+                       		},
+        		    fields: {
+        		      serialNumber:{
+                    		        key : true,
+                    		        list:false,
+                    		        create : false,
+                    		        edit:false
+                    		    },
+                        columnName: {
+                            list: true,
+                            create:true,
+                            edit: true,
+                            title: 'Column Name'
+                        },
+                        dataType: {
+
+                            create: true,
+                            title: 'Data Type',
+                            edit: true
+
+                        },
+                         transformations: {
+                            title: 'Source',
+                            create: true,
+                            edit: true
+                        },
+                        partition: {
+                                                    title: 'Partition Column',
+                                                    create: true,
+                                                    edit: true
+                                                }
+        		    }
+        	    });
+        		    $('#baseTableColumnDetails').jtable('load');
+        	    });
+
+        	</script>
 
 
 
@@ -1038,7 +1207,7 @@ function buildForm(fileformat) {
 		dataType: 'json',
 		success: function(data) {
 			var root = 'Records';
-			var div = document.getElementById('serde');
+			var div = document.getElementById('fileFormatDetails');
 			var formHTML = '';
 			formHTML = formHTML + '<form class="form-horizontal" role="form" id = "formatFields">';
 			formHTML = formHTML + '<div id="Serde, OutPut and Input Format">';

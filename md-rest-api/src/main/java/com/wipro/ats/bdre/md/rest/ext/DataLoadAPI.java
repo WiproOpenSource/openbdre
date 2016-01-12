@@ -17,6 +17,7 @@ import javax.validation.Valid;
 import java.security.Principal;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by cloudera on 1/8/16.
@@ -70,7 +71,20 @@ public class DataLoadAPI extends MetadataAPIBase {
         return restWrapper;
     }
 
+    @RequestMapping(value = {"/createjobs"}, method = RequestMethod.POST)
 
+    public
+    @ResponseBody
+    RestWrapper createJob(@RequestParam Map<String, String> map, Principal principal) {
+        LOGGER.debug(" value of map is " + map.size());
+        RestWrapper restWrapper = null;
+
+        String processName = null;
+        String processDescription = null;
+        Integer busDomainId = null;
+
+        return restWrapper;
+    }
 
 
 
