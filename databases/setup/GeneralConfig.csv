@@ -480,7 +480,7 @@
 'mdconfig', 'execute.script-path', 'Process Execute Script Path', 'Execute workflow script path',  1, '/home/${bdre_user_name}/bdre/bdre-scripts/execution', 'text', 1
 'mdconfig', 'upload.base-directory', 'Base Directory For Upload', 'Base Directory where you want to upload jars and hqls',  1, '/home/${bdre_user_name}/bdre-wfd', 'text', 1
 'mdconfig', 'r.shell-script', 'Location of R shell script', 'Location of R shell script', 1, 'Rhadoop.sh', 'text', 1
-'imconfig', 'common.default-fs-name', 'Default file system name','Default file system name', 1, 'hdfs://${name_node_hostname}', 'text', 1
+'imconfig', 'common.default-fs-name', 'Default file system name','Default file system name', 1, 'hdfs://${name_node_hostname}:${name_node_port}', 'text', 1
 'imconfig', 'etl.hive-connection', 'URL of Hive connection','URL of Hive connection', 1, 'jdbc:hive2://${hive_server_hostname}:10000', 'text', 1
 'imconfig', 'etl.hive-jdbcuser', 'Hive JDBC User','Hive JDBC User', 1, '${hive_jdbc_user}', 'text', 1
 'imconfig', 'etl.hive-jdbcpassword', 'Hive JDBC Pwd','Hive JDBC Pwd', 1, '${hive_jdbc_password}', 'text', 1
