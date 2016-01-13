@@ -388,29 +388,34 @@ $scope.uploadFile = function(processId,parentProcessId,subDir,cg) {
 
         var args = [parentProcessId,subDir,cg+'-propval'];
         var fileArgs=[parentProcessId,subDir,$("#"+args[2])[0].files[0].name];
-        var fileData=fileCheckAC('/mdrest/filehandler/check/','POST',fileArgs);
+        var fileData=fileHandlerAC('/mdrest/filehandler/check/','POST',fileArgs);
         var dataRecord = fileHandlerAC('/mdrest/filehandler/upload/', 'POST', args);
 
     if (dataRecord ) {
-         //After file load added following to properties table: '+subDir + '/'+fileName + ' against scriptPath key.');
+         //After file load added following to properties table: '+subDir + '/'+fileName + ' against a random generated key.');
 
          if(cg=='extraFiles'){
-         var putData = "configGroup="+cg+"&key="+dataRecord.Record.fileName+"&value="+subDir+'/'+dataRecord.Record.fileName+"&description="+'File path'+"&processId="+processId;
+         function generatePropKey()
+         {
+             var text = "FileId-";
+             var possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
 
-         console.log("fileexists="+fileData.fileExists);
-         if(fileData.fileExists==true){
-         console.log("entered if");
-         console.log("processid="+processId);
-         console.log(" fileName= "+dataRecord.Record.fileName );
-         var propKey=dataRecord.Record.fileName;
-         var deleteProperty = propertiesAC('/mdrest/properties/', 'DELETE', [processId,propKey]);
+             for( var i=0; i < 5; i++ )
+                 text += possible.charAt(Math.floor(Math.random() * possible.length));
+
+             return text;
          }
+         var putData = "configGroup="+cg+"&key="+generatePropKey()+"&value="+subDir+'/'+dataRecord.Record.fileName+"&description="+'File path'+"&processId="+processId;
+
+         console.log("file exists="+fileData.fileExists);
+         if(fileData.fileExists==false){
          cfgDetails = propertiesAC('/mdrest/properties/', 'PUT', putData);
-         $.get('/mdrest/properties/'+processId, function(getdata) {
-         $scope.chartViewModel.selectedProcessProps = getdata.Record;
-         });
-        $scope.getKeyValue(cfgDetails);
-        alertBox('info', 'File uploaded :'+dataRecord.Record.fileName+','+'size:'+(dataRecord.Record.fileSize/1024).toFixed(2)+'KB'+' and new property added');
+                  $.get('/mdrest/properties/'+processId, function(getdata) {
+                  $scope.chartViewModel.selectedProcessProps = getdata.Record;
+                  });
+                 $scope.getKeyValue(cfgDetails);
+                 alertBox('info', 'File uploaded :'+dataRecord.Record.fileName+','+'size:'+(dataRecord.Record.fileSize/1024).toFixed(2)+'KB'+' and new property added');
+         }
          }
          else if(cg=='script'){
          console.log(cg);
@@ -465,7 +470,7 @@ $scope.deleteFile = function(parentProcessId,cfgDetails,cfgKVP) {
 
     if (dataRecord ) {
          //After file delete remove following from properties table: '+subDir + '/'+fileName + ' against scriptPath key.');
-         var property = propertiesAC('/mdrest/properties/', 'DELETE', [cfgKVP.processId,'scriptPath']);
+         var property = propertiesAC('/mdrest/properties/', 'DELETE', [cfgKVP.processId,cfgKVP.key]);
          if (property) {
         $.get('/mdrest/properties/'+ cfgKVP.processId, function(getdata) {
             $scope.chartViewModel.selectedProcessProps = getdata.Record;
@@ -762,4 +767,12 @@ $scope.confirmDialog = function (message, callBackFunctionName){
                 $scope.chartViewModel.deleteSelected();
             }
         };
+
+        $scope.isFileId = function(key){
+
+                   var patt = new RegExp("FileId-");
+                   var res = patt.test(key);
+                   return res;
+        };
     }]);
+
