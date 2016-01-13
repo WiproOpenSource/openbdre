@@ -407,7 +407,7 @@ wizard = $(document).ready(function() {
 					formIntoMap('serdeproperties_', 'serdeProperties');
 					formIntoMap('tableproperties_', 'tableProperties');
 					formIntoMap('basetable_', 'baseTableDetails');
-					jtableIntoMap('basetablecolumn_', 'baseTableColumnDetails');
+					jtableIntoMapForBase('basetablecolumn_', 'baseTableColumnDetails');
 
 					$('#createjobs').on('click', function(e) {
 						console.log(selectedSourceType);
@@ -692,6 +692,12 @@ wizard = $(document).ready(function() {
                                         </div>
                                         <!-- btn-group -->
                                         <div id="rawTablDetailsDB">
+                                        <div class="form-group">
+                                            <label class="control-label col-sm-2" for="rawDBName">Raw DB Name:</label>
+                                            <div class="col-sm-10">
+                                                <input type="text" class="form-control"  id="rawDBName" name="rawDBName" placeholder="Enter RAW DB Name" value="" required>
+                                            </div>
+                                        </div>
                                             <div class="form-group">
                                                 <label class="control-label col-sm-2" for="fileformat">File Format:</label>
                                                 <div class="col-sm-10">
@@ -1097,7 +1103,7 @@ $(document).ready(function() {
                                 baseJSONedPostData += ',';
                                 console.log("json is" + baseJSONedPostData);
                             }
-                            if (baseJSONedPostData.indexOf("transformation") == -1){
+                            if (baseJSONedPostData.indexOf("transformations") == -1){
                                 baseJSONedPostData +=  '"transformations":"'+baseSplitedPostData[1].split("=")[1]+'"}';
                             }else{
                                 var baseLastIndex = baseJSONedPostData.lastIndexOf(",");
@@ -1281,15 +1287,39 @@ function jtableIntoMap(typeProp, typeDiv) {
 	var $selectedRows = $(div).jtable('selectedRows');
 	$selectedRows.each(function() {
 		var record = $(this).data('record');
-		var keys = typeProp + record.key;
+		var keys = typeProp + record.columnName;
 		console.log(keys);
-		map[keys] = record.defaultVal;
+		map[keys] = record.datatype;
 		console.log(map);
 	});
 	$('.jtable-row-selected').removeClass('jtable-row-selected');
 }
 
 		</script>
+				<script>
+        function jtableIntoMapForBase(typeDiv) {
+        	var div = '';
+        	div = document.getElementById(typeDiv);
+        	$('div .jtable-data-row').each(function() {
+        		console.log(this);
+        		$(this).addClass('jtable-row-selected');
+        		$(this).addClass('ui-state-highlight');
+        	});
+
+        	var $selectedRows = $(div).jtable('selectedRows');
+        	$selectedRows.each(function() {
+        		var record = $(this).data('record');
+        		console.log(record.columnName);
+        		map["transform_"+record.columnName] = record.transformations;
+        		map["stagedatatype_"+record.columnName] = record.dataType;
+        		map["baseaction_"+record.columnName] = record.dataType;
+        		console.log(map);
+        	});
+        	$('.jtable-row-selected').removeClass('jtable-row-selected');
+        }
+
+        		</script>
+
 		<script>
 function formIntoMap(typeProp, typeOf) {
 	var x = '';
@@ -1303,6 +1333,7 @@ function formIntoMap(typeProp, typeOf) {
 }
 
 		</script>
+
 
 
 	</body>
