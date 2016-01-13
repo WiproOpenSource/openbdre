@@ -2,6 +2,7 @@
 . $(dirname $0)/../env.properties
 BDRE_HOME=~/bdre
 BDRE_APPS_HOME=~/bdre_apps
+BDRE_HOME_TMP=~/bdre/tmp
 hdfsPath=/user/$bdreLinuxUserName
 nameNode=hdfs://$nameNodeHostName:$nameNodePort
 jobTracker=$jobTrackerHostName:$jobTrackerPort
@@ -120,8 +121,12 @@ then exit 1
 fi
 
 #copying files to hdfs
-
+pushd $BDRE_HOME_TMP
+tar -xzf userfile-$processId.tar.gz -C $BDRE_APPS_HOME/$busDomainId/$processTypeId/$processId/
+popd
 hdfs dfs -put $BDRE_APPS_HOME/$busDomainId/$processTypeId/$processId/* $hdfsPath/wf/$busDomainId/$processTypeId/$processId
+rm -r $BDRE_APPS_HOME/$busDomainId/$processTypeId/$processId/
+
 if [ $? -ne 0 ]
     then exit 1
 fi
