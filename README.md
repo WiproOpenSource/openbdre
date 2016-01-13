@@ -323,19 +323,35 @@ Contribution for the enhancements in BDRE are welcome and humbly requested by us
 
 <a class="buttons github" href="https://github.com/WiproOpenSourcePractice/openbdre">Goto BDRE@GitHub</a>
 
-```javascript
-git clone "https://github.com/WiproOpenSourcePractice/openbdre.git" //clone the main repo
-cd openbdre
-git remote add myrepo "https://<your id>:<your password>@github.com/<YOUR ACCT NAME>/openbdre.git" //add your forked repo where you have write access
-git checkout -b mybranch //create your own branch
-....//make changes
-....//make changes
-git commit -am "My changes" //commit to your own branch
-git push myrepo mybranch //push to your own branch in your own remote repo (myrepo)
-git checkout develop //everyday better pull from the main repo and sync your repo with it
-git pull origin develop //pulling from origin, the main repo
-git checkout mybranch //keep the develop branch only to have the latest main repo content. never change here. Make changes to your own branch.
-git merge develop //synch your code with the main repo
-git push myrepo mybranch //push the latest content pulled from the main repo to your own repo in your own branch
+ - Clone the main repo (if you havn't done already)
 ```
-
+git clone "https://github.com/WiproOpenSourcePractice/openbdre.git" 
+cd openbdre
+```
+ - Add your forked repo where you have write access and create your own branch
+```
+git remote add myrepo https://<your id>:<your password>@github.com/<YOUR ACCT NAME>/openbdre.git
+git checkout -b mybranch
+```
+ - Make and commit your changes to your own branch
+```
+git commit -am "My changes"
+```
+ - Push to your own branch in your own remote repo (myrepo)
+```
+git push myrepo mybranch
+```
+ - Everyday better pull from the main repo(origin) and sync your repo with it
+```
+git checkout develop
+git pull origin develop 
+```
+ - Keep the develop branch only to have the latest main repo content. Make changes while you are in your own branch.
+```
+- Synch your code with the main repo. Push the latest content pulled from the main repo to your own repo in your own branch.
+```
+git checkout mybranch 
+git merge develop
+git push myrepo mybranch
+```
+- When you are ready to submit your contribution to the main repo, please open a [Pull Request](https://help.github.com/articles/creating-a-pull-request).
