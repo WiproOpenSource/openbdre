@@ -457,6 +457,52 @@ ps -ef <span class="pl-k">|</span> grep -i oozie</pre></div>
 <p>Contribution for the enhancements in BDRE are welcome and humbly requested by us. To contribute, please navigate to our GitHub project page and click the 'Fork' button fork the repository under your own account. You can make changes to your own forked repository and then open a pull request to merge your change.</p>
 
 <p><a href="https://github.com/WiproOpenSourcePractice/openbdre">Goto BDRE@GitHub</a></p>
+
+<ul>
+<li>Clone the main repo (if you havn't done already)</li>
+</ul>
+
+<div class="highlight highlight-source-shell"><pre>git clone <span class="pl-s"><span class="pl-pds">"</span>https://github.com/WiproOpenSourcePractice/openbdre.git<span class="pl-pds">"</span></span> 
+<span class="pl-c1">cd</span> openbdre</pre></div>
+
+<ul>
+<li>Add your forked repo where you have write access and create your own branch.</li>
+</ul>
+
+<div class="highlight highlight-source-shell"><pre>git remote add myrepo https://<span class="pl-k">&lt;</span>your id<span class="pl-k">&gt;</span>:<span class="pl-k">&lt;</span>your password<span class="pl-k">&gt;</span>@github.com/<span class="pl-k">&lt;</span>YOUR ACCT NAME<span class="pl-k">&gt;</span>/openbdre.git
+git checkout -b mybranch</pre></div>
+
+<ul>
+<li>Make and commit your changes to your own branch.</li>
+</ul>
+
+<div class="highlight highlight-source-shell"><pre>git commit -am <span class="pl-s"><span class="pl-pds">"</span>My changes<span class="pl-pds">"</span></span></pre></div>
+
+<ul>
+<li>Push to your own branch in your own remote repo (myrepo).</li>
+</ul>
+
+<div class="highlight highlight-source-shell"><pre>git push myrepo mybranch</pre></div>
+
+<ul>
+<li>Everyday better pull from the main repo(origin) and sync your repo with it.</li>
+</ul>
+
+<div class="highlight highlight-source-shell"><pre>git checkout develop
+git pull origin develop </pre></div>
+
+<ul>
+<li><p>Keep the develop branch only to have the latest main repo content. Make changes while you are in your own branch.</p></li>
+<li><p>Synch your code with the main repo. Push the latest content pulled from the main repo to your own repo in your own branch.</p></li>
+</ul>
+
+<div class="highlight highlight-source-shell"><pre>git checkout mybranch 
+git merge develop
+git push myrepo mybranch</pre></div>
+
+<ul>
+<li>When you are ready to submit your contribution to the main repo, please open a <a href="https://help.github.com/articles/creating-a-pull-request">Pull Request</a>.</li>
+</ul>
       </section>
       <footer>
         <p><small>Hosted on <a href="https://pages.github.com">GitHub Pages</a> using the Dinky theme</small></p>
