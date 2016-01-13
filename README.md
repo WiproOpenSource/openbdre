@@ -299,7 +299,7 @@ alt="BDRE Workflow Designer demo video" width="240" height="180" border="10" /><
 Demo video TBD
 # Web Crawler
 
-<a href="http://www.youtube.com/watch?v=0b6dWGxin4Y" target="_blank"><img src="http://img.youtube.com/vi/0b6dWGxin4Y/0.jpg" 
+<a href="http://www.youtube.com/watch?v=0b6dWGxin4Y" target="_blank"><img src="http://wiproopensourcepractice.github.io/openbdre/bdreimages/crawler.PNG" 
 alt="BDRE Web Crawling" width="240" height="180" border="10" /></a>
 
 
