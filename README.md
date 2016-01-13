@@ -328,7 +328,7 @@ Contribution for the enhancements in BDRE are welcome and humbly requested by us
 ```shell
 git clone "https://github.com/WiproOpenSourcePractice/openbdre.git" 
 cd openbdre
-```shell
+```
 
  - Add your forked repo where you have write access and create your own branch.
  
