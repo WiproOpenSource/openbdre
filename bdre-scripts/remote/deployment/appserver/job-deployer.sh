@@ -1,6 +1,8 @@
 #!/bin/sh
 
 BDRE_WFD=~/bdre-wfd
+BDRE_HOME=~/bdre
+BDRE_REMOTE_HOME=~biadmin/bdre
 
 #1,'ingestion',null
 #2, 'Semantic', null
@@ -23,11 +25,13 @@ processTypeId=$2
 processId=$3
 
 if [ $processTypeId -eq 2 ]; then
-    pushd $BDRE_WFD/$processId
-    tar -czf userfile-$processId.tar.gz .
-    scp userfile-$processId.tar.gz biadmin@169.55.78.217:/home/biadmin/bdre/tmp
+    current_dir=`pwd`
+    echo "current dir: $current_dir"
+    cd $BDRE_WFD
+    tar -czf userfile-$processId.tar.gz $processId
+    scp userfile-$processId.tar.gz biadmin@169.55.78.217:$BDRE_REMOTE_HOME/tmp
     rm -r userfile-$processId.tar.gz
-    popd
+    cd $current_dir
 fi
 
-ssh biadmin@169.55.78.217 sh /home/biadmin/bdre/bdre-scripts/deployment/process-type-$processTypeId.sh $busDomainId $processTypeId $processId
+ssh biadmin@169.55.78.217 sh $BDRE_REMOTE_HOME/bdre-scripts/deployment/process-type-$processTypeId.sh $busDomainId $processTypeId $processId

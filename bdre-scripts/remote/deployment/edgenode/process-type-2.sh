@@ -122,10 +122,10 @@ fi
 
 #copying files to hdfs
 pushd $BDRE_HOME_TMP
-tar -xzf userfile-$processId.tar.gz -C $BDRE_APPS_HOME/$busDomainId/$processTypeId/$processId/
+tar -xzf userfile-$processId.tar.gz -C $BDRE_APPS_HOME/$busDomainId/$processTypeId
 popd
 hdfs dfs -put $BDRE_APPS_HOME/$busDomainId/$processTypeId/$processId/* $hdfsPath/wf/$busDomainId/$processTypeId/$processId
-rm -r $BDRE_APPS_HOME/$busDomainId/$processTypeId/$processId/
+
 
 if [ $? -ne 0 ]
     then exit 1
