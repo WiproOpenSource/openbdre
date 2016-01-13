@@ -22,15 +22,6 @@
 ***
 [Operational Metadata Management](#operational-metadata-management)
 ***
-# License
-Released under Apache Public License 2.0. You can get a copy for the license at http://www.apache.org/licenses/LICENSE-2.0.
-# Objective 
-Goal of BDRE is to give Bigdata implementation a significant acceleration by supplying the essential frameworks which are most likely to be written anyway. 
-It'll drastically eliminate hundreds of man hours of effort in operational framework development.
-Big Data implementations however, require specialized skills, signiﬁcant development effort on data loading, semantic processing, DQ, code deployment across environments etc.
-Big Data Ready Enterprise (BDRE)makes big data technology adoption simpler by optimizing and integrating various big data solutions and providing them under one integrated package. 
-BDRE provides a uniﬁed framework for a Hadoop implementation that can drastically minimize time development and fasttrack the Hadoop implementation. It comprises a reusable framework that can be customized as per the enterprise eco system. The components are loosely integrated and can be de-coupled or replaced easily with alternatives.
-
 [How To Contribute](#how-to-contribute)
 ***
 
@@ -38,7 +29,7 @@ BDRE provides a uniﬁed framework for a Hadoop implementation that can drastica
 Released under Apache Public License 2.0. You can get a copy of the license at http://www.apache.org/licenses/LICENSE-2.0.
 # Objective
 Big Data Ready Enterprise (BDRE)makes big data technology adoption simpler by optimizing and integrating various big data solutions and providing them under one integrated package. BDRE provides a uniﬁed framework for a Hadoop implementation that can drastically minimize development time and fast track the Hadoop implementation. It comprises a reusable framework that can be customized as per the enterprise ecosystem. The components are loosely integrated and can be de-coupled or replaced easily with alternatives.
- 
+
 The primary goal of BDRE is to accelerate Bigdata implementations by supplying the essential frameworks that are most likely to be written from scratch. It can drastically reduce effort by eliminating hundreds of man hours in operational framework development. Big Data implementations however, require specialized skills, signiﬁcant development effort on data loading, semantic processing, DQ, code deployment across environments etc.
 
 # Features
@@ -284,28 +275,31 @@ You should be able to do the same in Mac or Windows but note that setting up a H
 
 ## RDBMS Data Ingestion
 
-<a href="http://www.youtube.com/watch?v=JcbYU7oEmxc" target="_blank"><img src="http://img.youtube.com/vi/JcbYU7oEmxc/1.jpg" 
+<a href="http://www.youtube.com/watch?v=JcbYU7oEmxc" target="_blank"><img src="http://wiproopensourcepractice.github.io/openbdre/bdreimages/rdbms.PNG"
 alt="BDRE RDBMS data ingestion demo video" width="240" height="180" border="10" /></a>
 
 
 ## Streaming Data Ingestion
 
-<a href="http://www.youtube.com/watch?v=1yqoAVENrjo" target="_blank"><img src="http://img.youtube.com/vi/1yqoAVENrjo/1.jpg" 
+<a href="http://www.youtube.com/watch?v=1yqoAVENrjo" target="_blank"><img src="http://wiproopensourcepractice.github.io/openbdre/bdreimages/twitter.PNG"
 alt="BDRE Twitter Ingestion demo video" width="240" height="180" border="10" /></a>
 
 
 ## Directory Monitoring and File Ingestion
 
-<a href="http://www.youtube.com/watch?v=IhDMYase1fU" target="_blank"><img src="http://img.youtube.com/vi/IhDMYase1fU/0.jpg" 
+<a href="http://www.youtube.com/watch?v=IhDMYase1fU" target="_blank"><img src="http://wiproopensourcepractice.github.io/openbdre/bdreimages/filemon.PNG"
 alt="BDRE File ingestion demo video" width="240" height="180" border="10" /></a>
 
 # Workflow Builder
-Demo video TBD
+
+<a href="http://www.youtube.com/watch?v=PG6Qvg-pKO0" target="_blank"><img src="http://wiproopensourcepractice.github.io/openbdre/bdreimages/wfd.PNG"
+alt="BDRE Workflow Designer demo video" width="240" height="180" border="10" /></a>
+
 # Bulk Data Manufacturing
 Demo video TBD
 # Web Crawler
 
-<a href="http://www.youtube.com/watch?v=0b6dWGxin4Y" target="_blank"><img src="http://img.youtube.com/vi/0b6dWGxin4Y/0.jpg" 
+<a href="http://www.youtube.com/watch?v=0b6dWGxin4Y" target="_blank"><img src="http://wiproopensourcepractice.github.io/openbdre/bdreimages/crawler.PNG"
 alt="BDRE Web Crawling" width="240" height="180" border="10" /></a>
 
 
@@ -325,5 +319,51 @@ BDRE uses RDBMS database to store all job related metadata. A set of stored proc
 
 # How to Contribute
 
-Contribution for the enhancements in BDRE are welcome and humbly requested by us. To contribute, please navigate to our GitHub project page to fork the repository. You can make changes to your own forked repository and then open a pull request to merge your change.
+Contribution for the enhancements in BDRE are welcome and humbly requested by us. To contribute, please navigate to our GitHub project page and [fork](https://help.github.com/articles/fork-a-repo/) BDRE main repository under your own account. You can make changes to your own forked repository and then open a [Pull Request](https://help.github.com/articles/creating-a-pull-request) to merge your change with the main repo.
 
+<a class="buttons github" href="https://github.com/WiproOpenSourcePractice/openbdre">Goto BDRE@GitHub</a>
+
+ - Clone the main repo (if you havn't done already)
+
+```shell
+git clone "https://github.com/WiproOpenSourcePractice/openbdre.git"
+cd openbdre
+```
+
+ - Add your forked repo where you have write access and create your own branch.
+
+```shell
+git remote add myrepo https://<your id>:<your password>@github.com/<YOUR ACCT NAME>/openbdre.git
+git checkout -b mybranch
+```
+
+ - Make and commit your changes to your own branch.
+
+```shell
+git commit -am "My changes"
+```
+
+ - Push to your own branch in your own remote repo (myrepo).
+
+```shell
+git push myrepo mybranch
+```
+
+ - Everyday better pull from the main repo(origin) and sync your repo with it.
+
+```shell
+git checkout develop
+git pull origin develop
+```
+
+ - Keep the develop branch only to have the latest main repo content. Make changes while you are in your own branch.
+
+ - Synch your code with the main repo. Push the latest content pulled from the main repo to your own repo in your own branch.
+
+```shell
+git checkout mybranch
+git merge develop
+git push myrepo mybranch
+```
+
+ - When you are ready to submit your contribution to the main repo, please open a [pull request](https://help.github.com/articles/creating-a-pull-request).
