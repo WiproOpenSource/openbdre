@@ -324,34 +324,46 @@ Contribution for the enhancements in BDRE are welcome and humbly requested by us
 <a class="buttons github" href="https://github.com/WiproOpenSourcePractice/openbdre">Goto BDRE@GitHub</a>
 
  - Clone the main repo (if you havn't done already)
-```
+ 
+```shell
 git clone "https://github.com/WiproOpenSourcePractice/openbdre.git" 
 cd openbdre
-```
- - Add your forked repo where you have write access and create your own branch
-```
+```shell
+
+ - Add your forked repo where you have write access and create your own branch.
+ 
+```shell
 git remote add myrepo https://<your id>:<your password>@github.com/<YOUR ACCT NAME>/openbdre.git
 git checkout -b mybranch
 ```
- - Make and commit your changes to your own branch
-```
+
+ - Make and commit your changes to your own branch.
+ 
+```shell
 git commit -am "My changes"
 ```
- - Push to your own branch in your own remote repo (myrepo)
-```
+
+ - Push to your own branch in your own remote repo (myrepo).
+ 
+```shell
 git push myrepo mybranch
 ```
- - Everyday better pull from the main repo(origin) and sync your repo with it
-```
+
+ - Everyday better pull from the main repo(origin) and sync your repo with it.
+ 
+```shell
 git checkout develop
 git pull origin develop 
 ```
+
  - Keep the develop branch only to have the latest main repo content. Make changes while you are in your own branch.
-```
-- Synch your code with the main repo. Push the latest content pulled from the main repo to your own repo in your own branch.
-```
+
+ - Synch your code with the main repo. Push the latest content pulled from the main repo to your own repo in your own branch.
+
+```shell
 git checkout mybranch 
 git merge develop
 git push myrepo mybranch
 ```
-- When you are ready to submit your contribution to the main repo, please open a [Pull Request](https://help.github.com/articles/creating-a-pull-request).
+
+ - When you are ready to submit your contribution to the main repo, please open a [Pull Request](https://help.github.com/articles/creating-a-pull-request).
