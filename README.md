@@ -275,13 +275,13 @@ You should be able to do the same in Mac or Windows but note that setting up a H
 
 ## RDBMS Data Ingestion
 
-<a href="http://www.youtube.com/watch?v=JcbYU7oEmxc" target="_blank"><img src="http://img.youtube.com/vi/JcbYU7oEmxc/1.jpg" 
+<a href="http://www.youtube.com/watch?v=JcbYU7oEmxc" target="_blank"><img src="http://wiproopensourcepractice.github.io/openbdre/bdreimages/rdbms.PNG" 
 alt="BDRE RDBMS data ingestion demo video" width="240" height="180" border="10" /></a>
 
 
 ## Streaming Data Ingestion
 
-<a href="http://www.youtube.com/watch?v=1yqoAVENrjo" target="_blank"><img src="http://img.youtube.com/vi/1yqoAVENrjo/1.jpg" 
+<a href="http://www.youtube.com/watch?v=1yqoAVENrjo" target="_blank"><img src="http://wiproopensourcepractice.github.io/openbdre/bdreimages/twitter.PNG" 
 alt="BDRE Twitter Ingestion demo video" width="240" height="180" border="10" /></a>
 
 
@@ -292,7 +292,7 @@ alt="BDRE File ingestion demo video" width="240" height="180" border="10" /></a>
 
 # Workflow Builder
 
-<a href="http://www.youtube.com/watch?v=PG6Qvg-pKO0" target="_blank"><img src="http://img.youtube.com/vi/PG6Qvg-pKO0/1.jpg" 
+<a href="http://www.youtube.com/watch?v=PG6Qvg-pKO0" target="_blank"><img src="http://wiproopensourcepractice.github.io/openbdre/bdreimages/wfd.PNG" 
 alt="BDRE Workflow Designer demo video" width="240" height="180" border="10" /></a>
 
 # Bulk Data Manufacturing
