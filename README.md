@@ -287,7 +287,7 @@ alt="BDRE Twitter Ingestion demo video" width="240" height="180" border="10" /><
 
 ## Directory Monitoring and File Ingestion
 
-<a href="http://www.youtube.com/watch?v=IhDMYase1fU" target="_blank"><img src="http://img.youtube.com/vi/IhDMYase1fU/0.jpg" 
+<a href="http://www.youtube.com/watch?v=IhDMYase1fU" target="_blank"><img src="http://wiproopensourcepractice.github.io/openbdre/bdreimages/filemon.PNG" 
 alt="BDRE File ingestion demo video" width="240" height="180" border="10" /></a>
 
 # Workflow Builder
