@@ -379,28 +379,48 @@ $scope.insertProp = function(cfgDetails) {
         alertBox('warning', 'Duplicate key not allowed');
     }
 }
-
 //
 // On clicking upload button
 //
 
 $scope.uploadFile = function(processId,parentProcessId,subDir,cg) {
 
+
         var args = [parentProcessId,subDir,cg+'-propval'];
+
+        var fileArgs=[parentProcessId,subDir,$("#"+args[2])[0].files[0].name];
+        var fileData=fileCheckAC('/mdrest/filehandler/check/','POST',fileArgs);
         var dataRecord = fileHandlerAC('/mdrest/filehandler/upload/', 'POST', args);
 
     if (dataRecord ) {
          //After file load added following to properties table: '+subDir + '/'+fileName + ' against scriptPath key.');
-         
+
+         if(cg=='extraFiles'){
+         var putData = "configGroup="+cg+"&key="+dataRecord.Record.fileName+"&value="+subDir+'/'+dataRecord.Record.fileName+"&description="+'File path'+"&processId="+processId;
+
+         console.log("fileexists="+fileData.fileExists);
+         if(fileData.fileExists=='true'){
+         var property = propertiesAC('/mdrest/properties/', 'DELETE', [processId,dataRecord.Record.fileName]);
+         }
+         cfgDetails = propertiesAC('/mdrest/properties/', 'PUT', putData);
+         $.get('/mdrest/properties/'+processId, function(getdata) {
+         $scope.chartViewModel.selectedProcessProps = getdata.Record;
+         });
+        $scope.getKeyValue(cfgDetails);
+        alertBox('info', 'File uploaded :'+dataRecord.Record.fileName+','+'size:'+(dataRecord.Record.fileSize/1024).toFixed(2)+'KB'+' and new property added');
+         }
+         else if(cg=='script'){
+         console.log(cg);
          var property = propertiesAC('/mdrest/properties/', 'DELETE', [processId,'scriptPath']);
          var putData = "configGroup="+cg+"&key="+'scriptPath'+"&value="+subDir+'/'+dataRecord.Record.fileName+"&description="+'File path'+"&processId="+processId;
+         console.log(putData);
          cfgDetails = propertiesAC('/mdrest/properties/', 'PUT', putData);
         $.get('/mdrest/properties/'+processId, function(getdata) {
             $scope.chartViewModel.selectedProcessProps = getdata.Record;
         });
         $scope.getKeyValue(cfgDetails);
         alertBox('info', 'File uploaded :'+dataRecord.Record.fileName+','+'size:'+(dataRecord.Record.fileSize/1024).toFixed(2)+'KB'+' and new property added');
-       
+}
     }
     else {
         alertBox('warning', 'File upload failed');
@@ -423,6 +443,28 @@ $scope.uploadJar = function(parentProcessId,subDir,fileId) {
     }
 }
 
+$scope.uploadAdditionalFiles = function(processId,parentProcessId,subDir,cg) {
+
+        var args = [parentProcessId,subDir,cg+'-propval'];
+        var dataRecord = fileHandlerAC('/mdrest/filehandler/upload/', 'POST', args);
+
+    if (dataRecord ) {
+         //After file load added following to properties table: '+subDir + '/'+fileName + ' against scriptPath key.');
+
+         //var property = propertiesAC('/mdrest/properties/', 'DELETE', [processId,'scriptPath']);
+         var putData = "configGroup="+cg+"&key="+'addFiles'+"&value="+subDir+'/'+dataRecord.Record.fileName+"&description="+'File path'+"&processId="+processId;
+         cfgDetails = propertiesAC('/mdrest/properties/', 'PUT', putData);
+        $.get('/mdrest/properties/'+processId, function(getdata) {
+            $scope.chartViewModel.selectedProcessProps = getdata.Record;
+        });
+        $scope.getKeyValue(cfgDetails);
+        alertBox('info', 'File uploaded :'+dataRecord.Record.fileName+','+'size:'+(dataRecord.Record.fileSize/1024).toFixed(2)+'KB'+' and new property added');
+
+    }
+    else {
+        alertBox('warning', 'File upload failed');
+    }
+}
 
 $scope.getFile = function(parentProcessId,cfgKVP) {
     var args = [parentProcessId,cfgKVP.value];

@@ -237,9 +237,22 @@
                                                             <a href="#" class="glyphicon glyphicon-trash" ng-click="deleteFile(chartViewModel.selectedProcess.parentProcessId,genConfig, gen)"></a>
                                                         </div>
                                                     </div>
+                                                    <div class="row" ng-repeat="gen in chartViewModel.selectedProcessConfigKeyValue" ng-if="gen.key == 'extraFiles'">
+                                                        <div class="col-md-3">
+                                                            <label class="control-label" ng-if="gen.key.length > 7" id="{{genConfig.key}}-{{gen.key}}" for="{{genConfig.key}}-{{gen.value}}" title="{{ gen.key }}">{{ gen.key | limitTo : 7 : 0}}...:</label>
+                                                            <label class="control-label" ng-if="gen.key.length <= 7" id="{{genConfig.key}}-{{gen.key}}" for="{{genConfig.key}}-{{gen.value}}">{{ gen.key }}:</label>
+                                                        </div>
+                                                        <div class="col-md-6">
+                                                            <p class="form-control-static" ng-if="gen.value.length > 20" id="{{genConfig.key}}-{{gen.value}}" for="{{genConfig.key}}-{{gen.value}}" title="{{ gen.value }}">{{ gen.value | limitTo : 20 : 0}}...</p>
+                                                            <p class="form-control-static" ng-if="gen.value.length <= 20" id="{{genConfig.key}}-{{gen.value}}" for="{{genConfig.key}}-{{gen.value}}">{{ gen.value }}</p>
+                                                        </div>
+                                                        <div class="col-md-3">
+                                                            <a href="#" class="glyphicon glyphicon-trash" ng-click="deleteFile(chartViewModel.selectedProcess.parentProcessId,genConfig, gen)"></a>
+                                                        </div>
+                                                    </div>
                                                 </div>
                                                 <hr/>
-                                                <form class="form-horizontal" role="form" ng-if="genConfig.type != 'hql' && genConfig.type != 'r'  && genConfig.type != 'spark' && genConfig.type != 'pig' && genConfig.type != 'shell'">
+                                                <form class="form-horizontal" role="form" ng-if="genConfig.type != 'hql' && genConfig.type != 'r'  && genConfig.type != 'spark' && genConfig.type != 'pig' && genConfig.type != 'shell' && genConfig.type != 'addFiles'">
                                                     <div class="form-group">
                                                         <label class="control-label col-sm-2" for="{{genConfig.key}}-propkey">Name:</label>
                                                         <div class="col-sm-10">
@@ -283,6 +296,19 @@
                                                 <form class="form-horizontal" role="form" ng-if="genConfig.type == 'shell'">
                                                     <div class="form-group">
                                                         <label class="control-label col-sm-3" for="{{genConfig.key}}-propkey">Select shell script :</label>
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <div class="col-sm-10">
+                                                            <input type="file" name="file" class="form-control" id="{{genConfig.key}}-propval" required>
+                                                        </div>
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <button type="upload" ng-click="uploadFile(chartViewModel.selectedProcess.processId,chartViewModel.selectedProcess.parentProcessId,'shell',genConfig.key)" class="btn btn-primary  pull-right">Upload {{genConfig.key}}</button>
+                                                    </div>
+                                                </form>
+                                                <form class="form-horizontal" role="form" ng-if="genConfig.type == 'addFiles'">
+                                                    <div class="form-group">
+                                                        <label class="control-label col-sm-3" for="{{genConfig.key}}-propkey">Add files:</label>
                                                     </div>
                                                     <div class="form-group">
                                                         <div class="col-sm-10">

@@ -88,6 +88,7 @@ var propertiesAC = function(ajaxURL, type, arg) {
 			break;
 		case 'PUT':
 			returnObject = ajaxCall(ajaxURL, type, arg);
+			console.log("inside ajax");
 			if (returnObject) {
 				alterNPsC([returnObject.processId, returnObject.key], returnObject);
 			}
@@ -266,6 +267,25 @@ var fileHandlerAC = function (ajaxURL, type, arg) {
 	return returnObject;
 }
 
+var fileCheckAC = function (ajaxURL, type, arg) {
+	var returnObject;
+	switch(type) {
+		case 'GET':
+		    break;
+		case 'PUT':
+			break;
+		case 'DELETE':
+		    break;
+		case 'POST':
+ 				ajaxURL = ajaxURL + arg[0]+'/'+arg[1]+'?file='+arg[2];
+				returnObject = ajaxCall(ajaxURL, type, arg);
+			return returnObject;
+			break;
+		default:
+			console.log('In AC function defualt block');
+	}
+	return returnObject;
+}
 var processExportCache,
 	processExportAC = function (ajaxURL, processId) {
 		var returnObject;

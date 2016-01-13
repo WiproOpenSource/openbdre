@@ -71,18 +71,10 @@ public class ShellActionNode extends GenericActionNode {
                 "        <shell xmlns=\"uri:oozie:shell-action:0.1\">\n" +
                 "            <job-tracker>${jobTracker}</job-tracker>\n" +
                 "            <name-node>${nameNode}</name-node>\n");
-        ret.append(getScriptPath(getId(), "script"));
-        /*ret.append("            <param>exec-id=${wf:actionData(\"init-job\")[\"instance-exec-id\"]}</param>\n" +
-                "            <param>target-batch-id=${wf:actionData(\"init-job\")[\"target-batch-id\"]}</param>\n" +
-                "            <param>min-batch-id=${wf:actionData(\"init-job\")[\"min-batch-id-map." + getId() + "\"]}</param>\n" +
-                "            <param>max-batch-id=${wf:actionData(\"init-job\")[\"max-batch-id-map." + getId() + "\"]}</param>\n" +
-                "            <param>min-pri=${wf:actionData(\"init-job\")[\"min-source-instance-exec-map." + getId() + "\"]}</param>\n" +
-                "            <param>max-pri=${wf:actionData(\"init-job\")[\"max-source-instance-exec-map." + getId() + "\"]}</param>\n" +
-                "            <param>min-batch-marking=${wf:actionData(\"init-job\")[\"min-batch-marking-map." + getId() + "\"]}</param>\n" +
-                "            <param>max-batch-marking=${wf:actionData(\"init-job\")[\"max-batch-marking-map." + getId() + "\"]}</param>\n" +
-                "            <param>target-batch-marking=${wf:actionData(\"init-job\")[\"target-batch-marking\"]}</param>\n" +
-                "            <param>last-recoverable-sp-id=${wf:actionData(\"init-job\")[\"last-recoverable-sp-id\"]}</param>\n");*/
+        ret.append("            <exec>"+getScriptPath(getId(), "script").replace("shell/","")+"</exec>\n");
         ret.append(getParams(getId(), "param"));
+        ret.append("            <file>"+getScriptPath(getId(), "script")+"</file>\n");
+        ret.append(getSupplementaryFiles(getId(),"extraFiles"));
         ret.append("        </shell>\n" +
                 "        <ok to=\"" + getToNode().getName() + "\"/>\n" +
                 "        <error to=\"" + getTermNode().getName() + "\"/>\n" +
@@ -107,11 +99,11 @@ public class ShellActionNode extends GenericActionNode {
         if (scriptPath.size() > 1) {
             throw new RuntimeException("Can Handle only 1 script in shell action processInfo.getProcessTypeId()=" + processInfo.getProcessTypeId());
         } else if (scriptPath.size() == 0) {
-            addScriptPath.append("            <exec>shell/script" + getId() + ".sh</exec>\n");
+            addScriptPath.append("script" + getId() + ".sh");
         } else {
             while (e.hasMoreElements()) {
                 String key = (String) e.nextElement();
-                addScriptPath.append("            <exec>" + scriptPath.getProperty(key) + "</exec>\n");
+                addScriptPath.append(scriptPath.getProperty(key));
             }
         }
         return addScriptPath.toString();
@@ -138,4 +130,27 @@ public class ShellActionNode extends GenericActionNode {
         }
         return addParams.toString();
     }
+
+    /**
+     * This method gets details about additional files to be uploaded
+     *
+     * @param pid         process-id of Shell Script
+     * @param configGroup config_group entry in properties table "more-scripts" for query path
+     * @return String containing script path to be appended to workflow string
+     */
+    public String getSupplementaryFiles(Integer pid, String configGroup) {
+        GetProperties getProperties = new GetProperties();
+        java.util.Properties addtionalScripts = getProperties.getProperties(getId().toString(), configGroup);
+        Enumeration e = addtionalScripts.propertyNames();
+        StringBuilder addScriptPaths = new StringBuilder();
+
+        if (addtionalScripts.size() > 0) {
+            while (e.hasMoreElements()) {
+                String key = (String) e.nextElement();
+                addScriptPaths.append("            <file>"+addtionalScripts.getProperty(key)+"</file>\n");
+            }
+        }
+        return addScriptPaths.toString();
+    }
+
 }
