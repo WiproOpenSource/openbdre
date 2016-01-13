@@ -324,9 +324,9 @@ Contribution for the enhancements in BDRE are welcome and humbly requested by us
 <a class="buttons github" href="https://github.com/WiproOpenSourcePractice/openbdre">Goto BDRE@GitHub</a>
 
 ```javascript
-git clone https://github.com/WiproOpenSourcePractice/openbdre.git //clone the main repo
+git clone "https://github.com/WiproOpenSourcePractice/openbdre.git" //clone the main repo
 cd openbdre
-git remote add myrepo https://<your id>:<your password>@github.com/<YOUR ACCT NAME>/openbdre.git //add your forked repo where you have write access
+git remote add myrepo "https://<your id>:<your password>@github.com/<YOUR ACCT NAME>/openbdre.git" //add your forked repo where you have write access
 git checkout -b mybranch //create your own branch
 ....//make changes
 ....//make changes
