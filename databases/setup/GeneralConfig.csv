@@ -532,3 +532,5 @@
 'scripts_config', 'oozieHost', '-','-' , 1, '${oozie_host}', 'text' , 1
 'scripts_config', 'ooziePort', '-','-' , 1, '${oozie_port}', 'text' , 1
 'scripts_config', 'logDir', '-','-' , 1, '~/log/BDRE', 'text' , 1
+'scripts_config', 'edgeNodeHostName', '-','-' , 1, '${edge_node_host_name}', 'text' , 1
+'scripts_config', 'edgeNodeUserName', '-','-' , 1, '${edge_node_user_name}', 'text' , 1

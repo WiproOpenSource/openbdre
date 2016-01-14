@@ -2,7 +2,8 @@
 
 BDRE_WFD=~/bdre-wfd
 BDRE_HOME=~/bdre
-BDRE_REMOTE_HOME=~biadmin/bdre
+BDRE_REMOTE_HOME=~$edgeNodeUserName/bdre
+edgeNodeUrl=$edgeNodeUserName@$edgeNodeHostName
 
 #1,'ingestion',null
 #2, 'Semantic', null
@@ -29,9 +30,9 @@ if [ $processTypeId -eq 2 ]; then
     echo "current dir: $current_dir"
     cd $BDRE_WFD
     tar -czf userfile-$processId.tar.gz $processId
-    scp userfile-$processId.tar.gz biadmin@169.55.78.217:$BDRE_REMOTE_HOME/tmp
+    scp userfile-$processId.tar.gz $edgeNodeUrl:$BDRE_REMOTE_HOME/tmp
     rm -r userfile-$processId.tar.gz
     cd $current_dir
 fi
 
-ssh biadmin@169.55.78.217 sh $BDRE_REMOTE_HOME/bdre-scripts/deployment/process-type-$processTypeId.sh $busDomainId $processTypeId $processId
+ssh $edgeNodeUrl sh $BDRE_REMOTE_HOME/bdre-scripts/deployment/process-type-$processTypeId.sh $busDomainId $processTypeId $processId
