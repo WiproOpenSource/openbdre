@@ -417,7 +417,7 @@ $scope.uploadFile = function(processId,parentProcessId,subDir,cg) {
                  alertBox('info', 'File uploaded :'+dataRecord.Record.fileName+','+'size:'+(dataRecord.Record.fileSize/1024).toFixed(2)+'KB'+' and new property added');
          }
          }
-         else if(cg=='script'){
+         else {
          console.log(cg);
          var property = propertiesAC('/mdrest/properties/', 'DELETE', [processId,'scriptPath']);
          var putData = "configGroup="+cg+"&key="+'scriptPath'+"&value="+subDir+'/'+dataRecord.Record.fileName+"&description="+'File path'+"&processId="+processId;

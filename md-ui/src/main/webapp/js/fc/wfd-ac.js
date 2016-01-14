@@ -222,6 +222,7 @@ var fileHandlerAC = function (ajaxURL, type, arg) {
 							    returnObject=false;
 							}
 						 });
+						 }
 			return returnObject;
             break;
 		case 'PUT':
