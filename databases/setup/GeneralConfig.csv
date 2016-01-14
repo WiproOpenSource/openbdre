@@ -21,6 +21,7 @@
 '21','mqimport','MQ Import Configuration','Messaging Queue import configuration', 1,'true','text', 1
 '22','param','Parameters','Additional parameters', 1,'true','text', 1
 '22','script','Script location',' ', 1,'true','shell', 1
+'22','extraFiles','Additional Files','Optional files if any to upload',1,'true','addFiles',1
 '23','flume','Flume Configuration','Flume', 1,'true','text', 1
 '24', 'param', 'Parameters', 'Parameters', 1, 'true', 'text', 1
 '24', 'r-file', 'R file', 'R code',1, 'true', 'r', 1
