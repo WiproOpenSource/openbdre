@@ -775,4 +775,3 @@ $scope.confirmDialog = function (message, callBackFunctionName){
                    return res;
         };
     }]);
-
