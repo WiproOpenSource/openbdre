@@ -390,29 +390,26 @@ wizard = $(document).ready(function() {
             				}
 			}
 			if(currentIndex == 1 && newIndex == 2) {
-			console.log(document.getElementById('fileFormat').elements[0].value);
-			    buildForm(document.getElementById('fileFormat').elements[0].value);
+			console.log(document.getElementById('fileFormat').elements[1].value);
+			    buildForm(document.getElementById('fileFormat').elements[1].value);
 			}
 			return true;
 		},
 		onStepChanged: function(event, currentIndex, priorIndex) {
 			console.log(currentIndex + " " + priorIndex);
-			if(currentIndex == 9 && priorIndex == 8) {
+			if(currentIndex == 8 && priorIndex == 7) {
 				{
 
 					formIntoMap('process_', 'processFieldsForm1');
 					formIntoMap('fileformat_', 'fileFormat');
 					jtableIntoMap('rawtablecolumn_', 'rawTableColumnDetails');
-					formIntoMap('fileformatdetails_', 'fileFormatDetails');
+					formIntoMap('fileformatdetails_', 'formatFields');
 					formIntoMap('serdeproperties_', 'serdeProperties');
 					formIntoMap('tableproperties_', 'tableProperties');
 					formIntoMap('basetable_', 'baseTableDetails');
-					jtableIntoMapForBase('basetablecolumn_', 'baseTableColumnDetails');
+					jtableIntoMapForBase('baseTableColumnDetails');
 
 					$('#createjobs').on('click', function(e) {
-						console.log(selectedSourceType);
-						console.log(selectedChannelType);
-						console.log(selectedSinkType);
 
 						$.ajax({
 							type: "POST",
@@ -439,7 +436,7 @@ wizard = $(document).ready(function() {
 							}
 
 						});
-
+                    return false;
 					});
 
 				}
@@ -463,7 +460,7 @@ wizard = $(document).ready(function() {
 			}
 		},
 		onCanceled: function(event) {
-			location.href = '<c:url value="/pages/flumepropertieswizard.page"/>';
+			location.href = '<c:url value="/pages/dataload.page"/>';
 		}
 	});
 });
@@ -836,117 +833,7 @@ wizard = $(document).ready(function() {
 		<div style="display:none" id="div-dialog-warning">
 			<p><span class="ui-icon ui-icon-alert" style="float:left;"></span></p>
 		</div>
-		<script>
-$(document).ready(function() {
-	$('#dropdownSink').on('show.bs.dropdown', function() {
-		$.ajax({
-			type: "GET",
-			url: "/mdrest/genconfig/Sink_Type/?required=2",
-			dataType: 'json',
-			success: function(data) {
-				var root = 'Records';
-				var ul = $('#sinkDropdown').parent().find($("ul"));
-				$(ul).empty();
-				$.each(data[root], function(i, v) {
-					$(ul).append('<li><a href="#">' + v.value + '</a></li>');
-					var li = $(ul).children()[i];
-					$(li).data(v);
-				});
-			},
-		});
 
-	});
-
-	$('#dropdownSink').on('click', 'a', function() {
-
-		var car = $(this).parent();
-		console.log($(car));
-		var cardata = $(car).data();
-		console.log($(cardata));
-		$('#sinkDropdown').html(cardata.value + '<span class="caret"></span>');
-		if(selectedSinkType != '') {
-			$('#sinkAdvancedFields').jtable('destroy');
-		}
-		selectedSinkType = cardata.key;
-		buildForm(selectedSinkType + "_Sink", 'sinkRequiredFields');
-		console.log(selectedSinkType);
-		loadJTable(selectedSinkType, selectedSinkType + "_Sink", 'sinkAdvancedFields');
-		console.log(selectedSinkType);
-	});
-	console.log('here');
-	$('#dropdownChannel').on('show.bs.dropdown', function() {
-		$.ajax({
-			type: "GET",
-			url: "/mdrest/genconfig/Channel_Type/?required=2",
-			dataType: 'json',
-			success: function(data) {
-				var root = 'Records';
-				var ul = $('#chanDropdown').parent().find($("ul"));
-				$(ul).empty();
-				$.each(data[root], function(i, v) {
-					$(ul).append('<li><a href="#">' + v.value + '</a></li>');
-					var li = $(ul).children()[i];
-					$(li).data(v);
-				});
-			},
-		});
-
-	});
-	$('#dropdownChannel').on('click', 'a', function() {
-
-		var car = $(this).parent();
-		console.log($(car));
-		var cardata = $(car).data();
-		console.log($(cardata));
-		$('#chanDropdown').html(cardata.value + '<span class="caret"></span>');
-		if(selectedChannelType != '') {
-			$('#channelAdvancedFields').jtable('destroy');
-		}
-		selectedChannelType = cardata.key;
-		buildForm(selectedChannelType + "_Channel", 'channelRequiredFields');
-		console.log(selectedChannelType);
-		loadJTable(selectedChannelType, selectedChannelType + "_Channel", 'channelAdvancedFields');
-		console.log(selectedChannelType);
-	});
-
-	$('#dropdownSource').on('show.bs.dropdown', function() {
-		console.log(' i dont know');
-		$.ajax({
-			type: "GET",
-			url: "/mdrest/genconfig/Source_Type/?required=2",
-			dataType: 'json',
-			success: function(data) {
-				var root = 'Records';
-				var ul = $('#srcDropdown').parent().find($("ul"));
-				$(ul).empty();
-				$.each(data[root], function(i, v) {
-					$(ul).append('<li><a href="#">' + v.value + '</a></li>');
-					var li = $(ul).children()[i];
-					$(li).data(v);
-				});
-			},
-		});
-
-	});
-	$('#dropdownSource').on('click', 'a', function() {
-
-		var car = $(this).parent();
-		console.log($(car));
-		var cardata = $(car).data();
-		console.log($(cardata));
-		$('#srcDropdown').html(cardata.value + '<span class="caret"></span>');
-		if(selectedSourceType != '') {
-			$('#sourceAdvancedFields').jtable('destroy');
-		}
-		selectedSourceType = cardata.key;
-		buildForm(selectedSourceType + "_Source", 'sourceRequiredFields');
-		console.log(selectedSourceType);
-		loadJTable(selectedSourceType, selectedSourceType + "_Source", 'sourceAdvancedFields');
-		console.log(selectedSourceType);
-	});
-});
-
-		</script>
 		<script type="text/javascript">
 	$(document).ready(function () {
 	$('#rawTableColumnDetails').jtable({
@@ -1209,7 +1096,7 @@ function buildForm(fileformat) {
 
 	$.ajax({
 		type: "GET",
-		url: "/mdrest/genconfig/" + fileformat + "/?required=1",
+		url: "/mdrest/genconfig/" + fileformat + "/?required=2",
 		dataType: 'json',
 		success: function(data) {
 			var root = 'Records';
@@ -1289,7 +1176,7 @@ function jtableIntoMap(typeProp, typeDiv) {
 		var record = $(this).data('record');
 		var keys = typeProp + record.columnName;
 		console.log(keys);
-		map[keys] = record.datatype;
+		map[keys] = record.dataType;
 		console.log(map);
 	});
 	$('.jtable-row-selected').removeClass('jtable-row-selected');
@@ -1313,6 +1200,7 @@ function jtableIntoMap(typeProp, typeDiv) {
         		map["transform_"+record.columnName] = record.transformations;
         		map["stagedatatype_"+record.columnName] = record.dataType;
         		map["baseaction_"+record.columnName] = record.dataType;
+        		map["partition_"+record.columnName] = record.partition;
         		console.log(map);
         	});
         	$('.jtable-row-selected').removeClass('jtable-row-selected');

@@ -9,6 +9,7 @@ import com.wipro.ats.bdre.md.dao.jpa.Process;
 import com.wipro.ats.bdre.md.dao.jpa.Properties;
 import com.wipro.ats.bdre.md.rest.RestWrapper;
 import com.wipro.ats.bdre.md.rest.util.Dao2TableUtil;
+import com.wipro.ats.bdre.md.rest.util.DateConverter;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -18,10 +19,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.security.Principal;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * Created by cloudera on 1/8/16.
@@ -86,6 +84,7 @@ public class DataLoadAPI extends MetadataAPIBase {
         String processName = null;
         String processDescription = null;
         Integer busDomainId = null;
+        Map<String,String> partitionCols = new TreeMap<String, String>();
 
         List<com.wipro.ats.bdre.md.dao.jpa.Process> childProcesses=new ArrayList<com.wipro.ats.bdre.md.dao.jpa.Process>();
         List<com.wipro.ats.bdre.md.dao.jpa.Properties> file2RawProperties=new ArrayList<Properties>();
@@ -96,12 +95,12 @@ public class DataLoadAPI extends MetadataAPIBase {
 
         com.wipro.ats.bdre.md.dao.jpa.Properties jpaProperties=null;
         for (String string : map.keySet()) {
-            LOGGER.debug("String is" + string);
+            LOGGER.info("String is" + string);
             if (map.get(string) == null || ("").equals(map.get(string))) {
                 continue;
             }
             if (string.startsWith("rawtablecolumn_")) {
-                jpaProperties = Dao2TableUtil.buildJPAProperties("raw-columns", "raw_column_name." + rawColumnCounter, string.replaceAll("rawtablecolumn_", ""), "Column name for raw table");
+                jpaProperties = Dao2TableUtil.buildJPAProperties("raw-cols", "raw_column_name." + rawColumnCounter, string.replaceAll("rawtablecolumn_", ""), "Column name for raw table");
                 file2RawProperties.add(jpaProperties);
                 jpaProperties = Dao2TableUtil.buildJPAProperties("raw-data-types", "raw_column_datatype." + rawColumnCounter, map.get(string), "Data Type for raw table");
                 rawColumnCounter++;
@@ -110,11 +109,7 @@ public class DataLoadAPI extends MetadataAPIBase {
                 if("fileformat".equals(string.replaceAll("fileformat_", ""))){
                     continue;
                 }else if("rawDBName".equals(string.replaceAll("fileformat_", ""))){
-                    if("".equals(map.get(string))){
-                        jpaProperties = Dao2TableUtil.buildJPAProperties("raw-table", "table_db", "raw", "RAW DB Name");
-                    }else{
-                        jpaProperties = Dao2TableUtil.buildJPAProperties("raw-table", "table_db", map.get(string), "RAW DB Name");
-                    }
+                    jpaProperties = Dao2TableUtil.buildJPAProperties("raw-table", "table_db", map.get(string), "RAW DB Name");
                     file2RawProperties.add(jpaProperties);
                 }
             }
@@ -147,26 +142,28 @@ public class DataLoadAPI extends MetadataAPIBase {
                 if("baseTableName".equals(string.replaceAll("basetable_",""))){
                     jpaProperties = Dao2TableUtil.buildJPAProperties("base-table", "table_name" , map.get(string) , "Base Table Name");
                     raw2StageProperties.add(jpaProperties);
-                    jpaProperties = Dao2TableUtil.buildJPAProperties("raw-table", "table_name" , "raw"+map.get(string) , "RAW Table Name");
+                    jpaProperties = Dao2TableUtil.buildJPAProperties("raw-table", "table_name" , "raw_"+map.get(string) , "RAW Table Name");
                     file2RawProperties.add(jpaProperties);
                     jpaProperties = Dao2TableUtil.buildJPAProperties("base-table", "table_name" , map.get(string) , "Base Table Name");
                     stage2BaseProperties.add(jpaProperties);
                 }else if("baseDBName".equals(string.replaceAll("basetable_",""))){
                     jpaProperties = Dao2TableUtil.buildJPAProperties("base-table", "table_db" , map.get(string) , "Base Table Name");
                     stage2BaseProperties.add(jpaProperties);
+                    jpaProperties = Dao2TableUtil.buildJPAProperties("base-table", "table_db" , map.get(string) , "Base Table Name");
                     raw2StageProperties.add(jpaProperties);
                 }
-
-
             }else if (string.startsWith("transform_")) {
-                jpaProperties = Dao2TableUtil.buildJPAProperties("base-columns", string.replaceAll("transform_","") , map.get(string) , "Transformation on column");
+                jpaProperties = Dao2TableUtil.buildJPAProperties("base-columns", string , map.get(string) , "Transformation on column");
                 raw2StageProperties.add(jpaProperties);
             }else if (string.startsWith("stagedatatype_")) {
                 jpaProperties = Dao2TableUtil.buildJPAProperties("base-data-types", string.replaceAll("stagedatatype_","") , map.get(string) , "data type of column");
                 raw2StageProperties.add(jpaProperties);
             }else if (string.startsWith("baseaction_")) {
                 jpaProperties = Dao2TableUtil.buildJPAProperties("base-columns-and-types", string.replaceAll("baseaction_","") , map.get(string) , "Transformation on column");
-                raw2StageProperties.add(jpaProperties);
+                stage2BaseProperties.add(jpaProperties);
+            }else if (string.startsWith("partition_")) {
+                    LOGGER.info("partition column entering" + map.get(string));
+                    partitionCols.put(map.get(string),string.replaceAll("partition_",""));
             }
             else if (string.startsWith("process_processName")) {
                 LOGGER.debug("process_processName" + map.get(string));
@@ -179,7 +176,17 @@ public class DataLoadAPI extends MetadataAPIBase {
                 busDomainId = new Integer(map.get(string));
             }
         }
-
+        StringBuilder partitionColListBuilder = new StringBuilder();
+        for (String order : partitionCols.keySet()){
+            partitionColListBuilder.append(partitionCols.get(order));
+            partitionColListBuilder.append(",");
+        }
+        String partitionColList = partitionColListBuilder.toString();
+        partitionColList = partitionColList.substring(0,partitionColList.lastIndexOf(","));
+        jpaProperties = Dao2TableUtil.buildJPAProperties("partition", "partition_columns" , partitionColList , "Transformation on column");
+        stage2BaseProperties.add(jpaProperties);
+        jpaProperties = Dao2TableUtil.buildJPAProperties("partition", "partition_columns" , partitionColList , "Transformation on column");
+        raw2StageProperties.add(jpaProperties);
         jpaProperties = Dao2TableUtil.buildJPAProperties("raw-table", "raw.table.db", "raw", "Input Format");
         file2RawProperties.add(jpaProperties);
 
@@ -193,9 +200,16 @@ public class DataLoadAPI extends MetadataAPIBase {
         processPropertiesMap.put(file2Raw,file2RawProperties);
         processPropertiesMap.put(raw2Stage,raw2StageProperties);
         processPropertiesMap.put(stage2Base,stage2BaseProperties);
-        processDAO.createDataloadJob(parentProcess,childProcesses,null,processPropertiesMap);
+        List<com.wipro.ats.bdre.md.dao.jpa.Process> processList = processDAO.createDataloadJob(parentProcess,childProcesses,null,processPropertiesMap);
 
-
+        List<com.wipro.ats.bdre.md.beans.table.Process> tableProcessList = Dao2TableUtil.jpaList2TableProcessList(processList);
+        Integer counter = tableProcessList.size();
+        for (com.wipro.ats.bdre.md.beans.table.Process process:tableProcessList) {
+            process.setCounter(counter);
+            process.setTableAddTS(DateConverter.dateToString(process.getAddTS()));
+            process.setTableEditTS(DateConverter.dateToString(process.getEditTS()));
+        }
+        restWrapper = new RestWrapper(tableProcessList, RestWrapper.OK);
 
 
 

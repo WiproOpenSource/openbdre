@@ -108,7 +108,7 @@ UPDATE NO ACTION,
 CREATE TABLE properties_template (
   process_template_id int NOT NULL references process_template(process_template_id) ON
 DELETE NO ACTION ON UPDATE NO ACTION,
-  config_group varchar(10) NOT NULL,
+  config_group varchar(128) NOT NULL,
   prop_temp_key varchar(128) NOT NULL,
   prop_temp_value varchar(2048) NOT NULL,
   description varchar(1028) NOT NULL,
@@ -155,7 +155,7 @@ DELETE NO ACTION ON UPDATE NO ACTION,
 CREATE TABLE properties (
   process_id int NOT NULL references process(process_id) ON DELETE NO ACTION ON UPDATE NO
 ACTION,
-  config_group varchar(10) NOT NULL,
+  config_group varchar(128) NOT NULL,
   prop_key varchar(128) NOT NULL,
   prop_value varchar(2048) NOT NULL,
   description varchar(1028) NOT NULL,
