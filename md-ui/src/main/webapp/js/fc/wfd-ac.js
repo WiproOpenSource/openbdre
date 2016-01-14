@@ -88,7 +88,6 @@ var propertiesAC = function(ajaxURL, type, arg) {
 			break;
 		case 'PUT':
 			returnObject = ajaxCall(ajaxURL, type, arg);
-			console.log("inside ajax");
 			if (returnObject) {
 				alterNPsC([returnObject.processId, returnObject.key], returnObject);
 			}
@@ -223,9 +222,8 @@ var fileHandlerAC = function (ajaxURL, type, arg) {
 							    returnObject=false;
 							}
 						 });
-						 }
 			return returnObject;
-		    break;
+            break;
 		case 'PUT':
 			break;
 		case 'DELETE':
