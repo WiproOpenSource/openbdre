@@ -1,9 +1,10 @@
 #!/bin/sh
 
+. $(dirname $0)/../env.properties
 BDRE_WFD=~/bdre-wfd
 BDRE_HOME=~/bdre
 BDRE_REMOTE_HOME=~$edgeNodeUserName/bdre
-edgeNodeUrl=$edgeNodeUserName@$edgeNodeHostName
+EDGE_NODE_URL=$edgeNodeUserName@$edgeNodeHostName
 
 #1,'ingestion',null
 #2, 'Semantic', null
@@ -35,4 +36,4 @@ if [ $processTypeId -eq 2 ]; then
     cd $current_dir
 fi
 
-ssh $edgeNodeUrl sh $BDRE_REMOTE_HOME/bdre-scripts/deployment/process-type-$processTypeId.sh $busDomainId $processTypeId $processId
+ssh $EDGE_NODE_URL sh $BDRE_REMOTE_HOME/bdre-scripts/deployment/process-type-$processTypeId.sh $busDomainId $processTypeId $processId

@@ -10,11 +10,12 @@
 #19, 'DQ_Parent', null
 #26,'Filemon Parent',null
 
+. $(dirname $0)/../env.properties
 BDRE_HOME=~/bdre
 BDRE_APPS_HOME=~/bdre_apps
 BDRE_REMOTE_HOME=~$edgeNodeUserName/bdre
 BDRE_REMOTE_EXECUTION_DIR=$BDRE_REMOTE_HOME/bdre-scripts/execution
-edgeNodeUrl=$edgeNodeUserName@$edgeNodeHostName
+EDGE_NODE_URL=$edgeNodeUserName@$edgeNodeHostName
 
 if [ -z "$1" ] || [ -z "$2" ] || [ -z "$3" ] ; then
         echo Insufficient parameters !
@@ -26,21 +27,21 @@ processTypeId=$2
 processId=$3
 echo "busDomainId=$1 , processTypeId=$2 , processId=$3"
 if [ $processTypeId -eq 1 ]; then
-    ssh $edgeNodeUrl sh $BDRE_REMOTE_EXECUTION_DIR/flume.sh $busDomainId $processTypeId $processId
+    ssh $EDGE_NODE_URL sh $BDRE_REMOTE_EXECUTION_DIR/flume.sh $busDomainId $processTypeId $processId
 elif [ $processTypeId -eq 2 ]; then
-    ssh $edgeNodeUrl sh $BDRE_REMOTE_EXECUTION_DIR/workflow.sh $busDomainId $processTypeId $processId
+    ssh $EDGE_NODE_URL sh $BDRE_REMOTE_EXECUTION_DIR/workflow.sh $busDomainId $processTypeId $processId
 elif [ $processTypeId -eq 4 ]; then
-    ssh $edgeNodeUrl sh $BDRE_REMOTE_EXECUTION_DIR/workflow.sh $busDomainId $processTypeId $processId
+    ssh $EDGE_NODE_URL sh $BDRE_REMOTE_EXECUTION_DIR/workflow.sh $busDomainId $processTypeId $processId
 elif [ $processTypeId -eq 5 ]; then
-    ssh $edgeNodeUrl sh $BDRE_REMOTE_EXECUTION_DIR/workflow.sh $busDomainId $processTypeId $processId
+    ssh $EDGE_NODE_URL sh $BDRE_REMOTE_EXECUTION_DIR/workflow.sh $busDomainId $processTypeId $processId
 elif [ $processTypeId -eq 18 ]; then
-    ssh $edgeNodeUrl sh $BDRE_REMOTE_EXECUTION_DIR/workflow.sh $busDomainId $processTypeId $processId
+    ssh $EDGE_NODE_URL sh $BDRE_REMOTE_EXECUTION_DIR/workflow.sh $busDomainId $processTypeId $processId
 elif [ $processTypeId -eq 19 ]; then
-    ssh $edgeNodeUrl sh $BDRE_REMOTE_EXECUTION_DIR/workflow.sh $busDomainId $processTypeId $processId
+    ssh $EDGE_NODE_URL sh $BDRE_REMOTE_EXECUTION_DIR/workflow.sh $busDomainId $processTypeId $processId
 elif [ $processTypeId -eq 28 ]; then
-    ssh $edgeNodeUrl sh $BDRE_REMOTE_EXECUTION_DIR/workflow.sh $busDomainId $processTypeId $processId
+    ssh $EDGE_NODE_URL sh $BDRE_REMOTE_EXECUTION_DIR/workflow.sh $busDomainId $processTypeId $processId
 elif [ $processTypeId -eq 26 ]; then
-    ssh $edgeNodeUrl sh $BDRE_REMOTE_EXECUTION_DIR/filemonitor.sh $processId
+    ssh $EDGE_NODE_URL sh $BDRE_REMOTE_EXECUTION_DIR/filemonitor.sh $processId
 else
     echo "Don't know how to execute busDomainId=$1 , processTypeId=$2 , processId=$3"
 fi
