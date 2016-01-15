@@ -31,7 +31,7 @@ if [ $processTypeId -eq 2 ]; then
     echo "current dir: $current_dir"
     cd $BDRE_WFD
     tar -czf userfile-$processId.tar.gz $processId
-    scp userfile-$processId.tar.gz $edgeNodeUrl:$BDRE_REMOTE_HOME/tmp
+    scp userfile-$processId.tar.gz $EDGE_NODE_URL:$BDRE_REMOTE_HOME/tmp
     rm -r userfile-$processId.tar.gz
     cd $current_dir
 fi
