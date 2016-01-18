@@ -22,21 +22,21 @@
 ***
 [Operational Metadata Management](#operational-metadata-management)
 ***
-# License
-Released under Apache Public License 2.0. You can get a copy for the license at http://www.apache.org/licenses/LICENSE-2.0.
-# Objective
-Goal of BDRE is to give Bigdata implementation a significant acceleration by supplying the essential frameworks which are most likely to be written anyway.
-It'll drastically eliminate hundreds of man hours of effort in operational framework development.
-Big Data implementations however, require specialized skills, signiﬁcant development effort on data loading, semantic processing, DQ, code deployment across environments etc.
-Big Data Ready Enterprise (BDRE)makes big data technology adoption simpler by optimizing and integrating various big data solutions and providing them under one integrated package.
-BDRE provides a uniﬁed framework for a Hadoop implementation that can drastically minimize time development and fasttrack the Hadoop implementation. It comprises a reusable framework that can be customized as per the enterprise eco system. The components are loosely integrated and can be de-coupled or replaced easily with alternatives.
+[How To Contribute](#how-to-contribute)
+***
 
+# License
+Released under Apache Public License 2.0. You can get a copy of the license at http://www.apache.org/licenses/LICENSE-2.0.
+# Objective
+Big Data Ready Enterprise (BDRE)makes big data technology adoption simpler by optimizing and integrating various big data solutions and providing them under one integrated package. BDRE provides a uniﬁed framework for a Hadoop implementation that can drastically minimize development time and fast track the Hadoop implementation. It comprises a reusable framework that can be customized as per the enterprise ecosystem. The components are loosely integrated and can be de-coupled or replaced easily with alternatives.
+ 
+The primary goal of BDRE is to accelerate Bigdata implementations by supplying the essential frameworks that are most likely to be written from scratch. It can drastically reduce effort by eliminating hundreds of man hours in operational framework development. Big Data implementations however, require specialized skills, signiﬁcant development effort on data loading, semantic processing, DQ, code deployment across environments etc.
 
 # Features
 
 - Operational Metadata Management
  - Registry of all workflow processes/templates
- - Parameters/configuration(key/val) for processes
+ - Parameters/configuration(key/value) for processes
  - Dependency information (upstream/downstream)
  - Batch management/tracking. Batch concept in BDRE is for tracking the data flow between workflow processes.
  - Run control (for delta processing/dependency check)
@@ -44,7 +44,7 @@ BDRE provides a uniﬁed framework for a Hadoop implementation that can drastica
  - File registry - can be used to register e.g. ingested files or a raw file as an output of an upstream.
  - Execution statistics logging (key/value)
  - Executed hive queries and data lineage information.
- - Java APIs that ingrates with Bigdata with non-bigdata applications alike.
+ - Java APIs that integrates with Big Data with non-Big Data applications alike.
  - Job monitoring and proactive/reactive alerting
 - Data ingestion framework
  - Tabular data from RDBMS
@@ -55,7 +55,7 @@ BDRE provides a uniﬁed framework for a Hadoop implementation that can drastica
  - Generate billons of records based on patterns and ranges
 - Semantic Layer Building Framework
  - Build the sematic layer using visual workflow creator using the data you ingested.
- - Supports Hive, Pig, Mapreduce, Spark , R etc
+ - Supports Hive, Pig, MapReduce, Spark, R etc.
  - Generates Oozie workflows
 - Data Quality Framework
  - Validates your data using your rules in a distributed way
@@ -74,12 +74,12 @@ BDRE provides a uniﬁed framework for a Hadoop implementation that can drastica
 
 This section will help you build BDRE from source. Audience for this document are developers and architects who want be part of BDRE framework development or may just want to evaluate it.
 
-### General Prerequisit
+### General Prerequisite
 
-For testing/development perpose and to save time use the fully loaded Hadoop VMs from Cloudera or Hortonworks because all the required software are mostly installed and configured.
+For testing/development purpose and to save time, use the fully loaded Hadoop VMs from Cloudera or Hortonworks because all the required software are typically installed and configured.
 
 - A Hadoop Cluster
- - In this section we are using *HortonWorks Sandbox 2.2.0*
+ - In this section we are using *Hortonworks Sandbox 2.2.0*
 - Git 1.9 and up
 - Maven 3 and up
 - Oracle JDK 7(and up)
@@ -87,7 +87,7 @@ For testing/development perpose and to save time use the fully loaded Hadoop VMs
 For production use BDRE currently supports following production scale databases.)
   - MySQL Server 5.1 and up
   - Oracle 11g Server or better
-  - PostgreSql
+  - PostgreSQL
 - Google Chrome browser
 
 You should be able to do the same in Mac or Windows but note that setting up a Hadoop cluster might be tricky in Windows and might more involvement. However to deploy and run the jobs we recommend a Linux system. BDRE is typically installed in Hadoop edge node in a multi-node cluster.
@@ -95,16 +95,11 @@ You should be able to do the same in Mac or Windows but note that setting up a H
 ## Preparation
 
 * Download and install VirtualBox from https://www.virtualbox.org/
-* Download and install HortonWorks Sandbox 2.2 Virtual Box image from http://hortonworks.com/products/releases/hdp-2-2/#install
+* Download and install Hortonworks Sandbox 2.2 Virtual Box image from http://hortonworks.com/products/releases/hdp-2-2/#install
 * Setup a 'Host-Only Adapter' for network to enable communication between Host and Guest OS.
 * Now ssh into the sandbox using *root@VM_IP* (password hadoop)
     - The VM_IP is usually something between 192.168.56.101 - 192.168.56.109
-* Start Oozie as the Oozie user and Oozie isn't already started. ```ps -ef | grep -i oozie``` will help determine status of Oozie.
 
-    ```shell
-    su - oozie -c "/usr/hdp/current/oozie-server/bin/oozie-start.sh"
-    ps -ef | grep -i oozie
-    ```
 * Now create *openbdre* user account.
 
     ```shell
@@ -197,12 +192,12 @@ You should be able to do the same in Mac or Windows but note that setting up a H
     ```
 
 3. Building
- * Now build BDRE using (note BDRE may not compile if the **settings.xml** is not passed from the commandline so be sure to use the *-s* option. When building for the first time, it might take a while as maven resolves and downloads the jar libraries from diffrent repositories.
+ * Now build BDRE using (note BDRE may not compile if the **settings.xml** is not passed from the command line so be sure to use the *-s* option. When building for the first time, it might take a while as maven resolves and downloads the jar libraries from different repositories.
 
     ```shell
     mvn -s settings.xml clean install -P hdp22
     ```
- * *Note:* Selecting hdp22 will compile BDRE with HDP 2.2 libraries and automatically configure BDRE with Hortonworks Sandbox 2.2.0. Similarly one should be able to build this using -P cdh52 which will configure BDRE for CDH 5.2 Quickstart VM. During building it'll pickup the environment specific configurations from <source root>/databases/setup/profile.*hdp22*.properties.
+ * *Note:* Selecting hdp22 will compile BDRE with HDP 2.2 libraries and automatically configure BDRE with Hortonworks Sandbox 2.2.0. Similarly one should be able to build this using -P cdh52 which will configure BDRE for CDH 5.2 QuickStart VM. During building it'll pick up the environment specific configurations from <source root>/databases/setup/profile.*hdp22*.properties.
 
     Content of databases/setup/profile.hdp22.properties
  ```properties
@@ -251,8 +246,13 @@ You should be able to do the same in Mac or Windows but note that setting up a H
 ```shell
  sudo service bdre start
 ```
+* Start Oozie as the Oozie user incase Oozie isn't already started. ```ps -ef | grep -i oozie``` will help determine status of Oozie.
 
-* Use *Google Chrome browser* from the host machine and open *http://VM_IP:288503/mdui/pages/content.page*
+    ```shell
+    su - oozie -c "/usr/hdp/current/oozie-server/bin/oozie-start.sh"
+    ps -ef | grep -i oozie
+    ```
+* Use *Google Chrome browser* from the host machine and open *http://VM_IP:28850/mdui/pages/content.page*
 * Login using admin/zaq1xsw2
 
 ### Creating, Deploying and Running a Test Job
@@ -262,9 +262,9 @@ You should be able to do the same in Mac or Windows but note that setting up a H
 * Click *Test Connection*
 * Expand and select 1 table (be sure to expand the tables before selecting).
 * Create the jobs and see the pipeline.
-* Click *XML* , *Diagram* etc and check the generated Oozie workflow XML and diagram.
+* Click *XML*, *Diagram* etc. and check the generated Oozie workflow XML and diagram.
 * Search for 'Process' in the search window and open the 'Process' page
-* Click deploy button on process page corresponding to the process you want to deploy. ( Deploy button will show status regarding deployment of process, when you hover over the button.)
+* Click deploy button on process page corresponding to the process you want to deploy. (Deploy button will show status regarding deployment of process, when you hover over the button.)
 * Wait for 2 minutes and the deployment will be completed by then.
 * After the deployment is complete and in UI the status for the process is deployed (turns green).
 * Click the execution button to execute the *Import job*.
@@ -274,17 +274,34 @@ You should be able to do the same in Mac or Windows but note that setting up a H
 # Data Ingestion
 
 ## RDBMS Data Ingestion
-TDB
+
+<a href="http://www.youtube.com/watch?v=JcbYU7oEmxc" target="_blank"><img src="http://wiproopensourcepractice.github.io/openbdre/bdreimages/rdbms.PNG" 
+alt="BDRE RDBMS data ingestion demo video" width="240" height="180" border="10" /></a>
+
+
 ## Streaming Data Ingestion
-TBD
+
+<a href="http://www.youtube.com/watch?v=1yqoAVENrjo" target="_blank"><img src="http://wiproopensourcepractice.github.io/openbdre/bdreimages/twitter.PNG" 
+alt="BDRE Twitter Ingestion demo video" width="240" height="180" border="10" /></a>
+
+
 ## Directory Monitoring and File Ingestion
-TBD
+
+<a href="http://www.youtube.com/watch?v=IhDMYase1fU" target="_blank"><img src="http://wiproopensourcepractice.github.io/openbdre/bdreimages/filemon.PNG" 
+alt="BDRE File ingestion demo video" width="240" height="180" border="10" /></a>
+
 # Workflow Builder
-TBD
+
+<a href="http://www.youtube.com/watch?v=PG6Qvg-pKO0" target="_blank"><img src="http://wiproopensourcepractice.github.io/openbdre/bdreimages/wfd.PNG" 
+alt="BDRE Workflow Designer demo video" width="240" height="180" border="10" /></a>
+
 # Bulk Data Manufacturing
-TBD
+Demo video TBD
 # Web Crawler
-TBD
+
+<a href="http://www.youtube.com/watch?v=0b6dWGxin4Y" target="_blank"><img src="http://wiproopensourcepractice.github.io/openbdre/bdreimages/crawler.PNG" 
+alt="BDRE Web Crawling" width="240" height="180" border="10" /></a>
+
 
 # Operational Metadata Management System
 
@@ -299,3 +316,54 @@ BDRE provides complete job/operational metadata management solution for Hadoop. 
 BDRE uses RDBMS database to store all job related metadata. A set of stored procedures are there to interface will the tables which are exposed via Java APIs to manage/create/update the static and run time metadata information. Below is the data model for BDRE metadata operational database.
 
 ![eer](http://wiproopensourcepractice.github.io/openbdre/bdreimages/eer.png)
+
+# How to Contribute
+
+Contribution for the enhancements in BDRE are welcome and humbly requested by us. To contribute, please navigate to our GitHub project page and [fork](https://help.github.com/articles/fork-a-repo/) BDRE main repository under your own account. You can make changes to your own forked repository and then open a [Pull Request](https://help.github.com/articles/creating-a-pull-request) to merge your change with the main repo.
+
+<a class="buttons github" href="https://github.com/WiproOpenSourcePractice/openbdre">Goto BDRE@GitHub</a>
+
+ - Clone the main repo (if you havn't done already)
+ 
+```shell
+git clone "https://github.com/WiproOpenSourcePractice/openbdre.git" 
+cd openbdre
+```
+
+ - Add your forked repo where you have write access and create your own branch.
+ 
+```shell
+git remote add myrepo https://<your id>:<your password>@github.com/<YOUR ACCT NAME>/openbdre.git
+git checkout -b mybranch
+```
+
+ - Make and commit your changes to your own branch.
+ 
+```shell
+git commit -am "My changes"
+```
+
+ - Push to your own branch in your own remote repo (myrepo).
+ 
+```shell
+git push myrepo mybranch
+```
+
+ - Everyday better pull from the main repo(origin) and sync your repo with it.
+ 
+```shell
+git checkout develop
+git pull origin develop 
+```
+
+ - Keep the develop branch only to have the latest main repo content. Make changes while you are in your own branch.
+
+ - Synch your code with the main repo. Push the latest content pulled from the main repo to your own repo in your own branch.
+
+```shell
+git checkout mybranch 
+git merge develop
+git push myrepo mybranch
+```
+
+ - When you are ready to submit your contribution to the main repo, please open a [pull request](https://help.github.com/articles/creating-a-pull-request).
