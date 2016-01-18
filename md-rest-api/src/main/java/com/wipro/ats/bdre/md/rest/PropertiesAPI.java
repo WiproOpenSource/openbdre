@@ -120,7 +120,7 @@ public class PropertiesAPI extends MetadataAPIBase {
      * @param model
      * @return nothing.
      */
-    @RequestMapping(value = "/{id}/{k}", method = RequestMethod.DELETE)
+    @RequestMapping(value = "/{id}/{k}/", method = RequestMethod.DELETE)
     public
     @ResponseBody
     RestWrapper delete(
@@ -130,8 +130,6 @@ public class PropertiesAPI extends MetadataAPIBase {
 
         RestWrapper restWrapper = null;
         try {
-
-            Properties properties = new Properties();
 
             com.wipro.ats.bdre.md.dao.jpa.PropertiesId propertiesId = new com.wipro.ats.bdre.md.dao.jpa.PropertiesId();
             propertiesId.setProcessId(processId);
