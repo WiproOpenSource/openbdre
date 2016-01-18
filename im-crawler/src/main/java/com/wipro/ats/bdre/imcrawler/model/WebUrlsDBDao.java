@@ -70,7 +70,7 @@ public class WebUrlsDBDao {
         Long lid = new Long(id.intValue());
         Weburlsdb weburlsdb=(Weburlsdb)session.get(Weburlsdb.class,lid);
         //delete only if it is present from before i.e. not deleted by other mapper
-        if(weburlsdb != null)
+//        if(weburlsdb != null)
             session.delete(weburlsdb);
         session.getTransaction().commit();
     }
