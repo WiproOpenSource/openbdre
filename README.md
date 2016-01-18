@@ -1,7 +1,6 @@
 # Bigdata Ready Enterprise Open Source Software
 
-## Table of Contents
-
+# Table of Contents
 
 [License](#license)
 ***
@@ -9,22 +8,21 @@
 ***
 [Features](#features)
 ***
-[Architecture](#architecture)
-***
 [Installation](#installation)
+***
+[Architecture](#architecture)
 ***
 [Data Ingestion](#data-ingestion)
 ***
-[Workflow Builder](#workflow-builder)
+[Workflow Builder](#Workflow Builder)
 ***
-[Bulk Data Manufacturing](#bulk-data-manufacturing)
+[Operational Metadata Management](#Operational Metadata Management)
 ***
-[Web Crawler](#web-crawler)
+[Bulk Data Manufacturing](#Bulk Data Manufacturing)
 ***
-[Operational Metadata Management](#operational-metadata-management)
+[Web Crawler](#Web Crawler)
 ***
 # License
-
 Released under Apache Public License 2.0. You can get a copy for the license at http://www.apache.org/licenses/LICENSE-2.0.
 # Objective
 Goal of BDRE is to give Bigdata implementation a significant acceleration by supplying the essential frameworks which are most likely to be written anyway.
@@ -32,7 +30,6 @@ It'll drastically eliminate hundreds of man hours of effort in operational frame
 Big Data implementations however, require specialized skills, signiﬁcant development effort on data loading, semantic processing, DQ, code deployment across environments etc.
 Big Data Ready Enterprise (BDRE)makes big data technology adoption simpler by optimizing and integrating various big data solutions and providing them under one integrated package.
 BDRE provides a uniﬁed framework for a Hadoop implementation that can drastically minimize time development and fasttrack the Hadoop implementation. It comprises a reusable framework that can be customized as per the enterprise eco system. The components are loosely integrated and can be de-coupled or replaced easily with alternatives.
-
 
 # Features
 
@@ -66,9 +63,6 @@ BDRE provides a uniﬁed framework for a Hadoop implementation that can drastica
  - Create ingestion, data generation, Crawler jobs or create Oozie workflows graphically without writing any code
  - One click deploy and execute jobs without SSH into the edge node.
 
-# Architecture
-
-![image](http://wiproopensourcepractice.github.io/openbdre/bdreimages/architecture.PNG)
 
 # Installation
 
@@ -123,7 +117,7 @@ You should be able to do the same in Mac or Windows but note that setting up a H
     echo "openbdre ALL=(ALL) NOPASSWD:ALL" >> /etc/sudoers
     ```
 
-* Login to the HDP Sandbox with the newly created openbdre user. You can perform a **su openbdre** to switch to this account. Please make sure you are not root user beyond this point.
+* Login to the HDP Sandbox with the newly created openbdre user. You can perform a **su openbdre** to switch to this account.
 
     ```shell
     [root@sandbox ~]# su openbdre
@@ -248,10 +242,10 @@ You should be able to do the same in Mac or Windows but note that setting up a H
 
 ### Using BDRE
 
-* After a successful build, start the BDRE UI service
+* After a successful build, start the BDRE UI using
 
 ```shell
- sudo service bdre start
+ /home/openbdre/bdre/bdre-scripts/execution/run-ui.sh
 ```
 
 * Use *Google Chrome browser* from the host machine and open *http://VM_IP:288503/mdui/pages/content.page*
@@ -273,31 +267,5 @@ You should be able to do the same in Mac or Windows but note that setting up a H
 * Check the process in Oozie console *http://VM_IP:11000/oozie*
 * When the import job is complete start the *data load job*.
 
-# Data Ingestion
-
-## RDBMS Data Ingestion
-TDB
-## Streaming Data Ingestion
-TBD
-## Directory Monitoring and File Ingestion
-TBD
-# Workflow Builder
-TBD
-# Bulk Data Manufacturing
-TBD
-# Web Crawler
-TBD
-
-# Operational Metadata Management System
-
-### Operational Metadata Management
-
-BDRE provides complete job/operational metadata management solution for Hadoop. At its core acts as a registry and tracker for different types of jobs running in different Hadoop clusters or as a standalone. It provides APIs to integrate with virtually any jobs.
 
 
-![image](http://wiproopensourcepractice.github.io/openbdre/bdreimages/mdgraph.png)
-
-
-BDRE uses RDBMS database to store all job related metadata. A set of stored procedures are there to interface will the tables which are exposed via Java APIs to manage/create/update the static and run time metadata information. Below is the data model for BDRE metadata operational database.
-
-![eer](http://wiproopensourcepractice.github.io/openbdre/bdreimages/eer.png)
