@@ -186,7 +186,7 @@ public class CodeUploaderAPI extends MetadataAPIBase {
         private String subDir;
         private String fileName;
         private long fileSize;
-
+        private boolean fileExists;
         @Override
         public String toString() {
             return "parentProcessId=" + parentProcessId +
@@ -226,8 +226,44 @@ public class CodeUploaderAPI extends MetadataAPIBase {
         public void setFileSize(long fileSize) {
             this.fileSize = fileSize;
         }
+
+        public boolean isFileExists() {
+            return fileExists;
+        }
+
+        public void setFileExists(boolean fileExists) {
+            this.fileExists = fileExists;
+        }
     }
 
+    @RequestMapping(value = "/check/{parentProcessId}/{subDir}", method = RequestMethod.POST)
+
+    public
+    @ResponseBody
+    RestWrapper checkFileExists(@PathVariable("parentProcessId") Integer parentProcessId,
+                                 //This is lib, hql etc according to file to be uploaded
+                                 @PathVariable("subDir") String subDir,
+                                 @RequestParam("file") String file, Principal principal) {
+
+        boolean fileExists=false;
+            try {
+
+                String uploadedFilesDirectory = MDConfig.getProperty("upload.base-directory");
+                String fileName = file;
+               // byte[] bytes = file.getBytes();
+                String fileLocation = uploadedFilesDirectory + "/" + parentProcessId + "/" + subDir;
+                LOGGER.debug("Upload location: " + fileLocation);
+                File fileToBeChecked = new File(fileLocation + "/" + fileName);
+                LOGGER.debug("Checking if file: " + fileToBeChecked+ " exists");
+                fileExists=fileToBeChecked.exists() && !fileToBeChecked.isDirectory();
+                UploadedFile uploadedFile = new UploadedFile();
+                uploadedFile.setFileExists(fileExists);
+                return new RestWrapper(uploadedFile, RestWrapper.OK);
+            } catch (Exception e) {
+                LOGGER.error("error occurred while checking if file exists", e);
+                return new RestWrapper(e.getMessage(), RestWrapper.ERROR);
+                            }
+    }
     @Override
     public Object execute(String[] params) {
         return null;

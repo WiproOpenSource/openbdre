@@ -70,7 +70,7 @@ public class PendingUrlsDBDao {
         Long longid = new Long (id.intValue());
         Pendingurlsdb pendingurlsdb=(Pendingurlsdb)session.get(Pendingurlsdb.class,longid);
         //delete only if it is present from before i.e. not deleted by other mapper
-        if(pendingurlsdb != null)
+        //if(pendingurlsdb != null)
             session.delete(pendingurlsdb);
         session.getTransaction().commit();
     }
