@@ -32,7 +32,7 @@ public class LineageHook implements org.apache.hadoop.hive.ql.hooks.ExecuteWithH
 
 	public void run(HookContext hookContext) {
 //		TODO - redirect System.out to LOGGER.debug
-		System.out.println("Running LineageHook...");
+		LOGGER.debug("Running LineageHook...");
 		String wholeQuery = null;
 		String processId = null;
 		String instanceExecId = null;
@@ -43,7 +43,7 @@ public class LineageHook implements org.apache.hadoop.hive.ql.hooks.ExecuteWithH
 			    wholeQuery = LineageConstants.query;
 			    processId = "" + LineageConstants.processId;
 			    instanceExecId = "" + LineageConstants.instanceId;
-
+				LOGGER.debug("---------------query: "+ wholeQuery+" processid: "+processId+" iEid: "+instanceExecId);
 		    } else {
 //			    hookContext.getConf().getAllProperties().list(System.out);
 			    wholeQuery = hookContext.getQueryPlan().getQueryString();
@@ -53,28 +53,28 @@ public class LineageHook implements org.apache.hadoop.hive.ql.hooks.ExecuteWithH
 				    String key = (String)(entry.getKey());
 				    if (LineageConstants.processIdString.equalsIgnoreCase(key)) {
 					    processId = (String) (entry.getValue());
-					    System.out.println("ProcessId found in Hive = " + processId);
+					    LOGGER.debug("ProcessId found in Hive = " + processId);
 				    } else if (LineageConstants.instanceExecIdString.equalsIgnoreCase(key)) {
 					    instanceExecId = (String) (entry.getValue());
-					    System.out.println("InstanceExecId found in Hive = " + instanceExecId);
+					    LOGGER.debug("InstanceExecId found in Hive = " + instanceExecId);
 				    }
 			    }
 
 //			    if (processId == null) {
-//				    System.out.println("Error: bdre.lineage.processId is not supplied while calling Hive. Assuming default value");
+//				    LOGGER.debug("Error: bdre.lineage.processId is not supplied while calling Hive. Assuming default value");
 //				    processId = "" + LineageConstants.processId;
 //			    }
 //			    if (instanceExecId == null) {
-//				    System.out.println("Error: bdre.lineage.instanceExecId is not supplied while calling Hive. Assuming default value");
+//				    LOGGER.debug("Error: bdre.lineage.instanceExecId is not supplied while calling Hive. Assuming default value");
 //				    instanceExecId = "" + LineageConstants.instanceId;
 //			    }
 			    if (processId == null || instanceExecId == null) {
-				    System.out.println("Warning: ProcessId or InstanceExecId is null. Lineage not done. End of Lineage Hook.");
+				    LOGGER.debug("------------------Warning: ProcessId or InstanceExecId is null. Lineage not done. End of Lineage Hook.-------------");
 				    return;
 			    }
 
 		    }
-		    System.out.println("BDRE Printed query = " + wholeQuery);
+		    LOGGER.debug("BDRE Printed query = " + wholeQuery);
 
 		    LineageProcessor lineageProcessor = new LineageProcessor();
 		    lineageProcessor.execute(wholeQuery, processId, instanceExecId);
