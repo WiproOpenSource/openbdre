@@ -85,6 +85,7 @@ public class DataLoadAPI extends MetadataAPIBase {
         String processDescription = null;
         Integer busDomainId = null;
         Map<String,String> partitionCols = new TreeMap<String, String>();
+        Map<String,String> partitionDataTypes = new TreeMap<String, String>();
 
         List<com.wipro.ats.bdre.md.dao.jpa.Process> childProcesses=new ArrayList<com.wipro.ats.bdre.md.dao.jpa.Process>();
         List<com.wipro.ats.bdre.md.dao.jpa.Properties> file2RawProperties=new ArrayList<Properties>();
@@ -107,7 +108,8 @@ public class DataLoadAPI extends MetadataAPIBase {
                 file2RawProperties.add(jpaProperties);
             }else if (string.startsWith("fileformat_")) {
                 if("fileformat".equals(string.replaceAll("fileformat_", ""))){
-                    continue;
+                    jpaProperties = Dao2TableUtil.buildJPAProperties("raw-table", "file_type", map.get(string), "file type");
+                    file2RawProperties.add(jpaProperties);
                 }else if("rawDBName".equals(string.replaceAll("fileformat_", ""))){
                     jpaProperties = Dao2TableUtil.buildJPAProperties("raw-table", "table_db", map.get(string), "RAW DB Name");
                     file2RawProperties.add(jpaProperties);
@@ -153,17 +155,25 @@ public class DataLoadAPI extends MetadataAPIBase {
                     raw2StageProperties.add(jpaProperties);
                 }
             }else if (string.startsWith("transform_")) {
-                jpaProperties = Dao2TableUtil.buildJPAProperties("base-columns", string , map.get(string) , "Transformation on column");
-                raw2StageProperties.add(jpaProperties);
+                if("".equals(map.get(string.replaceAll("transform_","partition_"))) || map.get(string.replaceAll("transform_","partition_")) == null) {
+                    jpaProperties = Dao2TableUtil.buildJPAProperties("base-columns", string, map.get(string), "Transformation on column");
+                    raw2StageProperties.add(jpaProperties);
+                }else{
+                    partitionCols.put(map.get(string.replaceAll("transform_","partition_")),string.replaceAll("transform_",""));
+                }
             }else if (string.startsWith("stagedatatype_")) {
-                jpaProperties = Dao2TableUtil.buildJPAProperties("base-data-types", string.replaceAll("stagedatatype_","") , map.get(string) , "data type of column");
-                raw2StageProperties.add(jpaProperties);
+                if("".equals(map.get(string.replaceAll("stagedatatype_","partition_"))) || map.get(string.replaceAll("stagedatatype_","partition_")) == null) {
+                    jpaProperties = Dao2TableUtil.buildJPAProperties("base-data-types", string.replaceAll("stagedatatype_","") , map.get(string) , "data type of column");
+                    raw2StageProperties.add(jpaProperties);
+                }else{
+                    partitionDataTypes.put(map.get(string.replaceAll("stagedatatype_","partition_")),map.get(string));
+                }
+
             }else if (string.startsWith("baseaction_")) {
-                jpaProperties = Dao2TableUtil.buildJPAProperties("base-columns-and-types", string.replaceAll("baseaction_","") , map.get(string) , "Transformation on column");
-                stage2BaseProperties.add(jpaProperties);
-            }else if (string.startsWith("partition_")) {
-                    LOGGER.info("partition column entering" + map.get(string));
-                    partitionCols.put(map.get(string),string.replaceAll("partition_",""));
+                if("".equals(map.get(string.replaceAll("baseaction_","partition_"))) || map.get(string.replaceAll("transform_","partition_")) == null) {
+                    jpaProperties = Dao2TableUtil.buildJPAProperties("base-columns-and-types", string.replaceAll("baseaction_", ""), map.get(string), "Transformation on column");
+                    stage2BaseProperties.add(jpaProperties);
+                }
             }
             else if (string.startsWith("process_processName")) {
                 LOGGER.debug("process_processName" + map.get(string));
@@ -179,6 +189,8 @@ public class DataLoadAPI extends MetadataAPIBase {
         StringBuilder partitionColListBuilder = new StringBuilder();
         for (String order : partitionCols.keySet()){
             partitionColListBuilder.append(partitionCols.get(order));
+            partitionColListBuilder.append(" ");
+            partitionColListBuilder.append(partitionDataTypes.get(order));
             partitionColListBuilder.append(",");
         }
         String partitionColList = partitionColListBuilder.toString();

@@ -23,9 +23,7 @@ import org.apache.log4j.Logger;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.Statement;
-import java.util.ArrayList;
-import java.util.Enumeration;
-import java.util.List;
+import java.util.*;
 
 /**
  * Created by vishnu on 12/14/14.
@@ -51,35 +49,40 @@ public class CreateRawBaseTables extends ETLBase {
         //Getting raw table information from properties with raw-table as config group
         GetProperties getPropertiesOfRawTable = new GetProperties();
         java.util.Properties rawPropertiesOfTable = getPropertiesOfRawTable.getProperties(rawLoadProcessId.toString(), "raw-table");
-        String rawTableName = rawPropertiesOfTable.getProperty("table-name");
-        String rawTableDbName = rawPropertiesOfTable.getProperty("table-db");
-        String rawInputFormat = rawPropertiesOfTable.getProperty("input-format");
-        String rawOutputFormat = rawPropertiesOfTable.getProperty("output-format");
-        String rawSerdeClass = rawPropertiesOfTable.getProperty("serde");
+        String rawTableName = rawPropertiesOfTable.getProperty("table_name");
+        String rawTableDbName = rawPropertiesOfTable.getProperty("table_db");
+        String fileType = rawPropertiesOfTable.getProperty("file_type");
+        String rawInputFormat = rawPropertiesOfTable.getProperty("input.format");
+        String rawOutputFormat = rawPropertiesOfTable.getProperty("output.format");
+        String rawSerdeClass = rawPropertiesOfTable.getProperty("serde.class");
         String rawSerdeProperties="";
         String rawTableProperties="";
         String rawColumnList="";
 
         // fetching column names in a string list from properties with raw-columns as config group
         GetProperties getPropertiesOfRawColumns = new GetProperties();
-        java.util.Properties rawPropertiesOfColumns = getPropertiesOfRawColumns.getProperties(rawLoadProcessId.toString(), "raw-column");
+        java.util.Properties rawPropertiesOfColumns = getPropertiesOfRawColumns.getProperties(rawLoadProcessId.toString(), "raw-cols");
         Enumeration columns = rawPropertiesOfColumns.propertyNames();
+        List<String> orderOfCloumns = Collections.list(columns);
+        Collections.sort(orderOfCloumns);
         List<String> rawColumns = new ArrayList<>();
         if (rawPropertiesOfColumns.size() != 0) {
-            while (columns.hasMoreElements()) {
-                String key = (String) columns.nextElement();
+            for(String columnOrder : orderOfCloumns) {
+                String key = columnOrder;
                 rawColumns.add(rawPropertiesOfColumns.getProperty(key));
             }
         }
 
         // fetching column datatypes in a string list from properties with raw-data-types as config group
         GetProperties getPropertiesOfRawDataTypes = new GetProperties();
-        java.util.Properties rawPropertiesOfDataTypes = getPropertiesOfRawDataTypes.getProperties(rawLoadProcessId.toString(), "raw-dtype");
+        java.util.Properties rawPropertiesOfDataTypes = getPropertiesOfRawDataTypes.getProperties(rawLoadProcessId.toString(), "raw-data-types");
         Enumeration dataTypes = rawPropertiesOfDataTypes.propertyNames();
+        List<String> orderOfDataTypes = Collections.list(dataTypes);
+        Collections.sort(orderOfDataTypes);
         List<String> rawDataTypes = new ArrayList<>();
         if (rawPropertiesOfColumns.size() != 0) {
-            while (dataTypes.hasMoreElements()) {
-                String key = (String) dataTypes.nextElement();
+            for(String columnOrder : orderOfDataTypes) {
+                String key = columnOrder;
                 rawDataTypes.add(rawPropertiesOfDataTypes.getProperty(key));
             }
         }
@@ -91,10 +94,10 @@ public class CreateRawBaseTables extends ETLBase {
         String rawColumnsWithDataTypes = rawColumnList.substring(0,rawColumnList.length()-1);
 
         // fetching raw table serde-properties from properties table for a delimited file
-        if(rawInputFormat.equalsIgnoreCase("delimited")){
+        if("delimited".equalsIgnoreCase(fileType)){
             StringBuilder sList = new StringBuilder();
             GetProperties getSerdeProperties = new GetProperties();
-            java.util.Properties listForRawSerdeProps = getSerdeProperties.getProperties(rawLoadProcessId.toString(),"raw-sprops");
+            java.util.Properties listForRawSerdeProps = getSerdeProperties.getProperties(rawLoadProcessId.toString(),"raw-serde-props");
             Enumeration e = listForRawSerdeProps.propertyNames();
             if (listForRawSerdeProps.size() != 0) {
                 while (e.hasMoreElements()) {
@@ -107,7 +110,7 @@ public class CreateRawBaseTables extends ETLBase {
         }
 
         //fetching raw table serde-properties from properties table for a xml file
-        else if(rawInputFormat.equalsIgnoreCase("xml")){
+        else if("xml".equalsIgnoreCase(fileType)){
             StringBuilder sList = new StringBuilder();
             GetProperties getSerdeProperties = new GetProperties();
             java.util.Properties listForRawSerdeProps = getSerdeProperties.getProperties(rawLoadProcessId.toString(),"raw-serde-props");
@@ -126,7 +129,7 @@ public class CreateRawBaseTables extends ETLBase {
         // fetching raw table table-properties from properties table
         StringBuilder tList = new StringBuilder();
         GetProperties getTableProperties = new GetProperties();
-        java.util.Properties listForRawTableProps = getTableProperties.getProperties(rawLoadProcessId.toString(),"raw-tprops");
+        java.util.Properties listForRawTableProps = getTableProperties.getProperties(rawLoadProcessId.toString(),"raw-table-props");
         Enumeration e = listForRawTableProps.propertyNames();
         if (listForRawTableProps.size() != 0) {
             while (e.hasMoreElements()) {
@@ -139,7 +142,7 @@ public class CreateRawBaseTables extends ETLBase {
         String rawTableDdl = "";
 
         //generating raw table ddl for a delimited file
-        if(rawInputFormat.equalsIgnoreCase("delimited")) {
+        if("delimited".equalsIgnoreCase(fileType)) {
             rawTableDdl += "CREATE TABLE IF NOT EXISTS " + rawTableDbName + "." + rawTableName + " ( " + rawColumnsWithDataTypes + " ) " +
                     " partitioned by (batchid bigint) ROW FORMAT SERDE 'org.apache.hadoop.hive.serde2.lazy.LazySimpleSerDe'  WITH SERDEPROPERTIES (" + rawSerdeProperties + " ) STORED AS INPUTFORMAT 'org.apache.hadoop.mapred.TextInputFormat'" +
                     " OUTPUTFORMAT 'org.apache.hadoop.hive.ql.io.HiveIgnoreKeyTextOutputFormat'";
@@ -147,7 +150,7 @@ public class CreateRawBaseTables extends ETLBase {
             LOGGER.debug("rawTableDdl= " + rawTableDdl);
         }
         //generating raw table ddl for a xml file
-        else if(rawInputFormat.equalsIgnoreCase("xml")){
+        else if("xml".equalsIgnoreCase(fileType)){
             rawTableProperties=tList.substring(0, tList.length() - 1);
             LOGGER.debug("rawTableProperties = " + rawTableProperties);
             rawTableDdl += "CREATE TABLE IF NOT EXISTS " + rawTableDbName + "." + rawTableName + " ( " + rawColumnsWithDataTypes + " )" +
@@ -169,7 +172,7 @@ public class CreateRawBaseTables extends ETLBase {
 
         // fetching column names and aliases as a string from properties with base-columns as config group
         GetProperties getPropertiesOfViewColumns = new GetProperties();
-        java.util.Properties viewPropertiesOfColumns = getPropertiesOfViewColumns.getProperties(stgLoadProcessId.toString(), "base-cols");
+        java.util.Properties viewPropertiesOfColumns = getPropertiesOfViewColumns.getProperties(stgLoadProcessId.toString(), "base-columns");
         Enumeration viewColumnsList = viewPropertiesOfColumns.propertyNames();
         StringBuilder viewColumns = new StringBuilder();
         if (viewPropertiesOfColumns.size() != 0) {
@@ -188,14 +191,14 @@ public class CreateRawBaseTables extends ETLBase {
         //Getting base table information
         GetProperties getPropertiesOfBaseTable = new GetProperties();
         java.util.Properties basePropertiesOfTable = getPropertiesOfBaseTable.getProperties(baseLoadProcessId.toString(), "base-table");
-        String baseTableName = basePropertiesOfTable.getProperty("table-name");
-        String baseTableDbName = basePropertiesOfTable.getProperty("table-db");
+        String baseTableName = basePropertiesOfTable.getProperty("table_name");
+        String baseTableDbName = basePropertiesOfTable.getProperty("table_db");
         String baseTableDdl = "";
 
         // generating base table ddl
         // fetching column names list
         GetProperties getPropertiesOfBaseColumns = new GetProperties();
-        java.util.Properties basePropertiesOfColumns = getPropertiesOfBaseColumns.getProperties(baseLoadProcessId.toString(), "base-cols");
+        java.util.Properties basePropertiesOfColumns = getPropertiesOfBaseColumns.getProperties(baseLoadProcessId.toString(), "base-columns-and-types");
         Enumeration baseColumnsList = basePropertiesOfColumns.propertyNames();
         StringBuilder baseColumns = new StringBuilder();
         if (basePropertiesOfColumns.size() != 0) {
