@@ -671,7 +671,7 @@ if(col != null && colName != null) {
 
 		dotString = first.append(middle).append(last).toString();
 		System.out.println("\n" + dotString + "\n");
-//		printLineageDot(dotString);
+		//printLineageDot(dotString);
 	}
 
 	private void printLineageDot(String dotString) {

@@ -58,16 +58,19 @@ public class LineageQueryDAO {
         int counter = 1;
         Session session = sessionFactory.getCurrentSession();
         session.beginTransaction();
-        Criteria getLastElementCriteria = session.createCriteria(LineageQuery.class).add( Restrictions.eq("processId", processId) ).addOrder(Order.desc("instanceExecId"));
-        LineageQuery lineageQuery = (LineageQuery) getLastElementCriteria.list().get(0);
-        instanceExecId = lineageQuery.getInstanceExecId();
-        while(lineageQuery.getInstanceExecId() == instanceExecId) {
-            lineageQueryList.add(lineageQuery);
-            //break the loop if the counter exceeds the criteria size
-            if(counter < getLastElementCriteria.list().size())
-                lineageQuery = (LineageQuery) getLastElementCriteria.list().get(counter++);
-            else
-                break;
+        Criteria getLastElementCriteria = session.createCriteria(LineageQuery.class).add(Restrictions.eq("processId", processId)).addOrder(Order.desc("instanceExecId"));
+
+        if(getLastElementCriteria.list().size() != 0) {
+            LineageQuery lineageQuery = (LineageQuery) getLastElementCriteria.list().get(0);
+            instanceExecId = lineageQuery.getInstanceExecId();
+            while (lineageQuery.getInstanceExecId() == instanceExecId) {
+                lineageQueryList.add(lineageQuery);
+                //break the loop if the counter exceeds the criteria size
+                if (counter < getLastElementCriteria.list().size())
+                    lineageQuery = (LineageQuery) getLastElementCriteria.list().get(counter++);
+                else
+                    break;
+            }
         }
         session.getTransaction().commit();
         return lineageQueryList;
