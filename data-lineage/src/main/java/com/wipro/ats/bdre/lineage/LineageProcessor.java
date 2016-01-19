@@ -78,8 +78,12 @@ public class LineageProcessor {
 					defaultHiveDbName = splits[splits.length-1].toUpperCase();
 					LOGGER.debug("DefaulHiveDbName is set to " + defaultHiveDbName);
 
-				} else if (query.toLowerCase().startsWith("insert")
+				}
+				//Wrting queries having "use" "insert" & "update" clauses to the DB to be later used by DotGen class
+				if (query.toLowerCase().startsWith("use")
+						|| query.toLowerCase().startsWith("insert")
 						|| query.toLowerCase().startsWith("select")) {              // process only insert and select statements
+					//insert the query into DB using its DAO
 					LineageQuery lineageQuery = new LineageQuery();
 					lineageQuery.setQueryString(query);
 					lineageQuery.setInstanceExecId(Long.parseLong(instanceExecId));
@@ -89,8 +93,9 @@ public class LineageProcessor {
 					LineageQueryType lineageQueryType = new LineageQueryType(1, "HIVE");
 					lineageQuery.setLineageQueryType(lineageQueryType);
 					lineageQueryDAO.insert(lineageQuery);
+
 					// LineageMain.main(new String[]{query, processId, instanceExecId});
-					LineageMain.main(new String[]{query, defaultHiveDbName, processId, instanceExecId});
+					//LineageMain.main(new String[]{query, defaultHiveDbName, processId, instanceExecId});
 
 				}
 			}

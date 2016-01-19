@@ -20,10 +20,13 @@ import org.apache.log4j.Logger;
 import org.hibernate.Criteria;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
+import org.hibernate.criterion.Order;
+import org.hibernate.criterion.Restrictions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -47,6 +50,27 @@ public class LineageQueryDAO {
         session.getTransaction().commit();
         session.close();
         return lineageQuerys;
+    }
+
+    public List<LineageQuery> getLastInstanceExecLists(Integer processId) {
+        Long instanceExecId;
+        List<LineageQuery> lineageQueryList = new ArrayList<LineageQuery>();
+        int counter = 1;
+        Session session = sessionFactory.getCurrentSession();
+        session.beginTransaction();
+        Criteria getLastElementCriteria = session.createCriteria(LineageQuery.class).add( Restrictions.eq("processId", processId) ).addOrder(Order.desc("instanceExecId"));
+        LineageQuery lineageQuery = (LineageQuery) getLastElementCriteria.list().get(0);
+        instanceExecId = lineageQuery.getInstanceExecId();
+        while(lineageQuery.getInstanceExecId() == instanceExecId) {
+            lineageQueryList.add(lineageQuery);
+            //break the loop if the counter exceeds the criteria size
+            if(counter < getLastElementCriteria.list().size())
+                lineageQuery = (LineageQuery) getLastElementCriteria.list().get(counter++);
+            else
+                break;
+        }
+        session.getTransaction().commit();
+        return lineageQueryList;
     }
 
     public Integer totalRecordCount() {

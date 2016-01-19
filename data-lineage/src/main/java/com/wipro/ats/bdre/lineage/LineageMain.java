@@ -74,6 +74,12 @@ public class LineageMain implements NodeProcessor {
 	private int subquerySeq = 0;
 	private PersistenceUnit persistenceUnit;
 
+	/*public LineageMain(String query, Integer processId, Long instanceId, String defaultHiveDbName) {
+		this.query = query;
+		this.processId = processId;
+		this.instanceId = instanceId;
+		this.defaultHiveDbName = defaultHiveDbName;
+	}*/
 	public static void main(String[] args) throws IOException, ParseException,
 			SemanticException, Exception {
 		LineageMain lineageMain = new LineageMain();
@@ -158,7 +164,7 @@ public class LineageMain implements NodeProcessor {
 	public Object process(org.apache.hadoop.hive.ql.lib.Node nd, Stack<org.apache.hadoop.hive.ql.lib.Node> stack, NodeProcessorCtx procCtx,
 	                      Object... nodeOutputs) throws SemanticException {
 //		System.out.println("process: " + nd.getName());
-		// Empty table and column lists
+		// Empty table and column lists initialized
 		inputTableList = new UniqueList<String>();
 		outputTableList = new UniqueList<String>();
 		functionList = new UniqueList<String>();
@@ -183,6 +189,7 @@ public class LineageMain implements NodeProcessor {
 					System.out.println("inputTable = " + inputTable);
 				}
 
+				//adding to outputTableList and outputNodes
 				if (outputTableList.size() == 0) {
 					String outputTable = "TEMP_" + UUID.randomUUID();
 					outputTableList.add(outputTable);
