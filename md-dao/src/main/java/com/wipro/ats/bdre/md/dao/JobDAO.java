@@ -170,10 +170,8 @@ public class JobDAO {
 
             // BatchCheck Proc Implementation
             Integer batchesPresent = null;
-            LOGGER.info("size of batchCutPatternCriteria is " + batchCutPatternCriteria.list().size());
             for (Object batchCheckObject : batchCutPatternCriteria.list()) {
                 Process batchCheckProcess = (Process) batchCheckObject;
-                LOGGER.info("the process with enqueing process Id and batch cut pattern is "+ batchCheckProcess.getProcessId());
                 String batchCutPattern = batchCheckProcess.getBatchCutPattern();
                 Criteria batchCheckCriteria = session.createCriteria(BatchConsumpQueue.class).add(Restrictions.like("batchMarking", "%" + batchCutPattern + "%"));
                 if (batchCheckCriteria.list().size() == 0) {
