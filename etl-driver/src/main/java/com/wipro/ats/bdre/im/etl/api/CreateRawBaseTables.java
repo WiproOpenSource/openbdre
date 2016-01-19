@@ -104,9 +104,11 @@ public class CreateRawBaseTables extends ETLBase {
                     String key = (String) e.nextElement();
                     sList.append("'"+key  + "' = '" + listForRawSerdeProps.getProperty(key) + "',");
                 }
+                rawSerdeProperties=sList.substring(0, sList.length() - 1);
+                LOGGER.debug("rawSerdeProperties = " + rawSerdeProperties);
             }
-            rawSerdeProperties=sList.substring(0, sList.length() - 1);
-            LOGGER.debug("rawSerdeProperties = " + rawSerdeProperties);
+
+
         }
 
         //fetching raw table serde-properties from properties table for a xml file
@@ -120,9 +122,10 @@ public class CreateRawBaseTables extends ETLBase {
                     String key = (String) e.nextElement();
                     sList.append("\"" + key + "\" = \"" + listForRawSerdeProps.getProperty(key) + "\",");
                 }
+                rawSerdeProperties=sList.substring(0, sList.length() - 1);
+                LOGGER.debug("rawSerdeProperties = " + rawSerdeProperties);
             }
-            rawSerdeProperties=sList.substring(0, sList.length() - 1);
-            LOGGER.debug("rawSerdeProperties = " + rawSerdeProperties);
+
         }
 
 
@@ -136,6 +139,7 @@ public class CreateRawBaseTables extends ETLBase {
                 String key = (String) e.nextElement();
                 tList.append("\"" + key + "\" = \"" + listForRawTableProps.getProperty(key) + "\",");
             }
+
         }
 
 
@@ -178,7 +182,17 @@ public class CreateRawBaseTables extends ETLBase {
         if (viewPropertiesOfColumns.size() != 0) {
             while (viewColumnsList.hasMoreElements()) {
                 String key = (String) viewColumnsList.nextElement();
-                viewColumns.append(viewPropertiesOfColumns.getProperty(key) + " AS "+ key + ",");
+                viewColumns.append(viewPropertiesOfColumns.getProperty(key) + " AS "+ key.replaceAll("transform_","") + ",");
+            }
+        }
+
+        java.util.Properties viewPropertiesOfColumnsPartition = getPropertiesOfViewColumns.getProperties(stgLoadProcessId.toString(), "partition");
+        String partitionViewColumn = viewPropertiesOfColumnsPartition.getProperty("partition_columns");
+        LOGGER.info("partition columns "  + partitionViewColumn);
+        if (!("".equals(partitionViewColumn)) || !(partitionViewColumn == null) ){
+            String[] partitionViewColumns = partitionViewColumn.split(",");
+            for(String viewColumn : partitionViewColumns) {
+                viewColumns.append(viewColumn.split(" ")[0] + " AS " + viewColumn.split(" ")[0] + ",");
             }
         }
 
@@ -209,14 +223,14 @@ public class CreateRawBaseTables extends ETLBase {
         }
         //removing trailing comma
         String baseColumnsWithDataTypes = baseColumns.substring(0,baseColumns.length()-1);
-        java.util.Properties partitionproperties = getPropertiesOfRawTable.getProperties(rawLoadProcessId.toString(), "partition");
+        java.util.Properties partitionproperties = getPropertiesOfRawTable.getProperties(stgLoadProcessId.toString(), "partition");
         String partitions = partitionproperties.getProperty("partition_columns");
-        baseTableDdl+="CREATE TABLE IF NOT EXISTS " + baseTableDbName + "." + baseTableName + " (" + baseColumnsWithDataTypes + ") partitioned by (" + partitions  + " ,instanceexecid bigint) stored as orc";;
+        baseTableDdl+="CREATE TABLE IF NOT EXISTS " + baseTableDbName + "." + baseTableName + " (" + baseColumnsWithDataTypes + ") partitioned by (" + partitions  + " instanceexecid bigint) stored as orc";;
         LOGGER.debug(baseTableDdl);
 
         String stgTableName=baseTableName+"_"+instanceExecId;
         String stgTableDdl="";
-        stgTableDdl+="CREATE TABLE IF NOT EXISTS " + baseTableDbName + "." + stgTableName + " (" + baseColumnsWithDataTypes + ") partitioned by (" + partitions +" ,instanceexecid bigint) stored as orc";;
+        stgTableDdl+="CREATE TABLE IF NOT EXISTS " + baseTableDbName + "." + stgTableName + " (" + baseColumnsWithDataTypes + ") partitioned by (" + partitions +" instanceexecid bigint) stored as orc";;
         //Now create the tables/view if not exists.
         checkAndCreateRawTable(rawTableDbName, rawTableName, rawTableDdl);
         checkAndCreateRawView(rawViewDbName, rawViewName, rawViewDdl);

@@ -84,6 +84,7 @@ public class DataLoadAPI extends MetadataAPIBase {
         String processName = null;
         String processDescription = null;
         Integer busDomainId = null;
+        Integer enqId = null;
         Map<String,String> partitionCols = new TreeMap<String, String>();
         Map<String,String> partitionDataTypes = new TreeMap<String, String>();
 
@@ -184,7 +185,11 @@ public class DataLoadAPI extends MetadataAPIBase {
             }else if (string.startsWith("process_busDomainId")) {
                 LOGGER.debug("process_busDomainId" + map.get(string));
                 busDomainId = new Integer(map.get(string));
+            }else if (string.startsWith("process_enqueueId")) {
+                LOGGER.debug("process_busDomainId" + map.get(string));
+                enqId = new Integer(map.get(string));
             }
+
         }
         StringBuilder partitionColListBuilder = new StringBuilder();
         for (String order : partitionCols.keySet()){
@@ -193,12 +198,14 @@ public class DataLoadAPI extends MetadataAPIBase {
             partitionColListBuilder.append(partitionDataTypes.get(order));
             partitionColListBuilder.append(",");
         }
-        String partitionColList = partitionColListBuilder.toString();
-        partitionColList = partitionColList.substring(0,partitionColList.lastIndexOf(","));
-        jpaProperties = Dao2TableUtil.buildJPAProperties("partition", "partition_columns" , partitionColList , "Transformation on column");
-        stage2BaseProperties.add(jpaProperties);
-        jpaProperties = Dao2TableUtil.buildJPAProperties("partition", "partition_columns" , partitionColList , "Transformation on column");
-        raw2StageProperties.add(jpaProperties);
+        if (partitionColListBuilder.length() > 0) {
+            String  partitionColList = partitionColListBuilder.toString();
+            jpaProperties = Dao2TableUtil.buildJPAProperties("partition", "partition_columns" , partitionColList , "Transformation on column");
+            stage2BaseProperties.add(jpaProperties);
+            jpaProperties = Dao2TableUtil.buildJPAProperties("partition", "partition_columns" , partitionColList , "Transformation on column");
+            raw2StageProperties.add(jpaProperties);
+        }
+
         jpaProperties = Dao2TableUtil.buildJPAProperties("raw-table", "raw.table.db", "raw", "Input Format");
         file2RawProperties.add(jpaProperties);
 
@@ -206,6 +213,7 @@ public class DataLoadAPI extends MetadataAPIBase {
         com.wipro.ats.bdre.md.dao.jpa.Process file2Raw = Dao2TableUtil.buildJPAProcess(6, "File2Raw of "+processName , processDescription, 0,busDomainId);
         com.wipro.ats.bdre.md.dao.jpa.Process raw2Stage = Dao2TableUtil.buildJPAProcess(7, "Raw2Stage of "+processName , processDescription, 0,busDomainId);
         com.wipro.ats.bdre.md.dao.jpa.Process stage2Base = Dao2TableUtil.buildJPAProcess(8, "stage2Base of "+processName , processDescription, 0,busDomainId);
+        file2Raw.setEnqueuingProcessId(enqId);
         childProcesses.add(file2Raw);
         childProcesses.add(raw2Stage);
         childProcesses.add(stage2Base);

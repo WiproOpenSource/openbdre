@@ -50,6 +50,7 @@ public abstract class ETLBase extends BaseStructure{
     private String processId;
 
     protected void init(String processId){
+        LOGGER.info("process id is " + processId);
         loadHiveTableInfo(processId);
     }
     private void loadHiveTableInfo(String processId){
@@ -64,15 +65,15 @@ public abstract class ETLBase extends BaseStructure{
        }
         GetProperties getPropertiesOfRawTable = new GetProperties();
         java.util.Properties rawPropertiesOfTable = getPropertiesOfRawTable.getProperties(rawLoad.getProcessId().toString(), "raw-table");
-        rawTable = rawPropertiesOfTable.getProperty("table-name");
-        rawDb = rawPropertiesOfTable.getProperty("table-db");
+        rawTable = rawPropertiesOfTable.getProperty("table_name");
+        rawDb = rawPropertiesOfTable.getProperty("table_db");
         stgView = rawTable+"_view";
         stgDb=rawDb;
 
         GetProperties getPropertiesOfBaseTable = new GetProperties();
         java.util.Properties basePropertiesOfTable = getPropertiesOfBaseTable.getProperties(baseLoad.getProcessId().toString(), "base-table");
-        baseTable = basePropertiesOfTable.getProperty("table-name");
-        baseDb = basePropertiesOfTable.getProperty("table-db");
+        baseTable = basePropertiesOfTable.getProperty("table_name");
+        baseDb = basePropertiesOfTable.getProperty("table_db");
     }
     protected Connection getHiveJDBCConnection(String dbName){
         try {

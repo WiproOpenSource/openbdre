@@ -36,7 +36,7 @@ public class RawLoad extends ETLBase {
     private static final Logger LOGGER = Logger.getLogger(RawLoad.class);
     private static final String[][] PARAMS_STRUCTURE = {
             {"p", "process-id", " Process id of ETLDriver"},
-            {"instExecId", "instance-exec-id", " instance exec id"},
+            {"ied", "instance-exec-id", " instance exec id"},
             {"lof", "list-of-files", " List of files"},
             {"lob", "list-of-file-batchIds", "List of batch Ids corresponding to above files "}
     };

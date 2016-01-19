@@ -657,13 +657,13 @@ wizard = $(document).ready(function() {
                                 <div class="form-group">
                                     <label class="control-label col-sm-2" for="processName">Process Name:</label>
                                     <div class="col-sm-10">
-                                        <input type="text" class="form-control"  id="processName" name="processName" placeholder="Enter Process Name" value="remove me" required>
+                                        <input type="text" class="form-control"  id="processName" name="processName" placeholder="Enter Process Name" value="" required>
                                     </div>
                                 </div>
                                 <div class="form-group">
                                     <label class="control-label col-sm-2" for="processDescription">Process Description:</label>
                                     <div class="col-sm-10">
-                                        <input type="text" class="form-control" id="processDescription" name="processDescription" placeholder="Enter Process Description" value="remove me" required>
+                                        <input type="text" class="form-control" id="processDescription" name="processDescription" placeholder="Enter Process Description" value="" required>
                                     </div>
                                 </div>
                                 <div class="form-group">
@@ -673,6 +673,12 @@ wizard = $(document).ready(function() {
                                             <option ng-repeat="busDomain in busDomains.Options" value="{{busDomain.Value}}" name="busDomainId">{{busDomain.DisplayText}}</option>
 
                                         </select>
+                                    </div>
+                                </div>
+                                 <div class="form-group">
+                                    <label class="control-label col-sm-2" for="enqueueId">Enqueing Id:</label>
+                                    <div class="col-sm-10">
+                                        <input type="text" class="form-control" id="enqueueId" name="enqueueId" placeholder="Enter Enqueing Process Id" value="" required>
                                     </div>
                                 </div>
                             </div>

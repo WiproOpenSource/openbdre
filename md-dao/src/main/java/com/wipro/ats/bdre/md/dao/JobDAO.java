@@ -60,8 +60,9 @@ public class JobDAO {
             parentProcess.setProcessId(processId);
             maxBatchNullCheckCriteria.add(Restrictions.eq("process", parentProcess)).add(Restrictions.ne("enqueuingProcessId", 0)).add(Restrictions.eq("deleteFlag", false));
             Integer countOfProcWithBCP = maxBatchNullCheckCriteria.list().size();
-            maxBatchNullCheckCriteria.add(Restrictions.isNotNull("batchCutPattern"));
-            Integer countOfProcWithOutBCP = maxBatchNullCheckCriteria.list().size();
+            Criteria batchCutPatternCriteria= session.createCriteria(Process.class).add(Restrictions.eq("process", parentProcess)).add(Restrictions.ne("enqueuingProcessId", 0)).add(Restrictions.eq("deleteFlag", false))
+                    .add(Restrictions.isNotNull("batchCutPattern"));
+            Integer countOfProcWithOutBCP = batchCutPatternCriteria.list().size();
             if (countOfProcWithOutBCP < countOfProcWithBCP) {
                 if (maxBatch == null) {
                     LOGGER.error("max_batch cannot be null");
@@ -169,11 +170,11 @@ public class JobDAO {
 
             // BatchCheck Proc Implementation
             Integer batchesPresent = null;
-            for (Object batchCheckObject : maxBatchNullCheckCriteria.list()) {
+            LOGGER.info("size of batchCutPatternCriteria is " + batchCutPatternCriteria.list().size());
+            for (Object batchCheckObject : batchCutPatternCriteria.list()) {
                 Process batchCheckProcess = (Process) batchCheckObject;
-                Criteria batchCheckSubProcess = session.createCriteria(Process.class).add(Restrictions.eq("processId", batchCheckProcess.getProcessId())).add(Restrictions.eq("deleteFlag", false));
-                Process batchCutPatternProcess = (Process) batchCheckSubProcess.list().get(0);
-                String batchCutPattern = batchCutPatternProcess.getBatchCutPattern();
+                LOGGER.info("the process with enqueing process Id and batch cut pattern is "+ batchCheckProcess.getProcessId());
+                String batchCutPattern = batchCheckProcess.getBatchCutPattern();
                 Criteria batchCheckCriteria = session.createCriteria(BatchConsumpQueue.class).add(Restrictions.like("batchMarking", "%" + batchCutPattern + "%"));
                 if (batchCheckCriteria.list().size() == 0) {
                     batchesPresent = 0;
@@ -418,7 +419,7 @@ public class JobDAO {
                     initJobRowInfo.setBatchMarking(resultBCQ.getBatchMarking());
                     initJobRowInfo.setProcessId(resultBCQ.getProcess().getProcessId());
                     initJobRowInfo.setTargetBatchId(resultBCQ.getBatchByTargetBatchId().getBatchId());
-                    Criteria resultBatchCriteria = session.createCriteria(Batch.class).add(Restrictions.eq("batchId", resultBCQ.getBatchBySourceBatchId().getBatchId()));
+                    Criteria resultBatchCriteria = session.createCriteria(Batch.class).add(Restrictions.eq("batchId", resultBCQ.getBatchByTargetBatchId().getBatchId()));
                     Batch resultBatch = (Batch) resultBatchCriteria.list().get(0);
                     try {
                         initJobRowInfo.setSourceInstanceExecId(resultBatch.getInstanceExec().getInstanceExecId());
@@ -426,7 +427,7 @@ public class JobDAO {
                         LOGGER.info("source Instance Exec Id is  NULL");
                         initJobRowInfo.setSourceInstanceExecId(null);
                     }
-                    Criteria fileBatchCriteria = session.createCriteria(File.class).add(Restrictions.eq("id.batchId", resultBCQ.getBatchBySourceBatchId().getBatchId()));
+                    Criteria fileBatchCriteria = session.createCriteria(File.class).add(Restrictions.eq("id.batchId", resultBCQ.getBatchByTargetBatchId().getBatchId()));
                     if (fileBatchCriteria.list().size() > 0) {
                         StringBuilder fileList=new StringBuilder();
                         StringBuilder batchList=new StringBuilder();
