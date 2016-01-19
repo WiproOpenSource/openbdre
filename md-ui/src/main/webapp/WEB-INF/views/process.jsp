@@ -301,7 +301,7 @@
                                                                                     console.log(postData.processId);
                                                                                     return $.Deferred(function($dfd) {
                                                                                         $.ajax({
-                                                                                            url: '/mdrest/properties/' + item.record.processId + '/' + postData.key,
+                                                                                            url: '/mdrest/properties/' + item.record.processId + '/' + postData.key + '/',
                                                                                             type: 'DELETE',
                                                                                             data: item,
                                                                                             dataType: 'json',
@@ -511,7 +511,7 @@
                                                             console.log(postData.processId);
                                                             return $.Deferred(function($dfd) {
                                                                 $.ajax({
-                                                                    url: '/mdrest/properties/' + item.record.processId + '/' + postData.key,
+                                                                    url: '/mdrest/properties/' + item.record.processId + '/' + postData.key +'/',
                                                                     type: 'DELETE',
                                                                     data: item,
                                                                     dataType: 'json',
