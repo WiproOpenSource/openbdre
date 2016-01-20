@@ -214,6 +214,7 @@ public class DataLoadAPI extends MetadataAPIBase {
         com.wipro.ats.bdre.md.dao.jpa.Process raw2Stage = Dao2TableUtil.buildJPAProcess(7, "Raw2Stage of "+processName , processDescription, 0,busDomainId);
         com.wipro.ats.bdre.md.dao.jpa.Process stage2Base = Dao2TableUtil.buildJPAProcess(8, "stage2Base of "+processName , processDescription, 0,busDomainId);
         file2Raw.setEnqueuingProcessId(enqId);
+        raw2Stage.setEnqueuingProcessId(enqId);
         childProcesses.add(file2Raw);
         childProcesses.add(raw2Stage);
         childProcesses.add(stage2Base);

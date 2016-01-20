@@ -417,7 +417,7 @@ public class JobDAO {
                     initJobRowInfo.setBatchMarking(resultBCQ.getBatchMarking());
                     initJobRowInfo.setProcessId(resultBCQ.getProcess().getProcessId());
                     initJobRowInfo.setTargetBatchId(resultBCQ.getBatchByTargetBatchId().getBatchId());
-                    Criteria resultBatchCriteria = session.createCriteria(Batch.class).add(Restrictions.eq("batchId", resultBCQ.getBatchByTargetBatchId().getBatchId()));
+                    Criteria resultBatchCriteria = session.createCriteria(Batch.class).add(Restrictions.eq("batchId", resultBCQ.getBatchBySourceBatchId().getBatchId()));
                     Batch resultBatch = (Batch) resultBatchCriteria.list().get(0);
                     try {
                         initJobRowInfo.setSourceInstanceExecId(resultBatch.getInstanceExec().getInstanceExecId());
@@ -425,7 +425,7 @@ public class JobDAO {
                         LOGGER.info("source Instance Exec Id is  NULL");
                         initJobRowInfo.setSourceInstanceExecId(null);
                     }
-                    Criteria fileBatchCriteria = session.createCriteria(File.class).add(Restrictions.eq("id.batchId", resultBCQ.getBatchByTargetBatchId().getBatchId()));
+                    Criteria fileBatchCriteria = session.createCriteria(File.class).add(Restrictions.eq("id.batchId", resultBCQ.getBatchBySourceBatchId().getBatchId()));
                     if (fileBatchCriteria.list().size() > 0) {
                         StringBuilder fileList=new StringBuilder();
                         StringBuilder batchList=new StringBuilder();

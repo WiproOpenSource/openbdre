@@ -28,6 +28,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+
 /**
  * Created by SH324337 on 11/2/2015.
  */
@@ -83,15 +85,22 @@ public class RegisterFileDAO {
                 session.save(newFile);
                 BatchStatus batchStatusObj = new BatchStatus();
                 batchStatusObj.setBatchStateId(1);
-                BatchConsumpQueue batchConsumpQueueObj = new BatchConsumpQueue();
-                batchConsumpQueueObj.setBatchBySourceBatchId(batchObj);
-                batchConsumpQueueObj.setSourceProcessId(null);
-                batchConsumpQueueObj.setInsertTs(registerFileInfo.getCreationTs());
-                batchConsumpQueueObj.setBatchStatus(batchStatusObj);
-                batchConsumpQueueObj.setBatchMarking(registerFileInfo.getBatchMarking());
+
                 Process subProcess = (Process) session.get(Process.class, registerFileInfo.getSubProcessId());
-                batchConsumpQueueObj.setProcess(subProcess);
-                session.save(batchConsumpQueueObj);
+
+                Process parentProcess = subProcess.getProcess();
+                Criteria criteria = session.createCriteria(Process.class).add(Restrictions.eq("enqueuingProcessId",parentProcess.getProcessId()));
+                List<Process> processList = criteria.list();
+                for(Process process: processList) {
+                    BatchConsumpQueue batchConsumpQueueObj = new BatchConsumpQueue();
+                    batchConsumpQueueObj.setBatchBySourceBatchId(batchObj);
+                    batchConsumpQueueObj.setSourceProcessId(registerFileInfo.getSubProcessId());
+                    batchConsumpQueueObj.setInsertTs(registerFileInfo.getCreationTs());
+                    batchConsumpQueueObj.setBatchStatus(batchStatusObj);
+                    batchConsumpQueueObj.setBatchMarking(registerFileInfo.getBatchMarking());
+                    batchConsumpQueueObj.setProcess(process);
+                    session.save(batchConsumpQueueObj);
+                }
             }
             session.getTransaction().commit();
 
