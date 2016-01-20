@@ -70,6 +70,8 @@ public class StageLoadActionNode extends GenericActionNode {
                 "            <main-class>com.wipro.ats.bdre.im.etl.api.oozie.OozieStageLoad</main-class>\n" +
                 "            <arg>--process-id</arg>\n" +
                 "            <arg>" + this.getProcessInfo().getParentProcessId() + "</arg>\n" +
+                "            <arg>--sub-process-id</arg>\n" +
+                "            <arg>" + getId() + "</arg>\n" +
                 "            <arg>--instance-exec-id</arg>\n" +
                 "            <arg>${wf:actionData(\"init-job\")[\"instance-exec-id\"]}</arg>\n" +
                 "            <arg>--min-batch-id</arg>\n" +

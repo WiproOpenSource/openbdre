@@ -369,7 +369,7 @@
                                     children: [{
                                             label: "Load File in Hive",
                                             collapse: "1",
-                                            url: "etlform.page",
+                                            url: "dataload.page",
                                             children: []
 					}, {
                                             label: "Import from RDBMS",
