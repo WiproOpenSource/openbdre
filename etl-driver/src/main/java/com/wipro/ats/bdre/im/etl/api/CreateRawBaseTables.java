@@ -128,9 +128,10 @@ public class CreateRawBaseTables extends ETLBase {
 
         }
 
-
-        // fetching raw table table-properties from properties table
-        StringBuilder tList = new StringBuilder();
+        StringBuilder tList= new StringBuilder();
+        // fetching raw table table-properties from properties table for xml
+        if("xml".equalsIgnoreCase(fileType)){
+        tList   = new StringBuilder();
         GetProperties getTableProperties = new GetProperties();
         java.util.Properties listForRawTableProps = getTableProperties.getProperties(rawLoadProcessId.toString(),"raw-table-props");
         Enumeration e = listForRawTableProps.propertyNames();
@@ -140,8 +141,22 @@ public class CreateRawBaseTables extends ETLBase {
                 tList.append("\"" + key + "\" = \"" + listForRawTableProps.getProperty(key) + "\",");
             }
 
-        }
+        }}
+        else  if("mainframe".equalsIgnoreCase(fileType)){
+            // fetching raw table table-properties from properties table for mainframe
+            //'copybook.inputformat.cbl.hdfs.path' = 'copybook/example.cbl'
+            tList   = new StringBuilder();
+            GetProperties getTableProperties = new GetProperties();
+            java.util.Properties listForRawTableProps = getTableProperties.getProperties(rawLoadProcessId.toString(),"raw-table-props");
+            Enumeration e = listForRawTableProps.propertyNames();
+            if (listForRawTableProps.size() != 0) {
+                while (e.hasMoreElements()) {
+                    String key = (String) e.nextElement();
+                    tList.append("'" + key + "' = '" + listForRawTableProps.getProperty(key) + "',");
+                }
 
+            }
+        }
 
         String rawTableDdl = "";
 
@@ -163,7 +178,13 @@ public class CreateRawBaseTables extends ETLBase {
                     "TBLPROPERTIES ( " + rawTableProperties + " )";
             LOGGER.debug("rawTableDdl= " + rawTableDdl);
         }
-
+        if("mainframe".equalsIgnoreCase(fileType)) {
+            rawTableDdl += "CREATE TABLE IF NOT EXISTS " + rawTableDbName + "." + rawTableName + " ( " + rawColumnsWithDataTypes + " ) " +
+                    " partitioned by (batchid bigint)  ROW FORMAT DELIMITED FIELDS TERMINATED BY '1'\n" +
+                    "STORED AS INPUTFORMAT 'com.cloudera.sa.copybook.mapred.CopybookInputFormat' OUTPUTFORMAT 'org.apache.hadoop.hive.ql.io.HiveIgnoreKeyTextOutputFormat' "+
+                    "TBLPROPERTIES ("+rawTableProperties+" )";
+            LOGGER.debug("rawTableDdl= " + rawTableDdl);
+        }
 
         //Getting Stage view information
         String rawViewName = rawTableName+"_view";
