@@ -224,13 +224,14 @@ public class CreateRawBaseTables extends ETLBase {
         //removing trailing comma
         String baseColumnsWithDataTypes = baseColumns.substring(0,baseColumns.length()-1);
         java.util.Properties partitionproperties = getPropertiesOfRawTable.getProperties(stgLoadProcessId.toString(), "partition");
-        String partitions = partitionproperties.getProperty("partition_columns");
-        baseTableDdl+="CREATE TABLE IF NOT EXISTS " + baseTableDbName + "." + baseTableName + " (" + baseColumnsWithDataTypes + ") partitioned by (" + partitions  + " instanceexecid bigint) stored as orc";;
+        String partitionColumns = partitionproperties.getProperty("partition_columns");
+        if (partitionColumns == null) partitionColumns = "";
+        baseTableDdl+="CREATE TABLE IF NOT EXISTS " + baseTableDbName + "." + baseTableName + " (" + baseColumnsWithDataTypes + ") partitioned by (" + partitionColumns  + " instanceexecid bigint) stored as orc";;
         LOGGER.debug(baseTableDdl);
 
         String stgTableName=baseTableName+"_"+instanceExecId;
         String stgTableDdl="";
-        stgTableDdl+="CREATE TABLE IF NOT EXISTS " + baseTableDbName + "." + stgTableName + " (" + baseColumnsWithDataTypes + ") partitioned by (" + partitions +" instanceexecid bigint) stored as orc";;
+        stgTableDdl+="CREATE TABLE IF NOT EXISTS " + baseTableDbName + "." + stgTableName + " (" + baseColumnsWithDataTypes + ") partitioned by (" + partitionColumns +" instanceexecid bigint) stored as orc";;
         //Now create the tables/view if not exists.
         checkAndCreateRawTable(rawTableDbName, rawTableName, rawTableDdl);
         checkAndCreateRawView(rawViewDbName, rawViewName, rawViewDdl);

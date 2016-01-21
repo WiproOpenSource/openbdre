@@ -94,86 +94,25 @@ public class Table {
     }
 
     /**
-     * @return String of Raw table ddl.
+     * @return String of Raw table columns and data types.
      */
-    public String getRawTableDDL() {
-        String rawTableQuery1 = "CREATE TABLE if not exists %rawTable (";
-        String rawTableQuery2 = ") partitioned by (batchid bigint) ROW FORMAT DELIMITED FIELDS TERMINATED BY ',' STORED AS TEXTFILE";
-        String rawTableQuery = rawTableQuery1;
+    public String getRawTableColumn() {
 
-        String rawTableName = srcTableName;
-
-        rawTableQuery = rawTableQuery.replace("%rawTable", rawTableName);
         Map<String, String> columnMap = new TreeMap<String, String>();
-
+        String rawColumnName = "";
         for (Column columnObj : columns.values()) {
 
-            columnMap.put(columnObj.getSrcColumnIndex(), columnObj.getDestColumnName() + " " + columnObj.getDestDataType());
+            columnMap.put(columnObj.getSrcColumnIndex(), columnObj.getDestColumnName() + "@#" + columnObj.getDestDataType());
         }
 
         for (String rawString : columnMap.values()) {
-            rawTableQuery += rawString;
-            rawTableQuery += ",";
+            rawColumnName += rawString;
+            rawColumnName += "&*";
         }
-        rawTableQuery = rawTableQuery.substring(0, rawTableQuery.length() - 1);
-        rawTableQuery += rawTableQuery2;
-        return rawTableQuery;
+        rawColumnName = rawColumnName.substring(0, rawColumnName.length() - 1);
+        return rawColumnName;
     }
 
-    /**
-     * @return String of Raw view ddl.
-     */
-    public String getRawViewDDL() {
-        String rawViewQuery1 = "create view if not exists %rawView as select ";
-        String rawViewQuery2 = "batchid from %rawTable";
-        String rawViewQuery = rawViewQuery1;
-        String rawViewName = srcTableName + "_view";
-
-        Map<String, String> columnMap = new TreeMap<String, String>();
-
-        for (Column columnObj : columns.values()) {
-
-            columnMap.put(columnObj.getSrcColumnIndex(), columnObj.getSrcColumnName());
-        }
-
-        for (String viewString : columnMap.values()) {
-            rawViewQuery += viewString;
-            rawViewQuery += ",";
-        }
-        rawViewQuery += rawViewQuery2;
-        rawViewQuery = rawViewQuery.replace("%rawView", rawViewName);
-        rawViewQuery = rawViewQuery.replace("%rawTable", srcTableName);
-        return rawViewQuery;
-    }
-
-    /**
-     * @return String of Base table ddl.
-     */
-    public String getBaseTableDDL() {
-
-        String baseTableQuery1 = "CREATE TABLE if not exists %baseTable (";
-        String baseTableQuery2 = "batchid bigint) partitioned by (instanceexecid bigint) stored as orc";
-        String baseTableQuery = baseTableQuery1;
-
-        String baseTableName = destTableName + "_base";
-
-        baseTableQuery = baseTableQuery.replace("%baseTable", baseTableName);
-        Map<String, String> columnMap = new TreeMap<String, String>();
-
-        for (Column columnObj : columns.values()) {
-
-            columnMap.put(columnObj.getSrcColumnIndex(), columnObj.getDestColumnName() + " " + columnObj.getDestDataType());
-        }
-
-        for (String baseString : columnMap.values()) {
-            baseTableQuery += baseString;
-            baseTableQuery += ",";
-        }
-
-        baseTableQuery += baseTableQuery2;
-        return baseTableQuery;
-
-    }
 
     /**
      * @return String of comma separated column list.

@@ -62,7 +62,8 @@ public class DataImportAPI extends MetadataAPIBase {
     public
     @ResponseBody
     RestWrapper createJobs(HttpServletRequest request) {
-        String destDBName = request.getParameter("common_dbHive");
+        String rawDBName = request.getParameter("common_rawDBHive");
+        String baseDBName = request.getParameter("common_baseDBHive");
         String dbURL = request.getParameter("common_dbURL");
         String driverName = request.getParameter("common_dbDriver");
         String dbUser = request.getParameter("common_dbUser");
@@ -73,7 +74,8 @@ public class DataImportAPI extends MetadataAPIBase {
 
         String uuid = UUID.randomUUID().toString();
         //this goes to hive_tables , same for all tables being imported
-        pushToIntermediate(uuid, "hiveDB", destDBName);
+        pushToIntermediate(uuid, "baseHiveDB", baseDBName);
+        pushToIntermediate(uuid,"rawHiveDB",rawDBName);
         //To be pushed directly into properties table
 
         pushToIntermediate(uuid, "db", dbURL);
@@ -92,13 +94,13 @@ public class DataImportAPI extends MetadataAPIBase {
 
         for (Table table : tables.values()) {
             count++;
-            pushToIntermediate(uuid, "baseDDL_" + count, table.getBaseTableDDL());
-            pushToIntermediate(uuid, "rawDDL_" + count, table.getRawTableDDL());
-            pushToIntermediate(uuid, "rawViewDDL_" + count, table.getRawViewDDL());
+
+            pushToIntermediate(uuid, "rawColumnsAndDataTypes_" + count, table.getRawTableColumn());
+
             pushToIntermediate(uuid, "baseTableName_" + count, table.getDestTableName() + "_base");
             pushToIntermediate(uuid, "rawTableName_" + count, table.getSrcTableName());
-            pushToIntermediate(uuid, "rawViewName_" + count, table.getSrcTableName() + "_view");
             pushToIntermediate(uuid, "columnList_" + count, table.getColumnList());
+
             LOGGER.debug("value is " + table.getIngestOrNot());
             pushToIntermediate(uuid, "ingestOnly_" + count, table.getIngestOrNot());
             pushToIntermediate(uuid, "incrementType_" + count, table.getIncrementType());

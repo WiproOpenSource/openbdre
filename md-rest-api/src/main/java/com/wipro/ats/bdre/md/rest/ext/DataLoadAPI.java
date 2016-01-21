@@ -206,9 +206,6 @@ public class DataLoadAPI extends MetadataAPIBase {
             raw2StageProperties.add(jpaProperties);
         }
 
-        jpaProperties = Dao2TableUtil.buildJPAProperties("raw-table", "raw.table.db", "raw", "Input Format");
-        file2RawProperties.add(jpaProperties);
-
         com.wipro.ats.bdre.md.dao.jpa.Process parentProcess = Dao2TableUtil.buildJPAProcess(5, processName, processDescription, 1,busDomainId);
         com.wipro.ats.bdre.md.dao.jpa.Process file2Raw = Dao2TableUtil.buildJPAProcess(6, "File2Raw of "+processName , processDescription, 0,busDomainId);
         com.wipro.ats.bdre.md.dao.jpa.Process raw2Stage = Dao2TableUtil.buildJPAProcess(7, "Raw2Stage of "+processName , processDescription, 0,busDomainId);

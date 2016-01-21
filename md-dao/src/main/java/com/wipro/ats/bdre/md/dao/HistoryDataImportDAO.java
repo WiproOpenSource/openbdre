@@ -420,6 +420,56 @@ public class HistoryDataImportDAO {
 
                     nextProcessForR2S += stage2Base.getProcessId() + ",";
 
+                    PropertiesId propertiesFieldDelimId = new PropertiesId();
+                    propertiesFieldDelimId.setProcessId(file2Raw.getProcessId());
+                    propertiesFieldDelimId.setPropKey("field.delim");
+                    Properties propertiesFieldDelim = new Properties();
+                    propertiesFieldDelim.setId(propertiesFieldDelimId);
+                    propertiesFieldDelim.setConfigGroup("raw-serde-props");
+                    propertiesFieldDelim.setPropValue(",");
+                    propertiesFieldDelim.setDescription("properties for File delimiter");
+                    session.save(propertiesFieldDelim);
+
+                    PropertiesId propertiesFileFormatId = new PropertiesId();
+                    propertiesFileFormatId.setProcessId(file2Raw.getProcessId());
+                    propertiesFileFormatId.setPropKey("file_type");
+                    Properties propertiesFileFormat = new Properties();
+                    propertiesFileFormat.setId(propertiesFileFormatId);
+                    propertiesFileFormat.setConfigGroup("raw-table");
+                    propertiesFileFormat.setPropValue("delimited");
+                    propertiesFileFormat.setDescription("properties for File Format");
+                    session.save(propertiesFileFormat);
+
+                    PropertiesId propertiesInputFormatId = new PropertiesId();
+                    propertiesInputFormatId.setProcessId(file2Raw.getProcessId());
+                    propertiesInputFormatId.setPropKey("input.format");
+                    Properties propertiesInputFormat = new Properties();
+                    propertiesInputFormat.setId(propertiesInputFormatId);
+                    propertiesInputFormat.setConfigGroup("raw-table");
+                    propertiesInputFormat.setPropValue("org.apache.hadoop.mapred.TextInputFormat");
+                    propertiesInputFormat.setDescription("properties for input Format");
+                    session.save(propertiesInputFormat);
+
+                    PropertiesId propertiesOutputFormatId = new PropertiesId();
+                    propertiesOutputFormatId.setProcessId(file2Raw.getProcessId());
+                    propertiesOutputFormatId.setPropKey("output.format");
+                    Properties propertiesOutputFormat = new Properties();
+                    propertiesOutputFormat.setId(propertiesOutputFormatId);
+                    propertiesOutputFormat.setConfigGroup("raw-table");
+                    propertiesOutputFormat.setPropValue("org.apache.hadoop.hive.ql.io.HiveIgnoreKeyTextOutputFormat");
+                    propertiesOutputFormat.setDescription("properties for output Format");
+                    session.save(propertiesOutputFormat);
+
+                    PropertiesId propertiesSerdeClassId = new PropertiesId();
+                    propertiesSerdeClassId.setProcessId(file2Raw.getProcessId());
+                    propertiesSerdeClassId.setPropKey("serde.class");
+                    Properties propertiesSerdeClass = new Properties();
+                    propertiesSerdeClass.setId(propertiesSerdeClassId);
+                    propertiesSerdeClass.setConfigGroup("raw-table");
+                    propertiesSerdeClass.setPropValue("org.apache.hadoop.hive.serde2.lazy.LazySimpleSerDe");
+                    propertiesSerdeClass.setDescription("properties for Serde Class");
+                    session.save(propertiesSerdeClass);
+
                     IntermediateId intermediateIdRawTableName = new IntermediateId();
                     intermediateIdRawTableName.setUuid(intermediateInfo.getUuid());
                     intermediateIdRawTableName.setInterKey("rawTableName_" + i);
@@ -427,23 +477,93 @@ public class HistoryDataImportDAO {
                     Criteria rawTableNameCriteria = session.createCriteria(Intermediate.class).add(Restrictions.eq("id", intermediateIdRawTableName));
                     Intermediate rawTableName = (Intermediate) rawTableNameCriteria.list().get(0);
 
-                    IntermediateId intermediateIdRawTableDDL = new IntermediateId();
-                    intermediateIdRawTableDDL.setUuid(intermediateInfo.getUuid());
-                    intermediateIdRawTableDDL.setInterKey("rawDDL_" + i);
+                    PropertiesId rawTableNamePropertiesId = new PropertiesId();
+                    rawTableNamePropertiesId.setProcessId(file2Raw.getProcessId());
+                    rawTableNamePropertiesId.setPropKey("table_name");
+                    Properties rawTableNameProperties = new Properties();
+                    rawTableNameProperties.setId(rawTableNamePropertiesId);
+                    rawTableNameProperties.setConfigGroup("raw-table");
+                    rawTableNameProperties.setPropValue(rawTableName.getInterValue());
+                    rawTableNameProperties.setDescription("Raw Table Name");
+                    session.save(rawTableNameProperties);
 
-                    Criteria rawTableDDLCriteria = session.createCriteria(Intermediate.class).add(Restrictions.eq("id", intermediateIdRawTableDDL));
-                    Intermediate rawTableDDL = (Intermediate) rawTableDDLCriteria.list().get(0);
 
-                    HiveTables rawTableHive = new HiveTables();
-                    rawTableHive.setComments("for raw table");
-                    rawTableHive.setLocationType("hdfs");
-                    rawTableHive.setDbname("raw");
-                    rawTableHive.setBatchIdPartitionCol("batchid");
-                    rawTableHive.setTableName(rawTableName.getInterValue());
-                    rawTableHive.setType("raw");
-                    rawTableHive.setDdl(rawTableDDL.getInterValue());
-                    session.save(rawTableHive);
+                    IntermediateId intermediateIdRawTableDB = new IntermediateId();
+                    intermediateIdRawTableDB.setUuid(intermediateInfo.getUuid());
+                    intermediateIdRawTableDB.setInterKey("rawHiveDB");
 
+                    Criteria rawTableDBCriteria = session.createCriteria(Intermediate.class).add(Restrictions.eq("id", intermediateIdRawTableDB));
+                    Intermediate rawTableDB = (Intermediate) rawTableDBCriteria.list().get(0);
+
+                    PropertiesId rawTableDBPropertiesId = new PropertiesId();
+                    rawTableDBPropertiesId.setProcessId(file2Raw.getProcessId());
+                    rawTableDBPropertiesId.setPropKey("table_db");
+                    Properties rawTableDBProperties = new Properties();
+                    rawTableDBProperties.setId(rawTableDBPropertiesId);
+                    rawTableDBProperties.setConfigGroup("raw-table");
+                    rawTableDBProperties.setPropValue(rawTableDB.getInterValue());
+                    rawTableDBProperties.setDescription("Raw Table Name");
+                    session.save(rawTableNameProperties);
+
+                    IntermediateId intermediateIdRawTableColumns = new IntermediateId();
+                    intermediateIdRawTableColumns.setUuid(intermediateInfo.getUuid());
+                    intermediateIdRawTableColumns.setInterKey("rawColumnsAndDataTypes_" +  i);
+
+                    Criteria rawTableColumnsCriteria = session.createCriteria(Intermediate.class).add(Restrictions.eq("id", intermediateIdRawTableColumns));
+                    Intermediate rawTableColumns = (Intermediate) rawTableColumnsCriteria.list().get(0);
+                    String[] rawTableColumn = rawTableColumns.getInterValue().split("&*");
+                    for ( int columnCounter = 1;columnCounter <= rawTableColumn.length; columnCounter ++){
+                        PropertiesId rawTableColumnPropertiesId = new PropertiesId();
+                        rawTableColumnPropertiesId.setProcessId(file2Raw.getProcessId());
+                        rawTableColumnPropertiesId.setPropKey("raw_column_name." + columnCounter);
+                        Properties rawTableColumnProperties = new Properties();
+                        rawTableColumnProperties.setId(rawTableColumnPropertiesId);
+                        rawTableColumnProperties.setConfigGroup("raw-cols");
+                        rawTableColumnProperties.setPropValue(rawTableColumn[columnCounter-1].split("@#")[0]);
+                        rawTableColumnProperties.setDescription("Raw Table Columns");
+                        session.save(rawTableNameProperties);
+
+                        PropertiesId rawTableDataTypesPropertiesId = new PropertiesId();
+                        rawTableDataTypesPropertiesId.setProcessId(file2Raw.getProcessId());
+                        rawTableDataTypesPropertiesId.setPropKey("raw_column_datatype." + columnCounter);
+                        Properties rawTableDataTypesProperties = new Properties();
+                        rawTableDataTypesProperties.setId(rawTableDataTypesPropertiesId);
+                        rawTableDataTypesProperties.setConfigGroup("raw-data-types");
+                        rawTableDataTypesProperties.setPropValue(rawTableColumn[columnCounter-1].split("@#")[1]);
+                        rawTableDataTypesProperties.setDescription("Raw Table Data Types");
+                        session.save(rawTableNameProperties);
+
+                        PropertiesId baseTableColumnPropertiesId = new PropertiesId();
+                        baseTableColumnPropertiesId.setProcessId(raw2Stage.getProcessId());
+                        baseTableColumnPropertiesId.setPropKey("transform_" + rawTableColumn[columnCounter-1].split("@#")[0]);
+                        Properties baseTableColumnProperties = new Properties();
+                        baseTableColumnProperties.setId(baseTableColumnPropertiesId);
+                        baseTableColumnProperties.setConfigGroup("base-columns");
+                        baseTableColumnProperties.setPropValue(rawTableColumn[columnCounter-1].split("@#")[0]);
+                        baseTableColumnProperties.setDescription("Base Table Columns");
+                        session.save(rawTableNameProperties);
+
+                        PropertiesId baseTableDataTypePropertiesId = new PropertiesId();
+                        baseTableDataTypePropertiesId.setProcessId(raw2Stage.getProcessId());
+                        baseTableDataTypePropertiesId.setPropKey(rawTableColumn[columnCounter-1].split("@#")[0]);
+                        Properties baseTableDataTypeProperties = new Properties();
+                        baseTableDataTypeProperties.setId(baseTableDataTypePropertiesId);
+                        baseTableDataTypeProperties.setConfigGroup("base-data-types");
+                        baseTableDataTypeProperties.setPropValue(rawTableColumn[columnCounter-1].split("@#")[1]);
+                        baseTableDataTypeProperties.setDescription("Base Table data types");
+                        session.save(rawTableNameProperties);
+
+                        PropertiesId lastStageId = new PropertiesId();
+                        lastStageId.setProcessId(stage2Base.getProcessId());
+                        lastStageId.setPropKey(rawTableColumn[columnCounter-1].split("@#")[0]);
+                        Properties lastStage = new Properties();
+                        lastStage.setId(lastStageId);
+                        lastStage.setConfigGroup("base-columns-and-types");
+                        lastStage.setPropValue(rawTableColumn[columnCounter-1].split("@#")[1]);
+                        lastStage.setDescription("Base Table columns and data types");
+                        session.save(rawTableNameProperties);
+
+                    }
 
                     IntermediateId intermediateIdBaseTableName = new IntermediateId();
                     intermediateIdBaseTableName.setUuid(intermediateInfo.getUuid());
@@ -452,86 +572,54 @@ public class HistoryDataImportDAO {
                     Criteria baseTableNameCriteria = session.createCriteria(Intermediate.class).add(Restrictions.eq("id", intermediateIdBaseTableName));
                     Intermediate baseTableName = (Intermediate) baseTableNameCriteria.list().get(0);
 
-                    IntermediateId intermediateIdBaseTableDDL = new IntermediateId();
-                    intermediateIdBaseTableDDL.setUuid(intermediateInfo.getUuid());
-                    intermediateIdBaseTableDDL.setInterKey("baseDDL_" + i);
+                    PropertiesId baseTableNamePropertiesId = new PropertiesId();
+                    baseTableNamePropertiesId.setProcessId(raw2Stage.getProcessId());
+                    baseTableNamePropertiesId.setPropKey("table_name");
+                    Properties baseTableNameProperties = new Properties();
+                    baseTableNameProperties.setId(baseTableNamePropertiesId);
+                    baseTableNameProperties.setConfigGroup("base-table");
+                    baseTableNameProperties.setPropValue(baseTableName.getInterValue());
+                    baseTableNameProperties.setDescription("Base Table Name");
+                    session.save(baseTableNameProperties);
 
-                    Criteria baseTableDDLCriteria = session.createCriteria(Intermediate.class).add(Restrictions.eq("id", intermediateIdBaseTableDDL));
-                    Intermediate baseTableDDL = (Intermediate) baseTableDDLCriteria.list().get(0);
-
-                    IntermediateId intermediateIdBaseDB = new IntermediateId();
-                    intermediateIdBaseDB.setUuid(intermediateInfo.getUuid());
-                    intermediateIdBaseDB.setInterKey("hiveDB");
-
-                    Criteria baseDBCriteria = session.createCriteria(Intermediate.class).add(Restrictions.eq("id", intermediateIdBaseDB));
-                    Intermediate baseDB = (Intermediate) baseDBCriteria.list().get(0);
-
-                    HiveTables baseTableHive = new HiveTables();
-                    baseTableHive.setComments("for base table");
-                    baseTableHive.setLocationType("hdfs");
-                    baseTableHive.setDbname(baseDB.getInterValue());
-                    baseTableHive.setBatchIdPartitionCol("batchid");
-                    baseTableHive.setTableName(baseTableName.getInterValue());
-                    baseTableHive.setType("base");
-                    baseTableHive.setDdl(baseTableDDL.getInterValue());
-                    session.save(baseTableHive);
+                    baseTableNamePropertiesId = new PropertiesId();
+                    baseTableNamePropertiesId.setProcessId(stage2Base.getProcessId());
+                    baseTableNamePropertiesId.setPropKey("table_name");
+                    baseTableNameProperties = new Properties();
+                    baseTableNameProperties.setId(baseTableNamePropertiesId);
+                    baseTableNameProperties.setConfigGroup("base-table");
+                    baseTableNameProperties.setPropValue(baseTableName.getInterValue());
+                    baseTableNameProperties.setDescription("Base Table Name");
+                    session.save(baseTableNameProperties);
 
 
-                    IntermediateId intermediateIdViewName = new IntermediateId();
-                    intermediateIdViewName.setUuid(intermediateInfo.getUuid());
-                    intermediateIdViewName.setInterKey("rawViewName_" + i);
+                    IntermediateId intermediateIdBaseTableDB = new IntermediateId();
+                    intermediateIdBaseTableDB.setUuid(intermediateInfo.getUuid());
+                    intermediateIdBaseTableDB.setInterKey("baseHiveDB");
 
-                    Criteria viewNameCriteria = session.createCriteria(Intermediate.class).add(Restrictions.eq("id", intermediateIdViewName));
-                    Intermediate viewName = (Intermediate) viewNameCriteria.list().get(0);
+                    Criteria baseTableDBCriteria = session.createCriteria(Intermediate.class).add(Restrictions.eq("id", intermediateIdBaseTableDB));
+                    Intermediate baseTableDB = (Intermediate) baseTableDBCriteria.list().get(0);
 
-                    IntermediateId intermediateIdViewDDL = new IntermediateId();
-                    intermediateIdViewDDL.setUuid(intermediateInfo.getUuid());
-                    intermediateIdViewDDL.setInterKey("rawViewDDL_" + i);
+                    PropertiesId baseTableDBPropertiesId = new PropertiesId();
+                    baseTableDBPropertiesId.setProcessId(raw2Stage.getProcessId());
+                    baseTableDBPropertiesId.setPropKey("table_db");
+                    Properties baseTableDBProperties = new Properties();
+                    baseTableDBProperties.setId(baseTableDBPropertiesId);
+                    baseTableDBProperties.setConfigGroup("base-table");
+                    baseTableDBProperties.setPropValue(baseTableDB.getInterValue());
+                    baseTableDBProperties.setDescription("Base Table DB");
+                    session.save(baseTableNameProperties);
 
-                    Criteria viewDDLCriteria = session.createCriteria(Intermediate.class).add(Restrictions.eq("id", intermediateIdViewDDL));
-                    Intermediate viewDDL = (Intermediate) viewDDLCriteria.list().get(0);
+                    baseTableDBPropertiesId = new PropertiesId();
+                    baseTableDBPropertiesId.setProcessId(stage2Base.getProcessId());
+                    baseTableDBPropertiesId.setPropKey("table_db");
+                    baseTableDBProperties = new Properties();
+                    baseTableDBProperties.setId(baseTableDBPropertiesId);
+                    baseTableDBProperties.setConfigGroup("base-table");
+                    baseTableDBProperties.setPropValue(baseTableDB.getInterValue());
+                    baseTableDBProperties.setDescription("Base Table DB");
+                    session.save(baseTableNameProperties);
 
-                    HiveTables viewHive = new HiveTables();
-                    viewHive.setComments("for view");
-                    viewHive.setLocationType("hdfs");
-                    viewHive.setDbname("raw");
-                    viewHive.setBatchIdPartitionCol("batchid");
-                    viewHive.setTableName(viewName.getInterValue());
-                    viewHive.setType("view");
-                    viewHive.setDdl(viewDDL.getInterValue());
-                    session.save(viewHive);
-
-                    EtlDriver rawETLDriver = new EtlDriver();
-                    rawETLDriver.setEtlProcessId(file2Raw.getProcessId());
-                    rawETLDriver.setProcess(file2Raw);
-                    rawETLDriver.setHiveTablesByRawTableId(rawTableHive);
-                    rawETLDriver.setHiveTablesByBaseTableId(baseTableHive);
-                    rawETLDriver.setInsertType(Short.parseShort("1"));
-                    rawETLDriver.setDropRaw(false);
-                    rawETLDriver.setHiveTablesByRawViewId(viewHive);
-                    session.save(rawETLDriver);
-
-
-                    EtlDriver stageETLDriver = new EtlDriver();
-                    stageETLDriver.setEtlProcessId(raw2Stage.getProcessId());
-                    stageETLDriver.setProcess(raw2Stage);
-                    stageETLDriver.setHiveTablesByRawTableId(rawTableHive);
-                    stageETLDriver.setHiveTablesByBaseTableId(baseTableHive);
-                    stageETLDriver.setInsertType(Short.parseShort("1"));
-                    stageETLDriver.setDropRaw(false);
-                    stageETLDriver.setHiveTablesByRawViewId(viewHive);
-                    session.save(stageETLDriver);
-
-
-                    EtlDriver baseETLDriver = new EtlDriver();
-                    baseETLDriver.setEtlProcessId(stage2Base.getProcessId());
-                    baseETLDriver.setProcess(stage2Base);
-                    baseETLDriver.setHiveTablesByRawTableId(rawTableHive);
-                    baseETLDriver.setHiveTablesByBaseTableId(baseTableHive);
-                    baseETLDriver.setInsertType(Short.parseShort("1"));
-                    baseETLDriver.setDropRaw(false);
-                    baseETLDriver.setHiveTablesByRawViewId(viewHive);
-                    session.save(baseETLDriver);
                 }
             }
             if (flag == 1) {
