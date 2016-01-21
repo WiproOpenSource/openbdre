@@ -137,9 +137,11 @@ public class FileMonRunnableMain extends BaseStructure {
             String dir = FileMonRunnableMain.getMonitoredDirName();
             DefaultFileMonitor fm = new DefaultFileMonitor(FileMonitor.getInstance());
             FileObject listenDir = fsManager.resolveFile(dir);
+            FileObject archiveDir = fsManager.resolveFile(dir+"/_archive");
             LOGGER.debug("Monitoring directories " + dir);
-            fm.setRecursive(false);
+            fm.setRecursive(true);
             fm.addFile(listenDir);
+            fm.removeFile(archiveDir);
             fm.start();
             //Now scan the mondir for existing files and add to queue
             FileScan.scanAndAddToQueue();

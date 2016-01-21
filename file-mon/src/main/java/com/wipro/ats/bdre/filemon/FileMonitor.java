@@ -73,9 +73,9 @@ public class FileMonitor implements FileListener {
         FileObject obj = fileChangeEvent.getFile();
         LOGGER.debug("File Created " + obj.getURL());
         String dirPath = obj.getParent().getName().getPath();
-        if(!dirPath.equals(FileMonRunnableMain.getMonitoredDirName())){
-            return;
-        }
+        LOGGER.debug("Full path: "+obj.getName().getPath());
+
+
         //Don't process anything with _archive
         if(dirPath.endsWith("_archive")){
             return;
@@ -84,7 +84,9 @@ public class FileMonitor implements FileListener {
         if(obj.getType() == FileType.FOLDER){
             return;
         }
-        String fileName = obj.getName().getBaseName();
+
+        String fullPath = obj.getName().getPath();
+        String fileName = fullPath.replace(FileMonRunnableMain.getMonitoredDirName()+"/","");
 
         //Checking if the file name matches with the given pattern
         if (fileName.matches(FileMonRunnableMain.getFilePattern())) {
@@ -98,11 +100,16 @@ public class FileMonitor implements FileListener {
         // *Start*   Eligible files moved to data structure for ingestion to HDFS
         FileCopyInfo fileCopyInfo = new FileCopyInfo();
         try {
-            fileCopyInfo.setFileName(fileName);
+            String exactFileName = fc.getFile().getName().getBaseName();
+            fileCopyInfo.setFileName(exactFileName);
             fileCopyInfo.setSubProcessId(FileMonRunnableMain.getSubProcessId());
             fileCopyInfo.setServerId(new Integer(123461).toString());
             fileCopyInfo.setSrcLocation(fc.getFile().getName().getPath());
-            fileCopyInfo.setDstLocation(FileMonRunnableMain.getHdfsUploadDir());
+            if (fileName.equals(exactFileName)) {
+                fileCopyInfo.setDstLocation(FileMonRunnableMain.getHdfsUploadDir());
+            }else {
+                fileCopyInfo.setDstLocation(FileMonRunnableMain.getHdfsUploadDir() + "/" + fileName.replace("/"+exactFileName, ""));
+            }
             fileCopyInfo.setFileHash(DigestUtils.md5Hex(fc.getInputStream()));
             fileCopyInfo.setFileSize(fc.getSize());
             fileCopyInfo.setTimeStamp(fc.getLastModifiedTime());
