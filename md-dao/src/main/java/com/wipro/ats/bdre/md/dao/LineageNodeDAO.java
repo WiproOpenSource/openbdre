@@ -17,14 +17,18 @@ package com.wipro.ats.bdre.md.dao;
 
 import com.wipro.ats.bdre.exception.MetadataException;
 import com.wipro.ats.bdre.md.dao.jpa.LineageNode;
+import com.wipro.ats.bdre.md.dao.jpa.LineageQuery;
 import org.apache.log4j.Logger;
 import org.hibernate.Criteria;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
+import org.hibernate.criterion.Order;
+import org.hibernate.criterion.Restrictions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -87,6 +91,16 @@ public class LineageNodeDAO {
         return id;
     }
 
+    public List<LineageNode> getColNodeId(String col_name) {
+        Long instanceExecId;
+        List<LineageNode> lineageNodeList = new ArrayList<LineageNode>();
+        Session session = sessionFactory.getCurrentSession();
+        session.beginTransaction();
+        Criteria getLastElementCriteria = session.createCriteria(LineageNode.class).add(Restrictions.eq("displayName", col_name));
+        lineageNodeList = getLastElementCriteria.list();
+        session.getTransaction().commit();
+        return lineageNodeList;
+    }
 
     public void update(LineageNode lineageNode) {
         Session session = sessionFactory.openSession();

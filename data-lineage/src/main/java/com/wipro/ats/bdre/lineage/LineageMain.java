@@ -141,22 +141,22 @@ public class LineageMain implements NodeProcessor {
 		ogw.startWalking(topNodes, null);
 	}
 
-//	private ASTNode search(int type, ASTNode node) {
-//		System.out.println("searching node = " + node);
-//		if (node != null) {
-//			if (node.getType() == type) {
-//				return node;
-//			} else {
-//				for (int i = 0; i < node.getChildCount(); i++) {
-//					ASTNode foundNode = search(type, (ASTNode) node.getChild(i));
-//					return foundNode;
-//				}
-//			}
-//		} else {
-//			return null;
-//		}
-//		return null;
-//	}
+/*	private ASTNode search(int type, ASTNode node) {
+		System.out.println("searching node = " + node);
+		if (node != null) {
+			if (node.getType() == type) {
+				return node;
+			} else {
+				for (int i = 0; i < node.getChildCount(); i++) {
+					ASTNode foundNode = search(type, (ASTNode) node.getChild(i));
+					return foundNode;
+				}
+			}
+		} else {
+			return null;
+		}
+		return null;
+	}*/
 
 	/**
 	 * Implements the process method for the NodeProcessor interface.
@@ -181,7 +181,7 @@ public class LineageMain implements NodeProcessor {
 			case HiveParser.TOK_QUERY:
 //				System.out.println("\"got query\" = " + pt);
 				System.out.println("\nQuery " + ++subquerySeq + " parsed");
-//				printDot(pt);
+				printDot(pt);
 
 				getTableLineage(pt);
 

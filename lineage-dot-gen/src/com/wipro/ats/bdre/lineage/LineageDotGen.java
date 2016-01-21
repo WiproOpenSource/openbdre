@@ -20,34 +20,15 @@ import com.wipro.ats.bdre.md.dao.jpa.LineageQuery;
 import org.apache.commons.cli.CommandLine;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.apache.hadoop.hive.ql.parse.ParseException;
-import org.apache.hadoop.hive.ql.parse.SemanticException;
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileWriter;
+
 import java.util.List;
-import com.wipro.ats.bdre.lineage.api.PersistenceUnit;
-import com.wipro.ats.bdre.lineage.entiity.*;
-import com.wipro.ats.bdre.lineage.entiity.Node;
-import com.wipro.ats.bdre.lineage.type.EntityType;
-import com.wipro.ats.bdre.lineage.type.UniqueList;
-import org.antlr.runtime.tree.DOTTreeGenerator;
-import org.antlr.runtime.tree.Tree;
-import org.antlr.stringtemplate.StringTemplate;
-
-
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.util.*;
 
 /**
  * Created by AshutoshRai on 1/18/16.
  */
-public class DotGen extends BaseStructure {
+public class LineageDotGen extends BaseStructure {
 
-    protected static final Logger logger = LoggerFactory.getLogger(DotGen.class);
+    protected static final Logger logger = LoggerFactory.getLogger(LineageDotGen.class);
     private static String defaultHiveDbName = LineageConstants.defaultHiveDbName;
     private String dotString;
 
@@ -56,7 +37,7 @@ public class DotGen extends BaseStructure {
     };
 
     public static void main(String[] args) throws Exception {
-        CommandLine commandLine = new DotGen().getCommandLine(args, PARAMS_STRUCTURE);
+        CommandLine commandLine = new LineageDotGen().getCommandLine(args, PARAMS_STRUCTURE);
         String processId = commandLine.getOptionValue("sub-process-id");
         getDot(processId);
 
@@ -69,27 +50,26 @@ public class DotGen extends BaseStructure {
         List<LineageQuery> lineageQueryList = getLineageQueryByProcessId.execute(args);
 
         for (LineageQuery lineageQuery:lineageQueryList) {
-        String query = lineageQuery.getQueryString();
-        String instanceid= lineageQuery.getInstanceExecId().toString();
-        //to select which HiveDB to use by default
-        if (query.toLowerCase().startsWith("use")) {
-            // ignore 'use db' line for lineage
-            // use last split to determine the db
-            String[] splits = query.split(" ");
-            defaultHiveDbName = splits[splits.length - 1].toUpperCase();
-            logger.debug("DefaulHiveDbName is set to " + defaultHiveDbName);
+            String query = lineageQuery.getQueryString();
+            String instanceid= lineageQuery.getInstanceExecId().toString();
 
-        }
-        //replace main with fn() getlineageinfo & populatebeansandpersist
-        //LineageMain lineageMain = new LineageMain(query, Integer.parseInt(processId), instanceid, defaultHiveDbName);
+            //to select which HiveDB to use by default
+            if (query.toLowerCase().startsWith("use")) {
+                // ignore 'use db' line for lineage
+                // use last split to determine the db
+                String[] splits = query.split(" ");
+                defaultHiveDbName = splits[splits.length - 1].toUpperCase();
+                logger.debug("DefaulHiveDbName is set to " + defaultHiveDbName);
+
+            }
+
             try {
                 LineageMain.main(new String[]{query, defaultHiveDbName, processId, instanceid});
             } catch (Exception e) {
                 logger.info("Error while calling LineageMain's main()");
                 e.printStackTrace();
             }
-            //LineageMain.main(new String[]{query, defaultHiveDbName, processId, instanceExecId});
-    }
+        }
     }
 
 }
