@@ -210,7 +210,7 @@ public class CreateRawBaseTables extends ETLBase {
         java.util.Properties viewPropertiesOfColumnsPartition = getPropertiesOfViewColumns.getProperties(stgLoadProcessId.toString(), "partition");
         String partitionViewColumn = viewPropertiesOfColumnsPartition.getProperty("partition_columns");
         LOGGER.info("partition columns "  + partitionViewColumn);
-        if (!("".equals(partitionViewColumn)) || !(partitionViewColumn == null) ){
+        if (!("".equals(partitionViewColumn)) && !(partitionViewColumn == null) ){
             String[] partitionViewColumns = partitionViewColumn.split(",");
             for(String viewColumn : partitionViewColumns) {
                 viewColumns.append(viewColumn.split(" ")[0] + " AS " + viewColumn.split(" ")[0] + ",");
