@@ -15,6 +15,8 @@
 package com.wipro.ats.bdre.md.rest.util;
 
 
+import org.apache.derby.impl.jdbc.LOBInputStream;
+
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.TreeMap;
@@ -96,20 +98,20 @@ public class Table {
     /**
      * @return String of Raw table columns and data types.
      */
-    public String getRawTableColumn() {
+    public String getRawTableColumnAndDataType() {
 
         Map<String, String> columnMap = new TreeMap<String, String>();
         String rawColumnName = "";
         for (Column columnObj : columns.values()) {
 
-            columnMap.put(columnObj.getSrcColumnIndex(), columnObj.getDestColumnName() + "@#" + columnObj.getDestDataType());
+            columnMap.put(columnObj.getSrcColumnIndex(), columnObj.getDestColumnName() + " " + columnObj.getDestDataType());
         }
 
         for (String rawString : columnMap.values()) {
             rawColumnName += rawString;
-            rawColumnName += "&*";
+            rawColumnName += ",";
         }
-        rawColumnName = rawColumnName.substring(0, rawColumnName.length() - 1);
+        rawColumnName = rawColumnName.substring(0, rawColumnName.length() - 2);
         return rawColumnName;
     }
 

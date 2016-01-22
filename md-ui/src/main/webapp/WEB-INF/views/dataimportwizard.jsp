@@ -643,7 +643,7 @@ isInit=true;
 					<table id = "tree0" class = "table-striped" width = "290px" >
 						<thead >
 						<tr >
-							<th ><label for = "rawDBHive" >Hive DB</label ></th >
+							<th ><label for = "rawDBHive" >RAW Hive DB</label ></th >
 						</tr >
 						</thead >
 						<tbody >
@@ -655,7 +655,7 @@ isInit=true;
 						</tbody >
 						<thead >
                         <tr >
-                            <th ><label for = "baseDBHive" >Hive DB</label ></th >
+                            <th ><label for = "baseDBHive" >BASE Hive DB</label ></th >
                         </tr >
                         </thead >
                         <tbody >

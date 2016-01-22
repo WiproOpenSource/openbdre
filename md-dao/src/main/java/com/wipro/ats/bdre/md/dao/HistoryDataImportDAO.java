@@ -27,6 +27,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.persistence.criteria.CriteriaBuilder;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -47,15 +48,18 @@ public class HistoryDataImportDAO {
 
         try {
             session.beginTransaction();
-            Criteria numOfTableCriteria = session.createCriteria(Intermediate.class).add(Restrictions.like("id.interKey", "baseDDL_%"))
-                    .add(Restrictions.eq("id.uuid", intermediateInfo.getUuid()));
-            List<Intermediate> intermediateList = numOfTableCriteria.list();
-
+            IntermediateId intermediateId = new IntermediateId();
+            LOGGER.info("uuid is =" + intermediateInfo.getUuid());
+            intermediateId.setUuid(intermediateInfo.getUuid());
+            intermediateId.setInterKey("numberOfTables");
+            Intermediate numberOfTables = (Intermediate) session.get(Intermediate.class,intermediateId);
+            LOGGER.info("inter value is = " + numberOfTables.getInterValue() + " key is " + numberOfTables.getId().getInterKey());
+            Integer numOfTable = Integer.parseInt(numberOfTables.getInterValue());
             boolean triggerCheck;
             int flag = 0;
             int numOfTableToIngest = 0;
-            LOGGER.info("number of table is " + intermediateList.size());
-            for (int i = 1; i <= intermediateList.size(); i++) {
+            LOGGER.info("number of table is " + numOfTable);
+            for (int i = 1; i <= numOfTable; i++) {
                 IntermediateId getInterValue = new IntermediateId();
                 getInterValue.setInterKey("ingestOnly_" + i);
                 getInterValue.setUuid(intermediateInfo.getUuid());
@@ -138,7 +142,7 @@ public class HistoryDataImportDAO {
                 LOGGER.info("the inserted data load parent is " + dataLoadParent.getProcessId());
                 parentProcessIdList.add(dataLoadParent.getProcessId());
             }
-            for (int i = 1; i <= intermediateList.size(); i++) {
+            for (int i = 1; i <= numOfTable; i++) {
                 Process dataImportProcess = new Process();
                 dataImportProcess.setDescription(processDescription+"_Import" + i);
                 dataImportProcess.setAddTs(new Date());
@@ -157,9 +161,6 @@ public class HistoryDataImportDAO {
                 LOGGER.info("the inserted data import parent is " + dataImportProcess.getProcessId());
                 parentProcessIdList.add(dataImportProcess.getProcessId());
 
-                if (i == 1) {
-                    //something special to be done
-                }
 
                 Process childDataImportProcess = new Process();
                 childDataImportProcess.setDescription(processDescription+"_Import");
@@ -508,18 +509,25 @@ public class HistoryDataImportDAO {
                     IntermediateId intermediateIdRawTableColumns = new IntermediateId();
                     intermediateIdRawTableColumns.setUuid(intermediateInfo.getUuid());
                     intermediateIdRawTableColumns.setInterKey("rawColumnsAndDataTypes_" +  i);
+                    LOGGER.info("key is : " + i);
 
                     Criteria rawTableColumnsCriteria = session.createCriteria(Intermediate.class).add(Restrictions.eq("id", intermediateIdRawTableColumns));
                     Intermediate rawTableColumns = (Intermediate) rawTableColumnsCriteria.list().get(0);
-                    String[] rawTableColumn = rawTableColumns.getInterValue().split("&*");
+                    LOGGER.info("intermediate column : uuid " + rawTableColumns.getId().getUuid() + " key " + rawTableColumns.getId().getInterKey() + " value " + rawTableColumns.getInterValue());
+                    String[] rawTableColumn = rawTableColumns.getInterValue().split(",");
+                    LOGGER.info("inter value after splitting " + rawTableColumn.toString());
                     for ( int columnCounter = 1;columnCounter <= rawTableColumn.length; columnCounter ++){
+                        LOGGER.info ("column and data type is " + rawTableColumn[columnCounter-1]);
+                        LOGGER.info ("column and data type is " + rawTableColumn[columnCounter-1].split(" ")[0]);
+                        LOGGER.info ("column and data type is " + rawTableColumn[columnCounter-1].split(" ")[1]);
+
                         PropertiesId rawTableColumnPropertiesId = new PropertiesId();
                         rawTableColumnPropertiesId.setProcessId(file2Raw.getProcessId());
                         rawTableColumnPropertiesId.setPropKey("raw_column_name." + columnCounter);
                         Properties rawTableColumnProperties = new Properties();
                         rawTableColumnProperties.setId(rawTableColumnPropertiesId);
                         rawTableColumnProperties.setConfigGroup("raw-cols");
-                        rawTableColumnProperties.setPropValue(rawTableColumn[columnCounter-1].split("@#")[0]);
+                        rawTableColumnProperties.setPropValue(rawTableColumn[columnCounter-1].split(" ")[0]);
                         rawTableColumnProperties.setDescription("Raw Table Columns");
                         session.save(rawTableNameProperties);
 
@@ -529,37 +537,37 @@ public class HistoryDataImportDAO {
                         Properties rawTableDataTypesProperties = new Properties();
                         rawTableDataTypesProperties.setId(rawTableDataTypesPropertiesId);
                         rawTableDataTypesProperties.setConfigGroup("raw-data-types");
-                        rawTableDataTypesProperties.setPropValue(rawTableColumn[columnCounter-1].split("@#")[1]);
+                        rawTableDataTypesProperties.setPropValue(rawTableColumn[columnCounter-1].split(" ")[1]);
                         rawTableDataTypesProperties.setDescription("Raw Table Data Types");
                         session.save(rawTableNameProperties);
 
                         PropertiesId baseTableColumnPropertiesId = new PropertiesId();
                         baseTableColumnPropertiesId.setProcessId(raw2Stage.getProcessId());
-                        baseTableColumnPropertiesId.setPropKey("transform_" + rawTableColumn[columnCounter-1].split("@#")[0]);
+                        baseTableColumnPropertiesId.setPropKey("transform_" + rawTableColumn[columnCounter-1].split(" ")[0]);
                         Properties baseTableColumnProperties = new Properties();
                         baseTableColumnProperties.setId(baseTableColumnPropertiesId);
                         baseTableColumnProperties.setConfigGroup("base-columns");
-                        baseTableColumnProperties.setPropValue(rawTableColumn[columnCounter-1].split("@#")[0]);
+                        baseTableColumnProperties.setPropValue(rawTableColumn[columnCounter-1].split(" ")[0]);
                         baseTableColumnProperties.setDescription("Base Table Columns");
                         session.save(rawTableNameProperties);
 
                         PropertiesId baseTableDataTypePropertiesId = new PropertiesId();
                         baseTableDataTypePropertiesId.setProcessId(raw2Stage.getProcessId());
-                        baseTableDataTypePropertiesId.setPropKey(rawTableColumn[columnCounter-1].split("@#")[0]);
+                        baseTableDataTypePropertiesId.setPropKey(rawTableColumn[columnCounter-1].split(" ")[0]);
                         Properties baseTableDataTypeProperties = new Properties();
                         baseTableDataTypeProperties.setId(baseTableDataTypePropertiesId);
                         baseTableDataTypeProperties.setConfigGroup("base-data-types");
-                        baseTableDataTypeProperties.setPropValue(rawTableColumn[columnCounter-1].split("@#")[1]);
+                        baseTableDataTypeProperties.setPropValue(rawTableColumn[columnCounter-1].split(" ")[1]);
                         baseTableDataTypeProperties.setDescription("Base Table data types");
                         session.save(rawTableNameProperties);
 
                         PropertiesId lastStageId = new PropertiesId();
                         lastStageId.setProcessId(stage2Base.getProcessId());
-                        lastStageId.setPropKey(rawTableColumn[columnCounter-1].split("@#")[0]);
+                        lastStageId.setPropKey(rawTableColumn[columnCounter-1].split(" ")[0]);
                         Properties lastStage = new Properties();
                         lastStage.setId(lastStageId);
                         lastStage.setConfigGroup("base-columns-and-types");
-                        lastStage.setPropValue(rawTableColumn[columnCounter-1].split("@#")[1]);
+                        lastStage.setPropValue(rawTableColumn[columnCounter-1].split(" ")[1]);
                         lastStage.setDescription("Base Table columns and data types");
                         session.save(rawTableNameProperties);
 
