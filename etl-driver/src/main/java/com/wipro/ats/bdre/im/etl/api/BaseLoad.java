@@ -90,7 +90,7 @@ public class BaseLoad extends ETLBase {
                 LOGGER.info("relativePartitionPath = " + relativePartitionPath);
                 Path srcPath=new Path(stageTableLocation +stagePartition +"/");
                 LOGGER.info("srcPath = " + srcPath);
-                String basePartition = stagePartition.substring(0,stagePartition.lastIndexOf("/"));
+                String basePartition = (stagePartition.lastIndexOf("/")==-1)?"":stagePartition.substring(0,stagePartition.lastIndexOf("/"));
                 Path destPath=new Path(baseTableLocation +basePartition );
                 LOGGER.info("destPath = " + destPath);
                 LOGGER.info("Will move partitions from " + srcPath + " to "+destPath);

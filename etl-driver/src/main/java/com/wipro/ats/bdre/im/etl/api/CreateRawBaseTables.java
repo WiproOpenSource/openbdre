@@ -65,7 +65,7 @@ public class CreateRawBaseTables extends ETLBase {
         Enumeration columns = rawPropertiesOfColumns.propertyNames();
         List<String> orderOfCloumns = Collections.list(columns);
         Collections.sort(orderOfCloumns);
-        List<String> rawColumns = new ArrayList<>();
+        List<String> rawColumns = new ArrayList<String>();
         if (rawPropertiesOfColumns.size() != 0) {
             for(String columnOrder : orderOfCloumns) {
                 String key = columnOrder;
@@ -79,7 +79,7 @@ public class CreateRawBaseTables extends ETLBase {
         Enumeration dataTypes = rawPropertiesOfDataTypes.propertyNames();
         List<String> orderOfDataTypes = Collections.list(dataTypes);
         Collections.sort(orderOfDataTypes);
-        List<String> rawDataTypes = new ArrayList<>();
+        List<String> rawDataTypes = new ArrayList<String>();
         if (rawPropertiesOfColumns.size() != 0) {
             for(String columnOrder : orderOfDataTypes) {
                 String key = columnOrder;
@@ -128,9 +128,10 @@ public class CreateRawBaseTables extends ETLBase {
 
         }
 
-
-        // fetching raw table table-properties from properties table
-        StringBuilder tList = new StringBuilder();
+        StringBuilder tList= new StringBuilder();
+        // fetching raw table table-properties from properties table for xml
+        if("xml".equalsIgnoreCase(fileType)){
+        tList   = new StringBuilder();
         GetProperties getTableProperties = new GetProperties();
         java.util.Properties listForRawTableProps = getTableProperties.getProperties(rawLoadProcessId.toString(),"raw-table-props");
         Enumeration e = listForRawTableProps.propertyNames();
@@ -140,8 +141,22 @@ public class CreateRawBaseTables extends ETLBase {
                 tList.append("\"" + key + "\" = \"" + listForRawTableProps.getProperty(key) + "\",");
             }
 
-        }
+        }}
+        else  if("mainframe".equalsIgnoreCase(fileType)){
+            // fetching raw table table-properties from properties table for mainframe
+            //'copybook.inputformat.cbl.hdfs.path' = 'copybook/example.cbl'
+            tList   = new StringBuilder();
+            GetProperties getTableProperties = new GetProperties();
+            java.util.Properties listForRawTableProps = getTableProperties.getProperties(rawLoadProcessId.toString(),"raw-table-props");
+            Enumeration e = listForRawTableProps.propertyNames();
+            if (listForRawTableProps.size() != 0) {
+                while (e.hasMoreElements()) {
+                    String key = (String) e.nextElement();
+                    tList.append("'" + key + "' = '" + listForRawTableProps.getProperty(key) + "',");
+                }
 
+            }
+        }
 
         String rawTableDdl = "";
 
@@ -163,7 +178,13 @@ public class CreateRawBaseTables extends ETLBase {
                     "TBLPROPERTIES ( " + rawTableProperties + " )";
             LOGGER.debug("rawTableDdl= " + rawTableDdl);
         }
-
+        if("mainframe".equalsIgnoreCase(fileType)) {
+            rawTableDdl += "CREATE TABLE IF NOT EXISTS " + rawTableDbName + "." + rawTableName + " ( " + rawColumnsWithDataTypes + " ) " +
+                    " partitioned by (batchid bigint)  ROW FORMAT DELIMITED FIELDS TERMINATED BY '1'\n" +
+                    "STORED AS INPUTFORMAT 'com.cloudera.sa.copybook.mapred.CopybookInputFormat' OUTPUTFORMAT 'org.apache.hadoop.hive.ql.io.HiveIgnoreKeyTextOutputFormat' "+
+                    "TBLPROPERTIES ("+rawTableProperties+" )";
+            LOGGER.debug("rawTableDdl= " + rawTableDdl);
+        }
 
         //Getting Stage view information
         String rawViewName = rawTableName+"_view";
@@ -189,7 +210,7 @@ public class CreateRawBaseTables extends ETLBase {
         java.util.Properties viewPropertiesOfColumnsPartition = getPropertiesOfViewColumns.getProperties(stgLoadProcessId.toString(), "partition");
         String partitionViewColumn = viewPropertiesOfColumnsPartition.getProperty("partition_columns");
         LOGGER.info("partition columns "  + partitionViewColumn);
-        if (!("".equals(partitionViewColumn)) || !(partitionViewColumn == null) ){
+        if (!("".equals(partitionViewColumn)) && !(partitionViewColumn == null) ){
             String[] partitionViewColumns = partitionViewColumn.split(",");
             for(String viewColumn : partitionViewColumns) {
                 viewColumns.append(viewColumn.split(" ")[0] + " AS " + viewColumn.split(" ")[0] + ",");
@@ -232,7 +253,8 @@ public class CreateRawBaseTables extends ETLBase {
         String stgTableName=baseTableName+"_"+instanceExecId;
         String stgTableDdl="";
         stgTableDdl+="CREATE TABLE IF NOT EXISTS " + baseTableDbName + "." + stgTableName + " (" + baseColumnsWithDataTypes + ") partitioned by (" + partitionColumns +" instanceexecid bigint) stored as orc";;
-        //Now create the tables/view if not exists.
+
+        //Now create the tables/view if not exists
         checkAndCreateRawTable(rawTableDbName, rawTableName, rawTableDdl);
         checkAndCreateRawView(rawViewDbName, rawViewName, rawViewDdl);
         checkAndCreateStageTable(baseTableDbName, stgTableName, stgTableDdl);

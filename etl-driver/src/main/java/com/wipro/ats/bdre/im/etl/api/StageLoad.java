@@ -140,7 +140,7 @@ public class StageLoad extends ETLBase {
         java.util.Properties partitionproperties = getPropertiesOfRawTable.getProperties(stageLoadProcessId, "partition");
         String partitions = partitionproperties.getProperty("partition_columns");
         LOGGER.info("list of partitions is " + partitions);
-        if(!("".equals(partitions)) || !(partitions == null)) {
+        if(!("".equals(partitions)) && !(partitions == null)) {
             String[] partitionKeys = partitions.split(",");
             for (int i = 0; i < (partitionKeys.length); i++) {
                 stringBuffer.append(partitionKeys[i].split(" ")[0]);
