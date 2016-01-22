@@ -484,7 +484,7 @@ public class HistoryDataImportDAO {
                     Properties rawTableNameProperties = new Properties();
                     rawTableNameProperties.setId(rawTableNamePropertiesId);
                     rawTableNameProperties.setConfigGroup("raw-table");
-                    rawTableNameProperties.setPropValue(rawTableName.getInterValue());
+                    rawTableNameProperties.setPropValue("raw_" + rawTableName.getInterValue());
                     rawTableNameProperties.setDescription("Raw Table Name");
                     session.save(rawTableNameProperties);
 
@@ -504,7 +504,7 @@ public class HistoryDataImportDAO {
                     rawTableDBProperties.setConfigGroup("raw-table");
                     rawTableDBProperties.setPropValue(rawTableDB.getInterValue());
                     rawTableDBProperties.setDescription("Raw Table Name");
-                    session.save(rawTableNameProperties);
+                    session.save(rawTableDBProperties);
 
                     IntermediateId intermediateIdRawTableColumns = new IntermediateId();
                     intermediateIdRawTableColumns.setUuid(intermediateInfo.getUuid());
@@ -529,7 +529,7 @@ public class HistoryDataImportDAO {
                         rawTableColumnProperties.setConfigGroup("raw-cols");
                         rawTableColumnProperties.setPropValue(rawTableColumn[columnCounter-1].split(" ")[0]);
                         rawTableColumnProperties.setDescription("Raw Table Columns");
-                        session.save(rawTableNameProperties);
+                        session.save(rawTableColumnProperties);
 
                         PropertiesId rawTableDataTypesPropertiesId = new PropertiesId();
                         rawTableDataTypesPropertiesId.setProcessId(file2Raw.getProcessId());
@@ -539,7 +539,7 @@ public class HistoryDataImportDAO {
                         rawTableDataTypesProperties.setConfigGroup("raw-data-types");
                         rawTableDataTypesProperties.setPropValue(rawTableColumn[columnCounter-1].split(" ")[1]);
                         rawTableDataTypesProperties.setDescription("Raw Table Data Types");
-                        session.save(rawTableNameProperties);
+                        session.save(rawTableDataTypesProperties);
 
                         PropertiesId baseTableColumnPropertiesId = new PropertiesId();
                         baseTableColumnPropertiesId.setProcessId(raw2Stage.getProcessId());
@@ -549,7 +549,7 @@ public class HistoryDataImportDAO {
                         baseTableColumnProperties.setConfigGroup("base-columns");
                         baseTableColumnProperties.setPropValue(rawTableColumn[columnCounter-1].split(" ")[0]);
                         baseTableColumnProperties.setDescription("Base Table Columns");
-                        session.save(rawTableNameProperties);
+                        session.save(baseTableColumnProperties);
 
                         PropertiesId baseTableDataTypePropertiesId = new PropertiesId();
                         baseTableDataTypePropertiesId.setProcessId(raw2Stage.getProcessId());
@@ -559,7 +559,7 @@ public class HistoryDataImportDAO {
                         baseTableDataTypeProperties.setConfigGroup("base-data-types");
                         baseTableDataTypeProperties.setPropValue(rawTableColumn[columnCounter-1].split(" ")[1]);
                         baseTableDataTypeProperties.setDescription("Base Table data types");
-                        session.save(rawTableNameProperties);
+                        session.save(baseTableDataTypeProperties);
 
                         PropertiesId lastStageId = new PropertiesId();
                         lastStageId.setProcessId(stage2Base.getProcessId());
@@ -569,7 +569,7 @@ public class HistoryDataImportDAO {
                         lastStage.setConfigGroup("base-columns-and-types");
                         lastStage.setPropValue(rawTableColumn[columnCounter-1].split(" ")[1]);
                         lastStage.setDescription("Base Table columns and data types");
-                        session.save(rawTableNameProperties);
+                        session.save(lastStage);
 
                     }
 
@@ -616,7 +616,7 @@ public class HistoryDataImportDAO {
                     baseTableDBProperties.setConfigGroup("base-table");
                     baseTableDBProperties.setPropValue(baseTableDB.getInterValue());
                     baseTableDBProperties.setDescription("Base Table DB");
-                    session.save(baseTableNameProperties);
+                    session.save(baseTableDBProperties);
 
                     baseTableDBPropertiesId = new PropertiesId();
                     baseTableDBPropertiesId.setProcessId(stage2Base.getProcessId());
@@ -626,7 +626,7 @@ public class HistoryDataImportDAO {
                     baseTableDBProperties.setConfigGroup("base-table");
                     baseTableDBProperties.setPropValue(baseTableDB.getInterValue());
                     baseTableDBProperties.setDescription("Base Table DB");
-                    session.save(baseTableNameProperties);
+                    session.save(baseTableDBProperties);
 
                 }
             }

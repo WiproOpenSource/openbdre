@@ -111,7 +111,7 @@ public class Table {
             rawColumnName += rawString;
             rawColumnName += ",";
         }
-        rawColumnName = rawColumnName.substring(0, rawColumnName.length() - 2);
+        rawColumnName = rawColumnName.substring(0, rawColumnName.length() - 1);
         return rawColumnName;
     }
 
