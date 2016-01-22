@@ -20,10 +20,12 @@ import org.apache.log4j.Logger;
 import org.hibernate.Criteria;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
+import org.hibernate.criterion.Restrictions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -43,6 +45,18 @@ public class LineageRelationDAO {
         criteria.setFirstResult(pageNum);
         criteria.setMaxResults(numResults);
         List<LineageRelation> lineageRelations = criteria.list();
+        session.getTransaction().commit();
+        session.close();
+        return lineageRelations;
+    }
+
+    //to list all rows of LR table
+    public List<LineageRelation> getNodeIdForNode(String nodeid) {
+        List<LineageRelation> lineageRelations = new ArrayList<>();
+        Session session = sessionFactory.openSession();
+        session.beginTransaction();
+        Criteria criteria = session.createCriteria(LineageRelation.class).add(Restrictions.eq("lineageNodeBySrcNodeId", nodeid));
+        lineageRelations = criteria.list();
         session.getTransaction().commit();
         session.close();
         return lineageRelations;
