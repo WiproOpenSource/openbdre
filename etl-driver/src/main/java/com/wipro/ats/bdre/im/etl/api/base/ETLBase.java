@@ -38,9 +38,9 @@ public abstract class ETLBase extends BaseStructure{
     private static final Logger LOGGER = Logger.getLogger(ETLBase.class);
 
 
-    protected ProcessInfo rawLoad;
-    protected ProcessInfo stgLoad;
-    protected ProcessInfo baseLoad;
+    protected String rawLoad;
+    protected String stgLoad;
+    protected String baseLoad;
     protected String rawTable;
     protected String rawDb;
     protected String stgView;
@@ -49,29 +49,28 @@ public abstract class ETLBase extends BaseStructure{
     protected String baseDb;
     private String processId;
 
-    protected void init(String processId){
-        LOGGER.info("process id is " + processId);
-        loadHiveTableInfo(processId);
-    }
-    private void loadHiveTableInfo(String processId){
-        String[] processParams = {"-p", processId};
-        GetProcess getProcess = new GetProcess();
-        List<ProcessInfo> subProcessList=getProcess.getSubProcesses(processParams);
-       for(ProcessInfo subprocess:subProcessList){
-           if(subprocess.getProcessTypeId()==6) rawLoad = subprocess;
-           else if(subprocess.getProcessTypeId()==7) stgLoad = subprocess;
-           else if (subprocess.getProcessTypeId()==8) baseLoad = subprocess;
-           else throw new ETLException("Not a valid hive load process");
-       }
+
+    protected void loadRawHiveTableInfo(String processId){
+        rawLoad = processId;
         GetProperties getPropertiesOfRawTable = new GetProperties();
-        java.util.Properties rawPropertiesOfTable = getPropertiesOfRawTable.getProperties(rawLoad.getProcessId().toString(), "raw-table");
+        java.util.Properties rawPropertiesOfTable = getPropertiesOfRawTable.getProperties(rawLoad, "raw-table");
         rawTable = rawPropertiesOfTable.getProperty("table_name");
         rawDb = rawPropertiesOfTable.getProperty("table_db");
-        stgView = rawTable+"_view";
-        stgDb=rawDb;
-
+    }
+    protected void loadStageHiveTableInfo(String processId){
+        stgLoad = processId;
+        GetProperties getPropertiesOfRawTable = new GetProperties();
+        java.util.Properties rawPropertiesOfTable = getPropertiesOfRawTable.getProperties(stgLoad, "raw-table");
+        stgView=rawPropertiesOfTable.getProperty("table_name_raw")+"_view";
+        stgDb=rawPropertiesOfTable.getProperty("table_db_raw");
+        java.util.Properties basePropertiesOfTable = getPropertiesOfRawTable.getProperties(stgLoad, "base-table");
+        baseTable = basePropertiesOfTable.getProperty("table_name");
+        baseDb = basePropertiesOfTable.getProperty("table_db");
+    }
+    protected void loadBaseHiveTableInfo(String processId){
+        baseLoad = processId;
         GetProperties getPropertiesOfBaseTable = new GetProperties();
-        java.util.Properties basePropertiesOfTable = getPropertiesOfBaseTable.getProperties(baseLoad.getProcessId().toString(), "base-table");
+        java.util.Properties basePropertiesOfTable = getPropertiesOfBaseTable.getProperties(baseLoad, "base-table");
         baseTable = basePropertiesOfTable.getProperty("table_name");
         baseDb = basePropertiesOfTable.getProperty("table_db");
     }

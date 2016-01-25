@@ -37,7 +37,6 @@ public class StageLoad extends ETLBase {
     private static final Logger LOGGER = Logger.getLogger(StageLoad.class);
     private static final String[][] PARAMS_STRUCTURE = {
             {"p", "process-id", " Process id of ETLDriver"},
-            {"spId", "sub-process-id", " Process id of Stage Load"},
             {"ied", "instance-exec-id", " instance exec id"},
             {"minId", "min-batch-id", " Min batch Id"},
             {"maxId", "max-batch-id", " Max batch Id"}
@@ -47,14 +46,16 @@ public class StageLoad extends ETLBase {
 
         CommandLine commandLine = getCommandLine(params, PARAMS_STRUCTURE);
         String processId = commandLine.getOptionValue("process-id");
-        String subProcessId = commandLine.getOptionValue("sub-process-id");
         String instanceExecId = commandLine.getOptionValue("instance-exec-id");
         String minId = commandLine.getOptionValue("minId");
         String maxId = commandLine.getOptionValue("maxId");
-        init(processId);
+        loadStageHiveTableInfo(processId);
+        CreateRawBaseTables createRawBaseTables =new CreateRawBaseTables();
+        String[] createTablesArgs={"-p",processId,"-instExecId",instanceExecId };
+        createRawBaseTables.executeStageLoad(createTablesArgs);
 
         //Getting Stage view information
-        String stageViewName =stgView;
+        String stageViewName = stgView;
         String stageViewDbName = stgDb;
 
         //Getting base table info
@@ -62,7 +63,7 @@ public class StageLoad extends ETLBase {
         String baseDbName = baseDb;
       //  String baseTableDdl = getBaseTable().getDdl();
 
-        processStageLoad(stageViewDbName, stageViewName, baseDbName, baseTableName,instanceExecId, minId, maxId,subProcessId);
+        processStageLoad(stageViewDbName, stageViewName, baseDbName, baseTableName,instanceExecId, minId, maxId,processId);
     }
 
     //Read the partition keys from hive table
