@@ -109,6 +109,7 @@ fi
 dos2unix $BDRE_APPS_HOME/$busDomainId/$processTypeId/$processId/Rhadoop.sh
 
 dos2unix $BDRE_APPS_HOME/$busDomainId/$processTypeId/$processId/shell/*
+dos2unix $BDRE_APPS_HOME/$busDomainId/$processTypeId/$processId/additional/*
 
 #create/clean hdfs process directory
 hdfs dfs -mkdir -p $hdfsPath/wf/$busDomainId/$processTypeId/$processId

@@ -36,6 +36,7 @@ import java.util.Properties;
  */
 public class FileMonRunnableMain extends BaseStructure {
 
+    public static final String ARCHIVE = "_archive";
     private static final Logger LOGGER = Logger.getLogger(FileMonRunnableMain.class);
     private static String monitoredDirName = "";
     private static String filePattern = "";
@@ -137,9 +138,11 @@ public class FileMonRunnableMain extends BaseStructure {
             String dir = FileMonRunnableMain.getMonitoredDirName();
             DefaultFileMonitor fm = new DefaultFileMonitor(FileMonitor.getInstance());
             FileObject listenDir = fsManager.resolveFile(dir);
+            FileObject archiveDir = fsManager.resolveFile(dir+"/"+ARCHIVE);
             LOGGER.debug("Monitoring directories " + dir);
-            fm.setRecursive(false);
+            fm.setRecursive(true);
             fm.addFile(listenDir);
+            fm.removeFile(archiveDir);
             fm.start();
             //Now scan the mondir for existing files and add to queue
             FileScan.scanAndAddToQueue();
