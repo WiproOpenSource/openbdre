@@ -46,10 +46,10 @@ public class StepDAOTest {
         LOGGER.info("The sub process init step test executed with instance-exec-id :" + sub_instance_exec_id);
     }
 
-    @Ignore
+
     @Test
     public void testTermStep() throws Exception {
-        stepDAO.termStep(10805);
+        stepDAO.termStep(1356);
         LOGGER.info("The sub process term step test executed");
     }
 

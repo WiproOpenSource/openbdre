@@ -47,10 +47,10 @@ public class RawLoad extends ETLBase {
         String instanceExecId = commandLine.getOptionValue("instance-exec-id");
         String listOfFiles = commandLine.getOptionValue("list-of-files");
         String listOfBatches = commandLine.getOptionValue("list-of-file-batchIds");
+        loadRawHiveTableInfo(processId);
         CreateRawBaseTables createRawBaseTables =new CreateRawBaseTables();
         String[] createTablesArgs={"-p",processId,"-instExecId",instanceExecId };
-        createRawBaseTables.execute(createTablesArgs);
-        init(processId);
+        createRawBaseTables.executeRawLoad(createTablesArgs);
         //Getting raw table information
         String rawTableName = rawTable;
         String rawDbName = rawDb;

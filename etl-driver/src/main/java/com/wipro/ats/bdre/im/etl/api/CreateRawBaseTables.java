@@ -35,39 +35,36 @@ public class CreateRawBaseTables extends ETLBase {
             {"p", "process-id", " Process id of ETLDriver"},
             {"instExecId", "instance-exec-id", " instance exec id"},
     };
-    public void execute(String[] params) {
+    public void executeRawLoad(String[] params) {
 
         CommandLine commandLine = getCommandLine(params, PARAMS_STRUCTURE);
         String processId = commandLine.getOptionValue("process-id");
         String instanceExecId = commandLine.getOptionValue("instance-exec-id");
-        init(processId);
+        rawLoad=processId;
 
-        Integer rawLoadProcessId = rawLoad.getProcessId();
-        Integer stgLoadProcessId = stgLoad.getProcessId();
-        Integer baseLoadProcessId = baseLoad.getProcessId();
 
         //Getting raw table information from properties with raw-table as config group
         GetProperties getPropertiesOfRawTable = new GetProperties();
-        java.util.Properties rawPropertiesOfTable = getPropertiesOfRawTable.getProperties(rawLoadProcessId.toString(), "raw-table");
+        java.util.Properties rawPropertiesOfTable = getPropertiesOfRawTable.getProperties(rawLoad, "raw-table");
         String rawTableName = rawPropertiesOfTable.getProperty("table_name");
         String rawTableDbName = rawPropertiesOfTable.getProperty("table_db");
         String fileType = rawPropertiesOfTable.getProperty("file_type");
         String rawInputFormat = rawPropertiesOfTable.getProperty("input.format");
         String rawOutputFormat = rawPropertiesOfTable.getProperty("output.format");
         String rawSerdeClass = rawPropertiesOfTable.getProperty("serde.class");
-        String rawSerdeProperties="";
-        String rawTableProperties="";
-        String rawColumnList="";
+        String rawSerdeProperties = "";
+        String rawTableProperties = "";
+        String rawColumnList = "";
 
         // fetching column names in a string list from properties with raw-columns as config group
         GetProperties getPropertiesOfRawColumns = new GetProperties();
-        java.util.Properties rawPropertiesOfColumns = getPropertiesOfRawColumns.getProperties(rawLoadProcessId.toString(), "raw-cols");
+        java.util.Properties rawPropertiesOfColumns = getPropertiesOfRawColumns.getProperties(rawLoad, "raw-cols");
         Enumeration columns = rawPropertiesOfColumns.propertyNames();
         List<String> orderOfCloumns = Collections.list(columns);
         Collections.sort(orderOfCloumns);
         List<String> rawColumns = new ArrayList<String>();
         if (rawPropertiesOfColumns.size() != 0) {
-            for(String columnOrder : orderOfCloumns) {
+            for (String columnOrder : orderOfCloumns) {
                 String key = columnOrder;
                 rawColumns.add(rawPropertiesOfColumns.getProperty(key));
             }
@@ -75,36 +72,36 @@ public class CreateRawBaseTables extends ETLBase {
 
         // fetching column datatypes in a string list from properties with raw-data-types as config group
         GetProperties getPropertiesOfRawDataTypes = new GetProperties();
-        java.util.Properties rawPropertiesOfDataTypes = getPropertiesOfRawDataTypes.getProperties(rawLoadProcessId.toString(), "raw-data-types");
+        java.util.Properties rawPropertiesOfDataTypes = getPropertiesOfRawDataTypes.getProperties(rawLoad, "raw-data-types");
         Enumeration dataTypes = rawPropertiesOfDataTypes.propertyNames();
         List<String> orderOfDataTypes = Collections.list(dataTypes);
         Collections.sort(orderOfDataTypes);
         List<String> rawDataTypes = new ArrayList<String>();
         if (rawPropertiesOfColumns.size() != 0) {
-            for(String columnOrder : orderOfDataTypes) {
+            for (String columnOrder : orderOfDataTypes) {
                 String key = columnOrder;
                 rawDataTypes.add(rawPropertiesOfDataTypes.getProperty(key));
             }
         }
 
         // forming a comma separated string in the form of col1 datatype1, col2 datatype2, col3 datatype3 etc.
-        for(int i=0; i<rawColumns.size();i++){
-            rawColumnList+=rawColumns.get(i)+" "+rawDataTypes.get(i)+",";
+        for (int i = 0; i < rawColumns.size(); i++) {
+            rawColumnList += rawColumns.get(i) + " " + rawDataTypes.get(i) + ",";
         }
-        String rawColumnsWithDataTypes = rawColumnList.substring(0,rawColumnList.length()-1);
+        String rawColumnsWithDataTypes = rawColumnList.substring(0, rawColumnList.length() - 1);
 
         // fetching raw table serde-properties from properties table for a delimited file
-        if("delimited".equalsIgnoreCase(fileType)){
+        if ("delimited".equalsIgnoreCase(fileType)) {
             StringBuilder sList = new StringBuilder();
             GetProperties getSerdeProperties = new GetProperties();
-            java.util.Properties listForRawSerdeProps = getSerdeProperties.getProperties(rawLoadProcessId.toString(),"raw-serde-props");
+            java.util.Properties listForRawSerdeProps = getSerdeProperties.getProperties(rawLoad, "raw-serde-props");
             Enumeration e = listForRawSerdeProps.propertyNames();
             if (listForRawSerdeProps.size() != 0) {
                 while (e.hasMoreElements()) {
                     String key = (String) e.nextElement();
-                    sList.append("'"+key  + "' = '" + listForRawSerdeProps.getProperty(key) + "',");
+                    sList.append("'" + key + "' = '" + listForRawSerdeProps.getProperty(key) + "',");
                 }
-                rawSerdeProperties=sList.substring(0, sList.length() - 1);
+                rawSerdeProperties = sList.substring(0, sList.length() - 1);
                 LOGGER.debug("rawSerdeProperties = " + rawSerdeProperties);
             }
 
@@ -112,42 +109,42 @@ public class CreateRawBaseTables extends ETLBase {
         }
 
         //fetching raw table serde-properties from properties table for a xml file
-        else if("xml".equalsIgnoreCase(fileType)){
+        else if ("xml".equalsIgnoreCase(fileType)) {
             StringBuilder sList = new StringBuilder();
             GetProperties getSerdeProperties = new GetProperties();
-            java.util.Properties listForRawSerdeProps = getSerdeProperties.getProperties(rawLoadProcessId.toString(),"raw-serde-props");
+            java.util.Properties listForRawSerdeProps = getSerdeProperties.getProperties(rawLoad, "raw-serde-props");
             Enumeration e = listForRawSerdeProps.propertyNames();
             if (listForRawSerdeProps.size() != 0) {
                 while (e.hasMoreElements()) {
                     String key = (String) e.nextElement();
                     sList.append("\"" + key + "\" = \"" + listForRawSerdeProps.getProperty(key) + "\",");
                 }
-                rawSerdeProperties=sList.substring(0, sList.length() - 1);
+                rawSerdeProperties = sList.substring(0, sList.length() - 1);
                 LOGGER.debug("rawSerdeProperties = " + rawSerdeProperties);
             }
 
         }
 
-        StringBuilder tList= new StringBuilder();
+        StringBuilder tList = new StringBuilder();
         // fetching raw table table-properties from properties table for xml
-        if("xml".equalsIgnoreCase(fileType)){
-        tList   = new StringBuilder();
-        GetProperties getTableProperties = new GetProperties();
-        java.util.Properties listForRawTableProps = getTableProperties.getProperties(rawLoadProcessId.toString(),"raw-table-props");
-        Enumeration e = listForRawTableProps.propertyNames();
-        if (listForRawTableProps.size() != 0) {
-            while (e.hasMoreElements()) {
-                String key = (String) e.nextElement();
-                tList.append("\"" + key + "\" = \"" + listForRawTableProps.getProperty(key) + "\",");
-            }
+        if ("xml".equalsIgnoreCase(fileType)) {
+            tList = new StringBuilder();
+            GetProperties getTableProperties = new GetProperties();
+            java.util.Properties listForRawTableProps = getTableProperties.getProperties(rawLoad, "raw-table-props");
+            Enumeration e = listForRawTableProps.propertyNames();
+            if (listForRawTableProps.size() != 0) {
+                while (e.hasMoreElements()) {
+                    String key = (String) e.nextElement();
+                    tList.append("\"" + key + "\" = \"" + listForRawTableProps.getProperty(key) + "\",");
+                }
 
-        }}
-        else  if("mainframe".equalsIgnoreCase(fileType)){
+            }
+        } else if ("mainframe".equalsIgnoreCase(fileType)) {
             // fetching raw table table-properties from properties table for mainframe
             //'copybook.inputformat.cbl.hdfs.path' = 'copybook/example.cbl'
-            tList   = new StringBuilder();
+            tList = new StringBuilder();
             GetProperties getTableProperties = new GetProperties();
-            java.util.Properties listForRawTableProps = getTableProperties.getProperties(rawLoadProcessId.toString(),"raw-table-props");
+            java.util.Properties listForRawTableProps = getTableProperties.getProperties(rawLoad, "raw-table-props");
             Enumeration e = listForRawTableProps.propertyNames();
             if (listForRawTableProps.size() != 0) {
                 while (e.hasMoreElements()) {
@@ -161,7 +158,7 @@ public class CreateRawBaseTables extends ETLBase {
         String rawTableDdl = "";
 
         //generating raw table ddl for a delimited file
-        if("delimited".equalsIgnoreCase(fileType)) {
+        if ("delimited".equalsIgnoreCase(fileType)) {
             rawTableDdl += "CREATE TABLE IF NOT EXISTS " + rawTableDbName + "." + rawTableName + " ( " + rawColumnsWithDataTypes + " ) " +
                     " partitioned by (batchid bigint) ROW FORMAT SERDE 'org.apache.hadoop.hive.serde2.lazy.LazySimpleSerDe'  WITH SERDEPROPERTIES (" + rawSerdeProperties + " ) STORED AS INPUTFORMAT 'org.apache.hadoop.mapred.TextInputFormat'" +
                     " OUTPUTFORMAT 'org.apache.hadoop.hive.ql.io.HiveIgnoreKeyTextOutputFormat'";
@@ -169,8 +166,8 @@ public class CreateRawBaseTables extends ETLBase {
             LOGGER.debug("rawTableDdl= " + rawTableDdl);
         }
         //generating raw table ddl for a xml file
-        else if("xml".equalsIgnoreCase(fileType)){
-            rawTableProperties=tList.substring(0, tList.length() - 1);
+        else if ("xml".equalsIgnoreCase(fileType)) {
+            rawTableProperties = tList.substring(0, tList.length() - 1);
             LOGGER.debug("rawTableProperties = " + rawTableProperties);
             rawTableDdl += "CREATE TABLE IF NOT EXISTS " + rawTableDbName + "." + rawTableName + " ( " + rawColumnsWithDataTypes + " )" +
                     " partitioned by (batchid bigint) ROW FORMAT SERDE 'com.wipro.ats.bdre.io.xml.XmlSerDe' WITH SERDEPROPERTIES " +
@@ -178,18 +175,43 @@ public class CreateRawBaseTables extends ETLBase {
                     "TBLPROPERTIES ( " + rawTableProperties + " )";
             LOGGER.debug("rawTableDdl= " + rawTableDdl);
         }
-        if("mainframe".equalsIgnoreCase(fileType)) {
+        if ("mainframe".equalsIgnoreCase(fileType)) {
             rawTableDdl += "CREATE TABLE IF NOT EXISTS " + rawTableDbName + "." + rawTableName + " ( " + rawColumnsWithDataTypes + " ) " +
                     " partitioned by (batchid bigint)  ROW FORMAT DELIMITED FIELDS TERMINATED BY '1'\n" +
-                    "STORED AS INPUTFORMAT 'com.cloudera.sa.copybook.mapred.CopybookInputFormat' OUTPUTFORMAT 'org.apache.hadoop.hive.ql.io.HiveIgnoreKeyTextOutputFormat' "+
-                    "TBLPROPERTIES ("+rawTableProperties+" )";
+                    "STORED AS INPUTFORMAT 'com.cloudera.sa.copybook.mapred.CopybookInputFormat' OUTPUTFORMAT 'org.apache.hadoop.hive.ql.io.HiveIgnoreKeyTextOutputFormat' " +
+                    "TBLPROPERTIES (" + rawTableProperties + " )";
             LOGGER.debug("rawTableDdl= " + rawTableDdl);
         }
+        checkAndCreateRawTable(rawTableDbName, rawTableName, rawTableDdl);
+
+    }
+
+    public void executeStageLoad(String[] params) {
+
+        CommandLine commandLine = getCommandLine(params, PARAMS_STRUCTURE);
+        String processId = commandLine.getOptionValue("process-id");
+        String instanceExecId = commandLine.getOptionValue("instance-exec-id");
+        stgLoad = processId;
+
+
+//        Integer baseLoadProcessId = baseLoad.getProcessId();
+
+        //Getting raw table information from properties with raw-table as config group
+        GetProperties getPropertiesOfRawTable = new GetProperties();
+        java.util.Properties basePropertiesOfTable = getPropertiesOfRawTable.getProperties(stgLoad, "base-table");
+        String baseTableName = basePropertiesOfTable.getProperty("table_name");
+        String baseTableDbName = basePropertiesOfTable.getProperty("table_db");
+        java.util.Properties rawPropertiesOfTable = getPropertiesOfRawTable.getProperties(stgLoad, "raw-table");
+        String rawTableName = rawPropertiesOfTable.getProperty("table_name_raw");
+        String rawTableDbName = rawPropertiesOfTable.getProperty("table_db_raw");
 
         //Getting Stage view information
-        String rawViewName = rawTableName+"_view";
+        String rawViewName = rawTableName + "_view";
         String rawViewDbName = rawTableDbName;
         String rawViewDdl = "";
+        String baseTableDdl = "";
+
+
 
        /* raw view ddl is generated by fetching keys and values from properties table with config group as base-columns
           columns are generated by fetching keys and values in the form of value1 as key1, value2 as key2, value3 as key3 etc..*/
@@ -197,69 +219,66 @@ public class CreateRawBaseTables extends ETLBase {
 
         // fetching column names and aliases as a string from properties with base-columns as config group
         GetProperties getPropertiesOfViewColumns = new GetProperties();
-        java.util.Properties viewPropertiesOfColumns = getPropertiesOfViewColumns.getProperties(stgLoadProcessId.toString(), "base-columns");
+        java.util.Properties viewPropertiesOfColumns = getPropertiesOfViewColumns.getProperties(stgLoad, "base-columns");
         Enumeration viewColumnsList = viewPropertiesOfColumns.propertyNames();
         StringBuilder viewColumns = new StringBuilder();
         if (viewPropertiesOfColumns.size() != 0) {
             while (viewColumnsList.hasMoreElements()) {
                 String key = (String) viewColumnsList.nextElement();
-                viewColumns.append(viewPropertiesOfColumns.getProperty(key) + " AS "+ key.replaceAll("transform_","") + ",");
+                viewColumns.append(viewPropertiesOfColumns.getProperty(key) + " AS " + key.replaceAll("transform_", "") + ",");
             }
         }
 
-        java.util.Properties viewPropertiesOfColumnsPartition = getPropertiesOfViewColumns.getProperties(stgLoadProcessId.toString(), "partition");
+        java.util.Properties viewPropertiesOfColumnsPartition = getPropertiesOfViewColumns.getProperties(stgLoad, "partition");
         String partitionViewColumn = viewPropertiesOfColumnsPartition.getProperty("partition_columns");
-        LOGGER.info("partition columns "  + partitionViewColumn);
-        if (!("".equals(partitionViewColumn)) && !(partitionViewColumn == null) ){
+        LOGGER.info("partition columns " + partitionViewColumn);
+        if (!("".equals(partitionViewColumn)) && !(partitionViewColumn == null)) {
             String[] partitionViewColumns = partitionViewColumn.split(",");
-            for(String viewColumn : partitionViewColumns) {
+            for (String viewColumn : partitionViewColumns) {
                 viewColumns.append(viewColumn.split(" ")[0] + " AS " + viewColumn.split(" ")[0] + ",");
             }
         }
 
         // adding partition column (additional comma already present at the end of viewColumns
-        String viewColumnsWithDataTypes = viewColumns+ "batchid";
+        String viewColumnsWithDataTypes = viewColumns + "batchid";
 
-        rawViewDdl+= "CREATE VIEW IF NOT EXISTS "+ rawViewDbName+"."+rawViewName+"  AS SELECT "+viewColumnsWithDataTypes+ " FROM "+rawTableDbName+"."+rawTableName;
+        rawViewDdl += "CREATE VIEW IF NOT EXISTS " + rawViewDbName + "." + rawViewName + "  AS SELECT " + viewColumnsWithDataTypes + " FROM " + rawTableDbName + "." + rawTableName;
         LOGGER.debug(rawViewDdl);
 
-        //Getting base table information
-        GetProperties getPropertiesOfBaseTable = new GetProperties();
-        java.util.Properties basePropertiesOfTable = getPropertiesOfBaseTable.getProperties(baseLoadProcessId.toString(), "base-table");
-        String baseTableName = basePropertiesOfTable.getProperty("table_name");
-        String baseTableDbName = basePropertiesOfTable.getProperty("table_db");
-        String baseTableDdl = "";
 
-        // generating base table ddl
+        // generating stage table ddl
         // fetching column names list
         GetProperties getPropertiesOfBaseColumns = new GetProperties();
-        java.util.Properties basePropertiesOfColumns = getPropertiesOfBaseColumns.getProperties(baseLoadProcessId.toString(), "base-columns-and-types");
+        java.util.Properties basePropertiesOfColumns = getPropertiesOfBaseColumns.getProperties(stgLoad, "base-columns");
+        java.util.Properties basePropertiesOfDataTypes = getPropertiesOfBaseColumns.getProperties(stgLoad, "base-data-types");
         Enumeration baseColumnsList = basePropertiesOfColumns.propertyNames();
         StringBuilder baseColumns = new StringBuilder();
         if (basePropertiesOfColumns.size() != 0) {
             while (baseColumnsList.hasMoreElements()) {
                 String key = (String) baseColumnsList.nextElement();
-                baseColumns.append(key + " "+ basePropertiesOfColumns.getProperty(key)+ ",");
+                baseColumns.append(basePropertiesOfColumns.getProperty(key) + " " + basePropertiesOfDataTypes .getProperty(key.replaceAll("transform_","")) + ",");
             }
         }
         //removing trailing comma
-        String baseColumnsWithDataTypes = baseColumns.substring(0,baseColumns.length()-1);
-        java.util.Properties partitionproperties = getPropertiesOfRawTable.getProperties(stgLoadProcessId.toString(), "partition");
+        String baseColumnsWithDataTypes = baseColumns.substring(0, baseColumns.length() - 1);
+        java.util.Properties partitionproperties = getPropertiesOfRawTable.getProperties(stgLoad, "partition");
         String partitionColumns = partitionproperties.getProperty("partition_columns");
         if (partitionColumns == null) partitionColumns = "";
-        baseTableDdl+="CREATE TABLE IF NOT EXISTS " + baseTableDbName + "." + baseTableName + " (" + baseColumnsWithDataTypes + ") partitioned by (" + partitionColumns  + " instanceexecid bigint) stored as orc";;
+        baseTableDdl += "CREATE TABLE IF NOT EXISTS " + baseTableDbName + "." + baseTableName + " (" + baseColumnsWithDataTypes + ") partitioned by (" + partitionColumns + " instanceexecid bigint) stored as orc";
+        ;
         LOGGER.debug(baseTableDdl);
 
-        String stgTableName=baseTableName+"_"+instanceExecId;
-        String stgTableDdl="";
-        stgTableDdl+="CREATE TABLE IF NOT EXISTS " + baseTableDbName + "." + stgTableName + " (" + baseColumnsWithDataTypes + ") partitioned by (" + partitionColumns +" instanceexecid bigint) stored as orc";;
+        String stgTableName = baseTableName + "_" + instanceExecId;
+        String stgTableDdl = "";
+        stgTableDdl += "CREATE TABLE IF NOT EXISTS " + baseTableDbName + "." + stgTableName + " (" + baseColumnsWithDataTypes + ") partitioned by (" + partitionColumns + " instanceexecid bigint) stored as orc";
+        ;
 
-        //Now create the tables/view if not exists
-        checkAndCreateRawTable(rawTableDbName, rawTableName, rawTableDdl);
         checkAndCreateRawView(rawViewDbName, rawViewName, rawViewDdl);
         checkAndCreateStageTable(baseTableDbName, stgTableName, stgTableDdl);
         checkAndCreateBaseTable(baseTableDbName, baseTableName, baseTableDdl);
     }
+
+
 
     private void checkAndCreateRawTable(String dbName, String tableName, String ddl) {
         try {

@@ -63,9 +63,12 @@ public class JobDAOTest {
         jobDAO.haltJob(1, "@a");
     }
 
-    @Ignore
+
     @Test
     public void testTermJob() throws Exception {
-        jobDAO.termJob(1);
+        jobDAO.termJob(1347);
     }
+
+
+
 }

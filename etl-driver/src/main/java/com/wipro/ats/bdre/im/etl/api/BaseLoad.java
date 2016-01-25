@@ -51,7 +51,7 @@ public class BaseLoad extends ETLBase {
 
         String processId = commandLine.getOptionValue("process-id");
         String instanceExecId = commandLine.getOptionValue("instance-exec-id");
-        init(processId);
+        loadBaseHiveTableInfo(processId);
         //Getting core table information
         String baseTableName = baseTable;
         String baseTableDbName = baseDb;
@@ -70,7 +70,7 @@ public class BaseLoad extends ETLBase {
             String stageTableName =  baseTableName + "_" + instanceExecId;
             //Stage table is the source and base table is the destination
 
-            List<String> stagePartitions = new ArrayList<>();
+            List<String> stagePartitions = new ArrayList<String>();
             ResultSet resultSet = getHiveJDBCConnection(dbName).createStatement().executeQuery("show partitions " + stageTableName);
             ResultSetMetaData rsmd = resultSet.getMetaData();
             while (resultSet.next()) {
@@ -78,20 +78,20 @@ public class BaseLoad extends ETLBase {
                 LOGGER.info(columnValue);
                 stagePartitions.add(columnValue);
             }
-            List<String> basePartitions = new ArrayList<>();
+            List<String> basePartitions = new ArrayList<String>();
 
-            String stageTableLocation = IMConfig.getProperty("common.default-fs-name")+"/user/hive/warehouse/"+dbName+".db/"+stageTableName+"/";
+            String stageTableLocation = IMConfig.getProperty("common.default-fs-name")+"/user/hive/warehouse/"+dbName.toLowerCase()+".db/"+stageTableName.toLowerCase()+"/";
             LOGGER.info("stageTableLocation = " + stageTableLocation);
-            String baseTableLocation = IMConfig.getProperty("common.default-fs-name")+"/user/hive/warehouse/"+dbName+".db/"+baseTableName+"/";
+            String baseTableLocation = IMConfig.getProperty("common.default-fs-name")+"/user/hive/warehouse/"+dbName.toLowerCase()+".db/"+baseTableName.toLowerCase()+"/";
             LOGGER.info("baseTableLocation = " + baseTableLocation);
             for (String stagePartition : stagePartitions)
             {
                 String relativePartitionPath=stagePartition+"/";
                 LOGGER.info("relativePartitionPath = " + relativePartitionPath);
-                Path srcPath=new Path(stageTableLocation +stagePartition +"/");
+                Path srcPath=new Path(stageTableLocation +stagePartition.toLowerCase() +"/");
                 LOGGER.info("srcPath = " + srcPath);
                 String basePartition = (stagePartition.lastIndexOf("/")==-1)?"":stagePartition.substring(0,stagePartition.lastIndexOf("/"));
-                Path destPath=new Path(baseTableLocation +basePartition );
+                Path destPath=new Path(baseTableLocation +basePartition.toLowerCase() );
                 LOGGER.info("destPath = " + destPath);
                 LOGGER.info("Will move partitions from " + srcPath + " to "+destPath);
                 //if the parent destination directory(upper level partition) does not exist create it
