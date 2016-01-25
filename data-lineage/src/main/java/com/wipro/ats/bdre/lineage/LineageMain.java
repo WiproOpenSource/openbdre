@@ -19,6 +19,7 @@ import com.wipro.ats.bdre.lineage.entiity.*;
 import com.wipro.ats.bdre.lineage.entiity.Node;
 import com.wipro.ats.bdre.lineage.type.EntityType;
 import com.wipro.ats.bdre.lineage.type.UniqueList;
+import com.wipro.ats.bdre.md.dao.jpa.LineageNode;
 import org.antlr.runtime.tree.DOTTreeGenerator;
 import org.antlr.runtime.tree.Tree;
 import org.antlr.stringtemplate.StringTemplate;
@@ -107,7 +108,7 @@ public class LineageMain implements NodeProcessor {
 
 		// generate Dot
 //		lineageMain.generateLineageDotFromDB();
-		lineageMain.generateLineageDot();
+		//lineageMain.generateLineageDot();
 
 		System.out.println("End of program");
 	}
@@ -628,7 +629,7 @@ if(col != null && colName != null) {
 		System.out.println();
 	}
 
-	private void generateLineageDot() {
+	public void generateLineageDot(String relationDotString, LineageNode tableNode) {
 		// generate Dot from all tables, columns and functions
 		StringBuilder first = new StringBuilder("digraph g {\n" +
 				"graph [\n" +
@@ -645,7 +646,7 @@ if(col != null && colName != null) {
 
 		StringBuilder middle = new StringBuilder();         // all nodes definitions
 		// input tables to override output tables if duplicates are found
-		for (Node node : finalOutTableNodes) {
+		/*for (Node node : finalOutTableNodes) {
 			middle.append("\n" + node.toDotString());
 		}
 		for (Node node : finalInTableNodes) {
@@ -656,20 +657,24 @@ if(col != null && colName != null) {
 		}
 		for (Node node : finalConstants) {
 			middle.append("\n" + node.toDotString());
-		}
+		}*/
+		middle.append("\n" + tableNode.getDotString());
 		middle.append("\n");
 
 		StringBuilder last = new StringBuilder();           // relations
-		for (Relation relation : finalRelations) {
-			if(relation.getSource() instanceof Column && relation.getDestination() instanceof Column){
+		/*for (Relation relation : finalRelations) {
+			if(relation.getSource() instanceof Column && relation.getDestination() instanceof Column) {
 			if (!(((Column) relation.getSource()).getTable().getTableName().equals(((Column) relation.getDestination()).getTable().getTableName()) && ((Column) relation.getSource()).getColumnName().equals(((Column) relation.getDestination()).getColumnName()))){
-				last.append("\n" + relation.toDotString());} }
+				last.append("\n" + relation.toDotString());}
+			}
 			else
 				last.append("\n" + relation.toDotString());
-		}
+		}*/
+		last.append("\n" + relationDotString);
 		last.append("\n}");
 
 		dotString = first.append(middle).append(last).toString();
+		System.out.println("printing dot string");
 		System.out.println("\n" + dotString + "\n");
 		//printLineageDot(dotString);
 	}

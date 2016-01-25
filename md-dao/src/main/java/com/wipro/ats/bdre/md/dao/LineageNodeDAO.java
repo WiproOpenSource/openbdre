@@ -18,6 +18,7 @@ package com.wipro.ats.bdre.md.dao;
 import com.wipro.ats.bdre.exception.MetadataException;
 import com.wipro.ats.bdre.md.dao.jpa.LineageNode;
 import com.wipro.ats.bdre.md.dao.jpa.LineageQuery;
+import javafx.scene.shape.Line;
 import org.apache.log4j.Logger;
 import org.hibernate.Criteria;
 import org.hibernate.Session;
@@ -71,6 +72,17 @@ public class LineageNodeDAO {
         LineageNode lineageNode = (LineageNode) session.get(LineageNode.class, id);
         session.getTransaction().commit();
         session.close();
+        return lineageNode;
+    }
+
+    //get table node by the name passed
+    public LineageNode getTableNode(String tableName) {
+
+        Session session = sessionFactory.getCurrentSession();
+        session.beginTransaction();
+        Criteria getLastElementCriteria = session.createCriteria(LineageNode.class).add(Restrictions.eq("displayName", tableName));
+        LineageNode lineageNode = (LineageNode) getLastElementCriteria.list().get(0);
+        session.getTransaction().commit();
         return lineageNode;
     }
 

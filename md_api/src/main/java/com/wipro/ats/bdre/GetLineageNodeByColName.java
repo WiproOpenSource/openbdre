@@ -50,4 +50,10 @@ public class GetLineageNodeByColName extends MetadataAPIBase {
             throw new MetadataException(e);
         }
     }
+
+    public LineageNode getTableDotFromTableName (String tableName) {
+        LOGGER.debug("Table name is: " + tableName);
+        LineageNode lineageNode = lineageNodeDAO.getTableNode(tableName);
+        return lineageNode;
+    }
 }

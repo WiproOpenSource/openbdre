@@ -41,6 +41,9 @@ public class GetDotForTable {
         List<LineageRelation> lineageRelationList;
         //get the nodes which have the same DISPLAY_NAME as that of the string provided
         List<LineageNode> lineageNodeList = getDotForTable.getLineageNodeNodeId(args);
+        String tableName = args[2];
+        GetLineageNodeByColName getLineageNodeByColName = new GetLineageNodeByColName();
+        LineageNode tableNode = getLineageNodeByColName.getTableDotFromTableName(tableName);
         List<String> nodeIds = new ArrayList<>();
         List<String> nodeDotString = new ArrayList<>();
         //compare the list of Nodes got from LN table with LR table to get the required node & store its node id & dot string
@@ -57,6 +60,8 @@ public class GetDotForTable {
                     nodeIds.add(lineageNode.getNodeId());                                       //add the matched Node's nodeId to list
                     nodeDotString.add(lineageRelationList.get(0).getDotString());                          //add the corresponding Dot String to list
                     logger.info(lineageRelationList.get(0).getDotString());
+                    LineageMain lineageMain = new LineageMain();
+                    lineageMain.generateLineageDot(lineageRelationList.get(0).getDotString(), tableNode);          //call lineage main to create the DOT
                     //break;
                 }
                 //}
