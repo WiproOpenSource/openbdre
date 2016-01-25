@@ -57,7 +57,7 @@ public class QueuedFileUploader {
                         destPath);
 
                 File sourceFile = new File(fileCopying.getSrcLocation());
-                String arcDir = sourceFile.getParent()+"/_archive";
+                String arcDir = destDir.replace(FileMonRunnableMain.getHdfsUploadDir(),FileMonRunnableMain.getMonitoredDirName()+"/"+FileMonRunnableMain.ARCHIVE);
                 File arcDirFile = new File(arcDir);
                 FileUtils.moveFileToDirectory(sourceFile, arcDirFile, true);
             }
