@@ -27,6 +27,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.persistence.criteria.CriteriaBuilder;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -47,15 +48,18 @@ public class HistoryDataImportDAO {
 
         try {
             session.beginTransaction();
-            Criteria numOfTableCriteria = session.createCriteria(Intermediate.class).add(Restrictions.like("id.interKey", "baseDDL_%"))
-                    .add(Restrictions.eq("id.uuid", intermediateInfo.getUuid()));
-            List<Intermediate> intermediateList = numOfTableCriteria.list();
-
+            IntermediateId intermediateId = new IntermediateId();
+            LOGGER.info("uuid is =" + intermediateInfo.getUuid());
+            intermediateId.setUuid(intermediateInfo.getUuid());
+            intermediateId.setInterKey("numberOfTables");
+            Intermediate numberOfTables = (Intermediate) session.get(Intermediate.class,intermediateId);
+            LOGGER.info("inter value is = " + numberOfTables.getInterValue() + " key is " + numberOfTables.getId().getInterKey());
+            Integer numOfTable = Integer.parseInt(numberOfTables.getInterValue());
             boolean triggerCheck;
             int flag = 0;
             int numOfTableToIngest = 0;
-            LOGGER.info("number of table is " + intermediateList.size());
-            for (int i = 1; i <= intermediateList.size(); i++) {
+            LOGGER.info("number of table is " + numOfTable);
+            for (int i = 1; i <= numOfTable; i++) {
                 IntermediateId getInterValue = new IntermediateId();
                 getInterValue.setInterKey("ingestOnly_" + i);
                 getInterValue.setUuid(intermediateInfo.getUuid());
@@ -66,6 +70,7 @@ public class HistoryDataImportDAO {
                     numOfTableToIngest += 1;
                 }
             }
+            // Getting master data from metadata
             IntermediateId getBusDomain = new IntermediateId();
             getBusDomain.setInterKey("busdomainid");
             getBusDomain.setUuid(intermediateInfo.getUuid());
@@ -120,7 +125,7 @@ public class HistoryDataImportDAO {
             String nextProcessForF2R = "";
             String nextProcessForR2S = "";
 
-
+            // adding data laod parent
             if (flag == 1) {
                 dataLoadParent.setDescription(processDescription+"_Load");
                 dataLoadParent.setAddTs(new Date());
@@ -138,7 +143,9 @@ public class HistoryDataImportDAO {
                 LOGGER.info("the inserted data load parent is " + dataLoadParent.getProcessId());
                 parentProcessIdList.add(dataLoadParent.getProcessId());
             }
-            for (int i = 1; i <= intermediateList.size(); i++) {
+            // looping for each table and creating subsequent data import and data load processes with required properties
+            for (int i = 1; i <= numOfTable; i++) {
+                //data import process
                 Process dataImportProcess = new Process();
                 dataImportProcess.setDescription(processDescription+"_Import" + i);
                 dataImportProcess.setAddTs(new Date());
@@ -157,10 +164,7 @@ public class HistoryDataImportDAO {
                 LOGGER.info("the inserted data import parent is " + dataImportProcess.getProcessId());
                 parentProcessIdList.add(dataImportProcess.getProcessId());
 
-                if (i == 1) {
-                    //something special to be done
-                }
-
+                // child of data import process
                 Process childDataImportProcess = new Process();
                 childDataImportProcess.setDescription(processDescription+"_Import");
                 childDataImportProcess.setProcessName("SubProcess of "+processName+"_Import");
@@ -179,10 +183,13 @@ public class HistoryDataImportDAO {
                 }
 
                 session.save(childDataImportProcess);
+                // updating parent data import process
                 session.update(dataImportProcess);
                 LOGGER.info("the inserted data import is " + childDataImportProcess.getProcessId());
                 dataImportProcess.setNextProcessId(childDataImportProcess.getProcessId().toString());
 
+                // data import action related properties reading from intermediate table
+                //database name
                 IntermediateId intermediateIdDB = new IntermediateId();
                 intermediateIdDB.setUuid(intermediateInfo.getUuid());
                 intermediateIdDB.setInterKey("db");
@@ -200,7 +207,7 @@ public class HistoryDataImportDAO {
                 dbProperties.setDescription("properties for  data import");
                 session.save(dbProperties);
 
-
+                // driver name
                 IntermediateId intermediateIdDriver = new IntermediateId();
                 intermediateIdDriver.setUuid(intermediateInfo.getUuid());
                 intermediateIdDriver.setInterKey("driver");
@@ -218,6 +225,7 @@ public class HistoryDataImportDAO {
                 driverProperties.setDescription("properties for  data import");
                 session.save(driverProperties);
 
+                //password
                 IntermediateId intermediateIdPassword = new IntermediateId();
                 intermediateIdPassword.setUuid(intermediateInfo.getUuid());
                 intermediateIdPassword.setInterKey("password");
@@ -235,7 +243,7 @@ public class HistoryDataImportDAO {
                 passwordProperties.setDescription("properties for  data import");
                 session.save(passwordProperties);
 
-
+                //username
                 IntermediateId intermediateIdUserName = new IntermediateId();
                 intermediateIdUserName.setUuid(intermediateInfo.getUuid());
                 intermediateIdUserName.setInterKey("username");
@@ -253,7 +261,7 @@ public class HistoryDataImportDAO {
                 userNameProperties.setDescription("properties for  data import");
                 session.save(userNameProperties);
 
-
+                //table name
                 IntermediateId intermediateIdRawName = new IntermediateId();
                 intermediateIdRawName.setUuid(intermediateInfo.getUuid());
                 intermediateIdRawName.setInterKey("rawTableName_" + i);
@@ -271,6 +279,7 @@ public class HistoryDataImportDAO {
                 rawNameProperties.setDescription("properties for  data import");
                 session.save(rawNameProperties);
 
+                // file layout
                 PropertiesId propertiesIdFileLayout = new PropertiesId();
                 propertiesIdFileLayout.setProcessId(childDataImportProcess.getProcessId());
                 propertiesIdFileLayout.setPropKey("file.layout");
@@ -292,7 +301,7 @@ public class HistoryDataImportDAO {
                 importProperties.setDescription("properties for  data import");
                 session.save(importProperties);
 
-
+                // number of mapper
                 PropertiesId propertiesIdMappers = new PropertiesId();
                 propertiesIdMappers.setProcessId(childDataImportProcess.getProcessId());
                 propertiesIdMappers.setPropKey("mappers");
@@ -303,7 +312,7 @@ public class HistoryDataImportDAO {
                 mapeersProperties.setDescription("properties for  data import");
                 session.save(mapeersProperties);
 
-
+                //column list
                 IntermediateId intermediateIdColumnList = new IntermediateId();
                 intermediateIdColumnList.setUuid(intermediateInfo.getUuid());
                 intermediateIdColumnList.setInterKey("columnList_" + i);
@@ -321,7 +330,7 @@ public class HistoryDataImportDAO {
                 columnListProperties.setDescription("properties for  data import");
                 session.save(columnListProperties);
 
-
+                // increment type
                 IntermediateId intermediateIdIncrementType = new IntermediateId();
                 intermediateIdIncrementType.setUuid(intermediateInfo.getUuid());
                 intermediateIdIncrementType.setInterKey("incrementType_" + i);
@@ -339,7 +348,7 @@ public class HistoryDataImportDAO {
                 incrementTypeProperties.setDescription("properties for  data import");
                 session.save(incrementTypeProperties);
 
-
+                //primary key column
                 IntermediateId intermediateIdCheckCol = new IntermediateId();
                 intermediateIdCheckCol.setUuid(intermediateInfo.getUuid());
                 intermediateIdCheckCol.setInterKey("primaryKeyColumn_" + i);
@@ -357,6 +366,7 @@ public class HistoryDataImportDAO {
                 checkColProperties.setDescription("properties for  data import");
                 session.save(checkColProperties);
 
+                // checking whether process to load data into  hive is reuired or not
                 String ingestOnlyCount = "ingestOnly_" + i;
                 IntermediateId intermediateIdLoadOrNot = new IntermediateId();
                 intermediateIdLoadOrNot.setUuid(intermediateInfo.getUuid());
@@ -366,6 +376,7 @@ public class HistoryDataImportDAO {
                 Intermediate loadOrNotValue = (Intermediate) loadOrNotCriteria.list().get(0);
                 LOGGER.debug("loadOrNotValue " + loadOrNotValue.getInterValue());
                 if ("false".equals(loadOrNotValue.getInterValue())) {
+                    // file2Raw process
                     Process file2Raw = new Process();
                     file2Raw.setDescription(processDescription+"_'File2Raw'");
                     file2Raw.setAddTs(new Date());
@@ -382,7 +393,7 @@ public class HistoryDataImportDAO {
                     session.save(file2Raw);
 
                     nextProcessForDataLoadParent += file2Raw.getProcessId().toString() + ",";
-
+                    //raw2stage process
                     Process raw2Stage = new Process();
                     raw2Stage.setDescription(processDescription+"_''Raw2Stage''");
                     raw2Stage.setAddTs(new Date());
@@ -399,7 +410,7 @@ public class HistoryDataImportDAO {
                     session.save(raw2Stage);
 
                     nextProcessForF2R += raw2Stage.getProcessId().toString() + ",";
-
+                    //stage2base process
                     Process stage2Base = new Process();
                     stage2Base.setDescription(processDescription+"_'''Stage2Base'''");
                     stage2Base.setAddTs(new Date());
@@ -420,6 +431,59 @@ public class HistoryDataImportDAO {
 
                     nextProcessForR2S += stage2Base.getProcessId() + ",";
 
+                    //field delim
+                    PropertiesId propertiesFieldDelimId = new PropertiesId();
+                    propertiesFieldDelimId.setProcessId(file2Raw.getProcessId());
+                    propertiesFieldDelimId.setPropKey("field.delim");
+                    Properties propertiesFieldDelim = new Properties();
+                    propertiesFieldDelim.setId(propertiesFieldDelimId);
+                    propertiesFieldDelim.setConfigGroup("raw-serde-props");
+                    propertiesFieldDelim.setPropValue(",");
+                    propertiesFieldDelim.setDescription("properties for File delimiter");
+                    session.save(propertiesFieldDelim);
+
+                    // file type
+                    PropertiesId propertiesFileFormatId = new PropertiesId();
+                    propertiesFileFormatId.setProcessId(file2Raw.getProcessId());
+                    propertiesFileFormatId.setPropKey("file_type");
+                    Properties propertiesFileFormat = new Properties();
+                    propertiesFileFormat.setId(propertiesFileFormatId);
+                    propertiesFileFormat.setConfigGroup("raw-table");
+                    propertiesFileFormat.setPropValue("delimited");
+                    propertiesFileFormat.setDescription("properties for File Format");
+                    session.save(propertiesFileFormat);
+                    //input class
+                    PropertiesId propertiesInputFormatId = new PropertiesId();
+                    propertiesInputFormatId.setProcessId(file2Raw.getProcessId());
+                    propertiesInputFormatId.setPropKey("input.format");
+                    Properties propertiesInputFormat = new Properties();
+                    propertiesInputFormat.setId(propertiesInputFormatId);
+                    propertiesInputFormat.setConfigGroup("raw-table");
+                    propertiesInputFormat.setPropValue("org.apache.hadoop.mapred.TextInputFormat");
+                    propertiesInputFormat.setDescription("properties for input Format");
+                    session.save(propertiesInputFormat);
+                    //output class
+                    PropertiesId propertiesOutputFormatId = new PropertiesId();
+                    propertiesOutputFormatId.setProcessId(file2Raw.getProcessId());
+                    propertiesOutputFormatId.setPropKey("output.format");
+                    Properties propertiesOutputFormat = new Properties();
+                    propertiesOutputFormat.setId(propertiesOutputFormatId);
+                    propertiesOutputFormat.setConfigGroup("raw-table");
+                    propertiesOutputFormat.setPropValue("org.apache.hadoop.hive.ql.io.HiveIgnoreKeyTextOutputFormat");
+                    propertiesOutputFormat.setDescription("properties for output Format");
+                    session.save(propertiesOutputFormat);
+                    //serde class
+                    PropertiesId propertiesSerdeClassId = new PropertiesId();
+                    propertiesSerdeClassId.setProcessId(file2Raw.getProcessId());
+                    propertiesSerdeClassId.setPropKey("serde.class");
+                    Properties propertiesSerdeClass = new Properties();
+                    propertiesSerdeClass.setId(propertiesSerdeClassId);
+                    propertiesSerdeClass.setConfigGroup("raw-table");
+                    propertiesSerdeClass.setPropValue("org.apache.hadoop.hive.serde2.lazy.LazySimpleSerDe");
+                    propertiesSerdeClass.setDescription("properties for Serde Class");
+                    session.save(propertiesSerdeClass);
+
+                    //raw table name
                     IntermediateId intermediateIdRawTableName = new IntermediateId();
                     intermediateIdRawTableName.setUuid(intermediateInfo.getUuid());
                     intermediateIdRawTableName.setInterKey("rawTableName_" + i);
@@ -427,24 +491,118 @@ public class HistoryDataImportDAO {
                     Criteria rawTableNameCriteria = session.createCriteria(Intermediate.class).add(Restrictions.eq("id", intermediateIdRawTableName));
                     Intermediate rawTableName = (Intermediate) rawTableNameCriteria.list().get(0);
 
-                    IntermediateId intermediateIdRawTableDDL = new IntermediateId();
-                    intermediateIdRawTableDDL.setUuid(intermediateInfo.getUuid());
-                    intermediateIdRawTableDDL.setInterKey("rawDDL_" + i);
+                    PropertiesId rawTableNamePropertiesId = new PropertiesId();
+                    rawTableNamePropertiesId.setProcessId(file2Raw.getProcessId());
+                    rawTableNamePropertiesId.setPropKey("table_name");
+                    Properties rawTableNameProperties = new Properties();
+                    rawTableNameProperties.setId(rawTableNamePropertiesId);
+                    rawTableNameProperties.setConfigGroup("raw-table");
+                    rawTableNameProperties.setPropValue("raw_" + rawTableName.getInterValue());
+                    rawTableNameProperties.setDescription("Raw Table Name");
+                    session.save(rawTableNameProperties);
 
-                    Criteria rawTableDDLCriteria = session.createCriteria(Intermediate.class).add(Restrictions.eq("id", intermediateIdRawTableDDL));
-                    Intermediate rawTableDDL = (Intermediate) rawTableDDLCriteria.list().get(0);
+                    PropertiesId rawTableNamePropertiesIdForStage = new PropertiesId();
+                    rawTableNamePropertiesIdForStage.setProcessId(raw2Stage.getProcessId());
+                    rawTableNamePropertiesIdForStage.setPropKey("table_name_raw");
+                    Properties rawTableNamePropertiesForStage = new Properties();
+                    rawTableNamePropertiesForStage.setId(rawTableNamePropertiesIdForStage);
+                    rawTableNamePropertiesForStage.setConfigGroup("raw-table");
+                    rawTableNamePropertiesForStage.setPropValue("raw_" + rawTableName.getInterValue());
+                    rawTableNamePropertiesForStage.setDescription("Raw Table Name");
+                    session.save(rawTableNamePropertiesForStage);
 
-                    HiveTables rawTableHive = new HiveTables();
-                    rawTableHive.setComments("for raw table");
-                    rawTableHive.setLocationType("hdfs");
-                    rawTableHive.setDbname("raw");
-                    rawTableHive.setBatchIdPartitionCol("batchid");
-                    rawTableHive.setTableName(rawTableName.getInterValue());
-                    rawTableHive.setType("raw");
-                    rawTableHive.setDdl(rawTableDDL.getInterValue());
-                    session.save(rawTableHive);
+                    // raw db
+                    IntermediateId intermediateIdRawTableDB = new IntermediateId();
+                    intermediateIdRawTableDB.setUuid(intermediateInfo.getUuid());
+                    intermediateIdRawTableDB.setInterKey("rawHiveDB");
 
+                    Criteria rawTableDBCriteria = session.createCriteria(Intermediate.class).add(Restrictions.eq("id", intermediateIdRawTableDB));
+                    Intermediate rawTableDB = (Intermediate) rawTableDBCriteria.list().get(0);
 
+                    PropertiesId rawTableDBPropertiesId = new PropertiesId();
+                    rawTableDBPropertiesId.setProcessId(file2Raw.getProcessId());
+                    rawTableDBPropertiesId.setPropKey("table_db");
+                    Properties rawTableDBProperties = new Properties();
+                    rawTableDBProperties.setId(rawTableDBPropertiesId);
+                    rawTableDBProperties.setConfigGroup("raw-table");
+                    rawTableDBProperties.setPropValue(rawTableDB.getInterValue());
+                    rawTableDBProperties.setDescription("Raw Table Name");
+                    session.save(rawTableDBProperties);
+
+                    PropertiesId rawTableDBPropertiesIdForStage = new PropertiesId();
+                    rawTableDBPropertiesIdForStage.setProcessId(raw2Stage.getProcessId());
+                    rawTableDBPropertiesIdForStage.setPropKey("table_db_raw");
+                    Properties rawTableDBPropertiesForStage = new Properties();
+                    rawTableDBPropertiesForStage.setId(rawTableDBPropertiesIdForStage);
+                    rawTableDBPropertiesForStage.setConfigGroup("raw-table");
+                    rawTableDBPropertiesForStage.setPropValue(rawTableDB.getInterValue());
+                    rawTableDBPropertiesForStage.setDescription("Raw Table Name");
+                    session.save(rawTableDBPropertiesForStage);
+
+                    //cloumns and datyptes
+                    IntermediateId intermediateIdRawTableColumns = new IntermediateId();
+                    intermediateIdRawTableColumns.setUuid(intermediateInfo.getUuid());
+                    intermediateIdRawTableColumns.setInterKey("rawColumnsAndDataTypes_" +  i);
+                    LOGGER.info("key is : " + i);
+
+                    Criteria rawTableColumnsCriteria = session.createCriteria(Intermediate.class).add(Restrictions.eq("id", intermediateIdRawTableColumns));
+                    Intermediate rawTableColumns = (Intermediate) rawTableColumnsCriteria.list().get(0);
+                    LOGGER.info("intermediate column : uuid " + rawTableColumns.getId().getUuid() + " key " + rawTableColumns.getId().getInterKey() + " value " + rawTableColumns.getInterValue());
+                    String[] rawTableColumn = rawTableColumns.getInterValue().split(",");
+                    LOGGER.info("inter value after splitting " + rawTableColumn.toString());
+                    for ( int columnCounter = 1;columnCounter <= rawTableColumn.length; columnCounter ++){
+                        PropertiesId rawTableColumnPropertiesId = new PropertiesId();
+                        rawTableColumnPropertiesId.setProcessId(file2Raw.getProcessId());
+                        rawTableColumnPropertiesId.setPropKey("raw_column_name." + columnCounter);
+                        Properties rawTableColumnProperties = new Properties();
+                        rawTableColumnProperties.setId(rawTableColumnPropertiesId);
+                        rawTableColumnProperties.setConfigGroup("raw-cols");
+                        rawTableColumnProperties.setPropValue(rawTableColumn[columnCounter-1].split(" ")[0]);
+                        rawTableColumnProperties.setDescription("Raw Table Columns");
+                        session.save(rawTableColumnProperties);
+
+                        PropertiesId rawTableDataTypesPropertiesId = new PropertiesId();
+                        rawTableDataTypesPropertiesId.setProcessId(file2Raw.getProcessId());
+                        rawTableDataTypesPropertiesId.setPropKey("raw_column_datatype." + columnCounter);
+                        Properties rawTableDataTypesProperties = new Properties();
+                        rawTableDataTypesProperties.setId(rawTableDataTypesPropertiesId);
+                        rawTableDataTypesProperties.setConfigGroup("raw-data-types");
+                        rawTableDataTypesProperties.setPropValue(rawTableColumn[columnCounter-1].split(" ")[1]);
+                        rawTableDataTypesProperties.setDescription("Raw Table Data Types");
+                        session.save(rawTableDataTypesProperties);
+
+                        PropertiesId baseTableColumnPropertiesId = new PropertiesId();
+                        baseTableColumnPropertiesId.setProcessId(raw2Stage.getProcessId());
+                        baseTableColumnPropertiesId.setPropKey("transform_" + rawTableColumn[columnCounter-1].split(" ")[0]);
+                        Properties baseTableColumnProperties = new Properties();
+                        baseTableColumnProperties.setId(baseTableColumnPropertiesId);
+                        baseTableColumnProperties.setConfigGroup("base-columns");
+                        baseTableColumnProperties.setPropValue(rawTableColumn[columnCounter-1].split(" ")[0]);
+                        baseTableColumnProperties.setDescription("Base Table Columns");
+                        session.save(baseTableColumnProperties);
+
+                        PropertiesId baseTableDataTypePropertiesId = new PropertiesId();
+                        baseTableDataTypePropertiesId.setProcessId(raw2Stage.getProcessId());
+                        baseTableDataTypePropertiesId.setPropKey(rawTableColumn[columnCounter-1].split(" ")[0]);
+                        Properties baseTableDataTypeProperties = new Properties();
+                        baseTableDataTypeProperties.setId(baseTableDataTypePropertiesId);
+                        baseTableDataTypeProperties.setConfigGroup("base-data-types");
+                        baseTableDataTypeProperties.setPropValue(rawTableColumn[columnCounter-1].split(" ")[1]);
+                        baseTableDataTypeProperties.setDescription("Base Table data types");
+                        session.save(baseTableDataTypeProperties);
+
+                        PropertiesId lastStageId = new PropertiesId();
+                        lastStageId.setProcessId(stage2Base.getProcessId());
+                        lastStageId.setPropKey(rawTableColumn[columnCounter-1].split(" ")[0]);
+                        Properties lastStage = new Properties();
+                        lastStage.setId(lastStageId);
+                        lastStage.setConfigGroup("base-columns-and-types");
+                        lastStage.setPropValue(rawTableColumn[columnCounter-1].split(" ")[1]);
+                        lastStage.setDescription("Base Table columns and data types");
+                        session.save(lastStage);
+
+                    }
+                    //base table name
                     IntermediateId intermediateIdBaseTableName = new IntermediateId();
                     intermediateIdBaseTableName.setUuid(intermediateInfo.getUuid());
                     intermediateIdBaseTableName.setInterKey("baseTableName_" + i);
@@ -452,89 +610,58 @@ public class HistoryDataImportDAO {
                     Criteria baseTableNameCriteria = session.createCriteria(Intermediate.class).add(Restrictions.eq("id", intermediateIdBaseTableName));
                     Intermediate baseTableName = (Intermediate) baseTableNameCriteria.list().get(0);
 
-                    IntermediateId intermediateIdBaseTableDDL = new IntermediateId();
-                    intermediateIdBaseTableDDL.setUuid(intermediateInfo.getUuid());
-                    intermediateIdBaseTableDDL.setInterKey("baseDDL_" + i);
+                    PropertiesId baseTableNamePropertiesId = new PropertiesId();
+                    baseTableNamePropertiesId.setProcessId(raw2Stage.getProcessId());
+                    baseTableNamePropertiesId.setPropKey("table_name");
+                    Properties baseTableNameProperties = new Properties();
+                    baseTableNameProperties.setId(baseTableNamePropertiesId);
+                    baseTableNameProperties.setConfigGroup("base-table");
+                    baseTableNameProperties.setPropValue(baseTableName.getInterValue());
+                    baseTableNameProperties.setDescription("Base Table Name");
+                    session.save(baseTableNameProperties);
 
-                    Criteria baseTableDDLCriteria = session.createCriteria(Intermediate.class).add(Restrictions.eq("id", intermediateIdBaseTableDDL));
-                    Intermediate baseTableDDL = (Intermediate) baseTableDDLCriteria.list().get(0);
+                    baseTableNamePropertiesId = new PropertiesId();
+                    baseTableNamePropertiesId.setProcessId(stage2Base.getProcessId());
+                    baseTableNamePropertiesId.setPropKey("table_name");
+                    baseTableNameProperties = new Properties();
+                    baseTableNameProperties.setId(baseTableNamePropertiesId);
+                    baseTableNameProperties.setConfigGroup("base-table");
+                    baseTableNameProperties.setPropValue(baseTableName.getInterValue());
+                    baseTableNameProperties.setDescription("Base Table Name");
+                    session.save(baseTableNameProperties);
 
-                    IntermediateId intermediateIdBaseDB = new IntermediateId();
-                    intermediateIdBaseDB.setUuid(intermediateInfo.getUuid());
-                    intermediateIdBaseDB.setInterKey("hiveDB");
+                    // base database
+                    IntermediateId intermediateIdBaseTableDB = new IntermediateId();
+                    intermediateIdBaseTableDB.setUuid(intermediateInfo.getUuid());
+                    intermediateIdBaseTableDB.setInterKey("baseHiveDB");
 
-                    Criteria baseDBCriteria = session.createCriteria(Intermediate.class).add(Restrictions.eq("id", intermediateIdBaseDB));
-                    Intermediate baseDB = (Intermediate) baseDBCriteria.list().get(0);
+                    Criteria baseTableDBCriteria = session.createCriteria(Intermediate.class).add(Restrictions.eq("id", intermediateIdBaseTableDB));
+                    Intermediate baseTableDB = (Intermediate) baseTableDBCriteria.list().get(0);
 
-                    HiveTables baseTableHive = new HiveTables();
-                    baseTableHive.setComments("for base table");
-                    baseTableHive.setLocationType("hdfs");
-                    baseTableHive.setDbname(baseDB.getInterValue());
-                    baseTableHive.setBatchIdPartitionCol("batchid");
-                    baseTableHive.setTableName(baseTableName.getInterValue());
-                    baseTableHive.setType("base");
-                    baseTableHive.setDdl(baseTableDDL.getInterValue());
-                    session.save(baseTableHive);
+                    PropertiesId baseTableDBPropertiesId = new PropertiesId();
+                    baseTableDBPropertiesId.setProcessId(raw2Stage.getProcessId());
+                    baseTableDBPropertiesId.setPropKey("table_db");
+                    Properties baseTableDBProperties = new Properties();
+                    baseTableDBProperties.setId(baseTableDBPropertiesId);
+                    baseTableDBProperties.setConfigGroup("base-table");
+                    baseTableDBProperties.setPropValue(baseTableDB.getInterValue());
+                    baseTableDBProperties.setDescription("Base Table DB");
+                    session.save(baseTableDBProperties);
 
+                    baseTableDBPropertiesId = new PropertiesId();
+                    baseTableDBPropertiesId.setProcessId(stage2Base.getProcessId());
+                    baseTableDBPropertiesId.setPropKey("table_db");
+                    baseTableDBProperties = new Properties();
+                    baseTableDBProperties.setId(baseTableDBPropertiesId);
+                    baseTableDBProperties.setConfigGroup("base-table");
+                    baseTableDBProperties.setPropValue(baseTableDB.getInterValue());
+                    baseTableDBProperties.setDescription("Base Table DB");
+                    session.save(baseTableDBProperties);
 
-                    IntermediateId intermediateIdViewName = new IntermediateId();
-                    intermediateIdViewName.setUuid(intermediateInfo.getUuid());
-                    intermediateIdViewName.setInterKey("rawViewName_" + i);
-
-                    Criteria viewNameCriteria = session.createCriteria(Intermediate.class).add(Restrictions.eq("id", intermediateIdViewName));
-                    Intermediate viewName = (Intermediate) viewNameCriteria.list().get(0);
-
-                    IntermediateId intermediateIdViewDDL = new IntermediateId();
-                    intermediateIdViewDDL.setUuid(intermediateInfo.getUuid());
-                    intermediateIdViewDDL.setInterKey("rawViewDDL_" + i);
-
-                    Criteria viewDDLCriteria = session.createCriteria(Intermediate.class).add(Restrictions.eq("id", intermediateIdViewDDL));
-                    Intermediate viewDDL = (Intermediate) viewDDLCriteria.list().get(0);
-
-                    HiveTables viewHive = new HiveTables();
-                    viewHive.setComments("for view");
-                    viewHive.setLocationType("hdfs");
-                    viewHive.setDbname("raw");
-                    viewHive.setBatchIdPartitionCol("batchid");
-                    viewHive.setTableName(viewName.getInterValue());
-                    viewHive.setType("view");
-                    viewHive.setDdl(viewDDL.getInterValue());
-                    session.save(viewHive);
-
-                    EtlDriver rawETLDriver = new EtlDriver();
-                    rawETLDriver.setEtlProcessId(file2Raw.getProcessId());
-                    rawETLDriver.setProcess(file2Raw);
-                    rawETLDriver.setHiveTablesByRawTableId(rawTableHive);
-                    rawETLDriver.setHiveTablesByBaseTableId(baseTableHive);
-                    rawETLDriver.setInsertType(Short.parseShort("1"));
-                    rawETLDriver.setDropRaw(false);
-                    rawETLDriver.setHiveTablesByRawViewId(viewHive);
-                    session.save(rawETLDriver);
-
-
-                    EtlDriver stageETLDriver = new EtlDriver();
-                    stageETLDriver.setEtlProcessId(raw2Stage.getProcessId());
-                    stageETLDriver.setProcess(raw2Stage);
-                    stageETLDriver.setHiveTablesByRawTableId(rawTableHive);
-                    stageETLDriver.setHiveTablesByBaseTableId(baseTableHive);
-                    stageETLDriver.setInsertType(Short.parseShort("1"));
-                    stageETLDriver.setDropRaw(false);
-                    stageETLDriver.setHiveTablesByRawViewId(viewHive);
-                    session.save(stageETLDriver);
-
-
-                    EtlDriver baseETLDriver = new EtlDriver();
-                    baseETLDriver.setEtlProcessId(stage2Base.getProcessId());
-                    baseETLDriver.setProcess(stage2Base);
-                    baseETLDriver.setHiveTablesByRawTableId(rawTableHive);
-                    baseETLDriver.setHiveTablesByBaseTableId(baseTableHive);
-                    baseETLDriver.setInsertType(Short.parseShort("1"));
-                    baseETLDriver.setDropRaw(false);
-                    baseETLDriver.setHiveTablesByRawViewId(viewHive);
-                    session.save(baseETLDriver);
                 }
             }
             if (flag == 1) {
+                //updating next process for every process
                 LOGGER.info("nextProcessForDataLoadParent is " + nextProcessForDataLoadParent);
                 nextProcessForDataLoadParent = nextProcessForDataLoadParent.substring(0, nextProcessForDataLoadParent.length() - 1);
                 nextProcessForF2R = nextProcessForF2R.substring(0, nextProcessForF2R.length() - 1);

@@ -25,6 +25,10 @@ import org.apache.hadoop.hive.metastore.api.Partition;
 import org.apache.hadoop.hive.metastore.api.Table;
 import org.apache.log4j.Logger;
 
+import java.sql.Connection;
+import java.sql.ResultSet;
+import java.sql.ResultSetMetaData;
+import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -37,7 +41,7 @@ public class BaseLoad extends ETLBase {
     private static final Logger LOGGER = Logger.getLogger(BaseLoad.class);
     private static final String[][] PARAMS_STRUCTURE = {
             {"p", "process-id", " Process id of ETLDriver"},
-            {"instExecId", "instance-exec-id", " Process id of ETLDriver"}
+            {"ied", "instance-exec-id", " Process id of ETLDriver"}
     };
 
 
@@ -47,17 +51,17 @@ public class BaseLoad extends ETLBase {
 
         String processId = commandLine.getOptionValue("process-id");
         String instanceExecId = commandLine.getOptionValue("instance-exec-id");
-        init(processId);
+        loadBaseHiveTableInfo(processId);
         //Getting core table information
-        String baseTableName = getBaseTable().getTableName();
-        String baseTableDbName = getBaseTable().getDbName();
-        String baseTableDdl = getBaseTable().getDdl();
+        String baseTableName = baseTable;
+        String baseTableDbName = baseDb;
+      //  String baseTableDdl = getBaseTable().getDdl();
 
-        processStage(baseTableDbName, baseTableName, instanceExecId, baseTableDdl);
+        processStage(baseTableDbName, baseTableName, instanceExecId);
     }
 
 
-    private void processStage(String dbName, String baseTableName, String instanceExecId, String ddl) {
+    private void processStage(String dbName, String baseTableName, String instanceExecId) {
         try {
 
             Configuration conf = new Configuration();
@@ -65,41 +69,52 @@ public class BaseLoad extends ETLBase {
             FileSystem fs = FileSystem.get(conf);
             String stageTableName =  baseTableName + "_" + instanceExecId;
             //Stage table is the source and base table is the destination
-            Table stageTable=getMetaStoreClient().getTable(dbName,stageTableName);
-            Table baseTable=getMetaStoreClient().getTable(dbName,baseTableName);
-            List<Partition> stagePartitions = getMetaStoreClient().listPartitions(dbName, stageTableName, (short) -1);
-            List<Partition> basePartitions = new ArrayList<Partition>();
 
-            String stageTableLocation = stageTable.getSd().getLocation();
-            String baseTableLocation = baseTable.getSd().getLocation();
-            for (Partition stagePartition : stagePartitions)
+            List<String> stagePartitions = new ArrayList<String>();
+            ResultSet resultSet = getHiveJDBCConnection(dbName).createStatement().executeQuery("show partitions " + stageTableName);
+            ResultSetMetaData rsmd = resultSet.getMetaData();
+            while (resultSet.next()) {
+                String columnValue = resultSet.getString(1);
+                LOGGER.info(columnValue);
+                stagePartitions.add(columnValue);
+            }
+            List<String> basePartitions = new ArrayList<String>();
+
+            String stageTableLocation = IMConfig.getProperty("common.default-fs-name")+"/user/hive/warehouse/"+dbName.toLowerCase()+".db/"+stageTableName.toLowerCase()+"/";
+            LOGGER.info("stageTableLocation = " + stageTableLocation);
+            String baseTableLocation = IMConfig.getProperty("common.default-fs-name")+"/user/hive/warehouse/"+dbName.toLowerCase()+".db/"+baseTableName.toLowerCase()+"/";
+            LOGGER.info("baseTableLocation = " + baseTableLocation);
+            for (String stagePartition : stagePartitions)
             {
-                //Create a copy of the stage partitions and change the table name to that of base
-                //Change the location also other wise the added partition will point inside the stage table
-                Partition partition =stagePartition.deepCopy();
-                partition.setTableName(baseTableName);
-                String relativePartitionPath=partition.getSd().getLocation().replace(stageTableLocation,"");
-                partition.getSd().setLocation(baseTableLocation+relativePartitionPath);
-                basePartitions.add(partition);
-                Path srcPath=new Path(stageTableLocation + relativePartitionPath);
-                Path destPath=new Path(baseTableLocation + relativePartitionPath);
-                LOGGER.debug("Will move partitions from " + srcPath + " to "+destPath.getParent());
+                String relativePartitionPath=stagePartition+"/";
+                LOGGER.info("relativePartitionPath = " + relativePartitionPath);
+                Path srcPath=new Path(stageTableLocation +stagePartition.toLowerCase() +"/");
+                LOGGER.info("srcPath = " + srcPath);
+                String basePartition = (stagePartition.lastIndexOf("/")==-1)?"":stagePartition.substring(0,stagePartition.lastIndexOf("/"));
+                Path destPath=new Path(baseTableLocation +basePartition.toLowerCase() );
+                LOGGER.info("destPath = " + destPath);
+                LOGGER.info("Will move partitions from " + srcPath + " to "+destPath);
                 //if the parent destination directory(upper level partition) does not exist create it
-                fs.mkdirs(destPath.getParent());
+                fs.mkdirs(destPath);
                 //Now do the rename
-                fs.rename(srcPath,destPath.getParent());
-
+                fs.rename(srcPath,destPath);
+                Connection baseCon = getHiveJDBCConnection(dbName);
+                Statement baseConStatement = baseCon.createStatement();
+                String query="alter table "+ baseTableName+" add partition("+stagePartition.replace("/",",")+")";
+                LOGGER.info("query = " + query);
+                baseConStatement.executeUpdate(query);
             }
             //add partitions in the core table.
-            getMetaStoreClient().add_partitions(basePartitions);
+            //  getMetaStoreClient().add_partitions(basePartitions);
 
-            LOGGER.debug("Deleting stage table");
-            getMetaStoreClient().dropTable(dbName,stageTableName);
+            // LOGGER.info("Deleting stage table");
+            //  getMetaStoreClient().dropTable(dbName,stageTableName);
             LOGGER.info("BaseLoad completed for " + baseTableName);
         } catch (Exception e) {
-            LOGGER.error("Exception" + e);
+            LOGGER.info("Exception" + e);
             throw new ETLException(e);
         }
+
     }
 
 }

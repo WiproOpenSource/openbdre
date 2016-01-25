@@ -97,11 +97,11 @@ public class ProcessDAOTest {
     @Test
     @Ignore
     public void testSubProcesslist() throws Exception {
-        for(Process process: processDAO.subProcesslist(1))
+        for(Process process: processDAO.subProcesslist(182))
         {
             LOGGER.info("process "+process.getProcessId() + " is "+process.getProcessName());
         }
-        LOGGER.info("Total Sub Process count is:" + processDAO.subProcesslist(1).size());
+        LOGGER.info("Total Sub Process count is:" + processDAO.subProcesslist(182).size());
     }
 
     @Test

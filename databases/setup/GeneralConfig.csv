@@ -538,3 +538,17 @@
 'scripts_config', 'oozieHost', '-','-' , 1, '${oozie_host}', 'text' , 1
 'scripts_config', 'ooziePort', '-','-' , 1, '${oozie_port}', 'text' , 1
 'scripts_config', 'logDir', '-','-' , 1, '/var/log/BDRE', 'text' , 1
+'file_format', 'delimited', 'DELIMITED','delimited file' , 1, 'delimited', 'text' , 1
+'file_format', 'xml', 'XML','XML file' , 1, 'xml', 'text' , 1
+'file_format', 'json', 'JSON','JSON file' , 1, 'json', 'text' , 1
+'file_format', 'others', 'OTHERS','other format file' , 1, 'others', 'text' , 1
+'delimited', 'serdeClass', 'Serde Class','serde class to be used' , 1, 'org.apache.hadoop.hive.serde2.lazy.LazySimpleSerDe', 'text' , 1
+'delimited', 'inputFormat', 'Input Format','input format to be used' , 1, 'org.apache.hadoop.mapred.TextInputFormat', 'text' , 1
+'delimited', 'outputFormat', 'Output Format','output format to be used' , 1, 'org.apache.hadoop.hive.ql.io.HiveIgnoreKeyTextOutputFormat', 'text' , 1
+'xml', 'serdeClass', 'Serde Class','serde class to be used' , 1, 'com.wipro.ats.bdre.io.xml.XmlSerDe', 'text' , 1
+'xml', 'inputFormat', 'Input Format','input format to be used' , 1, 'com.wipro.ats.bdre.io.xml.XmlInputFormat', 'text' , 1
+'xml', 'outputFormat', 'Output Format','output format to be used' , 1, 'org.apache.hadoop.hive.ql.io.IgnoreKeyTextOutputFormat', 'text' , 1
+'json', 'serdeClass', 'Serde Class','serde class to be used' , 1, 'com.wipro.ats.bdre.io.xml.XmlSerDe', 'text' , 1
+'json', 'inputFormat', 'Input Format','input format to be used' , 1, 'com.wipro.ats.bdre.io.xml.XmlInputFormat', 'text' , 1
+'json', 'outputFormat', 'Output Format','output format to be used' , 1, 'org.apache.hadoop.hive.ql.io.IgnoreKeyTextOutputFormat', 'text' , 1
+

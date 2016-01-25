@@ -87,6 +87,9 @@ public class InitJobInfo {
     @PersistableParam(keyName = "file-list-map")
     private Map<String, String> fileListMap = new HashMap<String, String>();
 
+    @PersistableParam(keyName = "batch-list-map")
+    private Map<String, String> batchListMap = new HashMap<String, String>();
+
     public Map<String, String> getMaxBatchMarkingMap() {
         return maxBatchMarkingMap;
     }
@@ -143,6 +146,14 @@ public class InitJobInfo {
 
     public void setTargetBatchMarkingSet(Set<String> targetBatchMarkingSet) {
         this.targetBatchMarkingSet = targetBatchMarkingSet;
+    }
+
+    public Map<String, String> getBatchListMap() {
+        return batchListMap;
+    }
+
+    public void setBatchListMap(Map<String, String> batchListMap) {
+        this.batchListMap = batchListMap;
     }
 }
 
