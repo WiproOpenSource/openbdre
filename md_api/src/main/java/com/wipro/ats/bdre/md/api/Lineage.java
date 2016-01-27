@@ -72,7 +72,7 @@ public class Lineage {
         lineageNode.setLineageNodeType(lineageNodeType);
         if (lineageNodeInfo.getContainerNodeId() != null){
             LineageNode lineageContainerNode = new LineageNode();
-            lineageContainerNode.setNodeId(lineageNodeInfo.getNodeId());
+            lineageContainerNode.setNodeId(lineageNodeInfo.getContainerNodeId());
             lineageNode.setLineageNode(lineageContainerNode);
         }
         if (lineageNodeInfo.getNodeOrder() != null){

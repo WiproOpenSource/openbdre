@@ -56,4 +56,9 @@ public class GetLineageNodeByColName extends MetadataAPIBase {
         LineageNode lineageNode = lineageNodeDAO.getTableNode(tableName);
         return lineageNode;
     }
+
+    //returns the container node
+    public String getTableDotFromNodeId (LineageNode lineageNode) {
+        return lineageNodeDAO.getContainerDot(lineageNode.getNodeId());
+    }
 }

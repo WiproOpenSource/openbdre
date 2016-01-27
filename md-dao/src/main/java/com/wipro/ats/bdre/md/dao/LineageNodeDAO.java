@@ -86,6 +86,18 @@ public class LineageNodeDAO {
         return lineageNode;
     }
 
+    //get node by nodeid
+    public String getContainerDot(String nodeid) {
+        String dotString;
+        Session session = sessionFactory.getCurrentSession();
+        session.beginTransaction();
+        Criteria getLastElementCriteria = session.createCriteria(LineageNode.class).add(Restrictions.eq("nodeId", nodeid));
+        LineageNode lineageNode = (LineageNode) getLastElementCriteria.list().get(0);
+        dotString = lineageNode.getLineageNode().getDotString();
+        session.getTransaction().commit();
+        return dotString;
+    }
+
 
     public String insert(LineageNode lineageNode) {
         Session session = sessionFactory.openSession();
