@@ -23,6 +23,7 @@ import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.FileSystem;
 import org.apache.hadoop.fs.Path;
 import org.apache.log4j.Logger;
+import org.apache.commons.io.FilenameUtils;
 
 
 import java.io.File;
@@ -87,7 +88,7 @@ public class QueuedFileUploader {
         try {
             String subProcessId = fileCopying.getSubProcessId();
             String serverId = fileCopying.getServerId();
-            String path = fileCopying.getDstLocation()+"/"+fileCopying.getFileName();
+            String path = fileCopying.getDstLocation()+"/"+FilenameUtils.getBaseName(fileCopying.getFileName());
             String fileHash = fileCopying.getFileHash();
             String fileSize = String.valueOf(fileCopying.getFileSize());
             long timeStamp = fileCopying.getTimeStamp();
