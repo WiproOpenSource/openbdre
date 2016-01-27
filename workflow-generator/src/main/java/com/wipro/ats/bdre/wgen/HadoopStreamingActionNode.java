@@ -127,7 +127,7 @@ public class HadoopStreamingActionNode extends GenericActionNode {
                 String key = (String) e.nextElement();
                 addProperty.append("               <property>\n"+
                                    "                   <name>"+key+"</name>\n" +
-                                   "                   <value>"+listForParams.getProperty(key) + "</value/>\n"+
+                                   "                   <value>"+listForParams.getProperty(key) + "</value>\n"+
                                    "               </property>\n");
 
             }

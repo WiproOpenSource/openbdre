@@ -32,6 +32,7 @@ public class InitJobRowInfo {
     private Integer processId;
     private Long sourceInstanceExecId;
     private String fileList;
+    private String batchList;
 
     public String getFileList() {
         return fileList;
@@ -107,4 +108,11 @@ public class InitJobRowInfo {
         this.maxBatch = maxBatch;
     }
 
+    public String getBatchList() {
+        return batchList;
+    }
+
+    public void setBatchList(String batchList) {
+        this.batchList = batchList;
+    }
 }

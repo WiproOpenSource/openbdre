@@ -34,6 +34,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by MR299389 on 10/16/2015.
@@ -444,7 +445,7 @@ public List<Process> createOneChildJob(Process parentProcess, Process childProce
     Session session = sessionFactory.openSession();
     Integer parentPid = null;
     Integer childPid = null;
-    List<Process> processList=new ArrayList<>();
+    List<Process> processList=new ArrayList<Process>();
     try {
         session.beginTransaction();
         parentPid = (Integer) session.save(parentProcess);
@@ -487,6 +488,86 @@ public List<Process> createOneChildJob(Process parentProcess, Process childProce
     }
     return processList;
 }
+
+    public List<Process> createDataloadJob(Process parentProcess, List<Process> childProcesses, List<Properties> parentProps, Map<Process,List<Properties>> childProps ){
+        Session session = sessionFactory.openSession();
+        Integer parentPid = null;
+        Process file2Raw = null;
+        Process raw2Stage = null;
+        Process stage2Base = null;
+        List<Process> processList=new ArrayList<Process>();
+        try {
+            session.beginTransaction();
+            parentPid = (Integer) session.save(parentProcess);
+            LOGGER.info("parent processId:"+parentPid);
+            parentProcess.setProcessId(parentPid);
+            for (Process childProcess : childProcesses){
+                childProcess.setProcess(parentProcess);
+                if (childProcess.getProcessType().getProcessTypeId() == 8){
+                    stage2Base = childProcess;
+                    stage2Base.setNextProcessId(parentPid.toString());
+                    stage2Base.setProcessId((Integer) session.save(stage2Base));
+                }else  if (childProcess.getProcessType().getProcessTypeId() == 7){
+                    raw2Stage = childProcess;
+                    raw2Stage.setNextProcessId(parentPid.toString());
+                    raw2Stage.setProcessId((Integer) session.save(raw2Stage));
+                }else  if (childProcess.getProcessType().getProcessTypeId() == 6){
+                    file2Raw = childProcess;
+                    file2Raw.setNextProcessId(parentPid.toString());
+                    file2Raw.setProcessId((Integer) session.save(file2Raw));
+                }
+            }
+
+            parentProcess.setNextProcessId(file2Raw.getProcessId().toString());
+            file2Raw.setNextProcessId(raw2Stage.getProcessId().toString());
+            raw2Stage.setNextProcessId(stage2Base.getProcessId().toString());
+
+            session.update(parentProcess);
+            session.update(file2Raw);
+            session.update(raw2Stage);
+
+            if(parentProps!=null && !parentProps.isEmpty()){
+                for(Properties properties: parentProps){
+
+                    properties.getId().setProcessId(parentPid);
+                    properties.setProcess(parentProcess);
+                    session.save(properties);
+                }
+            }
+            for(Process process : childProps.keySet()) {
+                List<Properties> childProperties = childProps.get(process);
+                if (childProperties != null && !childProperties.isEmpty()) {
+                    for (Properties properties : childProperties) {
+                        if(process.getProcessType().getProcessTypeId() == 6){
+                            properties.getId().setProcessId(file2Raw.getProcessId());
+                            properties.setProcess(file2Raw);
+                            session.save(properties);
+                        }else if(process.getProcessType().getProcessTypeId() == 7){
+                            properties.getId().setProcessId(raw2Stage.getProcessId());
+                            properties.setProcess(raw2Stage);
+                            session.save(properties);
+                        }else if(process.getProcessType().getProcessTypeId() == 8){
+                            properties.getId().setProcessId(stage2Base.getProcessId());
+                            properties.setProcess(stage2Base);
+                            session.save(properties);
+                        }
+                    }
+                }
+            }
+            processList.add(parentProcess);
+            processList.add(file2Raw);
+            processList.add(raw2Stage);
+            processList.add(stage2Base);
+            session.getTransaction().commit();
+
+        } catch (MetadataException e) {
+            session.getTransaction().rollback();
+            LOGGER.error(e);
+        } finally {
+            session.close();
+        }
+        return processList;
+    }
 
 
 }
