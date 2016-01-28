@@ -14,5 +14,5 @@ processTypeId=$2
 processId=$3
 echo $0
 #creating flume command for
-nohup $flumeLibDir/bin/flume-ng agent --conf $flumeLibDir/conf/ -f $BDRE_APPS_HOME/$busDomainId/$processTypeId/$processId/flume-$processId.conf -Dflume.root.logger=ERROR,console -n agent &
+nohup $flumeLibDir/bin/flume-ng agent --conf $flumeLibDir/conf/ -f $BDRE_APPS_HOME/$busDomainId/$processTypeId/$processId/flume-$processId.conf -Dflume.root.logger=ERROR,console -n agent > $logDir/flume-$processId.log 2> $logDir/flume-error-$processId.log &
 

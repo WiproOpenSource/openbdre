@@ -9,4 +9,4 @@ fi
 processId=$1
 echo $0
 #creating flume command for
-nohup java -cp "$BDRE_HOME/lib/file-mon/*" com.wipro.ats.bdre.filemon.FileMonRunnableMain -p $processId &
+nohup java -cp "$BDRE_HOME/lib/file-mon/*" com.wipro.ats.bdre.filemon.FileMonRunnableMain -p $processId > $logDir/file-mon-$processId.log 2> $logDir/file-mon-error-$processId.log &
