@@ -17,16 +17,16 @@ package com.wipro.ats.bdre.im.etl.api;
 import com.wipro.ats.bdre.im.IMConstant;
 import com.wipro.ats.bdre.im.etl.api.base.ETLBase;
 import com.wipro.ats.bdre.im.etl.api.exception.ETLException;
+import com.wipro.ats.bdre.md.api.GetProperties;
 import org.apache.commons.cli.CommandLine;
 import org.apache.hadoop.hive.metastore.HiveMetaStoreClient;
 import org.apache.hadoop.hive.metastore.api.FieldSchema;
-import org.apache.hadoop.hive.metastore.api.StorageDescriptor;
 import org.apache.hadoop.hive.metastore.api.Table;
 import org.apache.log4j.Logger;
 
 import java.sql.Connection;
-import java.sql.ResultSet;
 import java.sql.Statement;
+import java.util.Enumeration;
 import java.util.List;
 
 /**
@@ -37,7 +37,7 @@ public class StageLoad extends ETLBase {
     private static final Logger LOGGER = Logger.getLogger(StageLoad.class);
     private static final String[][] PARAMS_STRUCTURE = {
             {"p", "process-id", " Process id of ETLDriver"},
-            {"instExecId", "instance-exec-id", " instance exec id"},
+            {"ied", "instance-exec-id", " instance exec id"},
             {"minId", "min-batch-id", " Min batch Id"},
             {"maxId", "max-batch-id", " Max batch Id"}
     };
@@ -49,18 +49,21 @@ public class StageLoad extends ETLBase {
         String instanceExecId = commandLine.getOptionValue("instance-exec-id");
         String minId = commandLine.getOptionValue("minId");
         String maxId = commandLine.getOptionValue("maxId");
-        init(processId);
+        loadStageHiveTableInfo(processId);
+        CreateRawBaseTables createRawBaseTables =new CreateRawBaseTables();
+        String[] createTablesArgs={"-p",processId,"-instExecId",instanceExecId };
+        createRawBaseTables.executeStageLoad(createTablesArgs);
 
         //Getting Stage view information
-        String stageViewName = getRawView().getTableName();
-        String stageViewDbName = getRawView().getDbName();
+        String stageViewName = stgView;
+        String stageViewDbName = stgDb;
 
         //Getting base table info
-        String baseTableName = getBaseTable().getTableName();
-        String baseDbName = getBaseTable().getDbName();
-        String baseTableDdl = getBaseTable().getDdl();
+        String baseTableName = baseTable;
+        String baseDbName = baseDb;
+      //  String baseTableDdl = getBaseTable().getDdl();
 
-        processStageLoad(stageViewDbName, stageViewName, baseDbName, baseTableName, baseTableDdl, instanceExecId, minId, maxId);
+        processStageLoad(stageViewDbName, stageViewName, baseDbName, baseTableName,instanceExecId, minId, maxId,processId);
     }
 
     //Read the partition keys from hive table
@@ -68,7 +71,7 @@ public class StageLoad extends ETLBase {
     //output - partition column names as comma seperated;
 
 
-    private void processStageLoad(String stageDbName, String viewName, String baseDbName, String baseTableName, String baseTableDdl, String instanceExecId, String minBatchId, String maxBatchId) {
+    private void processStageLoad(String stageDbName, String viewName, String baseDbName, String baseTableName, String instanceExecId, String minBatchId, String maxBatchId,String stageLoadProcessId) {
         try {
 
             Connection rawCon = getHiveJDBCConnection(stageDbName);
@@ -80,10 +83,10 @@ public class StageLoad extends ETLBase {
             Statement baseConStatement = baseCon.createStatement();
 
             String stageTableName = baseTableName + "_"+ instanceExecId;
-            //checking if stage table exists. If not create one
+         //stage table creation moved to rawload
+            /*   //checking if stage table exists. If not create one
             String stQuery = "SHOW TABLES LIKE '" + stageTableName + "'";
             LOGGER.info("stQuery="+stQuery);
-            //TODO:Replace this with Metastore API.
             ResultSet rs = baseConStatement.executeQuery(stQuery);
 
             if (!rs.next()) {
@@ -95,14 +98,13 @@ public class StageLoad extends ETLBase {
                 storageDescriptor.setLocation(storageDescriptor.getLocation() + "_" + instanceExecId);
                 etlStageTable.setSd(storageDescriptor);
                 getMetaStoreClient().createTable(etlStageTable);
-
-            }
+            }*/
 
             LOGGER.debug("Reading fields from stage table");
-            String fieldNames = getColumnNames(baseDbName, stageTableName);
+            String fieldNames = getColumnNames(baseDbName, stageTableName,stageLoadProcessId);
             LOGGER.info("Field names in the stage are " + fieldNames);
             LOGGER.debug("Reading partitions from stage table");
-            String partitionKeys = getPartitionKeys(baseDbName,stageTableName);
+            String partitionKeys = getPartitionKeys(baseDbName,stageTableName,stageLoadProcessId);
             /** partitionKeys will contain comma, so there is no need to
              * provide FILE_FIELD_SEPERATOR after partitionKeys in query
              */
@@ -126,36 +128,51 @@ public class StageLoad extends ETLBase {
         }
     }
 
-    private String getPartitionKeys(String dbName, String tableName) throws Exception {
+    private String getPartitionKeys(String dbName, String tableName,String stageLoadProcessId) throws Exception {
 
         StringBuffer stringBuffer = new StringBuffer("");
-        String result=new String();
-        HiveMetaStoreClient hclient = getMetaStoreClient();
-        Table stageTable = hclient.getTable(dbName, tableName);
-        List<FieldSchema> partitionKeys = stageTable.getPartitionKeys();
-        LOGGER.debug("Size of List partitionKeys"+partitionKeys.size());
-        for (int i = 0; i < (partitionKeys.size()) - 1; i++){
-            stringBuffer.append(partitionKeys.get(i).getName());
-            stringBuffer.append(",");
+        String result="";
+//        HiveMetaStoreClient hclient = getMetaStoreClient();
+//        Table stageTable = hclient.getTable(dbName, tableName);
+//        List<FieldSchema> partitionKeys = stageTable.getPartitionKeys();
+//        LOGGER.debug("Size of List partitionKeys"+partitionKeys.size());
+        GetProperties getPropertiesOfRawTable = new GetProperties();
+        LOGGER.info("process is " + stageLoadProcessId);
+        java.util.Properties partitionproperties = getPropertiesOfRawTable.getProperties(stageLoadProcessId, "partition");
+        String partitions = partitionproperties.getProperty("partition_columns");
+        LOGGER.info("list of partitions is " + partitions);
+        if(!("".equals(partitions)) && !(partitions == null)) {
+            String[] partitionKeys = partitions.split(",");
+            for (int i = 0; i < (partitionKeys.length); i++) {
+                stringBuffer.append(partitionKeys[i].split(" ")[0]);
+                stringBuffer.append(",");
+            }
         }
         LOGGER.debug("Partition column is"+ stringBuffer);
         LOGGER.debug("Size of result is"+stringBuffer.length());
-       if (",".equals(stringBuffer.toString())) {
-          result= "";
-       } else {
-           result= stringBuffer.toString();
-       }
+        result = stringBuffer.toString();
+        result=result.substring(0,result.length());
+        LOGGER.info(result);
         return result;
     }
 
-    private String getColumnNames(String dbName, String tableName) throws Exception {
-        List<FieldSchema> fields = getMetaStoreClient().getFields(dbName, tableName);
+    private String getColumnNames(String dbName, String tableName,String stageLoadProcessId) throws Exception {
+//        List<FieldSchema> fields = getMetaStoreClient().getFields(dbName, tableName);
+        GetProperties getPropertiesOfRawTable = new GetProperties();
         String result="";
-        LOGGER.debug("view fields " + fields);
-        for (FieldSchema fieldSchema : fields) {
-            result += fieldSchema.getName() + ",";
+        StringBuilder columnList = new StringBuilder();
+        java.util.Properties columnValues = getPropertiesOfRawTable.getProperties(stageLoadProcessId, "base-columns");
+        Enumeration e = columnValues.propertyNames();
+        if (columnValues.size() != 0) {
+            while (e.hasMoreElements()) {
+                String key = (String) e.nextElement();
+                columnList.append(key.replaceAll("transform_",""));
+                columnList.append(",");
+            }
+            result=columnList.substring(0, columnList.length() - 1);
+            LOGGER.debug("column list = " + result);
         }
-        result = result.substring(0, result.length() - 1);
+
 
         return result;
     }

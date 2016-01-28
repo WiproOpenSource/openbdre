@@ -62,6 +62,9 @@ public class ActionNode extends OozieNode {
     public static final int CRAWLER_PARENT_ACTION = 28;
     public static final int CRAWLER_CHILD_ACTION = 29;
 
+    //Hadoop streaming action
+    public static final int HADOOP_STREAMING_ACTION=30;
+
     private ProcessInfo processInfo = new ProcessInfo();
     private List<GenericActionNode> containingNodes = new ArrayList<GenericActionNode>();
 
@@ -90,15 +93,15 @@ public class ActionNode extends OozieNode {
     public void setProcessInfo(ProcessInfo processInfo) {
         this.processInfo = processInfo;
         if (processInfo.getProcessTypeId() == RAW_LOAD_ACTION) {
-            LOFActionNode lofActionNode = new LOFActionNode(this);
-            CreateTableActionNode createTableActionNode = new CreateTableActionNode(this);
+//            LOFActionNode lofActionNode = new LOFActionNode(this);
+//            CreateTableActionNode createTableActionNode = new CreateTableActionNode(this);
             RawLoadActionNode rawLoadActionNode = new RawLoadActionNode(this);
 
-            createTableActionNode.setToNode(lofActionNode);
-            lofActionNode.setToNode(rawLoadActionNode);
+//            createTableActionNode.setToNode(lofActionNode);
+//            lofActionNode.setToNode(rawLoadActionNode);
 
-            containingNodes.add(createTableActionNode);
-            containingNodes.add(lofActionNode);
+//            containingNodes.add(createTableActionNode);
+//            containingNodes.add(lofActionNode);
             containingNodes.add(rawLoadActionNode);
 
         } else if (processInfo.getProcessTypeId() == HIVE_ACTION) {
@@ -130,7 +133,11 @@ public class ActionNode extends OozieNode {
             PigActionNode pigActionNode = new PigActionNode(this);
             containingNodes.add(pigActionNode);
 
-        } else if (processInfo.getProcessTypeId() == MAPREDUCE_ACTION) {
+        } else if (processInfo.getProcessTypeId() == HADOOP_STREAMING_ACTION) {
+            HadoopStreamingActionNode hadoopStreamingActionNode= new HadoopStreamingActionNode(this);
+            containingNodes.add( hadoopStreamingActionNode);
+
+        }else if (processInfo.getProcessTypeId() == MAPREDUCE_ACTION) {
             MRActionNode mrActionNode = new MRActionNode(this);
             containingNodes.add(mrActionNode);
         } else if (processInfo.getProcessTypeId() == FILE_REG_ACTION) {

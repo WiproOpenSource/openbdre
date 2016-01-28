@@ -367,4 +367,6 @@ git push myrepo mybranch
 ```
 
  - When you are ready to submit your contribution to the main repo, please open a [pull request](https://help.github.com/articles/creating-a-pull-request).
- - Please join the community https://groups.google.com/forum/#!forum/bdre. If you have any questions related to support etc please email to bdre-queries@googlegroups.com
+ - Please join the community https://groups.google.com/forum/#!forum/bdre. If you have any questions/suggestions please email to bdre-queries@googlegroups.com .
+
+[![Analytics](https://ga-beacon.appspot.com/UA-72345517-2/openbdre/README.md)](http://wiproopensourcepractice.github.io/openbdre/bdreimages/badge.svg)

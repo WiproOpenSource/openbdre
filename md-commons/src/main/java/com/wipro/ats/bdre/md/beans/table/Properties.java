@@ -33,7 +33,7 @@ public class Properties {
     private Integer processId;
 
     @NotNull
-    @Size(max = 10)
+    @Size(max = 128)
     private String configGroup;
     @NotNull
     @Size(max = 128)
