@@ -62,6 +62,9 @@ public class ActionNode extends OozieNode {
     public static final int CRAWLER_PARENT_ACTION = 28;
     public static final int CRAWLER_CHILD_ACTION = 29;
 
+    //Hadoop streaming action
+    public static final int HADOOP_STREAMING_ACTION=30;
+
     private ProcessInfo processInfo = new ProcessInfo();
     private List<GenericActionNode> containingNodes = new ArrayList<GenericActionNode>();
 
@@ -130,7 +133,11 @@ public class ActionNode extends OozieNode {
             PigActionNode pigActionNode = new PigActionNode(this);
             containingNodes.add(pigActionNode);
 
-        } else if (processInfo.getProcessTypeId() == MAPREDUCE_ACTION) {
+        } else if (processInfo.getProcessTypeId() == HADOOP_STREAMING_ACTION) {
+            HadoopStreamingActionNode hadoopStreamingActionNode= new HadoopStreamingActionNode(this);
+            containingNodes.add( hadoopStreamingActionNode);
+
+        }else if (processInfo.getProcessTypeId() == MAPREDUCE_ACTION) {
             MRActionNode mrActionNode = new MRActionNode(this);
             containingNodes.add(mrActionNode);
         } else if (processInfo.getProcessTypeId() == FILE_REG_ACTION) {
