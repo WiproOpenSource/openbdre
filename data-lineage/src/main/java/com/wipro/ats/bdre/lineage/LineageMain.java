@@ -182,7 +182,7 @@ public class LineageMain implements NodeProcessor {
 			case HiveParser.TOK_QUERY:
 //				System.out.println("\"got query\" = " + pt);
 				System.out.println("\nQuery " + ++subquerySeq + " parsed");
-				printDot(pt);
+				//printDot(pt);
 
 				getTableLineage(pt);
 
@@ -612,7 +612,7 @@ if(col != null && colName != null) {
 //		return ++nextId;
 //	}
 
-	private void printDot(Tree ct) {
+	/*private void printDot(Tree ct) {
 //		System.out.println("Top tree = " + ct);
 		DOTTreeGenerator gen = new DOTTreeGenerator();
 		StringTemplate st = gen.toDOT(ct);
@@ -627,7 +627,7 @@ if(col != null && colName != null) {
 			LOGGER.error("Error in writing Dot visualization", e);
 		}
 		System.out.println();
-	}
+	}*/
 
 	public void generateLineageDot(String relationDotString, LineageNode tableNode, String targetNode) {
 		// generate Dot from all tables, columns and functions

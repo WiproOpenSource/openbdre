@@ -46,7 +46,7 @@ public class Lineage {
     LineageRelationDAO lineageRelationDAO;
 
     public void insertLineageQuery(LineageQueryInfo lineageQueryInfo){
-        LineageQuery lineageQuery = new LineageQuery();
+        /*LineageQuery lineageQuery = new LineageQuery();
         lineageQuery.setQueryId(lineageQueryInfo.getQueryId());
         if (lineageQueryInfo.getQueryString() != null){
             lineageQuery.setQueryString(lineageQueryInfo.getQueryString());
@@ -61,7 +61,7 @@ public class Lineage {
         if (lineageQueryInfo.getInstanceExecId() != null){
             lineageQuery.setInstanceExecId(lineageQueryInfo.getInstanceExecId());
         }
-        lineageQueryDAO.insert(lineageQuery);
+        lineageQueryDAO.insert(lineageQuery);*/
     }
 
     public void insertLineageNode(LineageNodeInfo lineageNodeInfo){

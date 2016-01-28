@@ -27,12 +27,14 @@ import org.springframework.context.support.ClassPathXmlApplicationContext;
 
 import java.io.IOException;
 import java.util.Date;
+import java.util.UUID;
 
 /**
  * Created by jayabroto on 21-05-2015.
  */
 public class LineageProcessor {
 	private static final Logger LOGGER = Logger.getLogger(LineageProcessor.class);
+	private String id;
 
 	private String defaultHiveDbName = LineageConstants.defaultHiveDbName;              // default Hive db
 
@@ -89,7 +91,8 @@ public class LineageProcessor {
 					lineageQuery.setInstanceExecId(Long.parseLong(instanceExecId));
 					lineageQuery.setProcessId(Integer.parseInt(processId));
 					lineageQuery.setCreateTs(new Date());
-					lineageQuery.setQueryId("df");
+					id = UUID.randomUUID().toString();
+					lineageQuery.setQueryId(id);
 					LineageQueryType lineageQueryType = new LineageQueryType(1, "HIVE");
 					lineageQuery.setLineageQueryType(lineageQueryType);
 					lineageQueryDAO.insert(lineageQuery);

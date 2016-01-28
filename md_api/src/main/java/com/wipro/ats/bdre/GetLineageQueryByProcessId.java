@@ -57,7 +57,6 @@ public class GetLineageQueryByProcessId extends MetadataAPIBase {
             String pid = commandLine.getOptionValue("sub-process-id");
             LOGGER.debug("Instance exec id  is " + pid);
             List<LineageQuery> lineageQueryList = lineageQueryDAO.getLastInstanceExecLists(Integer.parseInt(pid));
-
             return lineageQueryList;
         } catch (Exception e) {
             LOGGER.error("Error occurred", e);

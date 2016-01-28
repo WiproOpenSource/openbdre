@@ -50,7 +50,12 @@ public class LineageDotGen extends BaseStructure {
         List<LineageQuery> lineageQueryList = getLineageQueryByProcessId.execute(args);
 
         for (LineageQuery lineageQuery:lineageQueryList) {
+            logger.debug("Query extracted from LineageQuery Table: " + lineageQuery.getQueryString());
+        }
+
+        for (LineageQuery lineageQuery:lineageQueryList) {
             String query = lineageQuery.getQueryString();
+
             String instanceid= lineageQuery.getInstanceExecId().toString();
 
             //to select which HiveDB to use by default

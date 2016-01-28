@@ -91,6 +91,7 @@ public class LineageRelationDAO {
         String id = null;
         try {
             session.beginTransaction();
+            //session.save(lineageRelation.getLineageQuery());
             id = (String) session.save(lineageRelation);
             session.getTransaction().commit();
         } catch (MetadataException e) {
