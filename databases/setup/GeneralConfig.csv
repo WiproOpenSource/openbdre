@@ -555,4 +555,3 @@
 'json', 'serdeClass', 'Serde Class','serde class to be used' , 1, 'com.wipro.ats.bdre.io.xml.XmlSerDe', 'text' , 1
 'json', 'inputFormat', 'Input Format','input format to be used' , 1, 'com.wipro.ats.bdre.io.xml.XmlInputFormat', 'text' , 1
 'json', 'outputFormat', 'Output Format','output format to be used' , 1, 'org.apache.hadoop.hive.ql.io.IgnoreKeyTextOutputFormat', 'text' , 1
-d
