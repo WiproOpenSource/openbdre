@@ -170,8 +170,8 @@ public class CreateRawBaseTables extends ETLBase {
             rawTableProperties = tList.substring(0, tList.length() - 1);
             LOGGER.debug("rawTableProperties = " + rawTableProperties);
             rawTableDdl += "CREATE TABLE IF NOT EXISTS " + rawTableDbName + "." + rawTableName + " ( " + rawColumnsWithDataTypes + " )" +
-                    " partitioned by (batchid bigint) ROW FORMAT SERDE 'com.wipro.ats.bdre.io.xml.XmlSerDe' WITH SERDEPROPERTIES " +
-                    " ( " + rawSerdeProperties + " ) STORED AS INPUTFORMAT 'com.wipro.ats.bdre.io.xml.XmlInputFormat' OUTPUTFORMAT 'org.apache.hadoop.hive.ql.io.IgnoreKeyTextOutputFormat' " +
+                    " partitioned by (batchid bigint) ROW FORMAT SERDE 'com.ibm.spss.hive.serde2.xml.XmlSerDe' WITH SERDEPROPERTIES " +
+                    " ( " + rawSerdeProperties + " ) STORED AS INPUTFORMAT 'com.ibm.spss.hive.serde2.xml.XmlInputFormat' OUTPUTFORMAT 'org.apache.hadoop.hive.ql.io.IgnoreKeyTextOutputFormat' " +
                     "TBLPROPERTIES ( " + rawTableProperties + " )";
             LOGGER.debug("rawTableDdl= " + rawTableDdl);
         }
@@ -265,13 +265,12 @@ public class CreateRawBaseTables extends ETLBase {
         String partitionColumns = partitionproperties.getProperty("partition_columns");
         if (partitionColumns == null) partitionColumns = "";
         baseTableDdl += "CREATE TABLE IF NOT EXISTS " + baseTableDbName + "." + baseTableName + " (" + baseColumnsWithDataTypes + ") partitioned by (" + partitionColumns + " instanceexecid bigint) stored as orc";
-        ;
+
         LOGGER.debug(baseTableDdl);
 
         String stgTableName = baseTableName + "_" + instanceExecId;
         String stgTableDdl = "";
         stgTableDdl += "CREATE TABLE IF NOT EXISTS " + baseTableDbName + "." + stgTableName + " (" + baseColumnsWithDataTypes + ") partitioned by (" + partitionColumns + " instanceexecid bigint) stored as orc";
-        ;
 
         checkAndCreateRawView(rawViewDbName, rawViewName, rawViewDdl);
         checkAndCreateStageTable(baseTableDbName, stgTableName, stgTableDdl);
