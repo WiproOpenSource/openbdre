@@ -526,7 +526,7 @@
 'scripts_config', 'bdreLinuxUserName', '-','-' , 1, '${edge_node_user_name}', 'text' , 1
 'scripts_config', 'nameNodeHostName', '-','-' , 1, '${name_node_hostname}', 'text' , 1
 'scripts_config', 'nameNodePort', '-','-' , 1, '${name_node_port}', 'text' , 1
-'scripts_config', 'jobTrackerHostName', '-','-' , 1, '${thrift_hostname}', 'text' , 1
+'scripts_config', 'jobTrackerHostName', '-','-' , 1, '${job_tracker_hostname}', 'text' , 1
 #For cloudera this is 8032
 'scripts_config', 'jobTrackerPort', '-','-' , 1, '${job_tracker_port}', 'text' , 1
 'scripts_config', 'hiveConfDir', '-','-' , 1, 'conf', 'text' , 1
