@@ -77,23 +77,25 @@ public class LineageNodeDAO {
     //get table node by the name passed
     public LineageNode getTableNode(String tableName) {
 
-        Session session = sessionFactory.getCurrentSession();
+        Session session = sessionFactory.openSession();
         session.beginTransaction();
         Criteria getLastElementCriteria = session.createCriteria(LineageNode.class).add(Restrictions.eq("displayName", tableName));
         LineageNode lineageNode = (LineageNode) getLastElementCriteria.list().get(0);
         session.getTransaction().commit();
+        session.close();
         return lineageNode;
     }
 
     //get node by nodeid
     public String getContainerDot(String nodeid) {
         String dotString;
-        Session session = sessionFactory.getCurrentSession();
+        Session session = sessionFactory.openSession();
         session.beginTransaction();
         Criteria getLastElementCriteria = session.createCriteria(LineageNode.class).add(Restrictions.eq("nodeId", nodeid));
         LineageNode lineageNode = (LineageNode) getLastElementCriteria.list().get(0);
         dotString = lineageNode.getLineageNode().getDotString();
         session.getTransaction().commit();
+        session.close();
         return dotString;
     }
 
@@ -117,11 +119,12 @@ public class LineageNodeDAO {
     public List<LineageNode> getColNodeId(String col_name) {
         Long instanceExecId;
         List<LineageNode> lineageNodeList = new ArrayList<LineageNode>();
-        Session session = sessionFactory.getCurrentSession();
+        Session session = sessionFactory.openSession();
         session.beginTransaction();
         Criteria getLastElementCriteria = session.createCriteria(LineageNode.class).add(Restrictions.eq("displayName", col_name));
         lineageNodeList = getLastElementCriteria.list();
         session.getTransaction().commit();
+        session.close();
         return lineageNodeList;
     }
 

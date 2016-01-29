@@ -55,7 +55,7 @@ public class LineageQueryDAO {
     //get Instance exec ids for the process id from LQ table
     private Long getInstanceExecIds(Integer processId) {
         Long instanceExecId = null;
-        Session session = sessionFactory.getCurrentSession();
+        Session session = sessionFactory.openSession();
         session.beginTransaction();
         Criteria getLastElementCriteria = session.createCriteria(LineageQuery.class).add(Restrictions.eq("processId", processId)).addOrder(Order.desc("instanceExecId"));
 
@@ -64,7 +64,7 @@ public class LineageQueryDAO {
             instanceExecId = lineageQuery.getInstanceExecId();
         }
         session.getTransaction().commit();
-
+        session.close();
         return instanceExecId;
     }
 

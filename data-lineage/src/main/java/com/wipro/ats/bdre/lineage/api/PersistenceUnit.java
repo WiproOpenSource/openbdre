@@ -79,7 +79,7 @@ public class PersistenceUnit extends MetadataAPIBase {
 //		LineageQueryInfo.setInstanceExecId((long)1);
 //		LineageQueryInfo.setCreateTs(new Date());
 //		s.insert("call_procedures.InsertLineageQuery", lineageQueryInfo);
-		//lineage.insertLineageQuery(lineageQueryInfo);
+		lineage.insertLineageQuery(lineageQueryInfo);
 
 
 		for (LineageNodeInfo lineageTableNode : lineageTableNodes) {

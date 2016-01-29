@@ -660,7 +660,7 @@ if(col != null && colName != null) {
 		}*/
 		middle.append("\n" + tableNode.getDotString());
 		middle.append("\n");
-		LOGGER.info("node id------"+tableNode.getNodeId());
+		//LOGGER.info("node id------"+tableNode.getNodeId());
 		middle.append("\n" + targetNode);
 		middle.append("\n");
 
