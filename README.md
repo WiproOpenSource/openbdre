@@ -154,7 +154,7 @@ You should be able to do the same in Mac or Windows but note that setting up a H
     ```
 
 2. Database Setup
-    * Execute the `dbsetup.sh` script without any parameters as shown below. In this example, we are going to use `MySQL` as BDRE backend as it's already available in the HDP Sandbox. If you would like to use another database please select it accordingly.
+    * Execute the `dbsetup.sh` script without any parameters as shown below. In this example, we are going to use **MySQL** as BDRE backend as it's already available in the HDP Sandbox. If you would like to use another database please select it accordingly.
 
     ```shell
     [openbdre@sandbox ~]# sh dbsetup.sh
@@ -192,7 +192,7 @@ You should be able to do the same in Mac or Windows but note that setting up a H
     ```
 
 3. Building
- * Now build BDRE using (note BDRE may not compile if the **settings.xml** is not passed from the command line so be sure to use the *-s* option. When building for the first time, it might take a while as maven resolves and downloads the `jar` libraries from different repositories.
+ * Now build BDRE using (note BDRE may not compile if the **settings.xml** is not passed from the command line so be sure to use the *-s* option. When building for the first time, it might take a while as maven resolves and downloads the **jar** libraries from different repositories.
 
     ```shell
     mvn -s settings.xml clean install -P hdp22
@@ -252,8 +252,8 @@ You should be able to do the same in Mac or Windows but note that setting up a H
     su - oozie -c "/usr/hdp/current/oozie-server/bin/oozie-start.sh"
     ps -ef | grep -i oozie
     ```
-* Use *Google Chrome browser* from the host machine and open `http://VM_IP:28850/mdui/pages/content.page`
-* Login using `admin/zaq1xsw2`
+* Use *Google Chrome browser* from the host machine and open **http://VM_IP:28850/mdui/pages/content.page**
+* Login using **admin/zaq1xsw2**
 
 ### Creating, Deploying and Running a Test Job
 
@@ -268,7 +268,7 @@ You should be able to do the same in Mac or Windows but note that setting up a H
 * Wait for 2 minutes and the deployment will be completed by then.
 * After the deployment is complete and in UI the status for the process is deployed (turns green).
 * Click the execution button to execute the *Import job*.
-* Check the process in Oozie console `http://VM_IP:11000/oozie`
+* Check the process in Oozie console **http://VM_IP:11000/oozie**
 * When the import job is complete start the *data load job*.
 
 # Data Ingestion
