@@ -408,6 +408,11 @@
         list.push(myObject);
 
         var myObject = new Object();
+                myObject.name=$("#dbSchema")[0].name;
+                myObject.value=$("#dbSchema")[0].value;
+                list.push(myObject);
+
+        var myObject = new Object();
         myObject.name=$("#dbHive")[0].name;
         myObject.value=$("#dbHive")[0].value;
         list.push(myObject);
@@ -562,7 +567,8 @@ isInit=true;
                   $("#dbUser")[0].name+"="+encodeURIComponent($("#dbUser")[0].value) +
                   "&"+$("#dbURL")[0].name+"="+encodeURIComponent($("#dbURL")[0].value)  +
                   "&"+$("#dbPassword")[0].name+"="+encodeURIComponent($("#dbPassword")[0].value)  +
-                  "&"+$("#dbDriver")[0].name+"="+encodeURIComponent($("#dbDriver")[0].value) ;
+                  "&"+$("#dbDriver")[0].name+"="+encodeURIComponent($("#dbDriver")[0].value) +
+                   "&"+$("#dbSchema")[0].name+"="+encodeURIComponent($("#dbSchema")[0].value) ;
 
                    $.ajax({
                           type: "GET",
@@ -626,6 +632,8 @@ isInit=true;
 						<input id = "dbPassword" onchange = "treeData=null;" name = "common_dbPassword" type = "password" class = "form-control" value = "<fmt:message key='hibernate.connection.password' />" />
 						<label for = "dbDriver" >Database Driver</label >
 						<input id = "dbDriver" onchange = "treeData=null;" name = "common_dbDriver" type = "text" class = "form-control" value = "<fmt:message key='hibernate.connection.driver_class' />" />
+						<label for = "dbSchema" >Schema</label >
+                        <input id = "dbSchema" onchange = "treeData=null;" name = "common_dbSchema" type = "text" class = "form-control" value = "<fmt:message key='hibernate.default_schema' />" />
 						<div ><br /></div >
 						<button class = "btn btn-default  btn-success" type = "button" onClick = "verifyConnection()" href = "#" >
 							Test Connection

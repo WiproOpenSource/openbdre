@@ -67,6 +67,7 @@ public class DataImportAPI extends MetadataAPIBase {
         String driverName = request.getParameter("common_dbDriver");
         String dbUser = request.getParameter("common_dbUser");
         String dbPassword = request.getParameter("common_dbPassword");
+        String dbSchema = request.getParameter("common_dbSchema");
         String busDomainId = request.getParameter("common_busDomainId");
         String processName = request.getParameter("common_processName");
         String processDescription = request.getParameter("common_processDescription");
@@ -80,6 +81,7 @@ public class DataImportAPI extends MetadataAPIBase {
         pushToIntermediate(uuid, "driver", driverName);
         pushToIntermediate(uuid, "username", dbUser);
         pushToIntermediate(uuid, "password", dbPassword);
+        pushToIntermediate(uuid, "dbSchema", dbSchema);
         pushToIntermediate(uuid, "busdomainid", busDomainId);
         pushToIntermediate(uuid, "processName",processName);
         pushToIntermediate(uuid, "processDescription",processDescription);
@@ -132,12 +134,15 @@ public class DataImportAPI extends MetadataAPIBase {
     RestWrapper getTableList(@RequestParam("common_dbURL") String connectionURL,
                              @RequestParam("common_dbUser") String dbUser,
                              @RequestParam("common_dbPassword") String dbPassword,
-                             @RequestParam("common_dbDriver") String driverClass) {
+                             @RequestParam("common_dbDriver") String driverClass,
+                             @RequestParam("common_dbSchema") String dbSchema
+                             ) {
         RestWrapper restWrapper = null;
         try {
             Class.forName(driverClass);
             conn = DriverManager.getConnection(connectionURL, dbUser, dbPassword);
-            ResultSet result = conn.getMetaData().getTables(null, null, null, null);
+
+            ResultSet result = conn.getMetaData().getTables(null,dbSchema, null, new String[]{"TABLE","VIEW"} );
 
             List<RdbmsEntity> rdbmsEntities = new ArrayList<RdbmsEntity>();
 
@@ -154,8 +159,11 @@ public class DataImportAPI extends MetadataAPIBase {
                 }
                 rdbmsEntity.setPrimaryKeyColumn(primaryKey);
                 rdbmsEntities.add(rdbmsEntity);
+                primaryKeys.close();
             }
             restWrapper = new RestWrapper(rdbmsEntities, RestWrapper.OK);
+            result.close();
+
         } catch (Exception e) {
             restWrapper = new RestWrapper(e.getMessage(), RestWrapper.ERROR);
         }
