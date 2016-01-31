@@ -44,7 +44,7 @@ The primary goal of BDRE is to accelerate Bigdata implementations by supplying t
  - File registry - can be used to register e.g. ingested files or a raw file as an output of an upstream.
  - Execution statistics logging (key/value)
  - Executed hive queries and data lineage information.
- - Java APIs that integrates with Big Data with non-Big Data applications alike.
+ - Java APIs that integrates with Big Data as well as non-Big Data applications alike.
  - Job monitoring and proactive/reactive alerting
 - Data ingestion framework
  - Tabular data from RDBMS
@@ -97,8 +97,12 @@ You should be able to do the same in Mac or Windows but note that setting up a H
 * Download and install VirtualBox from https://www.virtualbox.org/
 * Download and install Hortonworks Sandbox 2.2 Virtual Box image from http://hortonworks.com/products/releases/hdp-2-2/#install
 * Setup a 'Host-Only Adapter' for network to enable communication between Host and Guest OS.
-* Now ssh into the sandbox using *root@VM_IP* (password hadoop)
-    - The VM_IP is usually something between 192.168.56.101 - 192.168.56.109
+* Now ssh into the sandbox using 
+
+```sh
+*root@VM_IP* (password hadoop)
+```
+    - The `VM_IP` is usually something between `192.168.56.101` - `192.168.56.109`
 
 * Now create *openbdre* user account.
 
@@ -110,13 +114,13 @@ You should be able to do the same in Mac or Windows but note that setting up a H
     Retype new password:
     passwd: all authentication tokens updated successfully.
     ```
-* As root edit /etc/sudoers and allow openbdre to perform `sudo`. Below will do it
+* As root edit `/etc/sudoers` and allow openbdre to perform `sudo`. Below will do it
 
     ```shell
     echo "openbdre ALL=(ALL) NOPASSWD:ALL" >> /etc/sudoers
     ```
 
-* Login to the HDP Sandbox with the newly created openbdre user. You can perform a **su openbdre** to switch to this account. Please make sure you are not root user beyond this point.
+* Login to the HDP Sandbox with the newly created openbdre user. You can perform a `su openbdre` to switch to this account. Please make sure you are not root user beyond this point.
 
     ```shell
     [root@sandbox ~]# su openbdre
@@ -124,7 +128,7 @@ You should be able to do the same in Mac or Windows but note that setting up a H
     [openbdre@sandbox ~]$
     ```
 
-* Download Maven from a mirror, unpack and add to the PATH.
+* Download Maven from a mirror, unpack and add to the `PATH`.
 
     ```shell
     [openbdre@sandbox ~]# wget http://www.us.apache.org/dist/maven/maven-3/3.3.9/binaries/apache-maven-3.3.9-bin.zip
@@ -135,7 +139,7 @@ You should be able to do the same in Mac or Windows but note that setting up a H
 ## Building BDRE from source
 
 1. Obtain the source code
- * cd to the home directory of openbdre.
+ * `cd` to the home directory of openbdre.
 
     ```shell
     [openbdre@sandbox ~]# cd ~
@@ -147,7 +151,7 @@ You should be able to do the same in Mac or Windows but note that setting up a H
     [openbdre@sandbox ~]# git clone https://github.com/WiproOpenSourcePractice/openbdre.git
     ```
 
- * cd to the cloned source dir (so you can be in /home/openbdre/openbdre)
+ * cd to the cloned source dir (so you can be in `/home/openbdre/openbdre`)
 
     ```shell
     [openbdre@sandbox ~]# cd openbdre
