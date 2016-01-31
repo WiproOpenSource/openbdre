@@ -28,7 +28,7 @@
 # License
 Released under Apache Public License 2.0. You can get a copy of the license at http://www.apache.org/licenses/LICENSE-2.0.
 # Objective
-Big Data Ready Enterprise (BDRE)makes big data technology adoption simpler by optimizing and integrating various big data solutions and providing them under one integrated package. BDRE provides a uniﬁed framework for a Hadoop implementation that can drastically minimize development time and fast track the Hadoop implementation. It comprises a reusable framework that can be customized as per the enterprise ecosystem. The components are loosely integrated and can be de-coupled or replaced easily with alternatives.
+Big Data Ready Enterprise(BDRE) makes big data technology adoption simpler by optimizing and integrating various big data solutions and providing them under one integrated package. BDRE provides a uniﬁed framework for a Hadoop implementation that can drastically minimize development time and fast track the Hadoop implementation. It comprises a reusable framework that can be customized as per the enterprise ecosystem. The components are loosely integrated and can be de-coupled or replaced easily with alternatives.
  
 The primary goal of BDRE is to accelerate Bigdata implementations by supplying the essential frameworks that are most likely to be written from scratch. It can drastically reduce effort by eliminating hundreds of man hours in operational framework development. Big Data implementations however, require specialized skills, signiﬁcant development effort on data loading, semantic processing, DQ, code deployment across environments etc.
 
@@ -52,9 +52,9 @@ The primary goal of BDRE is to accelerate Bigdata implementations by supplying t
  - Arbitrary file ingestion by directory monitoring
 - Web Crawler
 - Distributed Data Manufacturing framework
- - Generate billons of records based on patterns and ranges
+ - Generate billions of records based on patterns and ranges
 - Semantic Layer Building Framework
- - Build the sematic layer using visual workflow creator using the data you ingested.
+ - Build the semantic layer using visual workflow creator using the data you ingested.
  - Supports Hive, Pig, MapReduce, Spark, R etc.
  - Generates Oozie workflows
 - Data Quality Framework
@@ -90,7 +90,7 @@ For production use BDRE currently supports following production scale databases.
   - PostgreSQL
 - Google Chrome browser
 
-You should be able to do the same in Mac or Windows but note that setting up a Hadoop cluster might be tricky in Windows and might more involvement. However to deploy and run the jobs we recommend a Linux system. BDRE is typically installed in Hadoop edge node in a multi-node cluster.
+You should be able to do the same in Mac or Windows but note that setting up a Hadoop cluster might be tricky in Windows and might require more involvement. However to deploy and run the jobs we recommend a Linux system. BDRE is typically installed in Hadoop edge node in a multi-node cluster.
 
 ## Preparation
 
@@ -358,7 +358,7 @@ git pull origin develop
 
  - Keep the develop branch only to have the latest main repo content. Make changes while you are in your own branch.
 
- - Synch your code with the main repo. Push the latest content pulled from the main repo to your own repo in your own branch.
+ - Sync your code with the main repo. Push the latest content pulled from the main repo to your own repo in your own branch.
 
 ```shell
 git checkout mybranch 
