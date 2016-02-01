@@ -62,7 +62,8 @@ public class DataImportAPI extends MetadataAPIBase {
     public
     @ResponseBody
     RestWrapper createJobs(HttpServletRequest request) {
-        String destDBName = request.getParameter("common_dbHive");
+        String rawDBName = request.getParameter("common_rawDBHive");
+        String baseDBName = request.getParameter("common_baseDBHive");
         String dbURL = request.getParameter("common_dbURL");
         String driverName = request.getParameter("common_dbDriver");
         String dbUser = request.getParameter("common_dbUser");
@@ -74,7 +75,8 @@ public class DataImportAPI extends MetadataAPIBase {
 
         String uuid = UUID.randomUUID().toString();
         //this goes to hive_tables , same for all tables being imported
-        pushToIntermediate(uuid, "hiveDB", destDBName);
+        pushToIntermediate(uuid, "baseHiveDB", baseDBName);
+        pushToIntermediate(uuid,"rawHiveDB",rawDBName);
         //To be pushed directly into properties table
 
         pushToIntermediate(uuid, "db", dbURL);
@@ -90,30 +92,31 @@ public class DataImportAPI extends MetadataAPIBase {
         //pushing other non variable request params
 
         Map<String, Table> tables = buildTablesFromMap(request.getParameterMap());
-        int count = 0;
+        Integer count = 0;
 
         for (Table table : tables.values()) {
             count++;
-            pushToIntermediate(uuid, "baseDDL_" + count, table.getBaseTableDDL());
-            pushToIntermediate(uuid, "rawDDL_" + count, table.getRawTableDDL());
-            pushToIntermediate(uuid, "rawViewDDL_" + count, table.getRawViewDDL());
-            pushToIntermediate(uuid, "baseTableName_" + count, table.getDestTableName() + "_base");
+
+            pushToIntermediate(uuid, "rawColumnsAndDataTypes_" + count, table.getRawTableColumnAndDataType());
+            LOGGER.info("column values are " + table.getRawTableColumnAndDataType());
+            pushToIntermediate(uuid, "baseTableName_" + count, table.getDestTableName() );
             pushToIntermediate(uuid, "rawTableName_" + count, table.getSrcTableName());
-            pushToIntermediate(uuid, "rawViewName_" + count, table.getSrcTableName() + "_view");
             pushToIntermediate(uuid, "columnList_" + count, table.getColumnList());
-            LOGGER.debug("value is " + table.getIngestOrNot());
+
+            LOGGER.info("value is " + table.getIngestOrNot());
             pushToIntermediate(uuid, "ingestOnly_" + count, table.getIngestOrNot());
             pushToIntermediate(uuid, "incrementType_" + count, table.getIncrementType());
             pushToIntermediate(uuid, "primaryKeyColumn_" + count, table.getPrimaryKeyColumn());
 
 
         }
+        pushToIntermediate(uuid, "numberOfTables" , count.toString());
 
         RestWrapper restWrapper = null;
         try {
             IntermediateInfo intermediateInfo = new IntermediateInfo();
             intermediateInfo.setUuid(uuid);
-            LOGGER.debug("uuid is = " + uuid);
+            LOGGER.info("uuid is = " + uuid);
             //Calling proc HistoryDataImport which creates the data import job and data load job
 //            List<Process> process = s.selectList("call_procedures.HistoryDataImport", intermediateInfo);
             List<Process> process = historyDataImportDAO.historyDataImport(intermediateInfo);

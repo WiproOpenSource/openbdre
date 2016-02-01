@@ -408,6 +408,7 @@
         list.push(myObject);
 
         var myObject = new Object();
+
                 myObject.name=$("#dbSchema")[0].name;
                 myObject.value=$("#dbSchema")[0].value;
                 list.push(myObject);
@@ -415,7 +416,16 @@
         var myObject = new Object();
         myObject.name=$("#dbHive")[0].name;
         myObject.value=$("#dbHive")[0].value;
+
+        myObject.name=$("#rawDBHive")[0].name;
+        myObject.value=$("#rawDBHive")[0].value;
+
         list.push(myObject);
+
+         var myObject = new Object();
+         myObject.name=$("#baseDBHive")[0].name;
+         myObject.value=$("#baseDBHive")[0].value;
+         list.push(myObject);
 
          var myObject = new Object();
             myObject.name=$("#busDomainId")[0].name;
@@ -646,16 +656,28 @@ isInit=true;
 					<table id = "tree0" class = "table-striped" width = "290px" >
 						<thead >
 						<tr >
-							<th ><label for = "dbHive" >Hive DB</label ></th >
+							<th ><label for = "rawDBHive" >RAW Hive DB</label ></th >
 						</tr >
 						</thead >
 						<tbody >
 						<tr >
 							<td >
-								<input id = "dbHive" name = "common_dbHive" type = "text" class = "form-control" size = "180" value = "base" />
+								<input id = "rawDBHive" name = "common_rawDBHive" type = "text" class = "form-control" size = "180" value = "raw" />
 							</td >
 						</tr >
 						</tbody >
+						<thead >
+                        <tr >
+                            <th ><label for = "baseDBHive" >BASE Hive DB</label ></th >
+                        </tr >
+                        </thead >
+                        <tbody >
+                        <tr >
+                            <td >
+                                <input id = "baseDBHive" name = "common_baseDBHive" type = "text" class = "form-control" size = "180" value = "base" />
+                            </td >
+                        </tr >
+                        </tbody >
 					</table >
 
 
