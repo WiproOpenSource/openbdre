@@ -634,7 +634,7 @@ if(col != null && colName != null) {
 		StringBuilder first = new StringBuilder("digraph g {\n" +
 				"graph [\n" +
 				"rankdir = \"LR\"\n" +
-				"];\n" );
+				"];\n");
 		first.append("node [\n" +
 				"fontsize = \"16\"\n" +
 				"shape = \"ellipse\"\n" +
@@ -661,9 +661,10 @@ if(col != null && colName != null) {
 		middle.append("\n" + tableNode.getDotString());
 		middle.append("\n");
 		//LOGGER.info("node id------"+tableNode.getNodeId());
-		middle.append("\n" + targetNode);
-		middle.append("\n");
-
+		if(targetNode != null) {
+			middle.append("\n" + targetNode);
+			middle.append("\n");
+		}
 		StringBuilder last = new StringBuilder();           // relations
 		/*for (Relation relation : finalRelations) {
 			if(relation.getSource() instanceof Column && relation.getDestination() instanceof Column) {
@@ -673,8 +674,12 @@ if(col != null && colName != null) {
 			else
 				last.append("\n" + relation.toDotString());
 		}*/
-		last.append("\n" + relationDotString);
-		last.append("\n}");
+		if (relationDotString != null) {
+			last.append("\n" + relationDotString);
+			last.append("\n}");
+		} else {
+			last.append("\n}");
+		}
 
 		dotString = first.append(middle).append(last).toString();
 		System.out.println("printing dot string");

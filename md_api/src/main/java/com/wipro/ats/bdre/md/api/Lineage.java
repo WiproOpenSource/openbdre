@@ -97,16 +97,20 @@ public class Lineage {
     public void insertLineageRelation (LineageRelationInfo lineageRelationInfo){
         LineageRelation lineageRelation = new LineageRelation();
         lineageRelation.setRelationId(lineageRelationInfo.getRelationId());
+
         LineageNode srcLineageNode = new LineageNode();
         srcLineageNode.setNodeId(lineageRelationInfo.getSrcNodeId());
         lineageRelation.setLineageNodeBySrcNodeId(srcLineageNode);
+
         LineageNode tagertLineageNode = new LineageNode();
         tagertLineageNode.setNodeId(lineageRelationInfo.getTargetNodeId());
         lineageRelation.setLineageNodeByTargetNodeId(tagertLineageNode);
+
         LineageQuery lineageQuery = new LineageQuery();
         lineageQuery.setQueryId(lineageRelationInfo.getQueryId());
         lineageRelation.setLineageQuery(lineageQuery);
         lineageRelation.setDotString(lineageRelationInfo.getDotString());
+
         lineageRelationDAO.insert(lineageRelation);
 
     }

@@ -79,7 +79,7 @@ public class PersistenceUnit extends MetadataAPIBase {
 //		LineageQueryInfo.setInstanceExecId((long)1);
 //		LineageQueryInfo.setCreateTs(new Date());
 //		s.insert("call_procedures.InsertLineageQuery", lineageQueryInfo);
-		lineage.insertLineageQuery(lineageQueryInfo);
+//		lineage.insertLineageQuery(lineageQueryInfo);
 
 
 		for (LineageNodeInfo lineageTableNode : lineageTableNodes) {
@@ -98,9 +98,9 @@ public class PersistenceUnit extends MetadataAPIBase {
 //			s.insert("call_procedures.InsertLineageNode", lineageConstantNode);
 			lineage.insertLineageNode(lineageConstantNode);
 		}
-		for (LineageRelationInfo LineageRelationInfo : lineageRelationInfos) {
+		for (LineageRelationInfo lineageRelationInfo : lineageRelationInfos) {
 //			s.insert("call_procedures.InsertLineageRelation", LineageRelationInfo);
-			lineage.insertLineageRelation(LineageRelationInfo);
+			lineage.insertLineageRelation(lineageRelationInfo);
 
 		}
 
