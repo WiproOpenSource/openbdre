@@ -14,14 +14,10 @@
 
 package com.wipro.ats.bdre.md.rest.ext;
 
-import com.wipro.ats.bdre.md.rest.RestWrapper;
 import com.wipro.ats.bdre.md.rest.util.Table;
-import org.junit.Ignore;
-import org.junit.Test;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.logging.Logger;
 
 
 /**
@@ -108,12 +104,5 @@ public class DataImportAPITest {
             System.out.println("table.getColumns().values().getSrcColumnName() = " + table.getColumnList());
 
         }
-    }
-
-    @Test @Ignore
-    public void testGetTableList() throws Exception {
-        DataImportAPI dataImportAPI = new DataImportAPI();
-        RestWrapper restWrapper= dataImportAPI.getTableList("jdbc:oracle:thin:@localhost:1521/xe", "BDREORACLE", "root", "oracle.jdbc.driver.OracleDriver", "BDREORACLE");
-        System.out.println("restWrapper = " + restWrapper);
     }
 }
