@@ -35,8 +35,9 @@ import java.util.regex.Pattern;
  */
 public class GetDotForTable {
     protected static final Logger logger = LoggerFactory.getLogger(GetDotForTable.class);
+    private String dotString;
 
-    public static void main(String args[]) {
+    public String dotGenerator(String args[]) {
 
         GetDotForTable getDotForTable = new GetDotForTable();
         GetNodeIdForLineageRelation getNodeIdForLineageRelation = new GetNodeIdForLineageRelation();
@@ -64,7 +65,7 @@ public class GetDotForTable {
                     relationDot = lineageRelationList.get(0).getDotString();                                            //search for target table name in the DOT string
                     String targetTableNode = getLineageNodeByColName.getTableDotFromNodeId(lineageRelationList.get(0).getLineageNodeByTargetNodeId());
                     logger.info("relation DOT: \n" + relationDot);
-                    lineageMain.generateLineageDot(relationDot, srcTableNode, targetTableNode);                         //call lineage main to create the DOT
+                    dotString = lineageMain.generateLineageDot(relationDot, srcTableNode, targetTableNode);                         //call lineage main to create the DOT
                 }
 
             }
@@ -74,8 +75,10 @@ public class GetDotForTable {
             logger.info("Generating DOT for table");
             getLineageNodeByColName = new GetLineageNodeByColName();
             LineageNode srcTableNode = getLineageNodeByColName.getTableDotFromTableName(srcTableName);
-            lineageMain.generateLineageDot(null, srcTableNode, null);
+            dotString = lineageMain.generateLineageDot(null, srcTableNode, null);
         }
+
+        return dotString;
     }
 
     private List<LineageNode> getLineageNodeNodeId (String col) {

@@ -54,14 +54,14 @@ public class TableColumnLineageAPI extends MetadataAPIBase {
         RestWrapper restWrapper = null;
         try {
             GetLineageByBatch getLineageByBatch = new GetLineageByBatch();
+            //insert args as received from the jsp
             String[] args = {"-col", batchId};
             GetDotForTable getDotForTable = new GetDotForTable();
-            getDotForTable.main(args);
-            StringBuffer dot = new StringBuffer();
 
+            String dot = getDotForTable.dotGenerator(args);;
 
             LineageInfo lineageInfo = new LineageInfo();
-            lineageInfo.setDot(dot.toString());
+            lineageInfo.setDot(dot);
             lineageInfo.setBatchId(batchId);
             restWrapper = new RestWrapper(lineageInfo, RestWrapper.OK);
             LOGGER.info("Record with ID:" + batchId + " selected(getbyBatch) from Lineage by User:" + principal.getName());
