@@ -28,8 +28,7 @@
 # License
 Released under Apache Public License 2.0. You can get a copy of the license at http://www.apache.org/licenses/LICENSE-2.0.
 # Objective
-Big Data Ready Enterprise (BDRE)makes big data technology adoption simpler by optimizing and integrating various big data solutions and providing them under one integrated package. BDRE provides a uniﬁed framework for a Hadoop implementation that can drastically minimize development time and fast track the Hadoop implementation. It comprises a reusable framework that can be customized as per the enterprise ecosystem. The components are loosely integrated and can be de-coupled or replaced easily with alternatives.
-
+Big Data Ready Enterprise(BDRE) makes big data technology adoption simpler by optimizing and integrating various big data solutions and providing them under one integrated package. BDRE provides a uniﬁed framework for a Hadoop implementation that can drastically minimize development time and fast track the Hadoop implementation. It comprises a reusable framework that can be customized as per the enterprise ecosystem. The components are loosely integrated and can be de-coupled or replaced easily with alternatives.
 
 The primary goal of BDRE is to accelerate Bigdata implementations by supplying the essential frameworks that are most likely to be written from scratch. It can drastically reduce effort by eliminating hundreds of man hours in operational framework development. Big Data implementations however, require specialized skills, signiﬁcant development effort on data loading, semantic processing, DQ, code deployment across environments etc.
 
@@ -350,7 +349,7 @@ git commit -am "My changes"
 git push myrepo mybranch
 ```
 
- - Everyday better pull from the main repo(origin) and sync your repo with it.
+ - You should pull from the main repo(origin) regulary and sync it your repo.
 
 ```shell
 git checkout develop
@@ -370,6 +369,6 @@ git push myrepo mybranch
  - When you are ready to submit your contribution to the main repo, please open a [pull request](https://help.github.com/articles/creating-a-pull-request).
  - Please join the community https://groups.google.com/forum/#!forum/bdre. If you have any questions/suggestions please email to bdre-queries@googlegroups.com .
  - If you want to report a bug or work on something. Please sign up at https://openbdre.atlassian.net
- 
- 
+
+
 [![Analytics](https://ga-beacon.appspot.com/UA-72345517-2/openbdre/README.md)](http://wiproopensourcepractice.github.io/openbdre/bdreimages/badge.svg)
