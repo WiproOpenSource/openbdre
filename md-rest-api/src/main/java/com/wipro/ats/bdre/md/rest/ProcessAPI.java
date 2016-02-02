@@ -15,6 +15,7 @@
 package com.wipro.ats.bdre.md.rest;
 
 import com.wipro.ats.bdre.MDConfig;
+import com.wipro.ats.bdre.md.api.Export;
 import com.wipro.ats.bdre.md.api.base.MetadataAPIBase;
 import com.wipro.ats.bdre.md.beans.ExecutionInfo;
 import com.wipro.ats.bdre.md.beans.table.Process;
@@ -39,7 +40,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
-import java.io.File;
+import java.io.*;
 import java.lang.reflect.Field;
 import java.security.Principal;
 import java.util.ArrayList;
@@ -371,7 +372,7 @@ public class ProcessAPI extends MetadataAPIBase {
                        @PathVariable("id") Integer processId
     ) {
         RestWrapper restWrapper = null;
-        resp.setHeader("Content-Disposition", "attachment; filename=" + processId + ".json");
+        //resp.setHeader("Content-Disposition", "attachment; filename=" + processId + ".json");
         try {
             Process process = new Process();
             process.setProcessId(processId);
@@ -428,6 +429,112 @@ public class ProcessAPI extends MetadataAPIBase {
         }
         return restWrapper;
     }
+
+
+
+
+    @RequestMapping(value = {"/zippedexport/{id}", "/zippedexport/{id}/"}, method = RequestMethod.GET)
+    public
+    @ResponseBody
+    RestWrapper zippedexport(HttpServletResponse resp,
+                       @PathVariable("id") Integer processId
+    ) {
+        RestWrapper restWrapper = null;
+        ProcessExport processExport = new ProcessExport();
+        //resp.setHeader("Content-Disposition", "attachment; filename=" + processId + ".json");
+        try {
+            Process process = new Process();
+            process.setProcessId(processId);
+//            List<Process> processList = s.selectList("call_procedures.select-parent-sub-process-list", process);
+//            List<Properties> propertiesList = s.selectList("call_procedures.select-properties-list", process);
+            List<Process> processList = new ArrayList<Process>();
+            List<com.wipro.ats.bdre.md.dao.jpa.Process> daoProcessList = processDAO.selectProcessList(processId);
+            for (com.wipro.ats.bdre.md.dao.jpa.Process daoProcess : daoProcessList) {
+                Process tableProcess = new Process();
+                tableProcess.setProcessId(daoProcess.getProcessId());
+                tableProcess.setBusDomainId(daoProcess.getBusDomain().getBusDomainId());
+                if (daoProcess.getWorkflowType() != null) {
+                    tableProcess.setWorkflowId(daoProcess.getWorkflowType().getWorkflowId());
+                }
+                tableProcess.setDescription(daoProcess.getDescription());
+                tableProcess.setProcessName(daoProcess.getProcessName());
+                tableProcess.setProcessTypeId(daoProcess.getProcessType().getProcessTypeId());
+                if (daoProcess.getProcess() != null) {
+                    tableProcess.setParentProcessId(daoProcess.getProcess().getProcessId());
+                }
+                tableProcess.setCanRecover(daoProcess.getCanRecover());
+                if (daoProcess.getProcessTemplate() != null) {
+                    tableProcess.setProcessTemplateId(daoProcess.getProcessTemplate().getProcessTemplateId());
+                }
+                tableProcess.setEnqProcessId(daoProcess.getEnqueuingProcessId());
+                tableProcess.setNextProcessIds(daoProcess.getNextProcessId());
+                tableProcess.setBatchPattern(daoProcess.getBatchCutPattern());
+                if (daoProcess.getBatchCutPattern() != null) {
+                    tableProcess.setTableAddTS(DateConverter.dateToString(daoProcess.getAddTs()));
+                }
+                tableProcess.setTableEditTS(DateConverter.dateToString(daoProcess.getEditTs()));
+                tableProcess.setDeleteFlag(daoProcess.getDeleteFlag());
+                processList.add(tableProcess);
+            }
+            List<Properties> propertiesList = new ArrayList<Properties>();
+            com.wipro.ats.bdre.md.dao.jpa.Process process1 = new com.wipro.ats.bdre.md.dao.jpa.Process();
+            process1.setProcessId(processId);
+            List<com.wipro.ats.bdre.md.dao.jpa.Properties> daoPropertiesList = propertiesDAO.getByProcessId(process1);
+            for (com.wipro.ats.bdre.md.dao.jpa.Properties daoProperties : daoPropertiesList) {
+                Properties tableProperties = new Properties();
+                tableProperties.setProcessId(daoProperties.getProcess().getProcessId());
+                tableProperties.setConfigGroup(daoProperties.getConfigGroup());
+                tableProperties.setKey(daoProperties.getId().getPropKey());
+                tableProperties.setValue(daoProperties.getPropValue());
+                tableProperties.setDescription(daoProperties.getDescription());
+                propertiesList.add(tableProperties);
+            }
+
+            processExport.setProcessList(processList);
+            processExport.setPropertiesList(propertiesList);
+            Export export=new Export();
+            String zippedFileLocatin=export.compress(processId.toString(),processExport);
+            LOGGER.info("zippedfile location is "+zippedFileLocatin);
+
+
+
+
+            String fileName = "";
+            String fileType = "";
+            // Find this file id in database to get file name, and file type
+
+            // You must tell the browser the file type you are going to send
+            // for example application/pdf, text/plain, text/html, image/jpg
+            resp.setContentType("application/zip");
+
+            // Make sure to show the download dialog
+            resp.setHeader("Content-Disposition", "attachment; filename=" + processId + ".zip");
+
+            // Assume file name is retrieved from database
+            // For example D:\\file\\test.pdf
+
+            File my_file = new File(zippedFileLocatin);
+
+            // This should send the file to browser
+            OutputStream out = resp.getOutputStream();
+            FileInputStream in = new FileInputStream(my_file);
+            byte[] buffer = new byte[4096];
+            int length;
+            while ((length = in.read(buffer)) > 0){
+                out.write(buffer, 0, length);
+            }
+            in.close();
+                out.flush();
+            restWrapper = new RestWrapper(processExport, RestWrapper.OK);
+            }
+        catch (Exception e) {
+            restWrapper = new RestWrapper(e.getMessage(), RestWrapper.ERROR);
+        }
+        return restWrapper;
+    }
+
+
+
 
 
     @RequestMapping(value = {"/import", "/import/"}, method = RequestMethod.POST)

@@ -7,6 +7,9 @@
 <html >
 	<head >
 		<meta http-equiv = "Content-Type" content = "text/html; charset=UTF-8" >
+
+
+
 	<script>
 	  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
 	  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
@@ -16,8 +19,12 @@
 	  ga('create', 'UA-72345517-1', 'auto');
 	  ga('send', 'pageview');
 	</script>
-
+          <script src="../js/angular.min.js" type="text/javascript"></script>
 		<script src = "../js/jquery.min.js" ></script >
+		<script src="../js/fc/app.js" type="text/javascript"></script>
+		 <!--Ajax calls Code. -->
+        <script type="text/javascript" src="../js/fc/wfd-ac.js"></script>
+
 		<link href = "../css/jquery-ui-1.10.3.custom.css" rel = "stylesheet" >
 		<link href = "../css/css/bootstrap.min.css" rel = "stylesheet" />
 		<script src = "../js/jquery-ui-1.10.3.custom.js" ></script >
@@ -271,6 +278,39 @@
                             }
               </script>
               <script>
+                var uploadedFileName ="";
+              function uploadZip (subDir,fileId){
+             var arg= [subDir,fileId];
+               var fd = new FormData();
+              		                var fileObj = $("#"+arg[1])[0].files[0];
+                                      var fileName=fileObj.name;
+                                      fd.append("file", fileObj);
+                                      fd.append("name", fileName);
+                                      $.ajax({
+                                        url: '/mdrest/filehandler/uploadzip/'+arg[0],
+                                        type: "POST",
+                                        data: fd,
+                                        async: false,
+                                        enctype: 'multipart/form-data',
+                                        processData: false,  // tell jQuery not to process the data
+                                        contentType: false,  // tell jQuery not to set contentType
+                                        success:function (data) {
+                                              uploadedFileName=data.Record.fileName;
+                                              console.log( data );
+                                              console.log(uploadedFileName);
+                                              returnObject=data;
+              							},
+              						  error: function () {
+              							    returnObject=false;
+              							}
+              						 });
+
+              }
+
+
+
+              </script>
+              <script>
               function displayProcess (records){
                         console.log(records);
                         $('#ProcessContainer').jtable(
@@ -402,14 +442,16 @@
                                 }
                        </script>
 				<div id = "bdre-dataload" ng-controller = "myCtrl" >
-				<h3 >Json Input</h3 >
+				<h3 >Zip File Upload</h3 >
 				<section >
-					<div >
-					<textarea  placeholder="Please paste your Json here" rows="13.7" cols="130"  id="jsonTextArea" wrap="soft"></textarea>
+					<div class="col-sm-2">
+					<input type="file" name="file" class="form-control" id="zip-id" required>
 					<div ><br /></div >
-					<button class = "btn btn-default  btn-success" type = "button" onClick = "verifyIfJson()" href = "#" >
-					Validate JSON
-					</button >
+					 <button type="button" class="btn btn-sm btn-primary pull-right" onClick="uploadZip('zip','zip-id')">Upload ZIP</button>
+
+					 <button class = "btn btn-warning  btn-success" type = "button" onClick = "ImportFromJson()" href = "#" >
+                     					Import JSON Data
+                     				</button >
 					</div >
 				</section >
 
@@ -430,6 +472,10 @@
 					Import JSON Data
 				</button >
 				<br />
+
+
+
+
 				</section >
                 <h3 >Imported Details</h3 >
                 <section>
