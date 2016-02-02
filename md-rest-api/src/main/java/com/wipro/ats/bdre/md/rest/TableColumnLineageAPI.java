@@ -14,6 +14,7 @@
 
 package com.wipro.ats.bdre.md.rest;
 
+import com.wipro.ats.bdre.lineage.GetDotForTable;
 import com.wipro.ats.bdre.md.api.GetLineageByBatch;
 import com.wipro.ats.bdre.md.api.GetLineageByInstanceExec;
 import com.wipro.ats.bdre.md.api.base.MetadataAPIBase;
@@ -53,8 +54,9 @@ public class TableColumnLineageAPI extends MetadataAPIBase {
         RestWrapper restWrapper = null;
         try {
             GetLineageByBatch getLineageByBatch = new GetLineageByBatch();
-            String[] args = {"-bid", batchId};
+            String[] args = {"-col", batchId};
             GetDotForTable getDotForTable = new GetDotForTable();
+            getDotForTable.main(args);
             StringBuffer dot = new StringBuffer();
 
 
