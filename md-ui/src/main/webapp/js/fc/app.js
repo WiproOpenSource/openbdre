@@ -417,17 +417,40 @@ $scope.uploadFile = function(processId,parentProcessId,subDir,cg) {
                  alertBox('info', 'File uploaded :'+dataRecord.Record.fileName+','+'size:'+(dataRecord.Record.fileSize/1024).toFixed(2)+'KB'+' and new property added');
          }
          }
-         else {
-         console.log(cg);
-         var property = propertiesAC('/mdrest/properties/', 'DELETE', [processId,'scriptPath']);
-         var putData = "configGroup="+cg+"&key="+'scriptPath'+"&value="+subDir+'/'+dataRecord.Record.fileName+"&description="+'File path'+"&processId="+processId;
-         cfgDetails = propertiesAC('/mdrest/properties/', 'PUT', putData);
-        $.get('/mdrest/properties/'+processId, function(getdata) {
-            $scope.chartViewModel.selectedProcessProps = getdata.Record;
-        });
-        $scope.getKeyValue(cfgDetails);
-        alertBox('info', 'File uploaded :'+dataRecord.Record.fileName+','+'size:'+(dataRecord.Record.fileSize/1024).toFixed(2)+'KB'+' and new property added');
-}
+
+       else if(cg=='mapper'){
+             console.log(cg);
+             var property = propertiesAC('/mdrest/properties/', 'DELETE', [processId,'mapper']);
+             var putData = "configGroup="+cg+"&key="+'mapperPath'+"&value="+subDir+'/'+dataRecord.Record.fileName+"&description="+'File path'+"&processId="+processId;
+             cfgDetails = propertiesAC('/mdrest/properties/', 'PUT', putData);
+            $.get('/mdrest/properties/'+processId, function(getdata) {
+                $scope.chartViewModel.selectedProcessProps = getdata.Record;
+            });
+            $scope.getKeyValue(cfgDetails);
+            alertBox('info', 'File uploaded :'+dataRecord.Record.fileName+','+'size:'+(dataRecord.Record.fileSize/1024).toFixed(2)+'KB'+' and new property added');
+            }
+       else if(cg=='reducer'){
+             console.log(cg);
+             var property = propertiesAC('/mdrest/properties/', 'DELETE', [processId,'reducer']);
+             var putData = "configGroup="+cg+"&key="+'reducerPath'+"&value="+subDir+'/'+dataRecord.Record.fileName+"&description="+'File path'+"&processId="+processId;
+             cfgDetails = propertiesAC('/mdrest/properties/', 'PUT', putData);
+            $.get('/mdrest/properties/'+processId, function(getdata) {
+                $scope.chartViewModel.selectedProcessProps = getdata.Record;
+            });
+            $scope.getKeyValue(cfgDetails);
+            alertBox('info', 'File uploaded :'+dataRecord.Record.fileName+','+'size:'+(dataRecord.Record.fileSize/1024).toFixed(2)+'KB'+' and new property added');
+            }
+     else {
+             console.log(cg);
+             var property = propertiesAC('/mdrest/properties/', 'DELETE', [processId,'scriptPath']);
+             var putData = "configGroup="+cg+"&key="+'scriptPath'+"&value="+subDir+'/'+dataRecord.Record.fileName+"&description="+'File path'+"&processId="+processId;
+             cfgDetails = propertiesAC('/mdrest/properties/', 'PUT', putData);
+            $.get('/mdrest/properties/'+processId, function(getdata) {
+                $scope.chartViewModel.selectedProcessProps = getdata.Record;
+            });
+            $scope.getKeyValue(cfgDetails);
+            alertBox('info', 'File uploaded :'+dataRecord.Record.fileName+','+'size:'+(dataRecord.Record.fileSize/1024).toFixed(2)+'KB'+' and new property added');
+            }
     }
     else {
         alertBox('warning', 'File upload failed');

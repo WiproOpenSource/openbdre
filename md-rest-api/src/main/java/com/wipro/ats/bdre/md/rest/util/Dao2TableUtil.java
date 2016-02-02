@@ -47,7 +47,7 @@ public class Dao2TableUtil {
     }
 
     public static List<com.wipro.ats.bdre.md.beans.table.Process> jpaList2TableProcessList(List<com.wipro.ats.bdre.md.dao.jpa.Process> jpaProcessList) {
-        List<com.wipro.ats.bdre.md.beans.table.Process> tableProcessList = new ArrayList<>();
+        List<com.wipro.ats.bdre.md.beans.table.Process> tableProcessList = new ArrayList<com.wipro.ats.bdre.md.beans.table.Process>();
         for (com.wipro.ats.bdre.md.dao.jpa.Process jpaProcess : jpaProcessList) {
             tableProcessList.add(jpa2TableProcess(jpaProcess));
         }
