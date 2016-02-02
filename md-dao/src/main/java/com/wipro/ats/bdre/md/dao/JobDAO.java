@@ -445,6 +445,7 @@ public class JobDAO {
         } catch (MetadataException e) {
             session.getTransaction().rollback();
             LOGGER.error(e);
+            throw e;
         } finally {
             session.close();
         }
@@ -606,6 +607,7 @@ public class JobDAO {
         } catch (MetadataException e) {
             session.getTransaction().rollback();
             LOGGER.error(e);
+            throw e;
         } finally {
             session.close();
         }
@@ -681,6 +683,7 @@ public class JobDAO {
         } catch (MetadataException e) {
             session.getTransaction().rollback();
             LOGGER.error(e);
+            throw e;
         } finally {
             session.close();
         }
