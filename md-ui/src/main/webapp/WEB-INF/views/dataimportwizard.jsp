@@ -408,19 +408,14 @@
         list.push(myObject);
 
         var myObject = new Object();
-
-                myObject.name=$("#dbSchema")[0].name;
-                myObject.value=$("#dbSchema")[0].value;
-                list.push(myObject);
+        myObject.name=$("#dbSchema")[0].name;
+        myObject.value=$("#dbSchema")[0].value;
+        list.push(myObject);
 
         var myObject = new Object();
-        myObject.name=$("#dbHive")[0].name;
-        myObject.value=$("#dbHive")[0].value;
-
         myObject.name=$("#rawDBHive")[0].name;
         myObject.value=$("#rawDBHive")[0].value;
-
-        list.push(myObject);
+       list.push(myObject);
 
          var myObject = new Object();
          myObject.name=$("#baseDBHive")[0].name;
