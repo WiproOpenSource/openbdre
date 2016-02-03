@@ -38,14 +38,14 @@
 
                     var set = new StringSet();
 
-                    function getIed(ied) {
-                        //do not reload if the dependency graph for this ied is already rendered.
-                        if (set.contains(ied)) {
+                    function getTableName(tableName) {
+                        //do not reload if the dependency graph for this tableName is already rendered.
+                        if (set.contains(tableName)) {
                             return false;
                         }
-                        set.add(ied);
+                        set.add(tableName);
                         $.ajax({
-                            url: "/mdrest/lineage?ied=" + ied,
+                            url: "/mdrest/lineage?tableName=" + tableName,
                             type: "GET",
                             cache: false,
                             success: function (getData) {
@@ -54,14 +54,14 @@
                             }
                         });
                     }
-                    function getBid(bid) {
-                        //do not reload if the dependency graph for this bid is already rendered.
-                        if (set.contains(bid)) {
+                    function getColName(colName) {
+                        //do not reload if the dependency graph for this colName is already rendered.
+                        if (set.contains(colName)) {
                             return false;
                         }
-                        set.add(bid);
+                        set.add(colName);
                         $.ajax({
-                            url: "/mdrest/lineage/bybatch/" + bid,
+                            url: "/mdrest/lineage/bycolumn/" + colName,
                             type: "GET",
                             cache: false,
                             success: function (getData) {
@@ -243,9 +243,9 @@
                         });
                     }
 
-                    <c:if test="${not empty param.ied}">
+                    <c:if test="${not empty param.tableName}">
                         $(document).ready(function () {
-                            getIed(${param.ied});
+                            getTableName(${param.tableName});
                         });
                     </c:if>
                 </script>
@@ -255,11 +255,12 @@
                 <br/>
 
                 <button type='button' class='btn btn-primary' aria-label='Left Align' onClick='saveSVG("execution",0)'><span class='glyphicon glyphicon-save' aria-hidden='true'></span>Save</button>
-                <c:if test="${empty param.ied}">
+                <c:if test="${empty param.tableName}">
                     <section>
-                        Instance Exec Id: <input type="number" name="ied" id="ied" value =""/>
+                        Table Name is: <input type="number" name="tableName" id="tableName" value =""/>
+                        Column Name is: <input type="number" name="colName" id="colName" value =""/>
                         <button onClick="resetGraph();
-                                         getIed(jQuery('#ied').val())" href="#">Show Lineage</button>
+                                         getTableName(jQuery('#tableName').val(), jQuery('#colName').val())" href="#">Show Lineage</button>
                     </section>
                 </c:if>
                 <div id="graphviz_svg_div" style="width:100%;text-align:left;">
