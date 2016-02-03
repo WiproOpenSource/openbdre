@@ -119,6 +119,7 @@ public class StepDAO {
         } catch (MetadataException e) {
             session.getTransaction().rollback();
             LOGGER.error("Error occurred", e);
+            throw e;
         } finally {
             session.close();
         }
@@ -200,6 +201,7 @@ public class StepDAO {
         } catch (MetadataException e) {
             session.getTransaction().rollback();
             LOGGER.error("Error occurred", e);
+            throw e;
         } finally {
             session.close();
         }
@@ -296,6 +298,7 @@ public class StepDAO {
         } catch (MetadataException e) {
             session.getTransaction().rollback();
             LOGGER.error("Error occurred", e);
+            throw e;
         } finally {
             session.close();
         }

@@ -60,8 +60,9 @@ public class JobDAO {
             parentProcess.setProcessId(processId);
             maxBatchNullCheckCriteria.add(Restrictions.eq("process", parentProcess)).add(Restrictions.ne("enqueuingProcessId", 0)).add(Restrictions.eq("deleteFlag", false));
             Integer countOfProcWithBCP = maxBatchNullCheckCriteria.list().size();
-            maxBatchNullCheckCriteria.add(Restrictions.isNotNull("batchCutPattern"));
-            Integer countOfProcWithOutBCP = maxBatchNullCheckCriteria.list().size();
+            Criteria batchCutPatternCriteria= session.createCriteria(Process.class).add(Restrictions.eq("process", parentProcess)).add(Restrictions.ne("enqueuingProcessId", 0)).add(Restrictions.eq("deleteFlag", false))
+                    .add(Restrictions.isNotNull("batchCutPattern"));
+            Integer countOfProcWithOutBCP = batchCutPatternCriteria.list().size();
             if (countOfProcWithOutBCP < countOfProcWithBCP) {
                 if (maxBatch == null) {
                     LOGGER.error("max_batch cannot be null");
@@ -169,11 +170,9 @@ public class JobDAO {
 
             // BatchCheck Proc Implementation
             Integer batchesPresent = null;
-            for (Object batchCheckObject : maxBatchNullCheckCriteria.list()) {
+            for (Object batchCheckObject : batchCutPatternCriteria.list()) {
                 Process batchCheckProcess = (Process) batchCheckObject;
-                Criteria batchCheckSubProcess = session.createCriteria(Process.class).add(Restrictions.eq("processId", batchCheckProcess.getProcessId())).add(Restrictions.eq("deleteFlag", false));
-                Process batchCutPatternProcess = (Process) batchCheckSubProcess.list().get(0);
-                String batchCutPattern = batchCutPatternProcess.getBatchCutPattern();
+                String batchCutPattern = batchCheckProcess.getBatchCutPattern();
                 Criteria batchCheckCriteria = session.createCriteria(BatchConsumpQueue.class).add(Restrictions.like("batchMarking", "%" + batchCutPattern + "%"));
                 if (batchCheckCriteria.list().size() == 0) {
                     batchesPresent = 0;
@@ -428,8 +427,15 @@ public class JobDAO {
                     }
                     Criteria fileBatchCriteria = session.createCriteria(File.class).add(Restrictions.eq("id.batchId", resultBCQ.getBatchBySourceBatchId().getBatchId()));
                     if (fileBatchCriteria.list().size() > 0) {
-                        File fileBatch = (File) fileBatchCriteria.list().get(0);
-                        initJobRowInfo.setFileList(fileBatch.getId().getPath());
+                        StringBuilder fileList=new StringBuilder();
+                        StringBuilder batchList=new StringBuilder();
+                        for(Object fileBatch:fileBatchCriteria.list()) {
+                            File file = (File)fileBatch;
+                            fileList.append(file.getId().getPath()+",");
+                            batchList.append(file.getId().getBatchId()+",");
+                        }
+                        initJobRowInfo.setFileList(fileList.substring(0,fileList.length()-1).toString());
+                        initJobRowInfo.setBatchList(batchList.substring(0,batchList.length()-1).toString());
                     }
                     initJobRowInfos.add(initJobRowInfo);
                 }
@@ -439,6 +445,7 @@ public class JobDAO {
         } catch (MetadataException e) {
             session.getTransaction().rollback();
             LOGGER.error(e);
+            throw e;
         } finally {
             session.close();
         }
@@ -600,6 +607,7 @@ public class JobDAO {
         } catch (MetadataException e) {
             session.getTransaction().rollback();
             LOGGER.error(e);
+            throw e;
         } finally {
             session.close();
         }
@@ -675,6 +683,7 @@ public class JobDAO {
         } catch (MetadataException e) {
             session.getTransaction().rollback();
             LOGGER.error(e);
+            throw e;
         } finally {
             session.close();
         }
