@@ -950,7 +950,7 @@
                                             dataType: 'json',
                                             success: function(data) {
                                                 $dfd.resolve(data);
-                                                location.href = '<c:url value="/pages/process.page?"/>';
+                                                 $('div#Container').jtable('load');
                                             },
 
                                             error: function() {
@@ -994,10 +994,13 @@
                         }
 
                     </script>
+                    <script type="text/javascript">
+                         var auto = setInterval(    function ()
+                         {
+                               $('div#Container').jtable('load');
+                         }, 60000);
+                    </script>
 
-                   <script type="text/javascript">
-                       setInterval('window.location.reload()', 60000);
-                   </script>
             </head>
 
             <body>
