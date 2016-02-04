@@ -1,29 +1,18 @@
 # Bigdata Ready Enterprise Open Source Software
-
 ## Table of Contents
 
 [License](#license)
-***
 [Objective](#objective)
-***
 [Features](#features)
-***
 [Architecture](#architecture)
-***
 [Installation](#installation)
-***
-[Data Ingestion](#data-ingestion)
-***
-[Workflow Builder](#workflow-builder)
-***
-[Bulk Data Manufacturing](#bulk-data-manufacturing)
-***
-[Web Crawler](#web-crawler)
-***
+[Demo videos](#data-ingestion)
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [Data Ingestion](#data-ingestion)
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [Workflow Builder](#workflow-builder)
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [Bulk Data Manufacturing](#bulk-data-manufacturing)
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [Web Crawler](#web-crawler)
 [Operational Metadata Management](#operational-metadata-management)
-***
 [How To Contribute](#how-to-contribute)
-***
 
 # License
 Released under Apache Public License 2.0. You can get a copy of the license at http://www.apache.org/licenses/LICENSE-2.0.
@@ -44,7 +33,7 @@ The primary goal of BDRE is to accelerate Bigdata implementations by supplying t
  - File registry - can be used to register e.g. ingested files or a raw file as an output of an upstream.
  - Execution statistics logging (key/value)
  - Executed hive queries and data lineage information.
- - Java APIs that integrates with Big Data as well as non-Big Data applications alike.
+ - Java APIs that integrates with Big Data with non-Big Data applications alike.
  - Job monitoring and proactive/reactive alerting
 - Data ingestion framework
  - Tabular data from RDBMS
@@ -98,7 +87,7 @@ You should be able to do the same in Mac or Windows but note that setting up a H
 * Download and install Hortonworks Sandbox 2.2 Virtual Box image from http://hortonworks.com/products/releases/hdp-2-2/#install
 * Setup a 'Host-Only Adapter' for network to enable communication between Host and Guest OS.
 * Now ssh into the sandbox using *root@VM_IP* (password hadoop)
-    - The `VM_IP` is usually something between `192.168.56.101` - `192.168.56.109`
+    - The VM_IP is usually something between 192.168.56.101 - 192.168.56.109
 
 * Now create *openbdre* user account.
 
@@ -135,7 +124,7 @@ You should be able to do the same in Mac or Windows but note that setting up a H
 ## Building BDRE from source
 
 1. Obtain the source code
- * `cd` to the home directory of openbdre.
+ * cd to the home directory of openbdre.
 
     ```shell
     [openbdre@sandbox ~]# cd ~
@@ -147,14 +136,14 @@ You should be able to do the same in Mac or Windows but note that setting up a H
     [openbdre@sandbox ~]# git clone https://github.com/WiproOpenSourcePractice/openbdre.git
     ```
 
- * `cd` to the cloned source dir (so you can be in /home/openbdre/openbdre)
+ * cd to the cloned source dir (so you can be in /home/openbdre/openbdre)
 
     ```shell
     [openbdre@sandbox ~]# cd openbdre
     ```
 
 2. Database Setup
-    * Execute the `dbsetup.sh` script without any parameters as shown below. In this example, we are going to use **MySQL** as BDRE backend as it's already available in the HDP Sandbox. If you would like to use another database please select it accordingly.
+    * Execute the dbsetup.sh script without any parameters as shown below. In this example, we are going to use MySQL as BDRE backend as it's already available in the HDP Sandbox. If you would like to use another database please select it accordingly.
 
     ```shell
     [openbdre@sandbox ~]# sh dbsetup.sh
@@ -192,14 +181,15 @@ You should be able to do the same in Mac or Windows but note that setting up a H
     ```
 
 3. Building
- * Now build BDRE using (note BDRE may not compile if the **settings.xml** is not passed from the command line so be sure to use the *-s* option. When building for the first time, it might take a while as maven resolves and downloads the **jar** libraries from different repositories.
+ * Now build BDRE using (note BDRE may not compile if the **settings.xml** is not passed from the command line so be sure to use the *-s* option. When building for the first time, it might take a while as maven resolves and downloads the jar libraries from different repositories.
 
     ```shell
     mvn -s settings.xml clean install -P hdp22
     ```
- * *Note:* Selecting hdp22 will compile BDRE with HDP 2.2 libraries and automatically configure BDRE with Hortonworks Sandbox 2.2.0. Similarly one should be able to build this using `-P cdh52` which will configure BDRE for CDH 5.2 QuickStart VM. During building it'll pick up the environment specific configurations from <source root>/databases/setup/profile.*hdp22*.properties.
+ * *Note:* Selecting hdp22 will compile BDRE with HDP 2.2 libraries and automatically configure BDRE with properties from  databases/setup/profile.hdp22.properties . These properties can later be altered from the BDRE Settings page under Administration.
 
-    Content of `databases/setup/profile.hdp22.properties`
+    databases/setup/profile.hdp22.properties looks like this.
+
  ```properties
     bdre_user_name=openbdre
     name_node_hostname=sandbox.hortonworks.com
@@ -214,6 +204,11 @@ You should be able to do the same in Mac or Windows but note that setting up a H
     hive_jdbc_user=openbdre
     hive_jdbc_password=openbdre
  ```
+
+| Building BDRE for Cloudera QuickStart VM |
+| ------------- |
+| Similarly one should be able to build this using *-P cdh52* which will configure BDRE for CDH 5.2 QuickStart VM. During building it'll pick up the environment specific configurations from <source root>/databases/setup/profile.*cdh52*.properties. BDRE virtually works with any Hadoop distribution including IBM's BigInsight platform in Bluemix|
+
 
     ```shell
     $ mvn -s settings.xml clean install -P hdp22
@@ -237,7 +232,7 @@ You should be able to do the same in Mac or Windows but note that setting up a H
     ```shell
     sh install-scripts.sh local
     ```
- * It'll install the BDRE scripts and artifacts in `/home/openbdre/bdre`
+ * It'll install the BDRE scripts and artifacts in /home/openbdre/bdre
 
 ### Using BDRE
 
@@ -252,8 +247,8 @@ You should be able to do the same in Mac or Windows but note that setting up a H
     su - oozie -c "/usr/hdp/current/oozie-server/bin/oozie-start.sh"
     ps -ef | grep -i oozie
     ```
-* Use *Google Chrome browser* from the host machine and open **http://VM_IP:28850/mdui/pages/content.page**
-* Login using **admin/zaq1xsw2**
+* Use *Google Chrome browser* from the host machine and open *http://VM_IP:28850/mdui/pages/content.page*
+* Login using admin/zaq1xsw2
 
 ### Creating, Deploying and Running a Test Job
 
@@ -268,7 +263,7 @@ You should be able to do the same in Mac or Windows but note that setting up a H
 * Wait for 2 minutes and the deployment will be completed by then.
 * After the deployment is complete and in UI the status for the process is deployed (turns green).
 * Click the execution button to execute the *Import job*.
-* Check the process in Oozie console **http://VM_IP:11000/oozie**
+* Check the process in Oozie console *http://VM_IP:11000/oozie*
 * When the import job is complete start the *data load job*.
 
 # Data Ingestion
@@ -349,7 +344,7 @@ git commit -am "My changes"
 git push myrepo mybranch
 ```
 
- - You should pull from the main repo(origin) regulary and sync it your repo.
+ - Everyday better pull from the main repo(origin) and sync your repo with it.
 
 ```shell
 git checkout develop
@@ -368,7 +363,8 @@ git push myrepo mybranch
 
  - When you are ready to submit your contribution to the main repo, please open a [pull request](https://help.github.com/articles/creating-a-pull-request).
  - Please join the community https://groups.google.com/forum/#!forum/bdre. If you have any questions/suggestions please email to bdre-queries@googlegroups.com .
- - If you want to report a bug or work on something. Please sign up at https://openbdre.atlassian.net
+ - If you want to report a bug, see/request a feature or work on something. Please sign up at https://openbdre.atlassian.net
+
 
 
 [![Analytics](https://ga-beacon.appspot.com/UA-72345517-2/openbdre/README.md)](http://wiproopensourcepractice.github.io/openbdre/bdreimages/badge.svg)
