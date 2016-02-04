@@ -283,9 +283,9 @@ Tables created successfully <span class="pl-k">in</span> MySQL bdre DB</pre></di
 <div class="highlight highlight-source-shell"><pre>mvn -s settings.xml clean install -P hdp22</pre></div>
 </li>
 <li>
-<p><em>Note:</em> Selecting hdp22 will compile BDRE with HDP 2.2 libraries and automatically configure BDRE with Hortonworks Sandbox 2.2.0. Similarly one should be able to build this using -P cdh52 which will configure BDRE for CDH 5.2 QuickStart VM. During building it'll pick up the environment specific configurations from /databases/setup/profile.<em>hdp22</em>.properties.</p>
+<p><em>Note:</em> Selecting hdp22 will compile BDRE with HDP 2.2 libraries and automatically configure BDRE with properties from  databases/setup/profile.hdp22.properties . These properties can later be altered from the BDRE Settings page under Administration.</p>
 
-<p>Content of databases/setup/profile.hdp22.properties</p>
+<p>databases/setup/profile.hdp22.properties looks like this.</p>
 </li>
 </ul>
 
@@ -301,21 +301,40 @@ Tables created successfully <span class="pl-k">in</span> MySQL bdre DB</pre></di
   <span class="pl-k">drools_hostname</span>=sandbox.hortonworks.com
   <span class="pl-k">hive_jdbc_user</span>=openbdre
   <span class="pl-k">hive_jdbc_password</span>=openbdre</pre></div>
-
-<div class="highlight highlight-source-shell"><pre>  $ mvn -s settings.xml clean install -P hdp22
-  [INFO] Scanning <span class="pl-k">for</span> projects...
-  [INFO] ------------------------------------------------------------------------
-  [INFO] Reactor Build Order:
-      .......blah blah.........
-      .......blah blah.........
-  [INFO] ------------------------------------------------------------------------
-  [INFO] BUILD SUCCESS
-  [INFO] ------------------------------------------------------------------------
-  [INFO] Total <span class="pl-k">time</span>: 3:39.479s
-  [INFO] Finished at: Wed Dec 30 01:50:02 PST 2015
-  [INFO] Final Memory: 127M/2296M
-  [INFO] ------------------------------------------------------------------------</pre></div>
 </li>
+</ol>
+
+<table>
+<thead>
+<tr>
+<th>Building BDRE for Cloudera QuickStart VM</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Similarly one should be able to build this using <em>-P cdh52</em> which will configure BDRE for CDH 5.2 QuickStart VM. During building it'll pick up the environment specific configurations from /databases/setup/profile.<em>cdh52</em>.properties. BDRE virtually works with any Hadoop distribution including IBM's BigInsight platform in Bluemix</td>
+</tr>
+</tbody>
+</table>
+
+<pre><code>```shell
+$ mvn -s settings.xml clean install -P hdp22
+[INFO] Scanning for projects...
+[INFO] ------------------------------------------------------------------------
+[INFO] Reactor Build Order:
+    .......blah blah.........
+    .......blah blah.........
+[INFO] ------------------------------------------------------------------------
+[INFO] BUILD SUCCESS
+[INFO] ------------------------------------------------------------------------
+[INFO] Total time: 3:39.479s
+[INFO] Finished at: Wed Dec 30 01:50:02 PST 2015
+[INFO] Final Memory: 127M/2296M
+[INFO] ------------------------------------------------------------------------
+```
+</code></pre>
+
+<ol>
 <li>
 <p>Installing BDRE</p>
 
