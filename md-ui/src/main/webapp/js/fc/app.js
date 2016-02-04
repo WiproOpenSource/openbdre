@@ -420,7 +420,7 @@ $scope.uploadFile = function(processId,parentProcessId,subDir,cg) {
 
        else if(cg=='mapper'){
              console.log(cg);
-             var property = propertiesAC('/mdrest/properties/', 'DELETE', [processId,'mapperPath']);
+             var property = propertiesAC('/mdrest/properties/', 'DELETE', [processId,'mapper']);
              var putData = "configGroup="+cg+"&key="+'mapperPath'+"&value="+subDir+'/'+dataRecord.Record.fileName+"&description="+'File path'+"&processId="+processId;
              cfgDetails = propertiesAC('/mdrest/properties/', 'PUT', putData);
             $.get('/mdrest/properties/'+processId, function(getdata) {
@@ -431,7 +431,7 @@ $scope.uploadFile = function(processId,parentProcessId,subDir,cg) {
             }
        else if(cg=='reducer'){
              console.log(cg);
-             var property = propertiesAC('/mdrest/properties/', 'DELETE', [processId,'reducerPath']);
+             var property = propertiesAC('/mdrest/properties/', 'DELETE', [processId,'reducer']);
              var putData = "configGroup="+cg+"&key="+'reducerPath'+"&value="+subDir+'/'+dataRecord.Record.fileName+"&description="+'File path'+"&processId="+processId;
              cfgDetails = propertiesAC('/mdrest/properties/', 'PUT', putData);
             $.get('/mdrest/properties/'+processId, function(getdata) {
