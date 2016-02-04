@@ -950,7 +950,7 @@
                                             dataType: 'json',
                                             success: function(data) {
                                                 $dfd.resolve(data);
-                                                location.href = '<c:url value="/pages/pdq.page?"/>';
+                                                location.href = '<c:url value="/pages/process.page?"/>';
                                             },
 
                                             error: function() {
@@ -994,6 +994,10 @@
                         }
 
                     </script>
+
+                   <script type="text/javascript">
+                       setInterval('window.location.reload()', 60000);
+                   </script>
             </head>
 
             <body>
