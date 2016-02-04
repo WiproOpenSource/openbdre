@@ -6,13 +6,13 @@
 [Features](#features)  
 [Architecture](#architecture)  
 [Installation](#installation)  
-[Demo videos](#data-ingestion) 
- - [Data Ingestion](#data-ingestion)  
- - [Workflow Builder](#workflow-builder)  
- - [Bulk Data Manufacturing](#bulk-data-manufacturing)  
- - [Web Crawler](#web-crawler)  
- - [Operational Metadata Management](#operational-metadata-management)  
- - [How To Contribute](#how-to-contribute)  
+[Demo videos](#data-ingestion)  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [Data Ingestion](#data-ingestion)  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [Workflow Builder](#workflow-builder)  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [Bulk Data Manufacturing](#bulk-data-manufacturing)  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [Web Crawler](#web-crawler)  
+[Operational Metadata Management](#operational-metadata-management)  
+[How To Contribute](#how-to-contribute)  
 
 # License
 Released under Apache Public License 2.0. You can get a copy of the license at http://www.apache.org/licenses/LICENSE-2.0.
