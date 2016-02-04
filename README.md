@@ -1,8 +1,7 @@
 # Bigdata Ready Enterprise Open Source Software
 ## Table of Contents
 
-
-[License](#license)  
+[License](#license)
 [Objective](#objective)  
 [Features](#features)  
 [Architecture](#architecture)  
@@ -14,7 +13,6 @@
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [Web Crawler](#web-crawler)  
 [Operational Metadata Management](#operational-metadata-management)  
 [How To Contribute](#how-to-contribute)  
-
 
 # License
 Released under Apache Public License 2.0. You can get a copy of the license at http://www.apache.org/licenses/LICENSE-2.0.
@@ -190,10 +188,8 @@ You should be able to do the same in Mac or Windows but note that setting up a H
     ```
  * *Note:* Selecting hdp22 will compile BDRE with HDP 2.2 libraries and automatically configure BDRE with properties from  databases/setup/profile.hdp22.properties . These properties can later be altered from the BDRE Settings page under Administration.
 
- 
     databases/setup/profile.hdp22.properties looks like this.
  
-
  ```properties
     bdre_user_name=openbdre
     name_node_hostname=sandbox.hortonworks.com
@@ -350,8 +346,6 @@ git push myrepo mybranch
 
  - Everyday better pull from the main repo(origin) and sync your repo with it.
 
- 
-
 ```shell
 git checkout develop
 git pull origin develop 
@@ -370,8 +364,6 @@ git push myrepo mybranch
  - When you are ready to submit your contribution to the main repo, please open a [pull request](https://help.github.com/articles/creating-a-pull-request).
  - Please join the community https://groups.google.com/forum/#!forum/bdre. If you have any questions/suggestions please email to bdre-queries@googlegroups.com .
  - If you want to report a bug, see/request a feature or work on something. Please sign up at https://openbdre.atlassian.net
-
- 
 
 
 
