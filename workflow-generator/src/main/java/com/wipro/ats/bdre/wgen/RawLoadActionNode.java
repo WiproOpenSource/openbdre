@@ -76,10 +76,12 @@ public class RawLoadActionNode extends GenericActionNode {
                 "            <main-class>com.wipro.ats.bdre.im.etl.api.oozie.OozieRawLoad</main-class>\n" +
                 "            <arg>--process-id</arg>\n" +
                 "            <arg>" + getId() + "</arg>\n" +
+                "            <arg>--instance-exec-id</arg>\n" +
+                "            <arg>${wf:actionData(\"init-job\")[\"instance-exec-id\"]}</arg>\n" +
                 "            <arg>--list-of-files</arg>\n" +
-                "            <arg>${wf:actionData(\"" + fileListNode.getName() + "\")[\"file-list\"]}</arg>\n" +
-
-
+                "            <arg>${wf:actionData(\"init-job\")[\"file-list-map.FileList." + getId() + "\"]}</arg>\n" +
+                "            <arg>--list-of-file-batchIds</arg>\n" +
+                "            <arg>${wf:actionData(\"init-job\")[\"batch-list-map.FileBatchList." + getId() + "\"]}</arg>\n" +
                 "            <capture-output/>\n" +
                 "        </java>\n" +
                 "        <ok to=\"" + getToNode().getName() + "\"/>\n" +

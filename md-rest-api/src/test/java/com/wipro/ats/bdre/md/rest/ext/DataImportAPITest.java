@@ -14,10 +14,14 @@
 
 package com.wipro.ats.bdre.md.rest.ext;
 
+import com.wipro.ats.bdre.md.rest.RestWrapper;
 import com.wipro.ats.bdre.md.rest.util.Table;
+import org.junit.Ignore;
+import org.junit.Test;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.logging.Logger;
 
 
 /**
@@ -98,12 +102,18 @@ public class DataImportAPITest {
         DataImportAPI dataImportAPI = new DataImportAPI();
         Map<String, Table> tables = dataImportAPI.buildTablesFromMap(params);
         for (Table table : tables.values()) {
-            System.out.println("table.getBaseTableDDL() = " + table.getBaseTableDDL());
-            System.out.println("table.getRawTableDDL() = " + table.getRawTableDDL());
-            System.out.println("table.getRawViewDDL() = " + table.getRawViewDDL());
+            System.out.println("table.getBaseTableDDL() = " + table.getColumnList());
+            System.out.println("table.getBaseTableDDL() = " + table.getRawTableColumnAndDataType());
 
             System.out.println("table.getColumns().values().getSrcColumnName() = " + table.getColumnList());
 
         }
+    }
+
+    @Test @Ignore
+    public void testGetTableList() throws Exception {
+        DataImportAPI dataImportAPI = new DataImportAPI();
+        RestWrapper restWrapper= dataImportAPI.getTableList("jdbc:oracle:thin:@localhost:1521/xe", "BDREORACLE", "root", "oracle.jdbc.driver.OracleDriver", "BDREORACLE");
+        System.out.println("restWrapper = " + restWrapper);
     }
 }
