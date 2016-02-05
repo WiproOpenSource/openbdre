@@ -10,45 +10,32 @@ public class Import
 {
     List<String> fileList;
     private static final String OUTPUT_FOLDER = "/home/cloudera/bdretest/";
-
     public static void main( String[] args )
     {
         UUID idOne = UUID.randomUUID();
         System.out.println("UUID is "+idOne);
-        BufferedReader br = null;
+
         Import unZip = new Import();
-        unZip.unZipIt("/home/cloudera/bdre-wfd/export-38/38-de03d1e1-6f6a-42a5-8ad9-a2abcaa6c4a5.zip",OUTPUT_FOLDER+"/"+idOne);
-        String jsonfile="";
-        String temp;
-        try {
+        String jsonfile=unZip.unZipIt("/home/cloudera/bdre-wfd/export-38/38-de03d1e1-6f6a-42a5-8ad9-a2abcaa6c4a5.zip",OUTPUT_FOLDER+"/"+idOne);
 
-
-            br = new BufferedReader(new FileReader(OUTPUT_FOLDER+"/"+idOne+"/38.json"));
-            while ((temp=br.readLine()) != null) {
-                jsonfile=jsonfile+temp;
-                System.out.println(jsonfile);
-            }
-            System.out.println("final string is"+jsonfile);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
+        System.out.println("returned jsonfile is "+jsonfile);
     }
 
     /**
      * Unzip it
      * @param zipFile input zip file
      */
-    public void unZipIt(String zipFile, String outputFolder){
+    public String unZipIt(String zipFile, String outputFolder){
 
         byte[] buffer = new byte[1024];
-
+        String jsonfile="";
         try{
 
             //create output directory is not exists
-            File folder = new File(OUTPUT_FOLDER);
-            if(!folder.exists()){
-                folder.mkdir();
+            File folder = new File(outputFolder);
+            if(folder.exists()){
+                System.out.println("folder to be deleted is "+folder);
+                folder.delete();
             }
 
             //get the zip file content
@@ -84,8 +71,23 @@ public class Import
 
             System.out.println("Done");
 
+
+            String temp;
+            BufferedReader br = null;
+            String[] ar =outputFolder.split("/");
+            int size=ar.length;
+            br = new BufferedReader(new FileReader(outputFolder+"/"+ar[size-1]+".json"));
+            while ((temp=br.readLine()) != null) {
+                jsonfile=jsonfile+temp;
+                System.out.println(jsonfile);
+            }
+            System.out.println("final string is"+jsonfile);
+
+
+
         }catch(IOException ex){
             ex.printStackTrace();
         }
+       return jsonfile;
     }
 }

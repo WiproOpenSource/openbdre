@@ -67,17 +67,24 @@ public class MetadataPersistenceTrigger implements PreUpdateEventListener, PreIn
         Process process = (Process) object;
         LOGGER.info("Attempting to insert process " + process.getProcessName());
         Integer processTypeId = process.getProcessType().getProcessTypeId();
+        LOGGER.info("processType id of the process is "+processTypeId);
         Process parentProcess = process.getProcess();
+        LOGGER.info("parent process is "+process.getProcess());
+        if (process.getProcess()!=null)
+        LOGGER.info("parent processType id of the process is "+parentProcess.getProcessType().getProcessTypeId());
         if (parentProcess == null) {
             if (processTypeMap.get(processTypeId)!=0) {
+                LOGGER.error("wrong process type");
                 throw new MetadataException(processTypeId + " process type is not applicable for parent processes but " + process.getProcessId() + " seems to be parent process id");
             }
         } else {
             Integer parentProcessTypeId = parentProcess.getProcessType().getProcessTypeId();
             if (processTypeMap.get(processTypeId)==0) {
+                LOGGER.error("wrong process type");
                 throw new MetadataException(processTypeId + " process type is not applicable for sub processes. " + process.getProcessId() + " seems to be a subprocess with parent " + parentProcess.getProcessId());
             }else if(processTypeMap.get(processTypeId)!=parentProcessTypeId)
             {
+                LOGGER.error("wrong process type");
                 throw new MetadataException(processTypeId + " should have a parent with process type=" + processTypeMap.get(processTypeId) + " but it set parent proces type="+parentProcessTypeId);
             }
         }
@@ -97,8 +104,9 @@ public class MetadataPersistenceTrigger implements PreUpdateEventListener, PreIn
         UUID idOne = UUID.randomUUID();
         System.out.println("UUID is "+idOne);
         if (event.getEntity() instanceof Process) {
-           // if (((Process) event.getEntity()).getProcessCode()==null)
+            if (((Process) event.getEntity()).getProcessCode()==null)
             ((Process) event.getEntity()).setProcessCode(idOne.toString());
+
             processTypeValidator(event.getEntity());
         }
         return false;

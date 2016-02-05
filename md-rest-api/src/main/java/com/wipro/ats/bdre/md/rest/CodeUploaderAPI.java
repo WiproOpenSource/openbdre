@@ -170,6 +170,13 @@ public class CodeUploaderAPI extends MetadataAPIBase {
                 LOGGER.debug("Upload location: " + uploadLocation);
                 File fileDir = new File(uploadLocation);
                 fileDir.mkdirs();
+
+                File f = new File(uploadLocation+"/"+name);
+                if(f.exists()) {
+                    LOGGER.info("file to be deleted is "+f);
+                   f.delete();
+                }
+
                 File fileToBeSaved = new File(uploadLocation + "/" + name);
                 BufferedOutputStream stream =
                         new BufferedOutputStream(new FileOutputStream(fileToBeSaved));

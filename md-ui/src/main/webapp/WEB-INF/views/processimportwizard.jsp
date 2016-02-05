@@ -7,9 +7,6 @@
 <html >
 	<head >
 		<meta http-equiv = "Content-Type" content = "text/html; charset=UTF-8" >
-
-
-
 	<script>
 	  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
 	  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
@@ -51,25 +48,8 @@
 		    transitionEffect: "slide",
 		    onStepChanging: function (event, currentIndex, newIndex)
 		    {
-		        if(jsonObject == null)
-		        {
-		            $("#div-dialog-warning").dialog({
-                                    title: "",
-                                    resizable: false,
-                                    height: 'auto',
-                                    modal: true,
-                                    buttons: {
-                                        "Ok" : function () {
-                                            $(this).dialog("close");
-                                        }
-                                    }
-                    }).text("Please Validate JSON first to continue");
-                    return false;
-		        }
-		        var json=document.getElementById("jsonTextArea").value;
-		        finalJson=JSON.parse(json).Record;
+		             return true;
 
-		        return true;
 		    },
 		    onStepChanged: function (event, currentIndex, priorIndex){
 		        console.log(currentIndex+" "+priorIndex);
@@ -77,9 +57,7 @@
 		        {
 
 		        	console.log(finalJson);
-		        	loadProcessTable(finalJson);
-		        	loadPropertiesTable(finalJson);
-		        	document.getElementById("bdre-dataload-p-2").style.overflow = "hidden";
+		        	displayProcess(finalJson);
 		        }
 		    },
 		    onFinished: function (event, currentIndex) {
@@ -91,191 +69,52 @@
 		});
 
 		</script>
- <script type="text/javascript">
-         var jsonObject;
-         var jsonText;
-         function verifyIfJson() {
 
-     jsonText=document.getElementById("jsonTextArea").value;
-     try {
-             jsonObject=JSON.parse(jsonText).Record;
-             if (typeof jsonObject !== "undefined" || typeof jsonObject !== "undefined" )
-             alert('Valid Json! Click next');
-             else{
-             alert('Json does not have Process and Properties data!');
-             jsonObject=null;}
-              } catch (e) {
-             alert('Malformed json!');
-              }
-
-           }
-
-        </script>
-       <script type="text/javascript">
-          function loadProcessTable(finalJson) {
-               $('#ProcessTableContainer').jtable({
-               title: 'Process List',
-               paging: false,
-               sorting: false,
-               create: false,
-               edit :false,
-               actions: {
-               listAction: function (postData, jtParams) {
-                   return {
-                   "Result": "OK",
-                   "Records": finalJson.processList,
-                   "TotalRecordCount": finalJson.processList.length
-                   };
-               }
-
-               },
-               fields: {
-                   processId: {
-                      key: true,
-                      list: true,
-                      create: false,
-                      edit: false,
-                      title: 'Id'
-                  },
-                  processName: {
-                      title: 'Name'
-                  },
-                  tableAddTS: {
-                      title: 'Add TS',
-                      create: false,
-                      edit: true,
-
-                      type:'hidden'
-                  },
-                  description: {
-                      title: 'Description',
-                  },
-
-                  parentProcessId: {
-                      title: 'Parent',
-                      edit: true,
-                      create: false,
-
-
-                  },
-                  canRecover: {
-                      title: 'Restorable',
-
-
-                      edit: true,
-                  },
-                  nextProcessIds: {
-                      title: 'Next',
-
-                         edit: true,
-
-
-                  },
-                  enqProcessId: {
-                      title: 'Enqueuer',
-
-                      edit:true,
-
-                  },
-                  busDomainId: {
-                      title: 'Application',
-
-                      edit:true,
-                      type: 'combobox',
-                      options: '/mdrest/busdomain/options/',
-                  },
-                  processTypeId: {
-                      title: 'Type',
-                      edit: true,
-
-                  },
-                  batchPattern: {
-                              title: 'Batch Mark',
-
-                              create: false,
-                              edit: true,
-
-
-                                                                                                      },
-
-                   workflowId: {
-                   title: 'workflow type'}
-                   }
-               });
-
-               $('#ProcessTableContainer').jtable('load');
-           };
-       </script>
-         <br />
-       <script type="text/javascript">
-                 function loadPropertiesTable(finalJson) {
-                      $('#PropertiesTableContainer').jtable({
-                        title: 'Properties List',
-                        paging: false,
-                        sorting: false,
-                        create: false,
-                        edit :false,
-                      actions: {
-                      listAction: function (postData, jtParams) {
-                          return {
-                          "Result": "OK",
-                          "Records": finalJson.propertiesList,
-                          "TotalRecordCount": finalJson.propertiesList.length
-                          };
-                      }
-
-                      },
-                      fields: {
-                          processId: {
-                          title: 'process id'},
-                          configGroup: {
-                          title: 'configGroup'},
-                          key: {
-                          title: 'key'},
-                          value: {
-                          title: 'value'},
-                          description: {
-                          title: 'description'}
-                          }
-                      });
-
-                      $('#PropertiesTableContainer').jtable('load');
-                  };
-              </script>
 
               <script>
               function ImportFromJson(){
-             var jsonText=document.getElementById("jsonTextArea").value;
-              var fileString=JSON.stringify(JSON.parse(jsonText).Record);
+                  //var jsonText=document.getElementById("jsonTextArea").value;
+                        var fileString=uploadedFileName;
 
               				$.ajax({
                   		    url: "/mdrest/process/import",
                   		    type: "POST",
                   		    data: {'fileString': fileString},
                   		    success: function (getData) {
-                  		    if( getData.Result =="OK" ){
-                                 $("#div-dialog-warning").dialog({
-                                     title: "",
-                                     resizable: false,
-                                     height: 'auto',
-                                     modal: true,
-                                     buttons: {
-                                         "Ok" : function () {
-                                             $(this).dialog("close");
-                                         }
-                                     }
-                                 }).text("Data successfully imported");
-                                  console.log(getData);
-                                  displayProcess(getData);
-                                  displayProperties(getData);
-                                         }
+                  		        if( getData.Result =="OK" ){
+                  		            finalJson=getData;
+                                    console.log(getData);
+                                    $("#div-dialog-warning").dialog({
+                                                 title: "",
+                                                 resizable: false,
+                                                 height: 'auto',
+                                                 modal: true,
+                                                 buttons: {
+                                                     "Ok" : function () {
+                                                         $(this).dialog("close");
+                                                     }
+                                                 }
+                                    }).text("Process and Properties inserted successfully");
+                                    return false;
+                                }
+                  		        if(getData.Result =="ERROR"){
+                  		            $("#div-dialog-warning").dialog({
+                                             title: "",
+                                             resizable: false,
+                                             height: 'auto',
+                                             modal: true,
+                                             buttons: {
+                                                 "Ok" : function () {
+                                                     $(this).dialog("close");
+                                                 }
+                                             }
+                                    }).text("Error in importing"+getData.Message);
+                                    return false;
 
-
-                  		    if(getData.Result =="ERROR")
-                  		    alert(getData.Message);
-}
-                  		});
+                                }
                             }
+                  		});
+              }
               </script>
               <script>
                 var uploadedFileName ="";
@@ -297,11 +136,32 @@
                                         success:function (data) {
                                               uploadedFileName=data.Record.fileName;
                                               console.log( data );
-                                              console.log(uploadedFileName);
-                                              returnObject=data;
+                                              $("#div-dialog-warning").dialog({
+                                                              title: "",
+                                                              resizable: false,
+                                                              height: 'auto',
+                                                              modal: true,
+                                                              buttons: {
+                                                                  "Ok" : function () {
+                                                                      $(this).dialog("close");
+                                                                  }
+                                                              }
+                                              }).text("File Uploaded successfully " + uploadedFileName);
+                                              return false;
               							},
               						  error: function () {
-              							    returnObject=false;
+              							    $("#div-dialog-warning").dialog({
+                                                          title: "",
+                                                          resizable: false,
+                                                          height: 'auto',
+                                                          modal: true,
+                                                          buttons: {
+                                                              "Ok" : function () {
+                                                                  $(this).dialog("close");
+                                                              }
+                                                          }
+                                          }).text("File Upload failed ");
+                                          return false;
               							}
               						 });
 
@@ -329,75 +189,218 @@
                         };
                               }
                         },
+                            fields: {
 
-                        fields: {
+                                                                                processId: {
+                                                                                    key: true,
+                                                                                    width: '5%',
+                                                                                    list: true,
+                                                                                    create: false,
+                                                                                    edit: false,
+                                                                                    title: 'Id'
+                                                                                },
+                                                                                Properties: {
+                                                                                    title: 'Properties',
+                                                                                    width: '5%',
+                                                                                    sorting: false,
+                                                                                    edit: false,
+                                                                                    create: false,
+                                                                                    listClass: 'bdre-jtable-button',
+                                                                                    display: function(item) { //Create an image that will be used to open child table
 
-                        processId: {
-                        key: true,
-                        list: true,
-                        create: false,
+                                                                                        var $img = $('<span class="label label-primary">Show</span>'); //Open child table when user clicks the image
 
-                        title: 'Id'
-                        },
-                        processName: {
-                        title: 'Name'
-                        },
-                        tableAddTS: {
-                        title: 'Add TS',
-                        create: false,
+                                                                                        $img.click(function() {
+                                                                                            $('#Container').jtable('openChildTable',
+                                                                                                $img.closest('tr'), {
+                                                                                                    title: ' Properties of ' + item.record.processId,
+                                                                                                    paging: true,
+                                                                                                    pageSize: 10,
+                                                                                                    actions: {
+                                                                                                        listAction: function(postData) {
+                                                                                                            return $.Deferred(function($dfd) {
+                                                                                                                console.log(item);
+                                                                                                                $.ajax({
+                                                                                                                    url: '/mdrest/properties/' + item.record.processId,
+                                                                                                                    type: 'GET',
+                                                                                                                    data: item,
+                                                                                                                    dataType: 'json',
+                                                                                                                    success: function(data) {
+                                                                                                                        $dfd.resolve(data);
+                                                                                                                    },
+                                                                                                                    error: function() {
+                                                                                                                        $dfd.reject();
+                                                                                                                    }
+                                                                                                                }); ;
+                                                                                                            });
+                                                                                                        },
+                                                                                                        deleteAction: function(postData) {
+                                                                                                            console.log(postData.processId);
+                                                                                                            return $.Deferred(function($dfd) {
+                                                                                                                $.ajax({
+                                                                                                                    url: '/mdrest/properties/' + item.record.processId + '/' + postData.key + '/',
+                                                                                                                    type: 'DELETE',
+                                                                                                                    data: item,
+                                                                                                                    dataType: 'json',
+                                                                                                                    success: function(data) {
+                                                                                                                        $dfd.resolve(data);
+                                                                                                                    },
+                                                                                                                    error: function() {
+                                                                                                                        $dfd.reject();
+                                                                                                                    }
+                                                                                                                });
+                                                                                                            });
+                                                                                                        },
+                                                                                                        updateAction: function(postData) {
+                                                                                                            console.log(postData);
+                                                                                                            return $.Deferred(function($dfd) {
+                                                                                                                $.ajax({
+                                                                                                                    url: '/mdrest/properties',
+                                                                                                                    type: 'POST',
+                                                                                                                    data: postData + '&processId=' + item.record.processId,
+                                                                                                                    dataType: 'json',
+                                                                                                                    success: function(data) {
+                                                                                                                        console.log(data);
+                                                                                                                        $dfd.resolve(data);
+                                                                                                                    },
+                                                                                                                    error: function() {
+                                                                                                                        $dfd.reject();
+                                                                                                                    }
+                                                                                                                });
+                                                                                                            });
+                                                                                                        },
+                                                                                                        createAction: function(postData) {
+                                                                                                            console.log(postData);
+                                                                                                            return $.Deferred(function($dfd) {
+                                                                                                                $.ajax({
+                                                                                                                    url: '/mdrest/properties',
+                                                                                                                    type: 'PUT',
+                                                                                                                    data: postData + '&processId=' + item.record.processId,
+                                                                                                                    dataType: 'json',
+                                                                                                                    success: function(data) {
+                                                                                                                        $dfd.resolve(data);
+                                                                                                                    },
+                                                                                                                    error: function() {
+                                                                                                                        $dfd.reject();
+                                                                                                                    }
+                                                                                                                });
+                                                                                                            });
+                                                                                                        }
+                                                                                                    },
+                                                                                                    fields: {
 
-                        list: false,
-                        type:'hidden'
-                        },
-                        description: {
-                        title: 'Description',
-                        },
-                        batchPattern: {
-                        title: 'Batch Mark',
-                        list: false,
-                        create: false,
+                                                                                                        processId: {
+                                                                                                            key: true,
+                                                                                                            list: false,
+                                                                                                            create: false,
+                                                                                                            edit: true,
+                                                                                                            title: 'Process',
+                                                                                                            defaultValue: item.record.processId,
+                                                                                                        },
+                                                                                                        configGroup: {
+                                                                                                            title: 'Config Group',
+                                                                                                            defaultValue: item.record.configGroup,
+                                                                                                        },
+                                                                                                        key: {
+                                                                                                            title: 'Key',
+                                                                                                            key: true,
+                                                                                                            list: true,
+                                                                                                            create: true,
+                                                                                                            edit: false,
+                                                                                                            defaultValue: item.record.key,
+                                                                                                        },
+                                                                                                        value: {
+                                                                                                            title: 'Value',
+                                                                                                            defaultValue: item.record.value,
+                                                                                                        },
+                                                                                                        description: {
+                                                                                                            title: 'Description',
+                                                                                                            defaultValue: item.record.description,
+                                                                                                        },
+                                                                                                    }
+                                                                                                },
+                                                                                                function(data) { //opened handler
 
-                        type:'hidden'
+                                                                                                    data.childTable.jtable('load');
+                                                                                                });
+                                                                                        }); //Return image to show on the person row
 
-                        },
-                        parentProcessId: {
-                        title: 'Parent',
+                                                                                        return $img;
+                                                                                    }
+                                                                                },
+                                                                                processName: {
+                                                                                                title: 'Name'
+                                                                                            },
+                                                                                            tableAddTS: {
+                                                                                                title: 'Add TS',
+                                                                                                create: false,
+                                                                                                edit: true,
+                                                                                                list: false,
+                                                                                                type: 'hidden'
+                                                                                            },
+                                                                                            description: {
+                                                                                                title: 'Description',
+                                                                                            },
+                                                                                            batchPattern: {
+                                                                                                title: 'Batch Mark',
+                                                                                                list: false,
+                                                                                                create: false,
+                                                                                                edit: true,
+                                                                                                type: 'hidden'
 
-                        create: false,
+                                                                                            },
+                                                                                            parentProcessId: {
+                                                                                                title: 'Parent',
+                                                                                                edit: true,
+                                                                                                create: false,
+                                                                                                list: false,
+                                                                                                type: 'hidden'
+                                                                                            },
+                                                                                            canRecover: {
+                                                                                                title: 'Restorable',
+                                                                                                type: 'hidden',
+                                                                                                list: false,
+                                                                                                edit: true,
+                                                                                            },
+                                                                                            nextProcessIds: {
+                                                                                                title: 'Next',
+                                                                                                list: false,
+                                                                                                edit: true,
+                                                                                                type: 'hidden'
 
+                                                                                            },
+                                                                                            enqProcessId: {
+                                                                                                title: 'Enqueuer',
+                                                                                                list: false,
+                                                                                                edit: true,
+                                                                                                type: 'hidden',
+                                                                                            },
+                                                                                            busDomainId: {
+                                                                                                title: 'Application',
+                                                                                                list: false,
+                                                                                                edit: true,
+                                                                                                type: 'combobox',
+                                                                                                options: '/mdrest/busdomain/options/',
+                                                                                            },
+                                                                                            processTypeId: {
+                                                                                                title: 'Type',
+                                                                                                edit: true,
+                                                                                                type: 'hidden',
+                                                                                                options: '/mdrest/processtype/optionslist'
 
-                        },
-                        canRecover: {
-                        title: 'Restorable',
-
-                        list: false,
-
-                        },
-                        nextProcessIds: {
-                        title: 'Next',
-
-
-
-
-                        },
-                        enqProcessId: {
-                        title: 'Enqueuer',
-
-
-
-                        },
-                        busDomainId: {
-                        title: 'Application',
-
-
-                        type: 'combobox',
-                        options: '/mdrest/busdomain/options/',
-                        },
-                        processTypeId: {
-                        title: 'Type',
-                        },
-
-                        }
+                                                                                            },
+                                                                                            ProcessPipelineButton: {
+                                                                                                title: 'Pipeline',
+                                                                                                sorting: false,
+                                                                                                width: '2%',
+                                                                                                listClass: 'bdre-jtable-button',
+                                                                                                create: false,
+                                                                                                edit: false,
+                                                                                                display: function(data) {
+                                                                                                    return '<span class="label label-primary" onclick="fetchPipelineInfo(' + data.record.processId + ')">Display</span> ';
+                                                                                                },
+                                                                                            }
+                                                                                }
                         });
                         $('#ProcessContainer').jtable('load');
 
@@ -441,59 +444,36 @@
 
                                 }
                        </script>
+
+
 				<div id = "bdre-dataload" ng-controller = "myCtrl" >
 				<h3 >Zip File Upload</h3 >
 				<section >
 					<div class="col-sm-2">
 					<input type="file" name="file" class="form-control" id="zip-id" required>
 					<div ><br /></div >
-					 <button type="button" class="btn btn-sm btn-primary pull-right" onClick="uploadZip('zip','zip-id')">Upload ZIP</button>
-
-					 <button class = "btn btn-warning  btn-success" type = "button" onClick = "ImportFromJson()" href = "#" >
-                     					Import JSON Data
-                     				</button >
+                     <button type="button" class="btn btn-sm btn-primary pull-left" onClick="uploadZip('zip','zip-id')">Upload ZIP</button>
 					</div >
+					<div>
+					 <button class = "btn btn-warning  btn-success" type = "button" onClick = "ImportFromJson()" href = "#" >
+                                         					Import
+                                         				</button >
+					</div>
 				</section >
 
-                <h3 >Verify table data</h3 >
-				<section style = "display: block; overflow: auto;" >
-				<div class = "alert alert-success" role = "alert" >Click on next if the data seems okay</div >
-				<div id="ProcessTableContainer"> </div>
-				<br />
-				<div id="PropertiesTableContainer"> </div>
-				<br />
-				</section >
-
-				<h3 >Import data</h3 >
-				<section style = "display: block; overflow: auto;" >
-				<div class = "alert alert-success" role = "alert" >Click on the button to import the process and properties data. This may update or delete relevant data in the current environment as per the json.
-                </div >
-				<button class = "btn btn-warning  btn-success" type = "button" onClick = "ImportFromJson()" href = "#" >
-					Import JSON Data
-				</button >
-				<br />
-
-
-
-
-				</section >
                 <h3 >Imported Details</h3 >
                 <section>
-                <div class = "alert alert-success" role = "alert" >Click on the finish button to view more details about the imported process
-                </div >
                 <div id = "ProcessContainer" >
                 </div >
-                <br />
-                <br />
-                <div id = "PropertiesContainer" >
-                </div >
                 </section>
+                <div style = "display:none" id = "div-dialog-warning" >
+                				<p ><span class = "ui-icon ui-icon-alert" style = "float:left;" ></span >
+                				<div />
+                				</p>
+                				</div >
+
+
 				</div>
-				<div style = "display:none" id = "div-dialog-warning" >
-				<p ><span class = "ui-icon ui-icon-alert" style = "float:left;" ></span >
-				<div />
-				</p>
-				</div >
 
 
 </head>
