@@ -12,10 +12,11 @@
  * limitations under the License.
  */
 
-package com.wipro.ats.bdre.lineage;
+package com.wipro.ats.bdre.lineage.dot;
 
 import com.wipro.ats.bdre.GetLineageNodeByColName;
 import com.wipro.ats.bdre.GetNodeIdForLineageRelation;
+import com.wipro.ats.bdre.lineage.LineageMain;
 import com.wipro.ats.bdre.md.dao.jpa.LineageNode;
 import com.wipro.ats.bdre.md.dao.jpa.LineageRelation;
 import org.slf4j.Logger;

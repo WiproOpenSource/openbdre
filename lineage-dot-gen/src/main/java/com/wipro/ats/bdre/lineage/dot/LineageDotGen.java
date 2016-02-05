@@ -12,10 +12,12 @@
  * limitations under the License.
  */
 
-package com.wipro.ats.bdre.lineage;
+package com.wipro.ats.bdre.lineage.dot;
 
 import com.wipro.ats.bdre.BaseStructure;
 import com.wipro.ats.bdre.GetLineageQueryByProcessId;
+import com.wipro.ats.bdre.lineage.LineageConstants;
+import com.wipro.ats.bdre.lineage.LineageMain;
 import com.wipro.ats.bdre.md.dao.jpa.LineageQuery;
 import org.apache.commons.cli.CommandLine;
 import org.slf4j.Logger;

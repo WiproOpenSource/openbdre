@@ -38,17 +38,18 @@
 
                     var set = new StringSet();
 
-                    function getTableName(tableName) {
+                    function getTableName(tableName, colName) {
                         //do not reload if the dependency graph for this tableName is already rendered.
                         if (set.contains(tableName)) {
                             return false;
                         }
                         set.add(tableName);
                         $.ajax({
-                            url: "/mdrest/lineage?tableName=" + tableName,
+                            url: "/mdrest/lineage?tableName=" + tableName + "&colName=" + colName,
                             type: "GET",
                             cache: false,
                             success: function (getData) {
+				console.log(getData);
                                 graphViz = graphViz + getData.Records.dot;
                                 RefreshGraphviz(prefix + graphViz + postfix);
                             }
@@ -65,6 +66,7 @@
                             type: "GET",
                             cache: false,
                             success: function (getData) {
+				console.log(getData);
                                 graphViz = graphViz + getData.Records.dot;
                                 RefreshGraphviz(prefix + graphViz + postfix);
                             }
@@ -245,7 +247,7 @@
 
                     <c:if test="${not empty param.tableName}">
                         $(document).ready(function () {
-                            getTableName(${param.tableName});
+                            getTableName(${param.tableName},${param.colName});
                         });
                     </c:if>
                 </script>
@@ -257,8 +259,8 @@
                 <button type='button' class='btn btn-primary' aria-label='Left Align' onClick='saveSVG("execution",0)'><span class='glyphicon glyphicon-save' aria-hidden='true'></span>Save</button>
                 <c:if test="${empty param.tableName}">
                     <section>
-                        Table Name is: <input type="number" name="tableName" id="tableName" value =""/>
-                        Column Name is: <input type="number" name="colName" id="colName" value =""/>
+                        Table Name is: <input type="text" name="tableName" id="tableName" value =""/>
+                        Column Name is: <input type="text" name="colName" id="colName" value =""/>
                         <button onClick="resetGraph();
                                          getTableName(jQuery('#tableName').val(), jQuery('#colName').val())" href="#">Show Lineage</button>
                     </section>

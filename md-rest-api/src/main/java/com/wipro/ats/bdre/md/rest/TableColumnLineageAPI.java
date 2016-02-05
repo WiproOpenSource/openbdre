@@ -14,21 +14,12 @@
 
 package com.wipro.ats.bdre.md.rest;
 
-import com.wipro.ats.bdre.lineage.GetDotForTable;
-import com.wipro.ats.bdre.md.api.GetLineageByBatch;
-import com.wipro.ats.bdre.md.api.GetLineageByInstanceExec;
 import com.wipro.ats.bdre.md.api.base.MetadataAPIBase;
-import com.wipro.ats.bdre.md.beans.GetLineageByBatchInfo;
-import com.wipro.ats.bdre.md.beans.GetLineageByInstanceExecInfo;
 import org.apache.log4j.Logger;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
-
 import java.security.Principal;
-import java.sql.Timestamp;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.List;
+import com.wipro.ats.bdre.lineage.dot.GetDotForTable;
 
 /**
  * Created by arijit on 1/9/15.
@@ -47,7 +38,7 @@ public class TableColumnLineageAPI extends MetadataAPIBase {
      * @param batchId
      * @return restWrapper It contains an instance of LineageInfo.
      */
-    @RequestMapping(value = "/bybatch/{batchId}", method = RequestMethod.GET)
+    /*@RequestMapping(value = "/bybatch/{batchId}", method = RequestMethod.GET)
     public
     @ResponseBody
     RestWrapper getByBatch(@PathVariable("batchId") String batchId, Principal principal) {
@@ -69,7 +60,7 @@ public class TableColumnLineageAPI extends MetadataAPIBase {
             restWrapper = new RestWrapper(e.getMessage(), RestWrapper.ERROR);
         }
         return restWrapper;
-    }
+    }*/
 
     /**
      * This method is used to see the relationship between processes linked to a particular instanceExecId.
@@ -82,22 +73,39 @@ public class TableColumnLineageAPI extends MetadataAPIBase {
 
     public
     @ResponseBody
-    RestWrapper getByInstanceExec(@RequestParam(value = "tableName", defaultValue = "null") String tableName, Principal principal) {
+    RestWrapper getByInstanceExec(@RequestParam(value = "tableName", defaultValue = "null") String tableName, @RequestParam(value = "colName", defaultValue = "null") String colName, Principal principal) {
         RestWrapper restWrapper = null;
         try {
 
-            String[] args = {tableName};
-            String dot = new String();
-            GetDotForTable getDotForTable = new GetDotForTable();
-            dot = getDotForTable.dotGeneratorWithTable(args);
+            if(colName != null) {
+                String[] args = {colName, tableName};
+                String dot = new String();
+                GetDotForTable getDotForTable = new GetDotForTable();
+                dot = getDotForTable.dotGeneratorWithCol(args);
 
-            LineageInfo lineageInfo = new LineageInfo();
-            LOGGER.info(dot);
-            lineageInfo.setDot(dot.toString());
-            lineageInfo.setTableName(tableName);
+                LineageInfo lineageInfo = new LineageInfo();
+                LOGGER.info(dot);
+                lineageInfo.setDot(dot.toString());
+                lineageInfo.setTableName(tableName);
+                lineageInfo.setColName(colName);
 //            lineageInfo.setInstanceExecId(instanceExecId);
-            restWrapper = new RestWrapper(lineageInfo, RestWrapper.OK);
-            LOGGER.info("Getting " + tableName + " Lineage by User:" + principal.getName());
+                restWrapper = new RestWrapper(lineageInfo, RestWrapper.OK);
+                LOGGER.info("Getting " + tableName + "for column name: " + colName + " Lineage by User:" + principal.getName());
+            } else {
+                String[] args = {tableName};
+                String dot = new String();
+                GetDotForTable getDotForTable = new GetDotForTable();
+                dot = getDotForTable.dotGeneratorWithTable(args);
+
+                LineageInfo lineageInfo = new LineageInfo();
+                LOGGER.info(dot);
+                lineageInfo.setDot(dot.toString());
+                lineageInfo.setTableName(tableName);
+
+//            lineageInfo.setInstanceExecId(instanceExecId);
+                restWrapper = new RestWrapper(lineageInfo, RestWrapper.OK);
+                LOGGER.info("Getting " + tableName + " Lineage by User:" + principal.getName());
+            }
 
         } catch (Exception e) {
             restWrapper = new RestWrapper(e.getMessage(), RestWrapper.ERROR);
