@@ -14,12 +14,13 @@
 
 package com.wipro.ats.bdre.md.rest;
 
+import com.wipro.ats.bdre.lineagedot.GetDotForTable;
 import com.wipro.ats.bdre.md.api.base.MetadataAPIBase;
 import org.apache.log4j.Logger;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import java.security.Principal;
-import com.wipro.ats.bdre.lineage.dot.GetDotForTable;
+
 
 /**
  * Created by arijit on 1/9/15.

@@ -103,6 +103,11 @@
             <groupId>commons-fileupload</groupId>
             <artifactId>commons-fileupload</artifactId>
         </dependency>
+        <dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>lineage-dot</artifactId>
+            <version>${project.version}</version>
+        </dependency>
 
     </dependencies>
 

@@ -11,8 +11,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-package com.wipro.ats.bdre.lineage.dot;
+package com.wipro.ats.bdre.lineagedot;
 
 import com.wipro.ats.bdre.GetLineageNodeByColName;
 import com.wipro.ats.bdre.GetNodeIdForLineageRelation;

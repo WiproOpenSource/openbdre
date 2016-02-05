@@ -44,14 +44,14 @@
         <!--<module>eventing-fwk</module>-->
         <module>hive-data-gen</module>
         <module>dq</module>
-        <module>lineage-dot-gen</module>
-       <!-- <module>hive-io</module>-->
+        <!-- <module>hive-io</module>-->
         <module>data-lineage</module>
         <module>hive-plugin</module>
         <module>im-crawler</module>
         <module>flume-hdfs-sink</module>
         <module>spark-core</module>
         <module>genconf-dump</module>
+        <module>lineage-dot</module>
     </modules>
 
     <dependencies>
