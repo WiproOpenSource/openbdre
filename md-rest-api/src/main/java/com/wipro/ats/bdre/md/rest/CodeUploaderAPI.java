@@ -145,24 +145,15 @@ public class CodeUploaderAPI extends MetadataAPIBase {
         }
     }
 
-
-
-
-
     @RequestMapping(value = "/uploadzip/{subDir}", method = RequestMethod.POST)
-
     public
     @ResponseBody
-    RestWrapper zipUpload(
-                                 //This is lib, hql etc according to file to be uploaded
+    RestWrapper zipUpload(   //This is lib, hql ,zip etc according to file to be uploaded
                                  @PathVariable("subDir") String subDir,
                                  @RequestParam("file") MultipartFile file, Principal principal) {
-
         if (!file.isEmpty()) {
             RestWrapper restWrapper = null;
-
             try {
-
                 String uploadedFilesDirectory = MDConfig.getProperty("upload.base-directory");
                 String name = file.getOriginalFilename();
                 byte[] bytes = file.getBytes();
@@ -170,20 +161,15 @@ public class CodeUploaderAPI extends MetadataAPIBase {
                 LOGGER.debug("Upload location: " + uploadLocation);
                 File fileDir = new File(uploadLocation);
                 fileDir.mkdirs();
-
                 File f = new File(uploadLocation+"/"+name);
                 if(f.exists()) {
-                    LOGGER.info("file to be deleted is "+f);
                    f.delete();
                 }
-
                 File fileToBeSaved = new File(uploadLocation + "/" + name);
                 BufferedOutputStream stream =
                         new BufferedOutputStream(new FileOutputStream(fileToBeSaved));
                 stream.write(bytes);
                 stream.close();
-                LOGGER.debug("Uploaded file: " + fileToBeSaved);
-
                 //Populating Uploaded file bean to return in RestWrapper
                 UploadedFile uploadedFile = new UploadedFile();
                 uploadedFile.setParentProcessId(null);
@@ -192,7 +178,6 @@ public class CodeUploaderAPI extends MetadataAPIBase {
                 uploadedFile.setFileSize(fileToBeSaved.length());
                 LOGGER.debug("The UploadedFile bean:" + uploadedFile);
                 LOGGER.info("File uploaded : " + uploadedFile + " uploaded by User:" + principal.getName());
-
                 return new RestWrapper(uploadedFile, RestWrapper.OK);
             } catch (Exception e) {
                 LOGGER.error("error occurred while uploading file", e);
@@ -203,13 +188,6 @@ public class CodeUploaderAPI extends MetadataAPIBase {
 
         }
     }
-
-
-
-
-
-
-
 
     @RequestMapping(value = "/upload/{parentProcessId}/{subDir}/{fileName:.+}", method = RequestMethod.GET)
 

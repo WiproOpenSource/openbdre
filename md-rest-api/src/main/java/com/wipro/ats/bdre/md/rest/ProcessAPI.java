@@ -375,7 +375,6 @@ public class ProcessAPI extends MetadataAPIBase {
                        @PathVariable("id") Integer processId
     ) {
         RestWrapper restWrapper = null;
-        //resp.setHeader("Content-Disposition", "attachment; filename=" + processId + ".json");
         try {
             Process process = new Process();
             process.setProcessId(processId);
@@ -433,9 +432,6 @@ public class ProcessAPI extends MetadataAPIBase {
         return restWrapper;
     }
 
-
-
-
     @RequestMapping(value = {"/zippedexport/{id}", "/zippedexport/{id}/"}, method = RequestMethod.GET)
     public
     @ResponseBody
@@ -444,8 +440,8 @@ public class ProcessAPI extends MetadataAPIBase {
     ) {
         RestWrapper restWrapper = null;
         ProcessExport processExport = new ProcessExport();
-        //resp.setHeader("Content-Disposition", "attachment; filename=" + processId + ".json");
-        try {
+        try
+           {
             Process process = new Process();
             process.setProcessId(processId);
 //            List<Process> processList = s.selectList("call_procedures.select-parent-sub-process-list", process);
@@ -478,7 +474,6 @@ public class ProcessAPI extends MetadataAPIBase {
                 tableProcess.setTableEditTS(DateConverter.dateToString(daoProcess.getEditTs()));
                 tableProcess.setDeleteFlag(daoProcess.getDeleteFlag());
                 tableProcess.setProcessCode(daoProcess.getProcessCode());
-                LOGGER.info("processCode during export is "+tableProcess.getProcessCode());
                 processList.add(tableProcess);
             }
             List<Properties> propertiesList = new ArrayList<Properties>();
@@ -493,32 +488,21 @@ public class ProcessAPI extends MetadataAPIBase {
                 tableProperties.setDescription(daoProperties.getDescription());
                 propertiesList.add(tableProperties);
             }}
-
             processExport.setProcessList(processList);
             processExport.setPropertiesList(propertiesList);
             Export export=new Export();
             String zippedFileLocatin=export.compress(processId.toString(),processExport);
             LOGGER.info("zippedfile location is "+zippedFileLocatin);
-
-
-
-
             String fileName = "";
             String fileType = "";
-            // Find this file id in database to get file name, and file type
-
-            // You must tell the browser the file type you are going to send
+            // Find this file id in database to get file name, and file type .You must tell the browser the file type you are going to send
             // for example application/pdf, text/plain, text/html, image/jpg
             resp.setContentType("application/zip");
-
             // Make sure to show the download dialog
             resp.setHeader("Content-Disposition", "attachment; filename=" + processId + ".zip");
-
             // Assume file name is retrieved from database
             // For example D:\\file\\test.pdf
-
             File my_file = new File(zippedFileLocatin);
-
             // This should send the file to browser
             OutputStream out = resp.getOutputStream();
             FileInputStream in = new FileInputStream(my_file);
@@ -536,10 +520,6 @@ public class ProcessAPI extends MetadataAPIBase {
         }
         return restWrapper;
     }
-
-
-
-
 
     @RequestMapping(value = {"/import", "/import/"}, method = RequestMethod.POST)
     public
@@ -564,7 +544,6 @@ public class ProcessAPI extends MetadataAPIBase {
         try {
             ObjectMapper mapper = new ObjectMapper();
             mapper.configure(DeserializationConfig.Feature.FAIL_ON_UNKNOWN_PROPERTIES, false);
-            LOGGER.info("uploaded file name is "+uploadedFileName);
             String homeDir = System.getProperty("user.home");
             Import pimport=new Import();
             String zippedFileLocation = "";
@@ -574,13 +553,8 @@ public class ProcessAPI extends MetadataAPIBase {
                 zippedFileLocation = homeDir + "/bdre-wfd/zip/" + uploadedFileName;
             }
             String outputDir=homeDir+"/bdre-wfd/intermediateDir";
-            LOGGER.info("zipped file location is "+zippedFileLocation);
-            LOGGER.info("output dir is "+outputDir);
             String fileString=pimport.unZipIt(zippedFileLocation,outputDir);
-            LOGGER.info("filestring in processAPI is "+fileString);
             ProcessExport processExport = mapper.readValue(fileString, ProcessExport.class);
-            LOGGER.info(processExport.getProcessList());
-            LOGGER.info(processExport.getPropertiesList());
             for (Process process : processExport.getProcessList()) {
                 process.setProcessTemplateId(0);
             }
@@ -589,15 +563,12 @@ public class ProcessAPI extends MetadataAPIBase {
             for (Process process : allImportedProcessList)
             {
                 importedTable.put(process.getProcessCode(),process.getProcessId().toString());
-                //LOGGER.info(process.toString());
 
             }
             Process parentProcess = processExport.getProcessList().get(0);
 //            List<Process> dbList = s.selectList("call_procedures.select-parent-sub-process-list", parentProcess);
             List<Process> dbList = new ArrayList<Process>();
-            LOGGER.info("processCode searched for "+parentProcess.getProcessCode());
             com.wipro.ats.bdre.md.dao.jpa.Process dbParentProcess=processDAO.returnProcess(parentProcess.getProcessCode());
-            LOGGER.info(dbParentProcess);
             Integer parentProcessId=null;
             if (dbParentProcess==null)
             {
@@ -619,7 +590,6 @@ public class ProcessAPI extends MetadataAPIBase {
                     insertDaoProcess.setProcessTemplate(daoProcessTemplate);
                 }
                     insertDaoProcess.setProcess(null);
-                LOGGER.info("parent process is "+insertDaoProcess.getProcess());
                 insertDaoProcess.setDescription(parentProcess.getDescription());
                 insertDaoProcess.setAddTs(DateConverter.stringToDate(parentProcess.getTableAddTS()));
                 insertDaoProcess.setProcessName(parentProcess.getProcessName());
@@ -639,18 +609,12 @@ public class ProcessAPI extends MetadataAPIBase {
                     insertDaoProcess.setDeleteFlag(parentProcess.getDeleteFlag());
                 insertDaoProcess.setEditTs(DateConverter.stringToDate(parentProcess.getTableEditTS()));
                 insertDaoProcess.setProcessCode(parentProcess.getProcessCode());
-                LOGGER.info(parentProcess.toString());
                 parentProcessId = processDAO.insert(insertDaoProcess);
-                LOGGER.info("process id of  inserted  process is is "+parentProcessId);
                 parentProcess.setProcessId(parentProcessId);
                 parentProcess.setTableAddTS(DateConverter.dateToString(insertDaoProcess.getAddTs()));
                 parentProcess.setTableEditTS(DateConverter.dateToString(insertDaoProcess.getEditTs()));
             }
-
-
             List<com.wipro.ats.bdre.md.dao.jpa.Process> daoProcessList = processDAO.selectProcessList(parentProcess.getProcessCode());
-            LOGGER.info("daoProcessList size= "+daoProcessList);
-
             for (com.wipro.ats.bdre.md.dao.jpa.Process daoProcess : daoProcessList) {
                 Process tableProcess = new Process();
                 tableProcess.setProcessId(daoProcess.getProcessId());
@@ -678,7 +642,6 @@ public class ProcessAPI extends MetadataAPIBase {
                 tableProcess.setDeleteFlag(daoProcess.getDeleteFlag());
                 tableProcess.setProcessCode(daoProcess.getProcessCode());
                 dbList.add(tableProcess);
-                LOGGER.info("dblist size ="+dbList.size());
             }
             List<Integer> dbProcessIdList = new ArrayList<Integer>();
             List<Integer> importProcessIdList = new ArrayList<Integer>();
@@ -687,31 +650,14 @@ public class ProcessAPI extends MetadataAPIBase {
             List<String> commonPCodeList = new ArrayList<>();
             List<String> diffPCodeList = new ArrayList<>();
             List<String> toDeletePCodeList = new ArrayList<String>();
-
-
-
             for (Process p : dbList) {
-                LOGGER.info(p.getProcessCode());
                 dbProcessIdList.add(p.getProcessId());
                 dbProcessCodeList.add(p.getProcessCode());
-
             }
-
-               LOGGER.info("dbprocessidlist is  "+dbProcessIdList);
-               LOGGER.info("dbprocesscodelist is"+dbProcessCodeList);
-
-
-
             for (Process p : processExport.getProcessList()) {
                 importProcessIdList.add(p.getProcessId());
                 importedProcessCodeList.add(p.getProcessCode());
-
             }
-
-            LOGGER.info("importedprocessidlist is  "+importProcessIdList);
-            LOGGER.info("importedprocesscodelist is"+importedProcessCodeList);
-
-
             HashSet<String> set = new HashSet<String>();
             for (String i : dbProcessCodeList) {
                 set.add(i);
@@ -732,13 +678,7 @@ public class ProcessAPI extends MetadataAPIBase {
                     toDeletePCodeList.add(i);
                 }
             }
-
-            LOGGER.info("diffPcodeList is "+diffPCodeList);
-            LOGGER.info("CommonPcodeLIst is "+commonPCodeList);
-            LOGGER.info("tobedeletedpcodelist is"+toDeletePCodeList);
             Process pIdUpdate = new Process();
-
-
             for (Process process : processExport.getProcessList()) {
                 if (diffPCodeList.contains(process.getProcessCode())) {
                     com.wipro.ats.bdre.md.dao.jpa.Process insertDaoProcess = new com.wipro.ats.bdre.md.dao.jpa.Process();
@@ -759,14 +699,10 @@ public class ProcessAPI extends MetadataAPIBase {
                         insertDaoProcess.setProcessTemplate(daoProcessTemplate);
                     }
                     if (dbParentProcess!= null) {
-                        LOGGER.info("parent processId is "+dbParentProcess.getProcessId());
                         insertDaoProcess.setProcess(dbParentProcess);
                     }
-                    else
-                    {
-
-                        insertDaoProcess.setProcess(processDAO.get(parentProcessId));
-                    }
+                    else {
+                        insertDaoProcess.setProcess(processDAO.get(parentProcessId));}
                     insertDaoProcess.setDescription(process.getDescription());
                     insertDaoProcess.setAddTs(DateConverter.stringToDate(process.getTableAddTS()));
                     insertDaoProcess.setProcessName(process.getProcessName());
@@ -785,28 +721,14 @@ public class ProcessAPI extends MetadataAPIBase {
                         insertDaoProcess.setDeleteFlag(process.getDeleteFlag());
                     insertDaoProcess.setEditTs(DateConverter.stringToDate(process.getTableEditTS()));
                     insertDaoProcess.setProcessCode(process.getProcessCode());
-                    LOGGER.info(process.toString());
-                    LOGGER.info("process Code to be added = " + process.getProcessCode());
-                    LOGGER.info("process id to be inserted is "+process.getProcessId());
                     Integer processId = processDAO.insert(insertDaoProcess);
-                    LOGGER.info("process id of  inserted  process is is "+processId);
                     process.setProcessId(processId);
                     process.setTableAddTS(DateConverter.dateToString(insertDaoProcess.getAddTs()));
                     process.setTableEditTS(DateConverter.dateToString(insertDaoProcess.getEditTs()));
-                    //Process addedProcess = s.selectOne("call_procedures.InsertProcess", process);
-                 //pIdUpdate.setProcessId(process.getProcessId());
-                  //  pIdUpdate.setProcessTemplateId(process.getProcessTemplateId());
-                  /// LOGGER.debug("before updating pid = " + pIdUpdate.getProcessId() + " replacer id= " + pIdUpdate.getProcessTemplateId());
-//                  //  s.selectOne("call_procedures.UpdateProcessId", pIdUpdate);
-                   // processDAO.updateProcessId(pIdUpdate.getProcessId(), pIdUpdate.getProcessTemplateId());
                 }
             }
-
             for (Process process : processExport.getProcessList()) {
                 if (commonPCodeList.contains(process.getProcessCode())) {
-                    LOGGER.debug("updating existing processes,CODE= " + process.getProcessCode());
-
-                    LOGGER.debug("before updating next process id= " + process.getNextProcessIds());
 //                    s.selectOne("call_procedures.UpdateProcess", process);
                     com.wipro.ats.bdre.md.dao.jpa.Process updateDaoProcess =processDAO.returnProcess(process.getProcessCode());
                     com.wipro.ats.bdre.md.dao.jpa.ProcessType daoProcessType = new com.wipro.ats.bdre.md.dao.jpa.ProcessType();
@@ -827,7 +749,6 @@ public class ProcessAPI extends MetadataAPIBase {
                     }
                     if (process.getParentProcessId()!=null){
                     if (dbParentProcess!= null) {
-                        LOGGER.info("parent processId is "+dbParentProcess.getProcessId());
                         updateDaoProcess.setProcess(dbParentProcess);
                     }
                     else
@@ -862,52 +783,34 @@ public class ProcessAPI extends MetadataAPIBase {
 
             for (Process process : dbList) {
                 if (toDeletePCodeList.contains(process.getProcessCode())) {
-                    LOGGER.debug("deleting missing processes, CODE= " + process.getProcessCode());
 //                    s.delete("call_procedures.DeleteProcess", process);
                     processDAO.delete(process.getProcessId());
                 }
 
             }
-            LOGGER.info("process completed");
             Hashtable<String,String> table = new Hashtable<String,String>();
             List<com.wipro.ats.bdre.md.dao.jpa.Process> allDaoProcessList = processDAO.selectProcessList(parentProcess.getProcessCode());
              for (com.wipro.ats.bdre.md.dao.jpa.Process dbInsertedProcess : allDaoProcessList)
              {
-
-                     table.put(importedTable.get(dbInsertedProcess.getProcessCode()),dbInsertedProcess.getProcessId().toString());
-                     LOGGER.info("Key : "+importedTable.get(dbInsertedProcess.getProcessCode())+" Value : "+dbInsertedProcess.getProcessId());
-
+                 table.put(importedTable.get(dbInsertedProcess.getProcessCode()),dbInsertedProcess.getProcessId().toString());
              }
-
-
-
             for (com.wipro.ats.bdre.md.dao.jpa.Process dbInsertedProcess : allDaoProcessList)
             {
                 String nextProcessIds=dbInsertedProcess.getNextProcessId();
-                LOGGER.info(dbInsertedProcess.getNextProcessId());
                 String updatedNextProcessIds="";
                 String[] temp=nextProcessIds.split(",");
-                LOGGER.info(temp.toString());
                 for (int i=0;i<temp.length;i++)
                 {
-                    LOGGER.info("temp[i] "+temp[i]);
                     updatedNextProcessIds=updatedNextProcessIds+table.get(temp[i])+",";
                 }
-                LOGGER.info("updatedNextProcessIds :"+updatedNextProcessIds);
                 dbInsertedProcess.setNextProcessId(updatedNextProcessIds.substring(0,updatedNextProcessIds.length()-1));
                 processDAO.update(dbInsertedProcess);
                 propertiesDAO.deleteByProcessId(dbInsertedProcess);
-
             }
-                  LOGGER.info("after deleting properties");
-
             for (Properties properties : processExport.getPropertiesList()) {
-                LOGGER.info(properties.toString());
                 Integer updatedProcessId=Integer.valueOf(table.get(properties.getProcessId().toString()));
                 properties.setProcessId(updatedProcessId);
-                LOGGER.info(properties.toString());
-                LOGGER.info("Inserting all properties after delete, id= " + properties.getConfigGroup() + properties.getKey());
-//              s.selectOne("call_procedures.InsertProperties", properties);
+                //s.selectOne("call_procedures.InsertProperties", properties);
                 com.wipro.ats.bdre.md.dao.jpa.Properties insertProperties = new com.wipro.ats.bdre.md.dao.jpa.Properties();
                 PropertiesId propertiesId = new PropertiesId();
                 propertiesId.setPropKey(properties.getKey());
@@ -926,7 +829,6 @@ public class ProcessAPI extends MetadataAPIBase {
             File newDir=new File(homeDir+"/bdre-wfd/"+parentProcessInserted.getProcessId());
             if (newDir.exists())
             {
-                LOGGER.info("dir deleted is "+newDir);
                 newDir.delete();
             }
             if ( oldDir.isDirectory() ) {
@@ -935,16 +837,6 @@ public class ProcessAPI extends MetadataAPIBase {
                 oldDir.mkdir();
                 oldDir.renameTo(newDir);
             }
-            //File oldJsonFile = new File(homeDir+"/bdre-wfd/"+uploadedFileName.substring(0,uploadedFileName.length()-4)+"/"+uploadedFileName.substring(0,uploadedFileName.length()-4)+".json");
-
-//            File oldJsonFile = new File(homeDir+"/bdre-wfd/"+parentProcessInserted.getProcessId()+"/"+uploadedFileName.substring(0,uploadedFileName.length()-4)+".json");
-//            File newJsonFile = new File(homeDir+"/bdre-wfd/"+parentProcessInserted.getProcessId()+"/"+parentProcessInserted.getProcessId()+".json");
-//            if(oldJsonFile.renameTo(newJsonFile)) {
-//                System.out.println("renamed");
-//            } else {
-//                System.out.println("Error");
-//            }
-
             restWrapper = new RestWrapper(processExport, RestWrapper.OK);
         } catch (Exception e) {
             restWrapper = new RestWrapper(e.getMessage(), RestWrapper.ERROR);

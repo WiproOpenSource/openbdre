@@ -138,7 +138,6 @@ public class ProcessDAO {
         return process;
     }
 
-
     public Integer insert(Process process) {
         Session session = sessionFactory.openSession();
         Integer id = null;
@@ -218,9 +217,6 @@ public class ProcessDAO {
         return processSubProcessList;
     }
 
-
-
-
     public List<Process> selectProcessList(String processCode) {
         Session session = sessionFactory.openSession();
         session.beginTransaction();
@@ -257,9 +253,6 @@ public class ProcessDAO {
         return parentProcess;
 
     }
-
-
-
 
     public void updateProcessId(Integer oldProcessId, Integer newProcessId) {
         Session session = sessionFactory.openSession();
@@ -489,7 +482,7 @@ public List<Process> createOneChildJob(Process parentProcess, Process childProce
     Session session = sessionFactory.openSession();
     Integer parentPid = null;
     Integer childPid = null;
-    List<Process> processList=new ArrayList<Process>();
+    List<Process> processList=new ArrayList<>();
     try {
         session.beginTransaction();
         parentPid = (Integer) session.save(parentProcess);

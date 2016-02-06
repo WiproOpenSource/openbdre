@@ -23,14 +23,7 @@ $(document).ready(function(){
     this.href="#"+this.className.slice(7);
     var link="#"+this.className.slice(7);
     $('.nav-tabs a[href=link]').tab('show')
-
 });
-
-
-
-
-
-
 });
 
 </script>
@@ -57,8 +50,6 @@ $(document).ready(function(){
 <script>
 angular.module('myApp', [])
   .controller('myCtrl', function($scope, $window, $http) {
-
-
 $.ajax({
   url: "../../store/store.json?rand="+Math.random(),
   dataType: "json",
@@ -73,13 +64,7 @@ $scope.addClass = function(check,className) {
     var cssClass = check ? className : null;
     return cssClass;
 };
-
-
 $scope.createApp = function(location) {
-
-              window.
-
-
        $.ajax({
                          		    url: "/mdrest/process/import",
                          		    type: "POST",
@@ -138,8 +123,6 @@ $scope.createApp = function(location) {
       </div>
     </div>
   </div>
-
-
   <div class="modal fade" id="div-dialog-warning" role="dialog">
       <div class="modal-dialog modal-sm">
         <div class="modal-content">
@@ -156,10 +139,6 @@ $scope.createApp = function(location) {
         </div>
       </div>
     </div>
-
-
 </div>
-
-
 </body>
 </html>

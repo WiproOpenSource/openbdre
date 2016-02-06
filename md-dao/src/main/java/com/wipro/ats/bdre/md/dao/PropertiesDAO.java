@@ -169,7 +169,6 @@ public class PropertiesDAO {
         Session session = sessionFactory.openSession();
         try {
             session.beginTransaction();
-            LOGGER.info("deleting properties");
             Criteria propertiesByProcessId = session.createCriteria(Properties.class).add(Restrictions.eq("process", process));
             List<Properties> propertiesList = propertiesByProcessId.list();
             for (Properties properties : propertiesList) {
