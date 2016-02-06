@@ -172,7 +172,7 @@
                             }
                             var addRecord = function () {
                                 var postData = $.param({
-                                    rulesUserNameValue: $("#rulesUsername").val(),
+                                    rulesUserNameValue: $("#rulesUserNameValue").val(),
                                     rulesPasswordValue: $("#rulesPasswordValue").val(),
                                     rulesPackageValue: $("#rulesPackageValue").val(),
                                     fileDelimiterRegexValue: $("#fileDelimiterRegexValue").val(),
