@@ -567,8 +567,13 @@ public class ProcessAPI extends MetadataAPIBase {
             LOGGER.info("uploaded file name is "+uploadedFileName);
             String homeDir = System.getProperty("user.home");
             Import pimport=new Import();
-            String zippedFileLocation=homeDir+"/bdre-wfd/zip/"+uploadedFileName;
-            String outputDir=homeDir+"/bdre-wfd/"+uploadedFileName.substring(0,uploadedFileName.length()-4);
+            String zippedFileLocation = "";
+            if (uploadedFileName.contains("bdreappstore-apps")){
+                zippedFileLocation = uploadedFileName;
+            } else {
+                zippedFileLocation = homeDir + "/bdre-wfd/zip/" + uploadedFileName;
+            }
+            String outputDir=homeDir+"/bdre-wfd/intermediateDir";
             LOGGER.info("zipped file location is "+zippedFileLocation);
             LOGGER.info("output dir is "+outputDir);
             String fileString=pimport.unZipIt(zippedFileLocation,outputDir);
@@ -917,7 +922,7 @@ public class ProcessAPI extends MetadataAPIBase {
 
             }
             com.wipro.ats.bdre.md.dao.jpa.Process parentProcessInserted=processDAO.returnProcess(parentProcess.getProcessCode());
-            File oldDir = new File(homeDir+"/bdre-wfd/"+uploadedFileName.substring(0,uploadedFileName.length()-4));
+            File oldDir = new File(homeDir+"/bdre-wfd/intermediateDir");
             File newDir=new File(homeDir+"/bdre-wfd/"+parentProcessInserted.getProcessId());
             if (newDir.exists())
             {
@@ -932,13 +937,13 @@ public class ProcessAPI extends MetadataAPIBase {
             }
             //File oldJsonFile = new File(homeDir+"/bdre-wfd/"+uploadedFileName.substring(0,uploadedFileName.length()-4)+"/"+uploadedFileName.substring(0,uploadedFileName.length()-4)+".json");
 
-            File oldJsonFile = new File(homeDir+"/bdre-wfd/"+parentProcessInserted.getProcessId()+"/"+uploadedFileName.substring(0,uploadedFileName.length()-4)+".json");
-            File newJsonFile = new File(homeDir+"/bdre-wfd/"+parentProcessInserted.getProcessId()+"/"+parentProcessInserted.getProcessId()+".json");
-            if(oldJsonFile.renameTo(newJsonFile)) {
-                System.out.println("renamed");
-            } else {
-                System.out.println("Error");
-            }
+//            File oldJsonFile = new File(homeDir+"/bdre-wfd/"+parentProcessInserted.getProcessId()+"/"+uploadedFileName.substring(0,uploadedFileName.length()-4)+".json");
+//            File newJsonFile = new File(homeDir+"/bdre-wfd/"+parentProcessInserted.getProcessId()+"/"+parentProcessInserted.getProcessId()+".json");
+//            if(oldJsonFile.renameTo(newJsonFile)) {
+//                System.out.println("renamed");
+//            } else {
+//                System.out.println("Error");
+//            }
 
             restWrapper = new RestWrapper(processExport, RestWrapper.OK);
         } catch (Exception e) {

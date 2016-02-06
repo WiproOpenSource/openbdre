@@ -86,33 +86,24 @@ public class Export {
 
         String homeDir = System.getProperty("user.home");
 
-
+        source_dir=homeDir+"/bdre-wfd/"+processId;
 
         ObjectMapper mapper = new ObjectMapper();
-
-
-        if (Files.exists(Paths.get(source_dir))) {
-
-            // convert user object to json string,
-            try {
-                mapper.writeValue(new File(homeDir + "/bdre-wfd/" + processId + "/" + processId + ".json"), processExport);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-
-        }
-        else
-        {
-            File creatingDir = new File(source_dir);
+        File creatingDir = new File(source_dir);
+        if (!creatingDir.exists()) {
             creatingDir.mkdir();
+        }
+
+        if (creatingDir.exists()) {
             // convert user object to json string,
             try {
-                mapper.writeValue(new File(homeDir + "/bdre-wfd/" + processId + "/" + processId + ".json"), processExport);
+                mapper.writeValue(new File(homeDir + "/bdre-wfd/" + processId + "/" +"process.json"), processExport);
             } catch (IOException e) {
                 e.printStackTrace();
             }
 
         }
+
 
         UUID idOne = UUID.randomUUID();
         System.out.println("UUID is "+idOne);

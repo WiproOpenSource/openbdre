@@ -32,10 +32,9 @@ public class Import
         try{
 
             //create output directory is not exists
-            File folder = new File(outputFolder);
-            if(folder.exists()){
-                System.out.println("folder to be deleted is "+folder);
-                folder.delete();
+            File folder = new File(OUTPUT_FOLDER);
+            if(!folder.exists()){
+                folder.mkdir();
             }
 
             //get the zip file content
@@ -45,24 +44,27 @@ public class Import
             ZipEntry ze = zis.getNextEntry();
 
             while(ze!=null){
-
                 String fileName = ze.getName();
                 File newFile = new File(outputFolder + File.separator + fileName);
-
                 System.out.println("file unzip : "+ newFile.getAbsoluteFile());
 
                 //create all non exists folders
                 //else you will hit FileNotFoundException for compressed folder
                 new File(newFile.getParent()).mkdirs();
+                //Unix zip also adds directory entries
+                //so if an entry is of type directory create that directory or else create a file
+                if(ze.isDirectory()){
+                    newFile.mkdirs();
+                }else {
+                    FileOutputStream fos = new FileOutputStream(newFile);
 
-                FileOutputStream fos = new FileOutputStream(newFile);
-
-                int len;
-                while ((len = zis.read(buffer)) > 0) {
-                    fos.write(buffer, 0, len);
+                    int len;
+                    while ((len = zis.read(buffer)) > 0) {
+                        fos.write(buffer, 0, len);
+                    }
+                    fos.close();
                 }
 
-                fos.close();
                 ze = zis.getNextEntry();
             }
 
@@ -71,23 +73,21 @@ public class Import
 
             System.out.println("Done");
 
-
             String temp;
             BufferedReader br = null;
-            String[] ar =outputFolder.split("/");
-            int size=ar.length;
-            br = new BufferedReader(new FileReader(outputFolder+"/"+ar[size-1]+".json"));
+            // String[] ar =outputFolder.split("/");
+            // int size=ar.length;
+            br = new BufferedReader(new FileReader(outputFolder+"/process.json"));
             while ((temp=br.readLine()) != null) {
                 jsonfile=jsonfile+temp;
                 System.out.println(jsonfile);
             }
             System.out.println("final string is"+jsonfile);
 
-
-
         }catch(IOException ex){
             ex.printStackTrace();
         }
+
        return jsonfile;
     }
 }
