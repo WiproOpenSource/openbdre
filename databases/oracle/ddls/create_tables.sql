@@ -104,7 +104,7 @@ CREATE TABLE process_template
 
 CREATE TABLE properties_template (
   process_template_id number(10,0) NOT NULL,
-  config_group varchar2(10) NOT NULL,
+  config_group varchar2(128) NOT NULL,
   prop_temp_key varchar2(128) NOT NULL,
   prop_temp_value varchar2(2048) NOT NULL,
   description varchar2(1028) NOT NULL,
@@ -153,7 +153,7 @@ CREATE TABLE properties_template (
 
 CREATE TABLE properties (
   process_id number(10,0) NOT NULL,
-  config_group varchar2(10) NOT NULL,
+  config_group varchar2(128) NOT NULL,
   prop_key varchar2(128) NOT NULL,
   prop_value varchar2(2048) NOT NULL,
   description varchar2(1028) NOT NULL,

@@ -14,15 +14,19 @@
 
 package com.wipro.ats.bdre.im.etl.api;
 
+import com.wipro.ats.bdre.IMConfig;
 import com.wipro.ats.bdre.im.IMConstant;
 import com.wipro.ats.bdre.im.etl.api.base.ETLBase;
 import com.wipro.ats.bdre.im.etl.api.exception.ETLException;
 import org.apache.commons.cli.CommandLine;
+import org.apache.hadoop.conf.Configuration;
+import org.apache.hadoop.fs.FileSystem;
+import org.apache.hadoop.fs.FileUtil;
+import org.apache.hadoop.fs.Path;
 import org.apache.log4j.Logger;
 
 import java.sql.Connection;
 import java.sql.Statement;
-import java.util.HashMap;
 
 /**
  * Created by vishnu on 12/14/14.
@@ -32,41 +36,43 @@ public class RawLoad extends ETLBase {
     private static final Logger LOGGER = Logger.getLogger(RawLoad.class);
     private static final String[][] PARAMS_STRUCTURE = {
             {"p", "process-id", " Process id of ETLDriver"},
-            {"lof", "list-of-files", " List of files"}
+            {"ied", "instance-exec-id", " instance exec id"},
+            {"lof", "list-of-files", " List of files"},
+            {"lob", "list-of-file-batchIds", "List of batch Ids corresponding to above files "}
     };
 
     public void execute(String[] params) {
-
         CommandLine commandLine = getCommandLine(params, PARAMS_STRUCTURE);
         String processId = commandLine.getOptionValue("process-id");
+        String instanceExecId = commandLine.getOptionValue("instance-exec-id");
         String listOfFiles = commandLine.getOptionValue("list-of-files");
-        init(processId);
+        String listOfBatches = commandLine.getOptionValue("list-of-file-batchIds");
+        loadRawHiveTableInfo(processId);
+        CreateRawBaseTables createRawBaseTables =new CreateRawBaseTables();
+        String[] createTablesArgs={"-p",processId,"-instExecId",instanceExecId };
+        createRawBaseTables.executeRawLoad(createTablesArgs);
         //Getting raw table information
-        String rawTableName = getRawTable().getTableName();
-        String rawDbName = getRawTable().getDbName();
-        String rawTableDdl = getRawTable().getDdl();
+        String rawTableName = rawTable;
+        String rawDbName = rawDb;
         //Now load file to table
-        loadRawLoadTable(rawDbName, rawTableName, rawTableDdl, listOfFiles);
+        loadRawLoadTable(rawDbName, rawTableName, listOfFiles, listOfBatches);
 
     }
 
-    private void loadRawLoadTable(String dbName, String tableName, String ddl, String listOfFiles) {
+    private void loadRawLoadTable(String dbName, String tableName, String listOfFiles, String listOfBatches) {
         try {
             LOGGER.debug("Reading Hive Connection details from Properties File");
-            String[] files = listOfFiles.split(IMConstant.FILE_ROW_SEPERATOR);
-            HashMap<String, String> batchFiles = new HashMap<String, String>();
-            for (int i = 0; i < files.length; i++) {
-                String[] columns = files[i].split(IMConstant.FILE_FIELD_SEPERATOR);
-                batchFiles.put(columns[0], columns[2]);
-            }
+            String[] files = listOfFiles.split(IMConstant.FILE_FIELD_SEPERATOR);
+            String[] tempFiles = createTempCopies(files);
+            String[] correspondingBatchIds = listOfBatches.split(IMConstant.FILE_FIELD_SEPERATOR);
             Connection con = getHiveJDBCConnection(dbName);
             Statement stmt = con.createStatement();
 
             LOGGER.debug("Inserting data into the table");
 
-            for (String key : batchFiles.keySet()) {
-                String query = "LOAD DATA INPATH '" + batchFiles.get(key) + "' OVERWRITE INTO TABLE " + tableName
-                + " PARTITION (batchid='" + key + "')";
+            for (int i=0; i<tempFiles.length; i++) {
+                String query = "LOAD DATA INPATH '" + tempFiles[i] + "' INTO TABLE " + tableName
+                + " PARTITION (batchid='" + correspondingBatchIds[i] + "')";
                 LOGGER.info("Raw load query " + query);
                 stmt.executeUpdate(query);
             }
@@ -81,5 +87,23 @@ public class RawLoad extends ETLBase {
 
     }
 
+    private String[] createTempCopies(String[] files){
+        String outputFileList[]= new String[files.length];
+        try {
+        Configuration conf = new Configuration();
+        conf.set("fs.defaultFS", IMConfig.getProperty("common.default-fs-name"));
+        FileSystem fs = FileSystem.get(conf);
+        for(int i=0;i<files.length;i++) {
+            Path srcPath = new Path(files[i]);
+            Path destPath = new Path(files[i]+"_tmp");
+            FileUtil.copy(fs, srcPath, fs, destPath, false, conf);
+            outputFileList[i]=files[i]+"_tmp";
+        }
 
+    } catch(Exception e){
+            LOGGER.error("error occured ="+ e);
+            throw new ETLException(e);
+        }
+        return outputFileList;
+}
 }

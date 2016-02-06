@@ -73,18 +73,18 @@ public class FileMonitor implements FileListener {
         FileObject obj = fileChangeEvent.getFile();
         LOGGER.debug("File Created " + obj.getURL());
         String dirPath = obj.getParent().getName().getPath();
-        if(!dirPath.equals(FileMonRunnableMain.getMonitoredDirName())){
-            return;
-        }
+        LOGGER.debug("Full path "+obj.getName().getPath());
+
         //Don't process anything with _archive
-        if(dirPath.endsWith("_archive")){
+        if(dirPath.startsWith(FileMonRunnableMain.getMonitoredDirName()+"/"+FileMonRunnableMain.ARCHIVE)){
             return;
         }
         //Don't process directory
         if(obj.getType() == FileType.FOLDER){
             return;
         }
-        String fileName = obj.getName().getBaseName();
+
+        String fileName = obj.getName().getPath();
 
         //Checking if the file name matches with the given pattern
         if (fileName.matches(FileMonRunnableMain.getFilePattern())) {
@@ -98,11 +98,12 @@ public class FileMonitor implements FileListener {
         // *Start*   Eligible files moved to data structure for ingestion to HDFS
         FileCopyInfo fileCopyInfo = new FileCopyInfo();
         try {
+          //  String exactFileName = fc.getFile().getName().getBaseName();
             fileCopyInfo.setFileName(fileName);
             fileCopyInfo.setSubProcessId(FileMonRunnableMain.getSubProcessId());
             fileCopyInfo.setServerId(new Integer(123461).toString());
             fileCopyInfo.setSrcLocation(fc.getFile().getName().getPath());
-            fileCopyInfo.setDstLocation(FileMonRunnableMain.getHdfsUploadDir());
+            fileCopyInfo.setDstLocation(new java.io.File(fileName).getParent().replace(FileMonRunnableMain.getMonitoredDirName(), FileMonRunnableMain.getHdfsUploadDir()));
             fileCopyInfo.setFileHash(DigestUtils.md5Hex(fc.getInputStream()));
             fileCopyInfo.setFileSize(fc.getSize());
             fileCopyInfo.setTimeStamp(fc.getLastModifiedTime());
