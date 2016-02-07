@@ -14,7 +14,6 @@ before_install:
     - echo hibernate.dialect=org.hibernate.dialect.MySQLDialect >> md-dao/src/main/resources/db.properties
     - echo hibernate.default_schema=bdre >> md-dao/src/main/resources/db.properties
     - cat md-dao/src/main/resources/db.properties
-    - mysql -uroot -e "drop database bdre"
     - mysql -uroot -e "create database if not exists bdre"
     - mysql -uroot bdre < databases/mysql/ddls/drop_tables.sql
     - mysql -uroot bdre < databases/mysql/ddls/create_tables.sql
