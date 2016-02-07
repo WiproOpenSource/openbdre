@@ -1,0 +1,2 @@
+install:
+    mvn -s settings.xml clean install -P hdp22
