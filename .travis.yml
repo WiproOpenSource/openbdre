@@ -19,4 +19,4 @@ before_install:
 install:
     - java -version
     - mvn -version
-    - cat /home/travis/build/WiproOpenSourcePractice/openbdre/im-crawler/src/main/java/com/wipro/ats/bdre/md/dao/jpa/Weburlsdb.java
+    - cat /home/travis/build/WiproOpenSourcePractice/openbdre/md-dao/target/generated-sources/hibernate3/com/wipro/ats/bdre/md/dao/jpa/Weburlsdb.java
