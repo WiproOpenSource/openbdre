@@ -5,7 +5,8 @@ before_install:
     - echo hibernate.transaction.factory_class=org.hibernate.transaction.JDBCTransactionFactory >> md-dao/src/main/resources/db.properties
     - echo hibernate.show_sql=false >> md-dao/src/main/resources/db.properties
     - echo hibernate.connection.driver_class=com.mysql.jdbc.Driver >> md-dao/src/main/resources/db.properties
-    - echo hibernate.connection.url=jdbc:mysql://localhost:3306/bdre;create=true >> md-dao/src/main/resources/db.properties
+    - echo "hibernate.connection.url=jdbc:mysql://localhost:3306/bdre;create=true" >> md-dao/src/main/resources/db.properties
+    - echo hibernate.connection.password= >> md-dao/src/main/resources/db.properties
     - echo hibernate.connection.username=root >> md-dao/src/main/resources/db.properties
     - echo hibernate.dialect=org.hibernate.dialect.MySQLDialect >> md-dao/src/main/resources/db.properties
     - echo hibernate.default_schema=bdre >> md-dao/src/main/resources/db.properties
