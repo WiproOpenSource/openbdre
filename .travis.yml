@@ -23,17 +23,8 @@ script:
 after_script:
     - cat /home/travis/build/WiproOpenSourcePractice/openbdre/md-dao/target/generated-sources/hibernate3/com/wipro/ats/bdre/md/dao/jpa/Weburlsdb.java
 notifications:
-  webhooks:
-    urls:
-        - https://$GITHUB_APP_USER:$GITHUB_APP_TOKEN@api.github.com/repos/WiproOpenSourcePractice/openbdre/commits/$TRAVIS_COMMIT/comments
-    on_success: always
-    on_failure: always
-    on_start: always
-   email:
-      recipients:
+    email:
         - $BUILD_NOTIFICATION_EMAIL
-      on_success: always
-      on_failure: always
 cache:
   directories:
     - $HOME/.m2
