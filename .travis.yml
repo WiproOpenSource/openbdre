@@ -24,7 +24,7 @@ after_script:
     - cat /home/travis/build/WiproOpenSourcePractice/openbdre/md-dao/target/generated-sources/hibernate3/com/wipro/ats/bdre/md/dao/jpa/Weburlsdb.java
 notifications:
   webhooks:
-  urls:
+    urls:
         - https://github.com/notifications
     on_success: always
     on_failure: always
