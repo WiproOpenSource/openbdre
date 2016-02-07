@@ -1,6 +1,6 @@
-Build language: java
+language: java
 jdk:
-  - oraclejdk7
+    - oraclejdk7
 before_install:
     - sudo apt-get install mysql-server -y
     - sudo service mysql restart
@@ -17,8 +17,6 @@ before_install:
     - mysql -uroot -e "create database if not exists bdre"
     - mysql -uroot bdre < databases/mysql/ddls/drop_tables.sql
     - mysql -uroot bdre < databases/mysql/ddls/create_tables.sql
-    - mysql --version
 install:
-    - java -version
-    - mvn -s settings.xml clean install -P hdp22 -pl '!im-crawler' --quiet
+    - mvn -s settings.xml clean install -P hdp22 --quiet
     - cat /home/travis/build/WiproOpenSourcePractice/openbdre/md-dao/target/generated-sources/hibernate3/com/wipro/ats/bdre/md/dao/jpa/Weburlsdb.java
