@@ -25,7 +25,7 @@ after_script:
 notifications:
   webhooks:
     urls:
-        - https://github.com/notifications
+        - https://$GITHUB_APP_USER:$GITHUB_APP_TOKEN@api.github.com/repos/WiproOpenSourcePractice/openbdre/commits/$TRAVIS_COMMIT/comments
     on_success: always
     on_failure: always
     on_start: always
