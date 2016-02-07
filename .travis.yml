@@ -1,3 +1,5 @@
 Build language: java
+before_install:
+    sudo apt-get install mysql -y
 install:
     mvn -s settings.xml clean install -P hdp22
