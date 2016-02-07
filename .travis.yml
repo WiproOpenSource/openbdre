@@ -3,6 +3,7 @@ jdk:
   - oraclejdk7
 before_install:
     - sudo apt-get install mysql-server -y
+    - sudo service mysql start
     - echo hibernate.current_session_context_class=thread > md-dao/src/main/resources/db.properties
     - echo hibernate.transaction.factory_class=org.hibernate.transaction.JDBCTransactionFactory >> md-dao/src/main/resources/db.properties
     - echo hibernate.show_sql=false >> md-dao/src/main/resources/db.properties
@@ -16,7 +17,8 @@ before_install:
     - mysql -uroot -e "create database if not exists bdre"
     - mysql -uroot bdre < databases/mysql/ddls/drop_tables.sql
     - mysql -uroot bdre < databases/mysql/ddls/create_tables.sql
+    - mysql --version
 install:
     - java -version
-    - mvn -version
+    - mvn -s settings.xml clean install
     - cat /home/travis/build/WiproOpenSourcePractice/openbdre/md-dao/target/generated-sources/hibernate3/com/wipro/ats/bdre/md/dao/jpa/Weburlsdb.java
