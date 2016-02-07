@@ -20,5 +20,5 @@ before_install:
     - mysql --version
 install:
     - java -version
-    - mvn -s settings.xml clean install
+    - mvn -s settings.xml clean install -P hdp22
     - cat /home/travis/build/WiproOpenSourcePractice/openbdre/md-dao/target/generated-sources/hibernate3/com/wipro/ats/bdre/md/dao/jpa/Weburlsdb.java
