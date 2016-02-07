@@ -18,4 +18,5 @@ before_install:
     - mysql -uroot bdre < databases/mysql/ddls/create_tables.sql
 install:
     - java -version
-    - mvn -s settings.xml clean install -P hdp22
+    - mvn -version
+
