@@ -3,7 +3,7 @@ jdk:
   - oraclejdk7
 before_install:
     - sudo apt-get install mysql-server -y
-    - sudo service mysql start
+    - sudo service mysql restart
     - echo hibernate.current_session_context_class=thread > md-dao/src/main/resources/db.properties
     - echo hibernate.transaction.factory_class=org.hibernate.transaction.JDBCTransactionFactory >> md-dao/src/main/resources/db.properties
     - echo hibernate.show_sql=false >> md-dao/src/main/resources/db.properties
