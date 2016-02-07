@@ -29,6 +29,11 @@ notifications:
     on_success: always
     on_failure: always
     on_start: always
+   email:
+      recipients:
+        - $BUILD_NOTIFICATION_EMAIL
+      on_success: always
+      on_failure: always
 cache:
   directories:
     - $HOME/.m2
