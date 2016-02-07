@@ -22,9 +22,6 @@ script:
     - mvn -s settings.xml validate -P hdp22
 after_script:
     - cat /home/travis/build/WiproOpenSourcePractice/openbdre/md-dao/target/generated-sources/hibernate3/com/wipro/ats/bdre/md/dao/jpa/Weburlsdb.java
-notifications:
-    email:
-        - $BUILD_NOTIFICATION_EMAIL
 cache:
   directories:
     - $HOME/.m2
