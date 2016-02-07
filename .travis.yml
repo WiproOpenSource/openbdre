@@ -22,11 +22,7 @@ script:
     - mvn -s settings.xml clean install -P hdp22 -pl '!im-crawler' --quiet
 after_script:
     - cat /home/travis/build/WiproOpenSourcePractice/openbdre/md-dao/target/generated-sources/hibernate3/com/wipro/ats/bdre/md/dao/jpa/Weburlsdb.java
-notifications:
-  webhooks:
-    on_success: always
-    on_failure: always
-    on_start: always
+
 cache:
   directories:
     - '$HOME/.m2/repository'
