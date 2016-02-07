@@ -3,6 +3,7 @@ jdk:
   - oraclejdk7
 before_install:
     - sudo apt-get install mysql-server -y
+    - sudo apt-get install curl -y
     - sudo service mysql restart
     - echo hibernate.current_session_context_class=thread > md-dao/src/main/resources/db.properties
     - echo hibernate.transaction.factory_class=org.hibernate.transaction.JDBCTransactionFactory >> md-dao/src/main/resources/db.properties
@@ -17,9 +18,9 @@ before_install:
     - mysql -uroot -e "create database if not exists bdre"
     - mysql -uroot bdre < databases/mysql/ddls/drop_tables.sql
     - mysql -uroot bdre < databases/mysql/ddls/create_tables.sql
-    - curl -X POST  -H "Content-Type: application/json" -d '{"body":"BDRE Auto Tester says Build Started to verify"}' https://$GITHUB_APP_USER:$GITHUB_APP_TOKEN@api.github.com/repos/WiproOpenSourcePractice/openbdre/commits/$TRAVIS_COMMIT/comments
+    - curl -X POST  -H "Content-Type:application/json" -d '{"body":"BDRE Auto Tester says Build Started to verify"}' https://$GITHUB_APP_USER:$GITHUB_APP_TOKEN@api.github.com/repos/WiproOpenSourcePractice/openbdre/commits/$TRAVIS_COMMIT/comments
 install: /bin/true
 script:
     - mvn -s settings.xml clean install -P hdp22 -pl '!im-crawler' --quiet
 after_script:
-    - curl -X POST  -H "Content-Type: application/json" -d '{"body":"BDRE Auto Tester says [![Build Status](https://travis-ci.org/WiproOpenSourcePractice/openbdre.svg?branch=$TRAVIS_BRANCH)](https://travis-ci.org/WiproOpenSourcePractice/openbdre)"}' https://$GITHUB_APP_USER:$GITHUB_APP_TOKEN@api.github.com/repos/WiproOpenSourcePractice/openbdre/commits/$TRAVIS_COMMIT/comments
+    - curl -X POST  -H "Content-Type:application/json" -d '{"body":"BDRE Auto Tester says [![Build Status](https://travis-ci.org/WiproOpenSourcePractice/openbdre.svg?branch=$TRAVIS_BRANCH)](https://travis-ci.org/WiproOpenSourcePractice/openbdre)"}' https://$GITHUB_APP_USER:$GITHUB_APP_TOKEN@api.github.com/repos/WiproOpenSourcePractice/openbdre/commits/$TRAVIS_COMMIT/comments
