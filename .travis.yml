@@ -19,10 +19,16 @@ before_install:
     - mysql -uroot bdre < databases/mysql/ddls/create_tables.sql
 install: /bin/true
 script:
-    - mvn -s settings.xml clean install -P hdp22 -pl '!im-crawler' --quiet
+    - mvn -s settings.xml validate -P hdp22
 after_script:
     - cat /home/travis/build/WiproOpenSourcePractice/openbdre/md-dao/target/generated-sources/hibernate3/com/wipro/ats/bdre/md/dao/jpa/Weburlsdb.java
-
+notifications:
+  webhooks:
+  urls:
+        - https://github.com/notifications
+    on_success: always
+    on_failure: always
+    on_start: always
 cache:
   directories:
     - '$HOME/.m2/repository'
