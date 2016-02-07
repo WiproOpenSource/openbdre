@@ -1,6 +1,8 @@
 # Bigdata Ready Enterprise Open Source Software
 ## Table of Contents
 
+[![Join the chat at https://gitter.im/WiproOpenSourcePractice/openbdre](https://badges.gitter.im/WiproOpenSourcePractice/openbdre.svg)](https://gitter.im/WiproOpenSourcePractice/openbdre?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+
 [License](#license)  
 [Objective](#objective)  
 [Features](#features)  
