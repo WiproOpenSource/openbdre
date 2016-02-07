@@ -31,4 +31,4 @@ notifications:
     on_start: always
 cache:
   directories:
-    - '$HOME/.m2/repository'
+    - $HOME/.m2
