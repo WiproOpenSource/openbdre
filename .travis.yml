@@ -21,12 +21,9 @@ before_install:
 install: /bin/true
 script:
     - mvn -s settings.xml clean install -P hdp22 -pl '!im-crawler' --quiet
-after_script:
-    - cat /home/travis/build/WiproOpenSourcePractice/openbdre/md-dao/target/generated-sources/hibernate3/com/wipro/ats/bdre/md/dao/jpa/Weburlsdb.java
 after_success:
     - curl -X POST  -H "Content-Type: application/json" -d '{"body": "BDRE Auto Tester says : [![Build Status](https://travis-ci.org/WiproOpenSourcePractice/openbdre.svg?branch=$TRAVIS_BRANCH)](https://travis-ci.org/WiproOpenSourcePractice/openbdre)"}' https://$GITHUB_APP_USER:$GITHUB_APP_TOKEN@api.github.com/repos/WiproOpenSourcePractice/openbdre/commits/$TRAVIS_COMMIT/comments
 after_failure:
     - curl -X POST  -H "Content-Type: application/json" -d '{"body": "BDRE Auto Tester says : [![Build Status](https://travis-ci.org/WiproOpenSourcePractice/openbdre.svg?branch=$TRAVIS_BRANCH)](https://travis-ci.org/WiproOpenSourcePractice/openbdre)"}' https://$GITHUB_APP_USER:$GITHUB_APP_TOKEN@api.github.com/repos/WiproOpenSourcePractice/openbdre/commits/$TRAVIS_COMMIT/comments
-cache:
-  directories:
-    - $HOME/.m2
+after_script:
+    - cat /home/travis/build/WiproOpenSourcePractice/openbdre/md-dao/target/generated-sources/hibernate3/com/wipro/ats/bdre/md/dao/jpa/Weburlsdb.java
