@@ -27,9 +27,7 @@ import java.security.Principal;
  * Created by arijit on 1/9/15.
  */
 @Controller
-@RequestMapping("/lineage")
-
-
+@RequestMapping("/tabcollineage")
 public class TableColumnLineageAPI extends MetadataAPIBase {
     private static final Logger LOGGER = Logger.getLogger(TableColumnLineageAPI.class);
 
@@ -72,20 +70,19 @@ public class TableColumnLineageAPI extends MetadataAPIBase {
      * @return restWrapper It contains an instance of LineageInfo.
      */
     @RequestMapping(value = {"", "/"}, method = RequestMethod.GET)
-
     public
     @ResponseBody
-    RestWrapper getByInstanceExec(@RequestParam(value = "tableName", defaultValue = "null") String tableName, @RequestParam(value = "colName", defaultValue = "null") String colName, Principal principal) {
+    RestWrapper getByTableCol(@RequestParam(value = "tableName", defaultValue = "null") String tableName, @RequestParam(value = "colName", defaultValue = "null") String colName, Principal principal) {
         RestWrapper restWrapper = null;
         try {
 
-            if(colName != null) {
+            if(colName != null || !(colName.trim().equals(""))) {
+                LOGGER.info("ColName given: " + colName + "TableName given: " + tableName);
                 String[] args = {colName, tableName};
                 String dot = new String();
                 GetDotForTable getDotForTable = new GetDotForTable();
                 dot = getDotForTable.dotGeneratorWithCol(args);
-
-                LineageInfo lineageInfo = new LineageInfo();
+                LineageTabColInfo lineageInfo = new LineageTabColInfo();
                 LOGGER.info(dot);
                 lineageInfo.setDot(dot.toString());
                 lineageInfo.setTableName(tableName);
@@ -94,12 +91,12 @@ public class TableColumnLineageAPI extends MetadataAPIBase {
                 restWrapper = new RestWrapper(lineageInfo, RestWrapper.OK);
                 LOGGER.info("Getting " + tableName + "for column name: " + colName + " Lineage by User:" + principal.getName());
             } else {
+                LOGGER.info("TableName given: " + tableName);
                 String[] args = {tableName};
                 String dot = new String();
                 GetDotForTable getDotForTable = new GetDotForTable();
                 dot = getDotForTable.dotGeneratorWithTable(args);
-
-                LineageInfo lineageInfo = new LineageInfo();
+                LineageTabColInfo lineageInfo = new LineageTabColInfo();
                 LOGGER.info(dot);
                 lineageInfo.setDot(dot.toString());
                 lineageInfo.setTableName(tableName);
@@ -123,7 +120,7 @@ public class TableColumnLineageAPI extends MetadataAPIBase {
     /**
      * This class is used to access the variables of LineageAPI.
      */
-    private class LineageInfo {
+    private class LineageTabColInfo {
 
         private String tableName;
         private String colName;

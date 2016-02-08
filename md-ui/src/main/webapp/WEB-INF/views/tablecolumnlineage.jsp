@@ -25,16 +25,7 @@
                 <script language="javascript" type="text/javascript" src="../js/graph/site.js"></script>
                 <script>
                     var graphViz = "";
-                    var prefix = "strict digraph{\n" +
-                        "ranksep=0.4;" +
-                        "ratio=compact;" +
-                        "rankdir=LR;" +
-                        "graph [splines=true, nodesep=0.25];" +
-                        "id=lineagegraph;" +
-                        "node[nodesep=0.25,labeljust=left,margin=\".21,.055\",fontsize=.8,fontname=\"verdana\"];" +
-                        "\n"
-                    ;
-                    var postfix = "}"
+
 
                     var set = new StringSet();
 
@@ -45,13 +36,13 @@
                         }
                         set.add(tableName);
                         $.ajax({
-                            url: "/mdrest/lineage?tableName=" + tableName + "&colName=" + colName,
+                            url: "/mdrest/tabcollineage?tableName=" + tableName + "&colName=" + colName,
                             type: "GET",
                             cache: false,
                             success: function (getData) {
-				console.log(getData);
+				                console.log(getData);
                                 graphViz = graphViz + getData.Records.dot;
-                                RefreshGraphviz(prefix + graphViz + postfix);
+                                RefreshGraphviz(graphViz);
                             }
                         });
                     }
@@ -62,13 +53,13 @@
                         }
                         set.add(colName);
                         $.ajax({
-                            url: "/mdrest/lineage/bycolumn/" + colName,
+                            url: "/mdrest/tabcollineage/bycolumn/" + colName,
                             type: "GET",
                             cache: false,
                             success: function (getData) {
-				console.log(getData);
+				                console.log(getData);
                                 graphViz = graphViz + getData.Records.dot;
-                                RefreshGraphviz(prefix + graphViz + postfix);
+                                RefreshGraphviz(graphViz);
                             }
                         });
                     }
