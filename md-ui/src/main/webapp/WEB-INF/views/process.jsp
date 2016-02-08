@@ -883,7 +883,7 @@
                                                 success: function(data) {
                                                     if (data.Result == "OK") {
                                                         console.log(window.location.protocol);
-                                                        var url = (window.location.protocol + "//" + window.location.host + "/mdrest/process/export/" + item.record.processId);
+                                                        var url = (window.location.protocol + "//" + window.location.host + "/mdrest/process/zippedexport/" + item.record.processId);
                                                         window.location.href = url;
                                                     }
                                                     if (data.Result == "ERROR")
