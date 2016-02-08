@@ -18,11 +18,11 @@ before_install:
     - mysql -uroot -e "create database if not exists bdre"
     - mysql -uroot bdre < databases/mysql/ddls/drop_tables.sql
     - mysql -uroot bdre < databases/mysql/ddls/create_tables.sql
-    - curl -X POST  -H "Content-Type:application/json" -d '{"body":"BDRE Robot triggered an automatic build verification for $TRAVIS_BRANCH branch because of your change. I'll test it and comment again shortly. Don't celebrate just yet."}' https://$GITHUB_APP_USER:$GITHUB_APP_TOKEN@api.github.com/repos/WiproOpenSourcePractice/openbdre/commits/$TRAVIS_COMMIT/comments
+    - curl -X POST  -H "Content-Type:application/json" -d '{"body":"BDRE Robot triggered an automatic build verification for $TRAVIS_BRANCH branch because of your change. I shall test it and comment again shortly. Do not celebrate just yet."}' https://$GITHUB_APP_USER:$GITHUB_APP_TOKEN@api.github.com/repos/WiproOpenSourcePractice/openbdre/commits/$TRAVIS_COMMIT/comments
 install: /bin/true
 script:
     - mvn -s settings.xml clean install -P hdp22 -pl '!im-crawler' --quiet
 after_success:
     - curl -X POST  -H "Content-Type:application/json" -d '{"body":"BDRE Robot confirms that the build from $TRAVIS_BRANCH passed. Build logs available at https://travis-ci.org/WiproOpenSourcePractice/openbdre/builds/$TRAVIS_BUILD_ID"}' https://$GITHUB_APP_USER:$GITHUB_APP_TOKEN@api.github.com/repos/WiproOpenSourcePractice/openbdre/commits/$TRAVIS_COMMIT/comments
-after_success:
+after_failure:
     - curl -X POST  -H "Content-Type:application/json" -d '{"body":"BDRE Robot says that it encountered an error while building $TRAVIS_BRANCH. Build logs available at https://travis-ci.org/WiproOpenSourcePractice/openbdre/builds/$TRAVIS_BUILD_ID"}' https://$GITHUB_APP_USER:$GITHUB_APP_TOKEN@api.github.com/repos/WiproOpenSourcePractice/openbdre/commits/$TRAVIS_COMMIT/comments
