@@ -21,6 +21,7 @@ import com.wipro.ats.bdre.md.dao.ProcessDAO;
 import com.wipro.ats.bdre.md.dao.PropertiesDAO;
 import com.wipro.ats.bdre.md.dao.jpa.*;
 import com.wipro.ats.bdre.md.dao.jpa.Process;
+import com.wipro.ats.bdre.md.dao.jpa.Properties;
 import com.wipro.ats.bdre.md.rest.RestWrapper;
 import com.wipro.ats.bdre.md.rest.util.Dao2TableUtil;
 import com.wipro.ats.bdre.md.rest.util.DateConverter;
@@ -36,10 +37,7 @@ import java.security.Principal;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * Created by AS294216 on 13-10-2015.
@@ -80,8 +78,9 @@ public class DataGenAPI extends MetadataAPIBase {
         Date date = null, date2 = null;
 
         List<Properties> childProps=new ArrayList<>();
+        Map<String,String> orderedMap = new TreeMap<>(map);
         //inserting in properties table
-        for (String string : map.keySet()) {
+        for (String string : orderedMap.keySet()) {
             LOGGER.debug("String is" + string);
             if (map.get(string) == null || ("").equals(map.get(string))) {
                 continue;

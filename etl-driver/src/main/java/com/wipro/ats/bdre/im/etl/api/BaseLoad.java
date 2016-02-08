@@ -79,10 +79,17 @@ public class BaseLoad extends ETLBase {
                 stagePartitions.add(columnValue);
             }
             List<String> basePartitions = new ArrayList<String>();
+            String wareHouse = "";
+            ResultSet resultSetForWareHouse = getHiveJDBCConnection(dbName).createStatement().executeQuery("set hive.metastore.warehouse.dir");
+            ResultSetMetaData rsmdWareHouse = resultSet.getMetaData();
+            while (resultSetForWareHouse.next()) {
+                wareHouse = resultSetForWareHouse.getString(1);
+            }
+            LOGGER.info("ware house dir is " + wareHouse.split("=")[1]);
 
-            String stageTableLocation = IMConfig.getProperty("common.default-fs-name")+"/user/hive/warehouse/"+dbName.toLowerCase()+".db/"+stageTableName.toLowerCase()+"/";
+            String stageTableLocation = IMConfig.getProperty("common.default-fs-name")+ wareHouse.split("=")[1] +"/"+dbName.toLowerCase()+".db/"+stageTableName.toLowerCase()+"/";
             LOGGER.info("stageTableLocation = " + stageTableLocation);
-            String baseTableLocation = IMConfig.getProperty("common.default-fs-name")+"/user/hive/warehouse/"+dbName.toLowerCase()+".db/"+baseTableName.toLowerCase()+"/";
+            String baseTableLocation = IMConfig.getProperty("common.default-fs-name")+wareHouse.split("=")[1] +"/" +dbName.toLowerCase()+".db/"+baseTableName.toLowerCase()+"/";
             LOGGER.info("baseTableLocation = " + baseTableLocation);
             for (String stagePartition : stagePartitions)
             {

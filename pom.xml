@@ -113,6 +113,32 @@
                     <target>1.7</target>
                 </configuration>
             </plugin>
+            <plugin>
+                <artifactId>maven-resources-plugin</artifactId>
+                <version>2.7</version>
+                <executions>
+                    <execution>
+                        <id>copy-resources</id>
+                        <!-- here the phase you need -->
+                        <phase>validate</phase>
+                        <goals>
+                            <goal>copy-resources</goal>
+                        </goals>
+                        <configuration>
+                            <outputDirectory>${basedir}/.git/hooks</outputDirectory>
+                            <resources>
+                                <resource>
+                                    <directory>${basedir}/bdre-scripts/local/bin</directory>
+                                    <includes>
+                                        <include>commit-msg</include>
+                                    </includes>
+                                    <filtering>true</filtering>
+                                </resource>
+                            </resources>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
         </plugins>
     </build>
     <!-- To define the dependencies in your parent POM -->
@@ -618,5 +644,7 @@
     <!--<url>http://54.173.156.62:8081/nexus/content/repositories/snapshots</url>-->
     <!--</repository>-->
     <!--</repositories>-->
+
+
 
 </project>
