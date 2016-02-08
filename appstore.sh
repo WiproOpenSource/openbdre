@@ -1,4 +1,6 @@
 #!/usr/bin/env bash
+BDRE_HOME=~/bdre
+. $BDRE_HOME/bdre-scripts/env.properties
 BDRE_APPSTORE_REPO=~/bdreappstore-repo
 BDRE_APPSTORE_APPS=~/bdreappstore-apps
 rm -f -r $BDRE_APPSTORE_APPS
@@ -7,14 +9,14 @@ mkdir -p $BDRE_APPSTORE_APPS
 if [ -d "$BDRE_APPSTORE_REPO" ]; then
     echo "refresing repo"
     cd $BDRE_APPSTORE_REPO
-    git pull origin master
+    git pull $repoName $branchName
     if [ $? -ne 0 ]
         then exit 1
     fi
 else
     echo "cloning repo for first time"
     cd ~
-    git clone https://github.com/sriharshaboda/bdreappstore-repo.git
+    git clone $gitURL
     if [ $? -ne 0 ]
         then exit 1
     fi

@@ -71,11 +71,12 @@ $scope.createApp = function(location) {
                          		    data: {'fileString': location},
                          		    success: function (getData) {
                          		        if( getData.Result =="OK" ){
-                                            alert("App Installed");
+                         		        alert("App Installed Successfully");
+                                            $window.location.href = '<c:url value="/pages/process.page"/>';
                                            return false;
                                        }
                          		        if(getData.Result =="ERROR"){
-                         		        alert("Error in App Installed");
+                         		        alert("Error in App Installation");
                          		          return false;
 
                                        }
