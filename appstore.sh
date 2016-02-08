@@ -40,4 +40,3 @@ for d in */ ; do
     mv ./*.zip $BDRE_APPSTORE_APPS/"$d"
     cd ../
 done
-
