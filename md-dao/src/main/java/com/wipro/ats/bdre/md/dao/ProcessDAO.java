@@ -217,6 +217,43 @@ public class ProcessDAO {
         return processSubProcessList;
     }
 
+    public List<Process> selectProcessList(String processCode) {
+        Session session = sessionFactory.openSession();
+        session.beginTransaction();
+        List<Process> processSubProcessList = new ArrayList<Process>();
+        try {
+             Process parentProcess = (Process) session.createCriteria(Process.class).add(Restrictions.eq("processCode",processCode)).uniqueResult();
+            Criteria checkProcessSubProcessList = session.createCriteria(Process.class).add(Restrictions.or(Restrictions.eq("processCode", processCode), Restrictions.eq("process", parentProcess)));
+            processSubProcessList = checkProcessSubProcessList.list();
+            session.getTransaction().commit();
+        } catch (MetadataException e) {
+            session.getTransaction().rollback();
+            LOGGER.error(e);
+        } finally {
+            session.close();
+        }
+        return processSubProcessList;
+    }
+
+    public Process returnProcess(String processCode) {
+
+        Session session = sessionFactory.openSession();
+        session.beginTransaction();
+        Process parentProcess=null;
+
+        try {
+           parentProcess = (Process) session.createCriteria(Process.class).add(Restrictions.eq("processCode",processCode)).uniqueResult();
+            session.getTransaction().commit();
+        } catch (MetadataException e) {
+            session.getTransaction().rollback();
+            LOGGER.error(e);
+        } finally {
+            session.close();
+        }
+        return parentProcess;
+
+    }
+
     public void updateProcessId(Integer oldProcessId, Integer newProcessId) {
         Session session = sessionFactory.openSession();
         try {
@@ -445,7 +482,7 @@ public List<Process> createOneChildJob(Process parentProcess, Process childProce
     Session session = sessionFactory.openSession();
     Integer parentPid = null;
     Integer childPid = null;
-    List<Process> processList=new ArrayList<Process>();
+    List<Process> processList=new ArrayList<>();
     try {
         session.beginTransaction();
         parentPid = (Integer) session.save(parentProcess);

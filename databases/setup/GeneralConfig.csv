@@ -538,6 +538,10 @@
 'scripts_config', 'oozieHost', '-','-' , 1, '${oozie_host}', 'text' , 1
 'scripts_config', 'ooziePort', '-','-' , 1, '${oozie_port}', 'text' , 1
 'scripts_config', 'logDir', '-','-' , 1, '/var/log/BDRE', 'text' , 1
+#For cloudera this is 8032
+'scripts_config', 'repoName', '-','-' , 1, 'origin', 'text' , 1
+'scripts_config', 'branchName', '-','-' , 1, 'master', 'text' , 1
+'scripts_config', 'gitURL', '-','-' , 1, 'https://github.com/WiproOpenSourcePractice/bdreappstore-repo.git', 'text' , 1
 'file_format', 'delimited', 'DELIMITED','delimited file' , 1, 'delimited', 'text' , 1
 'file_format', 'xml', 'XML','XML file' , 1, 'xml', 'text' , 1
 'file_format', 'json', 'JSON','JSON file' , 1, 'json', 'text' , 1
