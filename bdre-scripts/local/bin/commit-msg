@@ -1,0 +1,10 @@
+#!/usr/bin/env bash
+# regex to validate in commit msg
+commit_regex='(BDRE-[0-9]+|merge)'
+RED='\033[0;31m'
+NC='\033[0m' # No Color
+error_msg="${RED}Commit not accepted:${NC} \nCommit message must have atleast one JIRA Issue (format 'BDRE-xxxx') or 'Merge'\ne.g. BDRE-1000 : Fixing the typo in variable name.\n"
+if ! grep -iqE "$commit_regex" "$1"; then
+    printf "$error_msg" >&2
+    exit 1
+fi
