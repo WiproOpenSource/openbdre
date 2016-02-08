@@ -371,7 +371,12 @@
                                             collapse: "1",
                                             url: "processtemplate.page",
                                             children: []
-                                                         					}
+                                                         					},{
+                                              label: "App Store",
+                                              collapse: "1",
+                                              url: "appstore.page",
+                                              children: []
+                                                                            }
 					]
 				}, {
                                     label: "Data Ingestion",
