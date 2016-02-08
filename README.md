@@ -1,18 +1,18 @@
 # Bigdata Ready Enterprise Open Source Software
 ## Table of Contents
 
-[License](#license)  
-[Objective](#objective)  
-[Features](#features)  
-[Demo videos](#demo-videos)  
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [Data Ingestion](#data-ingestion)  
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [Workflow Builder](#workflow-builder)  
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [Bulk Data Manufacturing](#bulk-data-manufacturing)  
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [Web Crawler](#web-crawler)  
-[Architecture](#architecture)  
-[Installation](#installation)  
-[Operational Metadata Management System](#operational-metadata-management-system)  
-[How To Contribute](#how-to-contribute)  
+[License](#license)
+[Objective](#objective)
+[Features](#features)
+[Demo videos](#demo-videos)
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [Data Ingestion](#data-ingestion)
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [Workflow Builder](#workflow-builder)
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [Bulk Data Manufacturing](#bulk-data-manufacturing)
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [Web Crawler](#web-crawler)
+[Architecture](#architecture)
+[Installation](#installation)
+[Operational Metadata Management System](#operational-metadata-management-system)
+[How To Contribute](#how-to-contribute)
 
 # License
 Released under Apache Public License 2.0. You can get a copy of the license at http://www.apache.org/licenses/LICENSE-2.0.
@@ -58,31 +58,31 @@ The primary goal of BDRE is to accelerate Bigdata implementations by supplying t
 
 ### RDBMS Data Ingestion
 
-<a href="http://www.youtube.com/watch?v=JcbYU7oEmxc" target="_blank"><img src="http://wiproopensourcepractice.github.io/openbdre/bdreimages/rdbms.PNG" 
+<a href="http://www.youtube.com/watch?v=JcbYU7oEmxc" target="_blank"><img src="http://wiproopensourcepractice.github.io/openbdre/bdreimages/rdbms.PNG"
 alt="BDRE RDBMS data ingestion demo video" width="240" height="180" border="10" /></a>
 
 
 ### Streaming Data Ingestion
 
-<a href="http://www.youtube.com/watch?v=1yqoAVENrjo" target="_blank"><img src="http://wiproopensourcepractice.github.io/openbdre/bdreimages/twitter.PNG" 
+<a href="http://www.youtube.com/watch?v=1yqoAVENrjo" target="_blank"><img src="http://wiproopensourcepractice.github.io/openbdre/bdreimages/twitter.PNG"
 alt="BDRE Twitter Ingestion demo video" width="240" height="180" border="10" /></a>
 
 
 ### Directory Monitoring and File Ingestion
 
-<a href="http://www.youtube.com/watch?v=IhDMYase1fU" target="_blank"><img src="http://wiproopensourcepractice.github.io/openbdre/bdreimages/filemon.PNG" 
+<a href="http://www.youtube.com/watch?v=IhDMYase1fU" target="_blank"><img src="http://wiproopensourcepractice.github.io/openbdre/bdreimages/filemon.PNG"
 alt="BDRE File ingestion demo video" width="240" height="180" border="10" /></a>
 
 ## Workflow Builder
 
-<a href="http://www.youtube.com/watch?v=PG6Qvg-pKO0" target="_blank"><img src="http://wiproopensourcepractice.github.io/openbdre/bdreimages/wfd.PNG" 
+<a href="http://www.youtube.com/watch?v=PG6Qvg-pKO0" target="_blank"><img src="http://wiproopensourcepractice.github.io/openbdre/bdreimages/wfd.PNG"
 alt="BDRE Workflow Designer demo video" width="240" height="180" border="10" /></a>
 
 ## Bulk Data Manufacturing
 Demo video TBD
 ## Web Crawler
 
-<a href="http://www.youtube.com/watch?v=0b6dWGxin4Y" target="_blank"><img src="http://wiproopensourcepractice.github.io/openbdre/bdreimages/crawler.PNG" 
+<a href="http://www.youtube.com/watch?v=0b6dWGxin4Y" target="_blank"><img src="http://wiproopensourcepractice.github.io/openbdre/bdreimages/crawler.PNG"
 alt="BDRE Web Crawling" width="240" height="180" border="10" /></a>
 
 # Architecture
@@ -362,7 +362,6 @@ git push myrepo mybranch
  - When you are ready to submit your contribution to the main repo, please open a [pull request](https://help.github.com/articles/creating-a-pull-request).
  - Please join the community https://groups.google.com/forum/#!forum/bdre. If you have any questions/suggestions please email to bdre-queries@googlegroups.com .
  - If you want to report a bug, see/request a feature or work on something. Please sign up at https://openbdre.atlassian.net
-
 
 
 [![Analytics](https://ga-beacon.appspot.com/UA-72345517-2/openbdre/README.md)](http://wiproopensourcepractice.github.io/openbdre/bdreimages/badge.svg)
