@@ -14,7 +14,8 @@
 
 package com.wipro.ats.bdre.md.rest;
 
-import com.wipro.ats.bdre.lineagedot.GetDotForTable;
+
+import com.wipro.ats.bdre.ldg.GetDotForTable;
 import com.wipro.ats.bdre.md.api.base.MetadataAPIBase;
 import org.apache.log4j.Logger;
 import org.springframework.stereotype.Controller;
