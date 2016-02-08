@@ -566,7 +566,7 @@ $scope.arrangePositions = function() {
         if (dataRecord) {
             updatePositionsFromArrangedData(dataRecord);
             $scope.init($scope.parentPidRecord);
-            // location.reload(true);
+            location.reload(true);
         }
         else {
             console.log('error');
