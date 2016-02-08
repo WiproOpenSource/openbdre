@@ -1,24 +1,24 @@
 # Bigdata Ready Enterprise Open Source Software
 ## Table of Contents
 
-[License](#license)  
-[Objective](#objective)  
-[Features](#features)  
-[Architecture](#architecture)  
-[Installation](#installation)  
-[Demo videos](#data-ingestion)  
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [Data Ingestion](#data-ingestion)  
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [Workflow Builder](#workflow-builder)  
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [Bulk Data Manufacturing](#bulk-data-manufacturing)  
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [Web Crawler](#web-crawler)  
-[Operational Metadata Management](#operational-metadata-management)  
-[How To Contribute](#how-to-contribute)  
+[License](#license)
+[Objective](#objective)
+[Features](#features)
+[Demo videos](#demo-videos)
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [Data Ingestion](#data-ingestion)
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [Workflow Builder](#workflow-builder)
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [Bulk Data Manufacturing](#bulk-data-manufacturing)
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [Web Crawler](#web-crawler)
+[Architecture](#architecture)
+[Installation](#installation)
+[Operational Metadata Management System](#operational-metadata-management-system)
+[How To Contribute](#how-to-contribute)
 
 # License
 Released under Apache Public License 2.0. You can get a copy of the license at http://www.apache.org/licenses/LICENSE-2.0.
 # Objective
 Big Data Ready Enterprise(BDRE) makes big data technology adoption simpler by optimizing and integrating various big data solutions and providing them under one integrated package. BDRE provides a uniﬁed framework for a Hadoop implementation that can drastically minimize development time and fast track the Hadoop implementation. It comprises a reusable framework that can be customized as per the enterprise ecosystem. The components are loosely integrated and can be de-coupled or replaced easily with alternatives.
- 
+
 The primary goal of BDRE is to accelerate Bigdata implementations by supplying the essential frameworks that are most likely to be written from scratch. It can drastically reduce effort by eliminating hundreds of man hours in operational framework development. Big Data implementations however, require specialized skills, signiﬁcant development effort on data loading, semantic processing, DQ, code deployment across environments etc.
 
 # Features
@@ -52,6 +52,38 @@ The primary goal of BDRE is to accelerate Bigdata implementations by supplying t
 - HTML5 User Interface
  - Create ingestion, data generation, Crawler jobs or create Oozie workflows graphically without writing any code
  - One click deploy and execute jobs without SSH into the edge node.
+
+# Demo Videos
+## Data Ingestion
+
+### RDBMS Data Ingestion
+
+<a href="http://www.youtube.com/watch?v=JcbYU7oEmxc" target="_blank"><img src="http://wiproopensourcepractice.github.io/openbdre/bdreimages/rdbms.PNG"
+alt="BDRE RDBMS data ingestion demo video" width="240" height="180" border="10" /></a>
+
+
+### Streaming Data Ingestion
+
+<a href="http://www.youtube.com/watch?v=1yqoAVENrjo" target="_blank"><img src="http://wiproopensourcepractice.github.io/openbdre/bdreimages/twitter.PNG"
+alt="BDRE Twitter Ingestion demo video" width="240" height="180" border="10" /></a>
+
+
+### Directory Monitoring and File Ingestion
+
+<a href="http://www.youtube.com/watch?v=IhDMYase1fU" target="_blank"><img src="http://wiproopensourcepractice.github.io/openbdre/bdreimages/filemon.PNG"
+alt="BDRE File ingestion demo video" width="240" height="180" border="10" /></a>
+
+## Workflow Builder
+
+<a href="http://www.youtube.com/watch?v=PG6Qvg-pKO0" target="_blank"><img src="http://wiproopensourcepractice.github.io/openbdre/bdreimages/wfd.PNG"
+alt="BDRE Workflow Designer demo video" width="240" height="180" border="10" /></a>
+
+## Bulk Data Manufacturing
+Demo video TBD
+## Web Crawler
+
+<a href="http://www.youtube.com/watch?v=0b6dWGxin4Y" target="_blank"><img src="http://wiproopensourcepractice.github.io/openbdre/bdreimages/crawler.PNG"
+alt="BDRE Web Crawling" width="240" height="180" border="10" /></a>
 
 # Architecture
 
@@ -187,9 +219,9 @@ You should be able to do the same in Mac or Windows but note that setting up a H
     mvn -s settings.xml clean install -P hdp22
     ```
  * *Note:* Selecting hdp22 will compile BDRE with HDP 2.2 libraries and automatically configure BDRE with properties from  databases/setup/profile.hdp22.properties . These properties can later be altered from the BDRE Settings page under Administration.
- 
+
     databases/setup/profile.hdp22.properties looks like this.
- 
+
  ```properties
     bdre_user_name=openbdre
     name_node_hostname=sandbox.hortonworks.com
@@ -266,41 +298,7 @@ You should be able to do the same in Mac or Windows but note that setting up a H
 * Check the process in Oozie console *http://VM_IP:11000/oozie*
 * When the import job is complete start the *data load job*.
 
-# Data Ingestion
-
-## RDBMS Data Ingestion
-
-<a href="http://www.youtube.com/watch?v=JcbYU7oEmxc" target="_blank"><img src="http://wiproopensourcepractice.github.io/openbdre/bdreimages/rdbms.PNG" 
-alt="BDRE RDBMS data ingestion demo video" width="240" height="180" border="10" /></a>
-
-
-## Streaming Data Ingestion
-
-<a href="http://www.youtube.com/watch?v=1yqoAVENrjo" target="_blank"><img src="http://wiproopensourcepractice.github.io/openbdre/bdreimages/twitter.PNG" 
-alt="BDRE Twitter Ingestion demo video" width="240" height="180" border="10" /></a>
-
-
-## Directory Monitoring and File Ingestion
-
-<a href="http://www.youtube.com/watch?v=IhDMYase1fU" target="_blank"><img src="http://wiproopensourcepractice.github.io/openbdre/bdreimages/filemon.PNG" 
-alt="BDRE File ingestion demo video" width="240" height="180" border="10" /></a>
-
-# Workflow Builder
-
-<a href="http://www.youtube.com/watch?v=PG6Qvg-pKO0" target="_blank"><img src="http://wiproopensourcepractice.github.io/openbdre/bdreimages/wfd.PNG" 
-alt="BDRE Workflow Designer demo video" width="240" height="180" border="10" /></a>
-
-# Bulk Data Manufacturing
-Demo video TBD
-# Web Crawler
-
-<a href="http://www.youtube.com/watch?v=0b6dWGxin4Y" target="_blank"><img src="http://wiproopensourcepractice.github.io/openbdre/bdreimages/crawler.PNG" 
-alt="BDRE Web Crawling" width="240" height="180" border="10" /></a>
-
-
 # Operational Metadata Management System
-
-### Operational Metadata Management
 
 BDRE provides complete job/operational metadata management solution for Hadoop. At its core acts as a registry and tracker for different types of jobs running in different Hadoop clusters or as a standalone. It provides APIs to integrate with virtually any jobs.
 
@@ -319,36 +317,36 @@ Contribution for the enhancements in BDRE are welcome and humbly requested by us
 <a class="buttons github" href="https://github.com/WiproOpenSourcePractice/openbdre">Goto BDRE@GitHub</a>
 
  - Clone the main repo (if you havn't done already)
- 
+
 ```shell
-git clone "https://github.com/WiproOpenSourcePractice/openbdre.git" 
+git clone "https://github.com/WiproOpenSourcePractice/openbdre.git"
 cd openbdre
 ```
 
  - Add your forked repo where you have write access and create your own branch.
- 
+
 ```shell
 git remote add myrepo https://<your id>:<your password>@github.com/<YOUR ACCT NAME>/openbdre.git
 git checkout -b mybranch
 ```
 
  - Make and commit your changes to your own branch.
- 
+
 ```shell
 git commit -am "My changes"
 ```
 
  - Push to your own branch in your own remote repo (myrepo).
- 
+
 ```shell
 git push myrepo mybranch
 ```
 
  - Everyday better pull from the main repo(origin) and sync your repo with it.
- 
+
 ```shell
 git checkout develop
-git pull origin develop 
+git pull origin develop
 ```
 
  - Keep the develop branch only to have the latest main repo content. Make changes while you are in your own branch.
@@ -356,7 +354,7 @@ git pull origin develop
  - Sync your code with the main repo. Push the latest content pulled from the main repo to your own repo in your own branch.
 
 ```shell
-git checkout mybranch 
+git checkout mybranch
 git merge develop
 git push myrepo mybranch
 ```
@@ -364,7 +362,6 @@ git push myrepo mybranch
  - When you are ready to submit your contribution to the main repo, please open a [pull request](https://help.github.com/articles/creating-a-pull-request).
  - Please join the community https://groups.google.com/forum/#!forum/bdre. If you have any questions/suggestions please email to bdre-queries@googlegroups.com .
  - If you want to report a bug, see/request a feature or work on something. Please sign up at https://openbdre.atlassian.net
- 
 
 
 [![Analytics](https://ga-beacon.appspot.com/UA-72345517-2/openbdre/README.md)](http://wiproopensourcepractice.github.io/openbdre/bdreimages/badge.svg)

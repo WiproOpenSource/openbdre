@@ -103,11 +103,6 @@
             <groupId>commons-fileupload</groupId>
             <artifactId>commons-fileupload</artifactId>
         </dependency>
-        <dependency>
-            <groupId>${project.groupId}</groupId>
-            <artifactId>dot-gen</artifactId>
-            <version>${project.version}</version>
-        </dependency>
 
     </dependencies>
 
@@ -129,19 +124,6 @@
                                     <groupId>org.mortbay.jetty</groupId>
                                     <artifactId>jetty-runner</artifactId>
                                     <destFileName>jetty-runner.jar</destFileName>
-                                </artifactItem>
-                                <artifactItem>
-                                    <groupId>org.mortbay.jetty</groupId>
-                                    <artifactId>jetty-runner</artifactId>
-                                    <outputDirectory>${project.parent.build.directory}/lib/webapps</outputDirectory>
-                                    <destFileName>jetty-runner.jar</destFileName>
-                                </artifactItem>
-                                <artifactItem>
-                                    <groupId>${project.groupId}</groupId>
-                                    <artifactId>${project.artifactId}</artifactId>
-                                    <version>${project.version}</version>
-                                    <type>${project.packaging}</type>
-                                    <outputDirectory>${project.parent.build.directory}/lib/webapps</outputDirectory>
                                 </artifactItem>
                             </artifactItems>
                         </configuration>
