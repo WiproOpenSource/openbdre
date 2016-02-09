@@ -58,11 +58,13 @@ public class GetDotForTable {
             lineageRelationList = getNodeIdForLineageRelation.execute(lineageNode.getNodeId());
             if (lineageRelationList.size() != 0) {
                 relationDot = lineageRelationList.get(0).getDotString();                                            //search for target table name in the DOT string
-                String targetTableNode = getLineageNodeByColName.getTableDotFromNodeId(lineageRelationList.get(0).getLineageNodeByTargetNodeId());
+                String targetTableNode = getLineageNodeByColName.getTableDotFromNodeId(lineageRelationList.get(0).getLineageNodeByTargetNodeId(), srcTableNode);
+                if(targetTableNode.equals("same-nodes")) {
+                    targetTableNode = getLineageNodeByColName.getTableDotFromNodeId(lineageRelationList.get(0).getLineageNodeBySrcNodeId(), srcTableNode);
+                }
                 logger.info("relation DOT: \n" + relationDot);
                 dotString = lineageMain.generateLineageDot(relationDot, srcTableNode, targetTableNode);             //call lineage main to create the DOT
             }
-
         }
         return dotString;
     }

@@ -72,7 +72,12 @@ public class GetLineageNodeByColName {
     }
 
     //returns the container node
-    public String getTableDotFromNodeId (LineageNode lineageNode) {
-        return lineageNodeDAO.getContainerDot(lineageNode.getNodeId());
+    public String getTableDotFromNodeId (LineageNode lineageNode, LineageNode lineageNode1) {
+        String node = lineageNodeDAO.getContainerDot(lineageNode.getNodeId());
+        if(node.equals(lineageNode1.getDotString())) {
+            return "same-nodes";
+        } else {
+            return node;
+        }
     }
 }
