@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 BDRE_HOME=~/bdre
 . $BDRE_HOME/bdre-scripts/env.properties
-BDRE_APPSTORE_REPO=~/bdreappstore-repo
+BDRE_APPSTORE_REPO=~/bdreappstore
 BDRE_APPSTORE_APPS=~/bdreappstore-apps
 rm -f -r $BDRE_APPSTORE_APPS
 mkdir -p $BDRE_APPSTORE_APPS
