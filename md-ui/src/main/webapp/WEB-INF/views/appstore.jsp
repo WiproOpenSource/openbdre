@@ -65,15 +65,19 @@ $scope.addClass = function(check,className) {
     return cssClass;
 };
 $scope.createApp = function(location) {
+
+                 $('#confirm').modal({ backdrop: 'static', keyboard: false }).one('click', '#yes', function (e)
+                 {
        $.ajax({
                          		    url: "/mdrest/process/import",
                          		    type: "POST",
                          		    data: {'fileString': location},
                          		    success: function (getData) {
                          		        if( getData.Result =="OK" ){
-                         		        alert("App Installed Successfully");
-                                            $window.location.href = '<c:url value="/pages/process.page"/>';
+                         		        $('#div-dialog-warning').modal({ backdrop: 'static', keyboard: false }).one('click', '#ok', function (e){
+                                            $window.location.href = '<c:url value="/pages/process.page?pid="/>' + getData.Records.processList[0].processId;
                                            return false;
+                                       });
                                        }
                          		        if(getData.Result =="ERROR"){
                          		        alert("Error in App Installation");
@@ -82,7 +86,9 @@ $scope.createApp = function(location) {
                                        }
                                    }
                          		});
+                       });
     };
+
 
   });
 </script>
@@ -99,7 +105,7 @@ $scope.createApp = function(location) {
 
 
 			<div class="alert alert-info">
-			<a href="#" class="installapp"><span class="label label-primary">{{column.name}}</span><br/><br/><img src="{{ column.icon }}" ng-click="createApp(column.location)" class="img-thumbnail" alt="App image" width="150" height="118"></a>
+			<a href="#" class="installapp"><span class="label label-primary">{{column.name}}</span><br/><br/><img src="{{ column.icon }}"   ng-click="createApp(column.location)" class="img-thumbnail" alt="App image" width="150" height="118"></a>
 			<br >{{column.description}}{{column.name}}
 			</div>
 		</div>
@@ -132,7 +138,7 @@ $scope.createApp = function(location) {
             <h4 class="modal-title">Install</h4>
           </div>
           <div class="modal-body">
-            <p>Porcess installed Successfully</p>
+            <p>Process installed Successfully</p>
           </div>
           <div class="modal-footer">
   			<button type="button" data-dismiss="modal" class="btn btn-primary" id="ok">OK</button>
