@@ -80,9 +80,9 @@ $scope.createApp = function(location) {
                                        });
                                        }
                          		        if(getData.Result =="ERROR"){
-                         		        alert("Error in App Installation");
+                         		        $('#div-dialog-error').modal({ backdrop: 'static', keyboard: false }).one('click', '#ok', function (e){
                          		          return false;
-
+                                         });
                                        }
                                    }
                          		});
@@ -146,6 +146,23 @@ $scope.createApp = function(location) {
         </div>
       </div>
     </div>
+
+       <div class="modal fade" id="div-dialog-error" role="dialog">
+          <div class="modal-dialog modal-sm">
+            <div class="modal-content">
+              <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">Install</h4>
+              </div>
+              <div class="modal-body">
+                <p>Error in app installation.</p>
+              </div>
+              <div class="modal-footer">
+      			<button type="button" data-dismiss="modal" class="btn btn-primary" id="ok">OK</button>
+              </div>
+            </div>
+          </div>
+       </div>
 </div>
 </body>
 </html>
