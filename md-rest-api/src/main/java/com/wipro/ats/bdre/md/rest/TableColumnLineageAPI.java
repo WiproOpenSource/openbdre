@@ -76,14 +76,14 @@ public class TableColumnLineageAPI extends MetadataAPIBase {
         RestWrapper restWrapper = null;
         try {
 
-            if(colName != null || !(colName.trim().equals(""))) {
+            if(colName != null && !(colName.trim().equals(""))) {
                 LOGGER.info("ColName given: " + colName + "TableName given: " + tableName);
                 String[] args = {colName, tableName};
                 String dot = new String();
                 GetDotForTable getDotForTable = new GetDotForTable();
                 dot = getDotForTable.dotGeneratorWithCol(args);
                 LineageTabColInfo lineageInfo = new LineageTabColInfo();
-                LOGGER.info(dot);
+                LOGGER.debug(dot);
                 lineageInfo.setDot(dot.toString());
                 lineageInfo.setTableName(tableName);
                 lineageInfo.setColName(colName);
@@ -97,7 +97,7 @@ public class TableColumnLineageAPI extends MetadataAPIBase {
                 GetDotForTable getDotForTable = new GetDotForTable();
                 dot = getDotForTable.dotGeneratorWithTable(args);
                 LineageTabColInfo lineageInfo = new LineageTabColInfo();
-                LOGGER.info(dot);
+                LOGGER.debug(dot);
                 lineageInfo.setDot(dot.toString());
                 lineageInfo.setTableName(tableName);
 
