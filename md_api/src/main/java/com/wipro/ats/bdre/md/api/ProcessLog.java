@@ -128,7 +128,7 @@ public class ProcessLog extends MetadataAPIBase {
             //inserting process log
             Long logId = processLogDAO.insert(processLog);
 
-            processLogInfo.setLogId((int) (long) logId);
+            processLogInfo.setLogId(logId);
 
             return processLogInfo;
         } catch (Exception e) {

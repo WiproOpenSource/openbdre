@@ -85,7 +85,7 @@
 						    console.log (item.record.parentProcessId);
 						    console.log (item.record.processId);
 						    $.ajax({
-						    url: '/mdrest/subprocess/' + item.record.processId,
+						    url: '/mdrest/processlog/?pid=' + item.record.parentProcessId,
 							    type: 'GET',
 							    data: item,
 							    dataType: 'json',
@@ -145,7 +145,7 @@
 									    title: 'Process Id',
 									    defaultValue: item.record.processId,
 								    },
-									    addTs: {
+									    tableAddTs: {
 									    title: 'add ts'
 									    },
 									    logCategory: {
@@ -200,7 +200,7 @@
 		    },
 			    parentProcessId: {
 			    key : true,
-				    list: false,
+				    list: true,
 				    create:true,
 				    edit: false,
 				    title: 'Process'
@@ -208,7 +208,7 @@
 			    },
 			    processId: {
 			    key : true,
-				    list: true,
+				    list: false,
 				    create:true,
 				    edit: false,
 				    title: 'Process'
