@@ -1,0 +1,28 @@
+language: java
+jdk:
+  - oraclejdk7
+before_install:
+    - sudo apt-get install mysql-server -y
+    - sudo apt-get install curl -y
+    - sudo service mysql restart
+    - echo hibernate.current_session_context_class=thread > md-dao/src/main/resources/db.properties
+    - echo hibernate.transaction.factory_class=org.hibernate.transaction.JDBCTransactionFactory >> md-dao/src/main/resources/db.properties
+    - echo hibernate.show_sql=false >> md-dao/src/main/resources/db.properties
+    - echo hibernate.connection.driver_class=com.mysql.jdbc.Driver >> md-dao/src/main/resources/db.properties
+    - echo "hibernate.connection.url=jdbc:mysql://localhost:3306/bdre?createDatabaseIfNotExist=true" >> md-dao/src/main/resources/db.properties
+    - echo hibernate.connection.password= >> md-dao/src/main/resources/db.properties
+    - echo hibernate.connection.username=root >> md-dao/src/main/resources/db.properties
+    - echo hibernate.dialect=org.hibernate.dialect.MySQLDialect >> md-dao/src/main/resources/db.properties
+    - echo hibernate.default_schema=bdre >> md-dao/src/main/resources/db.properties
+    - cat md-dao/src/main/resources/db.properties
+    - mysql -uroot -e "create database if not exists bdre"
+    - mysql -uroot bdre < databases/mysql/ddls/drop_tables.sql
+    - mysql -uroot bdre < databases/mysql/ddls/create_tables.sql
+    - #curl -X POST  -H "Content-Type:application/json" -d "{\"body\":\"BDRE Robot triggered an automatic build verification for $TRAVIS_BRANCH branch because of your change. I shall test it and comment again shortly. Do not celebrate just yet.\"}" https://$GITHUB_APP_USER:$GITHUB_APP_TOKEN@api.github.com/repos/WiproOpenSourcePractice/openbdre/commits/$TRAVIS_COMMIT/comments
+install: /bin/true
+script:
+    - mvn -s settings.xml clean install -P hdp22 -pl '!im-crawler' --quiet
+after_success:
+    - #curl -X POST  -H "Content-Type:application/json" -d "{\"body\":\"BDRE Robot confirms that the build from $TRAVIS_BRANCH passed. Build logs available at https://travis-ci.org/WiproOpenSourcePractice/openbdre/builds/$TRAVIS_BUILD_ID\"}" https://$GITHUB_APP_USER:$GITHUB_APP_TOKEN@api.github.com/repos/WiproOpenSourcePractice/openbdre/commits/$TRAVIS_COMMIT/comments
+after_failure:
+    - #curl -X POST  -H "Content-Type:application/json" -d "{\"body\":\"BDRE Robot says that it encountered an error while building $TRAVIS_BRANCH. Build logs available at https://travis-ci.org/WiproOpenSourcePractice/openbdre/builds/$TRAVIS_BUILD_ID\"}" https://$GITHUB_APP_USER:$GITHUB_APP_TOKEN@api.github.com/repos/WiproOpenSourcePractice/openbdre/commits/$TRAVIS_COMMIT/comments
