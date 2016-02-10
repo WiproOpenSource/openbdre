@@ -127,6 +127,7 @@ CREATE TABLE process (
   description varchar(256) NOT NULL,
   add_ts timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   process_name varchar(45) NOT NULL,
+  process_code VARCHAR(256),
   bus_domain_id int NOT NULL references bus_domain(bus_domain_id) ON DELETE NO ACTION ON
 UPDATE NO ACTION,
   process_type_id int NOT NULL references process_type(process_type_id) ON DELETE NO ACTION

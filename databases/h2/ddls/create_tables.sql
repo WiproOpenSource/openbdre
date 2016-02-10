@@ -83,6 +83,7 @@ CREATE TABLE process (
   process_type_id integer NOT NULL,
   parent_process_id integer DEFAULT NULL,
   can_recover boolean DEFAULT true,
+   process_code VARCHAR(256),
   enqueuing_process_id integer NOT NULL DEFAULT 0,
   batch_cut_pattern varchar(45) DEFAULT NULL,
   next_process_id varchar(256) NOT NULL DEFAULT '',
