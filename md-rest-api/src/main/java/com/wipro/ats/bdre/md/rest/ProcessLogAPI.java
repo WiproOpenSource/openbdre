@@ -17,6 +17,7 @@ package com.wipro.ats.bdre.md.rest;
 import com.wipro.ats.bdre.md.api.base.MetadataAPIBase;
 import com.wipro.ats.bdre.md.beans.ProcessLogInfo;
 import com.wipro.ats.bdre.md.dao.ProcessLogDAO;
+import com.wipro.ats.bdre.md.rest.util.DateConverter;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -58,7 +59,6 @@ public class ProcessLogAPI extends MetadataAPIBase {
         try {
             // SqlSessionFactory sqlSessionFactory = getSqlSessionFactory(null);
             // s = sqlSessionFactory.openSession();
-            Integer counter=processLogDAO.totalRecordCount();
             ProcessLogInfo processLogInfo = new ProcessLogInfo();
             if (pid == 0) {
                 pid = null;
@@ -66,12 +66,12 @@ public class ProcessLogAPI extends MetadataAPIBase {
             processLogInfo.setProcessId(pid);
             processLogInfo.setPage(startPage);
             processLogInfo.setPageSize(pageSize);
+
             //List<ProcessLogInfo> listLog = s.selectList("call_procedures.ListLog", processLogInfo);
             List<ProcessLogInfo> listLog = processLogDAO.listLog(processLogInfo);
-            for (ProcessLogInfo processLogInfo1 : listLog) {
-                processLogInfo1.setProcessId(processLogInfo1.getParentProcessId());
-                processLogInfo1.setCounter(counter);
-            }
+           // for (ProcessLogInfo processLogInfo1 : listLog) {
+          //      processLogInfo1.setProcessId(processLogInfo1.getProcessId());
+          //  }
 
             //s.close();
             restWrapper = new RestWrapper(listLog, RestWrapper.OK);
@@ -102,7 +102,9 @@ public class ProcessLogAPI extends MetadataAPIBase {
             processLogInfo.setProcessId(processId);
             // List<ProcessLogInfo> processLogList = s.selectList("call_procedures.GetProcessLog", processLogInfo);
             List<ProcessLogInfo> processLogList = processLogDAO.getProcessLog(processLogInfo);
-            //s.close();
+            for(ProcessLogInfo processLogInfo1:processLogList){
+                processLogInfo1.setTableAddTs(DateConverter.dateToString(processLogInfo1.getAddTs()));
+            }
             restWrapper = new RestWrapper(processLogList, RestWrapper.OK);
             LOGGER.info("Record with ID:" + processId + " selected from ProcessLog by User:" + principal.getName());
 

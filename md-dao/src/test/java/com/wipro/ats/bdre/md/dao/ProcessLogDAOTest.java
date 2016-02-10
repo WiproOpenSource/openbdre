@@ -91,7 +91,7 @@ public class ProcessLogDAOTest {
     @Ignore
     public void testLog() throws Exception {
         ProcessLogInfo processLogInfo = new ProcessLogInfo();
-        processLogInfo.setProcessId(10802);
+        processLogInfo.setProcessId(5);
         processLogInfo.setAddTs(new Date());
         processLogInfo.setMessage("Test1");
         processLogInfo.setMessageId("Test2");
@@ -106,7 +106,7 @@ public class ProcessLogDAOTest {
     @Ignore
     public void testGetLastValue() throws Exception {
         ProcessLogInfo processLogInfo = new ProcessLogInfo();
-        processLogInfo.setProcessId(10805);
+        processLogInfo.setProcessId(5);
         processLogInfo.setLogCategory("test");
         processLogInfo.setMessage("test");
         processLogInfo.setMessageId("test");
@@ -116,17 +116,12 @@ public class ProcessLogDAOTest {
         LOGGER.info(" processid of Last inserted process is" + processLogInfo1.getProcessId());
         ;
     }
-
-    @Test @Ignore
+  @Ignore
+    @Test
     public void testlistLog() {
         ProcessLogInfo processLogInfo = new ProcessLogInfo();
-        processLogInfo.setProcessId(10805);
-        processLogInfo.setLogCategory("test");
-        processLogInfo.setMessage("test");
-        processLogInfo.setMessageId("test");
-        processLogInfo.setInstanceRef(Long.parseLong("10"));
-        processLogInfo.setAddTs(new Date());
-        processLogInfo.setPage(1);
+        processLogInfo.setParentProcessId(null);
+        processLogInfo.setPage(0);
         processLogInfo.setPageSize(10);
         List<ProcessLogInfo> processLogInfoList = processLogDAO.listLog(processLogInfo);
         LOGGER.info("size of the list is " + processLogInfoList.size());
@@ -136,7 +131,7 @@ public class ProcessLogDAOTest {
     @Ignore
     public void testGetProcessLog() {
         ProcessLogInfo processLogInfo = new ProcessLogInfo();
-        processLogInfo.setProcessId(10805);
+        processLogInfo.setProcessId(5);
         processLogInfo.setLogCategory("test");
         processLogInfo.setMessage("test");
         processLogInfo.setMessageId("test");

@@ -26,7 +26,7 @@ import java.util.Date;
 public class ProcessLogInfo {
 
 
-    private Integer logId;
+    private Long logId;
     private Integer processId;
     private Integer counter;
     private Integer parentProcessId;
@@ -35,6 +35,7 @@ public class ProcessLogInfo {
     private String messageId;
     private Long instanceRef;
     private Date addTs;
+    private String tableAddTs;
     private Integer pageSize;
 
     public Integer getPageSize() {
@@ -77,11 +78,11 @@ public class ProcessLogInfo {
 
     private Integer page;
 
-    public Integer getLogId() {
+    public Long getLogId() {
         return logId;
     }
 
-    public void setLogId(Integer logId) {
+    public void setLogId(Long logId) {
         this.logId = logId;
     }
 
@@ -132,6 +133,14 @@ public class ProcessLogInfo {
 
     public void setInstanceRef(Long instanceRef) {
         this.instanceRef = instanceRef;
+    }
+
+    public String getTableAddTs() {
+        return tableAddTs;
+    }
+
+    public void setTableAddTs(String tableAddTs) {
+        this.tableAddTs = tableAddTs;
     }
 
 
