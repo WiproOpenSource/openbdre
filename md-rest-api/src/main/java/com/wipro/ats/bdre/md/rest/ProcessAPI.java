@@ -545,10 +545,11 @@ public class ProcessAPI extends MetadataAPIBase {
             ObjectMapper mapper = new ObjectMapper();
             mapper.configure(DeserializationConfig.Feature.FAIL_ON_UNKNOWN_PROPERTIES, false);
             String homeDir = System.getProperty("user.home");
+            LOGGER.info("home directory" + homeDir);
             Import pimport=new Import();
             String zippedFileLocation = "";
             if (uploadedFileName.contains("bdreappstore-apps")){
-                zippedFileLocation = uploadedFileName;
+                zippedFileLocation = homeDir + "/" + uploadedFileName;
             } else {
                 zippedFileLocation = homeDir + "/bdre-wfd/zip/" + uploadedFileName;
             }
