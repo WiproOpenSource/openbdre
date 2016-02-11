@@ -1,0 +1,117 @@
+#!/bin/bash
+#
+# /etc/init.d/bdre
+# Subsystem file for "BDRE" server
+#
+# chkconfig: 2345 95 05
+# description: bdre server daemon
+#
+# processname: BDRE
+# pidfile: /var/run/BDRE/bdre.pid
+#
+# Get function from functions library
+. /etc/init.d/functions
+# Start the service BDRE
+USER=%USER%
+BDRE_HOME=~$USER/bdre
+BDRE_APPS_HOME=~$USER/bdre_apps
+
+DAEMON=$BDRE_HOME/bdre-scripts/bin/run-ui.sh # Introduce the bdre's location here
+LOGDIR=/var/log/BDRE  # Log directory to use
+PIDFILE=/var/run/BDRE/bdre.pid
+
+DAEMON_OPTS="$LOGDIR/service.log $PIDFILE"
+BDRE_SHUTDOWN_TIMEOUT=15
+
+
+start() {
+        echo -n "Starting bdre: "
+        echo
+        pid_dir=$(dirname $PIDFILE)
+        mkdir -p $pid_dir
+        chown -R $USER $pid_dir
+
+	# Check if already running
+        if [ -f $PIDFILE ]; then
+            pid=`cat $PIDFILE`
+            returnPid=`ps -o pid= -p $pid`
+            if [ -n $returnPid ];then
+                echo "BDRE already running with pid $returnPid"
+                return 0
+            fi
+        fi
+        rm -f $PIDFILE
+        /sbin/runuser -s /bin/bash $USER -c "$DAEMON $DAEMON_OPTS > /dev/null 2>&1"
+	    ret=$?
+        base=$(basename $0)
+        if [ $ret -eq 0 ]; then
+            new_pid=`cat $PIDFILE`
+            echo
+            wait_timeout=120
+            until $(curl --output /dev/null --silent --head http://localhost:28850); do
+                printf '.'
+                sleep 5
+                wait_timeout=$((wait_timeout - 5))
+                if [ $wait_timeout -le 0 ]; then
+                    echo "BDRE has not yet started in 120 seconds. Giving up."
+                    return 1
+                fi
+            done
+            success
+            echo "BDRE UI initiated with PID $new_pid."
+            echo
+
+        fi
+        return $ret
+
+}
+# Restart the service bdre
+stop() {
+	 if [ ! -f $PIDFILE ]; then
+	        echo "BDRE is not running"
+            success
+            return 0
+        fi
+
+        echo -n "Shutting down BDRE UI:"
+
+        bdre_pid=`cat $PIDFILE`
+        if [ -n "$bdre_pid" ]; then
+          kill -TERM ${bdre_pid} &>/dev/null
+          for i in `seq 1 ${BDRE_SHUTDOWN_TIMEOUT}` ; do
+            kill -0 ${bdre_pid} &>/dev/null || break
+            sleep 1
+          done
+          kill -KILL ${bdre_pid} &>/dev/null
+        fi
+        ret=$?
+        rm -f $PIDFILE
+        return $ret
+}
+
+restart() {
+  stop
+  start
+}
+
+### main logic ###
+case "$1" in
+  start)
+        start
+        ;;
+  stop)
+        stop
+        ;;
+  status)
+        status -p $PIDFILE BDRE
+        ;;
+  restart)
+        restart
+        ;;
+    *)
+        echo "Usage: bdre {start|stop|status|restart"
+        exit 1
+        ;;
+
+esac
+exit $?

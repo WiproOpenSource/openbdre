@@ -1,0 +1,116 @@
+.ui-layout-west {
+position: absolute;
+margin: 0px;
+left: 0px;
+right: auto;
+top: 148px ;
+bottom: 0px;
+height: 86px;
+z-index: 0;
+padding-top: 1px !important;
+padding-right: 10px;
+padding-bottom: 10px;
+padding-left: 0px !important;
+border: none !important;
+overflow: auto;
+width: 178px;
+display: block;
+visibility: visible;
+background: rgb(255, 255, 255);
+}
+
+
+.ui-layout-resizer{
+position: absolute;
+padding: 0px;
+margin: 0px;
+font-size: 1px;
+text-align: left;
+overflow: hidden;
+z-index: 0;
+border: none;
+top: 166px;
+cursor: default;
+width: 1002px;
+height: 6px ;
+left: 0px;
+background: linear-gradient(#36aae7, #1fa0e4) !important;
+}
+.ui-layout-toggler{
+background: green !important;
+}
+.ui-layout-resizer-north{
+position: absolute;
+padding: 0px;
+margin: 0px;
+font-size: 1px;
+text-align: left;
+overflow: hidden;
+z-index: 2;
+border: none;
+top: 166px;
+cursor: default;
+width: 1002px;
+height: 20px !important ;
+left: 0px;
+background: linear-gradient(#36aae7, #1fa0e4) !important;
+}
+.ui-layout-north{
+background-image: url("images/computer-mouse-grey-header.jpg") !important;
+background-size: 100% !important;
+}
+h1{
+font-size: 1.5em;
+}
+
+h2{
+font-size: 1.1em;
+}
+.grid-container{
+    width: 100%;
+    max-width: 1200px;
+}
+
+/*-- our cleafix hack -- */
+.row:before,
+.row:after {
+    content:"";
+    display: table ;
+    clear:both;
+}
+
+[class*='col-'] {
+    color: rgb(80, 80, 80);
+    float: left;
+    min-height: 1px;
+    width: 16.66%;
+    /*-- our gutter -- */
+    padding: 1px;
+    background-color: transparent;
+}
+
+.col-1{ width: 16.66%; }
+.col-2{ width: 33.33%; }
+.col-3{ width: 50%;    }
+.col-4{ width: 66.66%; }
+.col-5{ width: 83.33%; }
+.col-6{ width: 100%;   }
+
+.outline, .outline *{
+    outline: none;
+}
+
+
+/*-- some extra column content styling --*/
+[class*='col-'] > p {
+ background-color: transparent;
+ padding: 0;
+ margin: 0;
+ text-align: center;
+ color: white;
+}
+table{
+border: 1px solid #835a2c;
+border-collapse: collapse;
+border-spacing: 0;
+}

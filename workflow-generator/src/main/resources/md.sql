@@ -1,0 +1,25 @@
+delete from process where process_id >=402 and process_id<=420;
+delete from process where process_id = 401;
+delete from process where process_id = 421;
+
+insert into process values (421, 'Enqueuing process', current_timestamp, 'Semantic', 1,2, null ,1, 0,null, '422');
+insert into process values (401, 'Parent process', current_timestamp, 'Semantic', 1,2, null, 1, 0,null, '402,403,404');
+insert into process values (402, 'Sub process', current_timestamp, 'Semantic', 1,2, 401 , 1, 421,null, '405');
+insert into process values (403, 'Sub process', current_timestamp, 'Semantic', 1,2, 401 , 1, 421,null, '405');
+insert into process values (404, 'Sub process', current_timestamp, 'Semantic', 1,2, 401 , 1, 421,null, '405');
+insert into process values (405, 'Sub process', current_timestamp, 'Semantic', 1,2, 401 , 1, 421,null, '406,407,408,409');
+insert into process values (406, 'Sub process', current_timestamp, 'Semantic', 1,2, 401 , 1, 421,null, '410,411,412,413');
+insert into process values (407, 'Sub process', current_timestamp, 'Semantic', 1,2, 401 , 1, 421,null, '410,411,412,413');
+insert into process values (408, 'Sub process', current_timestamp, 'Semantic', 1,2, 401 , 1, 421,null, '410,411,412,413');
+insert into process values (409, 'Sub process', current_timestamp, 'Semantic', 1,2, 401 , 1, 421,null, '410,411,412,413');
+insert into process values (410, 'Sub process', current_timestamp, 'Semantic', 1,2, 401 , 1, 421,null, '414');
+insert into process values (411, 'Sub process', current_timestamp, 'Semantic', 1,2, 401 , 1, 421,null, '414');
+insert into process values (412, 'Sub process', current_timestamp, 'Semantic', 1,2, 401 , 1, 421,null, '414');
+insert into process values (413, 'Sub process', current_timestamp, 'Semantic', 1,2, 401 , 1, 421,null, '414');
+insert into process values (414, 'Sub process', current_timestamp, 'Semantic', 1,2, 401 , 1, 421,null, '415,416,417');
+insert into process values (415, 'Sub process', current_timestamp, 'Semantic', 1,2, 401, 1, 421,null, '418,419');
+insert into process values (416, 'Sub process', current_timestamp, 'Semantic', 1,2, 401 , 1, 421,null, '418,419');
+insert into process values (417, 'Sub process', current_timestamp, 'Semantic', 1,2, 401 , 1, 421,null, '418,419');
+insert into process values (418, 'Sub process', current_timestamp, 'Semantic', 1,2, 401 , 1, 421,null, '420');
+insert into process values (419, 'Sub process', current_timestamp, 'Semantic', 1,2, 401 , 1, 421,null, '420');
+insert into process values (420, 'Sub process', current_timestamp, 'Semantic', 1,2, 401 , 1, 421,null, '401');

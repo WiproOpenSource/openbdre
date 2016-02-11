@@ -1,0 +1,63 @@
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+# http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+#
+
+#This file is for reference only
+
+
+##### Common entries #####
+hibernate.current_session_context_class=thread
+hibernate.transaction.factory_class=org.hibernate.transaction.JDBCTransactionFactory
+hibernate.show_sql=true
+
+#####Configuration for mysql#####
+
+#database=mysql
+#hibernate.connection.driver_class=com.mysql.jdbc.Driver
+#hibernate.connection.url=jdbc:mysql://localhost:3306/platmd
+#hibernate.connection.username=root
+#hibernate.connection.password=root
+#hibernate.dialect=org.hibernate.dialect.MySQLDialect
+#hibernate.default_schema=platmd
+
+#####Configuration for postgresql#####
+
+#database=postgresql
+#hibernate.connection.driver_class=org.postgresql.Driver
+#hibernate.connection.url=jdbc:postgresql://localhost:5432/mydb
+#hibernate.connection.username=root
+#hibernate.connection.password=root
+#hibernate.dialect=org.hibernate.dialect.PostgreSQLDialect
+#hibernate.default_schema=public
+
+
+##### Configuration for Oracle#####
+
+#database=oracle
+#hibernate.connection.driver_class=oracle.jdbc.driver.OracleDriver
+#hibernate.connection.url=jdbc:oracle:thin:@localhost:1521/xe
+#hibernate.connection.username=bdreOracle
+#hibernate.connection.password=root
+#hibernate.dialect=org.hibernate.dialect.Oracle10gDialect
+#hibernate.default_schema=BDREORACLE
+
+
+##### Configuration for H2 DB#####
+
+database=h2
+hibernate.connection.driver_class=org.h2.Driver
+hibernate.connection.url=jdbc:h2:~/bdre
+hibernate.connection.username=root
+hibernate.connection.password=root
+hibernate.dialect=org.hibernate.dialect.H2Dialect
+hibernate.default_schema=BDRE

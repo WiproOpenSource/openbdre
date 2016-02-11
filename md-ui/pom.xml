@@ -1,0 +1,310 @@
+<!--
+  ~ Licensed under the Apache License, Version 2.0 (the "License");
+  ~ you may not use this file except in compliance with the License.
+  ~ You may obtain a copy of the License at
+  ~
+  ~ http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~ Unless required by applicable law or agreed to in writing, software
+  ~ distributed under the License is distributed on an "AS IS" BASIS,
+  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~ See the License for the specific language governing permissions and
+  ~ limitations under the License.
+  -->
+
+<project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://maven.apache.org/POM/4.0.0"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+    <parent>
+        <artifactId>bdre-app</artifactId>
+        <groupId>com.wipro.ats.bdre</groupId>
+        <version>1.1-SNAPSHOT</version>
+    </parent>
+    <modelVersion>4.0.0</modelVersion>
+    <artifactId>md-ui</artifactId>
+    <packaging>war</packaging>
+
+    <dependencies>
+        <!-- Spring 3 dependencies -->
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-core</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-web</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-webmvc</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>workflow-generator</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-jdbc</artifactId>
+        </dependency>
+
+        <!-- Spring Security -->
+        <dependency>
+            <groupId>org.springframework.security</groupId>
+            <artifactId>spring-security-web</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework.security</groupId>
+            <artifactId>spring-security-config</artifactId>
+        </dependency>
+
+        <!-- Spring Security JSP Taglib -->
+        <dependency>
+            <groupId>org.springframework.security</groupId>
+            <artifactId>spring-security-taglibs</artifactId>
+        </dependency>
+
+        <!-- jstl for jsp page -->
+        <dependency>
+            <groupId>jstl</groupId>
+            <artifactId>jstl</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>login-module</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+
+        <!-- org webjars - for javascripts -->
+        <dependency>
+            <groupId>org.webjars</groupId>
+            <artifactId>jquery</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.webjars</groupId>
+            <artifactId>bootstrap</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.webjars</groupId>
+            <artifactId>angularjs</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.webjars.bower</groupId>
+            <artifactId>moment</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.webjars.bower</groupId>
+            <artifactId>Chart.js</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.webjars.bower</groupId>
+            <artifactId>handsontable</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.webjars.bower</groupId>
+            <artifactId>jquery.steps</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.webjars.bower</groupId>
+            <artifactId>fancytree</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.webjars</groupId>
+            <artifactId>jTable</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.webjars</groupId>
+            <artifactId>viz.js</artifactId>
+        </dependency>
+    </dependencies>
+    <build>
+        <finalName>md-ui-${project.version}</finalName>
+        <plugins>
+
+
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-dependency-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>unpack org.webjars dependencies</id>
+                        <goals>
+                            <goal>unpack-dependencies</goal>
+                        </goals>
+                        <configuration>
+                            <includeGroupIds>org.webjars,org.webjars.bower</includeGroupIds>
+                            <includes>
+                                **/jquery.min.js,**/bootstrap.js,**/angular.min.js,**/moment.js,**/Chart.js,**/jquery.fancytree.js,**/jquery.fancytree.table.js,**/jquery.fancytree.gridnav.js,**/jquery.steps.min.js,**/handsontable.full.js,**/*jquery.jtable.js,**/viz.js,**/localization/jquery.jtable*js,**/external/json2*js,**/extensions/jquery.jtable.aspnet*js,**/*.png,**/*.css,**/*.less,**/*.gif,**/*.map,**/fonts/*.eot,**/*.svg,**/*.ttf,**/*.woff,**/*.woff2
+                            </includes>
+                            <outputDirectory>${project.build.directory}/js-dependencies</outputDirectory>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>copy</goal>
+                        </goals>
+                        <configuration>
+                            <artifactItems>
+                                <artifactItem>
+                                    <groupId>${project.groupId}</groupId>
+                                    <artifactId>${project.artifactId}</artifactId>
+                                    <version>${project.version}</version>
+                                    <type>${project.packaging}</type>
+                                    <outputDirectory>${project.parent.build.directory}/lib/webapps</outputDirectory>
+                                </artifactItem>
+                            </artifactItems>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-antrun-plugin</artifactId>
+                <version>1.6</version>
+                <executions>
+                    <execution>
+                        <id>copy org.webjars dependency to jar</id>
+                        <phase>prepare-package</phase>
+                        <goals>
+                            <goal>run</goal>
+                        </goals>
+                        <configuration>
+                            <target>
+                                <copy todir="${project.basedir}/src/main/webapp/js" flatten="true">
+                                    <fileset dir="${project.build.directory}/js-dependencies" includes="**/*.js"
+                                             excludes="**/viz.js,**/localization/jquery.jtable.*.js,**/external/json2*js,**/extensions/jquery.jtable.aspnet*js"/>
+                                </copy>
+                                <copy todir="${project.basedir}/src/main/webapp/js/graph" flatten="true">
+                                    <fileset dir="${project.build.directory}/js-dependencies" includes="**/viz.js"/>
+                                </copy>
+                                <copy todir="${project.basedir}/src/main/webapp/js/localization" flatten="true">
+                                    <fileset dir="${project.build.directory}/js-dependencies"
+                                             includes="**/localization/jquery.jtable*js"/>
+                                </copy>
+                                <copy todir="${project.basedir}/src/main/webapp/js/external" flatten="true">
+                                    <fileset dir="${project.build.directory}/js-dependencies"
+                                             includes="**/external/json2*js"/>
+                                </copy>
+                                <copy todir="${project.basedir}/src/main/webapp/js/extensions" flatten="true">
+                                    <fileset dir="${project.build.directory}/js-dependencies"
+                                             includes="**/extensions/jquery.jtable.aspnet*js"/>
+                                </copy>
+                                <copy todir="${project.basedir}/src/main/webapp/js/themes/basic" flatten="true">
+                                    <fileset dir="${project.build.directory}/js-dependencies"
+                                             includes="**/themes/basic/*"/>
+                                </copy>
+                                <copy todir="${project.basedir}/src/main/webapp/js/themes/jqueryui" flatten="true">
+                                    <fileset dir="${project.build.directory}/js-dependencies"
+                                             includes="**/themes/jqueryui/*"/>
+                                </copy>
+                                <copy todir="${project.basedir}/src/main/webapp/js/themes/lightcolor/blue"
+                                      flatten="true">
+                                    <fileset dir="${project.build.directory}/js-dependencies"
+                                             includes="**/themes/lightcolor/blue/*"/>
+                                </copy>
+                                <copy todir="${project.basedir}/src/main/webapp/js/themes/lightcolor/gray"
+                                      flatten="true">
+                                    <fileset dir="${project.build.directory}/js-dependencies"
+                                             includes="**/themes/lightcolor/gray/*"/>
+                                </copy>
+                                <copy todir="${project.basedir}/src/main/webapp/js/themes/lightcolor/green"
+                                      flatten="true">
+                                    <fileset dir="${project.build.directory}/js-dependencies"
+                                             includes="**/themes/lightcolor/green/*"/>
+                                </copy>
+                                <copy todir="${project.basedir}/src/main/webapp/js/themes/lightcolor/orange"
+                                      flatten="true">
+                                    <fileset dir="${project.build.directory}/js-dependencies"
+                                             includes="**/themes/lightcolor/orange/*"/>
+                                </copy>
+                                <copy todir="${project.basedir}/src/main/webapp/js/themes/lightcolor/red"
+                                      flatten="true">
+                                    <fileset dir="${project.build.directory}/js-dependencies"
+                                             includes="**/themes/lightcolor/red/*"/>
+                                </copy>
+                                <copy todir="${project.basedir}/src/main/webapp/css/css/" flatten="true">
+                                    <fileset dir="${project.build.directory}/js-dependencies"
+                                             includes="**/bootstrap/*/css/*.css,**/bootstrap/*/css/*.map"
+                                             excludes="**/bootstrap/*/css/*jsf*"/>
+                                </copy>
+                                <copy todir="${project.basedir}/src/main/webapp/css/" flatten="true">
+                                    <fileset dir="${project.build.directory}/js-dependencies"
+                                             includes="**/handsontable.full.css"/>
+                                </copy>
+                                <copy todir="${project.basedir}/src/main/webapp/css/metro/purple" flatten="true">
+                                    <fileset dir="${project.build.directory}/js-dependencies"
+                                             includes="**/jTable/*/themes/metro/purple/*"/>
+                                </copy>
+                                <copy todir="${project.basedir}/src/main/webapp/css/metro/pink" flatten="true">
+                                    <fileset dir="${project.build.directory}/js-dependencies"
+                                             includes="**/jTable/*/themes/metro/pink/*"/>
+                                </copy>
+                                <copy todir="${project.basedir}/src/main/webapp/css/metro/lightgray" flatten="true">
+                                    <fileset dir="${project.build.directory}/js-dependencies"
+                                             includes="**/jTable/*/themes/metro/lightgray/*"/>
+                                </copy>
+                                <copy todir="${project.basedir}/src/main/webapp/css/metro/green" flatten="true">
+                                    <fileset dir="${project.build.directory}/js-dependencies"
+                                             includes="**/jTable/*/themes/metro/green/*"/>
+                                </copy>
+                                <copy todir="${project.basedir}/src/main/webapp/css/metro/darkorange" flatten="true">
+                                    <fileset dir="${project.build.directory}/js-dependencies"
+                                             includes="**/jTable/*/themes/metro/darkorange/*"/>
+                                </copy>
+                                <copy todir="${project.basedir}/src/main/webapp/css/metro/darkgray" flatten="true">
+                                    <fileset dir="${project.build.directory}/js-dependencies"
+                                             includes="**/jTable/*/themes/metro/darkgray/*"/>
+                                </copy>
+                                <copy todir="${project.basedir}/src/main/webapp/css/metro/crimson" flatten="true">
+                                    <fileset dir="${project.build.directory}/js-dependencies"
+                                             includes="**/jTable/*/themes/metro/crimson/*"/>
+                                </copy>
+                                <copy todir="${project.basedir}/src/main/webapp/css/metro/brown" flatten="true">
+                                    <fileset dir="${project.build.directory}/js-dependencies"
+                                             includes="**/jTable/*/themes/metro/brown/*"/>
+                                </copy>
+                                <copy todir="${project.basedir}/src/main/webapp/css/metro/blue" flatten="true">
+                                    <fileset dir="${project.build.directory}/js-dependencies"
+                                             includes="**/jTable/*/themes/metro/blue/*"/>
+                                </copy>
+                                <copy todir="${project.basedir}/src/main/webapp/css/metro" flatten="true">
+                                    <fileset dir="${project.build.directory}/js-dependencies"
+                                             includes="**/jTable/*/themes/metro/jtable_metro*,**/jTable/*/themes/metro/*.png"/>
+                                </copy>
+                                <copy todir="${project.basedir}/src/main/webapp/css/fonts" flatten="true">
+                                    <fileset dir="${project.build.directory}/js-dependencies"
+                                             includes="**/bootstrap/*/fonts/*"/>
+                                </copy>
+                            </target>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+
+            <!-- Force the generation of the jar to be done after the javascript dependencies have been copied.
+Note : This is a half solution, as the jar is generated twice: a first time before the javascript get copied, and
+another one after. As a result, there is the correct jar, but after two creations... -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-war-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>Force the war-plugin to be called after the javascripts dependencies have been copied to be
+                            embedded
+                        </id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>war</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+
+    </build>
+</project>

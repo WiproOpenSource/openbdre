@@ -1,0 +1,125 @@
+/*
+Generic reset.
+*/
+
+* {
+	padding: 0;
+	margin: 0;
+}
+
+.test {
+	border: 5px red solid;
+	padding: 10;
+	margin: 10;
+	font-family: "Courier New";
+	font-style: italic;
+}
+
+/*
+Styles for nodes and connectors.
+*/
+
+.node-rect {
+	stroke: gray;
+	stroke-width: 1;
+}
+
+.mouseover-node-rect {
+	stroke: black;
+	stroke-width: 2;
+}
+
+.selected-node-rect {
+	stroke: red;
+	stroke-width: 2;
+}
+
+.connector-circle {
+    fill: white;
+    stroke: gray;
+    stroke-width: 2;
+}
+
+.mouseover-connector-circle {
+    fill: white;
+    stroke: black;
+    stroke-width: 2;
+}
+
+/*
+Style for connections.
+*/
+
+.connection {
+}
+
+.connection-line {
+	stroke: gray;
+	stroke-width: 2;
+	fill: transparent;
+}	
+
+.mouseover-connection-line {
+	stroke: black;
+	stroke-width: 2;
+	fill: transparent;
+}	
+
+.selected-connection-line {
+	stroke: red;
+	stroke-width: 2;
+	fill: transparent;
+}	
+
+.connection-endpoint {
+	fill: gray;
+}
+
+.selected-connection-endpoint {
+	fill: red;
+}	
+
+.mouseover-connection-endpoint {
+	fill: gray;
+}
+
+/*
+Style for the connection being dragged out.
+*/
+
+.dragging-connection {
+	pointer-events: none;
+}
+
+.dragging-connection-line {
+	stroke: gray;
+	stroke-width: 3;
+	fill: transparent;
+}	
+
+.dragging-connection-endpoint {
+	fill: gray;
+}
+
+/*
+The element (in this case the SVG element) that contains the draggable elements.
+*/
+
+.draggable-container {
+	border: none;
+}
+
+/*
+Drag selection rectangle.
+*/
+
+.drag-selection-rect {
+	stroke: blue;
+	stroke-width: 2;
+	fill: transparent;
+}
+
+.grid{
+	 background: url(grid.png);
+	 overflow: hidden;
+}

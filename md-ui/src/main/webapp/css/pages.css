@@ -1,0 +1,28 @@
+
+body {
+color: rgb(80, 80, 80);
+font-size: 12px;
+font-family: Arial, sans-serif;
+
+}
+h1{
+font-size: 1.5em;
+}
+h2{
+font-size: 1.1em;
+}
+
+td { 
+width: px;
+cellpadding: 14px;
+solid #c0c0c0;
+margin: 14px;
+}
+p {
+text-align: "centre";}
+
+table{
+
+border-collapse: collapse;
+border-spacing: 10;
+}
