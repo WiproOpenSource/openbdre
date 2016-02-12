@@ -54,7 +54,7 @@ fi
 
 
 #copy generated jar for data-import
-cp -f $BDRE_HOME/lib/dq/dq-$bdreVersion-jar-with-dependencies.jar $BDRE_APPS_HOME/$busDomainId/$processTypeId/$processId/lib
+cp -f $BDRE_HOME/lib/dq/dq-$bdreVersion-executable.jar $BDRE_APPS_HOME/$busDomainId/$processTypeId/$processId/lib
 if [ $? -eq 1 ]
 then exit 1
 fi
