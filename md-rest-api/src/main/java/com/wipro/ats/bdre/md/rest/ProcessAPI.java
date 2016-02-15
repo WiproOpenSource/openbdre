@@ -545,10 +545,11 @@ public class ProcessAPI extends MetadataAPIBase {
             ObjectMapper mapper = new ObjectMapper();
             mapper.configure(DeserializationConfig.Feature.FAIL_ON_UNKNOWN_PROPERTIES, false);
             String homeDir = System.getProperty("user.home");
+            LOGGER.info("home directory" + homeDir);
             Import pimport=new Import();
             String zippedFileLocation = "";
             if (uploadedFileName.contains("bdreappstore-apps")){
-                zippedFileLocation = uploadedFileName;
+                zippedFileLocation = homeDir + "/" + uploadedFileName;
             } else {
                 zippedFileLocation = homeDir + "/bdre-wfd/zip/" + uploadedFileName;
             }
@@ -611,8 +612,13 @@ public class ProcessAPI extends MetadataAPIBase {
                 insertDaoProcess.setProcessCode(parentProcess.getProcessCode());
                 parentProcessId = processDAO.insert(insertDaoProcess);
                 parentProcess.setProcessId(parentProcessId);
+                processExport.getProcessList().get(0).setProcessId(parentProcessId);
                 parentProcess.setTableAddTS(DateConverter.dateToString(insertDaoProcess.getAddTs()));
                 parentProcess.setTableEditTS(DateConverter.dateToString(insertDaoProcess.getEditTs()));
+            }
+            else
+            {
+                processExport.getProcessList().get(0).setProcessId(dbParentProcess.getProcessId());
             }
             List<com.wipro.ats.bdre.md.dao.jpa.Process> daoProcessList = processDAO.selectProcessList(parentProcess.getProcessCode());
             for (com.wipro.ats.bdre.md.dao.jpa.Process daoProcess : daoProcessList) {
@@ -775,6 +781,7 @@ public class ProcessAPI extends MetadataAPIBase {
                     updateDaoProcess.setEditTs(DateConverter.stringToDate(process.getTableEditTS()));
 //            Process processes = s.selectOne("call_procedures.UpdateProcess", process);
                     updateDaoProcess = processDAO.update(updateDaoProcess);
+                    process.setProcessId(updateDaoProcess.getProcessId());
                     process.setTableAddTS(DateConverter.dateToString(updateDaoProcess.getAddTs()));
                     process.setTableEditTS(DateConverter.dateToString(updateDaoProcess.getEditTs()));
                 }
@@ -793,6 +800,7 @@ public class ProcessAPI extends MetadataAPIBase {
              for (com.wipro.ats.bdre.md.dao.jpa.Process dbInsertedProcess : allDaoProcessList)
              {
                  table.put(importedTable.get(dbInsertedProcess.getProcessCode()),dbInsertedProcess.getProcessId().toString());
+
              }
             for (com.wipro.ats.bdre.md.dao.jpa.Process dbInsertedProcess : allDaoProcessList)
             {

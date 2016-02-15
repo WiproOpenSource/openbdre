@@ -63,17 +63,8 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-shade-plugin</artifactId>
-                <version>${maven.shade.version}</version>
-                <configuration>
-                    <!-- get all project dependencies -->
-
-
-                </configuration>
-
                 <executions>
                     <execution>
-                        <id>make-assembly</id>
-                        <!-- bind to the packaging phase -->
                         <phase>package</phase>
                         <goals>
                             <goal>shade</goal>
@@ -92,11 +83,13 @@
                             </transformers>
                             <shadedArtifactAttached>true</shadedArtifactAttached>
                             <shadedClassifierName>executable</shadedClassifierName>
-                            <finalName>dq-${project.version}-jar-with-dependencies</finalName>
+                            <finalName>dq-${project.version}</finalName>
+                            <outputDirectory>${project.parent.build.directory}/lib/${project.artifactId}</outputDirectory>
                         </configuration>
                     </execution>
                 </executions>
             </plugin>
+
             <plugin>
                 <artifactId>maven-dependency-plugin</artifactId>
                 <executions>
@@ -108,7 +101,9 @@
                         <configuration>
                             <outputDirectory>${project.parent.build.directory}/lib/${project.artifactId}</outputDirectory>
                         </configuration>
+
                     </execution>
+
                     <execution>
                         <id>copy-installed</id>
                         <phase>install</phase>
@@ -127,8 +122,11 @@
                             <outputDirectory>${project.parent.build.directory}/lib/${project.artifactId}</outputDirectory>
                         </configuration>
                     </execution>
+
                 </executions>
             </plugin>
+
         </plugins>
+
     </build>
 </project>

@@ -15,9 +15,13 @@ mkdir -p $BDRE_HOME/lib
 mkdir -p $BDRE_APPS_HOME
 mkdir -p $BDRE_HOME-wfd
 
+BDRE_CODE=`pwd`
+
+
 #Stop BDRE if running
 sudo service bdre stop
 cp -f -r bdre-scripts/$1/* $BDRE_HOME/bdre-scripts
+cp -f -r appstore-context.xml $BDRE_HOME/bdre-scripts
 
 cp -r -f target/lib/* $BDRE_HOME/lib
 java -cp "target/lib/genconf-dump/*" com.wipro.ats.bdre.md.util.DumpConfigMain -cg scripts_config -f $BDRE_HOME/bdre-scripts/env.properties
@@ -74,9 +78,5 @@ fi
 hive -e "create database if not exists raw;create database if not exists base;"
 
 
-
-
-
-
-
-
+cd $BDRE_CODE
+sh appstore.sh
