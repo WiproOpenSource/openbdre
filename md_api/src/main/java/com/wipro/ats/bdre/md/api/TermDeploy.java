@@ -30,8 +30,7 @@ import org.springframework.context.support.ClassPathXmlApplicationContext;
  */
 public class TermDeploy extends MetadataAPIBase {
     public TermDeploy() {
-        ApplicationContext context = new ClassPathXmlApplicationContext("spring-dao.xml");
-        AutowireCapableBeanFactory acbFactory = context.getAutowireCapableBeanFactory();
+        AutowireCapableBeanFactory acbFactory = getAutowireCapableBeanFactory();
         acbFactory.autowireBean(this);
     }
 
