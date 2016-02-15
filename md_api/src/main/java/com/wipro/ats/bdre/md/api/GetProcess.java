@@ -34,8 +34,7 @@ import java.util.List;
  */
 public class GetProcess extends MetadataAPIBase {
     public GetProcess() {
-        ApplicationContext context = new ClassPathXmlApplicationContext("spring-dao.xml");
-        AutowireCapableBeanFactory acbFactory = context.getAutowireCapableBeanFactory();
+        AutowireCapableBeanFactory acbFactory = getAutowireCapableBeanFactory();
         acbFactory.autowireBean(this);
     }
 

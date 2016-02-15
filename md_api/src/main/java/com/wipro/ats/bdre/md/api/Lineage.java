@@ -13,6 +13,7 @@
  */
 package com.wipro.ats.bdre.md.api;
 
+import com.wipro.ats.bdre.md.api.base.MetadataAPIBase;
 import com.wipro.ats.bdre.md.beans.LineageNodeInfo;
 import com.wipro.ats.bdre.md.beans.LineageQueryInfo;
 import com.wipro.ats.bdre.md.beans.LineageRelationInfo;
@@ -31,11 +32,10 @@ import java.util.Date;
 /**
  * Created by KA294215 on 17-12-2015.
  */
-public class Lineage {
-    private static final Logger LOGGER = Logger.getLogger(BatchEnqueuer.class);
+public class Lineage extends MetadataAPIBase {
+    private static final Logger LOGGER = Logger.getLogger(Lineage.class);
     public Lineage() {
-        ApplicationContext context = new ClassPathXmlApplicationContext("spring-dao.xml");
-        AutowireCapableBeanFactory acbFactory = context.getAutowireCapableBeanFactory();
+        AutowireCapableBeanFactory acbFactory = getAutowireCapableBeanFactory();
         acbFactory.autowireBean(this);
     }
     @Autowired
@@ -44,6 +44,10 @@ public class Lineage {
     LineageNodeDAO lineageNodeDAO;
     @Autowired
     LineageRelationDAO lineageRelationDAO;
+
+    public Lineage execute(String[] params) {
+        return null;
+    }
 
     public void insertLineageQuery(LineageQueryInfo lineageQueryInfo){
         LineageQuery lineageQuery = new LineageQuery();

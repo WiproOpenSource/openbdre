@@ -32,8 +32,7 @@ import java.util.List;
  */
 public class GetLineageByBatch extends MetadataAPIBase {
     public GetLineageByBatch() {
-        ApplicationContext context = new ClassPathXmlApplicationContext("spring-dao.xml");
-        AutowireCapableBeanFactory acbFactory = context.getAutowireCapableBeanFactory();
+        AutowireCapableBeanFactory acbFactory = getAutowireCapableBeanFactory();
         acbFactory.autowireBean(this);
     }
 

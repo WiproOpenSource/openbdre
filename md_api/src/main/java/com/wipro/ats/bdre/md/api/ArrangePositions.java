@@ -34,8 +34,7 @@ import java.util.Map;
  */
 public class ArrangePositions extends MetadataAPIBase {
     public ArrangePositions() {
-        ApplicationContext context = new ClassPathXmlApplicationContext("spring-dao.xml");
-        AutowireCapableBeanFactory acbFactory = context.getAutowireCapableBeanFactory();
+        AutowireCapableBeanFactory acbFactory = getAutowireCapableBeanFactory();
         acbFactory.autowireBean(this);
     }
 
