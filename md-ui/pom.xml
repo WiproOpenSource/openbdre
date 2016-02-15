@@ -121,7 +121,7 @@
         </dependency>
     </dependencies>
     <build>
-        <finalName>md-ui</finalName>
+        <finalName>md-ui-${project.version}</finalName>
         <plugins>
 
 

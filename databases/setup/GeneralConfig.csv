@@ -494,17 +494,17 @@
 'imconfig', 'etl.hive-metastore-uris', 'URL of Hive metastore','URL of Hive metastore', 1, 'thrift://${thrift_hostname}:9083', 'text', 1
 'imconfig', 'etl.local-download-directory', 'Directory to store downloaded files','Directory to store downloaded files', 1, '/home/user/Downloads', 'text', 1
 'imconfig', 'file-mon.thread-wait', 'Thread waiting time','Thread waiting time', 1, '500', 'text', 1
-'imconfig', 'file-mon.dirs', 'Monitoring files directory list','Monitoring files directory list', 1, '/home/${bdre_user_name}/oozies,/home/${bdre_user_name}/datasets', 'text', 1
+'imconfig', 'file-mon.dirs', 'Monitoring files directory list','Monitoring files directory list', 1, '/home/${edge_node_user_name}/oozies,/home/${edge_node_user_name}/datasets', 'text', 1
 'imconfig', 'file-mon.filter', 'Filter Information','Filter Information', 1, 'merchant\\s[0-9],test\\s[0-9]', 'text', 1
 'imconfig', 'file-mon.sub-processIds', 'Sub process IDs','Sub process IDs', 1, '1,2', 'text', 1
 'imconfig', 'file-mon.serverIds', 'Server IDs','Server IDs', 1, '100,200', 'text', 1
 'imconfig', 'dq.drools-url-prefix', 'URL prefix for drools','URL prefix for drools', 1, 'http://${drools_hostname}:8080/guvnor56/rest/packages/', 'text', 1
 'imconfig', 'data-import.hadoop-home', 'Hadoop home directory for exporting','Hadoop home directory for exporting', 1, '/usr/lib/hadoop', 'text', 1
-'imconfig', 'data-import.target-dir', 'Target direcotry to store imported data','Target direcotry to store imported data', 1, 'hdfs://${name_node_hostname}:${name_node_port}/user/${bdre_user_name}/import', 'text', 1
+'imconfig', 'data-import.target-dir', 'Target direcotry to store imported data','Target direcotry to store imported data', 1, 'hdfs://${name_node_hostname}:${name_node_port}/user/${edge_node_user_name}/import', 'text', 1
 'imconfig', 'data-import.jar-output-dir', 'Jar output directory for importing','Jar output directory for importing', 1, '/tmp/bdre/sqoop/jar-output', 'text', 1
 'imconfig', 'mq-import.file-size-units', 'File sizes unit','File sizes unit', 1, 'KB', 'text', 1
 'imconfig', 'mq-import.rotation-file-size', 'Rotation file size','Rotation file size', 1, '10', 'text', 1
-'imconfig', 'mq-import.target-directory', 'Directory to import MQ file','Directory to import MQ file', 1, 'hdfs://${name_node_hostname}:${name_node_port}/user/${bdre_user_name}/mq-import', 'text', 1
+'imconfig', 'mq-import.target-directory', 'Directory to import MQ file','Directory to import MQ file', 1, 'hdfs://${name_node_hostname}:${name_node_port}/user/${edge_node_user_name}/mq-import', 'text', 1
 'imconfig', 'data-export.hadoop-home', 'Hadoop home directory for exporting','Hadoop home directory for exporting', 1, '/usr/lib/hadoop', 'text', 1
 'imconfig', 'data-export.jar-output-dir', 'Jar output directory for exporting','Jar output directory for exporting', 1, '/tmp/bdre/sqoop/jar-output', 'text', 1
 'imconfig', 'eventing.metadata-broker-list', 'Metadata Brokers URL','Metadata Brokers URL', 1, 'localhost://:9092', 'text', 1
@@ -523,21 +523,29 @@
 'crawler','urlsToSearch','urls to search','urls to search',1,'.*','text', 1
 'crawler','urlsNotToSearch','urls not to search','urls not to search',1,'.*\\\\.(bmp|gif|jpg|png)$','text', 1
 #For deploy and execution scripts
-'scripts_config', 'bdreLinuxUserName', '-','-' , 1, '${bdre_user_name}', 'text' , 1
-'scripts_config', 'nameNodeHostName', '-','-' , 1, '${name_node_hostname}', 'text' , 1
-'scripts_config', 'nameNodePort', '-','-' , 1, '${name_node_port}', 'text' , 1
-'scripts_config', 'jobTrackerHostName', '-','-' , 1, '${thrift_hostname}', 'text' , 1
+'scripts_config', 'bdreLinuxUserName', '-','-' , 1, 'user', 'text' , 1
+'scripts_config', 'nameNodeHostName', '-','-' , 1, '0.0.0.0', 'text' , 1
+'scripts_config', 'nameNodePort', '-','-' , 1, '0', 'text' , 1
+'scripts_config', 'jobTrackerHostName', '-','-' , 1, '0.0.0.0', 'text' , 1
 #For cloudera this is 8032
-'scripts_config', 'jobTrackerPort', '-','-' , 1, '${job_tracker_port}', 'text' , 1
+'scripts_config', 'jobTrackerPort', '-','-' , 1, '0', 'text' , 1
 'scripts_config', 'hiveConfDir', '-','-' , 1, 'conf', 'text' , 1
-'scripts_config', 'flumeLibDir', '-','-' , 1, '${flume_path}', 'text' , 1
-'scripts_config', 'remoteUserName', '-','-' , 1, 'ec2-user', 'text' , 1
-'scripts_config', 'remoteHostPublicIp', '-','-' , 1, '127.0.0.1', 'text' , 1
+'scripts_config', 'flumeLibDir', '-','-' , 1, '/flume/lib', 'text' , 1
+'scripts_config', 'remoteUserName', '-','-' , 1, 'user', 'text' , 1
+'scripts_config', 'remoteHostPublicIp', '-','-' , 1, '0.0.0.0', 'text' , 1
 'scripts_config', 'uploadBaseDir', '-','-' , 1, '~/bdre-wfd', 'text' , 1
 'scripts_config', 'bdreVersion', '-','-' , 1, '1.1-SNAPSHOT', 'text' , 1
-'scripts_config', 'oozieHost', '-','-' , 1, '${oozie_host}', 'text' , 1
-'scripts_config', 'ooziePort', '-','-' , 1, '${oozie_port}', 'text' , 1
+'scripts_config', 'oozieHost', '-','-' , 1, '0.0.0.0', 'text' , 1
+'scripts_config', 'ooziePort', '-','-' , 1, '0', 'text' , 1
+'scripts_config', 'edgeNodeHostName', '-','-' , 1, '0.0.0.0', 'text' , 1
+'scripts_config', 'edgeNodeUserName', '-','-' , 1, 'user', 'text' , 1
+'scripts_config', 'edgeNodePassword', '-','-' , 1, 'pwd', 'text' , 1
+'scripts_config', 'oozieUrl', '-','-' , 1, '0.0.0.0', 'text' , 1
 'scripts_config', 'logDir', '-','-' , 1, '/var/log/BDRE', 'text' , 1
+'scripts_config', 'repoName', '-','-' , 1, 'origin', 'text' , 1
+'scripts_config', 'branchName', '-','-' , 1, 'master', 'text' , 1
+'scripts_config', 'gitURL', '-','-' , 1, 'https://github.com/WiproOpenSourcePractice/bdreappstore.git', 'text' , 1
+
 'file_format', 'delimited', 'DELIMITED','delimited file' , 1, 'delimited', 'text' , 1
 'file_format', 'xml', 'XML','XML file' , 1, 'xml', 'text' , 1
 'file_format', 'json', 'JSON','JSON file' , 1, 'json', 'text' , 1
@@ -554,4 +562,3 @@
 'mainframe', 'serdeClass', 'Serde Class','serde class to be used' , 1, ' ', 'text' , 1
 'mainframe', 'inputFormat', 'Input Format','input format to be used' , 1, 'com.cloudera.sa.copybook.mapred.CopybookInputFormat', 'text' , 1
 'mainframe', 'outputFormat', 'Output Format','output format to be used' , 1, 'org.apache.hadoop.hive.ql.io.HiveIgnoreKeyTextOutputFormat', 'text' , 1
-

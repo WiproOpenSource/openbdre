@@ -87,7 +87,6 @@ public class MetadataPersistenceTrigger implements PreUpdateEventListener, PreIn
     @Override
     public boolean onPreUpdate(PreUpdateEvent event) {
         if (event.getEntity() instanceof Process) {
-
             processTypeValidator(event.getEntity());
         }
         return false;
@@ -98,8 +97,9 @@ public class MetadataPersistenceTrigger implements PreUpdateEventListener, PreIn
         UUID idOne = UUID.randomUUID();
         System.out.println("UUID is "+idOne);
         if (event.getEntity() instanceof Process) {
-           // if (((Process) event.getEntity()).getProcessCode()==null)
+            if (((Process) event.getEntity()).getProcessCode()==null)
             ((Process) event.getEntity()).setProcessCode(idOne.toString());
+
             processTypeValidator(event.getEntity());
         }
         return false;

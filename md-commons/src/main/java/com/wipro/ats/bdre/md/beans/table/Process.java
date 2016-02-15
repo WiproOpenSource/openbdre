@@ -29,7 +29,14 @@ public class Process {
     @Digits(fraction = 0, integer = 11)
     private Integer processId;
     private Integer pageSize;
+    private String processCode;
+    public String getProcessCode() {
+        return this.processCode;
+    }
 
+    public void setProcessCode(String processCode) {
+        this.processCode = processCode;
+    }
     public Integer getPageSize() {
         return pageSize;
     }
@@ -86,7 +93,7 @@ public class Process {
 
     @Override
     public String toString() {
-        return " processId:" + processId + " tableAddTS:" + tableAddTS +
+        return " processId:" + processId + " tableAddTS:" + tableAddTS + "processCode:"+processCode+
                 " workflowId:" + workflowId + " description:" + description.substring(0, Math.min(description.length(), 45)) +
                 "addTS:" + addTS + " processName:" + processName + " busDomainId:" + busDomainId +
                 " processTypeId:" + processTypeId + " parentProcessId:" + parentProcessId + " processTemplateId:" + processTemplateId +
