@@ -39,8 +39,7 @@ import java.util.Date;
  */
 public class HaltJob extends MetadataAPIBase {
     public HaltJob() {
-        ApplicationContext context = new ClassPathXmlApplicationContext("spring-dao.xml");
-        AutowireCapableBeanFactory acbFactory = context.getAutowireCapableBeanFactory();
+        AutowireCapableBeanFactory acbFactory = getAutowireCapableBeanFactory();
         acbFactory.autowireBean(this);
     }
 

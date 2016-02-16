@@ -33,8 +33,7 @@ import java.util.List;
  */
 public class GetHiveTables extends MetadataAPIBase {
     public GetHiveTables() {
-        ApplicationContext context = new ClassPathXmlApplicationContext("spring-dao.xml");
-        AutowireCapableBeanFactory acbFactory = context.getAutowireCapableBeanFactory();
+        AutowireCapableBeanFactory acbFactory = getAutowireCapableBeanFactory();
         acbFactory.autowireBean(this);
     }
 

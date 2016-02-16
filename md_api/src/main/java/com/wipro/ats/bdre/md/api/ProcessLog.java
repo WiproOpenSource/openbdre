@@ -33,8 +33,7 @@ import java.sql.Timestamp;
  */
 public class ProcessLog extends MetadataAPIBase {
     public ProcessLog() {
-        ApplicationContext context = new ClassPathXmlApplicationContext("spring-dao.xml");
-        AutowireCapableBeanFactory acbFactory = context.getAutowireCapableBeanFactory();
+        AutowireCapableBeanFactory acbFactory = getAutowireCapableBeanFactory();
         acbFactory.autowireBean(this);
     }
 
@@ -128,7 +127,7 @@ public class ProcessLog extends MetadataAPIBase {
             //inserting process log
             Long logId = processLogDAO.insert(processLog);
 
-            processLogInfo.setLogId((int) (long) logId);
+            processLogInfo.setLogId(logId);
 
             return processLogInfo;
         } catch (Exception e) {
