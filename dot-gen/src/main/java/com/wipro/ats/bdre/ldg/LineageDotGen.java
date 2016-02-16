@@ -66,11 +66,10 @@ public class LineageDotGen extends BaseStructure {
                 String[] splits = query.split(" ");
                 defaultHiveDbName = splits[splits.length - 1].toUpperCase();
                 logger.debug("DefaulHiveDbName is set to " + defaultHiveDbName);
-
             }
 
             try {
-                LineageMain.main(new String[]{query, defaultHiveDbName, processId, instanceid});
+                LineageMain.lineageMain(lineageQuery, defaultHiveDbName, processId, instanceid);
             } catch (Exception e) {
                 logger.info("Error while calling LineageMain's main()");
                 e.printStackTrace();

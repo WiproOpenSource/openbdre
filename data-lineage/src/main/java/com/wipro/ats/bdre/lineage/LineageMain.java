@@ -20,6 +20,7 @@ import com.wipro.ats.bdre.lineage.entiity.Node;
 import com.wipro.ats.bdre.lineage.type.EntityType;
 import com.wipro.ats.bdre.lineage.type.UniqueList;
 import com.wipro.ats.bdre.md.dao.jpa.LineageNode;
+import com.wipro.ats.bdre.md.dao.jpa.LineageQuery;
 import org.antlr.runtime.tree.DOTTreeGenerator;
 import org.antlr.runtime.tree.Tree;
 import org.antlr.stringtemplate.StringTemplate;
@@ -70,6 +71,7 @@ public class LineageMain implements NodeProcessor {
 	private Integer processId;
 	private Long instanceId;
 	private String defaultHiveDbName;
+	private LineageQuery lineageQuery;
 
 	//	private int nextId = 0;
 	private int subquerySeq = 0;
@@ -81,11 +83,16 @@ public class LineageMain implements NodeProcessor {
 		this.instanceId = instanceId;
 		this.defaultHiveDbName = defaultHiveDbName;
 	}*/
-	public static void main(String[] args) throws IOException, ParseException,
+	public static void lineageMain(LineageQuery lineageQuery,String args1, String args2, String args3) throws IOException, ParseException,
 			SemanticException, Exception {
 		LineageMain lineageMain = new LineageMain();
+		lineageMain.instanceId = Long.parseLong(args3);
+		lineageMain.processId = Integer.parseInt(args2);
+		lineageMain.defaultHiveDbName = args1;
+		lineageMain.query = lineageQuery.getQueryString();
+		lineageMain.lineageQuery = lineageQuery;
 
-		if (args.length == 4) {
+		/*if (args.length == 4) {
 			lineageMain.instanceId = Long.parseLong(args[3]);
 			lineageMain.processId = Integer.parseInt(args[2]);
 			lineageMain.defaultHiveDbName = args[1];
@@ -98,7 +105,7 @@ public class LineageMain implements NodeProcessor {
 //			lineageMain.query = LineageConstants.query;
 			System.out.println("Error: Invalid inputs for LineageMain");
 			throw new Exception("Invalid inputs for LineageMain");
-		}
+		}*/
 
 		lineageMain.getLineageInfo();
 //		lineageMain.generateOperatorTree(new HiveConf(), query);
@@ -885,7 +892,7 @@ if(col != null && colName != null) {
 
 	private void populateBeansAndPersist() {
 		persistenceUnit = new PersistenceUnit();
-		persistenceUnit.populateBeans(finalInTableNodes, finalOutTableNodes, finalFunctions, finalConstants, finalRelations, query, processId, instanceId);
+		persistenceUnit.populateBeans(finalInTableNodes, finalOutTableNodes, finalFunctions, finalConstants, finalRelations, lineageQuery, processId, instanceId);
 		persistenceUnit.persist();
 	}
 

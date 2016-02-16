@@ -22,6 +22,7 @@ import com.wipro.ats.bdre.md.beans.LineageNodeInfo;
 import com.wipro.ats.bdre.md.beans.LineageNodeTypeEnumInfo;
 import com.wipro.ats.bdre.md.beans.LineageQueryInfo;
 import com.wipro.ats.bdre.md.beans.LineageRelationInfo;
+import com.wipro.ats.bdre.md.dao.jpa.LineageQuery;
 import org.apache.log4j.Logger;
 
 import java.util.List;
@@ -37,7 +38,7 @@ public class PersistenceUnit extends MetadataAPIBase {
 	private UniqueList<LineageNodeInfo> lineageTableNodes = new UniqueList<LineageNodeInfo>();
 	private UniqueList<LineageNodeInfo> lineageColumnNodes = new UniqueList<LineageNodeInfo>();
 	private List<LineageNodeInfo> lineageFunctionNodes = new UniqueList<LineageNodeInfo>();
-	private LineageQueryInfo lineageQueryInfo = null;
+	//private LineageQueryInfo lineageQueryInfo = null;
 	private UniqueList<LineageRelationInfo> lineageRelationInfos = new UniqueList<LineageRelationInfo>();
 	private List<LineageNodeInfo> lineageConstantNodes = new UniqueList<LineageNodeInfo>();
 	public UniqueList<LineageNodeInfo> getLineageTableNodes() {
@@ -49,18 +50,12 @@ public class PersistenceUnit extends MetadataAPIBase {
 	public List<LineageNodeInfo> getLineageFunctionNodes() {
 		return lineageFunctionNodes;
 	}
-	public LineageQueryInfo getLineageQueryInfo() {
+	/*public LineageQueryInfo getLineageQueryInfo() {
 		return lineageQueryInfo;
-	}
+	}*/
 	public UniqueList<LineageRelationInfo> getLineageRelationInfos() {
 		return lineageRelationInfos;
 	}
-
-//	public static void main(String[] args) {
-//		System.out.println("*****Start*****");
-//		PersistenceUnit persist = new PersistenceUnit();
-//		persist.persist();
-//	}
 
 	@Override
 	public Object execute(String[] params) {
@@ -70,52 +65,36 @@ public class PersistenceUnit extends MetadataAPIBase {
 
 	public void persist() {
 		Lineage lineage = new Lineage();
-
-//		LineageQueryInfo LineageQueryInfo = new LineageQueryInfo();
-//		LineageQueryInfo.setProcessId(122);
-//		LineageQueryInfo.setQueryId(UUID.randomUUID().toString());
-//		LineageQueryInfo.setQueryTypeId(1);
-//		LineageQueryInfo.setQueryString("select * from me");
-//		LineageQueryInfo.setInstanceExecId((long)1);
-//		LineageQueryInfo.setCreateTs(new Date());
-//		s.insert("call_procedures.InsertLineageQuery", lineageQueryInfo);
-		lineage.insertLineageQuery(lineageQueryInfo);
-
+		//inserting to LQ
+		//lineage.insertLineageQuery(lineageQueryInfo);
 
 		for (LineageNodeInfo lineageTableNode : lineageTableNodes) {
-//			s.insert("call_procedures.InsertLineageNode", lineageTableNode);
 			lineage.insertLineageNode(lineageTableNode);
 		}
 		for (LineageNodeInfo lineageColumnNode : lineageColumnNodes) {
-//			s.insert("call_procedures.InsertLineageNode", lineageColumnNode);
 			lineage.insertLineageNode(lineageColumnNode);
 		}
 		for (LineageNodeInfo lineageFunctionNode : lineageFunctionNodes) {
-//			s.insert("call_procedures.InsertLineageNode", lineageFunctionNode);
 			lineage.insertLineageNode(lineageFunctionNode);
 		}
 		for (LineageNodeInfo lineageConstantNode : lineageConstantNodes) {
-//			s.insert("call_procedures.InsertLineageNode", lineageConstantNode);
 			lineage.insertLineageNode(lineageConstantNode);
 		}
 		for (LineageRelationInfo lineageRelationInfo : lineageRelationInfos) {
-//			s.insert("call_procedures.InsertLineageRelation", LineageRelationInfo);
 			lineage.insertLineageRelation(lineageRelationInfo);
-
 		}
-
 		System.out.println("All nodes and relations are persisted in MySql db");
 	}
 
 	/**
 	 * Populate data beans from final node lists
 	 */
-	public void populateBeans(UniqueList<Table> finalInTableNodes, UniqueList<Table> finalOutTableNodes, List<Function> finalFunctions,UniqueList<Constant> finalConstants, List<Relation> finalRelations, String query, int processId,long instanceId) {
+	public void populateBeans(UniqueList<Table> finalInTableNodes, UniqueList<Table> finalOutTableNodes, List<Function> finalFunctions, UniqueList<Constant> finalConstants, List<Relation> finalRelations, LineageQuery lineageQuery, int processId, long instanceId) {
 		lineageTableNodes = new UniqueList<LineageNodeInfo>();
 		lineageColumnNodes = new UniqueList<LineageNodeInfo>();
 		lineageFunctionNodes = new UniqueList<LineageNodeInfo>();
 		lineageConstantNodes = new UniqueList<LineageNodeInfo>();
-		lineageQueryInfo = null;
+		//lineageQueryInfo = null;
 		lineageRelationInfos = new UniqueList<LineageRelationInfo>();
 
 		for (Table table : finalInTableNodes) {
@@ -197,12 +176,12 @@ public class PersistenceUnit extends MetadataAPIBase {
 			lineageConstantNodes.add(node);
 		}
 		// one query
-		lineageQueryInfo = new LineageQueryInfo();
+		/*lineageQueryInfo = new LineageQueryInfo();
 		lineageQueryInfo.setQueryId(UUID.randomUUID().toString());
 		lineageQueryInfo.setQueryString(query);
 		lineageQueryInfo.setQueryTypeId(1);
 		lineageQueryInfo.setProcessId(processId);
-		lineageQueryInfo.setInstanceExecId(instanceId);
+		lineageQueryInfo.setInstanceExecId(instanceId);*/
 
 		for (Relation relation : finalRelations) {
 			if(relation.getSource() instanceof Column && relation.getDestination() instanceof Column){
@@ -210,7 +189,7 @@ public class PersistenceUnit extends MetadataAPIBase {
 					System.out.println("source and destination are not same columns = " + relation);
 					LineageRelationInfo lineageRelationInfo = new LineageRelationInfo();
 					lineageRelationInfo.setRelationId(UUID.randomUUID().toString());
-					lineageRelationInfo.setQueryId(lineageQueryInfo.getQueryId());
+					lineageRelationInfo.setQueryId(lineageQuery.getQueryId());
 					lineageRelationInfo.setSrcNodeId(relation.getSource().getId());
 					lineageRelationInfo.setTargetNodeId(relation.getDestination().getId());
 					lineageRelationInfo.setDotString(relation.toDotString());
@@ -219,7 +198,7 @@ public class PersistenceUnit extends MetadataAPIBase {
 				else {
 					LineageRelationInfo lineageRelationInfo = new LineageRelationInfo();
 					lineageRelationInfo.setRelationId(UUID.randomUUID().toString());
-					lineageRelationInfo.setQueryId(lineageQueryInfo.getQueryId());
+					lineageRelationInfo.setQueryId(lineageQuery.getQueryId());
 					lineageRelationInfo.setSrcNodeId(relation.getSource().getId());
 					lineageRelationInfo.setTargetNodeId(relation.getDestination().getId());
 					lineageRelationInfo.setDotString(relation.toDotString());

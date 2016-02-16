@@ -92,9 +92,6 @@ public class LineageRelationDAO {
         String id = null;
         try {
             session.beginTransaction();
-//            LineageQueryType lineageQueryType = new LineageQueryType(1, "HIVE");
-//            lineageRelation.getLineageQuery().setLineageQueryType(lineageQueryType);
-            //session.save(lineageRelation.getLineageQuery());
             LOGGER.info("LQ: " + lineageRelation.getLineageQuery().getQueryId());
             id = (String) session.save(lineageRelation);
             session.getTransaction().commit();
