@@ -116,12 +116,12 @@ public class LineageNodeDAO {
         return id;
     }
 
-    public List<LineageNode> getColNodeId(String col_name) {
-        Long instanceExecId;
+    public List<LineageNode> getColNodeId(String col_name, LineageNode tableNode) {
+        //Long instanceExecId;
         List<LineageNode> lineageNodeList = new ArrayList<LineageNode>();
         Session session = sessionFactory.openSession();
         session.beginTransaction();
-        Criteria getLastElementCriteria = session.createCriteria(LineageNode.class).add(Restrictions.eq("displayName", col_name));
+        Criteria getLastElementCriteria = session.createCriteria(LineageNode.class).add(Restrictions.eq("lineageNode", tableNode)).add(Restrictions.eq("displayName", col_name));
         lineageNodeList = getLastElementCriteria.list();
         session.getTransaction().commit();
         session.close();

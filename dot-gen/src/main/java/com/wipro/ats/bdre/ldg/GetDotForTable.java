@@ -41,17 +41,18 @@ public class GetDotForTable {
         //get elements of LR table
         List<LineageRelation> lineageRelationList;
 
-        //get the nodes which have the same DISPLAY_NAME as that of the string provided
-        List<LineageNode> lineageNodeList = getDotForTable.getLineageNodeNodeId(args[0]);
+        //get the nodes which have the same DISPLAY_NAME as that of the string(COLUMN NAME) provided
+
         GetLineageNodeByColName getLineageNodeByColName;
         LineageMain lineageMain = new LineageMain();
-
+        //src table name is provided by user
         String srcTableName = args[1];
         logger.info("Generating DOT for the given Column Name: " + args[0]);
         String targetTableName = null;
         String relationDot;
         getLineageNodeByColName = new GetLineageNodeByColName();
         LineageNode srcTableNode = getLineageNodeByColName.getTableDotFromTableName(srcTableName);
+        List<LineageNode> lineageNodeList = getDotForTable.getLineageNodeNodeId(args[0], srcTableNode);
 
         //compare the list of Nodes got from LN table with LR table to get the required node
         for (LineageNode lineageNode : lineageNodeList) {
@@ -87,9 +88,9 @@ public class GetDotForTable {
         return dotString;
     }
 
-    private List<LineageNode> getLineageNodeNodeId (String col) {
+    private List<LineageNode> getLineageNodeNodeId (String col, LineageNode tableNode) {
         GetLineageNodeByColName getLineageNodeByColName = new GetLineageNodeByColName();
-        List<LineageNode> lineageNodeList = getLineageNodeByColName.execute(col);
+        List<LineageNode> lineageNodeList = getLineageNodeByColName.execute(col, tableNode);
         for(LineageNode lineageNode:lineageNodeList){
             logger.info("Column name: "+lineageNode.getDisplayName()+" Node id: "+lineageNode.getNodeId());
         }

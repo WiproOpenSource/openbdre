@@ -15,12 +15,8 @@
 package com.wipro.ats.bdre;
 
 import com.wipro.ats.bdre.exception.MetadataException;
-import com.wipro.ats.bdre.md.api.base.MetadataAPIBase;
 import com.wipro.ats.bdre.md.dao.LineageNodeDAO;
-import com.wipro.ats.bdre.md.dao.LineageQueryDAO;
 import com.wipro.ats.bdre.md.dao.jpa.LineageNode;
-import com.wipro.ats.bdre.md.dao.jpa.LineageQuery;
-import org.apache.commons.cli.CommandLine;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.AutowireCapableBeanFactory;
@@ -50,13 +46,13 @@ public class GetLineageNodeByColName {
     @Autowired
     private LineageNodeDAO lineageNodeDAO;
 
-    public List<LineageNode> execute(String col) {
+    public List<LineageNode> execute(String col, LineageNode tableNode) {
 
         try {
             //CommandLine commandLine = getCommandLine(params, PARAMS_STRUCTURE);
             //String col = commandLine.getOptionValue("column-name");
             LOGGER.debug("Column name is " + col);
-            List<LineageNode> lineageNodeList = lineageNodeDAO.getColNodeId(col);
+            List<LineageNode> lineageNodeList = lineageNodeDAO.getColNodeId(col, tableNode);
 
             return lineageNodeList;
         } catch (Exception e) {
