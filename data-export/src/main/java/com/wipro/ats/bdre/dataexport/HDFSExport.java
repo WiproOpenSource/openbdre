@@ -1,19 +1,14 @@
-/*
- * Licensed under the Apache License, Version 2.0 (the "License");
+/* Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- *
  * http://www.apache.org/licenses/LICENSE-2.0
- *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
- * limitations under the License.
- */
+ * limitations under the License.*/
 
 package com.wipro.ats.bdre.dataexport;
-
 import com.cloudera.sqoop.SqoopOptions;
 import com.wipro.ats.bdre.IMConfig;
 import com.wipro.ats.bdre.im.etl.api.exception.ETLException;
@@ -23,7 +18,6 @@ import org.apache.hadoop.conf.Configured;
 import org.apache.hadoop.util.Tool;
 import org.apache.log4j.Logger;
 import org.apache.sqoop.tool.ExportTool;
-
 import java.io.File;
 import java.sql.Timestamp;
 import java.util.Date;
@@ -32,8 +26,6 @@ import java.util.Properties;
 /**
  * Created by MI294210 on 05-02-2015.
  */
-
-
 public class HDFSExport extends Configured implements Tool {
     private static final Logger LOGGER = Logger.getLogger(HDFSExport.class);
 
@@ -57,15 +49,6 @@ public class HDFSExport extends Configured implements Tool {
         tableName = commonProperties.getProperty("table");
         String driver = commonProperties.getProperty("driver");
         Class.forName(driver).newInstance();
-
-
-        /*// Sqoop connection parameters
-        Configuration config = new Configuration();
-        config.addResource("/etc/hadoop/conf/core-site.xml");
-        config.addResource("/etc/hadoop/conf/hdfs-site.xml");
-*/
-
-
         try {
             SqoopOptions options = new SqoopOptions();
             options.setDriverClassName(driver);
@@ -83,7 +66,6 @@ public class HDFSExport extends Configured implements Tool {
 
             //setting the parameters of sqoopOption
             options.setHadoopHome(hadoopHome);
-			//options.setHadoopMapRedHome(hadoopHome);
             options.setJarOutputDir(jarOutputDir);
             options.setConnManagerClassName(commonProperties.getProperty("con.mgr.class"));
             options.setConnectString(commonProperties.getProperty("db"));
