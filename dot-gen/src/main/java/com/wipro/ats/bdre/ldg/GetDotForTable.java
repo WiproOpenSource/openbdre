@@ -40,6 +40,7 @@ public class GetDotForTable {
 
         //get elements of LR table
         List<LineageRelation> lineageRelationList;
+        List<LineageRelation> lineageRelationListForTargetNodes;
 
         //get the nodes which have the same DISPLAY_NAME as that of the string(COLUMN NAME) provided
 
@@ -49,23 +50,38 @@ public class GetDotForTable {
         String srcTableName = args[1];
         logger.info("Generating DOT for the given Column Name: " + args[0]);
         String targetTableName = null;
-        String relationDot;
+        StringBuffer relationDot = null;
         getLineageNodeByColName = new GetLineageNodeByColName();
         LineageNode srcTableNode = getLineageNodeByColName.getTableDotFromTableName(srcTableName);
         List<LineageNode> lineageNodeList = getDotForTable.getLineageNodeNodeId(args[0], srcTableNode);
+        StringBuffer targetTableNode = null;
 
         //compare the list of Nodes got from LN table with LR table to get the required node
         for (LineageNode lineageNode : lineageNodeList) {
+            //this only checks the case where the node is src
             lineageRelationList = getNodeIdForLineageRelation.execute(lineageNode.getNodeId());
-            if (lineageRelationList.size() != 0) {
-                relationDot = lineageRelationList.get(0).getDotString();                                            //search for target table name in the DOT string
-                String targetTableNode = getLineageNodeByColName.getTableDotFromNodeId(lineageRelationList.get(0).getLineageNodeByTargetNodeId(), srcTableNode);
+            for(LineageRelation lineageRelation:lineageRelationList) {
+            //if (lineageRelationList.size() != 0) {
+                relationDot.append("\n" + lineageRelation.getDotString() + "\n");                                            //search for target table name in the DOT string
+                targetTableNode.append("\n" + getLineageNodeByColName.getTableDotFromNodeId(lineageRelation.getLineageNodeByTargetNodeId(), srcTableNode) + "\n");
                 if(targetTableNode.equals("same-nodes")) {
-                    targetTableNode = getLineageNodeByColName.getTableDotFromNodeId(lineageRelationList.get(0).getLineageNodeBySrcNodeId(), srcTableNode);
+                    targetTableNode.append("\n" + getLineageNodeByColName.getTableDotFromNodeId(lineageRelation.getLineageNodeBySrcNodeId(), srcTableNode) + "\n");
                 }
-                logger.info("relation DOT: \n" + relationDot);
-                dotString = lineageMain.generateLineageDot(relationDot, srcTableNode, targetTableNode);             //call lineage main to create the DOT
+                logger.info("-------------------------relation DOT: \n" + relationDot);
+             }
+
+            //this should check whether the nodes are target -- ??
+            lineageRelationListForTargetNodes = getNodeIdForLineageRelation.getWhenTargetNode(lineageNode.getNodeId());
+            for(LineageRelation lineageRelation:lineageRelationListForTargetNodes) {
+                //if (lineageRelationList.size() != 0) {
+                relationDot.append("\n" + lineageRelation.getDotString() + "\n");                                            //search for target table name in the DOT string
+                targetTableNode.append("\n" + getLineageNodeByColName.getTableDotFromNodeId(lineageRelation.getLineageNodeBySrcNodeId(), srcTableNode) + "\n");
+                if(targetTableNode.equals("same-nodes")) {
+                    targetTableNode.append("\n" + getLineageNodeByColName.getTableDotFromNodeId(lineageRelation.getLineageNodeByTargetNodeId(), srcTableNode) + "\n");
+                }
+                logger.info("-------------------------------relation DOT: \n" + relationDot);
             }
+            dotString = lineageMain.generateLineageDot(relationDot.toString(), srcTableNode.getDotString(), targetTableNode.toString());             //call lineage main to create the DOT
         }
         return dotString;
     }
@@ -84,7 +100,7 @@ public class GetDotForTable {
         String relationDot = null;
         String targetTableNode = null;
         LineageNode srcTableNode = getLineageNodeByColName.getTableDotFromTableName(srcTableName);
-        dotString = lineageMain.generateLineageDot(relationDot, srcTableNode, targetTableNode);             //call lineage main to create the DOT
+        dotString = lineageMain.generateLineageDot(relationDot, srcTableNode.getDotString(), targetTableNode);             //call lineage main to create the DOT
         return dotString;
     }
 

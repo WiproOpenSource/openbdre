@@ -54,4 +54,15 @@ public class GetNodeIdForLineageRelation {
             throw new MetadataException(e);
         }
     }
+
+    public List<LineageRelation> getWhenTargetNode(String nodeid) {
+
+        try {
+            List<LineageRelation> lineageRelationList = lineageRelationDAO.getNodeIdForNodeWhenTarget(nodeid);
+            return lineageRelationList;
+        } catch (Exception e) {
+            LOGGER.error("Error occurred", e);
+            throw new MetadataException(e);
+        }
+    }
 }

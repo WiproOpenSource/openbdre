@@ -636,7 +636,7 @@ if(col != null && colName != null) {
 		System.out.println();
 	}*/
 
-	public String generateLineageDot(String relationDotString, LineageNode tableNode, String targetNode) {
+	public String generateLineageDot(String relationDotString, String tableNode, String targetNode) {
 		// generate Dot from all tables, columns and functions
 		StringBuilder first = new StringBuilder("digraph g {\n" +
 				"graph [\n" +
@@ -665,7 +665,7 @@ if(col != null && colName != null) {
 		for (Node node : finalConstants) {
 			middle.append("\n" + node.toDotString());
 		}*/
-		middle.append("\n" + tableNode.getDotString());
+		middle.append("\n" + tableNode);
 		middle.append("\n");
 		//LOGGER.info("node id------"+tableNode.getNodeId());
 		if(targetNode != null) {

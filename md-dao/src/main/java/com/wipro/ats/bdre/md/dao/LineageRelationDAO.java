@@ -66,6 +66,19 @@ public class LineageRelationDAO {
         return lineageRelations;
     }
 
+    public List<LineageRelation> getNodeIdForNodeWhenTarget(String nodeid) {
+        List<LineageRelation> lineageRelations = new ArrayList<>();
+        Session session = sessionFactory.openSession();
+        session.beginTransaction();
+        LineageNode lineageNode = new LineageNode();
+        lineageNode.setNodeId(nodeid);
+        Criteria criteria = session.createCriteria(LineageRelation.class).add(Restrictions.eq("lineageNodeByTargetNodeId", lineageNode));
+        lineageRelations = criteria.list();
+        session.getTransaction().commit();
+        session.close();
+        return lineageRelations;
+    }
+
     public Integer totalRecordCount() {
         Session session = sessionFactory.openSession();
         session.beginTransaction();
