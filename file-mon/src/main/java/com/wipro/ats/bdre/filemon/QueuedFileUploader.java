@@ -39,6 +39,8 @@ public class QueuedFileUploader {
     private static SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
     private static Configuration config = new Configuration();
 
+    private QueuedFileUploader(){}
+
     private static void hdfsCopy(FileCopyInfo fileCopying) throws IOException {
         try {
             // Copying file from local to HDFS overriding, if file already exists
