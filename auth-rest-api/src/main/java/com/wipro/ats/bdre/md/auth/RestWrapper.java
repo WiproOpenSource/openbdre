@@ -14,6 +14,7 @@
 
 package com.wipro.ats.bdre.md.auth;
 
+import org.apache.log4j.Logger;
 import org.codehaus.jackson.annotate.JsonProperty;
 
 import java.lang.reflect.InvocationTargetException;
@@ -32,18 +33,8 @@ public class RestWrapper {
     public static final String ERROR = "ERROR";
     private String result;
     private Object records;
-
-    @JsonProperty("Message")
-    public String getMessage() {
-        return message;
-    }
-
-    public void setMessage(String message) {
-        this.message = message;
-    }
-
     private String message;
-
+    private static final Logger LOGGER = Logger.getLogger(RestWrapper.class);
 
     public RestWrapper(Object objectToSerialize, String result) {
         this.result = result;
@@ -52,6 +43,15 @@ public class RestWrapper {
         } else if (objectToSerialize != null) {
             this.message = objectToSerialize.toString();
         }
+    }
+
+    @JsonProperty("Message")
+    public String getMessage() {
+        return message;
+    }
+
+    public void setMessage(String message) {
+        this.message = message;
     }
 
     @JsonProperty("Result")
@@ -83,26 +83,22 @@ public class RestWrapper {
 
     @JsonProperty("TotalRecordCount")
     public int getTotalRecordCount() {
-        if (records != null) {
-            if (records instanceof Collection) {
+
+            if ( records != null && records instanceof Collection) {
                 Collection c = (Collection) records;
                 for (Object obj : c) {
                     try {
                         Method method = obj.getClass().getMethod("getCounter");
-                        Integer count = (Integer) method.invoke(obj);
-                        return count;
-                    } catch (NoSuchMethodException e) {
-                        return 0;
-                    } catch (InvocationTargetException e) {
-                        return 0;
-                    } catch (IllegalAccessException e) {
+                        return (Integer) method.invoke(obj);
+                    } catch (Exception e) {
+                        LOGGER.info(e);
                         return 0;
                     }
                 }
             } else {
                 return 1;
             }
-        }
+
         return 0;
     }
 
