@@ -15,15 +15,16 @@
 package com.wipro.ats.bdre.pdeploy;
 
 import org.apache.log4j.Logger;
+import org.junit.Ignore;
 import org.junit.Test;
 
 public class ProcessDeployMainTest {
-    private static final Logger LOGGER = Logger.getLogger(ProcessDeployMainTest.class);
 
+
+    @Ignore
     @Test
     public void testMain() throws Exception {
         String[] args = {"--num", "2"};
-        ProcessDeployMain processDeployMain = new ProcessDeployMain();
-
+        ProcessDeployMain.main(args);
     }
 }
