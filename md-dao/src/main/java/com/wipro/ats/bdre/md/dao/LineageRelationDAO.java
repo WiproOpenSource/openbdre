@@ -52,7 +52,7 @@ public class LineageRelationDAO {
         return lineageRelations;
     }
 
-    //to list all rows of LR table
+    //getting those relations where the col is in src table
     public List<LineageRelation> getNodeIdForNode(String nodeid) {
         List<LineageRelation> lineageRelations = new ArrayList<>();
         Session session = sessionFactory.openSession();
@@ -65,7 +65,7 @@ public class LineageRelationDAO {
         session.close();
         return lineageRelations;
     }
-
+    //getting those relations where the col is in target table
     public List<LineageRelation> getNodeIdForNodeWhenTarget(String nodeid) {
         List<LineageRelation> lineageRelations = new ArrayList<>();
         Session session = sessionFactory.openSession();

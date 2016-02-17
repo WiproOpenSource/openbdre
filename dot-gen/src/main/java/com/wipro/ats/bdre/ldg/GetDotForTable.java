@@ -50,32 +50,39 @@ public class GetDotForTable {
         String srcTableName = args[1];
         logger.info("Generating DOT for the given Column Name: " + args[0]);
         String targetTableName = null;
-        StringBuffer relationDot = null;
+        StringBuffer relationDot = new StringBuffer("");
         getLineageNodeByColName = new GetLineageNodeByColName();
         LineageNode srcTableNode = getLineageNodeByColName.getTableDotFromTableName(srcTableName);
         List<LineageNode> lineageNodeList = getDotForTable.getLineageNodeNodeId(args[0], srcTableNode);
-        StringBuffer targetTableNode = null;
+        StringBuffer targetTableNode = new StringBuffer("");
 
         //compare the list of Nodes got from LN table with LR table to get the required node
         for (LineageNode lineageNode : lineageNodeList) {
             //this only checks the case where the node is src
+            logger.info("------------------------inside");
             lineageRelationList = getNodeIdForLineageRelation.execute(lineageNode.getNodeId());
             for(LineageRelation lineageRelation:lineageRelationList) {
             //if (lineageRelationList.size() != 0) {
+                logger.info("------------------------inside src check");
                 relationDot.append("\n" + lineageRelation.getDotString() + "\n");                                            //search for target table name in the DOT string
+                logger.info("------------------" + relationDot);
                 targetTableNode.append("\n" + getLineageNodeByColName.getTableDotFromNodeId(lineageRelation.getLineageNodeByTargetNodeId(), srcTableNode) + "\n");
+                logger.info("-------------------------" + targetTableNode);
                 if(targetTableNode.equals("same-nodes")) {
                     targetTableNode.append("\n" + getLineageNodeByColName.getTableDotFromNodeId(lineageRelation.getLineageNodeBySrcNodeId(), srcTableNode) + "\n");
                 }
-                logger.info("-------------------------relation DOT: \n" + relationDot);
+                logger.info("------------------------------relation DOT: \n" + relationDot);
              }
 
             //this should check whether the nodes are target -- ??
             lineageRelationListForTargetNodes = getNodeIdForLineageRelation.getWhenTargetNode(lineageNode.getNodeId());
             for(LineageRelation lineageRelation:lineageRelationListForTargetNodes) {
                 //if (lineageRelationList.size() != 0) {
+                logger.info("------------------------inside target check");
                 relationDot.append("\n" + lineageRelation.getDotString() + "\n");                                            //search for target table name in the DOT string
+                logger.info("------------------" + relationDot);
                 targetTableNode.append("\n" + getLineageNodeByColName.getTableDotFromNodeId(lineageRelation.getLineageNodeBySrcNodeId(), srcTableNode) + "\n");
+                logger.info("-------------------------" + targetTableNode);
                 if(targetTableNode.equals("same-nodes")) {
                     targetTableNode.append("\n" + getLineageNodeByColName.getTableDotFromNodeId(lineageRelation.getLineageNodeByTargetNodeId(), srcTableNode) + "\n");
                 }
