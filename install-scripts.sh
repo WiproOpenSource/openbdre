@@ -77,6 +77,8 @@ fi
 #Create usual hive DBs
 hive -e "create database if not exists raw;create database if not exists base;"
 
+#Add java in path
+sudo ln -s `which java` /usr/sbin/java
 
 cd $BDRE_CODE
 sh appstore.sh
