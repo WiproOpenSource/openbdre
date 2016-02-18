@@ -102,13 +102,12 @@ $scope.createApp = function(location) {
   <div id="{{ row.id }}" ng-repeat="row in rows" class="tab-pane fade" ng-class="addClass($first,'active in')">
     <div class="row" >
     	<div class="col-md-2 appimage" ng-repeat="column in row.columns">
-
-
-			<div class="alert alert-info thumbnail">
-			<a href="#" class="installapp"><span class="label label-primary">{{column.name}}</span><br/><br/><img src="../../store/{{ column.icon }}"   ng-click="createApp(column.location)" alt="App image" width="150" height="118"></a>
+		<div class="alert alert-info thumbnail">
+			<button class="btn btn-info ng-binding center-block" ng-click="createApp(column.location)">{{column.name}}</button>
+			<img src="../../store/{{ column.icon }}"   ng-click="createApp(column.location)" alt="App image" width="150" height="118">
 			<br >{{column.description}}{{column.name}}
-			</div>
 		</div>
+	</div>
   </div>
 </div>
 
