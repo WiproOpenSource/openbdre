@@ -104,8 +104,8 @@ $scope.createApp = function(location) {
     	<div class="col-md-2 appimage" ng-repeat="column in row.columns">
 
 
-			<div class="alert alert-info">
-			<a href="#" class="installapp"><span class="label label-primary">{{column.name}}</span><br/><br/><img src="../../store/{{ column.icon }}"   ng-click="createApp(column.location)" class="img-thumbnail" alt="App image" width="150" height="118"></a>
+			<div class="alert alert-info thumbnail">
+			<a href="#" class="installapp"><span class="label label-primary">{{column.name}}</span><br/><br/><img src="../../store/{{ column.icon }}"   ng-click="createApp(column.location)" alt="App image" width="150" height="118"></a>
 			<br >{{column.description}}{{column.name}}
 			</div>
 		</div>
