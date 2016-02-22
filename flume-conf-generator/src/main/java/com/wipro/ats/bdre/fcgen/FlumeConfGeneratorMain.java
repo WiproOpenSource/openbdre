@@ -53,7 +53,7 @@ public class FlumeConfGeneratorMain extends BaseStructure {
                 java.util.Properties flumeProperties = getProperties.getProperties(processInfo.getProcessId().toString(), "flume");
                 Enumeration e = flumeProperties.propertyNames();
 
-                if (flumeProperties.size() != 0) {
+                if (!flumeProperties.isEmpty()) {
                     while (e.hasMoreElements()) {
                         String key = (String) e.nextElement();
                         addFlumeProperties.append(key + "=" + flumeProperties.get(key) + "\n");
