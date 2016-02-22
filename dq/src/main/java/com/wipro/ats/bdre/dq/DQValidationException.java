@@ -19,7 +19,7 @@ package com.wipro.ats.bdre.dq;
  */
 public class DQValidationException extends Exception {
 
-private DQStats dqStats;
+private final DQStats dqStats;
     public DQValidationException(DQStats dqStats){
         this.dqStats=dqStats;
     }
