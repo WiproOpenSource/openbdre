@@ -104,7 +104,7 @@ public class ProcessLogDAOTest {
         LOGGER.info("Updated processLog with message:" + processLog.getMessage());
         processLogDAO.delete(processLogId);
         LOGGER.info("ProcessLog Deleted with ID:" + processLogId);
-        processDAO.delete(id);
+        processDAO.testDelete(id);
     }
 
     @Test
