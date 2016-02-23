@@ -193,6 +193,21 @@ public class ProcessDAO {
         }
     }
 
+    public void testDelete(Integer id) {
+        Session session = sessionFactory.openSession();
+        try {
+            session.beginTransaction();
+            Process process = (Process) session.get(Process.class, id);
+            session.delete(process);
+            session.getTransaction().commit();
+        } catch (MetadataException e) {
+            session.getTransaction().rollback();
+            LOGGER.error(e);
+        } finally {
+            session.close();
+        }
+    }
+
     public List<com.wipro.ats.bdre.md.dao.jpa.Process> subProcesslist(Integer processId) {
         Session session = sessionFactory.openSession();
         session.beginTransaction();
