@@ -176,7 +176,7 @@ public class ProcessDAO {
             session.beginTransaction();
             Process process = (Process) session.get(Process.class, id);
             process.setDeleteFlag(true);
-            session.delete(process);
+            session.update(process);
             session.getTransaction().commit();
         } catch (MetadataException e) {
             session.getTransaction().rollback();
