@@ -25,7 +25,9 @@ import java.util.List;
  * Created by arijit on 12/28/14.
  */
 public class IMConfig {
-    private static Logger LOGGER=Logger.getLogger(IMConfig.class);
+    private static final Logger LOGGER=Logger.getLogger(IMConfig.class);
+    private IMConfig(){
+    }
 //    private static XMLConfiguration config;
 //    private static String defaultEnv;
 //    private IMConfig() {

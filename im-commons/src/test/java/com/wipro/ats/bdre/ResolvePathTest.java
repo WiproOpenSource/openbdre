@@ -20,13 +20,13 @@ import org.junit.Test;
 import static org.junit.Assert.*;
 
 public class ResolvePathTest {
-    private static Logger LOGGER = Logger.getLogger(ResolvePathTest.class);
+    private static final Logger LOGGER = Logger.getLogger(ResolvePathTest.class);
     @Test
     public void testReplaceVars() throws Exception {
         String input = "t=%t a=%a A=%A b=%b B=%B c=%c d=%d e=%e D=%D H=%H I=%I j=%j k=%k m=%m n=%n M=%M p=%p s=%s S=%S y=%y Y=%Y z=%z";
         LOGGER.debug("input="+input);
         String output = ResolvePath.replaceVars(input);
         LOGGER.debug("output="+output);
-        assert (!output.contains("Unknown"));
+        assert !output.contains("Unknown");
     }
 }

@@ -18,7 +18,7 @@ import org.apache.log4j.Logger;
 import org.junit.Test;
 
 public class IMConfigTest {
-    private Logger LOGGER=Logger.getLogger(IMConfigTest.class);
+    private static final Logger LOGGER=Logger.getLogger(IMConfigTest.class);
     @Test
     public void testGetProperty() throws Exception {
         String key = "data-import.hadoop-home";
