@@ -261,14 +261,14 @@ public class ArrangePositionsTest {
 
 
             try {
-                processDAO.delete(firstChildOfParentProcess1Id);
+                processDAO.testDelete(firstChildOfParentProcess1Id);
             }catch (Exception e) {
                 LOGGER.info("unable to delete firstChildOfParentProcess1");
                 flag = 1;
             }
 
             try {
-                processDAO.delete(secondChildOfParentProcess1Id);
+                processDAO.testDelete(secondChildOfParentProcess1Id);
             }catch (Exception e) {
                 LOGGER.info("unable to delete secondChildOfParentProcess1");
                 flag = 1;
@@ -276,41 +276,41 @@ public class ArrangePositionsTest {
 
 
             try {
-                processDAO.delete(thirdChildOfParentProcess1Id);
+                processDAO.testDelete(thirdChildOfParentProcess1Id);
             }catch (Exception e) {
                 LOGGER.info("unable to delete thirdChildOfParentProcess1");
                 flag = 1;
             }
 
             try {
-                processDAO.delete(fourthChildOfParentProcess1Id);
+                processDAO.testDelete(fourthChildOfParentProcess1Id);
             }catch (Exception e) {
                 LOGGER.info("unable to delete fourthChildOfParentProcess1");
                 flag = 1;
             }
 
             try {
-                processDAO.delete(fifthChildOfParentProcess1Id);
+                processDAO.testDelete(fifthChildOfParentProcess1Id);
             }catch (Exception e) {
                 LOGGER.info("unable to delete fifthChildOfParentProcess1");
                 flag = 1;
             }
 
             try {
-                processDAO.delete(sixthChildOfParentProcess1Id);
+                processDAO.testDelete(sixthChildOfParentProcess1Id);
             }catch (Exception e) {
                 LOGGER.info("unable to delete sixthChildOfParentProcess1");
                 flag = 1;
             }
 
             try {
-                processDAO.delete(seventhChildOfParentProcess1Id);
+                processDAO.testDelete(seventhChildOfParentProcess1Id);
             }catch (Exception e) {
                 LOGGER.info("unable to delete seventhChildOfParentProcess1");
                 flag = 1;
             }
             try {
-                processDAO.delete(firstParentProcessId);
+                processDAO.testDelete(firstParentProcessId);
             }catch (Exception e) {
                 LOGGER.info("unable to delete firstParentProcess1");
                 flag = 1;
