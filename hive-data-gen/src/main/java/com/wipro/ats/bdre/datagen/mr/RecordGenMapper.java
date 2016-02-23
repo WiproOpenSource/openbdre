@@ -43,12 +43,12 @@ public class RecordGenMapper
     }
     @Override
     public void map(LongWritable row, NullWritable ignored,Context context) throws IOException, InterruptedException {
-        String StrRow = tableUtil.getDelimitedTextRow(table,pid);
-        context.write(new Text(StrRow),new Text(""));
+        String strRow = tableUtil.getDelimitedTextRow(table,pid);
+        context.write(new Text(strRow),new Text(""));
     }
 
     @Override
     public void cleanup(Context context) {
-
+        //cleanup
     }
 }

@@ -29,7 +29,8 @@ public class RangeInputSplit extends InputSplit implements Writable {
     long firstRow;
     long rowCount;
 
-    public RangeInputSplit() { }
+    public RangeInputSplit() {
+    }
 
     public RangeInputSplit(long offset, long length) {
         firstRow = offset;

@@ -22,7 +22,10 @@ import java.util.Properties;
  * Created by arijit on 2/22/15.
  */
 public class Config {
-    public static final String NUM_SPLITS_KEY = "datagen.split.num";;
+
+    private Config(){
+    }
+    public static final String NUM_SPLITS_KEY = "datagen.split.num";
     public static final  String SEPARATOR_KEY ="mapreduce.textoutputformat.separator" ;
     public static final String NUM_ROWS_KEY = "datagen.row.num";
     public static final String PID_KEY = "datagen.pid";

@@ -36,7 +36,7 @@ public class GeneratorMain extends BaseStructure {
         java.util.Properties listForParams= getProperties.getProperties(processId,"table");
          String outputDir=listForParams.getProperty("outputPath");
 
-        String params[] =new String[]{processId,outputDir};
+        String[] params =new String[]{processId,outputDir};
         int res = ToolRunner.run(new Configuration(), new Driver(), params);
         System.exit(res);
     }
