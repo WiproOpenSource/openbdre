@@ -26,7 +26,7 @@ import java.util.Vector;
  */
 public class DQDataModel {
 
-    private static Logger LOGGER = Logger.getLogger(DQDataModel.class);
+    private static final Logger LOGGER = Logger.getLogger(DQDataModel.class);
     private String mRecord;
     private boolean isValidRecord;
     private Vector<String> mInvalidRecordMessage;
@@ -76,7 +76,7 @@ public class DQDataModel {
     }
 
     public String getmInvalidRecordMessage() {
-        if (mInvalidRecordMessage.size() == 0) {
+        if (mInvalidRecordMessage.isEmpty()) {
             return null;
         }
         return mInvalidRecordMessage.toString();
