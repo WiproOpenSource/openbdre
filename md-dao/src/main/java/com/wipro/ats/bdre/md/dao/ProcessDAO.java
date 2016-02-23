@@ -177,6 +177,13 @@ public class ProcessDAO {
             Process process = (Process) session.get(Process.class, id);
             process.setDeleteFlag(true);
             session.update(process);
+            List<Process> subProcessList = subProcesslist(id);
+            if (subProcessList.size() > 0){
+                for(Process subProcess : subProcessList){
+                    subProcess.setDeleteFlag(true);
+                    session.update(subProcess);
+                }
+            }
             session.getTransaction().commit();
         } catch (MetadataException e) {
             session.getTransaction().rollback();
