@@ -60,10 +60,6 @@ public class HDFSCompressedDataStream extends AbstractHDFSWriter {
   @Override
   public void configure(Context context) {
     super.configure(context);
-      ApplicationContext appCtx = new ClassPathXmlApplicationContext("spring-dao.xml");
-      AutowireCapableBeanFactory acbFactory = appCtx.getAutowireCapableBeanFactory();
-      acbFactory.autowireBean(this);
-
     // extracting in use suffix
     inUseSuffix = context.getString("hdfs.inUseSuffix","");
 

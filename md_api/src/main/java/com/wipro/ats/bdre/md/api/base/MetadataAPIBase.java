@@ -15,12 +15,24 @@
 package com.wipro.ats.bdre.md.api.base;
 
 import com.wipro.ats.bdre.BaseStructure;
+import org.springframework.beans.factory.config.AutowireCapableBeanFactory;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.support.ClassPathXmlApplicationContext;
 
 
 /**
  * Created by arijit on 12/8/14.
  */
 public abstract class MetadataAPIBase extends BaseStructure {
+
+    private static AutowireCapableBeanFactory acbFactory = null;
+    protected static AutowireCapableBeanFactory getAutowireCapableBeanFactory(){
+        if(acbFactory==null) {
+            ApplicationContext context = new ClassPathXmlApplicationContext("spring-dao.xml");
+            acbFactory = context.getAutowireCapableBeanFactory();
+        }
+        return acbFactory;
+    }
 
 /*
     private static SqlSessionFactory sqlSessionFactory;

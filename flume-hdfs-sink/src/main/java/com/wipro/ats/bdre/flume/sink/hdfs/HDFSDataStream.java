@@ -54,12 +54,7 @@ public class HDFSDataStream extends AbstractHDFSWriter {
   private Path dstPath;
   private String inUseSuffix;
   private String processId;
-  protected HDFSDataStream(){
-    logger.info("Init HDFSDataStream");
-    ApplicationContext appCtx = new ClassPathXmlApplicationContext("spring-dao.xml");
-    AutowireCapableBeanFactory acbFactory = appCtx.getAutowireCapableBeanFactory();
-    acbFactory.autowireBean(this);
-  }
+
   private static HDFSDataStream hdfsDataStream;
   public static HDFSDataStream getHDFSDataStream(){
     if(hdfsDataStream==null)hdfsDataStream=new HDFSDataStream();
@@ -168,8 +163,7 @@ public class HDFSDataStream extends AbstractHDFSWriter {
     // calling the method to save file details in tables
     saveFileToHDFS(conf, dstPath, inUseSuffix, processId);
   }
-  @Autowired
-  private BatchEnqueuer batchEnqueuer;
+
   public void saveFileToHDFS(Configuration conf, Path dstPath, String inUseSuffix, String processId) throws IOException {
     FileSystem hdfs = dstPath.getFileSystem(conf);
     FileStatus fileStatus=hdfs.getFileStatus(dstPath);
@@ -190,7 +184,7 @@ public class HDFSDataStream extends AbstractHDFSWriter {
 
     // creating the command to save
     String[] beargs={"-p",processId,"-sId","123461","-path",filePath,"-fs",fSize,"-fh","","-cTS",new Timestamp(new Date().getTime()).toString(),"-bid","null","-bm",""};
-    batchEnqueuer.execute(beargs);
+    new BatchEnqueuer().execute(beargs);
   }
 
 }
