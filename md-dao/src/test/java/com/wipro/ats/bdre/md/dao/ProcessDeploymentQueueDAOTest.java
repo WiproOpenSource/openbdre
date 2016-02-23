@@ -112,6 +112,6 @@ public class ProcessDeploymentQueueDAOTest {
         LOGGER.info("Updated processDeploymentQueue with user name:" + processDeploymentQueue.getUserName());
         processDeploymentQueueDAO.delete(processDeploymentQueueId);
         LOGGER.info("ProcessDeploymentQueue Deleted with ID:" + processDeploymentQueueId);
-        processDAO.delete(id);
+        processDAO.testDelete(id);
     }
 }
