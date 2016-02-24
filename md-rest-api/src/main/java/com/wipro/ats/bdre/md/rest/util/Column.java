@@ -28,17 +28,16 @@ public class Column {
     private String destDataType;
     private String srcColumnIndex;
 
+    public Column(String srcColumnName) {
+        this.srcColumnName = srcColumnName;
+    }
+
     public String getSrcColumnIndex() {
         return srcColumnIndex;
     }
 
-
     public void setSrcColumnIndex(String srcColumnIndex) {
         this.srcColumnIndex = srcColumnIndex;
-    }
-
-    public Column(String srcColumnName) {
-        this.srcColumnName = srcColumnName;
     }
 
     public String getSrcColumnName() {

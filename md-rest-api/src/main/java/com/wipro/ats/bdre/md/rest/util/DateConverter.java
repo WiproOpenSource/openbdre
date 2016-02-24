@@ -62,21 +62,19 @@ public class DateConverter {
      * This method converts the String of date from UI to Date object so that it can be
      * inserted into the database.
      *
-     * @param str_date String in "yyyy/MM/dd hh:mm:ss" format fetched from UI.
+     * @param strDate String in "yyyy/MM/dd hh:mm:ss" format fetched from UI.
      * @return Date object.
      */
-    public static Date stringToDate(String str_date) {
+    public static Date stringToDate(String strDate) {
 
         try {
-            if (str_date != null && !str_date.isEmpty()) {
+            if (strDate != null && !strDate.isEmpty()) {
                 DateFormat formatter = new SimpleDateFormat("yyyy/MM/dd hh:mm:ss");
-                Date date = (Date) formatter.parse(str_date);   // String to Date object
-                return date;
-            } else if (str_date != null && str_date.isEmpty()) {//check if the date is nullable
+                return formatter.parse(strDate);   // String to Date object
+            } else if (strDate != null && strDate.isEmpty()) {//check if the date is nullable
                 return null;
             } else {
-                Date date = new Date();
-                return date;
+                return new Date();
             }
         } catch (Exception e) {
             LOGGER.error("dateConverter.convertReverse error: " + e.getMessage());
