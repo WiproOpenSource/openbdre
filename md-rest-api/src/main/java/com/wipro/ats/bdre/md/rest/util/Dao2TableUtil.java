@@ -27,7 +27,7 @@ import java.util.List;
  */
 public class Dao2TableUtil {
 
-    public static final Logger LOGGER = Logger.getLogger(Dao2TableUtil.class);
+    private static final Logger LOGGER = Logger.getLogger(Dao2TableUtil.class);
 
     private Dao2TableUtil(){}
     private static com.wipro.ats.bdre.md.beans.table.Process jpa2TableProcess(com.wipro.ats.bdre.md.dao.jpa.Process jpaProcess) {
