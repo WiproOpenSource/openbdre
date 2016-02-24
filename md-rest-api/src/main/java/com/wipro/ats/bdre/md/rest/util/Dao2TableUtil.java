@@ -29,7 +29,9 @@ public class Dao2TableUtil {
 
     private static final Logger LOGGER = Logger.getLogger(Dao2TableUtil.class);
 
-    private Dao2TableUtil(){}
+    private Dao2TableUtil(){
+
+    }
     private static com.wipro.ats.bdre.md.beans.table.Process jpa2TableProcess(com.wipro.ats.bdre.md.dao.jpa.Process jpaProcess) {
         com.wipro.ats.bdre.md.beans.table.Process tableProcess = new com.wipro.ats.bdre.md.beans.table.Process();
         tableProcess.setProcessId(jpaProcess.getProcessId());
