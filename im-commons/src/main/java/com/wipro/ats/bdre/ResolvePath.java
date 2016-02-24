@@ -14,9 +14,6 @@
 
 package com.wipro.ats.bdre;
 
-
-import org.apache.log4j.Logger;
-
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.regex.Matcher;
@@ -26,10 +23,11 @@ import java.util.regex.Pattern;
  * Created by AS294216 on 1/5/2016.
  */
 public class ResolvePath {
-    private ResolvePath(){
-    }
 
     private static Pattern pattern = Pattern.compile("%(.)");
+
+    private ResolvePath(){
+    }
 
     public static String replaceVars(String line) {
         StringBuffer sb = new StringBuffer();
