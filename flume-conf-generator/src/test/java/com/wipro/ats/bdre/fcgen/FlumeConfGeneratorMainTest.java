@@ -15,15 +15,22 @@
 package com.wipro.ats.bdre.fcgen;
 
 
+import org.apache.log4j.Logger;
 import org.junit.Ignore;
 import org.junit.Test;
 
 public class FlumeConfGeneratorMainTest {
+    private static final Logger LOGGER = Logger.getLogger(FlumeConfGeneratorMainTest.class);
     @Test
     @Ignore
-    public void testMain() throws Exception {
-        FlumeConfGeneratorMain flumeConfGeneratorMain = new FlumeConfGeneratorMain();
-        String[] args = {"-p", "125"};
-        flumeConfGeneratorMain.main(args);
+    public void testMain() {
+        try {
+            FlumeConfGeneratorMain flumeConfGeneratorMain = new FlumeConfGeneratorMain();
+            String[] args = {"-p", "125"};
+            flumeConfGeneratorMain.main(args);
+        }
+        catch (Exception e){
+            LOGGER.info(e);
+        }
     }
 }
