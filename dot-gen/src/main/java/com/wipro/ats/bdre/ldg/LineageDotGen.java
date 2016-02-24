@@ -28,7 +28,7 @@ import java.util.List;
  */
 public class LineageDotGen extends BaseStructure {
 
-    protected static final Logger LOGGER = LoggerFactory.getLogger(LineageDotGen.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(LineageDotGen.class);
     private static String defaultHiveDbName = LineageConstants.defaultHiveDbName;
 
     private static final String[][] PARAMS_STRUCTURE = {

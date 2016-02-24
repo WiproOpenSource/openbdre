@@ -27,7 +27,7 @@ import java.util.List;
  * Created by AshutoshRai on 1/20/16.
  */
 public class GetDotForTable {
-    protected static final Logger LOGGER = LoggerFactory.getLogger(GetDotForTable.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(GetDotForTable.class);
     private String dotString;
 
     //fn() to get DOT through Column name & table name
