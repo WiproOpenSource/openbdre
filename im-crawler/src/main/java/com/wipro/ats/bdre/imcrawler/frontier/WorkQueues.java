@@ -17,6 +17,7 @@
 
 package com.wipro.ats.bdre.imcrawler.frontier;
 
+import com.wipro.ats.bdre.md.api.base.MetadataAPIBase;
 import com.wipro.ats.bdre.md.dao.jpa.Pendingurlsdb;
 import com.wipro.ats.bdre.md.dao.jpa.Weburlsdb;
 import com.wipro.ats.bdre.imcrawler.model.PendingUrlsDBDao;
@@ -24,17 +25,13 @@ import com.wipro.ats.bdre.imcrawler.model.WebUrlsDBDao;
 import com.wipro.ats.bdre.imcrawler.url.WebURL;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.AutowireCapableBeanFactory;
-import org.springframework.context.ApplicationContext;
-import org.springframework.context.support.ClassPathXmlApplicationContext;
 
 import java.util.ArrayList;
 import java.util.List;
-
-
 /**
  * @author Yasser Ganjisaffar modified by AS294216
  */
-public class WorkQueues {
+public class WorkQueues extends MetadataAPIBase{
     private String dbName;
     //PersistenceManager manager = PMF.getInstance().getPersistenceManager();
     private final boolean resumable;
@@ -44,9 +41,12 @@ public class WorkQueues {
         this.dbName = dbName;
         this.resumable = resumable;
         /*Hibernate autowire*/
-        ApplicationContext context = new ClassPathXmlApplicationContext("spring-dao.xml");
-        AutowireCapableBeanFactory acbFactory = context.getAutowireCapableBeanFactory();
+        AutowireCapableBeanFactory acbFactory = getAutowireCapableBeanFactory();
         acbFactory.autowireBean(this);
+    }
+
+    public Object execute(String[] params){
+        return null;
     }
 
     @Autowired

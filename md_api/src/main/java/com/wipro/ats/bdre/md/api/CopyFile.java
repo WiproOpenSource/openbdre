@@ -32,8 +32,7 @@ import org.springframework.context.support.ClassPathXmlApplicationContext;
  */
 public class CopyFile extends MetadataAPIBase {
     public CopyFile() {
-        ApplicationContext context = new ClassPathXmlApplicationContext("spring-dao.xml");
-        AutowireCapableBeanFactory acbFactory = context.getAutowireCapableBeanFactory();
+        AutowireCapableBeanFactory acbFactory = getAutowireCapableBeanFactory();
         acbFactory.autowireBean(this);
     }
 

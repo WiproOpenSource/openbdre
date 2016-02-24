@@ -26,14 +26,16 @@ import java.util.Map;
  * Created by AR288503 on 9/6/2015.
  */
 public class SessionHolder {
+
     public static final int MAX_INACTIVE_SESSION_DURATION = 600;
+    private static Map<String, AuthResult> authResultMap = new HashMap<String, AuthResult>();
+
+    private SessionHolder(){}
 
     public static void resetSessionTimeout(HttpSession session) {
         int timeElapsed = (int) (new Date().getTime() - session.getCreationTime()) / 1000;
         session.setMaxInactiveInterval(SessionHolder.MAX_INACTIVE_SESSION_DURATION + timeElapsed);
     }
-
-    private static Map<String, AuthResult> authResultMap = new HashMap<String, AuthResult>();
 
     public static Map<String, AuthResult> getAuthResultMap() {
         return authResultMap;

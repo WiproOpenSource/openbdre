@@ -68,11 +68,14 @@ $scope.createApp = function(location) {
 
                  $('#confirm').modal({ backdrop: 'static', keyboard: false }).one('click', '#yes', function (e)
                  {
+                 $('#installing').modal({ backdrop: 'static', keyboard: false })
+
        $.ajax({
                          		    url: "/mdrest/process/import",
                          		    type: "POST",
                          		    data: {'fileString': location},
                          		    success: function (getData) {
+                         		       $('#installing').modal('hide');
                          		        if( getData.Result =="OK" ){
                          		        $('#div-dialog-warning').modal({ backdrop: 'static', keyboard: false }).one('click', '#ok', function (e){
                                             $window.location.href = '<c:url value="/pages/process.page?pid="/>' + getData.Records.processList[0].processId;
@@ -102,13 +105,12 @@ $scope.createApp = function(location) {
   <div id="{{ row.id }}" ng-repeat="row in rows" class="tab-pane fade" ng-class="addClass($first,'active in')">
     <div class="row" >
     	<div class="col-md-2 appimage" ng-repeat="column in row.columns">
-
-
-			<div class="alert alert-info">
-			<a href="#" class="installapp"><span class="label label-primary">{{column.name}}</span><br/><br/><img src="../../store/{{ column.icon }}"   ng-click="createApp(column.location)" class="img-thumbnail" alt="App image" width="150" height="118"></a>
+		<div class="alert alert-info thumbnail">
+			<button class="btn btn-info ng-binding center-block" ng-click="createApp(column.location)">{{column.name}}</button>
+			<img src="../../store/{{ column.icon }}"   ng-click="createApp(column.location)" alt="App image" width="150" height="118">
 			<br >{{column.description}}{{column.name}}
-			</div>
 		</div>
+	</div>
   </div>
 </div>
 
@@ -117,7 +119,6 @@ $scope.createApp = function(location) {
     <div class="modal-dialog modal-sm">
       <div class="modal-content">
         <div class="modal-header">
-          <button type="button" class="close" data-dismiss="modal">&times;</button>
           <h4 class="modal-title">Install</h4>
         </div>
         <div class="modal-body">
@@ -130,11 +131,22 @@ $scope.createApp = function(location) {
       </div>
     </div>
   </div>
+    <div class="modal fade" id="installing" role="dialog">
+      <div class="modal-dialog modal-sm">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h4 class="modal-title">Install</h4>
+          </div>
+          <div class="modal-body">
+            <p>Installing Please wait....</p>
+          </div>
+        </div>
+      </div>
+    </div>
   <div class="modal fade" id="div-dialog-warning" role="dialog">
       <div class="modal-dialog modal-sm">
         <div class="modal-content">
           <div class="modal-header">
-            <button type="button" class="close" data-dismiss="modal">&times;</button>
             <h4 class="modal-title">Install</h4>
           </div>
           <div class="modal-body">
@@ -146,12 +158,10 @@ $scope.createApp = function(location) {
         </div>
       </div>
     </div>
-
        <div class="modal fade" id="div-dialog-error" role="dialog">
           <div class="modal-dialog modal-sm">
             <div class="modal-content">
               <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal">&times;</button>
                 <h4 class="modal-title">Install</h4>
               </div>
               <div class="modal-body">
