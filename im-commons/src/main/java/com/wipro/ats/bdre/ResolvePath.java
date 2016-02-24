@@ -60,15 +60,13 @@ public class ResolvePath {
                 code = "MMMMMM";
                 break;
             case "c":
+            case "e":
+            case "m":
                 code = "MM";
                 break;
             case "d":
-                code = "M";
-                break;
-            case "e":
-                code = "MM";
-                break;
             case "D":
+            case "n":
                 code = "M";
                 break;
             case "H":
@@ -82,12 +80,6 @@ public class ResolvePath {
                 break;
             case "k":
                 code = "h";
-                break;
-            case "m":
-                code = "MM";
-                break;
-            case "n":
-                code = "M";
                 break;
             case "M":
                 code = "mm";
