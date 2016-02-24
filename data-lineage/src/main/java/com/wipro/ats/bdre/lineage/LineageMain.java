@@ -16,22 +16,15 @@ package com.wipro.ats.bdre.lineage;
 
 import com.wipro.ats.bdre.lineage.api.PersistenceUnit;
 import com.wipro.ats.bdre.lineage.entiity.*;
-import com.wipro.ats.bdre.lineage.entiity.Node;
 import com.wipro.ats.bdre.lineage.type.EntityType;
 import com.wipro.ats.bdre.lineage.type.UniqueList;
-import com.wipro.ats.bdre.md.dao.jpa.LineageNode;
 import com.wipro.ats.bdre.md.dao.jpa.LineageQuery;
-import org.antlr.runtime.tree.DOTTreeGenerator;
-import org.antlr.runtime.tree.Tree;
-import org.antlr.stringtemplate.StringTemplate;
 import org.apache.hadoop.hive.ql.lib.*;
 import org.apache.hadoop.hive.ql.parse.*;
 import org.apache.log4j.Logger;
-
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
-import java.io.IOException;
 import java.util.*;
 
 import static org.apache.hadoop.hive.ql.parse.BaseSemanticAnalyzer.getUnescapedName;
@@ -77,35 +70,13 @@ public class LineageMain implements NodeProcessor {
 	private int subquerySeq = 0;
 	private PersistenceUnit persistenceUnit;
 
-	/*public LineageMain(String query, Integer processId, Long instanceId, String defaultHiveDbName) {
-		this.query = query;
-		this.processId = processId;
-		this.instanceId = instanceId;
-		this.defaultHiveDbName = defaultHiveDbName;
-	}*/
-	public static void lineageMain(LineageQuery lineageQuery,String args1, String args2, String args3) throws IOException, ParseException,
-			SemanticException, Exception {
+	public static void lineageMain(LineageQuery lineageQuery,String args1, String args2, String args3) throws Exception {
 		LineageMain lineageMain = new LineageMain();
 		lineageMain.instanceId = Long.parseLong(args3);
 		lineageMain.processId = Integer.parseInt(args2);
 		lineageMain.defaultHiveDbName = args1;
 		lineageMain.query = lineageQuery.getQueryString();
 		lineageMain.lineageQuery = lineageQuery;
-
-		/*if (args.length == 4) {
-			lineageMain.instanceId = Long.parseLong(args[3]);
-			lineageMain.processId = Integer.parseInt(args[2]);
-			lineageMain.defaultHiveDbName = args[1];
-			lineageMain.query = args[0];
-
-		} else {
-//			lineageMain.instanceId = LineageConstants.instanceId;
-//			lineageMain.processId = LineageConstants.processId;
-//			lineageMain.defaultHiveDbName = LineageConstants.defaultHiveDbName;
-//			lineageMain.query = LineageConstants.query;
-			System.out.println("Error: Invalid inputs for LineageMain");
-			throw new Exception("Invalid inputs for LineageMain");
-		}*/
 
 		lineageMain.getLineageInfo();
 //		lineageMain.generateOperatorTree(new HiveConf(), query);

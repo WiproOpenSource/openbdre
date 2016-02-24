@@ -20,7 +20,6 @@ import com.wipro.ats.bdre.md.dao.jpa.LineageNode;
 import com.wipro.ats.bdre.md.dao.jpa.LineageRelation;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -28,13 +27,13 @@ import java.util.List;
  * Created by AshutoshRai on 1/20/16.
  */
 public class GetDotForTable {
-    protected static final Logger logger = LoggerFactory.getLogger(GetDotForTable.class);
+    protected static final Logger LOGGER = LoggerFactory.getLogger(GetDotForTable.class);
     private String dotString;
 
     //fn() to get DOT through Column name & table name
-    public String dotGeneratorWithCol(String args[]) {
+    public String dotGeneratorWithCol(String[] args) {
         if(args.length !=2) {
-            logger.info("Two arguments required: please Give both Column name and Table name");
+            LOGGER.info("Two arguments required: please Give both Column name and Table name");
             System.exit(-1);
         }
         GetDotForTable getDotForTable = new GetDotForTable();
@@ -49,7 +48,7 @@ public class GetDotForTable {
         LineageMain lineageMain = new LineageMain();
         //src table name is provided by user
         String srcTableName = args[1];
-        logger.info("Generating DOT for the given Column Name: " + args[0]);
+        LOGGER.info("Generating DOT for the given Column Name: " + args[0]);
         String targetTableName = null;
         StringBuffer relationDot = new StringBuffer("");
         getLineageNodeByColName = new GetLineageNodeByColName();
@@ -59,43 +58,41 @@ public class GetDotForTable {
         int counter =0;
         //now get all those col nodes corresponding to the tables created for each relation
         for(LineageNode lnodes:srcTableNodeList) {
-            logger.info("----------------------------------src table" + lnodes.getDisplayName());
+            LOGGER.info("----------------------------------src table" + lnodes.getDisplayName());
              lineageNodeList.add(getDotForTable.getLineageNodeNodeId(args[0], lnodes));
-            logger.info("----------------------------------col node" + lineageNodeList.get(counter++).getDisplayName());
+            LOGGER.info("----------------------------------col node" + lineageNodeList.get(counter++).getDisplayName());
         }
         StringBuffer targetTableNode = new StringBuffer("");
 
         //compare the list of Nodes got from LN table with LR table to get the required node
         for (LineageNode lineageNode : lineageNodeList) {
             //this only checks the case where the node is src
-            logger.info("------------------------inside");
+            LOGGER.info("------------------------inside");
             lineageRelationList = getNodeIdForLineageRelation.execute(lineageNode.getNodeId());
             for(LineageRelation lineageRelation:lineageRelationList) {
-            //if (lineageRelationList.size() != 0) {
-                logger.info("------------------------inside src check");
+                LOGGER.info("------------------------inside src check");
                 relationDot.append("\n" + lineageRelation.getDotString() + "\n");                                            //search for target table name in the DOT string
-                logger.info("------------------" + relationDot);
+                LOGGER.info("------------------" + relationDot);
                 targetTableNode.append("\n" + getLineageNodeByColName.getTableDotFromNodeId(lineageRelation.getLineageNodeByTargetNodeId(), srcTableNodeList.get(0)) + "\n");
-                logger.info("-------------------------" + targetTableNode);
+                LOGGER.info("-------------------------" + targetTableNode);
                 if(targetTableNode.equals("same-nodes")) {
                     targetTableNode.append("\n" + getLineageNodeByColName.getTableDotFromNodeId(lineageRelation.getLineageNodeBySrcNodeId(), srcTableNodeList.get(0)) + "\n");
                 }
-                logger.info("------------------------------relation DOT: \n" + relationDot);
+                LOGGER.info("------------------------------relation DOT: \n" + relationDot);
              }
 
             //this should check whether the nodes are target -- ??
             lineageRelationListForTargetNodes = getNodeIdForLineageRelation.getWhenTargetNode(lineageNode.getNodeId());
             for(LineageRelation lineageRelation:lineageRelationListForTargetNodes) {
-                //if (lineageRelationList.size() != 0) {
-                logger.info("------------------------inside target check");
+                LOGGER.info("------------------------inside target check");
                 relationDot.append("\n" + lineageRelation.getDotString() + "\n");                                            //search for target table name in the DOT string
-                logger.info("------------------" + relationDot);
+                LOGGER.info("------------------" + relationDot);
                 targetTableNode.append("\n" + getLineageNodeByColName.getTableDotFromNodeId(lineageRelation.getLineageNodeBySrcNodeId(), srcTableNodeList.get(0)) + "\n");
-                logger.info("-------------------------" + targetTableNode);
+                LOGGER.info("-------------------------" + targetTableNode);
                 if(targetTableNode.equals("same-nodes")) {
                     targetTableNode.append("\n" + getLineageNodeByColName.getTableDotFromNodeId(lineageRelation.getLineageNodeByTargetNodeId(), srcTableNodeList.get(0)) + "\n");
                 }
-                logger.info("-------------------------------relation DOT: \n" + relationDot);
+                LOGGER.info("-------------------------------relation DOT: \n" + relationDot);
             }
 
         }
@@ -106,14 +103,13 @@ public class GetDotForTable {
     //fn() to get DOT through only Table name
     public String dotGeneratorWithTable(String args[]) {
         if(args.length !=1) {
-            logger.info("One argument required: please Give Table name");
+            LOGGER.info("One argument required: please Give Table name");
             System.exit(-1);
         }
         GetLineageNodeByColName getLineageNodeByColName = new GetLineageNodeByColName();;
         LineageMain lineageMain = new LineageMain();
         String srcTableName = args[0];
-        logger.info("Generating DOT for the given Table Name: " + args[0]);
-        String targetTableName = null;
+        LOGGER.info("Generating DOT for the given Table Name: " + args[0]);
         String relationDot = null;
         String targetTableNode = null;
         List<LineageNode> srcTableNodeList = getLineageNodeByColName.getTableDotFromTableName(srcTableName);
@@ -124,9 +120,7 @@ public class GetDotForTable {
     private LineageNode getLineageNodeNodeId (String col, LineageNode tableNode) {
         GetLineageNodeByColName getLineageNodeByColName = new GetLineageNodeByColName();
         LineageNode lineageNode = getLineageNodeByColName.execute(col, tableNode);
-        //for(LineageNode lineageNode:lineageNodeList){
-            logger.info("Column name: "+lineageNode.getDisplayName()+" Node id: "+lineageNode.getNodeId());
-        //}
+            LOGGER.info("Column name: "+lineageNode.getDisplayName()+" Node id: "+lineageNode.getNodeId());
         return lineageNode;
     }
 }

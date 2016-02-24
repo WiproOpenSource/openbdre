@@ -21,7 +21,6 @@ import com.wipro.ats.bdre.md.dao.jpa.LineageQuery;
 import org.apache.commons.cli.CommandLine;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 import java.util.List;
 
 /**
@@ -29,9 +28,8 @@ import java.util.List;
  */
 public class LineageDotGen extends BaseStructure {
 
-    protected static final Logger logger = LoggerFactory.getLogger(LineageDotGen.class);
+    protected static final Logger LOGGER = LoggerFactory.getLogger(LineageDotGen.class);
     private static String defaultHiveDbName = LineageConstants.defaultHiveDbName;
-    private String dotString;
 
     private static final String[][] PARAMS_STRUCTURE = {
             {"p", "sub-process-id", "Sub Process id of the step"},
@@ -51,7 +49,7 @@ public class LineageDotGen extends BaseStructure {
         List<LineageQuery> lineageQueryList = getLineageQueryByProcessId.execute(args);
 
         for (LineageQuery lineageQuery:lineageQueryList) {
-            logger.debug("Query extracted from LineageQuery Table: " + lineageQuery.getQueryString());
+            LOGGER.debug("Query extracted from LineageQuery Table: " + lineageQuery.getQueryString());
         }
 
         for (LineageQuery lineageQuery:lineageQueryList) {
@@ -65,13 +63,13 @@ public class LineageDotGen extends BaseStructure {
                 // use last split to determine the db
                 String[] splits = query.split(" ");
                 defaultHiveDbName = splits[splits.length - 1].toUpperCase();
-                logger.debug("DefaulHiveDbName is set to " + defaultHiveDbName);
+                LOGGER.debug("DefaulHiveDbName is set to " + defaultHiveDbName);
             }
 
             try {
                 LineageMain.lineageMain(lineageQuery, defaultHiveDbName, processId, instanceid);
             } catch (Exception e) {
-                logger.info("Error while calling LineageMain's main()");
+                LOGGER.info("Error while calling LineageMain's main()");
                 e.printStackTrace();
             }
         }

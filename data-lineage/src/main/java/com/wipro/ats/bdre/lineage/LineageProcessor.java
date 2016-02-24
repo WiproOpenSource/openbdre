@@ -17,15 +17,11 @@ package com.wipro.ats.bdre.lineage;
 import com.wipro.ats.bdre.md.dao.LineageQueryDAO;
 import com.wipro.ats.bdre.md.dao.jpa.LineageQuery;
 import com.wipro.ats.bdre.md.dao.jpa.LineageQueryType;
-import org.apache.hadoop.hive.ql.parse.ParseException;
-import org.apache.hadoop.hive.ql.parse.SemanticException;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.AutowireCapableBeanFactory;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
-
-import java.io.IOException;
 import java.util.Date;
 import java.util.UUID;
 
@@ -39,7 +35,6 @@ public class LineageProcessor {
 	private String defaultHiveDbName = LineageConstants.defaultHiveDbName;              // default Hive db
 
 	public LineageProcessor() {
-		//this.defaultHiveDbName = defaultHiveDbName;
 		 /*Hibernate Auto-wire*/
 		ApplicationContext context = new ClassPathXmlApplicationContext("spring-dao.xml");
 		AutowireCapableBeanFactory acbFactory = context.getAutowireCapableBeanFactory();
@@ -50,7 +45,7 @@ public class LineageProcessor {
 	@Autowired
 	LineageQueryDAO lineageQueryDAO;
 
-	public void execute(String wholeQuery, String processId, String instanceExecId) throws ParseException, SemanticException, IOException, Exception {
+	public void execute(String wholeQuery, String processId, String instanceExecId) throws Exception {
 
 		// split into queries by semicolon
 		String[] queries = wholeQuery.split(";");
@@ -81,7 +76,7 @@ public class LineageProcessor {
 					LOGGER.debug("DefaulHiveDbName is set to " + defaultHiveDbName);
 
 				}
-				//Wrting queries having "use" "insert" & "update" clauses to the DB to be later used by DotGen class
+				//Writing queries having "use" "insert" & "update" clauses to the DB to be later used by DotGen class
 				if (query.toLowerCase().startsWith("use")
 						|| query.toLowerCase().startsWith("insert")
 						|| query.toLowerCase().startsWith("select")) {              // process only insert and select statements
@@ -96,10 +91,6 @@ public class LineageProcessor {
 					LineageQueryType lineageQueryType = new LineageQueryType(1, "HIVE");
 					lineageQuery.setLineageQueryType(lineageQueryType);
 					lineageQueryDAO.insert(lineageQuery);
-
-					// LineageMain.main(new String[]{query, processId, instanceExecId});
-					//LineageMain.main(new String[]{query, defaultHiveDbName, processId, instanceExecId});
-
 				}
 			}
 		}
