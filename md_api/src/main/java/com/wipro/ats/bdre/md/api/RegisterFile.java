@@ -22,19 +22,16 @@ import org.apache.commons.cli.CommandLine;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.AutowireCapableBeanFactory;
-import org.springframework.context.ApplicationContext;
-import org.springframework.context.support.ClassPathXmlApplicationContext;
-import org.springframework.stereotype.Component;
 
 import java.sql.Timestamp;
 
 /**
  * Created by arijit on 12/8/14.
  */
-@Component
 public class RegisterFile extends MetadataAPIBase {
     public RegisterFile() {
-
+        AutowireCapableBeanFactory acbFactory = getAutowireCapableBeanFactory();
+        acbFactory.autowireBean(this);
     }
 
     private static final Logger LOGGER = Logger.getLogger(RegisterFile.class);
@@ -47,16 +44,7 @@ public class RegisterFile extends MetadataAPIBase {
             {"cTS", "creation-timestamp", "creation timestamp"},
             {"bid", "batch-id", "Batch id(use null for auto-generated batchid)"}
     };
-    /*private static RegisterFile registerFile;
-    public static RegisterFile getAutowiredRegisterFile(){
-        if(registerFile==null){
-            registerFile=new RegisterFile();
-            ApplicationContext appCtx = new ClassPathXmlApplicationContext("spring-dao.xml");
-            AutowireCapableBeanFactory acbFactory = appCtx.getAutowireCapableBeanFactory();
-            acbFactory.autowireBean(registerFile);
-        }
-        return registerFile;
-    }*/
+
     /**
      * This method runs RegisterFileProc proc in mysql and returns the input data back.
      *

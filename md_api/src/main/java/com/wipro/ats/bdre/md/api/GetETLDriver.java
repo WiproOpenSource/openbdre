@@ -32,8 +32,7 @@ import java.util.List;
  */
 public class GetETLDriver extends MetadataAPIBase {
     public GetETLDriver() {
-        ApplicationContext context = new ClassPathXmlApplicationContext("spring-dao.xml");
-        AutowireCapableBeanFactory acbFactory = context.getAutowireCapableBeanFactory();
+        AutowireCapableBeanFactory acbFactory = getAutowireCapableBeanFactory();
         acbFactory.autowireBean(this);
     }
 

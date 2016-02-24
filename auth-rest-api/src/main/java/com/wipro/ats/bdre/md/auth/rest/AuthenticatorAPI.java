@@ -103,6 +103,7 @@ public class AuthenticatorAPI extends MetadataAPIBase {
 
         } catch (Exception e) {
             LOGGER.debug("exception caught inside /bdrelogin");
+            LOGGER.info(e);
             authResult = new AuthResult();
             authResult.setAuthenticated(false);
             authResult.setErrorMsg(e.getMessage());
@@ -121,9 +122,9 @@ public class AuthenticatorAPI extends MetadataAPIBase {
     }
 
     @RequestMapping(value = "/validatetoken/{authtoken}", method = RequestMethod.GET)
-    public
+
     @ResponseBody
-    AuthResult validateToken(@PathVariable("authtoken") String token) {
+    public AuthResult validateToken(@PathVariable("authtoken") String token) {
         AuthResult authResult = null;
         try {
 
@@ -131,7 +132,9 @@ public class AuthenticatorAPI extends MetadataAPIBase {
                 //check for valid uuid
                 UUID.fromString(token);
                 authResult = (AuthResult) SessionHolder.getAuthResult(token);
-                if (authResult == null) throw new LoginException("Authtoken not found");
+                if (authResult == null) {
+                    throw new LoginException("Authtoken not found");
+                }
                 //reset session timeout
                 HttpSession session = authResult.getHttpSession();
                 SessionHolder.resetSessionTimeout(session);
@@ -152,9 +155,9 @@ public class AuthenticatorAPI extends MetadataAPIBase {
     }
 
     @RequestMapping(value = "/admin/logout/{authtoken}", method = RequestMethod.DELETE)
-    public
+
     @ResponseBody
-    RestWrapper logoutByToken(@PathVariable("authtoken") String token, HttpSession session) throws LoginException {
+    public RestWrapper logoutByToken(@PathVariable("authtoken") String token, HttpSession session) throws LoginException {
         RestWrapper restWrapper = null;
         if (token != null) {
             try {
@@ -162,6 +165,7 @@ public class AuthenticatorAPI extends MetadataAPIBase {
                 UUID.fromString(token);
             } catch (Exception e) {
                 //bad uuid
+                LOGGER.info(e);
                 restWrapper = new RestWrapper(e.getMessage(), RestWrapper.ERROR);
             }
             AuthResult authResult = SessionHolder.getAuthResult(token);
@@ -187,13 +191,12 @@ public class AuthenticatorAPI extends MetadataAPIBase {
     }
 
     @RequestMapping(value = "/admin/sessions", method = RequestMethod.GET)
-    public
-    @ResponseBody
+
+    public @ResponseBody
     RestWrapper list(HttpSession session) {
         //reset session timeout
         SessionHolder.resetSessionTimeout(session);
-        RestWrapper restWrapper = new RestWrapper(SessionHolder.getAllAuthResults(), RestWrapper.OK);
-        return restWrapper;
+        return new RestWrapper(SessionHolder.getAllAuthResults(), RestWrapper.OK);
     }
 
     @RequestMapping(value = "/login.page", method = RequestMethod.GET)
