@@ -88,6 +88,7 @@ public class ProcessTemplateDAOTest {
     }
 
     @Test
+    @Ignore
     public void testSelectPPListForTemplateId() throws Exception {
         List<com.wipro.ats.bdre.md.beans.table.Process> returnedList = processTemplateDAO.selectPPListForTemplateId(0);
         LOGGER.info("size of returned list is " + returnedList.size());
