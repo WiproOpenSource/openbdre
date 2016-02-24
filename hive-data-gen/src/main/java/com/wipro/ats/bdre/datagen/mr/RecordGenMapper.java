@@ -49,6 +49,8 @@ public class RecordGenMapper
 
     @Override
     public void cleanup(Context context) {
-        //cleanup
+        /*
+        cleanup
+         */
     }
 }

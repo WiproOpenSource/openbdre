@@ -15,6 +15,7 @@
 package com.wipro.ats.bdre.util;
 
 import com.wipro.ats.bdre.datagen.util.RandomValueGenerator;
+import com.wipro.ats.bdre.exception.BDREException;
 import org.apache.log4j.Logger;
 import org.junit.Test;
 
@@ -23,22 +24,27 @@ public class RandomValueGeneratorTest {
 
     @Test
     public void testRandomString() {
-        /* this function is not used*/
+        /*
+         this function is not used
+         */
     }
 
     @Test
     public void testRandomNumber() {
-         /* this function is not used*/
+         /*
+          this function is not used
+          */
     }
 
     @Test
     public void testRandomDecimal() {
-         /* this function is not used*/
+         /*
+          this function is not used
+          */
     }
 
     @Test
-    public void testRandomReverseRegex() {
-        try {
+    public void testRandomReverseRegex() throws BDREException{
             String pattern = "20[0-2][0-9]-((0[1-9])|10|11|12)-[0-3][0-9]";
             for (int i = 0; i < 20; i++) {
                 String generatedString = RandomValueGenerator.randomRegexPattern(pattern);
@@ -54,10 +60,5 @@ public class RandomValueGeneratorTest {
                 String generatedString = RandomValueGenerator.randomRegexPattern(pattern);
                 LOGGER.debug("generatedString=" + generatedString);
             }
-
-        }
-        catch (Exception e) {
-            LOGGER.info(e);
-        }
     }
 }

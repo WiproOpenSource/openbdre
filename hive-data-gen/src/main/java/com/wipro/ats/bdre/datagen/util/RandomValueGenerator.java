@@ -40,7 +40,7 @@ public class RandomValueGenerator {
 		long low = Long.parseLong(arg.split(",")[0]);
 		long high = Long.parseLong(arg.split(",")[1]);
 		long offset=low+(long)(r.nextDouble()*(high-low));
-		return (offset +"");
+		return offset +"";
 
 	}
 

@@ -23,8 +23,7 @@ import java.util.Properties;
  */
 public class Config {
 
-    private Config(){
-    }
+
     public static final String NUM_SPLITS_KEY = "datagen.split.num";
     public static final  String SEPARATOR_KEY ="mapreduce.textoutputformat.separator" ;
     public static final String NUM_ROWS_KEY = "datagen.row.num";
@@ -33,7 +32,8 @@ public class Config {
     private static Properties dataProperties=null;
     private static Properties tableProperties=null;
 
-
+    private Config(){
+    }
 
     public  static Properties getDataProperties(String pid) {
         if(dataProperties==null){
