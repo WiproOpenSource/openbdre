@@ -24,8 +24,11 @@ http://www.springframework.org/schema/context/spring-context-3.0.xsd">
     <context:annotation-config/>
     <context:property-placeholder location="classpath*:db.properties"/>
 
-    <context:component-scan
-            base-package=" com.wipro.ats.bdre.md,com.wipro.ats.bdre.md.dao,com.wipro.ats.bdre.md.api,com.wipro.ats.bdre.imcrawler.model,com.wipro.ats.bdre.md.triggers"/>
+    <context:component-scan base-package="com.wipro.ats.bdre.md"/>
+    <context:component-scan base-package="com.wipro.ats.bdre.md.dao"/>
+    <context:component-scan base-package="com.wipro.ats.bdre.md.api"/>
+    <context:component-scan base-package="com.wipro.ats.bdre.imcrawler.model"/>
+    <context:component-scan base-package="com.wipro.ats.bdre.md.triggers"/>
 
 
     <bean id="sessionFactory"

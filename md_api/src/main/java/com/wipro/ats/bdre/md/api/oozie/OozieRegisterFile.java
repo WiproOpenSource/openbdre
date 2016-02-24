@@ -32,15 +32,6 @@ public class OozieRegisterFile {
     private static final Logger LOGGER = Logger.getLogger(OozieRegisterFile.class);
 
     /**
-     * default constructor
-     */
-    private OozieRegisterFile() {
-        ApplicationContext context = new ClassPathXmlApplicationContext("spring-dao.xml");
-        AutowireCapableBeanFactory acbFactory = context.getAutowireCapableBeanFactory();
-        acbFactory.autowireBean(this);
-    }
-
-    /**
      * This method calls execute method and persist the output till runtime.
      *
      * @param args String array having environment and process-id with their command line notations.
@@ -48,10 +39,9 @@ public class OozieRegisterFile {
     public static void main(String[] args) {
         new OozieRegisterFile().execute(args);
     }
-    @Autowired
-    private RegisterFile rf;
+
     public void execute(String[] args){
-        RegisterFileInfo fileInfo = rf.execute(args);
+        RegisterFileInfo fileInfo = new RegisterFile().execute(args);
         OozieUtil oozieUtil = new OozieUtil();
         try {
             oozieUtil.persistBeanData(fileInfo, false);

@@ -314,42 +314,42 @@ public class FullJobTest {
         }
 
         try {
-            processDAO.delete(firstChildOfParentProcess1Id);
+            processDAO.testDelete(firstChildOfParentProcess1Id);
         }catch (Exception e) {
             LOGGER.info("unable to delete firstChildOfParentProcess1");
             flag = 1;
         }
 
         try {
-            processDAO.delete(secondChildOfParentProcess1Id);
+            processDAO.testDelete(secondChildOfParentProcess1Id);
         }catch (Exception e) {
             LOGGER.info("unable to delete secondChildOfParentProcess1");
             flag = 1;
         }
 
         try {
-            processDAO.delete(firstChildOfParentProcess2Id);
+            processDAO.testDelete(firstChildOfParentProcess2Id);
         }catch (Exception e) {
             LOGGER.info("unable to delete firstChildOfParentProcess2");
             flag = 1;
         }
 
         try {
-            processDAO.delete(secondChildOfParentProcess2Id);
+            processDAO.testDelete(secondChildOfParentProcess2Id);
         }catch (Exception e) {
             LOGGER.info("unable to delete secondChildOfParentProcess2");
             flag = 1;
         }
 
         try {
-            processDAO.delete(firstParentProcessId);
+            processDAO.testDelete(firstParentProcessId);
         }catch (Exception e) {
             LOGGER.info("unable to delete firstParentProcess");
             flag = 1;
         }
 
         try {
-            processDAO.delete(secondParentProcessId);
+            processDAO.testDelete(secondParentProcessId);
         }catch (Exception e) {
             LOGGER.info("unable to delete secondParentProcess");
             flag = 1;
