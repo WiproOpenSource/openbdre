@@ -21,13 +21,13 @@ import org.junit.Test;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.logging.Logger;
 
 
 /**
  * Created by jayabroto on 06-04-2015.
  */
 public class DataImportAPITest {
-
 
     @org.junit.Test
     public void testBuildTablesFromMap() throws Exception {
