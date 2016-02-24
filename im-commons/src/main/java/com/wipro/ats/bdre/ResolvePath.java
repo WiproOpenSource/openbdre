@@ -26,8 +26,8 @@ import java.util.regex.Pattern;
  * Created by AS294216 on 1/5/2016.
  */
 public class ResolvePath {
-    private static Logger LOGGER = Logger.getLogger(ResolvePath.class);
-
+    private ResolvePath(){
+    }
 
     private static Pattern pattern = Pattern.compile("%(.)");
 
@@ -42,9 +42,9 @@ public class ResolvePath {
         return sb.toString();
     }
 
-    private static String resolveCode(String code) {
-        ;
-        switch (code) {
+    private static String resolveCode(String argCode) {
+        String code = argCode;
+        switch (argCode) {
             case "t":
                 return new Date().getTime()+"";
             case "a":
@@ -60,15 +60,13 @@ public class ResolvePath {
                 code = "MMMMMM";
                 break;
             case "c":
+            case "e":
+            case "m":
                 code = "MM";
                 break;
             case "d":
-                code = "M";
-                break;
-            case "e":
-                code = "MM";
-                break;
             case "D":
+            case "n":
                 code = "M";
                 break;
             case "H":
@@ -82,12 +80,6 @@ public class ResolvePath {
                 break;
             case "k":
                 code = "h";
-                break;
-            case "m":
-                code = "MM";
-                break;
-            case "n":
-                code = "M";
                 break;
             case "M":
                 code = "mm";
