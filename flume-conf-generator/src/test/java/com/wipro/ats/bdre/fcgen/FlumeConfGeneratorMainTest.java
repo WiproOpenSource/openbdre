@@ -15,22 +15,21 @@
 package com.wipro.ats.bdre.fcgen;
 
 
+import com.wipro.ats.bdre.exception.MetadataException;
 import org.apache.log4j.Logger;
 import org.junit.Ignore;
 import org.junit.Test;
 
+import java.io.FileNotFoundException;
+
 public class FlumeConfGeneratorMainTest {
     private static final Logger LOGGER = Logger.getLogger(FlumeConfGeneratorMainTest.class);
     @Test
-    @Ignore
-    public void testMain() {
-        try {
+    public void testMain() throws MetadataException,FileNotFoundException{
+
             FlumeConfGeneratorMain flumeConfGeneratorMain = new FlumeConfGeneratorMain();
-            String[] args = {"-p", "125"};
+            String[] args = {"-p", "138"};
             flumeConfGeneratorMain.main(args);
-        }
-        catch (Exception e){
-            LOGGER.info(e);
-        }
+
     }
 }
