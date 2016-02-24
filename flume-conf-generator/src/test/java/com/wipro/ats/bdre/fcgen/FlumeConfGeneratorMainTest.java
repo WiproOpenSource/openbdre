@@ -24,11 +24,12 @@ import java.io.FileNotFoundException;
 
 public class FlumeConfGeneratorMainTest {
     private static final Logger LOGGER = Logger.getLogger(FlumeConfGeneratorMainTest.class);
+    @Ignore
     @Test
     public void testMain() throws MetadataException,FileNotFoundException{
 
             FlumeConfGeneratorMain flumeConfGeneratorMain = new FlumeConfGeneratorMain();
-            String[] args = {"-p", "138"};
+            String[] args = {"-p", "125"};
             flumeConfGeneratorMain.main(args);
 
     }
