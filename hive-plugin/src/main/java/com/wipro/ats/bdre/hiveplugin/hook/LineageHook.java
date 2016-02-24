@@ -30,8 +30,8 @@ public class LineageHook implements org.apache.hadoop.hive.ql.hooks.ExecuteWithH
 	private boolean successFlag;
 	public boolean isSuccess() {return successFlag;}
 
+	@Override
 	public void run(HookContext hookContext) {
-//		TODO - redirect System.out to LOGGER.debug
 		LOGGER.debug("Running LineageHook...");
 		String wholeQuery = null;
 		String processId = null;
@@ -45,7 +45,6 @@ public class LineageHook implements org.apache.hadoop.hive.ql.hooks.ExecuteWithH
 			    instanceExecId = "" + LineageConstants.instanceId;
 				LOGGER.debug("---------------query: "+ wholeQuery+" processid: "+processId+" iEid: "+instanceExecId);
 		    } else {
-//			    hookContext.getConf().getAllProperties().list(System.out);
 			    wholeQuery = hookContext.getQueryPlan().getQueryString();
 
 			    Properties properties = hookContext.getConf().getAllProperties();
@@ -60,14 +59,6 @@ public class LineageHook implements org.apache.hadoop.hive.ql.hooks.ExecuteWithH
 				    }
 			    }
 
-//			    if (processId == null) {
-//				    LOGGER.debug("Error: bdre.lineage.processId is not supplied while calling Hive. Assuming default value");
-//				    processId = "" + LineageConstants.processId;
-//			    }
-//			    if (instanceExecId == null) {
-//				    LOGGER.debug("Error: bdre.lineage.instanceExecId is not supplied while calling Hive. Assuming default value");
-//				    instanceExecId = "" + LineageConstants.instanceId;
-//			    }
 			    if (processId == null || instanceExecId == null) {
 				    LOGGER.debug("------------------Warning: ProcessId or InstanceExecId is null. Lineage not done. End of Lineage Hook.-------------");
 				    return;
@@ -82,7 +73,7 @@ public class LineageHook implements org.apache.hadoop.hive.ql.hooks.ExecuteWithH
 
 	    } catch (Throwable e) {
 		    LOGGER.error("Error in executing LineageHook", e);
-			e.printStackTrace(System.out);
+			e.printStackTrace();
 		    successFlag = false;
 	    }
     }

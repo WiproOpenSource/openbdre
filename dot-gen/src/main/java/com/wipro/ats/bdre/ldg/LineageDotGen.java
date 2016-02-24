@@ -69,7 +69,7 @@ public class LineageDotGen extends BaseStructure {
             try {
                 LineageMain.lineageMain(lineageQuery, defaultHiveDbName, processId, instanceid);
             } catch (Exception e) {
-                LOGGER.info("Error while calling LineageMain's main()");
+                LOGGER.info("Error while calling LineageMain's main()" + e);
                 e.printStackTrace();
             }
         }

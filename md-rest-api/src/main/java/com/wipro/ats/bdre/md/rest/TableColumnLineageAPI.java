@@ -32,41 +32,10 @@ public class TableColumnLineageAPI extends MetadataAPIBase {
     private static final Logger LOGGER = Logger.getLogger(TableColumnLineageAPI.class);
 
     /**
-     * This method returns the relationship between the processes linked to a batchId. It also generates the
-     * dot string for visualisation.
-     *
-     * @param batchId
-     * @return restWrapper It contains an instance of LineageInfo.
-     */
-    /*@RequestMapping(value = "/bybatch/{batchId}", method = RequestMethod.GET)
-    public
-    @ResponseBody
-    RestWrapper getByBatch(@PathVariable("batchId") String batchId, Principal principal) {
-        RestWrapper restWrapper = null;
-        try {
-            GetLineageByBatch getLineageByBatch = new GetLineageByBatch();
-            //insert args as received from the jsp
-            String[] args = {"-col", batchId};
-            GetDotForTable getDotForTable = new GetDotForTable();
-
-            String dot = getDotForTable.dotGeneratorWithCol(args);;
-
-            LineageInfo lineageInfo = new LineageInfo();
-            lineageInfo.setDot(dot);
-            lineageInfo.setBatchId(batchId);
-            restWrapper = new RestWrapper(lineageInfo, RestWrapper.OK);
-            LOGGER.info("Record with ID:" + batchId + " selected(getbyBatch) from Lineage by User:" + principal.getName());
-        } catch (Exception e) {
-            restWrapper = new RestWrapper(e.getMessage(), RestWrapper.ERROR);
-        }
-        return restWrapper;
-    }*/
-
-    /**
-     * This method is used to see the relationship between processes linked to a particular instanceExecId.
+     * This method is used to see the relationship between processes linked to a particular table name and/or column name.
      * It also generates the dot string for visualisation of the links.
      *
-     * @param tableName
+     * @param tableName, colName
      * @return restWrapper It contains an instance of LineageInfo.
      */
     @RequestMapping(value = {"", "/"}, method = RequestMethod.GET)
@@ -76,7 +45,7 @@ public class TableColumnLineageAPI extends MetadataAPIBase {
         RestWrapper restWrapper = null;
         try {
 
-            if(colName != null && !(colName.trim().equals(""))) {
+            if(colName != null && !("".equals(colName.trim()))) {
                 LOGGER.info("ColName given: " + colName + "TableName given: " + tableName);
                 String[] args = {colName, tableName};
                 String dot = new String();
@@ -87,7 +56,6 @@ public class TableColumnLineageAPI extends MetadataAPIBase {
                 lineageInfo.setDot(dot.toString());
                 lineageInfo.setTableName(tableName);
                 lineageInfo.setColName(colName);
-//            lineageInfo.setInstanceExecId(instanceExecId);
                 restWrapper = new RestWrapper(lineageInfo, RestWrapper.OK);
                 LOGGER.info("Getting " + tableName + "for column name: " + colName + " Lineage by User:" + principal.getName());
             } else {
@@ -100,14 +68,13 @@ public class TableColumnLineageAPI extends MetadataAPIBase {
                 LOGGER.debug(dot);
                 lineageInfo.setDot(dot.toString());
                 lineageInfo.setTableName(tableName);
-
-//            lineageInfo.setInstanceExecId(instanceExecId);
                 restWrapper = new RestWrapper(lineageInfo, RestWrapper.OK);
                 LOGGER.info("Getting " + tableName + " Lineage by User:" + principal.getName());
             }
 
         } catch (Exception e) {
             restWrapper = new RestWrapper(e.getMessage(), RestWrapper.ERROR);
+            LOGGER.info("Error occured in API" + e);
         }
         return restWrapper;
     }

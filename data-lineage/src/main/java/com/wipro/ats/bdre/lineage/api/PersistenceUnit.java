@@ -34,11 +34,9 @@ import java.util.UUID;
 public class PersistenceUnit extends MetadataAPIBase {
 	private static final Logger LOGGER = Logger.getLogger(PersistenceUnit.class);
 
-//	private List<LineageNodeInfo> LineageNodeInfos = new UniqueList<LineageNodeInfo>();
 	private UniqueList<LineageNodeInfo> lineageTableNodes = new UniqueList<LineageNodeInfo>();
 	private UniqueList<LineageNodeInfo> lineageColumnNodes = new UniqueList<LineageNodeInfo>();
 	private List<LineageNodeInfo> lineageFunctionNodes = new UniqueList<LineageNodeInfo>();
-	//private LineageQueryInfo lineageQueryInfo = null;
 	private UniqueList<LineageRelationInfo> lineageRelationInfos = new UniqueList<LineageRelationInfo>();
 	private List<LineageNodeInfo> lineageConstantNodes = new UniqueList<LineageNodeInfo>();
 	public UniqueList<LineageNodeInfo> getLineageTableNodes() {
@@ -50,9 +48,6 @@ public class PersistenceUnit extends MetadataAPIBase {
 	public List<LineageNodeInfo> getLineageFunctionNodes() {
 		return lineageFunctionNodes;
 	}
-	/*public LineageQueryInfo getLineageQueryInfo() {
-		return lineageQueryInfo;
-	}*/
 	public UniqueList<LineageRelationInfo> getLineageRelationInfos() {
 		return lineageRelationInfos;
 	}
@@ -66,7 +61,6 @@ public class PersistenceUnit extends MetadataAPIBase {
 	public void persist() {
 		Lineage lineage = new Lineage();
 		//inserting to LQ
-		//lineage.insertLineageQuery(lineageQueryInfo);
 
 		for (LineageNodeInfo lineageTableNode : lineageTableNodes) {
 			lineage.insertLineageNode(lineageTableNode);
@@ -83,7 +77,7 @@ public class PersistenceUnit extends MetadataAPIBase {
 		for (LineageRelationInfo lineageRelationInfo : lineageRelationInfos) {
 			lineage.insertLineageRelation(lineageRelationInfo);
 		}
-		System.out.println("All nodes and relations are persisted in MySql db");
+		LOGGER.info("All nodes and relations are persisted in MySql db");
 	}
 
 	/**
@@ -94,7 +88,6 @@ public class PersistenceUnit extends MetadataAPIBase {
 		lineageColumnNodes = new UniqueList<LineageNodeInfo>();
 		lineageFunctionNodes = new UniqueList<LineageNodeInfo>();
 		lineageConstantNodes = new UniqueList<LineageNodeInfo>();
-		//lineageQueryInfo = null;
 		lineageRelationInfos = new UniqueList<LineageRelationInfo>();
 
 		for (Table table : finalInTableNodes) {
@@ -175,18 +168,11 @@ public class PersistenceUnit extends MetadataAPIBase {
 			node.setNodeTypeId(LineageNodeTypeEnumInfo.CONSTANT.nodeTypeId);
 			lineageConstantNodes.add(node);
 		}
-		// one query
-		/*lineageQueryInfo = new LineageQueryInfo();
-		lineageQueryInfo.setQueryId(UUID.randomUUID().toString());
-		lineageQueryInfo.setQueryString(query);
-		lineageQueryInfo.setQueryTypeId(1);
-		lineageQueryInfo.setProcessId(processId);
-		lineageQueryInfo.setInstanceExecId(instanceId);*/
 
 		for (Relation relation : finalRelations) {
 			if(relation.getSource() instanceof Column && relation.getDestination() instanceof Column){
 				if (!(((Column) relation.getSource()).getTable().getTableName().equals(((Column) relation.getDestination()).getTable().getTableName()) && ((Column) relation.getSource()).getColumnName().equals(((Column) relation.getDestination()).getColumnName()))){
-					System.out.println("source and destination are not same columns = " + relation);
+					LOGGER.info("source and destination are not same columns = " + relation);
 					LineageRelationInfo lineageRelationInfo = new LineageRelationInfo();
 					lineageRelationInfo.setRelationId(UUID.randomUUID().toString());
 					lineageRelationInfo.setQueryId(lineageQuery.getQueryId());
@@ -207,22 +193,4 @@ public class PersistenceUnit extends MetadataAPIBase {
 		}
 	}
 
-
-	// populate lineage beans from data stored in DB
-//	public void populateBeansFromDB(String queryId) {
-//		LineageQueryInfo = null;
-//		LineageRelationInfos = new UniqueList<LineageRelationInfo>();
-//		lineageTableNodes = new UniqueList<LineageNodeInfo>();
-//		lineageColumnNodes = new UniqueList<LineageNodeInfo>();
-//		lineageFunctionNodes = new UniqueList<LineageNodeInfo>();
-//
-//		SqlSessionFactory sqlSessionFactory = getSqlSessionFactory(null);
-//		SqlSession s = sqlSessionFactory.openSession();
-//
-//		LineageQueryInfo = s.selectOne("call_procedures.GetLineageQueryInfo", queryId);
-//
-//		LineageRelationInfos = s.selectList("call_procedures.ListLineageRelationInfoByQueryId", queryId);
-//
-//
-//	}
 }

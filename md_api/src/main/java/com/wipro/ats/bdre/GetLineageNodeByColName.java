@@ -38,22 +38,14 @@ public class GetLineageNodeByColName {
 
     private static final Logger LOGGER = Logger.getLogger(GetLineageNodeByColName.class);
 
-    /*private static final String[][] PARAMS_STRUCTURE = {
-            {"col", "column-name", " Name of column to get Node id for"},
-    };*/
-
-
     @Autowired
     private LineageNodeDAO lineageNodeDAO;
 
     public LineageNode execute(String col, LineageNode tableNode) {
 
         try {
-            //CommandLine commandLine = getCommandLine(params, PARAMS_STRUCTURE);
-            //String col = commandLine.getOptionValue("column-name");
             LOGGER.debug("Column name is " + col);
-            LineageNode lineageNode = lineageNodeDAO.getColNodeId(col, tableNode);
-            return lineageNode;
+            return lineageNodeDAO.getColNodeId(col, tableNode);
         } catch (Exception e) {
             LOGGER.error("Error occurred: check the LNDAO", e);
             throw new MetadataException(e);
@@ -62,8 +54,7 @@ public class GetLineageNodeByColName {
 
     public List<LineageNode> getTableDotFromTableName (String tableName) {
         LOGGER.debug("Table name is: " + tableName);
-        List<LineageNode> lineageNodeList = lineageNodeDAO.getTableNode(tableName);
-        return lineageNodeList;
+        return lineageNodeDAO.getTableNode(tableName);
     }
 
     //returns the container node

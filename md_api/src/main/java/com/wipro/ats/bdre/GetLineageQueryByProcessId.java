@@ -16,8 +16,6 @@ package com.wipro.ats.bdre;
 
 import com.wipro.ats.bdre.exception.MetadataException;
 import com.wipro.ats.bdre.md.api.base.MetadataAPIBase;
-import com.wipro.ats.bdre.md.beans.GetLineageByInstanceExecInfo;
-import com.wipro.ats.bdre.md.dao.LineageByInstanceExecDAO;
 import com.wipro.ats.bdre.md.dao.LineageQueryDAO;
 import com.wipro.ats.bdre.md.dao.jpa.LineageQuery;
 import org.apache.commons.cli.CommandLine;
@@ -51,13 +49,11 @@ public class GetLineageQueryByProcessId extends MetadataAPIBase {
     private LineageQueryDAO lineageQueryDAO;
 
     public List<LineageQuery> execute(String[] params) {
-        List<LineageQuery> lineageByInstanceExecInfos;
         try {
             CommandLine commandLine = getCommandLine(params, PARAMS_STRUCTURE);
             String pid = commandLine.getOptionValue("sub-process-id");
             LOGGER.debug("Instance exec id  is " + pid);
-            List<LineageQuery> lineageQueryList = lineageQueryDAO.getLastInstanceExecLists(Integer.parseInt(pid));
-            return lineageQueryList;
+            return lineageQueryDAO.getLastInstanceExecLists(Integer.parseInt(pid));
         } catch (Exception e) {
             LOGGER.error("Error occurred", e);
             throw new MetadataException(e);

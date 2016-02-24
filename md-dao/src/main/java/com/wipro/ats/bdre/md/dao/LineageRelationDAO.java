@@ -16,7 +16,6 @@ package com.wipro.ats.bdre.md.dao;
 
 import com.wipro.ats.bdre.exception.MetadataException;
 import com.wipro.ats.bdre.md.dao.jpa.LineageNode;
-import com.wipro.ats.bdre.md.dao.jpa.LineageQueryType;
 import com.wipro.ats.bdre.md.dao.jpa.LineageRelation;
 import org.apache.log4j.Logger;
 import org.hibernate.Criteria;

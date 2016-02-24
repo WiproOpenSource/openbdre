@@ -36,6 +36,7 @@ import java.util.List;
 @Service
 public class LineageQueryDAO {
 
+    private Long instanceExecId = null;
     private static final Logger LOGGER = Logger.getLogger(LineageQueryDAO.class);
     @Autowired
     SessionFactory sessionFactory;
@@ -54,12 +55,12 @@ public class LineageQueryDAO {
 
     //get Instance exec ids for the process id from LQ table
     private Long getInstanceExecIds(Integer processId) {
-        Long instanceExecId = null;
+
         Session session = sessionFactory.openSession();
         session.beginTransaction();
         Criteria getLastElementCriteria = session.createCriteria(LineageQuery.class).add(Restrictions.eq("processId", processId)).addOrder(Order.desc("instanceExecId"));
 
-        if(getLastElementCriteria.list().size() != 0) {
+        if(!getLastElementCriteria.list().isEmpty()) {
             LineageQuery lineageQuery = (LineageQuery) getLastElementCriteria.list().get(0);
             instanceExecId = lineageQuery.getInstanceExecId();
         }
@@ -69,16 +70,13 @@ public class LineageQueryDAO {
     }
 
     public List<LineageQuery> getLastInstanceExecLists(Integer processId) {
-        Long instanceExecId = null;
+
         List<LineageQuery> lineageQueryList = new ArrayList<LineageQuery>();
-        //int counter = 1;
-        System.out.println("out");
         Session session = sessionFactory.openSession();
         session.beginTransaction();
-        System.out.println("in");
         Criteria getLastElementCriteria = session.createCriteria(LineageQuery.class).add(Restrictions.eq("processId", processId)).addOrder(Order.desc("instanceExecId"));
 
-        if(getLastElementCriteria.list().size() != 0) {
+        if(!getLastElementCriteria.list().isEmpty()) {
             LineageQuery lineageQuery = (LineageQuery) getLastElementCriteria.list().get(0);
             instanceExecId = lineageQuery.getInstanceExecId();
         }

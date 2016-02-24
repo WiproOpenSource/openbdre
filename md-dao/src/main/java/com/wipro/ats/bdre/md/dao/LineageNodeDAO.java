@@ -17,18 +17,14 @@ package com.wipro.ats.bdre.md.dao;
 
 import com.wipro.ats.bdre.exception.MetadataException;
 import com.wipro.ats.bdre.md.dao.jpa.LineageNode;
-import com.wipro.ats.bdre.md.dao.jpa.LineageQuery;
 import org.apache.log4j.Logger;
 import org.hibernate.Criteria;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
-import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -116,12 +112,11 @@ public class LineageNodeDAO {
         return id;
     }
 
-    public LineageNode getColNodeId(String col_name, LineageNode tableNode) throws Exception {
-        //Long instanceExecId;
+    public LineageNode getColNodeId(String colName, LineageNode tableNode) throws Exception {
         LineageNode lineageNode;
         Session session = sessionFactory.openSession();
         session.beginTransaction();
-        Criteria getLastElementCriteria = session.createCriteria(LineageNode.class).add(Restrictions.eq("lineageNode", tableNode)).add(Restrictions.eq("displayName", col_name));
+        Criteria getLastElementCriteria = session.createCriteria(LineageNode.class).add(Restrictions.eq("lineageNode", tableNode)).add(Restrictions.eq("displayName", colName));
         lineageNode = (LineageNode) getLastElementCriteria.list().get(0);
         LOGGER.info("----------------- LN value when getting the col: "+ lineageNode.getDisplayName() + lineageNode.getNodeId());
         session.getTransaction().commit();

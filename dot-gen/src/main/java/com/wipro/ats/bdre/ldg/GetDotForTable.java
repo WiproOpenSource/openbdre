@@ -49,7 +49,6 @@ public class GetDotForTable {
         //src table name is provided by user
         String srcTableName = args[1];
         LOGGER.info("Generating DOT for the given Column Name: " + args[0]);
-        String targetTableName = null;
         StringBuffer relationDot = new StringBuffer("");
         getLineageNodeByColName = new GetLineageNodeByColName();
         //for each relation a new node is created in LN table, so get all those
@@ -75,7 +74,7 @@ public class GetDotForTable {
                 LOGGER.info("------------------" + relationDot);
                 targetTableNode.append("\n" + getLineageNodeByColName.getTableDotFromNodeId(lineageRelation.getLineageNodeByTargetNodeId(), srcTableNodeList.get(0)) + "\n");
                 LOGGER.info("-------------------------" + targetTableNode);
-                if(targetTableNode.equals("same-nodes")) {
+                if("same-nodes".equals(targetTableNode)) {
                     targetTableNode.append("\n" + getLineageNodeByColName.getTableDotFromNodeId(lineageRelation.getLineageNodeBySrcNodeId(), srcTableNodeList.get(0)) + "\n");
                 }
                 LOGGER.info("------------------------------relation DOT: \n" + relationDot);
@@ -89,7 +88,7 @@ public class GetDotForTable {
                 LOGGER.info("------------------" + relationDot);
                 targetTableNode.append("\n" + getLineageNodeByColName.getTableDotFromNodeId(lineageRelation.getLineageNodeBySrcNodeId(), srcTableNodeList.get(0)) + "\n");
                 LOGGER.info("-------------------------" + targetTableNode);
-                if(targetTableNode.equals("same-nodes")) {
+                if("same-nodes".equals(targetTableNode)) {
                     targetTableNode.append("\n" + getLineageNodeByColName.getTableDotFromNodeId(lineageRelation.getLineageNodeByTargetNodeId(), srcTableNodeList.get(0)) + "\n");
                 }
                 LOGGER.info("-------------------------------relation DOT: \n" + relationDot);
@@ -101,12 +100,12 @@ public class GetDotForTable {
     }
 
     //fn() to get DOT through only Table name
-    public String dotGeneratorWithTable(String args[]) {
+    public String dotGeneratorWithTable(String[] args) {
         if(args.length !=1) {
             LOGGER.info("One argument required: please Give Table name");
             System.exit(-1);
         }
-        GetLineageNodeByColName getLineageNodeByColName = new GetLineageNodeByColName();;
+        GetLineageNodeByColName getLineageNodeByColName = new GetLineageNodeByColName();
         LineageMain lineageMain = new LineageMain();
         String srcTableName = args[0];
         LOGGER.info("Generating DOT for the given Table Name: " + args[0]);
