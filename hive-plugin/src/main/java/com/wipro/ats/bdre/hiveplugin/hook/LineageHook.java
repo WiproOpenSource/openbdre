@@ -45,8 +45,8 @@ public class LineageHook implements org.apache.hadoop.hive.ql.hooks.ExecuteWithH
 				processId = "" + LineageConstants.processId;
 				instanceExecId = "" + LineageConstants.instanceId;
 
-			} else {
-//			    hookContext.getConf().getAllProperties().list(System.out);
+			}
+			else {
 				wholeQuery = hookContext.getQueryPlan().getQueryString();
 
 				Properties properties = hookContext.getConf().getAllProperties();
@@ -61,14 +61,6 @@ public class LineageHook implements org.apache.hadoop.hive.ql.hooks.ExecuteWithH
 					}
 				}
 
-//			    if (processId == null) {
-//				    System.out.println("Error: bdre.lineage.processId is not supplied while calling Hive. Assuming default value");
-//				    processId = "" + LineageConstants.processId;
-//			    }
-//			    if (instanceExecId == null) {
-//				    System.out.println("Error: bdre.lineage.instanceExecId is not supplied while calling Hive. Assuming default value");
-//				    instanceExecId = "" + LineageConstants.instanceId;
-//			    }
 				if (processId == null || instanceExecId == null) {
 					LOGGER.warn("Warning: ProcessId or InstanceExecId is null. Lineage not done. End of Lineage Hook.");
 					return;
