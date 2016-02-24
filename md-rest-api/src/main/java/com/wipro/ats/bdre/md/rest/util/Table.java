@@ -14,9 +14,6 @@
 
 package com.wipro.ats.bdre.md.rest.util;
 
-
-import org.apache.derby.impl.jdbc.LOBInputStream;
-
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.TreeMap;
@@ -34,6 +31,12 @@ public class Table {
     private String destTableName;
     private String ingestOrNot;
     private String primaryKeyColumn;
+    private String incrementType;
+    private Map<String, Column> columns = new LinkedHashMap<String, Column>();
+
+    public Table(String srcTableName) {
+        this.srcTableName = srcTableName;
+    }
 
     public String getPrimaryKeyColumn() {
         return primaryKeyColumn;
@@ -51,20 +54,12 @@ public class Table {
         this.incrementType = incrementType;
     }
 
-    private String incrementType;
-    private Map<String, Column> columns = new LinkedHashMap<String, Column>();
-
-
     public String getIngestOrNot() {
         return ingestOrNot;
     }
 
     public void setIngestOrNot(String ingestOrNot) {
         this.ingestOrNot = ingestOrNot;
-    }
-
-    public Table(String srcTableName) {
-        this.srcTableName = srcTableName;
     }
 
     public String getSrcTableName() {
@@ -132,7 +127,7 @@ public class Table {
             columnList += ",";
         }
 
-        return columnList = columnList.substring(0, columnList.length() - 1);
+        return columnList.substring(0, columnList.length() - 1);
 
     }
 
