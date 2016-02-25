@@ -102,7 +102,7 @@ public class SessionCheckPerRequestFilter implements Filter {
                 authResult = restTemplate.getForObject(completeServiceURL + token, AuthResult.class);
             } catch (BDREException e) {
                 LOGGER.error(e);
-                throw new RuntimeException("Error Occurred. Service URL:" + completeServiceURL + token + "; servletRequest.isSecure()=" + servletRequest.isSecure(), e);
+                throw new BDREException("Error Occurred. Service URL:" + completeServiceURL + token + "; servletRequest.isSecure()=" + servletRequest.isSecure(), e);
             }
 
             if (authResult != null && authResult.isAuthenticated()) {

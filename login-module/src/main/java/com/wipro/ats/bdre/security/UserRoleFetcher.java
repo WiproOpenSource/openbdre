@@ -64,7 +64,7 @@ public class UserRoleFetcher extends MetadataAPIBase {
                 users.setEnabled((jpaUser.getEnabled()) ? (short) 1 : 0);
             }
         } catch (BDREException e) {
-            throw new RuntimeException(e);
+                throw new BDREException(e);
         }
         if (users != null)
             LOGGER.info("user:" + users.getUsername());
@@ -96,7 +96,7 @@ public class UserRoleFetcher extends MetadataAPIBase {
             }
 
         } catch (BDREException e) {
-            throw new RuntimeException(e);
+            throw new BDREException(e);
         }
         if (userRoleList != null) {
             LOGGER.info("user role list size:" + userRoleList.size());
