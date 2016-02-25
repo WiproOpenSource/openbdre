@@ -67,7 +67,7 @@ public class LineageMain implements NodeProcessor {
 	private int subquerySeq = 0;
 	private PersistenceUnit persistenceUnit;
 
-	public static void lineageMain(LineageQuery lineageQuery,String args1, String args2, String args3) throws Exception {
+	public static void lineageMain(LineageQuery lineageQuery,String args1, String args2, String args3) throws ParseException, SemanticException {
 		LineageMain lineageMain = new LineageMain();
 		lineageMain.instanceId = Long.parseLong(args3);
 		lineageMain.processId = Integer.parseInt(args2);
@@ -116,6 +116,7 @@ public class LineageMain implements NodeProcessor {
 	/**
 	 * Implements the process method for the NodeProcessor interface.
 	 */
+	@Override
 	public Object process(org.apache.hadoop.hive.ql.lib.Node nd, Stack<org.apache.hadoop.hive.ql.lib.Node> stack, NodeProcessorCtx procCtx,
 	                      Object... nodeOutputs) throws SemanticException {
 		// Empty table and column lists initialized
@@ -141,10 +142,10 @@ public class LineageMain implements NodeProcessor {
 				}
 
 				//adding to outputTableList and outputNodes
-				if (outputTableList.size() == 0) {
+				if (outputTableList.isEmpty()) {
 					String outputTable = "TEMP_" + UUID.randomUUID();
 					outputTableList.add(outputTable);
-					if (outTableNodes.size() == 0) {
+					if (outTableNodes.isEmpty()) {
 						Table table = new Table(outputTable, defaultHiveDbName, null, EntityType.OUTTYPE, false);
 						outTableNodes.add(table);
 						LOGGER.info("Output temp Table added : " + table.getTableName());
@@ -157,7 +158,7 @@ public class LineageMain implements NodeProcessor {
 							outputTable = "TEMP_" + UUID.randomUUID();
 							outputTableList.add(outputTable);
 						}
-						if (outTableNodes.size() == 0) {
+						if (outTableNodes.isEmpty()) {
 							Table table = new Table(outputTable, defaultHiveDbName, null, EntityType.OUTTYPE, false);
 							outTableNodes.add(table);
 							LOGGER.info("Output temp Table added : " + table.getTableName());
@@ -165,7 +166,6 @@ public class LineageMain implements NodeProcessor {
 					}
 					LOGGER.info("outputTable = " + outputTable);
 				}
-
 				// Update properties of Columns and Edges after processing all nodes in a query
 				// populate output table columns
 				Table.populateOutputTableColumns(inTableNodes, outTableNodes, inColumnNodes, outColumnNodes, functions, constants,relations);
@@ -173,9 +173,10 @@ public class LineageMain implements NodeProcessor {
 				Function.updateFunctions(inTableNodes, outTableNodes, inColumnNodes, outColumnNodes, functions, constants, relations);
 				Constant.updateConstants(inTableNodes, outTableNodes, inColumnNodes, outColumnNodes, functions, constants, relations);
 				Relation.updateRelations(inTableNodes, outTableNodes, inColumnNodes, outColumnNodes, functions, constants, relations);
-
 				break;
-
+			default:
+				LOGGER.info("Default clause selected: error in the switch case value given for HiveParser.TOK_QUERY");
+				break;
 		}
 
 		finalInTableNodes.addAll(inTableNodes);
@@ -217,7 +218,7 @@ public class LineageMain implements NodeProcessor {
 
 		LOGGER.info("nextToDestinationNode to process : " + nextToDestinationNode.toString());
 		if (nextToDestinationNode.getType() == HiveParser.TOK_DIR)
-			handleTokDir(nextToDestinationNode, queryNode);
+			handleTokDir(queryNode);
 		else if (nextToDestinationNode.getType() == HiveParser.TOK_TAB)
 			handleTokTab(nextToDestinationNode);
 
@@ -236,16 +237,16 @@ public class LineageMain implements NodeProcessor {
 	private void handleTokTabOrColOrElse(ASTNode nodeSelExpr) {
 		String col = null;
 		String colName = null;
-		String table_alias = null;
+		String tableAlias = null;
 		String label = null;
 		String constant = null;
 		String constant_alias= null;
 		if (nodeSelExpr.getChild(0).getChild(0) != null
 				&& nodeSelExpr.getChild(0).getChild(0).getType() == HiveParser.TOK_TABLE_OR_COL) {
-			table_alias = nodeSelExpr.getChild(0).getChild(0).getChild(0).toString();
+			tableAlias = nodeSelExpr.getChild(0).getChild(0).getChild(0).toString();
 			 {
 			col = colName = nodeSelExpr.getChild(0).getChild(1).toString();
-			col = col + "->" + table_alias;
+			col = col + "->" + tableAlias;
 		    if(nodeSelExpr.getChild(1)!=null) label=nodeSelExpr.getChild(1).toString();
 			 }
 		}else if(nodeSelExpr.getChild(0).getText()=="TOK_NULL"){
@@ -292,8 +293,9 @@ public class LineageMain implements NodeProcessor {
 if(col != null && colName != null) {
 	LOGGER.info("Input column = " + col);
 	columnList.addToList("input->" + col);
-	Column column = new Column(null, colName, null, table_alias, EntityType.INTYPE, null, true);
-	if (label != null) column.setLabel(label);
+	Column column = new Column(null, colName, null, tableAlias, EntityType.INTYPE, null, true);
+	if (label != null)
+		column.setLabel(label);
 	column = inColumnNodes.addToList(column);
 	Relation relation = new Relation(column, null);
 	relations.add(relation);
@@ -301,7 +303,7 @@ if(col != null && colName != null) {
 	}
 
 	private void handleTokAllColRef(ASTNode nodeSelExpr) {
-		LOGGER.info("Input column = *");;
+		LOGGER.info("Input column = *");
 
 		// for doing select *
 		Table table = null;
@@ -372,7 +374,6 @@ if(col != null && colName != null) {
 				} else {
 					colName = nodeSelExpr.getChild(j).getChild(0).toString();
 				}
-				String columnFullName = (tableName!=null ? tableName+"." : "") + colName;
 
 				LOGGER.info("Input column(infunction) = " + colName);
 				columnList.addToList("inputcol(infunction)->" + colName);
@@ -401,15 +402,15 @@ if(col != null && colName != null) {
 			node = (ASTNode) (nextToDestinationNode.getChild(0));
 		else
 			node  = nextToDestinationNode;
-		String table_name = (node.getChildCount() == 1) ?
+		String tableName = (node.getChildCount() == 1) ?
 				getUnescapedName((ASTNode) node.getChild(0)) : getUnescapedName((ASTNode) node.getChild(1));
-		outputTableList.add(table_name);
-		LOGGER.info("Output Table name in handleTokTab = " + table_name);
-		Table table = new Table(table_name, defaultHiveDbName, null, EntityType.OUTTYPE);
+		outputTableList.add(tableName);
+		LOGGER.info("Output Table name in handleTokTab = " + tableName);
+		Table table = new Table(tableName, defaultHiveDbName, null, EntityType.OUTTYPE);
 		outTableNodes.add(table);
 	}
 
-	private void handleTokDir(ASTNode nextToDestinationNode, ASTNode queryNode) {
+	private void handleTokDir(ASTNode queryNode) {
 		for (int i=0; i<queryNode.getParent().getChildCount(); i++) {
 			ASTNode outputTempTableNode = (ASTNode)queryNode.getParent().getChild(i);
 			if (outputTempTableNode.getType() == HiveParser.TOK_TABNAME) {
@@ -419,9 +420,9 @@ if(col != null && colName != null) {
 				outTableNodes.add(table);
 
 			} else if (((ASTNode)queryNode.getParent()).getType() == HiveParser.TOK_SUBQUERY && i==1) {
-				String temp_table_name = getUnescapedName((ASTNode)queryNode.getParent().getChild(i));
-				LOGGER.info("Temp output Table name found = " + temp_table_name);
-				Table table = new Table(temp_table_name, defaultHiveDbName, null, EntityType.OUTTYPE, false);        // temp tanle
+				String tempTableName = getUnescapedName((ASTNode)queryNode.getParent().getChild(i));
+				LOGGER.info("Temp output Table name found = " + tempTableName);
+				Table table = new Table(tempTableName, defaultHiveDbName, null, EntityType.OUTTYPE, false);        // temp tanle
 				outTableNodes.add(table);
 			}
 		}
@@ -429,7 +430,6 @@ if(col != null && colName != null) {
 
 
 	private void handleTokJoin(ASTNode nextNodeOfFrom) {
-		// TODO handle multiple input tables without alias
 		List<org.apache.hadoop.hive.ql.lib.Node> children = nextNodeOfFrom.getChildren();
 		for (org.apache.hadoop.hive.ql.lib.Node child : children) {
 			ASTNode childAST = (ASTNode) child;
@@ -452,18 +452,18 @@ if(col != null && colName != null) {
 
 	private void handleTokTabRef(ASTNode nextNodeOfFrom) {
 		ASTNode inputTableNodeInTR = (ASTNode) nextNodeOfFrom.getChild(0);
-		String table_name = (inputTableNodeInTR.getChildCount() == 1) ?
+		String tableName = (inputTableNodeInTR.getChildCount() == 1) ?
 				getUnescapedName((ASTNode) inputTableNodeInTR.getChild(0)) : getUnescapedName((ASTNode) inputTableNodeInTR.getChild(1)) ;
-		String table_alias = null;
+		String tableAlias = null;
 		if (nextNodeOfFrom.getChild(1) != null)
-			table_alias = getUnescapedName((ASTNode) nextNodeOfFrom.getChild(1));
+			tableAlias = getUnescapedName((ASTNode) nextNodeOfFrom.getChild(1));
 
-		if (table_alias != null)
-			inputTableList.add(table_name + "->" + table_alias);
+		if (tableAlias != null)
+			inputTableList.add(tableName + "->" + tableAlias);
 		else
-			inputTableList.add(table_name);
+			inputTableList.add(tableName);
 
-		Table table = new Table(table_name, defaultHiveDbName, table_alias, EntityType.INTYPE);
+		Table table = new Table(tableName, defaultHiveDbName, tableAlias, EntityType.INTYPE);
 		inTableNodes.addToList(table);
 	}
 
@@ -494,7 +494,6 @@ if(col != null && colName != null) {
 		// input tables to override output tables if duplicates are found
 		middle.append("\n" + tableNode);
 		middle.append("\n");
-		//LOGGER.info("node id------"+tableNode.getNodeId());
 		if(targetNode != null) {
 			middle.append("\n" + targetNode);
 			middle.append("\n");
@@ -528,7 +527,7 @@ if(col != null && colName != null) {
 
 	private void populateBeansAndPersist() {
 		persistenceUnit = new PersistenceUnit();
-		persistenceUnit.populateBeans(finalInTableNodes, finalOutTableNodes, finalFunctions, finalConstants, finalRelations, lineageQuery, processId, instanceId);
+		persistenceUnit.populateBeans(finalInTableNodes, finalOutTableNodes, finalFunctions, finalConstants, finalRelations, lineageQuery);
 		persistenceUnit.persist();
 	}
 

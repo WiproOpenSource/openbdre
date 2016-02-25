@@ -20,7 +20,6 @@ import com.wipro.ats.bdre.md.api.Lineage;
 import com.wipro.ats.bdre.md.api.base.MetadataAPIBase;
 import com.wipro.ats.bdre.md.beans.LineageNodeInfo;
 import com.wipro.ats.bdre.md.beans.LineageNodeTypeEnumInfo;
-import com.wipro.ats.bdre.md.beans.LineageQueryInfo;
 import com.wipro.ats.bdre.md.beans.LineageRelationInfo;
 import com.wipro.ats.bdre.md.dao.jpa.LineageQuery;
 import org.apache.log4j.Logger;
@@ -83,7 +82,7 @@ public class PersistenceUnit extends MetadataAPIBase {
 	/**
 	 * Populate data beans from final node lists
 	 */
-	public void populateBeans(UniqueList<Table> finalInTableNodes, UniqueList<Table> finalOutTableNodes, List<Function> finalFunctions, UniqueList<Constant> finalConstants, List<Relation> finalRelations, LineageQuery lineageQuery, int processId, long instanceId) {
+	public void populateBeans(UniqueList<Table> finalInTableNodes, UniqueList<Table> finalOutTableNodes, List<Function> finalFunctions, UniqueList<Constant> finalConstants, List<Relation> finalRelations, LineageQuery lineageQuery) {
 		lineageTableNodes = new UniqueList<LineageNodeInfo>();
 		lineageColumnNodes = new UniqueList<LineageNodeInfo>();
 		lineageFunctionNodes = new UniqueList<LineageNodeInfo>();

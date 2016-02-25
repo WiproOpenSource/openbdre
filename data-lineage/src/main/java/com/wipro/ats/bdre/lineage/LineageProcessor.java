@@ -38,6 +38,10 @@ public class LineageProcessor {
 
 	private String defaultHiveDbName = LineageConstants.defaultHiveDbName;              // default Hive db
 
+
+	@Autowired
+	LineageQueryDAO lineageQueryDAO;
+	
 	public LineageProcessor() {
 		 /*Hibernate Auto-wire*/
 		ApplicationContext context = new ClassPathXmlApplicationContext("spring-dao.xml");
@@ -46,10 +50,7 @@ public class LineageProcessor {
 		LOGGER.debug("--------------Auto wiring initiated---------------");
 	}
 
-	@Autowired
-	LineageQueryDAO lineageQueryDAO;
-
-	public void execute(String wholeQuery, String processId, String instanceExecId) throws ParseException, SemanticException, IOException {
+	public void execute(String wholeQuery, String processId, String instanceExecId) throws ParseException {
 
 		// split into queries by semicolon
 		String[] queries = wholeQuery.split(";");

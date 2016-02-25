@@ -29,17 +29,17 @@ import java.util.List;
  * Created by AshutoshRai on 1/22/16.
  */
 public class GetNodeIdForLineageRelation {
+    private static final Logger LOGGER = Logger.getLogger(GetNodeIdForLineageRelation.class);
+
+    @Autowired
+    private LineageRelationDAO lineageRelationDAO;
+
     public GetNodeIdForLineageRelation() {
         /* Hibernate Auto-Wire */
         ApplicationContext context = new ClassPathXmlApplicationContext("spring-dao.xml");
         AutowireCapableBeanFactory acbFactory = context.getAutowireCapableBeanFactory();
         acbFactory.autowireBean(this);
     }
-
-    private static final Logger LOGGER = Logger.getLogger(GetNodeIdForLineageRelation.class);
-
-    @Autowired
-    private LineageRelationDAO lineageRelationDAO;
 
     public List<LineageRelation> execute(String nodeid) {
 

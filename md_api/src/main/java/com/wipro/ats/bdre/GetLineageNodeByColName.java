@@ -29,17 +29,18 @@ import java.util.List;
  * Created by AshutoshRai on 1/21/16.
  */
 public class GetLineageNodeByColName {
+
+    private static final Logger LOGGER = Logger.getLogger(GetLineageNodeByColName.class);
+
+    @Autowired
+    private LineageNodeDAO lineageNodeDAO;
+
     public GetLineageNodeByColName() {
         /* Hibernate Auto-Wire */
         ApplicationContext context = new ClassPathXmlApplicationContext("spring-dao.xml");
         AutowireCapableBeanFactory acbFactory = context.getAutowireCapableBeanFactory();
         acbFactory.autowireBean(this);
     }
-
-    private static final Logger LOGGER = Logger.getLogger(GetLineageNodeByColName.class);
-
-    @Autowired
-    private LineageNodeDAO lineageNodeDAO;
 
     public LineageNode execute(String col, LineageNode tableNode) {
 
