@@ -15,10 +15,7 @@
 package com.wipro.ats.bdre.md.rest.ext;
 
 import com.wipro.ats.bdre.md.api.base.MetadataAPIBase;
-import com.wipro.ats.bdre.md.beans.table.Batch;
-import com.wipro.ats.bdre.md.beans.table.GeneralConfig;
 import com.wipro.ats.bdre.md.dao.ProcessDAO;
-import com.wipro.ats.bdre.md.dao.PropertiesDAO;
 import com.wipro.ats.bdre.md.dao.jpa.Process;
 import com.wipro.ats.bdre.md.dao.jpa.Properties;
 import com.wipro.ats.bdre.md.rest.RestWrapper;
@@ -27,11 +24,7 @@ import com.wipro.ats.bdre.md.rest.util.DateConverter;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.validation.BindingResult;
-import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.*;
-
-import javax.validation.Valid;
 import java.security.Principal;
 import java.util.*;
 
@@ -43,15 +36,26 @@ import java.util.*;
 @RequestMapping("/dataload")
 public class DataLoadAPI extends MetadataAPIBase {
     private static final Logger LOGGER = Logger.getLogger(DataLoadAPI.class);
+    private static final String FILEFORMAT = "fileformat_";
+    private static final String RAWTABLE = "raw-table";
+    private static final String TABLEDB = "table_db";
+    private static final String FILEFORMATDETAILS = "fileformatdetails_";
+    private static final String BASETABLEPREFIX = "basetable_";
+    private static final String TABLENAME = "table_name";
+    private static final String BASETABLE = "base-table";
+    private static final String BASETABLENAME = "Base Table Name";
+    private static final String TRANSFORM = "transform_";
+    private static final String PARTITION = "partition_";
+    private static final String TRANSFORMCOMMENT = "Transformation on column";
+    private static final String STAGEDATATYPE = "stagedatatype_";
+    private static final String BASEACTION = "baseaction_";
+    private static final String BUSDOMAIN = "process_busDomainId";
     @Autowired
     private ProcessDAO processDAO;
-    @Autowired
-    private PropertiesDAO propertiesDAO;
 
 
     @RequestMapping(value = {"/", ""}, method = RequestMethod.PUT)
-    public
-    @ResponseBody
+    @ResponseBody public
     RestWrapper insert(Principal principal) {
         LOGGER.debug("Updating jtable for new advanced config");
 
@@ -62,6 +66,7 @@ public class DataLoadAPI extends MetadataAPIBase {
             restWrapper = new RestWrapper(null, RestWrapper.OK);
             LOGGER.info(" Jtable created by User:" + principal.getName() );
         } catch (Exception e) {
+            LOGGER.error("error occured : " + e);
             restWrapper = new RestWrapper(e.getMessage(), RestWrapper.ERROR);
         }
         return restWrapper;
@@ -69,8 +74,7 @@ public class DataLoadAPI extends MetadataAPIBase {
 
 
     @RequestMapping(value = {"/", ""}, method = RequestMethod.GET)
-    public
-    @ResponseBody
+    @ResponseBody public
     RestWrapper list(Principal principal) {
         LOGGER.debug("Updating jtable for new advanced config");
 
@@ -82,6 +86,7 @@ public class DataLoadAPI extends MetadataAPIBase {
             restWrapper = new RestWrapper(null, RestWrapper.OK);
             LOGGER.info("All records listed from Batch by User:" + principal.getName());
         } catch (Exception e) {
+            LOGGER.error("error occured : " + e);
             restWrapper = new RestWrapper(e.getMessage(), RestWrapper.ERROR);
         }
         return restWrapper;
@@ -89,8 +94,7 @@ public class DataLoadAPI extends MetadataAPIBase {
 
     @RequestMapping(value = {"/createjobs"}, method = RequestMethod.POST)
 
-    public
-    @ResponseBody
+    @ResponseBody public
     RestWrapper createJob(@RequestParam Map<String, String> map, Principal principal) {
         LOGGER.debug(" value of map is " + map.size());
         RestWrapper restWrapper = null;
@@ -121,26 +125,26 @@ public class DataLoadAPI extends MetadataAPIBase {
                 jpaProperties = Dao2TableUtil.buildJPAProperties("raw-data-types", "raw_column_datatype." + rawColumnCounter, map.get(string), "Data Type for raw table");
                 rawColumnCounter++;
                 file2RawProperties.add(jpaProperties);
-            }else if (string.startsWith("fileformat_")) {
-                if("fileformat".equals(string.replaceAll("fileformat_", ""))){
-                    jpaProperties = Dao2TableUtil.buildJPAProperties("raw-table", "file_type", map.get(string), "file type");
+            }else if (string.startsWith(FILEFORMAT)) {
+                if("fileformat".equals(string.replaceAll(FILEFORMAT, ""))){
+                    jpaProperties = Dao2TableUtil.buildJPAProperties(RAWTABLE, "file_type", map.get(string), "file type");
                     file2RawProperties.add(jpaProperties);
-                }else if("rawDBName".equals(string.replaceAll("fileformat_", ""))){
-                    jpaProperties = Dao2TableUtil.buildJPAProperties("raw-table", "table_db", map.get(string), "RAW DB Name");
+                }else if("rawDBName".equals(string.replaceAll(FILEFORMAT, ""))){
+                    jpaProperties = Dao2TableUtil.buildJPAProperties(RAWTABLE, "table_db", map.get(string), "RAW DB Name");
                     file2RawProperties.add(jpaProperties);
-                    jpaProperties = Dao2TableUtil.buildJPAProperties("raw-table", "table_db_raw", map.get(string), "RAW DB Name");
+                    jpaProperties = Dao2TableUtil.buildJPAProperties(RAWTABLE, "table_db_raw", map.get(string), "RAW DB Name");
                     raw2StageProperties.add(jpaProperties);
                 }
             }
-            else if (string.startsWith("fileformatdetails_")) {
-                if ("inputFormat".equals(string.replaceAll("fileformatdetails_", ""))) {
-                    jpaProperties = Dao2TableUtil.buildJPAProperties("raw-table", "input.format", map.get(string), "Input Format");
+            else if (string.startsWith(FILEFORMATDETAILS)) {
+                if ("inputFormat".equals(string.replaceAll(FILEFORMATDETAILS, ""))) {
+                    jpaProperties = Dao2TableUtil.buildJPAProperties(RAWTABLE, "input.format", map.get(string), "Input Format");
                     file2RawProperties.add(jpaProperties);
-                } else  if ("outputFormat".equals(string.replaceAll("fileformatdetails_", ""))) {
-                    jpaProperties = Dao2TableUtil.buildJPAProperties("raw-table", "output.format", map.get(string), "Output Format");
+                } else  if ("outputFormat".equals(string.replaceAll(FILEFORMATDETAILS, ""))) {
+                    jpaProperties = Dao2TableUtil.buildJPAProperties(RAWTABLE, "output.format", map.get(string), "Output Format");
                     file2RawProperties.add(jpaProperties);
-                }  else if ("serdeClass".equals(string.replaceAll("fileformatdetails_", ""))) {
-                    jpaProperties = Dao2TableUtil.buildJPAProperties("raw-table", "serde.class", map.get(string), "Serde Class to be used");
+                }  else if ("serdeClass".equals(string.replaceAll(FILEFORMATDETAILS, ""))) {
+                    jpaProperties = Dao2TableUtil.buildJPAProperties(RAWTABLE, "serde.class", map.get(string), "Serde Class to be used");
                     file2RawProperties.add(jpaProperties);
                 }
             } else if (string.startsWith("serdeproperties_")) {
@@ -157,40 +161,40 @@ public class DataLoadAPI extends MetadataAPIBase {
                 }else{
                     continue;
                 }
-            }else if (string.startsWith("basetable_")) {
-                if("baseTableName".equals(string.replaceAll("basetable_",""))){
-                    jpaProperties = Dao2TableUtil.buildJPAProperties("base-table", "table_name" , map.get(string) , "Base Table Name");
+            }else if (string.startsWith(BASETABLEPREFIX)) {
+                if("baseTableName".equals(string.replaceAll(BASETABLEPREFIX,""))){
+                    jpaProperties = Dao2TableUtil.buildJPAProperties(BASETABLE, TABLENAME , map.get(string) , BASETABLENAME);
                     raw2StageProperties.add(jpaProperties);
-                    jpaProperties = Dao2TableUtil.buildJPAProperties("raw-table", "table_name" , "raw_"+map.get(string) , "RAW Table Name");
+                    jpaProperties = Dao2TableUtil.buildJPAProperties(RAWTABLE, TABLENAME , "raw_"+map.get(string) , "RAW Table Name");
                     file2RawProperties.add(jpaProperties);
-                    jpaProperties = Dao2TableUtil.buildJPAProperties("raw-table", "table_name_raw" , "raw_"+map.get(string) , "RAW Table Name");
+                    jpaProperties = Dao2TableUtil.buildJPAProperties(RAWTABLE, "table_name_raw" , "raw_"+map.get(string) , "RAW Table Name");
                     raw2StageProperties.add(jpaProperties);
-                    jpaProperties = Dao2TableUtil.buildJPAProperties("base-table", "table_name" , map.get(string) , "Base Table Name");
+                    jpaProperties = Dao2TableUtil.buildJPAProperties(BASETABLE, TABLENAME , map.get(string) , BASETABLENAME);
                     stage2BaseProperties.add(jpaProperties);
-                }else if("baseDBName".equals(string.replaceAll("basetable_",""))){
-                    jpaProperties = Dao2TableUtil.buildJPAProperties("base-table", "table_db" , map.get(string) , "Base Table Name");
+                }else if("baseDBName".equals(string.replaceAll(BASETABLEPREFIX,""))){
+                    jpaProperties = Dao2TableUtil.buildJPAProperties(BASETABLE, TABLEDB, map.get(string) , BASETABLENAME);
                     stage2BaseProperties.add(jpaProperties);
-                    jpaProperties = Dao2TableUtil.buildJPAProperties("base-table", "table_db" , map.get(string) , "Base Table Name");
+                    jpaProperties = Dao2TableUtil.buildJPAProperties(BASETABLE, TABLEDB, map.get(string) , BASETABLENAME);
                     raw2StageProperties.add(jpaProperties);
                 }
-            }else if (string.startsWith("transform_")) {
-                if("".equals(map.get(string.replaceAll("transform_","partition_"))) || map.get(string.replaceAll("transform_","partition_")) == null) {
-                    jpaProperties = Dao2TableUtil.buildJPAProperties("base-columns", string, map.get(string), "Transformation on column");
+            }else if (string.startsWith(TRANSFORM)) {
+                if("".equals(map.get(string.replaceAll(TRANSFORM,PARTITION))) || map.get(string.replaceAll(TRANSFORM,PARTITION)) == null) {
+                    jpaProperties = Dao2TableUtil.buildJPAProperties("base-columns", string, map.get(string), TRANSFORMCOMMENT);
                     raw2StageProperties.add(jpaProperties);
                 }else{
-                    partitionCols.put(map.get(string.replaceAll("transform_","partition_")),string.replaceAll("transform_",""));
+                    partitionCols.put(map.get(string.replaceAll(TRANSFORM,PARTITION)),string.replaceAll(TRANSFORM,""));
                 }
-            }else if (string.startsWith("stagedatatype_")) {
-                if("".equals(map.get(string.replaceAll("stagedatatype_","partition_"))) || map.get(string.replaceAll("stagedatatype_","partition_")) == null) {
-                    jpaProperties = Dao2TableUtil.buildJPAProperties("base-data-types", string.replaceAll("stagedatatype_","") , map.get(string) , "data type of column");
+            }else if (string.startsWith(STAGEDATATYPE)) {
+                if("".equals(map.get(string.replaceAll(STAGEDATATYPE,PARTITION))) || map.get(string.replaceAll(STAGEDATATYPE,PARTITION)) == null) {
+                    jpaProperties = Dao2TableUtil.buildJPAProperties("base-data-types", string.replaceAll(STAGEDATATYPE,"") , map.get(string) , "data type of column");
                     raw2StageProperties.add(jpaProperties);
                 }else{
-                    partitionDataTypes.put(map.get(string.replaceAll("stagedatatype_","partition_")),map.get(string));
+                    partitionDataTypes.put(map.get(string.replaceAll(STAGEDATATYPE,PARTITION)),map.get(string));
                 }
 
-            }else if (string.startsWith("baseaction_")) {
-                if("".equals(map.get(string.replaceAll("baseaction_","partition_"))) || map.get(string.replaceAll("transform_","partition_")) == null) {
-                    jpaProperties = Dao2TableUtil.buildJPAProperties("base-columns-and-types", string.replaceAll("baseaction_", ""), map.get(string), "Transformation on column");
+            }else if (string.startsWith(BASEACTION)) {
+                if("".equals(map.get(string.replaceAll(BASEACTION,PARTITION))) || map.get(string.replaceAll(TRANSFORM,PARTITION)) == null) {
+                    jpaProperties = Dao2TableUtil.buildJPAProperties("base-columns-and-types", string.replaceAll(BASEACTION, ""), map.get(string), TRANSFORMCOMMENT);
                     stage2BaseProperties.add(jpaProperties);
                 }
             }
@@ -200,11 +204,11 @@ public class DataLoadAPI extends MetadataAPIBase {
             }else if (string.startsWith("process_processDescription")) {
                 LOGGER.debug("process_processDescription" + map.get(string));
                 processDescription = map.get(string);
-            }else if (string.startsWith("process_busDomainId")) {
-                LOGGER.debug("process_busDomainId" + map.get(string));
+            }else if (string.startsWith(BUSDOMAIN)) {
+                LOGGER.debug(BUSDOMAIN + map.get(string));
                 busDomainId = new Integer(map.get(string));
             }else if (string.startsWith("process_enqueueId")) {
-                LOGGER.debug("process_busDomainId" + map.get(string));
+                LOGGER.debug(BUSDOMAIN + map.get(string));
                 enqId = new Integer(map.get(string));
             }
 
@@ -218,9 +222,9 @@ public class DataLoadAPI extends MetadataAPIBase {
         }
         if (partitionColListBuilder.length() > 0) {
             String  partitionColList = partitionColListBuilder.toString();
-            jpaProperties = Dao2TableUtil.buildJPAProperties("partition", "partition_columns" , partitionColList , "Transformation on column");
+            jpaProperties = Dao2TableUtil.buildJPAProperties("partition", "partition_columns" , partitionColList , TRANSFORMCOMMENT);
             stage2BaseProperties.add(jpaProperties);
-            jpaProperties = Dao2TableUtil.buildJPAProperties("partition", "partition_columns" , partitionColList , "Transformation on column");
+            jpaProperties = Dao2TableUtil.buildJPAProperties("partition", "partition_columns" , partitionColList , TRANSFORMCOMMENT);
             raw2StageProperties.add(jpaProperties);
         }
 
@@ -246,7 +250,7 @@ public class DataLoadAPI extends MetadataAPIBase {
             process.setTableEditTS(DateConverter.dateToString(process.getEditTS()));
         }
         restWrapper = new RestWrapper(tableProcessList, RestWrapper.OK);
-
+        LOGGER.info("Process and Properties for data load process inserted by" + principal.getName());
 
 
         return restWrapper;
