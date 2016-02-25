@@ -87,7 +87,7 @@ public class DataGenAPI extends MetadataAPIBase {
             LOGGER.debug("key is " + key);
 
             if (string.startsWith("type_genArg") && map.get(string).split(",").length == 3) {
-                fieldTypeCounter = Integer.parseInt(string.substring((string.lastIndexOf(".") + 1), string.length()));
+                fieldTypeCounter = Integer.parseInt(string.substring(string.lastIndexOf(".") + 1, string.length()));
                 LOGGER.debug("genArg key Index" + fieldTypeCounter);
 
                 dateContent = map.get(string).split(",");
@@ -168,6 +168,7 @@ public class DataGenAPI extends MetadataAPIBase {
             process.setTableEditTS(DateConverter.dateToString(process.getEditTS()));
         }
         restWrapper = new RestWrapper(tableProcessList, RestWrapper.OK);
+        LOGGER.info("Process and Properties for data generation process inserted by" + principal.getName());
         return restWrapper;
     }
 
