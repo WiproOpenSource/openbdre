@@ -29,7 +29,7 @@ public class DQDataModel {
     private static final Logger LOGGER = Logger.getLogger(DQDataModel.class);
     private String mRecord;
     private boolean isValidRecord;
-    private Vector<String> mInvalidRecordMessage;
+    private List<String> mInvalidRecordMessage;
     private String mStructureId;
     private String mDelimiter;
     private List<String> mColumns = new ArrayList<String>();
@@ -44,7 +44,7 @@ public class DQDataModel {
             }
             LOGGER.trace("mColumns = " + mColumns.toString());
         }
-        mInvalidRecordMessage = new Vector<String>();
+        mInvalidRecordMessage = new ArrayList<String>();
     }
     public void setColumn(Column column){
         mColumns.set(column.getIndex(),column.getValue());
@@ -53,7 +53,7 @@ public class DQDataModel {
        return null;
     }
     public String getmRecord() {
-        StringBuffer myRec=new StringBuffer();
+        StringBuilder myRec=new StringBuilder();
         for(String cols: mColumns)
         {
             myRec=myRec.append(cols).append(mDelimiter);

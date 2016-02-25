@@ -22,7 +22,7 @@ import org.apache.log4j.Logger;
  */
 public class CommonDQFunctions {
     private static final Logger LOGGER = Logger.getLogger(CommonDQFunctions.class);
-    public String checkString(String min, String max, String leftPad, String rightPad, String word)
+    public String checkString(String min, String max, String leftPad, String word)
     {
         int minLen = Integer.parseInt(min);
         int maxLen = Integer.parseInt(max);
