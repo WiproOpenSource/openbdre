@@ -42,7 +42,7 @@ public class AuthenticationFilter extends AbstractPreAuthenticatedProcessingFilt
         String principal = null;
         if (cookies != null) {
             for (Cookie c : cookies) {
-                if (c.getName().equals("bdre-auth-token")) {
+                if ("bdre-auth-token".equals(c.getName())) {
                     cookie = c;
                     break;
                 }
@@ -62,7 +62,8 @@ public class AuthenticationFilter extends AbstractPreAuthenticatedProcessingFilt
                 LOGGER.info("USER is authenticated for token " + token + "; principal=" + principal);
                 //store the authResult in session for comparing it later in SessionCheck Filter
                 request.getSession().setAttribute("CURRENT_LOGGED_IN_AUTH", authResult);
-            } else {
+            }
+            else {
                 LOGGER.error(" authResult not found for not authenticated for token:" + token);
             }
         } else {
@@ -77,11 +78,10 @@ public class AuthenticationFilter extends AbstractPreAuthenticatedProcessingFilt
      * Credentials aren't usually applicable, but if a <tt>credentialsRequestHeader</tt> is set, this
      * will be read and used as the credentials value. Otherwise a dummy value will be used.
      */
+    @Override
     protected Object getPreAuthenticatedCredentials(HttpServletRequest request) {
         if (credentialsRequestHeader != null) {
-            String credentials = request.getHeader(credentialsRequestHeader);
-
-            return credentials;
+            return request.getHeader(credentialsRequestHeader);
         }
 
         return "N/A";
