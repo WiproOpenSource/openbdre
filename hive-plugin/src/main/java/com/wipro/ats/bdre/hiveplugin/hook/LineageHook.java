@@ -29,54 +29,56 @@ public class LineageHook implements org.apache.hadoop.hive.ql.hooks.ExecuteWithH
 	private static final Logger LOGGER = Logger.getLogger(LineageHook.class);
 	private boolean successFlag;
 	public boolean isSuccess() {
-		return successFlag;
+	return successFlag;
 	}
 
+	@Override
 	public void run(HookContext hookContext) {
-		LOGGER.debug("Running LineageHook...");
-		String wholeQuery = null;
-		String processId = null;
-		String instanceExecId = null;
+	LOGGER.debug("Running LineageHook...");
+	String wholeQuery = null;
+	String processId = null;
+	String instanceExecId = null;
 
-		try {
-			if (hookContext == null) {
-				LOGGER.warn("HookContext is null. Assuming default values");
-				wholeQuery = LineageConstants.query;
-				processId = "" + LineageConstants.processId;
-				instanceExecId = "" + LineageConstants.instanceId;
+	try {
+	if (hookContext == null) {
+		LOGGER.warn("HookContext is null. Assuming default values");
+		wholeQuery = LineageConstants.query;
+		processId = "" + LineageConstants.processId;
+		instanceExecId = "" + LineageConstants.instanceId;
 
+	}
+	else {
+		wholeQuery = hookContext.getQueryPlan().getQueryString();
+
+		Properties properties = hookContext.getConf().getAllProperties();
+		for (Map.Entry entry : properties.entrySet()) {
+			String key = (String)(entry.getKey());
+			if (LineageConstants.processIdString.equalsIgnoreCase(key)) {
+				processId = (String) (entry.getValue());
+				LOGGER.info("ProcessId found in Hive = " + processId);
 			}
-			else {
-				wholeQuery = hookContext.getQueryPlan().getQueryString();
-
-				Properties properties = hookContext.getConf().getAllProperties();
-				for (Map.Entry entry : properties.entrySet()) {
-					String key = (String)(entry.getKey());
-					if (LineageConstants.processIdString.equalsIgnoreCase(key)) {
-						processId = (String) (entry.getValue());
-						LOGGER.info("ProcessId found in Hive = " + processId);
-					} else if (LineageConstants.instanceExecIdString.equalsIgnoreCase(key)) {
-						instanceExecId = (String) (entry.getValue());
-						LOGGER.info("InstanceExecId found in Hive = " + instanceExecId);
-					}
-				}
-
-				if (processId == null || instanceExecId == null) {
-					LOGGER.warn("Warning: ProcessId or InstanceExecId is null. Lineage not done. End of Lineage Hook.");
-					return;
-				}
-
+			else if (LineageConstants.instanceExecIdString.equalsIgnoreCase(key)) {
+				instanceExecId = (String) (entry.getValue());
+				LOGGER.info("InstanceExecId found in Hive = " + instanceExecId);
 			}
-			LOGGER.info("BDRE Printed query = " + wholeQuery);
-
-			LineageProcessor lineageProcessor = new LineageProcessor();
-			lineageProcessor.execute(wholeQuery, processId, instanceExecId);
-			successFlag = true;
-
-		} catch (Exception e) {
-			LOGGER.error("Error in executing LineageHook", e);
-			LOGGER.info(e);
-			successFlag = false;
 		}
+
+		if (processId == null || instanceExecId == null) {
+			LOGGER.warn("Warning: ProcessId or InstanceExecId is null. Lineage not done. End of Lineage Hook.");
+			return;
+		}
+
+	}
+	LOGGER.info("BDRE Printed query = " + wholeQuery);
+
+	LineageProcessor lineageProcessor = new LineageProcessor();
+	lineageProcessor.execute(wholeQuery, processId, instanceExecId);
+	successFlag = true;
+
+	} catch (Exception e) {
+	LOGGER.error("Error in executing LineageHook", e);
+	LOGGER.info(e);
+	successFlag = false;
+	}
 	}
 }
