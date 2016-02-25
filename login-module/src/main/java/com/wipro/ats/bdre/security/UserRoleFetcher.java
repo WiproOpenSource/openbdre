@@ -14,6 +14,7 @@
 
 package com.wipro.ats.bdre.security;
 
+import com.wipro.ats.bdre.exception.BDREException;
 import com.wipro.ats.bdre.md.api.base.MetadataAPIBase;
 import com.wipro.ats.bdre.md.beans.table.UserRoles;
 import com.wipro.ats.bdre.md.beans.table.Users;
@@ -22,8 +23,6 @@ import com.wipro.ats.bdre.md.dao.UsersDAO;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.AutowireCapableBeanFactory;
-import org.springframework.context.ApplicationContext;
-import org.springframework.context.support.ClassPathXmlApplicationContext;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
@@ -39,15 +38,13 @@ public class UserRoleFetcher extends MetadataAPIBase {
 
     @Autowired
     private UsersDAO usersDAO;
+    @Autowired
+    UserRolesDAO userRolesDAO;
 
     public UserRoleFetcher() {
         AutowireCapableBeanFactory acbFactory = getAutowireCapableBeanFactory();
         acbFactory.autowireBean(this);
     }
-//    public UserRoleFetcher(String env) {
-//
-//        this.env = env;
-//    }
 
     /**
      * This method calls proc GetUsers and returns the details of username passed.
@@ -64,11 +61,10 @@ public class UserRoleFetcher extends MetadataAPIBase {
                 users = new Users();
                 users.setUsername(jpaUser.getUsername());
                 users.setPassword(jpaUser.getPassword());
-                users.setEnabled((jpaUser.getEnabled() == true) ? (short) 1 : 0);
+                users.setEnabled((jpaUser.getEnabled()) ? (short) 1 : 0);
             }
-            //users = s.selectOne("call_procedures.GetUsers", users);
-        } catch (Exception e) {
-            throw new RuntimeException(e);
+        } catch (BDREException e) {
+                throw new BDREException(e);
         }
         if (users != null)
             LOGGER.info("user:" + users.getUsername());
@@ -82,8 +78,6 @@ public class UserRoleFetcher extends MetadataAPIBase {
      * @param username
      * @return userroles List of instances of UserRoles.
      */
-    @Autowired
-    UserRolesDAO userRolesDAO;
 
     public List<UserRoles> getRoles(String username) {
         List<UserRoles> userRoleList = new ArrayList<UserRoles>();
@@ -100,10 +94,9 @@ public class UserRoleFetcher extends MetadataAPIBase {
                 userRoleList.add(userRole);
 
             }
-            // userroles = s.selectList("call_procedures.ListUserRoles", userrole);
 
-        } catch (Exception e) {
-            throw new RuntimeException(e);
+        } catch (BDREException e) {
+            throw new BDREException(e);
         }
         if (userRoleList != null) {
             LOGGER.info("user role list size:" + userRoleList.size());
