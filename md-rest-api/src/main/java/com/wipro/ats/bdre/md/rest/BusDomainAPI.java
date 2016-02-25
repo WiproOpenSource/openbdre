@@ -14,13 +14,13 @@
 
 package com.wipro.ats.bdre.md.rest;
 
+import com.wipro.ats.bdre.exception.MetadataException;
 import com.wipro.ats.bdre.md.api.base.MetadataAPIBase;
 import com.wipro.ats.bdre.md.beans.table.BusDomain;
 import com.wipro.ats.bdre.md.dao.BusDomainDAO;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.ModelMap;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.*;
@@ -39,6 +39,7 @@ import java.util.List;
 
 public class BusDomainAPI extends MetadataAPIBase {
     private static final Logger LOGGER = Logger.getLogger(BusDomainAPI.class);
+    private static final String RECORDWITHID = "Record with ID:";
     @Autowired
     BusDomainDAO busDomainDAO;
 
@@ -49,8 +50,7 @@ public class BusDomainAPI extends MetadataAPIBase {
      * @return restWrapper Instance of BusDomain corresponding to busDomainId passed.
      */
     @RequestMapping(value = "/{id}", method = RequestMethod.GET)
-    public
-    @ResponseBody
+    @ResponseBody public
     RestWrapper get(
             @PathVariable("id") Integer busDomainId, Principal principal
     ) {
@@ -64,11 +64,10 @@ public class BusDomainAPI extends MetadataAPIBase {
                 busDomain.setBusDomainOwner(jpaBusDomain.getBusDomainOwner());
                 busDomain.setDescription(jpaBusDomain.getDescription());
             }
-            // busDomain = s.selectOne("call_procedures.GetBusDomain", busDomain);
-
             restWrapper = new RestWrapper(busDomain, RestWrapper.OK);
-            LOGGER.info("Record with ID:" + busDomainId + " selected from BusDomain by User:" + principal.getName());
-        } catch (Exception e) {
+            LOGGER.info(RECORDWITHID + busDomainId + " selected from BusDomain by User:" + principal.getName());
+        } catch (MetadataException e) {
+            LOGGER.error(e);
             restWrapper = new RestWrapper(e.getMessage(), RestWrapper.ERROR);
         }
         return restWrapper;
@@ -79,22 +78,19 @@ public class BusDomainAPI extends MetadataAPIBase {
      * This method calls proc DeleteBusDomain and deletes the record corresponding to busDomainId passed.
      *
      * @param busDomainId
-     * @param model
      * @return nothing.
      */
     @RequestMapping(value = "/{id}", method = RequestMethod.DELETE)
-    public
-    @ResponseBody
+    @ResponseBody public
     RestWrapper delete(
-            @PathVariable("id") Integer busDomainId, Principal principal,
-            ModelMap model) {
+            @PathVariable("id") Integer busDomainId, Principal principal) {
         RestWrapper restWrapper = null;
         try {
             busDomainDAO.delete(busDomainId);
-            //s.delete("call_procedures.DeleteBusDomain", busDomain);
             restWrapper = new RestWrapper(null, RestWrapper.OK);
-            LOGGER.info("Record with ID:" + busDomainId + " deleted from BusDomain by User:" + principal.getName());
-        } catch (Exception e) {
+            LOGGER.info(RECORDWITHID + busDomainId + " deleted from BusDomain by User:" + principal.getName());
+        } catch (MetadataException e) {
+            LOGGER.error(e);
             restWrapper = new RestWrapper(e.getMessage(), RestWrapper.ERROR);
         }
         return restWrapper;
@@ -107,9 +103,7 @@ public class BusDomainAPI extends MetadataAPIBase {
      * @return restWrapper List of instances of BusDomain.
      */
     @RequestMapping(value = {"", "/"}, method = RequestMethod.GET)
-
-    public
-    @ResponseBody
+    @ResponseBody public
     RestWrapper list(@RequestParam(value = "page", defaultValue = "0") int startPage,
                      @RequestParam(value = "size", defaultValue = "10") int pageSize, Principal principal) {
         RestWrapper restWrapper = null;
@@ -127,11 +121,10 @@ public class BusDomainAPI extends MetadataAPIBase {
                 returnBusDomain.setCounter(counter);
                 busDomains.add(returnBusDomain);
             }
-            //List<BusDomain> busDomains = s.selectList("call_procedures.GetBusDomains", busDomain);
-
             restWrapper = new RestWrapper(busDomains, RestWrapper.OK);
             LOGGER.info("All records listed from BusDomain by User:" + principal.getName());
-        } catch (Exception e) {
+        } catch (MetadataException e) {
+            LOGGER.error(e);
             restWrapper = new RestWrapper(e.getMessage(), RestWrapper.ERROR);
         }
         return restWrapper;
@@ -145,8 +138,7 @@ public class BusDomainAPI extends MetadataAPIBase {
      * @return restWrapper Updated record passed.
      */
     @RequestMapping(value = {"/", ""}, method = RequestMethod.POST)
-    public
-    @ResponseBody
+    @ResponseBody public
     RestWrapper update(@ModelAttribute("busdomain")
                        @Valid BusDomain busDomain, BindingResult bindingResult, Principal principal) {
         RestWrapper restWrapper = null;
@@ -174,8 +166,9 @@ public class BusDomainAPI extends MetadataAPIBase {
             // BusDomain busDomains = s.selectOne("call_procedures.UpdateBusDomain", busDomain);
 
             restWrapper = new RestWrapper(busDomain, RestWrapper.OK);
-            LOGGER.info("Record with ID:" + busDomain.getBusDomainId() + " updated in BusDomain by User:" + principal.getName() + busDomain);
-        } catch (Exception e) {
+            LOGGER.info(RECORDWITHID + busDomain.getBusDomainId() + " updated in BusDomain by User:" + principal.getName() + busDomain);
+        } catch (MetadataException e) {
+            LOGGER.error(e);
             restWrapper = new RestWrapper(e.getMessage(), RestWrapper.ERROR);
         }
         return restWrapper;
@@ -190,8 +183,7 @@ public class BusDomainAPI extends MetadataAPIBase {
      * @return restWrapper Instance of BusDomain inserted.
      */
     @RequestMapping(value = {"/", ""}, method = RequestMethod.PUT)
-    public
-    @ResponseBody
+    @ResponseBody public
     RestWrapper insert(@ModelAttribute("busdomain")
                        @Valid BusDomain busDomain, BindingResult bindingResult, Principal principal) {
         RestWrapper restWrapper = null;
@@ -220,8 +212,9 @@ public class BusDomainAPI extends MetadataAPIBase {
             // BusDomain busDomains = s.selectOne("call_procedures.InsertBusDomain", busDomain);
             jpaBusDomain.setBusDomainId(busDomainId);
             restWrapper = new RestWrapper(busDomain, RestWrapper.OK);
-            LOGGER.info("Record with ID:" + busDomain.getBusDomainId() + " inserted in BusDomain by User:" + principal.getName() + busDomain);
-        } catch (Exception e) {
+            LOGGER.info(RECORDWITHID + busDomain.getBusDomainId() + " inserted in BusDomain by User:" + principal.getName() + busDomain);
+        } catch (MetadataException e) {
+            LOGGER.error(e);
             restWrapper = new RestWrapper(e.getMessage(), RestWrapper.ERROR);
         }
         return restWrapper;
@@ -231,8 +224,7 @@ public class BusDomainAPI extends MetadataAPIBase {
      * @return
      */
     @RequestMapping(value = {"/options", "/options/"}, method = RequestMethod.POST)
-    public
-    @ResponseBody
+    @ResponseBody public
     RestWrapperOptions listOptions() {
         RestWrapperOptions restWrapperOptions = null;
         try {
@@ -248,8 +240,6 @@ public class BusDomainAPI extends MetadataAPIBase {
                 returnBusDomain.setCounter(jpaBusDoaminList.size());
                 busDomains.add(returnBusDomain);
             }
-            //List<BusDomain> busDomains = s.selectList("call_procedures.GetBusDomains");
-
             List<RestWrapperOptions.Option> options = new ArrayList<RestWrapperOptions.Option>();
 
             for (BusDomain busDomain1 : busDomains) {
@@ -257,8 +247,9 @@ public class BusDomainAPI extends MetadataAPIBase {
                 options.add(option);
             }
             restWrapperOptions = new RestWrapperOptions(options, RestWrapperOptions.OK);
-        } catch (Exception e) {
-            restWrapperOptions = new RestWrapperOptions(e.getMessage(), RestWrapperOptions.ERROR);
+        } catch (MetadataException e) {
+            LOGGER.error(e);
+            restWrapperOptions = new RestWrapperOptions(e.getMessage(), RestWrapper.ERROR);
         }
         return restWrapperOptions;
     }

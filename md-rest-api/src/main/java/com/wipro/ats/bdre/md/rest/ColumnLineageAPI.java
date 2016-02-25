@@ -48,8 +48,7 @@ public class ColumnLineageAPI extends MetadataAPIBase {
      * corresponding to processId passed.
      */
     @RequestMapping(value = {"", "/"}, method = RequestMethod.GET)
-    public
-    @ResponseBody
+    @ResponseBody public
     RestWrapper lineageByProcessId(@RequestParam(value = "pid", defaultValue = "0") Integer processId, Principal principal) {
 
         RestWrapper restWrapper = null;
@@ -57,7 +56,6 @@ public class ColumnLineageAPI extends MetadataAPIBase {
 
             List<LineageNodeInfo> lineageNodeInfo = new ArrayList<LineageNodeInfo>();
             List<String> dotStringList = getDotStringDAO.getDotString(processId);
-            //  lineageNodeInfo = s.selectList("call_procedures.GetDotString", processInfo);
             for (String dotString : dotStringList) {
                 LineageNodeInfo returnLineageNodeInfo = new LineageNodeInfo();
                 returnLineageNodeInfo.setDotString(dotString);
@@ -74,7 +72,8 @@ public class ColumnLineageAPI extends MetadataAPIBase {
             restWrapper = new RestWrapper(lineageNodeInfo1, RestWrapper.OK);
             LOGGER.info("lineageByProcessId for processId:" + processId + "from ColumnLineage by User:" + principal.getName());
         } catch (Exception e) {
-            restWrapper = new RestWrapper(e.getMessage(), RestWrapper.ERROR);
+            LOGGER.error("error occurred while uploading file", e);
+            return new RestWrapper(e.getMessage(), RestWrapper.ERROR);
         }
         return restWrapper;
     }

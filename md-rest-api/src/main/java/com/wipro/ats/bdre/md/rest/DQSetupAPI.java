@@ -39,6 +39,7 @@ import java.util.List;
 
 public class DQSetupAPI extends MetadataAPIBase {
     private static final Logger LOGGER = Logger.getLogger(DQSetupAPI.class);
+    private static final String RECORDWITHID = "Record with ID:";
 
     /**
      * This method calls prc DeleteDQSetup and deletes a record corresponding to the
@@ -51,19 +52,18 @@ public class DQSetupAPI extends MetadataAPIBase {
     DataQualityDAO dataQualityDAO;
 
     @RequestMapping(value = "/{id}", method = RequestMethod.DELETE)
-    public
-    @ResponseBody
+    @ResponseBody public
     RestWrapper delete(@PathVariable("id") Integer processId, Principal principal) {
         RestWrapper restWrapper = null;
         try {
             DQSetupInfo dqSetupInfo = new DQSetupInfo();
             dqSetupInfo.setSubProcessId(processId);
-            //s.delete("call_procedures.DeleteDQSetup",dqSetupInfo);
             dataQualityDAO.deleteDQSetup(processId);
             restWrapper = new RestWrapper(null, RestWrapper.OK);
-            LOGGER.info("Record with ID:" + processId + " deleted from DQSetup by User:" + principal.getName());
+            LOGGER.info(RECORDWITHID + processId + " deleted from DQSetup by User:" + principal.getName());
         } catch (Exception e) {
-            restWrapper = new RestWrapper(e.getMessage(), RestWrapper.ERROR);
+            LOGGER.error("error occurred while uploading file", e);
+            return new RestWrapper(e.getMessage(), RestWrapper.ERROR);
         }
 
 
@@ -77,9 +77,7 @@ public class DQSetupAPI extends MetadataAPIBase {
      * @return restWrapper List of instances of DQSetup.
      */
     @RequestMapping(value = {"", "/"}, method = RequestMethod.GET)
-
-    public
-    @ResponseBody
+    @ResponseBody public
     RestWrapper list(@RequestParam(value = "page", defaultValue = "0") int startPage,
                      @RequestParam(value = "size", defaultValue = "10") int pageSize, Principal principal) {
         RestWrapper restWrapper = null;
@@ -87,10 +85,8 @@ public class DQSetupAPI extends MetadataAPIBase {
             DQSetupInfo dqSetupInfo = new DQSetupInfo();
             dqSetupInfo.setPage(startPage);
             dqSetupInfo.setPageSize(pageSize);
-            LOGGER.debug("Listing DQ properties on page  " + dqSetupInfo.getPage());
-            // List<Properties> propertiesList = s.selectList("call_procedures.ListDQSetup", dqSetupInfo);
+            LOGGER.debug("Listing DQ properties on page" + dqSetupInfo.getPage());
             List<Properties> propertiesList = dataQualityDAO.listDQSetup(startPage, pageSize);
-            LOGGER.debug("properties contain" + propertiesList.size() + "objects");
             DQSetupInfo dqSetup = new DQSetupInfo();
             List<DQSetupInfo> dqSetups = new ArrayList<DQSetupInfo>();
             int count = 0;
@@ -102,57 +98,45 @@ public class DQSetupAPI extends MetadataAPIBase {
                 }
                 if (properties.getKey().equals(dqSetup.getRulesUserName())) {
                     dqSetups.get(i).setRulesUserNameValue(properties.getValue());
-                    LOGGER.debug("UN count :" + dqSetups.get(i).getRulesUserNameValue());
                     count++;
-                    LOGGER.debug("UN count :" + count);
                 } else if (properties.getKey().equals(dqSetup.getRulesPassword())) {
                     dqSetups.get(i).setRulesPasswordValue(properties.getValue());
-                    LOGGER.debug("UN count :" + dqSetups.get(i).getRulesPasswordValue());
                     count++;
-                    LOGGER.debug("pass count :" + count);
 
                 } else if (properties.getKey().equals(dqSetup.getRulesPackage())) {
                     dqSetups.get(i).setRulesPackageValue(properties.getValue());
-                    LOGGER.debug("UN count :" + dqSetups.get(i).getRulesPackageValue());
                     count++;
-                    LOGGER.debug("package count :" + count);
 
                 } else if (properties.getKey().equals(dqSetup.getFileDelimiterRegex())) {
                     dqSetups.get(i).setFileDelimiterRegexValue(properties.getValue());
-                    LOGGER.debug("UN count :" + dqSetups.get(i).getFileDelimiterRegexValue());
                     count++;
-                    LOGGER.debug("delimiter count :" + count);
 
                 } else if (properties.getKey().equals(dqSetup.getMinPassThresholdPercent())) {
                     dqSetups.get(i).setMinPassThresholdPercentValue(properties.getValue());
-                    LOGGER.debug("UN count :" + dqSetups.get(i).getMinPassThresholdPercentValue());
                     count++;
-                    LOGGER.debug("threshold count :" + count);
 
                 } else if (properties.getKey().equals(dqSetup.getProcessName())) {
                     dqSetups.get(i).setProcessName(properties.getValue());
-                    LOGGER.debug("process name :" + dqSetups.get(i).getProcessName());
 
                 }
                 //ensuring each process should have 5 properties each
                 if (count % 5 == 0) {
-                    LOGGER.debug("The value of if statement is" + count);
+                    LOGGER.debug("The value of if statement is:" + count);
                     //adding common properties
                     dqSetups.get(i).setDescription(properties.getDescription());
                     dqSetups.get(i).setParentProcessId(properties.getParentProcessId());
                     dqSetups.get(i).setSubProcessId(properties.getSubProcessId());
                     dqSetups.get(i).setCounter(properties.getCounter());
                     LOGGER.debug("parentprocess id is" + dqSetups.get(i).getSubProcessId() + "," + dqSetups.get(i).getParentProcessId());
-                    //  LOGGER.debug("values of dqSetup are" + dqSetups.get(i).getRulesUserNameValue() + dqSetups.get(i).getRulesPasswordValue() + dqSetups.get(i).getRulesPackageValue() + dqSetups.get(i).getProcessId());
                     i++;
                 }
 
             }
-            //LOGGER.debug("Listed DQ properties on  " + dqSetups.get(0).getCounter());
             restWrapper = new RestWrapper(dqSetups, RestWrapper.OK);
             LOGGER.info("All records listed from DQSetup by User:" + principal.getName());
         } catch (Exception e) {
-            restWrapper = new RestWrapper(e.getMessage(), RestWrapper.ERROR);
+            LOGGER.error("error occurred while uploading file", e);
+            return new RestWrapper(e.getMessage(), RestWrapper.ERROR);
         }
         return restWrapper;
     }
@@ -165,8 +149,7 @@ public class DQSetupAPI extends MetadataAPIBase {
      * @return restWrapper Instance of DQSetup.
      */
     @RequestMapping(value = {"", "/"}, method = RequestMethod.PUT)
-    public
-    @ResponseBody
+    @ResponseBody public
     RestWrapper insert(@ModelAttribute("dqsetup")
                        @Valid DQSetupInfo dqSetupInfo, BindingResult bindingResult, Principal principal) {
         RestWrapper restWrapper = null;
@@ -185,8 +168,7 @@ public class DQSetupAPI extends MetadataAPIBase {
             return restWrapper;
         }
         try {
-            LOGGER.debug("Listing DQ properties on page  " + dqSetupInfo.getPage());
-            //List<Properties> propertiesList = s.selectList("call_procedures.InsertDQSetup", dqSetupInfo);
+            LOGGER.debug("Listing DQ properties on page " + dqSetupInfo.getPage());
             List<Properties> propertiesList = dataQualityDAO.insertDQSetup(dqSetupInfo);
             LOGGER.debug("properties contain" + propertiesList.size() + "objects");
             DQSetupInfo dqSetup = new DQSetupInfo();
@@ -200,40 +182,29 @@ public class DQSetupAPI extends MetadataAPIBase {
                 }
                 if (properties.getKey().equals(dqSetup.getRulesUserName())) {
                     dqSetups.get(i).setRulesUserNameValue(properties.getValue());
-                    LOGGER.debug("UN count :" + dqSetups.get(i).getRulesUserNameValue());
                     count++;
-                    LOGGER.debug("UN count :" + count);
                 } else if (properties.getKey().equals(dqSetup.getRulesPassword())) {
                     dqSetups.get(i).setRulesPasswordValue(properties.getValue());
-                    LOGGER.debug("pass count :" + dqSetups.get(i).getRulesPasswordValue());
                     count++;
-                    LOGGER.debug("pass count :" + count);
 
                 } else if (properties.getKey().equals(dqSetup.getRulesPackage())) {
                     dqSetups.get(i).setRulesPackageValue(properties.getValue());
-                    LOGGER.debug("package count :" + dqSetups.get(i).getRulesPackageValue());
                     count++;
-                    LOGGER.debug("package count :" + count);
 
                 } else if (properties.getKey().equals(dqSetup.getFileDelimiterRegex())) {
                     dqSetups.get(i).setFileDelimiterRegexValue(properties.getValue());
-                    LOGGER.debug("delimiter count :" + dqSetups.get(i).getFileDelimiterRegexValue());
                     count++;
-                    LOGGER.debug("delimiter count :" + count);
 
                 } else if (properties.getKey().equals(dqSetup.getMinPassThresholdPercent())) {
                     dqSetups.get(i).setMinPassThresholdPercentValue(properties.getValue());
-                    LOGGER.debug("threshold count :" + dqSetups.get(i).getMinPassThresholdPercentValue());
                     count++;
-                    LOGGER.debug("threshold count :" + count);
 
                 }else if (properties.getKey().equals(dqSetup.getProcessName())) {
                     dqSetups.get(i).setProcessName(properties.getValue());
-                    LOGGER.debug("process name :" + dqSetups.get(i).getProcessName());
 
                 }
                 if (count % 5 == 0) {
-                    LOGGER.debug("The value of if statement is" + count);
+                    LOGGER.debug("The value of if statement is :" + count);
                     LOGGER.debug("properties has process id as ppid" + properties.getParentProcessId());
                     //adding common properties
                     dqSetups.get(i).setDescription(properties.getDescription());
@@ -246,9 +217,10 @@ public class DQSetupAPI extends MetadataAPIBase {
 
             }
             restWrapper = new RestWrapper(dqSetups, RestWrapper.OK);
-            LOGGER.info("Record with ID:" + dqSetupInfo.getParentProcessId() + " inserted in DQSetup by User:" + principal.getName() + dqSetupInfo);
-        } catch (Exception e) {
-            restWrapper = new RestWrapper(e.getMessage(), RestWrapper.ERROR);
+            LOGGER.info(RECORDWITHID + dqSetupInfo.getParentProcessId() + " inserted in DQSetup by User:" + principal.getName() + dqSetupInfo);
+        }catch (Exception e) {
+            LOGGER.error("error occurred while uploading file", e);
+            return new RestWrapper(e.getMessage(), RestWrapper.ERROR);
         }
         return restWrapper;
     }
@@ -262,8 +234,7 @@ public class DQSetupAPI extends MetadataAPIBase {
      * @return restWrapper Updated instance of DQSetup instance.
      */
     @RequestMapping(value = {"/", ""}, method = RequestMethod.POST)
-    public
-    @ResponseBody
+    @ResponseBody public
     RestWrapper update(@ModelAttribute("dqsetup")
                        @Valid DQSetupInfo dqSetupInfo, BindingResult bindingResult, Principal principal) {
         RestWrapper restWrapper = null;
@@ -283,7 +254,6 @@ public class DQSetupAPI extends MetadataAPIBase {
         }
         try {
             LOGGER.debug("Listing DQ properties on page  " + dqSetupInfo.getPage());
-            // List<Properties> propertiesList = s.selectList("call_procedures.UpdateDQSetup", dqSetupInfo);
             List<Properties> propertiesList = dataQualityDAO.updateDQSetup(dqSetupInfo);
             LOGGER.debug("properties contain" + propertiesList.size() + "objects");
             DQSetupInfo dqSetup = new DQSetupInfo();
@@ -297,55 +267,44 @@ public class DQSetupAPI extends MetadataAPIBase {
                 }
                 if (properties.getKey().equals(dqSetup.getRulesUserName())) {
                     dqSetups.get(i).setRulesUserNameValue(properties.getValue());
-                    LOGGER.debug("UN count :" + dqSetups.get(i).getRulesUserNameValue());
                     count++;
-                    LOGGER.debug("UN count :" + count);
                 } else if (properties.getKey().equals(dqSetup.getRulesPassword())) {
                     dqSetups.get(i).setRulesPasswordValue(properties.getValue());
-                    LOGGER.debug("UN count :" + dqSetups.get(i).getRulesPasswordValue());
                     count++;
-                    LOGGER.debug("pass count :" + count);
 
                 } else if (properties.getKey().equals(dqSetup.getRulesPackage())) {
                     dqSetups.get(i).setRulesPackageValue(properties.getValue());
-                    LOGGER.debug("UN count :" + dqSetups.get(i).getRulesPackageValue());
                     count++;
-                    LOGGER.debug("package count :" + count);
 
                 } else if (properties.getKey().equals(dqSetup.getFileDelimiterRegex())) {
                     dqSetups.get(i).setFileDelimiterRegexValue(properties.getValue());
-                    LOGGER.debug("UN count :" + dqSetups.get(i).getFileDelimiterRegexValue());
                     count++;
-                    LOGGER.debug("delimiter count :" + count);
 
                 } else if (properties.getKey().equals(dqSetup.getMinPassThresholdPercent())) {
                     dqSetups.get(i).setMinPassThresholdPercentValue(properties.getValue());
-                    LOGGER.debug("UN count :" + dqSetups.get(i).getMinPassThresholdPercentValue());
                     count++;
-                    LOGGER.debug("threshold count :" + count);
 
                 }else if (properties.getKey().equals(dqSetup.getProcessName())) {
                     dqSetups.get(i).setProcessName(properties.getValue());
-                    LOGGER.debug("process name :" + dqSetups.get(i).getProcessName());
 
 
                 }
                 if (count % 5 == 0) {
-                    LOGGER.debug("The value of if statement is" + count);
+                    LOGGER.debug("The value of if statement is : " + count);
                     //adding common properties
                     dqSetups.get(i).setDescription(properties.getDescription());
                     dqSetups.get(i).setParentProcessId(properties.getParentProcessId());
                     dqSetups.get(i).setSubProcessId(properties.getSubProcessId());
                     dqSetups.get(i).setCounter(properties.getCounter());
-                    //      LOGGER.debug("values of dqSetup are" + dqSetups.get(i).getRulesUserNameValue() + dqSetups.get(i).getRulesPasswordValue() + dqSetups.get(i).getRulesPackageValue() + dqSetups.get(i).getProcessId());
                     i++;
                 }
 
             }
             restWrapper = new RestWrapper(dqSetups, RestWrapper.OK);
-            LOGGER.info("Record with ID:" + dqSetupInfo.getParentProcessId() + " updated in DQSetup by User:" + principal.getName() + dqSetupInfo);
+            LOGGER.info(RECORDWITHID + dqSetupInfo.getParentProcessId() + " updated in DQSetup by User:" + principal.getName() + dqSetupInfo);
         } catch (Exception e) {
-            restWrapper = new RestWrapper(e.getMessage(), RestWrapper.ERROR);
+            LOGGER.error("error occurred while uploading file", e);
+            return new RestWrapper(e.getMessage(), RestWrapper.ERROR);
         }
         return restWrapper;
     }

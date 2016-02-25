@@ -14,6 +14,7 @@
 
 package com.wipro.ats.bdre.md.rest;
 
+import com.wipro.ats.bdre.exception.MetadataException;
 import com.wipro.ats.bdre.md.api.base.MetadataAPIBase;
 import com.wipro.ats.bdre.md.beans.table.BatchConsumpQueue;
 import com.wipro.ats.bdre.md.dao.BatchConsumpQueueDAO;
@@ -24,7 +25,6 @@ import com.wipro.ats.bdre.md.rest.util.DateConverter;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.ModelMap;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.*;
@@ -43,6 +43,7 @@ import java.util.List;
 
 public class BatchConsumpQueueAPI extends MetadataAPIBase {
     private static final Logger LOGGER = Logger.getLogger(BatchConsumpQueueAPI.class);
+    private static final String RECORDWITHID = "Record with ID:";
     @Autowired
     BatchConsumpQueueDAO batchConsumpQueueDAO;
 
@@ -54,8 +55,7 @@ public class BatchConsumpQueueAPI extends MetadataAPIBase {
      * @return restWrapper returns an instance of BatchConsumpQueue object.
      */
     @RequestMapping(value = "/{id}", method = RequestMethod.GET)
-    public
-    @ResponseBody
+    @ResponseBody public
     RestWrapper get(
             @PathVariable("id") Long queueId, Principal principal
     ) {
@@ -78,7 +78,6 @@ public class BatchConsumpQueueAPI extends MetadataAPIBase {
                 batchConsumpQueue.setBatchMarking(jpaBcq.getBatchMarking());
                 batchConsumpQueue.setBatchState(jpaBcq.getBatchStatus().getBatchStateId());
             }
-            //batchConsumpQueue = s.selectOne("call_procedures.GetBatchConsumpQueue", batchConsumpQueue);
             if (batchConsumpQueue.getEndTs() != null) {
                 batchConsumpQueue.setTableEndTS(DateConverter.dateToString(batchConsumpQueue.getEndTs()));
             }
@@ -89,8 +88,9 @@ public class BatchConsumpQueueAPI extends MetadataAPIBase {
             batchConsumpQueue.setTableInsertTS(DateConverter.dateToString(batchConsumpQueue.getInsertTs()));
 
             restWrapper = new RestWrapper(batchConsumpQueue, RestWrapper.OK);
-            LOGGER.info("Record with ID:" + queueId + " selected from BatchConsumpQueue by User:" + principal.getName());
-        } catch (Exception e) {
+            LOGGER.info(RECORDWITHID + queueId + " selected from BatchConsumpQueue by User:" + principal.getName());
+        } catch (MetadataException e) {
+            LOGGER.error(e);
             restWrapper = new RestWrapper(e.getMessage(), RestWrapper.ERROR);
         }
         return restWrapper;
@@ -101,24 +101,20 @@ public class BatchConsumpQueueAPI extends MetadataAPIBase {
      * passed queueId.
      *
      * @param queueId
-     * @param model
      * @return nothing.
      */
     @RequestMapping(value = "/{id}", method = RequestMethod.DELETE)
-    public
-    @ResponseBody
+    @ResponseBody public
     RestWrapper delete(
-            @PathVariable("id") Long queueId, Principal principal,
-            ModelMap model) {
+            @PathVariable("id") Long queueId, Principal principal) {
 
         RestWrapper restWrapper = null;
         try {
             batchConsumpQueueDAO.delete(queueId);
-            // s.delete("call_procedures.DeleteBatchConsumpQueue", batchConsumpQueue);
-
             restWrapper = new RestWrapper(null, RestWrapper.OK);
-            LOGGER.info("Record with ID:" + queueId + " deleted from BatchConsumpQueue by User:" + principal.getName());
-        } catch (Exception e) {
+            LOGGER.info(RECORDWITHID + queueId + " deleted from BatchConsumpQueue by User:" + principal.getName());
+        } catch (MetadataException e) {
+            LOGGER.error(e);
             restWrapper = new RestWrapper(e.getMessage(), RestWrapper.ERROR);
         }
         return restWrapper;
@@ -132,9 +128,7 @@ public class BatchConsumpQueueAPI extends MetadataAPIBase {
      * @return restWrapper returns a list of instances of BatchConsumpQueue object.
      */
     @RequestMapping(value = {"", "/"}, method = RequestMethod.GET)
-
-    public
-    @ResponseBody
+    @ResponseBody public
     RestWrapper list(@RequestParam(value = "page", defaultValue = "0") int startPage,
                      @RequestParam(value = "size", defaultValue = "10") int pageSize, Principal principal) {
         RestWrapper restWrapper = null;
@@ -162,9 +156,6 @@ public class BatchConsumpQueueAPI extends MetadataAPIBase {
                 LOGGER.info(batchConsumpQueue.getCounter());
                 batchConsumpQueues.add(batchConsumpQueue);
             }
-
-            // List<BatchConsumpQueue> batchConsumpQueues = s.selectList("call_procedures.GetBatchConsumpQueues", batchConsumpQueue);
-
             for (BatchConsumpQueue bcq : batchConsumpQueues) {
                 if (bcq.getEndTs() != null) {
                     bcq.setTableEndTS(DateConverter.dateToString(bcq.getEndTs()));
@@ -177,7 +168,8 @@ public class BatchConsumpQueueAPI extends MetadataAPIBase {
             }
             restWrapper = new RestWrapper(batchConsumpQueues, RestWrapper.OK);
             LOGGER.info("All records listed from BatchConsumpQueue by User:" + principal.getName());
-        } catch (Exception e) {
+        } catch (MetadataException e) {
+            LOGGER.error(e);
             restWrapper = new RestWrapper(e.getMessage(), RestWrapper.ERROR);
         }
         return restWrapper;
@@ -193,8 +185,7 @@ public class BatchConsumpQueueAPI extends MetadataAPIBase {
      * @return restWrapper Updated instance of BatchConsumpQueue.
      */
     @RequestMapping(value = {"/", ""}, method = RequestMethod.POST)
-    public
-    @ResponseBody
+    @ResponseBody public
     RestWrapper update(@ModelAttribute("bcq")
                        @Valid BatchConsumpQueue batchConsumpQueue, BindingResult bindingResult, Principal principal) {
         RestWrapper restWrapper = null;
@@ -246,15 +237,14 @@ public class BatchConsumpQueueAPI extends MetadataAPIBase {
             jpaBcq.setBatchStatus(batchStatus);
             jpaBcq.setBatchMarking(batchConsumpQueue.getBatchMarking());
             batchConsumpQueueDAO.update(jpaBcq);
-
-            //BatchConsumpQueue batchConsumpQueues = s.selectOne("call_procedures.UpdateBatchConsumpQueue", batchConsumpQueue);
             batchConsumpQueue.setTableStartTS(DateConverter.dateToString(batchConsumpQueue.getStartTs()));
             batchConsumpQueue.setTableEndTS(DateConverter.dateToString(batchConsumpQueue.getEndTs()));
             batchConsumpQueue.setTableInsertTS(DateConverter.dateToString(batchConsumpQueue.getInsertTs()));
 
             restWrapper = new RestWrapper(batchConsumpQueue, RestWrapper.OK);
-            LOGGER.info("Record with ID:" + batchConsumpQueue.getQueueId() + " updated in BatchConsumpQueue by User:" + principal.getName() + batchConsumpQueue);
-        } catch (Exception e) {
+            LOGGER.info(RECORDWITHID + batchConsumpQueue.getQueueId() + " updated in BatchConsumpQueue by User:" + principal.getName() + batchConsumpQueue);
+        } catch (MetadataException e) {
+            LOGGER.error(e);
             restWrapper = new RestWrapper(e.getMessage(), RestWrapper.ERROR);
         }
         return restWrapper;
@@ -269,8 +259,7 @@ public class BatchConsumpQueueAPI extends MetadataAPIBase {
      * @return restWrapper added instance of BatchConsumpQueue.
      */
     @RequestMapping(value = {"/", ""}, method = RequestMethod.PUT)
-    public
-    @ResponseBody
+    @ResponseBody public
     RestWrapper insert(@ModelAttribute("bcq")
                        @Valid BatchConsumpQueue batchConsumpQueue, BindingResult bindingResult, Principal principal) {
 
@@ -322,15 +311,15 @@ public class BatchConsumpQueueAPI extends MetadataAPIBase {
             jpaBcq.setBatchMarking(batchConsumpQueue.getBatchMarking());
             Long queueId = batchConsumpQueueDAO.insert(jpaBcq);
             jpaBcq.setQueueId(queueId);
-            // BatchConsumpQueue batchConsumpQueues = s.selectOne("call_procedures.InsertBatchConsumpQueue", batchConsumpQueue);
 
             batchConsumpQueue.setTableStartTS(DateConverter.dateToString(batchConsumpQueue.getStartTs()));
             batchConsumpQueue.setTableEndTS(DateConverter.dateToString(batchConsumpQueue.getEndTs()));
             batchConsumpQueue.setTableInsertTS(DateConverter.dateToString(batchConsumpQueue.getInsertTs()));
 
             restWrapper = new RestWrapper(batchConsumpQueue, RestWrapper.OK);
-            LOGGER.info("Record with ID:" + batchConsumpQueue.getQueueId() + " inserted in BatchConsumpQueue by User:" + principal.getName() + batchConsumpQueue);
-        } catch (Exception e) {
+            LOGGER.info(RECORDWITHID + batchConsumpQueue.getQueueId() + " inserted in BatchConsumpQueue by User:" + principal.getName() + batchConsumpQueue);
+        } catch (MetadataException e) {
+            LOGGER.error(e);
             restWrapper = new RestWrapper(e.getMessage(), RestWrapper.ERROR);
         }
         return restWrapper;
