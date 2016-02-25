@@ -55,7 +55,7 @@ public class CommonDQFunctions {
                 return num;
             else return "Integer not in range";
         } catch (NumberFormatException ex) {
-            System.out.println("Not a valid integer!");
+            LOGGER.info("Not a valid integer!");
             return "null";
         }
     }
@@ -68,7 +68,7 @@ public class CommonDQFunctions {
                 return num;
             else return "Long number not in range";
         } catch (NumberFormatException ex) {
-            System.out.println("Not a valid long number!");
+            LOGGER.info("Not a valid long number!");
             return "null";
         }
     }
