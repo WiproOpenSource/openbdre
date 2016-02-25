@@ -59,15 +59,12 @@ public class JAASUserPrincipal implements Principal, Serializable {
     public boolean equals(Object obj) {
         if (this == obj)
             return true;
-        if (obj == null)
-            return false;
-        if (getClass() != obj.getClass())
+        if (obj == null || getClass() != obj.getClass())
             return false;
         JAASUserPrincipal other = (JAASUserPrincipal) obj;
-        if (name == null) {
-            if (other.name != null)
-                return false;
-        } else if (!name.equals(other.name))
+        if (name == null && other.name != null)
+            return false;
+         else if (!name.equals(other.name))
             return false;
 
         return true;
