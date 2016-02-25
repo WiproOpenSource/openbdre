@@ -115,6 +115,7 @@ public class FlumePropertiesAPI extends MetadataAPIBase {
             process.setTableEditTS(DateConverter.dateToString(process.getEditTS()));
         }
         restWrapper = new RestWrapper(tableProcessList, RestWrapper.OK);
+        LOGGER.info("Process and properties inserted for Flume Process by " + principal.getName());
         return restWrapper;
     }
 
@@ -148,8 +149,8 @@ public class FlumePropertiesAPI extends MetadataAPIBase {
         } catch (Exception e) {
             LOGGER.error("error occcurred : " + e.getMessage());
             restWrapper = new RestWrapper(e.getMessage(), RestWrapper.ERROR);
+            throw e;
         }
-        LOGGER.info("Process and properties inserted for Flume Process by " + principal.getName());
         return restWrapper;
     }
 
