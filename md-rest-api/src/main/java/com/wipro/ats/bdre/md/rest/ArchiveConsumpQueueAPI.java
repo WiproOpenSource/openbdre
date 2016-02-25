@@ -42,7 +42,6 @@ import java.util.List;
 
 public class ArchiveConsumpQueueAPI extends MetadataAPIBase {
     private static final Logger LOGGER = Logger.getLogger(ArchiveConsumpQueueAPI.class);
-    private static final String RECORDWITHID = "Record with ID:";
     @Autowired
     ArchiveConsumpQueueDAO archiveConsumpQueueDAO;
 
@@ -54,7 +53,8 @@ public class ArchiveConsumpQueueAPI extends MetadataAPIBase {
      * @return restWrapper returns an instance of ArchiveConsumpQueue object.
      */
     @RequestMapping(value = "/{id}", method = RequestMethod.GET)
-    @ResponseBody public
+    public
+    @ResponseBody
     RestWrapper get(
             @PathVariable("id") Long queueId, Principal principal
     ) {
@@ -84,11 +84,13 @@ public class ArchiveConsumpQueueAPI extends MetadataAPIBase {
             if (archiveConsumpQueue.getStartTs() != null) {
                 archiveConsumpQueue.setTableStartTS(DateConverter.dateToString(archiveConsumpQueue.getStartTs()));
             }
+
+            // archiveConsumpQueue = s.selectOne("call_procedures.GetArchiveConsumpQueue", archiveConsumpQueue);
             archiveConsumpQueue.setTableInsertTS(DateConverter.dateToString(archiveConsumpQueue.getInsertTs()));
 
 
             restWrapper = new RestWrapper(archiveConsumpQueue, RestWrapper.OK);
-            LOGGER.info(RECORDWITHID + queueId + " selected from ArchiveConsumpQueue by User:" + principal.getName());
+            LOGGER.info("Record with ID:" + queueId + " selected from ArchiveConsumpQueue by User:" + principal.getName());
         } catch (Exception e) {
 
             restWrapper = new RestWrapper(e.getMessage(), RestWrapper.ERROR);
@@ -116,7 +118,7 @@ public class ArchiveConsumpQueueAPI extends MetadataAPIBase {
             //s.delete("call_procedures.DeleteArchiveConsumpQueue", archiveConsumpQueue);
 
             restWrapper = new RestWrapper(null, RestWrapper.OK);
-            LOGGER.info(RECORDWITHID + queueId + " deleted from ArchiveConsumpQueue by User:" + principal.getName());
+            LOGGER.info("Record with ID:" + queueId + " deleted from ArchiveConsumpQueue by User:" + principal.getName());
         } catch (Exception e) {
 
             restWrapper = new RestWrapper(e.getMessage(), RestWrapper.ERROR);
@@ -243,7 +245,7 @@ public class ArchiveConsumpQueueAPI extends MetadataAPIBase {
             archiveConsumpQueue.setTableInsertTS(DateConverter.dateToString(archiveConsumpQueue.getInsertTs()));
 
             restWrapper = new RestWrapper(archiveConsumpQueue, RestWrapper.OK);
-            LOGGER.info(RECORDWITHID + archiveConsumpQueue.getQueueId() + " updated from ArchiveConsumpQueue by User:" + principal.getName() + archiveConsumpQueue);
+            LOGGER.info("Record with ID:" + archiveConsumpQueue.getQueueId() + " updated from ArchiveConsumpQueue by User:" + principal.getName() + archiveConsumpQueue);
         } catch (Exception e) {
             restWrapper = new RestWrapper(e.getMessage(), RestWrapper.ERROR);
         }
@@ -317,7 +319,7 @@ public class ArchiveConsumpQueueAPI extends MetadataAPIBase {
             archiveConsumpQueue.setTableInsertTS(DateConverter.dateToString(archiveConsumpQueue.getInsertTs()));
 
             restWrapper = new RestWrapper(archiveConsumpQueue, RestWrapper.OK);
-            LOGGER.info(RECORDWITHID + archiveConsumpQueue.getQueueId() + " inserted into ArchiveConsumpQueue by User:" + principal.getName() + archiveConsumpQueue);
+            LOGGER.info("Record with ID:" + archiveConsumpQueue.getQueueId() + " inserted into ArchiveConsumpQueue by User:" + principal.getName() + archiveConsumpQueue);
         } catch (Exception e) {
             restWrapper = new RestWrapper(e.getMessage(), RestWrapper.ERROR);
         }
