@@ -37,19 +37,23 @@ public class RangeInputSplit extends InputSplit implements Writable {
         rowCount = length;
     }
 
+    @Override
     public long getLength() throws IOException {
         return 0;
     }
 
+    @Override
     public String[] getLocations() throws IOException {
         return new String[]{};
     }
 
+    @Override
     public void readFields(DataInput in) throws IOException {
         firstRow = WritableUtils.readVLong(in);
         rowCount = WritableUtils.readVLong(in);
     }
 
+    @Override
     public void write(DataOutput out) throws IOException {
         WritableUtils.writeVLong(out, firstRow);
         WritableUtils.writeVLong(out, rowCount);
