@@ -103,7 +103,7 @@ public class LineageMain implements NodeProcessor {
 		Dispatcher disp = new DefaultRuleDispatcher(this, rules, null);
 		GraphWalker ogw = new DefaultGraphWalker(disp);
 		// Create a list of topop nodes
-		ArrayList<org.apache.hadoop.hive.ql.lib.Node> topNodes = new ArrayList<org.apache.hadoop.hive.ql.lib.Node>();
+		List<org.apache.hadoop.hive.ql.lib.Node> topNodes = new ArrayList<org.apache.hadoop.hive.ql.lib.Node>();
 		topNodes.add(tree);
 		ogw.startWalking(topNodes, null);
 	}
@@ -362,10 +362,9 @@ if(col != null && colName != null) {
 
 			if (nodeSelExpr.getChild(j) != null && nodeSelExpr.getChild(j).getType() == HiveParser.TOK_TABLE_OR_COL) {
 				// if "." is present one step up then it is a table else a column
-				String tableName = null;
+
 				String colName = null;
 				if (nodeSelExpr.getChild(j).getParent().getType() == HiveParser.DOT) {
-					tableName = nodeSelExpr.getChild(j).getChild(0).toString();
 					colName = nodeSelExpr.getChild(j+1).toString();
 				} else {
 					colName = nodeSelExpr.getChild(j).getChild(0).toString();
