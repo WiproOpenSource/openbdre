@@ -48,12 +48,14 @@ public class FlumeConfGeneratorMain extends BaseStructure {
         // Getting properties related with flume action for every process
         StringBuilder addFlumeProperties = new StringBuilder();
         for (ProcessInfo processInfo : processInfos) {
-            if (processInfo.getParentProcessId() != 0) {
+            if (processInfo.getParentProcessId() == 0) {
+                continue;
+            }
                 GetProperties getProperties = new GetProperties();
                 java.util.Properties flumeProperties = getProperties.getProperties(processInfo.getProcessId().toString(), "flume");
                 Enumeration e = flumeProperties.propertyNames();
 
-                if (flumeProperties.size() != 0) {
+                if (!flumeProperties.isEmpty()) {
                     while (e.hasMoreElements()) {
                         String key = (String) e.nextElement();
                         addFlumeProperties.append(key + "=" + flumeProperties.get(key) + "\n");
@@ -63,7 +65,7 @@ public class FlumeConfGeneratorMain extends BaseStructure {
 
                 }
             }
-        }
+
         outputFile = "flume-" + processInfos.get(0).getProcessId() + ".conf";
         PrintWriter confOut = new PrintWriter(outputFile);
         confOut.println(addFlumeProperties);

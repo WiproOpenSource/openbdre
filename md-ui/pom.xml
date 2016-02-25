@@ -235,108 +235,108 @@
                         </goals>
                         <configuration>
                             <target>
-                                <copy todir="${project.basedir}/src/main/webapp/js" flatten="true">
+                                <copy todir="${project.basedir}/src/main/webapp/js" flatten="true" overwrite="true">
                                     <fileset dir="${project.build.directory}/js-dependencies" includes="**/*.js"
                                              excludes="**/viz.js,**/localization/jquery.jtable.*.js,**/external/json2*js,**/extensions/jquery.jtable.aspnet*js"/>
                                 </copy>
-                                <copy todir="${project.basedir}/src/main/webapp/js/graph" flatten="true">
+                                <copy todir="${project.basedir}/src/main/webapp/js/graph" flatten="true" overwrite="true">
                                     <fileset dir="${project.build.directory}/js-dependencies" includes="**/viz.js"/>
                                 </copy>
-                                <copy todir="${project.basedir}/src/main/webapp/js/localization" flatten="true">
+                                <copy todir="${project.basedir}/src/main/webapp/js/localization" flatten="true" overwrite="true">
                                     <fileset dir="${project.build.directory}/js-dependencies"
                                              includes="**/localization/jquery.jtable*js"/>
                                 </copy>
-                                <copy todir="${project.basedir}/src/main/webapp/js/external" flatten="true">
+                                <copy todir="${project.basedir}/src/main/webapp/js/external" flatten="true" overwrite="true">
                                     <fileset dir="${project.build.directory}/js-dependencies"
                                              includes="**/external/json2*js"/>
                                 </copy>
-                                <copy todir="${project.basedir}/src/main/webapp/js/extensions" flatten="true">
+                                <copy todir="${project.basedir}/src/main/webapp/js/extensions" flatten="true" overwrite="true">
                                     <fileset dir="${project.build.directory}/js-dependencies"
                                              includes="**/extensions/jquery.jtable.aspnet*js"/>
                                 </copy>
-                                <copy todir="${project.basedir}/src/main/webapp/js/themes/basic" flatten="true">
+                                <copy todir="${project.basedir}/src/main/webapp/js/themes/basic" flatten="true" overwrite="true">
                                     <fileset dir="${project.build.directory}/js-dependencies"
                                              includes="**/themes/basic/*"/>
                                 </copy>
-                                <copy todir="${project.basedir}/src/main/webapp/js/themes/jqueryui" flatten="true">
+                                <copy todir="${project.basedir}/src/main/webapp/js/themes/jqueryui" flatten="true" overwrite="true">
                                     <fileset dir="${project.build.directory}/js-dependencies"
                                              includes="**/themes/jqueryui/*"/>
                                 </copy>
                                 <copy todir="${project.basedir}/src/main/webapp/js/themes/lightcolor/blue"
-                                      flatten="true">
+                                      flatten="true" overwrite="true">
                                     <fileset dir="${project.build.directory}/js-dependencies"
                                              includes="**/themes/lightcolor/blue/*"/>
                                 </copy>
                                 <copy todir="${project.basedir}/src/main/webapp/js/themes/lightcolor/gray"
-                                      flatten="true">
+                                      flatten="true" overwrite="true">
                                     <fileset dir="${project.build.directory}/js-dependencies"
                                              includes="**/themes/lightcolor/gray/*"/>
                                 </copy>
                                 <copy todir="${project.basedir}/src/main/webapp/js/themes/lightcolor/green"
-                                      flatten="true">
+                                      flatten="true" overwrite="true">
                                     <fileset dir="${project.build.directory}/js-dependencies"
                                              includes="**/themes/lightcolor/green/*"/>
                                 </copy>
                                 <copy todir="${project.basedir}/src/main/webapp/js/themes/lightcolor/orange"
-                                      flatten="true">
+                                      flatten="true" overwrite="true">
                                     <fileset dir="${project.build.directory}/js-dependencies"
                                              includes="**/themes/lightcolor/orange/*"/>
                                 </copy>
                                 <copy todir="${project.basedir}/src/main/webapp/js/themes/lightcolor/red"
-                                      flatten="true">
+                                      flatten="true" overwrite="true">
                                     <fileset dir="${project.build.directory}/js-dependencies"
                                              includes="**/themes/lightcolor/red/*"/>
                                 </copy>
-                                <copy todir="${project.basedir}/src/main/webapp/css/css/" flatten="true">
+                                <copy todir="${project.basedir}/src/main/webapp/css/css/" flatten="true" overwrite="true">
                                     <fileset dir="${project.build.directory}/js-dependencies"
                                              includes="**/bootstrap/*/css/*.css,**/bootstrap/*/css/*.map"
                                              excludes="**/bootstrap/*/css/*jsf*"/>
                                 </copy>
-                                <copy todir="${project.basedir}/src/main/webapp/css/" flatten="true">
+                                <copy todir="${project.basedir}/src/main/webapp/css/" flatten="true" overwrite="true">
                                     <fileset dir="${project.build.directory}/js-dependencies"
                                              includes="**/handsontable.full.css"/>
                                 </copy>
-                                <copy todir="${project.basedir}/src/main/webapp/css/metro/purple" flatten="true">
+                                <copy todir="${project.basedir}/src/main/webapp/css/metro/purple" flatten="true" overwrite="true">
                                     <fileset dir="${project.build.directory}/js-dependencies"
                                              includes="**/jTable/*/themes/metro/purple/*"/>
                                 </copy>
-                                <copy todir="${project.basedir}/src/main/webapp/css/metro/pink" flatten="true">
+                                <copy todir="${project.basedir}/src/main/webapp/css/metro/pink" flatten="true" overwrite="true">
                                     <fileset dir="${project.build.directory}/js-dependencies"
                                              includes="**/jTable/*/themes/metro/pink/*"/>
                                 </copy>
-                                <copy todir="${project.basedir}/src/main/webapp/css/metro/lightgray" flatten="true">
+                                <copy todir="${project.basedir}/src/main/webapp/css/metro/lightgray" flatten="true" overwrite="true">
                                     <fileset dir="${project.build.directory}/js-dependencies"
                                              includes="**/jTable/*/themes/metro/lightgray/*"/>
                                 </copy>
-                                <copy todir="${project.basedir}/src/main/webapp/css/metro/green" flatten="true">
+                                <copy todir="${project.basedir}/src/main/webapp/css/metro/green" flatten="true" overwrite="true">
                                     <fileset dir="${project.build.directory}/js-dependencies"
                                              includes="**/jTable/*/themes/metro/green/*"/>
                                 </copy>
-                                <copy todir="${project.basedir}/src/main/webapp/css/metro/darkorange" flatten="true">
+                                <copy todir="${project.basedir}/src/main/webapp/css/metro/darkorange" flatten="true" overwrite="true">
                                     <fileset dir="${project.build.directory}/js-dependencies"
                                              includes="**/jTable/*/themes/metro/darkorange/*"/>
                                 </copy>
-                                <copy todir="${project.basedir}/src/main/webapp/css/metro/darkgray" flatten="true">
+                                <copy todir="${project.basedir}/src/main/webapp/css/metro/darkgray" flatten="true" overwrite="true">
                                     <fileset dir="${project.build.directory}/js-dependencies"
                                              includes="**/jTable/*/themes/metro/darkgray/*"/>
                                 </copy>
-                                <copy todir="${project.basedir}/src/main/webapp/css/metro/crimson" flatten="true">
+                                <copy todir="${project.basedir}/src/main/webapp/css/metro/crimson" flatten="true" overwrite="true">
                                     <fileset dir="${project.build.directory}/js-dependencies"
                                              includes="**/jTable/*/themes/metro/crimson/*"/>
                                 </copy>
-                                <copy todir="${project.basedir}/src/main/webapp/css/metro/brown" flatten="true">
+                                <copy todir="${project.basedir}/src/main/webapp/css/metro/brown" flatten="true" overwrite="true">
                                     <fileset dir="${project.build.directory}/js-dependencies"
                                              includes="**/jTable/*/themes/metro/brown/*"/>
                                 </copy>
-                                <copy todir="${project.basedir}/src/main/webapp/css/metro/blue" flatten="true">
+                                <copy todir="${project.basedir}/src/main/webapp/css/metro/blue" flatten="true" overwrite="true">
                                     <fileset dir="${project.build.directory}/js-dependencies"
                                              includes="**/jTable/*/themes/metro/blue/*"/>
                                 </copy>
-                                <copy todir="${project.basedir}/src/main/webapp/css/metro" flatten="true">
+                                <copy todir="${project.basedir}/src/main/webapp/css/metro" flatten="true" overwrite="true">
                                     <fileset dir="${project.build.directory}/js-dependencies"
                                              includes="**/jTable/*/themes/metro/jtable_metro*,**/jTable/*/themes/metro/*.png"/>
                                 </copy>
-                                <copy todir="${project.basedir}/src/main/webapp/css/fonts" flatten="true">
+                                <copy todir="${project.basedir}/src/main/webapp/css/fonts" flatten="true" overwrite="true">
                                     <fileset dir="${project.build.directory}/js-dependencies"
                                              includes="**/bootstrap/*/fonts/*"/>
                                 </copy>

@@ -122,8 +122,8 @@ public class RegisterFileDAOTest {
 
         registerFileDAO.registerFile(registerFileInfo);
 
-        processDAO.delete(childProcessId);
-        processDAO.delete(parentProcessId);
+        processDAO.testDelete(childProcessId);
+        processDAO.testDelete(parentProcessId);
 
     }
 }
