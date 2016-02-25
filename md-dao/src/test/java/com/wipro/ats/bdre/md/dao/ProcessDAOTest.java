@@ -90,7 +90,7 @@ public class ProcessDAOTest {
         processDAO.update(process);
         process = processDAO.get(id);
         LOGGER.info("Updated Process Name is:" + process.getProcessName());
-        processDAO.delete(id);
+        processDAO.testDelete(id);
         LOGGER.info("Deleted process with ID:" + id);
     }
 
@@ -117,7 +117,7 @@ public class ProcessDAOTest {
     @Ignore
     @Test
     public void testDelete() throws Exception {
-        processDAO.delete(10837);
+        processDAO.testDelete(10837);
         LOGGER.info("Deleted process with ID:");
     }
 
