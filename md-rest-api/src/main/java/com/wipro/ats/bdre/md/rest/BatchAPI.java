@@ -14,6 +14,7 @@
 
 package com.wipro.ats.bdre.md.rest;
 
+import com.wipro.ats.bdre.exception.MetadataException;
 import com.wipro.ats.bdre.md.api.base.MetadataAPIBase;
 import com.wipro.ats.bdre.md.beans.table.Batch;
 import com.wipro.ats.bdre.md.dao.BatchDAO;
@@ -21,7 +22,6 @@ import com.wipro.ats.bdre.md.dao.jpa.InstanceExec;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.ModelMap;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.*;
@@ -41,6 +41,7 @@ import java.util.List;
 public class BatchAPI extends MetadataAPIBase {
 
     private static final Logger LOGGER = Logger.getLogger(BatchAPI.class);
+    private static final String RECORDWITHID = "Record with ID:";
     @Autowired
     BatchDAO batchDAO;
 
@@ -51,8 +52,7 @@ public class BatchAPI extends MetadataAPIBase {
      * @return restWrapper an instance of Batch object.
      */
     @RequestMapping(value = "/{id}", method = RequestMethod.GET)
-    public
-    @ResponseBody
+    @ResponseBody public
     RestWrapper get(
             @PathVariable("id") Long batchId, Principal principal
     ) {
@@ -68,11 +68,10 @@ public class BatchAPI extends MetadataAPIBase {
                     batch.setSourceInstanceExecId(jpaBatch.getInstanceExec().getInstanceExecId());
                 }
             }
-            // batch = s.selectOne("call_procedures.GetBatch", batch);
-
             restWrapper = new RestWrapper(batch, RestWrapper.OK);
-            LOGGER.info("Record with ID:" + batchId + " selected from Batch by User:" + principal.getName());
-        } catch (Exception e) {
+            LOGGER.info(RECORDWITHID + batchId + " selected from Batch by User:" + principal.getName());
+        } catch (MetadataException e) {
+            LOGGER.error(e);
             restWrapper = new RestWrapper(e.getMessage(), RestWrapper.ERROR);
         }
         return restWrapper;
@@ -83,24 +82,20 @@ public class BatchAPI extends MetadataAPIBase {
      * This method calls proc DeleteBatch and deletes a record corresponding to passed batchId.
      *
      * @param batchId
-     * @param model
      * @return nothing.
      */
     @RequestMapping(value = "/{id}", method = RequestMethod.DELETE)
-    public
-    @ResponseBody
+    @ResponseBody public
     RestWrapper delete(
-            @PathVariable("id") Long batchId, Principal principal,
-            ModelMap model) {
+            @PathVariable("id") Long batchId, Principal principal) {
 
         RestWrapper restWrapper = null;
         try {
             batchDAO.delete(batchId);
-            // s.delete("call_procedures.DeleteBatch", batch);
-
             restWrapper = new RestWrapper(null, RestWrapper.OK);
-            LOGGER.info("Record with ID:" + batchId + " deleted from Batch by User:" + principal.getName());
-        } catch (Exception e) {
+            LOGGER.info(RECORDWITHID + batchId + " deleted from Batch by User:" + principal.getName());
+        } catch (MetadataException e) {
+            LOGGER.error(e);
             restWrapper = new RestWrapper(e.getMessage(), RestWrapper.ERROR);
         }
         return restWrapper;
@@ -114,8 +109,7 @@ public class BatchAPI extends MetadataAPIBase {
      */
     @RequestMapping(value = {"", "/"}, method = RequestMethod.GET)
 
-    public
-    @ResponseBody
+    @ResponseBody public
     RestWrapper list(@RequestParam(value = "page", defaultValue = "0") int startPage,
                      @RequestParam(value = "size", defaultValue = "10") int pageSize, Principal principal) {
         RestWrapper restWrapper = null;
@@ -135,11 +129,10 @@ public class BatchAPI extends MetadataAPIBase {
                 batches.add(returnBatch);
 
             }
-            //List<Batch> batches = s.selectList("call_procedures.GetBatches", batch);
-
             restWrapper = new RestWrapper(batches, RestWrapper.OK);
             LOGGER.info("All records listed from Batch by User:" + principal.getName());
-        } catch (Exception e) {
+        } catch (MetadataException e) {
+            LOGGER.error(e);
             restWrapper = new RestWrapper(e.getMessage(), RestWrapper.ERROR);
         }
         return restWrapper;
@@ -154,8 +147,7 @@ public class BatchAPI extends MetadataAPIBase {
      * @return restWrapper updated instance of Batch passed.
      */
     @RequestMapping(value = {"/", ""}, method = RequestMethod.POST)
-    public
-    @ResponseBody
+    @ResponseBody public
     RestWrapper update(@ModelAttribute("batch")
                        @Valid Batch batch, BindingResult bindingResult, Principal principal) {
         RestWrapper restWrapper = null;
@@ -184,10 +176,10 @@ public class BatchAPI extends MetadataAPIBase {
             }
 
             batchDAO.update(jpaBatch);
-            // Batch batches = s.selectOne("call_procedures.UpdateBatch", batch);
             restWrapper = new RestWrapper(batch, RestWrapper.OK);
-            LOGGER.info("Record with ID:" + batch.getBatchId() + " updated in Batch by User:" + principal.getName() + batch);
-        } catch (Exception e) {
+            LOGGER.info(RECORDWITHID + batch.getBatchId() + " updated in Batch by User:" + principal.getName() + batch);
+        } catch (MetadataException e) {
+            LOGGER.error(e);
             restWrapper = new RestWrapper(e.getMessage(), RestWrapper.ERROR);
         }
         return restWrapper;
@@ -202,8 +194,7 @@ public class BatchAPI extends MetadataAPIBase {
      * @return restWrapper It contains the instance of Batch passed.
      */
     @RequestMapping(value = {"/", ""}, method = RequestMethod.PUT)
-    public
-    @ResponseBody
+    @ResponseBody public
     RestWrapper insert(@ModelAttribute("batch")
                        @Valid Batch batch, BindingResult bindingResult, Principal principal) {
         RestWrapper restWrapper = null;
@@ -234,11 +225,11 @@ public class BatchAPI extends MetadataAPIBase {
 
             Long autoGenBatchId = batchDAO.insert(jpaBatch);
             batch.setBatchId(autoGenBatchId);
-            //Batch batches = s.selectOne("call_procedures.InsertBatch", batch);
 
             restWrapper = new RestWrapper(batch, RestWrapper.OK);
-            LOGGER.info("Record with ID:" + batch.getBatchId() + " inserted in Batch by User:" + principal.getName() + batch);
-        } catch (Exception e) {
+            LOGGER.info(RECORDWITHID + batch.getBatchId() + " inserted in Batch by User:" + principal.getName() + batch);
+        } catch (MetadataException e) {
+            LOGGER.error(e);
             restWrapper = new RestWrapper(e.getMessage(), RestWrapper.ERROR);
         }
         return restWrapper;
