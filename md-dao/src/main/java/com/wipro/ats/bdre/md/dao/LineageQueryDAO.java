@@ -112,11 +112,10 @@ public class LineageQueryDAO {
 
     public String insert(LineageQuery lineageQuery) {
         Session session = sessionFactory.openSession();
-        String id = "oi";
+        String id = null;
         try {
             session.beginTransaction();
-            //check whethter the query is present from before
-            session.save(lineageQuery);
+            id = (String) session.save(lineageQuery);
             session.getTransaction().commit();
         } catch (MetadataException e) {
             session.getTransaction().rollback();
