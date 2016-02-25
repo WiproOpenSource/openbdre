@@ -18,7 +18,6 @@ import com.wipro.ats.bdre.md.api.base.MetadataAPIBase;
 import com.wipro.ats.bdre.md.beans.CrawlerInfo;
 import com.wipro.ats.bdre.md.beans.table.Process;
 import com.wipro.ats.bdre.md.dao.ProcessDAO;
-import com.wipro.ats.bdre.md.dao.PropertiesDAO;
 import com.wipro.ats.bdre.md.rest.RestWrapper;
 import com.wipro.ats.bdre.md.rest.util.Dao2TableUtil;
 import com.wipro.ats.bdre.md.rest.util.DateConverter;

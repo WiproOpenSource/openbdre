@@ -18,7 +18,6 @@ import com.wipro.ats.bdre.md.api.base.MetadataAPIBase;
 import com.wipro.ats.bdre.md.beans.table.GeneralConfig;
 
 import com.wipro.ats.bdre.md.dao.ProcessDAO;
-import com.wipro.ats.bdre.md.dao.PropertiesDAO;
 import com.wipro.ats.bdre.md.dao.jpa.*;
 import com.wipro.ats.bdre.md.dao.jpa.Process;
 import com.wipro.ats.bdre.md.dao.jpa.Properties;

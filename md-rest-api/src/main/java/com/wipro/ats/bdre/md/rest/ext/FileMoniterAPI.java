@@ -16,7 +16,6 @@ package com.wipro.ats.bdre.md.rest.ext;
 
 import com.wipro.ats.bdre.md.beans.FileMonitorInfo;
 import com.wipro.ats.bdre.md.dao.ProcessDAO;
-import com.wipro.ats.bdre.md.dao.PropertiesDAO;
 import com.wipro.ats.bdre.md.dao.jpa.Process;
 import com.wipro.ats.bdre.md.dao.jpa.Properties;
 import com.wipro.ats.bdre.md.rest.RestWrapper;
