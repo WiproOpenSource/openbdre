@@ -14,6 +14,7 @@
 
 package com.wipro.ats.bdre.security;
 
+import com.wipro.ats.bdre.exception.BDREException;
 import org.apache.http.conn.scheme.Scheme;
 import org.apache.http.conn.ssl.SSLSocketFactory;
 import org.apache.http.conn.ssl.TrustStrategy;
@@ -44,7 +45,8 @@ public class SessionCheckPerRequestFilter implements Filter {
 
     @Override
     public void init(FilterConfig filterConfig) throws ServletException {
-        if (userServiceURL == null) throw new ServletException("userServiceURL must be passed.");
+        if (userServiceURL == null)
+            throw new ServletException("userServiceURL must be passed.");
     }
 
     @Override
@@ -55,7 +57,7 @@ public class SessionCheckPerRequestFilter implements Filter {
         String principal = null;
         if (cookies != null) {
             for (Cookie c : cookies) {
-                if (c.getName().equals("bdre-auth-token")) {
+                if ("bdre-auth-token".equals(c.getName())) {
                     cookie = c;
                     break;
                 }
@@ -98,7 +100,7 @@ public class SessionCheckPerRequestFilter implements Filter {
             AuthResult authResult = null;
             try {
                 authResult = restTemplate.getForObject(completeServiceURL + token, AuthResult.class);
-            } catch (Exception e) {
+            } catch (BDREException e) {
                 LOGGER.error(e);
                 throw new RuntimeException("Error Occurred. Service URL:" + completeServiceURL + token + "; servletRequest.isSecure()=" + servletRequest.isSecure(), e);
             }
@@ -124,7 +126,9 @@ public class SessionCheckPerRequestFilter implements Filter {
 
     @Override
     public void destroy() {
-
+    /*
+     this method is generated from interface
+    */
     }
 
     public void setUserServiceURL(String userServiceURL) {
