@@ -14,6 +14,7 @@
 
 package com.wipro.ats.bdre.md.rest;
 
+import com.wipro.ats.bdre.exception.MetadataException;
 import com.wipro.ats.bdre.md.api.base.MetadataAPIBase;
 import com.wipro.ats.bdre.md.beans.table.Batch;
 import com.wipro.ats.bdre.md.dao.BatchDAO;
@@ -70,8 +71,8 @@ public class BatchAPI extends MetadataAPIBase {
             }
             restWrapper = new RestWrapper(batch, RestWrapper.OK);
             LOGGER.info(RECORDWITHID + batchId + " selected from Batch by User:" + principal.getName());
-        } catch (Exception e) {
-            LOGGER.error("error occurred :" + e.getMessage());
+        } catch (MetadataException e) {
+            LOGGER.error(e);
             restWrapper = new RestWrapper(e.getMessage(), RestWrapper.ERROR);
         }
         return restWrapper;
@@ -82,7 +83,6 @@ public class BatchAPI extends MetadataAPIBase {
      * This method calls proc DeleteBatch and deletes a record corresponding to passed batchId.
      *
      * @param batchId
-     * @param model
      * @return nothing.
      */
     @RequestMapping(value = "/{id}", method = RequestMethod.DELETE)
@@ -95,8 +95,8 @@ public class BatchAPI extends MetadataAPIBase {
             batchDAO.delete(batchId);
             restWrapper = new RestWrapper(null, RestWrapper.OK);
             LOGGER.info(RECORDWITHID + batchId + " deleted from Batch by User:" + principal.getName());
-        } catch (Exception e) {
-            LOGGER.error("error occurred :" + e.getMessage());
+        } catch (MetadataException e) {
+            LOGGER.error(e);
             restWrapper = new RestWrapper(e.getMessage(), RestWrapper.ERROR);
         }
         return restWrapper;
@@ -132,8 +132,8 @@ public class BatchAPI extends MetadataAPIBase {
             }
             restWrapper = new RestWrapper(batches, RestWrapper.OK);
             LOGGER.info("All records listed from Batch by User:" + principal.getName());
-        } catch (Exception e) {
-            LOGGER.error("error occurred :" + e.getMessage());
+        } catch (MetadataException e) {
+            LOGGER.error(e);
             restWrapper = new RestWrapper(e.getMessage(), RestWrapper.ERROR);
         }
         return restWrapper;
@@ -179,8 +179,8 @@ public class BatchAPI extends MetadataAPIBase {
             batchDAO.update(jpaBatch);
             restWrapper = new RestWrapper(batch, RestWrapper.OK);
             LOGGER.info(RECORDWITHID + batch.getBatchId() + " updated in Batch by User:" + principal.getName() + batch);
-        } catch (Exception e) {
-            LOGGER.error("error occurred :" + e.getMessage());
+        } catch (MetadataException e) {
+            LOGGER.error(e);
             restWrapper = new RestWrapper(e.getMessage(), RestWrapper.ERROR);
         }
         return restWrapper;
@@ -229,8 +229,8 @@ public class BatchAPI extends MetadataAPIBase {
 
             restWrapper = new RestWrapper(batch, RestWrapper.OK);
             LOGGER.info(RECORDWITHID + batch.getBatchId() + " inserted in Batch by User:" + principal.getName() + batch);
-        } catch (Exception e) {
-            LOGGER.error("error occurred :" + e.getMessage());
+        } catch (MetadataException e) {
+            LOGGER.error(e);
             restWrapper = new RestWrapper(e.getMessage(), RestWrapper.ERROR);
         }
         return restWrapper;
