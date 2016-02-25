@@ -76,7 +76,6 @@ public class LineageHook implements org.apache.hadoop.hive.ql.hooks.ExecuteWithH
 
 	    } catch (Exception e) {
 		    LOGGER.error("Error in executing LineageHook", e);
-			e.printStackTrace(System.out);
 		    successFlag = false;
 	    }
     }

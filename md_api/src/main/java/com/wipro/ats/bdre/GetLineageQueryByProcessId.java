@@ -31,6 +31,12 @@ import java.util.List;
  * Created by AshutoshRai on 1/19/16.
  */
 public class GetLineageQueryByProcessId extends MetadataAPIBase {
+
+    private static final Logger LOGGER = Logger.getLogger(GetLineageQueryByProcessId.class);
+
+    @Autowired
+    private LineageQueryDAO lineageQueryDAO;
+
     public GetLineageQueryByProcessId() {
         /* Hibernate Auto-Wire */
         ApplicationContext context = new ClassPathXmlApplicationContext("spring-dao.xml");
@@ -38,15 +44,9 @@ public class GetLineageQueryByProcessId extends MetadataAPIBase {
         acbFactory.autowireBean(this);
     }
 
-    private static final Logger LOGGER = Logger.getLogger(GetLineageQueryByProcessId.class);
-
     private static final String[][] PARAMS_STRUCTURE = {
             {"pid", "sub-process-id", " Process id whose lineage query to be extracted"},
     };
-
-
-    @Autowired
-    private LineageQueryDAO lineageQueryDAO;
 
     public List<LineageQuery> execute(String[] params) {
         try {

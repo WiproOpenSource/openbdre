@@ -60,8 +60,6 @@ public class LineageMain implements NodeProcessor {
 	private List<Relation> finalRelations = new ArrayList<Relation>();
 	private String query;
 	private String dotString;
-	private Integer processId;
-	private Long instanceId;
 	private String defaultHiveDbName;
 	private LineageQuery lineageQuery;
 	private int subquerySeq = 0;
@@ -69,8 +67,6 @@ public class LineageMain implements NodeProcessor {
 
 	public static void lineageMain(LineageQuery lineageQuery,String args1, String args2, String args3) throws ParseException, SemanticException {
 		LineageMain lineageMain = new LineageMain();
-		lineageMain.instanceId = Long.parseLong(args3);
-		lineageMain.processId = Integer.parseInt(args2);
 		lineageMain.defaultHiveDbName = args1;
 		lineageMain.query = lineageQuery.getQueryString();
 		lineageMain.lineageQuery = lineageQuery;

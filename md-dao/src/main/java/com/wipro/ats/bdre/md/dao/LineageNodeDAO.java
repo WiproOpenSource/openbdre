@@ -112,7 +112,7 @@ public class LineageNodeDAO {
         return id;
     }
 
-    public LineageNode getColNodeId(String colName, LineageNode tableNode) throws Exception {
+    public LineageNode getColNodeId(String colName, LineageNode tableNode) {
         LineageNode lineageNode;
         Session session = sessionFactory.openSession();
         session.beginTransaction();

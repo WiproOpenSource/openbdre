@@ -18,14 +18,11 @@ import com.wipro.ats.bdre.md.dao.LineageQueryDAO;
 import com.wipro.ats.bdre.md.dao.jpa.LineageQuery;
 import com.wipro.ats.bdre.md.dao.jpa.LineageQueryType;
 import org.apache.hadoop.hive.ql.parse.ParseException;
-import org.apache.hadoop.hive.ql.parse.SemanticException;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.AutowireCapableBeanFactory;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
-
-import java.io.IOException;
 import java.util.Date;
 import java.util.UUID;
 
@@ -41,7 +38,7 @@ public class LineageProcessor {
 
 	@Autowired
 	LineageQueryDAO lineageQueryDAO;
-	
+
 	public LineageProcessor() {
 		 /*Hibernate Auto-wire*/
 		ApplicationContext context = new ClassPathXmlApplicationContext("spring-dao.xml");
