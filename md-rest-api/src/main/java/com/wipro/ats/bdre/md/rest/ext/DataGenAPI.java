@@ -107,6 +107,8 @@ public class DataGenAPI extends MetadataAPIBase {
                 fieldArgCounter++;
             }
             else if(string.startsWith("type_genArg")){
+                fieldTypeCounter = Integer.parseInt(string.substring((string.lastIndexOf(".") + 1), string.length()));
+                LOGGER.debug("genArg key Index" + fieldTypeCounter);
                 jpaProperties =Dao2TableUtil.buildJPAProperties("data", "args." + fieldArgCounter, map.get(string), "Generated Argument");
                 childProps.add(jpaProperties );
                 jpaProperties =Dao2TableUtil.buildJPAProperties("data", "data-gen-id." + fieldArgCounter, map.get("type_generatedType." + fieldTypeCounter), "Generated Type");
@@ -199,7 +201,7 @@ public class DataGenAPI extends MetadataAPIBase {
             restWrapper = new RestWrapper(generalConfig, RestWrapper.OK);
             LOGGER.info("Record with configGroup:" + generalConfig.getConfigGroup() + " inserted in Jtable by User:" + principal.getName() + generalConfig);
         } catch (Exception e) {
-            LOGGER.error("error occured " + e);
+            LOGGER.error("error occured " + e.getMessage());
             restWrapper = new RestWrapper(e.getMessage(), RestWrapper.ERROR);
         }
         return restWrapper;

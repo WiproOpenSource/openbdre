@@ -45,6 +45,7 @@ import java.util.List;
 @RequestMapping("/crawler")
 @Scope("session")
 public class CrawlerAPI extends MetadataAPIBase {
+    private static final Logger LOGGER = Logger.getLogger(CrawlerAPI.class);
     private static final String CRAWLER = "crawler";
 
     @Autowired
@@ -129,6 +130,7 @@ public class CrawlerAPI extends MetadataAPIBase {
             process.setTableEditTS(DateConverter.dateToString(process.getEditTS()));
         }
         restWrapper = new RestWrapper(tableProcessList, RestWrapper.OK);
+        LOGGER.info("Process and Properties for crawler process inserted by" + principal.getName());
         return restWrapper;
     }
 
