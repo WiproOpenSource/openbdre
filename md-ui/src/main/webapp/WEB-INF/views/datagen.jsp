@@ -100,7 +100,7 @@ function formIntoMap(typeProp, typeOf) {
                         <br>
                         <b>For number type use format:</b> min Value,max Value
                         <br>
-                        <b>Enter the Table Field Name as:</b> name:type for e.g.:- account_type:string or open_date:date
+                        <b>Enter the Column Name : Column Type as:</b> name:type for e.g.:- account_type:string or open_date:date
                         
                     </div>
                     
@@ -240,7 +240,7 @@ function formIntoMap(typeProp, typeOf) {
         var newIn = '';
         newIn = newIn +  '<div class="form-group" id="formGroup' + next + '">' ;
         newIn = newIn +  '<div class="col-md-3">' ;
-        newIn = newIn +  '<input type="text" class="form-control input-sm" id="fieldName.' + next + '" value="" name="fieldName.' + next + '" placeholder="Table Field Name" />' ;
+        newIn = newIn +  '<input type="text" class="form-control input-sm" id="fieldName.' + next + '" value="" name="fieldName.' + next + '" placeholder="Column Name : Column Type" />' ;
         newIn = newIn +  '</div>' ;
         newIn = newIn +  '<div class="col-md-3">' ;
         newIn = newIn +  '<select class="form-control input-sm" id="generatedType.' + next + '" name="generatedType.' + next + '">' ;
