@@ -18,7 +18,6 @@ import com.wipro.ats.bdre.md.api.base.MetadataAPIBase;
 import com.wipro.ats.bdre.md.beans.table.GeneralConfig;
 import com.wipro.ats.bdre.md.beans.table.Process;
 import com.wipro.ats.bdre.md.dao.ProcessDAO;
-import com.wipro.ats.bdre.md.dao.PropertiesDAO;
 import com.wipro.ats.bdre.md.rest.RestWrapper;
 import com.wipro.ats.bdre.md.rest.util.Dao2TableUtil;
 import com.wipro.ats.bdre.md.rest.util.DateConverter;
@@ -43,15 +42,14 @@ import java.util.Map;
 @RequestMapping("/flumeproperties")
 public class FlumePropertiesAPI extends MetadataAPIBase {
     private static final Logger LOGGER = Logger.getLogger(FlumePropertiesAPI.class);
+    private static final String FLUME = "flume";
+    private static final String CHANNEL = "channel";
     @Autowired
     private ProcessDAO processDAO;
-    @Autowired
-    private PropertiesDAO propertiesDAO;
 
     @RequestMapping(value = {"/createjobs"}, method = RequestMethod.POST)
 
-    public
-    @ResponseBody
+    @ResponseBody public
     RestWrapper createJob(@RequestParam Map<String, String> map, Principal principal) {
         LOGGER.debug(" value of map is " + map.size());
         RestWrapper restWrapper = null;
@@ -73,13 +71,13 @@ public class FlumePropertiesAPI extends MetadataAPIBase {
             String key = string.substring(splitIndex + 1, string.length());
             LOGGER.debug("key is " + key);
             if (string.startsWith("source_")) {
-                jpaProperties = Dao2TableUtil.buildJPAProperties("flume", "agent.sources.source." + key, map.get(string), "Properties for source");
+                jpaProperties = Dao2TableUtil.buildJPAProperties(FLUME, "agent.sources.source." + key, map.get(string), "Properties for source");
                 childProps.add(jpaProperties);
             } else if (string.startsWith("channel_")) {
-                jpaProperties = Dao2TableUtil.buildJPAProperties("flume", "agent.channels.channel." + key, map.get(string), "Properties for channel");
+                jpaProperties = Dao2TableUtil.buildJPAProperties(FLUME, "agent.channels.channel." + key, map.get(string), "Properties for channel");
                 childProps.add(jpaProperties);
             } else if (string.startsWith("sink_")) {
-                jpaProperties = Dao2TableUtil.buildJPAProperties("flume", "agent.sinks.sink." + key, map.get(string), "Properties for sink");
+                jpaProperties = Dao2TableUtil.buildJPAProperties(FLUME, "agent.sinks.sink." + key, map.get(string), "Properties for sink");
                 childProps.add(jpaProperties);
             }else if (string.startsWith("process_processName")) {
                 LOGGER.debug("process_processName" + map.get(string));
@@ -93,15 +91,15 @@ public class FlumePropertiesAPI extends MetadataAPIBase {
             }
         }
 
-        jpaProperties = Dao2TableUtil.buildJPAProperties("flume", "agent.sources", "source", "Source name");
+        jpaProperties = Dao2TableUtil.buildJPAProperties(FLUME, "agent.sources", "source", "Source name");
         childProps.add(jpaProperties);
-        jpaProperties = Dao2TableUtil.buildJPAProperties("flume", "agent.sinks", "sink", "Sink name");
+        jpaProperties = Dao2TableUtil.buildJPAProperties(FLUME, "agent.sinks", "sink", "Sink name");
         childProps.add(jpaProperties);
-        jpaProperties = Dao2TableUtil.buildJPAProperties("flume",  "agent.channels", "channel", "Channel name");
+        jpaProperties = Dao2TableUtil.buildJPAProperties(FLUME,  "agent.channels", CHANNEL, "Channel name");
         childProps.add(jpaProperties);
-        jpaProperties = Dao2TableUtil.buildJPAProperties("flume", "agent.sources.source.channels", "channel", "Channel name for source");
+        jpaProperties = Dao2TableUtil.buildJPAProperties(FLUME, "agent.sources.source.channels", CHANNEL, "Channel name for source");
         childProps.add(jpaProperties);
-        jpaProperties = Dao2TableUtil.buildJPAProperties("flume", "agent.sinks.sink.channel", "channel", "Channel name for sink");
+        jpaProperties = Dao2TableUtil.buildJPAProperties(FLUME, "agent.sinks.sink.channel", CHANNEL, "Channel name for sink");
         childProps.add(jpaProperties);
 
         com.wipro.ats.bdre.md.dao.jpa.Process parentProcess = Dao2TableUtil.buildJPAProcess(1, processName, processDescription, 2,busDomainId);
@@ -116,12 +114,12 @@ public class FlumePropertiesAPI extends MetadataAPIBase {
             process.setTableEditTS(DateConverter.dateToString(process.getEditTS()));
         }
         restWrapper = new RestWrapper(tableProcessList, RestWrapper.OK);
+        LOGGER.info("Process and properties inserted for Flume Process by " + principal.getName());
         return restWrapper;
     }
 
     @RequestMapping(value = {"/", ""}, method = RequestMethod.PUT)
-    public
-    @ResponseBody
+    @ResponseBody public
     RestWrapper insert(@ModelAttribute("generalconfig")
                        @Valid GeneralConfig generalConfig, BindingResult bindingResult, Principal principal) {
         LOGGER.debug("Updating jtable for new advanced config");
@@ -148,7 +146,9 @@ public class FlumePropertiesAPI extends MetadataAPIBase {
             restWrapper = new RestWrapper(generalConfig, RestWrapper.OK);
             LOGGER.info("Record with configGroup:" + generalConfig.getConfigGroup() + " inserted in Jtable by User:" + principal.getName() + generalConfig);
         } catch (Exception e) {
+            LOGGER.error("error occcurred : " + e.getMessage());
             restWrapper = new RestWrapper(e.getMessage(), RestWrapper.ERROR);
+            throw e;
         }
         return restWrapper;
     }
