@@ -62,7 +62,7 @@ public class DQSetupAPI extends MetadataAPIBase {
             restWrapper = new RestWrapper(null, RestWrapper.OK);
             LOGGER.info(RECORDWITHID + processId + " deleted from DQSetup by User:" + principal.getName());
         } catch (Exception e) {
-            LOGGER.error("error occurred while uploading file", e);
+            LOGGER.error( e);
             return new RestWrapper(e.getMessage(), RestWrapper.ERROR);
         }
 
@@ -135,7 +135,7 @@ public class DQSetupAPI extends MetadataAPIBase {
             restWrapper = new RestWrapper(dqSetups, RestWrapper.OK);
             LOGGER.info("All records listed from DQSetup by User:" + principal.getName());
         } catch (Exception e) {
-            LOGGER.error("error occurred while uploading file", e);
+            LOGGER.error( e);
             return new RestWrapper(e.getMessage(), RestWrapper.ERROR);
         }
         return restWrapper;
@@ -219,7 +219,7 @@ public class DQSetupAPI extends MetadataAPIBase {
             restWrapper = new RestWrapper(dqSetups, RestWrapper.OK);
             LOGGER.info(RECORDWITHID + dqSetupInfo.getParentProcessId() + " inserted in DQSetup by User:" + principal.getName() + dqSetupInfo);
         }catch (Exception e) {
-            LOGGER.error("error occurred while uploading file", e);
+            LOGGER.error( e);
             return new RestWrapper(e.getMessage(), RestWrapper.ERROR);
         }
         return restWrapper;
@@ -303,7 +303,7 @@ public class DQSetupAPI extends MetadataAPIBase {
             restWrapper = new RestWrapper(dqSetups, RestWrapper.OK);
             LOGGER.info(RECORDWITHID + dqSetupInfo.getParentProcessId() + " updated in DQSetup by User:" + principal.getName() + dqSetupInfo);
         } catch (Exception e) {
-            LOGGER.error("error occurred while uploading file", e);
+            LOGGER.error( e);
             return new RestWrapper(e.getMessage(), RestWrapper.ERROR);
         }
         return restWrapper;

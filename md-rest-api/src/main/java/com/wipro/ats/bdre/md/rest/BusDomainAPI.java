@@ -163,8 +163,6 @@ public class BusDomainAPI extends MetadataAPIBase {
             jpaBusDomain.setBusDomainOwner(busDomain.getBusDomainOwner());
             jpaBusDomain.setDescription(busDomain.getDescription());
             busDomainDAO.update(jpaBusDomain);
-            // BusDomain busDomains = s.selectOne("call_procedures.UpdateBusDomain", busDomain);
-
             restWrapper = new RestWrapper(busDomain, RestWrapper.OK);
             LOGGER.info(RECORDWITHID + busDomain.getBusDomainId() + " updated in BusDomain by User:" + principal.getName() + busDomain);
         } catch (MetadataException e) {
@@ -209,7 +207,6 @@ public class BusDomainAPI extends MetadataAPIBase {
             jpaBusDomain.setBusDomainOwner(busDomain.getBusDomainOwner());
             jpaBusDomain.setDescription(busDomain.getDescription());
             Integer busDomainId = busDomainDAO.insert(jpaBusDomain);
-            // BusDomain busDomains = s.selectOne("call_procedures.InsertBusDomain", busDomain);
             jpaBusDomain.setBusDomainId(busDomainId);
             restWrapper = new RestWrapper(busDomain, RestWrapper.OK);
             LOGGER.info(RECORDWITHID + busDomain.getBusDomainId() + " inserted in BusDomain by User:" + principal.getName() + busDomain);

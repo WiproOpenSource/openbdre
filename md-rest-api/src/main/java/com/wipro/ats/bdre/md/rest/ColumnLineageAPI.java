@@ -72,7 +72,7 @@ public class ColumnLineageAPI extends MetadataAPIBase {
             restWrapper = new RestWrapper(lineageNodeInfo1, RestWrapper.OK);
             LOGGER.info("lineageByProcessId for processId:" + processId + "from ColumnLineage by User:" + principal.getName());
         } catch (Exception e) {
-            LOGGER.error("error occurred while uploading file", e);
+            LOGGER.error( e);
             return new RestWrapper(e.getMessage(), RestWrapper.ERROR);
         }
         return restWrapper;

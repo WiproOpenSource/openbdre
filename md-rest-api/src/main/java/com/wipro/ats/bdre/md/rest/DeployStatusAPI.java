@@ -67,7 +67,7 @@ public class DeployStatusAPI extends MetadataAPIBase {
             restWrapper = new RestWrapper(deployStatus, RestWrapper.OK);
             LOGGER.info(RECORDWITHID + deployStatusId + " selected from DeployStatus by User:" + principal.getName());
         }catch (Exception e) {
-            LOGGER.error("error occurred while uploading file", e);
+            LOGGER.error( e);
             return new RestWrapper(e.getMessage(), RestWrapper.ERROR);
         }
         return restWrapper;
@@ -90,7 +90,7 @@ public class DeployStatusAPI extends MetadataAPIBase {
             restWrapper = new RestWrapper(null, RestWrapper.OK);
             LOGGER.info(RECORDWITHID + deployStatusId + " deleted from DeployStatus by User:" + principal.getName());
         } catch (Exception e) {
-            LOGGER.error("error occurred while uploading file", e);
+            LOGGER.error( e);
             return new RestWrapper(e.getMessage(), RestWrapper.ERROR);
         }
         return restWrapper;
@@ -122,7 +122,7 @@ public class DeployStatusAPI extends MetadataAPIBase {
             restWrapper = new RestWrapper(deployStatuses, RestWrapper.OK);
             LOGGER.info("All records listed from DeployStatus by User:" + principal.getName());
         } catch (Exception e) {
-            LOGGER.error("error occurred while uploading file", e);
+            LOGGER.error( e);
             return new RestWrapper(e.getMessage(), RestWrapper.ERROR);
         }
         return restWrapper;
@@ -166,7 +166,7 @@ public class DeployStatusAPI extends MetadataAPIBase {
             restWrapper = new RestWrapper(deployStatus, RestWrapper.OK);
             LOGGER.info(RECORDWITHID + deployStatus.getDeployStatusId() + " updated in DeployStatus by User:" + principal.getName() + deployStatus);
         } catch (Exception e) {
-            LOGGER.error("error occurred while uploading file", e);
+            LOGGER.error( e);
             return new RestWrapper(e.getMessage(), RestWrapper.ERROR);
         }
         return restWrapper;
@@ -213,7 +213,7 @@ public class DeployStatusAPI extends MetadataAPIBase {
             restWrapper = new RestWrapper(deployStatus, RestWrapper.OK);
             LOGGER.info(RECORDWITHID + deployStatus.getDeployStatusId() + " inserted in DeployStatus by User:" + principal.getName() + deployStatus);
         } catch (Exception e) {
-            LOGGER.error("error occurred while uploading file", e);
+            LOGGER.error( e);
             return new RestWrapper(e.getMessage(), RestWrapper.ERROR);
         }
         return restWrapper;
@@ -246,7 +246,7 @@ public class DeployStatusAPI extends MetadataAPIBase {
             }
             restWrapperOptions = new RestWrapperOptions(options, RestWrapperOptions.OK);
         } catch (Exception e) {
-            LOGGER.error("error occurred while uploading file", e);
+            LOGGER.error( e);
             return new RestWrapperOptions(e.getMessage(), RestWrapperOptions.ERROR);
         }
         return restWrapperOptions;

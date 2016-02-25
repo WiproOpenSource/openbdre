@@ -76,7 +76,7 @@ public class CodeUploaderAPI extends MetadataAPIBase {
 
                 return new RestWrapper(uploadedFile, RestWrapper.OK);
             } catch (Exception e) {
-                LOGGER.error("error occurred while uploading file", e);
+                LOGGER.error( e);
                 return new RestWrapper(e.getMessage(), RestWrapper.ERROR);
             }
         } else {
