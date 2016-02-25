@@ -14,22 +14,21 @@
 
 package com.wipro.ats.bdre;
 
+import com.wipro.ats.bdre.exception.BDREException;
 import org.apache.log4j.Logger;
 import org.junit.Test;
 
 public class IMConfigTest {
-    private Logger LOGGER=Logger.getLogger(IMConfigTest.class);
+    private static final Logger LOGGER=Logger.getLogger(IMConfigTest.class);
     @Test
-    public void testGetProperty() throws Exception {
+    public void testGetProperty() throws BDREException {
         String key = "data-import.hadoop-home";
-
         LOGGER.info(key+"="+IMConfig.getProperty(key));
     }
 
    @Test
-    public void testGetProperty1() throws Exception {
+    public void testGetProperty1() throws BDREException {
         String key = "etl.hive-connection";
-
         LOGGER.info(key+"="+IMConfig.getProperty(key));
 
     }

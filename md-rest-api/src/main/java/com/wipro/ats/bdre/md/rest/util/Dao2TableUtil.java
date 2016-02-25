@@ -26,8 +26,13 @@ import java.util.List;
  * Created by AR288503 on 1/2/2016.
  */
 public class Dao2TableUtil {
-    public static final Logger LOGGER = Logger.getLogger(Dao2TableUtil.class);
-    public static com.wipro.ats.bdre.md.beans.table.Process jpa2TableProcess(com.wipro.ats.bdre.md.dao.jpa.Process jpaProcess) {
+
+    private static final Logger LOGGER = Logger.getLogger(Dao2TableUtil.class);
+
+    private Dao2TableUtil(){
+
+    }
+    private static com.wipro.ats.bdre.md.beans.table.Process jpa2TableProcess(com.wipro.ats.bdre.md.dao.jpa.Process jpaProcess) {
         com.wipro.ats.bdre.md.beans.table.Process tableProcess = new com.wipro.ats.bdre.md.beans.table.Process();
         tableProcess.setProcessId(jpaProcess.getProcessId());
         tableProcess.setProcessName(jpaProcess.getProcessName());
