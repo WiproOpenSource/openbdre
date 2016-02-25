@@ -21,10 +21,10 @@ import org.apache.log4j.Logger;
 import org.hibernate.Criteria;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
+import org.hibernate.criterion.Restrictions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
 import java.util.List;
 
 /**
@@ -70,6 +70,31 @@ public class LineageNodeDAO {
         return lineageNode;
     }
 
+    //get all table node(s) by the name passed
+    public List<LineageNode> getTableNode(String tableName) {
+        List<LineageNode> lineageNodeList;
+        Session session = sessionFactory.openSession();
+        session.beginTransaction();
+        Criteria getLastElementCriteria = session.createCriteria(LineageNode.class).add(Restrictions.eq("displayName", tableName));
+        lineageNodeList = getLastElementCriteria.list();
+        session.getTransaction().commit();
+        session.close();
+        return lineageNodeList;
+    }
+
+    //get node by nodeid
+    public String getContainerDot(String nodeid) {
+        String dotString;
+        Session session = sessionFactory.openSession();
+        session.beginTransaction();
+        Criteria getLastElementCriteria = session.createCriteria(LineageNode.class).add(Restrictions.eq("nodeId", nodeid));
+        LineageNode lineageNode = (LineageNode) getLastElementCriteria.list().get(0);
+        dotString = lineageNode.getLineageNode().getDotString();
+        session.getTransaction().commit();
+        session.close();
+        return dotString;
+    }
+
 
     public String insert(LineageNode lineageNode) {
         Session session = sessionFactory.openSession();
@@ -87,6 +112,17 @@ public class LineageNodeDAO {
         return id;
     }
 
+    public LineageNode getColNodeId(String colName, LineageNode tableNode) throws Exception {
+        LineageNode lineageNode;
+        Session session = sessionFactory.openSession();
+        session.beginTransaction();
+        Criteria getLastElementCriteria = session.createCriteria(LineageNode.class).add(Restrictions.eq("lineageNode", tableNode)).add(Restrictions.eq("displayName", colName));
+        lineageNode = (LineageNode) getLastElementCriteria.list().get(0);
+        LOGGER.info("----------------- LN value when getting the col: "+ lineageNode.getDisplayName() + lineageNode.getNodeId());
+        session.getTransaction().commit();
+        session.close();
+        return lineageNode;
+    }
 
     public void update(LineageNode lineageNode) {
         Session session = sessionFactory.openSession();

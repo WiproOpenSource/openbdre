@@ -20,10 +20,13 @@ import org.apache.log4j.Logger;
 import org.hibernate.Criteria;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
+import org.hibernate.criterion.Order;
+import org.hibernate.criterion.Restrictions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -33,6 +36,7 @@ import java.util.List;
 @Service
 public class LineageQueryDAO {
 
+    private Long instanceExecId = null;
     private static final Logger LOGGER = Logger.getLogger(LineageQueryDAO.class);
     @Autowired
     SessionFactory sessionFactory;
@@ -47,6 +51,42 @@ public class LineageQueryDAO {
         session.getTransaction().commit();
         session.close();
         return lineageQuerys;
+    }
+
+    //get Instance exec ids for the process id from LQ table
+    private Long getInstanceExecIds(Integer processId) {
+
+        Session session = sessionFactory.openSession();
+        session.beginTransaction();
+        Criteria getLastElementCriteria = session.createCriteria(LineageQuery.class).add(Restrictions.eq("processId", processId)).addOrder(Order.desc("instanceExecId"));
+
+        if(!getLastElementCriteria.list().isEmpty()) {
+            LineageQuery lineageQuery = (LineageQuery) getLastElementCriteria.list().get(0);
+            instanceExecId = lineageQuery.getInstanceExecId();
+        }
+        session.getTransaction().commit();
+        session.close();
+        return instanceExecId;
+    }
+
+    public List<LineageQuery> getLastInstanceExecLists(Integer processId) {
+
+        List<LineageQuery> lineageQueryList = new ArrayList<LineageQuery>();
+        Session session = sessionFactory.openSession();
+        session.beginTransaction();
+        Criteria getLastElementCriteria = session.createCriteria(LineageQuery.class).add(Restrictions.eq("processId", processId)).addOrder(Order.desc("instanceExecId"));
+
+        if(!getLastElementCriteria.list().isEmpty()) {
+            LineageQuery lineageQuery = (LineageQuery) getLastElementCriteria.list().get(0);
+            instanceExecId = lineageQuery.getInstanceExecId();
+        }
+        if (instanceExecId != null) {
+            Criteria criteria = session.createCriteria(LineageQuery.class).add(Restrictions.eq("processId", processId)).add(Restrictions.eq("instanceExecId", instanceExecId));
+            lineageQueryList = criteria.list();
+        }
+        session.getTransaction().commit();
+        session.close();
+        return lineageQueryList;
     }
 
     public Integer totalRecordCount() {
@@ -72,10 +112,11 @@ public class LineageQueryDAO {
 
     public String insert(LineageQuery lineageQuery) {
         Session session = sessionFactory.openSession();
-        String id = null;
+        String id = "oi";
         try {
             session.beginTransaction();
-            id = (String) session.save(lineageQuery);
+            //check whethter the query is present from before
+            session.save(lineageQuery);
             session.getTransaction().commit();
         } catch (MetadataException e) {
             session.getTransaction().rollback();
