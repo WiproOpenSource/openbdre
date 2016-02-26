@@ -20,7 +20,6 @@ import com.wipro.ats.bdre.md.dao.ServersDAO;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.ModelMap;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.*;
@@ -74,6 +73,7 @@ public class ServersAPI extends MetadataAPIBase {
             LOGGER.info("Record with ID:" + serverId + " selected from Servers by User:" + principal.getName());
 
         } catch (Exception e) {
+            LOGGER.error(e);
             restWrapper = new RestWrapper(e.getMessage(), RestWrapper.ERROR);
         }
         return restWrapper;
@@ -98,6 +98,7 @@ public class ServersAPI extends MetadataAPIBase {
             LOGGER.info("Record with ID:" + serverId + " deleted from Servers by User:" + principal.getName());
 
         } catch (Exception e) {
+            LOGGER.error(e);
             restWrapper = new RestWrapper(e.getMessage(), RestWrapper.ERROR);
         }
         return restWrapper;
@@ -139,6 +140,7 @@ public class ServersAPI extends MetadataAPIBase {
             LOGGER.info("All records listed from Servers by User:" + principal.getName());
 
         } catch (Exception e) {
+            LOGGER.error(e);
             restWrapper = new RestWrapper(e.getMessage(), RestWrapper.ERROR);
         }
         return restWrapper;
@@ -186,6 +188,7 @@ public class ServersAPI extends MetadataAPIBase {
             LOGGER.info("Record with ID:" + server.getServerId() + " updated in Servers by User:" + principal.getName() + server);
 
         } catch (Exception e) {
+            LOGGER.error(e);
             restWrapper = new RestWrapper(e.getMessage(), RestWrapper.ERROR);
         }
         return restWrapper;
@@ -235,6 +238,7 @@ public class ServersAPI extends MetadataAPIBase {
             LOGGER.info("Record with ID:" + server.getServerId() + " inserted in Servers by User:" + principal.getName() + server);
 
         } catch (Exception e) {
+            LOGGER.error(e);
             restWrapper = new RestWrapper(e.getMessage(), RestWrapper.ERROR);
         }
         return restWrapper;

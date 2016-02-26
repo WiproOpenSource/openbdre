@@ -21,7 +21,6 @@ import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.ModelMap;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.*;
@@ -63,11 +62,9 @@ public class UsersAPI extends MetadataAPIBase {
                 users.setUsername(jpaUsers.getUsername());
                 users.setPassword(jpaUsers.getPassword());
 
-                users.setEnabled((jpaUsers.getEnabled() == true) ? (short) 1 : 0);
+                users.setEnabled((jpaUsers.getEnabled()) ? (short) 1 : 0);
 
             }
-            //  users = s.selectOne("call_procedures.GetUsers", users);
-
             restWrapper = new RestWrapper(users, RestWrapper.OK);
             LOGGER.info("Record with name:" + username + " selected from Users by User:" + principal.getName());
 
@@ -130,7 +127,7 @@ public class UsersAPI extends MetadataAPIBase {
                 returnUsers.setUsername(users.getUsername());
                 returnUsers.setPassword(users.getPassword());
 
-                returnUsers.setEnabled((users.getEnabled() == true) ? (short) 1 : 0);
+                returnUsers.setEnabled((users.getEnabled()) ? (short) 1 : 0);
                 returnUsers.setCounter(counter);
                 usersList.add(returnUsers);
             }
