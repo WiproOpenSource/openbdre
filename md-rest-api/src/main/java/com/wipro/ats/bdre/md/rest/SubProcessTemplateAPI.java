@@ -53,15 +53,14 @@ public class SubProcessTemplateAPI extends MetadataAPIBase {
      */
     @RequestMapping(value = "/{id}", method = RequestMethod.GET)
 
-    public
+
     @ResponseBody
-    RestWrapper get(
+    public RestWrapper get(
             @PathVariable("id") Integer processTemplateId, Principal principal
     ) {
         RestWrapper restWrapper = null;
         try {
             List<ProcessTemplate> processTemplates = processTemplateDAO.listSubProcessTemplates(processTemplateId);
-            // List<ProcessTemplate> processTemplates = s.selectList("call_procedures.GetSubProcessTemplates", processTemplate);
             for (ProcessTemplate p : processTemplates) {
                 p.setTableAddTS(DateConverter.dateToString(p.getAddTS()));
             }
@@ -70,6 +69,7 @@ public class SubProcessTemplateAPI extends MetadataAPIBase {
             LOGGER.info("Record with ID:" + processTemplateId + " selected from ProcessTemplate by User:" + principal.getName());
 
         } catch (Exception e) {
+            LOGGER.error(e);
             restWrapper = new RestWrapper(e.getMessage(), RestWrapper.ERROR);
         }
         return restWrapper;
@@ -80,25 +80,22 @@ public class SubProcessTemplateAPI extends MetadataAPIBase {
      * processId passed.
      *
      * @param processTemplateId
-     * @param model
      * @return nothing.
      */
     @RequestMapping(value = "/{id}", method = RequestMethod.DELETE)
-    public
+
     @ResponseBody
-    RestWrapper delete(
-            @PathVariable("id") Integer processTemplateId, Principal principal,
-            ModelMap model) {
+    public RestWrapper delete(
+            @PathVariable("id") Integer processTemplateId, Principal principal) {
 
         RestWrapper restWrapper = null;
         try {
             processTemplateDAO.delete(processTemplateId);
-            // s.delete("call_procedures.DeleteProcessTemplate", processTemplate);
-
             restWrapper = new RestWrapper(null, RestWrapper.OK);
             LOGGER.info("Record with ID:" + processTemplateId + " deleted from ProcessTemplate by User:" + principal.getName());
 
         } catch (Exception e) {
+            LOGGER.error(e);
             restWrapper = new RestWrapper(e.getMessage(), RestWrapper.ERROR);
         }
         return restWrapper;
@@ -112,9 +109,9 @@ public class SubProcessTemplateAPI extends MetadataAPIBase {
      * @return restWrapper It contains the updated instance of Process.
      */
     @RequestMapping(value = {"/", ""}, method = RequestMethod.POST)
-    public
+
     @ResponseBody
-    RestWrapper update(@ModelAttribute("processtemplate")
+    public RestWrapper update(@ModelAttribute("processtemplate")
                        @Valid ProcessTemplate processTemplate, BindingResult bindingResult, Principal principal) {
         RestWrapper restWrapper = null;
         if (bindingResult.hasErrors()) {
@@ -137,7 +134,6 @@ public class SubProcessTemplateAPI extends MetadataAPIBase {
             if (processTemplate.getBatchPattern().isEmpty()) {
                 processTemplate.setBatchPattern(null);
             }
-            // ProcessTemplate processTemplates = s.selectOne("call_procedures.UpdateProcessTemplate", processTemplate);
             com.wipro.ats.bdre.md.dao.jpa.ProcessTemplate jpaProcessTemplate = new com.wipro.ats.bdre.md.dao.jpa.ProcessTemplate();
             jpaProcessTemplate.setProcessTemplateId(processTemplate.getProcessTemplateId());
             jpaProcessTemplate.setDescription(processTemplate.getDescription());
@@ -173,6 +169,7 @@ public class SubProcessTemplateAPI extends MetadataAPIBase {
             LOGGER.info("Record with ID:" + processTemplate.getProcessTemplateId() + " updated in ProcessTemplate by User:" + principal.getName() + processTemplate);
 
         } catch (Exception e) {
+            LOGGER.error(e);
             restWrapper = new RestWrapper(e.getMessage(), RestWrapper.ERROR);
         }
         return restWrapper;
@@ -186,9 +183,9 @@ public class SubProcessTemplateAPI extends MetadataAPIBase {
      * @return restWrapper It contains an instance of Process newly added.
      */
     @RequestMapping(value = {"/", ""}, method = RequestMethod.PUT)
-    public
+
     @ResponseBody
-    RestWrapper insert(@ModelAttribute("processtemplate")
+    public RestWrapper insert(@ModelAttribute("processtemplate")
                        @Valid ProcessTemplate processTemplate, BindingResult bindingResult, Principal principal) {
         RestWrapper restWrapper = null;
         if (bindingResult.hasErrors()) {
@@ -242,14 +239,13 @@ public class SubProcessTemplateAPI extends MetadataAPIBase {
             jpaProcessTemplate.setBusDomain(busDomain);
 
             Integer processTemplateId = processTemplateDAO.insert(jpaProcessTemplate);
-            //ProcessTemplate processTemplates = s.selectOne("call_procedures.InsertProcessTemplate", processTemplate);
-
             processTemplate.setProcessTemplateId(processTemplateId);
 
             restWrapper = new RestWrapper(processTemplate, RestWrapper.OK);
             LOGGER.info("Record with ID:" + processTemplate.getProcessTemplateId() + " inserted in ProcessTemplate by User:" + principal.getName() + processTemplate);
 
         } catch (Exception e) {
+            LOGGER.error(e);
             restWrapper = new RestWrapper(e.getMessage(), RestWrapper.ERROR);
         }
         return restWrapper;

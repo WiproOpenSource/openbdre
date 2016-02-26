@@ -49,31 +49,29 @@ public class UserRolesAPI extends MetadataAPIBase {
      */
 
     @RequestMapping(value = "/{uname}", method = RequestMethod.GET)
-    public
+
     @ResponseBody
-    RestWrapper list(
-            @PathVariable("uname") String username, Principal principal,
-            ModelMap model) {
+    public RestWrapper list(
+            @PathVariable("uname") String username, Principal principal) {
         RestWrapper restWrapper = null;
         try {
             List<com.wipro.ats.bdre.md.dao.jpa.UserRoles> jpaUserRolesList = userRolesDAO.listByName(username);
             List<UserRoles> userRolesList = new ArrayList<UserRoles>();
 
-            Integer counter=jpaUserRolesList.size();
+            Integer counter = jpaUserRolesList.size();
             for (com.wipro.ats.bdre.md.dao.jpa.UserRoles userRoles : jpaUserRolesList) {
                 UserRoles userRole = new UserRoles();
                 userRole.setUserRoleId(userRoles.getUserRoleId());
                 userRole.setUsername(userRoles.getUsers().getUsername());
                 userRole.setRole(userRoles.getRole());
-             userRole.setCounter(counter);
-
+                userRole.setCounter(counter);
                 userRolesList.add(userRole);
             }
-            //  List<UserRoles> userRolesList = s.selectList("call_procedures.ListUserRoles", userroles);
             restWrapper = new RestWrapper(userRolesList, RestWrapper.OK);
             LOGGER.info("Records with username:" + username + " selected from  by UserRoles:" + principal.getName());
 
         } catch (Exception e) {
+            LOGGER.error(e);
             restWrapper = new RestWrapper(e.getMessage(), RestWrapper.ERROR);
         }
         return restWrapper;
@@ -83,24 +81,21 @@ public class UserRolesAPI extends MetadataAPIBase {
      * This method calls the proc deleteUserRoles and deletes a record corresponding to the id passed.
      *
      * @param userRoleId
-     * @param model
      * @return nothing.
      */
     @RequestMapping(value = "/{urid}", method = RequestMethod.DELETE)
-    public
+
     @ResponseBody
-    RestWrapper delete(
-            @PathVariable("urid") Integer userRoleId, Principal principal,
-            ModelMap model) {
+    public RestWrapper delete(
+            @PathVariable("urid") Integer userRoleId, Principal principal) {
         RestWrapper restWrapper = null;
         try {
             userRolesDAO.delete(userRoleId);
-            // s.delete("call_procedures.DeleteUserRoles", userroles);
-
             restWrapper = new RestWrapper(null, RestWrapper.OK);
             LOGGER.info("Record with ID:" + userRoleId + " deleted from UserRoles by User:" + principal.getName());
 
         } catch (Exception e) {
+            LOGGER.error(e);
             restWrapper = new RestWrapper(e.getMessage(), RestWrapper.ERROR);
         }
         return restWrapper;
@@ -114,9 +109,9 @@ public class UserRolesAPI extends MetadataAPIBase {
      * @return restWrapper Contains updated instance of UserRoles .
      */
     @RequestMapping(value = {"/", ""}, method = RequestMethod.POST)
-    public
+
     @ResponseBody
-    RestWrapper update(@ModelAttribute("userroles")
+    public RestWrapper update(@ModelAttribute("userroles")
                        @Valid UserRoles userRoles, BindingResult bindingResult, Principal principal) {
         RestWrapper restWrapper = null;
         if (bindingResult.hasErrors()) {
@@ -142,12 +137,11 @@ public class UserRolesAPI extends MetadataAPIBase {
             users.setUsername(userRoles.getUsername());
             jpaUserRoles.setUsers(users);
             userRolesDAO.update(jpaUserRoles);
-            //  UserRoles userRolesUpdate = s.selectOne("call_procedures.UpdateUserRoles", userroles);
-
             restWrapper = new RestWrapper(userRoles, RestWrapper.OK);
             LOGGER.info("Record with ID:" + userRoles.getUserRoleId() + " updated in UserRoles by User:" + principal.getName() + userRoles);
 
         } catch (Exception e) {
+            LOGGER.error(e);
             restWrapper = new RestWrapper(e.getMessage(), RestWrapper.ERROR);
         }
         return restWrapper;
@@ -161,9 +155,9 @@ public class UserRolesAPI extends MetadataAPIBase {
      * @return restWrapper It contains an instance of UserRoles newly added.
      */
     @RequestMapping(value = {"/", ""}, method = RequestMethod.PUT)
-    public
+
     @ResponseBody
-    RestWrapper insert(@ModelAttribute("userroles")
+    public RestWrapper insert(@ModelAttribute("userroles")
                        @Valid UserRoles userRoles, BindingResult bindingResult, Principal principal) {
         RestWrapper restWrapper = null;
         if (bindingResult.hasErrors()) {
@@ -189,12 +183,11 @@ public class UserRolesAPI extends MetadataAPIBase {
             jpaUserRoles.setUsers(users);
             Integer userRolesId = userRolesDAO.insert(jpaUserRoles);
             userRoles.setUserRoleId(userRolesId);
-            //  UserRoles userRolesInsert = s.selectOne("call_procedures.InsertUserRoles", userroles);
-
             restWrapper = new RestWrapper(userRoles, RestWrapper.OK);
             LOGGER.info("Record with ID:" + userRoles.getUserRoleId() + " inserted in UserRoles by User:" + principal.getName() + userRoles);
 
         } catch (Exception e) {
+            LOGGER.error(e);
             restWrapper = new RestWrapper(e.getMessage(), RestWrapper.ERROR);
         }
 

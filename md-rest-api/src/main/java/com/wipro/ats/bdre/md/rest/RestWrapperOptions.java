@@ -29,18 +29,7 @@ public class RestWrapperOptions {
     public static final String ERROR = "ERROR";
     private String result;
     private Object options;
-
-    @JsonProperty("Message")
-    public String getMessage() {
-        return message;
-    }
-
-    public void setMessage(String message) {
-        this.message = message;
-    }
-
     private String message;
-
 
     public RestWrapperOptions(Object objectToSerialize, String result) {
         this.result = result;
@@ -49,6 +38,14 @@ public class RestWrapperOptions {
         } else if (objectToSerialize != null) {
             this.message = objectToSerialize.toString();
         }
+    }
+    @JsonProperty("Message")
+    public String getMessage() {
+        return message;
+    }
+
+    public void setMessage(String message) {
+        this.message = message;
     }
 
     @JsonProperty("Result")
@@ -63,7 +60,6 @@ public class RestWrapperOptions {
 
     @JsonProperty("Options")
     public Object getOptions() {
-
         return options;
     }
 
@@ -75,6 +71,10 @@ public class RestWrapperOptions {
     public static class Option {
         private String displayText;
         private Object value;
+        public Option(String displayText, Object value) {
+            this.displayText = displayText;
+            this.value = value;
+        }
 
         @JsonProperty("DisplayText")
         public String getDisplayText() {
@@ -94,9 +94,6 @@ public class RestWrapperOptions {
             this.value = value;
         }
 
-        public Option(String displayText, Object value) {
-            this.displayText = displayText;
-            this.value = value;
-        }
+
     }
 }

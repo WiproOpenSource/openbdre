@@ -49,9 +49,9 @@ public class UsersAPI extends MetadataAPIBase {
      * @return restWraper Instance of Users corresponding to passed username.
      */
     @RequestMapping(value = "/{uname}", method = RequestMethod.GET)
-    public
+
     @ResponseBody
-    RestWrapper get(
+    public RestWrapper get(
             @PathVariable("uname") String username, Principal principal
     ) {
 
@@ -72,6 +72,7 @@ public class UsersAPI extends MetadataAPIBase {
             LOGGER.info("Record with name:" + username + " selected from Users by User:" + principal.getName());
 
         } catch (Exception e) {
+            LOGGER.error(e);
             restWrapper = new RestWrapper(e.getMessage(), RestWrapper.ERROR);
         }
         return restWrapper;
@@ -81,26 +82,25 @@ public class UsersAPI extends MetadataAPIBase {
      * This method calls proc DeleteUsers and removes record corresponding to username passed.
      *
      * @param username
-     * @param model
      * @return nothing.
      */
     @RequestMapping(value = "/{uname}", method = RequestMethod.DELETE)
-    public
+
     @ResponseBody
-    RestWrapper delete(
-            @PathVariable("uname") String username, Principal principal,
-            ModelMap model) {
+    public RestWrapper delete(
+            @PathVariable("uname") String username, Principal principal
+    ) {
 
         RestWrapper restWrapper = null;
         try {
 
             usersDAO.delete(username);
-            // s.delete("call_procedures.DeleteUsers", users);
 
             restWrapper = new RestWrapper(null, RestWrapper.OK);
             LOGGER.info("Record with name:" + username + " deleted from Users by User:" + principal.getName());
 
         } catch (Exception e) {
+            LOGGER.error(e);
             restWrapper = new RestWrapper(e.getMessage(), RestWrapper.ERROR);
         }
         return restWrapper;
@@ -115,14 +115,14 @@ public class UsersAPI extends MetadataAPIBase {
 
     @RequestMapping(value = {"", "/"}, method = RequestMethod.GET)
 
-    public
+
     @ResponseBody
-    RestWrapper list(@RequestParam(value = "page", defaultValue = "0") int startPage,
+    public RestWrapper list(@RequestParam(value = "page", defaultValue = "0") int startPage,
                      @RequestParam(value = "size", defaultValue = "10") int pageSize, Principal principal) {
 
         RestWrapper restWrapper = null;
         try {
-            Integer counter=usersDAO.totalRecordCount();
+            Integer counter = usersDAO.totalRecordCount();
             List<com.wipro.ats.bdre.md.dao.jpa.Users> jpaUsers = usersDAO.list(startPage, pageSize);
             List<Users> usersList = new ArrayList<Users>();
             for (com.wipro.ats.bdre.md.dao.jpa.Users users : jpaUsers) {
@@ -134,12 +134,12 @@ public class UsersAPI extends MetadataAPIBase {
                 returnUsers.setCounter(counter);
                 usersList.add(returnUsers);
             }
-            // List<Users> userslist = s.selectList("call_procedures.ListUsers", users);
 
             restWrapper = new RestWrapper(usersList, RestWrapper.OK);
             LOGGER.info("All records listed from Users by User:" + principal.getName());
 
         } catch (Exception e) {
+            LOGGER.error(e);
             restWrapper = new RestWrapper(e.getMessage(), RestWrapper.ERROR);
         }
         return restWrapper;
@@ -154,9 +154,9 @@ public class UsersAPI extends MetadataAPIBase {
      * @return restWrapper It contains the updated instance of Users passed.
      */
     @RequestMapping(value = {"/", ""}, method = RequestMethod.POST)
-    public
+
     @ResponseBody
-    RestWrapper update(@ModelAttribute("users")
+    public RestWrapper update(@ModelAttribute("users")
                        @Valid Users users, BindingResult bindingResult, Principal principal) {
         RestWrapper restWrapper = null;
         if (bindingResult.hasErrors()) {
@@ -183,12 +183,12 @@ public class UsersAPI extends MetadataAPIBase {
             jpaUsers.setEnabled((users.getEnabled() == 1) ? true : false);
             usersDAO.update(jpaUsers);
 
-            //Users usersupdate = s.selectOne("call_procedures.UpdateUsers", users);
 
             restWrapper = new RestWrapper(users, RestWrapper.OK);
             LOGGER.info("Record with name:" + users.getUsername() + " updated in Users by User:" + principal.getName() + users);
 
         } catch (Exception e) {
+            LOGGER.error(e);
             restWrapper = new RestWrapper(e.getMessage(), RestWrapper.ERROR);
         }
 
@@ -203,9 +203,9 @@ public class UsersAPI extends MetadataAPIBase {
      * @return restWrapper Instance of Users newly added.
      */
     @RequestMapping(value = {"/", ""}, method = RequestMethod.PUT)
-    public
+
     @ResponseBody
-    RestWrapper insert(@ModelAttribute("users")
+    public RestWrapper insert(@ModelAttribute("users")
                        @Valid Users users, BindingResult bindingResult, Principal principal) {
 
         RestWrapper restWrapper = null;
@@ -231,12 +231,12 @@ public class UsersAPI extends MetadataAPIBase {
             jpaUsers.setUsername(users.getUsername());
             jpaUsers.setEnabled((users.getEnabled() == 1) ? true : false);
             usersDAO.insert(jpaUsers);
-            //Users usersupdate = s.selectOne("call_procedures.InsertUsers", users);
 
             restWrapper = new RestWrapper(users, RestWrapper.OK);
             LOGGER.info("Record with ID:" + users.getUsername() + " inserted in Users by User:" + principal.getName() + users);
 
         } catch (Exception e) {
+            LOGGER.error(e);
             restWrapper = new RestWrapper(e.getMessage(), RestWrapper.ERROR);
         }
         return restWrapper;
