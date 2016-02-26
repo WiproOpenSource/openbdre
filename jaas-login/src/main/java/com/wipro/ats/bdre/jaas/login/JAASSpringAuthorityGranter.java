@@ -27,8 +27,7 @@ import java.util.Set;
 public class JAASSpringAuthorityGranter implements org.springframework.security.authentication.jaas.AuthorityGranter {
     @Override
     public Set<String> grant(Principal principal) {
-        Set<String> roleSet = getRoles(principal.getName());
-        return roleSet;
+        return getRoles(principal.getName());
     }
 
     /**
@@ -37,7 +36,7 @@ public class JAASSpringAuthorityGranter implements org.springframework.security.
      * @return roleSet
      */
     private Set<String> getRoles(String username) {
-        HashSet<String> roleSet = new HashSet<String>();
+        Set<String> roleSet = new HashSet<String>();
         UserRoleFetcher userRoleFetcher = new UserRoleFetcher();
         for (UserRoles role : userRoleFetcher.getRoles(username)) {
             roleSet.add(role.getRole());
