@@ -68,11 +68,9 @@ public class DataImportMain extends BaseStructure {
             }
 
             String[] param = {processId, batchId,instanceExecId};
-            int result = 0;
-            result = ToolRunner.run(new Configuration(), new HDFSImport(commonProperties, columns), param);
+            ToolRunner.run(new Configuration(), new HDFSImport(commonProperties, columns), param);
 
         } catch (Exception e) {
-            e.printStackTrace();
             LOGGER.error(e);
             throw new ETLException(e);
         }
