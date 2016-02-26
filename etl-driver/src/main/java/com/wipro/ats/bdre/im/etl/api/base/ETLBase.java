@@ -92,24 +92,24 @@ public abstract class ETLBase extends BaseStructure{
         }
 
     }
-    HiveMetaStoreClient hClient =null;
+    HiveMetaStoreClient hiveClient =null;
     protected HiveMetaStoreClient getMetaStoreClient()
     {
-        if(hClient ==null) {
+        if(hiveClient ==null) {
             try {
                 HiveConf hiveConf = new HiveConf();
                 hiveConf.set("hive.metastore.uris", IMConfig.getProperty("etl.hive-metastore-uris"));
                 hiveConf.set("hive.exec.dynamic.partition.mode", "nonstrict");
                 hiveConf.set("hive.exec.dynamic.partition", "true");
                 hiveConf.set("hive.exec.max.dynamic.partitions.pernode", "1000");
-                hClient = new HiveMetaStoreClient(hiveConf);
+                hiveClient = new HiveMetaStoreClient(hiveConf);
 
             } catch (MetaException e) {
                 LOGGER.error(e);
                 throw new ETLException(e);
             }
         }
-        return hClient;
+        return hiveClient;
     }
 
 
