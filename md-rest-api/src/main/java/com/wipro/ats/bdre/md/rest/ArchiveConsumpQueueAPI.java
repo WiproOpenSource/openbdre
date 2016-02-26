@@ -14,6 +14,7 @@
 
 package com.wipro.ats.bdre.md.rest;
 
+import com.wipro.ats.bdre.exception.MetadataException;
 import com.wipro.ats.bdre.md.api.base.MetadataAPIBase;
 import com.wipro.ats.bdre.md.beans.table.ArchiveConsumpQueue;
 import com.wipro.ats.bdre.md.dao.ArchiveConsumpQueueDAO;
@@ -23,7 +24,6 @@ import com.wipro.ats.bdre.md.rest.util.DateConverter;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.ModelMap;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.*;
@@ -42,6 +42,7 @@ import java.util.List;
 
 public class ArchiveConsumpQueueAPI extends MetadataAPIBase {
     private static final Logger LOGGER = Logger.getLogger(ArchiveConsumpQueueAPI.class);
+    private static final String RECORDWITHID = "Record with ID:";
     @Autowired
     ArchiveConsumpQueueDAO archiveConsumpQueueDAO;
 
@@ -53,8 +54,7 @@ public class ArchiveConsumpQueueAPI extends MetadataAPIBase {
      * @return restWrapper returns an instance of ArchiveConsumpQueue object.
      */
     @RequestMapping(value = "/{id}", method = RequestMethod.GET)
-    public
-    @ResponseBody
+    @ResponseBody public
     RestWrapper get(
             @PathVariable("id") Long queueId, Principal principal
     ) {
@@ -84,15 +84,13 @@ public class ArchiveConsumpQueueAPI extends MetadataAPIBase {
             if (archiveConsumpQueue.getStartTs() != null) {
                 archiveConsumpQueue.setTableStartTS(DateConverter.dateToString(archiveConsumpQueue.getStartTs()));
             }
-
-            // archiveConsumpQueue = s.selectOne("call_procedures.GetArchiveConsumpQueue", archiveConsumpQueue);
             archiveConsumpQueue.setTableInsertTS(DateConverter.dateToString(archiveConsumpQueue.getInsertTs()));
 
 
             restWrapper = new RestWrapper(archiveConsumpQueue, RestWrapper.OK);
-            LOGGER.info("Record with ID:" + queueId + " selected from ArchiveConsumpQueue by User:" + principal.getName());
-        } catch (Exception e) {
-
+            LOGGER.info(RECORDWITHID + queueId + " selected from ArchiveConsumpQueue by User:" + principal.getName());
+        } catch (MetadataException e) {
+            LOGGER.error(e);
             restWrapper = new RestWrapper(e.getMessage(), RestWrapper.ERROR);
         }
         return restWrapper;
@@ -103,24 +101,20 @@ public class ArchiveConsumpQueueAPI extends MetadataAPIBase {
      * passed queueId.
      *
      * @param queueId
-     * @param model
      * @return nothing.
      */
     @RequestMapping(value = "/{id}", method = RequestMethod.DELETE)
-    public
-    @ResponseBody
+    @ResponseBody public
     RestWrapper delete(
-            @PathVariable("id") Long queueId, Principal principal,
-            ModelMap model) {
+            @PathVariable("id") Long queueId, Principal principal) {
         RestWrapper restWrapper = null;
         try {
             archiveConsumpQueueDAO.delete(queueId);
-            //s.delete("call_procedures.DeleteArchiveConsumpQueue", archiveConsumpQueue);
 
             restWrapper = new RestWrapper(null, RestWrapper.OK);
-            LOGGER.info("Record with ID:" + queueId + " deleted from ArchiveConsumpQueue by User:" + principal.getName());
-        } catch (Exception e) {
-
+            LOGGER.info(RECORDWITHID + queueId + " deleted from ArchiveConsumpQueue by User:" + principal.getName());
+        } catch (MetadataException e) {
+            LOGGER.error(e);
             restWrapper = new RestWrapper(e.getMessage(), RestWrapper.ERROR);
         }
         return restWrapper;
@@ -135,8 +129,7 @@ public class ArchiveConsumpQueueAPI extends MetadataAPIBase {
      */
     @RequestMapping(value = {"", "/"}, method = RequestMethod.GET)
 
-    public
-    @ResponseBody
+    @ResponseBody public
     RestWrapper list(@RequestParam(value = "page", defaultValue = "0") int startPage,
                      @RequestParam(value = "size", defaultValue = "10") int pageSize, Principal principal) {
         RestWrapper restWrapper = null;
@@ -161,7 +154,6 @@ public class ArchiveConsumpQueueAPI extends MetadataAPIBase {
                 archiveConsumpQueue.setCounter(counter);
                 archiveConsumpQueues.add(archiveConsumpQueue);
             }
-            // List<ArchiveConsumpQueue> archiveConsumpQueues = s.selectList("call_procedures.GetArchiveConsumpQueues", archiveConsumpQueue);
             for (ArchiveConsumpQueue acq : archiveConsumpQueues) {
                 if (acq.getEndTs() != null) {
                     acq.setTableEndTS(DateConverter.dateToString(acq.getEndTs()));
@@ -173,7 +165,8 @@ public class ArchiveConsumpQueueAPI extends MetadataAPIBase {
             }
             restWrapper = new RestWrapper(archiveConsumpQueues, RestWrapper.OK);
             LOGGER.info("All records listed from ArchiveConsumpQueue by User:" + principal.getName());
-        } catch (Exception e) {
+        } catch (MetadataException e) {
+            LOGGER.error(e);
             restWrapper = new RestWrapper(e.getMessage(), RestWrapper.ERROR);
         }
 
@@ -189,8 +182,7 @@ public class ArchiveConsumpQueueAPI extends MetadataAPIBase {
      * @return restWrapper Updated instance of ArchiveConsumpQueue.
      */
     @RequestMapping(value = {"/", ""}, method = RequestMethod.POST)
-    public
-    @ResponseBody
+    @ResponseBody public
     RestWrapper update(@ModelAttribute("acq")
                        @Valid ArchiveConsumpQueue archiveConsumpQueue, BindingResult bindingResult, Principal principal) {
         RestWrapper restWrapper = null;
@@ -238,15 +230,14 @@ public class ArchiveConsumpQueueAPI extends MetadataAPIBase {
             jpaAcq.setBatchMarking(archiveConsumpQueue.getBatchMarking());
             archiveConsumpQueueDAO.update(jpaAcq);
 
-            //  ArchiveConsumpQueue archiveConsumpQueues = s.selectOne("call_procedures.UpdateArchiveConsumpQueue", archiveConsumpQueue);
-
             archiveConsumpQueue.setTableStartTS(DateConverter.dateToString(archiveConsumpQueue.getStartTs()));
             archiveConsumpQueue.setTableEndTS(DateConverter.dateToString(archiveConsumpQueue.getEndTs()));
             archiveConsumpQueue.setTableInsertTS(DateConverter.dateToString(archiveConsumpQueue.getInsertTs()));
 
             restWrapper = new RestWrapper(archiveConsumpQueue, RestWrapper.OK);
-            LOGGER.info("Record with ID:" + archiveConsumpQueue.getQueueId() + " updated from ArchiveConsumpQueue by User:" + principal.getName() + archiveConsumpQueue);
-        } catch (Exception e) {
+            LOGGER.info(RECORDWITHID + archiveConsumpQueue.getQueueId() + " updated from ArchiveConsumpQueue by User:" + principal.getName() + archiveConsumpQueue);
+        } catch (MetadataException e) {
+            LOGGER.error(e);
             restWrapper = new RestWrapper(e.getMessage(), RestWrapper.ERROR);
         }
         return restWrapper;
@@ -261,8 +252,7 @@ public class ArchiveConsumpQueueAPI extends MetadataAPIBase {
      * @return restWrapper added instance of ArchiveConsumpQueue.
      */
     @RequestMapping(value = {"/", ""}, method = RequestMethod.PUT)
-    public
-    @ResponseBody
+    @ResponseBody public
     RestWrapper insert(@ModelAttribute("acq")
                        @Valid ArchiveConsumpQueue archiveConsumpQueue, BindingResult bindingResult, Principal principal) {
         RestWrapper restWrapper = null;
@@ -312,15 +302,14 @@ public class ArchiveConsumpQueueAPI extends MetadataAPIBase {
             jpaAcq.setBatchMarking(archiveConsumpQueue.getBatchMarking());
             Long queueId = archiveConsumpQueueDAO.insert(jpaAcq);
             archiveConsumpQueue.setQueueId(queueId);
-
-            // ArchiveConsumpQueue archiveConsumpQueues = s.selectOne("call_procedures.InsertArchiveConsumpQueue", archiveConsumpQueue);
             archiveConsumpQueue.setTableStartTS(DateConverter.dateToString(archiveConsumpQueue.getStartTs()));
             archiveConsumpQueue.setTableEndTS(DateConverter.dateToString(archiveConsumpQueue.getEndTs()));
             archiveConsumpQueue.setTableInsertTS(DateConverter.dateToString(archiveConsumpQueue.getInsertTs()));
 
             restWrapper = new RestWrapper(archiveConsumpQueue, RestWrapper.OK);
-            LOGGER.info("Record with ID:" + archiveConsumpQueue.getQueueId() + " inserted into ArchiveConsumpQueue by User:" + principal.getName() + archiveConsumpQueue);
-        } catch (Exception e) {
+            LOGGER.info(RECORDWITHID + archiveConsumpQueue.getQueueId() + " inserted into ArchiveConsumpQueue by User:" + principal.getName() + archiveConsumpQueue);
+        } catch (MetadataException e) {
+            LOGGER.error(e);
             restWrapper = new RestWrapper(e.getMessage(), RestWrapper.ERROR);
         }
         return restWrapper;

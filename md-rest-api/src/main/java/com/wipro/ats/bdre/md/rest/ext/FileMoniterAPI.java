@@ -16,7 +16,6 @@ package com.wipro.ats.bdre.md.rest.ext;
 
 import com.wipro.ats.bdre.md.beans.FileMonitorInfo;
 import com.wipro.ats.bdre.md.dao.ProcessDAO;
-import com.wipro.ats.bdre.md.dao.PropertiesDAO;
 import com.wipro.ats.bdre.md.dao.jpa.Process;
 import com.wipro.ats.bdre.md.dao.jpa.Properties;
 import com.wipro.ats.bdre.md.rest.RestWrapper;
@@ -46,13 +45,12 @@ import java.util.List;
 @Scope("session")
 public class FileMoniterAPI {
     private static final Logger LOGGER = Logger.getLogger(FileMoniterAPI.class);
+    private static final String FILEMON = "fileMon";
     @Autowired
     private ProcessDAO processDAO;
-    @Autowired
-    private PropertiesDAO propertiesDAO;
+
     @RequestMapping(value = {"/", ""}, method = RequestMethod.POST)
-    public
-    @ResponseBody
+    @ResponseBody public
     RestWrapper createFileMonitorProperties(@ModelAttribute("fileMonitorInfo")
                                             @Valid FileMonitorInfo fileMonitorInfo, BindingResult bindingResult, Principal principal) {
         RestWrapper restWrapper = null;
@@ -75,15 +73,15 @@ public class FileMoniterAPI {
         Process childProcess = Dao2TableUtil.buildJPAProcess(27, "SubProcess of " + fileMonitorInfo.getProcessName(), fileMonitorInfo.getProcessDescription(), 0,fileMonitorInfo.getBusDomainId());
         List<Properties> childProps=new ArrayList<>();
         //inserting in properties table
-        Properties jpaProperties = Dao2TableUtil.buildJPAProperties("fileMon", "deleteCopiedSrc", fileMonitorInfo.getDeleteCopiedSource(), "Delete copied source");
+        Properties jpaProperties = Dao2TableUtil.buildJPAProperties(FILEMON, "deleteCopiedSrc", fileMonitorInfo.getDeleteCopiedSource(), "Delete copied source");
         childProps.add(jpaProperties);
-        jpaProperties = Dao2TableUtil.buildJPAProperties("fileMon", "filePattern", fileMonitorInfo.getFilePattern(), "pattern of file");
+        jpaProperties = Dao2TableUtil.buildJPAProperties(FILEMON, "filePattern", fileMonitorInfo.getFilePattern(), "pattern of file");
         childProps.add(jpaProperties);
-        jpaProperties = Dao2TableUtil.buildJPAProperties("fileMon", "hdfsUploadDir", fileMonitorInfo.getHdfsUploadDir(), "hdfc upload dir");
+        jpaProperties = Dao2TableUtil.buildJPAProperties(FILEMON, "hdfsUploadDir", fileMonitorInfo.getHdfsUploadDir(), "hdfc upload dir");
         childProps.add(jpaProperties);
-        jpaProperties = Dao2TableUtil.buildJPAProperties("fileMon", "monitoredDirName", fileMonitorInfo.getMonitoredDirName(), "file monitored dir");
+        jpaProperties = Dao2TableUtil.buildJPAProperties(FILEMON, "monitoredDirName", fileMonitorInfo.getMonitoredDirName(), "file monitored dir");
         childProps.add(jpaProperties);
-        jpaProperties = Dao2TableUtil.buildJPAProperties("fileMon", "sleepTime", Integer.toString(fileMonitorInfo.getSleepTime()), "sleeptime of thread");
+        jpaProperties = Dao2TableUtil.buildJPAProperties(FILEMON, "sleepTime", Integer.toString(fileMonitorInfo.getSleepTime()), "sleeptime of thread");
         childProps.add(jpaProperties);
         List<Process> processList = processDAO.createOneChildJob(parentProcess,childProcess,null,childProps);
         List<com.wipro.ats.bdre.md.beans.table.Process>tableProcessList=Dao2TableUtil.jpaList2TableProcessList(processList);
@@ -94,6 +92,7 @@ public class FileMoniterAPI {
             process.setTableEditTS(DateConverter.dateToString(process.getEditTS()));
         }
         restWrapper = new RestWrapper(processList, RestWrapper.OK);
+        LOGGER.info("Process and properties inserted for File Monitor Process by " + principal.getName());
         return restWrapper;
     }
 
