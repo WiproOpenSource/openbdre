@@ -18,9 +18,7 @@ import com.wipro.ats.bdre.BaseStructure;
 import com.wipro.ats.bdre.IMConfig;
 import com.wipro.ats.bdre.im.IMConstant;
 import com.wipro.ats.bdre.im.etl.api.exception.ETLException;
-import com.wipro.ats.bdre.md.api.GetProcess;
 import com.wipro.ats.bdre.md.api.GetProperties;
-import com.wipro.ats.bdre.md.beans.ProcessInfo;
 import org.apache.hadoop.hive.conf.HiveConf;
 import org.apache.hadoop.hive.metastore.HiveMetaStoreClient;
 import org.apache.hadoop.hive.metastore.api.MetaException;
@@ -29,7 +27,6 @@ import org.apache.log4j.Logger;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
-import java.util.List;
 
 /**
  * Created by arijit on 12/28/14.
@@ -47,7 +44,6 @@ public abstract class ETLBase extends BaseStructure{
     protected String stgDb;
     protected String baseTable;
     protected String baseDb;
-    private String processId;
 
 
     protected void loadRawHiveTableInfo(String processId){
@@ -94,24 +90,24 @@ public abstract class ETLBase extends BaseStructure{
         }
 
     }
-    HiveMetaStoreClient hclient =null;
+    HiveMetaStoreClient hClient =null;
     protected HiveMetaStoreClient getMetaStoreClient()
     {
-        if(hclient ==null) {
+        if(hClient ==null) {
             try {
                 HiveConf hiveConf = new HiveConf();
                 hiveConf.set("hive.metastore.uris", IMConfig.getProperty("etl.hive-metastore-uris"));
                 hiveConf.set("hive.exec.dynamic.partition.mode", "nonstrict");
                 hiveConf.set("hive.exec.dynamic.partition", "true");
                 hiveConf.set("hive.exec.max.dynamic.partitions.pernode", "1000");
-                hclient = new HiveMetaStoreClient(hiveConf);
+                hClient = new HiveMetaStoreClient(hiveConf);
 
             } catch (MetaException e) {
                 LOGGER.error(e);
                 throw new ETLException(e);
             }
         }
-        return hclient;
+        return hClient;
     }
 
 

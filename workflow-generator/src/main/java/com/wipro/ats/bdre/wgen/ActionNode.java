@@ -155,8 +155,6 @@ public class ActionNode extends OozieNode {
             containingNodes.add(fileRegistrationNode);
         } else if (processInfo.getProcessTypeId() == SEMANTIC_ACTION) {
 
-        } else if (processInfo.getProcessTypeId() == INGESTION) {
-
         } else if (processInfo.getProcessTypeId() == EXPORT_ACTION) {
 
         } else if (processInfo.getProcessTypeId() == IMPORT_ACTION) {
