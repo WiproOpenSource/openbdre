@@ -113,20 +113,6 @@ public abstract class ETLBase extends BaseStructure{
         }
         return hclient;
     }
- /*   protected GetHiveTablesInfo getRawTable() {
-
-        return rawTable;
-    }
-
-
-    protected GetHiveTablesInfo getBaseTable() {
-        return baseTable;
-    }
-
-
-    protected GetHiveTablesInfo getRawView() {
-        return rawView;
-    }*/
 
 
 }

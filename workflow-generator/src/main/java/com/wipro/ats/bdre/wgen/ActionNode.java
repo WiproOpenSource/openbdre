@@ -93,15 +93,7 @@ public class ActionNode extends OozieNode {
     public void setProcessInfo(ProcessInfo processInfo) {
         this.processInfo = processInfo;
         if (processInfo.getProcessTypeId() == RAW_LOAD_ACTION) {
-//            LOFActionNode lofActionNode = new LOFActionNode(this);
-//            CreateTableActionNode createTableActionNode = new CreateTableActionNode(this);
             RawLoadActionNode rawLoadActionNode = new RawLoadActionNode(this);
-
-//            createTableActionNode.setToNode(lofActionNode);
-//            lofActionNode.setToNode(rawLoadActionNode);
-
-//            containingNodes.add(createTableActionNode);
-//            containingNodes.add(lofActionNode);
             containingNodes.add(rawLoadActionNode);
 
         } else if (processInfo.getProcessTypeId() == HIVE_ACTION) {
