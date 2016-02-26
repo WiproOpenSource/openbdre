@@ -53,7 +53,6 @@ public class SFTP {
         }
         String key = fileInfo.getSshPrivateKey();
         String rfile = fileInfo.getFilePath();
-        String lfile = destination;
         Session session = null;
 
         if (key != null && !key.isEmpty()) {
@@ -94,7 +93,7 @@ public class SFTP {
     }
 
     private void transferFile(Session session, String remoteFile, String localFile) {
-        {
+
             FileOutputStream fos = null;
             try {
                 String prefix = null;
@@ -129,11 +128,12 @@ public class SFTP {
                             // error
                             break;
                         }
-                        if (buf[0] == ' ') break;
+                        if (buf[0] == ' ')
+                            break;
                         filesize = filesize * 10L + (long) (buf[0] - '0');
                     }
                     String file = null;
-                    for (int i = 0; ; i++) {
+                    for (int i = 0; i>= 0; i++) {
                         in.read(buf, i, 1);
                         if (buf[i] == (byte) 0x0a) {
                             file = new String(buf, 0, i);
@@ -149,7 +149,8 @@ public class SFTP {
                     fos = new FileOutputStream(prefix == null ? localFile : prefix + file);
                     int foo;
                     while (true) {
-                        if (buf.length < filesize) foo = buf.length;
+                        if (buf.length < filesize)
+                            foo = buf.length;
                         else foo = (int) filesize;
                         foo = in.read(buf, 0, foo);
                         if (foo < 0) {
@@ -158,7 +159,8 @@ public class SFTP {
                         }
                         fos.write(buf, 0, foo);
                         filesize -= foo;
-                        if (filesize == 0L) break;
+                        if (filesize == 0L)
+                            break;
                     }
                     fos.close();
                     fos = null;
@@ -176,11 +178,13 @@ public class SFTP {
             } catch (Exception e) {
                 LOGGER.error(e);
                 try {
-                    if (fos != null) fos.close();
+                    if (fos != null)
+                        fos.close();
                 } catch (Exception ee) {
+                    LOGGER.info(e);
                 }
             }
-        }
+
     }
 
     private int checkAck(InputStream in) throws IOException {
@@ -189,11 +193,13 @@ public class SFTP {
         //          1 for error,
         //          2 for fatal error,
         //          -1
-        if (b == 0) return b;
-        if (b == -1) return b;
+        if (b == 0)
+            return b;
+        if (b == -1)
+            return b;
 
         if (b == 1 || b == 2) {
-            StringBuffer sb = new StringBuffer();
+            StringBuilder sb = new StringBuilder();
             int c;
             do {
                 c = in.read();
@@ -201,10 +207,10 @@ public class SFTP {
             }
             while (c != '\n');
             if (b == 1) { // error
-                System.out.print(sb.toString());
+                LOGGER.info(sb.toString());
             }
             if (b == 2) { // fatal error
-                System.out.print(sb.toString());
+                LOGGER.info(sb.toString());
             }
         }
         return b;

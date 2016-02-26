@@ -18,9 +18,7 @@ import com.wipro.ats.bdre.BaseStructure;
 import com.wipro.ats.bdre.IMConfig;
 import com.wipro.ats.bdre.im.IMConstant;
 import com.wipro.ats.bdre.im.etl.api.exception.ETLException;
-import com.wipro.ats.bdre.md.api.GetProcess;
 import com.wipro.ats.bdre.md.api.GetProperties;
-import com.wipro.ats.bdre.md.beans.ProcessInfo;
 import org.apache.hadoop.hive.conf.HiveConf;
 import org.apache.hadoop.hive.metastore.HiveMetaStoreClient;
 import org.apache.hadoop.hive.metastore.api.MetaException;
@@ -29,7 +27,6 @@ import org.apache.log4j.Logger;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
-import java.util.List;
 
 /**
  * Created by arijit on 12/28/14.
@@ -47,7 +44,8 @@ public abstract class ETLBase extends BaseStructure{
     protected String stgDb;
     protected String baseTable;
     protected String baseDb;
-    private String processId;
+
+    HiveMetaStoreClient hclient =null;
 
 
     protected void loadRawHiveTableInfo(String processId){
@@ -94,7 +92,7 @@ public abstract class ETLBase extends BaseStructure{
         }
 
     }
-    HiveMetaStoreClient hclient =null;
+
     protected HiveMetaStoreClient getMetaStoreClient()
     {
         if(hclient ==null) {
@@ -113,20 +111,7 @@ public abstract class ETLBase extends BaseStructure{
         }
         return hclient;
     }
- /*   protected GetHiveTablesInfo getRawTable() {
 
-        return rawTable;
-    }
-
-
-    protected GetHiveTablesInfo getBaseTable() {
-        return baseTable;
-    }
-
-
-    protected GetHiveTablesInfo getRawView() {
-        return rawView;
-    }*/
 
 
 }
