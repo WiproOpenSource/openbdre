@@ -46,7 +46,7 @@ public abstract class ETLBase extends BaseStructure{
     protected String stgDb;
     protected String baseTable;
     protected String baseDb;
-
+    HiveMetaStoreClient hiveClient =null;
 
     protected void loadRawHiveTableInfo(String processId){
         rawLoad = processId;
@@ -92,7 +92,7 @@ public abstract class ETLBase extends BaseStructure{
         }
 
     }
-    HiveMetaStoreClient hiveClient =null;
+
     protected HiveMetaStoreClient getMetaStoreClient()
     {
         if(hiveClient ==null) {
