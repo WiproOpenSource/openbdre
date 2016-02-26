@@ -34,13 +34,13 @@ import java.util.Map;
  */
 public class JAASLoginModule implements LoginModule {
 
-    private static Logger LOGGER = Logger.getLogger(JAASLoginModule.class);
+    private static final Logger LOGGER = Logger.getLogger(JAASLoginModule.class);
 
     // initial state
     private Subject subject;
     private CallbackHandler callbackHandler;
-    private Map sharedState;
-    private Map options;
+    private Map<String, ?> sharedState;
+    private Map<String, ?> options;
 
     // configurable option
 
@@ -105,8 +105,10 @@ public class JAASLoginModule implements LoginModule {
 
         } catch (IOException e) {
             LOGGER.error("Callback handler does not return login data properly. " + e.getMessage());
+            LOGGER.info(e);
         } catch (UnsupportedCallbackException e) {
             LOGGER.error("Callback handler does not return login data properly. " + e.getMessage());
+            LOGGER.info(e);
         }
 
         return false;
@@ -114,7 +116,7 @@ public class JAASLoginModule implements LoginModule {
 
     @Override
     public boolean commit() throws LoginException {
-        if (succeeded == false) {
+        if (succeeded) {
             return false;
         } else {
             userPrincipal = new JAASUserPrincipal(username);
@@ -148,9 +150,9 @@ public class JAASLoginModule implements LoginModule {
 
     @Override
     public boolean abort() throws LoginException {
-        if (succeeded == false) {
+        if (succeeded) {
             return false;
-        } else if (succeeded == true && commitSucceeded == false) {
+        } else if (succeeded && commitSucceeded) {
             succeeded = false;
             username = null;
             if (password != null) {
