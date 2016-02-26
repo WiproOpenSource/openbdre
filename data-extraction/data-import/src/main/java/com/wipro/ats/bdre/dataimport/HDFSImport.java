@@ -43,7 +43,8 @@ import java.util.Properties;
 
 public class HDFSImport extends Configured implements Tool {
     private static final Logger LOGGER = Logger.getLogger(HDFSImport.class);
-
+    private static final String QUERY_STRING = "query";
+    private static final String LOG_CATEGORY = "IncrementalImport";
     private Properties commonProperties;
     private String processId;
     private String batchId;
@@ -66,7 +67,7 @@ public class HDFSImport extends Configured implements Tool {
                 cols[i] = columns[i];
         }
     }
-
+    @Override
     public int run(String[] param) throws Exception {
 
         processId = param[0];
@@ -79,8 +80,8 @@ public class HDFSImport extends Configured implements Tool {
         if (commonProperties.getProperty("incr.mode") != null) {
             incrementMode = commonProperties.getProperty("incr.mode");
         }
-        if (commonProperties.getProperty("query") != null) {
-            query = commonProperties.getProperty("query");
+        if (commonProperties.getProperty(QUERY_STRING) != null) {
+            query = commonProperties.getProperty(QUERY_STRING);
         }
         String driver = commonProperties.getProperty("driver");
         Class.forName(driver).newInstance();
@@ -104,7 +105,6 @@ public class HDFSImport extends Configured implements Tool {
 
             //setting the parameters of sqoopOption
             options.setHadoopHome(hadoopHome);
-			//options.setHadoopMapRedHome(hadoopHome);
             options.setJarOutputDir(jarOutputDir);
             String outputDir = targetDir + "/" + processId + "/tmp";
             options.setTargetDir(outputDir);
@@ -124,32 +124,28 @@ public class HDFSImport extends Configured implements Tool {
 
 
             //Checking the condition for importing by table ,columns or query
-            String importType = commonProperties.getProperty("import");
-            if (null != commonProperties.getProperty("query") && "" != commonProperties.getProperty("query")) {
+            if (null != commonProperties.getProperty(QUERY_STRING) && "" != commonProperties.getProperty(QUERY_STRING)) {
                 options.setSqlQuery(query);//import using the query
 
             } else {
-                if (null != commonProperties.getProperty("columns")) {
-                    if (size != 0) {
+                if (null != commonProperties.getProperty("columns") && size != 0) {
 
                         options.setTableName(tableName);
                         options.setColumns(cols);        //importing table or columns
 
-                    }
                 }
 
                 if (!("None".equalsIgnoreCase(incrementMode)) && incrementMode != null) {
                     ProcessLog processLog = new ProcessLog();
                     ProcessLogInfo processLogInfo = new ProcessLogInfo();
                     String logCategory;
-                    logCategory = "IncrementalImport";
+                    logCategory = LOG_CATEGORY;
                     String msgId = "last value";
                     processLogInfo = processLog.getLastValue(processId, msgId, logCategory);
                     if (processLogInfo != null) {
                         lastValue = processLogInfo.getMessage();
                         prevLastValue = lastValue;
                     }
-
                     options.setIncrementalMode(SqoopOptions.IncrementalMode.valueOf(incrementMode));
                     options.setIncrementalTestColumn(commonProperties.getProperty("check.col"));
                     options.setIncrementalLastValue(lastValue);
@@ -177,7 +173,7 @@ public class HDFSImport extends Configured implements Tool {
 
                 if (prevLastValue != null && prevLastValue.equals(lastValue)) {
                     LOGGER.info("No new records imported.");
-                    processLogInfo.setLogCategory("IncrementalImport");
+                    processLogInfo.setLogCategory(LOG_CATEGORY);
                     processLogInfo.setMessage("0");
                     processLogInfo.setMessageId("Number of imported records");
                     processLog.log(processLogInfo);
@@ -211,29 +207,19 @@ public class HDFSImport extends Configured implements Tool {
                     OozieUtil oozieUtil = new OozieUtil();
                     oozieUtil.persistBeanData(registerFileInfo, false);
 
-                    if (null != commonProperties.getProperty("query") && "" != commonProperties.getProperty("query")) {
+                    if (null != commonProperties.getProperty(QUERY_STRING) && "" != commonProperties.getProperty(QUERY_STRING)) {
                         //adding log for import by query
                         processLogInfo.setLogCategory("ImpQuery");
                         processLogInfo.setMessage(query);
-                        processLogInfo.setMessageId("query");
+                        processLogInfo.setMessageId(QUERY_STRING);
                         processLog.log(processLogInfo);
                     } else {
                         //adding log for incremental import
                         if (!("None".equalsIgnoreCase(incrementMode)) && incrementMode != null) {
-                            processLogInfo.setLogCategory("IncrementalImport");
+                            processLogInfo.setLogCategory(LOG_CATEGORY);
                             processLogInfo.setMessage(lastValue);
                             processLogInfo.setMessageId("last value");
                             processLog.log(processLogInfo);
-
-                                   /* processLogInfo.setLogCategory("IncrImport");
-                                    long numRecords = ConfigurationHelper.getNumMapOutputRecords();
-                                    String newRecords = Long.toString(numRecords);
-                                    processLogInfo.setMessage("0");
-                                    processLogInfo.setMessageId("Number of imported records");
-                                    processLog.log(processLogInfo);
-                                   */
-
-
                         }
                         //adding log for normal import
                         else {
