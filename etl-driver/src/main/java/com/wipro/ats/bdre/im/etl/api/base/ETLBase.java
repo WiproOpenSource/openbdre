@@ -33,6 +33,8 @@ import java.sql.SQLException;
  */
 public abstract class ETLBase extends BaseStructure{
     private static final Logger LOGGER = Logger.getLogger(ETLBase.class);
+    private static final String TABLEDB = "table_db";
+    private static final String TABLENAME = "table_name";
 
 
     protected String rawLoad;
@@ -50,8 +52,8 @@ public abstract class ETLBase extends BaseStructure{
         rawLoad = processId;
         GetProperties getPropertiesOfRawTable = new GetProperties();
         java.util.Properties rawPropertiesOfTable = getPropertiesOfRawTable.getProperties(rawLoad, "raw-table");
-        rawTable = rawPropertiesOfTable.getProperty("table_name");
-        rawDb = rawPropertiesOfTable.getProperty("table_db");
+        rawTable = rawPropertiesOfTable.getProperty(TABLENAME);
+        rawDb = rawPropertiesOfTable.getProperty(TABLEDB);
     }
     protected void loadStageHiveTableInfo(String processId){
         stgLoad = processId;
@@ -60,15 +62,15 @@ public abstract class ETLBase extends BaseStructure{
         stgView=rawPropertiesOfTable.getProperty("table_name_raw")+"_view";
         stgDb=rawPropertiesOfTable.getProperty("table_db_raw");
         java.util.Properties basePropertiesOfTable = getPropertiesOfRawTable.getProperties(stgLoad, "base-table");
-        baseTable = basePropertiesOfTable.getProperty("table_name");
-        baseDb = basePropertiesOfTable.getProperty("table_db");
+        baseTable = basePropertiesOfTable.getProperty(TABLENAME);
+        baseDb = basePropertiesOfTable.getProperty(TABLEDB);
     }
     protected void loadBaseHiveTableInfo(String processId){
         baseLoad = processId;
         GetProperties getPropertiesOfBaseTable = new GetProperties();
         java.util.Properties basePropertiesOfTable = getPropertiesOfBaseTable.getProperties(baseLoad, "base-table");
-        baseTable = basePropertiesOfTable.getProperty("table_name");
-        baseDb = basePropertiesOfTable.getProperty("table_db");
+        baseTable = basePropertiesOfTable.getProperty(TABLENAME);
+        baseDb = basePropertiesOfTable.getProperty(TABLEDB);
     }
     protected Connection getHiveJDBCConnection(String dbName){
         try {
