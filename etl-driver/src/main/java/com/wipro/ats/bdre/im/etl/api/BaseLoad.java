@@ -21,13 +21,10 @@ import org.apache.commons.cli.CommandLine;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.FileSystem;
 import org.apache.hadoop.fs.Path;
-import org.apache.hadoop.hive.metastore.api.Partition;
-import org.apache.hadoop.hive.metastore.api.Table;
 import org.apache.log4j.Logger;
 
 import java.sql.Connection;
 import java.sql.ResultSet;
-import java.sql.ResultSetMetaData;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
@@ -55,7 +52,6 @@ public class BaseLoad extends ETLBase {
         //Getting core table information
         String baseTableName = baseTable;
         String baseTableDbName = baseDb;
-      //  String baseTableDdl = getBaseTable().getDdl();
 
         processStage(baseTableDbName, baseTableName, instanceExecId);
     }
@@ -72,16 +68,14 @@ public class BaseLoad extends ETLBase {
 
             List<String> stagePartitions = new ArrayList<String>();
             ResultSet resultSet = getHiveJDBCConnection(dbName).createStatement().executeQuery("show partitions " + stageTableName);
-            ResultSetMetaData rsmd = resultSet.getMetaData();
             while (resultSet.next()) {
                 String columnValue = resultSet.getString(1);
                 LOGGER.info(columnValue);
                 stagePartitions.add(columnValue);
             }
-            List<String> basePartitions = new ArrayList<String>();
+
             String wareHouse = "";
             ResultSet resultSetForWareHouse = getHiveJDBCConnection(dbName).createStatement().executeQuery("set hive.metastore.warehouse.dir");
-            ResultSetMetaData rsmdWareHouse = resultSet.getMetaData();
             while (resultSetForWareHouse.next()) {
                 wareHouse = resultSetForWareHouse.getString(1);
             }
@@ -112,10 +106,6 @@ public class BaseLoad extends ETLBase {
                 baseConStatement.executeUpdate(query);
             }
             //add partitions in the core table.
-            //  getMetaStoreClient().add_partitions(basePartitions);
-
-            // LOGGER.info("Deleting stage table");
-            //  getMetaStoreClient().dropTable(dbName,stageTableName);
             LOGGER.info("BaseLoad completed for " + baseTableName);
         } catch (Exception e) {
             LOGGER.info("Exception" + e);
