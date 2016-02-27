@@ -10,7 +10,7 @@
 # pidfile: /var/run/BDRE/bdre.pid
 #
 # Get function from functions library
-. /etc/init.d/functions
+. /lib/lsb/init-functions
 # Start the service BDRE
 USER=%USER%
 BDRE_HOME=~$USER/bdre
@@ -41,7 +41,7 @@ start() {
             fi
         fi
         rm -f $PIDFILE
-        /sbin/runuser -s /bin/bash $USER -c "$DAEMON $DAEMON_OPTS > /dev/null 2>&1"
+        su -s /bin/bash $USER -c "$DAEMON $DAEMON_OPTS > /dev/null 2>&1"
 	    ret=$?
         base=$(basename $0)
         if [ $ret -eq 0 ]; then
@@ -57,8 +57,7 @@ start() {
                     return 1
                 fi
             done
-            success
-            echo "BDRE UI initiated with PID $new_pid."
+            log_success_msg "BDRE UI initiated with PID $new_pid."
             echo
 
         fi
@@ -68,8 +67,7 @@ start() {
 # Restart the service bdre
 stop() {
 	 if [ ! -f $PIDFILE ]; then
-	        echo "BDRE is not running"
-            success
+            log_success_msg "BDRE is not running"
             return 0
         fi
 
