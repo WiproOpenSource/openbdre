@@ -30,4 +30,5 @@ script:
 after_success:
     - echo "Looks like success !"
 after_failure:
+    - cat /var/log/BDRE/daemon.log
     
