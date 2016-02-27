@@ -36,12 +36,12 @@ start() {
             pid=`cat $PIDFILE`
             returnPid=`ps -o pid= -p $pid`
             if [ -n $returnPid ];then
-                echo "BDRE already running with pid $returnPid"
-                return 0
+                log_failure_msg "BDRE already running with pid $returnPid"
+                return 1
             fi
         fi
         rm -f $PIDFILE
-        su -s /bin/bash $USER -c "$DAEMON $DAEMON_OPTS > /dev/null 2>&1"
+        su -s /bin/bash $USER -c "$DAEMON $DAEMON_OPTS"
 	    ret=$?
         base=$(basename $0)
         if [ $ret -eq 0 ]; then
@@ -53,7 +53,7 @@ start() {
                 sleep 5
                 wait_timeout=$((wait_timeout - 5))
                 if [ $wait_timeout -le 0 ]; then
-                    echo "BDRE has not yet started in 120 seconds. Giving up."
+                    log_failure_msg "BDRE has not yet started in 120 seconds. Giving up."
                     return 1
                 fi
             done
