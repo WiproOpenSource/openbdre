@@ -4,6 +4,7 @@ jdk:
 before_install:
     - sudo apt-get install mysql-server -y
     - sudo apt-get install curl -y
+    - sudo apt-get install util-linux -y
     - sudo service mysql restart
     - echo hibernate.current_session_context_class=thread > md-dao/src/main/resources/db.properties
     - echo hibernate.transaction.factory_class=org.hibernate.transaction.JDBCTransactionFactory >> md-dao/src/main/resources/db.properties
