@@ -28,6 +28,6 @@ script:
     - sh install-scripts.sh local
     - sudo service bdre start
 after_success:
-    
+    - echo "Looks like success !"
 after_failure:
     
