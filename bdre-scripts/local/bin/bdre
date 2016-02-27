@@ -61,7 +61,7 @@ start() {
             done
             echo
             log_success_msg "BDRE UI initiated with PID $new_pid."
-            exit 0
+            exit 1
 
         fi
         log_failure_msg "Failed to start BDRE daemon."
