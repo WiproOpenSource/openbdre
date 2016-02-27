@@ -42,7 +42,6 @@ start() {
         fi
         rm -f $PIDFILE
         echo "Attempting to start BDRE web application as $USER ."
-        ls -lR /home/travis/bdre/lib/
         
         su -s /bin/bash $USER -c "$DAEMON $DAEMON_OPTS"
 	    ret=$?
@@ -56,15 +55,18 @@ start() {
                 sleep 5
                 wait_timeout=$((wait_timeout - 5))
                 if [ $wait_timeout -le 0 ]; then
+                    echo
                     log_failure_msg "BDRE has not yet started in 120 seconds. Giving up."
-                    return 1
+                    exit 1
                 fi
             done
-            log_success_msg "BDRE UI initiated with PID $new_pid."
             echo
+            log_success_msg "BDRE UI initiated with PID $new_pid."
+            exit 0
 
         fi
-        return $ret
+        log_failure_msg "Failed to start BDRE daemon."
+        exit $ret
 
 }
 # Restart the service bdre
