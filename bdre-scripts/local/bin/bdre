@@ -41,6 +41,9 @@ start() {
             fi
         fi
         rm -f $PIDFILE
+        echo "Attempting to start BDRE web application as $USER ."
+        ls -lR /home/travis/bdre/lib/
+        
         su -s /bin/bash $USER -c "$DAEMON $DAEMON_OPTS"
 	    ret=$?
         base=$(basename $0)
