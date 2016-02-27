@@ -42,9 +42,8 @@ start() {
         fi
         rm -f $PIDFILE
         echo "Attempting to start BDRE web application as $USER ."
-        
-        su -s /bin/bash $USER -c "$DAEMON $DAEMON_OPTS"
-	    ret=$?
+        su -s /bin/bash $USER -c "$DAEMON $DAEMON_OPTS > $LOGDIR/daemon.log 2>&1"
+	ret=$?
         base=$(basename $0)
         if [ $ret -eq 0 ]; then
             new_pid=`cat $PIDFILE`
