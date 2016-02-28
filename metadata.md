@@ -29,3 +29,11 @@ Semantic Layer Building Framework:
 Build the sematic layer using visual workflow creator using the data you ingested.
 Supports Hive, Pig, Mapreduce, Spark , R etc
 Generates Oozie workflows
+
+Data Quality Framework:
+Validates your data using your rules in a distributed way
+Integrated with Drools rule engine
+
+HTML5 User Interface:
+Create ingestion, data generation, Crawler jobs or create Oozie workflows graphically without writing any code
+One click deploy and execute jobs without SSH into the edge node.
