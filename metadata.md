@@ -24,3 +24,8 @@ Web Crawler:
 
 Distributed Data Manufacturing framework:
 Generate billons of records based on patterns and ranges
+
+Semantic Layer Building Framework:
+Build the sematic layer using visual workflow creator using the data you ingested.
+Supports Hive, Pig, Mapreduce, Spark , R etc
+Generates Oozie workflows
