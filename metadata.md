@@ -1,0 +1,2 @@
+Bigdata Ready Enterprise
+Goal of BDRE is to give Bigdata implementation a significant acceleration by supplying the essential frameworks which are most likely to be written anyway. It'll drastically eliminate hundreds of man hours of effort in operational framework development.
