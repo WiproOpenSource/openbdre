@@ -1,39 +1,14 @@
 Bigdata Ready Enterprise
-Goal of BDRE is to give Bigdata implementation a significant acceleration by supplying the essential frameworks which are most likely to be written anyway. It'll drastically eliminate hundreds of man hours of effort in operational framework development.
+This document contains information about BDRE's metadata management.
 
-BDRE currently implements the following.
+BDRE Metadata Tables:
 
-Operational Metadata Management:Registry of all workflow processes/templates
-Parameters/configuration(key/val) for processes
-Dependency information (upstream/downstream)
-Batch management/tracking. Batch concept in BDRE is for tracking the data flow between workflow processes.
-Run control (for delta processing/dependency check)
-Execution status for jobs(dynamic metadata - with step level granularity)
-File registry - can be used to register e.g. ingested files or a raw file as an output of an upstream.
-Execution statistics logging (key/value)
-Executed hive queries and data lineage information.
-Java APIs that ingrates with Bigdata with non-bigdata applications alike.
-Job monitoring and proactive/reactive alerting
+PROCESS
 
-Data ingestion framework:
-Tabular data from RDBMS
-Streaming data from 16 types of sources (including logs, message queues and Twitter)
-Arbitrary file ingestion by directory monitoring
+This table will act as a registry for all processes (jobs) that will run on the cluster. The processes could be a file to table process, semantic process or an export process. Each process will be registered using designated procedure API and given a unique process identifier.
+INSTANCE_EXEC
 
-Web Crawler:
+Every time a process runs it’s assigned a new auto-generated process id, which gets inserted in a row with other information in INSTANCE_EXEC table. This run id is used as an ETL partition in Hive tables where the data is being loaded.
+BATCH_CONSUMP_QUEUE
 
-Distributed Data Manufacturing framework:
-Generate billons of records based on patterns and ranges
-
-Semantic Layer Building Framework:
-Build the sematic layer using visual workflow creator using the data you ingested.
-Supports Hive, Pig, Mapreduce, Spark , R etc
-Generates Oozie workflows
-
-Data Quality Framework:
-Validates your data using your rules in a distributed way
-Integrated with Drools rule engine
-
-HTML5 User Interface:
-Create ingestion, data generation, Crawler jobs or create Oozie workflows graphically without writing any code
-One click deploy and execute jobs without SSH into the edge node.
+Every time a process runs it consumes batches through its sub-processes. Those sub-processes consume batches enqueued by its enqueuing process(es). A sub-process can have one, two or more enqueuing processes but majority of them will generally have only one enqueuing process. This means that a sub process can consume delta batches from different tables, which are independently populated with different batches (usually by different file to table interfaces). A row gets added in this table for an eligible sub-process by its enqueuing process(a parent process always) when the enqueuing process completes its execution successfully. If multiple processes (sub) have same enqueuing process then for each process a row gets added with same batch id but with different process ids. The target batch id initially remains empty and gets populated with an auto generated batch id when the process given by the process_id accesses the corresponding batch. When all batches for the parent process have been processed successfully then the enqueued batches are moved to the ARCHIVE_CONSUMP_QUEUE table.
