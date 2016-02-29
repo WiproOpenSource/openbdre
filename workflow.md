@@ -15,3 +15,9 @@ To build the above workflow, these processes have to be valid entries in the pro
     insert into process values (1, 'Parent process', current_timestamp, 'Semantic', 1,2, null ,1, 0,null, '2',0,2);
 
     insert into process values (2, 'Sub process-1', current_timestamp, 'Semantic', 1,9, 1, 1, 8,null, '3,4,5',0,0);
+
+Similarly, the other sub-processes and their respective enqueuing processes have to be valid entries in the process table.
+This marks the population of the process table and we have valid process entries which constitutes the workflow.
+In Oozie , processes function by different types of nodes.
+Parent process or the main job begins with a InitJobNode and ends with an HaltJobNode. On failure, the job is failed by the TermJobNode.
+Sub processes or the sub steps begin with a InitStepNode, perform some activities as part of the ActionNode and finally end with the HaltStepNode. In case of failure, the step is failed by the TermStepNode.
