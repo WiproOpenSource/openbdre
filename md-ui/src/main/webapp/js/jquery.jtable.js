@@ -2062,6 +2062,7 @@ THE SOFTWARE.
                 self._addToolBarItem({
                     icon: true,
                     cssClass: 'jtable-toolbar-item-add-record',
+                    text: self.options.messages.addNewRecord,
                     click: function () {
                         self._showAddRecordForm();
                     }

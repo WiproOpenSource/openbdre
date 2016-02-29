@@ -14,6 +14,7 @@
 
 package com.wipro.ats.bdre.wgen;
 
+import com.wipro.ats.bdre.exception.BDREException;
 import com.wipro.ats.bdre.md.beans.ProcessInfo;
 
 import java.util.ArrayList;
@@ -93,15 +94,7 @@ public class ActionNode extends OozieNode {
     public void setProcessInfo(ProcessInfo processInfo) {
         this.processInfo = processInfo;
         if (processInfo.getProcessTypeId() == RAW_LOAD_ACTION) {
-//            LOFActionNode lofActionNode = new LOFActionNode(this);
-//            CreateTableActionNode createTableActionNode = new CreateTableActionNode(this);
             RawLoadActionNode rawLoadActionNode = new RawLoadActionNode(this);
-
-//            createTableActionNode.setToNode(lofActionNode);
-//            lofActionNode.setToNode(rawLoadActionNode);
-
-//            containingNodes.add(createTableActionNode);
-//            containingNodes.add(lofActionNode);
             containingNodes.add(rawLoadActionNode);
 
         } else if (processInfo.getProcessTypeId() == HIVE_ACTION) {
@@ -126,8 +119,6 @@ public class ActionNode extends OozieNode {
         } else if (processInfo.getProcessTypeId() == BASE_LOAD_ACTION) {
             BaseLoadActionNode baseLoadActionNode = new BaseLoadActionNode(this);
             containingNodes.add(baseLoadActionNode);
-
-        } else if (processInfo.getProcessTypeId() == ETL_ACTION) {
 
         } else if (processInfo.getProcessTypeId() == PIG_ACTION) {
             PigActionNode pigActionNode = new PigActionNode(this);
@@ -161,19 +152,7 @@ public class ActionNode extends OozieNode {
             containingNodes.add(lofActionNode);
             containingNodes.add(dataQualityActionNode);
             containingNodes.add(fileRegistrationNode);
-        } else if (processInfo.getProcessTypeId() == SEMANTIC_ACTION) {
-
-        } else if (processInfo.getProcessTypeId() == INGESTION) {
-
-        } else if (processInfo.getProcessTypeId() == EXPORT_ACTION) {
-
-        } else if (processInfo.getProcessTypeId() == IMPORT_ACTION) {
-
-        } else if (processInfo.getProcessTypeId() == DQ_PARENT_ACTION) {
-
-        } else if (processInfo.getProcessTypeId() == HIVE_GEN_PARENT_ACTION) {
-
-        } else if (processInfo.getProcessTypeId() == SFTP) {
+        }  else if (processInfo.getProcessTypeId() == SFTP) {
 
             SFTPNonOozieActionNode sftpNonOozieActionNode = new SFTPNonOozieActionNode(this);
             containingNodes.add(sftpNonOozieActionNode);
@@ -187,13 +166,11 @@ public class ActionNode extends OozieNode {
         } else if (processInfo.getProcessTypeId() == SPARK_ACTION) {
             SparkActionNode sparkActionNode = new SparkActionNode(this);
             containingNodes.add(sparkActionNode);
-        } else if (processInfo.getProcessTypeId() == CRAWLER_PARENT_ACTION) {
-
         } else if (processInfo.getProcessTypeId() == CRAWLER_CHILD_ACTION) {
             CrawlerActionNode crawlerActionNode = new CrawlerActionNode(this);
             containingNodes.add(crawlerActionNode);
         } else {
-            throw new RuntimeException("Don't know how to handle processInfo.getProcessTypeId()=" + processInfo.getProcessTypeId());
+            throw new BDREException("Don't know how to handle processInfo.getProcessTypeId()=" + processInfo.getProcessTypeId());
         }
 
     }
