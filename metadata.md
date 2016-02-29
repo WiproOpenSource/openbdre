@@ -82,3 +82,11 @@ This is another master table which defines the execution status of the processes
 PROCESS_TYPE
 
 This is also a master table which defines the process type. It can be semantic,hive data generation,etc.Each type is assigned a process type Id. These ids are referred in workflow generation module to generate the workflow xml file for oozie and the dot file for workflow visualization.
+
+WORKFLOW_TYPE
+
+Another master table which defines the workflow type and assigns a workflow type Id to each type. This has 3 entries : steps,stand alone and oozie.
+
+LINEAGE_QUERY_TYPE
+
+This table registers the lineage query type which would referenced by different tables of the Lineage module.The query type can be pig,hive etc.
