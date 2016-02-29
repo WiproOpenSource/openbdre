@@ -102,3 +102,8 @@ Workflow Generator
 The parent process is which is the process at which the workflow has to begin is passed as a command line argument. The filename in which workflow is to be written to is also passed as argument. The process id is used to fetch all the sub-processes from the metadata and form the processInfos list which gets used by the NodeCollection class to initialize nodes for various sub-processes. It also is used by WorkflowPrinter to print the workflow.
 Ultimately, two files are generated, an XML file that contains the entire workflow in XML format and a dot file which is a graphical representation of the workflow.
 
+WORKFLOW GENERATION SETUP
+
+Use md.sql to load process data into the process table
+Run WorkflowGenerator.java with the following arguments:
+
