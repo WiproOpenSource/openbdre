@@ -59,3 +59,10 @@ PROPERTIES_TEMPLATE
 
 A table which contains properties for any associated process template.
 
+LINEAGE_QUERY
+
+This table contains information about the hive/pig query for which column level lineage is to be shown.
+
+LINEAGE_NODE
+
+This table contains information about different nodes involved in a query(table, column, function etc).
