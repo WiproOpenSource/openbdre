@@ -89,3 +89,7 @@ After a fork node is inserted,
 A join node waits until every concurrent execution path of a previous fork node arrives to it.
 image
 https://gitlab.com/bdre/documentation/uploads/3fae60dc89af819f4a07aeea7eb83a03/image.png
+
+When there are multiple parent nodes, either none or both the steps would be ended.
+So, JoinNode on success goes to HaltStepNode for parent 1, and also to HaltStepNode for parent 2. When both steps end successfully, they go to the InitStepNode of the next sub-process.
+
