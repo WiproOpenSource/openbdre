@@ -42,6 +42,14 @@ Provides us the flexibility of selecting upper limit for batches in two ways :
 1. Setting the maximum number of batches, i.e. max batch 2. A batch cut pattern, which would be matched with incoming batches and a cut would be made thereby.This prevents overloading of batches that are being processed.
 Sub - steps process the input batches and the main job produces an output batch. The input batches to the sub - steps are provided by their respective enqueuing jobs. So, the availability of batches to sub- steps is dependent on the defined relationships in the metadata framework.
 
+AUDITING & LINEAGE
+
+Our metadata contains information about the origins of a particular data set and is granular enough to define information at the attribute level. Our metadata also maintains auditable information about applications, and processes that create, delete, or change data, the exact time stamp, etc.
+Our metadata stores relevant history about the running/ completed/ failed jobs in various fields of the metadata tables. It enables customers to retrace back to the source of any change and read the information pertaining to the change. The metadata hence stores information like batch history, file history, job history, etc. This helps maintain information that could be used during auditing.
+
+INCREMENTAL PROCESSING ENABLEMENT
+
+The metadata provides parameters using which partitioning is done on tables, thereby supporting Delta/incremental Processing.
 BDRE Metadata Tables:
 
 PROCESS
