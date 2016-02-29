@@ -64,3 +64,6 @@ For a particular sub-process
     ActionNode on success goes to the HaltStepNode
     InitStepNode on failure goes to the TermJobNode
     ActionNode on failure goes to the TermStepNode
+    HaltStepNode on failure goes to the TermStepNode
+    TermStepNode on success/ failure goes to TermJobNode
+    TermJobNode on success/ failure goes to KillNode
