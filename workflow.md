@@ -43,3 +43,5 @@ KillNode : The kill node allows a workflow job to terminate. When a workflow job
 InitJobNode : The actual execution of job starts from this node. This is the node from which the process begins and the start node points to this node. The InitJobNode must run successfully before the beginning of any sub-step.
 HaltJobNode : The HaltJobNode on success notifies the metadata to mark the completion of a job in the process table and takes the workflow.
 TermJobNode : The TermJobNode on success notifies the metadata to mark the failure of a process in the process table.
+TermStepNode : The TermStepNode notifies the metadata to mark the failure of a sub-process in the process table.
+InitStepNode : The InitStepNode notifies the metadata to mark the beginning of a sub process in the process table.
