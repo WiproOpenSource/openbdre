@@ -90,3 +90,7 @@ Another master table which defines the workflow type and assigns a workflow type
 LINEAGE_QUERY_TYPE
 
 This table registers the lineage query type which would referenced by different tables of the Lineage module.The query type can be pig,hive etc.
+
+LINEAGE_NODE_TYPE
+
+This table is used to define the lineage node type which can be a table,column,function etc. This would be used by lineage module to generate the lineage graphic.
