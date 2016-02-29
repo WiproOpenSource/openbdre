@@ -14,6 +14,7 @@
 
 package com.wipro.ats.bdre.md.rest;
 
+import org.apache.log4j.Logger;
 import org.codehaus.jackson.annotate.JsonProperty;
 
 import java.lang.reflect.InvocationTargetException;
@@ -30,21 +31,10 @@ import java.util.Collection;
 public class RestWrapper {
     public static final String OK = "OK";
     public static final String ERROR = "ERROR";
+    private static final Logger LOGGER = Logger.getLogger(RestWrapper.class);
     private String result;
     private Object records;
-
-    @JsonProperty("Message")
-    public String getMessage() {
-        return message;
-    }
-
-    public void setMessage(String message) {
-        this.message = message;
-    }
-
     private String message;
-
-
     public RestWrapper(Object objectToSerialize, String result) {
         this.result = result;
         if (OK.equals(result)) {
@@ -52,6 +42,14 @@ public class RestWrapper {
         } else if (objectToSerialize != null) {
             this.message = objectToSerialize.toString();
         }
+    }
+    @JsonProperty("Message")
+    public String getMessage() {
+        return message;
+    }
+
+    public void setMessage(String message) {
+        this.message = message;
     }
 
     @JsonProperty("Result")
@@ -89,13 +87,15 @@ public class RestWrapper {
                 for (Object obj : c) {
                     try {
                         Method method = obj.getClass().getMethod("getCounter");
-                        Integer count = (Integer) method.invoke(obj);
-                        return count;
+                        return (Integer) method.invoke(obj);
                     } catch (NoSuchMethodException e) {
+                        LOGGER.error(e);
                         return 0;
                     } catch (InvocationTargetException e) {
+                        LOGGER.error(e);
                         return 0;
                     } catch (IllegalAccessException e) {
+                        LOGGER.error(e);
                         return 0;
                     }
                 }
