@@ -50,3 +50,12 @@ Multiple process in a given subject area are grouped into a given business domai
 PROCESS_LOG
 
 Specific logs are registered in the process log table with respective process id and instance exec Id as instance_ref after its execution. For example, logs of Data Quality process and Import process. This log can be referenced later for further analysis.
+
+PROCESS_TEMPLATE
+
+A table which contains a standard template of the form process, from which more such processes can be created or existing such processes can be edited.
+
+PROPERTIES_TEMPLATE
+
+A table which contains properties for any associated process template.
+
