@@ -93,3 +93,7 @@ https://gitlab.com/bdre/documentation/uploads/3fae60dc89af819f4a07aeea7eb83a03/i
 When there are multiple parent nodes, either none or both the steps would be ended.
 So, JoinNode on success goes to HaltStepNode for parent 1, and also to HaltStepNode for parent 2. When both steps end successfully, they go to the InitStepNode of the next sub-process.
 
+Node Collection
+
+This class creates objects of all the node types. The constructor of this class is used to set the default node settings as shown in the graphics above. ParentCollection and ChildCollection lists are populated by traversing every node. Multiple parents/ children are taken care of by Fork / Join nodes. Getter/setter methods are used to fetch individual nodes and set their ToNode and FailNode. This completes forming relationships among the various nodes as per the workflow.
+
