@@ -55,3 +55,7 @@ image
 https://gitlab.com/bdre/documentation/uploads/deab4781a3a1a763d1e808a0a3db7e3a/image.png
 
 where IS = InitStepNode, AN = ActionNode, TS = TermStepNode, TJ = TermJobNode, HS = HaltStepNode
+
+Hence by default,
+StartNode goes to the InitJobNode and InitJobNode on failure goes to the KillNode
+HaltJobNode on success goes to the EndNode and on failure goes to the TermJobNode
