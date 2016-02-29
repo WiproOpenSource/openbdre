@@ -46,8 +46,12 @@ TermJobNode : The TermJobNode on success notifies the metadata to mark the failu
 TermStepNode : The TermStepNode notifies the metadata to mark the failure of a sub-process in the process table.
 InitStepNode : The InitStepNode notifies the metadata to mark the beginning of a sub process in the process table.
 EndStepNode : The HaltStepNode notifies the metadata to mark the completion of a sub process in the process table.
+
 The default settings for a node are:
 image
 https://gitlab.com/bdre/documentation/uploads/46811c76fb53634c0654edacb9706c48/image.png
+
 image
 https://gitlab.com/bdre/documentation/uploads/deab4781a3a1a763d1e808a0a3db7e3a/image.png
+
+where IS = InitStepNode, AN = ActionNode, TS = TermStepNode, TJ = TermJobNode, HS = HaltStepNode
