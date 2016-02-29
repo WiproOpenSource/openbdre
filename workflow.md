@@ -29,3 +29,14 @@ nodes that control the start and end of the workflow and workflow job execution 
 Action nodes:
 
 nodes that trigger the execution of a computation/processing task.
+
+Also,
+each node is linked to one or more nodes by:
+
+(i) ToNode : Which points to the next node on success of the current node
+(ii) FailNode :Which points to the next node on failure of the current node
+The nodes are described as:
+ActionNode : Action nodes are the mechanism by which a workflow triggers the execution of a computation/processing task.
+StartNode : The start node is the entry point for a workflow job, it indicates the first workflow node the workflow job must transition to.When a workflow starts, it automatically transitions to the node specified in the start.
+EndNode : The end node is the end for a workflow job, it indicates that the workflow job has completed successfully. When a workflow job reaches the end it finishes successfully (SUCCEEDED).
+KillNode : The kill node allows a workflow job to terminate. When a workflow job reaches the kill it finishes in error (KILLED). If one or more actions started by the workflow job are executing when the kill node is reached, the actions will be killed.
