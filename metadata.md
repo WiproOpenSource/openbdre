@@ -36,6 +36,11 @@ RESTARTABILITY
 
 The framework is capable of resuming from the last successful step in case of occurrence of a failure. The entire workflow need not run again. Suppose the last step under some job failed. The framework is capable of capturing the last but one step which ran successfully. The job need not run from step 1 all over again, but could simply run from the captured step and complete the job.This feature allows jobs to restart from the most recent checkpoint, rather than from the beginning.
 
+METADATA DRIVEN DEPENDENCY MANAGEMENT
+
+Provides us the flexibility of selecting upper limit for batches in two ways :
+1. Setting the maximum number of batches, i.e. max batch 2. A batch cut pattern, which would be matched with incoming batches and a cut would be made thereby.This prevents overloading of batches that are being processed.
+Sub - steps process the input batches and the main job produces an output batch. The input batches to the sub - steps are provided by their respective enqueuing jobs. So, the availability of batches to sub- steps is dependent on the defined relationships in the metadata framework.
 
 BDRE Metadata Tables:
 
