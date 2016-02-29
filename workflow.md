@@ -85,3 +85,7 @@ After a fork node is inserted,
     HaltStepNode of the parent node goes to the ForkNode,
     ForkNode goes to InitStepNode of Child1
     ForkNode goes to InitStepNode of Child2
+
+A join node waits until every concurrent execution path of a previous fork node arrives to it.
+image
+https://gitlab.com/bdre/documentation/uploads/3fae60dc89af819f4a07aeea7eb83a03/image.png
