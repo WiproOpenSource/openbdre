@@ -107,3 +107,5 @@ WORKFLOW GENERATION SETUP
 Use md.sql to load process data into the process table
 Run WorkflowGenerator.java with the following arguments:
 
+-p 401 –f workflow –env env1
+env1 : Environment variable that has details to set up connection with the database.
