@@ -120,6 +120,7 @@ Target batch id. This is the batch resulting from the successful execution of th
 Last recoverable sub process id. In case of a previously failed instance of this parent process (due to failure of one of the sub processes), the InitJob starts its execution from the last recoverable sub process id, instead of running the successfully completed sub processes again.
 
 HaltJob API
+
 Marks completion of a workflow/process .
 Mark batch_state to PROCESSED in PROCESS_BATCH_QUEUE.
 Mark run_state as complete in INSTANCE_EXEC and also populate end timestamp.
@@ -131,3 +132,15 @@ TermJob API
 Records failure of a parent process
 Mark the row in the INSTANCE_EXEC for this sub-process as FAILED
 Update the BATCH_CONSUMP_QUEUE table for this process id and set batch status to a value corresponding to FAILURE. These batches are NOT moved to the ARCHIVE_CONSUMP_QUEUE.
+
+InitStep API
+
+Marks start of a sub-process/steps/routine
+Add a row in the INSTANCE_EXEC for this sub-process
+Update the BATCH_CONSUMP_QUEUE table for this process id and set start_ts with current system TS.
+
+HaltStep API
+
+Marks end of a sub-process/steps/routine
+Mark the row in the INSTANCE_EXEC for this sub-process as COMPLETED.
+Mark with end_ts (as system TS) in BATCH_CONSUMP_QUEUE.
