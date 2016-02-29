@@ -9,3 +9,9 @@ We use Oozie scheduler for the workflow of our metadata. An Oozie workflow is a 
 image
 https://gitlab.com/bdre/documentation/uploads/7a091b62b67849fe0fb30b84b7261ded/image.png
 
+The workflow starts with process 1. Process 1 is the parent process with its corresponding entry in the process table. It comprises of the sub processes 2,3,4,5 and 6 which are also present in the process table.
+The entire workflow goes like : Parent process begins, Sub-processes begin, Sub-processes end, Parent process ends. It is managed by what are known as workflow nodes.
+To build the above workflow, these processes have to be valid entries in the process table. For example, following are queries to insert the parent process 1 and sub process 2 into the process table:
+    insert into process values (1, 'Parent process', current_timestamp, 'Semantic', 1,2, null ,1, 0,null, '2',0,2);
+
+    insert into process values (2, 'Sub process-1', current_timestamp, 'Semantic', 1,9, 1, 1, 8,null, '3,4,5',0,0);
