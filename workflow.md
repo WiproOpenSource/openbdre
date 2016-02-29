@@ -109,3 +109,9 @@ Run WorkflowGenerator.java with the following arguments:
 
 -p 401 –f workflow –env env1
 env1 : Environment variable that has details to set up connection with the database.
+    Use the corresponding environment variable in mybatis-config.xml. workflow.xml is the filename containing the workflow
+    hadoop fs –put metadata_mgmt\workflow-generator\workflow.xml
+    Edit job.properties file with the above path-name of workflow in hdfs
+    Along with workflow.xml, a dot file is also generated which is converted to pdf format by using Graphviz
+    Graphviz installation link:
+    http://www.graphviz.org/Download..php
