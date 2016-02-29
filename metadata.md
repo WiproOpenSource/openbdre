@@ -144,3 +144,21 @@ HaltStep API
 Marks end of a sub-process/steps/routine
 Mark the row in the INSTANCE_EXEC for this sub-process as COMPLETED.
 Mark with end_ts (as system TS) in BATCH_CONSUMP_QUEUE.
+
+TermStep API
+
+Records failure of a sub-process/steps/routine
+Mark the row in the INSTANCE_EXEC for this sub-process as FAILED.
+
+GetFiles API
+
+Fetches the records of files from join of file table and servers table between the min batch and max batch id passed through parameters.
+
+GetProperties API
+
+Fetches the records from properties table related to the process Id and config group passed as parameters.
+
+GetETLDriver API
+
+Fetches the records of files from file table between the min batch and max batch id passed through parameters.
+Returns a string of file details separated by semicolon.
