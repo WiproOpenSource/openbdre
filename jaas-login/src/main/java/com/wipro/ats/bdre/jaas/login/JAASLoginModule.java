@@ -116,7 +116,7 @@ public class JAASLoginModule implements LoginModule {
 
     @Override
     public boolean commit() throws LoginException {
-        if (succeeded) {
+        if (!succeeded) {
             return false;
         } else {
             userPrincipal = new JAASUserPrincipal(username);
@@ -150,9 +150,9 @@ public class JAASLoginModule implements LoginModule {
 
     @Override
     public boolean abort() throws LoginException {
-        if (succeeded) {
+        if (!succeeded) {
             return false;
-        } else if (succeeded && commitSucceeded) {
+        } else if (succeeded && !commitSucceeded) {
             succeeded = false;
             username = null;
             if (password != null) {

@@ -162,48 +162,6 @@ CREATE TABLE properties (
  CONSTRAINT PROPERTIES_PROCESS_FK FOREIGN KEY (process_id) REFERENCES process(process_id)
 );
 
-
-
-CREATE TABLE hive_tables (
-  table_id number(10,0) NOT NULL,
-  comments varchar2(256) NOT NULL,
-  location_type varchar2(45) NOT NULL,
-  dbname varchar2(45) DEFAULT NULL,
-  batch_id_partition_col varchar2(45) DEFAULT NULL,
-  table_name varchar2(45) NOT NULL,
-  type varchar2(45) NOT NULL,
-  ddl varchar2(2048) NOT NULL,
-  PRIMARY KEY (table_id)
-);
-
- CREATE SEQUENCE hive_tables_seq
-  MINVALUE 1
-  MAXVALUE 9999999999
-  START WITH 1
-  INCREMENT BY 1
-  CACHE 2;
-
-
-
-
-
-CREATE TABLE etl_driver (
-  etl_process_id number(10,0) NOT NULL,
-  raw_table_id number(10,0) NOT NULL,
-  base_table_id number(10,0) NULL ,
-  insert_type NUMBER(5,0) NULL,
-  drop_raw NUMBER(1,0) DEFAULT 0 NOT NULL,
-  raw_view_id number(10,0) NOT NULL,
-  CONSTRAINT ETL_DRIVER_PK PRIMARY KEY (etl_process_id),
-  CONSTRAINT table_id_etl_driver FOREIGN KEY (raw_table_id) REFERENCES hive_tables (table_id),
-  CONSTRAINT table_id2_etl_driver FOREIGN KEY (base_table_id) REFERENCES hive_tables (table_id),
-  CONSTRAINT batch_id_etl_driver FOREIGN KEY (etl_process_id) REFERENCES process (process_id),
-  CONSTRAINT view_id_etl_driver FOREIGN KEY (raw_view_id) REFERENCES hive_tables (table_id)
-  );
-
-
-
-
 CREATE TABLE instance_exec (
   instance_exec_id number(19,0) NOT NULL,
   process_id  number(10,0) NOT NULL,
@@ -342,39 +300,6 @@ begin
 select CURRENT_TIMESTAMP into :new.insert_ts from dual;
 end;
 /
-
-CREATE TABLE etlstep (
-  uuid varchar2(128) NOT NULL ,
-  serial_number number(19,0) NOT NULL ,
-  bus_domain_id number(10,0) NOT NULL,
-  process_name varchar2(256) NOT NULL,
-  description varchar2(2048) NOT NULL,
-  base_table_name varchar2(45) ,
-  raw_table_name varchar2(45) ,
-  raw_view_name varchar2(45) ,
-  base_db_name varchar2(45) DEFAULT NULL,
-  raw_db_name varchar2(45) DEFAULT NULL,
-  base_table_ddl varchar2(2048),
-  raw_table_ddl varchar2(2048),
-  raw_view_ddl varchar2(2048),
-  raw_partition_col varchar2(45) ,
-  drop_raw number(1,0) ,
-  enq_id number(10,0),
-  column_info varchar2(45) ,
-  serde_properties varchar2(45) ,
-  table_properties varchar2(45) ,
-  input_format varchar2(45) ,
-  CONSTRAINT pk_ID primary key (serial_number,uuid)
-   );
-
- CREATE SEQUENCE etlstep_seq
-  MINVALUE 1
-  MAXVALUE 9999999999
-  START WITH 1
-  INCREMENT BY 1
-  CACHE 2;
-
-
 
 
 CREATE  TABLE users (
