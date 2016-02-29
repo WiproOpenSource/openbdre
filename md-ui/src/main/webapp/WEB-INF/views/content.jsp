@@ -293,16 +293,6 @@
                                                     url: "busdomain.page",
                                                     children: []
 								}, {
-                                                    label: "Data Load",
-                                                    collapse: "1",
-                                                    url: "etldriver.page",
-                                                    children: []
-								}, {
-                                                    label: "Hive Tables",
-                                                    collapse: "1",
-                                                    url: "hivetables.page",
-                                                    children: []
-								}, {
                                                     label: "Servers",
                                                     collapse: "1",
                                                     url: "servers.page",

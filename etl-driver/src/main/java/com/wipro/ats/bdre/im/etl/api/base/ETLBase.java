@@ -18,9 +18,7 @@ import com.wipro.ats.bdre.BaseStructure;
 import com.wipro.ats.bdre.IMConfig;
 import com.wipro.ats.bdre.im.IMConstant;
 import com.wipro.ats.bdre.im.etl.api.exception.ETLException;
-import com.wipro.ats.bdre.md.api.GetProcess;
 import com.wipro.ats.bdre.md.api.GetProperties;
-import com.wipro.ats.bdre.md.beans.ProcessInfo;
 import org.apache.hadoop.hive.conf.HiveConf;
 import org.apache.hadoop.hive.metastore.HiveMetaStoreClient;
 import org.apache.hadoop.hive.metastore.api.MetaException;
@@ -29,13 +27,14 @@ import org.apache.log4j.Logger;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
-import java.util.List;
 
 /**
  * Created by arijit on 12/28/14.
  */
 public abstract class ETLBase extends BaseStructure{
     private static final Logger LOGGER = Logger.getLogger(ETLBase.class);
+    private static final String TABLEDB = "table_db";
+    private static final String TABLENAME = "table_name";
 
 
     protected String rawLoad;
@@ -47,15 +46,14 @@ public abstract class ETLBase extends BaseStructure{
     protected String stgDb;
     protected String baseTable;
     protected String baseDb;
-    private String processId;
-
+    HiveMetaStoreClient hiveClient =null;
 
     protected void loadRawHiveTableInfo(String processId){
         rawLoad = processId;
         GetProperties getPropertiesOfRawTable = new GetProperties();
         java.util.Properties rawPropertiesOfTable = getPropertiesOfRawTable.getProperties(rawLoad, "raw-table");
-        rawTable = rawPropertiesOfTable.getProperty("table_name");
-        rawDb = rawPropertiesOfTable.getProperty("table_db");
+        rawTable = rawPropertiesOfTable.getProperty(TABLENAME);
+        rawDb = rawPropertiesOfTable.getProperty(TABLEDB);
     }
     protected void loadStageHiveTableInfo(String processId){
         stgLoad = processId;
@@ -64,15 +62,15 @@ public abstract class ETLBase extends BaseStructure{
         stgView=rawPropertiesOfTable.getProperty("table_name_raw")+"_view";
         stgDb=rawPropertiesOfTable.getProperty("table_db_raw");
         java.util.Properties basePropertiesOfTable = getPropertiesOfRawTable.getProperties(stgLoad, "base-table");
-        baseTable = basePropertiesOfTable.getProperty("table_name");
-        baseDb = basePropertiesOfTable.getProperty("table_db");
+        baseTable = basePropertiesOfTable.getProperty(TABLENAME);
+        baseDb = basePropertiesOfTable.getProperty(TABLEDB);
     }
     protected void loadBaseHiveTableInfo(String processId){
         baseLoad = processId;
         GetProperties getPropertiesOfBaseTable = new GetProperties();
         java.util.Properties basePropertiesOfTable = getPropertiesOfBaseTable.getProperties(baseLoad, "base-table");
-        baseTable = basePropertiesOfTable.getProperty("table_name");
-        baseDb = basePropertiesOfTable.getProperty("table_db");
+        baseTable = basePropertiesOfTable.getProperty(TABLENAME);
+        baseDb = basePropertiesOfTable.getProperty(TABLEDB);
     }
     protected Connection getHiveJDBCConnection(String dbName){
         try {
@@ -94,39 +92,25 @@ public abstract class ETLBase extends BaseStructure{
         }
 
     }
-    HiveMetaStoreClient hclient =null;
+
     protected HiveMetaStoreClient getMetaStoreClient()
     {
-        if(hclient ==null) {
+        if(hiveClient ==null) {
             try {
                 HiveConf hiveConf = new HiveConf();
                 hiveConf.set("hive.metastore.uris", IMConfig.getProperty("etl.hive-metastore-uris"));
                 hiveConf.set("hive.exec.dynamic.partition.mode", "nonstrict");
                 hiveConf.set("hive.exec.dynamic.partition", "true");
                 hiveConf.set("hive.exec.max.dynamic.partitions.pernode", "1000");
-                hclient = new HiveMetaStoreClient(hiveConf);
+                hiveClient = new HiveMetaStoreClient(hiveConf);
 
             } catch (MetaException e) {
                 LOGGER.error(e);
                 throw new ETLException(e);
             }
         }
-        return hclient;
+        return hiveClient;
     }
- /*   protected GetHiveTablesInfo getRawTable() {
-
-        return rawTable;
-    }
-
-
-    protected GetHiveTablesInfo getBaseTable() {
-        return baseTable;
-    }
-
-
-    protected GetHiveTablesInfo getRawView() {
-        return rawView;
-    }*/
 
 
 }
