@@ -38,3 +38,15 @@ This table registers the properties as key-value pair with a configuration group
 ETLDRIVER
 
 This table is used by Data Load Process to link the DDLs with the process by registering the table Ids generated in the HIVE_TABLES.
+
+SERVERS
+
+The servers table registers the server details like name,login user,password,ssh private key, IP address,etc, against an auto incremented server Id which can be referred by the process to make an entry in file table.
+
+BUS_DOMAIN
+
+Multiple process in a given subject area are grouped into a given business domain. Example – Security application can contain different security related processes.
+
+PROCESS_LOG
+
+Specific logs are registered in the process log table with respective process id and instance exec Id as instance_ref after its execution. For example, logs of Data Quality process and Import process. This log can be referenced later for further analysis.
