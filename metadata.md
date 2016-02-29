@@ -63,6 +63,9 @@ SEMANTIC OPERATION SUPPORT
 
 Our framework supports the metadata capture during semantic operations also.
 
+
+
+
 BDRE Metadata Tables:
 
 PROCESS
