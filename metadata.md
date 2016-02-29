@@ -26,3 +26,15 @@ This table is responsible for generating a batch id when a new batch has to be c
 FILE
 
 If a process is a file to table interface then the file table would be queried for file location.The file path and server Id is registered in this table with other file details once the upstream process is successfully completed so the downstream process can access the file by querying the file table using the batch Id.
+
+HIVE TABLES
+
+This table registers the DDLs required to create the tables and views in the Hive for the Data Load operations. An auto increment table Id is generated which can be referred to link these DDLs to a Data Load process.
+
+PROPERTIES
+
+This table registers the properties as key-value pair with a configuration group against a sub-process required for the execution.The processes like data-generation,semantic utilizes this table to define the parameters required for their execution.
+
+ETLDRIVER
+
+This table is used by Data Load Process to link the DDLs with the process by registering the table Ids generated in the HIVE_TABLES.
