@@ -162,3 +162,13 @@ GetETLDriver API
 
 Fetches the records of files from file table between the min batch and max batch id passed through parameters.
 Returns a string of file details separated by semicolon.
+
+RegisterFile
+
+Records registration of a new file and the associated file details.
+Add a row in the File table with the file details as provided through the parameters.
+
+AddProcessLog
+
+Enables adding a new process log to the process log table.
+On calling the procedure, the inputs get added as a new row entry in the table along with an auto incremented log_id.
