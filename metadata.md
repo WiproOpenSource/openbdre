@@ -94,3 +94,11 @@ This table registers the lineage query type which would referenced by different 
 LINEAGE_NODE_TYPE
 
 This table is used to define the lineage node type which can be a table,column,function etc. This would be used by lineage module to generate the lineage graphic.
+
+USERS
+
+This table registers the users with their passwords for authentication and performing actions.
+
+USER_ROLES
+
+This table defines the user role for the different users registered in the USERS table.
