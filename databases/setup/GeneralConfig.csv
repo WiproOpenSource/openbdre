@@ -543,7 +543,7 @@
 'scripts_config', 'oozieUrl', '-','-' , 1, '0.0.0.0', 'text' , 1
 'scripts_config', 'logDir', '-','-' , 1, '/var/log/BDRE', 'text' , 1
 'scripts_config', 'repoName', '-','-' , 1, 'origin', 'text' , 1
-'scripts_config', 'branchName', '-','-' , 1, 'master', 'text' , 1
+'scripts_config', 'branchName', '-','-' , 1, 'develop', 'text' , 1
 'scripts_config', 'gitURL', '-','-' , 1, 'https://github.com/WiproOpenSourcePractice/bdreappstore.git', 'text' , 1
 
 'file_format', 'delimited', 'DELIMITED','delimited file' , 1, 'delimited', 'text' , 1

@@ -74,12 +74,9 @@ $scope.createApp = function(location) {
                          		    url: "/mdrest/process/import",
                          		    type: "POST",
                          		    data: {'fileString': location},
-
-
-
                          		    success: function (getData) {
+                         		       $('#installing').modal('hide');
                          		        if( getData.Result =="OK" ){
-                                          $('#installing').modal('hide');
                          		        $('#div-dialog-warning').modal({ backdrop: 'static', keyboard: false }).one('click', '#ok', function (e){
                                             $window.location.href = '<c:url value="/pages/process.page?pid="/>' + getData.Records.processList[0].processId;
                                            return false;
@@ -123,7 +120,6 @@ $scope.createApp = function(location) {
     <div class="modal-dialog modal-sm">
       <div class="modal-content">
         <div class="modal-header">
-          <button type="button" class="close" data-dismiss="modal">&times;</button>
           <h4 class="modal-title">Install</h4>
         </div>
         <div class="modal-body">
@@ -136,16 +132,10 @@ $scope.createApp = function(location) {
       </div>
     </div>
   </div>
-
-
-<div id=loading>
-</div>
-
     <div class="modal fade" id="installing" role="dialog">
       <div class="modal-dialog modal-sm">
         <div class="modal-content">
           <div class="modal-header">
-            <button type="button" class="close" data-dismiss="modal">&times;</button>
             <h4 class="modal-title">Install</h4>
           </div>
           <div class="modal-body">
@@ -154,13 +144,10 @@ $scope.createApp = function(location) {
         </div>
       </div>
     </div>
-
-
   <div class="modal fade" id="div-dialog-warning" role="dialog">
       <div class="modal-dialog modal-sm">
         <div class="modal-content">
           <div class="modal-header">
-            <button type="button" class="close" data-dismiss="modal">&times;</button>
             <h4 class="modal-title">Install</h4>
           </div>
           <div class="modal-body">
@@ -172,21 +159,10 @@ $scope.createApp = function(location) {
         </div>
       </div>
     </div>
-
-
-
-    <div >
-    <img  src="views\default.svg">
-
-    </div>
-
-
-
        <div class="modal fade" id="div-dialog-error" role="dialog">
           <div class="modal-dialog modal-sm">
             <div class="modal-content">
               <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal">&times;</button>
                 <h4 class="modal-title">Install</h4>
               </div>
               <div class="modal-body">

@@ -108,8 +108,6 @@ public class FileMonRunnableMain extends BaseStructure {
 
     private void execute(String[] params) {
         try {
-            CommandLine commandLine = getCommandLine(params, PARAMS_STRUCTURE);
-
             GetProcess getProcess = new GetProcess();
             List<ProcessInfo> subProcessList = getProcess.getSubProcesses(params);
             subProcessId = subProcessList.get(0).getProcessId().toString();

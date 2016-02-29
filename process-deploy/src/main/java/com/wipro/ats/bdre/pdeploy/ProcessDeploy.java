@@ -61,7 +61,7 @@ public class ProcessDeploy implements Runnable {
         }
         String[] params = {"--deployment-id", pdq.getDeploymentId().toString()};
         //using Apache Commons Exec library
-        int iExitValue;
+
         String sCommandString;
         String command = "sh " + pdq.getDeployScriptLocation() + " " + pdq.getBusDomainId() + " " + pdq.getProcessTypeId() + " " + pdq.getProcessId();
         sCommandString = command;
@@ -78,7 +78,7 @@ public class ProcessDeploy implements Runnable {
             InitDeploy initDeploy = new InitDeploy();
             initDeploy.execute(params);
 
-            iExitValue = oDefaultExecutor.execute(oCmdLine);
+            oDefaultExecutor.execute(oCmdLine);
 
             //If the script is successful then call HaltDeploy
             HaltDeploy haltDeploy = new HaltDeploy();

@@ -32,12 +32,10 @@ import java.util.List;
 /**
  * Created by SR294224 on 5/29/2015.
  */
-@Component
 public class BatchEnqueuer extends MetadataAPIBase {
     public BatchEnqueuer() {
-        /*ApplicationContext context = new ClassPathXmlApplicationContext("spring-dao.xml");
-        AutowireCapableBeanFactory acbFactory = context.getAutowireCapableBeanFactory();
-        acbFactory.autowireBean(this);*/
+        AutowireCapableBeanFactory acbFactory = getAutowireCapableBeanFactory();
+        acbFactory.autowireBean(this);
     }
 
     @Autowired
