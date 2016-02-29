@@ -50,6 +50,22 @@ Our metadata stores relevant history about the running/ completed/ failed jobs i
 INCREMENTAL PROCESSING ENABLEMENT
 
 The metadata provides parameters using which partitioning is done on tables, thereby supporting Delta/incremental Processing.
+
+DATA INGESTION AND LOADING
+
+Our metadata framework captures end to end metadata during file ingestion and file load processes. It supports metadata capture in file to core operations. During a file to core process, the framework facilitates us to retrace from a particular partition of the core table to its origin, i.e the corresponding source file.
+
+REDUCED DEVELOPMENT COST ACROSS DATA PATTERNS
+
+Our metadata framework ensures this.
+
+SEMANTIC OPERATION SUPPORT
+
+Our framework supports the metadata capture during semantic operations also.
+
+
+
+
 BDRE Metadata Tables:
 
 PROCESS
