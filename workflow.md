@@ -80,3 +80,8 @@ Fork Control Node
 A fork node is used to handle multiple children processes for a particular process. A fork node splits one path of execution into multiple concurrent paths of execution.
 image
 https://gitlab.com/bdre/documentation/uploads/4f504c41d9b8bbbe46763fd4e7c331d7/image.png
+
+After a fork node is inserted,
+    HaltStepNode of the parent node goes to the ForkNode,
+    ForkNode goes to InitStepNode of Child1
+    ForkNode goes to InitStepNode of Child2
