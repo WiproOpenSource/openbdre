@@ -59,3 +59,8 @@ where IS = InitStepNode, AN = ActionNode, TS = TermStepNode, TJ = TermJobNode, H
 Hence by default,
 StartNode goes to the InitJobNode and InitJobNode on failure goes to the KillNode
 HaltJobNode on success goes to the EndNode and on failure goes to the TermJobNode
+For a particular sub-process
+    InitStepNode on success goes to the ActionNode
+    ActionNode on success goes to the HaltStepNode
+    InitStepNode on failure goes to the TermJobNode
+    ActionNode on failure goes to the TermStepNode
