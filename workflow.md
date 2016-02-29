@@ -21,3 +21,11 @@ This marks the population of the process table and we have valid process entries
 In Oozie , processes function by different types of nodes.
 Parent process or the main job begins with a InitJobNode and ends with an HaltJobNode. On failure, the job is failed by the TermJobNode.
 Sub processes or the sub steps begin with a InitStepNode, perform some activities as part of the ActionNode and finally end with the HaltStepNode. In case of failure, the step is failed by the TermStepNode.
+
+In general, workflow nodes are classified as control flow nodes and action nodes:
+Control flow nodes:
+
+nodes that control the start and end of the workflow and workflow job execution path.
+Action nodes:
+
+nodes that trigger the execution of a computation/processing task.
