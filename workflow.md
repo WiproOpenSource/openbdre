@@ -72,3 +72,6 @@ While building the workflow , the individual nodes with the above default settin
 image
 https://gitlab.com/bdre/documentation/uploads/52423bf9744fc3199fe7f18987511a4d/image.png
 
+Hence, HaltStepNode for a sub-process goes to the InitStepNode for the next sub-process. This works in a sequential workflow where each step of scheduled work is dependent on the preceding step. But in a parallel workflow, where a process could have multiple Parent nodes/ Children nodes, the default node relationships have to be modified.
+It is taken care of by the FORK node and the JOIN node.
+
