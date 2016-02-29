@@ -67,3 +67,8 @@ For a particular sub-process
     HaltStepNode on failure goes to the TermStepNode
     TermStepNode on success/ failure goes to TermJobNode
     TermJobNode on success/ failure goes to KillNode
+
+While building the workflow , the individual nodes with the above default settings have to be linked to establish a relationship among the nodes.
+image
+https://gitlab.com/bdre/documentation/uploads/52423bf9744fc3199fe7f18987511a4d/image.png
+
