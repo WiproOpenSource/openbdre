@@ -45,3 +45,4 @@ HaltJobNode : The HaltJobNode on success notifies the metadata to mark the compl
 TermJobNode : The TermJobNode on success notifies the metadata to mark the failure of a process in the process table.
 TermStepNode : The TermStepNode notifies the metadata to mark the failure of a sub-process in the process table.
 InitStepNode : The InitStepNode notifies the metadata to mark the beginning of a sub process in the process table.
+EndStepNode : The HaltStepNode notifies the metadata to mark the completion of a sub process in the process table.
