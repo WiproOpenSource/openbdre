@@ -75,3 +75,8 @@ https://gitlab.com/bdre/documentation/uploads/52423bf9744fc3199fe7f18987511a4d/i
 Hence, HaltStepNode for a sub-process goes to the InitStepNode for the next sub-process. This works in a sequential workflow where each step of scheduled work is dependent on the preceding step. But in a parallel workflow, where a process could have multiple Parent nodes/ Children nodes, the default node relationships have to be modified.
 It is taken care of by the FORK node and the JOIN node.
 
+Fork Control Node
+
+A fork node is used to handle multiple children processes for a particular process. A fork node splits one path of execution into multiple concurrent paths of execution.
+image
+https://gitlab.com/bdre/documentation/uploads/4f504c41d9b8bbbe46763fd4e7c331d7/image.png
