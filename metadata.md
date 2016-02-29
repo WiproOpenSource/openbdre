@@ -172,3 +172,12 @@ AddProcessLog
 
 Enables adding a new process log to the process log table.
 On calling the procedure, the inputs get added as a new row entry in the table along with an auto incremented log_id.
+
+BatchEnqueuer
+
+Enables adding batch in batch table and then a file entry in file table and finally, an entry in batch consump queue.
+Add a row in the Batch table,File table and BatchConsumpQueue table, with the details as provided through the parameters.
+
+BatchCheck
+
+Checks the presence of the required batches for initiation of the Process which is passed as parameter.This proc is used in the Init Job.
