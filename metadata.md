@@ -16,6 +16,18 @@ Accidentally attempting to end the job having one or more running sub-steps coul
 A job consists of various steps which run towards the completion of the job. These steps take inputs in the form of ‘input batches’ and the main job produces output in the form of a single ‘output batch’. Before running a job, it is made sure that all its sub-steps have their respective input batches available to them, failing which the job does not begin to run.
 During transfer and/or transformation of data from files to tables, the framework confirms data integrity by using a 2 stage load process. This prevents any possible corruption of data that is finally inserted into the target table.
 
+RUN CONTROLS
+
+The framework automatically synchronizes the metadata with any changes to the data set in real time. This results in the metadata always being up-to-date.
+Here, 3 terms are to be understood:
+1. Main job
+2. Sub-steps
+3. Enqueuing job
+The main job consists of the sub-steps, as explained earlier. The successful running and completion of all the sub-steps is mandatory for the successful completion of the main job. These steps take inputs in the form of ‘input batches’ and the main job produces output in the form of a single ‘output batch’. These input batches to the sub-steps are provided by what is called an enqueuing job. Hence, an enqueuing job functions as the source of input batches for the sub-steps.
+When we end a main job, it automatically inputs the output batch generated to all its downstream processes, i.e. the processes whose enqueuing job is this main job that we are trying to end. This ensures the availability of necessary and sufficient batches to the downstream steps so that they can successfully begin when required.
+This whole process is automated and synchronized to keep the metadata up-to-date dynamically.
+
+
 BDRE Metadata Tables:
 
 PROCESS
