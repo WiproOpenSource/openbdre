@@ -1,6 +1,21 @@
 Bigdata Ready Enterprise
 This document contains information about BDRE's metadata management.
 
+Metadata framework salient features:
+
+DATA INTEGRITY:
+
+Data integrity refers to maintaining and assuring the accuracy and consistency of data over its entire life-cycle, and is a critical to any enterprise environment or data warehouse.
+Data integrity in our Metadata Framework is imposed at its design stage through the use of standard rules and is maintained through the use of error checking and validation routines at the necessary steps, listed below :
+Attempting to simultaneously run a job more than once by accident could compromise with the Data Integrity. So, before running a job, our metadata framework makes sure that the job is not already running. Else, error is thrown. This ensures that there are no multiple running instances of a particular job at any point of time.
+A job is composed of several steps which contribute to its successful completion. These steps come into picture only after the main job starts running. The metadata framework validates that the main job is successfully running before running any of the sub- steps. This ensures that no step can run unless the main job which comprises those steps is already running.
+
+The general flow of any job goes like :
+Main job begins --> Sub-steps begin --> Sub-steps end --> Main job ends
+Accidentally attempting to end the job having one or more running sub-steps could hamper the data integrity. Hence, our framework makes sure that all sub-steps have ended before the main job can be ended.
+A job consists of various steps which run towards the completion of the job. These steps take inputs in the form of ‘input batches’ and the main job produces output in the form of a single ‘output batch’. Before running a job, it is made sure that all its sub-steps have their respective input batches available to them, failing which the job does not begin to run.
+During transfer and/or transformation of data from files to tables, the framework confirms data integrity by using a 2 stage load process. This prevents any possible corruption of data that is finally inserted into the target table.
+
 BDRE Metadata Tables:
 
 PROCESS
