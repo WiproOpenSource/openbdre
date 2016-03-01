@@ -19,6 +19,7 @@ import com.wipro.ats.bdre.md.api.base.MetadataAPIBase;
 import com.wipro.ats.bdre.md.beans.table.Batch;
 import com.wipro.ats.bdre.md.dao.BatchDAO;
 import com.wipro.ats.bdre.md.dao.jpa.InstanceExec;
+import com.wipro.ats.bdre.md.rest.util.BindingResultError;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -152,18 +153,8 @@ public class BatchAPI extends MetadataAPIBase {
                        @Valid Batch batch, BindingResult bindingResult, Principal principal) {
         RestWrapper restWrapper = null;
         if (bindingResult.hasErrors()) {
-            StringBuilder errorMessages = new StringBuilder("<p>Please fix following errors and try again<p><ul>");
-            List<FieldError> errors = bindingResult.getFieldErrors();
-            for (FieldError error : errors) {
-                errorMessages.append("<li>");
-                errorMessages.append(error.getField());
-                errorMessages.append(". Bad value: '");
-                errorMessages.append(error.getRejectedValue());
-                errorMessages.append("'</li>");
-            }
-            errorMessages.append("</ul>");
-            restWrapper = new RestWrapper(errorMessages.toString(), RestWrapper.ERROR);
-            return restWrapper;
+            BindingResultError bindingResultError = new BindingResultError();
+            return bindingResultError.errorMessage(bindingResult);
         }
         try {
             com.wipro.ats.bdre.md.dao.jpa.Batch jpaBatch = new com.wipro.ats.bdre.md.dao.jpa.Batch();
@@ -199,18 +190,8 @@ public class BatchAPI extends MetadataAPIBase {
                        @Valid Batch batch, BindingResult bindingResult, Principal principal) {
         RestWrapper restWrapper = null;
         if (bindingResult.hasErrors()) {
-            StringBuilder errorMessages = new StringBuilder("<p>Please fix following errors and try again<p><ul>");
-            List<FieldError> errors = bindingResult.getFieldErrors();
-            for (FieldError error : errors) {
-                errorMessages.append("<li>");
-                errorMessages.append(error.getField());
-                errorMessages.append(". Bad value: '");
-                errorMessages.append(error.getRejectedValue());
-                errorMessages.append("'</li>");
-            }
-            errorMessages.append("</ul>");
-            restWrapper = new RestWrapper(errorMessages.toString(), RestWrapper.ERROR);
-            return restWrapper;
+            BindingResultError bindingResultError = new BindingResultError();
+            return bindingResultError.errorMessage(bindingResult);
         }
 
         try {

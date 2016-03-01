@@ -20,6 +20,7 @@ import com.wipro.ats.bdre.md.dao.jpa.BusDomain;
 import com.wipro.ats.bdre.md.dao.jpa.DeployStatus;
 import com.wipro.ats.bdre.md.dao.jpa.Process;
 import com.wipro.ats.bdre.md.dao.jpa.ProcessType;
+import com.wipro.ats.bdre.md.rest.util.BindingResultError;
 import com.wipro.ats.bdre.md.rest.util.DateConverter;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -194,18 +195,8 @@ public class ProcessDeploymentQueueAPI extends MetadataAPIBase {
 
         RestWrapper restWrapper = null;
         if (bindingResult.hasErrors()) {
-            StringBuilder errorMessages = new StringBuilder("<p>Please fix following errors and try again<p><ul>");
-            List<FieldError> errors = bindingResult.getFieldErrors();
-            for (FieldError error : errors) {
-                errorMessages.append("<li>");
-                errorMessages.append(error.getField());
-                errorMessages.append(". Bad value: '");
-                errorMessages.append(error.getRejectedValue());
-                errorMessages.append("'</li>");
-            }
-            errorMessages.append("</ul>");
-            restWrapper = new RestWrapper(errorMessages.toString(), RestWrapper.ERROR);
-            return restWrapper;
+            BindingResultError bindingResultError = new BindingResultError();
+            return bindingResultError.errorMessage(bindingResult);
         }
         try {
 
@@ -262,18 +253,8 @@ public class ProcessDeploymentQueueAPI extends MetadataAPIBase {
                        @Valid ProcessDeploymentQueue processDeploymentQueue, BindingResult bindingResult, Principal principal) {
         RestWrapper restWrapper = null;
         if (bindingResult.hasErrors()) {
-            StringBuilder errorMessages = new StringBuilder("<p>Please fix following errors and try again<p><ul>");
-            List<FieldError> errors = bindingResult.getFieldErrors();
-            for (FieldError error : errors) {
-                errorMessages.append("<li>");
-                errorMessages.append(error.getField());
-                errorMessages.append(". Bad value: '");
-                errorMessages.append(error.getRejectedValue());
-                errorMessages.append("'</li>");
-            }
-            errorMessages.append("</ul>");
-            restWrapper = new RestWrapper(errorMessages.toString(), RestWrapper.ERROR);
-            return restWrapper;
+            BindingResultError bindingResultError = new BindingResultError();
+            return bindingResultError.errorMessage(bindingResult);
         }
 
         try {
