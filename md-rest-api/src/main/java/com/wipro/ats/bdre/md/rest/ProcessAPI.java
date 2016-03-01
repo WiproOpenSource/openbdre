@@ -201,7 +201,7 @@ public class ProcessAPI extends MetadataAPIBase {
             restWrapper = new RestWrapper(processes, RestWrapper.OK);
             LOGGER.info("All records listed from Process by User:" + principal.getName());
         } catch (Exception e) {
-            restWrapper = new RestWrapper(e.getMessage(), RestWrapper.ERROR);
+            restWrapper = new RestWrapper("no process found for mentioned id", RestWrapper.ERROR);
         }
         return restWrapper;
     }
