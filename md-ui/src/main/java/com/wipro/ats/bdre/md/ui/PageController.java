@@ -36,17 +36,11 @@ import java.util.List;
 @Controller
 @RequestMapping("/pages")
 public class PageController {
+
     @RequestMapping(value = "/{page}.page", method = RequestMethod.GET)
     public String welcome(@PathVariable("page") String page) {
         return page;
     }
-
-    /* @RequestMapping(value = "/{page}.page", method = RequestMethod.GET)
-     public String welcome(@PathVariable("page") String page,@RequestParam("pid") String pid,ModelMap map) {
-         map.addAttribute("pid",pid);
-         map.addAttribute("page",page);
-         return page;
-     }*/
     @RequestMapping(value = "/workflow/{pid}.page", method = RequestMethod.GET)
     @ResponseBody
     public String getWorkflowDot(@PathVariable("pid") String pid) {

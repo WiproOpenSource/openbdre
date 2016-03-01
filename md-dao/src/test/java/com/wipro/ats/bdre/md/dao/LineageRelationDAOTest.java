@@ -75,13 +75,13 @@ public class LineageRelationDAOTest {
     @Test
     public void testInsertUpdateAndDelete() throws Exception {
         LineageQuery lineageQuery = new LineageQuery();
-        lineageQuery.setQueryId("Test");
+        lineageQuery.setQueryId("Test5");
         lineageQuery.setCreateTs(new Date());
         LineageQueryType lineageQueryType = lineageQueryTypeDAO.get(1);
         lineageQuery.setLineageQueryType(lineageQueryType);
         String lineageQueryId = lineageQueryDAO.insert(lineageQuery);
         LineageRelation lineageRelation = new LineageRelation();
-        lineageRelation.setRelationId("Test_Id");
+        lineageRelation.setRelationId("Test_Id5");
         lineageRelation.setLineageQuery(lineageQuery);
         String lineageRelationId = lineageRelationDAO.insert(lineageRelation);
         LOGGER.info("New LineageRelation added with ID:" + lineageRelationId);

@@ -76,7 +76,7 @@ public class Lineage extends MetadataAPIBase {
         lineageNode.setLineageNodeType(lineageNodeType);
         if (lineageNodeInfo.getContainerNodeId() != null){
             LineageNode lineageContainerNode = new LineageNode();
-            lineageContainerNode.setNodeId(lineageNodeInfo.getNodeId());
+            lineageContainerNode.setNodeId(lineageNodeInfo.getContainerNodeId());
             lineageNode.setLineageNode(lineageContainerNode);
         }
         if (lineageNodeInfo.getNodeOrder() != null){
@@ -101,16 +101,20 @@ public class Lineage extends MetadataAPIBase {
     public void insertLineageRelation (LineageRelationInfo lineageRelationInfo){
         LineageRelation lineageRelation = new LineageRelation();
         lineageRelation.setRelationId(lineageRelationInfo.getRelationId());
+
         LineageNode srcLineageNode = new LineageNode();
         srcLineageNode.setNodeId(lineageRelationInfo.getSrcNodeId());
         lineageRelation.setLineageNodeBySrcNodeId(srcLineageNode);
+
         LineageNode tagertLineageNode = new LineageNode();
         tagertLineageNode.setNodeId(lineageRelationInfo.getTargetNodeId());
         lineageRelation.setLineageNodeByTargetNodeId(tagertLineageNode);
+
         LineageQuery lineageQuery = new LineageQuery();
         lineageQuery.setQueryId(lineageRelationInfo.getQueryId());
         lineageRelation.setLineageQuery(lineageQuery);
         lineageRelation.setDotString(lineageRelationInfo.getDotString());
+
         lineageRelationDAO.insert(lineageRelation);
 
     }
