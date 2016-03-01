@@ -27,6 +27,44 @@ The main job consists of the sub-steps, as explained earlier. The successful run
 When we end a main job, it automatically inputs the output batch generated to all its downstream processes, i.e. the processes whose enqueuing job is this main job that we are trying to end. This ensures the availability of necessary and sufficient batches to the downstream steps so that they can successfully begin when required.
 This whole process is automated and synchronized to keep the metadata up-to-date dynamically.
 
+AUTOMATED WORKFLOW GENERATION
+
+The metadata framework automatically generates the entire workflow based on workflow specification. Simply knowing the order in which jobs are to run suffices in generating the workflow. For example, there is a job consisting of 25 sub-steps , few running sequentially , others in parallel. Writing the workflow would be a tedious, time-consuming and error-prone task of writing 1500 lines of code. The auto generated workflow feature in our metadata framework takes care of this complex task, by forming relationships internally and also taking care of not just sequential jobs but also jobs that run in parallel.
+Apart from the automated workflow, a pictorial/graphical representation of the entire workflow is also generated in dot format, which could be read in graphviz or OmniGraffle and rendered in graphical form, also generated automatically It is also convertible to pdf format. It is a flow diagram that clearly shows how the entire workflow runs. The most important advantage of this is the clear understanding it provides to a person who would otherwise have to read each and every line in the code to visualize the workflow. Another advantage is it eliminates the need to run the workflow every time the correctness of the workflow is to be tested. One could simply see the error through this graphical representation and fix it appropriately.
+
+RESTARTABILITY
+
+The framework is capable of resuming from the last successful step in case of occurrence of a failure. The entire workflow need not run again. Suppose the last step under some job failed. The framework is capable of capturing the last but one step which ran successfully. The job need not run from step 1 all over again, but could simply run from the captured step and complete the job.This feature allows jobs to restart from the most recent checkpoint, rather than from the beginning.
+
+METADATA DRIVEN DEPENDENCY MANAGEMENT
+
+Provides us the flexibility of selecting upper limit for batches in two ways :
+1. Setting the maximum number of batches, i.e. max batch 2. A batch cut pattern, which would be matched with incoming batches and a cut would be made thereby.This prevents overloading of batches that are being processed.
+Sub - steps process the input batches and the main job produces an output batch. The input batches to the sub - steps are provided by their respective enqueuing jobs. So, the availability of batches to sub- steps is dependent on the defined relationships in the metadata framework.
+
+AUDITING & LINEAGE
+
+Our metadata contains information about the origins of a particular data set and is granular enough to define information at the attribute level. Our metadata also maintains auditable information about applications, and processes that create, delete, or change data, the exact time stamp, etc.
+Our metadata stores relevant history about the running/ completed/ failed jobs in various fields of the metadata tables. It enables customers to retrace back to the source of any change and read the information pertaining to the change. The metadata hence stores information like batch history, file history, job history, etc. This helps maintain information that could be used during auditing.
+
+INCREMENTAL PROCESSING ENABLEMENT
+
+The metadata provides parameters using which partitioning is done on tables, thereby supporting Delta/incremental Processing.
+
+DATA INGESTION AND LOADING
+
+Our metadata framework captures end to end metadata during file ingestion and file load processes. It supports metadata capture in file to core operations. During a file to core process, the framework facilitates us to retrace from a particular partition of the core table to its origin, i.e the corresponding source file.
+
+REDUCED DEVELOPMENT COST ACROSS DATA PATTERNS
+
+Our metadata framework ensures this.
+
+SEMANTIC OPERATION SUPPORT
+
+Our framework supports the metadata capture during semantic operations also.
+
+
+
 
 BDRE Metadata Tables:
 

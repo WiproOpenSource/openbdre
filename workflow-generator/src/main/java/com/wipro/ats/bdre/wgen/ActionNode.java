@@ -119,6 +119,7 @@ public class ActionNode extends OozieNode {
         } else if (processInfo.getProcessTypeId() == BASE_LOAD_ACTION) {
             BaseLoadActionNode baseLoadActionNode = new BaseLoadActionNode(this);
             containingNodes.add(baseLoadActionNode);
+        } else if (processInfo.getProcessTypeId() == ETL_ACTION) {
 
         } else if (processInfo.getProcessTypeId() == PIG_ACTION) {
             PigActionNode pigActionNode = new PigActionNode(this);
@@ -152,6 +153,18 @@ public class ActionNode extends OozieNode {
             containingNodes.add(lofActionNode);
             containingNodes.add(dataQualityActionNode);
             containingNodes.add(fileRegistrationNode);
+        } else if (processInfo.getProcessTypeId() == SEMANTIC_ACTION) {
+
+        } else if (processInfo.getProcessTypeId() == INGESTION) {
+
+        } else if (processInfo.getProcessTypeId() == EXPORT_ACTION) {
+
+        } else if (processInfo.getProcessTypeId() == IMPORT_ACTION) {
+
+        } else if (processInfo.getProcessTypeId() == DQ_PARENT_ACTION) {
+
+        } else if (processInfo.getProcessTypeId() == HIVE_GEN_PARENT_ACTION) {
+
         }  else if (processInfo.getProcessTypeId() == SFTP) {
 
             SFTPNonOozieActionNode sftpNonOozieActionNode = new SFTPNonOozieActionNode(this);
