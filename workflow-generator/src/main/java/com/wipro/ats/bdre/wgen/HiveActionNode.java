@@ -63,6 +63,7 @@ public class HiveActionNode extends GenericActionNode {
 
     @Override
     public String getXML() {
+        LOGGER.info("Inside HiveAction");
 
         if (this.getProcessInfo().getParentProcessId() == 0) {
             return "";
