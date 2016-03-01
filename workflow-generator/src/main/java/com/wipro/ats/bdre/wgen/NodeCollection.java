@@ -467,12 +467,9 @@ public class NodeCollection {
                 stringBuilder.append(haltStepNode);
                 printedNodeNames.add(haltStepNode.getName());
         }
-        if (termStepNode != null) {
-            if (!printedNodeNames.contains(termStepNode.getName())) {
+        if (termStepNode != null && !printedNodeNames.contains(termStepNode.getName())) {
                 stringBuilder.append(termStepNode);
                 printedNodeNames.add(termStepNode.getName());
-            }
-
         }
         return stringBuilder.toString();
     }
