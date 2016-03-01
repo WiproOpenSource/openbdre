@@ -25,15 +25,19 @@ import java.util.List;
  */
 public class DotUtil {
     private static final Logger LOGGER = Logger.getLogger(DotUtil.class);
+    private static final String SHAPE=  " [shape=rectangle,style=\"rounded\",penwidth=3];";
+    private static final String FORK = "fork_";
 
+    private DotUtil(){
+    }
     /**
      * This method creates schematic diagram of oozie workflow using dot language.
      *
      * @param oozieNodes This is a collection containing all oozie nodes to be used in the workflow.
      * @return Method returns String buffer of schematic diagram of oozie workflow.
      */
-    public static StringBuffer getDot(Collection<OozieNode> oozieNodes) {
-        StringBuffer dot = new StringBuffer("digraph{\n" +
+    public static StringBuilder getDot(Collection<OozieNode> oozieNodes) {
+        StringBuilder dot = new StringBuilder("digraph{\n" +
 
                 "ratio=auto;" +
                 "ranksep=.25;" +
@@ -73,12 +77,12 @@ public class DotUtil {
                 LOGGER.debug(dotLine);
                 dot.append(dotLine + ";\n");
             } else if (oozieNode.getName().startsWith("init-step")) {
-                dot.append(oozieNode.getName().replace('-', '_') + " [shape=rectangle,style=\"rounded\",penwidth=3];");
+                dot.append(oozieNode.getName().replace('-', '_') +SHAPE);
                 dotLine = oozieNode.getName().replace('-', '_') + "->" + oozieNode.getToNode().getName().replace('-', '_');
                 LOGGER.debug(dotLine);
                 dot.append(dotLine + ";\n");
             } else if (oozieNode.getName().startsWith("halt-step")) {
-                dot.append(oozieNode.getName().replace('-', '_') + " [shape=rectangle,style=\"rounded\",penwidth=3];");
+                dot.append(oozieNode.getName().replace('-', '_') +SHAPE);
                 dotLine = oozieNode.getName().replace('-', '_') + "->" + oozieNode.getToNode().getName().replace('-', '_');
                 LOGGER.debug(dotLine);
                 dot.append(dotLine + ";\n");
@@ -93,12 +97,12 @@ public class DotUtil {
                 LOGGER.debug(dotLine);
                 dot.append(dotLine + ";\n");
             } else if (oozieNode.getName().startsWith("init-job")) {
-                dot.append(oozieNode.getName().replace('-', '_') + " [shape=rectangle,style=\"rounded\",penwidth=3];");
+                dot.append(oozieNode.getName().replace('-', '_') +SHAPE);
                 dotLine = oozieNode.getName().replace('-', '_') + "->" + oozieNode.getToNode().getName().replace('-', '_');
                 LOGGER.debug(dotLine);
                 dot.append(dotLine + ";\n");
             } else if (oozieNode.getName().startsWith("halt-job")) {
-                dot.append(oozieNode.getName().replace('-', '_') + " [shape=rectangle,style=\"rounded\",penwidth=3];");
+                dot.append(oozieNode.getName().replace('-', '_') +SHAPE);
                 dotLine = oozieNode.getName().replace('-', '_') + "->" + oozieNode.getToNode().getName().replace('-', '_');
                 LOGGER.debug(dotLine);
                 dot.append(dotLine + ";\n");
@@ -122,9 +126,9 @@ public class DotUtil {
         return dot;
     }
 
-    public static StringBuffer getDashboardDot(Collection<OozieNode> oozieNodes, List<ProcessInfo> processInfoList) throws NullPointerException {
+    public static StringBuilder getDashboardDot(Collection<OozieNode> oozieNodes, List<ProcessInfo> processInfoList) throws NullPointerException {
 
-        StringBuffer dot = new StringBuffer("digraph{\n" +
+        StringBuilder dot = new StringBuilder("digraph{\n" +
                 "edge[penwidth=.25,color=gray86,arrowsize=.50,arrowType=vee];" +
                 "ratio=auto;" +
                 "ranksep=.25;" +
@@ -142,7 +146,7 @@ public class DotUtil {
 
 
         for (ProcessInfo processInfo : processInfoList) {
-            StringBuffer label = new StringBuffer();
+            StringBuilder label = new StringBuilder();
             label.append("<<TABLE ALIGN=\"LEFT\" CELLSPACING=\"4\" CELLPADDING=\"0\" BORDER=\"0\" WIDTH=\"100%\">" +
                     "<TR><TD>" + processInfo.getProcessName() + "</TD></TR>" +
                     "<TR><TD>");
@@ -158,14 +162,14 @@ public class DotUtil {
             if (processInfo.getParentProcessId() == 0) {
                 String[] nextProcess = processInfo.getNextProcessIds().split(",");
                 if (nextProcess.length > 1) {
-                    dot.append("fork_" + processInfo.getNextProcessIds().replace(',', '_') + " [shape=rnastab,label =\" \",style=\"rounded\",penwidth=.25,height = 0.1,width =0.1,color=gray86];\n");
-                    dot.append("start" + "->" + "fork_" + processInfo.getNextProcessIds().replace(',', '_') + " ;\n");
+                    dot.append(FORK + processInfo.getNextProcessIds().replace(',', '_') + " [shape=rnastab,label =\" \",style=\"rounded\",penwidth=.25,height = 0.1,width =0.1,color=gray86];\n");
+                    dot.append("start" + "->" + FORK + processInfo.getNextProcessIds().replace(',', '_') + " ;\n");
                     for (String next : nextProcess) {
 
-                        if (dot.toString().contains("fork_" + processInfo.getNextProcessIds().replace(',', '_') + " ->" + next + " ;\n")) {
+                        if (dot.toString().contains(FORK + processInfo.getNextProcessIds().replace(',', '_') + " ->" + next + " ;\n")) {
                             continue;
                         } else {
-                            dot.append("fork_" + processInfo.getNextProcessIds().replace(',', '_') + " ->" + next + " ;\n");
+                            dot.append(FORK + processInfo.getNextProcessIds().replace(',', '_') + " ->" + next + " ;\n");
                         }
                     }
                 } else {
@@ -177,14 +181,14 @@ public class DotUtil {
             } else {
                 String[] nextProcess = processInfo.getNextProcessIds().split(",");
                 if (nextProcess.length > 1) {
-                    dot.append("fork_" + processInfo.getNextProcessIds().replace(',', '_') + " [shape=rnastab,label = \" \",style=\"rounded\",penwidth=.25,height = 0.1,width =0.1,color=gray86];\n");
-                    dot.append(processInfo.getProcessId().toString() + "->" + "fork_" + processInfo.getNextProcessIds().replace(',', '_') + ";\n");
+                    dot.append(FORK + processInfo.getNextProcessIds().replace(',', '_') + " [shape=rnastab,label = \" \",style=\"rounded\",penwidth=.25,height = 0.1,width =0.1,color=gray86];\n");
+                    dot.append(processInfo.getProcessId().toString() + "->" + FORK + processInfo.getNextProcessIds().replace(',', '_') + ";\n");
                     for (String next : nextProcess) {
 
-                        if (dot.toString().contains("fork_" + processInfo.getNextProcessIds().replace(',', '_') + " ->" + next + " ;\n")) {
+                        if (dot.toString().contains(FORK + processInfo.getNextProcessIds().replace(',', '_') + " ->" + next + " ;\n")) {
                             continue;
                         } else {
-                            dot.append("fork_" + processInfo.getNextProcessIds().replace(',', '_') + " ->" + next + " ;\n");
+                            dot.append(FORK + processInfo.getNextProcessIds().replace(',', '_') + " ->" + next + " ;\n");
                         }
                     }
                 } else {
@@ -221,6 +225,7 @@ public class DotUtil {
                 color = "white";
             }
         } catch (NullPointerException e) {
+            LOGGER.info(e);
             color = "black";
             label = "(Not Started)";
         }
