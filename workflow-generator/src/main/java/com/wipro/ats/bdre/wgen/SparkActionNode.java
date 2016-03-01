@@ -100,7 +100,7 @@ public class SparkActionNode extends GenericActionNode {
         java.util.Properties jarPath = getProperties.getProperties(getId().toString(), configGroup);
         Enumeration e = jarPath.propertyNames();
         StringBuilder addJarPath = new StringBuilder();
-        if (jarPath.size() != 0) {
+        if (!jarPath.isEmpty()) {
             while (e.hasMoreElements()) {
                 String key = (String) e.nextElement();
                 addJarPath.append(jarPath.getProperty(key));
@@ -124,7 +124,7 @@ public class SparkActionNode extends GenericActionNode {
         java.util.Properties listForParams = getProperties.getProperties(getId().toString(), configGroup);
         Enumeration e = listForParams.propertyNames();
         StringBuilder addParams = new StringBuilder();
-        if (listForParams.size() != 0) {
+        if (!listForParams.isEmpty()) {
             while (e.hasMoreElements()) {
                 String key = (String) e.nextElement();
                 addParams.append("        <arg>--" + key + "</arg>\n");
@@ -146,7 +146,7 @@ public class SparkActionNode extends GenericActionNode {
         java.util.Properties listForParams = getProperties.getProperties(getId().toString(), configGroup);
         Enumeration e = listForParams.propertyNames();
         StringBuilder addParams = new StringBuilder();
-        if (listForParams.size() != 0) {
+        if (!listForParams.isEmpty()) {
             while (e.hasMoreElements()) {
                 String key = (String) e.nextElement();
                 addParams.append("        <arg>" + listForParams.getProperty(key) + "</arg>\n");
@@ -173,7 +173,7 @@ public class SparkActionNode extends GenericActionNode {
         java.util.Properties className = getProperties.getProperties(getId().toString(), configGroup);
         Enumeration e = className.propertyNames();
         StringBuilder addClassName = new StringBuilder();
-        if (className.size() != 0) {
+        if (!className.isEmpty()) {
             while (e.hasMoreElements()) {
                 String key = (String) e.nextElement();
                 addClassName.append("        <arg>" + className.getProperty(key) + "</arg>\n");
