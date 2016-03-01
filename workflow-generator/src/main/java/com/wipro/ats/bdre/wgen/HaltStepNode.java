@@ -30,9 +30,7 @@ public class HaltStepNode extends OozieNode {
      *
      * @param sid id to be set for Halt Step Node
      */
-//    public HaltStepNode(Integer id) {
-//        setId(id);
-//    }
+
     public HaltStepNode(String sid) {
         setSid(sid);
     }
@@ -44,7 +42,7 @@ public class HaltStepNode extends OozieNode {
 
     @Override
     public String getXML() {
-        String ret = "\n<action name=\"" + getName() + "\">\n" +
+        return "\n<action name=\"" + getName() + "\">\n" +
                 "        <java>\n" +
                 "            <job-tracker>${jobTracker}</job-tracker>\n" +
                 "            <name-node>${nameNode}</name-node>\n" +
@@ -58,7 +56,7 @@ public class HaltStepNode extends OozieNode {
                 "        <ok to=\"" + getToNode().getName() + "\"/>\n" +
                 "        <error to=\"" + getTermNode().getName() + "\"/>\n" +
                 "</action>";
-        return ret;
+
     }
 
 }

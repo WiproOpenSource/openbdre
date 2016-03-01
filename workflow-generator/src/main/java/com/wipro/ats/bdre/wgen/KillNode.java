@@ -14,6 +14,8 @@
 
 package com.wipro.ats.bdre.wgen;
 
+import com.wipro.ats.bdre.exception.BDREException;
+
 /**
  * Created by arijit on 12/23/14.
  */
@@ -36,12 +38,12 @@ public class KillNode extends OozieNode {
 
     @Override
     public OozieNode getToNode() {
-        throw new RuntimeException("Getting To node from kill is not supported");
+        throw new BDREException("Getting To node from kill is not supported");
     }
 
     @Override
     public void setToNode(OozieNode node) {
-        throw new RuntimeException("Setting To node to kill is not supported");
+        throw new BDREException("Setting To node to kill is not supported");
     }
 
 
