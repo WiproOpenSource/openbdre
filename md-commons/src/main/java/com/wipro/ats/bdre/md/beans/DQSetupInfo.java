@@ -48,6 +48,13 @@ public class DQSetupInfo {
     private String processName;
     private Integer busDomainId;
     private Boolean canRecover;
+    private Boolean deleteFlag;
+    private Integer enqId;
+    private Integer page;
+    private Integer counter;
+    private Integer pageSize;
+    private Integer subProcessId;
+    private Integer parentProcessId;
 
     public Boolean getDeleteFlag() {
         return deleteFlag;
@@ -57,12 +64,6 @@ public class DQSetupInfo {
         this.deleteFlag = deleteFlag;
     }
 
-    private Boolean deleteFlag;
-    private Integer enqId;
-    private Integer page;
-    private Integer counter;
-    private Integer pageSize;
-
     public Integer getPageSize() {
         return pageSize;
     }
@@ -70,9 +71,6 @@ public class DQSetupInfo {
     public void setPageSize(Integer pageSize) {
         this.pageSize = pageSize;
     }
-
-    private Integer subProcessId;
-    private Integer parentProcessId;
 
     @Override
     public String toString() {

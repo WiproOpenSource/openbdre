@@ -135,7 +135,7 @@ public final class OozieUtil {
      */
     public void persistBeanData(Object bean, boolean printOnly) {
 
-        try {
+        /*try {
             persistSingleBean(bean);
         } catch (IntrospectionException e) {
             LOGGER.error(e);
@@ -150,7 +150,9 @@ public final class OozieUtil {
         LOGGER.info("propertiesToBeSaved=" + propertiesToBeSaved);
         if (!printOnly) {
             persistEmittedKeyValue();
-        }
+        }*/
+        persistBeanTryCatch(bean);
+        callPersistEmittedKeyValue(printOnly);
     }
 
     /**
@@ -162,7 +164,7 @@ public final class OozieUtil {
 
     public void persistBeanList(List beans, boolean printOnly) {
         for (Object bean : beans) {
-            try {
+           /* try {
                 persistSingleBean(bean);
             } catch (IntrospectionException e) {
                 LOGGER.error(e);
@@ -173,8 +175,32 @@ public final class OozieUtil {
             } catch (IllegalAccessException e) {
                 LOGGER.error(e);
                 throw new MetadataException(e);
-            }
+            }*/
+            persistBeanTryCatch(bean);
         }
+        /*LOGGER.info("propertiesToBeSaved=" + propertiesToBeSaved);
+        if (!printOnly) {
+            persistEmittedKeyValue();
+        }*/
+        callPersistEmittedKeyValue(printOnly);
+    }
+
+    private void persistBeanTryCatch(Object bean){
+        try {
+            persistSingleBean(bean);
+        } catch (IntrospectionException e) {
+            LOGGER.error(e);
+            throw new MetadataException(e);
+        } catch (InvocationTargetException e) {
+            LOGGER.error(e);
+            throw new MetadataException(e);
+        } catch (IllegalAccessException e) {
+            LOGGER.error(e);
+            throw new MetadataException(e);
+        }
+    }
+
+    private void callPersistEmittedKeyValue(boolean printOnly){
         LOGGER.info("propertiesToBeSaved=" + propertiesToBeSaved);
         if (!printOnly) {
             persistEmittedKeyValue();

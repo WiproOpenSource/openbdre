@@ -29,6 +29,32 @@ import java.util.Set;
  * This class contains all the setter and getter methods for InitJob variables.
  */
 public class InitJobInfo {
+
+    @PersistableParam(keyName = "instance-exec-id")
+    private Long instanceExecId;
+    @PersistableParam(keyName = "last-recoverable-sp-id")
+    private Integer lastRecoverableSpId;
+    @PersistableParam(keyName = "target-batch-id")
+    private Long targetBatchId;
+    @PersistableParam(keyName = "min-batch-id-map")
+    private Map<String, String> minBatchIdMap = new HashMap<String, String>();
+    @PersistableParam(keyName = "max-batch-id-map")
+    private Map<String, String> maxBatchIdMap = new HashMap<String, String>();
+    @PersistableParam(keyName = "min-batch-marking-map")
+    private Map<String, String> minBatchMarkingMap = new HashMap<String, String>();
+    @PersistableParam(keyName = "max-batch-marking-map")
+    private Map<String, String> maxBatchMarkingMap = new HashMap<String, String>();
+    @PersistableParam(keyName = "target-batch-marking")
+    private Set<String> targetBatchMarkingSet = new HashSet<String>();
+    @PersistableParam(keyName = "min-source-instance-exec-id-map")
+    private Map<String, String> minSourceInstanceExecIdMap = new HashMap<String, String>();
+    @PersistableParam(keyName = "max-source-instance-exec-id-map")
+    private Map<String, String> maxSourceInstanceExecIdMap = new HashMap<String, String>();
+    @PersistableParam(keyName = "file-list-map")
+    private Map<String, String> fileListMap = new HashMap<String, String>();
+    @PersistableParam(keyName = "batch-list-map")
+    private Map<String, String> batchListMap = new HashMap<String, String>();
+
     public Long getInstanceExecId() {
         return instanceExecId;
     }
@@ -53,29 +79,6 @@ public class InitJobInfo {
         this.maxSourceInstanceExecIdMap = maxSourceInstanceExecIdMap;
     }
 
-    @PersistableParam(keyName = "instance-exec-id")
-
-    private Long instanceExecId;
-    @PersistableParam(keyName = "last-recoverable-sp-id")
-    private Integer lastRecoverableSpId;
-
-    @PersistableParam(keyName = "target-batch-id")
-    private Long targetBatchId;
-    @PersistableParam(keyName = "min-batch-id-map")
-    private Map<String, String> minBatchIdMap = new HashMap<String, String>();
-    @PersistableParam(keyName = "max-batch-id-map")
-    private Map<String, String> maxBatchIdMap = new HashMap<String, String>();
-    @PersistableParam(keyName = "min-batch-marking-map")
-    private Map<String, String> minBatchMarkingMap = new HashMap<String, String>();
-    @PersistableParam(keyName = "max-batch-marking-map")
-    private Map<String, String> maxBatchMarkingMap = new HashMap<String, String>();
-    @PersistableParam(keyName = "target-batch-marking")
-    private Set<String> targetBatchMarkingSet = new HashSet<String>();
-    @PersistableParam(keyName = "min-source-instance-exec-id-map")
-    private Map<String, String> minSourceInstanceExecIdMap = new HashMap<String, String>();
-    @PersistableParam(keyName = "max-source-instance-exec-id-map")
-    private Map<String, String> maxSourceInstanceExecIdMap = new HashMap<String, String>();
-
     public Map<String, String> getFileListMap() {
         return fileListMap;
     }
@@ -83,12 +86,6 @@ public class InitJobInfo {
     public void setFileListMap(Map<String, String> fileListMap) {
         this.fileListMap = fileListMap;
     }
-
-    @PersistableParam(keyName = "file-list-map")
-    private Map<String, String> fileListMap = new HashMap<String, String>();
-
-    @PersistableParam(keyName = "batch-list-map")
-    private Map<String, String> batchListMap = new HashMap<String, String>();
 
     public Map<String, String> getMaxBatchMarkingMap() {
         return maxBatchMarkingMap;

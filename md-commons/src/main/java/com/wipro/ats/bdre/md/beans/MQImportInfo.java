@@ -41,6 +41,9 @@ public class MQImportInfo {
     private Boolean canRecover;
     private Integer page;
     private Integer pageSize;
+    private Integer counter;
+    private Integer subProcessId;
+    private Integer parentProcessId;
 
     public Integer getPageSize() {
         return pageSize;
@@ -49,10 +52,6 @@ public class MQImportInfo {
     public void setPageSize(Integer pageSize) {
         this.pageSize = pageSize;
     }
-
-    private Integer counter;
-    private Integer subProcessId;
-    private Integer parentProcessId;
 
     @Override
     public String toString() {

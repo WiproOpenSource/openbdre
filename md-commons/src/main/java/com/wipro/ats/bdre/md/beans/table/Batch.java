@@ -29,13 +29,18 @@ public class Batch {
     @Min(value = 1)
     @Digits(fraction = 0, integer = 20)
     private Long batchId;
+    private Integer pageSize;
+    @NotNull
+    @Pattern(regexp = "([0-z][' '|-]?)+")
+    @Size(max = 45)
+    private String batchType;
+    private Integer page;
+    private Long sourceInstanceExecId;
 
     @Override
     public String toString() {
         return " limitId:" + limitId + " batchId:" + batchId + " sourceInstanceExecId:" + sourceInstanceExecId + " page:" + page + " batchType:" + batchType;
     }
-
-    private Integer pageSize;
 
     public Integer getPageSize() {
         return pageSize;
@@ -63,8 +68,6 @@ public class Batch {
         this.sourceInstanceExecId = sourceInstanceExecId;
     }
 
-    private Long sourceInstanceExecId;
-
     public Integer getLimitId() {
         return limitId;
     }
@@ -81,12 +84,6 @@ public class Batch {
     public void setPage(Integer page) {
         this.page = page;
     }
-
-    @NotNull
-    @Pattern(regexp = "([0-z][' '|-]?)+")
-    @Size(max = 45)
-    private String batchType;
-    private Integer page;
 
     public Long getBatchId() {
         return batchId;

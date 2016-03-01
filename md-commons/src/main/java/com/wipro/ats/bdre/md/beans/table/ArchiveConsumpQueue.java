@@ -35,16 +35,6 @@ public class ArchiveConsumpQueue {
     private Long sourceBatchId;
     private Long targetBatchId;
     private Integer pageSize;
-
-    public Integer getPageSize() {
-        return pageSize;
-    }
-
-    public void setPageSize(Integer pageSize) {
-        this.pageSize = pageSize;
-    }
-
-
     @Min(value = 1)
     @Digits(integer = 20, fraction = 0)
     private Long queueId;
@@ -55,6 +45,26 @@ public class ArchiveConsumpQueue {
     private Date startTs;
     private Date endTs;
     private String tableInsertTS;
+    private String tableStartTS;
+    private String tableEndTS;
+    @NotNull
+    @Min(value = 0)
+    @Digits(integer = 11, fraction = 0)
+    private Integer batchState;
+    private String batchMarking;
+    @NotNull
+    @Min(value = 1)
+    @Digits(integer = 11, fraction = 0)
+    private Integer processId;
+    private Integer page;
+
+    public Integer getPageSize() {
+        return pageSize;
+    }
+
+    public void setPageSize(Integer pageSize) {
+        this.pageSize = pageSize;
+    }
 
     @Override
     public String toString() {
@@ -86,19 +96,6 @@ public class ArchiveConsumpQueue {
     public void setTableEndTS(String tableEndTS) {
         this.tableEndTS = tableEndTS;
     }
-
-    private String tableStartTS;
-    private String tableEndTS;
-    @NotNull
-    @Min(value = 0)
-    @Digits(integer = 11, fraction = 0)
-    private Integer batchState;
-    private String batchMarking;
-    @NotNull
-    @Min(value = 1)
-    @Digits(integer = 11, fraction = 0)
-    private Integer processId;
-    private Integer page;
 
     public Integer getPage() {
         return page;
