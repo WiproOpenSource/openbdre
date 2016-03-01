@@ -14,9 +14,9 @@
 
 package com.wipro.ats.bdre.wgen;
 
+import com.wipro.ats.bdre.exception.BDREException;
 import com.wipro.ats.bdre.md.api.GetProperties;
 import com.wipro.ats.bdre.md.beans.ProcessInfo;
-import org.apache.log4j.Logger;
 
 import java.util.Enumeration;
 
@@ -34,8 +34,8 @@ for the current action node, appropriately formatted as XML.
 
 public class ShellActionNode extends GenericActionNode {
 
-    private static final Logger LOGGER = Logger.getLogger(ShellActionNode.class);
     private ProcessInfo processInfo = new ProcessInfo();
+    private static final String SCRIPT = "script";
     private ActionNode actionNode = null;
 
     /**
@@ -71,9 +71,9 @@ public class ShellActionNode extends GenericActionNode {
                 "        <shell xmlns=\"uri:oozie:shell-action:0.1\">\n" +
                 "            <job-tracker>${jobTracker}</job-tracker>\n" +
                 "            <name-node>${nameNode}</name-node>\n");
-        ret.append("            <exec>"+getScriptPath(getId(), "script").replace("shell/","")+"</exec>\n");
+        ret.append("            <exec>"+getScriptPath(getId(), SCRIPT).replace("shell/","")+"</exec>\n");
         ret.append(getParams(getId(), "param"));
-        ret.append("            <file>"+getScriptPath(getId(), "script")+"</file>\n");
+        ret.append("            <file>"+getScriptPath(getId(), SCRIPT)+"</file>\n");
         ret.append(getSupplementaryFiles(getId(),"extraFiles"));
         ret.append("        </shell>\n" +
                 "        <ok to=\"" + getToNode().getName() + "\"/>\n" +
@@ -97,9 +97,9 @@ public class ShellActionNode extends GenericActionNode {
         StringBuilder addScriptPath = new StringBuilder();
 
         if (scriptPath.size() > 1) {
-            throw new RuntimeException("Can Handle only 1 script in shell action processInfo.getProcessTypeId()=" + processInfo.getProcessTypeId());
-        } else if (scriptPath.size() == 0) {
-            addScriptPath.append("script" + getId() + ".sh");
+            throw new BDREException("Can Handle only 1 script in shell action processInfo.getProcessTypeId()=" + processInfo.getProcessTypeId());
+        } else if (scriptPath.isEmpty()) {
+            addScriptPath.append(SCRIPT + getId() + ".sh");
         } else {
             while (e.hasMoreElements()) {
                 String key = (String) e.nextElement();
@@ -121,7 +121,7 @@ public class ShellActionNode extends GenericActionNode {
         java.util.Properties listForParams = getProperties.getProperties(getId().toString(), configGroup);
         Enumeration e = listForParams.propertyNames();
         StringBuilder addParams = new StringBuilder();
-        if (listForParams.size() != 0) {
+        if (!listForParams.isEmpty()) {
             while (e.hasMoreElements()) {
                 String key = (String) e.nextElement();
                 addParams.append(" <argument>" + listForParams.getProperty(key) + "</argument>\n");
@@ -144,7 +144,7 @@ public class ShellActionNode extends GenericActionNode {
         Enumeration e = addtionalScripts.propertyNames();
         StringBuilder addScriptPaths = new StringBuilder();
 
-        if (addtionalScripts.size() > 0) {
+        if (!addtionalScripts.isEmpty()) {
             while (e.hasMoreElements()) {
                 String key = (String) e.nextElement();
                 addScriptPaths.append("            <file>"+addtionalScripts.getProperty(key)+"</file>\n");

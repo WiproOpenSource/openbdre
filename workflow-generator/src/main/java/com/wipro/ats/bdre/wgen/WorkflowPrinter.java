@@ -26,6 +26,7 @@ import java.util.*;
  */
 public class WorkflowPrinter {
     private static final Logger LOGGER = Logger.getLogger(WorkflowPrinter.class);
+    private static final String EMPTYERROR = "Empty Workflow name";
     //Add this map for future step chain(to determine the next step of a subprocess)
     private Map<Integer, NodeCollection> uniqNodeCollectionTreeMap = new LinkedHashMap<Integer, NodeCollection>();
 
@@ -44,8 +45,8 @@ public class WorkflowPrinter {
         NodeCollection nc = nodeMaintainer.getNc();
         Set<String> printedNodeNames = new HashSet<String>();
         if (workflowName == null || workflowName.trim().isEmpty()) {
-            LOGGER.error("Empty Workflow name");
-            throw new MetadataException("Empty Workflow name");
+            LOGGER.error(EMPTYERROR);
+            throw new MetadataException(EMPTYERROR);
         }
         final String prefixXml = "<workflow-app name=\"" + workflowName + "\" xmlns=\"uri:oozie:workflow:0.4\">\n";
         String pid = processInfos.get(0).getProcessId().toString();
@@ -53,7 +54,7 @@ public class WorkflowPrinter {
         credentials.append(isSecurityEnabled(pid, "security"));
         final String postfixXml = "\n</workflow-app>";
 
-        StringBuffer workflowXML = new StringBuffer();
+        StringBuilder workflowXML = new StringBuilder();
         StringBuilder stepXML = new StringBuilder();
         LOGGER.info("Starting workflow generation for " + workflowName);
         //Populate the map
@@ -150,7 +151,7 @@ public class WorkflowPrinter {
         java.util.Properties isEnabled = getProperties.getProperties(pid, configGroup);
         Enumeration e = isEnabled.propertyNames();
         StringBuilder addCredentials = new StringBuilder();
-        if (isEnabled.size() != 0) {
+        if (!isEnabled.isEmpty()) {
             String key = (String) e.nextElement();
 
             if ("true".equalsIgnoreCase(isEnabled.getProperty(key))) {
@@ -171,7 +172,7 @@ public class WorkflowPrinter {
         java.util.Properties properties = getProperties.getProperties(pid, configGroup);
         Enumeration e = properties.propertyNames();
         StringBuilder addProperties = new StringBuilder();
-        if (properties.size() != 0) {
+        if (!properties.isEmpty()) {
             while (e.hasMoreElements()) {
                 String key = (String) e.nextElement();
                 addProperties.append("                        <property>\n" +
@@ -190,8 +191,8 @@ public class WorkflowPrinter {
         NodeCollection nc = nodeMaintainer.getNc();
         Set<String> printedNodeNames = new HashSet<String>();
         if (workflowName == null || workflowName.trim().isEmpty()) {
-            LOGGER.error("Empty Workflow name");
-            throw new MetadataException("Empty Workflow name");
+            LOGGER.error(EMPTYERROR);
+            throw new MetadataException(EMPTYERROR);
         }
         final String prefixXml = "<workflow-app name=\"" + workflowName + "\" xmlns=\"uri:oozie:workflow:0.4\">\n";
         String pid = processInfos.get(0).getProcessId().toString();
@@ -199,7 +200,7 @@ public class WorkflowPrinter {
         credentials.append(isSecurityEnabled(pid, "security"));
         final String postfixXml = "\n</workflow-app>";
 
-        StringBuffer workflowXML = new StringBuffer();
+        StringBuilder workflowXML = new StringBuilder();
         StringBuilder stepXML = new StringBuilder();
         LOGGER.info("Starting workflow generation for " + workflowName);
         //Populate the map
