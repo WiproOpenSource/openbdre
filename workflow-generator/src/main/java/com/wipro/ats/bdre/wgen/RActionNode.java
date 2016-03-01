@@ -14,6 +14,7 @@
 
 package com.wipro.ats.bdre.wgen;
 
+import com.wipro.ats.bdre.exception.BDREException;
 import com.wipro.ats.bdre.md.api.GetProperties;
 import com.wipro.ats.bdre.md.beans.ProcessInfo;
 import org.apache.log4j.Logger;
@@ -113,11 +114,11 @@ public class RActionNode extends GenericActionNode {
         GetProperties getProperties = new GetProperties();
         java.util.Properties rScript = getProperties.getProperties(getId().toString(), configGroup);
         Enumeration e = rScript.propertyNames();
-        System.out.println("rScript = " + rScript.size());
+        LOGGER.info("rScript = " + rScript.size());
         StringBuilder addRScript = new StringBuilder();
         if (rScript.size() > 1) {
-            throw new RuntimeException("Can Handle only 1 input file in R action, process type=" + processInfo.getProcessTypeId());
-        } else if (rScript.size() == 0) {
+            throw new BDREException("Can Handle only 1 input file in R action, process type=" + processInfo.getProcessTypeId());
+        } else if (rScript.isEmpty()) {
             addRScript.append("r/" + getId() + ".R");
         } else {
             while (e.hasMoreElements()) {
