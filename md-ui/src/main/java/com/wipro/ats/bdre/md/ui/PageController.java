@@ -36,16 +36,19 @@ import java.util.List;
 @Controller
 @RequestMapping("/pages")
 public class PageController {
+    private static final String PARENTPROCESSID = "--parent-process-id";
+    private static final String WORKFLOWCON = "workflow-";
 
     @RequestMapping(value = "/{page}.page", method = RequestMethod.GET)
     public String welcome(@PathVariable("page") String page) {
         return page;
     }
+
     @RequestMapping(value = "/workflow/{pid}.page", method = RequestMethod.GET)
     @ResponseBody
     public String getWorkflowDot(@PathVariable("pid") String pid) {
-        List<ProcessInfo> processInfos = new GetProcess().execute(new String[]{"--parent-process-id", pid});
-        Workflow workflow = new WorkflowPrinter().execute(processInfos, "workflow-" + pid);
+        List<ProcessInfo> processInfos = new GetProcess().execute(new String[]{PARENTPROCESSID, pid});
+        Workflow workflow = new WorkflowPrinter().execute(processInfos, WORKFLOWCON + pid);
         return workflow.getDot().toString();
     }
 
@@ -53,8 +56,8 @@ public class PageController {
     @ResponseBody
     public String getDashboardDot(@PathVariable("pid") String pid, @PathVariable("ieid") String ieid) {
 
-        List<ProcessInfo> processInfos = new GetProcess().execInfo(new String[]{"--parent-process-id", pid, "--instance-exec-id", ieid});
-        Workflow workflow = new WorkflowPrinter().execInfo(processInfos, "workflow-" + pid);
+        List<ProcessInfo> processInfos = new GetProcess().execInfo(new String[]{PARENTPROCESSID, pid, "--instance-exec-id", ieid});
+        Workflow workflow = new WorkflowPrinter().execInfo(processInfos, WORKFLOWCON + pid);
         return workflow.getDot().toString();
 
     }
@@ -62,8 +65,8 @@ public class PageController {
     @RequestMapping(value = "/workflowxml/{pid}.page", method = RequestMethod.GET)
     @ResponseBody
     public String getWorkflowXML(@PathVariable("pid") String pid) {
-        List<ProcessInfo> processInfos = new GetProcess().execute(new String[]{"--parent-process-id", pid});
-        Workflow workflow = new WorkflowPrinter().execute(processInfos, "workflow-" + pid);
+        List<ProcessInfo> processInfos = new GetProcess().execute(new String[]{PARENTPROCESSID, pid});
+        Workflow workflow = new WorkflowPrinter().execute(processInfos, WORKFLOWCON + pid);
         return workflow.getXml().toString();
     }
 
