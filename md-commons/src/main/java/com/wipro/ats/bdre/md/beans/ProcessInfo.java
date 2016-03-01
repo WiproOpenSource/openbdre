@@ -30,15 +30,6 @@ public class ProcessInfo {
     private Integer processId;
     private String description;
     private String processName;
-
-    public Integer getBusDomainId() {
-        return busDomainId;
-    }
-
-    public void setBusDomainId(Integer busDomainId) {
-        this.busDomainId = busDomainId;
-    }
-
     private Integer busDomainId;
     private Integer processTypeId;
     //To avoid NPE during parent row processing
@@ -48,6 +39,27 @@ public class ProcessInfo {
     private String nextProcessIds;
     private String batchCutPattern;
     private Boolean deleteFlag;
+    List<ProcessInfo> processInfo;
+    List<LineageNodeInfo> lineageNodeInfo;
+    private Long instanceExecId;
+    private Date startTs;
+    private Date endTs;
+    @NotNull
+    private String tableStartTs;
+    private String tableEndTs;
+    @NotNull
+    @Digits(fraction = 0, integer = 10)
+    private Integer execState;
+    private Integer counter;
+    private Integer page;
+
+    public Integer getBusDomainId() {
+        return busDomainId;
+    }
+
+    public void setBusDomainId(Integer busDomainId) {
+        this.busDomainId = busDomainId;
+    }
 
     public String getBatchCutPattern() {
         return batchCutPattern;
@@ -64,10 +76,6 @@ public class ProcessInfo {
     public void setDeleteFlag(Boolean deleteFlag) {
         this.deleteFlag = deleteFlag;
     }
-
-    List<ProcessInfo> processInfo;
-    List<LineageNodeInfo> lineageNodeInfo;
-
 
     public List<ProcessInfo> getProcessInfo() {
         return processInfo;
@@ -191,13 +199,6 @@ public class ProcessInfo {
         this.nextProcessIds = nextProcessIds;
     }
 
-
-    private Long instanceExecId;
-
-
-    private Date startTs;
-    private Date endTs;
-
     public String getTableStartTs() {
         return tableStartTs;
     }
@@ -214,10 +215,6 @@ public class ProcessInfo {
         this.tableEndTs = tableEndTs;
     }
 
-    @NotNull
-    private String tableStartTs;
-    private String tableEndTs;
-
     public Integer getExecState() {
         return execState;
     }
@@ -225,12 +222,6 @@ public class ProcessInfo {
     public void setExecState(Integer execState) {
         this.execState = execState;
     }
-
-    @NotNull
-    @Digits(fraction = 0, integer = 10)
-    private Integer execState;
-    private Integer counter;
-    private Integer page;
 
     public Integer getCounter() {
         return counter;

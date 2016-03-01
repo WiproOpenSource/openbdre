@@ -31,19 +31,18 @@ public class ProcessType {
     @Min(value = 1)
     @Max(value = Integer.MAX_VALUE)
     private Integer processTypeId;
-
-    public Integer getParentProcessTypeId() {
-        return parentProcessTypeId;
-    }
-
-    public void setParentProcessTypeId(Integer parentProcessTypeId) {
-        this.parentProcessTypeId = parentProcessTypeId;
-    }
-
     private Integer parentProcessTypeId;
     private Integer page;
     private Integer counter;
     private Integer pageSize;
+    @NotNull
+    @Pattern(regexp = "([0-z][-]?[' ']?)+")
+    private String processTypeName;
+
+    @Override
+    public String toString() {
+        return " processTypeId:" + processTypeId + " parentProcessTypeId:" + parentProcessTypeId + " page:" + page + " processTypeName:" + processTypeName;
+    }
 
     public Integer getPageSize() {
         return pageSize;
@@ -53,10 +52,12 @@ public class ProcessType {
         this.pageSize = pageSize;
     }
 
+    public Integer getParentProcessTypeId() {
+        return parentProcessTypeId;
+    }
 
-    @Override
-    public String toString() {
-        return " processTypeId:" + processTypeId + " parentProcessTypeId:" + parentProcessTypeId + " page:" + page + " processTypeName:" + processTypeName;
+    public void setParentProcessTypeId(Integer parentProcessTypeId) {
+        this.parentProcessTypeId = parentProcessTypeId;
     }
 
     public Integer getPage() {
@@ -91,7 +92,4 @@ public class ProcessType {
         this.processTypeName = processTypeName;
     }
 
-    @NotNull
-    @Pattern(regexp = "([0-z][-]?[' ']?)+")
-    private String processTypeName;
 }
