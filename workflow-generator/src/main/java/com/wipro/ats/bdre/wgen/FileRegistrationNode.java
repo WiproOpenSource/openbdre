@@ -56,7 +56,7 @@ public class FileRegistrationNode extends GenericActionNode {
                 node = oozieNode;
             }
         }
-        String ret = "\n<action name=\"" + getName() + "\">\n" +
+        return "\n<action name=\"" + getName() + "\">\n" +
                 "        <java>\n" +
                 "            <job-tracker>${jobTracker}</job-tracker>\n" +
                 "            <name-node>${nameNode}</name-node>\n" +
@@ -83,7 +83,7 @@ public class FileRegistrationNode extends GenericActionNode {
                 "        <ok to=\"" + getToNode().getName() + "\"/>\n" +
                 "        <error to=\"" + getTermNode().getName() + "\"/>\n" +
                 "    </action>";
-        return ret;
+
     }
 
 }

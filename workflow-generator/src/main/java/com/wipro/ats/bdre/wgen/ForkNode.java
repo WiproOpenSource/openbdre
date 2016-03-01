@@ -14,6 +14,8 @@
 
 package com.wipro.ats.bdre.wgen;
 
+import com.wipro.ats.bdre.exception.BDREException;
+
 import java.util.*;
 
 /**
@@ -59,7 +61,6 @@ public class ForkNode extends OozieNode {
                 parentIdSet.add(parent.getId());
             }
         }
-        //forkNode.getIdSet().addAll(parentIdSet);
 
         for (int i = 0; i < children.size(); i++) {
             NodeCollection child = children.get(i);
@@ -93,12 +94,12 @@ public class ForkNode extends OozieNode {
 
     @Override
     public OozieNode getToNode() {
-        throw new RuntimeException("Getting To node from fork is not supported");
+        throw new BDREException("Getting To node from fork is not supported");
     }
 
     @Override
     public void setToNode(OozieNode node) {
-        throw new RuntimeException("Setting To node to fork is not supported");
+        throw new BDREException("Setting To node to fork is not supported");
     }
 
     @Override
