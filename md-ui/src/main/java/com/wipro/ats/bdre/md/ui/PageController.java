@@ -36,12 +36,14 @@ import java.util.List;
 @Controller
 @RequestMapping("/pages")
 public class PageController {
-     private static final String PARENTPROCESSID="--parent-process-id";
-    private static final String WORKFLOWCON="workflow-";
+    private static final String PARENTPROCESSID = "--parent-process-id";
+    private static final String WORKFLOWCON = "workflow-";
+
     @RequestMapping(value = "/{page}.page", method = RequestMethod.GET)
     public String welcome(@PathVariable("page") String page) {
         return page;
     }
+
     @RequestMapping(value = "/workflow/{pid}.page", method = RequestMethod.GET)
     @ResponseBody
     public String getWorkflowDot(@PathVariable("pid") String pid) {
