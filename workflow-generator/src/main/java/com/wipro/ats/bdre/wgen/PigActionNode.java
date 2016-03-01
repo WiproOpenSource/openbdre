@@ -63,6 +63,7 @@ public class PigActionNode extends GenericActionNode {
 
     @Override
     public String getXML() {
+        LOGGER.info("Inside PigAction");
         if (this.getProcessInfo().getParentProcessId() == 0) {
             return "";
         }
