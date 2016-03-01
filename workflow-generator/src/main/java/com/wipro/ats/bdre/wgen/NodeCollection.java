@@ -57,7 +57,6 @@ public class NodeCollection {
     private HaltStepNode haltStepNode1;
     private ForkNode forkNode;
     private Integer id;
-    //    private Integer sid;
     private List<NodeCollection> parents = new ArrayList<NodeCollection>();
     private List<NodeCollection> children = new ArrayList<NodeCollection>();
 
@@ -173,7 +172,7 @@ public class NodeCollection {
             if (joinNode == null) {
                 joinNode = JoinNode.getJoinNode(id, parents, nodeMaintainer);
             }
-            StringBuffer sid = new StringBuffer("");
+            StringBuilder sid = new StringBuilder("");
             for (int i = 0; i < parents.size(); i++) {
                 if (i < parents.size() - 1) {
                     sid.append(parents.get(i).getId().toString() + ",");
@@ -196,7 +195,6 @@ public class NodeCollection {
                 if (i == 0) {
 
                     joinNode.setToNode(haltStepNode1);
-//                      parent.getHaltStepNode().setToNode(parents.get(i + 1).getHaltStepNode());
                     parent.setHaltStepNode(haltStepNode1);
                     nodeMaintainer.getRestartNodes().add(haltStepNode1);
                     nodeMaintainer.getRestartNodes().remove(parent.getHaltStepNode());
@@ -220,7 +218,6 @@ public class NodeCollection {
                     parent.getHaltStepNode().setToNode(initStepNode);
                     parent.getTermStepNode().setToNode(termJobNode);
                     parent.getActionNode().setTermNode(parents.get(0).getTermStepNode());
-//                    nodeMaintainer.getRestartNodes().add(parent.getHaltStepNode());
                 } else {
 
                     /**
@@ -252,8 +249,7 @@ public class NodeCollection {
                     parent.getHaltStepNode().setToNode(haltStepNode1);
                     parent.getTermStepNode().setToNode(parents.get(i + 1).getTermStepNode());
                     parent.getActionNode().setTermNode(parents.get(0).getTermStepNode());
-//                    nodeMaintainer.getRestartNodes().add(parents.get(i + 1).getHaltStepNode());
-//                    nodeMaintainer.getRestartNodes().remove(parent.getHaltStepNode());
+
                 }
             }
         }
@@ -445,27 +441,17 @@ public class NodeCollection {
 
     public String toXML(Set<String> printedNodeNames) {
         StringBuilder stringBuilder = new StringBuilder();
-        if (forkNode != null) {
-            if (!printedNodeNames.contains(forkNode.getName())) {
+        if (forkNode != null && !printedNodeNames.contains(forkNode.getName())) {
                 stringBuilder.append(forkNode);
                 printedNodeNames.add(forkNode.getName());
-            }
         }
-        if (initStepNode != null) {
-            if (!printedNodeNames.contains(initStepNode.getName())) {
+        if (initStepNode != null && !printedNodeNames.contains(initStepNode.getName())) {
                 stringBuilder.append(initStepNode);
                 printedNodeNames.add(initStepNode.getName());
-            }
-
         }
         if (actionNode != null) {
 
-
             for (OozieNode containingNode : actionNode.getContainingNodes()) {
-                /*if (!printedNodeNames.contains(actionNode.getName())) {
-                    stringBuilder.append(actionNode);
-                    printedNodeNames.add(actionNode.getName());
-                }*/
                 if (!printedNodeNames.contains(containingNode.getName())) {
                     stringBuilder.append(containingNode);
                     printedNodeNames.add(containingNode.getName());
@@ -473,19 +459,13 @@ public class NodeCollection {
 
             }
         }
-        if (joinNode != null) {
-
-            if (!printedNodeNames.contains(joinNode.getName())) {
+        if (joinNode != null && !printedNodeNames.contains(joinNode.getName())) {
                 stringBuilder.append(joinNode);
                 printedNodeNames.add(joinNode.getName());
-            }
         }
-        if (haltStepNode != null) {
-            if (!printedNodeNames.contains(haltStepNode.getName())) {
+        if (haltStepNode != null && !printedNodeNames.contains(haltStepNode.getName())) {
                 stringBuilder.append(haltStepNode);
                 printedNodeNames.add(haltStepNode.getName());
-            }
-
         }
         if (termStepNode != null) {
             if (!printedNodeNames.contains(termStepNode.getName())) {
