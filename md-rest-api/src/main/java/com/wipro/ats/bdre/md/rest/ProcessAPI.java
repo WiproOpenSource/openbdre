@@ -864,11 +864,11 @@ public class ProcessAPI extends MetadataAPIBase {
                 LOGGER.debug("Setting OS process Id"+executionInfo.getOSProcessId());
             } catch (Exception e) {
                 executionInfo.setOSProcessId(-1);
-                LOGGER.error("Setting OS Process ID failed " + executionInfo.getOSProcessId());
+                LOGGER.error(e + " Setting OS Process ID failed " + executionInfo.getOSProcessId());
             }
             restWrapper = new RestWrapper(executionInfo, RestWrapper.OK);
         } catch (Exception e) {
-            LOGGER.error("Executing workflow failed " +e.getCause());
+            LOGGER.error( e + " Executing workflow failed " +e.getCause());
             restWrapper = new RestWrapper(e.getMessage(), RestWrapper.ERROR);
         }
         return restWrapper;
