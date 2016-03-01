@@ -146,7 +146,7 @@ public class SparkActionNode extends GenericActionNode {
         java.util.Properties listForParams = getProperties.getProperties(getId().toString(), configGroup);
         Enumeration e = listForParams.propertyNames();
         StringBuilder addParams = new StringBuilder();
-        if (listForParams.isEmpty()) {
+        if (!listForParams.isEmpty()) {
             while (e.hasMoreElements()) {
                 String key = (String) e.nextElement();
                 addParams.append("        <arg>" + listForParams.getProperty(key) + "</arg>\n");
