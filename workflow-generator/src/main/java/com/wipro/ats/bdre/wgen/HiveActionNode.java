@@ -136,7 +136,7 @@ public class HiveActionNode extends GenericActionNode {
         java.util.Properties queryPath = getProperties.getProperties(getId().toString(), configGroup);
         Enumeration e = queryPath.propertyNames();
         StringBuilder addQueryPath = new StringBuilder();
-        if (queryPath.size() != 0) {
+        if (!queryPath.isEmpty()) {
             while (e.hasMoreElements()) {
                 String key = (String) e.nextElement();
                 addQueryPath.append("            <script>" + queryPath.getProperty(key) + "</script>\n");
@@ -160,7 +160,7 @@ public class HiveActionNode extends GenericActionNode {
         java.util.Properties listForParams = getProperties.getProperties(getId().toString(), configGroup);
         Enumeration e = listForParams.propertyNames();
         StringBuilder addParams = new StringBuilder();
-        if (listForParams.size() != 0) {
+        if (!listForParams.isEmpty()) {
             while (e.hasMoreElements()) {
                 String key = (String) e.nextElement();
                 addParams.append("            <param>" + key + "=" + listForParams.getProperty(key) + "</param>\n");
