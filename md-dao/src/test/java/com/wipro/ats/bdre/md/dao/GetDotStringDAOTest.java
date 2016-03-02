@@ -37,10 +37,10 @@ public class GetDotStringDAOTest {
         acbFactory.autowireBean(this);
     }
 
-    @Ignore
+
     @Test
     public void testGetDotString() throws Exception {
-        List<String> dotStringList = getDotStringDAO.getDotString(10802);
+        List<String> dotStringList = getDotStringDAO.getDotString(165);
         for (String dot : dotStringList) {
             LOGGER.info(dot);
         }
