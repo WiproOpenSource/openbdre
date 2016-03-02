@@ -51,6 +51,7 @@
                                                 data: postData,
                                                 dataType: 'json',
                                                 success: function(data) {
+                                                if (data.Result == "OK"){
                                                     $dfd.resolve(data);
 
 
@@ -112,8 +113,25 @@
 						  }
 
 					   });
+			}else {
+			    $dfd.reject();
+			    $("#process-not-found").dialog({
+                    resizable: false,
+                    height: 'auto',
+                    modal: true,
+                    buttons: {
+                        "OK": function() {
+                            $(this).dialog("close");
+                             location.href = location.href = '<c:url value="/pages/process.page"/>';
+                        }
+                    }
+                }).html("No Process exist for mentioned ID.");;
+
+			}
+
                                                 },
                                                 error: function() {
+                                                    console.log("error occured");
                                                     $dfd.reject();
                                                 }
                                         });
@@ -1030,6 +1048,9 @@
                 </div>
                 <div id="execute-fail" title="Process Failed" style="display:none;">
                     <p><span class="ui-icon ui-icon-warning" style="float:left; margin:0 7px 20px 0;"></span>Process Initiation Failed</p>
+                </div>
+                <div id="process-not-found" title="Process Not Found" style="display:none;">
+                    <p><span class="ui-icon ui-icon-warning" style="float:left; margin:0 7px 20px 0;"></span>Process Not Found</p>
                 </div>
                 <div id="dialog-form" title="Are you sure?" style="display:none;">
                     <p><span class="ui-icon ui-icon-alert" style="float:left; margin:0 7px 20px 0;"></span>This will export process and related properties.</p>

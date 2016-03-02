@@ -10,7 +10,7 @@
 # pidfile: /var/run/BDRE/bdre.pid
 #
 # Get function from functions library
-. /etc/init.d/functions
+. /lib/lsb/init-functions
 # Start the service BDRE
 USER=%USER%
 BDRE_HOME=~$USER/bdre
@@ -36,13 +36,14 @@ start() {
             pid=`cat $PIDFILE`
             returnPid=`ps -o pid= -p $pid`
             if [ -n $returnPid ];then
-                echo "BDRE already running with pid $returnPid"
-                return 0
+                log_failure_msg "BDRE already running with pid $returnPid"
+                return 1
             fi
         fi
         rm -f $PIDFILE
-        /sbin/runuser -s /bin/bash $USER -c "$DAEMON $DAEMON_OPTS > /dev/null 2>&1"
-	    ret=$?
+        echo "Attempting to start BDRE web application as $USER ."
+        su -s /bin/bash $USER -c "$DAEMON $DAEMON_OPTS > $LOGDIR/daemon.log 2>&1"
+	ret=$?
         base=$(basename $0)
         if [ $ret -eq 0 ]; then
             new_pid=`cat $PIDFILE`
@@ -53,23 +54,24 @@ start() {
                 sleep 5
                 wait_timeout=$((wait_timeout - 5))
                 if [ $wait_timeout -le 0 ]; then
-                    echo "BDRE has not yet started in 120 seconds. Giving up."
-                    return 1
+                    echo
+                    log_failure_msg "BDRE has not yet started in 120 seconds. Giving up."
+                    exit 1
                 fi
             done
-            success
-            echo "BDRE UI initiated with PID $new_pid."
             echo
+            log_success_msg "BDRE UI initiated with PID $new_pid."
+            return 0
 
         fi
-        return $ret
+        log_failure_msg "Failed to start BDRE daemon."
+        exit $ret
 
 }
 # Restart the service bdre
 stop() {
 	 if [ ! -f $PIDFILE ]; then
-	        echo "BDRE is not running"
-            success
+            log_success_msg "BDRE is not running"
             return 0
         fi
 

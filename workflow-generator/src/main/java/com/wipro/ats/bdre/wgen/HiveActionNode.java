@@ -61,6 +61,7 @@ public class HiveActionNode extends GenericActionNode {
 
     @Override
     public String getXML() {
+        LOGGER.info("Inside HiveAction");
 
         if (this.getProcessInfo().getParentProcessId() == 0) {
             return "";
@@ -82,8 +83,7 @@ public class HiveActionNode extends GenericActionNode {
                 "                <name>run_id</name>\n" +
                 "                <value>${wf:actionData(\"init-job\")[\"min-batch-id-map." + getId() + "\"]}</value>\n" +
                 "            </property>\n" +
-//TODO:Fix lineage and enable it
-/*
+
                 "            <property>\n" +
                 "                <name>hive.exec.post.hooks</name>\n" +
                 "                <value>com.wipro.ats.bdre.hiveplugin.hook.LineageHook</value>\n" +
@@ -96,7 +96,7 @@ public class HiveActionNode extends GenericActionNode {
                 "                <name>bdre.lineage.instanceExecId</name>\n" +
                 "                <value>${wf:actionData(\"init-job\")[\"instance-exec-id\"]}</value>\n" +
                 "                </property>\n" +
- */
+
                 "                </configuration>");
         ret.append(getQueryPath(getId(), "query"));
 
