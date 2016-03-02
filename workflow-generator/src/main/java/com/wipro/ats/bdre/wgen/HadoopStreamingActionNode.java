@@ -14,9 +14,9 @@
 
 package com.wipro.ats.bdre.wgen;
 
+import org.apache.log4j.Logger;
 import com.wipro.ats.bdre.md.api.GetProperties;
 import com.wipro.ats.bdre.md.beans.ProcessInfo;
-import org.apache.log4j.Logger;
 
 import java.util.Enumeration;
 
@@ -63,6 +63,7 @@ public class HadoopStreamingActionNode extends GenericActionNode {
 
     @Override
     public String getXML() {
+        LOGGER.info("Inside HadoopStreaming");
         if (this.getProcessInfo().getParentProcessId() == 0) {
             return "";
         }
@@ -101,7 +102,7 @@ public class HadoopStreamingActionNode extends GenericActionNode {
         Enumeration e = scriptPath.propertyNames();
         StringBuilder addScript = new StringBuilder();
 
-        if (scriptPath.size() > 0) {
+        if (!scriptPath.isEmpty()) {
             while (e.hasMoreElements()) {
                 String key = (String) e.nextElement();
                 addScript.append(scriptPath.getProperty(key));
@@ -122,7 +123,7 @@ public class HadoopStreamingActionNode extends GenericActionNode {
         java.util.Properties listForParams = getProperties.getProperties(getId().toString(), configGroup);
         Enumeration e = listForParams.propertyNames();
         StringBuilder addProperty = new StringBuilder();
-        if (listForParams.size() != 0) {
+        if (!listForParams.isEmpty()) {
             while (e.hasMoreElements()) {
                 String key = (String) e.nextElement();
                 addProperty.append("               <property>\n"+
@@ -148,7 +149,7 @@ public class HadoopStreamingActionNode extends GenericActionNode {
         Enumeration e = addtionalScripts.propertyNames();
         StringBuilder addScriptPaths = new StringBuilder();
 
-        if (addtionalScripts.size() > 0) {
+        if (!addtionalScripts.isEmpty()) {
             while (e.hasMoreElements()) {
                 String key = (String) e.nextElement();
                 addScriptPaths.append("            <file>"+addtionalScripts.getProperty(key)+"</file>\n");
