@@ -124,7 +124,7 @@ public class SetupDB {
     private String[] getColumns(String line) throws MetadataException {
         if (line.trim().isEmpty() || line.trim().startsWith("--") || line.trim().startsWith("#")) {
             LOGGER.info("Ignoring comment:" + line);
-            return new String[]{};
+            return null;
         }
         //replace the variables
         line=replaceVars(line);
@@ -699,9 +699,11 @@ public class SetupDB {
             while ((line = br.readLine()) != null) {
                 lineNum++;
                 LOGGER.debug(lineNumber + lineNum + ": " + line);
+
                 String[] cols = getColumns(line);
                 if (cols == null)
                     continue;
+
                 GeneralConfigId generalConfigId = new GeneralConfigId();
                 generalConfigId.setConfigGroup(cols[0]);
                 generalConfigId.setGcKey(cols[1]);
