@@ -42,6 +42,10 @@ public class SetupDB {
     private Session session;
     private static java.util.Properties map;
     private static Pattern pattern = Pattern.compile("\\$\\{(?<key>[^}]*)\\}");
+    String inFile="In File: ";
+    String badLine="; Bad Line: ";
+    String lineH="Line #";
+
     public static void main(String[] args) throws Exception {
         if (args == null || args.length != 2) {
             LOGGER.info("Usage SetupDB <CSV file base dir> <profile>");
@@ -117,7 +121,7 @@ public class SetupDB {
 
         return sb.toString();
     }
-    private String[] getColumns(String line) throws Exception {
+    private String[] getColumns(String line) throws MetadataException {
         if (line.trim().isEmpty() || line.trim().startsWith("--") || line.trim().startsWith("#")) {
             LOGGER.info("Ignoring comment:" + line);
             String[] nullString=null;
@@ -134,7 +138,7 @@ public class SetupDB {
         return cols;
     }
 
-    private void populateBatch(String dataFile) throws MetadataException {
+    private void populateBatch(String dataFile) throws MetadataException, IOException {
         String line = null;
         int lineNum = 0;
 
@@ -162,18 +166,19 @@ public class SetupDB {
                 }
 
             }
-
-
-        } catch (Exception e) {
-            String inFile="In File: ";
-            String badLine="; Bad Line: ";
+        } catch (MetadataException e) {
             LOGGER.error(inFile + dataFile + badLine + line);
             LOGGER.error(e.getMessage());
             throw new MetadataException(e);
         }
+        catch (IOException e) {
+            LOGGER.error(inFile + dataFile + badLine + line);
+            LOGGER.error(e.getMessage());
+            throw new IOException(e);
+        }
     }
 
-    private void populateBatchStatus(String dataFile) throws Exception {
+    private void populateBatchStatus(String dataFile) throws MetadataException, IOException {
         String line = null;
         int lineNum = 0;
 
@@ -181,7 +186,7 @@ public class SetupDB {
             BufferedReader br = new BufferedReader(new FileReader(dataFile));
             while ((line = br.readLine()) != null) {
                 lineNum++;
-                LOGGER.debug("Line #" + lineNum + ": " + line);
+                LOGGER.debug(lineH + lineNum + ": " + line);
                 String[] cols = getColumns(line);
                 if (cols == null)
                     continue;
@@ -193,15 +198,19 @@ public class SetupDB {
                     session.save(batchStatus);
                 }
             }
-
-        } catch (Exception e) {
-            LOGGER.error("In File: " + dataFile + "; Bad Line: " + line);
+        } catch (MetadataException e) {
+            LOGGER.error(inFile + dataFile + badLine + line);
             LOGGER.error(e.getMessage());
             throw new MetadataException(e);
         }
+        catch (IOException e) {
+            LOGGER.error(inFile + dataFile + badLine + line);
+            LOGGER.error(e.getMessage());
+            throw new IOException(e);
+        }
     }
 
-    private void populateBusDomain(String dataFile) throws Exception {
+    private void populateBusDomain(String dataFile) throws MetadataException, IOException {
         String line = null;
         int lineNum = 0;
 
@@ -209,7 +218,7 @@ public class SetupDB {
             BufferedReader br = new BufferedReader(new FileReader(dataFile));
             while ((line = br.readLine()) != null) {
                 lineNum++;
-                LOGGER.debug("Line #" + lineNum + ": " + line);
+                LOGGER.debug(lineH + lineNum + ": " + line);
                 String[] cols = getColumns(line);
                 if (cols == null)
                     continue;
@@ -223,15 +232,19 @@ public class SetupDB {
                     session.save(busDomain);
                 }
             }
-
         } catch (MetadataException e) {
-            LOGGER.error("In File: " + dataFile + "; Bad Line: " + line);
+            LOGGER.error(inFile + dataFile + badLine + line);
             LOGGER.error(e.getMessage());
             throw new MetadataException(e);
         }
+        catch (IOException e) {
+            LOGGER.error(inFile + dataFile + badLine + line);
+            LOGGER.error(e.getMessage());
+            throw new IOException(e);
+        }
     }
 
-    private void populateDeployStatus(String dataFile) throws Exception {
+    private void populateDeployStatus(String dataFile) throws MetadataException, IOException {
         String line = null;
         int lineNum = 0;
 
@@ -239,7 +252,7 @@ public class SetupDB {
             BufferedReader br = new BufferedReader(new FileReader(dataFile));
             while ((line = br.readLine()) != null) {
                 lineNum++;
-                LOGGER.debug("Line #" + lineNum + ": " + line);
+                LOGGER.debug(lineH + lineNum + ": " + line);
                 String[] cols = getColumns(line);
                 if (cols == null) continue;
                 DeployStatus deployStatus = new DeployStatus();
@@ -250,15 +263,19 @@ public class SetupDB {
                     session.save(deployStatus);
                 }
             }
-            //session.flush();;
-        } catch (Exception e) {
-            LOGGER.error("In File: " + dataFile + "; Bad Line: " + line);
+        } catch (MetadataException e) {
+            LOGGER.error(inFile + dataFile + badLine + line);
             LOGGER.error(e.getMessage());
-            throw new Exception(e);
+            throw new MetadataException(e);
+        }
+        catch (IOException e) {
+            LOGGER.error(inFile + dataFile + badLine + line);
+            LOGGER.error(e.getMessage());
+            throw new IOException(e);
         }
     }
 
-    private void populateExecStatus(String dataFile) throws Exception {
+    private void populateExecStatus(String dataFile) throws MetadataException, IOException {
         String line = null;
         int lineNum = 0;
 
@@ -266,7 +283,7 @@ public class SetupDB {
             BufferedReader br = new BufferedReader(new FileReader(dataFile));
             while ((line = br.readLine()) != null) {
                 lineNum++;
-                LOGGER.debug("Line #" + lineNum + ": " + line);
+                LOGGER.debug(lineH + lineNum + ": " + line);
                 String[] cols = getColumns(line);
                 if (cols == null) continue;
                 ExecStatus execStatus = new ExecStatus();
@@ -277,16 +294,19 @@ public class SetupDB {
                     session.save(execStatus);
                 }
             }
-
-
-        } catch (Exception e) {
-            LOGGER.error("In File: " + dataFile + "; Bad Line: " + line);
+        } catch (MetadataException e) {
+            LOGGER.error(inFile + dataFile + badLine + line);
             LOGGER.error(e.getMessage());
-            throw new Exception(e);
+            throw new MetadataException(e);
+        }
+        catch (IOException e) {
+            LOGGER.error(inFile + dataFile + badLine + line);
+            LOGGER.error(e.getMessage());
+            throw new IOException(e);
         }
     }
 
-    private void populateLineageNodeType(String dataFile) throws Exception {
+    private void populateLineageNodeType(String dataFile) throws MetadataException, IOException {
         String line = null;
         int lineNum = 0;
 
@@ -294,7 +314,7 @@ public class SetupDB {
             BufferedReader br = new BufferedReader(new FileReader(dataFile));
             while ((line = br.readLine()) != null) {
                 lineNum++;
-                LOGGER.debug("Line #" + lineNum + ": " + line);
+                LOGGER.debug(lineH + lineNum + ": " + line);
                 String[] cols = getColumns(line);
                 if (cols == null) continue;
                 LineageNodeType lineageNodeType = new LineageNodeType();
@@ -305,15 +325,19 @@ public class SetupDB {
                     session.save(lineageNodeType);
                 }
             }
-            //session.flush();;
-        } catch (Exception e) {
-            LOGGER.error("In File: " + dataFile + "; Bad Line: " + line);
+        } catch (MetadataException e) {
+            LOGGER.error(inFile + dataFile + badLine + line);
             LOGGER.error(e.getMessage());
-            throw new Exception(e);
+            throw new MetadataException(e);
+        }
+        catch (IOException e) {
+            LOGGER.error(inFile + dataFile + badLine + line);
+            LOGGER.error(e.getMessage());
+            throw new IOException(e);
         }
     }
 
-    private void populateLineageQueryType(String dataFile) throws Exception {
+    private void populateLineageQueryType(String dataFile) throws MetadataException, IOException {
         String line = null;
         int lineNum = 0;
 
@@ -321,7 +345,7 @@ public class SetupDB {
             BufferedReader br = new BufferedReader(new FileReader(dataFile));
             while ((line = br.readLine()) != null) {
                 lineNum++;
-                LOGGER.debug("Line #" + lineNum + ": " + line);
+                LOGGER.debug(lineH + lineNum + ": " + line);
                 String[] cols = getColumns(line);
                 if (cols == null) continue;
                 LineageQueryType lineageQueryType = new LineageQueryType();
@@ -332,15 +356,20 @@ public class SetupDB {
                     session.save(lineageQueryType);
                 }
             }
-            //session.flush();;
-        } catch (Exception e) {
-            LOGGER.error("In File: " + dataFile + "; Bad Line: " + line);
+        } catch (MetadataException e) {
+            LOGGER.error(inFile + dataFile + badLine + line);
             LOGGER.error(e.getMessage());
-            throw new Exception(e);
+            throw new MetadataException(e);
         }
+        catch (IOException e) {
+            LOGGER.error(inFile + dataFile + badLine + line);
+            LOGGER.error(e.getMessage());
+            throw new IOException(e);
+        }
+
     }
 
-    private void populateProcessType(String dataFile) throws Exception {
+    private void populateProcessType(String dataFile) throws MetadataException, IOException {
         String line = null;
         int lineNum = 0;
 
@@ -348,7 +377,7 @@ public class SetupDB {
             BufferedReader br = new BufferedReader(new FileReader(dataFile));
             while ((line = br.readLine()) != null) {
                 lineNum++;
-                LOGGER.debug("Line #" + lineNum + ": " + line);
+                LOGGER.debug(lineH + lineNum + ": " + line);
                 String[] cols = getColumns(line);
                 if (cols == null) continue;
                 ProcessType pType = new ProcessType();
@@ -361,15 +390,19 @@ public class SetupDB {
                     session.save(pType);
                 }
             }
-            ////session.flush();;
-        } catch (Exception e) {
-            LOGGER.error("In File: " + dataFile + "; Bad Line: " + line);
+        }catch (MetadataException e) {
+            LOGGER.error(inFile + dataFile + badLine + line);
             LOGGER.error(e.getMessage());
-            throw new Exception(e);
+            throw new MetadataException(e);
+        }
+        catch (IOException e) {
+            LOGGER.error(inFile + dataFile + badLine + line);
+            LOGGER.error(e.getMessage());
+            throw new IOException(e);
         }
     }
 
-    private void populateProcessTemplate(String dataFile) throws Exception {
+    private void populateProcessTemplate(String dataFile) throws MetadataException, IOException {
         String line = null;
         int lineNum = 0;
 
@@ -377,7 +410,7 @@ public class SetupDB {
             BufferedReader br = new BufferedReader(new FileReader(dataFile));
             while ((line = br.readLine()) != null) {
                 lineNum++;
-                LOGGER.debug("Line #" + lineNum + ": " + line);
+                LOGGER.debug(lineH + lineNum + ": " + line);
                 String[] cols = getColumns(line);
                 if (cols == null) continue;
                 ProcessTemplate processTemplate = new ProcessTemplate();
@@ -407,15 +440,19 @@ public class SetupDB {
                     session.save(processTemplate);
                 }
             }
-            //session.flush();;
-        } catch (Exception e) {
-            LOGGER.error("In File: " + dataFile + "; Bad Line: " + line);
+        } catch (MetadataException e) {
+            LOGGER.error(inFile + dataFile + badLine + line);
             LOGGER.error(e.getMessage());
-            throw new Exception(e);
+            throw new MetadataException(e);
+        }
+        catch (IOException e) {
+            LOGGER.error(inFile + dataFile + badLine + line);
+            LOGGER.error(e.getMessage());
+            throw new IOException(e);
         }
     }
 
-    private void populateProcess(String dataFile) throws Exception {
+    private void populateProcess(String dataFile) throws MetadataException, IOException {
         String line = null;
         int lineNum = 0;
 
@@ -423,7 +460,7 @@ public class SetupDB {
             BufferedReader br = new BufferedReader(new FileReader(dataFile));
             while ((line = br.readLine()) != null) {
                 lineNum++;
-                LOGGER.debug("Line #" + lineNum + ": " + line);
+                LOGGER.debug(lineH + lineNum + ": " + line);
                 String[] cols = getColumns(line);
                 if (cols == null) continue;
                 Process process = new Process();
@@ -459,15 +496,19 @@ public class SetupDB {
                     session.save(process);
                 }
             }
-            //session.flush();;
-        } catch (Exception e) {
-            LOGGER.error("In File: " + dataFile + "; Bad Line: " + line);
+        } catch (MetadataException e) {
+            LOGGER.error(inFile + dataFile + badLine + line);
             LOGGER.error(e.getMessage());
-            throw new Exception(e);
+            throw new MetadataException(e);
+        }
+        catch (IOException e) {
+            LOGGER.error(inFile + dataFile + badLine + line);
+            LOGGER.error(e.getMessage());
+            throw new IOException(e);
         }
     }
 
-    private void populateProperties(String dataFile) throws Exception {
+    private void populateProperties(String dataFile) throws MetadataException, IOException {
         String line = null;
         int lineNum = 0;
 
@@ -475,7 +516,7 @@ public class SetupDB {
             BufferedReader br = new BufferedReader(new FileReader(dataFile));
             while ((line = br.readLine()) != null) {
                 lineNum++;
-                LOGGER.debug("Line #" + lineNum + ": " + line);
+                LOGGER.debug(lineH + lineNum + ": " + line);
                 String[] cols = getColumns(line);
                 if (cols == null) continue;
                 PropertiesId propertiesId = new PropertiesId();
@@ -491,15 +532,19 @@ public class SetupDB {
                     session.save(properties);
                 }
             }
-            //session.flush();;
-        } catch (Exception e) {
-            LOGGER.error("In File: " + dataFile + "; Bad Line: " + line);
+        } catch (MetadataException e) {
+            LOGGER.error(inFile + dataFile + badLine + line);
             LOGGER.error(e.getMessage());
-            throw new Exception(e);
+            throw new MetadataException(e);
+        }
+        catch (IOException e) {
+            LOGGER.error(inFile + dataFile + badLine + line);
+            LOGGER.error(e.getMessage());
+            throw new IOException(e);
         }
     }
 
-    private void populateServers(String dataFile) throws Exception {
+    private void populateServers(String dataFile) throws MetadataException, IOException {
         String line = null;
         int lineNum = 0;
 
@@ -507,7 +552,7 @@ public class SetupDB {
             BufferedReader br = new BufferedReader(new FileReader(dataFile));
             while ((line = br.readLine()) != null) {
                 lineNum++;
-                LOGGER.debug("Line #" + lineNum + ": " + line);
+                LOGGER.debug(lineH + lineNum + ": " + line);
                 String[] cols = getColumns(line);
                 if (cols == null) continue;
                 Servers servers = new Servers();
@@ -524,15 +569,19 @@ public class SetupDB {
                     session.save(servers);
                 }
             }
-            //session.flush();;
-        } catch (Exception e) {
-            LOGGER.error("In File: " + dataFile + "; Bad Line: " + line);
+        } catch (MetadataException e) {
+            LOGGER.error(inFile + dataFile + badLine + line);
             LOGGER.error(e.getMessage());
-            throw new Exception(e);
+            throw new MetadataException(e);
+        }
+        catch (IOException e) {
+            LOGGER.error(inFile + dataFile + badLine + line);
+            LOGGER.error(e.getMessage());
+            throw new IOException(e);
         }
     }
 
-    private void populateUserRoles(String dataFile) throws Exception {
+    private void populateUserRoles(String dataFile) throws MetadataException, IOException {
         String line = null;
         int lineNum = 0;
 
@@ -540,7 +589,7 @@ public class SetupDB {
             BufferedReader br = new BufferedReader(new FileReader(dataFile));
             while ((line = br.readLine()) != null) {
                 lineNum++;
-                LOGGER.debug("Line #" + lineNum + ": " + line);
+                LOGGER.debug(lineH + lineNum + ": " + line);
                 String[] cols = getColumns(line);
                 if (cols == null) continue;
                 UserRoles userRoles = new UserRoles();
@@ -552,15 +601,19 @@ public class SetupDB {
                     session.save(userRoles);
                 }
             }
-            //session.flush();;
-        } catch (Exception e) {
-            LOGGER.error("In File: " + dataFile + "; Bad Line: " + line);
+        } catch (MetadataException e) {
+            LOGGER.error(inFile + dataFile + badLine + line);
             LOGGER.error(e.getMessage());
-            throw new Exception(e);
+            throw new MetadataException(e);
+        }
+        catch (IOException e) {
+            LOGGER.error(inFile + dataFile + badLine + line);
+            LOGGER.error(e.getMessage());
+            throw new IOException(e);
         }
     }
 
-    private void populateUsers(String dataFile) throws Exception {
+    private void populateUsers(String dataFile) throws MetadataException , IOException {
         String line = null;
         int lineNum = 0;
 
@@ -581,15 +634,19 @@ public class SetupDB {
                     session.save(users);
                 }
             }
-            //session.flush();;
-        } catch (Exception e) {
-            LOGGER.error("In File: " + dataFile + "; Bad Line: " + line);
+        } catch (MetadataException e) {
+            LOGGER.error(inFile + dataFile + badLine + line);
             LOGGER.error(e.getMessage());
-            throw new Exception(e);
+            throw new MetadataException(e);
+        }
+        catch (IOException e) {
+            LOGGER.error(inFile + dataFile + badLine + line);
+            LOGGER.error(e.getMessage());
+            throw new IOException(e);
         }
     }
 
-    private void populateWorkflowType(String dataFile) throws Exception {
+    private void populateWorkflowType(String dataFile) throws MetadataException, IOException {
         String line = null;
         int lineNum = 0;
 
@@ -608,15 +665,19 @@ public class SetupDB {
                     session.save(workflowType);
                 }
             }
-            //session.flush();;
-        } catch (Exception e) {
-            LOGGER.error("In File: " + dataFile + "; Bad Line: " + line);
+        } catch (MetadataException e) {
+            LOGGER.error(inFile + dataFile + badLine + line);
             LOGGER.error(e.getMessage());
-            throw new Exception(e);
+            throw new MetadataException(e);
+        }
+        catch (IOException e) {
+            LOGGER.error(inFile + dataFile + badLine + line);
+            LOGGER.error(e.getMessage());
+            throw new IOException(e);
         }
     }
 
-    private void populateGeneralConfig(String dataFile) throws Exception {
+    private void populateGeneralConfig(String dataFile) throws MetadataException, IOException {
         String line = null;
         int lineNum = 0;
         try {
@@ -647,10 +708,15 @@ public class SetupDB {
                     session.save(generalConfig);
                 }
             }
-            //session.flush();;
-        } catch (Exception e) {
-            LOGGER.error("In File: " + dataFile + "; Bad Line: " + line);
-            throw new Exception(e);
+        } catch (MetadataException e) {
+            LOGGER.error(inFile + dataFile + badLine + line);
+            LOGGER.error(e.getMessage());
+            throw new MetadataException(e);
+        }
+        catch (IOException e) {
+            LOGGER.error(inFile + dataFile + badLine + line);
+            LOGGER.error(e.getMessage());
+            throw new IOException(e);
         }
     }
 
