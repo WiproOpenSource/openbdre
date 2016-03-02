@@ -18,6 +18,7 @@ package com.wipro.ats.bdre.md.rest;
  * Created by kapil on 29-01-2015.
  */
 
+import com.wipro.ats.bdre.exception.MetadataException;
 import com.wipro.ats.bdre.md.api.base.MetadataAPIBase;
 import com.wipro.ats.bdre.md.beans.table.InstanceExec;
 import com.wipro.ats.bdre.md.dao.InstanceExecDAO;
@@ -49,8 +50,7 @@ public class InstanceExecAPI extends MetadataAPIBase {
      * @return restWrapper It contains an instance of InstanceExec.
      */
     @RequestMapping(value = "/{id}", method = RequestMethod.GET)
-    public
-    @ResponseBody
+    @ResponseBody public
     RestWrapper get(
             @PathVariable("id") Integer instanceExecId, Principal principal
     ) {
@@ -66,13 +66,13 @@ public class InstanceExecAPI extends MetadataAPIBase {
                 instanceExec.setExecState(jpaInstanceExec.getExecStatus().getExecStateId());
                 instanceExec.setProcessId(jpaInstanceExec.getProcess().getProcessId());
             }
-            // instanceExec = s.selectOne("call_procedures.GetInstanceExec", instanceExec);
             instanceExec.setTableStartTs(DateConverter.dateToString(instanceExec.getStartTs()));
             instanceExec.setTableEndTs(DateConverter.dateToString(instanceExec.getEndTs()));
 
             restWrapper = new RestWrapper(instanceExec, RestWrapper.OK);
             LOGGER.info("Record with ID:" + instanceExecId + " selected from InstanceExec by User:" + principal.getName());
-        } catch (Exception e) {
+        } catch (MetadataException e) {
+            LOGGER.error(e);
             restWrapper = new RestWrapper(e.getMessage(), RestWrapper.ERROR);
         }
         return restWrapper;
@@ -88,22 +88,20 @@ public class InstanceExecAPI extends MetadataAPIBase {
      */
     @RequestMapping(value = {"", "/"}, method = RequestMethod.GET)
 
-    public
-    @ResponseBody
+    @ResponseBody public
     RestWrapper list(@RequestParam(value = "pid", defaultValue = "0") Integer pid, @RequestParam(value = "page", defaultValue = "0") int startPage,
                      @RequestParam(value = "size", defaultValue = "10") int pageSize, Principal principal) {
         LOGGER.info("pid = " + pid);
         LOGGER.info("startPage = " + startPage);
 
         RestWrapper restWrapper = null;
+        Integer processId = pid;
         try {
 
             if (pid == 0) {
-                pid = null;
+                processId = null;
             }
-            List<InstanceExec> instanceExecs = instanceExecDAO.list(pid, startPage, pageSize);
-
-            //   List<InstanceExec> instanceExecs = s.selectList("call_procedures.ListInstanceExec", instanceExec);
+            List<InstanceExec> instanceExecs = instanceExecDAO.list(processId, startPage, pageSize);
             for (InstanceExec ie : instanceExecs) {
                 ie.setTableStartTs(DateConverter.dateToString(ie.getStartTs()));
                 ie.setTableEndTs(DateConverter.dateToString(ie.getEndTs()));
@@ -111,7 +109,8 @@ public class InstanceExecAPI extends MetadataAPIBase {
 
             restWrapper = new RestWrapper(instanceExecs, RestWrapper.OK);
             LOGGER.info("All records listed from InstanceExec by User:" + principal.getName());
-        } catch (Exception e) {
+        } catch (MetadataException e) {
+            LOGGER.error(e);
             restWrapper = new RestWrapper(e.getMessage(), RestWrapper.ERROR);
         }
         return restWrapper;
