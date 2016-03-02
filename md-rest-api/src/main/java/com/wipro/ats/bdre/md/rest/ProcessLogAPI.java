@@ -14,6 +14,7 @@
 
 package com.wipro.ats.bdre.md.rest;
 
+import com.wipro.ats.bdre.exception.MetadataException;
 import com.wipro.ats.bdre.md.api.base.MetadataAPIBase;
 import com.wipro.ats.bdre.md.beans.ProcessLogInfo;
 import com.wipro.ats.bdre.md.dao.ProcessLogDAO;
@@ -76,7 +77,8 @@ public class ProcessLogAPI extends MetadataAPIBase {
             //s.close();
             restWrapper = new RestWrapper(listLog, RestWrapper.OK);
             LOGGER.info("All records listed from ProcessLog by User:" + principal.getName());
-        } catch (Exception e) {
+        }catch (MetadataException e) {
+            LOGGER.error(e);
             restWrapper = new RestWrapper(e.getMessage(), RestWrapper.ERROR);
         }
         return restWrapper;
@@ -108,7 +110,8 @@ public class ProcessLogAPI extends MetadataAPIBase {
             restWrapper = new RestWrapper(processLogList, RestWrapper.OK);
             LOGGER.info("Record with ID:" + processId + " selected from ProcessLog by User:" + principal.getName());
 
-        } catch (Exception e) {
+        }catch (MetadataException e) {
+            LOGGER.error(e);
             restWrapper = new RestWrapper(e.getMessage(), RestWrapper.ERROR);
         }
         return restWrapper;

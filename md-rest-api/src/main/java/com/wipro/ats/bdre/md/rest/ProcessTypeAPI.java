@@ -14,6 +14,7 @@
 
 package com.wipro.ats.bdre.md.rest;
 
+import com.wipro.ats.bdre.exception.MetadataException;
 import com.wipro.ats.bdre.md.api.base.MetadataAPIBase;
 import com.wipro.ats.bdre.md.beans.table.ProcessType;
 import com.wipro.ats.bdre.md.dao.ProcessTypeDAO;
@@ -70,7 +71,8 @@ public class ProcessTypeAPI extends MetadataAPIBase {
             restWrapper = new RestWrapper(processType, RestWrapper.OK);
             LOGGER.info("Record with ID:" + processTypeId + " selected from ProcessType by User:" + principal.getName());
 
-        } catch (Exception e) {
+        } catch (MetadataException e) {
+            LOGGER.error(e);
             restWrapper = new RestWrapper(e.getMessage(), RestWrapper.ERROR);
         }
         return restWrapper;
@@ -97,7 +99,8 @@ public class ProcessTypeAPI extends MetadataAPIBase {
             restWrapper = new RestWrapper(null, RestWrapper.OK);
             LOGGER.info("Record with ID:" + processTypeId + " deleted from ProcessType by User:" + principal.getName());
 
-        } catch (Exception e) {
+        } catch (MetadataException e) {
+            LOGGER.error(e);
             restWrapper = new RestWrapper(e.getMessage(), RestWrapper.ERROR);
         }
         return restWrapper;
@@ -134,7 +137,8 @@ public class ProcessTypeAPI extends MetadataAPIBase {
             restWrapper = new RestWrapper(processTypes, RestWrapper.OK);
             LOGGER.info("All records listed from ProcessType by User:" + principal.getName());
 
-        } catch (Exception e) {
+        } catch (MetadataException e) {
+            LOGGER.error(e);
             restWrapper = new RestWrapper(e.getMessage(), RestWrapper.ERROR);
         }
         return restWrapper;
@@ -169,7 +173,8 @@ public class ProcessTypeAPI extends MetadataAPIBase {
             restWrapper = new RestWrapper(processType, RestWrapper.OK);
             LOGGER.info("Record with ID:" + processType.getProcessTypeId() + " updated in ProcessType by User:" + principal.getName() + processType);
 
-        } catch (Exception e) {
+        } catch (MetadataException e) {
+            LOGGER.error(e);
             restWrapper = new RestWrapper(e.getMessage(), RestWrapper.ERROR);
         }
         return restWrapper;
@@ -202,7 +207,8 @@ public class ProcessTypeAPI extends MetadataAPIBase {
 
             restWrapper = new RestWrapper(processType, RestWrapper.OK);
             LOGGER.info("Record with ID:" + processType.getProcessTypeId() + " inserted in ProcessType by User:" + principal.getName() + processType);
-        } catch (Exception e) {
+        } catch (MetadataException e) {
+            LOGGER.error(e);
             restWrapper = new RestWrapper(e.getMessage(), RestWrapper.ERROR);
         }
         return restWrapper;
@@ -246,7 +252,8 @@ public class ProcessTypeAPI extends MetadataAPIBase {
             }
             restWrapperOptions = new RestWrapperOptions(options, RestWrapperOptions.OK);
 
-        } catch (Exception e) {
+        } catch (MetadataException e) {
+            LOGGER.error(e);
             restWrapperOptions = new RestWrapperOptions(e.getMessage(), RestWrapperOptions.ERROR);
         }
         return restWrapperOptions;
@@ -286,7 +293,8 @@ public class ProcessTypeAPI extends MetadataAPIBase {
                 LOGGER.debug(option.getDisplayText());
             }
             restWrapperOptions = new RestWrapperOptions(options, RestWrapperOptions.OK);
-        } catch (Exception e) {
+        } catch (MetadataException e) {
+            LOGGER.error(e);
             restWrapperOptions = new RestWrapperOptions(e.getMessage(), RestWrapperOptions.ERROR);
         }
         return restWrapperOptions;

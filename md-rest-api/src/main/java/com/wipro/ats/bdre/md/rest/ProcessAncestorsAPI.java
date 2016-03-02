@@ -68,7 +68,8 @@ public class ProcessAncestorsAPI extends MetadataAPIBase {
 
             restWrapper = new RestWrapper(ancestorsInfo, RestWrapper.OK);
             LOGGER.info("Record with ID:" + processId + " and ancestor details fetched by User:" + principal.getName());
-        } catch (Exception e) {
+        }catch (MetadataException e) {
+            LOGGER.error(e);
             restWrapper = new RestWrapper(e.getMessage(), RestWrapper.ERROR);
         }
 
@@ -106,9 +107,9 @@ public class ProcessAncestorsAPI extends MetadataAPIBase {
                 i++;
             }
             return ancestorList;
-        } catch (Exception e) {
-            LOGGER.error("Error occurred", e);
-            throw new MetadataException(e);
+        } catch (MetadataException e) {
+            LOGGER.error(e);
+            throw new MetadataException();
         }
     }
 

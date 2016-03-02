@@ -14,6 +14,7 @@
 
 package com.wipro.ats.bdre.md.rest;
 
+import com.wipro.ats.bdre.exception.MetadataException;
 import com.wipro.ats.bdre.md.api.GetLineageByBatch;
 import com.wipro.ats.bdre.md.api.GetLineageByInstanceExec;
 import com.wipro.ats.bdre.md.api.base.MetadataAPIBase;
@@ -149,7 +150,8 @@ public class LineageAPI extends MetadataAPIBase {
             lineageInfo.setBatchId(batchId);
             restWrapper = new RestWrapper(lineageInfo, RestWrapper.OK);
             LOGGER.info("Record with ID:" + batchId + " selected(getbyBatch) from Lineage by User:" + principal.getName());
-        } catch (Exception e) {
+        } catch (MetadataException e) {
+            LOGGER.error(e);
             restWrapper = new RestWrapper(e.getMessage(), RestWrapper.ERROR);
         }
         return restWrapper;
@@ -250,7 +252,8 @@ public class LineageAPI extends MetadataAPIBase {
             restWrapper = new RestWrapper(lineageInfo, RestWrapper.OK);
             LOGGER.info("Record with ID:" + instanceExecId + " selected(getbyInstanceExec) from Lineage by User:" + principal.getName());
 
-        } catch (Exception e) {
+        } catch (MetadataException e) {
+            LOGGER.error(e);
             restWrapper = new RestWrapper(e.getMessage(), RestWrapper.ERROR);
         }
         return restWrapper;

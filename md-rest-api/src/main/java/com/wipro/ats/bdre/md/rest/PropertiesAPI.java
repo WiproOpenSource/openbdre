@@ -14,6 +14,7 @@
 
 package com.wipro.ats.bdre.md.rest;
 
+import com.wipro.ats.bdre.exception.MetadataException;
 import com.wipro.ats.bdre.md.api.base.MetadataAPIBase;
 import com.wipro.ats.bdre.md.beans.table.Properties;
 import com.wipro.ats.bdre.md.dao.PropertiesDAO;
@@ -66,7 +67,7 @@ public class PropertiesAPI extends MetadataAPIBase {
             restWrapper = new RestWrapper(null, RestWrapper.OK);
             LOGGER.info("Record with ID:" + processId + " deleted from Properties by User:" + principal.getName());
 
-        } catch (Exception e) {
+        } catch (MetadataException e) {
             LOGGER.error(e);
             restWrapper = new RestWrapper(e.getMessage(), RestWrapper.ERROR);
         }
@@ -101,7 +102,7 @@ public class PropertiesAPI extends MetadataAPIBase {
             restWrapper = new RestWrapper(getProperties, RestWrapper.OK);
             LOGGER.info("All records listed from Properties by User:" + principal.getName());
 
-        } catch (Exception e) {
+        } catch (MetadataException e) {
             LOGGER.error(e);
             restWrapper = new RestWrapper(e.getMessage(), RestWrapper.ERROR);
         }
@@ -132,7 +133,7 @@ public class PropertiesAPI extends MetadataAPIBase {
             restWrapper = new RestWrapper(null, RestWrapper.OK);
             LOGGER.info("Record with ID:" + processId + "," + key + " deleted from Properties by User:" + principal.getName());
 
-        } catch (Exception e) {
+        } catch (MetadataException e) {
             LOGGER.error(e);
             restWrapper = new RestWrapper(e.getMessage(), RestWrapper.ERROR);
         }
@@ -176,7 +177,7 @@ public class PropertiesAPI extends MetadataAPIBase {
             restWrapper = new RestWrapper(propertiesList, RestWrapper.OK);
             LOGGER.info("Record with ID:" + processId + "selected from Properties by User:" + principal.getName());
 
-        } catch (Exception e) {
+        } catch (MetadataException e) {
             LOGGER.error(e);
             restWrapper = new RestWrapper(e.getMessage(), RestWrapper.ERROR);
         }
@@ -218,7 +219,7 @@ public class PropertiesAPI extends MetadataAPIBase {
             restWrapper = new RestWrapper(propertiesList, RestWrapper.OK);
             LOGGER.info("Record with ID:" + processId + "and config group" + configGroup + "selected from Properties by User:" + principal.getName());
 
-        } catch (Exception e) {
+        } catch (MetadataException e) {
             LOGGER.error(e);
             restWrapper = new RestWrapper(e.getMessage(), RestWrapper.ERROR);
         }
@@ -259,7 +260,7 @@ public class PropertiesAPI extends MetadataAPIBase {
             restWrapper = new RestWrapper(properties, RestWrapper.OK);
             LOGGER.info("Record with ID:" + properties.getProcessId() + " updated in Properties by User:" + principal.getName() + properties);
 
-        } catch (Exception e) {
+        } catch (MetadataException e) {
             LOGGER.error(e);
             restWrapper = new RestWrapper(e.getMessage(), RestWrapper.ERROR);
         }
@@ -301,7 +302,7 @@ public class PropertiesAPI extends MetadataAPIBase {
             restWrapper = new RestWrapper(properties, RestWrapper.OK);
             LOGGER.info("Record with ID:" + properties.getProcessId() + " inserted in Properties by User:" + principal.getName() + properties);
 
-        } catch (Exception e) {
+        } catch (MetadataException e) {
             LOGGER.error(e);
             restWrapper = new RestWrapper(e.getMessage(), RestWrapper.ERROR);
         }
@@ -343,7 +344,7 @@ public class PropertiesAPI extends MetadataAPIBase {
             LOGGER.debug("Records fetched:" + propertiesList);
             LOGGER.info("All records with parent process ID:" + parentProcessId + " selected from Properties by User:" + principal.getName());
 
-        } catch (Exception e) {
+        } catch (MetadataException e) {
             LOGGER.error(e);
             restWrapper = new RestWrapper(e.getMessage(), RestWrapper.ERROR);
         }

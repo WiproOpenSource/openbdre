@@ -14,6 +14,7 @@
 
 package com.wipro.ats.bdre.md.rest;
 
+import com.wipro.ats.bdre.exception.MetadataException;
 import com.wipro.ats.bdre.md.api.GetProcessDependency;
 import com.wipro.ats.bdre.md.api.base.MetadataAPIBase;
 import com.wipro.ats.bdre.md.beans.ProcessDependencyInfo;
@@ -136,7 +137,8 @@ public class ProcessDependencyAPI extends MetadataAPIBase {
             restWrapper = new RestWrapper(lineageInfo, RestWrapper.OK);
             LOGGER.info("Record with ID:" + processId + " selected from LineageInfo by User:" + principal.getName());
 
-        } catch (Exception e) {
+        } catch (MetadataException e) {
+            LOGGER.error(e);
             restWrapper = new RestWrapper(e.getMessage(), RestWrapper.ERROR);
         }
         return restWrapper;

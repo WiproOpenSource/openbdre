@@ -14,6 +14,7 @@
 
 package com.wipro.ats.bdre.md.rest;
 
+import com.wipro.ats.bdre.exception.MetadataException;
 import com.wipro.ats.bdre.md.api.base.MetadataAPIBase;
 import com.wipro.ats.bdre.md.beans.table.Process;
 import com.wipro.ats.bdre.md.beans.table.ProcessTemplate;
@@ -91,7 +92,8 @@ public class ProcessTemplateAPI extends MetadataAPIBase {
             restWrapper = new RestWrapper(processTemplate, RestWrapper.OK);
             LOGGER.info("Record with ID:" + processTemplateId + " selected from ProcessTemplate by User:" + principal.getName());
 
-        } catch (Exception e) {
+        } catch (MetadataException e) {
+            LOGGER.error(e);
             restWrapper = new RestWrapper(e.getMessage(), RestWrapper.ERROR);
         }
 
@@ -122,7 +124,8 @@ public class ProcessTemplateAPI extends MetadataAPIBase {
             restWrapper = new RestWrapper(null, RestWrapper.OK);
             LOGGER.info("Record with ID:" + processTemplateId + " deleted from ProcessTemplate by User:" + principal.getName());
 
-        } catch (Exception e) {
+        } catch (MetadataException e) {
+            LOGGER.error(e);
             restWrapper = new RestWrapper(e.getMessage(), RestWrapper.ERROR);
         }
         return restWrapper;
@@ -158,7 +161,8 @@ public class ProcessTemplateAPI extends MetadataAPIBase {
             restWrapper = new RestWrapper(processes, RestWrapper.OK);
             LOGGER.info("All records listed from ProcessTemplate by User:" + principal.getName());
 
-        } catch (Exception e) {
+        } catch (MetadataException e) {
+            LOGGER.error(e);
             restWrapper = new RestWrapper(e.getMessage(), RestWrapper.ERROR);
         }
         return restWrapper;
@@ -223,7 +227,8 @@ public class ProcessTemplateAPI extends MetadataAPIBase {
             restWrapper = new RestWrapper(processTemplate, RestWrapper.OK);
             LOGGER.info("Record with ID:" + processTemplate.getProcessTemplateId() + " updated in BatchStatus by User:" + principal.getName() + processTemplate);
 
-        } catch (Exception e) {
+        } catch (MetadataException e) {
+            LOGGER.error(e);
             restWrapper = new RestWrapper(e.getMessage(), RestWrapper.ERROR);
         }
         return restWrapper;
@@ -298,7 +303,8 @@ public class ProcessTemplateAPI extends MetadataAPIBase {
             restWrapper = new RestWrapper(processTemplate, RestWrapper.OK);
             LOGGER.info("Record with ID:" + processTemplate.getProcessTemplateId() + " inserted in ProcessTemplate by User:" + principal.getName() + processTemplate);
 
-        } catch (Exception e) {
+        } catch (MetadataException e) {
+            LOGGER.error(e);
             restWrapper = new RestWrapper(e.getMessage(), RestWrapper.ERROR);
         }
         return restWrapper;
@@ -365,9 +371,10 @@ public class ProcessTemplateAPI extends MetadataAPIBase {
 
 
             restWrapper = new RestWrapper(processTemplate, RestWrapper.OK);
-        } catch (Exception e) {
+        } catch (MetadataException e) {
+            LOGGER.error(e);
             restWrapper = new RestWrapper(e.getMessage(), RestWrapper.ERROR);
-        } finally {
+        }finally {
             AdjustNextIdsForInsert(processTemplate, processes);
         }
         return restWrapper;
@@ -572,7 +579,8 @@ public class ProcessTemplateAPI extends MetadataAPIBase {
             }
 
             restWrapper = new RestWrapper(processTemplate, RestWrapper.OK);
-        } catch (Exception e) {
+        } catch (MetadataException e) {
+            LOGGER.error(e);
             restWrapper = new RestWrapper(e.getMessage(), RestWrapper.ERROR);
         } finally {
 
@@ -673,14 +681,12 @@ public class ProcessTemplateAPI extends MetadataAPIBase {
 
                     updateDaoProcess.setEditTs(DateConverter.stringToDate(processForNext.getTableEditTS()));
                     processDAO.update(updateDaoProcess);
-                    //        s.selectOne("call_procedures.UpdateProcess", processForNext);
                     count_inner++;
                 }
                 count_outer++;
             }
-        } catch (Exception e) {
-            LOGGER.debug("Exception caught " + e.getStackTrace());
-
+        } catch (MetadataException e) {
+            LOGGER.error(e);
         }
 
     }
@@ -690,8 +696,6 @@ public class ProcessTemplateAPI extends MetadataAPIBase {
 
 
         try {
-
-            //       List<ProcessTemplate> processTemplatesForNext = s.selectList("call_procedures.select-process-template-list", processTemplate);
             List<ProcessTemplate> processTemplatesForNext = processTemplateDAO.selectPTList(processTemplate.getProcessTemplateId());
             ProcessTemplate processTemplate2;
             int count = 0;
@@ -765,13 +769,10 @@ public class ProcessTemplateAPI extends MetadataAPIBase {
                     updateDaoProcess.setDeleteFlag(processes.get(count).getDeleteFlag());
                 updateDaoProcess.setEditTs(DateConverter.stringToDate(processes.get(count).getTableEditTS()));
                 processDAO.update(updateDaoProcess);
-
-                //s.selectOne("call_procedures.UpdateProcess", processes.get(count));
                 count++;
             }
-        } catch (Exception e) {
-            LOGGER.debug("Exception caught " + e.getStackTrace());
-
+        } catch (MetadataException e) {
+            LOGGER.error(e);
         }
     }
 

@@ -13,6 +13,7 @@
  */
 package com.wipro.ats.bdre.md.rest;
 
+import com.wipro.ats.bdre.exception.MetadataException;
 import com.wipro.ats.bdre.md.api.base.MetadataAPIBase;
 import com.wipro.ats.bdre.md.beans.table.ProcessDeploymentQueue;
 import com.wipro.ats.bdre.md.dao.ProcessDeploymentQueueDAO;
@@ -89,7 +90,8 @@ public class ProcessDeploymentQueueAPI extends MetadataAPIBase {
 
             restWrapper = new RestWrapper(processDeploymentQueue, RestWrapper.OK);
             LOGGER.info("Record with ID:" + deploymentId + " selected from ProcessDeploymentQueue by User:" + principal.getName());
-        } catch (Exception e) {
+        } catch (MetadataException e) {
+            LOGGER.error(e);
             restWrapper = new RestWrapper(e.getMessage(), RestWrapper.ERROR);
         }
         return restWrapper;
@@ -117,7 +119,8 @@ public class ProcessDeploymentQueueAPI extends MetadataAPIBase {
 
             restWrapper = new RestWrapper(null, RestWrapper.OK);
             LOGGER.info("Record with ID:" + deploymentId + " deleted from ProcessDeploymentQueue by User:" + principal.getName());
-        } catch (Exception e) {
+        } catch (MetadataException e) {
+            LOGGER.error(e);
             restWrapper = new RestWrapper(e.getMessage(), RestWrapper.ERROR);
         }
         return restWrapper;
@@ -172,7 +175,8 @@ public class ProcessDeploymentQueueAPI extends MetadataAPIBase {
 
             restWrapper = new RestWrapper(processDeploymentQueues, RestWrapper.OK);
             LOGGER.info("All records listed from ProcessDeploymentQueue by User:" + principal.getName());
-        } catch (Exception e) {
+        } catch (MetadataException e) {
+            LOGGER.error(e);
             restWrapper = new RestWrapper(e.getMessage(), RestWrapper.ERROR);
         }
         return restWrapper;
@@ -231,7 +235,8 @@ public class ProcessDeploymentQueueAPI extends MetadataAPIBase {
 
             restWrapper = new RestWrapper(processDeploymentQueue, RestWrapper.OK);
             LOGGER.info("Record with ID:" + processDeploymentQueue.getDeploymentId() + " updated in ProcessDeploymentQueue by User:" + principal.getName() + processDeploymentQueue);
-        } catch (Exception e) {
+        } catch (MetadataException e) {
+            LOGGER.error(e);
             restWrapper = new RestWrapper(e.getMessage(), RestWrapper.ERROR);
         }
         return restWrapper;
@@ -284,7 +289,8 @@ public class ProcessDeploymentQueueAPI extends MetadataAPIBase {
             }
             restWrapper = new RestWrapper(processDeploymentQueue, RestWrapper.OK);
             LOGGER.info("Record with ID:" + processDeploymentQueue.getDeploymentId() + " inserted in ProcessDeploymentQueue by User:" + principal.getName() + processDeploymentQueue);
-        } catch (Exception e) {
+        } catch (MetadataException e) {
+            LOGGER.error(e);
             restWrapper = new RestWrapper(e.getMessage(), RestWrapper.ERROR);
         }
         return restWrapper;
