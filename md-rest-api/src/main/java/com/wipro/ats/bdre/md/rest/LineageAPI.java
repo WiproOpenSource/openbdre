@@ -210,7 +210,7 @@ public class LineageAPI extends MetadataAPIBase {
 
             SimpleDateFormat format = new SimpleDateFormat("MM-dd-yyyy HH:mm:ss");
 
-            StringBuilder InstanceExecLabel = new StringBuilder("<<TABLE ALIGN=\"LEFT\" CELLSPACING=\"4\" CELLPADDING=\"0\" BORDER=\"0\" WIDTH=\"100%\">" +
+            StringBuilder instanceExecLabel = new StringBuilder("<<TABLE ALIGN=\"LEFT\" CELLSPACING=\"4\" CELLPADDING=\"0\" BORDER=\"0\" WIDTH=\"100%\">" +
                     "<TR><TD><FONT POINT-SIZE=\"9\">Instance Exec#" + "</FONT></TD></TR>" +
                     "<TR><TD><FONT POINT-SIZE=\"12\">" + instanceExecId + "</FONT></TD></TR>" +
                     "<TR><TD><FONT POINT-SIZE=\"9\">Process Name:" + "</FONT></TD></TR>" +
@@ -222,23 +222,23 @@ public class LineageAPI extends MetadataAPIBase {
                     "<TR><TD>Start Time:</TD></TR>");
 
             if (startTime == null) {
-                InstanceExecLabel.append("<TR><TD> NA </TD></TR>");
+                instanceExecLabel.append("<TR><TD> NA </TD></TR>");
             } else {
-                InstanceExecLabel.append("<TR><TD>" + format.format(startTime) + "</TD></TR>");
+                instanceExecLabel.append("<TR><TD>" + format.format(startTime) + "</TD></TR>");
             }
 
-            InstanceExecLabel.append("<TR><TD>End Time:</TD></TR>");
+            instanceExecLabel.append("<TR><TD>End Time:</TD></TR>");
             if (endTime == null) {
-                InstanceExecLabel.append("<TR><TD> NA </TD></TR>");
+                instanceExecLabel.append("<TR><TD> NA </TD></TR>");
             } else {
-                InstanceExecLabel.append("<TR><TD>" + format.format(endTime) + "</TD></TR>");
+                instanceExecLabel.append("<TR><TD>" + format.format(endTime) + "</TD></TR>");
             }
-            InstanceExecLabel.append("<TR><TD COLOR=\"blue\"  href=\"javascript:popDetails(" + processId + "," + instanceExecId + ")\"><FONT COLOR=\"blue\" POINT-SIZE=\"8\">Details</FONT></TD></TR>" +
+            instanceExecLabel.append("<TR><TD COLOR=\"blue\"  href=\"javascript:popDetails(" + processId + "," + instanceExecId + ")\"><FONT COLOR=\"blue\" POINT-SIZE=\"8\">Details</FONT></TD></TR>" +
                     "</TABLE>>");
             //Building dot
 
             instTooltip = "Process Description :" + processDesc;
-            dot.append("\"" + instanceExecId + "e\"" + " [label=" + InstanceExecLabel + ",shape=box,height=2.5,color=" + color + ",style=filled,fontcolor=black,style=\"rounded\",penwidth=2,fontsize=8,tooltip=\"" + instTooltip + "\"];\n");
+            dot.append("\"" + instanceExecId + "e\"" + " [label=" + instanceExecLabel + ",shape=box,height=2.5,color=" + color + ",style=filled,fontcolor=black,style=\"rounded\",penwidth=2,fontsize=8,tooltip=\"" + instTooltip + "\"];\n");
 
             String batchLabel = "\"Batch id:" + targetBatchId + "\"";
             dot.append("\"" + targetBatchId + "b\"" + " [shape=point,fixedsize=true, height =0.2,width =0.2,style=filled,color=grey,style=\"rounded\",penwidth=2,tooltip=" + batchLabel + ", fontsize=8,URL=\"javascript:getBid(" + targetBatchId + ")\"];\n");
