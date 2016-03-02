@@ -14,6 +14,7 @@
 
 package com.wipro.ats.bdre.md.rest;
 
+import com.wipro.ats.bdre.exception.MetadataException;
 import com.wipro.ats.bdre.md.api.base.MetadataAPIBase;
 import com.wipro.ats.bdre.md.beans.ProcessLogInfo;
 import com.wipro.ats.bdre.md.dao.ProcessLogDAO;
@@ -22,12 +23,8 @@ import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
-
 import java.security.Principal;
 import java.util.List;
-
-//import org.apache.ibatis.session.SqlSession;
-//import org.apache.ibatis.session.SqlSessionFactory;
 
 /**
  * Created by arijit on 1/9/15.
@@ -54,11 +51,8 @@ public class ProcessLogAPI extends MetadataAPIBase {
     public
     @ResponseBody
     RestWrapper list(@RequestParam(value = "page", defaultValue = "0") int startPage, @RequestParam(value = "size", defaultValue = "10") int pageSize, @RequestParam(value = "pid", defaultValue = "0") Integer pid, Principal principal) {
-        // SqlSession s = null;
         RestWrapper restWrapper = null;
         try {
-            // SqlSessionFactory sqlSessionFactory = getSqlSessionFactory(null);
-            // s = sqlSessionFactory.openSession();
             ProcessLogInfo processLogInfo = new ProcessLogInfo();
             if (pid == 0) {
                 pid = null;
@@ -66,17 +60,11 @@ public class ProcessLogAPI extends MetadataAPIBase {
             processLogInfo.setProcessId(pid);
             processLogInfo.setPage(startPage);
             processLogInfo.setPageSize(pageSize);
-
-            //List<ProcessLogInfo> listLog = s.selectList("call_procedures.ListLog", processLogInfo);
             List<ProcessLogInfo> listLog = processLogDAO.listLog(processLogInfo);
-           // for (ProcessLogInfo processLogInfo1 : listLog) {
-          //      processLogInfo1.setProcessId(processLogInfo1.getProcessId());
-          //  }
-
-            //s.close();
             restWrapper = new RestWrapper(listLog, RestWrapper.OK);
             LOGGER.info("All records listed from ProcessLog by User:" + principal.getName());
-        } catch (Exception e) {
+        }catch (MetadataException e) {
+            LOGGER.error(e);
             restWrapper = new RestWrapper(e.getMessage(), RestWrapper.ERROR);
         }
         return restWrapper;
@@ -93,14 +81,10 @@ public class ProcessLogAPI extends MetadataAPIBase {
     public
     @ResponseBody
     RestWrapper list(@PathVariable("id") Integer processId, Principal principal) {
-        // SqlSession s = null;
         RestWrapper restWrapper = null;
         try {
-            //SqlSessionFactory sqlSessionFactory = getSqlSessionFactory(null);
-            //s = sqlSessionFactory.openSession();
             ProcessLogInfo processLogInfo = new ProcessLogInfo();
             processLogInfo.setProcessId(processId);
-            // List<ProcessLogInfo> processLogList = s.selectList("call_procedures.GetProcessLog", processLogInfo);
             List<ProcessLogInfo> processLogList = processLogDAO.getProcessLog(processLogInfo);
             for(ProcessLogInfo processLogInfo1:processLogList){
                 processLogInfo1.setTableAddTs(DateConverter.dateToString(processLogInfo1.getAddTs()));
@@ -108,7 +92,8 @@ public class ProcessLogAPI extends MetadataAPIBase {
             restWrapper = new RestWrapper(processLogList, RestWrapper.OK);
             LOGGER.info("Record with ID:" + processId + " selected from ProcessLog by User:" + principal.getName());
 
-        } catch (Exception e) {
+        }catch (MetadataException e) {
+            LOGGER.error(e);
             restWrapper = new RestWrapper(e.getMessage(), RestWrapper.ERROR);
         }
         return restWrapper;
