@@ -348,7 +348,7 @@ public class ProcessTemplateAPI extends MetadataAPIBase {
                 // Inserting properties for newly created process from template
                 List<PropertiesTemplate> propertiesTemplateList = propertiesTemplateDAO.listPropertiesTemplateBean(processTempInfo.getProcessTemplateId());
                 for (PropertiesTemplate propertiesTemplate : propertiesTemplateList) {
-                    if (propertiesTemplateList.size() != 0) {
+                    if (propertiesTemplateList.isEmpty()) {
                         propertiesTemplate.setProcessId(processes.get(index).getProcessId());
                     }
                 }
@@ -413,7 +413,7 @@ public class ProcessTemplateAPI extends MetadataAPIBase {
                 List<Process> processInfos = processTemplateDAO.selectPListForTemplate(processTemplate.getProcessTemplateId());
                 for (Process processInfo : processInfos) {
                     List<PropertiesTemplate> propTemplateList = propertiesTemplateDAO.listPropertiesTemplateBean(processTemplate.getProcessTemplateId());
-                    if (propTemplateList.size() != 0) {
+                    if (propTemplateList.isEmpty()) {
                         for (PropertiesTemplate propertyTemplate : propTemplateList) {
                             propertyTemplate.setProcessId(processInfo.getProcessId());
                         }
