@@ -16,6 +16,7 @@ package com.wipro.ats.bdre.wgen;
 
 import com.wipro.ats.bdre.md.api.GetProperties;
 import com.wipro.ats.bdre.md.beans.ProcessInfo;
+import org.apache.log4j.Logger;
 
 import java.util.Enumeration;
 
@@ -33,6 +34,7 @@ for the current action node, appropriately formatted as XML.
 
 public class HiveActionNode extends GenericActionNode {
 
+    private static final Logger LOGGER = Logger.getLogger(HiveActionNode.class);
     private ProcessInfo processInfo = new ProcessInfo();
     private ActionNode actionNode = null;
 

@@ -14,6 +14,7 @@
 
 package com.wipro.ats.bdre.wgen;
 
+import org.apache.log4j.Logger;
 import com.wipro.ats.bdre.md.api.GetProperties;
 import com.wipro.ats.bdre.md.beans.ProcessInfo;
 
@@ -33,6 +34,7 @@ for the current action node, appropriately formatted as XML.
 
 public class HadoopStreamingActionNode extends GenericActionNode {
 
+    private static final Logger LOGGER = Logger.getLogger(HadoopStreamingActionNode.class);
     private ProcessInfo processInfo = new ProcessInfo();
     private ActionNode actionNode = null;
 
@@ -61,6 +63,7 @@ public class HadoopStreamingActionNode extends GenericActionNode {
 
     @Override
     public String getXML() {
+        LOGGER.info("Inside HadoopStreaming");
         if (this.getProcessInfo().getParentProcessId() == 0) {
             return "";
         }
