@@ -1,8 +1,6 @@
 package com.wipro.ats.bdre.wgen;
 
-import com.wipro.ats.bdre.md.api.GetProperties;
 import com.wipro.ats.bdre.md.beans.ProcessInfo;
-import java.util.Enumeration;
 
 /**
  * Created by AS294216 on 12/28/2015.
@@ -74,19 +72,12 @@ public class CrawlerActionNode extends GenericActionNode {
      * @return String containing main class to be appended to workflow string
      */
     public String getClassName(Integer pid, String configGroup) {
-        /* GetProperties getProperties = new GetProperties();
-        java.util.Properties className = getProperties.getProperties(getId().toString(), configGroup);
-        Enumeration e = className.propertyNames();  */
-        StringBuilder addClassName = new StringBuilder();
-        /* if (className.size() != 0) {
-            while (e.hasMoreElements()) {
-                String key = (String) e.nextElement(); */
-                addClassName.append("            <main-class>com.wipro.ats.bdre.imcrawler.mr.MRMain</main-class>\n");
 
-        /*    }
-         } else {
-            addClassName.append("            <main-class>JavaMainClass" + getId() + "</main-class>\n");
-        } */
+        StringBuilder addClassName = new StringBuilder();
+
+        addClassName.append("            <main-class>com.wipro.ats.bdre.imcrawler.mr.MRMain</main-class>\n");
+
+
         return addClassName.toString();
     }
 
@@ -98,17 +89,12 @@ public class CrawlerActionNode extends GenericActionNode {
      * @return String containing arguments to be appended to workflow string.
      */
     public String getArgs(Integer pid, String configGroup) {
-        /* GetProperties getProperties = new GetProperties();
-        java.util.Properties listForArgs = getProperties.getProperties(getId().toString(), configGroup);
-        Enumeration e = listForArgs.propertyNames(); */
+
         StringBuilder addArgs = new StringBuilder();
-       /* if (listForArgs.size() != 0) {
-            while (e.hasMoreElements()) {
-                String key = (String) e.nextElement(); */
-                addArgs.append("            <arg>--" + "sub-process-id" + "</arg>\n<arg>" + pid.toString() + "</arg>\n");
-                addArgs.append("            <arg>--" + "instance-exec-id" + "</arg>\n<arg>" + "${wf:actionData(\"init-job\")[\"instance-exec-id\"]}" + "</arg>\n");
-         /*   }
-        } */
+
+        addArgs.append("            <arg>--" + "sub-process-id" + "</arg>\n<arg>" + pid.toString() + "</arg>\n");
+        addArgs.append("            <arg>--" + "instance-exec-id" + "</arg>\n<arg>" + "${wf:actionData(\"init-job\")[\"instance-exec-id\"]}" + "</arg>\n");
+
         return addArgs.toString();
     }
 }
