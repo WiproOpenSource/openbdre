@@ -67,7 +67,6 @@ public class ProcessTypeAPI extends MetadataAPIBase {
                 processType.setParentProcessTypeId(jpaProcessType.getParentProcessTypeId());
                 processType.setProcessTypeName(jpaProcessType.getProcessTypeName());
             }
-            //processType = s.selectOne("call_procedures.GetProcessType", processType);
             restWrapper = new RestWrapper(processType, RestWrapper.OK);
             LOGGER.info("Record with ID:" + processTypeId + " selected from ProcessType by User:" + principal.getName());
 
@@ -94,8 +93,6 @@ public class ProcessTypeAPI extends MetadataAPIBase {
         RestWrapper restWrapper = null;
         try {
             processTypeDAO.delete(processTypeId);
-            //s.delete("call_procedures.DeleteProcessType", processType);
-
             restWrapper = new RestWrapper(null, RestWrapper.OK);
             LOGGER.info("Record with ID:" + processTypeId + " deleted from ProcessType by User:" + principal.getName());
 
@@ -132,8 +129,6 @@ public class ProcessTypeAPI extends MetadataAPIBase {
                 returnProcessType.setCounter(counter);
                 processTypes.add(returnProcessType);
             }
-            // List<ProcessType> processTypes = s.selectList("call_procedures.GetProcessTypes", processType);
-
             restWrapper = new RestWrapper(processTypes, RestWrapper.OK);
             LOGGER.info("All records listed from ProcessType by User:" + principal.getName());
 
@@ -168,7 +163,6 @@ public class ProcessTypeAPI extends MetadataAPIBase {
             jpaProcessType.setParentProcessTypeId(processType.getParentProcessTypeId());
             jpaProcessType.setProcessTypeName(processType.getProcessTypeName());
             processTypeDAO.update(jpaProcessType);
-            // ProcessType processTypes = s.selectOne("call_procedures.UpdateProcessType", processType);
 
             restWrapper = new RestWrapper(processType, RestWrapper.OK);
             LOGGER.info("Record with ID:" + processType.getProcessTypeId() + " updated in ProcessType by User:" + principal.getName() + processType);
@@ -203,7 +197,6 @@ public class ProcessTypeAPI extends MetadataAPIBase {
             jpaProcessType.setParentProcessTypeId(processType.getParentProcessTypeId());
             jpaProcessType.setProcessTypeName(processType.getProcessTypeName());
             processTypeDAO.insert(jpaProcessType);
-            // ProcessType processTypes = s.selectOne("call_procedures.InsertProcessType", processType);
 
             restWrapper = new RestWrapper(processType, RestWrapper.OK);
             LOGGER.info("Record with ID:" + processType.getProcessTypeId() + " inserted in ProcessType by User:" + principal.getName() + processType);
@@ -240,8 +233,6 @@ public class ProcessTypeAPI extends MetadataAPIBase {
                 returnProcessType.setCounter(jpaProcessTypes.size());
                 processTypes.add(returnProcessType);
             }
-            // List<ProcessType> processTypes = s.selectList("call_procedures.GetProcessType", processType);
-
             LOGGER.debug(processTypes.get(0).getProcessTypeId());
             List<RestWrapperOptions.Option> options = new ArrayList<RestWrapperOptions.Option>();
 
@@ -282,8 +273,6 @@ public class ProcessTypeAPI extends MetadataAPIBase {
                 returnProcessType.setCounter(jpaProcessTypes.size());
                 processTypes.add(returnProcessType);
             }
-            //List<ProcessType> processTypes = s.selectList("call_procedures.GetProcessType");
-
             LOGGER.debug(processTypes.get(0).getProcessTypeId());
             List<RestWrapperOptions.Option> options = new ArrayList<RestWrapperOptions.Option>();
 

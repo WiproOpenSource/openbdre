@@ -78,7 +78,6 @@ public class ProcessDeploymentQueueAPI extends MetadataAPIBase {
                 processDeploymentQueue.setProcessId(jpaPdq.getProcess().getProcessId());
                 processDeploymentQueue.setProcessTypeId(jpaPdq.getProcessType().getProcessTypeId());
             }
-            //  processDeploymentQueue = s.selectOne("call_procedures.GetProcessDeploymentQueue", processDeploymentQueue);
             if (processDeploymentQueue.getEndTs() != null) {
                 processDeploymentQueue.setTableEndTs(DateConverter.dateToString(processDeploymentQueue.getEndTs()));
             }
@@ -115,7 +114,6 @@ public class ProcessDeploymentQueueAPI extends MetadataAPIBase {
         RestWrapper restWrapper = null;
         try {
             processDeploymentQueueDAO.delete(deploymentId);
-            // s.delete("call_procedures.DeleteProcessDeploymentQueue", processDeploymentQueue);
 
             restWrapper = new RestWrapper(null, RestWrapper.OK);
             LOGGER.info("Record with ID:" + deploymentId + " deleted from ProcessDeploymentQueue by User:" + principal.getName());
@@ -161,7 +159,6 @@ public class ProcessDeploymentQueueAPI extends MetadataAPIBase {
                 processDeploymentQueue.setCounter(counter);
                 processDeploymentQueues.add(processDeploymentQueue);
             }
-            //  List<ProcessDeploymentQueue> processDeploymentQueues = s.selectList("call_procedures.GetProcessDeploymentQueues", processDeploymentQueue);
             for (ProcessDeploymentQueue pdq : processDeploymentQueues) {
                 if (pdq.getEndTs() != null) {
                     pdq.setTableEndTs(DateConverter.dateToString(pdq.getEndTs()));
@@ -230,7 +227,6 @@ public class ProcessDeploymentQueueAPI extends MetadataAPIBase {
             jpaPdq.setProcess(process);
             processDeploymentQueueDAO.update(jpaPdq);
 
-            //  ProcessDeploymentQueue processDeploymentQueues = s.selectOne("call_procedures.UpdateProcessDeploymentQueue", processDeploymentQueue);
 
 
             restWrapper = new RestWrapper(processDeploymentQueue, RestWrapper.OK);
@@ -265,7 +261,6 @@ public class ProcessDeploymentQueueAPI extends MetadataAPIBase {
         try {
 
             com.wipro.ats.bdre.md.dao.jpa.ProcessDeploymentQueue jpaPdq = processDeploymentQueueDAO.insertProcessDeploymentQueue(processId, principal.getName());
-            // ProcessDeploymentQueue processDeploymentQueues = s.selectOne("call_procedures.InsertProcessDeploymentQueue", processDeploymentQueue);
 
             if (jpaPdq != null) {
 
@@ -280,7 +275,6 @@ public class ProcessDeploymentQueueAPI extends MetadataAPIBase {
                 processDeploymentQueue.setProcessId(jpaPdq.getProcess().getProcessId());
                 processDeploymentQueue.setProcessTypeId(jpaPdq.getProcessType().getProcessTypeId());
             }
-            //  processDeploymentQueue = s.selectOne("call_procedures.GetProcessDeploymentQueue", processDeploymentQueue);
             if (processDeploymentQueue.getEndTs() != null) {
                 processDeploymentQueue.setTableEndTs(DateConverter.dateToString(processDeploymentQueue.getEndTs()));
             }

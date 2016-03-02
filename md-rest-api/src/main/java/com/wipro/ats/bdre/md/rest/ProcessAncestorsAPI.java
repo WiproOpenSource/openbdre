@@ -88,14 +88,11 @@ public class ProcessAncestorsAPI extends MetadataAPIBase {
 
                 ProcessAncestorsInfo processAncestorsInfo = new ProcessAncestorsInfo();
                 processAncestorsInfo = processAncestorsDAO.fetchDetails(ancestors.get(i));
-                // processAncestorsInfo = s.selectOne("call_procedures.FetchDetails",processAncestorsInfo);
                 processAncestorsInfo.setTableEditTs(DateConverter.dateToString(processAncestorsInfo.getEditTs()));
                 processAncestorsInfo.setTableDeployInsertTs(DateConverter.dateToString(processAncestorsInfo.getDeployInsertTs()));
                 processAncestorsInfo.setTableDeploySuccessTs(DateConverter.dateToString(processAncestorsInfo.getDeploySuccessTs()));
 
                 LOGGER.info("ProcessAncestor bean :" + processAncestorsInfo);
-
-                // List<Process>upstreamProcesses = s.selectList("call_procedures.ListU", processAncestorsInfo);
                 List<Process> upstreamProcesses = processAncestorsDAO.listUpstreams(ancestors.get(i));
 
                 processAncestorsInfo.setUpstreamProcess(upstreamProcesses);

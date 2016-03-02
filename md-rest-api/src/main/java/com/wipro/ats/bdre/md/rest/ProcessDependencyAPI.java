@@ -100,7 +100,6 @@ public class ProcessDependencyAPI extends MetadataAPIBase {
                         break;
                 }
                 tooltip = "Description: " + processDependencyInfo.getDescription() + " Added on:" + processDependencyInfo.getAddTS();
-                //String label = "\"" + processDependencyInfo.getProcessName()+ "\n(" +processDependencyInfo.getProcessId() +")" + "\"";
                 String label = "<<TABLE CELLSPACING=\"4\" CELLPADDING=\"0\" BORDER=\"0\" WIDTH=\"100%\"><TR><TD COLSPAN=\"3\">" + processDependencyInfo.getProcessName().replace("&", "&amp;") +
                         "</TD></TR><TR><TD COLSPAN=\"3\">" + processDependencyInfo.getProcessId() + "</TD></TR>" +
                         "<TR>" +
@@ -108,7 +107,6 @@ public class ProcessDependencyAPI extends MetadataAPIBase {
                         "<TD COLOR=\"blue\"  href=\"javascript:popModalXml(" + processDependencyInfo.getProcessId() + ")\"><FONT COLOR=\"blue\" POINT-SIZE=\"8\"> XML </FONT></TD>" +
                         "<TD COLOR=\"blue\"  href=\"javascript:GotoProcess(" + processDependencyInfo.getProcessId() + ")\"><FONT COLOR=\"blue\" POINT-SIZE=\"8\"> Details</FONT></TD></TR></TABLE>>";
 
-                //String label = "<" + processDependencyInfo.getProcessName()+ "\n(" +processDependencyInfo.getProcessId() +")" + ">";
 
                 dot.append(processDependencyInfo.getProcessId() + " [label=" + label + " tooltip=\"" + tooltip + "\"shape=rectangle,style=filled,fontcolor=black,color=" + borderColor + ",style=\"rounded\",penwidth=2,fontsize=10,URL=\"javascript:getPid(" + processDependencyInfo.getProcessId() + ")\"];\n");
                 //Checking if the process is an upstream or downstream
