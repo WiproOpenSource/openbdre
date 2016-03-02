@@ -11,7 +11,7 @@ export metaCount=`curl -L -c cookies.txt -b cookies.txt "$base_url/auth/j_spring
 
 echo metaCount = $metaCount
 
-if [ "$metaCount" == "1" ] 
+if [ $metaCount -eq 1 ] 
 then
 	echo "Login successful"
 else
