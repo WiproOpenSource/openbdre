@@ -124,8 +124,7 @@ public class SetupDB {
     private String[] getColumns(String line) throws MetadataException {
         if (line.trim().isEmpty() || line.trim().startsWith("--") || line.trim().startsWith("#")) {
             LOGGER.info("Ignoring comment:" + line);
-            String[] nullString=null;
-            return nullString;
+            return new String[]{};
         }
         //replace the variables
         line=replaceVars(line);
