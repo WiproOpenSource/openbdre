@@ -27,7 +27,7 @@ script:
     - mvn -s settings.xml clean install -P hdp22 -pl '!im-crawler' --quiet
     - sh install-scripts.sh local
     - sudo service bdre start
-    - sh bdre-scripts/bin/login-check.sh "http://localhost:28850" admin zaq1xsw2 "bdre content page"
+    - sh bdre-scripts/local/bin/login-check.sh "http://localhost:28850" admin zaq1xsw2 "bdre content page"
 after_success:
     - echo "Looks like success !"
 after_failure:
