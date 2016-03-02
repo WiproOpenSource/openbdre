@@ -41,7 +41,7 @@ public class TermStepNode extends OozieNode {
 
     @Override
     public String getXML() {
-        String ret = "\n<action name=\"" + getName() + "\">\n" +
+        return "\n<action name=\"" + getName() + "\">\n" +
                 "        <java>\n" +
                 "            <job-tracker>${jobTracker}</job-tracker>\n" +
                 "            <name-node>${nameNode}</name-node>\n" +
@@ -55,6 +55,5 @@ public class TermStepNode extends OozieNode {
                 "        <ok to=\"" + getToNode().getName() + "\"/>\n" +
                 "        <error to=\"" + getTermNode().getName() + "\"/>\n" +
                 "</action>";
-        return ret;
     }
 }
