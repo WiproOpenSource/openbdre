@@ -254,7 +254,8 @@ public class SetupDB {
                 lineNum++;
                 LOGGER.debug(lineH + lineNum + ": " + line);
                 String[] cols = getColumns(line);
-                if (cols == null) continue;
+                if (cols == null)
+                    continue;
                 DeployStatus deployStatus = new DeployStatus();
                 deployStatus.setDeployStatusId(new Short(cols[0]));
                 deployStatus.setDescription(cols[1]);
@@ -285,7 +286,8 @@ public class SetupDB {
                 lineNum++;
                 LOGGER.debug(lineH + lineNum + ": " + line);
                 String[] cols = getColumns(line);
-                if (cols == null) continue;
+                if (cols == null)
+                    continue;
                 ExecStatus execStatus = new ExecStatus();
                 execStatus.setExecStateId(new Integer(cols[0]));
                 execStatus.setDescription(cols[1]);
@@ -316,7 +318,8 @@ public class SetupDB {
                 lineNum++;
                 LOGGER.debug(lineH + lineNum + ": " + line);
                 String[] cols = getColumns(line);
-                if (cols == null) continue;
+                if (cols == null)
+                    continue;
                 LineageNodeType lineageNodeType = new LineageNodeType();
                 lineageNodeType.setNodeTypeId(new Integer(cols[0]));
                 lineageNodeType.setNodeTypeName(cols[1]);
@@ -347,7 +350,8 @@ public class SetupDB {
                 lineNum++;
                 LOGGER.debug(lineH + lineNum + ": " + line);
                 String[] cols = getColumns(line);
-                if (cols == null) continue;
+                if (cols == null)
+                    continue;
                 LineageQueryType lineageQueryType = new LineageQueryType();
                 lineageQueryType.setQueryTypeId(new Integer(cols[0]));
                 lineageQueryType.setQueryTypeName(cols[1]);
@@ -379,7 +383,8 @@ public class SetupDB {
                 lineNum++;
                 LOGGER.debug(lineH + lineNum + ": " + line);
                 String[] cols = getColumns(line);
-                if (cols == null) continue;
+                if (cols == null)
+                    continue;
                 ProcessType pType = new ProcessType();
                 pType.setProcessTypeId(new Integer(cols[0]));
                 pType.setProcessTypeName(cols[1]);
@@ -412,7 +417,8 @@ public class SetupDB {
                 lineNum++;
                 LOGGER.debug(lineH + lineNum + ": " + line);
                 String[] cols = getColumns(line);
-                if (cols == null) continue;
+                if (cols == null)
+                    continue;
                 ProcessTemplate processTemplate = new ProcessTemplate();
                 processTemplate.setProcessTemplateId(new Integer(cols[0]));
                 processTemplate.setDescription(cols[1]);
@@ -462,7 +468,8 @@ public class SetupDB {
                 lineNum++;
                 LOGGER.debug(lineH + lineNum + ": " + line);
                 String[] cols = getColumns(line);
-                if (cols == null) continue;
+                if (cols == null)
+                    continue;
                 Process process = new Process();
                 process.setProcessId(new Integer(cols[0]));
                 process.setDescription(cols[1]);
@@ -518,7 +525,8 @@ public class SetupDB {
                 lineNum++;
                 LOGGER.debug(lineH + lineNum + ": " + line);
                 String[] cols = getColumns(line);
-                if (cols == null) continue;
+                if (cols == null)
+                    continue;
                 PropertiesId propertiesId = new PropertiesId();
                 propertiesId.setProcessId(new Integer(cols[0]));
                 propertiesId.setPropKey(cols[2]);
@@ -554,7 +562,8 @@ public class SetupDB {
                 lineNum++;
                 LOGGER.debug(lineH + lineNum + ": " + line);
                 String[] cols = getColumns(line);
-                if (cols == null) continue;
+                if (cols == null)
+                    continue;
                 Servers servers = new Servers();
                 servers.setServerId(new Integer(cols[0]));
                 servers.setServerType(cols[1]);
@@ -591,7 +600,8 @@ public class SetupDB {
                 lineNum++;
                 LOGGER.debug(lineH + lineNum + ": " + line);
                 String[] cols = getColumns(line);
-                if (cols == null) continue;
+                if (cols == null)
+                    continue;
                 UserRoles userRoles = new UserRoles();
                 userRoles.setUserRoleId(new Integer(cols[0]));
                 userRoles.setUsername(cols[1]);
@@ -623,7 +633,8 @@ public class SetupDB {
                 lineNum++;
                 LOGGER.debug("Line #" + lineNum + ": " + line);
                 String[] cols = getColumns(line);
-                if (cols == null) continue;
+                if (cols == null)
+                    continue;
                 Users users = new Users();
                 users.setUsername(cols[0]);
                 users.setPassword(cols[1]);
@@ -656,7 +667,8 @@ public class SetupDB {
                 lineNum++;
                 LOGGER.debug("Line #" + lineNum + ": " + line);
                 String[] cols = getColumns(line);
-                if (cols == null) continue;
+                if (cols == null)
+                    continue;
                 WorkflowType workflowType = new WorkflowType();
                 workflowType.setWorkflowId(new Integer(cols[0]));
                 workflowType.setWorkflowTypeName(cols[1]);
@@ -686,7 +698,8 @@ public class SetupDB {
                 lineNum++;
                 LOGGER.debug("Line #" + lineNum + ": " + line);
                 String[] cols = getColumns(line);
-                if (cols == null) continue;
+                if (cols == null)
+                    continue;
                 GeneralConfigId generalConfigId = new GeneralConfigId();
                 generalConfigId.setConfigGroup(cols[0]);
                 generalConfigId.setGcKey(cols[1]);
