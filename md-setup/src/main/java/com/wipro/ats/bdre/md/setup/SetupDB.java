@@ -146,8 +146,7 @@ public class SetupDB {
             BufferedReader br = new BufferedReader(new FileReader(dataFile));
             while ((line = br.readLine()) != null) {
                 lineNum++;
-                String constant="Line #";
-                LOGGER.debug(constant + lineNum + ": " + line);
+                LOGGER.debug(lineH + lineNum + ": " + line);
                 String[] cols = getColumns(line);
                 if (cols == null)
                     continue;
@@ -631,7 +630,7 @@ public class SetupDB {
             BufferedReader br = new BufferedReader(new FileReader(dataFile));
             while ((line = br.readLine()) != null) {
                 lineNum++;
-                LOGGER.debug("Line #" + lineNum + ": " + line);
+                LOGGER.debug(lineH + lineNum + ": " + line);
                 String[] cols = getColumns(line);
                 if (cols == null)
                     continue;
@@ -665,7 +664,7 @@ public class SetupDB {
             BufferedReader br = new BufferedReader(new FileReader(dataFile));
             while ((line = br.readLine()) != null) {
                 lineNum++;
-                LOGGER.debug("Line #" + lineNum + ": " + line);
+                LOGGER.debug(lineH + lineNum + ": " + line);
                 String[] cols = getColumns(line);
                 if (cols == null)
                     continue;
@@ -696,7 +695,7 @@ public class SetupDB {
             BufferedReader br = new BufferedReader(new FileReader(dataFile));
             while ((line = br.readLine()) != null) {
                 lineNum++;
-                LOGGER.debug("Line #" + lineNum + ": " + line);
+                LOGGER.debug(lineH + lineNum + ": " + line);
                 String[] cols = getColumns(line);
                 if (cols == null)
                     continue;
