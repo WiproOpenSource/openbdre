@@ -54,9 +54,9 @@ public class ProcessDeploymentQueueAPI extends MetadataAPIBase {
      * @return restWrapper returns an instance of ProcessDeploymentQueue object.
      */
     @RequestMapping(value = "/{id}", method = RequestMethod.GET)
-    public
+
     @ResponseBody
-    RestWrapper get(
+    public RestWrapper get(
             @PathVariable("id") Long deploymentId, Principal principal
     ) {
 
@@ -76,7 +76,6 @@ public class ProcessDeploymentQueueAPI extends MetadataAPIBase {
                 processDeploymentQueue.setProcessId(jpaPdq.getProcess().getProcessId());
                 processDeploymentQueue.setProcessTypeId(jpaPdq.getProcessType().getProcessTypeId());
             }
-            //  processDeploymentQueue = s.selectOne("call_procedures.GetProcessDeploymentQueue", processDeploymentQueue);
             if (processDeploymentQueue.getEndTs() != null) {
                 processDeploymentQueue.setTableEndTs(DateConverter.dateToString(processDeploymentQueue.getEndTs()));
             }
@@ -89,6 +88,7 @@ public class ProcessDeploymentQueueAPI extends MetadataAPIBase {
             restWrapper = new RestWrapper(processDeploymentQueue, RestWrapper.OK);
             LOGGER.info("Record with ID:" + deploymentId + " selected from ProcessDeploymentQueue by User:" + principal.getName());
         } catch (Exception e) {
+            LOGGER.error(e);
             restWrapper = new RestWrapper(e.getMessage(), RestWrapper.ERROR);
         }
         return restWrapper;
@@ -103,20 +103,19 @@ public class ProcessDeploymentQueueAPI extends MetadataAPIBase {
      * @return nothing.
      */
     @RequestMapping(value = "/{id}", method = RequestMethod.DELETE)
-    public
+
     @ResponseBody
-    RestWrapper delete(
+    public RestWrapper delete(
             @PathVariable("id") Long deploymentId, Principal principal,
             ModelMap model) {
 
         RestWrapper restWrapper = null;
         try {
             processDeploymentQueueDAO.delete(deploymentId);
-            // s.delete("call_procedures.DeleteProcessDeploymentQueue", processDeploymentQueue);
-
             restWrapper = new RestWrapper(null, RestWrapper.OK);
             LOGGER.info("Record with ID:" + deploymentId + " deleted from ProcessDeploymentQueue by User:" + principal.getName());
         } catch (Exception e) {
+            LOGGER.error(e);
             restWrapper = new RestWrapper(e.getMessage(), RestWrapper.ERROR);
         }
         return restWrapper;
@@ -131,9 +130,9 @@ public class ProcessDeploymentQueueAPI extends MetadataAPIBase {
      */
     @RequestMapping(value = {"", "/"}, method = RequestMethod.GET)
 
-    public
+
     @ResponseBody
-    RestWrapper list(@RequestParam(value = "page", defaultValue = "0") int startPage,
+    public RestWrapper list(@RequestParam(value = "page", defaultValue = "0") int startPage,
                      @RequestParam(value = "size", defaultValue = "10") int pageSize, Principal principal) {
 
         RestWrapper restWrapper = null;
@@ -157,7 +156,6 @@ public class ProcessDeploymentQueueAPI extends MetadataAPIBase {
                 processDeploymentQueue.setCounter(counter);
                 processDeploymentQueues.add(processDeploymentQueue);
             }
-            //  List<ProcessDeploymentQueue> processDeploymentQueues = s.selectList("call_procedures.GetProcessDeploymentQueues", processDeploymentQueue);
             for (ProcessDeploymentQueue pdq : processDeploymentQueues) {
                 if (pdq.getEndTs() != null) {
                     pdq.setTableEndTs(DateConverter.dateToString(pdq.getEndTs()));
@@ -172,6 +170,7 @@ public class ProcessDeploymentQueueAPI extends MetadataAPIBase {
             restWrapper = new RestWrapper(processDeploymentQueues, RestWrapper.OK);
             LOGGER.info("All records listed from ProcessDeploymentQueue by User:" + principal.getName());
         } catch (Exception e) {
+            LOGGER.error(e);
             restWrapper = new RestWrapper(e.getMessage(), RestWrapper.ERROR);
         }
         return restWrapper;
@@ -187,9 +186,9 @@ public class ProcessDeploymentQueueAPI extends MetadataAPIBase {
      * @return restWrapper Updated instance of ProcessDeploymentQueue.
      */
     @RequestMapping(value = {"/", ""}, method = RequestMethod.POST)
-    public
+
     @ResponseBody
-    RestWrapper update(@ModelAttribute("pdq")
+    public RestWrapper update(@ModelAttribute("pdq")
                        @Valid ProcessDeploymentQueue processDeploymentQueue, BindingResult bindingResult, Principal principal) {
 
         RestWrapper restWrapper = null;
@@ -235,12 +234,10 @@ public class ProcessDeploymentQueueAPI extends MetadataAPIBase {
             jpaPdq.setProcess(process);
             processDeploymentQueueDAO.update(jpaPdq);
 
-            //  ProcessDeploymentQueue processDeploymentQueues = s.selectOne("call_procedures.UpdateProcessDeploymentQueue", processDeploymentQueue);
-
-
             restWrapper = new RestWrapper(processDeploymentQueue, RestWrapper.OK);
             LOGGER.info("Record with ID:" + processDeploymentQueue.getDeploymentId() + " updated in ProcessDeploymentQueue by User:" + principal.getName() + processDeploymentQueue);
         } catch (Exception e) {
+            LOGGER.error(e);
             restWrapper = new RestWrapper(e.getMessage(), RestWrapper.ERROR);
         }
         return restWrapper;
@@ -255,9 +252,9 @@ public class ProcessDeploymentQueueAPI extends MetadataAPIBase {
      * @return restWrapper added instance of ProcessDeploymentQueue.
      */
     @RequestMapping(value = {"{id}", "/{id}"}, method = RequestMethod.PUT)
-    public
+
     @ResponseBody
-    RestWrapper insert(@PathVariable("id") Integer processId
+    public RestWrapper insert(@PathVariable("id") Integer processId
             , @ModelAttribute("pdq")
                        @Valid ProcessDeploymentQueue processDeploymentQueue, BindingResult bindingResult, Principal principal) {
         RestWrapper restWrapper = null;
@@ -279,8 +276,6 @@ public class ProcessDeploymentQueueAPI extends MetadataAPIBase {
         try {
 
             com.wipro.ats.bdre.md.dao.jpa.ProcessDeploymentQueue jpaPdq = processDeploymentQueueDAO.insertProcessDeploymentQueue(processId, principal.getName());
-            // ProcessDeploymentQueue processDeploymentQueues = s.selectOne("call_procedures.InsertProcessDeploymentQueue", processDeploymentQueue);
-
             if (jpaPdq != null) {
 
                 processDeploymentQueue.setDeploymentId(jpaPdq.getDeploymentId());
@@ -294,7 +289,6 @@ public class ProcessDeploymentQueueAPI extends MetadataAPIBase {
                 processDeploymentQueue.setProcessId(jpaPdq.getProcess().getProcessId());
                 processDeploymentQueue.setProcessTypeId(jpaPdq.getProcessType().getProcessTypeId());
             }
-            //  processDeploymentQueue = s.selectOne("call_procedures.GetProcessDeploymentQueue", processDeploymentQueue);
             if (processDeploymentQueue.getEndTs() != null) {
                 processDeploymentQueue.setTableEndTs(DateConverter.dateToString(processDeploymentQueue.getEndTs()));
             }
@@ -304,6 +298,7 @@ public class ProcessDeploymentQueueAPI extends MetadataAPIBase {
             restWrapper = new RestWrapper(processDeploymentQueue, RestWrapper.OK);
             LOGGER.info("Record with ID:" + processDeploymentQueue.getDeploymentId() + " inserted in ProcessDeploymentQueue by User:" + principal.getName() + processDeploymentQueue);
         } catch (Exception e) {
+            LOGGER.error(e);
             restWrapper = new RestWrapper(e.getMessage(), RestWrapper.ERROR);
         }
         return restWrapper;

@@ -9,7 +9,7 @@
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
- * limitations under the License.
+ * limitations limitationsunder the License.
  */
 
 package com.wipro.ats.bdre.md.rest;
@@ -20,7 +20,6 @@ import com.wipro.ats.bdre.md.dao.ProcessTypeDAO;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.ModelMap;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.*;
@@ -79,15 +78,13 @@ public class ProcessTypeAPI extends MetadataAPIBase {
      * This method calls proc DeleteProcessType and deletes a record corresponding to processTypeId passed.
      *
      * @param processTypeId
-     * @param model
      * @return nothing.
      */
     @RequestMapping(value = "/{id}", method = RequestMethod.DELETE)
 
     @ResponseBody
     public RestWrapper delete(
-            @PathVariable("id") Integer processTypeId, Principal principal,
-            ModelMap model) {
+            @PathVariable("id") Integer processTypeId, Principal principal) {
         RestWrapper restWrapper = null;
         try {
             processTypeDAO.delete(processTypeId);
@@ -230,15 +227,13 @@ public class ProcessTypeAPI extends MetadataAPIBase {
      * This method is used to list the ProcessTypes applicable for processTypeId passed in dropdown list.
      *
      * @param processTypeId
-     * @param model
      * @return
      */
     @RequestMapping(value = {"/options/{ptid}"}, method = RequestMethod.POST)
 
 
     @ResponseBody
-    public RestWrapperOptions options(@PathVariable("ptid") Integer processTypeId,
-                               ModelMap model) {
+    public RestWrapperOptions options(@PathVariable("ptid") Integer processTypeId) {
 
         RestWrapperOptions restWrapperOptions = null;
         try {
