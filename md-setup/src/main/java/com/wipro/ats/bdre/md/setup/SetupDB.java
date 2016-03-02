@@ -431,12 +431,14 @@ public class SetupDB {
 
                     processTemplate.setProcessTemplateId(new Integer(cols[6]));
                 }
-                if ("1".equals(cols[7])) cols[7] = "true";
+                if ("1".equals(cols[7]))
+                    cols[7] = "true";
                 processTemplate.setCanRecover(new Boolean(cols[7]));
 
                 processTemplate.setBatchCutPattern(cols[8]);
                 processTemplate.setNextProcessTemplateId(cols[9]);
-                if ("1".equals(cols[10])) cols[10] = "true";
+                if ("1".equals(cols[10]))
+                    cols[10] = "true";
                 processTemplate.setDeleteFlag(new Boolean(cols[10]));
 
                 processTemplate.setWorkflowId(new Integer(cols[11]));
@@ -482,14 +484,15 @@ public class SetupDB {
                 if (!("null".equals(cols[6]))) {
                     process.setParentProcessId(new Integer(cols[6]));
                 }
-                if ("1".equals(cols[7])) cols[7] = "true";
+                if ("1".equals(cols[7]))
+                    cols[7] = "true";
                 process.setCanRecover(new Boolean(cols[7]));
 
                 process.setEnqueuingProcessId(new Integer(cols[8]));
-                if (!"null".equals(cols[9])) ;
                 process.setBatchCutPattern(cols[9]);
                 process.setNextProcessId(cols[10]);
-                if ("1".equals(cols[11])) cols[11] = "true";
+                if ("1".equals(cols[11]))
+                    cols[11] = "true";
                 process.setDeleteFlag(new Boolean(cols[11]));
 
                 process.setWorkflowId(new Integer(cols[12]));
@@ -637,7 +640,8 @@ public class SetupDB {
                 Users users = new Users();
                 users.setUsername(cols[0]);
                 users.setPassword(cols[1]);
-                if ("1".equals(cols[2])) cols[2] = "true";
+                if ("1".equals(cols[2]))
+                    cols[2] = "true";
                 users.setEnabled(new Boolean(cols[2]));
                 Object existing = session.get(users.getClass(), users.getUsername());
                 if (existing == null) {
@@ -708,12 +712,14 @@ public class SetupDB {
                     generalConfig.setGcValue(cols[2]);
                 if (!"null".equals(cols[3]))
                     generalConfig.setDescription(cols[3]);
-                if ("1".equals(cols[4])) cols[4] = "true";
+                if ("1".equals(cols[4]))
+                    cols[4] = "true";
                 generalConfig.setRequired(new Boolean(cols[4]));
                 if (!"null".equals(cols[5]))
                     generalConfig.setDefaultVal(cols[5]);
                 generalConfig.setType(cols[6]);
-                if ("1".equals(cols[7])) cols[7] = "true";
+                if ("1".equals(cols[7]))
+                    cols[7] = "true";
                 generalConfig.setEnabled(new Boolean(cols[7]));
                 Object existing = session.get(generalConfig.getClass(), generalConfig.getId());
                 if (existing == null) {
