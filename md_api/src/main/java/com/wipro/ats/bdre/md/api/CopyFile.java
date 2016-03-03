@@ -54,6 +54,7 @@ public class CopyFile extends MetadataAPIBase {
      * file and server specifications.
      */
 
+    @Override
     public FileInfo execute(String[] params) {
         try {
             CommandLine commandLine = getCommandLine(params, PARAMS_STRUCTURE);

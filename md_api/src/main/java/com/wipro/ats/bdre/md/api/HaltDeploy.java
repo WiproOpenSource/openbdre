@@ -42,6 +42,7 @@ public class HaltDeploy extends MetadataAPIBase {
         acbFactory.autowireBean(this);
     }
 
+    @Override
     public HaltDeployInfo execute(String[] params) {
 
         try {

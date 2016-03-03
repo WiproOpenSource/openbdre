@@ -58,6 +58,7 @@ public class BatchEnqueuer extends MetadataAPIBase {
      * @return This method return output of BatchEnqueuer proc having information regarding
      * batch queued in batch_consump_queue.
      */
+    @Override
     public List<BatchConsumpQueue> execute(String[] params) {
 
         try {

@@ -41,6 +41,8 @@ public class TermDeploy extends MetadataAPIBase {
         AutowireCapableBeanFactory acbFactory = getAutowireCapableBeanFactory();
         acbFactory.autowireBean(this);
     }
+
+    @Override
     public TermDeployInfo execute(String[] params) {
         try {
             TermDeployInfo termDeployInfo = new TermDeployInfo();

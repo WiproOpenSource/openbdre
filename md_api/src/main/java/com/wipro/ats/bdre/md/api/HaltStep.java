@@ -49,8 +49,8 @@ public class HaltStep extends MetadataAPIBase {
      * @param params String array having sub-process-id, environment with their command line notations.
      * @return returns nothing.
      */
+    @Override
     public HaltStepInfo execute(String[] params) {
-//        SqlSession s = null;
         try {
             HaltStepInfo haltStepInfo = new HaltStepInfo();
             CommandLine commandLine = getCommandLine(params, PARAMS_STRUCTURE);

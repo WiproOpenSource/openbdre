@@ -36,6 +36,9 @@ public class GetLineageByInstanceExec extends MetadataAPIBase {
             {"eid", "instance-exec-id", " Instance exec id whose lineage to be determined"},
     };
 
+    @Autowired
+    private LineageByInstanceExecDAO lineageByInstanceExecDAO;
+
     public GetLineageByInstanceExec() {
         AutowireCapableBeanFactory acbFactory = getAutowireCapableBeanFactory();
         acbFactory.autowireBean(this);
@@ -50,9 +53,8 @@ public class GetLineageByInstanceExec extends MetadataAPIBase {
      * @return This method returns list of all processes present in batch_consump_queue and archive_consump_queue
      * linked to a particular instance exec id.
      */
-    @Autowired
-    private LineageByInstanceExecDAO lineageByInstanceExecDAO;
 
+    @Override
     public List<GetLineageByInstanceExecInfo> execute(String[] params) {
         List<GetLineageByInstanceExecInfo> lineageByInstanceExecInfos;
         try {

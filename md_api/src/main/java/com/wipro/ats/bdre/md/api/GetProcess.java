@@ -43,6 +43,9 @@ public class GetProcess extends MetadataAPIBase {
 
     };
 
+    @Autowired
+    ProcessDAO processDAO;
+
     public GetProcess() {
         AutowireCapableBeanFactory acbFactory = getAutowireCapableBeanFactory();
         acbFactory.autowireBean(this);
@@ -54,9 +57,8 @@ public class GetProcess extends MetadataAPIBase {
      * @param params String array having environment and process-id with their command line notations.
      * @return This method returns information regarding that parent process and all sub-process of parent process.
      */
-    @Autowired
-    ProcessDAO processDAO;
 
+    @Override
     public List<ProcessInfo> execute(String[] params) {
         List<ProcessInfo> processInfoList = new ArrayList<ProcessInfo>();
         try {

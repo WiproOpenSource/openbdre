@@ -36,6 +36,9 @@ public class GetLineageByBatch extends MetadataAPIBase {
             {"bid", "batch-id", " Target batch id whose lineage to be determined"},
     };
 
+    @Autowired
+    private LineageByBatchDAO lineageByBatchDAO;
+
     public GetLineageByBatch() {
         AutowireCapableBeanFactory acbFactory = getAutowireCapableBeanFactory();
         acbFactory.autowireBean(this);
@@ -50,9 +53,8 @@ public class GetLineageByBatch extends MetadataAPIBase {
      * @return This method returns list of all processes present in batch_consump_queue and archive_consump_queue
      * linked to a particular batch id.
      */
-    @Autowired
-    private LineageByBatchDAO lineageByBatchDAO;
 
+    @Override
     public List<GetLineageByBatchInfo> execute(String[] params) {
         List<GetLineageByBatchInfo> lineageByBatchInfos;
 

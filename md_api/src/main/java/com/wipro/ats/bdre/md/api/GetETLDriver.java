@@ -36,6 +36,10 @@ public class GetETLDriver extends MetadataAPIBase {
             {"maxB", "max-batch-id", "maximum batch id"}
     };
 
+
+    @Autowired
+    private GetETLInfoDAO getETLInfoDAO;
+
     public GetETLDriver() {
         AutowireCapableBeanFactory acbFactory = getAutowireCapableBeanFactory();
         acbFactory.autowireBean(this);
@@ -49,9 +53,7 @@ public class GetETLDriver extends MetadataAPIBase {
      * batch-ids, and retained by vm till runtime.
      */
 
-    @Autowired
-    private GetETLInfoDAO getETLInfoDAO;
-
+    @Override
     public GetETLDriverInfo execute(String[] params) {
 
         try {

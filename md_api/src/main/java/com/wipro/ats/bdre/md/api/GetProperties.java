@@ -77,6 +77,7 @@ public class GetProperties extends MetadataAPIBase {
     @Autowired
     private PropertiesDAO propertiesDAO;
 
+    @Override
     public List<GetPropertiesInfo> execute(String[] params) {
         List<com.wipro.ats.bdre.md.dao.jpa.Properties> propertyList;
         try {

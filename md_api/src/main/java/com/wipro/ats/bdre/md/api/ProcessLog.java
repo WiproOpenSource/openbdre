@@ -72,7 +72,7 @@ public class ProcessLog extends MetadataAPIBase {
             processLogInfo = processLogDAO.getLastValue(processLogInfo);
             return processLogInfo;
         } catch (Exception e) {
-            LOGGER.error("Error occurred", e);
+            LOGGER.error("Error  occurred", e);
             throw new MetadataException(e);
         }
     }
@@ -86,6 +86,7 @@ public class ProcessLog extends MetadataAPIBase {
      * @return This method returns same input data as instance of ProcessLogInfo class.
      */
 
+    @Override
     public ProcessLogInfo execute(String[] params) {
         try {
             ProcessLogInfo processLogInfo = new ProcessLogInfo();
@@ -145,7 +146,7 @@ public class ProcessLog extends MetadataAPIBase {
             processLogDAO.log(processLogInfo);
 
         } catch (Exception e) {
-            LOGGER.error("Error occurred", e);
+            LOGGER.error("Error occurred.", e);
             throw new MetadataException(e);
         }
 

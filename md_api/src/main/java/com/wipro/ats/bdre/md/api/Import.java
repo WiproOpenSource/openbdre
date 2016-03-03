@@ -10,7 +10,6 @@ import java.util.zip.ZipInputStream;
 
 public class Import
 {
-    List<String> fileList;
     private static final Logger LOGGER = Logger.getLogger(Import.class);
     private static final String OUTPUT_FOLDER = "/home/cloudera/bdretest/";
     public static void main( String[] args )

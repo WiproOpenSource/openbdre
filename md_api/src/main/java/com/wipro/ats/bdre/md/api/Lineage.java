@@ -44,6 +44,7 @@ public class Lineage extends MetadataAPIBase {
         AutowireCapableBeanFactory acbFactory = getAutowireCapableBeanFactory();
         acbFactory.autowireBean(this);
     }
+    @Override
     public Lineage execute(String[] params) {
         return null;
     }
@@ -65,6 +66,7 @@ public class Lineage extends MetadataAPIBase {
             lineageQuery.setInstanceExecId(lineageQueryInfo.getInstanceExecId());
         }
         lineageQueryDAO.insert(lineageQuery);
+        LOGGER.info("id of lineage query inserted:"+lineageQuery.getQueryId());
     }
 
     public void insertLineageNode(LineageNodeInfo lineageNodeInfo){
