@@ -121,9 +121,10 @@ public class HistoryDataImportDAO {
             Process dataLoadParent = new Process();
 
 
-            String nextProcessForDataLoadParent = "0";
-            String nextProcessForF2R = "0";
-            String nextProcessForR2S = "0";
+            String nextProcessForDataLoadParent = "";
+            String nextProcessForF2R = "";
+            String nextProcessForR2S = "";
+            
 
             // adding data laod parent
             if (flag == 1) {
