@@ -39,7 +39,7 @@ public class ProcessInfo {
     private String nextProcessIds;
     private String batchCutPattern;
     private Boolean deleteFlag;
-    List<ProcessInfo> processInfo;
+    List<ProcessInfo> processInfos;
     List<LineageNodeInfo> lineageNodeInfo;
     private Long instanceExecId;
     private Date startTs;
@@ -78,11 +78,11 @@ public class ProcessInfo {
     }
 
     public List<ProcessInfo> getProcessInfo() {
-        return processInfo;
+        return processInfos;
     }
 
-    public void setProcessInfo(List<ProcessInfo> processInfo) {
-        this.processInfo = processInfo;
+    public void setProcessInfo(List<ProcessInfo> processInfos) {
+        this.processInfos = processInfos;
     }
 
     public Integer getWorkflowId() {

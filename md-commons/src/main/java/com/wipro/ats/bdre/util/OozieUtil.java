@@ -134,23 +134,6 @@ public final class OozieUtil {
      * @param printOnly whether to print it or not
      */
     public void persistBeanData(Object bean, boolean printOnly) {
-
-        /*try {
-            persistSingleBean(bean);
-        } catch (IntrospectionException e) {
-            LOGGER.error(e);
-            throw new MetadataException(e);
-        } catch (InvocationTargetException e) {
-            LOGGER.error(e);
-            throw new MetadataException(e);
-        } catch (IllegalAccessException e) {
-            LOGGER.error(e);
-            throw new MetadataException(e);
-        }
-        LOGGER.info("propertiesToBeSaved=" + propertiesToBeSaved);
-        if (!printOnly) {
-            persistEmittedKeyValue();
-        }*/
         persistBeanTryCatch(bean);
         callPersistEmittedKeyValue(printOnly);
     }
@@ -164,24 +147,8 @@ public final class OozieUtil {
 
     public void persistBeanList(List beans, boolean printOnly) {
         for (Object bean : beans) {
-           /* try {
-                persistSingleBean(bean);
-            } catch (IntrospectionException e) {
-                LOGGER.error(e);
-                throw new MetadataException(e);
-            } catch (InvocationTargetException e) {
-                LOGGER.error(e);
-                throw new MetadataException(e);
-            } catch (IllegalAccessException e) {
-                LOGGER.error(e);
-                throw new MetadataException(e);
-            }*/
             persistBeanTryCatch(bean);
         }
-        /*LOGGER.info("propertiesToBeSaved=" + propertiesToBeSaved);
-        if (!printOnly) {
-            persistEmittedKeyValue();
-        }*/
         callPersistEmittedKeyValue(printOnly);
     }
 

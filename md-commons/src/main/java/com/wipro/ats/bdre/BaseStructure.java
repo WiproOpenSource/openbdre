@@ -89,6 +89,7 @@ public class BaseStructure {
             return cmd;
 
         } catch (ParseException e) {
+            LOGGER.error(e.getMessage());
             //System.err cannot be removed as it is an command line argument
             printUsage("java <main_class> ", e.getMessage(), options, System.err);
             System.exit(1);
