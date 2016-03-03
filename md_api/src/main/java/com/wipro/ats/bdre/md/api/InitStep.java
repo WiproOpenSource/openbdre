@@ -22,22 +22,23 @@ import org.apache.commons.cli.CommandLine;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.AutowireCapableBeanFactory;
-import org.springframework.context.ApplicationContext;
-import org.springframework.context.support.ClassPathXmlApplicationContext;
 
 /**
  * Created by arijit on 12/8/14.
  */
 public class InitStep extends MetadataAPIBase {
-    public InitStep() {
-        AutowireCapableBeanFactory acbFactory = getAutowireCapableBeanFactory();
-        acbFactory.autowireBean(this);
-    }
 
     private static final Logger LOGGER = Logger.getLogger(InitStep.class);
     private static final String[][] PARAMS_STRUCTURE = {
             {"p", "sub-process-id", "Sub Process id of the step"}
     };
+    @Autowired
+    private StepDAO stepDAO;
+
+    public InitStep() {
+        AutowireCapableBeanFactory acbFactory = getAutowireCapableBeanFactory();
+        acbFactory.autowireBean(this);
+    }
 
     /**
      * This method call InitStep proc and returns instance-exec-id of sub process which is running.This makes
@@ -46,8 +47,6 @@ public class InitStep extends MetadataAPIBase {
      * @param params String array having environment and sub-process-id with their command line notations
      * @return returns sub-process-instance-exec-id.
      */
-    @Autowired
-    private StepDAO stepDAO;
 
     public InitStepInfo execute(String[] params) {
 
@@ -58,8 +57,6 @@ public class InitStep extends MetadataAPIBase {
             LOGGER.debug("subPid is " + subPid);
             initStepInfo.setSubProcessId(Integer.parseInt(subPid));
 
-
-//          s.selectOne("call_procedures.InitStep", initStepInfo);
             stepDAO.initStep(initStepInfo.getSubProcessId());
             return initStepInfo;
         } catch (Exception e) {

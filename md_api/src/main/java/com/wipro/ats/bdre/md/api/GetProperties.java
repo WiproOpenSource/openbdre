@@ -21,9 +21,7 @@ import com.wipro.ats.bdre.md.dao.PropertiesDAO;
 import org.apache.commons.cli.CommandLine;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.config.AutowireCapableBeanFactory;
-import org.springframework.context.ApplicationContext;
-import org.springframework.context.support.ClassPathXmlApplicationContext;
+import org.springframework.beans.factory.config.AutowireCapableBeanFactory;;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -33,10 +31,6 @@ import java.util.Properties;
  * This class gets settings as key value pair for particular process and configuration type.
  */
 public class GetProperties extends MetadataAPIBase {
-    public GetProperties() {
-        AutowireCapableBeanFactory acbFactory = getAutowireCapableBeanFactory();
-        acbFactory.autowireBean(this);
-    }
 
     private static final Logger LOGGER = Logger.getLogger(GetProperties.class);
 
@@ -46,6 +40,10 @@ public class GetProperties extends MetadataAPIBase {
             {"cg", "config-group", "Configuration group of the process to run "}
     };
 
+    public GetProperties() {
+        AutowireCapableBeanFactory acbFactory = getAutowireCapableBeanFactory();
+        acbFactory.autowireBean(this);
+    }
     /**
      * This method gets settings as key value pair for particular process and configuration type.
      *
@@ -93,7 +91,6 @@ public class GetProperties extends MetadataAPIBase {
             getPropertiesInfo.setProcessId(Integer.parseInt(pid));
             getPropertiesInfo.setConfigGroup(configGrp);
             //Calling proc GetPropertiesForConfig
-//            propertyList = s.selectList("call_procedures.GetPropertiesForConfig", getPropertiesInfo);
             propertyList = propertiesDAO.getPropertiesForConfig(Integer.parseInt(pid), configGrp);
             List<GetPropertiesInfo> propertiesInfoList = new ArrayList<GetPropertiesInfo>();
             for (com.wipro.ats.bdre.md.dao.jpa.Properties property : propertyList) {

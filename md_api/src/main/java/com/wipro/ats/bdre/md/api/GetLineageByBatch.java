@@ -22,8 +22,6 @@ import org.apache.commons.cli.CommandLine;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.AutowireCapableBeanFactory;
-import org.springframework.context.ApplicationContext;
-import org.springframework.context.support.ClassPathXmlApplicationContext;
 
 import java.util.List;
 
@@ -31,16 +29,17 @@ import java.util.List;
  * This class gets list of Upstream and Downstream processes of a particular process.
  */
 public class GetLineageByBatch extends MetadataAPIBase {
-    public GetLineageByBatch() {
-        AutowireCapableBeanFactory acbFactory = getAutowireCapableBeanFactory();
-        acbFactory.autowireBean(this);
-    }
 
     private static final Logger LOGGER = Logger.getLogger(GetLineageByBatch.class);
 
     private static final String[][] PARAMS_STRUCTURE = {
             {"bid", "batch-id", " Target batch id whose lineage to be determined"},
     };
+
+    public GetLineageByBatch() {
+        AutowireCapableBeanFactory acbFactory = getAutowireCapableBeanFactory();
+        acbFactory.autowireBean(this);
+    }
 
     /**
      * This method gets list of all processes present in batch_consump_queue and archive_consump_queue
@@ -66,8 +65,6 @@ public class GetLineageByBatch extends MetadataAPIBase {
             GetLineageByBatchInfo getLineageByBatchInfo = new GetLineageByBatchInfo();
             getLineageByBatchInfo.setTargetBatchId(Long.parseLong(bid));
             //calling LineageByBatch
-            //   lineageByBatchInfos = s.selectList("call_procedures.GetLineageByBatch", getLineageByBatchInfo);
-
 
             lineageByBatchInfos = lineageByBatchDAO.lineageByBatch(getLineageByBatchInfo);
             LOGGER.debug("Details of batch is " + lineageByBatchInfos);

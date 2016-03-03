@@ -29,15 +29,19 @@ import org.springframework.context.support.ClassPathXmlApplicationContext;
  * Created by arijit on 12/8/14.
  */
 public class HaltStep extends MetadataAPIBase {
-    public HaltStep() {
-        AutowireCapableBeanFactory acbFactory = getAutowireCapableBeanFactory();
-        acbFactory.autowireBean(this);
-    }
 
     private static final Logger LOGGER = Logger.getLogger(HaltStep.class);
     private static final String[][] PARAMS_STRUCTURE = {
             {"p", "sub-process-id", "Sub Process id of the step"}
     };
+
+    @Autowired
+    private StepDAO stepDAO;
+
+    public HaltStep() {
+        AutowireCapableBeanFactory acbFactory = getAutowireCapableBeanFactory();
+        acbFactory.autowireBean(this);
+    }
 
     /**
      * This process calls HaltStep Proc and updates instance_exec table and batch_consump_queue.
@@ -45,9 +49,6 @@ public class HaltStep extends MetadataAPIBase {
      * @param params String array having sub-process-id, environment with their command line notations.
      * @return returns nothing.
      */
-    @Autowired
-    private StepDAO stepDAO;
-
     public HaltStepInfo execute(String[] params) {
 //        SqlSession s = null;
         try {
@@ -56,14 +57,11 @@ public class HaltStep extends MetadataAPIBase {
             String subPids = commandLine.getOptionValue("sub-process-id");
             LOGGER.debug("subPid is " + subPids);
 
-//            SqlSessionFactory sqlSessionFactory = getSqlSessionFactory(env);
-//            s = sqlSessionFactory.openSession();
-            String subPidList[] = subPids.split(",");
+            String[] subPidList = subPids.split(",");
 
             for (String subPid : subPidList) {
                 //Calling proc HaltStep
                 haltStepInfo.setSubProcessId(Integer.parseInt(subPid));
-//                    s.selectOne("call_procedures.HaltStep", haltStepInfo);
                 stepDAO.haltStep(haltStepInfo.getSubProcessId());
             }
             return haltStepInfo;

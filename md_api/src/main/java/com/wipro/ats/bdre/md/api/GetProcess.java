@@ -23,8 +23,6 @@ import org.apache.commons.cli.CommandLine;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.AutowireCapableBeanFactory;
-import org.springframework.context.ApplicationContext;
-import org.springframework.context.support.ClassPathXmlApplicationContext;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -33,21 +31,22 @@ import java.util.List;
  * Created by arijit on 12/8/14.
  */
 public class GetProcess extends MetadataAPIBase {
-    public GetProcess() {
-        AutowireCapableBeanFactory acbFactory = getAutowireCapableBeanFactory();
-        acbFactory.autowireBean(this);
-    }
 
     private static final Logger LOGGER = Logger.getLogger(GetProcess.class);
+    private static final String PARENTPROCESSID = "parent-process-id";
     private static final String[][] PARAMS_STRUCTURE = {
-            {"p", "parent-process-id", "Parent process id for a given workflow"}
+            {"p", PARENTPROCESSID, "Parent process id for a given workflow"}
     };
     private static final String[][] PARAMS_STRUCTURE_WITH_EXEC = {
-            {"p", "parent-process-id", "Parent process id for a given workflow"},
+            {"p", PARENTPROCESSID, "Parent process id for a given workflow"},
             {"ieid", "instance-exec-id", "Instance Exec Id for a given run"}
 
     };
 
+    public GetProcess() {
+        AutowireCapableBeanFactory acbFactory = getAutowireCapableBeanFactory();
+        acbFactory.autowireBean(this);
+    }
 
     /**
      * This method executes query on process table for mentioned parent-process-id.
@@ -63,7 +62,7 @@ public class GetProcess extends MetadataAPIBase {
         try {
 
             CommandLine commandLine = getCommandLine(params, PARAMS_STRUCTURE);
-            String subPid = commandLine.getOptionValue("parent-process-id");
+            String subPid = commandLine.getOptionValue(PARENTPROCESSID);
             LOGGER.info("Parent Pid is " + subPid);
 
             //Calling proc select-process-list
@@ -90,11 +89,9 @@ public class GetProcess extends MetadataAPIBase {
 
             }
 
-            // List<ProcessInfo> processInfos = s.selectList("call_procedures.select-process-list", processInfo);
-
             return processInfoList;
         } catch (Exception e) {
-            LOGGER.error("Error occurred", e);
+            LOGGER.error("Error occurred.", e);
             throw new MetadataException(e);
         }
 
@@ -104,7 +101,7 @@ public class GetProcess extends MetadataAPIBase {
         try {
 
             CommandLine commandLine = getCommandLine(params, PARAMS_STRUCTURE);
-            String subPid = commandLine.getOptionValue("parent-process-id");
+            String subPid = commandLine.getOptionValue(PARENTPROCESSID);
             LOGGER.info("Parent Pid is " + subPid);
 
             //Calling proc select-process-list
@@ -128,20 +125,17 @@ public class GetProcess extends MetadataAPIBase {
                 processInfo.setDeleteFlag(process.getDeleteFlag());
                 processInfoList.add(processInfo);
             }
-
-            // List<ProcessInfo> processInfos = s.selectList("call_procedures.select-process-list", processInfo);
             return processInfoList;
         } catch (Exception e) {
-            LOGGER.error("Error occurred", e);
+            LOGGER.error("Error  occurred", e);
             throw new MetadataException(e);
         }
     }
     public List<ProcessInfo> execInfo(String[] params) {
 
         try {
-            ProcessInfo processInfo = new ProcessInfo();
             CommandLine commandLine = getCommandLine(params, PARAMS_STRUCTURE_WITH_EXEC);
-            String subPid = commandLine.getOptionValue("parent-process-id");
+            String subPid = commandLine.getOptionValue(PARENTPROCESSID);
             LOGGER.debug("Pid is " + subPid);
             String ieid = commandLine.getOptionValue("instance-exec-id");
             LOGGER.debug("Ieid is " + ieid);
@@ -149,10 +143,7 @@ public class GetProcess extends MetadataAPIBase {
 
             //Calling proc select-process-list
 
-            List<ProcessInfo> processInfos = processDAO.selectProcessListWithExec(Integer.parseInt(subPid), Long.parseLong(ieid));
-            // List<ProcessInfo> processInfos = s.selectList("call_procedures.select-process-list-with-exec", processInfo);
-
-            return processInfos;
+           return processDAO.selectProcessListWithExec(Integer.parseInt(subPid), Long.parseLong(ieid));
 
         } catch (Exception e) {
             LOGGER.error("Error occurred", e);

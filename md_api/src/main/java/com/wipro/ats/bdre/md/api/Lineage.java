@@ -24,8 +24,6 @@ import com.wipro.ats.bdre.md.dao.jpa.*;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.AutowireCapableBeanFactory;
-import org.springframework.context.ApplicationContext;
-import org.springframework.context.support.ClassPathXmlApplicationContext;
 
 import java.util.Date;
 
@@ -34,10 +32,7 @@ import java.util.Date;
  */
 public class Lineage extends MetadataAPIBase {
     private static final Logger LOGGER = Logger.getLogger(Lineage.class);
-    public Lineage() {
-        AutowireCapableBeanFactory acbFactory = getAutowireCapableBeanFactory();
-        acbFactory.autowireBean(this);
-    }
+
     @Autowired
     LineageQueryDAO lineageQueryDAO;
     @Autowired
@@ -45,6 +40,10 @@ public class Lineage extends MetadataAPIBase {
     @Autowired
     LineageRelationDAO lineageRelationDAO;
 
+    public Lineage() {
+        AutowireCapableBeanFactory acbFactory = getAutowireCapableBeanFactory();
+        acbFactory.autowireBean(this);
+    }
     public Lineage execute(String[] params) {
         return null;
     }
