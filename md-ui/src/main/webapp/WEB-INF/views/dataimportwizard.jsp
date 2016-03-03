@@ -43,6 +43,7 @@
         }
 		</script >
 		<script >
+
     var datatypeMap = {
     INT: "Int",
     VARCHAR: "String",
@@ -53,6 +54,7 @@
     INTEGER: "Int",
     TINYINT: "tinyInt"
 };
+    var created=0;
 		function displayProcess (records){
                                 $('#Container').jtable(
                                 {
@@ -334,7 +336,24 @@
 
 		        	loadTableTree();
 		        }
-		    }
+		    },
+		    onFinished: function(event, currentIndex) {
+                                                        if(created == 1) {
+                                                            location.href = '<c:url value="/pages/process.page"/>';
+                                                        } else {
+                                                            $("#div-dialog-warning").dialog({
+                                                                title: "",
+                                                                resizable: false,
+                                                                height: 'auto',
+                                                                modal: true,
+                                                                buttons: {
+                                                                    "Ok": function() {
+                                                                        $(this).dialog("close");
+                                                                    }
+                                                                }
+                                                            }).text("Jobs have not been created.");
+                                                        }
+                                        }
 			});
 
 		});
@@ -447,6 +466,7 @@
           success: function(data)
           {
             if( data.Result =="OK" ){
+             created = 1;
                     $("#div-dialog-warning").dialog({
                         title: "",
                         resizable: false,

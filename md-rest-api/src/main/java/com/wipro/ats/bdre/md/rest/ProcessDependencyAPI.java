@@ -14,6 +14,7 @@
 
 package com.wipro.ats.bdre.md.rest;
 
+import com.wipro.ats.bdre.exception.MetadataException;
 import com.wipro.ats.bdre.md.api.GetProcessDependency;
 import com.wipro.ats.bdre.md.api.base.MetadataAPIBase;
 import com.wipro.ats.bdre.md.beans.ProcessDependencyInfo;
@@ -99,7 +100,6 @@ public class ProcessDependencyAPI extends MetadataAPIBase {
                         break;
                 }
                 tooltip = "Description: " + processDependencyInfo.getDescription() + " Added on:" + processDependencyInfo.getAddTS();
-                //String label = "\"" + processDependencyInfo.getProcessName()+ "\n(" +processDependencyInfo.getProcessId() +")" + "\"";
                 String label = "<<TABLE CELLSPACING=\"4\" CELLPADDING=\"0\" BORDER=\"0\" WIDTH=\"100%\"><TR><TD COLSPAN=\"3\">" + processDependencyInfo.getProcessName().replace("&", "&amp;") +
                         "</TD></TR><TR><TD COLSPAN=\"3\">" + processDependencyInfo.getProcessId() + "</TD></TR>" +
                         "<TR>" +
@@ -107,7 +107,6 @@ public class ProcessDependencyAPI extends MetadataAPIBase {
                         "<TD COLOR=\"blue\"  href=\"javascript:popModalXml(" + processDependencyInfo.getProcessId() + ")\"><FONT COLOR=\"blue\" POINT-SIZE=\"8\"> XML </FONT></TD>" +
                         "<TD COLOR=\"blue\"  href=\"javascript:GotoProcess(" + processDependencyInfo.getProcessId() + ")\"><FONT COLOR=\"blue\" POINT-SIZE=\"8\"> Details</FONT></TD></TR></TABLE>>";
 
-                //String label = "<" + processDependencyInfo.getProcessName()+ "\n(" +processDependencyInfo.getProcessId() +")" + ">";
 
                 dot.append(processDependencyInfo.getProcessId() + " [label=" + label + " tooltip=\"" + tooltip + "\"shape=rectangle,style=filled,fontcolor=black,color=" + borderColor + ",style=\"rounded\",penwidth=2,fontsize=10,URL=\"javascript:getPid(" + processDependencyInfo.getProcessId() + ")\"];\n");
                 //Checking if the process is an upstream or downstream
@@ -136,7 +135,8 @@ public class ProcessDependencyAPI extends MetadataAPIBase {
             restWrapper = new RestWrapper(lineageInfo, RestWrapper.OK);
             LOGGER.info("Record with ID:" + processId + " selected from LineageInfo by User:" + principal.getName());
 
-        } catch (Exception e) {
+        } catch (MetadataException e) {
+            LOGGER.error(e);
             restWrapper = new RestWrapper(e.getMessage(), RestWrapper.ERROR);
         }
         return restWrapper;

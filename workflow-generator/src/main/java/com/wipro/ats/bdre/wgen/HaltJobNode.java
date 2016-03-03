@@ -36,7 +36,7 @@ public class HaltJobNode extends OozieNode {
 
     @Override
     public String getXML() {
-        String ret = "\n<action name=\"halt-job\">\n" +
+        return "\n<action name=\"halt-job\">\n" +
                 "        <java>\n" +
                 "            <job-tracker>${jobTracker}</job-tracker>\n" +
                 "            <name-node>${nameNode}</name-node>\n" +
@@ -52,7 +52,6 @@ public class HaltJobNode extends OozieNode {
                 "        <error to=\"term-job\"/>\n" +
                 "    </action>";
 
-        return ret;
     }
 
 }

@@ -18,6 +18,8 @@ package com.wipro.ats.bdre.wgen;
  * Created by arijit on 12/23/14.
  */
 
+import com.wipro.ats.bdre.exception.BDREException;
+
 /**
  * Methods getName() and getXML() for HaltNode
  * getXML() is formatting the string to be returned as XML format
@@ -40,12 +42,12 @@ public class HaltNode extends OozieNode {
 
     @Override
     public OozieNode getToNode() {
-        throw new RuntimeException("Getting To node from end is not supported");
+        throw new BDREException("Getting To node from end is not supported");
     }
 
     @Override
     public void setToNode(OozieNode node) {
-        throw new RuntimeException("Setting To node to end is not supported");
+        throw new BDREException("Setting To node to end is not supported");
     }
 
 
