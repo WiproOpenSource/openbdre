@@ -3,7 +3,6 @@ package com.wipro.ats.bdre.md.api;
 import org.apache.log4j.Logger;
 
 import java.io.*;
-import java.util.List;
 import java.util.UUID;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;

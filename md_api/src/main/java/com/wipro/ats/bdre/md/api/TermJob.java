@@ -27,8 +27,6 @@ import org.apache.log4j.BasicConfigurator;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.AutowireCapableBeanFactory;
-import org.springframework.context.ApplicationContext;
-import org.springframework.context.support.ClassPathXmlApplicationContext;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -38,10 +36,6 @@ import java.util.Date;
  * Created by arijit on 12/8/14.
  */
 public class TermJob extends MetadataAPIBase {
-    public TermJob() {
-        AutowireCapableBeanFactory acbFactory = getAutowireCapableBeanFactory();
-        acbFactory.autowireBean(this);
-    }
 
     private static final Logger LOGGER = Logger.getLogger(TermJob.class);
     private static final String[][] PARAMS_STRUCTURE = {
@@ -60,6 +54,12 @@ public class TermJob extends MetadataAPIBase {
     @Autowired
     private ProcessDAO processDAO;
 
+    public TermJob() {
+        AutowireCapableBeanFactory acbFactory = getAutowireCapableBeanFactory();
+        acbFactory.autowireBean(this);
+    }
+
+    @Override
     public TermJobInfo execute(String[] params) {
 
         try {
@@ -70,12 +70,10 @@ public class TermJob extends MetadataAPIBase {
 
             termJobInfo.setProcessId(Integer.parseInt(pid));
 
-//            s.selectOne("call_procedures.TermJob", termJobInfo);
             jobDAO.termJob(termJobInfo.getProcessId());
             ProcessInfo processInfo = new ProcessInfo();
             com.wipro.ats.bdre.md.dao.jpa.Process process = new com.wipro.ats.bdre.md.dao.jpa.Process();
             process.setProcessId(Integer.parseInt(pid));
-//            process = s.selectOne("call_procedures.GetProcess", process);
             process = processDAO.get(Integer.parseInt(pid));
             processInfo.setProcessName(process.getProcessName());
             DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
@@ -86,7 +84,8 @@ public class TermJob extends MetadataAPIBase {
             //The TermJob completes even if sending message fails
             try {
                 BasicConfigurator.configure();
-                new StatusNotification(termMessage, MDConfig.getProperty("status-notification.term-queue"));
+                StatusNotification statusNotification = new StatusNotification(termMessage, MDConfig.getProperty("status-notification.term-queue"));
+                LOGGER.info(statusNotification);
             } catch (Exception e) {
                 LOGGER.error("Error occurred while notifying job status", e);
             }

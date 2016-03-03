@@ -49,6 +49,7 @@ public class GetLineageQueryByProcessId extends MetadataAPIBase {
     }
 
 
+    @Override
     public List<LineageQuery> execute(String[] params) {
         try {
             CommandLine commandLine = getCommandLine(params, PARAMS_STRUCTURE);
