@@ -74,7 +74,7 @@ public class BaseStructure {
         }
 
         CommandLineParser parser = new BasicParser();
-        CommandLine cmd;
+        CommandLine cmd=null;
         try {
             List<String> newParams = new ArrayList<String>();
 
@@ -86,15 +86,13 @@ public class BaseStructure {
             }
 
             cmd = parser.parse(options, newParams.toArray(new String[]{}));
-            return cmd;
 
         } catch (ParseException e) {
             LOGGER.error(e.getMessage());
             //System.err cannot be removed as it is an command line argument
             printUsage("java <main_class> ", e.getMessage(), options, System.err);
-            System.exit(1);
         }
-        return null;
+        return cmd;
     }
 
 
