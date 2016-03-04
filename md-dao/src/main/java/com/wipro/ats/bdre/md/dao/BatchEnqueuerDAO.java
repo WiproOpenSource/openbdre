@@ -44,6 +44,7 @@ public class BatchEnqueuerDAO {
 
     public List<com.wipro.ats.bdre.md.beans.table.BatchConsumpQueue> batchEnqueue(RegisterFileInfo registerFileInfo) {
         Session session = sessionFactory.openSession();
+        List<com.wipro.ats.bdre.md.beans.table.BatchConsumpQueue> bcqs = new ArrayList<com.wipro.ats.bdre.md.beans.table.BatchConsumpQueue>();
         try {
             Long finalBatchID;
 
@@ -64,13 +65,10 @@ public class BatchEnqueuerDAO {
             File file = new File();
             Batch batch = new Batch();
             batch.setBatchId(finalBatchID);
-            //Batch batch = (Batch)session.get(Batch.class, finalBatchID);
             file.setBatch(batch);
             Servers servers = new Servers();
             servers.setServerId(registerFileInfo.getServerId());
-            // Servers servers = (Servers)session.get(Servers.class,registerFileInfo.getServerId());
             file.setServers(servers);
-
             FileId fileId = new FileId();
             fileId.setBatchId(finalBatchID);
             fileId.setServerId(registerFileInfo.getServerId());
@@ -79,9 +77,7 @@ public class BatchEnqueuerDAO {
             fileId.setFileSize(registerFileInfo.getFileSize());
             fileId.setPath(registerFileInfo.getPath());
             file.setId(fileId);
-
             session.save(file);
-
             Integer proId;
             List<Process> list = session.createCriteria(Process.class).add(Restrictions.eq("enqueuingProcessId", registerFileInfo.getParentProcessId())).list();
             Iterator<Process> iterator = list.iterator();
@@ -100,7 +96,7 @@ public class BatchEnqueuerDAO {
                 session.save(batchConsumpQueue);
             }
 
-            List<com.wipro.ats.bdre.md.beans.table.BatchConsumpQueue> bcqs = new ArrayList<com.wipro.ats.bdre.md.beans.table.BatchConsumpQueue>();
+
             Batch batch1 = (Batch) session.get(Batch.class, finalBatchID);
             List<BatchConsumpQueue> list1 = session.createCriteria(BatchConsumpQueue.class).add(Restrictions.eq("batchBySourceBatchId", batch1)).list();
             LOGGER.info("Total size of Batches in queue is" + list1.size());
@@ -127,7 +123,7 @@ public class BatchEnqueuerDAO {
         } catch (MetadataException e) {
             LOGGER.error("Error occurred", e);
             session.getTransaction().rollback();
-            return null;
+            return bcqs;
         } finally {
             session.close();
         }
