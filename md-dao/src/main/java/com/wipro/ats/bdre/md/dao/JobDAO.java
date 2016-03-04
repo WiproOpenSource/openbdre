@@ -245,7 +245,7 @@ public class JobDAO {
             for (Object subProcessObject : listOfSubProcessCriteria.list()) {
                 Process subProcess = (Process) subProcessObject;
                 Criteria notNullTargetBatchCriteria = session.createCriteria(BatchConsumpQueue.class).add(Restrictions.isNotNull(BATCHBYTARGETBATCHID)).add(Restrictions.eq(PROCESS, subProcess));
-                if (notNullTargetBatchCriteria.list().size() > 0) {
+                if (!notNullTargetBatchCriteria.list().isEmpty()) {
                     notNullTargetBatches += notNullTargetBatchCriteria.list().size();
                 }
             }

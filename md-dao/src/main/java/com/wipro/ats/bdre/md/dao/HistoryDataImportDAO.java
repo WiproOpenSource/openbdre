@@ -499,7 +499,7 @@ public class HistoryDataImportDAO {
 
                     PropertiesId rawTableNamePropertiesId = new PropertiesId();
                     rawTableNamePropertiesId.setProcessId(file2Raw.getProcessId());
-                    rawTableNamePropertiesId.setPropKey("TABLE_NAME");
+                    rawTableNamePropertiesId.setPropKey(TABLE_NAME);
                     Properties rawTableNameProperties = new Properties();
                     rawTableNameProperties.setId(rawTableNamePropertiesId);
                     rawTableNameProperties.setConfigGroup(RAW_TABLE);
@@ -618,7 +618,7 @@ public class HistoryDataImportDAO {
 
                     PropertiesId baseTableNamePropertiesId = new PropertiesId();
                     baseTableNamePropertiesId.setProcessId(raw2Stage.getProcessId());
-                    baseTableNamePropertiesId.setPropKey("TABLE_NAME");
+                    baseTableNamePropertiesId.setPropKey(TABLE_NAME);
                     Properties baseTableNameProperties = new Properties();
                     baseTableNameProperties.setId(baseTableNamePropertiesId);
                     baseTableNameProperties.setConfigGroup(BASE_TABLE);
@@ -628,7 +628,7 @@ public class HistoryDataImportDAO {
 
                     baseTableNamePropertiesId = new PropertiesId();
                     baseTableNamePropertiesId.setProcessId(stage2Base.getProcessId());
-                    baseTableNamePropertiesId.setPropKey("TABLE_NAME");
+                    baseTableNamePropertiesId.setPropKey(TABLE_NAME);
                     baseTableNameProperties = new Properties();
                     baseTableNameProperties.setId(baseTableNamePropertiesId);
                     baseTableNameProperties.setConfigGroup(BASE_TABLE);
