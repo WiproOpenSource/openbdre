@@ -56,21 +56,6 @@ public class HaltJob extends MetadataAPIBase {
     @Autowired
     private ProcessDAO processDAO;
 
-    public HaltJob() {
-        AutowireCapableBeanFactory acbFactory = getAutowireCapableBeanFactory();
-        acbFactory.autowireBean(this);
-    }
-
-    public void configuration(String haltMessage){
-        try {
-            BasicConfigurator.configure();
-            StatusNotification statusNotification = new StatusNotification(haltMessage, MDConfig.getProperty("status-notification.halt-queue"));
-            LOGGER.info(statusNotification);
-        } catch (Exception e) {
-            LOGGER.error("Error occurred while notifying job status", e);
-        }
-    }
-
     @Override
     public HaltJobInfo execute(String[] params) {
         try {
@@ -95,9 +80,13 @@ public class HaltJob extends MetadataAPIBase {
             String haltMessage = " --processId=" + haltJobInfo.getProcessId() + "  --stage=parent" + "  --status=success" + "  --processName=" + process.getProcessName() + "  --endTs=" + (dateFormat.format(date)).toString();
             //Calling StatusNotification class
             //The HaltJob completes even if sending message fails
-            HaltJob haltJob = new HaltJob();
-            haltJob.configuration(haltMessage);
+            try {
+                BasicConfigurator.configure();
+                new StatusNotification(haltMessage, MDConfig.getProperty("status-notification.halt-queue"));
+            } catch (Exception e) {
+                LOGGER.error("Error occurred while notifying job status", e);
 
+            }
             return haltJobInfo;
         } catch (Exception e) {
             LOGGER.error("Error occurred", e);
