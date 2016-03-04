@@ -60,7 +60,7 @@ public class ProcessAncestorsDAO {
             List<Integer> enqueuingProcessIdList = checkEnqueuingProcesses.list();
 
             LOGGER.info("Number of enqueuing process count:" + checkEnqueuingProcesses.list().size());
-            if (enqueuingProcessIdList.size() != 0) {
+            if (!enqueuingProcessIdList.isEmpty()) {
                 Criteria fetchEnqueuingProcessList = session.createCriteria(com.wipro.ats.bdre.md.dao.jpa.Process.class).add(Restrictions.eq("deleteFlag", false)).add(Restrictions.in(PROCESSID, enqueuingProcessIdList));
                 List<com.wipro.ats.bdre.md.dao.jpa.Process> enqueuingProcessList = fetchEnqueuingProcessList.list();
                 Integer enqProcessListCount = fetchEnqueuingProcessList.list().size();

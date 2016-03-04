@@ -316,7 +316,7 @@ public class JobDAO {
                     String batchCutPattern = notNullBCPProcess.getBatchCutPattern();
                     Criteria likeBCPCriteria = session.createCriteria(BatchConsumpQueue.class).add(Restrictions.like("batchMarking", "%" + batchCutPattern + "%"))
                             .add(Restrictions.eq(PROCESS, notNullBCPProcess)).addOrder(Order.asc(BATCHBYSOURCEBATCHID)).setMaxResults(1);
-                    if (likeBCPCriteria.list().size() > 0) {
+                    if (!likeBCPCriteria.list().isEmpty()) {
                         BatchConsumpQueue batchConsumpQueue = (BatchConsumpQueue) likeBCPCriteria.list().get(0);
                         sourceBatchId = batchConsumpQueue.getBatchBySourceBatchId().getBatchId();
                     }
@@ -386,9 +386,6 @@ public class JobDAO {
                         session.update(batchId);
                     }
                 }
-                Criteria newTargetBatchCriteria = session.createCriteria(Batch.class).add(Restrictions.eq("instanceExec", instanceExec));
-                Batch newTargetBatch = (Batch) newTargetBatchCriteria.list().get(0);
-
             }
 
 
