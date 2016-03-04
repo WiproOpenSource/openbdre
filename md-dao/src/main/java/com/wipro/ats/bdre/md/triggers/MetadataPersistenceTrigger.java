@@ -21,6 +21,7 @@ import org.hibernate.event.spi.*;
 import org.springframework.stereotype.Component;
 
 import java.util.HashMap;
+import java.util.Map;
 import java.util.UUID;
 
 /**
@@ -30,7 +31,7 @@ import java.util.UUID;
 public class MetadataPersistenceTrigger implements PreUpdateEventListener, PreInsertEventListener, PostUpdateEventListener, PostInsertEventListener {
 
     private static final Logger LOGGER = Logger.getLogger(MetadataPersistenceTrigger.class);
-    private static HashMap<Integer,Integer> processTypeMap=new HashMap<>();
+    private static Map<Integer,Integer> processTypeMap=new HashMap<>();
     //TODO:We have to populate this from DB
     static {
         processTypeMap.put(1,0);
@@ -95,7 +96,6 @@ public class MetadataPersistenceTrigger implements PreUpdateEventListener, PreIn
     @Override
     public boolean onPreInsert(PreInsertEvent event) {
         UUID idOne = UUID.randomUUID();
-        System.out.println("UUID is "+idOne);
         if (event.getEntity() instanceof Process) {
             if (((Process) event.getEntity()).getProcessCode()==null)
             ((Process) event.getEntity()).setProcessCode(idOne.toString());
