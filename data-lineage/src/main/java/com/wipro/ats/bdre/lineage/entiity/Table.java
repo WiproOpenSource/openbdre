@@ -109,13 +109,20 @@ public class Table extends Node {
 //				"label = \"" + getLabel() + "\"\n" +
 //				"shape = \"" + getShape() + "\"\n" +
 //				"];";
+
+		// struct1 [label=<
+		//<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+		//<TR><TD>left</TD><TD PORT="f1">mid dle</TD><TD PORT="f2">right</TD></TR>
+		//</TABLE>>];
+
 		String tableFullName = getDataBase() + "." + getTableName();
 		LOGGER.info("Table " + getTableName() + " : getColumns().size = " + getColumns().size());
 
-		StringBuilder first = new StringBuilder("\n\"" + tableFullName + "\" [\n" + "label = ");
-
+		StringBuilder first = new StringBuilder("\n\"" + tableFullName + "\"  [\n" + "label =< <TABLE BORDER=\"0\" CELLBORDER=\"1\" CELLSPACING=\"0\"> ");
+		first= first.append("<TR><TD ");
 		String tableHeader = "Table " + tableFullName;
-		StringBuilder middle = new StringBuilder("\"<" + tableFullName + ">" + tableHeader + " | ");
+		//StringBuilder middle = new StringBuilder("\"<" + tableFullName + ">" + tableHeader + " | ");
+		StringBuilder middle=new StringBuilder("");
 //		for (int i = 0; i < getColumns().size(); i++) {
 //			Column column = getColumns().get(i);
 //			column.setId(i);
@@ -125,14 +132,15 @@ public class Table extends Node {
 //				middle += "<f" + (i+1) + ">" + column.getColumnName();
 //		}
 		for (Column column : getColumns()) {
-			middle.append(column.toDotString() + " | ");
+			middle.append(  " HREF=\"javascript:getTableName('"+ tableName + "','" + column.getColumnName() +"')\"" + " PORT=\""+column.getColumnName()+ "\" >" + column.getColumnName()  + "</TD> </TR><TR><TD " );
 		}
-		middle = new StringBuilder(middle.substring(0, middle.length() - 3));
+		//middle = new StringBuilder(middle.substring(0, middle.length() - 3));
+		middle.append("> </TD></TR></TABLE>>,");
 
-		String last = "\"";
+		String last = "";
 		if (!this.isDataBaseTable())
 			last += "\ncolor=\"gray\"";
-		last += "\nshape = \"" + getShape() + "\"\n" + "];";
+		last += "\nshape = \"" + getShape() + "s\"\n" + "];";
 
 		return first.append(middle).append(last).toString();
 	}
