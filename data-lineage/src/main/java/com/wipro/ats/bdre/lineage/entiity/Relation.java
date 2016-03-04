@@ -152,8 +152,12 @@ public class Relation {
 						Function function = (Function) source;
 						if (function.getOutAlias() != null)
 							outColumnName = function.getOutAlias();
-						else
+						else {
+							if(function.getInNodes().isEmpty()) {
+								//System.out.println("function = " + function);
+							}
 							outColumnName = function.getInNodes().get(0).getLabel();
+						}
 					} else
 						outColumnName = source.getLabel();
 
