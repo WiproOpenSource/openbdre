@@ -28,7 +28,6 @@ import com.wipro.ats.bdre.md.rest.util.DateConverter;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.ModelMap;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.*;
@@ -59,11 +58,19 @@ public class ProcessTemplateAPI extends MetadataAPIBase {
     ProcessDAO processDAO;
     @Autowired
     PropertiesDAO propertiesDAO;
+    @Autowired
+    ProcessTypeDAO processTypeDAO;
+    @Autowired
+    WorkflowTypeDAO workflowTypeDAO;
+    @Autowired
+    BusDomainDAO busDomainDAO;
+    @Autowired
+    PropertiesTemplateDAO propertiesTemplateDAO;
 
     @RequestMapping(value = "/{id}", method = RequestMethod.GET)
-    public
+    
     @ResponseBody
-    RestWrapper get(
+    public RestWrapper get(
             @PathVariable("id") Integer processTemplateId, Principal principal
     ) {
 
@@ -84,13 +91,13 @@ public class ProcessTemplateAPI extends MetadataAPIBase {
                 processTemplate.setBatchPattern(jpaProcessTemplate.getBatchCutPattern());
                 processTemplate.setNextProcessTemplateId(jpaProcessTemplate.getNextProcessTemplateId());
             }
-            //  processTemplate = s.selectOne("call_procedures.GetProcessTemplate", processTemplate);
             processTemplate.setTableAddTS(DateConverter.dateToString(processTemplate.getAddTS()));
 
             restWrapper = new RestWrapper(processTemplate, RestWrapper.OK);
             LOGGER.info("Record with ID:" + processTemplateId + " selected from ProcessTemplate by User:" + principal.getName());
 
         } catch (Exception e) {
+            LOGGER.error(e);
             restWrapper = new RestWrapper(e.getMessage(), RestWrapper.ERROR);
         }
 
@@ -102,26 +109,24 @@ public class ProcessTemplateAPI extends MetadataAPIBase {
      * This method calls proc DeleteProcess and deletes a record corresponding to processId passed.
      *
      * @param processTemplateId
-     * @param model
      * @return nothing.
      */
     @RequestMapping(value = "/{id}", method = RequestMethod.DELETE)
-    public
+    
     @ResponseBody
-    RestWrapper delete(
-            @PathVariable("id") Integer processTemplateId,
-            ModelMap model, Principal principal) {
+    public RestWrapper delete(
+            @PathVariable("id") Integer processTemplateId, Principal principal) {
 
         RestWrapper restWrapper = null;
         try {
 
             processTemplateDAO.delete(processTemplateId);
-            // s.delete("call_procedures.DeleteProcessTemplate", processTemplate);
 
             restWrapper = new RestWrapper(null, RestWrapper.OK);
             LOGGER.info("Record with ID:" + processTemplateId + " deleted from ProcessTemplate by User:" + principal.getName());
 
         } catch (Exception e) {
+            LOGGER.error(e);
             restWrapper = new RestWrapper(e.getMessage(), RestWrapper.ERROR);
         }
         return restWrapper;
@@ -135,20 +140,20 @@ public class ProcessTemplateAPI extends MetadataAPIBase {
      */
     @RequestMapping(value = {"", "/"}, method = RequestMethod.GET)
 
-    public
+    
     @ResponseBody
-    RestWrapper list(@RequestParam(value = "page", defaultValue = "0") int startPage,
+    public RestWrapper list(@RequestParam(value = "page", defaultValue = "0") int startPage,
                      @RequestParam(value = "size", defaultValue = "10") int pageSize, @RequestParam(value = "pid", defaultValue = "0") Integer pid, Principal principal) {
 
 
         RestWrapper restWrapper = null;
+        Integer processId=pid;
         try {
-            if (pid == 0) {
-                pid = null;
+            if (processId == 0) {
+                processId = null;
             }
             Integer counter=processTemplateDAO.totalRecordCount();
-            List<ProcessTemplate> processes = processTemplateDAO.list(startPage, pageSize, pid);
-            // List<ProcessTemplate> processes = s.selectList("call_procedures.FG", processTemplate);
+            List<ProcessTemplate> processes = processTemplateDAO.list(startPage, pageSize, processId);
             for (ProcessTemplate p : processes) {
                 p.setCounter(counter);
                 p.setTableAddTS(DateConverter.dateToString(p.getAddTS()));
@@ -158,6 +163,7 @@ public class ProcessTemplateAPI extends MetadataAPIBase {
             LOGGER.info("All records listed from ProcessTemplate by User:" + principal.getName());
 
         } catch (Exception e) {
+            LOGGER.error(e);
             restWrapper = new RestWrapper(e.getMessage(), RestWrapper.ERROR);
         }
         return restWrapper;
@@ -171,9 +177,9 @@ public class ProcessTemplateAPI extends MetadataAPIBase {
      * @return restWrapper It contains the updated instance of Process.
      */
     @RequestMapping(value = {"/", ""}, method = RequestMethod.POST)
-    public
+    
     @ResponseBody
-    RestWrapper update(@ModelAttribute("processtemplate")
+    public RestWrapper update(@ModelAttribute("processtemplate")
                        @Valid ProcessTemplate processTemplate, BindingResult bindingResult, Principal principal) {
 
 
@@ -227,12 +233,12 @@ public class ProcessTemplateAPI extends MetadataAPIBase {
             jpaProcessTemplate.setBusDomain(busDomain);
 
             processTemplateDAO.update(jpaProcessTemplate);
-            // ProcessTemplate processTemplates = s.selectOne("call_procedures.UpdateProcessTemplate", processTemplate);
 
             restWrapper = new RestWrapper(processTemplate, RestWrapper.OK);
             LOGGER.info("Record with ID:" + processTemplate.getProcessTemplateId() + " updated in BatchStatus by User:" + principal.getName() + processTemplate);
 
         } catch (Exception e) {
+            LOGGER.error(e);
             restWrapper = new RestWrapper(e.getMessage(), RestWrapper.ERROR);
         }
         return restWrapper;
@@ -245,17 +251,12 @@ public class ProcessTemplateAPI extends MetadataAPIBase {
      * @param bindingResult
      * @return restWrapper.
      */
-    @Autowired
-    ProcessTypeDAO processTypeDAO;
-    @Autowired
-    WorkflowTypeDAO workflowTypeDAO;
-    @Autowired
-    BusDomainDAO busDomainDAO;
+    
 
     @RequestMapping(value = {"/", ""}, method = RequestMethod.PUT)
-    public
+    
     @ResponseBody
-    RestWrapper insert(@ModelAttribute("processtemplate")
+    public RestWrapper insert(@ModelAttribute("processtemplate")
                        @Valid ProcessTemplate processTemplate, BindingResult bindingResult, Principal principal) {
 
         RestWrapper restWrapper = null;
@@ -295,7 +296,6 @@ public class ProcessTemplateAPI extends MetadataAPIBase {
             jpaProcessTemplate.setNextProcessTemplateId(processTemplate.getNextProcessTemplateId());
 
             ProcessType processType = processTypeDAO.get(processTemplate.getProcessTypeId());
-            ;
             jpaProcessTemplate.setProcessType(processType);
             if (processTemplate.getParentProcessId() != null) {
                 com.wipro.ats.bdre.md.dao.jpa.ProcessTemplate pt = processTemplateDAO.get(processTemplate.getParentProcessId());
@@ -311,20 +311,19 @@ public class ProcessTemplateAPI extends MetadataAPIBase {
             jpaProcessTemplate.setBusDomain(busDomain);
 
             Integer processTemplateId = processTemplateDAO.insert(jpaProcessTemplate);
-            //ProcessTemplate processTemplates = s.selectOne("call_procedures.InsertProcessTemplate", processTemplate);
 
             processTemplate.setProcessTemplateId(processTemplateId);
             restWrapper = new RestWrapper(processTemplate, RestWrapper.OK);
             LOGGER.info("Record with ID:" + processTemplate.getProcessTemplateId() + " inserted in ProcessTemplate by User:" + principal.getName() + processTemplate);
 
         } catch (Exception e) {
+            LOGGER.error(e);
             restWrapper = new RestWrapper(e.getMessage(), RestWrapper.ERROR);
         }
         return restWrapper;
     }
 
-    @Autowired
-    PropertiesTemplateDAO propertiesTemplateDAO;
+   
 
     /**
      * This method handles the creation of a new process from process template and its associated properties
@@ -334,9 +333,9 @@ public class ProcessTemplateAPI extends MetadataAPIBase {
      * @return
      */
     @RequestMapping(value = {"/create", "/create/"}, method = RequestMethod.PUT)
-    public
+    
     @ResponseBody
-    RestWrapper create(@ModelAttribute("processtemplate")
+    public RestWrapper create(@ModelAttribute("processtemplate")
                        @Valid ProcessTemplate processTemplate, BindingResult bindingResult) {
 
         RestWrapper restWrapper = null;
@@ -361,7 +360,6 @@ public class ProcessTemplateAPI extends MetadataAPIBase {
             LOGGER.debug("processTemplate id is " + processTemplate.getProcessTemplateId());
 
             // Inserting new process from template
-            //  List<ProcessTemplate> processTemplateInfos = s.selectList("call_procedures.select-process-template-list", processTemplate);
             List<ProcessTemplate> processTemplateInfos = processTemplateDAO.selectPTList(processTemplate.getProcessTemplateId());
             int index = 0;
             int pid = 0;
@@ -375,17 +373,14 @@ public class ProcessTemplateAPI extends MetadataAPIBase {
                     processTempInfo.setParentProcessId(pid);
                 }
 
-                // processes.add(index, (Process) s.selectOne("call_procedures.InsertProcess", processTempInfo));
                 pid = processes.get(0).getProcessId();
                 LOGGER.debug("index= " + index + "processTempInfo.processtempid=" + processTempInfo.getProcessTemplateId() + "processes.(0)name= " + processes.get(index).getProcessId());
 
                 // Inserting properties for newly created process from template
-                //     List<PropertiesTemplate> propertiesTemplateList = s.selectList("call_procedures.ListPropertiesOfProcessTemplate", processTempInfo);
                 List<PropertiesTemplate> propertiesTemplateList = propertiesTemplateDAO.listPropertiesTemplateBean(processTempInfo.getProcessTemplateId());
                 for (PropertiesTemplate propertiesTemplate : propertiesTemplateList) {
-                    if (propertiesTemplateList.size() != 0) {
+                    if (!propertiesTemplateList.isEmpty()) {
                         propertiesTemplate.setProcessId(processes.get(index).getProcessId());
-                        //s.selectOne("call_procedures.InsertProperties", propertiesTemplate);
                     }
                 }
                 index++;
@@ -395,9 +390,10 @@ public class ProcessTemplateAPI extends MetadataAPIBase {
 
             restWrapper = new RestWrapper(processTemplate, RestWrapper.OK);
         } catch (Exception e) {
+            LOGGER.error(e);
             restWrapper = new RestWrapper(e.getMessage(), RestWrapper.ERROR);
         } finally {
-            AdjustNextIdsForInsert(processTemplate, processes);
+            adjustNextIdsForInsert(processTemplate, processes);
         }
         return restWrapper;
     }
@@ -410,9 +406,9 @@ public class ProcessTemplateAPI extends MetadataAPIBase {
      * @return
      */
     @RequestMapping(value = {"/apply", "/apply/"}, method = RequestMethod.POST)
-    public
+    
     @ResponseBody
-    RestWrapper apply(@ModelAttribute("processtemplate")
+    public RestWrapper apply(@ModelAttribute("processtemplate")
                       @Valid ProcessTemplate processTemplate, BindingResult bindingResult) {
 
         RestWrapper restWrapper = null;
@@ -435,12 +431,9 @@ public class ProcessTemplateAPI extends MetadataAPIBase {
 
             // Updating existing processes with changes made in template
             List<ProcessTemplate> processTemplateInfos = new ArrayList<ProcessTemplate>();
-            //  processTemplateInfos = s.selectList("call_procedures.select-process-template-list", processTemplate);
             processTemplateInfos = processTemplateDAO.selectPTList(processTemplate.getProcessTemplateId());
             for (ProcessTemplate processTempInfo : processTemplateInfos) {
                 List<Process> processInfos = new ArrayList<Process>();
-                Process p = new Process();
-                //  processInfos = s.selectList("call_procedures.select-process-list-for-template-id", processTempInfo);
                 processInfos = processTemplateDAO.selectPListForTemplate(processTemplate.getProcessTemplateId());
                 for (Process processInfo : processInfos) {
                     LOGGER.debug("Entered update");
@@ -454,31 +447,26 @@ public class ProcessTemplateAPI extends MetadataAPIBase {
                     LOGGER.debug("processtempinfo.canrecover= " + processTempInfo.getCanRecover());
                     LOGGER.debug("processInfo next process id is " + processInfo.getNextProcessIds());
                     processTempInfo.setNextProcessIds(processInfo.getNextProcessIds());
-                    //s.selectOne("call_procedures.UpdateProcess", processTempInfo);
                 }
             }
             // Updating existing properties with changes made in properties template
             for (ProcessTemplate processTempInfo : processTemplateInfos) {
-                // List<Process> processInfos = s.selectList("call_procedures.select-process-list-for-template-id", processTempInfo);
+                LOGGER.debug(processTempInfo.getProcessTemplateId());
                 List<Process> processInfos = processTemplateDAO.selectPListForTemplate(processTemplate.getProcessTemplateId());
                 for (Process processInfo : processInfos) {
-                    //   List<PropertiesTemplate> propTemplateList = s.selectList("call_procedures.ListPropertiesOfProcessTemplate", processTempInfo);
                     List<PropertiesTemplate> propTemplateList = propertiesTemplateDAO.listPropertiesTemplateBean(processTemplate.getProcessTemplateId());
-                    if (propTemplateList.size() != 0) {
+                    if (!propTemplateList.isEmpty()) {
                         for (PropertiesTemplate propertyTemplate : propTemplateList) {
                             propertyTemplate.setProcessId(processInfo.getProcessId());
-                            //s.selectOne("call_procedures.UpdateProperties", propertyTemplate);
                         }
                     }
                 }
             }
             // Inserting in process if any extra sub processes are added to the templaate
-            //   List<Process> processesForInsert = s.selectList("call_procedures.select-parent-process-list-for-template-id", processTemplate);
             List<Process> processesForInsert = processTemplateDAO.selectPPListForTemplateId(processTemplate.getProcessTemplateId());
             for (Process process : processesForInsert) {
                 processTemplate.setProcessId(process.getProcessId());
                 LOGGER.debug("ProcessId= " + process.getProcessId());
-                //    List<ProcessTemplate> processTemplates = s.selectList("call_procedures.select-missing-sub-template-list-for-process-id", processTemplate);
                 List<ProcessTemplate> processTemplates = processTemplateDAO.selectMissingSubTList(processTemplate.getProcessId(), processTemplate.getProcessTemplateId());
                 for (ProcessTemplate processTemplate1 : processTemplates) {
                     processTemplate1.setParentProcessId(process.getProcessId());
@@ -525,35 +513,29 @@ public class ProcessTemplateAPI extends MetadataAPIBase {
 
                     insertDaoProcess.setNextProcessId(processTemplate1.getNextProcessIds());
                     Integer processId = processDAO.insert(insertDaoProcess);
-                    // s.selectOne("call_procedures.InsertProcess", processTemplate1);
                     processTemplate1.setProcessId(processId);
                     processTemplate1.setTableAddTS(DateConverter.dateToString(processTemplate1.getAddTS()));
                 }
             }
             // Deleting from process if any existing sub processes are deleted from template
-            //   List<Process> processesForDelete = s.selectList("call_procedures.select-parent-process-list-for-template-id", processTemplate);
             List<Process> processesForDelete = processTemplateDAO.selectPPListForTemplateId(processTemplate.getProcessTemplateId());
 
             for (Process process : processesForDelete) {
                 processTemplate.setProcessId(process.getProcessId());
                 LOGGER.debug("ProcessId= " + process.getProcessId());
-                // List<ProcessTemplate> processTemplates = s.selectList("call_procedures.select-missing-sub-process-list-for-template-id", processTemplate);
                 List<ProcessTemplate> processTemplates = processTemplateDAO.selectMissingSubPList(processTemplate.getProcessId(), processTemplate.getProcessTemplateId());
 
                 for (ProcessTemplate processTemplate1 : processTemplates) {
-                    //         s.delete("call_procedures.DeleteProcess", processTemplate1);
                     processDAO.delete(processTemplate1.getProcessId());
                 }
             }
 
             // Adding to existing properties if any extra properties are defined in the properties template
-            //       List<ProcessTemplate> processTemplatesForInsert = s.selectList("call_procedures.select-process-template-list", processTemplate);
             List<ProcessTemplate> processTemplatesForInsert = processTemplateDAO.selectPTList(processTemplate.getProcessTemplateId());
 
             for (ProcessTemplate processTemplateForInsert : processTemplatesForInsert) {
                 LOGGER.debug("HERE processTemplateForInsertid= " + processTemplateForInsert.getProcessTemplateId());
 
-                //         List<Process> processesForPropInsert = s.selectList("call_procedures.select-process-list-for-template-id", processTemplateForInsert);
                 List<Process> processesForPropInsert = processTemplateDAO.selectPListForTemplate(processTemplateForInsert.getProcessTemplateId());
                 for (Process processForPropInsert : processesForPropInsert) {
                     LOGGER.debug("HERE processForPropInsertid= " + processForPropInsert.getProcessId());
@@ -564,11 +546,9 @@ public class ProcessTemplateAPI extends MetadataAPIBase {
                     LOGGER.debug("procTemplate.setProcessId= " + procTemplate.getProcessId());
                     procTemplate.setProcessTemplateId(processTemplateForInsert.getProcessTemplateId());
                     LOGGER.debug("procTemplate.setProcessTemplateId= " + procTemplate.getProcessTemplateId());
-                    //            List<PropertiesTemplate> propertiesTemplates = s.selectList("call_procedures.select-missing-property-list-for-template-id", procTemplate);
                     List<PropertiesTemplate> propertiesTemplates = processTemplateDAO.selectMissingPropListForT(procTemplate.getProcessId(), procTemplate.getParentProcessId(), procTemplate.getProcessTemplateId());
                     for (PropertiesTemplate propertyTemplates : propertiesTemplates) {
                         LOGGER.debug("HERE property to be inserted = " + propertyTemplates.getProcessId() + "property config= " + propertyTemplates.getConfigGroup());
-                        //                s.selectOne("call_procedures.InsertProperties", propertyTemplates);
                         com.wipro.ats.bdre.md.dao.jpa.Properties jpaPropertyTemplate = new com.wipro.ats.bdre.md.dao.jpa.Properties();
                         PropertiesId propertiesId = new PropertiesId();
                         propertiesId.setProcessId(propertyTemplates.getProcessId());
@@ -589,19 +569,15 @@ public class ProcessTemplateAPI extends MetadataAPIBase {
 
             // Deleting from existing properties if any properties are deleted in the properties template
 
-            LOGGER.debug("checking proctemplate before using it= " + processTemplate.getProcessTemplateId());
-            //         List<ProcessTemplate> processTemplatesForDelete = s.selectList("call_procedures.select-process-template-list", processTemplate);
+            LOGGER.debug("checking process template before using it= " + processTemplate.getProcessTemplateId());
             List<ProcessTemplate> processTemplatesForDelete = processTemplateDAO.selectPTList(processTemplate.getProcessTemplateId());
             for (ProcessTemplate processTemplateForDelete : processTemplatesForDelete) {
-                //            List<Process> processesForPropDelete = s.selectList("call_procedures.select-process-list-for-template-id", processTemplateForDelete);
                 List<Process> processesForPropDelete = processTemplateDAO.selectPListForTemplate(processTemplateForDelete.getProcessTemplateId());
                 for (Process processForPropDelete : processesForPropDelete) {
-                    //                 List<Properties> propertiesForDelete = s.selectList("call_procedures.select-missing-property-list-for-process-id", processForPropDelete);
                     List<Properties> propertiesForDelete = processTemplateDAO.selectMissingPropListForP(processForPropDelete.getProcessId(), processForPropDelete.getProcessTemplateId());
                     for (Properties propertyForDelete : propertiesForDelete) {
 
-                        LOGGER.debug("prperty to be deleted  = " + propertyForDelete.getProcessId() + " " + propertyForDelete.getKey());
-                        //                   s.delete("call_procedures.DeleteProperty", propertyForDelete);
+                        LOGGER.debug("property to be deleted  = " + propertyForDelete.getProcessId() + " " + propertyForDelete.getKey());
                         PropertiesId propertiesId = new PropertiesId();
                         propertiesId.setProcessId(propertyForDelete.getProcessId());
                         propertiesId.setPropKey(propertyForDelete.getKey());
@@ -612,46 +588,44 @@ public class ProcessTemplateAPI extends MetadataAPIBase {
 
             restWrapper = new RestWrapper(processTemplate, RestWrapper.OK);
         } catch (Exception e) {
+            LOGGER.error(e);
             restWrapper = new RestWrapper(e.getMessage(), RestWrapper.ERROR);
         } finally {
 
-            AdjustNextIdsForApply(processTemplate);
+            adjustNextIdsForApply(processTemplate);
         }
         return restWrapper;
     }
 
-    public void AdjustNextIdsForApply(ProcessTemplate processTemplate) {
+    public void adjustNextIdsForApply(ProcessTemplate processTemplate) {
         // Updating the next process ids to maintain the workflow structure defined in the template
 
         try {
 
-            //      List<ProcessTemplate> processTemplatesForNext = s.selectList("call_procedures.select-process-template-list", processTemplate);
             List<ProcessTemplate> processTemplatesForNext = processTemplateDAO.selectPTList(processTemplate.getProcessTemplateId());
             ProcessTemplate processTemplate2;
-            //        List<Process> processesForParentList = s.selectList("call_procedures.select-process-list-for-template-id", processTemplatesForNext.get(0));
             List<Process> processesForParentList = processTemplateDAO.selectPListForTemplate(processTemplatesForNext.get(0).getProcessTemplateId());
             List<Integer> parentProcessList = new ArrayList<Integer>();
             for (Process p : processesForParentList) {
                 parentProcessList.add(p.getProcessId());
                 LOGGER.debug("parentProcessList= " + p.getProcessId());
             }
-            int count_outer = 0;
+            int countOuter = 0;
             for (ProcessTemplate processTemplateForNext : processTemplatesForNext) {
                 LOGGER.debug("processTemplate id= " + processTemplateForNext.getProcessTemplateId());
-                String nextTemplateList[] = processTemplateForNext.getNextProcessTemplateId().split(",");
+                String[] nextTemplateList = processTemplateForNext.getNextProcessTemplateId().split(",");
                 LOGGER.debug("nextTemplateList= " + nextTemplateList[0]);
 
                 processTemplate2 = new ProcessTemplate();
                 LOGGER.debug("processTemplatesForNext.get(count)= " + processTemplateForNext.getProcessId());
-                int count_inner = 0;
-                //        List<Process> processesForNext = s.selectList("call_procedures.select-process-list-for-template-id", processTemplatesForNext.get(count_outer));
-                List<Process> processesForNext = processTemplateDAO.selectPListForTemplate(processTemplatesForNext.get(count_outer).getProcessTemplateId());
+                int countInner  = 0;
+                List<Process> processesForNext = processTemplateDAO.selectPListForTemplate(processTemplatesForNext.get(countOuter).getProcessTemplateId());
                 for (Process processForNext : processesForNext) {
 
                     LOGGER.debug("processesForNext= " + processForNext.getProcessId());
                     String nextProcessList = "";
-                    LOGGER.debug("count_inner= " + count_inner);
-                    processTemplate2.setParentProcessId(parentProcessList.get(count_inner));
+                    LOGGER.debug("countInner = " + countInner );
+                    processTemplate2.setParentProcessId(parentProcessList.get(countInner ));
                     for (int i = 0; i < nextTemplateList.length; i++) {
 
                         LOGGER.debug("nextTemplate item" + i + "  " + nextTemplateList[i]);
@@ -659,7 +633,6 @@ public class ProcessTemplateAPI extends MetadataAPIBase {
                         LOGGER.debug("processTemplate2.setProcessId= " + processTemplate2.getProcessId());
 
                         LOGGER.debug("processTemplate2.setParentProcessId= " + processTemplate2.getParentProcessId());
-                        //             Process processForNext1 = s.selectOne("call_procedures.select-next-for-process-id", processTemplate2);
                         Process processForNext1 = processTemplateDAO.selectNextForPid(processTemplate2.getProcessId(), processTemplate2.getParentProcessId());
                         LOGGER.debug("processForNext1  id=" + processForNext1.getProcessId());
                         nextProcessList = nextProcessList + processForNext1.getProcessId() + ",";
@@ -712,31 +685,30 @@ public class ProcessTemplateAPI extends MetadataAPIBase {
 
                     updateDaoProcess.setEditTs(DateConverter.stringToDate(processForNext.getTableEditTS()));
                     processDAO.update(updateDaoProcess);
-                    //        s.selectOne("call_procedures.UpdateProcess", processForNext);
-                    count_inner++;
+                    countInner ++;
                 }
-                count_outer++;
+                countOuter++;
             }
         } catch (Exception e) {
+            LOGGER.error(e);
             LOGGER.debug("Exception caught " + e.getStackTrace());
 
         }
 
     }
 
-    public void AdjustNextIdsForInsert(ProcessTemplate processTemplate, List<Process> processes) {
+    public void adjustNextIdsForInsert(ProcessTemplate processTemplate, List<Process> processes) {
         // Updating the next process ids to maintain the workflow structure defined in the template
 
 
         try {
 
-            //       List<ProcessTemplate> processTemplatesForNext = s.selectList("call_procedures.select-process-template-list", processTemplate);
             List<ProcessTemplate> processTemplatesForNext = processTemplateDAO.selectPTList(processTemplate.getProcessTemplateId());
             ProcessTemplate processTemplate2;
             int count = 0;
             for (ProcessTemplate processTemplateForNext : processTemplatesForNext) {
                 LOGGER.debug("processTemplate id= " + processTemplateForNext.getProcessTemplateId());
-                String nextTemplateList[] = processTemplateForNext.getNextProcessTemplateId().split(",");
+                String[] nextTemplateList = processTemplateForNext.getNextProcessTemplateId().split(",");
                 LOGGER.debug("nextTemplateList's first value= " + nextTemplateList[0]);
 
                 processTemplate2 = new ProcessTemplate();
@@ -752,7 +724,6 @@ public class ProcessTemplateAPI extends MetadataAPIBase {
                     LOGGER.debug("processTemplate2.setProcessId= " + processTemplate2.getProcessId());
 
                     LOGGER.debug("processTemplate2.setParentProcessId= " + processTemplate2.getParentProcessId());
-                    //              Process processForNext1 = s.selectOne("call_procedures.select-next-for-process-id", processTemplate2);
                     Process processForNext1 = processTemplateDAO.selectNextForPid(processTemplate2.getProcessId(), processTemplate2.getParentProcessId());
                     LOGGER.debug("processForNext1  id=" + processForNext1.getProcessId());
                     nextProcessList = nextProcessList + processForNext1.getProcessId() + ",";
@@ -804,11 +775,10 @@ public class ProcessTemplateAPI extends MetadataAPIBase {
                     updateDaoProcess.setDeleteFlag(processes.get(count).getDeleteFlag());
                 updateDaoProcess.setEditTs(DateConverter.stringToDate(processes.get(count).getTableEditTS()));
                 processDAO.update(updateDaoProcess);
-
-                //s.selectOne("call_procedures.UpdateProcess", processes.get(count));
                 count++;
             }
         } catch (Exception e) {
+            LOGGER.error(e);
             LOGGER.debug("Exception caught " + e.getStackTrace());
 
         }
