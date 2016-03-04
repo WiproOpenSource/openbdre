@@ -40,7 +40,7 @@ public class GetETLInfoDAO {
     @Autowired
     SessionFactory sessionFactory;
 
-    public List<GetETLDriverInfo> getETLInfo(long minBatchId, long maxBatchId) throws Exception {
+    public List<GetETLDriverInfo> getETLInfo(long minBatchId, long maxBatchId) {
         Session session = sessionFactory.openSession();
         List<GetETLDriverInfo> getETLDriverInfoList = new ArrayList<GetETLDriverInfo>();
         try {
@@ -55,13 +55,13 @@ public class GetETLInfoDAO {
                     batchList.add(batchSizeList);
                 }
             }
-            if (batchList.size() != 0) {
+            if (!batchList.isEmpty()) {
                 Criteria FileCriteria = session.createCriteria(File.class).add(Restrictions.in("batch", batchList));
                 fileList = FileCriteria.list();
             }
             for (File file : fileList) {
                 GetETLDriverInfo getETLDriverInfo = new GetETLDriverInfo();
-                getETLDriverInfo.setFileList(String.valueOf(file.getBatch().getBatchId()) + "," + String.valueOf(file.getServers().getServerId()) + "," + file.getId().getPath() + "," + String.valueOf(file.getId().getFileSize() + "," + file.getId().getFileHash() + "," + file.getId().getCreationTs()));
+                getETLDriverInfo.setFileList(file.getBatch().getBatchId() + "," + file.getServers().getServerId() + "," + file.getId().getPath() + "," +file.getId().getFileSize() + "," + file.getId().getFileHash() + "," + file.getId().getCreationTs());
                 getETLDriverInfoList.add(getETLDriverInfo);
 
             }
@@ -71,7 +71,7 @@ public class GetETLInfoDAO {
         } catch (MetadataException e) {
             session.getTransaction().rollback();
             LOGGER.info("Error Occured " + e);
-            return null;
+            return getETLDriverInfoList;
         } finally {
             session.close();
         }
