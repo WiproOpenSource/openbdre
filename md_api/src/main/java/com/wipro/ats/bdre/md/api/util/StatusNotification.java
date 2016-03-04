@@ -75,8 +75,10 @@ public class StatusNotification {
         }
     }
 
+    @Override
+    public String toString() {
+        return "StatusNotification{" +
+                "connection=" + connection +
+                '}';
+    }
 }
-
-
-
-

@@ -59,6 +59,18 @@ public class TermJob extends MetadataAPIBase {
         acbFactory.autowireBean(this);
     }
 
+    public void configuration(String termMessage){
+        //Calling StatusNotification class
+        //The TermJob completes even if sending message fails
+        try {
+            BasicConfigurator.configure();
+            StatusNotification statusNotification = new StatusNotification(termMessage, MDConfig.getProperty("status-notification.term-queue"));
+            LOGGER.info(statusNotification);
+        } catch (Exception e) {
+            LOGGER.error("Error occurred while notifying job status", e);
+        }
+    }
+
     @Override
     public TermJobInfo execute(String[] params) {
 
@@ -80,15 +92,8 @@ public class TermJob extends MetadataAPIBase {
             Date date = new Date();
             //message to send to messaging server
             String termMessage = " --processId=" + termJobInfo.getProcessId() + "  --stage=parent" + "  --status=fail" + "  --processName=" + process.getProcessName() + "  --endTs=" + (dateFormat.format(date)).toString();
-            //Calling StatusNotification class
-            //The TermJob completes even if sending message fails
-            try {
-                BasicConfigurator.configure();
-                StatusNotification statusNotification = new StatusNotification(termMessage, MDConfig.getProperty("status-notification.term-queue"));
-                LOGGER.info(statusNotification);
-            } catch (Exception e) {
-                LOGGER.error("Error occurred while notifying job status", e);
-            }
+            TermJob termJob = new TermJob();
+            termJob.configuration(termMessage);
             return termJobInfo;
         } catch (Exception e) {
             LOGGER.error("Error occurred", e);
