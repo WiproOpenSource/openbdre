@@ -24,9 +24,11 @@ before_install:
     - export M2_HOME=$PWD/apache-maven-3.3.9
 install: /bin/true
 script:
-    - mvn -s settings.xml clean install -P hdp22 -pl '!im-crawler' --quiet
+    - #mvn -s settings.xml clean install -P hdp22 -pl '!im-crawler' --quiet
     - sh install-scripts.sh local
-    - sudo service bdre start
+    - #sudo service bdre start
+    - sh bdre-scripts/local/bin/login-check.sh "http://nightly.openbdre.org" admin zaq1xsw2 "bdre content page"
+    - cat cookies.txt
 after_success:
     - echo "Looks like success !"
 after_failure:
