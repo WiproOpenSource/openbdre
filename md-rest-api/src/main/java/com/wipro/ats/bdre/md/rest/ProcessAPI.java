@@ -122,14 +122,12 @@ public class ProcessAPI extends MetadataAPIBase {
      * This method calls proc DeleteProcess and deletes a record corresponding to processId passed.
      *
      * @param processId
-     * @param model
      * @return nothing.
      */
     @RequestMapping(value = "/{id}", method = RequestMethod.DELETE)
     @ResponseBody public
     RestWrapper delete(
-            @PathVariable("id") Integer processId, Principal principal,
-            ModelMap model) {
+            @PathVariable("id") Integer processId, Principal principal) {
         RestWrapper restWrapper = null;
         try {
             processDAO.delete(processId);
@@ -343,8 +341,7 @@ public class ProcessAPI extends MetadataAPIBase {
 
     @RequestMapping(value = {"/export/{id}", "/export/{id}/"}, method = RequestMethod.GET)
     @ResponseBody public
-    RestWrapper export(HttpServletResponse resp,
-                       @PathVariable("id") Integer processId
+    RestWrapper export(@PathVariable("id") Integer processId
     ) {
         RestWrapper restWrapper = null;
         try {
@@ -813,7 +810,7 @@ public class ProcessAPI extends MetadataAPIBase {
     @RequestMapping(value = {"/execute", "/execute/"}, method = RequestMethod.POST)
     @ResponseBody public
     RestWrapper executeProcess(@ModelAttribute("process")
-                               @Valid Process process, BindingResult bindingResult, Principal principal) {
+                               @Valid Process process, Principal principal) {
         RestWrapper restWrapper = null;
         ExecutionInfo executionInfo = new ExecutionInfo();
         executionInfo.setProcessId(process.getProcessId());
@@ -832,7 +829,7 @@ public class ProcessAPI extends MetadataAPIBase {
                     fPid.setAccessible(true);
                 }
                 executionInfo.setOSProcessId(fPid.getInt(osProcess));
-                LOGGER.debug("Setting OS process Id"+executionInfo.getOSProcessId());
+                LOGGER.debug(" OS process Id : "+executionInfo.getOSProcessId() + "executed by " + principal.getName());
             } catch (Exception e) {
                 executionInfo.setOSProcessId(-1);
                 LOGGER.error(e + " Setting OS Process ID failed " + executionInfo.getOSProcessId());

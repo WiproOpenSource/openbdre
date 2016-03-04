@@ -30,7 +30,6 @@ import com.wipro.ats.bdre.md.rest.util.DateConverter;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.ModelMap;
 import org.springframework.validation.BindingResult;
 
 import org.springframework.web.bind.annotation.*;
@@ -63,8 +62,7 @@ public class ProcessTemplateAPI extends MetadataAPIBase {
     PropertiesDAO propertiesDAO;
 
     @RequestMapping(value = "/{id}", method = RequestMethod.GET)
-    public
-    @ResponseBody
+    @ResponseBody public
     RestWrapper get(
             @PathVariable("id") Integer processTemplateId, Principal principal
     ) {
@@ -104,15 +102,12 @@ public class ProcessTemplateAPI extends MetadataAPIBase {
      * This method calls proc DeleteProcess and deletes a record corresponding to processId passed.
      *
      * @param processTemplateId
-     * @param model
      * @return nothing.
      */
     @RequestMapping(value = "/{id}", method = RequestMethod.DELETE)
-    public
-    @ResponseBody
+    @ResponseBody public
     RestWrapper delete(
-            @PathVariable("id") Integer processTemplateId,
-            ModelMap model, Principal principal) {
+            @PathVariable("id") Integer processTemplateId, Principal principal) {
 
         RestWrapper restWrapper = null;
         try {
@@ -136,19 +131,19 @@ public class ProcessTemplateAPI extends MetadataAPIBase {
      */
     @RequestMapping(value = {"", "/"}, method = RequestMethod.GET)
 
-    public
-    @ResponseBody
+    @ResponseBody public
     RestWrapper list(@RequestParam(value = "page", defaultValue = "0") int startPage,
                      @RequestParam(value = "size", defaultValue = "10") int pageSize, @RequestParam(value = "pid", defaultValue = "0") Integer pid, Principal principal) {
 
 
         RestWrapper restWrapper = null;
+        Integer processId = pid;
         try {
             if (pid == 0) {
-                pid = null;
+                processId = null;
             }
             Integer counter=processTemplateDAO.totalRecordCount();
-            List<ProcessTemplate> processes = processTemplateDAO.list(startPage, pageSize, pid);
+            List<ProcessTemplate> processes = processTemplateDAO.list(startPage, pageSize, processId);
             for (ProcessTemplate p : processes) {
                 p.setCounter(counter);
                 p.setTableAddTS(DateConverter.dateToString(p.getAddTS()));
@@ -172,8 +167,7 @@ public class ProcessTemplateAPI extends MetadataAPIBase {
      * @return restWrapper It contains the updated instance of Process.
      */
     @RequestMapping(value = {"/", ""}, method = RequestMethod.POST)
-    public
-    @ResponseBody
+    @ResponseBody public
     RestWrapper update(@ModelAttribute("processtemplate")
                        @Valid ProcessTemplate processTemplate, BindingResult bindingResult, Principal principal) {
 
@@ -244,8 +238,7 @@ public class ProcessTemplateAPI extends MetadataAPIBase {
     BusDomainDAO busDomainDAO;
 
     @RequestMapping(value = {"/", ""}, method = RequestMethod.PUT)
-    public
-    @ResponseBody
+    @ResponseBody public
     RestWrapper insert(@ModelAttribute("processtemplate")
                        @Valid ProcessTemplate processTemplate, BindingResult bindingResult, Principal principal) {
 
@@ -315,8 +308,7 @@ public class ProcessTemplateAPI extends MetadataAPIBase {
      * @return
      */
     @RequestMapping(value = {"/create", "/create/"}, method = RequestMethod.PUT)
-    public
-    @ResponseBody
+    @ResponseBody public
     RestWrapper create(@ModelAttribute("processtemplate")
                        @Valid ProcessTemplate processTemplate, BindingResult bindingResult) {
 
@@ -362,7 +354,7 @@ public class ProcessTemplateAPI extends MetadataAPIBase {
             LOGGER.error(e);
             restWrapper = new RestWrapper(e.getMessage(), RestWrapper.ERROR);
         }finally {
-            AdjustNextIdsForInsert(processTemplate, processes);
+            adjustNextIdsForInsert(processTemplate, processes);
         }
         return restWrapper;
     }
@@ -375,8 +367,7 @@ public class ProcessTemplateAPI extends MetadataAPIBase {
      * @return
      */
     @RequestMapping(value = {"/apply", "/apply/"}, method = RequestMethod.POST)
-    public
-    @ResponseBody
+    @ResponseBody public
     RestWrapper apply(@ModelAttribute("processtemplate")
                       @Valid ProcessTemplate processTemplate, BindingResult bindingResult) {
 
@@ -571,19 +562,19 @@ public class ProcessTemplateAPI extends MetadataAPIBase {
             int count_outer = 0;
             for (ProcessTemplate processTemplateForNext : processTemplatesForNext) {
                 LOGGER.debug("processTemplate id= " + processTemplateForNext.getProcessTemplateId());
-                String nextTemplateList[] = processTemplateForNext.getNextProcessTemplateId().split(",");
+                String[] nextTemplateList = processTemplateForNext.getNextProcessTemplateId().split(",");
                 LOGGER.debug("nextTemplateList= " + nextTemplateList[0]);
 
                 processTemplate2 = new ProcessTemplate();
                 LOGGER.debug("processTemplatesForNext.get(count)= " + processTemplateForNext.getProcessId());
-                int count_inner = 0;
+                int countInner = 0;
                 List<Process> processesForNext = processTemplateDAO.selectPListForTemplate(processTemplatesForNext.get(count_outer).getProcessTemplateId());
                 for (Process processForNext : processesForNext) {
 
                     LOGGER.debug("processesForNext= " + processForNext.getProcessId());
                     String nextProcessList = "";
-                    LOGGER.debug("count_inner= " + count_inner);
-                    processTemplate2.setParentProcessId(parentProcessList.get(count_inner));
+                    LOGGER.debug("countInner= " + countInner);
+                    processTemplate2.setParentProcessId(parentProcessList.get(countInner));
                     for (int i = 0; i < nextTemplateList.length; i++) {
 
                         LOGGER.debug("nextTemplate item" + i + "  " + nextTemplateList[i]);
@@ -643,7 +634,7 @@ public class ProcessTemplateAPI extends MetadataAPIBase {
 
                     updateDaoProcess.setEditTs(DateConverter.stringToDate(processForNext.getTableEditTS()));
                     processDAO.update(updateDaoProcess);
-                    count_inner++;
+                    countInner++;
                 }
                 count_outer++;
             }
@@ -653,7 +644,7 @@ public class ProcessTemplateAPI extends MetadataAPIBase {
 
     }
 
-    public void AdjustNextIdsForInsert(ProcessTemplate processTemplate, List<Process> processes) {
+    public void adjustNextIdsForInsert(ProcessTemplate processTemplate, List<Process> processes) {
         // Updating the next process ids to maintain the workflow structure defined in the template
 
 
