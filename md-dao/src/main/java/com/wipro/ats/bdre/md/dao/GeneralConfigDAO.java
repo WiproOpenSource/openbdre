@@ -39,6 +39,7 @@ public class GeneralConfigDAO {
     private static final Logger LOGGER = Logger.getLogger(GeneralConfigDAO.class);
     @Autowired
     SessionFactory sessionFactory;
+    private static final String CONFIG_GROUP="id.configGroup";
 
     public List<GeneralConfig> list(Integer pageNum, Integer numResults) {
         Session session = sessionFactory.openSession();
@@ -125,12 +126,12 @@ public class GeneralConfigDAO {
             session.beginTransaction();
 
             if (required == 2) {
-                Criteria getGeneralConfigCriteria = session.createCriteria(GeneralConfig.class).add(Restrictions.eq("id.configGroup", configGroup)).add(Restrictions.eq("enabled", true));
+                Criteria getGeneralConfigCriteria = session.createCriteria(GeneralConfig.class).add(Restrictions.eq(CONFIG_GROUP, configGroup)).add(Restrictions.eq("enabled", true));
                 List<GeneralConfig> jpaGeneralConfigList = getGeneralConfigCriteria.list();
                 for (GeneralConfig jpaGeneralConfig : jpaGeneralConfigList) {
                     com.wipro.ats.bdre.md.beans.table.GeneralConfig generalConfig = new com.wipro.ats.bdre.md.beans.table.GeneralConfig();
                     generalConfig.setCounter(jpaGeneralConfigList.size());
-                    if (jpaGeneralConfig.getRequired() == true)
+                    if (jpaGeneralConfig.getRequired())
                         generalConfig.setRequired(1);
                     else
                         generalConfig.setRequired(0);
@@ -147,7 +148,7 @@ public class GeneralConfigDAO {
             } else {
                 // only difference in both criteria is that requiredRestriction is added in this one.
                 boolean req = (required == 1) ? true : false;
-                Criteria getGeneralConfigCriteria = session.createCriteria(GeneralConfig.class).add(Restrictions.eq("id.configGroup", configGroup)).add(Restrictions.eq("enabled", true)).add(Restrictions.eq("required", req));
+                Criteria getGeneralConfigCriteria = session.createCriteria(GeneralConfig.class).add(Restrictions.eq(CONFIG_GROUP, configGroup)).add(Restrictions.eq("enabled", true)).add(Restrictions.eq("required", req));
                 List<GeneralConfig> jpaGeneralConfigList = getGeneralConfigCriteria.list();
                 for (GeneralConfig jpaGeneralConfig : jpaGeneralConfigList) {
                     com.wipro.ats.bdre.md.beans.table.GeneralConfig generalConfig = new com.wipro.ats.bdre.md.beans.table.GeneralConfig();
@@ -185,7 +186,7 @@ public class GeneralConfigDAO {
         try {
             session.beginTransaction();
 
-            Criteria getGenConfigPropertyCriteria = session.createCriteria(GeneralConfig.class).add(Restrictions.eq("id.configGroup", configGroup)).add(Restrictions.eq("id.gcKey", key));
+            Criteria getGenConfigPropertyCriteria = session.createCriteria(GeneralConfig.class).add(Restrictions.eq(CONFIG_GROUP, configGroup)).add(Restrictions.eq("id.gcKey", key));
             List<GeneralConfig> jpaGeneralConfigList = getGenConfigPropertyCriteria.list();
             if (jpaGeneralConfigList == null)
                 return null;

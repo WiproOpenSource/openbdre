@@ -29,7 +29,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
 /**
@@ -48,9 +47,7 @@ public class LineageByInstanceExecDAO {
 
         try {
             session.beginTransaction();
-            //Batch batch=(Batch)session.get(Batch.class,getLineageByInstanceExecInfo.getInstanceExecId());
             Long targetBatchId;
-            List<Batch> batches = new ArrayList<Batch>();
             if (session.get(InstanceExec.class, getLineageByInstanceExecInfo.getInstanceExecId()) != null) {
                 Criteria fetchBatchId= session.createCriteria(Batch.class).add(Restrictions.eq("instanceExec.instanceExecId",getLineageByInstanceExecInfo.getInstanceExecId())).setProjection(Projections.property("batchId"));
                 targetBatchId=(Long)fetchBatchId.uniqueResult();

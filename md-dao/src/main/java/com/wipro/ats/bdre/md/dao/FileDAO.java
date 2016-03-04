@@ -42,7 +42,7 @@ public class FileDAO {
     private static final Logger LOGGER = Logger.getLogger(FileDAO.class);
     @Autowired
     SessionFactory sessionFactory;
-
+    FileId fileId = new FileId();
     public List<File> list(Integer pageNum, Integer numResults) {
         Session session = sessionFactory.openSession();
         session.beginTransaction();
@@ -75,14 +75,13 @@ public class FileDAO {
 
     public FileId insert(File file) {
         Session session = sessionFactory.openSession();
-        FileId fileId = new FileId();
         try {
             session.beginTransaction();
             fileId = (FileId) session.save(file);
             session.getTransaction().commit();
         } catch (MetadataException e) {
             session.getTransaction().rollback();
-            LOGGER.info("Error Occured " + e);
+            LOGGER.info(" Error Occured " + e);
             return null;
         } finally {
             session.close();
@@ -116,7 +115,7 @@ public class FileDAO {
             session.getTransaction().commit();
         } catch (MetadataException e) {
             session.getTransaction().rollback();
-            LOGGER.info("Error Occured " + e);
+            LOGGER.info("Error  Occured " + e);
             return null;
         } finally {
             session.close();
@@ -137,7 +136,7 @@ public class FileDAO {
             session.getTransaction().commit();
         } catch (MetadataException e) {
             session.getTransaction().rollback();
-            LOGGER.info("Error Occured " + e);
+            LOGGER.info("error occured " + e);
 
         } finally {
             session.close();
@@ -145,21 +144,16 @@ public class FileDAO {
     }
 
 
-    public List<com.wipro.ats.bdre.md.beans.FileInfo> getFiles(long minBatchId, long maxBatchId) throws Exception {
+    public List<com.wipro.ats.bdre.md.beans.FileInfo> getFiles(long minBatchId, long maxBatchId) {
         Session session = sessionFactory.openSession();
+        List<FileInfo> fileInfos = new ArrayList<FileInfo>();
         try {
             session.beginTransaction();
-
-            //f.batch_id between min_b_id and max_b_id  order by f.batch_id;
-
             Criteria joinFileServers = session.createCriteria(File.class, "f").createAlias("f.servers", "s").add(Restrictions.between("f.batch.batchId", minBatchId, maxBatchId));
             joinFileServers.addOrder(Order.asc("f.batch.batchId"));
 
             List<File> joinedFileServerList = joinFileServers.list();
             LOGGER.info(joinedFileServerList.toString());
-
-
-            List<FileInfo> fileInfos = new ArrayList<FileInfo>();
             for (File file : joinedFileServerList) {
                 FileInfo fileInfo = new FileInfo();
                 fileInfo.setBatchId(file.getBatch().getBatchId());
@@ -182,7 +176,7 @@ public class FileDAO {
         } catch (MetadataException e) {
             session.getTransaction().rollback();
             LOGGER.info("Error Occured " + e);
-            return null;
+            return fileInfos;
         } finally {
             session.close();
         }
@@ -213,15 +207,13 @@ public class FileDAO {
             session.getTransaction().commit();
         } catch (MetadataException e) {
             session.getTransaction().rollback();
-            LOGGER.info("Error Occured " + e);
+            LOGGER.info("Error Occured" + e);
             return null;
         } finally {
             session.close();
         }
         return tableFile;
     }
-
-    FileId fileId = new FileId();
 
     public com.wipro.ats.bdre.md.beans.table.File insert(com.wipro.ats.bdre.md.beans.table.File tableFile) {
         Session session = sessionFactory.openSession();
@@ -251,7 +243,7 @@ public class FileDAO {
             session.getTransaction().commit();
         } catch (MetadataException e) {
             session.getTransaction().rollback();
-            LOGGER.info("Error Occured " + e);
+            LOGGER.info("Error occured " + e);
             return null;
         } finally {
             session.close();

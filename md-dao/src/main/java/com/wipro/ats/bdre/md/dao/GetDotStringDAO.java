@@ -41,7 +41,10 @@ public class GetDotStringDAO {
     private static final Logger LOGGER = Logger.getLogger(GetDotStringDAO.class);
     @Autowired
     SessionFactory sessionFactory;
-
+    private static final  String PROCESSID="processId";
+    private static final String LINEAGEQUARYID="lineageQuery.queryId";
+    private static final String DOTSTRING="dotString";
+    private static final String NODEID="nodeId";
     public List<String> getDotString(Integer processId) {
         List<String> dotStringList = new ArrayList<String>();
         Session session = sessionFactory.openSession();
@@ -53,30 +56,30 @@ public class GetDotStringDAO {
             List<String> srcTargetNodeIdList = new ArrayList<String>();
 
             //List of sub processes of parent process passed
-            Criteria fetchListOfSubProcess = session.createCriteria(com.wipro.ats.bdre.md.dao.jpa.Process.class).add(Restrictions.eq("process.processId", processId)).setProjection(Projections.property("processId"));
+            Criteria fetchListOfSubProcess = session.createCriteria(com.wipro.ats.bdre.md.dao.jpa.Process.class).add(Restrictions.eq("process.processId", processId)).setProjection(Projections.property(PROCESSID));
             LOGGER.info("Number of sub processes:" + fetchListOfSubProcess.list().size());
             List<Integer> subProcessList = fetchListOfSubProcess.list();
 
             // select max(instance_exec_id) from lineage_query group by process_id having process_id in
-            if (fetchListOfSubProcess.list().size() != 0) {
-                Criteria fetchMaxIeId = session.createCriteria(LineageQuery.class).setProjection(Projections.groupProperty("processId")).add(Restrictions.in("processId", subProcessList)).setProjection(Projections.max("instanceExecId"));
+            if (!fetchListOfSubProcess.list().isEmpty()) {
+                Criteria fetchMaxIeId = session.createCriteria(LineageQuery.class).setProjection(Projections.groupProperty(PROCESSID)).add(Restrictions.in(PROCESSID, subProcessList)).setProjection(Projections.max("instanceExecId"));
                 List<Long> maxIeIdList = fetchMaxIeId.list();
                 LOGGER.info("max instance exec Id list size:" + fetchMaxIeId.list().size());
                 //select query_id from lineage_query where instance_exec_id in
 
-                if (fetchMaxIeId.list().size() != 0) {
+                if (!fetchMaxIeId.list().isEmpty()) {
                     Criteria fetchQueryId = session.createCriteria(LineageQuery.class).add(Restrictions.in("instanceExecId", maxIeIdList)).setProjection(Projections.property("queryId"));
                     LOGGER.info("Number of query ids fetched:" + fetchQueryId.list().size());
                     List<String> queryIdList = fetchQueryId.list();
 
-                    if (fetchQueryId.list().size() != 0) {
+                    if (!fetchQueryId.list().isEmpty()) {
                         //select src_node_id from lineage_relation where query_id in
-                        Criteria fetchSrcNodeId = session.createCriteria(LineageRelation.class).add(Restrictions.in("lineageQuery.queryId", queryIdList)).setProjection(Projections.property("lineageNodeBySrcNodeId.nodeId"));
+                        Criteria fetchSrcNodeId = session.createCriteria(LineageRelation.class).add(Restrictions.in(LINEAGEQUARYID, queryIdList)).setProjection(Projections.property("lineageNodeBySrcNodeId.nodeId"));
                         LOGGER.info("Source node id list size:" + fetchSrcNodeId.list().size());
                         List<String> srcNodeIdList = fetchSrcNodeId.list();
 
                         //select target_node_id from lineage_relation where query_id in
-                        Criteria fetchTargetNodeId = session.createCriteria(LineageRelation.class).add(Restrictions.in("lineageQuery.queryId", queryIdList)).setProjection(Projections.property("lineageNodeByTargetNodeId.nodeId"));
+                        Criteria fetchTargetNodeId = session.createCriteria(LineageRelation.class).add(Restrictions.in(LINEAGEQUARYID, queryIdList)).setProjection(Projections.property("lineageNodeByTargetNodeId.nodeId"));
                         LOGGER.info("Target node id list size:" + fetchTargetNodeId.list().size());
                         List<String> targetNodeIdList = fetchTargetNodeId.list();
 
@@ -89,9 +92,9 @@ public class GetDotStringDAO {
                         }
 
 
-                        if (srcTargetNodeIdList.size() != 0) {
+                        if (!srcTargetNodeIdList.isEmpty()) {
                             //select dot_string as dotString from lineage_node where node_type_id in (3,4,5,6) and node_id in
-                            Criteria fetchSpecificNodeTypeIdDotString = session.createCriteria(LineageNode.class).add(Restrictions.in("lineageNodeType.nodeTypeId", new Integer[]{3, 4, 5, 6})).add(Restrictions.in("nodeId", srcTargetNodeIdList)).setProjection(Projections.property("dotString"));
+                            Criteria fetchSpecificNodeTypeIdDotString = session.createCriteria(LineageNode.class).add(Restrictions.in("lineageNodeType.nodeTypeId", new Integer[]{3, 4, 5, 6})).add(Restrictions.in(NODEID, srcTargetNodeIdList)).setProjection(Projections.property(DOTSTRING));
                             List<String> specificNodeTypeIdDotString = fetchSpecificNodeTypeIdDotString.list();
                             //adding the list to final returning dot string list
                             for (String dotString : specificNodeTypeIdDotString) {
@@ -99,12 +102,12 @@ public class GetDotStringDAO {
                             }
 
                             //(select container_node_id from lineage_node where node_type_id =2 and node_id in
-                            Criteria fetchContainerNodeId = session.createCriteria(LineageNode.class).add(Restrictions.eq("lineageNodeType.nodeTypeId", 2)).add(Restrictions.in("nodeId", srcTargetNodeIdList)).setProjection(Projections.property("lineageNode.nodeId"));
+                            Criteria fetchContainerNodeId = session.createCriteria(LineageNode.class).add(Restrictions.eq("lineageNodeType.nodeTypeId", 2)).add(Restrictions.in(NODEID, srcTargetNodeIdList)).setProjection(Projections.property("lineageNode.nodeId"));
                             List<String> containerNodeIdList = fetchContainerNodeId.list();
-                            if (fetchContainerNodeId.list().size() != 0) {
+                            if (!fetchContainerNodeId.list().isEmpty()) {
 
                                 //select dot_string as dotString from lineage_node where node_id in (select container_node_id from lineage_node where node_type_id =2 and node_id in
-                                Criteria fetchContainerNodeIdDotString = session.createCriteria(LineageNode.class).add(Restrictions.in("nodeId", containerNodeIdList)).setProjection(Projections.property("dotString"));
+                                Criteria fetchContainerNodeIdDotString = session.createCriteria(LineageNode.class).add(Restrictions.in(NODEID, containerNodeIdList)).setProjection(Projections.property(DOTSTRING));
                                 List<String> containerNodeDotStringList = fetchContainerNodeIdDotString.list();
 
                                 //adding the list to final returning dot string list
@@ -115,7 +118,7 @@ public class GetDotStringDAO {
                         }
 
                         //select dot_string as dotString from lineage_relation where query_id in
-                        Criteria fetchLineageRelationDotString = session.createCriteria(LineageRelation.class).add(Restrictions.in("lineageQuery.queryId", queryIdList)).setProjection(Projections.property("dotString"));
+                        Criteria fetchLineageRelationDotString = session.createCriteria(LineageRelation.class).add(Restrictions.in(LINEAGEQUARYID, queryIdList)).setProjection(Projections.property(DOTSTRING));
                         List<String> lineageRelationDotStringList = fetchLineageRelationDotString.list();
                         //adding the list to final returning dot string list
                         for (String dotString : lineageRelationDotStringList) {
