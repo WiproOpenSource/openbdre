@@ -52,8 +52,7 @@ public class ProcessTypeAPI extends MetadataAPIBase {
      * @return restWrapper It contains instance of ProcessType corresponding to processTypeId passed.
      */
     @RequestMapping(value = "/{id}", method = RequestMethod.GET)
-    public
-    @ResponseBody
+    @ResponseBody public
     RestWrapper get(
             @PathVariable("id") Integer processTypeId, Principal principal
     ) {
@@ -85,8 +84,7 @@ public class ProcessTypeAPI extends MetadataAPIBase {
      * @return nothing.
      */
     @RequestMapping(value = "/{id}", method = RequestMethod.DELETE)
-    public
-    @ResponseBody
+    @ResponseBody public
     RestWrapper delete(
             @PathVariable("id") Integer processTypeId, Principal principal,
             ModelMap model) {
@@ -110,9 +108,7 @@ public class ProcessTypeAPI extends MetadataAPIBase {
      * @return restWrapper It contains list of instances of ProcessTypes.
      */
     @RequestMapping(value = {"", "/"}, method = RequestMethod.GET)
-
-    public
-    @ResponseBody
+    @ResponseBody public
     RestWrapper list(@RequestParam(value = "page", defaultValue = "0") int startPage,
                      @RequestParam(value = "size", defaultValue = "10") int pageSize, Principal principal) {
         RestWrapper restWrapper = null;
@@ -148,8 +144,7 @@ public class ProcessTypeAPI extends MetadataAPIBase {
      * @return restWrapper It contains the updated instance of ProcessType.
      */
     @RequestMapping(value = {"/", ""}, method = RequestMethod.POST)
-    public
-    @ResponseBody
+    @ResponseBody public
     RestWrapper update(@ModelAttribute("processtype")
                        @Valid ProcessType processType, BindingResult bindingResult, Principal principal) {
         RestWrapper restWrapper = null;
@@ -182,8 +177,7 @@ public class ProcessTypeAPI extends MetadataAPIBase {
      * @return restWrapper It contains an instance of ProcessType just added.
      */
     @RequestMapping(value = {"/", ""}, method = RequestMethod.PUT)
-    public
-    @ResponseBody
+    @ResponseBody public
     RestWrapper insert(@ModelAttribute("processtype")
                        @Valid ProcessType processType, BindingResult bindingResult, Principal principal) {
         RestWrapper restWrapper = null;
@@ -215,9 +209,7 @@ public class ProcessTypeAPI extends MetadataAPIBase {
      * @return
      */
     @RequestMapping(value = {"/options/{ptid}"}, method = RequestMethod.POST)
-
-    public
-    @ResponseBody
+    @ResponseBody public
     RestWrapperOptions options(@PathVariable("ptid") Integer processTypeId,
                                ModelMap model) {
 
@@ -256,9 +248,7 @@ public class ProcessTypeAPI extends MetadataAPIBase {
      * @return
      */
     @RequestMapping(value = {"/optionslist"}, method = RequestMethod.POST)
-
-    public
-    @ResponseBody
+    @ResponseBody public
     RestWrapperOptions listOptions() {
 
         RestWrapperOptions restWrapperOptions = null;

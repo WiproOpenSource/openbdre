@@ -47,14 +47,13 @@ public class ProcessDependencyAPI extends MetadataAPIBase {
      * @return restWrapper It contains an instance of LineageInfo.
      */
     @RequestMapping(value = {"", "/"}, method = RequestMethod.GET)
-    public
-    @ResponseBody
+    @ResponseBody public
     RestWrapper get(
             @RequestParam(value = "pid", defaultValue = "0") String processId, Principal principal
     ) {
         RestWrapper restWrapper = null;
         try {
-            StringBuffer dot = new StringBuffer();
+            StringBuilder dot = new StringBuilder();
             String[] args = {"-p", processId};
             GetProcessDependency bs = new GetProcessDependency();
             List<ProcessDependencyInfo> processDependencyInfoList = bs.execute(args);
@@ -97,6 +96,8 @@ public class ProcessDependencyAPI extends MetadataAPIBase {
                         break;
                     case 7:
                         borderColor = "yellow";
+                        break;
+                    default:
                         break;
                 }
                 tooltip = "Description: " + processDependencyInfo.getDescription() + " Added on:" + processDependencyInfo.getAddTS();
@@ -152,6 +153,9 @@ public class ProcessDependencyAPI extends MetadataAPIBase {
      *
      */
     private class LineageInfo {
+
+        private String pid;
+        private String dot;
         public String getPid() {
             return pid;
         }
@@ -168,8 +172,7 @@ public class ProcessDependencyAPI extends MetadataAPIBase {
             this.dot = dot;
         }
 
-        private String pid;
-        private String dot;
+
 
     }
 
