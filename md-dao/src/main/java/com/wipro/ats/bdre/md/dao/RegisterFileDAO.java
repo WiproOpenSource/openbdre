@@ -73,7 +73,7 @@ public class RegisterFileDAO {
 
             Criteria fileCriteria = session.createCriteria(File.class).add(Restrictions.eq("servers", servers)).add(Restrictions.eq("id.fileHash", fileId.getFileHash())).add(Restrictions.eq("id.path", fileId.getPath()));
             LOGGER.info("matched file count" + fileCriteria.list().size());
-            if (fileCriteria.list().size() > 0) {
+            if (!fileCriteria.list().isEmpty()) {
                 LOGGER.error("File Already exists exception");
                 throw new MetadataException("File Already exists exception");
             } else {
