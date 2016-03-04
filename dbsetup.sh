@@ -237,9 +237,9 @@ case "$(uname -s)" in
 
    Linux)
      echo 'Linux'
-     sudo mkdir -p $var_dbname
-     sudo cp databases/h2/*.db $var_dbname
-     sudo chmod -R 777 $var_dbname
+
+     sudo cp databases/h2/*.db ~
+     sudo chmod -R 777 ~/*.db
      if [ $? -eq 0 ]; then
           echo "Enbedded DB created"
      fi
