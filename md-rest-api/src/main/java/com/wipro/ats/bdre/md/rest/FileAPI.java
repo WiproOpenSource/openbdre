@@ -75,14 +75,12 @@ public class FileAPI extends MetadataAPIBase {
      * This method calls proc DeleteFile and deletes a record corresponding to batchId passed.
      *
      * @param batchId
-     * @param model
      * @return nothing.
      */
     @RequestMapping(value = "/{id}", method = RequestMethod.DELETE)
     @ResponseBody public
     RestWrapper delete(
-            @PathVariable("id") Long batchId, Principal principal,
-            ModelMap model) {
+            @PathVariable("id") Long batchId, Principal principal) {
         RestWrapper restWrapper = null;
         try {
             File file = new File();

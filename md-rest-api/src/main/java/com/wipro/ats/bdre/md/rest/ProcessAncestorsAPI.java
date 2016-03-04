@@ -51,8 +51,7 @@ public class ProcessAncestorsAPI extends MetadataAPIBase {
 
 
     @RequestMapping(value = "/{id}", method = RequestMethod.GET)
-    public
-    @ResponseBody
+    @ResponseBody public
     RestWrapper get(
             @PathVariable("id") Integer processId, Principal principal
     ) {
