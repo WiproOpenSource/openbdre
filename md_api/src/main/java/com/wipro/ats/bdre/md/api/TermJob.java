@@ -79,7 +79,8 @@ public class TermJob extends MetadataAPIBase {
             //The TermJob completes even if sending message fails
             try {
                 BasicConfigurator.configure();
-                new StatusNotification(termMessage, MDConfig.getProperty("status-notification.term-queue"));
+                StatusNotification statusNotification =new StatusNotification(termMessage, MDConfig.getProperty("status-notification.term-queue"));
+                LOGGER.info(e);
             } catch (Exception e) {
                 LOGGER.error("Error occurred while notifying job status", e);
             }

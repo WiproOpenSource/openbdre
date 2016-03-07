@@ -82,7 +82,8 @@ public class HaltJob extends MetadataAPIBase {
             //The HaltJob completes even if sending message fails
             try {
                 BasicConfigurator.configure();
-                new StatusNotification(haltMessage, MDConfig.getProperty("status-notification.halt-queue"));
+                StatusNotification statusNotification = new StatusNotification(haltMessage, MDConfig.getProperty("status-notification.halt-queue"));
+                LOGGER.info(statusNotification);
             } catch (Exception e) {
                 LOGGER.error("Error occurred while notifying job status", e);
 
