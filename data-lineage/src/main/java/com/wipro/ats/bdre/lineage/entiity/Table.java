@@ -43,7 +43,7 @@ public class Table extends Node {
 
 	public Table(String tableName, String dataBase, String alias, EntityType entityType, boolean isDatabaseTable) throws ETLException {
 		// eliminate "." from table name
-		super((tableName.split("\\."))[tableName.split("\\.").length-1], "Table", "record", tableName);
+		super((tableName.split("\\."))[tableName.split("\\.").length-1], "Table", "records", tableName);
 //		++counter;
 
 		this.tableName = getLabel().toUpperCase();
@@ -119,8 +119,8 @@ public class Table extends Node {
 		LOGGER.info("Table " + getTableName() + " : getColumns().size = " + getColumns().size());
 
 		StringBuilder first = new StringBuilder("\n\"" + tableFullName + "\"  [\n" + "label =< <TABLE BORDER=\"0\" CELLBORDER=\"1\" CELLSPACING=\"0\"> ");
-		first= first.append("<TR><TD ");
 		String tableHeader = "Table " + tableFullName;
+		first= first.append("<TR><TD>"+ tableHeader +"</TD></TR>");
 		//StringBuilder middle = new StringBuilder("\"<" + tableFullName + ">" + tableHeader + " | ");
 		StringBuilder middle=new StringBuilder("");
 //		for (int i = 0; i < getColumns().size(); i++) {
@@ -132,15 +132,15 @@ public class Table extends Node {
 //				middle += "<f" + (i+1) + ">" + column.getColumnName();
 //		}
 		for (Column column : getColumns()) {
-			middle.append(  " HREF=\"javascript:getTableName('"+ tableName + "','" + column.getColumnName() +"')\"" + " PORT=\""+column.getColumnName()+ "\" >" + column.getColumnName()  + "</TD> </TR><TR><TD " );
+			middle.append("<TR><TD HREF=\"javascript:getTableName('"+ tableName + "','" + column.getColumnName() +"');\"" + " PORT=\""+column.getColumnName()+ "\" >" + column.getColumnName()  + "</TD></TR> " );
 		}
 		//middle = new StringBuilder(middle.substring(0, middle.length() - 3));
-		middle.append("> </TD></TR></TABLE>>,");
+		middle.append("</TABLE>>,");
 
 		String last = "";
 		if (!this.isDataBaseTable())
 			last += "\ncolor=\"gray\"";
-		last += "\nshape = \"" + getShape() + "s\"\n" + "];";
+		last += "\nshape = \"" + getShape() + "\"\n" + "];";
 
 		return first.append(middle).append(last).toString();
 	}

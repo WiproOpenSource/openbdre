@@ -470,6 +470,7 @@ if(col != null && colName != null) {
 
 	public String generateLineageDot(String relationDotString, String tableNode, String targetNode) {
 		// generate Dot from all tables, columns and functions
+		//DOT initial properties being appended in the jsp this variable "first" is not used
 		StringBuilder first = new StringBuilder("strict digraph g {\n" +
 				"graph [\n" +
 				"rankdir = \"LR\"\n" +
@@ -495,9 +496,7 @@ if(col != null && colName != null) {
 
 		if (relationDotString != null) {
 			last.append("\n" + relationDotString);
-			last.append("\n}");
-		} else {
-			last.append("\n}");
+			last.append("\n");
 		}
 
 		dotString = (middle).append(last).toString();
