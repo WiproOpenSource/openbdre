@@ -38,9 +38,9 @@
                                 "ranksep=0.4;" +
                                 "ratio=compact;" +
                                 "rankdir=LR;" +
-                                "graph [splines=true, nodesep=0.25];" +
+                                "graph [splines=true, nodesep=0.25, dpi=50];" +
                                 "id=lineagegraph;" +
-                                "node[nodesep=0.25,labeljust=left,margin=\".21,.055\",fontsize=8,fontname=\"verdana\"];" +
+                                "node[nodesep=0.25,labeljust=left,margin=\".21,.055\",fontsize=10,fontname=\"verdana\"];" +
                                 "\n"
                                 ;
                     var postfix = "}"
