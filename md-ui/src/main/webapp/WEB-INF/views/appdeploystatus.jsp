@@ -7,6 +7,7 @@
     <head>
 	<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
 	<title>Bigdata Ready Enterprise</title>
+
 	<script>
 	  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
 	  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
@@ -31,10 +32,8 @@
 	<script type="text/javascript">
 		    $(document).ready(function () {
 	    $('#Container').jtable({
-	    title: 'App Deployment Queue List',
+	    title: 'App Deploy Status List',
 		    paging: true,
-		    edit: false,
-		    create: false,
 		    pageSize: 10,
 		    sorting: true,
 		    actions: {
@@ -42,7 +41,7 @@
 		    console.log(postData);
 			    return $.Deferred(function ($dfd) {
 			    $.ajax({
-			    url: '/mdrest/adq?page=' + jtParams.jtStartIndex + '&size='+jtParams.jtPageSize,
+			    url: '/mdrest/appdeploystatus?page=' + jtParams.jtStartIndex + '&size='+jtParams.jtPageSize,
 				    type: 'GET',
 				    data: postData,
 				    dataType: 'json',
@@ -56,28 +55,45 @@
 			    });
 		    },
 	    <security:authorize access="hasAnyRole('ROLE_ADMIN','ROLE_USER')">
-	   			 updateAction: function(item) {
-        			    console.log(item);
-        				    return $.Deferred(function($dfd) {
-        				    $.ajax({
-        				    url: '/mdrest/adq',
-        					    type: 'POST',
-        					    data: postData,
-        					    dataType: 'json',
-        					    success: function(data) {
-        					    $dfd.resolve(data);
-        					    },
-        					    error: function() {
-        					    $dfd.reject();
-        					    }
-        				    });
-        				    });
-        			    },
+		    createAction:function (postData, jtParams) {
+		    console.log(postData);
+			    return $.Deferred(function ($dfd) {
+			    $.ajax({
+			    url: '/mdrest/appdeploystatus/',
+				    type: 'PUT',
+				    data: postData,
+				    dataType: 'json',
+				    success: function (data) {
+				    $dfd.resolve(data);
+				    },
+				    error: function () {
+				    $dfd.reject();
+				    }
+			    });
+			    });
+		    },
+			    updateAction: function (postData) {
+			    console.log(postData);
+				    return $.Deferred(function ($dfd) {
+				    $.ajax({
+				    url: '/mdrest/appdeploystatus',
+					    type: 'POST',
+					    data: postData,
+					    dataType: 'json',
+					    success: function (data) {
+					    $dfd.resolve(data);
+					    },
+					    error: function () {
+					    $dfd.reject();
+					    }
+				    });
+				    });
+			    },
 			    deleteAction: function (item) {
 			    console.log(item);
 				    return $.Deferred(function ($dfd) {
 				    $.ajax({
-				    url: '/mdrest/adq/' + item.deploymentId,
+				    url: '/mdrest/appdeploystatus/' + item.deployStatusId,
 					    type: 'DELETE',
 					    data: item,
 					    dataType: 'json',
@@ -89,65 +105,21 @@
 					    }
 				    });
 				    });
-			    }
-	    </security:authorize>
+			    }</security:authorize>
 		    },
-		    fields:
-	    {
-            deployId: {
-            title: 'Deploy ID',
-            key: true,
-                list: true,
-                edit:false
-            },
-            processId: {
-			title: 'Process ID',
-			edit:false,
-
-			},
+		    fields: {
 		    appDeployStatusId: {
-		    title: 'App Deploy Status',
-		    edit:false,
-		    type: 'combobox',
-		    options: '/mdrest/appdeploystatus/options'
-
+		    key : true,
+			    list: true,
+			    create:true,
+			    edit: false,
+			    title: 'Id'
 		    },
-            userName: {
-           title: 'User Name',
-           edit:false
-           },
-		   appDomain: {
-		   title: 'Application Domain',
-		   edit:false
-			 },
-             appName: {
-             title: 'Application Name',
-             edit:false
-             },
-		   mergeButton: {
+			    description: {
+			    title: 'Description'
 
-			 sorting: false,
-			 width: '2%',
-			 listClass: 'bdre-jtable-button',
-			 create: false,
-			 edit: false,
-			 display: function(data) {
-				 return '<span class="label label-primary" onclick="mergeApp(' + data.record.processId + ')">Merge</span> ';
-			 },
-		 },
-		 rejectButton: {
-
-         			 sorting: false,
-         			 width: '2%',
-         			 listClass: 'bdre-jtable-button',
-         			 create: false,
-         			 edit: false,
-         			 display: function(data) {
-         				 return '<span class="label label-primary" onclick="rejectApp(' + data.record.processId + ')">Reject</span> ';
-         			 },
-         		 }
-
-	    }
+			    }
+		    }
 	    });
 		    $('#Container').jtable('load');
 	    });
