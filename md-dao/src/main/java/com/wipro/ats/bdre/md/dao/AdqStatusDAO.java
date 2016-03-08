@@ -23,6 +23,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+
 /**
  * Created by SU324335 on 3/8/2016.
  */
@@ -32,6 +34,27 @@ public class AdqStatusDAO {
     private static final Logger LOGGER = Logger.getLogger(AdqStatusDAO.class);
     @Autowired
     SessionFactory sessionFactory;
+
+    public List<AdqStatus> list(Integer pageNum, Integer numResults) {
+        Session session = sessionFactory.openSession();
+        session.beginTransaction();
+        Criteria criteria = session.createCriteria(AdqStatus.class);
+        criteria.setFirstResult(pageNum);
+        criteria.setMaxResults(numResults);
+        List<AdqStatus> adqStatuses = criteria.list();
+        session.getTransaction().commit();
+        session.close();
+        return adqStatuses;
+    }
+
+    public Long totalRecordCount() {
+        Session session = sessionFactory.openSession();
+        session.beginTransaction();
+        long size = session.createCriteria(AdqStatus.class).list().size();
+        session.getTransaction().commit();
+        session.close();
+        return size;
+    }
 
     public AdqStatus get(Short id) {
         Session session = sessionFactory.openSession();
