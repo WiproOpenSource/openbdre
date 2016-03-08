@@ -23,30 +23,30 @@ import javax.persistence.Table;
  * Created by SU324335 on 3/8/2016.
  */
 @Entity
-@Table(name="ADQ_STATUS"
+@Table(name="APP_DEPLOYMENT_QUEUE_STATUS"
 
 )
 public class ADQStatus  implements java.io.Serializable {
 
-    private Short adqState;
+    private Integer adqState;
     private String description;
 
         public ADQStatus() {
     }
 
-    public ADQStatus(Short adqState, String description) {
+    public ADQStatus(Integer adqState, String description) {
         this.adqState = adqState;
         this.description = description;
     }
 
     @Id
 
-    @Column(name="ADQ_STATE", unique=true, nullable=false)
-    public Short getAdqState() {
+    @Column(name="APP_DEPLOY_STATUS_ID", unique=true, nullable=false)
+    public Integer getAdqState() {
         return this.adqState;
     }
 
-    public void setAdqState(Short adqState) {
+    public void setAdqState(Integer adqState) {
         this.adqState = adqState;
     }
 

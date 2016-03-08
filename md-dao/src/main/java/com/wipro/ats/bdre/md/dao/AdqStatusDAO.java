@@ -14,7 +14,7 @@
 package com.wipro.ats.bdre.md.dao;
 
 import com.wipro.ats.bdre.exception.MetadataException;
-import com.wipro.ats.bdre.md.dao.jpa.AdqStatus;
+import com.wipro.ats.bdre.md.dao.jpa.AppDeploymentQueueStatus;
 import org.apache.log4j.Logger;
 import org.hibernate.Criteria;
 import org.hibernate.Session;
@@ -35,13 +35,13 @@ public class AdqStatusDAO {
     @Autowired
     SessionFactory sessionFactory;
 
-    public List<AdqStatus> list(Integer pageNum, Integer numResults) {
+    public List<AppDeploymentQueueStatus> list(Integer pageNum, Integer numResults) {
         Session session = sessionFactory.openSession();
         session.beginTransaction();
-        Criteria criteria = session.createCriteria(AdqStatus.class);
+        Criteria criteria = session.createCriteria(AppDeploymentQueueStatus.class);
         criteria.setFirstResult(pageNum);
         criteria.setMaxResults(numResults);
-        List<AdqStatus> adqStatuses = criteria.list();
+        List<AppDeploymentQueueStatus> adqStatuses = criteria.list();
         session.getTransaction().commit();
         session.close();
         return adqStatuses;
@@ -50,22 +50,22 @@ public class AdqStatusDAO {
     public Long totalRecordCount() {
         Session session = sessionFactory.openSession();
         session.beginTransaction();
-        long size = session.createCriteria(AdqStatus.class).list().size();
+        long size = session.createCriteria(AppDeploymentQueueStatus.class).list().size();
         session.getTransaction().commit();
         session.close();
         return size;
     }
 
-    public AdqStatus get(Short id) {
+    public AppDeploymentQueueStatus get(Short id) {
         Session session = sessionFactory.openSession();
         session.beginTransaction();
-        AdqStatus adqStatus = (AdqStatus) session.get(AdqStatus.class, id);
+        AppDeploymentQueueStatus adqStatus = (AppDeploymentQueueStatus) session.get(AppDeploymentQueueStatus.class, id);
         session.getTransaction().commit();
         session.close();
         return adqStatus;
     }
 
-    public Short insert(AdqStatus adqStatus) {
+    public Short insert(AppDeploymentQueueStatus adqStatus) {
         Session session = sessionFactory.openSession();
         session.beginTransaction();
         Short id = null;
@@ -81,7 +81,7 @@ public class AdqStatusDAO {
         return id;
     }
 
-    public void update(AdqStatus adqStatus) {
+    public void update(AppDeploymentQueueStatus adqStatus) {
         Session session = sessionFactory.openSession();
         try {
             session.beginTransaction();
@@ -99,7 +99,7 @@ public class AdqStatusDAO {
         Session session = sessionFactory.openSession();
         try {
             session.beginTransaction();
-            AdqStatus adqStatus = (AdqStatus) session.get(AdqStatus.class, id);
+            AppDeploymentQueueStatus adqStatus = (AppDeploymentQueueStatus) session.get(AppDeploymentQueueStatus.class, id);
             session.delete(adqStatus);
             session.getTransaction().commit();
         } catch (MetadataException e) {

@@ -14,7 +14,7 @@
 package com.wipro.ats.bdre.md.dao;
 
 import com.wipro.ats.bdre.exception.MetadataException;
-import com.wipro.ats.bdre.md.dao.jpa.Adq;
+import com.wipro.ats.bdre.md.dao.jpa.AppDeploymentQueue;
 import org.apache.log4j.Logger;
 import org.hibernate.Criteria;
 import org.hibernate.Session;
@@ -35,13 +35,13 @@ public class AdqDAO {
     @Autowired
     SessionFactory sessionFactory;
 
-    public List<Adq> list(Integer pageNum, Integer numResults) {
+    public List<AppDeploymentQueue> list(Integer pageNum, Integer numResults) {
         Session session = sessionFactory.openSession();
         session.beginTransaction();
-        Criteria criteria = session.createCriteria(Adq.class);
+        Criteria criteria = session.createCriteria(AppDeploymentQueue.class);
         criteria.setFirstResult(pageNum);
         criteria.setMaxResults(numResults);
-        List<Adq> adqList = criteria.list();
+        List<AppDeploymentQueue> adqList = criteria.list();
         session.getTransaction().commit();
         session.close();
         return adqList;
@@ -50,21 +50,21 @@ public class AdqDAO {
     public Long totalRecordCount() {
         Session session = sessionFactory.openSession();
         session.beginTransaction();
-        long size = session.createCriteria(Adq.class).list().size();
+        long size = session.createCriteria(AppDeploymentQueue.class).list().size();
         session.getTransaction().commit();
         session.close();
         return size;
     }
-    public Adq get(Integer id) {
+    public AppDeploymentQueue get(Integer id) {
         Session session = sessionFactory.openSession();
         session.beginTransaction();
-        Adq adq = (Adq) session.get(Adq.class, id);
+        AppDeploymentQueue adq = (AppDeploymentQueue) session.get(AppDeploymentQueue.class, id);
         session.getTransaction().commit();
         session.close();
         return adq;
     }
 
-    public Integer insert(Adq adq) {
+    public Integer insert(AppDeploymentQueue adq) {
         Session session = sessionFactory.openSession();
         session.beginTransaction();
         Integer id = null;
@@ -80,7 +80,7 @@ public class AdqDAO {
         return id;
     }
 
-    public void update(Adq adq) {
+    public void update(AppDeploymentQueue adq) {
         Session session = sessionFactory.openSession();
         try {
             session.beginTransaction();
@@ -98,7 +98,7 @@ public class AdqDAO {
         Session session = sessionFactory.openSession();
         try {
             session.beginTransaction();
-            Adq adq = (Adq) session.get(Adq.class, id);
+            AppDeploymentQueue adq = (AppDeploymentQueue) session.get(AppDeploymentQueue.class, id);
             session.delete(adq);
             session.getTransaction().commit();
         } catch (MetadataException e) {

@@ -16,7 +16,9 @@ package com.wipro.ats.bdre.md.dao;
 /**
  * Created by SU324335 on 3/8/2016.
  */
-import com.wipro.ats.bdre.md.dao.jpa.Adq;
+import com.wipro.ats.bdre.md.dao.jpa.AppDeploymentQueue;
+import com.wipro.ats.bdre.md.dao.jpa.AppDeploymentQueueStatus;
+import com.wipro.ats.bdre.md.dao.jpa.Process;
 import org.apache.log4j.Logger;
 import org.junit.Before;
 import org.junit.Ignore;
@@ -25,7 +27,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.AutowireCapableBeanFactory;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
-import static org.junit.Assert.*;
+
+import static org.junit.Assert.assertEquals;
 public class AdqDAOTest {
 
     private static final Logger LOGGER = Logger.getLogger(AdqDAOTest.class);
@@ -40,19 +43,27 @@ public class AdqDAOTest {
     @Autowired
     AdqDAO adqDAO;
 
+    @Ignore
     @Test
     public void testInsertUpdateAndDelete() throws Exception {
-        Adq adq = new Adq();
-        adq.set
+        AppDeploymentQueue adq = new AppDeploymentQueue();
+        adq.setAppName("Test");
+        adq.setAppDomain("Banking");
+        AppDeploymentQueueStatus adqStatus=new AppDeploymentQueueStatus();
+        adqStatus.setDescription("Merged");
+        adqStatus.setAppDeployStatusId((short) 0);
+        adq.setAppDeploymentQueueStatus(adqStatus);
+        Process process=new Process();
+        process.setProcessId(141);
+        adq.setProcess(process);
         Integer adqId = adqDAO.insert(adq);
         LOGGER.info("Adq is added with Id:" + adqId);
 
         adqDAO.update(adq);
         adq = adqDAO.get(adqId);
-        assertEquals("Test Updated",adqStatus.getDescription());
+        assertEquals("Test Updated",adq.getAppName());
         LOGGER.info("Updated Description is:" + adqStatus.getDescription());
-        adqStatusDAO.delete(adqStateId);
-        LOGGER.info("Deleted AdqStatus Entry with ID" + adqStateId);
+        LOGGER.info("Deleted AdqStatus Entry with ID" + adq.getAppDeploymentQueueStatus().getAppDeployStatusId());
     }
 
 }
