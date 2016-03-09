@@ -22,22 +22,22 @@ package com.wipro.ats.bdre.wgen;
  * This class contains all the setter and getter methods for Workflow variables .
  */
 public class Workflow {
-    private StringBuffer xml;
-    private StringBuffer dot;
+    private StringBuilder xml;
+    private StringBuilder dot;
 
-    public StringBuffer getXml() {
+    public StringBuilder getXml() {
         return xml;
     }
 
-    public void setXml(StringBuffer xml) {
+    public void setXml(StringBuilder xml) {
         this.xml = xml;
     }
 
-    public StringBuffer getDot() {
+    public StringBuilder getDot() {
         return dot;
     }
 
-    public void setDot(StringBuffer dot) {
+    public void setDot(StringBuilder dot) {
         this.dot = dot;
     }
 }

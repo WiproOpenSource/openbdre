@@ -70,7 +70,7 @@ public class LineageQueryDAOTest {
     @Test
     public void testInsertUpdateAndDelete() throws Exception {
         LineageQuery lineageQuery = new LineageQuery();
-        lineageQuery.setQueryId("Test2");
+        lineageQuery.setQueryId("Test4");
 
         LineageQueryType lineageQueryType = new LineageQueryType();
         lineageQueryType.setQueryTypeId(1);

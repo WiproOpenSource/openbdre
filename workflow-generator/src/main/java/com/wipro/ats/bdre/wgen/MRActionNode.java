@@ -94,7 +94,7 @@ public class MRActionNode extends GenericActionNode {
         java.util.Properties className = getProperties.getProperties(getId().toString(), configGroup);
         Enumeration e = className.propertyNames();
         StringBuilder addClassName = new StringBuilder();
-        if (className.size() != 0) {
+        if (!className.isEmpty()) {
             while (e.hasMoreElements()) {
                 String key = (String) e.nextElement();
                 addClassName.append("            <main-class>" + className.getProperty(key) + "</main-class>\n");
@@ -118,7 +118,7 @@ public class MRActionNode extends GenericActionNode {
         java.util.Properties listForArgs = getProperties.getProperties(getId().toString(), configGroup);
         Enumeration e = listForArgs.propertyNames();
         StringBuilder addArgs = new StringBuilder();
-        if (listForArgs.size() != 0) {
+        if (!listForArgs.isEmpty()) {
             while (e.hasMoreElements()) {
                 String key = (String) e.nextElement();
                 addArgs.append("            <arg>--" + key + "</arg>\n<arg>" + listForArgs.getProperty(key) + "</arg>\n");

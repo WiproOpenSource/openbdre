@@ -14,16 +14,18 @@
 
 package com.wipro.ats.bdre.md.rest;
 
+import com.wipro.ats.bdre.exception.MetadataException;
 import com.wipro.ats.bdre.md.api.base.MetadataAPIBase;
 import com.wipro.ats.bdre.md.beans.table.File;
 import com.wipro.ats.bdre.md.dao.FileDAO;
+import com.wipro.ats.bdre.md.rest.util.BindingResultError;
 import com.wipro.ats.bdre.md.rest.util.DateConverter;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.validation.BindingResult;
-import org.springframework.validation.FieldError;
+
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -50,8 +52,7 @@ public class FileAPI extends MetadataAPIBase {
     FileDAO fileDAO;
 
     @RequestMapping(value = "/{id}", method = RequestMethod.GET)
-    public
-    @ResponseBody
+    @ResponseBody public
     RestWrapper get(
             @PathVariable("id") Long batchId, Principal principal
     ) {
@@ -60,11 +61,11 @@ public class FileAPI extends MetadataAPIBase {
             File file = new File();
             file.setBatchId(batchId);
             file.setCreationTS(DateConverter.stringToDate(file.getTableCreationTS()));
-            //file = s.selectOne("call_procedures.GetFile", file);
             file = fileDAO.getFile(file);
             restWrapper = new RestWrapper(file, RestWrapper.OK);
             LOGGER.info("Record with ID:" + batchId + " selected from File by User:" + principal.getName());
-        } catch (Exception e) {
+        } catch (MetadataException e) {
+            LOGGER.error(e);
             restWrapper = new RestWrapper(e.getMessage(), RestWrapper.ERROR);
         }
         return restWrapper;
@@ -74,24 +75,21 @@ public class FileAPI extends MetadataAPIBase {
      * This method calls proc DeleteFile and deletes a record corresponding to batchId passed.
      *
      * @param batchId
-     * @param model
      * @return nothing.
      */
     @RequestMapping(value = "/{id}", method = RequestMethod.DELETE)
-    public
-    @ResponseBody
+    @ResponseBody public
     RestWrapper delete(
-            @PathVariable("id") Long batchId, Principal principal,
-            ModelMap model) {
+            @PathVariable("id") Long batchId, Principal principal) {
         RestWrapper restWrapper = null;
         try {
             File file = new File();
             file.setBatchId(batchId);
-            // s.delete("call_procedures.DeleteFile", file);
             fileDAO.delete(batchId);
             restWrapper = new RestWrapper(null, RestWrapper.OK);
             LOGGER.info("Record with ID:" + batchId + " deleted from File by User:" + principal.getName());
-        } catch (Exception e) {
+        } catch (MetadataException e) {
+            LOGGER.error(e);
             restWrapper = new RestWrapper(e.getMessage(), RestWrapper.ERROR);
         }
         return restWrapper;
@@ -105,8 +103,7 @@ public class FileAPI extends MetadataAPIBase {
      */
     @RequestMapping(value = {"", "/"}, method = RequestMethod.GET)
 
-    public
-    @ResponseBody
+    @ResponseBody public
     RestWrapper list(@RequestParam(value = "page", defaultValue = "0") int startPage,
                      @RequestParam(value = "size", defaultValue = "10") int pageSize, Principal principal) {
         RestWrapper restWrapper = null;
@@ -116,7 +113,6 @@ public class FileAPI extends MetadataAPIBase {
             file.setPageSize(pageSize);
             file.setCreationTS(DateConverter.stringToDate(file.getTableCreationTS()));
             Integer counter=fileDAO.totalRecordCount().intValue();
-            // List<File> files = s.selectList("call_procedures.ListFiles", file);
             List<com.wipro.ats.bdre.md.dao.jpa.File> jpaFileList = fileDAO.list(startPage, pageSize);
             LOGGER.info("size of the jpaFiles is " + jpaFileList.size());
             List<File> files = new ArrayList<File>();
@@ -139,7 +135,8 @@ public class FileAPI extends MetadataAPIBase {
             }
             restWrapper = new RestWrapper(files, RestWrapper.OK);
             LOGGER.info("All records listed from File by User:" + principal.getName());
-        } catch (Exception e) {
+        } catch (MetadataException e) {
+            LOGGER.error(e);
             restWrapper = new RestWrapper(e.getMessage(), RestWrapper.ERROR);
         }
 
@@ -155,33 +152,21 @@ public class FileAPI extends MetadataAPIBase {
      * @return restWrapper It contains updated instance of File.
      */
     @RequestMapping(value = {"/", ""}, method = RequestMethod.POST)
-    public
-    @ResponseBody
+    @ResponseBody public
     RestWrapper update(@ModelAttribute("file")
                        @Valid File file, BindingResult bindingResult, Principal principal) {
         RestWrapper restWrapper = null;
         if (bindingResult.hasErrors()) {
-            StringBuilder errorMessages = new StringBuilder("<p>Please fix following errors and try again<p><ul>");
-            List<FieldError> errors = bindingResult.getFieldErrors();
-            for (FieldError error : errors) {
-                errorMessages.append("<li>");
-                errorMessages.append(error.getField());
-                errorMessages.append(". Bad value: '");
-                errorMessages.append(error.getRejectedValue());
-                errorMessages.append("'</li>");
-            }
-            errorMessages.append("</ul>");
-            restWrapper = new RestWrapper(errorMessages.toString(), RestWrapper.ERROR);
-            return restWrapper;
+            BindingResultError bindingResultError = new BindingResultError();
+            return bindingResultError.errorMessage(bindingResult);
         }
         try {
             file.setCreationTS(DateConverter.stringToDate(file.getTableCreationTS()));
-
-            //List<File> files = s.selectList("call_procedures.UpdateFile", file);
             fileDAO.update(file);
             restWrapper = new RestWrapper(file, RestWrapper.OK);
             LOGGER.info("Record with ID:" + file.getBatchId() + " updated in File by User:" + principal.getName() + file);
-        } catch (Exception e) {
+        } catch (MetadataException e) {
+            LOGGER.error(e);
             restWrapper = new RestWrapper(e.getMessage(), RestWrapper.ERROR);
         }
         return restWrapper;
@@ -195,33 +180,22 @@ public class FileAPI extends MetadataAPIBase {
      * @return restWrapper It contains an instance of File just added.
      */
     @RequestMapping(value = {"/", ""}, method = RequestMethod.PUT)
-    public
-    @ResponseBody
+    @ResponseBody public
     RestWrapper insert(@ModelAttribute("file")
                        @Valid File file, BindingResult bindingResult, Principal principal) {
         RestWrapper restWrapper = null;
         if (bindingResult.hasErrors()) {
-            StringBuilder errorMessages = new StringBuilder("<p>Please fix following errors and try again<p><ul>");
-            List<FieldError> errors = bindingResult.getFieldErrors();
-            for (FieldError error : errors) {
-                errorMessages.append("<li>");
-                errorMessages.append(error.getField());
-                errorMessages.append(". Bad value: '");
-                errorMessages.append(error.getRejectedValue());
-                errorMessages.append("'</li>");
-            }
-            errorMessages.append("</ul>");
-            restWrapper = new RestWrapper(errorMessages.toString(), RestWrapper.ERROR);
-            return restWrapper;
+            BindingResultError bindingResultError = new BindingResultError();
+            return bindingResultError.errorMessage(bindingResult);
         }
         try {
             file.setCreationTS(DateConverter.stringToDate(file.getTableCreationTS()));
-            // List<File> files = s.selectList("call_procedures.InsertFile", file);
             fileDAO.insert(file);
 
             restWrapper = new RestWrapper(file, RestWrapper.OK);
             LOGGER.info("Record with ID:" + file.getBatchId() + " inserted in File by User:" + principal.getName() + file);
-        } catch (Exception e) {
+        } catch (MetadataException e) {
+            LOGGER.error(e);
             restWrapper = new RestWrapper(e.getMessage(), RestWrapper.ERROR);
         }
         return restWrapper;

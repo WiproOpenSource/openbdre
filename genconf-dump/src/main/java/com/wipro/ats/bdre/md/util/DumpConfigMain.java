@@ -17,8 +17,6 @@ import com.wipro.ats.bdre.md.api.GetGeneralConfig;
 import com.wipro.ats.bdre.md.beans.table.GeneralConfig;
 import org.apache.commons.cli.CommandLine;
 import org.apache.log4j.Logger;
-
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.List;
@@ -33,8 +31,8 @@ public class DumpConfigMain extends BaseStructure{
             {"cg", "config-group", "Config group to dump"},
             {"f", "output-file", "Output file path"},
     };
-    private final Logger LOGGER = Logger.getLogger(DumpConfigMain.class);
 
+    private static final Logger LOGGER = Logger.getLogger(DumpConfigMain.class);
     public static void main(String[] args) throws IOException {
         new DumpConfigMain().execute(args);
     }

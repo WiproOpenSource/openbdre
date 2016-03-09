@@ -51,8 +51,7 @@ public class ProcessAncestorsAPI extends MetadataAPIBase {
 
 
     @RequestMapping(value = "/{id}", method = RequestMethod.GET)
-    public
-    @ResponseBody
+    @ResponseBody public
     RestWrapper get(
             @PathVariable("id") Integer processId, Principal principal
     ) {
@@ -68,7 +67,8 @@ public class ProcessAncestorsAPI extends MetadataAPIBase {
 
             restWrapper = new RestWrapper(ancestorsInfo, RestWrapper.OK);
             LOGGER.info("Record with ID:" + processId + " and ancestor details fetched by User:" + principal.getName());
-        } catch (Exception e) {
+        }catch (MetadataException e) {
+            LOGGER.error(e);
             restWrapper = new RestWrapper(e.getMessage(), RestWrapper.ERROR);
         }
 
@@ -87,14 +87,11 @@ public class ProcessAncestorsAPI extends MetadataAPIBase {
 
                 ProcessAncestorsInfo processAncestorsInfo = new ProcessAncestorsInfo();
                 processAncestorsInfo = processAncestorsDAO.fetchDetails(ancestors.get(i));
-                // processAncestorsInfo = s.selectOne("call_procedures.FetchDetails",processAncestorsInfo);
                 processAncestorsInfo.setTableEditTs(DateConverter.dateToString(processAncestorsInfo.getEditTs()));
                 processAncestorsInfo.setTableDeployInsertTs(DateConverter.dateToString(processAncestorsInfo.getDeployInsertTs()));
                 processAncestorsInfo.setTableDeploySuccessTs(DateConverter.dateToString(processAncestorsInfo.getDeploySuccessTs()));
 
                 LOGGER.info("ProcessAncestor bean :" + processAncestorsInfo);
-
-                // List<Process>upstreamProcesses = s.selectList("call_procedures.ListU", processAncestorsInfo);
                 List<Process> upstreamProcesses = processAncestorsDAO.listUpstreams(ancestors.get(i));
 
                 processAncestorsInfo.setUpstreamProcess(upstreamProcesses);
@@ -106,9 +103,9 @@ public class ProcessAncestorsAPI extends MetadataAPIBase {
                 i++;
             }
             return ancestorList;
-        } catch (Exception e) {
-            LOGGER.error("Error occurred", e);
-            throw new MetadataException(e);
+        } catch (MetadataException e) {
+            LOGGER.error(e);
+            throw new MetadataException();
         }
     }
 
