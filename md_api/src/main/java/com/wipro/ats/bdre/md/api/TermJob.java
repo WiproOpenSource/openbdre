@@ -26,7 +26,6 @@ import org.apache.commons.cli.CommandLine;
 import org.apache.log4j.BasicConfigurator;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.config.AutowireCapableBeanFactory;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -80,8 +79,9 @@ public class TermJob extends MetadataAPIBase {
             try {
                 BasicConfigurator.configure();
                 StatusNotification statusNotification =new StatusNotification(termMessage, MDConfig.getProperty("status-notification.term-queue"));
-                LOGGER.info(e);
+                LOGGER.info(statusNotification.toString());
             } catch (Exception e) {
+                LOGGER.info(e);
                 LOGGER.error("Error occurred while notifying job status", e);
             }
             return termJobInfo;
