@@ -16,15 +16,15 @@ package com.wipro.ats.bdre.md.beans.table;
 /**
  * Created by SU324335 on 3/8/2016.
  */
-public class Adq {
+public class AppDeploymentQueue {
 
     private Long adqId;
     private Integer processId;
 
-    public Adq(){
+    public AppDeploymentQueue(){
     }
 
-    public Adq(Long adqId, Integer processId, String username, String appDomain, String appName, Short adqState, Integer pageSize, Integer page, Integer counter) {
+    public AppDeploymentQueue(Long adqId, Integer processId, String username, String appDomain, String appName, Short adqState, Integer pageSize, Integer page, Integer counter) {
         this.adqId = adqId;
         this.processId = processId;
         this.username = username;

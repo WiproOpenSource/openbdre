@@ -29,9 +29,9 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
 import static org.junit.Assert.assertEquals;
-public class AdqDAOTest {
+public class AppDeploymentQueueDAOTest {
 
-    private static final Logger LOGGER = Logger.getLogger(AdqDAOTest.class);
+    private static final Logger LOGGER = Logger.getLogger(AppDeploymentQueueDAOTest.class);
 
     @Before
     public void init() {
@@ -41,7 +41,7 @@ public class AdqDAOTest {
     }
 
     @Autowired
-    AdqDAO adqDAO;
+    AppDeploymentQueueDAO appDeploymentQueueDAO;
 
     @Ignore
     @Test
@@ -56,11 +56,11 @@ public class AdqDAOTest {
         Process process=new Process();
         process.setProcessId(141);
         adq.setProcess(process);
-        Integer adqId = adqDAO.insert(adq);
+        Integer adqId = appDeploymentQueueDAO.insert(adq);
         LOGGER.info("Adq is added with Id:" + adqId);
 
-        adqDAO.update(adq);
-        adq = adqDAO.get(adqId);
+        appDeploymentQueueDAO.update(adq);
+        adq = appDeploymentQueueDAO.get(adqId);
         assertEquals("Test Updated",adq.getAppName());
         LOGGER.info("Updated Description is:" + adqStatus.getDescription());
         LOGGER.info("Deleted AdqStatus Entry with ID" + adq.getAppDeploymentQueueStatus().getAppDeployStatusId());

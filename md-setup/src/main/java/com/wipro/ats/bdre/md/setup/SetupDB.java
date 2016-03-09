@@ -752,7 +752,7 @@ public class SetupDB {
                 String[] cols = getColumns(line);
                 if (cols == null)
                     continue;
-                ADQStatus adqStatus = new ADQStatus();
+                AppDeploymentQueueStatus adqStatus = new AppDeploymentQueueStatus();
                 adqStatus.setAdqState(new Integer(cols[0]));
                 adqStatus.setDescription(cols[1]);
                 Object existing = session.get(adqStatus.getClass(), adqStatus.getAdqState());

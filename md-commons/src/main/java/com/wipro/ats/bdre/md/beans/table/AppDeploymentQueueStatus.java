@@ -16,17 +16,17 @@ package com.wipro.ats.bdre.md.beans.table;
 /**
  * Created by SU324335 on 3/8/2016.
  */
-public class AdqStatus {
+public class AppDeploymentQueueStatus {
     private Short adqState;
     private String description;
     private Integer pageSize;
     private Integer page;
     private Integer counter;
 
-    public AdqStatus() {
+    public AppDeploymentQueueStatus() {
     }
 
-    public AdqStatus(Short adqState, String description) {
+    public AppDeploymentQueueStatus(Short adqState, String description) {
         this.adqState = adqState;
         this.description = description;
     }

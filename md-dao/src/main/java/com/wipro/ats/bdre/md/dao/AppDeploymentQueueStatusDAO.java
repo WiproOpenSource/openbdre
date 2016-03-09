@@ -14,7 +14,7 @@
 package com.wipro.ats.bdre.md.dao;
 
 import com.wipro.ats.bdre.exception.MetadataException;
-import com.wipro.ats.bdre.md.dao.jpa.AppDeploymentQueue;
+import com.wipro.ats.bdre.md.dao.jpa.AppDeploymentQueueStatus;
 import org.apache.log4j.Logger;
 import org.hibernate.Criteria;
 import org.hibernate.Session;
@@ -30,46 +30,47 @@ import java.util.List;
  */
 @Transactional
 @Service
-public class AdqDAO {
-    private static final Logger LOGGER = Logger.getLogger(AdqDAO.class);
+public class AppDeploymentQueueStatusDAO {
+    private static final Logger LOGGER = Logger.getLogger(AppDeploymentQueueStatusDAO.class);
     @Autowired
     SessionFactory sessionFactory;
 
-    public List<AppDeploymentQueue> list(Integer pageNum, Integer numResults) {
+    public List<AppDeploymentQueueStatus> list(Integer pageNum, Integer numResults) {
         Session session = sessionFactory.openSession();
         session.beginTransaction();
-        Criteria criteria = session.createCriteria(AppDeploymentQueue.class);
+        Criteria criteria = session.createCriteria(AppDeploymentQueueStatus.class);
         criteria.setFirstResult(pageNum);
         criteria.setMaxResults(numResults);
-        List<AppDeploymentQueue> adqList = criteria.list();
+        List<AppDeploymentQueueStatus> adqStatuses = criteria.list();
         session.getTransaction().commit();
         session.close();
-        return adqList;
+        return adqStatuses;
     }
 
     public Long totalRecordCount() {
         Session session = sessionFactory.openSession();
         session.beginTransaction();
-        long size = session.createCriteria(AppDeploymentQueue.class).list().size();
+        long size = session.createCriteria(AppDeploymentQueueStatus.class).list().size();
         session.getTransaction().commit();
         session.close();
         return size;
     }
-    public AppDeploymentQueue get(Integer id) {
+
+    public AppDeploymentQueueStatus get(Short id) {
         Session session = sessionFactory.openSession();
         session.beginTransaction();
-        AppDeploymentQueue adq = (AppDeploymentQueue) session.get(AppDeploymentQueue.class, id);
+        AppDeploymentQueueStatus adqStatus = (AppDeploymentQueueStatus) session.get(AppDeploymentQueueStatus.class, id);
         session.getTransaction().commit();
         session.close();
-        return adq;
+        return adqStatus;
     }
 
-    public Integer insert(AppDeploymentQueue adq) {
+    public Short insert(AppDeploymentQueueStatus adqStatus) {
         Session session = sessionFactory.openSession();
         session.beginTransaction();
-        Integer id = null;
+        Short id = null;
         try {
-            id = (Integer) session.save(adq);
+            id = (Short) session.save(adqStatus);
             session.getTransaction().commit();
         } catch (MetadataException e) {
             session.getTransaction().rollback();
@@ -80,11 +81,11 @@ public class AdqDAO {
         return id;
     }
 
-    public void update(AppDeploymentQueue adq) {
+    public void update(AppDeploymentQueueStatus adqStatus) {
         Session session = sessionFactory.openSession();
         try {
             session.beginTransaction();
-            session.update(adq);
+            session.update(adqStatus);
             session.getTransaction().commit();
         } catch (MetadataException e) {
             session.getTransaction().rollback();
@@ -94,12 +95,12 @@ public class AdqDAO {
         }
     }
 
-    public void delete(Integer id) {
+    public void delete(Short id) {
         Session session = sessionFactory.openSession();
         try {
             session.beginTransaction();
-            AppDeploymentQueue adq = (AppDeploymentQueue) session.get(AppDeploymentQueue.class, id);
-            session.delete(adq);
+            AppDeploymentQueueStatus adqStatus = (AppDeploymentQueueStatus) session.get(AppDeploymentQueueStatus.class, id);
+            session.delete(adqStatus);
             session.getTransaction().commit();
         } catch (MetadataException e) {
             session.getTransaction().rollback();
@@ -108,4 +109,5 @@ public class AdqDAO {
             session.close();
         }
     }
+
 }
