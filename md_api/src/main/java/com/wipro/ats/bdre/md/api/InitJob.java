@@ -23,8 +23,6 @@ import org.apache.commons.cli.CommandLine;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.AutowireCapableBeanFactory;
-import org.springframework.context.ApplicationContext;
-import org.springframework.context.support.ClassPathXmlApplicationContext;
 
 import java.util.*;
 
@@ -34,16 +32,20 @@ import java.util.*;
 
 
 public class InitJob extends MetadataAPIBase {
-    public InitJob() {
-        AutowireCapableBeanFactory acbFactory = getAutowireCapableBeanFactory();
-        acbFactory.autowireBean(this);
-    }
 
     private static final Logger LOGGER = Logger.getLogger(InitJob.class);
     private static final String[][] PARAMS_STRUCTURE = {
             {"p", "process-id", "Process Id of the process to begin"},
             {"bmax", "max-batch", "Maximum no.of batches to be taken"},
     };
+    @Autowired
+    private JobDAO jobDAO;
+
+    public InitJob() {
+        AutowireCapableBeanFactory acbFactory = getAutowireCapableBeanFactory();
+        acbFactory.autowireBean(this);
+    }
+
 
     /**
      * This method uses output from InitJob proc and extracts more data out of it and
@@ -72,7 +74,6 @@ public class InitJob extends MetadataAPIBase {
         // then corresponding value of the map is a comma separated string list of the batch id eg: batch-id1,batch-id1,batch-id1 etc..
         Map<Integer, List<String>> batchListMap = new HashMap<Integer, List<String>>();
         //fileBatchMap contains filepath and corresponding batch id as map
-        Map<String,String> fileBatchIdMap = new HashMap<String,String>();
 
         InitJobInfo initJobInfo = new InitJobInfo();
         for (InitJobRowInfo initJobRowInfo : initJobRowInfos) {
@@ -204,16 +205,6 @@ public class InitJob extends MetadataAPIBase {
             initJobInfo.getBatchListMap().put("FileBatchList." + subProcessId.toString(), batchList.toString().replace("[", "").replace("]", "").replace(", ", ","));
         }
 
-      /*  for (Integer subProcessId : fileListMap.keySet()) {
-            String[] filePaths=initJobInfo.getFileListMap().get("FileList." + subProcessId.toString()).toString().split(",");
-            LOGGER.debug("!");
-            String[] batches=initJobInfo.getBatchListMap().get("FileBatchList." + subProcessId.toString()).split(",");
-            LOGGER.debug("@");
-            for(int j=0;j<filePaths.length;j++) {
-                fileBatchIdMap.put(filePaths[j], batches[j]);
-            }
-        }
-            initJobInfo.setFileBatchIdMap(fileBatchIdMap);*/
         return initJobInfo;
     }
 
@@ -224,12 +215,10 @@ public class InitJob extends MetadataAPIBase {
      * command line notations.
      * @return This method return ouptut of InitJob proc as an instance of class InitJobRowInfo.
      */
-    @Autowired
-    private JobDAO jobDAO;
 
+    @Override
     public List<InitJobRowInfo> execute(String[] params) {
         List<InitJobRowInfo> initJobRowInfos = new ArrayList<InitJobRowInfo>();
-//        SqlSession s = null;
         try {
             InitJobRowInfo initJobInfo = new InitJobRowInfo();
             CommandLine commandLine = getCommandLine(params, PARAMS_STRUCTURE);
@@ -240,7 +229,6 @@ public class InitJob extends MetadataAPIBase {
 
             initJobInfo.setProcessId(Integer.parseInt(pid));
             initJobInfo.setMaxBatch(Integer.parseInt(maxBId));
-//            initJobRowInfos = s.selectList("call_procedures.InitJob", initJobInfo);
             initJobRowInfos = jobDAO.initJob(initJobInfo.getProcessId(), initJobInfo.getMaxBatch());
             return initJobRowInfos;
         } catch (Exception e) {

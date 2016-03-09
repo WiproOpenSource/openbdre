@@ -47,9 +47,9 @@ public class ProcessTemplateDAO {
     SessionFactory sessionFactory;
     private static final String PROCESSTEMPLATEID="processTemplateId";
     private static final String PARENTPROCESSTEMPLATEID="processTemplate.processTemplateId";
-    private static final String DELETE_FLAG="deleteFlag";
-    private static final String CONFIG_GROUP="configGroup";
-    private static final String CONFIG_GROUPID="id.processId";
+    private static final String DELETEFLAG="deleteFlag";
+    private static final String CONFIGGROUP="configGroup";
+    private static final String CONFIGGROUPID="id.processId";
 
     public List<com.wipro.ats.bdre.md.beans.table.ProcessTemplate> list(Integer pageNum, Integer numResults, Integer processId) {
         Session session = sessionFactory.openSession();
@@ -62,8 +62,8 @@ public class ProcessTemplateDAO {
 
             if (processId == null) {
 
-                //(parent_process_id is null and delete_flag != 1 and process_template_id !=0) order by process_template_id
-                Criteria fetchProcessTemplate = session.createCriteria(ProcessTemplate.class).add(Restrictions.isNull(PARENTPROCESSTEMPLATEID)).add(Restrictions.eq(DELETE_FLAG, false)).add(Restrictions.not(Restrictions.eq(PROCESSTEMPLATEID, 0))).addOrder(Order.asc(PROCESSTEMPLATEID));
+                //(parent_process_id is null and DELETEFLAG != 1 and process_template_id !=0) order by process_template_id
+                Criteria fetchProcessTemplate = session.createCriteria(ProcessTemplate.class).add(Restrictions.isNull(PARENTPROCESSTEMPLATEID)).add(Restrictions.eq(DELETEFLAG, false)).add(Restrictions.not(Restrictions.eq(PROCESSTEMPLATEID, 0))).addOrder(Order.asc(PROCESSTEMPLATEID));
                 fetchProcessTemplate.setFirstResult(pageNum);
                 fetchProcessTemplate.setMaxResults(numResults);
                 List<ProcessTemplate> jpaPTList = fetchProcessTemplate.list();
@@ -91,7 +91,7 @@ public class ProcessTemplateDAO {
                 if (processTemplatePid.getProcessTemplate() != null && processTemplatePid != null) {
                     Integer parentProcessId = processTemplatePid.getProcessTemplate().getProcessTemplateId();
 
-                    Criteria fetchProcessTemplate = session.createCriteria(ProcessTemplate.class).add(Restrictions.eq(PROCESSTEMPLATEID, parentProcessId)).add(Restrictions.eq(DELETE_FLAG, false)).add(Restrictions.not(Restrictions.eq(PROCESSTEMPLATEID, 0))).addOrder(Order.asc(PROCESSTEMPLATEID));
+                    Criteria fetchProcessTemplate = session.createCriteria(ProcessTemplate.class).add(Restrictions.eq(PROCESSTEMPLATEID, parentProcessId)).add(Restrictions.eq(DELETEFLAG, false)).add(Restrictions.not(Restrictions.eq(PROCESSTEMPLATEID, 0))).addOrder(Order.asc(PROCESSTEMPLATEID));
                     fetchProcessTemplate.setFirstResult(pageNum);
                     fetchProcessTemplate.setMaxResults(numResults);
                     List<ProcessTemplate> jpaPTList = fetchProcessTemplate.list();
@@ -117,7 +117,7 @@ public class ProcessTemplateDAO {
                 }
 
             } else {
-                Criteria fetchProcessTemplate = session.createCriteria(ProcessTemplate.class).add(Restrictions.isNull(PARENTPROCESSTEMPLATEID)).add(Restrictions.eq(PROCESSTEMPLATEID, processId)).add(Restrictions.eq(DELETE_FLAG, false)).add(Restrictions.not(Restrictions.eq(PROCESSTEMPLATEID, 0))).addOrder(Order.asc(PROCESSTEMPLATEID));
+                Criteria fetchProcessTemplate = session.createCriteria(ProcessTemplate.class).add(Restrictions.isNull(PARENTPROCESSTEMPLATEID)).add(Restrictions.eq(PROCESSTEMPLATEID, processId)).add(Restrictions.eq(DELETEFLAG, false)).add(Restrictions.not(Restrictions.eq(PROCESSTEMPLATEID, 0))).addOrder(Order.asc(PROCESSTEMPLATEID));
                 fetchProcessTemplate.setFirstResult(pageNum);
                 fetchProcessTemplate.setMaxResults(numResults);
 
@@ -230,12 +230,12 @@ public class ProcessTemplateDAO {
             session.beginTransaction();
             Criteria criteria1 = session.createCriteria(ProcessTemplate.class);
             criteria1.add(Restrictions.eq(PROCESSTEMPLATEID, processTemplateId));
-            criteria1.add(Restrictions.eq(DELETE_FLAG, false));
+            criteria1.add(Restrictions.eq(DELETEFLAG, false));
             List<ProcessTemplate> processTemplatesList1 = criteria1.list();
 
             Criteria criteria2 = session.createCriteria(ProcessTemplate.class);
             criteria2.add(Restrictions.eq(PARENTPROCESSTEMPLATEID, processTemplateId));
-            criteria2.add(Restrictions.eq(DELETE_FLAG, false));
+            criteria2.add(Restrictions.eq(DELETEFLAG, false));
             List<ProcessTemplate> processTemplatesList2 = criteria2.list();
 
             List<ProcessTemplate> completeProcessTemplatesList = new ArrayList<ProcessTemplate>();
@@ -280,7 +280,7 @@ public class ProcessTemplateDAO {
                 Criteria criteria = session.createCriteria(com.wipro.ats.bdre.md.dao.jpa.Process.class, "p1").createCriteria("process", "p2");
                 criteria.add(Restrictions.eq("p1.process.processId", "p2.processId"));
                 criteria.add(Restrictions.eq(PARENTPROCESSTEMPLATEID, processTemplateId));
-                criteria.add(Restrictions.eq(DELETE_FLAG, 0));
+                criteria.add(Restrictions.eq(DELETEFLAG, 0));
                 criteria.addOrder(Order.asc("p2.processId"));
                 List<Process> jpaProcessList = criteria.list();
                 Iterator<Process> iterator = jpaProcessList.iterator();
@@ -306,7 +306,7 @@ public class ProcessTemplateDAO {
 
             } else {
                 Criteria criteria = session.createCriteria(Process.class).add(Restrictions.eq(PARENTPROCESSTEMPLATEID, processTemplateId));
-                criteria.add(Restrictions.eq(DELETE_FLAG, 0));
+                criteria.add(Restrictions.eq(DELETEFLAG, 0));
                 List<Process> jpaProcessList = criteria.list();
                 Iterator<Process> iterator = jpaProcessList.iterator();
                 while (iterator.hasNext()) {
@@ -350,13 +350,13 @@ public class ProcessTemplateDAO {
             List<Integer> listProcessIds = criteriaProcessIds.list();
             LOGGER.info("number of process ids are " + listProcessIds.size());
             LOGGER.info("ids are  " + listProcessIds);
-            Criteria criteriaProcess1 = session.createCriteria(Process.class).add(Restrictions.eq(DELETE_FLAG, false));
+            Criteria criteriaProcess1 = session.createCriteria(Process.class).add(Restrictions.eq(DELETEFLAG, false));
             criteriaProcess1.add(Restrictions.isNull("process.processId"));
             criteriaProcess1.add(Restrictions.in("processId", listProcessIds));
             List<Process> jpaProcessList1 = criteriaProcess1.list();
             LOGGER.info("size of first returned list " + jpaProcessList1.size());
 
-            Criteria criteriaProcess2 = session.createCriteria(Process.class).add(Restrictions.eq(DELETE_FLAG, false));
+            Criteria criteriaProcess2 = session.createCriteria(Process.class).add(Restrictions.eq(DELETEFLAG, false));
             criteriaProcess2.add(Restrictions.isNull("process.processId"));
             criteriaProcess2.add(Restrictions.in("process.processId", listProcessIds));
             List<Process> jpaProcessList2 = criteriaProcess2.list();
@@ -402,7 +402,7 @@ public class ProcessTemplateDAO {
         try {
             session.beginTransaction();
             Criteria criteria = session.createCriteria(ProcessTemplate.class).add(Restrictions.eq(PARENTPROCESSTEMPLATEID, processTemplateId));
-            criteria.add(Restrictions.ne(DELETE_FLAG, true));
+            criteria.add(Restrictions.ne(DELETEFLAG, true));
             List<ProcessTemplate> processTemplateList = criteria.list();
             Iterator<ProcessTemplate> iterator = processTemplateList.iterator();
 
@@ -440,7 +440,7 @@ public class ProcessTemplateDAO {
 
         try {
             session.beginTransaction();
-            Criteria fetchProcessList = session.createCriteria(com.wipro.ats.bdre.md.dao.jpa.Process.class).add(Restrictions.eq(DELETE_FLAG, false)).add(Restrictions.eq(PARENTPROCESSTEMPLATEID, processId)).add(Restrictions.or(Restrictions.eq("process.processId", parentProcessId), Restrictions.eq("processId", parentProcessId)));
+            Criteria fetchProcessList = session.createCriteria(com.wipro.ats.bdre.md.dao.jpa.Process.class).add(Restrictions.eq(DELETEFLAG, false)).add(Restrictions.eq(PARENTPROCESSTEMPLATEID, processId)).add(Restrictions.or(Restrictions.eq("process.processId", parentProcessId), Restrictions.eq("processId", parentProcessId)));
             Integer listSize = fetchProcessList.list().size();
             LOGGER.info("process list size:" + listSize);
             List<com.wipro.ats.bdre.md.dao.jpa.Process> jpaProcessList = fetchProcessList.list();
@@ -477,7 +477,7 @@ public class ProcessTemplateDAO {
             session.beginTransaction();
             Criteria criteria = session.createCriteria(ProcessTemplate.class);
             criteria.add(Restrictions.eq(PARENTPROCESSTEMPLATEID, processTemplateId));
-            criteria.add(Restrictions.eq(DELETE_FLAG, false));
+            criteria.add(Restrictions.eq(DELETEFLAG, false));
             criteria.setProjection(Projections.property(PROCESSTEMPLATEID));
             List<Integer> processTemplateIdList = criteria.list();
             LOGGER.info("List of processTemplateIdList is " + processTemplateIdList);
@@ -485,7 +485,7 @@ public class ProcessTemplateDAO {
             if (!processTemplateIdList.isEmpty())
                 processCriteria.add(Restrictions.not(Restrictions.in(PARENTPROCESSTEMPLATEID, processTemplateIdList)));
             processCriteria.add(Restrictions.eq("process.processId", processId));
-            processCriteria.add(Restrictions.eq(DELETE_FLAG, false));
+            processCriteria.add(Restrictions.eq(DELETEFLAG, false));
             List<Process> jpaProcessList = processCriteria.list();
             Iterator<Process> iterator = jpaProcessList.iterator();
             while (iterator.hasNext()) {
@@ -522,7 +522,7 @@ public class ProcessTemplateDAO {
         try {
             session.beginTransaction();
 
-            Criteria fetchProcessTemplateId = session.createCriteria(Process.class).add(Restrictions.eq(DELETE_FLAG, false)).add(Restrictions.eq("process.processId", processId)).setProjection(Projections.property(PARENTPROCESSTEMPLATEID));
+            Criteria fetchProcessTemplateId = session.createCriteria(Process.class).add(Restrictions.eq(DELETEFLAG, false)).add(Restrictions.eq("process.processId", processId)).setProjection(Projections.property(PARENTPROCESSTEMPLATEID));
             List<Integer> processTemplateIdList = fetchProcessTemplateId.list();
             LOGGER.info("processTemplateId List size:" + processTemplateIdList);
 
@@ -570,7 +570,7 @@ public class ProcessTemplateDAO {
             LOGGER.info("prop temp key list size:" + fetchPropTempKey.list().size());
 
             //select config_group from properties_template where process_template_id=p_t_id
-            Criteria fetchconfigGroup = session.createCriteria(com.wipro.ats.bdre.md.dao.jpa.PropertiesTemplate.class).add(Restrictions.eq("id.processTemplateId", processTemplateId)).setProjection(Projections.property(CONFIG_GROUP));
+            Criteria fetchconfigGroup = session.createCriteria(com.wipro.ats.bdre.md.dao.jpa.PropertiesTemplate.class).add(Restrictions.eq("id.processTemplateId", processTemplateId)).setProjection(Projections.property(CONFIGGROUP));
             List<String> configGroupList = fetchconfigGroup.list();
             LOGGER.info("config Group list size:" + configGroupList.size());
 
@@ -578,7 +578,7 @@ public class ProcessTemplateDAO {
             if (!configGroupList.isEmpty()) {
        /* (config_group not in (select config_group from properties_template where process_template_id=p_t_id ) or prop_key not in
         (select prop_temp_key from properties_template where process_template_id=p_t_id ))*/
-                Criteria fetchMissingCgPropertiesList = session.createCriteria(com.wipro.ats.bdre.md.dao.jpa.Properties.class).add(Restrictions.eq(CONFIG_GROUPID, processId)).add(Restrictions.not(Restrictions.in(CONFIG_GROUP, configGroupList)));
+                Criteria fetchMissingCgPropertiesList = session.createCriteria(com.wipro.ats.bdre.md.dao.jpa.Properties.class).add(Restrictions.eq(CONFIGGROUPID, processId)).add(Restrictions.not(Restrictions.in(CONFIGGROUP, configGroupList)));
                 List<com.wipro.ats.bdre.md.dao.jpa.Properties> jpaCgPropertiesList = fetchMissingCgPropertiesList.list();
                 for (com.wipro.ats.bdre.md.dao.jpa.Properties jpaProperty : jpaCgPropertiesList) {
                     Properties properties = new Properties();
@@ -591,7 +591,7 @@ public class ProcessTemplateDAO {
                 }
 
                 if (!propTempKeyList.isEmpty()) {
-                    Criteria fetchMissingKeyPropertiesList = session.createCriteria(com.wipro.ats.bdre.md.dao.jpa.Properties.class).add(Restrictions.eq(CONFIG_GROUPID, processId)).add(Restrictions.not(Restrictions.in("id.propKey", propTempKeyList)));
+                    Criteria fetchMissingKeyPropertiesList = session.createCriteria(com.wipro.ats.bdre.md.dao.jpa.Properties.class).add(Restrictions.eq(CONFIGGROUPID, processId)).add(Restrictions.not(Restrictions.in("id.propKey", propTempKeyList)));
                     List<com.wipro.ats.bdre.md.dao.jpa.Properties> jpaKeyPropertiesList = fetchMissingKeyPropertiesList.list();
                     for (com.wipro.ats.bdre.md.dao.jpa.Properties jpaProperty : jpaKeyPropertiesList) {
                         Properties properties = new Properties();
@@ -606,7 +606,7 @@ public class ProcessTemplateDAO {
 
 
             } else if (!propTempKeyList.isEmpty()) {
-                Criteria fetchMissingKeyPropertiesList = session.createCriteria(com.wipro.ats.bdre.md.dao.jpa.Properties.class).add(Restrictions.eq(CONFIG_GROUPID, processId)).add(Restrictions.not(Restrictions.in("id.propKey", propTempKeyList)));
+                Criteria fetchMissingKeyPropertiesList = session.createCriteria(com.wipro.ats.bdre.md.dao.jpa.Properties.class).add(Restrictions.eq(CONFIGGROUPID, processId)).add(Restrictions.not(Restrictions.in("id.propKey", propTempKeyList)));
                 List<com.wipro.ats.bdre.md.dao.jpa.Properties> jpaKeyPropertiesList = fetchMissingKeyPropertiesList.list();
                 for (com.wipro.ats.bdre.md.dao.jpa.Properties jpaProperty : jpaKeyPropertiesList) {
                     Properties properties = new Properties();
@@ -657,13 +657,13 @@ public class ProcessTemplateDAO {
                             .createAlias("properties.process", "process")
                             .add(Restrictions.in("properties.process.processId", processIdList))//properties.process_id in processIdList
                             .add(Restrictions.eq("process.processId", processId));//process.process_id=p_id
-                    joinPropertiesAndProcess.setProjection(Projections.property(CONFIG_GROUP));
+                    joinPropertiesAndProcess.setProjection(Projections.property(CONFIGGROUP));
                     List<String> configGroupList = joinPropertiesAndProcess.list();
                     LOGGER.info("configGroupList size:" + joinPropertiesAndProcess.list().size());
 
                     if (!joinPropertiesAndProcess.list().isEmpty()) {
                         //select * from properties_template where process_template_id =p_t_id
-                        Criteria fetchPropertiesTemplate = session.createCriteria(PropertiesTemplate.class).add(Restrictions.eq(PARENTPROCESSTEMPLATEID, processTemplateId)).add(Restrictions.not(Restrictions.in(CONFIG_GROUP, configGroupList)));
+                        Criteria fetchPropertiesTemplate = session.createCriteria(PropertiesTemplate.class).add(Restrictions.eq(PARENTPROCESSTEMPLATEID, processTemplateId)).add(Restrictions.not(Restrictions.in(CONFIGGROUP, configGroupList)));
                         List<PropertiesTemplate> propertiesTemplateList = fetchPropertiesTemplate.list();
 
                         //select * from process where process_id=p_id

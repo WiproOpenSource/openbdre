@@ -23,15 +23,16 @@ import java.util.zip.ZipOutputStream;
  */
 public class Export {
     
-    private static  String source_dir = "";
+    private static  String sourceDir = "";
     List<String>  fileList = new ArrayList<String>();
+    private static final String BDREWFD = "/bdre-wfd/";
 
     private static final Logger LOGGER = Logger.getLogger(Export.class);
     public  static void main(String[] args)
     {
         String processId=args[0];
         String homeDir = System.getProperty("user.home");
-        String source_dir=homeDir+"/bdre-wfd/"+processId;
+        String sourceDir=homeDir+BDREWFD+processId;
 
 
         ProcessExport processExport=new ProcessExport();
@@ -65,11 +66,11 @@ public class Export {
 
 
         String zippedFile = null;
-        LOGGER.info("source directory is "+source_dir);
-        if (Files.exists(Paths.get(source_dir)))
+        LOGGER.info("source directory is "+sourceDir);
+        if (Files.exists(Paths.get(sourceDir)))
         {
-            LOGGER.info(source_dir);
-            LOGGER.info("path is "+Paths.get(source_dir));
+            LOGGER.info(sourceDir);
+            LOGGER.info("path is "+Paths.get(sourceDir));
             Export compression=new Export();
             zippedFile=compression.compress(processId,processExport);
         }
@@ -86,10 +87,10 @@ public class Export {
 
         String homeDir = System.getProperty("user.home");
 
-        source_dir=homeDir+"/bdre-wfd/"+processId;
+        sourceDir=homeDir+BDREWFD+processId;
 
         ObjectMapper mapper = new ObjectMapper();
-        File creatingDir = new File(source_dir);
+        File creatingDir = new File(sourceDir);
         if (!creatingDir.exists()) {
             creatingDir.mkdir();
         }
@@ -97,25 +98,24 @@ public class Export {
         if (creatingDir.exists()) {
             // convert user object to json string,
             try {
-                mapper.writeValue(new File(homeDir + "/bdre-wfd/" + processId + "/" +"process.json"), processExport);
+                mapper.writeValue(new File(homeDir + BDREWFD + processId + "/" +"process.json"), processExport);
             } catch (IOException e) {
-                e.printStackTrace();
+                LOGGER.info(e);
             }
-
         }
 
 
         UUID idOne = UUID.randomUUID();
-        System.out.println("UUID is "+idOne);
-        source_dir=homeDir+"/bdre-wfd/"+processId;
+        LOGGER.info("UUID is "+idOne);
+        sourceDir=homeDir+BDREWFD+processId;
         Export export = new Export();
-        export.generateFileList(new File(source_dir));
-        String output_folder=homeDir+"/bdre-wfd/export-"+processId;
-        File outdir=new File(output_folder);
+        export.generateFileList(new File(sourceDir));
+        String outputFolder=homeDir+"/bdre-wfd/export-"+processId;
+        File outdir=new File(outputFolder);
         if (!outdir.exists())
             outdir.mkdir();
-        System.out.println("output folder is "+output_folder);
-        String zippedFile=output_folder+"/"+processId+"-"+idOne+".zip";
+        LOGGER.info("output folder is "+outputFolder);
+        String zippedFile=outputFolder+"/"+processId+"-"+idOne+".zip";
         export.zipIt(zippedFile);
         return zippedFile;
     }
@@ -133,16 +133,16 @@ public class Export {
             FileOutputStream fos = new FileOutputStream(zipFile);
             ZipOutputStream zos = new ZipOutputStream(fos);
 
-            System.out.println("Output to Zip : " + zipFile);
+            LOGGER.info("Output to Zip : " + zipFile);
 
             for(String file : this.fileList){
 
-                System.out.println("File Added : " + file);
+                LOGGER.info("File Added : " + file);
                 ZipEntry ze= new ZipEntry(file);
                 zos.putNextEntry(ze);
 
                 FileInputStream in =
-                        new FileInputStream(source_dir + File.separator + file);
+                        new FileInputStream(sourceDir + File.separator + file);
 
                 int len;
                 while ((len = in.read(buffer)) > 0) {
@@ -156,9 +156,9 @@ public class Export {
             //remember close it
             zos.close();
 
-            System.out.println("Done");
+            LOGGER.info("Done");
         }catch(IOException ex){
-            ex.printStackTrace();
+            LOGGER.info(ex);
         }
     }
 
@@ -189,7 +189,7 @@ public class Export {
      * @return Formatted file path
      */
     public String generateZipEntry(String file){
-        return file.substring(source_dir.length()+1, file.length());
+        return file.substring(sourceDir.length()+1, file.length());
     }
     
 }
