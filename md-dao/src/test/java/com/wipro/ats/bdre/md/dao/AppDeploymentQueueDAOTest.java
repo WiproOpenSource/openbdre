@@ -56,11 +56,11 @@ public class AppDeploymentQueueDAOTest {
         Process process=new Process();
         process.setProcessId(141);
         adq.setProcess(process);
-        Integer adqId = appDeploymentQueueDAO.insert(adq);
+        Long adqId = appDeploymentQueueDAO.insert(adq);
         LOGGER.info("Adq is added with Id:" + adqId);
 
         appDeploymentQueueDAO.update(adq);
-        adq = appDeploymentQueueDAO.get(adqId);
+        adq = appDeploymentQueueDAO.get(adqId.intValue());
         assertEquals("Test Updated",adq.getAppName());
         LOGGER.info("Updated Description is:" + adqStatus.getDescription());
         LOGGER.info("Deleted AdqStatus Entry with ID" + adq.getAppDeploymentQueueStatus().getAppDeployStatusId());

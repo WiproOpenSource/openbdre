@@ -64,12 +64,12 @@ public class AppDeploymentQueueDAO {
         return adq;
     }
 
-    public Integer insert(AppDeploymentQueue adq) {
+    public Long insert(AppDeploymentQueue adq) {
         Session session = sessionFactory.openSession();
         session.beginTransaction();
-        Integer id = null;
+        Long id = null;
         try {
-            id = (Integer) session.save(adq);
+            id = (Long) session.save(adq);
             session.getTransaction().commit();
         } catch (MetadataException e) {
             session.getTransaction().rollback();
