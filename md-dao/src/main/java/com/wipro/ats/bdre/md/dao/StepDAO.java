@@ -42,11 +42,13 @@ public class StepDAO {
     private static final Logger LOGGER = Logger.getLogger(StepDAO.class);
     @Autowired
     SessionFactory sessionFactory;
-
+    private static final String PROCESS="process";
+    private static final String EXECSTATUS="execStatus";
+    private static final String BATCHBYTARGETBATCHID="batchByTargetBatchId";
     public Long initStep(Integer subPid) {
         Session session = sessionFactory.openSession();
 
-        Long sub_instance_exec_id = null;
+        Long subInstanceExecId = null;
         try {
             session.beginTransaction();
 
@@ -67,23 +69,23 @@ public class StepDAO {
             LOGGER.info("Deleted process count :" + deletedProcessCount);
 
             //querying running parent process
-            Criteria checkParentProcessExec = session.createCriteria(InstanceExec.class).add(Restrictions.and(Restrictions.eq("process", parentProcess), Restrictions.eq("execStatus", runningExecState)));
+            Criteria checkParentProcessExec = session.createCriteria(InstanceExec.class).add(Restrictions.and(Restrictions.eq(PROCESS, parentProcess), Restrictions.eq(EXECSTATUS, runningExecState)));
             Integer runningProcessCount = checkParentProcessExec.list().size();
-            LOGGER.info("Running parent process count :" + runningProcessCount);
+            LOGGER.info("Running parent process count : " + runningProcessCount);
 
             //querying running sub process process
-            Criteria checkSubProcessExec = session.createCriteria(InstanceExec.class).add(Restrictions.and(Restrictions.eq("process", subProcess), Restrictions.eq("execStatus", runningExecState)));
+            Criteria checkSubProcessExec = session.createCriteria(InstanceExec.class).add(Restrictions.and(Restrictions.eq(PROCESS, subProcess), Restrictions.eq(EXECSTATUS, runningExecState)));
             Integer runningSubProcessCount = checkSubProcessExec.list().size();
             LOGGER.info("Running sub process count :" + runningSubProcessCount);
 
             //list of  sub process entries in BCQ with target_batch_id not null
             List<BatchConsumpQueue> batchConsumpQueueList = new ArrayList<BatchConsumpQueue>();
-            Criteria checkSubProcessBCQ = session.createCriteria(BatchConsumpQueue.class).add(Restrictions.and(Restrictions.eq("process", subProcess), Restrictions.isNotNull("batchByTargetBatchId")));
+            Criteria checkSubProcessBCQ = session.createCriteria(BatchConsumpQueue.class).add(Restrictions.and(Restrictions.eq(PROCESS, subProcess), Restrictions.isNotNull(BATCHBYTARGETBATCHID)));
             batchConsumpQueueList = checkSubProcessBCQ.list();
 
             //check valid sub process
             if (parentProcess == null) {
-                throw new MetadataException("Invalid sub-process. sub_pid=" + subPid);
+                throw new MetadataException("Invalid sub-process. sub_pid =" + subPid);
             }
             // check process is deleted
             else if (deletedProcessCount != 0) {
@@ -104,9 +106,9 @@ public class StepDAO {
                 java.util.Date date = new java.util.Date();
                 subProcessExec.setStartTs(new Timestamp(date.getTime()));
                 subProcessExec.setExecStatus(runningExecState);
-                sub_instance_exec_id = (Long) session.save(subProcessExec);
+                subInstanceExecId = (Long) session.save(subProcessExec);
 
-                LOGGER.info("The instance-exec-id of sub process inserted :" + sub_instance_exec_id);
+                LOGGER.info("The instance-exec-id of sub process inserted :" + subInstanceExecId);
 
                 //updating startTs of sub process in BatchComsumpQueue table with target batch id not null
                 for (BatchConsumpQueue bcq : batchConsumpQueueList) {
@@ -123,7 +125,7 @@ public class StepDAO {
         } finally {
             session.close();
         }
-        return sub_instance_exec_id;
+        return subInstanceExecId;
     }
 
 
@@ -152,14 +154,14 @@ public class StepDAO {
             processedBatchState.setBatchStateId(1);
 
             //querying running parent process
-            Criteria checkParentProcessExec = session.createCriteria(InstanceExec.class).add(Restrictions.and(Restrictions.eq("process", parentProcess), Restrictions.eq("execStatus", runningExecState)));
+            Criteria checkParentProcessExec = session.createCriteria(InstanceExec.class).add(Restrictions.and(Restrictions.eq(PROCESS, parentProcess), Restrictions.eq(EXECSTATUS, runningExecState)));
             Integer runningProcessCount = checkParentProcessExec.list().size();
-            LOGGER.info("Running parent process count :" + runningProcessCount);
+            LOGGER.info("Running parent process count:" + runningProcessCount);
 
             //querying running sub process
-            Criteria checkSubProcessExec = session.createCriteria(InstanceExec.class).add(Restrictions.and(Restrictions.eq("process", subProcess), Restrictions.eq("execStatus", runningExecState)));
+            Criteria checkSubProcessExec = session.createCriteria(InstanceExec.class).add(Restrictions.and(Restrictions.eq(PROCESS, subProcess), Restrictions.eq(EXECSTATUS, runningExecState)));
             Integer runningSubProcessCount = checkSubProcessExec.list().size();
-            LOGGER.info("Running sub process count :" + runningSubProcessCount);
+            LOGGER.info("Running sub process count:" + runningSubProcessCount);
 
             //Fetch the instance_exec of the sub process
             List<InstanceExec> subProcessExec = new ArrayList<InstanceExec>();
@@ -167,16 +169,16 @@ public class StepDAO {
 
             //list of sub process entries in BCQ with target_batch_id not null
             List<BatchConsumpQueue> batchConsumpQueueList = new ArrayList<BatchConsumpQueue>();
-            Criteria checkSubProcessBCQ = session.createCriteria(BatchConsumpQueue.class).add(Restrictions.and(Restrictions.eq("process", subProcess), Restrictions.isNotNull("batchByTargetBatchId")));
+            Criteria checkSubProcessBCQ = session.createCriteria(BatchConsumpQueue.class).add(Restrictions.and(Restrictions.eq(PROCESS, subProcess), Restrictions.isNotNull(BATCHBYTARGETBATCHID)));
             batchConsumpQueueList = checkSubProcessBCQ.list();
 
             //check valid sub process
             if (parentProcess == null) {
-                throw new MetadataException("Invalid sub-process. sub_pid=" + subPid);
+                throw new MetadataException("Invalid sub-process.sub_pid=" + subPid);
             }
             //check parent process is not running
             else if (runningProcessCount == 0) {
-                throw new MetadataException("The parent process is not under execution, sub_pid=" + subPid);
+                throw new MetadataException("The parent process is not under execution,sub_pid=" + subPid);
             }
             //check sub process is not running
             else if (runningSubProcessCount == 0) {
@@ -200,7 +202,7 @@ public class StepDAO {
 
         } catch (MetadataException e) {
             session.getTransaction().rollback();
-            LOGGER.error("Error occurred", e);
+            LOGGER.error("Error Occurred", e);
             throw e;
         } finally {
             session.close();
@@ -235,14 +237,14 @@ public class StepDAO {
             processedBatchState.setBatchStateId(1);
 
             //querying running parent process
-            Criteria checkParentProcessExec = session.createCriteria(InstanceExec.class).add(Restrictions.and(Restrictions.eq("process", parentProcess), Restrictions.eq("execStatus", runningExecState)));
+            Criteria checkParentProcessExec = session.createCriteria(InstanceExec.class).add(Restrictions.and(Restrictions.eq(PROCESS, parentProcess), Restrictions.eq(EXECSTATUS, runningExecState)));
             Integer runningProcessCount = checkParentProcessExec.list().size();
             LOGGER.info("Running parent process count :" + runningProcessCount);
 
             //querying running sub process
-            Criteria checkSubProcessExec = session.createCriteria(InstanceExec.class).add(Restrictions.and(Restrictions.eq("process", subProcess), Restrictions.eq("execStatus", runningExecState)));
+            Criteria checkSubProcessExec = session.createCriteria(InstanceExec.class).add(Restrictions.and(Restrictions.eq(PROCESS, subProcess), Restrictions.eq(EXECSTATUS, runningExecState)));
             Integer runningSubProcessCount = checkSubProcessExec.list().size();
-            LOGGER.info("Running sub process count :" + runningSubProcessCount);
+            LOGGER.info("Running sub process count : " + runningSubProcessCount);
 
             //Fetch the instance_exec of the sub process
             List<InstanceExec> subProcessExec = new ArrayList<InstanceExec>();
@@ -257,12 +259,12 @@ public class StepDAO {
             if (enqProcessIdSum == 0) {
 
                 //list of sub process entries in BCQ
-                Criteria checkSubProcessBCQ = session.createCriteria(BatchConsumpQueue.class).add(Restrictions.eq("process", subProcess));
+                Criteria checkSubProcessBCQ = session.createCriteria(BatchConsumpQueue.class).add(Restrictions.eq(PROCESS, subProcess));
                 batchConsumpQueueList = checkSubProcessBCQ.list();
 
             } else {
                 //list of sub process entries in BCQ with target_batch_id not null
-                Criteria checkSubProcessBCQ = session.createCriteria(BatchConsumpQueue.class).add(Restrictions.and(Restrictions.eq("process", subProcess), Restrictions.isNotNull("batchByTargetBatchId")));
+                Criteria checkSubProcessBCQ = session.createCriteria(BatchConsumpQueue.class).add(Restrictions.and(Restrictions.eq(PROCESS, subProcess), Restrictions.isNotNull(BATCHBYTARGETBATCHID)));
                 batchConsumpQueueList = checkSubProcessBCQ.list();
             }
             //check valid sub process
@@ -271,7 +273,7 @@ public class StepDAO {
             }
             //check parent process is not running
             else if (runningProcessCount == 0) {
-                throw new MetadataException("The parent process is not under execution, sub_pid=" + subPid);
+                throw new MetadataException("The parent process is not under execution, sub_pid= " + subPid);
             }
             //check sub process is not running
             else if (runningSubProcessCount == 0) {
@@ -297,7 +299,7 @@ public class StepDAO {
 
         } catch (MetadataException e) {
             session.getTransaction().rollback();
-            LOGGER.error("Error occurred", e);
+            LOGGER.error("Error occurred ", e);
             throw e;
         } finally {
             session.close();
