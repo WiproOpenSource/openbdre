@@ -20,6 +20,13 @@ public class AppDeploymentQueue {
 
     private Long adqId;
     private Integer processId;
+    private String username;
+    private String appDomain;
+    private String appName;
+    private Short adqState;
+    private Integer pageSize;
+    private Integer page;
+    private Integer counter;
 
     public AppDeploymentQueue(){
     }
@@ -123,11 +130,5 @@ public class AppDeploymentQueue {
         this.counter = counter;
     }
 
-    private String username;
-    private String appDomain;
-    private String appName;
-    private Short adqState;
-    private Integer pageSize;
-    private Integer page;
-    private Integer counter;
+
 }

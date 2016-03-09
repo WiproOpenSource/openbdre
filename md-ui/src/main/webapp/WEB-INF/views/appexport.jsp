@@ -104,6 +104,7 @@
                                             <div class="form-group">
                                                   <label >Upload App Image</label>
                                                   <input type="file" name="appImage" class="form-control" placeholder="Upload App Image"required>
+
                                             </div>
 
                                             <input type="submit" id="submitButton" class="btn btn-primary" ng-click="appstorePush(<%=processId %>)"/>
