@@ -51,7 +51,7 @@ public class AppDeploymentQueueDAOTest {
         adq.setAppDomain("Banking");
         AppDeploymentQueueStatus adqStatus=new AppDeploymentQueueStatus();
         adqStatus.setDescription("Merged");
-        adqStatus.setAppDeployStatusId((short) 0);
+        adqStatus.setAppDeployStatusId((short) 3);
         adq.setAppDeploymentQueueStatus(adqStatus);
         Process process=new Process();
         process.setProcessId(141);
