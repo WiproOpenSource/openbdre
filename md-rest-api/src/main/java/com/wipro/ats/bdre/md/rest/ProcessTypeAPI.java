@@ -215,7 +215,7 @@ public class ProcessTypeAPI extends MetadataAPIBase {
 
         RestWrapperOptions restWrapperOptions = null;
         try {
-            List<com.wipro.ats.bdre.md.dao.jpa.ProcessType> jpaProcessTypes = processTypeDAO.list(processTypeId, 0, 0);
+            List<com.wipro.ats.bdre.md.dao.jpa.ProcessType> jpaProcessTypes  = processTypeDAO.list(processTypeId);
             List<ProcessType> processTypes = new ArrayList<ProcessType>();
             for (com.wipro.ats.bdre.md.dao.jpa.ProcessType processType : jpaProcessTypes) {
                 ProcessType returnProcessType = new ProcessType();
@@ -253,7 +253,7 @@ public class ProcessTypeAPI extends MetadataAPIBase {
 
         RestWrapperOptions restWrapperOptions = null;
         try {
-            List<com.wipro.ats.bdre.md.dao.jpa.ProcessType> jpaProcessTypes = processTypeDAO.list(null, 0, 0);
+            List<com.wipro.ats.bdre.md.dao.jpa.ProcessType> jpaProcessTypes = processTypeDAO.list(null);
             List<ProcessType> processTypes = new ArrayList<ProcessType>();
             for (com.wipro.ats.bdre.md.dao.jpa.ProcessType processType : jpaProcessTypes) {
                 ProcessType returnProcessType = new ProcessType();
