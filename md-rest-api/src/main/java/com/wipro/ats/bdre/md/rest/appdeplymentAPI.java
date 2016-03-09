@@ -37,6 +37,7 @@ public class appdeplymentAPI {
             BindingResultError bindingResultError = new BindingResultError();
             return bindingResultError.errorMessage(bindingResult);
         }
+        LOGGER.info("in appDeploymentQueueAPI");
         return null;
     }
 

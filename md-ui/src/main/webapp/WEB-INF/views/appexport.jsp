@@ -86,11 +86,11 @@
                                         <form role="form" id="exportToAppStoreForm"  >
                                              <div class="form-group">
                                                 <label >Application Name</label>
-                                                <input type="text" class="form-control" name="appname"  placeholder="Application Name" required>
+                                                <input type="text" class="form-control" name="appName"  placeholder="Application Name" required>
                                             </div>
                                             <div class="form-group">
                                                 <label >Select Application Domain</label>
-                                                <select class="form-control" name="deleteCopiedSource">
+                                                <select class="form-control" name="appDomain">
                                                     <option value="banking">Banking</option>
                                                     <option value="retail"> Retail</option>
                                                     <option value="telecom">Telecom</option>
@@ -106,8 +106,12 @@
                                                   <input type="file" name="appImage" class="form-control" placeholder="Upload App Image"required>
 
                                             </div>
+                                            <div class="form-group">
+                                               <label >Application Name</label>
+                                               <input type="hidden" class="form-control" name="processsId"  value="<%=processId %>" required>
+                                            </div>
 
-                                            <input type="submit" id="submitButton" class="btn btn-primary" ng-click="appstorePush(<%=processId %>)"/>
+                                            <input type="submit" id="submitButton" class="btn btn-primary" onclick="appstorePush()"/>
                                         </form>
 
                                     </div>
@@ -119,7 +123,7 @@
                <script>
                $("#export").hide();
                $("#successHeader").hide();
-                               downloadZip =function (processId){
+                               downloadZip =function (){
 
                                 $.ajax({
                                       url: '/mdrest/process/export/' + processId,
@@ -127,10 +131,8 @@
                                        dataType: 'json',
                                         success: function(data) {
                                         if (data.Result == "OK") {
-                                        console.log(window.location.protocol);
-                                       var url = (window.location.protocol + "//" + window.location.host + "/mdrest/process/zippedexport/" + processId);
-                                        window.location.href = url;
-                                     }
+                                         console.log("data passed successfully");
+                                        }
                                   if (data.Result == "ERROR")
                                     alert(data.Message);
                                },
@@ -144,21 +146,19 @@
                                appstorePush =function (processId){
 
                                 $.ajax({
-                                     url: '/mdrest/process/export/' + processId,
+                                     url: '/mdrest/appdeployment/',
                                       type: 'POST',
                                       data: $('#exportToAppStoreForm').serialize(),
                                       dataType: 'json',
                                        success: function(data) {
                                        if (data.Result == "OK") {
-                                       console.log(window.location.protocol);
-                                      var url = (window.location.protocol + "//" + window.location.host + "/mdrest/process/zippedexport/" + processId);
-                                       window.location.href = url;
+                                       console.log(data);
                                     }
                                          if (data.Result == "ERROR")
                                            alert(data.Message);
                                       },
                                        error: function() {
-                                       alert('Error in zip download');
+                                       alert('Error in app export to appstore');
                                    }
                                });
 
