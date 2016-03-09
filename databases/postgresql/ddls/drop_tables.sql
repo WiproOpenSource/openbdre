@@ -1,3 +1,5 @@
+DROP TABLE app_deployment_queue CASCADE;
+DROP TABLE app_deployment_queue_status CASCADE;
 DROP TABLE batch_status CASCADE;
 DROP TABLE bus_domain CASCADE;
 DROP TABLE exec_status CASCADE;
