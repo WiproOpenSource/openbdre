@@ -21,8 +21,6 @@ import com.wipro.ats.bdre.md.dao.PropertiesDAO;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.AutowireCapableBeanFactory;
-import org.springframework.context.ApplicationContext;
-import org.springframework.context.support.ClassPathXmlApplicationContext;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -33,10 +31,6 @@ import java.util.Map;
  * Created by RI294200 on 10/6/2015.
  */
 public class ArrangePositions extends MetadataAPIBase {
-    public ArrangePositions() {
-        AutowireCapableBeanFactory acbFactory = getAutowireCapableBeanFactory();
-        acbFactory.autowireBean(this);
-    }
 
     private static final Logger LOGGER = Logger.getLogger(ArrangePositions.class);
 
@@ -48,17 +42,17 @@ public class ArrangePositions extends MetadataAPIBase {
     @Autowired
     private ProcessDAO processDAO;
 
+    public ArrangePositions() {
+        AutowireCapableBeanFactory acbFactory = getAutowireCapableBeanFactory();
+        acbFactory.autowireBean(this);
+    }
+
     public Map<String, PositionsInfo> getListPositionInfo(Integer processId) {
-        //List<PositionsInfo> listPositionInfo = new ArrayList<PositionsInfo>();
         Map<String, PositionsInfo> positionsInfoMap = new HashMap<String, PositionsInfo>();
         //Level and list of nodes map
         Map<Integer, List<PositionsInfo>> rankPositionsInfoMap = new HashMap<Integer, List<PositionsInfo>>();
         try {
 
-
-            // List<Properties> propertiesList = new ArrayList<Properties>();
-            //fetching parent process and adding it to the top of the list of processes that include sub-processes also.
-            //process = s.selectOne("call_procedures.GetProcess", process);
             com.wipro.ats.bdre.md.dao.jpa.Process jpaProcess = processDAO.get(processId);
 
             Process process = new Process();
@@ -86,7 +80,6 @@ public class ArrangePositions extends MetadataAPIBase {
                     process.setParentProcessId(jpaProcess.getProcess().getProcessId());
             }
 
-            //  List<Process> processes = s.selectList("call_procedures.GetSubProcesses", process);
             List<com.wipro.ats.bdre.md.dao.jpa.Process> jpaSubProcesses = processDAO.subProcesslist(processId);
             List<Process> processes = new ArrayList<Process>();
             for (com.wipro.ats.bdre.md.dao.jpa.Process jpaSubProcess : jpaSubProcesses) {
@@ -132,7 +125,8 @@ public class ArrangePositions extends MetadataAPIBase {
                 String[] nextProcesses = p.getNextProcessIds().split(",");
                 List<PositionsInfo> children = new ArrayList<PositionsInfo>();
                 for (String nextProcess : nextProcesses) {
-                    if (nextProcess.equals("0") || nextProcess.equals(processId.toString())) continue;
+                    if ("0".equals(nextProcess) || nextProcess.equals(processId.toString()))
+                        continue;
                     children.add(positionsInfoMap.get(nextProcess));
                 }
                 thisPositionInfo.setChildren(children);
@@ -161,8 +155,8 @@ public class ArrangePositions extends MetadataAPIBase {
     private void savePositionsInDB(Map<Integer, List<PositionsInfo>> rankPositionsInfoMap) {
 
         java.util.Date date = new java.util.Date();
-
         LOGGER.info("start time save positions in db" + date);
+
         try {
             List<PositionsInfo> allPositionsInfoList = new ArrayList<PositionsInfo>();
             for (int level : rankPositionsInfoMap.keySet()) {
@@ -172,11 +166,11 @@ public class ArrangePositions extends MetadataAPIBase {
                 allPositionsInfoList.addAll(positionsInfoList);
             }
 
-            if (allPositionsInfoList.size() > 0) {
+            if (!allPositionsInfoList.isEmpty()) {
                 //calling updateArrangePositions
                 propertiesDAO.updateArrangePositions(allPositionsInfoList.get(0).getProcessId(), allPositionsInfoList);
                 java.util.Date date1 = new java.util.Date();
-                LOGGER.info("close time save positions in db" + date);
+                LOGGER.info("close time save positions in db" + date1);
             }
         } catch (Exception e) {
             LOGGER.error("error occurred in addToDatabase function", e);
@@ -185,7 +179,6 @@ public class ArrangePositions extends MetadataAPIBase {
 
     private void setLevels(PositionsInfo referenceNode) {
         List<PositionsInfo> childNodes = referenceNode.kids();
-        //List<String> nextIds = Arrays.asList(referenceNode.nextProcessIds.split(","));
         for (PositionsInfo childNode : childNodes) {
             int parentLevel = referenceNode.getLevel();
             int childLevel = childNode.getLevel();
@@ -194,7 +187,7 @@ public class ArrangePositions extends MetadataAPIBase {
                 childLevel = parentLevel + 1;
             }
             childNode.setLevel(childLevel);
-            if ((childNode.kids().size() == 1 && childNode.kids().get(0).getProcessId() == childNode.kids().get(0).getParentProcessId()) || childNode.kids().size() == 0) {
+            if ((childNode.kids().size() == 1 && childNode.kids().get(0).getProcessId() == childNode.kids().get(0).getParentProcessId()) || childNode.kids().isEmpty()) {
                 LOGGER.debug("No more children to process");
             } else {
                 setLevels(childNode);
