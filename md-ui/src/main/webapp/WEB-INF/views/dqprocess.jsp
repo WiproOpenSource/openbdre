@@ -89,7 +89,7 @@
                                     </div>
                                     <div class="form-group">
                                         <label for="rulesPasswordValue">Rules Password</label>
-                                        <input type="text" class="form-control" id="rulesPasswordValue" required>
+                                        <input type="password" class="form-control" id="rulesPasswordValue" required>
                                     </div>
                                     <div class="form-group">
                                         <label for="rulesPackageValue">Rules Packages</label>
