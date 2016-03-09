@@ -38,16 +38,17 @@ public class ProcessTypeDAO {
     private static final Logger LOGGER = Logger.getLogger(ProcessTypeDAO.class);
     @Autowired
     SessionFactory sessionFactory;
+    private static final String PARENTPROCESSTYPEID="parentProcessTypeId";
 
-    public List<ProcessType> list(Integer processTypeId, Integer pageNum, Integer numResults) {
+    public List<ProcessType> list(Integer processTypeId) {
         Session session = sessionFactory.openSession();
         session.beginTransaction();
         List<ProcessType> processTypes = new ArrayList<ProcessType>();
         if (processTypeId == null) {
-            Criteria parentProcessTypeCriteria = session.createCriteria(ProcessType.class).add(Restrictions.isNull("parentProcessTypeId"));
+            Criteria parentProcessTypeCriteria = session.createCriteria(ProcessType.class).add(Restrictions.isNull(PARENTPROCESSTYPEID));
             processTypes = parentProcessTypeCriteria.list();
         } else {
-            Criteria processTypeCriteria = session.createCriteria(ProcessType.class).add(Restrictions.eq("parentProcessTypeId", processTypeId));
+            Criteria processTypeCriteria = session.createCriteria(ProcessType.class).add(Restrictions.eq(PARENTPROCESSTYPEID, processTypeId));
             processTypes = processTypeCriteria.list();
         }
         session.getTransaction().commit();
@@ -82,10 +83,10 @@ public class ProcessTypeDAO {
         session.beginTransaction();
         Integer size;
         if (processTypeId == null) {
-            Criteria parentProcessTypeCriteria = session.createCriteria(ProcessType.class).add(Restrictions.isNull("parentProcessTypeId"));
+            Criteria parentProcessTypeCriteria = session.createCriteria(ProcessType.class).add(Restrictions.isNull(PARENTPROCESSTYPEID));
             size = parentProcessTypeCriteria.list().size();
         } else {
-            Criteria processTypeCriteria = session.createCriteria(ProcessType.class).add(Restrictions.eq("parentProcessTypeId", processTypeId));
+            Criteria processTypeCriteria = session.createCriteria(ProcessType.class).add(Restrictions.eq(PARENTPROCESSTYPEID, processTypeId));
             size = processTypeCriteria.list().size();
         }
         session.getTransaction().commit();

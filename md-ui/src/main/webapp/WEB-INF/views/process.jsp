@@ -888,33 +888,11 @@
                                     sorting: false,
                                     create: false,
                                     edit: false,
+                                    display: function(data) {
 
-                                    display: function(item) {     
-                                        var $img1 = $('<span class="label label-primary">Export</span>');                        
-                                        $img1.click(function() {
+                                     return '<span class="label label-primary" onclick="goToExportPage(' + data.record.processId + ')">Export</span> ';
+                                     },
 
-                                            $.ajax({
-                                                url: '/mdrest/process/export/' + item.record.processId,
-                                                type: 'GET',
-                                                data: item + '&processId=' + item.record.processId + '&busDomainId=' + item.record.busDomainId + '&processTypeId=' + item.record.processTypeId + '&processName=' + item.record.processName + '&canRecover=' + item.record.canRecover + '&description=' + item.record.description + '&processTemplateId=0' + '&NextProcessIds=0',
-                                                dataType: 'json',
-                                                success: function(data) {
-                                                    if (data.Result == "OK") {
-                                                        console.log(window.location.protocol);
-                                                        var url = (window.location.protocol + "//" + window.location.host + "/mdrest/process/zippedexport/" + item.record.processId);
-                                                        window.location.href = url;
-                                                    }
-                                                    if (data.Result == "ERROR")
-                                                        alert(data.Message);
-                                                },
-                                                error: function() {
-                                                    alert('Error getting json');
-                                                }
-                                            });
-
-                                        })
-                                        return $img1;
-                                    }
                                 },
                                 EditGraphically: {
                                     title: 'Edit Graphically',
@@ -1000,6 +978,12 @@
                         location.href = '<c:url value="/pages/wfdesigner.page?processId="/>' + pid;
                     }
 
+                     function goToExportPage(pid)
+                     {
+                        console.log(pid);
+                        location.href = '<c:url value="/pages/appexport.page?processId="/>' + pid;
+
+                     }
 
 
                 </script>
