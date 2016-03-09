@@ -55,7 +55,7 @@ public class GeneralConfigAPI extends MetadataAPIBase {
         RestWrapper restWrapper = null;
         GetGeneralConfig generalConfigs = new GetGeneralConfig();
         List<GeneralConfig> generalConfigList = generalConfigs.byConigGroupOnly(configGroup, required);
-        if (generalConfigList.isEmpty()) {
+        if (!generalConfigList.isEmpty()) {
             if (generalConfigList.get(0).getRequired() == 2) {
                 restWrapper = new RestWrapper("Listing of Records Failed", RestWrapper.ERROR);
             } else {

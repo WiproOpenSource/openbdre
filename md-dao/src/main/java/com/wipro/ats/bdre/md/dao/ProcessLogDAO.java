@@ -42,6 +42,8 @@ public class ProcessLogDAO {
     private static final Logger LOGGER = Logger.getLogger(ProcessLogDAO.class);
     @Autowired
     SessionFactory sessionFactory;
+    private static final String PROCESS="process";
+    private static final String PARENTPROCESSID="process.processId";
 
     public List<ProcessLog> list(Integer pageNum, Integer numResults) {
         Session session = sessionFactory.openSession();
@@ -149,11 +151,11 @@ public class ProcessLogDAO {
 
         try {
             com.wipro.ats.bdre.md.dao.jpa.Process process = (Process) session.get(Process.class, processLogInfo.getProcessId());
-            Criteria processLogCriteria = session.createCriteria(ProcessLog.class).add(Restrictions.eq("process", process)).add(Restrictions.eq("messageId", processLogInfo.getMessageId())).add(Restrictions.eq("logCategory", processLogInfo.getLogCategory())).addOrder(Order.desc("logId"));
+            Criteria processLogCriteria = session.createCriteria(ProcessLog.class).add(Restrictions.eq(PROCESS, process)).add(Restrictions.eq("messageId", processLogInfo.getMessageId())).add(Restrictions.eq("logCategory", processLogInfo.getLogCategory())).addOrder(Order.desc("logId"));
             processLogCriteria.setMaxResults(1);
             ProcessLogInfo returnProcessLogInfo = new ProcessLogInfo();
 
-            if (processLogCriteria.list().size() != 0) {
+            if (!processLogCriteria.list().isEmpty()) {
                 ProcessLog processLog = (ProcessLog) processLogCriteria.list().get(0);
 
                 //mapping values to returnProcessLogInfo bean
@@ -186,19 +188,18 @@ public class ProcessLogDAO {
         List<ProcessLogInfo> processLogInfoList = new ArrayList<ProcessLogInfo>();
 
         try {
-            Criteria listProcessLogCriteria = session.createCriteria(ProcessLog.class).setProjection(Projections.distinct(Projections.property("process.processId")));
+            Criteria listProcessLogCriteria = session.createCriteria(ProcessLog.class).setProjection(Projections.distinct(Projections.property(PARENTPROCESSID)));
             int counter = listProcessLogCriteria.list().size();
             LOGGER.info("number of distinct processid is " + counter);
             List<Integer> processList = new ArrayList<Integer>();
-            Criteria processLogListCriteria = session.createCriteria(ProcessLog.class).setProjection(Projections.distinct(Projections.property("process.processId")));
+            Criteria processLogListCriteria = session.createCriteria(ProcessLog.class).setProjection(Projections.distinct(Projections.property(PARENTPROCESSID)));
             processList = processLogListCriteria.list();
             LOGGER.info("size of processlog " + processList.size() +" and list contains:"+ processList);
-//
-                List <Process> parentProcessList=new ArrayList<>();
+
             if(processLogInfo.getProcessId()==null){
-                if (processList.size() != 0) {
-                    Criteria distintPProcessId = session.createCriteria(Process.class).add(Restrictions.in("processId",processList)).setProjection(Projections.distinct(Projections.property("process.processId")));
-                    distintPProcessId.addOrder(Order.desc("process.processId")).setFirstResult(processLogInfo.getPage()).setMaxResults(processLogInfo.getPageSize());
+                if (!processList.isEmpty()) {
+                    Criteria distintPProcessId = session.createCriteria(Process.class).add(Restrictions.in("processId",processList)).setProjection(Projections.distinct(Projections.property(PARENTPROCESSID)));
+                    distintPProcessId.addOrder(Order.desc(PARENTPROCESSID)).setFirstResult(processLogInfo.getPage()).setMaxResults(processLogInfo.getPageSize());
 
                     List<Integer>distinctPPidList=distintPProcessId.list();
                     for(Integer pPid:distinctPPidList){
@@ -210,9 +211,9 @@ public class ProcessLogDAO {
 
                 }
                 }else {
-                if (processList.size() != 0) {
+                if (!processList.isEmpty()) {
                     for (Integer processId : processList) {
-                        Criteria pProcessId = session.createCriteria(Process.class).setProjection(Projections.property("process.processId")).add(Restrictions.eq("processId", processId));
+                        Criteria pProcessId = session.createCriteria(Process.class).setProjection(Projections.property(PARENTPROCESSID)).add(Restrictions.eq("processId", processId));
                         Integer parentProcessId = (Integer) pProcessId.uniqueResult();
 
 
@@ -248,11 +249,11 @@ public class ProcessLogDAO {
         try {
             session.beginTransaction();
             Process process = (Process) session.get(Process.class, processLogInfo.getProcessId());
-            Integer counter = session.createCriteria(ProcessLog.class).add(Restrictions.eq("process", process)).list().size();
+            Integer counter = session.createCriteria(ProcessLog.class).add(Restrictions.eq(PROCESS, process)).list().size();
 
 
             List<ProcessLog> processLogList = null;
-            Criteria processLogListCriteria = session.createCriteria(ProcessLog.class).add(Restrictions.eq("process", process));
+            Criteria processLogListCriteria = session.createCriteria(ProcessLog.class).add(Restrictions.eq(PROCESS, process));
 
             processLogList = processLogListCriteria.list();
 
