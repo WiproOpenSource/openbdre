@@ -32,7 +32,7 @@ public class MetadataPersistenceTrigger implements PreUpdateEventListener, PreIn
 
     private static final Logger LOGGER = Logger.getLogger(MetadataPersistenceTrigger.class);
     private static Map<Integer,Integer> processTypeMap=new HashMap<>();
-    //TODO:We have to populate this from DB
+    //TO DO:We have to populate this from DB
     static {
         processTypeMap.put(1,0);
         processTypeMap.put(2,0);
@@ -107,12 +107,12 @@ public class MetadataPersistenceTrigger implements PreUpdateEventListener, PreIn
 
     @Override
     public void onPostInsert(PostInsertEvent event) {
-        //TODO: Update edit_ts property if its Process and Properties
+        //tod o: Update edit_ts property if its Process and Properties
     }
 
     @Override
     public void onPostUpdate(PostUpdateEvent event) {
-        //TODO: Update edit_ts property if its Process and Properties
+        //TOD O: Update edit_ts property if its Process and Properties
     }
 }
 

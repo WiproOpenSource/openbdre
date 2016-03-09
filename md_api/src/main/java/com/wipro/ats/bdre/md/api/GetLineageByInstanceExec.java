@@ -22,8 +22,6 @@ import org.apache.commons.cli.CommandLine;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.AutowireCapableBeanFactory;
-import org.springframework.context.ApplicationContext;
-import org.springframework.context.support.ClassPathXmlApplicationContext;
 
 import java.util.List;
 
@@ -31,16 +29,20 @@ import java.util.List;
  * Created by IshitaParekh on 28-01-2015.
  */
 public class GetLineageByInstanceExec extends MetadataAPIBase {
-    public GetLineageByInstanceExec() {
-        AutowireCapableBeanFactory acbFactory = getAutowireCapableBeanFactory();
-        acbFactory.autowireBean(this);
-    }
 
     private static final Logger LOGGER = Logger.getLogger(GetLineageByInstanceExec.class);
 
     private static final String[][] PARAMS_STRUCTURE = {
             {"eid", "instance-exec-id", " Instance exec id whose lineage to be determined"},
     };
+
+    @Autowired
+    private LineageByInstanceExecDAO lineageByInstanceExecDAO;
+
+    public GetLineageByInstanceExec() {
+        AutowireCapableBeanFactory acbFactory = getAutowireCapableBeanFactory();
+        acbFactory.autowireBean(this);
+    }
 
     /**
      * This method gets list of all processes present in batch_consump_queue and archive_consump_queue
@@ -51,9 +53,8 @@ public class GetLineageByInstanceExec extends MetadataAPIBase {
      * @return This method returns list of all processes present in batch_consump_queue and archive_consump_queue
      * linked to a particular instance exec id.
      */
-    @Autowired
-    private LineageByInstanceExecDAO lineageByInstanceExecDAO;
 
+    @Override
     public List<GetLineageByInstanceExecInfo> execute(String[] params) {
         List<GetLineageByInstanceExecInfo> lineageByInstanceExecInfos;
         try {
@@ -66,7 +67,6 @@ public class GetLineageByInstanceExec extends MetadataAPIBase {
             GetLineageByInstanceExecInfo getLineageByInstanceExecInfo = new GetLineageByInstanceExecInfo();
             getLineageByInstanceExecInfo.setInstanceExecId(Long.parseLong(eid));
             //calling proc LineageByInstanceExec
-//            lineageByInstanceExecInfos = s.selectList("call_procedures.GetLineageByInstanceExec", getLineageByInstanceExecInfo);
             lineageByInstanceExecInfos = lineageByInstanceExecDAO.LineageByInstanceExec(getLineageByInstanceExecInfo);
             LOGGER.debug("Details of batch is " + lineageByInstanceExecInfos);
             return lineageByInstanceExecInfos;

@@ -23,8 +23,6 @@ import org.apache.commons.cli.CommandLine;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.AutowireCapableBeanFactory;
-import org.springframework.context.ApplicationContext;
-import org.springframework.context.support.ClassPathXmlApplicationContext;
 
 import java.util.List;
 
@@ -32,10 +30,6 @@ import java.util.List;
  * Created by KA294215 on 03-04-2015.
  */
 public class Intermediate extends MetadataAPIBase {
-    public Intermediate() {
-        AutowireCapableBeanFactory acbFactory = getAutowireCapableBeanFactory();
-        acbFactory.autowireBean(this);
-    }
 
     private static final Logger LOGGER = Logger.getLogger(Intermediate.class);
     private static final String[][] PARAMS_STRUCTURE = {
@@ -46,6 +40,11 @@ public class Intermediate extends MetadataAPIBase {
     @Autowired
     IntermediateDAO intermediateDAO;
 
+    public Intermediate() {
+        AutowireCapableBeanFactory acbFactory = getAutowireCapableBeanFactory();
+        acbFactory.autowireBean(this);
+    }
+
     /**
      * This method runs InsertIntermediate proc and stores intermediate properties as key value pairs which is linked
      * with a unique uuid.
@@ -53,7 +52,7 @@ public class Intermediate extends MetadataAPIBase {
      * @param params String array containing uuid.key,value and environment with their respective notation on command line.
      * @return This method returns list of key value pairs.
      */
-
+    @Override
     public IntermediateInfo execute(String[] params) {
 
         try {
@@ -70,8 +69,6 @@ public class Intermediate extends MetadataAPIBase {
             intermediateInfo.setUuid(uuid);
             intermediateInfo.setKey(key);
             intermediateInfo.setValue(value);
-            //intermediateInfo = s.selectOne("call_procedures.InsertIntermediate", intermediateInfo);
-
             com.wipro.ats.bdre.md.dao.jpa.Intermediate intermediate = new com.wipro.ats.bdre.md.dao.jpa.Intermediate();
             IntermediateId intermediateId = new IntermediateId();
             intermediateId.setInterKey(key);
@@ -100,8 +97,6 @@ public class Intermediate extends MetadataAPIBase {
 
         try {
             for (IntermediateInfo intermediateInfo : intermediateInfos) {
-
-                //    s.selectOne("call_procedures.InsertIntermediate", intermediateInfo);
                 com.wipro.ats.bdre.md.dao.jpa.Intermediate intermediate = new com.wipro.ats.bdre.md.dao.jpa.Intermediate();
                 IntermediateId intermediateId = new IntermediateId();
                 intermediateId.setInterKey(intermediateInfo.getKey());

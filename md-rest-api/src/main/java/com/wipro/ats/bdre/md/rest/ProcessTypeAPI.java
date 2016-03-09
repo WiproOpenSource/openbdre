@@ -22,9 +22,7 @@ import com.wipro.ats.bdre.md.rest.util.BindingResultError;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.ModelMap;
 import org.springframework.validation.BindingResult;
-
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -67,7 +65,7 @@ public class ProcessTypeAPI extends MetadataAPIBase {
                 processType.setProcessTypeName(jpaProcessType.getProcessTypeName());
             }
             restWrapper = new RestWrapper(processType, RestWrapper.OK);
-            LOGGER.info("Record with ID:" + processTypeId + " selected from ProcessType by User:" + principal.getName());
+            LOGGER.info("Record with ID : " + processTypeId + " selected from ProcessType by User:" + principal.getName());
 
         } catch (MetadataException e) {
             LOGGER.error(e);
@@ -80,14 +78,12 @@ public class ProcessTypeAPI extends MetadataAPIBase {
      * This method calls proc DeleteProcessType and deletes a record corresponding to processTypeId passed.
      *
      * @param processTypeId
-     * @param model
      * @return nothing.
      */
     @RequestMapping(value = "/{id}", method = RequestMethod.DELETE)
     @ResponseBody public
     RestWrapper delete(
-            @PathVariable("id") Integer processTypeId, Principal principal,
-            ModelMap model) {
+            @PathVariable("id") Integer processTypeId, Principal principal) {
         RestWrapper restWrapper = null;
         try {
             processTypeDAO.delete(processTypeId);
@@ -116,7 +112,6 @@ public class ProcessTypeAPI extends MetadataAPIBase {
             Integer counter=processTypeDAO.totalRows();
             List<com.wipro.ats.bdre.md.dao.jpa.ProcessType> jpaProcessTypes = processTypeDAO.listFull(startPage, pageSize);
             List<ProcessType> processTypes = new ArrayList<ProcessType>();
-            Integer totalRows=jpaProcessTypes.size();
             for (com.wipro.ats.bdre.md.dao.jpa.ProcessType processType : jpaProcessTypes) {
                 ProcessType returnProcessType = new ProcessType();
                 returnProcessType.setProcessTypeId(processType.getProcessTypeId());
@@ -160,7 +155,7 @@ public class ProcessTypeAPI extends MetadataAPIBase {
             processTypeDAO.update(jpaProcessType);
 
             restWrapper = new RestWrapper(processType, RestWrapper.OK);
-            LOGGER.info("Record with ID:" + processType.getProcessTypeId() + " updated in ProcessType by User:" + principal.getName() + processType);
+            LOGGER.info("Record with ID: " + processType.getProcessTypeId() + " updated in ProcessType by User:" + principal.getName() + processType);
 
         } catch (MetadataException e) {
             LOGGER.error(e);
@@ -193,7 +188,7 @@ public class ProcessTypeAPI extends MetadataAPIBase {
             processTypeDAO.insert(jpaProcessType);
 
             restWrapper = new RestWrapper(processType, RestWrapper.OK);
-            LOGGER.info("Record with ID:" + processType.getProcessTypeId() + " inserted in ProcessType by User:" + principal.getName() + processType);
+            LOGGER.info("Record with ID :" + processType.getProcessTypeId() + " inserted in ProcessType by User:" + principal.getName() + processType);
         } catch (MetadataException e) {
             LOGGER.error(e);
             restWrapper = new RestWrapper(e.getMessage(), RestWrapper.ERROR);
@@ -205,16 +200,15 @@ public class ProcessTypeAPI extends MetadataAPIBase {
      * This method is used to list the ProcessTypes applicable for processTypeId passed in dropdown list.
      *
      * @param processTypeId
-     * @param model
      * @return
      */
     @RequestMapping(value = {"/options/{ptid}"}, method = RequestMethod.POST)
     @ResponseBody public
-    RestWrapperOptions options(@PathVariable("ptid") Integer processTypeId,
-                               ModelMap model) {
+    RestWrapperOptions options(@PathVariable("ptid") Integer processTypeId) {
 
         RestWrapperOptions restWrapperOptions = null;
         try {
+
             List<com.wipro.ats.bdre.md.dao.jpa.ProcessType> jpaProcessTypes = processTypeDAO.list(processTypeId);
             List<ProcessType> processTypes = new ArrayList<ProcessType>();
             for (com.wipro.ats.bdre.md.dao.jpa.ProcessType processType : jpaProcessTypes) {
