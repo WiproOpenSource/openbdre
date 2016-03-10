@@ -2,6 +2,7 @@ package com.wipro.ats.bdre.md.rest;
 
 import com.wipro.ats.bdre.exception.MetadataException;
 import com.wipro.ats.bdre.md.api.util.AddJson;
+import com.wipro.ats.bdre.md.app.AppStore;
 import com.wipro.ats.bdre.md.beans.table.AppDeploymentQueue;
 import com.wipro.ats.bdre.md.beans.table.Process;
 import com.wipro.ats.bdre.md.beans.table.Properties;
@@ -14,15 +15,18 @@ import com.wipro.ats.bdre.md.rest.beans.ProcessExport;
 import com.wipro.ats.bdre.md.rest.util.BindingResultError;
 import com.wipro.ats.bdre.md.rest.util.DateConverter;
 import org.apache.log4j.Logger;
+import org.codehaus.jackson.map.DeserializationConfig;
+import org.codehaus.jackson.map.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.io.BufferedReader;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.IOException;
 import java.security.Principal;
 import java.util.ArrayList;
 import java.util.List;
@@ -31,11 +35,11 @@ import java.util.List;
  * Created by cloudera on 3/8/16.
  */
 @Controller
-@RequestMapping("/appdeployment")
+@RequestMapping("/adq")
 
-public class appdeplymentAPI {
+public class AppDeplymentQueueAPI {
 
-    private static final Logger LOGGER = Logger.getLogger(appdeplymentAPI.class);
+    private static final Logger LOGGER = Logger.getLogger(AppDeplymentQueueAPI.class);
     @Autowired
     AppDeploymentQueueDAO appDeploymentQueueDAO;
     @Autowired
@@ -129,8 +133,8 @@ public class appdeplymentAPI {
              returnedAppDeploymentQueue.setAppName(appDeploymentQueue.getAppName());
              returnedAppDeploymentQueue.setAppDomain(appDeploymentQueue.getAppDomain());
              returnedAppDeploymentQueue.setUsername(principal.getName());
-             returnedAppDeploymentQueue.setAdqId(adqId);
-             returnedAppDeploymentQueue.setAdqState((short) 0);
+             returnedAppDeploymentQueue.setAppDeploymentQueueId(adqId);
+             returnedAppDeploymentQueue.setAppDeploymentQueueStatus((short) 0);
              restWrapper = new RestWrapper(returnedAppDeploymentQueue, RestWrapper.OK);
         } catch (MetadataException e) {
             LOGGER.error(e);
@@ -140,6 +144,81 @@ public class appdeplymentAPI {
     }
 
 
+    @RequestMapping(value = "/merge/{id}", method = RequestMethod.POST)
+    @ResponseBody
+    public
+    RestWrapper merge(@PathVariable("id") Long queueId, Principal principal) {
+        RestWrapper restWrapper = null;
+        AppDeploymentQueue returnedAppDeploymentQueue=new AppDeploymentQueue();
+        ProcessExport processExport = new ProcessExport();
+        try{
+            String temp;
+            BufferedReader br = null;
+            String jsonfile="";
+            String homeDir = System.getProperty("user.home");
+            LOGGER.info("home directory" + homeDir);
+            br = new BufferedReader(new FileReader(homeDir+"/bdreappstore/store.json"));
+            while ((temp=br.readLine()) != null) {
+                jsonfile=jsonfile+temp;
+                LOGGER.info(jsonfile);
+            }
+            LOGGER.info("final string is"+jsonfile);
+            ObjectMapper mapper = new ObjectMapper();
+            mapper.configure(DeserializationConfig.Feature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+            AppStore appStore = mapper.readValue(jsonfile, AppStore.class);
+            restWrapper = new RestWrapper(returnedAppDeploymentQueue, RestWrapper.OK);
+        } catch (MetadataException e) {
+            LOGGER.error(e);
+            restWrapper = new RestWrapper(e.getMessage(), RestWrapper.ERROR);
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+            restWrapper = new RestWrapper(e.getMessage(), RestWrapper.ERROR);
+        } catch (IOException e) {
+            e.printStackTrace();
+            restWrapper = new RestWrapper(e.getMessage(), RestWrapper.ERROR);
+        }
+        return restWrapper;
+    }
 
+
+
+    /**
+     * This method fetches a list records from
+     * AppDeploymentQueues table.
+     *
+     * @param
+     * @return restWrapper returns a list of instances of AppDeploymentQueue object.
+     */
+    @RequestMapping(value = {"", "/"}, method = RequestMethod.GET)
+    @ResponseBody public
+    RestWrapper list(@RequestParam(value = "page", defaultValue = "0") int startPage,
+                     @RequestParam(value = "size", defaultValue = "10") int pageSize, Principal principal) {
+
+        RestWrapper restWrapper = null;
+        try {
+            Integer counter=appDeploymentQueueDAO.totalRecordCount();
+            List<com.wipro.ats.bdre.md.dao.jpa.AppDeploymentQueue> jpaAdqList = appDeploymentQueueDAO.list(startPage, pageSize);
+            List<AppDeploymentQueue> appDeploymentQueues = new ArrayList<AppDeploymentQueue>();
+            for (com.wipro.ats.bdre.md.dao.jpa.AppDeploymentQueue adq : jpaAdqList) {
+                AppDeploymentQueue appDeploymentQueue = new AppDeploymentQueue();
+                appDeploymentQueue.setUsername(adq.getUsers().getUsername());
+                appDeploymentQueue.setAppDomain(adq.getAppDomain());
+                appDeploymentQueue.setAppName(adq.getAppName());
+                appDeploymentQueue.setProcessId(adq.getProcess().getProcessId());
+                appDeploymentQueue.setAppDeploymentQueueId(adq.getAppDeploymentQueueId());
+                appDeploymentQueue.setAppDeploymentQueueStatus(adq.getAppDeploymentQueueStatus().getAppDeployStatusId());
+                appDeploymentQueue.setCounter(counter);
+                appDeploymentQueues.add(appDeploymentQueue);
+            }
+
+
+            restWrapper = new RestWrapper(appDeploymentQueues, RestWrapper.OK);
+            LOGGER.info("All records listed from AppDeploymentQueue by User:" + principal.getName());
+        } catch (MetadataException e) {
+            LOGGER.error(e);
+            restWrapper = new RestWrapper(e.getMessage(), RestWrapper.ERROR);
+        }
+        return restWrapper;
+    }
 
 }

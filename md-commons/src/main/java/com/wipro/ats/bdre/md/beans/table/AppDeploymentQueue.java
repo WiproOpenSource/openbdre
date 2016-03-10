@@ -18,12 +18,12 @@ package com.wipro.ats.bdre.md.beans.table;
  */
 public class AppDeploymentQueue {
 
-    private Long adqId;
+    private Long appDeploymentQueueId;
     private Integer processId;
     private String username;
     private String appDomain;
     private String appName;
-    private Short adqState;
+    private Short appDeploymentQueueStatus;
     private Integer pageSize;
     private Integer page;
     private Integer counter;
@@ -31,13 +31,13 @@ public class AppDeploymentQueue {
     public AppDeploymentQueue(){
     }
 
-    public AppDeploymentQueue(Long adqId, Integer processId, String username, String appDomain, String appName, Short adqState, Integer pageSize, Integer page, Integer counter) {
-        this.adqId = adqId;
+    public AppDeploymentQueue(Long appDeploymentQueueId, Integer processId, String username, String appDomain, String appName, Short appDeploymentQueueStatus, Integer pageSize, Integer page, Integer counter) {
+        this.appDeploymentQueueId = appDeploymentQueueId;
         this.processId = processId;
         this.username = username;
         this.appDomain = appDomain;
         this.appName = appName;
-        this.adqState = adqState;
+        this.appDeploymentQueueStatus = appDeploymentQueueStatus;
         this.pageSize = pageSize;
         this.page = page;
         this.counter = counter;
@@ -46,32 +46,24 @@ public class AppDeploymentQueue {
     @Override
     public String toString() {
         return "Adq{" +
-                "adqId=" + adqId +
+                "appDeploymentQueueId=" + appDeploymentQueueId +
                 ", processId=" + processId +
                 ", username='" + username + '\'' +
                 ", appDomain='" + appDomain + '\'' +
                 ", appName='" + appName + '\'' +
-                ", adqState=" + adqState +
+                ", appDeploymentQueueStatus=" + appDeploymentQueueStatus +
                 ", pageSize=" + pageSize +
                 ", page=" + page +
                 ", counter=" + counter +
                 '}';
     }
 
-    public String getUsername() {
-        return username;
+    public Long getAppDeploymentQueueId() {
+        return appDeploymentQueueId;
     }
 
-    public void setUsername(String username) {
-        this.username = username;
-    }
-
-    public Long getAdqId() {
-        return adqId;
-    }
-
-    public void setAdqId(Long adqId) {
-        this.adqId = adqId;
+    public void setAppDeploymentQueueId(Long appDeploymentQueueId) {
+        this.appDeploymentQueueId = appDeploymentQueueId;
     }
 
     public Integer getProcessId() {
@@ -80,6 +72,14 @@ public class AppDeploymentQueue {
 
     public void setProcessId(Integer processId) {
         this.processId = processId;
+    }
+
+    public String getUsername() {
+        return username;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
     }
 
     public String getAppDomain() {
@@ -98,12 +98,12 @@ public class AppDeploymentQueue {
         this.appName = appName;
     }
 
-    public Short getAdqState() {
-        return adqState;
+    public Short getAppDeploymentQueueStatus() {
+        return appDeploymentQueueStatus;
     }
 
-    public void setAdqState(Short adqState) {
-        this.adqState = adqState;
+    public void setAppDeploymentQueueStatus(Short appDeploymentQueueStatus) {
+        this.appDeploymentQueueStatus = appDeploymentQueueStatus;
     }
 
     public Integer getPageSize() {
@@ -129,6 +129,4 @@ public class AppDeploymentQueue {
     public void setCounter(Integer counter) {
         this.counter = counter;
     }
-
-
 }

@@ -59,7 +59,7 @@ public class AppDeployStatusAPI extends MetadataAPIBase {
             com.wipro.ats.bdre.md.dao.jpa.AppDeploymentQueueStatus jpaAdqStatus = appDeploymentQueueStatusDAO.get(adqState.shortValue());
             AppDeploymentQueueStatus adqStatus = new AppDeploymentQueueStatus();
             if (jpaAdqStatus != null) {
-                adqStatus.setAdqState( jpaAdqStatus.getAppDeployStatusId());
+                adqStatus.setAppDeploymentQueueStatusId( jpaAdqStatus.getAppDeployStatusId());
                 adqStatus.setDescription(jpaAdqStatus.getDescription());
             }
             restWrapper = new RestWrapper(adqStatus, RestWrapper.OK);
@@ -150,7 +150,7 @@ public class AppDeployStatusAPI extends MetadataAPIBase {
             LOGGER.debug("Updating Adq Status Id" + jpaAdqStatus.getAppDeployStatusId());
             LOGGER.debug("Exiting from update for deploy_status table");
             restWrapper = new RestWrapper(adqStatus, RestWrapper.OK);
-            LOGGER.info(RECORDWITHID + adqStatus.getAdqState() + " updated in AppDeploymentQueueStatus by User:" + principal.getName() + adqStatus);
+            LOGGER.info(RECORDWITHID + adqStatus.getAppDeploymentQueueStatusId() + " updated in AppDeploymentQueueStatus by User:" + principal.getName() + adqStatus);
         } catch (Exception e) {
             LOGGER.error( e);
             return new RestWrapper(e.getMessage(), RestWrapper.ERROR);
@@ -181,7 +181,7 @@ public class AppDeployStatusAPI extends MetadataAPIBase {
             com.wipro.ats.bdre.md.dao.jpa.AppDeploymentQueueStatus jpaAdqStatus = new com.wipro.ats.bdre.md.dao.jpa.AppDeploymentQueueStatus();
             jpaAdqStatus.setDescription(adqStatus.getDescription());
             Short adqState = appDeploymentQueueStatusDAO.insert(jpaAdqStatus);
-            adqStatus.setAdqState(adqState);
+            adqStatus.setAppDeploymentQueueStatusId(adqState);
             LOGGER.debug("Exiting from insert for adq_status table");
             restWrapper = new RestWrapper(adqStatus, RestWrapper.OK);
             LOGGER.info(RECORDWITHID + " inserted in AppDeploymentQueueStatus by User:" + principal.getName() + adqStatus);
@@ -206,7 +206,7 @@ public class AppDeployStatusAPI extends MetadataAPIBase {
             List<AppDeploymentQueueStatus> adqStatuses = new ArrayList<AppDeploymentQueueStatus>();
             for (com.wipro.ats.bdre.md.dao.jpa.AppDeploymentQueueStatus adqStatus : jpaAdqStatus) {
                 AppDeploymentQueueStatus returnAdqStatus = new AppDeploymentQueueStatus();
-                returnAdqStatus.setAdqState(adqStatus.getAppDeployStatusId());
+                returnAdqStatus.setAppDeploymentQueueStatusId(adqStatus.getAppDeployStatusId());
                 returnAdqStatus.setDescription(adqStatus.getDescription());
                 returnAdqStatus.setCounter(jpaAdqStatus.size());
                 adqStatuses.add(returnAdqStatus);
@@ -214,7 +214,7 @@ public class AppDeployStatusAPI extends MetadataAPIBase {
             List<RestWrapperOptions.Option> options = new ArrayList<RestWrapperOptions.Option>();
 
             for (AppDeploymentQueueStatus deploy : adqStatuses) {
-                RestWrapperOptions.Option option = new RestWrapperOptions.Option(deploy.getDescription(), deploy.getAdqState());
+                RestWrapperOptions.Option option = new RestWrapperOptions.Option(deploy.getDescription(), deploy.getAppDeploymentQueueStatusId());
                 options.add(option);
             }
             restWrapperOptions = new RestWrapperOptions(options, RestWrapperOptions.OK);

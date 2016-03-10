@@ -108,7 +108,7 @@
 			    }</security:authorize>
 		    },
 		    fields: {
-		    appDeployStatusId: {
+		    appDeploymentStatusId: {
 		    key : true,
 			    list: true,
 			    create:true,

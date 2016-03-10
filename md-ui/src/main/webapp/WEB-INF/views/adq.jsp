@@ -94,7 +94,7 @@
 		    },
 		    fields:
 	    {
-            deployId: {
+            appDeploymentQueueId: {
             title: 'Deploy ID',
             key: true,
                 list: true,
@@ -105,11 +105,10 @@
 			edit:false,
 
 			},
-		    appDeployStatusId: {
+		    appDeploymentQueueStatus: {
 		    title: 'App Deploy Status',
 		    edit:false,
-		    type: 'combobox',
-		    options: '/mdrest/appdeploystatus/options'
+
 
 		    },
             userName: {
