@@ -86,11 +86,11 @@
                                         <form role="form" id="exportToAppStoreForm"  >
                                              <div class="form-group">
                                                 <label >Application Name</label>
-                                                <input type="text" class="form-control" name="appname"  placeholder="Application Name" required>
+                                                <input type="text" class="form-control" name="appName"  placeholder="Application Name" required>
                                             </div>
                                             <div class="form-group">
                                                 <label >Select Application Domain</label>
-                                                <select class="form-control" name="deleteCopiedSource">
+                                                <select class="form-control" name="appDomain">
                                                     <option value="banking">Banking</option>
                                                     <option value="retail"> Retail</option>
                                                     <option value="telecom">Telecom</option>
@@ -103,10 +103,15 @@
 
                                             <div class="form-group">
                                                   <label >Upload App Image</label>
-                                                  <input type="file" name="appImage" class="form-control" placeholder="Upload App Image"required>
+                                                  <input type="file" name="appImage" class="form-control" placeholder="Upload App Image" id="img-id" required>
+
+                                            </div>
+                                            <div class="form-group">
+                                               <label></label>
+                                               <input type="hidden" class="form-control" name="processId"  value="<%=processId %>" required>
                                             </div>
 
-                                            <input type="submit" id="submitButton" class="btn btn-primary" ng-click="appstorePush(<%=processId %>)"/>
+                                            <input type="submit" id="submitButton" class="btn btn-primary" onclick="appstorePush();"/>
                                         </form>
 
                                     </div>
@@ -118,7 +123,7 @@
                <script>
                $("#export").hide();
                $("#successHeader").hide();
-                               downloadZip =function (processId){
+                               downloadZip =function(processId){
 
                                 $.ajax({
                                       url: '/mdrest/process/export/' + processId,
@@ -140,24 +145,31 @@
 
                                }
 
-                               appstorePush =function (processId){
-
+                               appstorePush =function (){
+                                    uploadImg(<%=processId %> ,'img-id');
+                                   event.preventDefault();
                                 $.ajax({
-                                     url: '/mdrest/process/export/' + processId,
+                                     url: '/mdrest/appdeployment/',
                                       type: 'POST',
                                       data: $('#exportToAppStoreForm').serialize(),
                                       dataType: 'json',
                                        success: function(data) {
                                        if (data.Result == "OK") {
-                                       console.log(window.location.protocol);
-                                      var url = (window.location.protocol + "//" + window.location.host + "/mdrest/process/zippedexport/" + processId);
-                                       window.location.href = url;
+                                       console.log(data);
+                                       if(imgstatus == "uploaded"){
+                                            alert('data successfully submitted');
+                                             $("#export").hide();
+                                             }
+                                        if(imgstatus == "failed")
+                                            alert('image upload failed');
+
                                     }
                                          if (data.Result == "ERROR")
                                            alert(data.Message);
                                       },
                                        error: function() {
-                                       alert('Error in zip download');
+                                       console.log(imgstatus);
+                                       alert('Error in app export to appstore');
                                    }
                                });
 
@@ -171,6 +183,47 @@
                                                                  $("#export").show();
                                               }
                                  </script>
+
+                                 <script>
+                                                 var uploadedFileName ="";
+                                                 var imgstatus="";
+                                               function uploadImg (subDir,fileId){
+                                              var arg= [subDir,fileId];
+                                                var fd = new FormData();
+                                               		                var fileObj = $("#"+arg[1])[0].files[0];
+                                                                       var fileName=fileObj.name;
+                                                                       fd.append("file", fileObj);
+                                                                       fd.append("name", fileName);
+                                                                       $.ajax({
+                                                                         url: '/mdrest/filehandler/uploadzip/'+arg[0],
+                                                                         type: "POST",
+                                                                         data: fd,
+                                                                         async: false,
+                                                                         enctype: 'multipart/form-data',
+                                                                         processData: false,  // tell jQuery not to process the data
+                                                                         contentType: false,  // tell jQuery not to set contentType
+                                                                         success:function (data) {
+                                                                               uploadedFileName=data.Record.fileName;
+                                                                               console.log( data );
+                                                                               imgstatus="uploaded";
+                                                                               return false;
+                                               							},
+                                               						  error: function () {
+                                               							   imgstatus="failed";
+                                                                           return false;
+                                               							}
+                                               						 });
+
+                                               }
+
+
+
+                                               </script>
+
+
+                                               <div style = "display:none" id = "div-dialog-warning" >
+                                                               				<p ><span class = "ui-icon ui-icon-alert" style = "float:left;" ></span >
+                                                               				<div />
 
 
   </body>
