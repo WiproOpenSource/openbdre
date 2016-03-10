@@ -111,7 +111,7 @@
                                                <input type="hidden" class="form-control" name="processId"  value="<%=processId %>" required>
                                             </div>
 
-                                            <input type="submit" id="submitButton" class="btn btn-primary" onclick="appstorePush(); uploadImg(<%=processId %> ,'img-id');"/>
+                                            <input type="submit" id="submitButton" class="btn btn-primary" onclick="appstorePush();"/>
                                         </form>
 
                                     </div>
@@ -146,6 +146,7 @@
                                }
 
                                appstorePush =function (){
+                                    uploadImg(<%=processId %> ,'img-id');
                                    event.preventDefault();
                                 $.ajax({
                                      url: '/mdrest/appdeployment/',
