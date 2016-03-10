@@ -94,7 +94,7 @@ public class AppDeploymentQueueDAO {
         }
     }
 
-    public void delete(Integer id) {
+    public void delete(Long id) {
         Session session = sessionFactory.openSession();
         try {
             session.beginTransaction();
