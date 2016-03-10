@@ -123,7 +123,7 @@
                <script>
                $("#export").hide();
                $("#successHeader").hide();
-                               downloadZip =function (processId){
+                               downloadZip =function(processId){
 
                                 $.ajax({
                                       url: '/mdrest/process/export/' + processId,
