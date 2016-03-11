@@ -63,6 +63,7 @@ public class PigActionNode extends GenericActionNode {
 
     @Override
     public String getXML() {
+        LOGGER.info("Inside PigAction");
         if (this.getProcessInfo().getParentProcessId() == 0) {
             return "";
         }
@@ -72,16 +73,6 @@ public class PigActionNode extends GenericActionNode {
                 "            <job-tracker>${jobTracker}</job-tracker>\n" +
                 "            <name-node>${nameNode}</name-node>\n");
         ret.append(getScriptPath(getId(), "script"));
-        /*ret.append("            <param>exec-id=${wf:actionData(\"init-job\")[\"instance-exec-id\"]}</param>\n" +
-                "            <param>target-batch-id=${wf:actionData(\"init-job\")[\"target-batch-id\"]}</param>\n" +
-                "            <param>min-batch-id=${wf:actionData(\"init-job\")[\"min-batch-id-map." + getId() + "\"]}</param>\n" +
-                "            <param>max-batch-id=${wf:actionData(\"init-job\")[\"max-batch-id-map." + getId() + "\"]}</param>\n" +
-                "            <param>min-pri=${wf:actionData(\"init-job\")[\"min-source-instance-exec-map." + getId() + "\"]}</param>\n" +
-                "            <param>max-pri=${wf:actionData(\"init-job\")[\"max-source-instance-exec-map." + getId() + "\"]}</param>\n" +
-                "            <param>min-batch-marking=${wf:actionData(\"init-job\")[\"min-batch-marking-map." + getId() + "\"]}</param>\n" +
-                "            <param>max-batch-marking=${wf:actionData(\"init-job\")[\"max-batch-marking-map." + getId() + "\"]}</param>\n" +
-                "            <param>target-batch-marking=${wf:actionData(\"init-job\")[\"target-batch-marking\"]}</param>\n" +
-                "            <param>last-recoverable-sp-id=${wf:actionData(\"init-job\")[\"last-recoverable-sp-id\"]}</param>\n");*/
         ret.append(getParams(getId(), "param"));
         ret.append("        </pig>\n" +
                 "        <ok to=\"" + getToNode().getName() + "\"/>\n" +
@@ -103,7 +94,7 @@ public class PigActionNode extends GenericActionNode {
         java.util.Properties scriptPath = getProperties.getProperties(getId().toString(), configGroup);
         Enumeration e = scriptPath.propertyNames();
         StringBuilder addScriptPath = new StringBuilder();
-        if (scriptPath.size() != 0) {
+        if (!scriptPath.isEmpty()) {
             while (e.hasMoreElements()) {
                 String key = (String) e.nextElement();
                 addScriptPath.append("            <script>" + scriptPath.getProperty(key) + "</script>\n");
@@ -127,10 +118,10 @@ public class PigActionNode extends GenericActionNode {
         java.util.Properties listForParams = getProperties.getProperties(getId().toString(), configGroup);
         Enumeration e = listForParams.propertyNames();
         StringBuilder addParams = new StringBuilder();
-        if (listForParams.size() != 0) {
+        if (!listForParams.isEmpty()) {
             while (e.hasMoreElements()) {
                 String key = (String) e.nextElement();
-                if (key.equals("run_id")) {
+                if ("run_id".equals(key)) {
                     addParams.append("<argument>-param</argument>");
                     addParams.append("<argument>" + key + "=" + "${wf:actionData(\"init-job\")[\"min-batch-id-map." + getId() + "\"]}" + "</argument>\n");
                 } else {

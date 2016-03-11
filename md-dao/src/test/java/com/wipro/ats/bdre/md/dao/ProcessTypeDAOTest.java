@@ -42,7 +42,7 @@ public class ProcessTypeDAOTest {
     @Ignore
     @Test
     public void testList() throws Exception {
-        LOGGER.info("Size of ProcessType is atleast:" + processTypeDAO.list(null, 0, 10).size());
+        LOGGER.info("Size of ProcessType is atleast:" + processTypeDAO.list(null).size());
     }
     @Ignore
     @Test

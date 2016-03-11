@@ -53,7 +53,6 @@ public class InstanceExecDAO {
         try {
             if (processId == null) {
 
-                // select count(instance_exec_id) from instance_exec into counter;
                 counter = session.createCriteria(InstanceExec.class).list().size();
                 Criteria joinBatchInstanceExec = session.createCriteria(Batch.class, "b").createAlias("b.instanceExec", "ieid", JoinType.RIGHT_OUTER_JOIN).addOrder(Order.desc("ieid.instanceExecId"));
                 joinBatchInstanceExec.setFirstResult(pageNum);
@@ -61,7 +60,6 @@ public class InstanceExecDAO {
                 batchList = joinBatchInstanceExec.list();
 
             } else {
-                // select count(instance_exec_id) from instance_exec where process_id = pid into counter;
                 counter = session.createCriteria(InstanceExec.class).add(Restrictions.eq("process.processId", processId)).list().size();
                 Criteria joinBatchInstanceExec = session.createCriteria(Batch.class, "b").createAlias("b.instanceExec", "ieid", JoinType.RIGHT_OUTER_JOIN).add(Restrictions.eq("ieid.process.processId", processId)).addOrder(Order.desc("ieid.instanceExecId"));
                 joinBatchInstanceExec.setFirstResult(pageNum);

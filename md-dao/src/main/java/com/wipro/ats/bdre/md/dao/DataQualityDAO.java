@@ -43,13 +43,14 @@ public class DataQualityDAO {
     private static final Logger LOGGER = Logger.getLogger(DataQualityDAO.class);
     @Autowired
     SessionFactory sessionFactory;
-
+    private static final String PROCESSID="process.processId";
+    private static final String CONFIGGROUP="configGroup";
     public void deleteDQSetup(int pid) {
         Session session = sessionFactory.openSession();
         try {
             session.beginTransaction();
-            Criteria deletePropertiesCriteria = session.createCriteria(Properties.class).add(Restrictions.eq("process.processId", pid));
-            deletePropertiesCriteria.add(Restrictions.eq("configGroup", "dq"));
+            Criteria deletePropertiesCriteria = session.createCriteria(Properties.class).add(Restrictions.eq(PROCESSID, pid));
+            deletePropertiesCriteria.add(Restrictions.eq(CONFIGGROUP, "dq"));
             List<Properties> deletingProperties = deletePropertiesCriteria.list();
             Iterator<Properties> iterator = deletingProperties.iterator();
             while (iterator.hasNext()) {
@@ -74,13 +75,13 @@ public class DataQualityDAO {
         try {
             session.beginTransaction();
             Criteria propertiesCriteria = session.createCriteria(Properties.class);
-            propertiesCriteria.add(Restrictions.eq("configGroup", "dq"));
+            propertiesCriteria.add(Restrictions.eq(CONFIGGROUP, "dq"));
             propertiesCriteria.setProjection(Projections.distinct(Projections.property("process")));
             int counter = propertiesCriteria.list().size();
             LOGGER.info("Distinct process id count: " + counter);
             Criteria listPropertiesCriteria = session.createCriteria(Properties.class);
-            listPropertiesCriteria.add(Restrictions.eq("configGroup", "dq"));
-            listPropertiesCriteria.addOrder(Order.desc("process.processId"));
+            listPropertiesCriteria.add(Restrictions.eq(CONFIGGROUP, "dq"));
+            listPropertiesCriteria.addOrder(Order.desc(PROCESSID));
             listPropertiesCriteria.setFirstResult(startPage).setMaxResults(pageSize);
             List<Properties> propertiesList = listPropertiesCriteria.list();
 
@@ -244,7 +245,7 @@ public class DataQualityDAO {
 
 
             Criteria countCriteria = session.createCriteria(Properties.class).add(Restrictions.eq("id.processId", subProcessId));
-            countCriteria.add(Restrictions.eq("configGroup", dqSetupInfo.getConfigGroup()));
+            countCriteria.add(Restrictions.eq(CONFIGGROUP, dqSetupInfo.getConfigGroup()));
 
             List<Properties> jpaPropertiesList = countCriteria.list();
             int counter = jpaPropertiesList.size();
@@ -288,7 +289,7 @@ public class DataQualityDAO {
             LOGGER.info(" propertiesId1 setPropKey" + propertiesId1.getPropKey());
             LOGGER.info("dqSetupInfo.getConfigGroup() " + dqSetupInfo.getConfigGroup());
             Criteria updatePropertiesCriteria1 = session.createCriteria(Properties.class).add(Restrictions.eq("id", propertiesId1));
-            updatePropertiesCriteria1.add(Restrictions.eq("configGroup", dqSetupInfo.getConfigGroup()));
+            updatePropertiesCriteria1.add(Restrictions.eq(CONFIGGROUP, dqSetupInfo.getConfigGroup()));
             Properties updatingProperties1 = (Properties) updatePropertiesCriteria1.uniqueResult();
             LOGGER.info("updating propertiy is " + updatingProperties1);
             updatingProperties1.setPropValue(dqSetupInfo.getRulesUserNameValue());
@@ -299,7 +300,7 @@ public class DataQualityDAO {
             propertiesId2.setProcessId(dqSetupInfo.getSubProcessId());
             propertiesId2.setPropKey(dqSetupInfo.getRulesPassword());
             Criteria updatePropertiesCriteria2 = session.createCriteria(Properties.class).add(Restrictions.eq("id", propertiesId2));
-            updatePropertiesCriteria2.add(Restrictions.eq("configGroup", dqSetupInfo.getConfigGroup()));
+            updatePropertiesCriteria2.add(Restrictions.eq(CONFIGGROUP, dqSetupInfo.getConfigGroup()));
             Properties updatingProperties2 = (Properties) updatePropertiesCriteria2.uniqueResult();
             updatingProperties2.setPropValue(dqSetupInfo.getRulesPasswordValue());
             updatingProperties2.setDescription(dqSetupInfo.getDescription());
@@ -309,7 +310,7 @@ public class DataQualityDAO {
             propertiesId3.setProcessId(dqSetupInfo.getSubProcessId());
             propertiesId3.setPropKey(dqSetupInfo.getRulesPackage());
             Criteria updatePropertiesCriteria3 = session.createCriteria(Properties.class).add(Restrictions.eq("id", propertiesId3));
-            updatePropertiesCriteria3.add(Restrictions.eq("configGroup", dqSetupInfo.getConfigGroup()));
+            updatePropertiesCriteria3.add(Restrictions.eq(CONFIGGROUP, dqSetupInfo.getConfigGroup()));
             Properties updatingProperties3 = (Properties) updatePropertiesCriteria3.uniqueResult();
             updatingProperties3.setPropValue(dqSetupInfo.getRulesPackageValue());
             updatingProperties3.setDescription(dqSetupInfo.getDescription());
@@ -319,7 +320,7 @@ public class DataQualityDAO {
             propertiesId4.setProcessId(dqSetupInfo.getSubProcessId());
             propertiesId4.setPropKey(dqSetupInfo.getFileDelimiterRegex());
             Criteria updatePropertiesCriteria4 = session.createCriteria(Properties.class).add(Restrictions.eq("id", propertiesId4));
-            updatePropertiesCriteria4.add(Restrictions.eq("configGroup", dqSetupInfo.getConfigGroup()));
+            updatePropertiesCriteria4.add(Restrictions.eq(CONFIGGROUP, dqSetupInfo.getConfigGroup()));
             Properties updatingProperties4 = (Properties) updatePropertiesCriteria4.uniqueResult();
             updatingProperties4.setPropValue(dqSetupInfo.getFileDelimiterRegexValue());
             updatingProperties4.setDescription(dqSetupInfo.getDescription());
@@ -329,14 +330,14 @@ public class DataQualityDAO {
             propertiesId5.setProcessId(dqSetupInfo.getSubProcessId());
             propertiesId5.setPropKey(dqSetupInfo.getMinPassThresholdPercent());
             Criteria updatePropertiesCriteria5 = session.createCriteria(Properties.class).add(Restrictions.eq("id", propertiesId5));
-            updatePropertiesCriteria5.add(Restrictions.eq("configGroup", dqSetupInfo.getConfigGroup()));
+            updatePropertiesCriteria5.add(Restrictions.eq(CONFIGGROUP, dqSetupInfo.getConfigGroup()));
             Properties updatingProperties5 = (Properties) updatePropertiesCriteria5.uniqueResult();
             updatingProperties5.setPropValue(dqSetupInfo.getMinPassThresholdPercentValue());
             updatingProperties5.setDescription(dqSetupInfo.getDescription());
             session.update(updatingProperties5);
 
-            Criteria countCriteria = session.createCriteria(Properties.class).add(Restrictions.eq("process.processId", dqSetupInfo.getSubProcessId()));
-            countCriteria.add(Restrictions.eq("configGroup", dqSetupInfo.getConfigGroup()));
+            Criteria countCriteria = session.createCriteria(Properties.class).add(Restrictions.eq(PROCESSID, dqSetupInfo.getSubProcessId()));
+            countCriteria.add(Restrictions.eq(CONFIGGROUP, dqSetupInfo.getConfigGroup()));
             List<Properties> jpaPropertiesList = countCriteria.list();
             int counter = jpaPropertiesList.size();
             Iterator<Properties> iterator = jpaPropertiesList.iterator();

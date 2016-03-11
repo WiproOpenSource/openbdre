@@ -34,28 +34,6 @@ public abstract class MetadataAPIBase extends BaseStructure {
         return acbFactory;
     }
 
-/*
-    private static SqlSessionFactory sqlSessionFactory;
-    private static Reader reader = null;
-    private static final Logger LOGGER = Logger.getLogger(MetadataAPIBase.class);
-
-    static {
-        try {
-
-
-            String resource;
-            resource = "mybatis-config.xml";
-            reader = Resources.getResourceAsReader(resource);
-
-        } catch (FileNotFoundException e) {
-            throw new MetadataException("Config file not found", e);
-        } catch (IOException e) {
-            throw new MetadataException("Config file not found", e);
-        }
-    }
-
-    */
-
     /**
      * This is an abstract method defining structure of execute method.
      *
@@ -64,26 +42,5 @@ public abstract class MetadataAPIBase extends BaseStructure {
      */
 
     public abstract Object execute(String[] params);
-
-
-/**
- * This method creates an instance of SqlSessionFactory and build a sql session.
- *
- * @param env Environment variable which defines connection setting for sql server.
- * @return The method returns instance of SqlSessionFactory.
- *//*
-
-
-    public SqlSessionFactory getSqlSessionFactory(String env) {
-        if (env == null) {
-            env = getDefaultEnv();
-            LOGGER.debug("env was null so adding env from default:env= " + env);
-        }
-        if (sqlSessionFactory == null) {
-            sqlSessionFactory = new SqlSessionFactoryBuilder().build(reader, env);
-        }
-        return sqlSessionFactory;
-    }
-*/
 
 }

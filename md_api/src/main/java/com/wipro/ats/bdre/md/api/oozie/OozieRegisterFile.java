@@ -20,10 +20,6 @@ import com.wipro.ats.bdre.md.api.RegisterFile;
 import com.wipro.ats.bdre.md.beans.RegisterFileInfo;
 import com.wipro.ats.bdre.util.OozieUtil;
 import org.apache.log4j.Logger;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.config.AutowireCapableBeanFactory;
-import org.springframework.context.ApplicationContext;
-import org.springframework.context.support.ClassPathXmlApplicationContext;
 
 /**
  * Created by leela on 12-12-2014.

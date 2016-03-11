@@ -39,13 +39,14 @@ public class DeployDAO {
     private static final Logger LOGGER = Logger.getLogger(DeployDAO.class);
     @Autowired
     SessionFactory sessionFactory;
+    private static final String DEPLOYMENTID="deploymentId";
+    private static final String DEPLOYSTATUS="deployStatus";
 
     public void initDeploy(Long deployId) {
         Session session = sessionFactory.openSession();
         try {
 
             session.beginTransaction();
-
             // Running deploy status object
             DeployStatus runningDeployStatus = new DeployStatus();
             runningDeployStatus.setDeployStatusId((short) 2);
@@ -60,30 +61,30 @@ public class DeployDAO {
             pickedDeployStatus.setDeployStatusId((short) 5);
 
             // querying deploymentId present or not
-            Criteria checkDeploymentId = session.createCriteria(ProcessDeploymentQueue.class).add(Restrictions.eq("deploymentId", deployId));
+            Criteria checkDeploymentId = session.createCriteria(ProcessDeploymentQueue.class).add(Restrictions.eq(DEPLOYMENTID, deployId));
             Integer deploymentIdCount = checkDeploymentId.list().size();
             LOGGER.info("Deployment Id count :" + deploymentIdCount);
 
             //querying running deployment process
-            Criteria checkDeployingProcess = session.createCriteria(ProcessDeploymentQueue.class).add(Restrictions.and(Restrictions.eq("deploymentId", deployId), Restrictions.eq("deployStatus", runningDeployStatus)));
+            Criteria checkDeployingProcess = session.createCriteria(ProcessDeploymentQueue.class).add(Restrictions.and(Restrictions.eq(DEPLOYMENTID, deployId), Restrictions.eq(DEPLOYSTATUS, runningDeployStatus)));
             Integer deployingProcessCount = checkDeployingProcess.list().size();
-            LOGGER.info("Deploying process count :" + deployingProcessCount);
+            LOGGER.info("Deploying process count of running deployment process:" + deployingProcessCount);
 
             //querying deployed process
-            Criteria checkDeployedProcess = session.createCriteria(ProcessDeploymentQueue.class).add(Restrictions.eq("deploymentId", deployId)).add(Restrictions.or(Restrictions.eq("deployStatus", failDeployStatus), Restrictions.eq("deployStatus", successDeployStatus)));
+            Criteria checkDeployedProcess = session.createCriteria(ProcessDeploymentQueue.class).add(Restrictions.eq(DEPLOYMENTID, deployId)).add(Restrictions.or(Restrictions.eq(DEPLOYSTATUS, failDeployStatus), Restrictions.eq(DEPLOYSTATUS, successDeployStatus)));
             Integer deployedProcessCount = checkDeployedProcess.list().size();
-            LOGGER.info("Deployed process count :" + deployedProcessCount);
+            LOGGER.info("Deployed process count of deployed process :" + deployedProcessCount);
 
             //picked deployment status process with passed deployment Id  from PDQ to update
             List<ProcessDeploymentQueue> processDeploymentQueueList = new ArrayList<ProcessDeploymentQueue>();
-            Criteria checkPickedProcesses = session.createCriteria(ProcessDeploymentQueue.class).add(Restrictions.and(Restrictions.eq("deploymentId", deployId), Restrictions.eq("deployStatus", pickedDeployStatus)));
+            Criteria checkPickedProcesses = session.createCriteria(ProcessDeploymentQueue.class).add(Restrictions.and(Restrictions.eq(DEPLOYMENTID, deployId), Restrictions.eq(DEPLOYSTATUS, pickedDeployStatus)));
             processDeploymentQueueList = checkPickedProcesses.list();
             Integer pickedCount = checkPickedProcesses.list().size();
             LOGGER.info("Picked process count :" + pickedCount);
 
             //check deployment Id is present or not
             if (deploymentIdCount == 0) {
-                throw new MetadataException("The deployment Id is not present:" + deployId);
+                throw new MetadataException("The deployment Id is not present: " + deployId);
             }
             // check process is deploying
             else if (deployingProcessCount != 0) {
@@ -91,7 +92,7 @@ public class DeployDAO {
             }
             //check process is already deployed
             else if (deployedProcessCount != 0) {
-                throw new MetadataException("The process is already deployed:" + deployId);
+                throw new MetadataException("The process is already deployed: " + deployId);
             } else {
                 //updating startTs and deploy status of process to running in ProcessDeploymentQueue table from deploy status as picked
                 if (pickedCount == 0) {
@@ -107,7 +108,7 @@ public class DeployDAO {
 
         } catch (MetadataException e) {
             session.getTransaction().rollback();
-            LOGGER.error("Error occurred", e);
+            LOGGER.error("Error occurred ", e);
         } finally {
             session.close();
         }
@@ -131,31 +132,31 @@ public class DeployDAO {
             successDeployStatus.setDeployStatusId((short) 3);
 
             // querying deploymentId present or not
-            Criteria checkDeploymentId = session.createCriteria(ProcessDeploymentQueue.class).add(Restrictions.eq("deploymentId", deployId));
+            Criteria checkDeploymentId = session.createCriteria(ProcessDeploymentQueue.class).add(Restrictions.eq(DEPLOYMENTID, deployId));
             Integer deploymentIdCount = checkDeploymentId.list().size();
             LOGGER.info("Deployment Id count :" + deploymentIdCount);
 
             //querying deployed process
-            Criteria checkDeployedProcess = session.createCriteria(ProcessDeploymentQueue.class).add(Restrictions.eq("deploymentId", deployId)).add(Restrictions.or(Restrictions.eq("deployStatus", failDeployStatus), Restrictions.eq("deployStatus", successDeployStatus)));
+            Criteria checkDeployedProcess = session.createCriteria(ProcessDeploymentQueue.class).add(Restrictions.eq(DEPLOYMENTID, deployId)).add(Restrictions.or(Restrictions.eq(DEPLOYSTATUS, failDeployStatus), Restrictions.eq(DEPLOYSTATUS, successDeployStatus)));
             Integer deployedProcessCount = checkDeployedProcess.list().size();
             LOGGER.info("Deployed process count :" + deployedProcessCount);
 
 
             //querying running deployment process
             List<ProcessDeploymentQueue> processDeploymentQueueList = new ArrayList<ProcessDeploymentQueue>();
-            Criteria checkDeployingProcess = session.createCriteria(ProcessDeploymentQueue.class).add(Restrictions.and(Restrictions.eq("deploymentId", deployId), Restrictions.eq("deployStatus", runningDeployStatus)));
+            Criteria checkDeployingProcess = session.createCriteria(ProcessDeploymentQueue.class).add(Restrictions.and(Restrictions.eq(DEPLOYMENTID, deployId), Restrictions.eq(DEPLOYSTATUS, runningDeployStatus)));
             Integer deployingProcessCount = checkDeployingProcess.list().size();
             processDeploymentQueueList = checkDeployingProcess.list();
-            LOGGER.info("Deploying process count :" + deployingProcessCount);
+            LOGGER.info("Deploying process count of running deployment processes :" + deployingProcessCount);
 
 
             //check deployment Id is present or not
             if (deploymentIdCount == 0) {
-                throw new MetadataException("The deployment Id is not present:" + deployId);
+                throw new MetadataException("The deployment Id is  not present:" + deployId);
             }
             //check process is already deployed
             else if (deployedProcessCount != 0) {
-                throw new MetadataException("The process is already deployed:" + deployId);
+                throw new MetadataException("The process is already deployed :" + deployId);
             }
             // check process is deploying
             else if (deployingProcessCount == 0) {
@@ -172,7 +173,7 @@ public class DeployDAO {
 
         } catch (MetadataException e) {
             session.getTransaction().rollback();
-            LOGGER.error("Error occurred", e);
+            LOGGER.error(" Error occurred", e);
         } finally {
             session.close();
         }
@@ -198,22 +199,19 @@ public class DeployDAO {
             failDeployStatus.setDeployStatusId((short) 4);
 
             // querying deploymentId present or not
-            Criteria checkDeploymentId = session.createCriteria(ProcessDeploymentQueue.class).add(Restrictions.eq("deploymentId", deployId));
+            Criteria checkDeploymentId = session.createCriteria(ProcessDeploymentQueue.class).add(Restrictions.eq(DEPLOYMENTID, deployId));
             Integer deploymentIdCount = checkDeploymentId.list().size();
             LOGGER.info("Deployment Id count :" + deploymentIdCount);
 
             //querying deployed process
-            Criteria checkDeployedProcess = session.createCriteria(ProcessDeploymentQueue.class).add(Restrictions.eq("deploymentId", deployId)).add(Restrictions.or(Restrictions.eq("deployStatus", failDeployStatus), Restrictions.eq("deployStatus", successDeployStatus)));
+            Criteria checkDeployedProcess = session.createCriteria(ProcessDeploymentQueue.class).add(Restrictions.eq(DEPLOYMENTID, deployId)).add(Restrictions.or(Restrictions.eq(DEPLOYSTATUS, failDeployStatus), Restrictions.eq(DEPLOYSTATUS, successDeployStatus)));
             Integer deployedProcessCount = checkDeployedProcess.list().size();
-            LOGGER.info("Deployed process count :" + deployedProcessCount);
-
 
             //querying running deployment process
             List<ProcessDeploymentQueue> processDeploymentQueueList = new ArrayList<ProcessDeploymentQueue>();
-            Criteria checkDeployingProcess = session.createCriteria(ProcessDeploymentQueue.class).add(Restrictions.and(Restrictions.eq("deploymentId", deployId), Restrictions.eq("deployStatus", runningDeployStatus)));
+            Criteria checkDeployingProcess = session.createCriteria(ProcessDeploymentQueue.class).add(Restrictions.and(Restrictions.eq(DEPLOYMENTID, deployId), Restrictions.eq(DEPLOYSTATUS, runningDeployStatus)));
             Integer deployingProcessCount = checkDeployingProcess.list().size();
             processDeploymentQueueList = checkDeployingProcess.list();
-            LOGGER.info("Deploying process count :" + deployingProcessCount);
 
             //check deployment Id is present or not
             if (deploymentIdCount == 0) {
