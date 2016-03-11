@@ -231,7 +231,7 @@ public class ProcessDAO {
         List<Process> processSubProcessList = new ArrayList<Process>();
         try {
             Process parentProcess = (Process) session.get(Process.class, processId);
-            Criteria checkProcessSubProcessList = session.createCriteria(Process.class).add(Restrictions.or(Restrictions.eq(PROCESSID, processId), Restrictions.eq(PROCESS, parentProcess)));
+            Criteria checkProcessSubProcessList = session.createCriteria(Process.class).add(Restrictions.or(Restrictions.eq(PROCESSID, processId), Restrictions.eq(PROCESS, parentProcess))).add(Restrictions.eq(DELETE_FLAG, false));
             processSubProcessList = checkProcessSubProcessList.list();
             session.getTransaction().commit();
         } catch (MetadataException e) {
