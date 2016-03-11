@@ -37,6 +37,10 @@ public class GetLineageQueryByProcessId extends MetadataAPIBase {
     @Autowired
     private LineageQueryDAO lineageQueryDAO;
 
+    private static final String[][] PARAMS_STRUCTURE = {
+            {"pid", "sub-process-id", " Process id whose lineage query to be extracted"},
+    };
+
     public GetLineageQueryByProcessId() {
         /* Hibernate Auto-Wire */
         ApplicationContext context = new ClassPathXmlApplicationContext("spring-dao.xml");
@@ -44,10 +48,8 @@ public class GetLineageQueryByProcessId extends MetadataAPIBase {
         acbFactory.autowireBean(this);
     }
 
-    private static final String[][] PARAMS_STRUCTURE = {
-            {"pid", "sub-process-id", " Process id whose lineage query to be extracted"},
-    };
 
+    @Override
     public List<LineageQuery> execute(String[] params) {
         try {
             CommandLine commandLine = getCommandLine(params, PARAMS_STRUCTURE);

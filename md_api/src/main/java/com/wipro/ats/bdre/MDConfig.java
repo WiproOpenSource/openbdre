@@ -25,67 +25,11 @@ import java.util.List;
  * Created by kapil on 12/28/14.
  */
 public class MDConfig {
-    private static Logger LOGGER = Logger.getLogger(MDConfig.class);
-//    private static XMLConfiguration config;
-//    private static String defaultEnv;
+    private static final Logger LOGGER = Logger.getLogger(MDConfig.class);
 
-//    private MDConfig() {
-//        try {
-//            config = new XMLConfiguration("md-config.xml");
-//            config.setExpressionEngine(new XPathExpressionEngine());
-//            defaultEnv = (String) config.getProperty("environments/default/@id");
-//            LOGGER.info("defaultEnv: " + defaultEnv);
-//        } catch (
-//                ConfigurationException cex) {
-//            LOGGER.error(cex);
-//        }
-//    }
+    private MDConfig(){
 
-//    /**
-//     * This method accepts a string as key and returns a string as value of the property related to the key
-//     * present in md-config.xml inside md-commons.
-//     *
-//     * @param key String representing property.
-//     * @param env Environment to interact with the database.
-//     * @return String representing the value.
-//     */
-//    public static String getProperty(String key, String env) {
-//
-//        if (config == null) {
-//            new MDConfig();
-//        }
-//        if (env == null || env.isEmpty()) {
-//            Properties properties = new Properties();
-//            try {
-//
-//                properties.load(MDConfig.class.getResourceAsStream("/ENVIRONMENT"));
-//                defaultEnv = properties.getProperty("environment");
-//
-//            } catch (IOException e) {
-//                LOGGER.error("Please create ENVIRONMENT file in resources folder of md-commons project with content <environment=env1> in it");
-//
-//            }
-//
-//            env = defaultEnv;
-//            LOGGER.info("Environment set to " + env);
-//        }
-//        key = "environments/environment[@id=\"" + env + "\"]/" + key.replaceAll("\\.", "/");
-//        LOGGER.debug("fetching for: " + key);
-//
-//        if (config.getProperty(key) instanceof List) {
-//            String propVal = "";
-//            for (String val : (List<String>) config.getProperty(key)) {
-//                if (propVal.equals("")) {
-//                    propVal = propVal + val;
-//                } else {
-//                    propVal = propVal + "," + val;
-//                }
-//            }
-//            return propVal;
-//        }
-//        return (String) config.getProperty(key);
-//    }
-
+    }
     /**
      * This method accepts a string as key and returns a string as value of the property related to the key
      * present in md-config.xml inside md-commons.
@@ -102,35 +46,6 @@ public class MDConfig {
         return generalConfig.getDefaultVal();
     }
 
-    //    //If the val is comma seperated the function will return it as a List<String>
-//    public static List<String> getPropertyList(String key, String env) {
-//
-//        if (config == null) {
-//            new MDConfig();
-//        }
-//        if (env == null || env.isEmpty()) {
-//            Properties properties = new Properties();
-//            try {
-//                properties.load(MDConfig.class.getResourceAsStream("ENVIRONMENT"));
-//                defaultEnv = properties.getProperty("environment");
-//
-//            } catch (Exception e) {
-//                LOGGER.error("Please create ENVIRONMENT file with content 'environment=<your environment>' in it");
-//            }
-//            env = defaultEnv;
-//            LOGGER.info("Environment set to " + env);
-//        }
-//        key = "environments/environment[@id=\"" + env + "\"]/" + key.replaceAll("\\.", "/");
-//        LOGGER.debug("fetching for: " + key);
-//        if (config.getProperty(key) instanceof List) {
-//            return (List<String>) config.getProperty(key);
-//        } else {
-//            List<String> props = new ArrayList<String>();
-//            props.add((String) config.getProperty(key));
-//            return props;
-//        }
-//
-//    }
 //If the val is comma seperated the function will return it as a List<String>
     public static List<String> getPropertyList(String key) {
 

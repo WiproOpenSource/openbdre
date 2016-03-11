@@ -74,6 +74,7 @@ public class SetupDB {
             setupDB.populateProperties(projectRoot + "databases/setup/Properties.csv");
             setupDB.populateUsers(projectRoot + "databases/setup/Users.csv");
             setupDB.populateUserRoles(projectRoot + "databases/setup/UserRoles.csv");
+            setupDB.populateADQStatus(projectRoot + "databases/setup/ADQStatus.csv");
 
 
             setupDB.halt();
@@ -725,6 +726,38 @@ public class SetupDB {
                 Object existing = session.get(generalConfig.getClass(), generalConfig.getId());
                 if (existing == null) {
                     session.save(generalConfig);
+                }
+            }
+        } catch (MetadataException e) {
+            LOGGER.error(inFile + dataFile + badLine + line);
+            LOGGER.error(e.getMessage());
+            throw new MetadataException(e);
+        }
+        catch (IOException e) {
+            LOGGER.error(inFile + dataFile + badLine + line);
+            LOGGER.error(e.getMessage());
+            throw new IOException(e);
+        }
+    }
+
+    private void populateADQStatus(String dataFile) throws MetadataException, IOException {
+        String line = null;
+        int lineNum = 0;
+
+        try {
+            BufferedReader br = new BufferedReader(new FileReader(dataFile));
+            while ((line = br.readLine()) != null) {
+                lineNum++;
+                LOGGER.debug(lineNumber + lineNum + ": " + line);
+                String[] cols = getColumns(line);
+                if (cols == null)
+                    continue;
+                AppDeploymentQueueStatus adqStatus = new AppDeploymentQueueStatus();
+                adqStatus.setAdqState(new Integer(cols[0]));
+                adqStatus.setDescription(cols[1]);
+                Object existing = session.get(adqStatus.getClass(), adqStatus.getAdqState());
+                if (existing == null) {
+                    session.save(adqStatus);
                 }
             }
         } catch (MetadataException e) {
