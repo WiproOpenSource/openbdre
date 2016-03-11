@@ -3,6 +3,7 @@
         pageEncoding="ISO-8859-1"%>
         <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
         <html>
+        <title>Table Column Lineage | BDRE</title>
             <head>
                 <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
                 <title>Bigdata Ready Enterprise</title>
@@ -16,22 +17,39 @@
                     ga('send', 'pageview');
                 </script>
 
-                <link href="../css/pages.css" rel="stylesheet" type="text/css" />
-                <!-- Include one of jTable styles. -->
-                <link rel="stylesheet" href="../css/css/bootstrap.min.css" />
-                <script src="../js/svgutil.js" type="text/javascript"></script>
-                <script src="../js/jquery.min.js" type="text/javascript"></script>
-                <script language="javascript" type="text/javascript" src="../js/graph/viz.js"></script>
-                <script language="javascript" type="text/javascript" src="../js/graph/site.js"></script>
-                <script>
-                    var graphViz = "";
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <script src="../js/jquery.min.js"></script>
+    <link href="../css/jquery-ui-1.10.3.custom.css" rel="stylesheet">
+    <link href="../css/css/bootstrap.min.css" rel="stylesheet" />
+    <script src="../js/jquery-ui-1.10.3.custom.js"></script>
+    <script src="../js/jquery.steps.min.js"></script>
+    <link rel="stylesheet" href="../css/jquery.steps.css" />
+    <script src="../js/bootstrap.js" type="text/javascript"></script>
+    <script src="../js/jquery.jtable.js" type="text/javascript"></script>
+    <link href="../css/jtables-bdre.css" rel="stylesheet" type="text/css" />
+    <script src="../js/angular.min.js" type="text/javascript"></script>
+    <script src="../js/svgutil.js" type="text/javascript"></script>
+    <script language="javascript" type="text/javascript" src="../js/graph/viz.js"></script>
+    <script language="javascript" type="text/javascript" src="../js/graph/site.js"></script>
 
+    <script type="text/javascript">
+                    var graphViz = "";
+                    var prefix = "strict digraph{\n" +
+                                "ranksep=0.4;" +
+                                "ratio=compact;" +
+                                "rankdir=LR;" +
+                                "graph [splines=true, nodesep=0.25, dpi=50];" +
+                                "id=lineagegraph;" +
+                                "node[nodesep=0.25,labeljust=left,margin=\".21,.055\",fontsize=10,fontname=\"verdana\"];" +
+                                "\n"
+                                ;
+                    var postfix = "}"
 
                     var set = new StringSet();
 
                     function getTableName(tableName, colName) {
                         //do not reload if the dependency graph for this tableName is already rendered.
-                        if (set.contains(tableName)) {
+                        if (set.contains(tableName) && colName == "") {
                             return false;
                         }
                         set.add(tableName);
@@ -40,29 +58,32 @@
                             type: "GET",
                             cache: false,
                             success: function (getData) {
-				                console.log(getData);
-                                graphViz = graphViz + getData.Records.dot;
-                                RefreshGraphviz(graphViz);
-                            }
+                                if(getData.Result == "OK") {
+                                    console.log(getData);
+                                    graphViz = graphViz + getData.Records.dot;
+                                    RefreshGraphviz(prefix + graphViz + postfix);
+                                    console.log("Called refreshGraphViz");
+                                }
+                                else{
+                                    $("#div-dialog-warning").dialog({
+                                        title: "Error",
+                                        resizable: false,
+                                        height: 'auto',
+                                        modal: true,
+                                        buttons: {
+                                            "Ok": function() {
+                                                $(this).dialog("close");
+                                            }
+                                        }
+                                    }).html(getData.Message);
+                                }
+                            },
+                             error : function(){
+                                alert('Danger: You have entered wrong Table Name or Column Name');
+                             }
                         });
                     }
-                    function getColName(colName) {
-                        //do not reload if the dependency graph for this colName is already rendered.
-                        if (set.contains(colName)) {
-                            return false;
-                        }
-                        set.add(colName);
-                        $.ajax({
-                            url: "/mdrest/tabcollineage/bycolumn/" + colName,
-                            type: "GET",
-                            cache: false,
-                            success: function (getData) {
-				                console.log(getData);
-                                graphViz = graphViz + getData.Records.dot;
-                                RefreshGraphviz(graphViz);
-                            }
-                        });
-                    }
+
                     function RefreshGraphviz(data) {
                         var svg_div = jQuery('#graphviz_svg_div');
                         svg_div.html("");
@@ -259,5 +280,6 @@
                 <div id="graphviz_svg_div" style="width:100%;text-align:left;">
                     <!-- Target for dynamic svg generation -->
                 </div>
+                <div id="div-dialog-warning"/>
             </body>
         </html>
