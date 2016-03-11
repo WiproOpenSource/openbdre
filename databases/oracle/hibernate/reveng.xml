@@ -232,5 +232,16 @@
         </primary-key>
     </table>
 
+    <table name="APP_DEPLOYMENT_QUEUE">
+        <primary-key>
+            <!-- setting up a specific id generator for a table -->
+            <generator class="org.hibernate.id.enhanced.SequenceStyleGenerator">
+                <param name="sequence_name">APP_DEPLOYMENT_SEQ</param>
+                <param name="increment_size">1</param>
+            </generator>
+            <key-column name="UNIQID"/>
+        </primary-key>
+    </table>
+
 
 </hibernate-reverse-engineering>
