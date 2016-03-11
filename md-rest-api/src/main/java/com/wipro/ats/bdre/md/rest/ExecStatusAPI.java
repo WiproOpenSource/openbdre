@@ -80,14 +80,12 @@ public class ExecStatusAPI extends MetadataAPIBase {
      * This method calls proc DeleteExecstatus and deletes a record corresponding to execStateId passed.
      *
      * @param execStateId
-     * @param model
      * @return nothing.
      */
     @RequestMapping(value = "/{id}", method = RequestMethod.DELETE)
     @ResponseBody public
     RestWrapper delete(
-            @PathVariable("id") Integer execStateId, Principal principal,
-            ModelMap model) {
+            @PathVariable("id") Integer execStateId, Principal principal) {
         RestWrapper restWrapper = null;
         try {
             execStatusDAO.delete(execStateId);

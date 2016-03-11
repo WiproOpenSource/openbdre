@@ -56,8 +56,7 @@ public class ProcessDeploymentQueueAPI extends MetadataAPIBase {
      * @return restWrapper returns an instance of ProcessDeploymentQueue object.
      */
     @RequestMapping(value = "/{id}", method = RequestMethod.GET)
-    public
-    @ResponseBody
+    @ResponseBody public
     RestWrapper get(
             @PathVariable("id") Long deploymentId, Principal principal
     ) {
@@ -101,15 +100,12 @@ public class ProcessDeploymentQueueAPI extends MetadataAPIBase {
      * passed queueId.
      *
      * @param deploymentId
-     * @param model
      * @return nothing.
      */
     @RequestMapping(value = "/{id}", method = RequestMethod.DELETE)
-    public
-    @ResponseBody
+    @ResponseBody public
     RestWrapper delete(
-            @PathVariable("id") Long deploymentId, Principal principal,
-            ModelMap model) {
+            @PathVariable("id") Long deploymentId, Principal principal) {
 
         RestWrapper restWrapper = null;
         try {
@@ -132,9 +128,7 @@ public class ProcessDeploymentQueueAPI extends MetadataAPIBase {
      * @return restWrapper returns a list of instances of ProcessDeploymentQueue object.
      */
     @RequestMapping(value = {"", "/"}, method = RequestMethod.GET)
-
-    public
-    @ResponseBody
+    @ResponseBody public
     RestWrapper list(@RequestParam(value = "page", defaultValue = "0") int startPage,
                      @RequestParam(value = "size", defaultValue = "10") int pageSize, Principal principal) {
 
@@ -189,8 +183,7 @@ public class ProcessDeploymentQueueAPI extends MetadataAPIBase {
      * @return restWrapper Updated instance of ProcessDeploymentQueue.
      */
     @RequestMapping(value = {"/", ""}, method = RequestMethod.POST)
-    public
-    @ResponseBody
+    @ResponseBody public
     RestWrapper update(@ModelAttribute("pdq")
                        @Valid ProcessDeploymentQueue processDeploymentQueue, BindingResult bindingResult, Principal principal) {
 
@@ -247,8 +240,7 @@ public class ProcessDeploymentQueueAPI extends MetadataAPIBase {
      * @return restWrapper added instance of ProcessDeploymentQueue.
      */
     @RequestMapping(value = {"{id}", "/{id}"}, method = RequestMethod.PUT)
-    public
-    @ResponseBody
+    @ResponseBody public
     RestWrapper insert(@PathVariable("id") Integer processId
             , @ModelAttribute("pdq")
                        @Valid ProcessDeploymentQueue processDeploymentQueue, BindingResult bindingResult, Principal principal) {

@@ -47,17 +47,16 @@ public class ProcessLogAPI extends MetadataAPIBase {
     ProcessLogDAO processLogDAO;
 
     @RequestMapping(value = {"", "/"}, method = RequestMethod.GET)
-
-    public
-    @ResponseBody
+    @ResponseBody public
     RestWrapper list(@RequestParam(value = "page", defaultValue = "0") int startPage, @RequestParam(value = "size", defaultValue = "10") int pageSize, @RequestParam(value = "pid", defaultValue = "0") Integer pid, Principal principal) {
         RestWrapper restWrapper = null;
+        Integer processId = pid;
         try {
             ProcessLogInfo processLogInfo = new ProcessLogInfo();
             if (pid == 0) {
-                pid = null;
+                processId = null;
             }
-            processLogInfo.setProcessId(pid);
+            processLogInfo.setProcessId(processId);
             processLogInfo.setPage(startPage);
             processLogInfo.setPageSize(pageSize);
             List<ProcessLogInfo> listLog = processLogDAO.listLog(processLogInfo);
@@ -77,9 +76,7 @@ public class ProcessLogAPI extends MetadataAPIBase {
      * @return restWrapper It contains instance of ProcessLog corresponding to processId passed.
      */
     @RequestMapping(value = {"/{id}"}, method = RequestMethod.GET)
-
-    public
-    @ResponseBody
+    @ResponseBody public
     RestWrapper list(@PathVariable("id") Integer processId, Principal principal) {
         RestWrapper restWrapper = null;
         try {

@@ -22,8 +22,6 @@ import org.apache.commons.cli.CommandLine;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.AutowireCapableBeanFactory;
-import org.springframework.context.ApplicationContext;
-import org.springframework.context.support.ClassPathXmlApplicationContext;
 
 import java.util.List;
 
@@ -31,10 +29,6 @@ import java.util.List;
  * Created by arijit on 12/8/14.
  */
 public class GetFiles extends MetadataAPIBase {
-    public GetFiles() {
-        AutowireCapableBeanFactory acbFactory = getAutowireCapableBeanFactory();
-        acbFactory.autowireBean(this);
-    }
 
     @Autowired
     FileDAO fileDAO;
@@ -45,6 +39,10 @@ public class GetFiles extends MetadataAPIBase {
             {"maxB", "max-batch-id", "maximum batch id"}
     };
 
+    public GetFiles() {
+        AutowireCapableBeanFactory acbFactory = getAutowireCapableBeanFactory();
+        acbFactory.autowireBean(this);
+    }
     /**
      * This method runs GetFile proc for some batch-id between mininmum and maximum batch id
      * and return corresponding file and their server specification.
@@ -54,6 +52,7 @@ public class GetFiles extends MetadataAPIBase {
      * @return This method return output of GetFile proc having information regarding
      * files and their server specifications.
      */
+    @Override
     public List<FileInfo> execute(String[] params) {
 
         try {
@@ -67,10 +66,8 @@ public class GetFiles extends MetadataAPIBase {
             fileInfo.setMinBatch(Long.parseLong(minBId));
             fileInfo.setMaxBatch(Long.parseLong(maxBId));
             //calling GetFiles
-            // List<FileInfo> fileInfos = s.selectList("call_procedures.GetFiles", fileInfo);
 
-            List<FileInfo> fileInfos = fileDAO.getFiles(Long.parseLong(minBId), Long.parseLong(maxBId));
-            return fileInfos;
+            return fileDAO.getFiles(Long.parseLong(minBId), Long.parseLong(maxBId));
         } catch (Exception e) {
             LOGGER.error("Error occurred", e);
             throw new MetadataException(e);

@@ -40,6 +40,8 @@ public class ProcessAncestorsDAO {
     private static final Logger LOGGER = Logger.getLogger(ProcessAncestorsDAO.class);
     @Autowired
     SessionFactory sessionFactory;
+    private static final String PROCESSID="processId";
+    private static final String PARENTPROCESSID="process.processId";
 
     public List<Process> listUpstreams(Integer processId) {
         List<Process> upstreamProcessList = new ArrayList<Process>();
@@ -47,19 +49,19 @@ public class ProcessAncestorsDAO {
 
         try {
             session.beginTransaction();
-            Criteria checkParentProcess = session.createCriteria(com.wipro.ats.bdre.md.dao.jpa.Process.class).add(Restrictions.eq("processId", processId)).add(Restrictions.isNull("process.processId"));
+            Criteria checkParentProcess = session.createCriteria(com.wipro.ats.bdre.md.dao.jpa.Process.class).add(Restrictions.eq(PROCESSID, processId)).add(Restrictions.isNull(PARENTPROCESSID));
             Integer parentProcessCount = checkParentProcess.list().size();
             LOGGER.info("Parent process count:" + parentProcessCount);
             if (parentProcessCount == 0) {
                 throw new MetadataException("Invalid parent process:" + processId);
             }
 
-            Criteria checkEnqueuingProcesses = session.createCriteria(com.wipro.ats.bdre.md.dao.jpa.Process.class).add(Restrictions.eq("process.processId", processId)).add(Restrictions.eq("deleteFlag", false)).setProjection(Projections.distinct(Projections.property("enqueuingProcessId")));
+            Criteria checkEnqueuingProcesses = session.createCriteria(com.wipro.ats.bdre.md.dao.jpa.Process.class).add(Restrictions.eq(PARENTPROCESSID, processId)).add(Restrictions.eq("deleteFlag", false)).setProjection(Projections.distinct(Projections.property("enqueuingProcessId")));
             List<Integer> enqueuingProcessIdList = checkEnqueuingProcesses.list();
 
             LOGGER.info("Number of enqueuing process count:" + checkEnqueuingProcesses.list().size());
-            if (enqueuingProcessIdList.size() != 0) {
-                Criteria fetchEnqueuingProcessList = session.createCriteria(com.wipro.ats.bdre.md.dao.jpa.Process.class).add(Restrictions.eq("deleteFlag", false)).add(Restrictions.in("processId", enqueuingProcessIdList));
+            if (!enqueuingProcessIdList.isEmpty()) {
+                Criteria fetchEnqueuingProcessList = session.createCriteria(com.wipro.ats.bdre.md.dao.jpa.Process.class).add(Restrictions.eq("deleteFlag", false)).add(Restrictions.in(PROCESSID, enqueuingProcessIdList));
                 List<com.wipro.ats.bdre.md.dao.jpa.Process> enqueuingProcessList = fetchEnqueuingProcessList.list();
                 Integer enqProcessListCount = fetchEnqueuingProcessList.list().size();
                 LOGGER.info("No. of upstream processes:" + enqProcessListCount);
@@ -113,18 +115,18 @@ public class ProcessAncestorsDAO {
         try {
             session.beginTransaction();
 
-            Criteria checkParentProcess = session.createCriteria(com.wipro.ats.bdre.md.dao.jpa.Process.class).add(Restrictions.eq("processId", processId)).add(Restrictions.isNull("process.processId"));
+            Criteria checkParentProcess = session.createCriteria(com.wipro.ats.bdre.md.dao.jpa.Process.class).add(Restrictions.eq(PROCESSID, processId)).add(Restrictions.isNull(PARENTPROCESSID));
             Integer parentProcessCount = checkParentProcess.list().size();
             LOGGER.info("Parent process count:" + parentProcessCount);
             if (parentProcessCount == 0) {
                 throw new MetadataException("Invalid parent process:" + processId);
             }
 
-            Criteria fetchMaxEditTs = session.createCriteria(com.wipro.ats.bdre.md.dao.jpa.Process.class).add(Restrictions.or(Restrictions.eq("processId", processId), Restrictions.eq("process.processId", processId))).setProjection(Projections.max("editTs"));
-            Criteria fetchMaxInsertTs = session.createCriteria(com.wipro.ats.bdre.md.dao.jpa.ProcessDeploymentQueue.class).add(Restrictions.eq("process.processId", processId)).setProjection(Projections.max("insertTs"));
-            Criteria fetchMaxSuccessTs = session.createCriteria(com.wipro.ats.bdre.md.dao.jpa.ProcessDeploymentQueue.class).add(Restrictions.eq("process.processId", processId)).add(Restrictions.eq("deployStatus.deployStatusId", (short) 3)).setProjection(Projections.max("endTs"));
-            Criteria fetchMaxFailTs = session.createCriteria(com.wipro.ats.bdre.md.dao.jpa.ProcessDeploymentQueue.class).add(Restrictions.eq("process.processId", processId)).add(Restrictions.eq("deployStatus.deployStatusId", (short) 4)).setProjection(Projections.max("endTs"));
-            Criteria fetchMaxDeploymentId = session.createCriteria(com.wipro.ats.bdre.md.dao.jpa.ProcessDeploymentQueue.class).add(Restrictions.eq("process.processId", processId)).setProjection(Projections.max("deploymentId"));
+            Criteria fetchMaxEditTs = session.createCriteria(com.wipro.ats.bdre.md.dao.jpa.Process.class).add(Restrictions.or(Restrictions.eq(PROCESSID, processId), Restrictions.eq(PARENTPROCESSID, processId))).setProjection(Projections.max("editTs"));
+            Criteria fetchMaxInsertTs = session.createCriteria(com.wipro.ats.bdre.md.dao.jpa.ProcessDeploymentQueue.class).add(Restrictions.eq(PARENTPROCESSID, processId)).setProjection(Projections.max("insertTs"));
+            Criteria fetchMaxSuccessTs = session.createCriteria(com.wipro.ats.bdre.md.dao.jpa.ProcessDeploymentQueue.class).add(Restrictions.eq(PARENTPROCESSID, processId)).add(Restrictions.eq("deployStatus.deployStatusId", (short) 3)).setProjection(Projections.max("endTs"));
+            Criteria fetchMaxFailTs = session.createCriteria(com.wipro.ats.bdre.md.dao.jpa.ProcessDeploymentQueue.class).add(Restrictions.eq(PARENTPROCESSID, processId)).add(Restrictions.eq("deployStatus.deployStatusId", (short) 4)).setProjection(Projections.max("endTs"));
+            Criteria fetchMaxDeploymentId = session.createCriteria(com.wipro.ats.bdre.md.dao.jpa.ProcessDeploymentQueue.class).add(Restrictions.eq(PARENTPROCESSID, processId)).setProjection(Projections.max("deploymentId"));
 
             Date editTs = (Date) fetchMaxEditTs.list().get(0);
             LOGGER.info("edit Ts:" + editTs);

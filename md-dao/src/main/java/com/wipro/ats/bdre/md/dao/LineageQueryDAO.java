@@ -40,7 +40,8 @@ public class LineageQueryDAO {
     private static final Logger LOGGER = Logger.getLogger(LineageQueryDAO.class);
     @Autowired
     SessionFactory sessionFactory;
-
+    private static final String INSTANCE_EXEC_ID="instanceExecId";
+    private static final String PROCESSID="processId";
     public List<LineageQuery> list(Integer pageNum, Integer numResults) {
         Session session = sessionFactory.openSession();
         session.beginTransaction();
@@ -58,7 +59,7 @@ public class LineageQueryDAO {
 
         Session session = sessionFactory.openSession();
         session.beginTransaction();
-        Criteria getLastElementCriteria = session.createCriteria(LineageQuery.class).add(Restrictions.eq("processId", processId)).addOrder(Order.desc("instanceExecId"));
+        Criteria getLastElementCriteria = session.createCriteria(LineageQuery.class).add(Restrictions.eq(PROCESSID, processId)).addOrder(Order.desc(INSTANCE_EXEC_ID));
 
         if(!getLastElementCriteria.list().isEmpty()) {
             LineageQuery lineageQuery = (LineageQuery) getLastElementCriteria.list().get(0);
@@ -74,14 +75,14 @@ public class LineageQueryDAO {
         List<LineageQuery> lineageQueryList = new ArrayList<LineageQuery>();
         Session session = sessionFactory.openSession();
         session.beginTransaction();
-        Criteria getLastElementCriteria = session.createCriteria(LineageQuery.class).add(Restrictions.eq("processId", processId)).addOrder(Order.desc("instanceExecId"));
+        Criteria getLastElementCriteria = session.createCriteria(LineageQuery.class).add(Restrictions.eq(PROCESSID, processId)).addOrder(Order.desc(INSTANCE_EXEC_ID));
 
         if(!getLastElementCriteria.list().isEmpty()) {
             LineageQuery lineageQuery = (LineageQuery) getLastElementCriteria.list().get(0);
             instanceExecId = lineageQuery.getInstanceExecId();
         }
         if (instanceExecId != null) {
-            Criteria criteria = session.createCriteria(LineageQuery.class).add(Restrictions.eq("processId", processId)).add(Restrictions.eq("instanceExecId", instanceExecId));
+            Criteria criteria = session.createCriteria(LineageQuery.class).add(Restrictions.eq(PROCESSID, processId)).add(Restrictions.eq(INSTANCE_EXEC_ID, instanceExecId));
             lineageQueryList = criteria.list();
         }
         session.getTransaction().commit();

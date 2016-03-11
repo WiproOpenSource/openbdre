@@ -20,8 +20,6 @@ import com.wipro.ats.bdre.md.dao.GeneralConfigDAO;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.AutowireCapableBeanFactory;
-import org.springframework.context.ApplicationContext;
-import org.springframework.context.support.ClassPathXmlApplicationContext;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -32,33 +30,34 @@ import java.util.List;
 
 
 public class GetGeneralConfig extends MetadataAPIBase {
-    public GetGeneralConfig() {
-        AutowireCapableBeanFactory acbFactory = getAutowireCapableBeanFactory();
-        acbFactory.autowireBean(this);
-    }
 
     @Autowired
     GeneralConfigDAO generalConfigDAO;
 
     private static final Logger LOGGER = Logger.getLogger(GetGeneralConfig.class);
 
+    public GetGeneralConfig() {
+        AutowireCapableBeanFactory acbFactory = getAutowireCapableBeanFactory();
+        acbFactory.autowireBean(this);
+    }
+
     public List<GeneralConfig> byConigGroupOnly(String configGroup, Integer required) {
 
         GeneralConfig generalConfig = new GeneralConfig();
         List<GeneralConfig> generalConfigs = new ArrayList<GeneralConfig>();
         try {
+            Integer newRequired = required;
             if (required == null) {
-                required = 2;
+                newRequired = 2;
             }
-            // generalConfigs = s.selectList("call_procedures.GeneralConfig", generalConfig);
-            generalConfigs = generalConfigDAO.getGeneralConfig(configGroup, required);
+            generalConfigs = generalConfigDAO.getGeneralConfig(configGroup, newRequired);
             LOGGER.info("All records listed with config group" + configGroup);
             LOGGER.info("generalConfigs" + generalConfigs);
 
         } catch (Exception e) {
             generalConfig.setRequired(2);
             generalConfigs.add(generalConfig);
-            LOGGER.error("Listing of Records Failed");
+            LOGGER.error("Listing of Records Failed",e);
         }
         return generalConfigs;
     }
@@ -68,14 +67,13 @@ public class GetGeneralConfig extends MetadataAPIBase {
         GeneralConfig generalConfig = new GeneralConfig();
         try {
 
-            //generalConfig = s.selectOne("call_procedures.GenConfigProperty", generalConfig);
             generalConfig = generalConfigDAO.GetGenConfigProperty(configGroup, key);
 
             LOGGER.info("Record with config group:" + configGroup + " and key:" + key + "selected from General Config " + generalConfig);
 
         } catch (Exception e) {
             generalConfig.setRequired(2);
-            LOGGER.error("Object with specified config_group and key not found");
+            LOGGER.error("Object with specified config_group and key not found",e);
 
         }
         return generalConfig;
