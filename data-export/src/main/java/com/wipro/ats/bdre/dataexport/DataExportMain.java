@@ -57,12 +57,10 @@ public class DataExportMain extends BaseStructure {
             Properties commonProperties = getProperties.getProperties(processId, configGroup);
 
             String[] param = {processId, batchId,instanceExecId};
-            int result = 0;
-            result = ToolRunner.run(new Configuration(), new HDFSExport(commonProperties), param);
+            ToolRunner.run(new Configuration(), new HDFSExport(commonProperties), param);
 
 
         } catch (Exception e) {
-            e.printStackTrace();
             LOGGER.error(e);
             throw new ETLException(e);
         }

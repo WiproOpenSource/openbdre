@@ -14,15 +14,17 @@
 
 package com.wipro.ats.bdre.md.rest;
 
+import com.wipro.ats.bdre.exception.MetadataException;
 import com.wipro.ats.bdre.md.api.base.MetadataAPIBase;
 import com.wipro.ats.bdre.md.beans.table.ExecStatus;
 import com.wipro.ats.bdre.md.dao.ExecStatusDAO;
+import com.wipro.ats.bdre.md.rest.util.BindingResultError;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.validation.BindingResult;
-import org.springframework.validation.FieldError;
+
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -51,8 +53,7 @@ public class ExecStatusAPI extends MetadataAPIBase {
     ExecStatusDAO execStatusDAO;
 
     @RequestMapping(value = "/{id}", method = RequestMethod.GET)
-    public
-    @ResponseBody
+    @ResponseBody public
     RestWrapper get(
             @PathVariable("id") Integer execStateId, Principal principal
     ) {
@@ -66,11 +67,10 @@ public class ExecStatusAPI extends MetadataAPIBase {
                 execStatus.setExecStateId(jpaExecStatus.getExecStateId());
                 execStatus.setDescription(jpaExecStatus.getDescription());
             }
-            // execStatus = s.selectOne("call_procedures.GetExecStatus", execStatus);
-
             restWrapper = new RestWrapper(execStatus, RestWrapper.OK);
             LOGGER.info("Record with ID:" + execStateId + " selected from ExecStatus by User:" + principal.getName());
-        } catch (Exception e) {
+        } catch (MetadataException e) {
+            LOGGER.error(e);
             restWrapper = new RestWrapper(e.getMessage(), RestWrapper.ERROR);
         }
         return restWrapper;
@@ -80,23 +80,19 @@ public class ExecStatusAPI extends MetadataAPIBase {
      * This method calls proc DeleteExecstatus and deletes a record corresponding to execStateId passed.
      *
      * @param execStateId
-     * @param model
      * @return nothing.
      */
     @RequestMapping(value = "/{id}", method = RequestMethod.DELETE)
-    public
-    @ResponseBody
+    @ResponseBody public
     RestWrapper delete(
-            @PathVariable("id") Integer execStateId, Principal principal,
-            ModelMap model) {
+            @PathVariable("id") Integer execStateId, Principal principal) {
         RestWrapper restWrapper = null;
         try {
             execStatusDAO.delete(execStateId);
-            //s.delete("call_procedures.DeleteExecStatus", execStatus);
-
             restWrapper = new RestWrapper(null, RestWrapper.OK);
             LOGGER.info("Record with ID:" + execStateId + " deleted from ExecStatus by User:" + principal.getName());
-        } catch (Exception e) {
+        } catch (MetadataException e) {
+            LOGGER.error(e);
             restWrapper = new RestWrapper(e.getMessage(), RestWrapper.ERROR);
         }
         return restWrapper;
@@ -110,14 +106,11 @@ public class ExecStatusAPI extends MetadataAPIBase {
      */
     @RequestMapping(value = {"", "/"}, method = RequestMethod.GET)
 
-    public
-    @ResponseBody
+    @ResponseBody public
     RestWrapper list(@RequestParam(value = "page", defaultValue = "0") int startPage,
                      @RequestParam(value = "size", defaultValue = "10") int pageSize, Principal principal) {
         RestWrapper restWrapper = null;
         try {
-            // execStatus.setPage(startPage);
-            // List<ExecStatus> execStatuses = s.selectList("call_procedures.ListExecStatus", execStatus);
             Integer counter=execStatusDAO.totalRecordCount().intValue();
             List<ExecStatus> execStatuses = new ArrayList<ExecStatus>();
             List<com.wipro.ats.bdre.md.dao.jpa.ExecStatus> jpaExecStatuses = execStatusDAO.list(startPage, pageSize);
@@ -132,7 +125,8 @@ public class ExecStatusAPI extends MetadataAPIBase {
             }
             restWrapper = new RestWrapper(execStatuses, RestWrapper.OK);
             LOGGER.info("All records listed from ExecStatus by User:" + principal.getName());
-        } catch (Exception e) {
+        } catch (MetadataException e) {
+            LOGGER.error(e);
             restWrapper = new RestWrapper(e.getMessage(), RestWrapper.ERROR);
         }
         return restWrapper;
@@ -146,37 +140,24 @@ public class ExecStatusAPI extends MetadataAPIBase {
      * @return restWrapper It contains the updated instance of ExecStatus.
      */
     @RequestMapping(value = {"/", ""}, method = RequestMethod.POST)
-    public
-    @ResponseBody
+    @ResponseBody public
     RestWrapper update(@ModelAttribute("execstatus")
                        @Valid ExecStatus execStatus, BindingResult bindingResult, Principal principal) {
         RestWrapper restWrapper = null;
         if (bindingResult.hasErrors()) {
-            StringBuilder errorMessages = new StringBuilder("<p>Please fix following errors and try again<p><ul>");
-            List<FieldError> errors = bindingResult.getFieldErrors();
-            for (FieldError error : errors) {
-                errorMessages.append("<li>");
-                errorMessages.append(error.getField());
-                errorMessages.append(". Bad value: '");
-                errorMessages.append(error.getRejectedValue());
-                errorMessages.append("'</li>");
-            }
-            errorMessages.append("</ul>");
-            restWrapper = new RestWrapper(errorMessages.toString(), RestWrapper.ERROR);
-            return restWrapper;
+            BindingResultError bindingResultError = new BindingResultError();
+            return bindingResultError.errorMessage(bindingResult);
         }
         try {
             com.wipro.ats.bdre.md.dao.jpa.ExecStatus jpaExecStatus = new com.wipro.ats.bdre.md.dao.jpa.ExecStatus();
             jpaExecStatus.setExecStateId(execStatus.getExecStateId());
             jpaExecStatus.setDescription(execStatus.getDescription());
             execStatusDAO.update(jpaExecStatus);
-            //ExecStatus execStatuses = s.selectOne("call_procedures.UpdateExecStatus", execStatus);
-
             restWrapper = new RestWrapper(execStatus, RestWrapper.OK);
             LOGGER.info("Record with ID:" + execStatus.getExecStateId() + " updated in ExecStatus by User:" + principal.getName() + execStatus);
-        } catch (Exception e) {
+        } catch (MetadataException e) {
+            LOGGER.error(e);
             restWrapper = new RestWrapper(e.getMessage(), RestWrapper.ERROR);
-            LOGGER.info("exception occured");
         }
         return restWrapper;
     }
@@ -189,28 +170,15 @@ public class ExecStatusAPI extends MetadataAPIBase {
      * @return restWrapper It contains an instance of ExecStatus just added.
      */
     @RequestMapping(value = {"/", ""}, method = RequestMethod.PUT)
-    public
-    @ResponseBody
+    @ResponseBody public
     RestWrapper insert(@ModelAttribute("execstatus")
                        @Valid ExecStatus execStatus, BindingResult bindingResult, Principal principal) {
         RestWrapper restWrapper = null;
         if (bindingResult.hasErrors()) {
-            StringBuilder errorMessages = new StringBuilder("<p>Please fix following errors and try again<p><ul>");
-            List<FieldError> errors = bindingResult.getFieldErrors();
-            for (FieldError error : errors) {
-                errorMessages.append("<li>");
-                errorMessages.append(error.getField());
-                errorMessages.append(". Bad value: '");
-                errorMessages.append(error.getRejectedValue());
-                errorMessages.append("'</li>");
-            }
-            errorMessages.append("</ul>");
-            restWrapper = new RestWrapper(errorMessages.toString(), RestWrapper.ERROR);
-            return restWrapper;
+            BindingResultError bindingResultError = new BindingResultError();
+            return bindingResultError.errorMessage(bindingResult);
         }
         try {
-
-            // ExecStatus execStatuses = s.selectOne("call_procedures.InsertExecStatus", execStatus);
             com.wipro.ats.bdre.md.dao.jpa.ExecStatus jpaExecStatus = new com.wipro.ats.bdre.md.dao.jpa.ExecStatus();
             jpaExecStatus.setExecStateId(execStatus.getExecStateId());
             jpaExecStatus.setDescription(execStatus.getDescription());
@@ -218,7 +186,8 @@ public class ExecStatusAPI extends MetadataAPIBase {
             jpaExecStatus.setExecStateId(execStateId);
             restWrapper = new RestWrapper(execStatus, RestWrapper.OK);
             LOGGER.info("Record with ID:" + execStatus.getExecStateId() + " inserted in ExecStatus by User:" + principal.getName() + execStatus);
-        } catch (Exception e) {
+        } catch (MetadataException e) {
+            LOGGER.error(e);
             restWrapper = new RestWrapper(e.getMessage(), RestWrapper.ERROR);
         }
         return restWrapper;

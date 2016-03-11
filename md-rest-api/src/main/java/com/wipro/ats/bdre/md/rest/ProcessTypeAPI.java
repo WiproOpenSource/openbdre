@@ -14,15 +14,17 @@
 
 package com.wipro.ats.bdre.md.rest;
 
+import com.wipro.ats.bdre.exception.MetadataException;
 import com.wipro.ats.bdre.md.api.base.MetadataAPIBase;
 import com.wipro.ats.bdre.md.beans.table.ProcessType;
 import com.wipro.ats.bdre.md.dao.ProcessTypeDAO;
+import com.wipro.ats.bdre.md.rest.util.BindingResultError;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.validation.BindingResult;
-import org.springframework.validation.FieldError;
+
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -50,8 +52,7 @@ public class ProcessTypeAPI extends MetadataAPIBase {
      * @return restWrapper It contains instance of ProcessType corresponding to processTypeId passed.
      */
     @RequestMapping(value = "/{id}", method = RequestMethod.GET)
-    public
-    @ResponseBody
+    @ResponseBody public
     RestWrapper get(
             @PathVariable("id") Integer processTypeId, Principal principal
     ) {
@@ -65,11 +66,11 @@ public class ProcessTypeAPI extends MetadataAPIBase {
                 processType.setParentProcessTypeId(jpaProcessType.getParentProcessTypeId());
                 processType.setProcessTypeName(jpaProcessType.getProcessTypeName());
             }
-            //processType = s.selectOne("call_procedures.GetProcessType", processType);
             restWrapper = new RestWrapper(processType, RestWrapper.OK);
             LOGGER.info("Record with ID:" + processTypeId + " selected from ProcessType by User:" + principal.getName());
 
-        } catch (Exception e) {
+        } catch (MetadataException e) {
+            LOGGER.error(e);
             restWrapper = new RestWrapper(e.getMessage(), RestWrapper.ERROR);
         }
         return restWrapper;
@@ -83,20 +84,18 @@ public class ProcessTypeAPI extends MetadataAPIBase {
      * @return nothing.
      */
     @RequestMapping(value = "/{id}", method = RequestMethod.DELETE)
-    public
-    @ResponseBody
+    @ResponseBody public
     RestWrapper delete(
             @PathVariable("id") Integer processTypeId, Principal principal,
             ModelMap model) {
         RestWrapper restWrapper = null;
         try {
             processTypeDAO.delete(processTypeId);
-            //s.delete("call_procedures.DeleteProcessType", processType);
-
             restWrapper = new RestWrapper(null, RestWrapper.OK);
             LOGGER.info("Record with ID:" + processTypeId + " deleted from ProcessType by User:" + principal.getName());
 
-        } catch (Exception e) {
+        } catch (MetadataException e) {
+            LOGGER.error(e);
             restWrapper = new RestWrapper(e.getMessage(), RestWrapper.ERROR);
         }
         return restWrapper;
@@ -109,9 +108,7 @@ public class ProcessTypeAPI extends MetadataAPIBase {
      * @return restWrapper It contains list of instances of ProcessTypes.
      */
     @RequestMapping(value = {"", "/"}, method = RequestMethod.GET)
-
-    public
-    @ResponseBody
+    @ResponseBody public
     RestWrapper list(@RequestParam(value = "page", defaultValue = "0") int startPage,
                      @RequestParam(value = "size", defaultValue = "10") int pageSize, Principal principal) {
         RestWrapper restWrapper = null;
@@ -128,12 +125,11 @@ public class ProcessTypeAPI extends MetadataAPIBase {
                 returnProcessType.setCounter(counter);
                 processTypes.add(returnProcessType);
             }
-            // List<ProcessType> processTypes = s.selectList("call_procedures.GetProcessTypes", processType);
-
             restWrapper = new RestWrapper(processTypes, RestWrapper.OK);
             LOGGER.info("All records listed from ProcessType by User:" + principal.getName());
 
-        } catch (Exception e) {
+        } catch (MetadataException e) {
+            LOGGER.error(e);
             restWrapper = new RestWrapper(e.getMessage(), RestWrapper.ERROR);
         }
         return restWrapper;
@@ -148,24 +144,13 @@ public class ProcessTypeAPI extends MetadataAPIBase {
      * @return restWrapper It contains the updated instance of ProcessType.
      */
     @RequestMapping(value = {"/", ""}, method = RequestMethod.POST)
-    public
-    @ResponseBody
+    @ResponseBody public
     RestWrapper update(@ModelAttribute("processtype")
                        @Valid ProcessType processType, BindingResult bindingResult, Principal principal) {
         RestWrapper restWrapper = null;
         if (bindingResult.hasErrors()) {
-            StringBuilder errorMessages = new StringBuilder("<p>Please fix following errors and try again<p><ul>");
-            List<FieldError> errors = bindingResult.getFieldErrors();
-            for (FieldError error : errors) {
-                errorMessages.append("<li>");
-                errorMessages.append(error.getField());
-                errorMessages.append(". Bad value: '");
-                errorMessages.append(error.getRejectedValue());
-                errorMessages.append("'</li>");
-            }
-            errorMessages.append("</ul>");
-            restWrapper = new RestWrapper(errorMessages.toString(), RestWrapper.ERROR);
-            return restWrapper;
+            BindingResultError bindingResultError = new BindingResultError();
+            return bindingResultError.errorMessage(bindingResult);
         }
         try {
             com.wipro.ats.bdre.md.dao.jpa.ProcessType jpaProcessType = new com.wipro.ats.bdre.md.dao.jpa.ProcessType();
@@ -173,12 +158,12 @@ public class ProcessTypeAPI extends MetadataAPIBase {
             jpaProcessType.setParentProcessTypeId(processType.getParentProcessTypeId());
             jpaProcessType.setProcessTypeName(processType.getProcessTypeName());
             processTypeDAO.update(jpaProcessType);
-            // ProcessType processTypes = s.selectOne("call_procedures.UpdateProcessType", processType);
 
             restWrapper = new RestWrapper(processType, RestWrapper.OK);
             LOGGER.info("Record with ID:" + processType.getProcessTypeId() + " updated in ProcessType by User:" + principal.getName() + processType);
 
-        } catch (Exception e) {
+        } catch (MetadataException e) {
+            LOGGER.error(e);
             restWrapper = new RestWrapper(e.getMessage(), RestWrapper.ERROR);
         }
         return restWrapper;
@@ -192,24 +177,13 @@ public class ProcessTypeAPI extends MetadataAPIBase {
      * @return restWrapper It contains an instance of ProcessType just added.
      */
     @RequestMapping(value = {"/", ""}, method = RequestMethod.PUT)
-    public
-    @ResponseBody
+    @ResponseBody public
     RestWrapper insert(@ModelAttribute("processtype")
                        @Valid ProcessType processType, BindingResult bindingResult, Principal principal) {
         RestWrapper restWrapper = null;
         if (bindingResult.hasErrors()) {
-            StringBuilder errorMessages = new StringBuilder("<p>Please fix following errors and try again<p><ul>");
-            List<FieldError> errors = bindingResult.getFieldErrors();
-            for (FieldError error : errors) {
-                errorMessages.append("<li>");
-                errorMessages.append(error.getField());
-                errorMessages.append(". Bad value: '");
-                errorMessages.append(error.getRejectedValue());
-                errorMessages.append("'</li>");
-            }
-            errorMessages.append("</ul>");
-            restWrapper = new RestWrapper(errorMessages.toString(), RestWrapper.ERROR);
-            return restWrapper;
+            BindingResultError bindingResultError = new BindingResultError();
+            return bindingResultError.errorMessage(bindingResult);
         }
         try {
             com.wipro.ats.bdre.md.dao.jpa.ProcessType jpaProcessType = new com.wipro.ats.bdre.md.dao.jpa.ProcessType();
@@ -217,11 +191,11 @@ public class ProcessTypeAPI extends MetadataAPIBase {
             jpaProcessType.setParentProcessTypeId(processType.getParentProcessTypeId());
             jpaProcessType.setProcessTypeName(processType.getProcessTypeName());
             processTypeDAO.insert(jpaProcessType);
-            // ProcessType processTypes = s.selectOne("call_procedures.InsertProcessType", processType);
 
             restWrapper = new RestWrapper(processType, RestWrapper.OK);
             LOGGER.info("Record with ID:" + processType.getProcessTypeId() + " inserted in ProcessType by User:" + principal.getName() + processType);
-        } catch (Exception e) {
+        } catch (MetadataException e) {
+            LOGGER.error(e);
             restWrapper = new RestWrapper(e.getMessage(), RestWrapper.ERROR);
         }
         return restWrapper;
@@ -235,9 +209,7 @@ public class ProcessTypeAPI extends MetadataAPIBase {
      * @return
      */
     @RequestMapping(value = {"/options/{ptid}"}, method = RequestMethod.POST)
-
-    public
-    @ResponseBody
+    @ResponseBody public
     RestWrapperOptions options(@PathVariable("ptid") Integer processTypeId,
                                ModelMap model) {
 
@@ -253,8 +225,6 @@ public class ProcessTypeAPI extends MetadataAPIBase {
                 returnProcessType.setCounter(jpaProcessTypes.size());
                 processTypes.add(returnProcessType);
             }
-            // List<ProcessType> processTypes = s.selectList("call_procedures.GetProcessType", processType);
-
             LOGGER.debug(processTypes.get(0).getProcessTypeId());
             List<RestWrapperOptions.Option> options = new ArrayList<RestWrapperOptions.Option>();
 
@@ -265,7 +235,8 @@ public class ProcessTypeAPI extends MetadataAPIBase {
             }
             restWrapperOptions = new RestWrapperOptions(options, RestWrapperOptions.OK);
 
-        } catch (Exception e) {
+        } catch (MetadataException e) {
+            LOGGER.error(e);
             restWrapperOptions = new RestWrapperOptions(e.getMessage(), RestWrapperOptions.ERROR);
         }
         return restWrapperOptions;
@@ -277,9 +248,7 @@ public class ProcessTypeAPI extends MetadataAPIBase {
      * @return
      */
     @RequestMapping(value = {"/optionslist"}, method = RequestMethod.POST)
-
-    public
-    @ResponseBody
+    @ResponseBody public
     RestWrapperOptions listOptions() {
 
         RestWrapperOptions restWrapperOptions = null;
@@ -294,8 +263,6 @@ public class ProcessTypeAPI extends MetadataAPIBase {
                 returnProcessType.setCounter(jpaProcessTypes.size());
                 processTypes.add(returnProcessType);
             }
-            //List<ProcessType> processTypes = s.selectList("call_procedures.GetProcessType");
-
             LOGGER.debug(processTypes.get(0).getProcessTypeId());
             List<RestWrapperOptions.Option> options = new ArrayList<RestWrapperOptions.Option>();
 
@@ -305,7 +272,8 @@ public class ProcessTypeAPI extends MetadataAPIBase {
                 LOGGER.debug(option.getDisplayText());
             }
             restWrapperOptions = new RestWrapperOptions(options, RestWrapperOptions.OK);
-        } catch (Exception e) {
+        } catch (MetadataException e) {
+            LOGGER.error(e);
             restWrapperOptions = new RestWrapperOptions(e.getMessage(), RestWrapperOptions.ERROR);
         }
         return restWrapperOptions;

@@ -49,34 +49,25 @@ public class CopyFileDAO {
 
         try {
             session.beginTransaction();
-
             if (copyFileInfo.getDestBatchId() == null || copyFileInfo.getDestServerId() == null || copyFileInfo.getSourceBatchId() == null) {
                 LOGGER.info("Null params except for prefix not allowed");
                 throw new MetadataException("Null params except for prefix not allowed");
                 //this function should not be executed
-
             }
-
-
             //deleting the file
-
             Criteria deletingFileCriteria = session.createCriteria(File.class).add(Restrictions.eq("id.serverId", copyFileInfo.getDestServerId())).add(Restrictions.eq("id.batchId", copyFileInfo.getDestBatchId()));
             List<File> deletingFiles = deletingFileCriteria.list();
-
             if (deletingFiles != null) {
                 for (File deletingFile : deletingFiles) {
                     session.delete(deletingFile);
                     LOGGER.info("creation time of the file deleted is " + deletingFile.getId().getCreationTs());
-
                 }
             }
-
             //adding the file into the database
             Batch sourceBatch = (Batch) session.get(Batch.class, copyFileInfo.getSourceBatchId());
             LOGGER.info("sourceBatch" + sourceBatch.getBatchId());
             Servers destServer = (Servers) session.get(Servers.class, copyFileInfo.getDestServerId());
             Batch destBatch = (Batch) session.get(Batch.class, copyFileInfo.getDestBatchId());
-
             Criteria addingFileCriteria = session.createCriteria(File.class).add(Restrictions.eq("id.batchId", copyFileInfo.getSourceBatchId()));
             LOGGER.info("files count:" + addingFileCriteria.list().size());
             List<File> addingFiles = addingFileCriteria.list();
@@ -86,40 +77,27 @@ public class CopyFileDAO {
                 addingFileId.setPath(copyFileInfo.getDestPrefix() + addingFileId.getPath());
                 addingFileId.setBatchId(destBatch.getBatchId());
                 addingFileId.setServerId(destServer.getServerId());
-
-
                 File file = new File();
                 file.setServers(destServer);
                 file.setBatch(destBatch);
                 file.setId(addingFileId);
                 LOGGER.info("adding file id is " + file.getId().getBatchId());
-
                 LOGGER.info("adding file dest batch id : " + addingFile.getBatch().getBatchId());
                 LOGGER.info("adding file server id" + addingFile.getServers().getServerId());
-
-
-                //LOGGER.info("File added with Path: "+addingFile.getId().getPath());
-
                 session.save(file);
-
             }
-
             // Returning fileInfo joining Servers and File
             LOGGER.info("return dest server id is " + destServer.getServerId());
             LOGGER.info("return batch id is " + destBatch.getBatchId());
             Criteria returningFilesCriteria = session.createCriteria(File.class).add(Restrictions.eq("batch", destBatch)).add(Restrictions.eq("servers", destServer));
-            // Criteria returningServersCriteria = session.createCriteria(Servers.class);
             returningFilesCriteria.setMaxResults(1);
             List<File> returningFiles = returningFilesCriteria.list();
-
             LOGGER.info(returningFiles.size() + " return file size");
             File returningFile = new File();
-            if (returningFiles.size() != 0)
+            if (!returningFiles.isEmpty())
                 returningFile = returningFiles.get(0);
             LOGGER.info("Returning:" + returningFile);
-
             FileInfo fileInfo = new FileInfo();
-
             if (returningFile.getBatch() != null && returningFile != null)
                 fileInfo.setBatchId(returningFile.getBatch().getBatchId());
             if (returningFile.getId() != null && returningFile != null) {
@@ -138,7 +116,6 @@ public class CopyFileDAO {
             }
             session.getTransaction().commit();
             return fileInfo;
-
         } catch (MetadataException e) {
             session.getTransaction().rollback();
             throw new MetadataException(e);
@@ -146,6 +123,5 @@ public class CopyFileDAO {
         } finally {
             session.close();
         }
-
     }
 }
