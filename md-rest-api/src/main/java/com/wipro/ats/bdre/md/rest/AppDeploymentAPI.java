@@ -33,9 +33,9 @@ import java.util.List;
 @Controller
 @RequestMapping("/appdeployment")
 
-public class appdeplymentAPI {
+public class AppDeploymentAPI {
 
-    private static final Logger LOGGER = Logger.getLogger(appdeplymentAPI.class);
+    private static final Logger LOGGER = Logger.getLogger(AppDeploymentAPI.class);
     @Autowired
     AppDeploymentQueueDAO appDeploymentQueueDAO;
     @Autowired

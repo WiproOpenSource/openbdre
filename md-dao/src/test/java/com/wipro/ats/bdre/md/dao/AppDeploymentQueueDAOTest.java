@@ -63,6 +63,7 @@ public class AppDeploymentQueueDAOTest {
         adq = appDeploymentQueueDAO.get(adqId.intValue());
         assertEquals("Test Updated",adq.getAppName());
         LOGGER.info("Updated Description is:" + adqStatus.getDescription());
+        appDeploymentQueueDAO.delete(adqId);
         LOGGER.info("Deleted AdqStatus Entry with ID" + adq.getAppDeploymentQueueStatus().getAppDeployStatusId());
     }
 
