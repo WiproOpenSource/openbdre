@@ -84,12 +84,12 @@ public class LineageNodeDAO {
 
     //get node by nodeid
     public String getContainerDot(String nodeid) {
-        String dotString;
+        String dotString  = "";
         Session session = sessionFactory.openSession();
         session.beginTransaction();
         Criteria getLastElementCriteria = session.createCriteria(LineageNode.class).add(Restrictions.eq("nodeId", nodeid));
         LineageNode lineageNode = (LineageNode) getLastElementCriteria.list().get(0);
-        dotString = lineageNode.getLineageNode().getDotString();
+        dotString += lineageNode.getLineageNode().getDotString();
         session.getTransaction().commit();
         session.close();
         return dotString;
@@ -118,7 +118,7 @@ public class LineageNodeDAO {
         session.beginTransaction();
         Criteria getLastElementCriteria = session.createCriteria(LineageNode.class).add(Restrictions.eq("lineageNode", tableNode)).add(Restrictions.eq("displayName", colName));
         lineageNode = (LineageNode) getLastElementCriteria.list().get(0);
-        LOGGER.info("----------------- LN value when getting the col: "+ lineageNode.getDisplayName() + lineageNode.getNodeId());
+        LOGGER.info("LN value when getting the col: "+ lineageNode.getDisplayName() + lineageNode.getNodeId());
         session.getTransaction().commit();
         session.close();
         return lineageNode;
