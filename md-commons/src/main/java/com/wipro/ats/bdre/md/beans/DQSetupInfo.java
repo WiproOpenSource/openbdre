@@ -30,7 +30,8 @@ public class DQSetupInfo {
     private static String rulesUserName = "rules.username";
     @NotNull
     private String rulesPasswordValue;
-    private static String rulesPassword = "rules.password";
+    private String pwd="rules.password";
+    private static String rulesPassword =pwd ;
     @NotNull
     private String rulesPackageValue;
     private static String rulesPackage = "rules.package";
