@@ -33,15 +33,6 @@ public class InstanceExec {
     @Digits(fraction = 0, integer = 20)
     private Integer instanceExecId;
     private Integer pageSize;
-
-    public Integer getPageSize() {
-        return pageSize;
-    }
-
-    public void setPageSize(Integer pageSize) {
-        this.pageSize = pageSize;
-    }
-
     @NotNull
     @Min(value = 1)
     @Digits(fraction = 0, integer = 11)
@@ -49,12 +40,28 @@ public class InstanceExec {
     @NotNull
     private Date startTs;
     private Date endTs;
+    @NotNull
+    private String tableStartTs;
+    private String tableEndTs;
+    @NotNull
+    @Digits(fraction = 0, integer = 10)
+    private Integer execState;
+    private Integer counter;
+    private Integer page;
 
     @Override
     public String toString() {
         return " instanceExecId:" + instanceExecId + " processId:" + processId + " startTs:" + startTs + " endTs:" + endTs +
                 " tableStartTs:" + tableStartTs + " tableEndTs:" + tableEndTs +
                 " execState:" + execState + " page:" + page;
+    }
+
+    public Integer getPageSize() {
+        return pageSize;
+    }
+
+    public void setPageSize(Integer pageSize) {
+        this.pageSize = pageSize;
     }
 
     public String getTableStartTs() {
@@ -73,13 +80,6 @@ public class InstanceExec {
         this.tableEndTs = tableEndTs;
     }
 
-    @NotNull
-    private String tableStartTs;
-    private String tableEndTs;
-    @NotNull
-    @Digits(fraction = 0, integer = 10)
-    private Integer execState;
-
     public Integer getCounter() {
         return counter;
     }
@@ -95,9 +95,6 @@ public class InstanceExec {
     public void setPage(Integer page) {
         this.page = page;
     }
-
-    private Integer counter;
-    private Integer page;
 
     public Integer getInstanceExecId() {
         return instanceExecId;

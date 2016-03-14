@@ -25,6 +25,14 @@ import com.wipro.ats.bdre.annotation.PersistableParam;
  */
 public class RunningProcessesInfo {
     private Integer counter;
+    @PersistableParam(keyName = "process-id")
+    private Long processId = 0L;
+    @PersistableParam(keyName = "instance-exec-id")
+    private Long iExecId = 0L;
+    @PersistableParam(keyName = "process-name")
+    private String pName = null;
+    @PersistableParam(keyName = "process-duration")
+    private Long duration = 0L;
 
     public Long getProcessId() {
         return processId;
@@ -71,15 +79,5 @@ public class RunningProcessesInfo {
     public String toString() {
         return " processId:" + processId + " iExecId:" + iExecId + " pName:" + pName + " duration:" + duration;
     }
-
-    @PersistableParam(keyName = "process-id")
-    private Long processId = 0L;
-    @PersistableParam(keyName = "instance-exec-id")
-    private Long iExecId = 0L;
-    @PersistableParam(keyName = "process-name")
-    private String pName = null;
-    @PersistableParam(keyName = "process-duration")
-    private Long duration = 0L;
-
 
 }
