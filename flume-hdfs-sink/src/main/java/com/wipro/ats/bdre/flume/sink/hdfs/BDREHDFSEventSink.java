@@ -447,14 +447,10 @@ public class BDREHDFSEventSink extends AbstractSink implements Configurable {
       transaction.rollback();
       LOG.warn("HDFS IO error", eIO);
       return Status.BACKOFF;
-    } catch (Throwable th) {
+    } catch (Exception ex) {
       transaction.rollback();
-      LOG.error("process failed", th);
-      if (th instanceof Error) {
-        throw (Error) th;
-      } else {
-        throw new EventDeliveryException(th);
-      }
+      LOG.error("process failed", ex);
+      throw new EventDeliveryException(ex);
     } finally {
       transaction.close();
     }

@@ -192,6 +192,7 @@ class BucketWriter {
    * @throws java.io.IOException
    * @throws InterruptedException
    */
+  @SuppressWarnings("squid:S1860")
   private void open() throws IOException, InterruptedException {
     if ((filePath == null) || (writer == null)) {
       throw new IOException("Invalid file settings");
@@ -271,8 +272,8 @@ class BucketWriter {
           try {
             // Roll the file and remove reference from sfWriters map.
             close(true);
-          } catch(Throwable t) {
-            LOG.error("Unexpected error", t);
+          } catch(Exception ex) {
+            LOG.error("Unexpected error", ex);
           }
           return null;
         }
@@ -439,11 +440,10 @@ class BucketWriter {
       if(onCloseCallback != null) {
         onCloseCallback.run(onCloseCallbackPath);
       }
-    } catch(Throwable t) {
-      LOG.error("Unexpected error", t);
+    } catch(Exception ex) {
+      LOG.error("Unexpected error", ex);
     }
   }
-
   /**
    * doFlush() must only be called by flush()
    * @throws java.io.IOException
