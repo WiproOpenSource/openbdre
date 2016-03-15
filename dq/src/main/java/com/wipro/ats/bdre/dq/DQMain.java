@@ -43,7 +43,7 @@ public class DQMain extends BaseStructure {
         int result=0;
         if(sPath.indexOf(';')!=-1 || sPath.indexOf(',')!=-1){
             String[] lof = sPath.split(";");
-            String entries[] = lof[0].split(",");
+            String[] entries = lof[0].split(",");
             String[] params = {processId, entries[2], destDir};
             result = ToolRunner.run(new Configuration(),new DQDriver(), params);
 
