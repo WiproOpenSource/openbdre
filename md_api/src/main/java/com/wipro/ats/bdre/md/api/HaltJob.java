@@ -26,6 +26,9 @@ import org.apache.commons.cli.CommandLine;
 import org.apache.log4j.BasicConfigurator;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.config.AutowireCapableBeanFactory;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.support.ClassPathXmlApplicationContext;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -35,6 +38,10 @@ import java.util.Date;
  * Created by arijit on 12/8/14.
  */
 public class HaltJob extends MetadataAPIBase {
+    public HaltJob() {
+        AutowireCapableBeanFactory acbFactory = getAutowireCapableBeanFactory();
+        acbFactory.autowireBean(this);
+    }
 
     private static final Logger LOGGER = Logger.getLogger(HaltJob.class);
     private static final String[][] PARAMS_STRUCTURE = {
@@ -81,8 +88,7 @@ public class HaltJob extends MetadataAPIBase {
             //The HaltJob completes even if sending message fails
             try {
                 BasicConfigurator.configure();
-                StatusNotification statusNotification = new StatusNotification(haltMessage, MDConfig.getProperty("status-notification.halt-queue"));
-                LOGGER.info(statusNotification.toString());
+                new StatusNotification(haltMessage, MDConfig.getProperty("status-notification.halt-queue"));
             } catch (Exception e) {
                 LOGGER.error("Error occurred while notifying job status", e);
 
