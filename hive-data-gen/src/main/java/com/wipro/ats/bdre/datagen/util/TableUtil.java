@@ -78,7 +78,6 @@ public class TableUtil {
                 break;
             }
             rowData.append(getData(column.getColumnGenId(), pid));
-            //LOGGER.debug("Table="+table.getTableName()+"; column="+column.getColumnName()+"; index="+column.getColumnIndex());
             rowData.append(table.getDelimiter());
         }
         rowData.deleteCharAt(rowData.length() - 1);

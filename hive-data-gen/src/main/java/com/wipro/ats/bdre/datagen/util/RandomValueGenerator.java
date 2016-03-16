@@ -27,7 +27,7 @@ import java.util.Random;
 public class RandomValueGenerator {
 
 	public static final Random RANDOM = new Random();
-
+	public static final Logger LOGGER = Logger.getLogger(RandomValueGenerator.class);
 	private RandomValueGenerator(){
 	}
 	/**
@@ -40,6 +40,7 @@ public class RandomValueGenerator {
 		long low = Long.parseLong(arg.split(",")[0]);
 		long high = Long.parseLong(arg.split(",")[1]);
 		long offset=low+(long)(r.nextDouble()*(high-low));
+		LOGGER.info(offset);
 		return offset +"";
 
 	}
