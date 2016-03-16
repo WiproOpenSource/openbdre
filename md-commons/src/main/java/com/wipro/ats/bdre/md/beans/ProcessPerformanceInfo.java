@@ -25,6 +25,14 @@ import com.wipro.ats.bdre.annotation.PersistableParam;
  */
 public class ProcessPerformanceInfo {
 
+    @PersistableParam(keyName = "input-minutes")
+    private Integer timeInMin = 0;
+    @PersistableParam(keyName = "process-id")
+    private Long processId = 0L;
+    @PersistableParam(keyName = "process-duration")
+    private Integer durationInSec = 0;
+    @PersistableParam(keyName = "instance-exec-id")
+    private Long instanceExecId = 0L;
 
     public Long getInstanceExecId() {
         return instanceExecId;
@@ -63,15 +71,5 @@ public class ProcessPerformanceInfo {
     public String toString() {
         return " timeInMin:" + timeInMin + " processId:" + processId + " durationInSec:" + durationInSec + " instanceExecId:" + instanceExecId;
     }
-
-    @PersistableParam(keyName = "input-minutes")
-    private Integer timeInMin = 0;
-    @PersistableParam(keyName = "process-id")
-    private Long processId = 0L;
-    @PersistableParam(keyName = "process-duration")
-    private Integer durationInSec = 0;
-    @PersistableParam(keyName = "instance-exec-id")
-    private Long instanceExecId = 0L;
-
 
 }

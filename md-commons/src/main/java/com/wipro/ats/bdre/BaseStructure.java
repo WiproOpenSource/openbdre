@@ -20,12 +20,13 @@ import org.apache.log4j.Logger;
 import java.io.OutputStream;
 import java.io.PrintWriter;
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by arijit on 12/8/14.
  */
 public class BaseStructure {
-    private static Logger LOGGER = Logger.getLogger(BaseStructure.class);
+    private static final Logger LOGGER = Logger.getLogger(BaseStructure.class);
     private static final int PRINT_USAGE_WIDTH = 80;
     private static final int DESCPAD = 5;
     private static final int LEFTPAD = 10;
@@ -72,15 +73,10 @@ public class BaseStructure {
             options.addOption(a);
         }
 
-        //Option env = new Option("env", "environment-id", true, "Environment Id(dev, local, test, production etc");
-       // env.setOptionalArg(true);
-       // env.setRequired(false);
-       // options.addOption(env);
-
         CommandLineParser parser = new BasicParser();
-        CommandLine cmd;
+        CommandLine cmd=null;
         try {
-            ArrayList<String> newParams = new ArrayList<String>();
+            List<String> newParams = new ArrayList<String>();
 
             for (String param : params) {
                 if (param != null) {
@@ -90,14 +86,13 @@ public class BaseStructure {
             }
 
             cmd = parser.parse(options, newParams.toArray(new String[]{}));
-            return cmd;
 
         } catch (ParseException e) {
+            LOGGER.error(e);
             //System.err cannot be removed as it is an command line argument
             printUsage("java <main_class> ", e.getMessage(), options, System.err);
-            System.exit(1);
         }
-        return null;
+        return cmd;
     }
 
 

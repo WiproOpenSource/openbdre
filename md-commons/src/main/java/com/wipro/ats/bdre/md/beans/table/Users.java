@@ -31,15 +31,6 @@ public class Users {
     @Size(max = 45)
     private String username;
     private Integer pageSize;
-
-    public Integer getPageSize() {
-        return pageSize;
-    }
-
-    public void setPageSize(Integer pageSize) {
-        this.pageSize = pageSize;
-    }
-
     @NotNull
     @Size(max = 45, min = 8)
     private String password;
@@ -51,6 +42,14 @@ public class Users {
     @Override
     public String toString() {
         return " username:" + username + " password:" + password + " page:" + page;
+    }
+
+    public Integer getPageSize() {
+        return pageSize;
+    }
+
+    public void setPageSize(Integer pageSize) {
+        this.pageSize = pageSize;
     }
 
     public String getUsername() {

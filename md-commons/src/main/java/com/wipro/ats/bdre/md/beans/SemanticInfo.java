@@ -26,6 +26,18 @@ public class SemanticInfo {
     private Integer processId;
     private String uuid;
     private String serialNumber;
+    private Integer enqId;
+    private String nextProcessIds;
+    private String batchPattern;
+    private Integer page;
+    private Integer counter;
+    private String description;
+    private Timestamp addTS;
+    private String processName;
+    private Integer busDomainId;
+    private Integer processTypeId;
+    private Integer parentProcessId = new Integer(0); //To avoid NPE during parent row processing
+    private Boolean canRecover;
 
     public Timestamp getAddTS() {
         return addTS;
@@ -43,14 +55,6 @@ public class SemanticInfo {
         this.busDomainId = busDomainId;
     }
 
-    private String description;
-    private Timestamp addTS;
-    private String processName;
-    private Integer busDomainId;
-    private Integer processTypeId;
-    private Integer parentProcessId = new Integer(0); //To avoid NPE during parent row processing
-    private Boolean canRecover;
-
     public Integer getCounter() {
         return counter;
     }
@@ -58,12 +62,6 @@ public class SemanticInfo {
     public void setCounter(Integer counter) {
         this.counter = counter;
     }
-
-    private Integer enqId;
-    private String nextProcessIds;
-    private String batchPattern;
-    private Integer page;
-    private Integer counter;
 
     public String getBatchPattern() {
         return batchPattern;

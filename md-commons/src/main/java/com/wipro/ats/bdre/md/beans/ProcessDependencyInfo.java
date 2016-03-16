@@ -25,15 +25,6 @@ import java.sql.Timestamp;
  */
 public class ProcessDependencyInfo {
     private Integer processId;
-
-    public Timestamp getAddTS() {
-        return addTS;
-    }
-
-    public void setAddTS(Timestamp addTS) {
-        this.addTS = addTS;
-    }
-
     private String description;
     private Timestamp addTS;
     private String processName;
@@ -44,6 +35,7 @@ public class ProcessDependencyInfo {
     private Integer enqProcessId;
     private String nextProcessIds;
     private String batchPattern;
+    private String rowType;
 
     @Override
     public String toString() {
@@ -53,6 +45,14 @@ public class ProcessDependencyInfo {
                 " rowType:" + rowType;
     }
 
+    public Timestamp getAddTS() {
+        return addTS;
+    }
+
+    public void setAddTS(Timestamp addTS) {
+        this.addTS = addTS;
+    }
+
     public String getRowType() {
         return rowType;
     }
@@ -60,9 +60,6 @@ public class ProcessDependencyInfo {
     public void setRowType(String rowType) {
         this.rowType = rowType;
     }
-
-    private String rowType;
-
 
     public String getBatchPattern() {
         return batchPattern;
