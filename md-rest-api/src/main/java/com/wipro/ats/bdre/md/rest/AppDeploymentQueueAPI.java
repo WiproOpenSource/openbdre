@@ -152,7 +152,6 @@ public class AppDeploymentQueueAPI {
         LOGGER.info("queue id is "+queueId);
         LOGGER.info("user name is "+principal.getName());
         AppDeploymentQueue returnedAppDeploymentQueue=new AppDeploymentQueue();
-        ProcessExport processExport = new ProcessExport();
         try{
             String temp;
             BufferedReader br = null;
