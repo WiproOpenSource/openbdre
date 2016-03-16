@@ -560,9 +560,9 @@ CREATE SEQUENCE Weburlsdb_SEQ
        CACHE 2;
 
 CREATE TABLE app_deployment_queue_status (
-  app_deploy_status_id number(5,0) not null,
+  app_deployment_status_id number(5,0) not null,
   description varchar(45) not null,
-  PRIMARY KEY (app_deploy_status_id)
+  PRIMARY KEY (app_deployment_status_id)
 );
 
 
@@ -572,11 +572,11 @@ CREATE TABLE app_deployment_queue (
   username varchar(45) not null,
   app_domain varchar(45) not null,
   app_name varchar(45) not null,
-  app_deployment_state number(5,0) not null,
+  app_deployment_status_id number(5,0) not null,
   PRIMARY KEY (app_deployment_queue_id),
   CONSTRAINT process_id_adq_constraint FOREIGN KEY (process_id) REFERENCES process(process_id) enable,
   CONSTRAINT adq_user_constraint FOREIGN KEY (username) REFERENCES users(username) enable,
-  CONSTRAINT adq_state_constraint FOREIGN KEY (app_deployment_state) REFERENCES app_deployment_queue_status(app_deploy_status_id) enable
+  CONSTRAINT adq_state_constraint FOREIGN KEY (app_deployment_status_id) REFERENCES app_deployment_queue_status(app_deployment_status_id) enable
 );
 
  CREATE SEQUENCE App_Deployment_SEQ

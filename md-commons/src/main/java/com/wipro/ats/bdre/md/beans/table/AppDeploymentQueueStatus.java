@@ -17,7 +17,7 @@ package com.wipro.ats.bdre.md.beans.table;
  * Created by SU324335 on 3/8/2016.
  */
 public class AppDeploymentQueueStatus {
-    private Short adqState;
+    private Short appDeploymentStatusId;
     private String description;
     private Integer pageSize;
     private Integer page;
@@ -27,27 +27,27 @@ public class AppDeploymentQueueStatus {
     }
 
     public AppDeploymentQueueStatus(Short adqState, String description) {
-        this.adqState = adqState;
+        this.appDeploymentStatusId = appDeploymentStatusId;
         this.description = description;
     }
 
     @Override
     public String toString() {
-        return "AdqStatus{" +
-                "adqState=" + adqState +
-                ", description='" + description + '\'' +
+        return
+                "appDeploymentStatusId=" + appDeploymentStatusId +
+                ", description='" + description  +
                 ", pageSize=" + pageSize +
                 ", page=" + page +
                 ", counter=" + counter +
                 '}';
     }
 
-    public Short getAdqState() {
-        return adqState;
+    public Short getAppDeploymentStatusId() {
+        return appDeploymentStatusId;
     }
 
-    public void setAdqState(Short adqState) {
-        this.adqState = adqState;
+    public void setAppDeploymentStatusId(Short appDeploymentStatusId) {
+        this.appDeploymentStatusId = appDeploymentStatusId;
     }
 
     public String getDescription() {
@@ -81,6 +81,4 @@ public class AppDeploymentQueueStatus {
     public void setCounter(Integer counter) {
         this.counter = counter;
     }
-
-
 }
