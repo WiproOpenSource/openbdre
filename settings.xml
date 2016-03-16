@@ -180,10 +180,7 @@
                     <id>maven-central</id>
                     <url>http://repo1.maven.org/maven2/</url>
                 </repository>
-                <repository>
-                    <id>central</id>
-                    <url>http://repo.maven.org/maven2/</url>
-                </repository>
+
                 <repository>
                     <id>clojars</id>
                     <url>https://clojars.org/repo/</url>
@@ -207,10 +204,7 @@
                     <id>maven-central</id>
                     <url>http://repo1.maven.org/maven2/</url>
                 </pluginRepository>
-                <pluginRepository>
-                    <id>central</id>
-                    <url>http://repo.maven.org/maven2/</url>
-                </pluginRepository>
+
                 <pluginRepository>
                     <id>clojars</id>
                     <url>https://clojars.org/repo/</url>
