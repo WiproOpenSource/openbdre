@@ -42,15 +42,15 @@ public class TermJob extends MetadataAPIBase {
             {"p", "process-id", "Process Id of the process to terminate"},
     };
 
-    @Autowired
-    private JobDAO jobDAO;
-    @Autowired
-    private ProcessDAO processDAO;
+
     public TermJob() {
         AutowireCapableBeanFactory acbFactory = getAutowireCapableBeanFactory();
         acbFactory.autowireBean(this);
     }
-
+    @Autowired
+    private JobDAO jobDAO;
+    @Autowired
+    private ProcessDAO processDAO;
 
 
     /**
