@@ -521,24 +521,24 @@
 'crawler','urlsToSearch','urls to search','urls to search',1,'.*','text', 1
 'crawler','urlsNotToSearch','urls not to search','urls not to search',1,'.*\\\\.(bmp|gif|jpg|png)$','text', 1
 #For deploy and execution scripts
-'scripts_config', 'bdreLinuxUserName', '-','-' , 1, 'user', 'text' , 1
-'scripts_config', 'nameNodeHostName', '-','-' , 1, '0.0.0.0', 'text' , 1
-'scripts_config', 'nameNodePort', '-','-' , 1, '0', 'text' , 1
-'scripts_config', 'jobTrackerHostName', '-','-' , 1, '0.0.0.0', 'text' , 1
+'scripts_config', 'bdreLinuxUserName', '-','-' , 1, '${edge_node_user_name}', 'text' , 1
+'scripts_config', 'nameNodeHostName', '-','-' , 1, '${name_node_hostname}', 'text' , 1
+'scripts_config', 'nameNodePort', '-','-' , 1, '${name_node_port}', 'text' , 1
+'scripts_config', 'jobTrackerHostName', '-','-' , 1, '${thrift_hostname}', 'text' , 1
 #For cloudera this is 8032
-'scripts_config', 'jobTrackerPort', '-','-' , 1, '0', 'text' , 1
+'scripts_config', 'jobTrackerPort', '-','-' , 1, '${job_tracker_port}', 'text' , 1
 'scripts_config', 'hiveConfDir', '-','-' , 1, 'conf', 'text' , 1
-'scripts_config', 'flumeLibDir', '-','-' , 1, '/flume/lib', 'text' , 1
-'scripts_config', 'remoteUserName', '-','-' , 1, 'user', 'text' , 1
-'scripts_config', 'remoteHostPublicIp', '-','-' , 1, '0.0.0.0', 'text' , 1
+'scripts_config', 'flumeLibDir', '-','-' , 1, '${flume_path}', 'text' , 1
+'scripts_config', 'remoteUserName', '-','-' , 1, 'ec2-user', 'text' , 1
+'scripts_config', 'remoteHostPublicIp', '-','-' , 1, '127.0.0.1', 'text' , 1
 'scripts_config', 'uploadBaseDir', '-','-' , 1, '~/bdre-wfd', 'text' , 1
 'scripts_config', 'bdreVersion', '-','-' , 1, '1.1-SNAPSHOT', 'text' , 1
-'scripts_config', 'oozieHost', '-','-' , 1, '0.0.0.0', 'text' , 1
-'scripts_config', 'ooziePort', '-','-' , 1, '0', 'text' , 1
-'scripts_config', 'edgeNodeHostName', '-','-' , 1, '0.0.0.0', 'text' , 1
-'scripts_config', 'edgeNodeUserName', '-','-' , 1, 'user', 'text' , 1
-'scripts_config', 'edgeNodePassword', '-','-' , 1, 'pwd', 'text' , 1
-'scripts_config', 'oozieUrl', '-','-' , 1, '0.0.0.0', 'text' , 1
+'scripts_config', 'oozieHost', '-','-' , 1, '${oozie_host}', 'text' , 1
+'scripts_config', 'ooziePort', '-','-' , 1, '${oozie_port}', 'text' , 1
+'scripts_config', 'edgeNodeHostName', '-','-' , 1, '${edge_node_host_name}', 'text' , 1
+'scripts_config', 'edgeNodeUserName', '-','-' , 1, '${edge_node_user_name}', 'text' , 1
+'scripts_config', 'edgeNodePassword', '-','-' , 1, '${edge_node_password}', 'text' , 1
+'scripts_config', 'oozieUrl', '-','-' , 1, '${oozie_url}', 'text' , 1
 'scripts_config', 'logDir', '-','-' , 1, '/var/log/BDRE', 'text' , 1
 'scripts_config', 'repoName', '-','-' , 1, 'origin', 'text' , 1
 'scripts_config', 'branchName', '-','-' , 1, 'develop', 'text' , 1
