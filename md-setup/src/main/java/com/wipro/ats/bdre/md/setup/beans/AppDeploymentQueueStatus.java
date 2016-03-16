@@ -28,26 +28,25 @@ import javax.persistence.Table;
 )
 public class AppDeploymentQueueStatus  implements java.io.Serializable {
 
-    private Integer adqStateId;
+    private Integer appDeploymentStatusId;
     private String description;
 
         public AppDeploymentQueueStatus() {
     }
 
-    public AppDeploymentQueueStatus(Integer adqState, String description) {
-        this.adqStateId = adqState;
+    public AppDeploymentQueueStatus(Integer appDeploymentStatusId, String description) {
+        this.appDeploymentStatusId = appDeploymentStatusId;
         this.description = description;
     }
 
     @Id
-
-    @Column(name="APP_DEPLOY_STATUS_ID", unique=true, nullable=false)
-    public Integer getAdqState() {
-        return this.adqStateId;
+    @Column(name="APP_DEPLOYMENT_STATUS_ID", unique=true, nullable=false)
+    public Integer getAppDeploymentStatusId() {
+        return this.appDeploymentStatusId;
     }
 
-    public void setAdqState(Integer adqState) {
-        this.adqStateId = adqState;
+    public void setAppDeploymentStatusId(Integer appDeploymentStatusId) {
+        this.appDeploymentStatusId = appDeploymentStatusId;
     }
 
     @Column(name="DESCRIPTION", nullable=false, length=45)
