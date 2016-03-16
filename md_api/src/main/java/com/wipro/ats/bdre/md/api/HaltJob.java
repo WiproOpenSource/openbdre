@@ -26,6 +26,7 @@ import org.apache.commons.cli.CommandLine;
 import org.apache.log4j.BasicConfigurator;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.config.AutowireCapableBeanFactory;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -42,6 +43,17 @@ public class HaltJob extends MetadataAPIBase {
             {"batchmarking", "batch-marking", "Batch Marking of the batches enqueued for downstream"}
     };
 
+    @Autowired
+    private JobDAO jobDAO;
+    @Autowired
+    private ProcessDAO processDAO;
+    public HaltJob() {
+        AutowireCapableBeanFactory acbFactory = getAutowireCapableBeanFactory();
+        acbFactory.autowireBean(this);
+    }
+
+
+
     /**
      * This process calls HaltJob Proc and updates the instance_exec table, adds entry in batch_consump_queue and
      * archive_consump_queue once process ends successfully.It also calls StatusNotification class to send the
@@ -50,10 +62,7 @@ public class HaltJob extends MetadataAPIBase {
      * @param params String array having process-id, batch-marking,environment with their command line notations.
      * @return returns nothing.
      */
-    @Autowired
-    private JobDAO jobDAO;
-    @Autowired
-    private ProcessDAO processDAO;
+
 
     @Override
     public HaltJobInfo execute(String[] params) {

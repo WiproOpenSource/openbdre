@@ -26,6 +26,7 @@ import org.apache.commons.cli.CommandLine;
 import org.apache.log4j.BasicConfigurator;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.config.AutowireCapableBeanFactory;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -41,6 +42,17 @@ public class TermJob extends MetadataAPIBase {
             {"p", "process-id", "Process Id of the process to terminate"},
     };
 
+    @Autowired
+    private JobDAO jobDAO;
+    @Autowired
+    private ProcessDAO processDAO;
+    public TermJob() {
+        AutowireCapableBeanFactory acbFactory = getAutowireCapableBeanFactory();
+        acbFactory.autowireBean(this);
+    }
+
+
+
     /**
      * This method calls TermJob proc and updates status of a process as terminated in instance_exec table.
      * It also calls StatusNotification class to send the message of Job termination.
@@ -48,10 +60,7 @@ public class TermJob extends MetadataAPIBase {
      * @param params String array having environment and process-id with their command line notations.
      * @return nothing.
      */
-    @Autowired
-    private JobDAO jobDAO;
-    @Autowired
-    private ProcessDAO processDAO;
+
 
     @Override
     public TermJobInfo execute(String[] params) {
@@ -78,10 +87,9 @@ public class TermJob extends MetadataAPIBase {
             //The TermJob completes even if sending message fails
             try {
                 BasicConfigurator.configure();
-                StatusNotification statusNotification =new StatusNotification(termMessage, MDConfig.getProperty("status-notification.term-queue"));
+                StatusNotification statusNotification = new StatusNotification(termMessage, MDConfig.getProperty("status-notification.term-queue"));
                 LOGGER.info(statusNotification.toString());
             } catch (Exception e) {
-                LOGGER.info(e);
                 LOGGER.error("Error occurred while notifying job status", e);
             }
             return termJobInfo;
