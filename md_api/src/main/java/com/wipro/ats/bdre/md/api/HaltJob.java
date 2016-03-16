@@ -43,15 +43,15 @@ public class HaltJob extends MetadataAPIBase {
             {"batchmarking", "batch-marking", "Batch Marking of the batches enqueued for downstream"}
     };
 
-
-    public HaltJob() {
-        AutowireCapableBeanFactory acbFactory = getAutowireCapableBeanFactory();
-        acbFactory.autowireBean(this);
-    }
     @Autowired
     private JobDAO jobDAO;
     @Autowired
     private ProcessDAO processDAO;
+    public HaltJob() {
+        AutowireCapableBeanFactory acbFactory = getAutowireCapableBeanFactory();
+        acbFactory.autowireBean(this);
+    }
+
 
 
     /**
