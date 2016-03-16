@@ -64,7 +64,7 @@ public class AppDeploymentQueueDAOTest {
         assertEquals("Test Updated",adq.getAppName());
         LOGGER.info("Updated Description is:" + adqStatus.getDescription());
         appDeploymentQueueDAO.delete(adqId);
-        LOGGER.info("Deleted AdqStatus Entry with ID" + adq.getAppDeploymentQueueStatus().getAppDeploymentStatusId());
+        LOGGER.info("Deleted AdqStatus Entry with ID" +  adq.getAppDeploymentQueueStatus().getAppDeploymentStatusId());
     }
 
 }
