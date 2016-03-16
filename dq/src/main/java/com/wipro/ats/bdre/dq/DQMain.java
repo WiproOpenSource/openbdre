@@ -35,7 +35,7 @@ public class DQMain extends BaseStructure {
      * @throws Exception
      */
     public static void main(String[] args) throws Exception {
-        try {
+
             CommandLine commandLine = new DQMain().getCommandLine(args, PARAMS_STRUCTURE);
             String processId = commandLine.getOptionValue("process-id");
             String sPath = commandLine.getOptionValue("source-file-path");
@@ -52,10 +52,9 @@ public class DQMain extends BaseStructure {
                 String[] params = {processId, sPath, destDir};
                 result = ToolRunner.run(new Configuration(), new DQDriver(), params);
             }
-        }
-        finally {
-            throw new Exception("dq exit exception");
-        }
-
+       if (result != 0)
+           throw new DQValidationException(new DQStats());
+        else
+           return;
     }
 }
