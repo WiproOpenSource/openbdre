@@ -36,15 +36,22 @@ import java.util.Date;
  * Created by arijit on 12/8/14.
  */
 public class TermJob extends MetadataAPIBase {
-    public TermJob() {
-        AutowireCapableBeanFactory acbFactory = getAutowireCapableBeanFactory();
-        acbFactory.autowireBean(this);
-    }
 
     private static final Logger LOGGER = Logger.getLogger(TermJob.class);
     private static final String[][] PARAMS_STRUCTURE = {
             {"p", "process-id", "Process Id of the process to terminate"},
     };
+
+    @Autowired
+    private JobDAO jobDAO;
+    @Autowired
+    private ProcessDAO processDAO;
+    public TermJob() {
+        AutowireCapableBeanFactory acbFactory = getAutowireCapableBeanFactory();
+        acbFactory.autowireBean(this);
+    }
+
+
 
     /**
      * This method calls TermJob proc and updates status of a process as terminated in instance_exec table.
@@ -53,10 +60,7 @@ public class TermJob extends MetadataAPIBase {
      * @param params String array having environment and process-id with their command line notations.
      * @return nothing.
      */
-    @Autowired
-    private JobDAO jobDAO;
-    @Autowired
-    private ProcessDAO processDAO;
+
 
     @Override
     public TermJobInfo execute(String[] params) {

@@ -36,16 +36,23 @@ import java.util.Date;
  * Created by arijit on 12/8/14.
  */
 public class HaltJob extends MetadataAPIBase {
-    public HaltJob() {
-        AutowireCapableBeanFactory acbFactory = getAutowireCapableBeanFactory();
-        acbFactory.autowireBean(this);
-    }
 
     private static final Logger LOGGER = Logger.getLogger(HaltJob.class);
     private static final String[][] PARAMS_STRUCTURE = {
             {"p", "process-id", "Process id of the job"},
             {"batchmarking", "batch-marking", "Batch Marking of the batches enqueued for downstream"}
     };
+
+    @Autowired
+    private JobDAO jobDAO;
+    @Autowired
+    private ProcessDAO processDAO;
+    public HaltJob() {
+        AutowireCapableBeanFactory acbFactory = getAutowireCapableBeanFactory();
+        acbFactory.autowireBean(this);
+    }
+
+
 
     /**
      * This process calls HaltJob Proc and updates the instance_exec table, adds entry in batch_consump_queue and
@@ -55,10 +62,7 @@ public class HaltJob extends MetadataAPIBase {
      * @param params String array having process-id, batch-marking,environment with their command line notations.
      * @return returns nothing.
      */
-    @Autowired
-    private JobDAO jobDAO;
-    @Autowired
-    private ProcessDAO processDAO;
+
 
     @Override
     public HaltJobInfo execute(String[] params) {
