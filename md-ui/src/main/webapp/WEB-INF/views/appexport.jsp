@@ -146,10 +146,10 @@
                                }
 
                                appstorePush =function (){
-                                    uploadImg(<%=processId %> ,'img-id');
+                                  uploadImg(<%=processId %> ,'img-id');
                                    event.preventDefault();
                                 $.ajax({
-                                     url: '/mdrest/appdeployment/',
+                                     url: '/mdrest/adq/',
                                       type: 'POST',
                                       data: $('#exportToAppStoreForm').serialize(),
                                       dataType: 'json',

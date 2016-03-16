@@ -337,9 +337,9 @@ CREATE TABLE Weburlsdb (
 );
 
 create table app_deployment_queue_status (
-  app_deploy_status_id smallint not null,
+  app_deployment_status_id smallint not null,
   description varchar(45) not null,
-  primary key (app_deploy_status_id)
+  primary key (app_deployment_status_id)
 );
 
 
@@ -349,9 +349,9 @@ create table app_deployment_queue (
   username varchar(45) not null,
   app_domain varchar(45) not null,
   app_name varchar(45) not null,
-  app_deployment_state smallint not null,
+  app_deployment_status_id smallint not null,
   primary key (app_deployment_queue_id),
   constraint process_id_adq_constraint foreign key (process_id) references process(process_id) on delete no action on update no action,
   constraint adq_user_constraint foreign key (username) references users(username) on delete no action on update no action,
-  constraint adq_state_constraint foreign key (app_deployment_state) references app_deployment_queue_status(app_deploy_status_id) on delete no action on update no action
+  constraint adq_state_constraint foreign key (app_deployment_status_id) references app_deployment_queue_status(app_deployment_status_id) on delete no action on update no action
 );
