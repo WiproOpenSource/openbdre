@@ -22,7 +22,7 @@ import org.apache.log4j.Logger;
 import java.io.IOException;
 
 public class DQFileReportReducer extends Reducer<Text, IntWritable, Text, Text> {
-    private static Logger LOGGER = Logger.getLogger(DQFileReportReducer.class);
+    private static final Logger LOGGER = Logger.getLogger(DQFileReportReducer.class);
     private Text outputKey = new Text();
     private Text outputValue = new Text();
     private int goodRecords;
