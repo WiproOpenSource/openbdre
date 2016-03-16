@@ -49,8 +49,9 @@ import java.util.Properties;
  */
 
 public class DQDriver extends Configured implements Tool {
-    private static Logger LOGGER = Logger.getLogger(DQDriver.class);
+    private static final Logger LOGGER = Logger.getLogger(DQDriver.class);
 
+    @Override
     public int run(String[] arg) throws Exception {
         String processId = arg[0];
         String sPath = arg[1];
@@ -184,6 +185,7 @@ public class DQDriver extends Configured implements Tool {
             public void write(int x) throws IOException {
                 this.string.append((char) x);
             }
+            @Override
             public String toString() {
                 return this.string.toString();
             }

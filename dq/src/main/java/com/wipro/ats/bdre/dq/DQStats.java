@@ -17,7 +17,7 @@ package com.wipro.ats.bdre.dq;
 /**
  * Created by arijit on 3/6/15.
  */
-public class DQStats {
+public class DQStats  implements java.io.Serializable {
     private long numGood;
     private long numBad;
     private float goodPercent;
