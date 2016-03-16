@@ -158,6 +158,17 @@ public class CodeUploaderAPI extends MetadataAPIBase {
                 stream.write(bytes);
                 stream.close();
                 //Populating Uploaded file bean to return in RestWrapper
+                LOGGER.info("name of the file is + "+name);
+                if (CodeUploaderAPI.isNumeric(subDir))
+                {
+                    File oldName = new File(uploadLocation+"/"+name);
+                    File newName = new File(uploadLocation+"/"+"analytic.png");
+                    if(oldName.renameTo(newName)) {
+                        System.out.println("renamed");
+                    } else {
+                        System.out.println("Error");
+                    }
+                }
                 UploadedFile uploadedFile = new UploadedFile();
                 uploadedFile.setParentProcessId(null);
                 uploadedFile.setSubDir(subDir);
@@ -285,5 +296,19 @@ public class CodeUploaderAPI extends MetadataAPIBase {
     @Override
     public Object execute(String[] params) {
         return null;
+    }
+
+
+    public static boolean isNumeric(String str)
+    {
+        try
+        {
+            double d = Double.parseDouble(str);
+        }
+        catch(NumberFormatException nfe)
+        {
+            return false;
+        }
+        return true;
     }
 }
