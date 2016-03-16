@@ -97,9 +97,9 @@ public class PersistenceUnit extends MetadataAPIBase {
 			node.setDotLabel(table.getLabel());
 			node.setDotString(table.toDotString());
 			if (table.isDataBaseTable())
-				node.setNodeTypeId(LineageNodeTypeEnumInfo.TABLE.nodeTypeId);
+				node.setNodeTypeId(LineageNodeTypeEnumInfo.TABLE.getNodeTypeId());
 			else
-				node.setNodeTypeId(LineageNodeTypeEnumInfo.TEMPTABLE.nodeTypeId);
+				node.setNodeTypeId(LineageNodeTypeEnumInfo.TEMPTABLE.getNodeTypeId());
 			lineageTableNodes.addToList(node);
 
 			// add columns
@@ -112,9 +112,9 @@ public class PersistenceUnit extends MetadataAPIBase {
 				node.setDotString(column.toDotString());
 				node.setNodeOrder(column.getOrdinalPosition());
 				if (column.isUsedInQuery())
-					node.setNodeTypeId(LineageNodeTypeEnumInfo.COLUMN.nodeTypeId);
+					node.setNodeTypeId(LineageNodeTypeEnumInfo.COLUMN.getNodeTypeId());
 				else
-					node.setNodeTypeId(LineageNodeTypeEnumInfo.IDLECOLUMN.nodeTypeId);
+					node.setNodeTypeId(LineageNodeTypeEnumInfo.IDLECOLUMN.getNodeTypeId());
 				lineageColumnNodes.addToList(node);
 			}
 		}
@@ -126,9 +126,9 @@ public class PersistenceUnit extends MetadataAPIBase {
 			node.setDotLabel(table.getLabel());
 			node.setDotString(table.toDotString());
 			if (table.isDataBaseTable())
-				node.setNodeTypeId(LineageNodeTypeEnumInfo.TABLE.nodeTypeId);
+				node.setNodeTypeId(LineageNodeTypeEnumInfo.TABLE.getNodeTypeId());
 			else
-				node.setNodeTypeId(LineageNodeTypeEnumInfo.TEMPTABLE.nodeTypeId);
+				node.setNodeTypeId(LineageNodeTypeEnumInfo.TEMPTABLE.getNodeTypeId());
 			lineageTableNodes.addToList(node);
 
 			// add columns
@@ -141,9 +141,9 @@ public class PersistenceUnit extends MetadataAPIBase {
 				node.setDotString(column.toDotString());
 				node.setNodeOrder(column.getOrdinalPosition());
 				if (column.isUsedInQuery())
-					node.setNodeTypeId(LineageNodeTypeEnumInfo.COLUMN.nodeTypeId);
+					node.setNodeTypeId(LineageNodeTypeEnumInfo.COLUMN.getNodeTypeId());
 				else
-					node.setNodeTypeId(LineageNodeTypeEnumInfo.IDLECOLUMN.nodeTypeId);
+					node.setNodeTypeId(LineageNodeTypeEnumInfo.IDLECOLUMN.getNodeTypeId());
 				lineageColumnNodes.addToList(node);
 			}
 		}
@@ -154,7 +154,7 @@ public class PersistenceUnit extends MetadataAPIBase {
 			node.setDisplayName(function.getDisplayName());
 			node.setDotLabel(function.getLabel());
 			node.setDotString(function.toDotString());
-			node.setNodeTypeId(LineageNodeTypeEnumInfo.FUNCTION.nodeTypeId);
+			node.setNodeTypeId(LineageNodeTypeEnumInfo.FUNCTION.getNodeTypeId());
 			lineageFunctionNodes.add(node);
 		}
 		for (Constant constant : finalConstants) {
@@ -164,7 +164,7 @@ public class PersistenceUnit extends MetadataAPIBase {
 			node.setDisplayName(constant.getDisplayName());
 			node.setDotLabel(constant.getLabel());
 			node.setDotString(constant.toDotString());
-			node.setNodeTypeId(LineageNodeTypeEnumInfo.CONSTANT.nodeTypeId);
+			node.setNodeTypeId(LineageNodeTypeEnumInfo.CONSTANT.getNodeTypeId());
 			lineageConstantNodes.add(node);
 		}
 

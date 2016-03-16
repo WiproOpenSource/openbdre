@@ -17,10 +17,15 @@ package com.wipro.ats.bdre.md.rest;
 
 import com.wipro.ats.bdre.ldg.GetDotForTable;
 import com.wipro.ats.bdre.md.api.base.MetadataAPIBase;
+import com.wipro.ats.bdre.md.rest.beans.LineageTabColInfo;
 import org.apache.log4j.Logger;
 import org.springframework.stereotype.Controller;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.*;
+import javax.validation.Valid;
 import java.security.Principal;
+import java.util.List;
 
 
 /**
@@ -35,15 +40,35 @@ public class TableColumnLineageAPI extends MetadataAPIBase {
      * This method is used to see the relationship between processes linked to a particular table name and/or column name.
      * It also generates the dot string for visualisation of the links.
      *
-     * @param tableName, colName
-     * @return restWrapper It contains an instance of LineageInfo.
+     * @param lineageTabColInfo
+     * @return restWrapper It contains an instance of LineageTabColInfo.
      */
     @RequestMapping(value = {"", "/"}, method = RequestMethod.GET)
     public
     @ResponseBody
-    RestWrapper getByTableCol(@RequestParam(value = "tableName", defaultValue = "null") String tableName, @RequestParam(value = "colName", defaultValue = "null") String colName, Principal principal) {
+    RestWrapper getByTableCol(@ModelAttribute("lineageTabColInfo")
+                              @Valid LineageTabColInfo lineageTabColInfo, BindingResult bindingResult, Principal principal) {
         RestWrapper restWrapper = null;
-        try {
+        String colName = lineageTabColInfo.getColName();
+        String tableName = lineageTabColInfo.getTableName();
+
+        if (bindingResult.hasErrors()) {
+            StringBuilder errorMessages = new StringBuilder("<p>Please fix following errors and try again<p><ul>");
+            List<FieldError> errors = bindingResult.getFieldErrors();
+            for (FieldError error : errors) {
+                errorMessages.append("<li>");
+                errorMessages.append(error.getField());
+                errorMessages.append(". Bad value: '");
+                errorMessages.append(error.getRejectedValue());
+                errorMessages.append("'</li>");
+                errorMessages.append("<li>");
+                errorMessages.append("Relation corresponding to the column selected may not exist");
+                errorMessages.append("'</li>");
+            }
+            errorMessages.append("</ul>");
+            restWrapper = new RestWrapper(errorMessages.toString(), RestWrapper.ERROR);
+            return restWrapper;
+        }
 
             if(colName != null && !("".equals(colName.trim()))) {
                 LOGGER.info("ColName given: " + colName + "TableName given: " + tableName);
@@ -51,12 +76,11 @@ public class TableColumnLineageAPI extends MetadataAPIBase {
                 String dot = new String();
                 GetDotForTable getDotForTable = new GetDotForTable();
                 dot = getDotForTable.dotGeneratorWithCol(args);
-                LineageTabColInfo lineageInfo = new LineageTabColInfo();
                 LOGGER.debug(dot);
-                lineageInfo.setDot(dot.toString());
-                lineageInfo.setTableName(tableName);
-                lineageInfo.setColName(colName);
-                restWrapper = new RestWrapper(lineageInfo, RestWrapper.OK);
+                lineageTabColInfo.setDot(dot.toString());
+//                lineageTabColInfo.setTableName(tableName);
+//                lineageTabColInfo.setColName(colName);
+                restWrapper = new RestWrapper(lineageTabColInfo, RestWrapper.OK);
                 LOGGER.info("Getting " + tableName + "for column name: " + colName + " Lineage by User:" + principal.getName());
             } else {
                 LOGGER.info("TableName given: " + tableName);
@@ -64,59 +88,19 @@ public class TableColumnLineageAPI extends MetadataAPIBase {
                 String dot = new String();
                 GetDotForTable getDotForTable = new GetDotForTable();
                 dot = getDotForTable.dotGeneratorWithTable(args);
-                LineageTabColInfo lineageInfo = new LineageTabColInfo();
                 LOGGER.debug(dot);
-                lineageInfo.setDot(dot.toString());
-                lineageInfo.setTableName(tableName);
-                restWrapper = new RestWrapper(lineageInfo, RestWrapper.OK);
+                lineageTabColInfo.setDot(dot.toString());
+//                lineageTabColInfo.setTableName(tableName);
+                restWrapper = new RestWrapper(lineageTabColInfo, RestWrapper.OK);
                 LOGGER.info("Getting " + tableName + " Lineage by User:" + principal.getName());
             }
 
-        } catch (Exception e) {
-            restWrapper = new RestWrapper(e.getMessage(), RestWrapper.ERROR);
-            LOGGER.info("Error occured in API" + e);
-        }
         return restWrapper;
     }
 
     @Override
     public Object execute(String[] params) {
         return null;
-    }
-
-    /**
-     * This class is used to access the variables of LineageAPI.
-     */
-    private class LineageTabColInfo {
-
-        private String tableName;
-        private String colName;
-        private String dot;
-
-        public String getTableName() {
-            return tableName;
-        }
-
-        public void setTableName(String tableName) {
-            this.tableName = tableName;
-        }
-
-        public String getColName() {
-            return colName;
-        }
-
-        public void setColName(String colName) {
-            this.colName = colName;
-        }
-
-        public String getDot() {
-            return dot;
-        }
-
-        public void setDot(String dot) {
-            this.dot = dot;
-        }
-
     }
 
 }

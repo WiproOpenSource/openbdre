@@ -30,6 +30,40 @@ public class Process {
     private Integer processId;
     private Integer pageSize;
     private String processCode;
+    private String tableAddTS;
+    private Date editTS;
+    private String tableEditTS;
+    private Boolean deleteFlag;
+    private Integer workflowId;
+    @NotNull
+    @Size(min = 1, max = 256)
+    private String description;
+    private Date addTS;
+    @NotNull
+    @Size(max = 45)
+    private String processName;
+    @Min(value = 1)
+    @Max(value = Integer.MAX_VALUE)
+    @NotNull
+    private Integer busDomainId;
+    @Min(value = 0)
+    @Max(value = Integer.MAX_VALUE)
+    @NotNull
+    private Integer processTypeId;
+    private Integer parentProcessId; // new Integer(0); //To avoid NPE during parent row processing
+    @NotNull
+    private Boolean canRecover;
+    private Integer processTemplateId;
+    @Min(value = 0)
+    @Max(value = Integer.MAX_VALUE)
+    private Integer enqProcessId;
+    @NotNull
+    @Pattern(regexp = "^[0-9]+(,[0-9]+)*$")
+    private String nextProcessIds;
+    private String batchPattern;
+    private Integer page;
+    private Integer counter;
+
     public String getProcessCode() {
         return this.processCode;
     }
@@ -37,6 +71,7 @@ public class Process {
     public void setProcessCode(String processCode) {
         this.processCode = processCode;
     }
+
     public Integer getPageSize() {
         return pageSize;
     }
@@ -44,7 +79,6 @@ public class Process {
     public void setPageSize(Integer pageSize) {
         this.pageSize = pageSize;
     }
-
 
     public Date getAddTS() {
         return addTS;
@@ -69,11 +103,6 @@ public class Process {
     public void setTableAddTS(String tableAddTS) {
         this.tableAddTS = tableAddTS;
     }
-
-    private String tableAddTS;
-
-    private Date editTS;
-    private String tableEditTS;
 
     public Date getEditTS() {
         return editTS;
@@ -100,8 +129,6 @@ public class Process {
                 " enqProcessId:" + enqProcessId + " nextProcessIds:" + nextProcessIds + " editTS:" + editTS + " page:" + page + " delete flag:" + deleteFlag;
     }
 
-    private Boolean deleteFlag;
-
     public Boolean getDeleteFlag() {
         return deleteFlag;
     }
@@ -110,29 +137,6 @@ public class Process {
         this.deleteFlag = deleteFlag;
     }
 
-    private Integer workflowId;
-    @NotNull
-    @Size(min = 1, max = 256)
-    private String description;
-
-    private Date addTS;
-    @NotNull
-    @Size(max = 45)
-    private String processName;
-    @Min(value = 1)
-    @Max(value = Integer.MAX_VALUE)
-    @NotNull
-    private Integer busDomainId;
-    @Min(value = 0)
-    @Max(value = Integer.MAX_VALUE)
-    @NotNull
-    private Integer processTypeId;
-
-    private Integer parentProcessId; // new Integer(0); //To avoid NPE during parent row processing
-    @NotNull
-    private Boolean canRecover;
-    private Integer processTemplateId;
-
     public Integer getCounter() {
         return counter;
     }
@@ -140,19 +144,6 @@ public class Process {
     public void setCounter(Integer counter) {
         this.counter = counter;
     }
-
-    @Min(value = 0)
-    @Max(value = Integer.MAX_VALUE)
-    private Integer enqProcessId;
-    @NotNull
-    @Pattern(regexp = "^[0-9]+(,[0-9]+)*$")
-    private String nextProcessIds;
-
-    private String batchPattern;
-
-    private Integer page;
-
-    private Integer counter;
 
     public String getBatchPattern() {
         return batchPattern;

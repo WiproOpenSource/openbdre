@@ -28,6 +28,35 @@ public class ProcessTemplate {
 
     @Digits(fraction = 0, integer = 11)
     private Integer processTemplateId;
+    private String tableAddTS;
+    private Integer workflowId;
+    @NotNull
+    @Size(min = 1, max = 256)
+    private String description;
+    private Date addTS;
+    @NotNull
+    @Size(max = 45)
+    private String processName;
+    @Min(value = 1)
+    @Max(value = Integer.MAX_VALUE)
+    @NotNull
+    private Integer busDomainId;
+    @Min(value = 0)
+    @Max(value = Integer.MAX_VALUE)
+    @NotNull
+    private Integer processTypeId;
+    private Integer parentProcessId; // new Integer(0); //To avoid NPE during parent row processing
+    @NotNull
+    private Boolean canRecover;
+    private Integer processId;
+    private String batchPattern;
+    private String nextProcessTemplateId;
+    private Integer page;
+    private Integer pageSize;
+    private String nextProcessIds;
+    private Integer enqProcessId;
+    private Integer counter;
+    private Boolean deleteFlag;
 
     public Date getAddTS() {
         return addTS;
@@ -53,30 +82,6 @@ public class ProcessTemplate {
         this.tableAddTS = tableAddTS;
     }
 
-    private String tableAddTS;
-
-    private Integer workflowId;
-    @NotNull
-    @Size(min = 1, max = 256)
-    private String description;
-
-    private Date addTS;
-    @NotNull
-    @Size(max = 45)
-    private String processName;
-    @Min(value = 1)
-    @Max(value = Integer.MAX_VALUE)
-    @NotNull
-    private Integer busDomainId;
-    @Min(value = 0)
-    @Max(value = Integer.MAX_VALUE)
-    @NotNull
-    private Integer processTypeId;
-
-    private Integer parentProcessId; // new Integer(0); //To avoid NPE during parent row processing
-    @NotNull
-    private Boolean canRecover;
-
     public Integer getCounter() {
         return counter;
     }
@@ -84,13 +89,6 @@ public class ProcessTemplate {
     public void setCounter(Integer counter) {
         this.counter = counter;
     }
-
-
-    private Integer processId;
-    private String batchPattern;
-    private String nextProcessTemplateId;
-    private Integer page;
-    private Integer pageSize;
 
     public Integer getPageSize() {
         return pageSize;
@@ -100,28 +98,12 @@ public class ProcessTemplate {
         this.pageSize = pageSize;
     }
 
-
-    private Integer counter;
-    private String nextProcessIds;
-    private Integer enqProcessId;
-
-    private Boolean deleteFlag;
-
     public Boolean getDeleteFlag() {
         return deleteFlag;
     }
 
     public void setDeleteFlag(Boolean deleteFlag) {
         this.deleteFlag = deleteFlag;
-    }
-
-    @Override
-    public String toString() {
-        return " processId:" + processId + " tableAddTS:" + tableAddTS +
-                " workflowId:" + workflowId + " description:" + description.substring(0, Math.min(description.length(), 45)) +
-                "addTS:" + addTS + " processName:" + processName + " busDomainId:" + busDomainId +
-                " processTypeId:" + processTypeId + " parentProcessId:" + parentProcessId + " processTemplateId:" + processTemplateId +
-                " enqProcessId:" + enqProcessId + " nextProcessIds:" + nextProcessIds + " page:" + page;
     }
 
     public String getBatchPattern() {
@@ -229,5 +211,14 @@ public class ProcessTemplate {
 
     public void setProcessId(Integer processId) {
         this.processId = processId;
+    }
+
+    @Override
+    public String toString() {
+        return " processId:" + processId + " tableAddTS:" + tableAddTS +
+                " workflowId:" + workflowId + " description:" + description.substring(0, Math.min(description.length(), 45)) +
+                "addTS:" + addTS + " processName:" + processName + " busDomainId:" + busDomainId +
+                " processTypeId:" + processTypeId + " parentProcessId:" + parentProcessId + " processTemplateId:" + processTemplateId +
+                " enqProcessId:" + enqProcessId + " nextProcessIds:" + nextProcessIds + " page:" + page;
     }
 }

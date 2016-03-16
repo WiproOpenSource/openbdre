@@ -24,6 +24,13 @@ import com.wipro.ats.bdre.annotation.PersistableParam;
  * This class contains all the setter and getter methods for SuccessFailure  variables.
  */
 public class SuccessFailureInfo {
+    @PersistableParam(keyName = "success-count")
+    private Integer countSuccess = 0;
+    @PersistableParam(keyName = "failure-count")
+    private Integer countFailure = 0;
+    @PersistableParam(keyName = "time")
+    private Integer time = 0;
+    
     public Integer getCountSuccess() {
         return countSuccess;
     }
@@ -52,14 +59,6 @@ public class SuccessFailureInfo {
     public String toString() {
         return " countSuccess:" + countSuccess + " countFailure:" + countFailure + " time:" + time;
     }
-
-    @PersistableParam(keyName = "success-count")
-    private Integer countSuccess = 0;
-    @PersistableParam(keyName = "failure-count")
-    private Integer countFailure = 0;
-    @PersistableParam(keyName = "time")
-    private Integer time = 0;
-
 
 }
 

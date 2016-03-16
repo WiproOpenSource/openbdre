@@ -30,13 +30,20 @@ public enum LineageNodeTypeEnumInfo {
     IDLECOLUMN(5, "IDLE_COLUMN"),
     CONSTANT(6, "CONSTANT");
 
-    public final int nodeTypeId;
-    public final String nodeTypeName;
-
+    private final int nodeTypeId;
+    private final String nodeTypeName;
 
     LineageNodeTypeEnumInfo(int nodeTypeId, String nodeTypeName) {
         this.nodeTypeId = nodeTypeId;
         this.nodeTypeName = nodeTypeName;
+    }
+
+    public int getNodeTypeId() {
+        return nodeTypeId;
+    }
+
+    public String getNodeTypeName() {
+        return nodeTypeName;
     }
 
     private static int populateFromDb() {

@@ -37,6 +37,17 @@ public class ProcessLogInfo {
     private Date addTs;
     private String tableAddTs;
     private Integer pageSize;
+    private Integer page;
+
+    public ProcessLogInfo() {
+        this.logId = logId;
+        this.processId = processId;
+        this.logCategory = logCategory;
+        this.message = message;
+        this.messageId = messageId;
+        this.instanceRef = instanceRef;
+        this.addTs = addTs;
+    }
 
     public Integer getPageSize() {
         return pageSize;
@@ -75,8 +86,6 @@ public class ProcessLogInfo {
     public void setPage(Integer page) {
         this.page = page;
     }
-
-    private Integer page;
 
     public Long getLogId() {
         return logId;
@@ -143,14 +152,4 @@ public class ProcessLogInfo {
         this.tableAddTs = tableAddTs;
     }
 
-
-    public ProcessLogInfo() {
-        this.logId = logId;
-        this.processId = processId;
-        this.logCategory = logCategory;
-        this.message = message;
-        this.messageId = messageId;
-        this.instanceRef = instanceRef;
-        this.addTs = addTs;
-    }
 }

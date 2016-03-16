@@ -32,7 +32,7 @@
 	<script type="text/javascript">
 		    $(document).ready(function () {
 	    $('#Container').jtable({
-	    title: 'App Deploy Status List',
+	    title: 'App Deployment Status List',
 		    paging: true,
 		    pageSize: 10,
 		    sorting: true,
@@ -41,7 +41,7 @@
 		    console.log(postData);
 			    return $.Deferred(function ($dfd) {
 			    $.ajax({
-			    url: '/mdrest/appdeploystatus?page=' + jtParams.jtStartIndex + '&size='+jtParams.jtPageSize,
+			    url: '/mdrest/adqstatus?page=' + jtParams.jtStartIndex + '&size='+jtParams.jtPageSize,
 				    type: 'GET',
 				    data: postData,
 				    dataType: 'json',
@@ -59,7 +59,7 @@
 		    console.log(postData);
 			    return $.Deferred(function ($dfd) {
 			    $.ajax({
-			    url: '/mdrest/appdeploystatus/',
+			    url: '/mdrest/adqstatus/',
 				    type: 'PUT',
 				    data: postData,
 				    dataType: 'json',
@@ -76,7 +76,7 @@
 			    console.log(postData);
 				    return $.Deferred(function ($dfd) {
 				    $.ajax({
-				    url: '/mdrest/appdeploystatus',
+				    url: '/mdrest/adqstatus',
 					    type: 'POST',
 					    data: postData,
 					    dataType: 'json',
@@ -93,7 +93,7 @@
 			    console.log(item);
 				    return $.Deferred(function ($dfd) {
 				    $.ajax({
-				    url: '/mdrest/appdeploystatus/' + item.deployStatusId,
+				    url: '/mdrest/adqstatus/' + item.appDeploymentStatusId,
 					    type: 'DELETE',
 					    data: item,
 					    dataType: 'json',

@@ -105,7 +105,7 @@
 			edit:false,
 
 			},
-		    appDeploymentQueueStatus: {
+		    appDeploymentStatusId: {
 		    title: 'App Deploy Status',
 		    edit:false,
 

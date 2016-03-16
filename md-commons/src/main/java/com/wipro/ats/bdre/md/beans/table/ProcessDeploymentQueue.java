@@ -30,21 +30,11 @@ public class ProcessDeploymentQueue {
     @Digits(fraction = 0, integer = 20)
     private Long deploymentId;
     private Integer pageSize;
-
-    public Integer getPageSize() {
-        return pageSize;
-    }
-
-    public void setPageSize(Integer pageSize) {
-        this.pageSize = pageSize;
-    }
-
     @NotNull
     @Digits(fraction = 0, integer = 11)
     private Integer processId;
     @Min(value = 1)
     @Digits(fraction = 0, integer = 11)
-
     private Integer deployStatusId;
     private Integer busDomainId;
     private Integer processTypeId;
@@ -65,6 +55,14 @@ public class ProcessDeploymentQueue {
         return "deploymentId:" + deploymentId + " deployStatusId:" + deployStatusId + " processId:" + processId + " startTs:" + startTs +
                 " endTs:" + endTs + " insertTs" + insertTs + " busDomainId:" + busDomainId + " userName:" + userName +
                 " processTypeId:" + processTypeId + " deployScriptLocation:" + deployScriptLocation + " page:" + page;
+    }
+
+    public Integer getPageSize() {
+        return pageSize;
+    }
+
+    public void setPageSize(Integer pageSize) {
+        this.pageSize = pageSize;
     }
 
     public Long getDeploymentId() {

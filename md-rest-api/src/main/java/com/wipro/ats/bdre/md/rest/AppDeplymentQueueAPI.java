@@ -134,7 +134,7 @@ public class AppDeplymentQueueAPI {
              returnedAppDeploymentQueue.setAppDomain(appDeploymentQueue.getAppDomain());
              returnedAppDeploymentQueue.setUsername(principal.getName());
              returnedAppDeploymentQueue.setAppDeploymentQueueId(adqId);
-             returnedAppDeploymentQueue.setAppDeploymentQueueStatus((short) 0);
+             returnedAppDeploymentQueue.setAppDeploymentStatusId((short) 0);
              restWrapper = new RestWrapper(returnedAppDeploymentQueue, RestWrapper.OK);
         } catch (MetadataException e) {
             LOGGER.error(e);
@@ -208,7 +208,7 @@ public class AppDeplymentQueueAPI {
                 appDeploymentQueue.setAppName(adq.getAppName());
                 appDeploymentQueue.setProcessId(adq.getProcess().getProcessId());
                 appDeploymentQueue.setAppDeploymentQueueId(adq.getAppDeploymentQueueId());
-                appDeploymentQueue.setAppDeploymentQueueStatus(adq.getAppDeploymentQueueStatus().getAppDeployStatusId());
+                appDeploymentQueue.setAppDeploymentStatusId(adq.getAppDeploymentQueueStatus().getAppDeployStatusId());
                 appDeploymentQueue.setCounter(counter);
                 appDeploymentQueues.add(appDeploymentQueue);
             }

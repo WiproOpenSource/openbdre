@@ -30,12 +30,13 @@ public class DeployStatus {
     @NotNull
     @Min(value = 1)
     @Digits(fraction = 0, integer = 11)
-
     private Integer deployStatusId;
     @NotNull
     @Size(max = 45)
     private String description;
     private Integer pageSize;
+    private Integer page;
+    private Integer counter;
 
     public Integer getPageSize() {
         return pageSize;
@@ -44,10 +45,6 @@ public class DeployStatus {
     public void setPageSize(Integer pageSize) {
         this.pageSize = pageSize;
     }
-
-
-    private Integer page;
-    private Integer counter;
 
     @Override
     public String toString() {

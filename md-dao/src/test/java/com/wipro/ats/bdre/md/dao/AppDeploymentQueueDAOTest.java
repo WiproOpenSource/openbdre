@@ -51,7 +51,7 @@ public class AppDeploymentQueueDAOTest {
         adq.setAppDomain("Banking");
         AppDeploymentQueueStatus adqStatus=new AppDeploymentQueueStatus();
         adqStatus.setDescription("Merged");
-        adqStatus.setAppDeployStatusId((short) 0);
+        adqStatus.setAppDeploymentStatusId((short) 0);
         adq.setAppDeploymentQueueStatus(adqStatus);
         Process process=new Process();
         process.setProcessId(141);
@@ -63,7 +63,8 @@ public class AppDeploymentQueueDAOTest {
         adq = appDeploymentQueueDAO.get(adqId.intValue());
         assertEquals("Test Updated",adq.getAppName());
         LOGGER.info("Updated Description is:" + adqStatus.getDescription());
-        LOGGER.info("Deleted AdqStatus Entry with ID" + adq.getAppDeploymentQueueStatus().getAppDeployStatusId());
+        appDeploymentQueueDAO.delete(adqId);
+        LOGGER.info("Deleted AdqStatus Entry with ID" + adq.getAppDeploymentQueueStatus().getAppDeploymentStatusId());
     }
 
 }

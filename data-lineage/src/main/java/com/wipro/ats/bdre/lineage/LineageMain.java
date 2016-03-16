@@ -170,9 +170,7 @@ public class LineageMain implements NodeProcessor {
 				Constant.updateConstants(inTableNodes, outTableNodes, inColumnNodes, outColumnNodes, functions, constants, relations);
 				Relation.updateRelations(inTableNodes, outTableNodes, inColumnNodes, outColumnNodes, functions, constants, relations);
 				break;
-			default:
-				LOGGER.info("Default clause selected: error in the switch case value given for HiveParser.TOK_QUERY");
-				break;
+
 		}
 
 		finalInTableNodes.addAll(inTableNodes);
@@ -472,7 +470,8 @@ if(col != null && colName != null) {
 
 	public String generateLineageDot(String relationDotString, String tableNode, String targetNode) {
 		// generate Dot from all tables, columns and functions
-		StringBuilder first = new StringBuilder("digraph g {\n" +
+		//DOT initial properties being appended in the jsp this variable "first" is not used
+		StringBuilder first = new StringBuilder("strict digraph g {\n" +
 				"graph [\n" +
 				"rankdir = \"LR\"\n" +
 				"];\n");
@@ -497,12 +496,10 @@ if(col != null && colName != null) {
 
 		if (relationDotString != null) {
 			last.append("\n" + relationDotString);
-			last.append("\n}");
-		} else {
-			last.append("\n}");
+			last.append("\n");
 		}
 
-		dotString = first.append(middle).append(last).toString();
+		dotString = (middle).append(last).toString();
 		LOGGER.info("printing dot string");
 		LOGGER.info("\n" + dotString + "\n");
 		return dotString;

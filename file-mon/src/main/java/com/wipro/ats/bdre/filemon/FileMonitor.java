@@ -32,10 +32,17 @@ public class FileMonitor implements FileListener {
     private String monDir = null;
     private String archiveDirName = null;
     private String filePattern = null;
+    /* this data structure is used to maintain order and getting eldest element
+   * Map contain Filename as key and FileCopyInfo as value    * */
+    private static LinkedMap<String, FileCopyInfo> fileToCopyMap =
+            new LinkedMap<String, FileCopyInfo>();
+
+    private FileMonitor() {
+        init();
+    }
     public static synchronized FileCopyInfo getFileInfoFromQueue() {
         String key = FileMonitor.fileToCopyMap.firstKey();
-        FileCopyInfo fileCopyInfo=fileToCopyMap.remove(key);
-        return fileCopyInfo;
+        return fileToCopyMap.remove(key);
     }
 
     public static synchronized void addToQueue(String fileName, FileCopyInfo fileCopyInfo) {
@@ -45,14 +52,7 @@ public class FileMonitor implements FileListener {
         return fileToCopyMap.size();
     }
 
-    /* this data structure is used to maintain order and getting eldest element
-       * Map contain Filename as key and FileCopyInfo as value    * */
-    private static LinkedMap<String, FileCopyInfo> fileToCopyMap =
-            new LinkedMap<String, FileCopyInfo>();
 
-    private FileMonitor() {
-        init();
-    }
 
     //Singleton pattern
     public static FileMonitor getInstance() {

@@ -23,7 +23,7 @@ public class AppDeploymentQueue {
     private String username;
     private String appDomain;
     private String appName;
-    private Short appDeploymentQueueStatus;
+    private Short appDeploymentStatusId;
     private Integer pageSize;
     private Integer page;
     private Integer counter;
@@ -37,7 +37,7 @@ public class AppDeploymentQueue {
         this.username = username;
         this.appDomain = appDomain;
         this.appName = appName;
-        this.appDeploymentQueueStatus = appDeploymentQueueStatus;
+        this.appDeploymentStatusId = appDeploymentQueueStatus;
         this.pageSize = pageSize;
         this.page = page;
         this.counter = counter;
@@ -51,7 +51,7 @@ public class AppDeploymentQueue {
                 ", username='" + username + '\'' +
                 ", appDomain='" + appDomain + '\'' +
                 ", appName='" + appName + '\'' +
-                ", appDeploymentQueueStatus=" + appDeploymentQueueStatus +
+                ", appDeploymentStatusId=" + appDeploymentStatusId +
                 ", pageSize=" + pageSize +
                 ", page=" + page +
                 ", counter=" + counter +
@@ -98,12 +98,12 @@ public class AppDeploymentQueue {
         this.appName = appName;
     }
 
-    public Short getAppDeploymentQueueStatus() {
-        return appDeploymentQueueStatus;
+    public Short getAppDeploymentStatusId() {
+        return appDeploymentStatusId;
     }
 
-    public void setAppDeploymentQueueStatus(Short appDeploymentQueueStatus) {
-        this.appDeploymentQueueStatus = appDeploymentQueueStatus;
+    public void setAppDeploymentStatusId(Short appDeploymentStatusId) {
+        this.appDeploymentStatusId = appDeploymentStatusId;
     }
 
     public Integer getPageSize() {

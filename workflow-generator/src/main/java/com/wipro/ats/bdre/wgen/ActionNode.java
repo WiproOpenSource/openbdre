@@ -179,6 +179,8 @@ public class ActionNode extends OozieNode {
         } else if (processInfo.getProcessTypeId() == SPARK_ACTION) {
             SparkActionNode sparkActionNode = new SparkActionNode(this);
             containingNodes.add(sparkActionNode);
+        } else if (processInfo.getProcessTypeId() == CRAWLER_PARENT_ACTION) {
+
         } else if (processInfo.getProcessTypeId() == CRAWLER_CHILD_ACTION) {
             CrawlerActionNode crawlerActionNode = new CrawlerActionNode(this);
             containingNodes.add(crawlerActionNode);

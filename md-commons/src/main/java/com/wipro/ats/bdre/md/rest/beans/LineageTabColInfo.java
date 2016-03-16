@@ -14,33 +14,41 @@
 
 package com.wipro.ats.bdre.md.rest.beans;
 
-import com.wipro.ats.bdre.md.beans.table.Process;
-import com.wipro.ats.bdre.md.beans.table.Properties;
-
-import java.util.List;
+/**
+ * Created by AshutoshRai on 3/7/16.
+ */
 
 /**
- * Created by SR294224 on 8/7/2015.
+ * This is bean class for TableColumnLineage JSP.
  */
-public class ProcessExport {
+public class LineageTabColInfo {
 
-    List<Process> processList;
-    List<Properties> propertiesList;
+    private String tableName;
+    private String colName;
+    private String dot;
 
-    public List<Properties> getPropertiesList() {
-        return propertiesList;
+    public String getTableName() {
+        return tableName;
     }
 
-    public void setPropertiesList(List<Properties> propertiesList) {
-        this.propertiesList = propertiesList;
+    public void setTableName(String tableName) {
+        this.tableName = tableName;
     }
 
-    public List<Process> getProcessList() {
-        return processList;
+    public String getColName() {
+        return colName;
     }
 
-    public void setProcessList(List<Process> processList) {
-        this.processList = processList;
+    public void setColName(String colName) {
+        this.colName = colName;
+    }
+
+    public String getDot() {
+        return dot;
+    }
+
+    public void setDot(String dot) {
+        this.dot = dot;
     }
 
 }
