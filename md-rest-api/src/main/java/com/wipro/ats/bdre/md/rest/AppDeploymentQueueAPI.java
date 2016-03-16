@@ -173,10 +173,10 @@ public class AppDeploymentQueueAPI {
             LOGGER.error(e);
             restWrapper = new RestWrapper(e.getMessage(), RestWrapper.ERROR);
         } catch (FileNotFoundException e) {
-            e.printStackTrace();
+            LOGGER.error(e);
             restWrapper = new RestWrapper(e.getMessage(), RestWrapper.ERROR);
         } catch (IOException e) {
-            e.printStackTrace();
+            LOGGER.error(e);
             restWrapper = new RestWrapper(e.getMessage(), RestWrapper.ERROR);
         }
         return restWrapper;
