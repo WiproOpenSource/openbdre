@@ -116,7 +116,7 @@ public class AppDeplymentQueueAPI {
             LOGGER.info("status of process.json addition "+status);
             com.wipro.ats.bdre.md.dao.jpa.AppDeploymentQueue jpaAppDeploymentQueue=new com.wipro.ats.bdre.md.dao.jpa.AppDeploymentQueue();
             AppDeploymentQueueStatus appDeploymentQueueStatus=new AppDeploymentQueueStatus();
-            appDeploymentQueueStatus.setAppDeployStatusId((short) 0);
+            appDeploymentQueueStatus.setAppDeploymentStatusId((short) 0);
             appDeploymentQueueStatus.setDescription("pull request created");
             jpaAppDeploymentQueue.setAppDeploymentQueueStatus(appDeploymentQueueStatus);
             com.wipro.ats.bdre.md.dao.jpa.Process process1=new com.wipro.ats.bdre.md.dao.jpa.Process();
@@ -208,7 +208,7 @@ public class AppDeplymentQueueAPI {
                 appDeploymentQueue.setAppName(adq.getAppName());
                 appDeploymentQueue.setProcessId(adq.getProcess().getProcessId());
                 appDeploymentQueue.setAppDeploymentQueueId(adq.getAppDeploymentQueueId());
-                appDeploymentQueue.setAppDeploymentStatusId(adq.getAppDeploymentQueueStatus().getAppDeployStatusId());
+                appDeploymentQueue.setAppDeploymentStatusId(adq.getAppDeploymentQueueStatus().getAppDeploymentStatusId());
                 appDeploymentQueue.setCounter(counter);
                 appDeploymentQueues.add(appDeploymentQueue);
             }
