@@ -26,7 +26,7 @@ public class AppDeploymentQueueStatus {
     public AppDeploymentQueueStatus() {
     }
 
-    public AppDeploymentQueueStatus(Short adqState, String description) {
+    public AppDeploymentQueueStatus(Short appDeploymentStatusId, String description) {
         this.appDeploymentStatusId = appDeploymentStatusId;
         this.description = description;
     }

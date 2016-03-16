@@ -8,6 +8,7 @@ import java.util.List;
 public class StoreJson {
     private String name;
     private String id;
+    private List<AppValues> columns;
 
     public List<AppValues> getColumns() {
         return columns;
@@ -16,8 +17,6 @@ public class StoreJson {
     public void setColumns(List<AppValues> columns) {
         this.columns = columns;
     }
-
-    private List<AppValues> columns;
 
     public String getName() {
         return name;
