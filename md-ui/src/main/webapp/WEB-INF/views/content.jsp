@@ -265,7 +265,13 @@
                                                 collapse: "1",
                                                 url: "deploystatus.page",
                                                 children: []
-							}, {
+							},
+							{
+                                                label: "App Deployment Status",
+                                                collapse: "1",
+                                                url: "adqstatus.page",
+                                                children: []
+                            },{
                                                 label: "Workflow Type",
                                                 collapse: "1",
                                                 url: "workflowtype.page",
@@ -351,7 +357,13 @@
                                             url: "pdq.page",
                                             children: []
 						}, 
-                        <security:authorize access = "hasRole('ROLE_ADMIN')"> {
+                        <security:authorize access = "hasRole('ROLE_ADMIN')">
+                                                                              {
+                                            label: "App Deployment",
+                                            collapse: "1",
+                                            url: "adq.page",
+                                            children: []
+                                                                            },{
                                             label: "Job Import Wizard",
                                             collapse: "1",
                                             url: "processimportwizard.page",

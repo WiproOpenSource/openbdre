@@ -47,10 +47,10 @@ public class AppDeploymentQueueDAO {
         return adqList;
     }
 
-    public Long totalRecordCount() {
+    public Integer totalRecordCount() {
         Session session = sessionFactory.openSession();
         session.beginTransaction();
-        long size = session.createCriteria(AppDeploymentQueue.class).list().size();
+        Integer size = session.createCriteria(AppDeploymentQueue.class).list().size();
         session.getTransaction().commit();
         session.close();
         return size;
