@@ -34,7 +34,7 @@ public class AppDeploymentQueueStatusDAOTest {
     public void testInsertUpdateAndDelete() throws Exception {
         AppDeploymentQueueStatus adqStatus=new AppDeploymentQueueStatus();
         adqStatus.setDescription("Merged");
-        adqStatus.setAppDeploymentStatusId((short) 3);
+        adqStatus.setAppDeployStatusId((short) 3);
 
         Short adqId = appDeploymentQueueStatusDAO.insert(adqStatus);
         LOGGER.info("Adq is added with Id:" + adqId);
@@ -45,7 +45,7 @@ public class AppDeploymentQueueStatusDAOTest {
         assertEquals("updated Merged",adqStatus.getDescription());
         LOGGER.info("Updated Description is:" + adqStatus.getDescription());
         appDeploymentQueueStatusDAO.delete(adqId);
-        LOGGER.info("Deleted AdqStatus Entry with ID" + adqStatus.getAppDeploymentStatusId());
+        LOGGER.info("Deleted AdqStatus Entry with ID" + adqStatus.getAppDeployStatusId());
     }
 
 

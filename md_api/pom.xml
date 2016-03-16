@@ -71,11 +71,6 @@
             <artifactId>jms</artifactId>
         </dependency>
         <dependency>
-            <groupId>junit</groupId>
-            <artifactId>junit</artifactId>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
             <groupId>${project.groupId}</groupId>
             <artifactId>md-dao</artifactId>
             <version>${project.version}</version>
