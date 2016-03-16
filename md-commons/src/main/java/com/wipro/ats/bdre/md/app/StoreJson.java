@@ -9,15 +9,15 @@ public class StoreJson {
     private String name;
     private String id;
 
-    public List<AppValues> getAppValuesList() {
-        return appValuesList;
+    public List<AppValues> getColumns() {
+        return columns;
     }
 
-    public void setAppValuesList(List<AppValues> appValuesList) {
-        this.appValuesList = appValuesList;
+    public void setColumns(List<AppValues> columns) {
+        this.columns = columns;
     }
 
-    private List<AppValues> appValuesList;
+    private List<AppValues> columns;
 
     public String getName() {
         return name;

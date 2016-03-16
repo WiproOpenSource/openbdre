@@ -149,6 +149,8 @@ public class AppDeplymentQueueAPI {
     public
     RestWrapper merge(@PathVariable("id") Long queueId, Principal principal) {
         RestWrapper restWrapper = null;
+        LOGGER.info("queue id is "+queueId);
+        LOGGER.info("user name is "+principal.getName());
         AppDeploymentQueue returnedAppDeploymentQueue=new AppDeploymentQueue();
         ProcessExport processExport = new ProcessExport();
         try{
@@ -160,12 +162,12 @@ public class AppDeplymentQueueAPI {
             br = new BufferedReader(new FileReader(homeDir+"/bdreappstore/store.json"));
             while ((temp=br.readLine()) != null) {
                 jsonfile=jsonfile+temp;
-                LOGGER.info(jsonfile);
             }
-            LOGGER.info("final string is"+jsonfile);
             ObjectMapper mapper = new ObjectMapper();
             mapper.configure(DeserializationConfig.Feature.FAIL_ON_UNKNOWN_PROPERTIES, false);
             AppStore appStore = mapper.readValue(jsonfile, AppStore.class);
+            LOGGER.info("size of app catagory is "+appStore.getApplicationList().size());
+
             restWrapper = new RestWrapper(returnedAppDeploymentQueue, RestWrapper.OK);
         } catch (MetadataException e) {
             LOGGER.error(e);
