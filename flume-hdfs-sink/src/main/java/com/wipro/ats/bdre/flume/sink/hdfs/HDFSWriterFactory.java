@@ -21,20 +21,20 @@ package com.wipro.ats.bdre.flume.sink.hdfs;
 import java.io.IOException;
 
 public class HDFSWriterFactory {
-  static final String SequenceFileType = "SequenceFile";
-  static final String DataStreamType = "DataStream";
-  static final String CompStreamType = "CompressedStream";
+  static final String SEQUENCE_FILE_TYPE = "SequenceFile";
+  static final String DATA_STREAM_TYPE = "DataStream";
+  static final String COMP_STREAM_TYPE = "CompressedStream";
 
   public HDFSWriterFactory() {
 
   }
 
   public HDFSWriter getWriter(String fileType) throws IOException {
-    if (fileType.equalsIgnoreCase(SequenceFileType)) {
+    if (fileType.equalsIgnoreCase(SEQUENCE_FILE_TYPE)) {
       return new HDFSSequenceFile();
-    } else if (fileType.equalsIgnoreCase(DataStreamType)) {
+    } else if (fileType.equalsIgnoreCase(DATA_STREAM_TYPE)) {
       return HDFSDataStream.getHDFSDataStream();
-    } else if (fileType.equalsIgnoreCase(CompStreamType)) {
+    } else if (fileType.equalsIgnoreCase(COMP_STREAM_TYPE)) {
       return new HDFSCompressedDataStream();
     } else {
       throw new IOException("File type " + fileType + " not supported");

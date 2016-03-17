@@ -54,7 +54,7 @@ public class BDREHDFSEventSink extends AbstractSink implements Configurable {
     public void run(String filePath);
   }
 
-  private static final Logger LOG = LoggerFactory
+  private static final Logger LOGGER = LoggerFactory
       .getLogger(BDREHDFSEventSink.class);
 
   private static String DIRECTORY_DELIMITER = System.getProperty("file.separator");
@@ -67,7 +67,7 @@ public class BDREHDFSEventSink extends AbstractSink implements Configurable {
   private static final String defaultInUsePrefix = "";
   private static final String defaultInUseSuffix = ".tmp";
   private static final long defaultBatchSize = 100;
-  private static final String defaultFileType = HDFSWriterFactory.SequenceFileType;
+  private static final String defaultFileType = HDFSWriterFactory.SEQUENCE_FILE_TYPE;
   private static final int defaultMaxOpenFiles = 5000;
   // Time between close retries, in seconds
   private static final long defaultRetryInterval = 180;
@@ -122,6 +122,7 @@ public class BDREHDFSEventSink extends AbstractSink implements Configurable {
   private SinkCounter sinkCounter;
 
   private volatile int idleTimeout;
+  @SuppressWarnings("squid:S1068")
   private Clock clock;
   private FileSystem mockFs;
   private HDFSWriter mockWriter;
@@ -136,6 +137,7 @@ public class BDREHDFSEventSink extends AbstractSink implements Configurable {
    * Extended Java LinkedHashMap for open file handle LRU queue.
    * We want to clear the oldest file handle if there are too many open ones.
    */
+  @SuppressWarnings("squid:S2160")
   private static class WriterLinkedHashMap
       extends LinkedHashMap<String, BucketWriter> {
 
@@ -154,9 +156,9 @@ public class BDREHDFSEventSink extends AbstractSink implements Configurable {
         try {
           eldest.getValue().close();
         } catch (IOException e) {
-          LOG.warn(eldest.getKey().toString(), e);
+          LOGGER.warn(eldest.getKey().toString(), e);
         } catch (InterruptedException e) {
-          LOG.warn(eldest.getKey().toString(), e);
+          LOGGER.warn(eldest.getKey().toString(), e);
           Thread.currentThread().interrupt();
         }
         return true;
@@ -211,7 +213,7 @@ public class BDREHDFSEventSink extends AbstractSink implements Configurable {
     tryCount = context.getInteger("hdfs.closeTries", defaultTryCount);
     processId = context.getString("hdfs.processId");
     if(tryCount <= 0) {
-      LOG.warn("Retry count value : " + tryCount + " is not " +
+      LOGGER.warn("Retry count value : " + tryCount + " is not " +
         "valid. The sink will try to close the file until the file " +
         "is eventually closed.");
       tryCount = defaultTryCount;
@@ -219,7 +221,7 @@ public class BDREHDFSEventSink extends AbstractSink implements Configurable {
     retryInterval = context.getLong("hdfs.retryInterval",
       defaultRetryInterval);
     if(retryInterval <= 0) {
-      LOG.warn("Retry Interval value: " + retryInterval + " is not " +
+      LOGGER.warn("Retry Interval value: " + retryInterval + " is not " +
         "valid. If the first close of a file fails, " +
         "it may remain open and will not be renamed.");
       tryCount = 1;
@@ -238,14 +240,14 @@ public class BDREHDFSEventSink extends AbstractSink implements Configurable {
 
     // Do not allow user to set fileType DataStream with codeC together
     // To prevent output file with compress extension (like .snappy)
-    if(fileType.equalsIgnoreCase(HDFSWriterFactory.DataStreamType)
+    if(fileType.equalsIgnoreCase(HDFSWriterFactory.DATA_STREAM_TYPE)
         && codecName != null) {
       throw new IllegalArgumentException("fileType: " + fileType +
           " which does NOT support compressed output. Please don't set codeC" +
           " or change the fileType if compressed output is desired.");
     }
 
-    if(fileType.equalsIgnoreCase(HDFSWriterFactory.CompStreamType)) {
+    if(fileType.equalsIgnoreCase(HDFSWriterFactory.COMP_STREAM_TYPE)) {
       Preconditions.checkNotNull(codeC, "It's essential to set compress codec"
           + " when fileType is: " + fileType);
     }
@@ -261,14 +263,14 @@ public class BDREHDFSEventSink extends AbstractSink implements Configurable {
 
     if(needRounding) {
       String unit = context.getString("hdfs.roundUnit", "second");
-      if (unit.equalsIgnoreCase("hour")) {
+      if ("hour".equalsIgnoreCase(unit)) {
         this.roundUnit = Calendar.HOUR_OF_DAY;
-      } else if (unit.equalsIgnoreCase("minute")) {
+      } else if ("minute".equalsIgnoreCase(unit)) {
         this.roundUnit = Calendar.MINUTE;
-      } else if (unit.equalsIgnoreCase("second")){
+      } else if ("second".equalsIgnoreCase(unit)){
         this.roundUnit = Calendar.SECOND;
       } else {
-        LOG.warn("Rounding unit is not valid, please set one of" +
+        LOGGER.warn("Rounding unit is not valid, please set one of" +
             "minute, hour, or second. Rounding will be disabled");
         needRounding = false;
       }
@@ -294,6 +296,7 @@ public class BDREHDFSEventSink extends AbstractSink implements Configurable {
     }
   }
 
+  @SuppressWarnings("squid:S1872")
   private static boolean codecMatches(Class<? extends CompressionCodec> cls,
       String codecName) {
     String simpleName = cls.getSimpleName();
@@ -312,6 +315,7 @@ public class BDREHDFSEventSink extends AbstractSink implements Configurable {
   }
 
   @VisibleForTesting
+  @SuppressWarnings("squid:S1166")
   static CompressionCodec getCodec(String codecName) {
     Configuration conf = new Configuration();
     List<Class<? extends CompressionCodec>> codecs = CompressionCodecFactory
@@ -319,7 +323,7 @@ public class BDREHDFSEventSink extends AbstractSink implements Configurable {
     // Wish we could base this on DefaultCodec but appears not all codec's
     // extend DefaultCodec(Lzo)
     CompressionCodec codec = null;
-    ArrayList<String> codecStrs = new ArrayList<String>();
+    List<String> codecStrs = new ArrayList<String>();
     codecStrs.add("None");
     for (Class<? extends CompressionCodec> cls : codecs) {
       codecStrs.add(cls.getSimpleName());
@@ -327,15 +331,15 @@ public class BDREHDFSEventSink extends AbstractSink implements Configurable {
         try {
           codec = cls.newInstance();
         } catch (InstantiationException e) {
-          LOG.error("Unable to instantiate " + cls + " class");
+          LOGGER.error("Unable to instantiate " + cls + " class");
         } catch (IllegalAccessException e) {
-          LOG.error("Unable to access " + cls + " class");
+          LOGGER.error("Unable to access " + cls + " class");
         }
       }
     }
 
     if (codec == null) {
-      if (!codecName.equalsIgnoreCase("None")) {
+      if (!"None".equalsIgnoreCase(codecName)) {
         throw new IllegalArgumentException("Unsupported compression codec "
             + codecName + ".  Please choose from: " + codecStrs);
       }
@@ -356,6 +360,7 @@ public class BDREHDFSEventSink extends AbstractSink implements Configurable {
    * HDFS. <br/>
    * This method is not thread safe.
    */
+  @Override
   public Status process() throws EventDeliveryException {
     Channel channel = getChannel();
     Transaction transaction = channel.getTransaction();
@@ -384,7 +389,7 @@ public class BDREHDFSEventSink extends AbstractSink implements Configurable {
         WriterCallback closeCallback = new WriterCallback() {
           @Override
           public void run(String bucketPath) {
-            LOG.info("Writer callback called.");
+            LOGGER.info("Writer callback called.");
             synchronized (sfWritersLock) {
               sfWriters.remove(bucketPath);
             }
@@ -407,19 +412,7 @@ public class BDREHDFSEventSink extends AbstractSink implements Configurable {
         }
 
         // Write the data to HDFS
-        try {
-          bucketWriter.append(event);
-        } catch (BucketClosedException ex) {
-          LOG.info("Bucket was closed while trying to append, " +
-            "reinitializing bucket and writing event.");
-          hdfsWriter = writerFactory.getWriter(fileType);
-          bucketWriter = initializeBucketWriter(realPath, realName,
-            lookupPath, hdfsWriter, closeCallback);
-          synchronized (sfWritersLock) {
-            sfWriters.put(lookupPath, bucketWriter);
-          }
-          bucketWriter.append(event);
-        }
+        writeTheDataToHDFS(event, realPath, realName, lookupPath, bucketWriter, closeCallback);
       }
 
       if (txnEventCount == 0) {
@@ -445,14 +438,31 @@ public class BDREHDFSEventSink extends AbstractSink implements Configurable {
       }
     } catch (IOException eIO) {
       transaction.rollback();
-      LOG.warn("HDFS IO error", eIO);
+      LOGGER.warn("HDFS IO error", eIO);
       return Status.BACKOFF;
     } catch (Exception ex) {
       transaction.rollback();
-      LOG.error("process failed", ex);
+      LOGGER.error("process failed", ex);
       throw new EventDeliveryException(ex);
     } finally {
       transaction.close();
+    }
+  }
+
+  private void writeTheDataToHDFS(Event event, String realPath, String realName, String lookupPath, BucketWriter bucketWriter, WriterCallback closeCallback) throws IOException, InterruptedException {
+    HDFSWriter hdfsWriter;
+    try {
+      bucketWriter.append(event);
+    } catch (BucketClosedException ex) {
+      LOGGER.info("Bucket was closed while trying to append, " +
+        "reinitializing bucket and writing event.");
+      hdfsWriter = writerFactory.getWriter(fileType);
+      bucketWriter = initializeBucketWriter(realPath, realName,
+        lookupPath, hdfsWriter, closeCallback);
+      synchronized (sfWritersLock) {
+        sfWriters.put(lookupPath, bucketWriter);
+      }
+      bucketWriter.append(event);
     }
   }
 
@@ -478,16 +488,17 @@ public class BDREHDFSEventSink extends AbstractSink implements Configurable {
     // do not constrain close() calls with a timeout
     synchronized (sfWritersLock) {
       for (Entry<String, BucketWriter> entry : sfWriters.entrySet()) {
-        LOG.info("Closing {}", entry.getKey());
+        LOGGER.info("Closing {}", entry.getKey());
 
         try {
           entry.getValue().close();
+        } catch (InterruptedException ie) {
+          LOGGER.warn("Exception while closing " + entry.getKey() + ". " +
+                  "Exception follows.", ie);
+          Thread.currentThread().interrupt();
         } catch (Exception ex) {
-          LOG.warn("Exception while closing " + entry.getKey() + ". " +
+          LOGGER.warn("Exception while closing " + entry.getKey() + ". " +
                   "Exception follows.", ex);
-          if (ex instanceof InterruptedException) {
-            Thread.currentThread().interrupt();
-          }
         }
       }
     }
@@ -502,7 +513,7 @@ public class BDREHDFSEventSink extends AbstractSink implements Configurable {
                   Math.max(defaultCallTimeout, callTimeout), TimeUnit.MILLISECONDS);
         }
       } catch (InterruptedException ex) {
-        LOG.warn("shutdown interrupted on " + execService, ex);
+        LOGGER.warn("shutdown interrupted on " + execService, ex);
       }
     }
 

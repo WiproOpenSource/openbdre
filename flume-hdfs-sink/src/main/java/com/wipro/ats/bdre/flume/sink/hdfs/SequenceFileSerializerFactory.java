@@ -28,6 +28,8 @@ public class SequenceFileSerializerFactory {
   private static final Logger LOGGER =
       LoggerFactory.getLogger(SequenceFileSerializerFactory.class);
 
+  private SequenceFileSerializerFactory(){}
+
   /**
    * {@link Context} prefix
    */
@@ -36,16 +38,14 @@ public class SequenceFileSerializerFactory {
   @SuppressWarnings("unchecked")
   static SequenceFileSerializer getSerializer(String formatType,
                                               Context context) {
-
-    Preconditions.checkNotNull(formatType,
-        "serialize type must not be null");
+    Preconditions.checkNotNull(formatType, "serialize type must not be null");
 
     // try to find builder class in enum of known formatters
     SequenceFileSerializerType type;
     try {
       type = SequenceFileSerializerType.valueOf(formatType);
     } catch (IllegalArgumentException e) {
-      LOGGER.debug("Not in enum, loading builder class: {}", formatType);
+      LOGGER.debug("Not in enum, loading builder class: {}" + formatType);
       type = SequenceFileSerializerType.Other;
     }
     Class<? extends SequenceFileSerializer.Builder> builderClass =
