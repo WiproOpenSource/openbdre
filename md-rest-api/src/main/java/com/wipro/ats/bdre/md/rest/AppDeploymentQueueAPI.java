@@ -113,17 +113,10 @@ public class AppDeploymentQueueAPI {
             String status=addJson.addJsonToProcessId(appDeploymentQueue.getProcessId().toString(),processExport);
             LOGGER.info("status of process.json addition "+status);
             com.wipro.ats.bdre.md.dao.jpa.AppDeploymentQueue jpaAppDeploymentQueue=new com.wipro.ats.bdre.md.dao.jpa.AppDeploymentQueue();
-            //AppDeploymentQueueStatus appDeploymentQueueStatus=new AppDeploymentQueueStatus();
-           // appDeploymentQueueStatus.setAppDeploymentStatusId((short) 0);
-           // appDeploymentQueueStatus.setDescription("pull request created");
             jpaAppDeploymentQueue.setAppDeploymentQueueStatus(appDeploymentQueueStatusDAO.get((short) 0));
-            //com.wipro.ats.bdre.md.dao.jpa.Process process1=new com.wipro.ats.bdre.md.dao.jpa.Process();
-            //process1.setProcessId(appDeploymentQueue.getProcessId());
             jpaAppDeploymentQueue.setProcess(processDAO.get(appDeploymentQueue.getProcessId()));
             jpaAppDeploymentQueue.setAppDomain(appDeploymentQueue.getAppDomain());
             jpaAppDeploymentQueue.setAppName(appDeploymentQueue.getAppName());
-            //Users users=new Users();
-           // users.setUsername(principal.getName());
             jpaAppDeploymentQueue.setUsers(usersDAO.get(principal.getName()));
             Long adqId=appDeploymentQueueDAO.insert(jpaAppDeploymentQueue);
             LOGGER.info("app deployment queue Id is "+adqId);
