@@ -34,6 +34,27 @@ public class BatchConsumpQueue {
     private Long sourceBatchId;
     private Long targetBatchId;
     private Integer pageSize;
+    @Min(value = 1)
+    @Digits(fraction = 0, integer = 20)
+    private Long queueId;
+    private Date insertTs;
+    private String tableInsertTS;
+    private Integer sourceProcessId;
+    private Date startTs;
+    private String tableStartTS;
+    private Date endTs;
+    private String tableEndTS;
+    @NotNull
+    @Min(value = 0)
+    @Digits(fraction = 0, integer = 11)
+    private Integer batchState;
+    private String batchMarking;
+    @NotNull
+    @Min(value = 1)
+    @Digits(fraction = 0, integer = 11)
+    private Integer processId;
+    private Integer page;
+    private Integer counter;
 
     public Integer getPageSize() {
         return pageSize;
@@ -42,15 +63,6 @@ public class BatchConsumpQueue {
     public void setPageSize(Integer pageSize) {
         this.pageSize = pageSize;
     }
-
-
-    @Min(value = 1)
-    @Digits(fraction = 0, integer = 20)
-    private Long queueId;
-    private Date insertTs;
-    private String tableInsertTS;
-    private Integer sourceProcessId;
-    private Date startTs;
 
     @Override
     public String toString() {
@@ -83,21 +95,6 @@ public class BatchConsumpQueue {
         this.tableEndTS = tableEndTS;
     }
 
-    private String tableStartTS;
-    private Date endTs;
-    private String tableEndTS;
-    @NotNull
-    @Min(value = 0)
-    @Digits(fraction = 0, integer = 11)
-    private Integer batchState;
-    private String batchMarking;
-    @NotNull
-    @Min(value = 1)
-    @Digits(fraction = 0, integer = 11)
-    private Integer processId;
-    private Integer page;
-
-
     public Integer getCounter() {
         return counter;
     }
@@ -113,8 +110,6 @@ public class BatchConsumpQueue {
     public void setPage(Integer page) {
         this.page = page;
     }
-
-    private Integer counter;
 
     public Long getSourceBatchId() {
         return sourceBatchId;

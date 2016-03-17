@@ -1,24 +1,25 @@
 package com.wipro.ats.bdre.md.api;
 
+import org.apache.log4j.Logger;
+
 import java.io.*;
-import java.util.List;
 import java.util.UUID;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
 public class Import
 {
-    List<String> fileList;
+    private static final Logger LOGGER = Logger.getLogger(Import.class);
     private static final String OUTPUT_FOLDER = "/home/cloudera/bdretest/";
     public static void main( String[] args )
     {
         UUID idOne = UUID.randomUUID();
-        System.out.println("UUID is "+idOne);
+        LOGGER.info("UUID is "+idOne);
 
         Import unZip = new Import();
         String jsonfile=unZip.unZipIt("/home/cloudera/bdre-wfd/export-38/38-de03d1e1-6f6a-42a5-8ad9-a2abcaa6c4a5.zip",OUTPUT_FOLDER+"/"+idOne);
 
-        System.out.println("returned jsonfile is "+jsonfile);
+        LOGGER.info("returned jsonfile is "+jsonfile);
     }
 
     /**
@@ -38,15 +39,14 @@ public class Import
             }
 
             //get the zip file content
-            ZipInputStream zis =
-                    new ZipInputStream(new FileInputStream(zipFile));
+            ZipInputStream zis = new ZipInputStream(new FileInputStream(zipFile));
             //get the zipped file list entry
             ZipEntry ze = zis.getNextEntry();
 
             while(ze!=null){
                 String fileName = ze.getName();
                 File newFile = new File(outputFolder + File.separator + fileName);
-                System.out.println("file unzip : "+ newFile.getAbsoluteFile());
+                LOGGER.info("file unzip : "+ newFile.getAbsoluteFile());
 
                 //create all non exists folders
                 //else you will hit FileNotFoundException for compressed folder
@@ -71,21 +71,19 @@ public class Import
             zis.closeEntry();
             zis.close();
 
-            System.out.println("Done");
+            LOGGER.info("Done");
 
             String temp;
             BufferedReader br = null;
-            // String[] ar =outputFolder.split("/");
-            // int size=ar.length;
             br = new BufferedReader(new FileReader(outputFolder+"/process.json"));
             while ((temp=br.readLine()) != null) {
                 jsonfile=jsonfile+temp;
-                System.out.println(jsonfile);
+                LOGGER.info(jsonfile);
             }
-            System.out.println("final string is"+jsonfile);
+          LOGGER.info("final string is"+jsonfile);
 
         }catch(IOException ex){
-            ex.printStackTrace();
+            LOGGER.info(ex);
         }
 
        return jsonfile;

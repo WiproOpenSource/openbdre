@@ -25,6 +25,7 @@ import java.util.List;
 public class ProcessExport {
 
     List<Process> processList;
+    List<Properties> propertiesList;
 
     public List<Properties> getPropertiesList() {
         return propertiesList;
@@ -41,7 +42,5 @@ public class ProcessExport {
     public void setProcessList(List<Process> processList) {
         this.processList = processList;
     }
-
-    List<Properties> propertiesList;
 
 }

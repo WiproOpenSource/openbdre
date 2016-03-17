@@ -54,7 +54,7 @@ public class LineageDotGen extends BaseStructure {
 
         for (LineageQuery lineageQuery:lineageQueryList) {
             String query = lineageQuery.getQueryString();
-
+            LOGGER.info("The Query provided is: " + query);
             String instanceid= lineageQuery.getInstanceExecId().toString();
 
             //to select which HiveDB to use by default

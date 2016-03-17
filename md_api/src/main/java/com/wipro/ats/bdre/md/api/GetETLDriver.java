@@ -22,8 +22,6 @@ import org.apache.commons.cli.CommandLine;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.AutowireCapableBeanFactory;
-import org.springframework.context.ApplicationContext;
-import org.springframework.context.support.ClassPathXmlApplicationContext;
 
 import java.util.List;
 
@@ -31,16 +29,21 @@ import java.util.List;
  * Created by arijit on 12/8/14.
  */
 public class GetETLDriver extends MetadataAPIBase {
-    public GetETLDriver() {
-        AutowireCapableBeanFactory acbFactory = getAutowireCapableBeanFactory();
-        acbFactory.autowireBean(this);
-    }
 
     private static final Logger LOGGER = Logger.getLogger(GetETLDriver.class);
     private static final String[][] PARAMS_STRUCTURE = {
             {"minB", "min-batch-id", "minimum batch id"},
             {"maxB", "max-batch-id", "maximum batch id"}
     };
+
+
+    @Autowired
+    private GetETLInfoDAO getETLInfoDAO;
+
+    public GetETLDriver() {
+        AutowireCapableBeanFactory acbFactory = getAutowireCapableBeanFactory();
+        acbFactory.autowireBean(this);
+    }
 
     /**
      * This method runs GetETLInfo proc and retrieves information regarding files available for batches mentioned.
@@ -50,13 +53,10 @@ public class GetETLDriver extends MetadataAPIBase {
      * batch-ids, and retained by vm till runtime.
      */
 
-    @Autowired
-    private GetETLInfoDAO getETLInfoDAO;
-
+    @Override
     public GetETLDriverInfo execute(String[] params) {
 
         try {
-            GetETLDriverInfo getETLDriverInfo = new GetETLDriverInfo();
             CommandLine commandLine = getCommandLine(params, PARAMS_STRUCTURE);
             String minBId = commandLine.getOptionValue("min-batch-id");
             LOGGER.debug("minimum-batch-id is " + minBId);
@@ -64,7 +64,6 @@ public class GetETLDriver extends MetadataAPIBase {
             LOGGER.debug("maximum-batch-id is " + maxBId);
 
 
-//            s.selectOne("call_procedures.GetETLInfo", getETLDriverInfo);
             List<GetETLDriverInfo> getETLDriverInfoList = getETLInfoDAO.getETLInfo(Long.parseLong(minBId), Long.parseLong(maxBId));
             LOGGER.info("list of File is " + getETLDriverInfoList.get(0).getFileList());
             return getETLDriverInfoList.get(0);

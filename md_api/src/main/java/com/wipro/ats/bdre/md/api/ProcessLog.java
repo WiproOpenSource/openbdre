@@ -23,8 +23,6 @@ import org.apache.commons.cli.CommandLine;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.AutowireCapableBeanFactory;
-import org.springframework.context.ApplicationContext;
-import org.springframework.context.support.ClassPathXmlApplicationContext;
 
 import java.sql.Timestamp;
 
@@ -32,10 +30,6 @@ import java.sql.Timestamp;
  * Created by IshitaParekh on 11-03-2015.
  */
 public class ProcessLog extends MetadataAPIBase {
-    public ProcessLog() {
-        AutowireCapableBeanFactory acbFactory = getAutowireCapableBeanFactory();
-        acbFactory.autowireBean(this);
-    }
 
     private static final Logger LOGGER = Logger.getLogger(ProcessLog.class);
 
@@ -53,6 +47,10 @@ public class ProcessLog extends MetadataAPIBase {
 
     };
 
+    public ProcessLog() {
+        AutowireCapableBeanFactory acbFactory = getAutowireCapableBeanFactory();
+        acbFactory.autowireBean(this);
+    }
     /**
      * This method is used by DataImport module to get the LastValue for incremental import.This method runs
      * GetLastValue proc present in AddProcessLogProc  in mysql.
@@ -72,10 +70,9 @@ public class ProcessLog extends MetadataAPIBase {
             processLogInfo.setMessageId(msgId);
             //Calling proc GetLastValue
             processLogInfo = processLogDAO.getLastValue(processLogInfo);
-//            processLogInfo = s.selectOne("call_procedures.GetLastValue", processLogInfo);
             return processLogInfo;
         } catch (Exception e) {
-            LOGGER.error("Error occurred", e);
+            LOGGER.error("Error  occurred", e);
             throw new MetadataException(e);
         }
     }
@@ -89,6 +86,7 @@ public class ProcessLog extends MetadataAPIBase {
      * @return This method returns same input data as instance of ProcessLogInfo class.
      */
 
+    @Override
     public ProcessLogInfo execute(String[] params) {
         try {
             ProcessLogInfo processLogInfo = new ProcessLogInfo();
@@ -112,8 +110,6 @@ public class ProcessLog extends MetadataAPIBase {
             processLogInfo.setMessageId(mId);
             processLogInfo.setInstanceRef(Long.parseLong(iRef));
             processLogInfo.setAddTs(Timestamp.valueOf(addTs));
-
-            //  processLogInfo = s.selectOne("call_procedures.AddProcessLog", processLogInfo);
 
             com.wipro.ats.bdre.md.dao.jpa.ProcessLog processLog = new com.wipro.ats.bdre.md.dao.jpa.ProcessLog();
             processLog.setAddTs(Timestamp.valueOf(addTs));
@@ -146,12 +142,11 @@ public class ProcessLog extends MetadataAPIBase {
     public void log(ProcessLogInfo processLogInfo) {
         try {
 
-            // s.selectOne("call_procedures.AddProcessLog", processLogInfo);
             //calling addprocesslog function of Addprocesslogdao
             processLogDAO.log(processLogInfo);
 
         } catch (Exception e) {
-            LOGGER.error("Error occurred", e);
+            LOGGER.error("Error occurred.", e);
             throw new MetadataException(e);
         }
 
