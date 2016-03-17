@@ -126,7 +126,7 @@ public class UIFTPUser implements UserInfo, UIKeyboardInteractive {
             }
             return response;
         } else {
-            return new String[0];
+            return null;
             // cancel
         }
     }
