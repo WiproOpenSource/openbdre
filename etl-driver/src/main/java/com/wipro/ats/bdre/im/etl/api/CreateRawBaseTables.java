@@ -31,6 +31,7 @@ import java.util.*;
  */
 public class CreateRawBaseTables extends ETLBase {
     private static final Logger LOGGER = Logger.getLogger(CreateRawBaseTables.class);
+    private static final String PROCESSID = "process-id";
     private static final String[][] PARAMS_STRUCTURE = {
             {"p", "process-id", " Process id of ETLDriver"},
             {"instExecId", "instance-exec-id", " instance exec id"},
@@ -38,7 +39,7 @@ public class CreateRawBaseTables extends ETLBase {
     public void executeRawLoad(String[] params) {
 
         CommandLine commandLine = getCommandLine(params, PARAMS_STRUCTURE);
-        String processId = commandLine.getOptionValue("process-id");
+        String processId = commandLine.getOptionValue(PROCESSID);
         rawLoad=processId;
 
 
@@ -185,7 +186,7 @@ public class CreateRawBaseTables extends ETLBase {
     public void executeStageLoad(String[] params) {
 
         CommandLine commandLine = getCommandLine(params, PARAMS_STRUCTURE);
-        String processId = commandLine.getOptionValue("process-id");
+        String processId = commandLine.getOptionValue(PROCESSID);
         String instanceExecId = commandLine.getOptionValue("instance-exec-id");
         stgLoad = processId;
 

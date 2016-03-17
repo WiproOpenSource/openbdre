@@ -34,7 +34,7 @@ import java.util.List;
  * Modified by arijit
  */
 public class BaseLoad extends ETLBase {
-
+    private static final String DEFAULTFSNAME = "common.default-fs-name";
     private static final Logger LOGGER = Logger.getLogger(BaseLoad.class);
     private static final String[][] PARAMS_STRUCTURE = {
             {"p", "process-id", " Process id of ETLDriver"},
@@ -64,7 +64,7 @@ public class BaseLoad extends ETLBase {
         try {
 
             Configuration conf = new Configuration();
-            conf.set("fs.defaultFS", IMConfig.getProperty("common.default-fs-name"));
+            conf.set("fs.defaultFS", IMConfig.getProperty(DEFAULTFSNAME));
             FileSystem fs = FileSystem.get(conf);
             String stageTableName =  baseTableName + "_" + instanceExecId;
             //Stage table is the source and base table is the destination
@@ -84,9 +84,9 @@ public class BaseLoad extends ETLBase {
             }
             LOGGER.info("ware house dir is " + wareHouse.split("=")[1]);
 
-            String stageTableLocation = IMConfig.getProperty("common.default-fs-name")+ wareHouse.split("=")[1] +"/"+dbName.toLowerCase()+".db/"+stageTableName.toLowerCase()+"/";
+            String stageTableLocation = IMConfig.getProperty(DEFAULTFSNAME)+ wareHouse.split("=")[1] +"/"+dbName.toLowerCase()+".db/"+stageTableName.toLowerCase()+"/";
             LOGGER.info("stageTableLocation = " + stageTableLocation);
-            String baseTableLocation = IMConfig.getProperty("common.default-fs-name")+wareHouse.split("=")[1] +"/" +dbName.toLowerCase()+".db/"+baseTableName.toLowerCase()+"/";
+            String baseTableLocation = IMConfig.getProperty(DEFAULTFSNAME)+wareHouse.split("=")[1] +"/" +dbName.toLowerCase()+".db/"+baseTableName.toLowerCase()+"/";
             LOGGER.info("baseTableLocation = " + baseTableLocation);
             for (String stagePartition : stagePartitions)
             {
