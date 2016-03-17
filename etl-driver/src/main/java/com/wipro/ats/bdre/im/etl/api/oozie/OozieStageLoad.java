@@ -20,6 +20,8 @@ import com.wipro.ats.bdre.im.etl.api.StageLoad;
  * Created by vishnu on 12/24/14.
  */
 public class OozieStageLoad {
+    private OozieStageLoad(){
+    }
 
     public static void main(String[] args) throws Exception {
 
