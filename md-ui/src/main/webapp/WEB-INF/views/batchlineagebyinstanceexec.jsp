@@ -262,7 +262,7 @@
                                                               		    UpdateGraphviz(data);
                                                               		    modal.center();
                                                               		});}
-                                 }, 3000);
+                                 }, 5000);
 	</script>
 
     </head>
