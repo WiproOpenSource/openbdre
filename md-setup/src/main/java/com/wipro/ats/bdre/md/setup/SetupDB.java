@@ -753,9 +753,9 @@ public class SetupDB {
                 if (cols == null)
                     continue;
                 AppDeploymentQueueStatus adqStatus = new AppDeploymentQueueStatus();
-                adqStatus.setAdqState(new Integer(cols[0]));
+                adqStatus.setAppDeploymentStatusId(new Integer(cols[0]));
                 adqStatus.setDescription(cols[1]);
-                Object existing = session.get(adqStatus.getClass(), adqStatus.getAdqState());
+                Object existing = session.get(adqStatus.getClass(), adqStatus.getAppDeploymentStatusId());
                 if (existing == null) {
                     session.save(adqStatus);
                 }
