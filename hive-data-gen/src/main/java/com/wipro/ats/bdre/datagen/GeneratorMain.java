@@ -16,6 +16,7 @@ package com.wipro.ats.bdre.datagen;
 
 import com.wipro.ats.bdre.BaseStructure;
 import com.wipro.ats.bdre.datagen.mr.Driver;
+import com.wipro.ats.bdre.exception.BDREException;
 import com.wipro.ats.bdre.md.api.GetProperties;
 import org.apache.commons.cli.CommandLine;
 import org.apache.hadoop.conf.Configuration;
@@ -36,8 +37,11 @@ public class GeneratorMain extends BaseStructure {
         java.util.Properties listForParams= getProperties.getProperties(processId,"table");
          String outputDir=listForParams.getProperty("outputPath");
 
-        String params[] =new String[]{processId,outputDir};
+        String[] params =new String[]{processId,outputDir};
         int res = ToolRunner.run(new Configuration(), new Driver(), params);
-        System.exit(res);
+        if(res != 0)
+            throw new BDREException("Hive Generator error");
+        else
+            return;
     }
 }

@@ -25,45 +25,44 @@ import java.util.Random;
  *
  */
 public class RandomValueGenerator {
-	
 
-	public static Random random = new Random();
-	private static final Logger LOGGER=Logger.getLogger(RandomValueGenerator.class);
-
-	
+	public static final Random RANDOM = new Random();
+	public static final Logger LOGGER = Logger.getLogger(RandomValueGenerator.class);
+	private RandomValueGenerator(){
+	}
 	/**
 	 * 
 	 * @return a random number
 	 */
-	public static String randomNumber(String arg){
-		arg=arg.replaceAll("\'","\"");
+	public static String randomNumber(String args){
+		String arg=args.replaceAll("\'","\"");
 		Random r = new Random();
 		long low = Long.parseLong(arg.split(",")[0]);
 		long high = Long.parseLong(arg.split(",")[1]);
 		long offset=low+(long)(r.nextDouble()*(high-low));
-		String str = offset +"";
-		return str;
+		LOGGER.info(offset);
+		return offset +"";
+
 	}
 
 	/**
 	 * 
 	 * @return a random decimal
 	 */
-	public static String randomDecimal(String arg){
+	public static String randomDecimal(){
 		   StringBuilder randomStringBuilder = new StringBuilder();
 		   //Minimum 1 and Maximum 100
-		   float decimalvalue=random.nextFloat()*100 + 1;
+		   float decimalvalue=RANDOM.nextFloat()*100 + 1;
 		   //Precise the float value with a precision of 2
 		   randomStringBuilder.append(Math.round(decimalvalue*100.0)/100.0);
 		   return randomStringBuilder.toString();
 	}
 	public static String randomRegexPattern(String pattern) {
 		Xeger generator = new Xeger(pattern);
-		String result = generator.generate();
-		return result;
+		return generator.generate();
 	}
-	public static String randomDate(String arg){
-		arg=arg.replaceAll("\'","\"");
+	public static String randomDate(String args){
+		String arg=args.replaceAll("\'","\"");
 		long low = Long.parseLong(arg.split(",")[0]);
 		long high = Long.parseLong(arg.split(",")[1]);
 		String format = arg.split(",")[2];

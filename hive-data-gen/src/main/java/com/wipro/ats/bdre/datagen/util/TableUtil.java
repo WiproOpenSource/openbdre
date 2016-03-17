@@ -72,12 +72,12 @@ public class TableUtil {
 
 
         List<Column> columns = table.getColumns();
-        int i = 0;
         StringBuilder rowData = new StringBuilder();
         for (Column column : columns) {
-            if (column.getRefTable() != null) break;
+            if (column.getRefTable() != null) {
+                break;
+            }
             rowData.append(getData(column.getColumnGenId(), pid));
-            //LOGGER.debug("Table="+table.getTableName()+"; column="+column.getColumnName()+"; index="+column.getColumnIndex());
             rowData.append(table.getDelimiter());
         }
         rowData.deleteCharAt(rowData.length() - 1);

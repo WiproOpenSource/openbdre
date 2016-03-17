@@ -39,6 +39,7 @@ public class RangeRecordReader
     public RangeRecordReader() {
     }
 
+    @Override
     public void initialize(InputSplit split, TaskAttemptContext context)
             throws IOException, InterruptedException {
         startRow = ((RangeInputSplit)split).firstRow;
@@ -46,22 +47,27 @@ public class RangeRecordReader
         totalRows = ((RangeInputSplit)split).rowCount;
     }
 
+    @Override
     public void close() throws IOException {
         // NOTHING
     }
 
+    @Override
     public LongWritable getCurrentKey() {
         return key;
     }
 
+    @Override
     public NullWritable getCurrentValue() {
         return NullWritable.get();
     }
 
+    @Override
     public float getProgress() throws IOException {
         return finishedRows / (float) totalRows;
     }
 
+    @Override
     public boolean nextKeyValue() {
         if (key == null) {
             key = new LongWritable();
