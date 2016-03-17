@@ -6,11 +6,7 @@ import com.wipro.ats.bdre.md.app.AppStore;
 import com.wipro.ats.bdre.md.beans.table.AppDeploymentQueue;
 import com.wipro.ats.bdre.md.beans.table.Process;
 import com.wipro.ats.bdre.md.beans.table.Properties;
-import com.wipro.ats.bdre.md.dao.AppDeploymentQueueDAO;
-import com.wipro.ats.bdre.md.dao.ProcessDAO;
-import com.wipro.ats.bdre.md.dao.PropertiesDAO;
-import com.wipro.ats.bdre.md.dao.jpa.AppDeploymentQueueStatus;
-import com.wipro.ats.bdre.md.dao.jpa.Users;
+import com.wipro.ats.bdre.md.dao.*;
 import com.wipro.ats.bdre.md.rest.beans.ProcessExport;
 import com.wipro.ats.bdre.md.rest.util.BindingResultError;
 import com.wipro.ats.bdre.md.rest.util.DateConverter;
@@ -46,7 +42,10 @@ public class AppDeploymentQueueAPI {
     private ProcessDAO processDAO;
     @Autowired
     private PropertiesDAO propertiesDAO;
-
+    @Autowired
+    private AppDeploymentQueueStatusDAO appDeploymentQueueStatusDAO;
+    @Autowired
+    private UsersDAO usersDAO;
     @RequestMapping(value = {"/", ""}, method = RequestMethod.POST)
     @ResponseBody
     public
@@ -65,7 +64,7 @@ public class AppDeploymentQueueAPI {
 
             Process process = new Process();
             process.setProcessId(appDeploymentQueue.getProcessId());
-            List<Process> processList = new ArrayList<Process>();
+            List<Process> processList = new ArrayList<>();
             List<com.wipro.ats.bdre.md.dao.jpa.Process> daoProcessList = processDAO.selectProcessList(appDeploymentQueue.getProcessId());
             for (com.wipro.ats.bdre.md.dao.jpa.Process daoProcess : daoProcessList) {
                 Process tableProcess = new Process();
@@ -95,7 +94,7 @@ public class AppDeploymentQueueAPI {
                 tableProcess.setProcessCode(daoProcess.getProcessCode());
                 processList.add(tableProcess);
             }
-            List<Properties> propertiesList = new ArrayList<Properties>();
+            List<Properties> propertiesList = new ArrayList<>();
             for (com.wipro.ats.bdre.md.dao.jpa.Process process1 : daoProcessList){
                 List<com.wipro.ats.bdre.md.dao.jpa.Properties> daoPropertiesList = propertiesDAO.getByProcessId(process1);
                 for (com.wipro.ats.bdre.md.dao.jpa.Properties daoProperties : daoPropertiesList) {
@@ -112,21 +111,20 @@ public class AppDeploymentQueueAPI {
             LOGGER.info("export object is "+processExport);
             AddJson addJson=new AddJson();
             String status=addJson.addJsonToProcessId(appDeploymentQueue.getProcessId().toString(),processExport);
-
             LOGGER.info("status of process.json addition "+status);
             com.wipro.ats.bdre.md.dao.jpa.AppDeploymentQueue jpaAppDeploymentQueue=new com.wipro.ats.bdre.md.dao.jpa.AppDeploymentQueue();
-            AppDeploymentQueueStatus appDeploymentQueueStatus=new AppDeploymentQueueStatus();
-            appDeploymentQueueStatus.setAppDeploymentStatusId((short) 0);
-            appDeploymentQueueStatus.setDescription("pull request created");
-            jpaAppDeploymentQueue.setAppDeploymentQueueStatus(appDeploymentQueueStatus);
-            com.wipro.ats.bdre.md.dao.jpa.Process process1=new com.wipro.ats.bdre.md.dao.jpa.Process();
-            process1.setProcessId(appDeploymentQueue.getProcessId());
-            jpaAppDeploymentQueue.setProcess(process1);
+            //AppDeploymentQueueStatus appDeploymentQueueStatus=new AppDeploymentQueueStatus();
+           // appDeploymentQueueStatus.setAppDeploymentStatusId((short) 0);
+           // appDeploymentQueueStatus.setDescription("pull request created");
+            jpaAppDeploymentQueue.setAppDeploymentQueueStatus(appDeploymentQueueStatusDAO.get((short) 0));
+            //com.wipro.ats.bdre.md.dao.jpa.Process process1=new com.wipro.ats.bdre.md.dao.jpa.Process();
+            //process1.setProcessId(appDeploymentQueue.getProcessId());
+            jpaAppDeploymentQueue.setProcess(processDAO.get(appDeploymentQueue.getProcessId()));
             jpaAppDeploymentQueue.setAppDomain(appDeploymentQueue.getAppDomain());
             jpaAppDeploymentQueue.setAppName(appDeploymentQueue.getAppName());
-            Users users=new Users();
-            users.setUsername(principal.getName());
-            jpaAppDeploymentQueue.setUsers(users);
+            //Users users=new Users();
+           // users.setUsername(principal.getName());
+            jpaAppDeploymentQueue.setUsers(usersDAO.get(principal.getName()));
             Long adqId=appDeploymentQueueDAO.insert(jpaAppDeploymentQueue);
             LOGGER.info("app deployment queue Id is "+adqId);
              returnedAppDeploymentQueue.setProcessId(appDeploymentQueue.getProcessId());
