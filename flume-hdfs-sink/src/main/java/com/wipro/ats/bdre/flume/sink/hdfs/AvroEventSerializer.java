@@ -64,7 +64,7 @@ import static org.apache.flume.serialization.AvroEventSerializerConfigurationCon
  */
 public class AvroEventSerializer implements EventSerializer, Configurable {
 
-  private static final Logger logger =
+  private static final Logger LOGGER =
           LoggerFactory.getLogger(AvroEventSerializer.class);
 
   public static final String AVRO_SCHEMA_LITERAL_HEADER = "flume.avro.schema.literal";
@@ -136,7 +136,7 @@ public class AvroEventSerializer implements EventSerializer, Configurable {
       CodecFactory codecFactory = CodecFactory.fromString(compressionCodec);
       dataFileWriter.setCodec(codecFactory);
     } catch (AvroRuntimeException e) {
-      logger.warn("Unable to instantiate avro codec with name (" +
+      LOGGER.warn("Unable to instantiate avro codec with name (" +
               compressionCodec + "). Compression disabled. Exception follows.", e);
     }
 
@@ -185,13 +185,13 @@ public class AvroEventSerializer implements EventSerializer, Configurable {
     return false;
   }
 
-  public static class Builder implements EventSerializer.Builder {
+  public static class MyBuilder implements EventSerializer.Builder {
 
     @Override
     public EventSerializer build(Context context, OutputStream out) {
-      AvroEventSerializer writer = new AvroEventSerializer(out);
-      writer.configure(context);
-      return writer;
+      AvroEventSerializer avroEventSerializer = new AvroEventSerializer(out);
+      avroEventSerializer.configure(context);
+      return avroEventSerializer;
     }
 
   }
