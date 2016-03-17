@@ -445,6 +445,7 @@ public class BDREHDFSEventSink extends AbstractSink implements Configurable {
     }
   }
 
+  @SuppressWarnings("squid:S1166")
   private void writeTheDataToHDFS(Event event, String realPath, String realName, String lookupPath, BucketWriter bucketWriter, WriterCallback closeCallback) throws IOException, InterruptedException {
     HDFSWriter hdfsWriter;
     try {
