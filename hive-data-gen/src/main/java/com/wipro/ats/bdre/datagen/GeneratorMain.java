@@ -41,7 +41,7 @@ public class GeneratorMain extends BaseStructure {
         int res = ToolRunner.run(new Configuration(), new Driver(), params);
         if(res != 0)
             throw new BDREException("Hive Generator error");
-        else
-            return;
+
+        return;
     }
 }
