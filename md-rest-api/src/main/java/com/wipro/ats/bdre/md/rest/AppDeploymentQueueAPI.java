@@ -193,11 +193,10 @@ public class AppDeploymentQueueAPI {
             ObjectMapper mapper1 = new ObjectMapper();
             try {
                FileWriter fileOut = new FileWriter(homeDir+"/bdreappstore/store.json");
+                LOGGER.info(fileOut);
                  mapper1.writeValue(new File(homeDir+"/bdreappstore/store.json"),appStore);
             } catch (IOException e) {
-                e.printStackTrace();
-
-
+                LOGGER.error(e);
             }
 
 
