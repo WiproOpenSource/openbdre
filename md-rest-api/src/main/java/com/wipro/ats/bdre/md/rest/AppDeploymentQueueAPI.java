@@ -3,6 +3,8 @@ package com.wipro.ats.bdre.md.rest;
 import com.wipro.ats.bdre.exception.MetadataException;
 import com.wipro.ats.bdre.md.api.util.AddJson;
 import com.wipro.ats.bdre.md.app.AppStore;
+import com.wipro.ats.bdre.md.app.AppValues;
+import com.wipro.ats.bdre.md.app.StoreJson;
 import com.wipro.ats.bdre.md.beans.table.AppDeploymentQueue;
 import com.wipro.ats.bdre.md.beans.table.Process;
 import com.wipro.ats.bdre.md.beans.table.Properties;
@@ -19,13 +21,11 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
-import java.io.BufferedReader;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.IOException;
+import java.io.*;
 import java.security.Principal;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 /**
  * Created by cloudera on 3/8/16.
@@ -157,6 +157,49 @@ public class AppDeploymentQueueAPI {
             mapper.configure(DeserializationConfig.Feature.FAIL_ON_UNKNOWN_PROPERTIES, false);
             AppStore appStore = mapper.readValue(jsonfile, AppStore.class);
             LOGGER.info("size of app catagory is "+appStore.getApplicationList().size());
+            com.wipro.ats.bdre.md.dao.jpa.AppDeploymentQueue appDeploymentQueue=appDeploymentQueueDAO.get(queueId);
+            LOGGER.info("AppDeploymentQueue  is "+appDeploymentQueue);
+            for (StoreJson storeJson:appStore.getApplicationList())
+            {
+                if (storeJson.getId().equals(appDeploymentQueue.getAppDomain()))
+                {
+                    LOGGER.info("no of apps in this catagory without updating is "+storeJson.getColumns().size());
+                    int alreadyExistedApp=0;
+                    AppValues addedApp=new AppValues();
+                    for (AppValues appValues:storeJson.getColumns())
+                    {
+                        if (appValues.getName().equals(appDeploymentQueue.getAppName()))
+                        {
+                            alreadyExistedApp=1;
+                        }
+                    }
+
+                    if (alreadyExistedApp==0)
+                    {
+                        UUID idOne = UUID.randomUUID();
+                        String temprory=storeJson.getId()+"/"+appDeploymentQueue.getAppName().toLowerCase().replace(" ","_");
+                        addedApp.setCategory("Category 1");
+                        addedApp.setDescription(appDeploymentQueue.getAppName());
+                        addedApp.setName(appDeploymentQueue.getAppName());
+                        addedApp.setIcon(temprory+"/analytic.png");
+                        addedApp.setLocation("bdreappstore-apps/"+temprory+".zip");
+                        addedApp.setId(idOne.toString());
+                    }
+                    storeJson.getColumns().add(addedApp);
+                    LOGGER.info("no of apps in this catagory after updating is "+storeJson.getColumns().size());
+
+                }
+            }
+            ObjectMapper mapper1 = new ObjectMapper();
+            try {
+               FileWriter fileOut = new FileWriter(homeDir+"/bdreappstore/store.json");
+                 mapper1.writeValue(new File(homeDir+"/bdreappstore/store.json"),appStore);
+            } catch (IOException e) {
+                e.printStackTrace();
+
+
+            }
+
 
             restWrapper = new RestWrapper(returnedAppDeploymentQueue, RestWrapper.OK);
         } catch (MetadataException e) {
