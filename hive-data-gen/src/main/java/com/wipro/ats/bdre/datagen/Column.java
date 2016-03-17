@@ -23,7 +23,9 @@ public class Column {
 	private String refTable;
 	private String refCol;
 
-	public Column(){}
+	public Column() {
+
+	}
 
 	
 	public String getColumnName() {
