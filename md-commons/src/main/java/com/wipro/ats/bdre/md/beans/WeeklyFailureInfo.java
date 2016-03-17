@@ -25,6 +25,10 @@ import com.wipro.ats.bdre.annotation.PersistableParam;
  */
 public class WeeklyFailureInfo {
     private Integer counter;
+    @PersistableParam(keyName = "process-id")
+    private Long processId = 0L;
+    @PersistableParam(keyName = "instance-exec-id")
+    private Long instanceExecId = 0L;
 
     public Integer getCounter() {
         return counter;
@@ -54,11 +58,5 @@ public class WeeklyFailureInfo {
     public String toString() {
         return " processId:" + processId + " instanceExecId:" + instanceExecId;
     }
-
-    @PersistableParam(keyName = "process-id")
-    private Long processId = 0L;
-    @PersistableParam(keyName = "instance-exec-id")
-    private Long instanceExecId = 0L;
-
 
 }

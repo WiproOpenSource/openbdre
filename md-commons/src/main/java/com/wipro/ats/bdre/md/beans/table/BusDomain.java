@@ -30,15 +30,6 @@ public class BusDomain {
     @Digits(fraction = 0, integer = 11)
     private Integer busDomainId;
     private Integer pageSize;
-
-    public Integer getPageSize() {
-        return pageSize;
-    }
-
-    public void setPageSize(Integer pageSize) {
-        this.pageSize = pageSize;
-    }
-
     @Size(max = 256)
     @NotNull
     private String description;
@@ -58,6 +49,14 @@ public class BusDomain {
         return " busDomainId:" + busDomainId + " page:" + page + " description:" + description.substring(0, Math.min(description.length(), 45)) + " busDomainName:" + busDomainName + " busDomainOwner:" + busDomainOwner;
     }
 
+    public Integer getPageSize() {
+        return pageSize;
+    }
+
+    public void setPageSize(Integer pageSize) {
+        this.pageSize = pageSize;
+    }
+
     public Integer getCounter() {
         return counter;
     }
@@ -73,7 +72,6 @@ public class BusDomain {
     public void setPage(Integer page) {
         this.page = page;
     }
-
 
     public String getBusDomainOwner() {
         return busDomainOwner;

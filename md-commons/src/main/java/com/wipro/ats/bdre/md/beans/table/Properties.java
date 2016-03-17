@@ -47,8 +47,15 @@ public class Properties {
     private String description;
     private Integer counter;
     private Integer page;
-
+    private Integer parentProcessId;
+    private Integer subProcessId;
     private Integer pageSize;
+
+    @Override
+    public String toString() {
+        return " processId:" + processId + " configGroup:" + configGroup + " key:" + key + " description:" + description.substring(0, Math.min(description.length(), 45)) +
+                " page:" + page + " parentProcessId:" + parentProcessId + " subProcessId:" + subProcessId;
+    }
 
     public Integer getPageSize() {
         return pageSize;
@@ -56,15 +63,6 @@ public class Properties {
 
     public void setPageSize(Integer pageSize) {
         this.pageSize = pageSize;
-    }
-
-    private Integer parentProcessId;
-    private Integer subProcessId;
-
-    @Override
-    public String toString() {
-        return " processId:" + processId + " configGroup:" + configGroup + " key:" + key + " description:" + description.substring(0, Math.min(description.length(), 45)) +
-                " page:" + page + " parentProcessId:" + parentProcessId + " subProcessId:" + subProcessId;
     }
 
     public Integer getPage() {
@@ -82,7 +80,6 @@ public class Properties {
     public void setCounter(Integer counter) {
         this.counter = counter;
     }
-
 
     public Integer getProcessId() {
         return processId;
