@@ -69,7 +69,6 @@ public class StageLoad extends ETLBase {
     private void processStageLoad(String stageDbName, String viewName, String baseDbName, String baseTableName, String instanceExecId, String minBatchId, String maxBatchId,String stageLoadProcessId) {
         try {
 
-            Connection rawCon = getHiveJDBCConnection(stageDbName);
             Connection baseCon = getHiveJDBCConnection(baseDbName);
 
             Statement baseConStatement = baseCon.createStatement();

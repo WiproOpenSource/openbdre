@@ -21,7 +21,6 @@ import org.apache.commons.cli.CommandLine;
 import org.apache.log4j.Logger;
 
 import java.sql.Connection;
-import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.Statement;
 import java.util.*;
@@ -143,7 +142,7 @@ public class CreateRawBaseTables extends ETLBase {
             GetProperties getTableProperties = new GetProperties();
             java.util.Properties listForRawTableProps = getTableProperties.getProperties(rawLoad, "raw-table-props");
             Enumeration e = listForRawTableProps.propertyNames();
-            if (listForRawTableProps.size() != 0) {
+            if (!listForRawTableProps.isEmpty()) {
                 while (e.hasMoreElements()) {
                     String key = (String) e.nextElement();
                     tList.append("'" + key + "' = '" + listForRawTableProps.getProperty(key) + "',");
@@ -274,21 +273,24 @@ public class CreateRawBaseTables extends ETLBase {
     }
 
 
+    private String getName(String name){
+        return "SHOW TABLES LIKE '" + name + "'";
+    }
 
     private void checkAndCreateRawTable(String dbName, String tableName, String ddl) {
         try {
             LOGGER.debug("Reading Hive Connection details from Properties File");
             Connection con = getHiveJDBCConnection(dbName);
-
-            PreparedStatement pst = con.prepareStatement("SHOW TABLES LIKE '" + tableName + "'");
-            ResultSet rs = pst.executeQuery();
+            Statement stmt = con.createStatement();
+            String tName = tableName;
+            ResultSet rs = stmt.executeQuery("SHOW TABLES LIKE '" + tName + "'");
             if (!rs.next()) {
                 LOGGER.info("Raw table does not exist Creating table " + tableName);
-                LOGGER.info("Creating raw table using "+ddl);
-                pst.executeUpdate(ddl);
+                LOGGER.info("Creating raw table using " + ddl);
+                stmt.executeUpdate(ddl);
                 LOGGER.info("Raw table created.");
             }
-            pst.close();
+            stmt.close();
             con.close();
         } catch (Exception e) {
             LOGGER.error("Error while creating raw table" + e);
@@ -302,10 +304,11 @@ public class CreateRawBaseTables extends ETLBase {
 
             Connection con = getHiveJDBCConnection(dbName);
             Statement stmt = con.createStatement();
-            ResultSet rs = stmt.executeQuery("SHOW TABLES LIKE '" + stageViewName + "'");
+            String svName = stageViewName;
+            ResultSet rs = stmt.executeQuery("SHOW TABLES LIKE '" + svName + "'");
             if (!rs.next()) {
                 LOGGER.debug("View does not exist. Creating View " + stageViewName);
-                LOGGER.info("Creating view using "+ddl);
+                LOGGER.info("Creating view using " + ddl);
                 stmt.executeUpdate(ddl);
             }
             stmt.close();
@@ -321,7 +324,8 @@ public class CreateRawBaseTables extends ETLBase {
 
             Connection con = getHiveJDBCConnection(dbName);
             Statement stmt = con.createStatement();
-            ResultSet rs = stmt.executeQuery("SHOW TABLES LIKE '" + baseTable + "'");
+            String bTable = baseTable;
+            ResultSet rs = stmt.executeQuery("SHOW TABLES LIKE '" + bTable + "'");
             if (!rs.next()) {
                 LOGGER.info("Base table does not exist.Creating Table " + baseTable);
                 LOGGER.info("Creating base table using "+ddl);
@@ -340,7 +344,8 @@ public class CreateRawBaseTables extends ETLBase {
 
             Connection con = getHiveJDBCConnection(dbName);
             Statement stmt = con.createStatement();
-            ResultSet rs = stmt.executeQuery("SHOW TABLES LIKE '" + baseTable + "'");
+            CreateRawBaseTables createRawBaseTables = new CreateRawBaseTables();
+            ResultSet rs = stmt.executeQuery(createRawBaseTables.getName(baseTable));
             if (!rs.next()) {
                 LOGGER.info("Stage table does not exist.Creating Table " + baseTable);
                 LOGGER.info("Creating stage table using "+ddl);

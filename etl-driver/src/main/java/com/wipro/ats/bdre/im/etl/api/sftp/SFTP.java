@@ -133,12 +133,14 @@ public class SFTP {
                         filesize = filesize * 10L + (long) (buf[0] - '0');
                     }
                     String file = null;
-                    for (int i = 0; i>= 0; i++) {
+                    int i = 0;
+                     while(true) {
                         in.read(buf, i, 1);
                         if (buf[i] == (byte) 0x0a) {
                             file = new String(buf, 0, i);
                             break;
                         }
+                        i++;
                     }
                     LOGGER.info("filesize=" + filesize + ", file=" + file);
                     // send '\0'
@@ -181,7 +183,7 @@ public class SFTP {
                     if (fos != null)
                         fos.close();
                 } catch (Exception ee) {
-                    LOGGER.info(e);
+                    LOGGER.info(ee);
                 }
             }
 
