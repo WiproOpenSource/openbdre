@@ -35,7 +35,7 @@ public class SequenceFileSerializerFactory {
    */
   static final String CTX_PREFIX = "writeFormat.";
 
-  @SuppressWarnings("unchecked")
+  @SuppressWarnings("squid:S1166")
   static SequenceFileSerializer getSerializer(String formatType,
                                               Context context) {
     Preconditions.checkNotNull(formatType, "serialize type must not be null");

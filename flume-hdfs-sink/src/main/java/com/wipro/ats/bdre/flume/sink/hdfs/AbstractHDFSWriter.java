@@ -230,6 +230,7 @@ public abstract class AbstractHDFSWriter implements HDFSWriter {
     return m;
   }
 
+  @SuppressWarnings("squid:S1166")
   private Method reflectHflushOrSync(FSDataOutputStream os) {
     Method m = null;
     if(os != null) {
