@@ -323,7 +323,6 @@ public class CreateRawBaseTables extends ETLBase {
 
             Connection con = getHiveJDBCConnection(dbName);
             Statement stmt = con.createStatement();
-            String bTable = baseTable;
             ResultSet rs = stmt.executeQuery(CreateRawBaseTables.getQuery(baseTable));
             if (!rs.next()) {
                 LOGGER.info("Base table does not exist.Creating Table " + baseTable);
