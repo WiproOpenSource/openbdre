@@ -57,6 +57,9 @@ public class BaseLoad extends ETLBase {
     }
 
 
+    private static String getQuery(String name){
+        return "show partitions "+name;
+    }
     private void processStage(String dbName, String baseTableName, String instanceExecId) {
         try {
 
@@ -67,7 +70,7 @@ public class BaseLoad extends ETLBase {
             //Stage table is the source and base table is the destination
 
             List<String> stagePartitions = new ArrayList<String>();
-            ResultSet resultSet = getHiveJDBCConnection(dbName).createStatement().executeQuery("show partitions " + stageTableName);
+            ResultSet resultSet = getHiveJDBCConnection(dbName).createStatement().executeQuery(BaseLoad.getQuery(stageTableName));
             while (resultSet.next()) {
                 String columnValue = resultSet.getString(1);
                 LOGGER.info(columnValue);

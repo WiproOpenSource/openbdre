@@ -273,7 +273,7 @@ public class CreateRawBaseTables extends ETLBase {
     }
 
 
-    private String getName(String name){
+    private static String getQuery(String name){
         return "SHOW TABLES LIKE '" + name + "'";
     }
 
@@ -282,8 +282,7 @@ public class CreateRawBaseTables extends ETLBase {
             LOGGER.debug("Reading Hive Connection details from Properties File");
             Connection con = getHiveJDBCConnection(dbName);
             Statement stmt = con.createStatement();
-            String tName = tableName;
-            ResultSet rs = stmt.executeQuery("SHOW TABLES LIKE '" + tName + "'");
+            ResultSet rs = stmt.executeQuery(CreateRawBaseTables.getQuery(tableName));
             if (!rs.next()) {
                 LOGGER.info("Raw table does not exist Creating table " + tableName);
                 LOGGER.info("Creating raw table using " + ddl);
@@ -304,8 +303,7 @@ public class CreateRawBaseTables extends ETLBase {
 
             Connection con = getHiveJDBCConnection(dbName);
             Statement stmt = con.createStatement();
-            String svName = stageViewName;
-            ResultSet rs = stmt.executeQuery("SHOW TABLES LIKE '" + svName + "'");
+            ResultSet rs = stmt.executeQuery(CreateRawBaseTables.getQuery(stageViewName));
             if (!rs.next()) {
                 LOGGER.debug("View does not exist. Creating View " + stageViewName);
                 LOGGER.info("Creating view using " + ddl);
@@ -325,7 +323,7 @@ public class CreateRawBaseTables extends ETLBase {
             Connection con = getHiveJDBCConnection(dbName);
             Statement stmt = con.createStatement();
             String bTable = baseTable;
-            ResultSet rs = stmt.executeQuery("SHOW TABLES LIKE '" + bTable + "'");
+            ResultSet rs = stmt.executeQuery(CreateRawBaseTables.getQuery(baseTable));
             if (!rs.next()) {
                 LOGGER.info("Base table does not exist.Creating Table " + baseTable);
                 LOGGER.info("Creating base table using "+ddl);
@@ -344,8 +342,7 @@ public class CreateRawBaseTables extends ETLBase {
 
             Connection con = getHiveJDBCConnection(dbName);
             Statement stmt = con.createStatement();
-            CreateRawBaseTables createRawBaseTables = new CreateRawBaseTables();
-            ResultSet rs = stmt.executeQuery(createRawBaseTables.getName(baseTable));
+            ResultSet rs = stmt.executeQuery(CreateRawBaseTables.getQuery(baseTable));
             if (!rs.next()) {
                 LOGGER.info("Stage table does not exist.Creating Table " + baseTable);
                 LOGGER.info("Creating stage table using "+ddl);
