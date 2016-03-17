@@ -122,8 +122,6 @@ public class BDREHDFSEventSink extends AbstractSink implements Configurable {
   private SinkCounter sinkCounter;
 
   private volatile int idleTimeout;
-  @SuppressWarnings("squid:S1068")
-  private Clock clock;
   private FileSystem mockFs;
   private HDFSWriter mockWriter;
   private final Object sfWritersLock = new Object();
@@ -287,9 +285,7 @@ public class BDREHDFSEventSink extends AbstractSink implements Configurable {
     }
 
     this.useLocalTime = context.getBoolean("hdfs.useLocalTimeStamp", false);
-    if(useLocalTime) {
-      clock = new SystemClock();
-    }
+
 
     if (sinkCounter == null) {
       sinkCounter = new SinkCounter(getName());
