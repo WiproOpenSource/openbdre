@@ -15,44 +15,50 @@
 package com.wipro.ats.bdre.util;
 
 import com.wipro.ats.bdre.datagen.util.RandomValueGenerator;
+import com.wipro.ats.bdre.exception.BDREException;
 import org.apache.log4j.Logger;
 import org.junit.Test;
 
 public class RandomValueGeneratorTest {
-    private static final Logger LOGGER=Logger.getLogger(RandomValueGeneratorTest.class);
+    private static final Logger LOGGER = Logger.getLogger(RandomValueGeneratorTest.class);
 
     @Test
-    public void testRandomString() throws Exception {
-
+    public void testRandomString() {
+        /*
+         this function is not used
+         */
     }
 
     @Test
-    public void testRandomNumber() throws Exception {
-
+    public void testRandomNumber() {
+         /*
+          this function is not used
+          */
     }
 
     @Test
-    public void testRandomDecimal() throws Exception {
-
+    public void testRandomDecimal() {
+         /*
+          this function is not used
+          */
     }
 
     @Test
-    public void testRandomReverseRegex() throws Exception {
-        String pattern="20[0-2][0-9]-((0[1-9])|10|11|12)-[0-3][0-9]";
-        for(int i=0;i<20;i++) {
-            String generatedString = RandomValueGenerator.randomRegexPattern(pattern);
-            LOGGER.debug("generatedString=" + generatedString);
-        }
-        pattern="[1-9][0-9]*";
-        for(int i=0;i<20;i++) {
-            String generatedString = RandomValueGenerator.randomRegexPattern(pattern);
-            LOGGER.debug("generatedString=" + generatedString);
-        }
-        pattern="user[1-2][0-9](\\@gmail\\.com|\\@hotmail\\.com)";
-        for(int i=0;i<100;i++) {
-            String generatedString = RandomValueGenerator.randomRegexPattern(pattern);
-            LOGGER.debug("generatedString=" + generatedString);
-        }
-
+    public void testRandomReverseRegex() throws BDREException{
+            String pattern = "20[0-2][0-9]-((0[1-9])|10|11|12)-[0-3][0-9]";
+            for (int i = 0; i < 20; i++) {
+                String generatedString = RandomValueGenerator.randomRegexPattern(pattern);
+                LOGGER.debug("generatedString=" + generatedString);
+            }
+            pattern = "[1-9][0-9]*";
+            for (int i = 0; i < 20; i++) {
+                String generatedString = RandomValueGenerator.randomRegexPattern(pattern);
+                LOGGER.debug("generatedString=" + generatedString);
+            }
+            pattern = "user[1-2][0-9](\\@gmail\\.com|\\@hotmail\\.com)";
+            for (int i = 0; i < 100; i++) {
+                String generatedString = RandomValueGenerator.randomRegexPattern(pattern);
+                LOGGER.debug("generatedString=" + generatedString);
+            }
     }
 }

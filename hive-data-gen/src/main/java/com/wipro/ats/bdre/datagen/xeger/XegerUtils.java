@@ -22,6 +22,10 @@ import java.util.Random;
  */
 public class XegerUtils {
 
+
+    private XegerUtils() {
+    }
+
     /**
      * Generates a random number within the given bounds.
      *
@@ -30,7 +34,8 @@ public class XegerUtils {
      * @param random The object used as the randomizer.
      * @return A random number in the given range.
      */
-    public final static int getRandomInt(int min, int max, Random random) {
+
+    public static final int getRandomInt(int min, int max, Random random) {
         int dif = max - min;
         float number = random.nextFloat();              // 0 <= number < 1
         return min + Math.round(number * dif);

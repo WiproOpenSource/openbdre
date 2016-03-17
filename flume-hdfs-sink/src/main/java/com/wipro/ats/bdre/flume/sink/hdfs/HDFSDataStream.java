@@ -30,10 +30,6 @@ import org.apache.hadoop.io.SequenceFile.CompressionType;
 import org.apache.hadoop.io.compress.CompressionCodec;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.config.AutowireCapableBeanFactory;
-import org.springframework.context.ApplicationContext;
-import org.springframework.context.support.ClassPathXmlApplicationContext;
 
 import java.io.IOException;
 import java.sql.Timestamp;
@@ -41,7 +37,7 @@ import java.util.Date;
 
 public class HDFSDataStream extends AbstractHDFSWriter {
 
-  private static final Logger logger =
+  private static final Logger LOGGER =
       LoggerFactory.getLogger(HDFSDataStream.class);
 
   private FSDataOutputStream outStream;
@@ -57,7 +53,8 @@ public class HDFSDataStream extends AbstractHDFSWriter {
 
   private static HDFSDataStream hdfsDataStream;
   public static HDFSDataStream getHDFSDataStream(){
-    if(hdfsDataStream==null)hdfsDataStream=new HDFSDataStream();
+    if(hdfsDataStream==null)
+        hdfsDataStream=new HDFSDataStream();
     return hdfsDataStream;
   }
   @Override
@@ -74,7 +71,7 @@ public class HDFSDataStream extends AbstractHDFSWriter {
         false);
     serializerContext =
         new Context(context.getSubProperties(EventSerializer.CTX_PREFIX));
-    logger.info("Serializer = " + serializerType + ", UseRawLocalFileSystem = "
+    LOGGER.info("Serializer = " + serializerType + ", UseRawLocalFileSystem = "
         + useRawLocalFileSystem);
   }
 
@@ -91,14 +88,13 @@ public class HDFSDataStream extends AbstractHDFSWriter {
       if(hdfs instanceof LocalFileSystem) {
         hdfs = ((LocalFileSystem)hdfs).getRaw();
       } else {
-        logger.warn("useRawLocalFileSystem is set to true but file system " +
+        LOGGER.warn("useRawLocalFileSystem is set to true but file system " +
             "is not of type LocalFileSystem: " + hdfs.getClass().getName());
       }
     }
 
     boolean appending = false;
-    if (conf.getBoolean("hdfs.append.support", false) == true && hdfs.isFile
-            (dstPath)) {
+    if (conf.getBoolean("hdfs.append.support", false) && hdfs.isFile(dstPath)) {
       outStream = hdfs.append(dstPath);
       appending = true;
     } else {
@@ -168,10 +164,10 @@ public class HDFSDataStream extends AbstractHDFSWriter {
     FileSystem hdfs = dstPath.getFileSystem(conf);
     FileStatus fileStatus=hdfs.getFileStatus(dstPath);
 
-    logger.info("Process Id :" + processId);
+    LOGGER.info("Process Id :" + processId);
 
     String fSize = String.valueOf(fileStatus.getLen());
-    logger.info("File Size in Byte :" + fSize);
+    LOGGER.info("File Size in Byte :" + fSize);
 
     String filePath;
     if (dstPath.toString().contains(inUseSuffix)){
@@ -180,7 +176,7 @@ public class HDFSDataStream extends AbstractHDFSWriter {
       filePath = dstPath.toString();
     }
 
-    logger.info("File path :" + filePath);
+    LOGGER.info("File path :" + filePath);
 
     // creating the command to save
     String[] beargs={"-p",processId,"-sId","123461","-path",filePath,"-fs",fSize,"-fh","","-cTS",new Timestamp(new Date().getTime()).toString(),"-bid","null","-bm",""};

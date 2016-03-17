@@ -103,7 +103,7 @@ public class TestHDFSEventSinkOnMiniCluster {
 
     Context sinkCtx = new Context();
     sinkCtx.put("hdfs.path", nnURL + outputDir);
-    sinkCtx.put("hdfs.fileType", HDFSWriterFactory.DataStreamType);
+    sinkCtx.put("hdfs.fileType", HDFSWriterFactory.DATA_STREAM_TYPE);
     sinkCtx.put("hdfs.batchSize", Integer.toString(1));
 
     BDREHDFSEventSink sink = new BDREHDFSEventSink();
@@ -182,7 +182,7 @@ public class TestHDFSEventSinkOnMiniCluster {
 
     Context sinkCtx = new Context();
     sinkCtx.put("hdfs.path", nnURL + outputDir);
-    sinkCtx.put("hdfs.fileType", HDFSWriterFactory.CompStreamType);
+    sinkCtx.put("hdfs.fileType", HDFSWriterFactory.COMP_STREAM_TYPE);
     sinkCtx.put("hdfs.batchSize", Integer.toString(1));
     sinkCtx.put("hdfs.codeC", "gzip");
 
@@ -282,7 +282,7 @@ public class TestHDFSEventSinkOnMiniCluster {
 
     Context sinkCtx = new Context();
     sinkCtx.put("hdfs.path", nnURL + outputDir);
-    sinkCtx.put("hdfs.fileType", HDFSWriterFactory.DataStreamType);
+    sinkCtx.put("hdfs.fileType", HDFSWriterFactory.DATA_STREAM_TYPE);
     sinkCtx.put("hdfs.batchSize", Integer.toString(1));
 
     BDREHDFSEventSink sink = new BDREHDFSEventSink();
@@ -395,7 +395,7 @@ public class TestHDFSEventSinkOnMiniCluster {
 
     Context sinkCtx = new Context();
     sinkCtx.put("hdfs.path", nnURL + outputDir);
-    sinkCtx.put("hdfs.fileType", HDFSWriterFactory.DataStreamType);
+    sinkCtx.put("hdfs.fileType", HDFSWriterFactory.DATA_STREAM_TYPE);
     sinkCtx.put("hdfs.batchSize", Integer.toString(1));
 
     BDREHDFSEventSink sink = new BDREHDFSEventSink();
