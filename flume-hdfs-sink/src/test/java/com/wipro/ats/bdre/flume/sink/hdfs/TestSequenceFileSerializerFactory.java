@@ -50,7 +50,7 @@ public class TestSequenceFileSerializerFactory {
   public void getCustomFormatter() {
     SequenceFileSerializer formatter = SequenceFileSerializerFactory
       .getSerializer(
-        "MyCustomSerializer$Builder", new Context());
+        "MyCustomSerializer$MyBuilder", new Context());
 
     assertTrue(formatter != null);
     assertTrue(formatter.getClass().getName(),
