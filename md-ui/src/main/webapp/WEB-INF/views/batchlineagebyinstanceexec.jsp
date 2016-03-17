@@ -158,6 +158,8 @@
 	</style>
 
 	<script>
+	    var globalPid;
+	    var globalIeid;
 	    var modal = (function () {
 		var
 			method = {},
@@ -202,6 +204,8 @@
 		    $overlay.hide();
 		    $content.empty();
 		    $(window).unbind('resize.modal');
+		    globalIeid=undefined;
+		    globalPid=undefined;
 		};
 
 		// Generate the HTML and add it to the document
@@ -241,6 +245,8 @@
                         		    UpdateGraphviz(data);
                         		    modal.center();
                         		});
+                        		globalPid=pid;
+                                globalIeid=ieid;
                         	    }
 
 	    <c:if test="${not empty param.ied}">
@@ -248,6 +254,15 @@
 		getIed(${param.ied});
 	    });
 	    </c:if>
+
+	     var auto = setInterval(    function ()
+                                 {      if(globalIeid != undefined && globalPid != undefined){
+                                      $.get('details/' + globalPid + '/'+globalIeid+'.page', function (data) {
+                                                              		    modal.open({content: "<b>Loading</b>"});
+                                                              		    UpdateGraphviz(data);
+                                                              		    modal.center();
+                                                              		});}
+                                 }, 3000);
 	</script>
 
     </head>
