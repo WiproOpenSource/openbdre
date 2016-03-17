@@ -36,6 +36,7 @@ public class RangeInputFormat
         extends InputFormat<LongWritable, NullWritable> {
     private static final Log LOG = LogFactory.getLog(RangeInputFormat.class);
 
+    @Override
     public RecordReader<LongWritable, NullWritable>
     createRecordReader(InputSplit split, TaskAttemptContext context)
             throws IOException {
@@ -46,6 +47,7 @@ public class RangeInputFormat
      * Create the desired number of splits, dividing the number of rows
      * between the mappers.
      */
+    @Override
     public List<InputSplit> getSplits(JobContext job) {
         long totalRows =  getNumberOfRows(job);
         int numSplits = job.getConfiguration().getInt(Config.NUM_SPLITS_KEY, 1);
