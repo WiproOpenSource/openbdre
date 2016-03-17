@@ -18,10 +18,10 @@ public class AddJson {
 
         String homeDir = System.getProperty("user.home");
 
-        String source_dir=homeDir+"/bdre-wfd/"+processId;
+        String sourceDir=homeDir+"/bdre-wfd/"+processId;
 
         ObjectMapper mapper = new ObjectMapper();
-        File creatingDir = new File(source_dir);
+        File creatingDir = new File(sourceDir);
         if (!creatingDir.exists()) {
             creatingDir.mkdir();
         }
