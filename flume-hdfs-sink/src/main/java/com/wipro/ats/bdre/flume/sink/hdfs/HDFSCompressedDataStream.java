@@ -31,15 +31,12 @@ import org.apache.hadoop.io.SequenceFile.CompressionType;
 import org.apache.hadoop.io.compress.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.config.AutowireCapableBeanFactory;
-import org.springframework.context.ApplicationContext;
-import org.springframework.context.support.ClassPathXmlApplicationContext;
 
 import java.io.IOException;
 
 public class HDFSCompressedDataStream extends AbstractHDFSWriter {
 
-  private static final Logger logger =
+  private static final Logger LOGGER =
       LoggerFactory.getLogger(HDFSCompressedDataStream.class);
 
   private FSDataOutputStream fsOut;
@@ -71,7 +68,7 @@ public class HDFSCompressedDataStream extends AbstractHDFSWriter {
         false);
     serializerContext = new Context(
         context.getSubProperties(EventSerializer.CTX_PREFIX));
-    logger.info("Serializer = " + serializerType + ", UseRawLocalFileSystem = "
+    LOGGER.info("Serializer = " + serializerType + ", UseRawLocalFileSystem = "
         + useRawLocalFileSystem);
   }
 
@@ -92,12 +89,12 @@ public class HDFSCompressedDataStream extends AbstractHDFSWriter {
       if(hdfs instanceof LocalFileSystem) {
         hdfs = ((LocalFileSystem)hdfs).getRaw();
       } else {
-        logger.warn("useRawLocalFileSystem is set to true but file system " +
+        LOGGER.warn("useRawLocalFileSystem is set to true but file system " +
             "is not of type LocalFileSystem: " + hdfs.getClass().getName());
       }
     }
     boolean appending = false;
-    if (conf.getBoolean("hdfs.append.support", false) == true && hdfs.isFile
+    if (conf.getBoolean("hdfs.append.support", false) && hdfs.isFile
     (dstPath)) {
       fsOut = hdfs.append(dstPath);
       appending = true;
