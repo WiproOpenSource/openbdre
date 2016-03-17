@@ -26,8 +26,8 @@ import java.util.Random;
  */
 public class RandomValueGenerator {
 
+	private static final Logger LOGGER = Logger.getLogger(RandomValueGenerator.class);
 	public static final Random RANDOM = new Random();
-	public static final Logger LOGGER = Logger.getLogger(RandomValueGenerator.class);
 	private RandomValueGenerator(){
 	}
 	/**
