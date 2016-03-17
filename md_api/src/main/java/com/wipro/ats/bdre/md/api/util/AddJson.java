@@ -1,6 +1,7 @@
 package com.wipro.ats.bdre.md.api.util;
 
 import com.wipro.ats.bdre.md.rest.beans.ProcessExport;
+import org.apache.log4j.Logger;
 import org.codehaus.jackson.map.ObjectMapper;
 
 import java.io.File;
@@ -10,7 +11,7 @@ import java.io.IOException;
  * Created by cloudera on 3/9/16.
  */
 public class AddJson {
-
+    private static final Logger LOGGER = Logger.getLogger(AddJson.class);
     public  String addJsonToProcessId(String processId,ProcessExport processExport)
     {
 
@@ -30,7 +31,7 @@ public class AddJson {
             try {
                 mapper.writeValue(new File(homeDir + "/bdre-wfd/" + processId + "/" +"process.json"), processExport);
             } catch (IOException e) {
-                e.printStackTrace();
+               LOGGER.info(e);
                 return "failed";
 
             }
