@@ -88,7 +88,7 @@ public class RawLoad extends ETLBase {
     }
 
     private String[] createTempCopies(String[] files){
-        String outputFileList[]= new String[files.length];
+        String[] outputFileList= new String[files.length];
         try {
         Configuration conf = new Configuration();
         conf.set("fs.defaultFS", IMConfig.getProperty("common.default-fs-name"));

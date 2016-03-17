@@ -20,6 +20,8 @@ import com.wipro.ats.bdre.im.etl.api.BaseLoad;
  * Created by vishnu on 12/24/14.
  */
 public class OozieBaseLoad {
+    private OozieBaseLoad(){
+    }
 
     public static void main(String[] args) {
         BaseLoad baseLoad = new BaseLoad();
