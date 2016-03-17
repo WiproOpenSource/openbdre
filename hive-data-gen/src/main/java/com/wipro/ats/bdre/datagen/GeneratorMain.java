@@ -42,6 +42,5 @@ public class GeneratorMain extends BaseStructure {
         if(res != 0)
             throw new BDREException("Hive Generator error");
 
-        return;
     }
 }
