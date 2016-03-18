@@ -21,13 +21,10 @@ import org.apache.commons.cli.CommandLine;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.FileSystem;
 import org.apache.hadoop.fs.Path;
-import org.apache.hadoop.hive.metastore.api.Partition;
-import org.apache.hadoop.hive.metastore.api.Table;
 import org.apache.log4j.Logger;
 
 import java.sql.Connection;
 import java.sql.ResultSet;
-import java.sql.ResultSetMetaData;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
@@ -37,7 +34,7 @@ import java.util.List;
  * Modified by arijit
  */
 public class BaseLoad extends ETLBase {
-
+    private static final String DEFAULTFSNAME = "common.default-fs-name";
     private static final Logger LOGGER = Logger.getLogger(BaseLoad.class);
     private static final String[][] PARAMS_STRUCTURE = {
             {"p", "process-id", " Process id of ETLDriver"},
@@ -55,41 +52,41 @@ public class BaseLoad extends ETLBase {
         //Getting core table information
         String baseTableName = baseTable;
         String baseTableDbName = baseDb;
-      //  String baseTableDdl = getBaseTable().getDdl();
 
         processStage(baseTableDbName, baseTableName, instanceExecId);
     }
 
 
+    private static String getQuery(String name){
+        return "show partitions "+name;
+    }
     private void processStage(String dbName, String baseTableName, String instanceExecId) {
         try {
 
             Configuration conf = new Configuration();
-            conf.set("fs.defaultFS", IMConfig.getProperty("common.default-fs-name"));
+            conf.set("fs.defaultFS", IMConfig.getProperty(DEFAULTFSNAME));
             FileSystem fs = FileSystem.get(conf);
             String stageTableName =  baseTableName + "_" + instanceExecId;
             //Stage table is the source and base table is the destination
 
             List<String> stagePartitions = new ArrayList<String>();
-            ResultSet resultSet = getHiveJDBCConnection(dbName).createStatement().executeQuery("show partitions " + stageTableName);
-            ResultSetMetaData rsmd = resultSet.getMetaData();
+            ResultSet resultSet = getHiveJDBCConnection(dbName).createStatement().executeQuery(BaseLoad.getQuery(stageTableName));
             while (resultSet.next()) {
                 String columnValue = resultSet.getString(1);
                 LOGGER.info(columnValue);
                 stagePartitions.add(columnValue);
             }
-            List<String> basePartitions = new ArrayList<String>();
+
             String wareHouse = "";
             ResultSet resultSetForWareHouse = getHiveJDBCConnection(dbName).createStatement().executeQuery("set hive.metastore.warehouse.dir");
-            ResultSetMetaData rsmdWareHouse = resultSet.getMetaData();
             while (resultSetForWareHouse.next()) {
                 wareHouse = resultSetForWareHouse.getString(1);
             }
             LOGGER.info("ware house dir is " + wareHouse.split("=")[1]);
 
-            String stageTableLocation = IMConfig.getProperty("common.default-fs-name")+ wareHouse.split("=")[1] +"/"+dbName.toLowerCase()+".db/"+stageTableName.toLowerCase()+"/";
+            String stageTableLocation = IMConfig.getProperty(DEFAULTFSNAME)+ wareHouse.split("=")[1] +"/"+dbName.toLowerCase()+".db/"+stageTableName.toLowerCase()+"/";
             LOGGER.info("stageTableLocation = " + stageTableLocation);
-            String baseTableLocation = IMConfig.getProperty("common.default-fs-name")+wareHouse.split("=")[1] +"/" +dbName.toLowerCase()+".db/"+baseTableName.toLowerCase()+"/";
+            String baseTableLocation = IMConfig.getProperty(DEFAULTFSNAME)+wareHouse.split("=")[1] +"/" +dbName.toLowerCase()+".db/"+baseTableName.toLowerCase()+"/";
             LOGGER.info("baseTableLocation = " + baseTableLocation);
             for (String stagePartition : stagePartitions)
             {
@@ -112,10 +109,6 @@ public class BaseLoad extends ETLBase {
                 baseConStatement.executeUpdate(query);
             }
             //add partitions in the core table.
-            //  getMetaStoreClient().add_partitions(basePartitions);
-
-            // LOGGER.info("Deleting stage table");
-            //  getMetaStoreClient().dropTable(dbName,stageTableName);
             LOGGER.info("BaseLoad completed for " + baseTableName);
         } catch (Exception e) {
             LOGGER.info("Exception" + e);

@@ -22,4 +22,7 @@ public class IMConstant {
     public static final String FILE_ROW_SEPERATOR = ";";
     public static final String FILE_FIELD_SEPERATOR = ",";
     public static final String PATH_SEPERATOR = "/";
+
+    private IMConstant(){
+    }
 }

@@ -70,27 +70,7 @@ public class FTPUser implements UserInfo {
 
             //TODO: Implement a common location of the trust file
             return true;
-            /*String footPrint = FTPUtil.extractFootPrint(s);
 
-            if ((footPrint != null || !footPrint.isEmpty()) && FTPUtil.getKnownFootPrints().contains(footPrint)) {
-                return true;
-            }
-            BufferedReader bufferRead = new BufferedReader(new InputStreamReader(System.in));
-            System.out.print(s);
-            System.out.print(" (y/n): ");
-            String response = bufferRead.readLine();
-
-            if (response == null || response.isEmpty()) {
-                return promptYesNo(s);
-            } else if (response.equalsIgnoreCase("y")) {
-
-                LOGGER.info("adding " + footPrint);
-                FTPUtil.addToKnownFootPrints(footPrint);
-
-                return true;
-            } else {
-                return false;
-            }*/
         } catch (Exception e) {
             LOGGER.error(e);
             return false;
