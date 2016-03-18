@@ -131,6 +131,7 @@
 			 create: false,
 			 edit: false,
 			 display: function(data) {
+
 				 return '<span class="label label-primary" onclick="mergeApp(' + data.record.appDeploymentQueueId + ')">Merge</span> ';
 			 },
 		 },
@@ -162,18 +163,43 @@
                                                console.log(data);
                                                alert("merge completed");
 
+
                                             }
                                                  if (data.Result == "ERROR")
                                                    alert(data.Message);
                                               },
                                                error: function() {
-                                               console.log(imgstatus);
                                                alert('Error in app merge to appstore');
                                            }
                                        });
 
 
                                         }
+
+
+         rejectApp =function (appDeploymentQueueId){
+                                                         console.log(appDeploymentQueueId);
+                                                 $.ajax({
+                                                      url: '/mdrest/adq/reject/'+appDeploymentQueueId,
+                                                       type: 'POST',
+                                                       dataType: 'json',
+                                                        success: function(data) {
+                                                        if (data.Result == "OK") {
+                                                        console.log(data);
+                                                        alert("app rejected");
+
+                                                     }
+                                                          if (data.Result == "ERROR")
+                                                            alert(data.Message);
+                                                       },
+                                                        error: function() {
+                                                        alert('Error in app reject to appstore');
+                                                    }
+                                                });
+
+
+                                                 }
+
 
 	</script>
     </head>

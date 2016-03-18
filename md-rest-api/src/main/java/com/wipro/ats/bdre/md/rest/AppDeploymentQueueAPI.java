@@ -1,5 +1,6 @@
 package com.wipro.ats.bdre.md.rest;
 
+import com.wipro.ats.bdre.MDConfig;
 import com.wipro.ats.bdre.exception.MetadataException;
 import com.wipro.ats.bdre.md.api.util.AddJson;
 import com.wipro.ats.bdre.md.app.AppStore;
@@ -12,6 +13,9 @@ import com.wipro.ats.bdre.md.dao.*;
 import com.wipro.ats.bdre.md.rest.beans.ProcessExport;
 import com.wipro.ats.bdre.md.rest.util.BindingResultError;
 import com.wipro.ats.bdre.md.rest.util.DateConverter;
+import org.apache.commons.exec.CommandLine;
+import org.apache.commons.exec.DefaultExecutor;
+import org.apache.commons.exec.ExecuteException;
 import org.apache.log4j.Logger;
 import org.codehaus.jackson.map.DeserializationConfig;
 import org.codehaus.jackson.map.ObjectMapper;
@@ -26,7 +30,6 @@ import java.security.Principal;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
-
 /**
  * Created by cloudera on 3/8/16.
  */
@@ -198,7 +201,24 @@ public class AppDeploymentQueueAPI {
             } catch (IOException e) {
                 LOGGER.error(e);
             }
+            int iExitValue;
+            String sCommandString;
+            String[] command = {MDConfig.getProperty("deploy.script-path") + "/appstore-push.sh",appDeploymentQueue.getProcess().getProcessId().toString(),appDeploymentQueue.getAppDomain().toString(),appDeploymentQueue.getAppName().toLowerCase().replace(" ","_").toString()};
 
+            sCommandString = "sh "+command[0]+" "+command[1]+" "+command[2]+" "+command[3];
+            CommandLine oCmdLine = CommandLine.parse(sCommandString);
+            DefaultExecutor oDefaultExecutor = new DefaultExecutor();
+            oDefaultExecutor.setExitValue(0);
+            try {
+                iExitValue = oDefaultExecutor.execute(oCmdLine);
+                LOGGER.info("exit value of the shell script"+iExitValue);
+            } catch (ExecuteException e) {
+                LOGGER.info("Execution failed.");
+                LOGGER.error(e);
+            } catch (IOException e) {
+                LOGGER.info("permission denied.");
+                LOGGER.error(e);
+            }
 
             restWrapper = new RestWrapper(returnedAppDeploymentQueue, RestWrapper.OK);
         } catch (MetadataException e) {
@@ -254,5 +274,26 @@ public class AppDeploymentQueueAPI {
         }
         return restWrapper;
     }
+
+
+    @RequestMapping(value = "/reject/{id}", method = RequestMethod.POST)
+    @ResponseBody
+    public
+    RestWrapper reject(@PathVariable("id") Long queueId, Principal principal) {
+        RestWrapper restWrapper = null;
+        try{
+        LOGGER.info("queue id is "+queueId);
+        LOGGER.info("user name is "+principal.getName());
+        AppDeploymentQueue returnedAppDeploymentQueue=new AppDeploymentQueue();
+        com.wipro.ats.bdre.md.dao.jpa.AppDeploymentQueue appDeploymentQueue=appDeploymentQueueDAO.get(queueId);
+            appDeploymentQueue.setAppDeploymentQueueStatus(appDeploymentQueueStatusDAO.get((short)2));
+            appDeploymentQueueDAO.update(appDeploymentQueue);
+        restWrapper = new RestWrapper(returnedAppDeploymentQueue, RestWrapper.OK);
+    } catch (MetadataException e) {
+        LOGGER.error(e);
+        restWrapper = new RestWrapper(e.getMessage(), RestWrapper.ERROR);
+    }
+        return restWrapper;
+}
 
 }
