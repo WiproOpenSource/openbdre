@@ -16,7 +16,6 @@ package com.wipro.ats.bdre.im.etl.api.sftp;
 
 import com.jcraft.jsch.UIKeyboardInteractive;
 import com.jcraft.jsch.UserInfo;
-import org.apache.log4j.Logger;
 
 import javax.swing.*;
 import java.awt.*;
@@ -25,20 +24,21 @@ import java.awt.*;
  * Created by arijit on 12/30/14.
  */
 public class UIFTPUser implements UserInfo, UIKeyboardInteractive {
-    private static final Logger LOGGER = Logger.getLogger(UIFTPUser.class);
     final GridBagConstraints gbc =
             new GridBagConstraints(0, 0, 1, 1, 1, 1,
                     GridBagConstraints.NORTHWEST,
                     GridBagConstraints.NONE,
                     new Insets(0, 0, 0, 0), 0, 0);
     private String passwd;
-    private JTextField passwordField = (JTextField) new JPasswordField(20);
+    private JTextField passwordField =  new JPasswordField(20);
     private Container panel;
 
+    @Override
     public String getPassword() {
         return passwd;
     }
 
+    @Override
     public boolean promptYesNo(String str) {
         Object[] options = {"yes", "no"};
         int foo = JOptionPane.showOptionDialog(null,
@@ -50,14 +50,17 @@ public class UIFTPUser implements UserInfo, UIKeyboardInteractive {
         return foo == 0;
     }
 
+    @Override
     public String getPassphrase() {
         return null;
     }
 
+    @Override
     public boolean promptPassphrase(String message) {
         return true;
     }
 
+    @Override
     public boolean promptPassword(String message) {
         Object[] ob = {passwordField};
         int result =
@@ -71,10 +74,12 @@ public class UIFTPUser implements UserInfo, UIKeyboardInteractive {
         }
     }
 
+    @Override
     public void showMessage(String message) {
         JOptionPane.showMessageDialog(null, message);
     }
 
+    @Override
     public String[] promptKeyboardInteractive(String destination,
                                               String name,
                                               String instruction,
@@ -121,7 +126,8 @@ public class UIFTPUser implements UserInfo, UIKeyboardInteractive {
             }
             return response;
         } else {
-            return null;  // cancel
+            return null;
+            // cancel
         }
     }
 }

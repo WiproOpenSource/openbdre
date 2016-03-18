@@ -49,7 +49,7 @@ import java.util.concurrent.atomic.AtomicLong;
  */
 class BucketWriter {
 
-  private static final Logger LOG = LoggerFactory
+  private static final Logger LOGGER = LoggerFactory
       .getLogger(BucketWriter.class);
 
   /**
@@ -108,6 +108,7 @@ class BucketWriter {
   protected boolean closed = false;
   AtomicInteger renameTries = new AtomicInteger(0);
 
+  @SuppressWarnings("squid:S00107")
   BucketWriter(long rollInterval, long rollSize, long rollCount, long batchSize,
     Context context, String filePath, String fileName, String inUsePrefix,
     String inUseSuffix, String fileSuffix, CompressionCodec codeC,
@@ -173,7 +174,7 @@ class BucketWriter {
       return fileSystem.getClass().getMethod("isFileClosed",
         Path.class);
     } catch (Exception e) {
-      LOG.warn("isFileClosed is not available in the " +
+      LOGGER.warn("isFileClosed is not available in the " +
         "version of HDFS being used. Flume will not " +
         "attempt to close files if the close fails on " +
         "the first attempt",e);
@@ -181,17 +182,13 @@ class BucketWriter {
     }
   }
 
-  private Boolean isFileClosed(FileSystem fs,
-    Path tmpFilePath) throws Exception {
-    return (Boolean)(isClosedMethod.invoke(fs,
-      tmpFilePath));
-  }
 
   /**
    * open() is called by append()
    * @throws java.io.IOException
    * @throws InterruptedException
    */
+  @SuppressWarnings("squid:S1860")
   private void open() throws IOException, InterruptedException {
     if ((filePath == null) || (writer == null)) {
       throw new IOException("Invalid file settings");
@@ -224,38 +221,33 @@ class BucketWriter {
           + fullFileName + inUseSuffix;
         targetPath = filePath + "/" + fullFileName;
 
-        LOG.info("Creating " + bucketPath);
+        LOGGER.info("Creating " + bucketPath);
         callWithTimeout(new CallRunner<Void>() {
           @Override
           public Void call() throws Exception {
             if (codeC == null) {
               // Need to get reference to FS using above config before underlying
-              // writer does in order to avoid shutdown hook &
-              // IllegalStateExceptions
+              // writer does in order to avoid shutdown hook & IllegalStateExceptions
               if(!mockFsInjected) {
-                fileSystem = new Path(bucketPath).getFileSystem(
-                  config);
+                fileSystem = new Path(bucketPath).getFileSystem(config);
               }
               writer.open(bucketPath);
             } else {
-              // need to get reference to FS before writer does to
-              // avoid shutdown hook
+              // need to get reference to FS before writer does to avoid shutdown hook
               if(!mockFsInjected) {
-                fileSystem = new Path(bucketPath).getFileSystem(
-                  config);
+                fileSystem = new Path(bucketPath).getFileSystem(config);
               }
               writer.open(bucketPath, codeC, compType);
             }
             return null;
           }
         });
-      } catch (Exception ex) {
+      }catch (IOException ioex){
         sinkCounter.incrementConnectionFailedCount();
-        if (ex instanceof IOException) {
-          throw (IOException) ex;
-        } else {
-          throw Throwables.propagate(ex);
-        }
+        throw ioex;
+      }catch (Exception ex) {
+        sinkCounter.incrementConnectionFailedCount();
+        throw Throwables.propagate(ex);
       }
     }
     isClosedMethod = getRefIsClosed();
@@ -265,14 +257,15 @@ class BucketWriter {
     // if time-based rolling is enabled, schedule the roll
     if (rollInterval > 0) {
       Callable<Void> action = new Callable<Void>() {
+        @Override
         public Void call() throws Exception {
-          LOG.debug("Rolling file ({}): Roll scheduled after {} sec elapsed.",
+          LOGGER.debug("Rolling file ({}): Roll scheduled after {} sec elapsed.",
               bucketPath, rollInterval);
           try {
             // Roll the file and remove reference from sfWriters map.
             close(true);
-          } catch(Throwable t) {
-            LOG.error("Unexpected error", t);
+          } catch(Exception ex) {
+            LOGGER.error("Unexpected error", ex);
           }
           return null;
         }
@@ -280,7 +273,6 @@ class BucketWriter {
       timedRollFuture = timedRollerPool.schedule(action, rollInterval,
           TimeUnit.SECONDS);
     }
-
     isOpen = true;
   }
 
@@ -293,6 +285,7 @@ class BucketWriter {
    * @throws java.io.IOException On failure to rename if temp file exists.
    * @throws InterruptedException
    */
+  @SuppressWarnings("squid:S1160")
   public synchronized void close() throws IOException, InterruptedException {
     close(false);
   }
@@ -308,6 +301,7 @@ class BucketWriter {
     };
   }
 
+  @SuppressWarnings("squid:S1188")
   private Callable<Void> createScheduledRenameCallable() {
 
     return new Callable<Void>() {
@@ -319,7 +313,7 @@ class BucketWriter {
       @Override
       public Void call() throws Exception {
         if (renameTries >= maxRenameTries) {
-          LOG.warn("Unsuccessfully attempted to rename " + path + " " +
+          LOGGER.warn("Unsuccessfully attempted to rename " + path + " " +
             maxRenameTries + " times. File may still be open.");
           return null;
         }
@@ -327,10 +321,9 @@ class BucketWriter {
         try {
           renameBucket(path, finalPath, fs);
         } catch (Exception e) {
-          LOG.warn("Renaming file: " + path + " failed. Will " +
+          LOGGER.warn("Renaming file: " + path + " failed. Will " +
             "retry again in " + retryInterval + " seconds.", e);
-          timedRollerPool.schedule(this, retryInterval,
-            TimeUnit.SECONDS);
+          timedRollerPool.schedule(this, retryInterval, TimeUnit.SECONDS);
           return null;
         }
         return null;
@@ -350,25 +343,23 @@ class BucketWriter {
     try {
       flush();
     } catch (IOException e) {
-      LOG.warn("pre-close flush failed", e);
+      LOGGER.warn("pre-close flush failed", e);
     }
-    boolean failedToClose = false;
-    LOG.info("Closing {}", bucketPath);
+    LOGGER.info("Closing {}", bucketPath);
     CallRunner<Void> closeCallRunner = createCloseCallRunner();
     if (isOpen) {
       try {
         callWithTimeout(closeCallRunner);
         sinkCounter.incrementConnectionClosedCount();
       } catch (IOException e) {
-        LOG.warn(
+        LOGGER.warn(
           "failed to close() HDFSWriter for file (" + bucketPath +
             "). Exception follows.", e);
         sinkCounter.incrementConnectionFailedCount();
-        failedToClose = true;
-      }
+        }
       isOpen = false;
     } else {
-      LOG.info("HDFSWriter is already closed: {}", bucketPath);
+      LOGGER.info("HDFSWriter is already closed: {}", bucketPath);
     }
 
     // NOTE: timed rolls go through this codepath as well as other roll types
@@ -387,7 +378,7 @@ class BucketWriter {
       try {
         renameBucket(bucketPath, targetPath, fileSystem);
       } catch(Exception e) {
-        LOG.warn(
+        LOGGER.warn(
           "failed to rename() file (" + bucketPath +
           "). Exception follows.", e);
         sinkCounter.incrementConnectionFailedCount();
@@ -413,13 +404,12 @@ class BucketWriter {
     if (!isBatchComplete()) {
       doFlush();
 
-      if(idleTimeout > 0) {
-        // if the future exists and couldn't be cancelled, that would mean it has already run
-        // or been cancelled
-        if(idleFuture == null || idleFuture.cancel(false)) {
+      // if the future exists and couldn't be cancelled, that would mean it has already run
+      // or been cancelled
+      if(idleTimeout > 0  && (idleFuture == null || idleFuture.cancel(false))) {
           Callable<Void> idleAction = new Callable<Void>() {
             public Void call() throws Exception {
-              LOG.info("Closing idle bucketWriter {} at {}", bucketPath,
+              LOGGER.info("Closing idle bucketWriter {} at {}", bucketPath,
                 System.currentTimeMillis());
               if (isOpen) {
                 close(true);
@@ -432,18 +422,16 @@ class BucketWriter {
         }
       }
     }
-  }
 
   private void runCloseAction() {
     try {
       if(onCloseCallback != null) {
         onCloseCallback.run(onCloseCallbackPath);
       }
-    } catch(Throwable t) {
-      LOG.error("Unexpected error", t);
+    } catch(Exception ex) {
+      LOGGER.error("Unexpected error", ex);
     }
   }
-
   /**
    * doFlush() must only be called by flush()
    * @throws java.io.IOException
@@ -487,10 +475,10 @@ class BucketWriter {
         try {
           idleFuture.get(callTimeout, TimeUnit.MILLISECONDS);
         } catch (TimeoutException ex) {
-          LOG.warn("Timeout while trying to cancel closing of idle file. Idle" +
+          LOGGER.warn("Timeout while trying to cancel closing of idle file. Idle" +
             " file close may have failed", ex);
         } catch (Exception ex) {
-          LOG.warn("Error while trying to cancel closing of idle file. ", ex);
+          LOGGER.warn("Error while trying to cancel closing of idle file. ", ex);
         }
       }
       idleFuture = null;
@@ -516,12 +504,12 @@ class BucketWriter {
             consecutiveUnderReplRotateCount >= maxConsecUnderReplRotations) {
           doRotate = false;
           if (consecutiveUnderReplRotateCount == maxConsecUnderReplRotations) {
-            LOG.error("Hit max consecutive under-replication rotations ({}); " +
+            LOGGER.error("Hit max consecutive under-replication rotations ({}); " +
                 "will not continue rolling files under this path due to " +
                 "under-replication", maxConsecUnderReplRotations);
           }
         } else {
-          LOG.warn("Block Under-replication detected. Rotating file.");
+          LOGGER.warn("Block Under-replication detected. Rotating file.");
         }
         consecutiveUnderReplRotateCount++;
       } else {
@@ -545,13 +533,13 @@ class BucketWriter {
         }
       });
     } catch (IOException e) {
-      LOG.warn("Caught IOException writing to HDFSWriter ({}). Closing file (" +
+      LOGGER.warn("Caught IOException writing to HDFSWriter ({}). Closing file (" +
           bucketPath + ") and rethrowing exception.",
           e.getMessage());
       try {
         close(true);
       } catch (IOException e2) {
-        LOG.warn("Caught IOException while closing file (" +
+        LOGGER.warn("Caught IOException while closing file (" +
              bucketPath + "). Exception follows.", e2);
       }
       throw e;
@@ -581,12 +569,12 @@ class BucketWriter {
     }
 
     if ((rollCount > 0) && (rollCount <= eventCounter)) {
-      LOG.debug("rolling: rollCount: {}, events: {}", rollCount, eventCounter);
+      LOGGER.debug("rolling: rollCount: {}, events: {}", rollCount, eventCounter);
       doRotate = true;
     }
 
     if ((rollSize > 0) && (rollSize <= processSize)) {
-      LOG.debug("rolling: rollSize: {}, bytes: {}", rollSize, processSize);
+      LOGGER.debug("rolling: rollSize: {}, bytes: {}", rollSize, processSize);
       doRotate = true;
     }
 
@@ -619,7 +607,7 @@ class BucketWriter {
       @Override
       public Void call() throws Exception {
         if (fs.exists(srcPath)) { // could block
-          LOG.info("Renaming " + srcPath + " to " + dstPath);
+          LOGGER.info("Renaming " + srcPath + " to " + dstPath);
           renameTries.incrementAndGet();
           fs.rename(srcPath, dstPath); // could block
         }
@@ -701,9 +689,9 @@ class BucketWriter {
       }
     } catch (CancellationException ce) {
       throw new InterruptedException(
-        "Blocked callable interrupted by rotation event");
+        "Blocked callable interrupted by rotation event"+ce);
     } catch (InterruptedException ex) {
-      LOG.warn("Unexpected Exception " + ex.getMessage(), ex);
+      LOGGER.warn("Unexpected Exception " + ex.getMessage(), ex);
       throw ex;
     }
   }

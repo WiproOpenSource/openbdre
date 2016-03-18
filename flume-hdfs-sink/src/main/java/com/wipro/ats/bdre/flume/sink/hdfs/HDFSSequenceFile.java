@@ -30,15 +30,12 @@ import org.apache.hadoop.io.SequenceFile.CompressionType;
 import org.apache.hadoop.io.compress.CompressionCodec;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.config.AutowireCapableBeanFactory;
-import org.springframework.context.ApplicationContext;
-import org.springframework.context.support.ClassPathXmlApplicationContext;
 
 import java.io.IOException;
 
 public class HDFSSequenceFile extends AbstractHDFSWriter {
 
-  private static final Logger logger =
+  private static final Logger LOGGER =
       LoggerFactory.getLogger(HDFSSequenceFile.class);
   private SequenceFile.Writer writer;
   private String writeFormat;
@@ -73,7 +70,7 @@ public class HDFSSequenceFile extends AbstractHDFSWriter {
             context.getSubProperties(SequenceFileSerializerFactory.CTX_PREFIX));
     serializer = SequenceFileSerializerFactory
             .getSerializer(writeFormat, serializerContext);
-    logger.info("writeFormat = " + writeFormat + ", UseRawLocalFileSystem = "
+    LOGGER.info("writeFormat = " + writeFormat + ", UseRawLocalFileSystem = "
         + useRawLocalFileSystem);
   }
 
@@ -98,11 +95,11 @@ public class HDFSSequenceFile extends AbstractHDFSWriter {
       if(hdfs instanceof LocalFileSystem) {
         hdfs = ((LocalFileSystem)hdfs).getRaw();
       } else {
-        logger.warn("useRawLocalFileSystem is set to true but file system " +
+        LOGGER.warn("useRawLocalFileSystem is set to true but file system " +
             "is not of type LocalFileSystem: " + hdfs.getClass().getName());
       }
     }
-    if (conf.getBoolean("hdfs.append.support", false) == true && hdfs.isFile
+    if (conf.getBoolean("hdfs.append.support", false) && hdfs.isFile
             (dstPath)) {
       outStream = hdfs.append(dstPath);
     } else {
