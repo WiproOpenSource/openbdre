@@ -55,7 +55,8 @@ class BucketWriter {
   /**
    * This lock ensures that only one thread can open a file at a time.
    */
-  private static final Integer staticLock = new Integer(1);
+  private static final Integer STATIC_LOCK = new Integer(1);
+  @SuppressWarnings("squid:S1068")
   private Method isClosedMethod = null;
 
   private HDFSWriter writer;
@@ -67,6 +68,7 @@ class BucketWriter {
   private final CompressionType compType;
   private final ScheduledExecutorService timedRollerPool;
   private final PrivilegedExecutor proxyUser;
+  @SuppressWarnings("squid:S1068")
   private volatile String processId;
 
   private final AtomicLong fileExtensionCounter;
@@ -95,7 +97,7 @@ class BucketWriter {
   private final String onCloseCallbackPath;
   private final long callTimeout;
   private final ExecutorService callTimeoutPool;
-  private final int maxConsecUnderReplRotations = 30; // make this config'able?
+  private static final int maxConsecUnderReplRotations = 30; // make this config'able?
 
   private boolean mockFsInjected = false;
 
@@ -188,7 +190,7 @@ class BucketWriter {
    * @throws java.io.IOException
    * @throws InterruptedException
    */
-  @SuppressWarnings("squid:S1860")
+  @SuppressWarnings({"squid:S1860","squid:MethodCyclomaticComplexity"})
   private void open() throws IOException, InterruptedException {
     if ((filePath == null) || (writer == null)) {
       throw new IOException("Invalid file settings");
@@ -203,7 +205,7 @@ class BucketWriter {
     // open() must be called by one thread at a time in the JVM.
     // NOTE: tried synchronizing on the underlying Kerberos principal previously
     // which caused deadlocks. See FLUME-1231.
-    synchronized (staticLock) {
+    synchronized (STATIC_LOCK) {
       checkAndThrowInterruptedException();
 
       try {
@@ -301,7 +303,7 @@ class BucketWriter {
     };
   }
 
-  @SuppressWarnings("squid:S1188")
+  @SuppressWarnings({"squid:S1188","squid:S1170"})
   private Callable<Void> createScheduledRenameCallable() {
 
     return new Callable<Void>() {
@@ -337,6 +339,7 @@ class BucketWriter {
    * @throws java.io.IOException On failure to rename if temp file exists.
    * @throws InterruptedException
    */
+  @SuppressWarnings({"squid:S1160","squid:MethodCyclomaticComplexity", "squid:S1192"})
   public synchronized void close(boolean callCloseCallback)
     throws IOException, InterruptedException {
     checkAndThrowInterruptedException();
@@ -399,6 +402,7 @@ class BucketWriter {
    * @throws java.io.IOException
    * @throws InterruptedException
    */
+  @SuppressWarnings("squid:S1160")
   public synchronized void flush() throws IOException, InterruptedException {
     checkAndThrowInterruptedException();
     if (!isBatchComplete()) {
@@ -408,6 +412,7 @@ class BucketWriter {
       // or been cancelled
       if(idleTimeout > 0  && (idleFuture == null || idleFuture.cancel(false))) {
           Callable<Void> idleAction = new Callable<Void>() {
+            @Override
             public Void call() throws Exception {
               LOGGER.info("Closing idle bucketWriter {} at {}", bucketPath,
                 System.currentTimeMillis());
@@ -459,6 +464,7 @@ class BucketWriter {
    * @throws java.io.IOException
    * @throws InterruptedException
    */
+  @SuppressWarnings({"squid:S1860","squid:MethodCyclomaticComplexity","squid:S134"})
   public synchronized void append(final Event event)
           throws IOException, InterruptedException {
     checkAndThrowInterruptedException();
@@ -623,7 +629,7 @@ class BucketWriter {
   }
 
   private boolean isBatchComplete() {
-    return (batchCounter == 0);
+    return batchCounter == 0;
   }
 
   void setClock(Clock clock) {
@@ -649,6 +655,7 @@ class BucketWriter {
    * for the specified amount of time in milliseconds. In case of timeout
    * cancel the callable and throw an IOException
    */
+  @SuppressWarnings({"squid:MethodCyclomaticComplexity","squid:S00112"})
   private <T> T callWithTimeout(final CallRunner<T> callRunner)
     throws IOException, InterruptedException {
     Future<T> future = callTimeoutPool.submit(new Callable<T>() {
@@ -702,6 +709,7 @@ class BucketWriter {
    * {@linkplain java.security.PrivilegedExceptionAction#run()} call.
    * @param <T>
    */
+  @SuppressWarnings("squid:S00112")
   private interface CallRunner<T> {
     T call() throws Exception;
   }

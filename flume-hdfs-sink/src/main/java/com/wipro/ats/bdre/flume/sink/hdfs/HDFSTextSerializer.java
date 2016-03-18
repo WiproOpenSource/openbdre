@@ -45,15 +45,15 @@ public class HDFSTextSerializer implements SequenceFileSerializer {
   }
 
   @Override
-  public Iterable<Record> serialize(Event e) {
-    Object key = getKey(e);
-    Object value = getValue(e);
+  public Iterable<Record> serialize(Event event) {
+    Object key = getKey(event);
+    Object value = getValue(event);
     return Collections.singletonList(new Record(key, value));
   }
 
-  private Object getKey(Event e) {
+  private Object getKey(Event event) {
     // Write the data to HDFS
-    String timestamp = e.getHeaders().get("timestamp");
+    String timestamp = event.getHeaders().get("timestamp");
     long eventStamp;
 
     if (timestamp == null) {
@@ -64,8 +64,8 @@ public class HDFSTextSerializer implements SequenceFileSerializer {
     return new LongWritable(eventStamp);
   }
 
-  private Object getValue(Event e) {
-    return makeText(e);
+  private Object getValue(Event event) {
+    return makeText(event);
   }
 
   public static class Builder implements SequenceFileSerializer.Builder {

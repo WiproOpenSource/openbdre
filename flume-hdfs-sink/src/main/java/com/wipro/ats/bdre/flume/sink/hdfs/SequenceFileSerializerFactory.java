@@ -28,14 +28,15 @@ public class SequenceFileSerializerFactory {
   private static final Logger LOGGER =
       LoggerFactory.getLogger(SequenceFileSerializerFactory.class);
 
-  private SequenceFileSerializerFactory(){}
-
   /**
    * {@link Context} prefix
    */
   static final String CTX_PREFIX = "writeFormat.";
 
-  @SuppressWarnings("squid:S1166")
+  private SequenceFileSerializerFactory()
+  {}
+
+  @SuppressWarnings({"squid:MethodCyclomaticComplexity","squid:S1166"})
   static SequenceFileSerializer getSerializer(String formatType,
                                               Context context) {
     Preconditions.checkNotNull(formatType, "serialize type must not be null");
@@ -46,7 +47,7 @@ public class SequenceFileSerializerFactory {
       type = SequenceFileSerializerType.valueOf(formatType);
     } catch (IllegalArgumentException e) {
       LOGGER.debug("Not in enum, loading builder class: {}" + formatType);
-      type = SequenceFileSerializerType.Other;
+      type = SequenceFileSerializerType.OTHER;
     }
     Class<? extends SequenceFileSerializer.Builder> builderClass =
         type.getBuilderClass();
