@@ -27,6 +27,8 @@ public class FTPUtil {
     public static final String KNOWN_HOSTS_FILE = "known_hosts";
     private static final Logger LOGGER = Logger.getLogger(FTPUtil.class);
 
+    private FTPUtil(){
+    }
     public static List<String> getKnownFootPrints() {
 
 
@@ -46,12 +48,14 @@ public class FTPUtil {
             BufferedReader bufferedReader = new BufferedReader(fileReader);
             String s;
             while ((s = bufferedReader.readLine()) != null) {
-                if (s.trim().isEmpty()) continue;
+                if (s.trim().isEmpty())
+                    continue;
                 knownFootPrints.add(s);
             }
             bufferedReader.close();
             fileReader.close();
         } catch (FileNotFoundException e) {
+            LOGGER.info(e);
 
         } catch (IOException e) {
             LOGGER.error(e);
@@ -74,20 +78,22 @@ public class FTPUtil {
 
     public static String extractFootPrint(String message) {
         String findText = "RSA key fingerprint is ";
-        if (!message.contains(findText)) return "";
+        String returnMessage;
+        if (!message.contains(findText))
+            return "";
         //Meaasge is like below
 
         //The authenticity of host '192.168.56.101' can't be established.
         //RSA key fingerprint is 2b:e0:2b:60:e7:63:9d:8d:06:da:53:f8:b8:27:b0:5f.
         //Are you sure you want to continue connecting?
 
-        message = message.substring(message.indexOf(findText) + findText.length(), message.length());
+        String message1 = message.substring(message.indexOf(findText) + findText.length(), message.length());
         //message is now
         //2b:e0:2b:60:e7:63:9d:8d:06:da:53:f8:b8:27:b0:5f.
         //Are you sure you want to continue connecting?
 
-        message = message.substring(0, message.indexOf("\nAre you sure you want to continue connecting?"));
+        returnMessage = message1.substring(0, message1.indexOf("\nAre you sure you want to continue connecting?"));
         //message is now 2b:e0:2b:60:e7:63:9d:8d:06:da:53:f8:b8:27:b0:5f.
-        return message.trim();
+        return returnMessage.trim();
     }
 }

@@ -54,7 +54,5 @@ public class DQMain extends BaseStructure {
             }
        if (result != 0)
            throw new DQValidationException(new DQStats());
-        else
-           return;
     }
 }
