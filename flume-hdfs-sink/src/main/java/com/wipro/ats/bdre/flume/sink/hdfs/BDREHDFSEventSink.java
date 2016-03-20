@@ -48,7 +48,7 @@ import java.util.concurrent.TimeUnit;
 /*
 *   Custom HDFS Event Sink class
 * */
-
+@SuppressWarnings("squid:S1068")
 public class BDREHDFSEventSink extends AbstractSink implements Configurable {
   public interface WriterCallback {
     public void run(String filePath);
