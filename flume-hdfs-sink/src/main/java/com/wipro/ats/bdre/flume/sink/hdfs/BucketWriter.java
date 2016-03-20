@@ -56,8 +56,6 @@ class BucketWriter {
    * This lock ensures that only one thread can open a file at a time.
    */
   private static final Integer STATIC_LOCK = new Integer(1);
-  @SuppressWarnings("squid:S1068")
-  private Method isClosedMethod = null;
 
   private HDFSWriter writer;
   private final long rollInterval;
@@ -68,8 +66,6 @@ class BucketWriter {
   private final CompressionType compType;
   private final ScheduledExecutorService timedRollerPool;
   private final PrivilegedExecutor proxyUser;
-  @SuppressWarnings("squid:S1068")
-  private volatile String processId;
 
   private final AtomicLong fileExtensionCounter;
 
@@ -97,7 +93,7 @@ class BucketWriter {
   private final String onCloseCallbackPath;
   private final long callTimeout;
   private final ExecutorService callTimeoutPool;
-  private static final int maxConsecUnderReplRotations = 30; // make this config'able?
+  private static final int MAX_CONSEC_UNDER_REPL_ROTATIONS = 30; // make this config'able?
 
   private boolean mockFsInjected = false;
 
@@ -112,14 +108,14 @@ class BucketWriter {
 
   @SuppressWarnings("squid:S00107")
   BucketWriter(long rollInterval, long rollSize, long rollCount, long batchSize,
-    Context context, String filePath, String fileName, String inUsePrefix,
-    String inUseSuffix, String fileSuffix, CompressionCodec codeC,
-    CompressionType compType, HDFSWriter writer,
-    ScheduledExecutorService timedRollerPool, PrivilegedExecutor proxyUser,
-    SinkCounter sinkCounter, int idleTimeout, WriterCallback onCloseCallback,
-    String onCloseCallbackPath, long callTimeout,
-    ExecutorService callTimeoutPool, long retryInterval,
-    int maxCloseTries,String processId) {
+               Context context, String filePath, String fileName, String inUsePrefix,
+               String inUseSuffix, String fileSuffix, CompressionCodec codeC,
+               CompressionType compType, HDFSWriter writer,
+               ScheduledExecutorService timedRollerPool, PrivilegedExecutor proxyUser,
+               SinkCounter sinkCounter, int idleTimeout, WriterCallback onCloseCallback,
+               String onCloseCallbackPath, long callTimeout,
+               ExecutorService callTimeoutPool, long retryInterval,
+               int maxCloseTries) {
     this.rollInterval = rollInterval;
     this.rollSize = rollSize;
     this.rollCount = rollCount;
@@ -140,7 +136,6 @@ class BucketWriter {
     this.onCloseCallbackPath = onCloseCallbackPath;
     this.callTimeout = callTimeout;
     this.callTimeoutPool = callTimeoutPool;
-    this.processId = processId;
     fileExtensionCounter = new AtomicLong(clock.currentTimeMillis());
 
     this.retryInterval = retryInterval;
@@ -252,7 +247,6 @@ class BucketWriter {
         throw Throwables.propagate(ex);
       }
     }
-    isClosedMethod = getRefIsClosed();
     sinkCounter.incrementConnectionCreatedCount();
     resetCounters();
 
@@ -464,7 +458,7 @@ class BucketWriter {
    * @throws java.io.IOException
    * @throws InterruptedException
    */
-  @SuppressWarnings({"squid:S1860","squid:MethodCyclomaticComplexity","squid:S134"})
+  @SuppressWarnings({"squid:S1860","squid:MethodCyclomaticComplexity","squid:S134","squid:S1160"})
   public synchronized void append(final Event event)
           throws IOException, InterruptedException {
     checkAndThrowInterruptedException();
@@ -506,13 +500,13 @@ class BucketWriter {
       boolean doRotate = true;
 
       if (isUnderReplicated) {
-        if (maxConsecUnderReplRotations > 0 &&
-            consecutiveUnderReplRotateCount >= maxConsecUnderReplRotations) {
+        if (MAX_CONSEC_UNDER_REPL_ROTATIONS > 0 &&
+            consecutiveUnderReplRotateCount >= MAX_CONSEC_UNDER_REPL_ROTATIONS) {
           doRotate = false;
-          if (consecutiveUnderReplRotateCount == maxConsecUnderReplRotations) {
+          if (consecutiveUnderReplRotateCount == MAX_CONSEC_UNDER_REPL_ROTATIONS) {
             LOGGER.error("Hit max consecutive under-replication rotations ({}); " +
                 "will not continue rolling files under this path due to " +
-                "under-replication", maxConsecUnderReplRotations);
+                "under-replication", MAX_CONSEC_UNDER_REPL_ROTATIONS);
           }
         } else {
           LOGGER.warn("Block Under-replication detected. Rotating file.");

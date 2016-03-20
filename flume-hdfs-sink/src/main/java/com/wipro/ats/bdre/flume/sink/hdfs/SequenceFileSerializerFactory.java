@@ -33,8 +33,8 @@ public class SequenceFileSerializerFactory {
    */
   static final String CTX_PREFIX = "writeFormat.";
 
-  private SequenceFileSerializerFactory()
-  {}
+  private SequenceFileSerializerFactory(){
+  }
 
   @SuppressWarnings({"squid:MethodCyclomaticComplexity","squid:S1166"})
   static SequenceFileSerializer getSerializer(String formatType,
@@ -59,7 +59,7 @@ public class SequenceFileSerializerFactory {
         if (c != null && SequenceFileSerializer.Builder.class.isAssignableFrom(c)) {
           builderClass = (Class<? extends SequenceFileSerializer.Builder>) c;
         } else {
-          LOGGER.error("Unable to instantiate MyBuilder from {}", formatType);
+          LOGGER.error("Unable to instantiate AvroEventSerializerBuilder from {}", formatType);
           return null;
         }
       } catch (ClassNotFoundException ex) {

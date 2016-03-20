@@ -68,7 +68,7 @@ public class HDFSTextSerializer implements SequenceFileSerializer {
     return makeText(event);
   }
 
-  public static class Builder implements SequenceFileSerializer.Builder {
+  public static class HDFSTextSerializerBuilder implements SequenceFileSerializer.Builder {
 
     @Override
     public SequenceFileSerializer build(Context context) {

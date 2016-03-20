@@ -473,7 +473,7 @@ public class BDREHDFSEventSink extends AbstractSink implements Configurable {
       suffix, codeC, compType, hdfsWriter, timedRollerPool,
       privExecutor, sinkCounter, idleTimeout, closeCallback,
       lookupPath, callTimeout, callTimeoutPool, retryInterval,
-      tryCount, processId);
+      tryCount);
     if(mockFs != null) {
       bucketWriter.setFileSystem(mockFs);
       bucketWriter.setMockStream(mockWriter);
