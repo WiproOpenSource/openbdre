@@ -158,7 +158,7 @@ public abstract class AbstractHDFSWriter implements HDFSWriter {
    * @throws IllegalAccessException
    * @throws IllegalArgumentException
    */
-  @SuppressWarnings("squid:S1860")
+  @SuppressWarnings("squid:S1160")
   public int getNumCurrentReplicas()
       throws IllegalArgumentException, IllegalAccessException,
           InvocationTargetException {

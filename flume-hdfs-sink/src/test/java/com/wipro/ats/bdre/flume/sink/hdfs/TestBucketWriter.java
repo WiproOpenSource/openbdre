@@ -74,7 +74,7 @@ public class TestBucketWriter {
         "/tmp", "file", "", ".tmp", null, null, SequenceFile.CompressionType.NONE,
         hdfsWriter, timedRollerPool, proxy,
         new SinkCounter("test-bucket-writer-" + System.currentTimeMillis()), 0,
-        null, null, 30000, Executors.newSingleThreadExecutor(), 0, 0);
+        null, null, 30000, Executors.newSingleThreadExecutor(), 0, 0, "1");
 
     Event e = EventBuilder.withBody("foo", Charsets.UTF_8);
     for (int i = 0; i < 1000; i++) {
@@ -99,7 +99,7 @@ public class TestBucketWriter {
       SequenceFile.CompressionType.NONE, hdfsWriter,timedRollerPool,
       proxy, new SinkCounter("test-bucket-writer-" +
       System.currentTimeMillis()),0, null, null, 30000,
-      Executors.newSingleThreadExecutor(), 0, 0);
+      Executors.newSingleThreadExecutor(), 0, 0, "1");
 
     Event e = EventBuilder.withBody("foo", Charsets.UTF_8);
     for (int i = 0; i < 1000; i++) {
@@ -131,7 +131,7 @@ public class TestBucketWriter {
       public void run(String filePath) {
         calledBack.set(true);
       }
-    }, null, 30000, Executors.newSingleThreadExecutor(), 0, 0);
+    }, null, 30000, Executors.newSingleThreadExecutor(), 0, 0, "1");
 
     Event e = EventBuilder.withBody("foo", Charsets.UTF_8);
     long startNanos = System.nanoTime();
@@ -150,7 +150,7 @@ public class TestBucketWriter {
       hdfsWriter, timedRollerPool, proxy,
       new SinkCounter("test-bucket-writer-"
         + System.currentTimeMillis()), 0, null, null, 30000,
-      Executors.newSingleThreadExecutor(), 0, 0);
+      Executors.newSingleThreadExecutor(), 0, 0, "1");
     // write one more event (to reopen a new file so we will roll again later)
     bucketWriter.append(e);
 
@@ -233,7 +233,7 @@ public class TestBucketWriter {
       timedRollerPool, proxy, new SinkCounter("test-bucket-writer-"
       + System.currentTimeMillis()),
       0, null, null, 30000, Executors.newSingleThreadExecutor(),
-      0, 0);
+      0, 0, "1");
 
     Event e = EventBuilder.withBody("foo", Charsets.UTF_8);
     for (int i = 0; i < NUM_EVENTS - 1; i++) {
@@ -257,7 +257,7 @@ public class TestBucketWriter {
         SequenceFile.CompressionType.NONE, hdfsWriter,
         timedRollerPool, proxy, new SinkCounter("test-bucket-writer-"
         + System.currentTimeMillis()), 0, null, null, 30000,
-        Executors.newSingleThreadExecutor(), 0, 0);
+        Executors.newSingleThreadExecutor(), 0, 0, "1");
 
       // Need to override system time use for test so we know what to expect
       final long testTime = System.currentTimeMillis();
@@ -285,7 +285,7 @@ public class TestBucketWriter {
         SequenceFile.CompressionType.NONE, hdfsWriter,
         timedRollerPool, proxy, new SinkCounter(
         "test-bucket-writer-" + System.currentTimeMillis()), 0,
-        null, null, 30000, Executors.newSingleThreadExecutor(), 0, 0);
+        null, null, 30000, Executors.newSingleThreadExecutor(), 0, 0, "1");
 
         // Need to override system time use for test so we know what to expect
 
@@ -318,7 +318,7 @@ public class TestBucketWriter {
       SequenceFile.CompressionType.BLOCK, hdfsWriter,
       timedRollerPool, proxy, new SinkCounter("test-bucket-writer-"
       + System.currentTimeMillis()), 0, null, null, 30000,
-      Executors.newSingleThreadExecutor(), 0, 0);
+      Executors.newSingleThreadExecutor(), 0, 0, "1");
 
     // Need to override system time use for test so we know what to expect
     final long testTime = System.currentTimeMillis();
@@ -349,7 +349,7 @@ public class TestBucketWriter {
       SequenceFile.CompressionType.NONE, hdfsWriter,
       timedRollerPool, proxy, new SinkCounter(
         "test-bucket-writer-" + System.currentTimeMillis()), 0,
-      null, null, 30000, Executors.newSingleThreadExecutor(), 0, 0);
+      null, null, 30000, Executors.newSingleThreadExecutor(), 0, 0, "1");
 
     Event e = EventBuilder.withBody("foo", Charsets.UTF_8);
     bucketWriter.append(e);
@@ -369,7 +369,7 @@ public class TestBucketWriter {
       SequenceFile.CompressionType.NONE, hdfsWriter,
       timedRollerPool, proxy, new SinkCounter(
         "test-bucket-writer-" + System.currentTimeMillis()), 0,
-      null, null, 30000, Executors.newSingleThreadExecutor(), 0, 0);
+      null, null, 30000, Executors.newSingleThreadExecutor(), 0, 0, "1");
 
     Event e = EventBuilder.withBody("foo", Charsets.UTF_8);
     bucketWriter.append(e);
@@ -395,7 +395,7 @@ public class TestBucketWriter {
       public void run(String filePath) {
         callbackCalled.set(true);
       }
-    }, "blah", 30000, Executors.newSingleThreadExecutor(), 0, 0);
+    }, "blah", 30000, Executors.newSingleThreadExecutor(), 0, 0, "1");
 
     Event e = EventBuilder.withBody("foo", Charsets.UTF_8);
     bucketWriter.append(e);
@@ -445,7 +445,7 @@ public class TestBucketWriter {
       new SinkCounter(
         "test-bucket-writer-" + System.currentTimeMillis()),
       0, null, null, 30000, Executors.newSingleThreadExecutor(), 1,
-      numberOfRetriesRequired);
+      numberOfRetriesRequired, "1");
 
     bucketWriter.setFileSystem(mockFs);
     // At this point, we checked if isFileClosed is available in

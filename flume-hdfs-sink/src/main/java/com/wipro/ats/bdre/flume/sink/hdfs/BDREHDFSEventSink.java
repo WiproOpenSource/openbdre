@@ -122,6 +122,7 @@ public class BDREHDFSEventSink extends AbstractSink implements Configurable {
   private SinkCounter sinkCounter;
 
   private volatile int idleTimeout;
+  private Clock clock;
   private FileSystem mockFs;
   private HDFSWriter mockWriter;
   private final Object sfWritersLock = new Object();
@@ -285,7 +286,9 @@ public class BDREHDFSEventSink extends AbstractSink implements Configurable {
     }
 
     this.useLocalTime = context.getBoolean("hdfs.useLocalTimeStamp", false);
-
+    if(useLocalTime) {
+      clock = new SystemClock();
+    }
 
     if (sinkCounter == null) {
       sinkCounter = new SinkCounter(getName());
@@ -473,7 +476,7 @@ public class BDREHDFSEventSink extends AbstractSink implements Configurable {
       suffix, codeC, compType, hdfsWriter, timedRollerPool,
       privExecutor, sinkCounter, idleTimeout, closeCallback,
       lookupPath, callTimeout, callTimeoutPool, retryInterval,
-      tryCount);
+      tryCount, processId);
     if(mockFs != null) {
       bucketWriter.setFileSystem(mockFs);
       bucketWriter.setMockStream(mockWriter);

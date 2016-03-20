@@ -47,6 +47,7 @@ import java.util.concurrent.atomic.AtomicLong;
  * This class does file rolling and handles file formats and serialization.
  * Only the public methods in this class are thread safe.
  */
+@SuppressWarnings("squid:S1068")
 class BucketWriter {
 
   private static final Logger LOGGER = LoggerFactory
@@ -56,7 +57,7 @@ class BucketWriter {
    * This lock ensures that only one thread can open a file at a time.
    */
   private static final Integer STATIC_LOCK = new Integer(1);
-
+  private Method isClosedMethod = null;
   private HDFSWriter writer;
   private final long rollInterval;
   private final long rollSize;
@@ -66,7 +67,7 @@ class BucketWriter {
   private final CompressionType compType;
   private final ScheduledExecutorService timedRollerPool;
   private final PrivilegedExecutor proxyUser;
-
+  private volatile String processId;
   private final AtomicLong fileExtensionCounter;
 
   private long eventCounter;
@@ -115,7 +116,7 @@ class BucketWriter {
                SinkCounter sinkCounter, int idleTimeout, WriterCallback onCloseCallback,
                String onCloseCallbackPath, long callTimeout,
                ExecutorService callTimeoutPool, long retryInterval,
-               int maxCloseTries) {
+               int maxCloseTries,String processId) {
     this.rollInterval = rollInterval;
     this.rollSize = rollSize;
     this.rollCount = rollCount;
@@ -136,6 +137,7 @@ class BucketWriter {
     this.onCloseCallbackPath = onCloseCallbackPath;
     this.callTimeout = callTimeout;
     this.callTimeoutPool = callTimeoutPool;
+    this.processId = processId;
     fileExtensionCounter = new AtomicLong(clock.currentTimeMillis());
 
     this.retryInterval = retryInterval;
@@ -144,7 +146,6 @@ class BucketWriter {
     isUnderReplicated = false;
     this.writer.configure(context);
   }
-
   @VisibleForTesting
   void setFileSystem(FileSystem fs) {
     this.fileSystem = fs;
@@ -247,6 +248,7 @@ class BucketWriter {
         throw Throwables.propagate(ex);
       }
     }
+    isClosedMethod = getRefIsClosed();
     sinkCounter.incrementConnectionCreatedCount();
     resetCounters();
 

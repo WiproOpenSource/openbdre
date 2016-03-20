@@ -140,7 +140,7 @@ public class TestBDREHDFSEventSink {
     context.put("hdfs.rollInterval", "0");
     context.put("hdfs.rollSize", "0");
     context.put("hdfs.batchSize", String.valueOf(batchSize));
-    context.put("hdfs.writeFormat", "TEXT");
+    context.put("hdfs.writeFormat", "Text");
     context.put("hdfs.useRawLocalFileSystem",
         Boolean.toString(useRawLocalFileSystem));
     context.put("hdfs.fileType", "DataStream");
@@ -292,7 +292,7 @@ public class TestBDREHDFSEventSink {
     context.put("hdfs.filePrefix", fileName);
     context.put("hdfs.rollCount", String.valueOf(rollCount));
     context.put("hdfs.batchSize", String.valueOf(batchSize));
-    context.put("hdfs.writeFormat", "TEXT");
+    context.put("hdfs.writeFormat", "Text");
     context.put("hdfs.fileType", "DataStream");
 
     Configurables.configure(sink, context);
@@ -370,7 +370,7 @@ public class TestBDREHDFSEventSink {
     context.put("hdfs.filePrefix", fileName);
     context.put("hdfs.rollCount", String.valueOf(rollCount));
     context.put("hdfs.batchSize", String.valueOf(batchSize));
-    context.put("hdfs.writeFormat", "TEXT");
+    context.put("hdfs.writeFormat", "Text");
     context.put("hdfs.fileType", "DataStream");
     context.put("serializer", "AVRO_EVENT");
 
