@@ -48,7 +48,7 @@ import java.util.concurrent.TimeUnit;
 /*
 *   Custom HDFS Event Sink class
 * */
-
+@SuppressWarnings("squid:S1068")
 public class BDREHDFSEventSink extends AbstractSink implements Configurable {
   public interface WriterCallback {
     public void run(String filePath);
@@ -59,26 +59,26 @@ public class BDREHDFSEventSink extends AbstractSink implements Configurable {
 
   private static String DIRECTORY_DELIMITER = System.getProperty("file.separator");
 
-  private static final long defaultRollInterval = 30;
-  private static final long defaultRollSize = 1024;
-  private static final long defaultRollCount = 10;
-  private static final String defaultFileName = "FlumeData";
-  private static final String defaultSuffix = "";
-  private static final String defaultInUsePrefix = "";
-  private static final String defaultInUseSuffix = ".tmp";
-  private static final long defaultBatchSize = 100;
-  private static final String defaultFileType = HDFSWriterFactory.SEQUENCE_FILE_TYPE;
-  private static final int defaultMaxOpenFiles = 5000;
+  private static final long DEFAULT_ROLL_INTERVAL = 30;
+  private static final long DEFAULT_ROLL_SIZE = 1024;
+  private static final long DEFAULT_ROLL_COUNT = 10;
+  private static final String DEFAULT_FILE_NAME = "FlumeData";
+  private static final String DEFAULT_SUFFIX = "";
+  private static final String DEFAULT_IN_USE_PREFIX = "";
+  private static final String DEFAULT_IN_USE_SUFFIX = ".tmp";
+  private static final long DEFAULT_BATCH_SIZE = 100;
+  private static final String DEFAULT_FILE_TYPE = HDFSWriterFactory.SEQUENCE_FILE_TYPE;
+  private static final int DEFAULT_MAX_OPEN_FILES = 5000;
   // Time between close retries, in seconds
-  private static final long defaultRetryInterval = 180;
+  private static final long DEFAULT_RETRY_INTERVAL = 180;
   // Retry forever.
-  private static final int defaultTryCount = Integer.MAX_VALUE;
+  private static final int DEFAULT_TRY_COUNT = Integer.MAX_VALUE;
 
   /**
    * Default length of time we wait for blocking BucketWriter calls
    * before timing out the operation. Intended to prevent server hangs.
    */
-  private static final long defaultCallTimeout = 10000;
+  private static final long DEFAULT_CALL_TIMEOUT = 10000;
   /**
    * Default number of threads available for tasks
    * such as append/open/close/flush with hdfs.
@@ -86,8 +86,8 @@ public class BDREHDFSEventSink extends AbstractSink implements Configurable {
    * the case that they take too long. In which
    * case we create a new file and move on.
    */
-  private static final int defaultThreadPoolSize = 10;
-  private static final int defaultRollTimerPoolSize = 1;
+  private static final int DEFAULT_THREAD_POOL_SIZE = 10;
+  private static final int DEFAULT_ROLL_TIMER_POOL_SIZE = 1;
 
   private final HDFSWriterFactory writerFactory;
   private WriterLinkedHashMap sfWriters;
@@ -181,43 +181,44 @@ public class BDREHDFSEventSink extends AbstractSink implements Configurable {
 
   // read configuration and setup thresholds
   @Override
+  @SuppressWarnings("squid:MethodCyclomaticComplexity")
   public void configure(Context context) {
     this.context = context;
 
     filePath = Preconditions.checkNotNull(
         context.getString("hdfs.path"), "hdfs.path is required");
-    fileName = context.getString("hdfs.filePrefix", defaultFileName);
-    this.suffix = context.getString("hdfs.fileSuffix", defaultSuffix);
-    inUsePrefix = context.getString("hdfs.inUsePrefix", defaultInUsePrefix);
-    inUseSuffix = context.getString("hdfs.inUseSuffix", defaultInUseSuffix);
+    fileName = context.getString("hdfs.filePrefix", DEFAULT_FILE_NAME);
+    this.suffix = context.getString("hdfs.fileSuffix", DEFAULT_SUFFIX);
+    inUsePrefix = context.getString("hdfs.inUsePrefix", DEFAULT_IN_USE_PREFIX);
+    inUseSuffix = context.getString("hdfs.inUseSuffix", DEFAULT_IN_USE_SUFFIX);
     String tzName = context.getString("hdfs.timeZone");
     timeZone = tzName == null ? null : TimeZone.getTimeZone(tzName);
-    rollInterval = context.getLong("hdfs.rollInterval", defaultRollInterval);
-    rollSize = context.getLong("hdfs.rollSize", defaultRollSize);
-    rollCount = context.getLong("hdfs.rollCount", defaultRollCount);
-    batchSize = context.getLong("hdfs.batchSize", defaultBatchSize);
+    rollInterval = context.getLong("hdfs.rollInterval", DEFAULT_ROLL_INTERVAL);
+    rollSize = context.getLong("hdfs.rollSize", DEFAULT_ROLL_SIZE);
+    rollCount = context.getLong("hdfs.rollCount", DEFAULT_ROLL_COUNT);
+    batchSize = context.getLong("hdfs.batchSize", DEFAULT_BATCH_SIZE);
     idleTimeout = context.getInteger("hdfs.idleTimeout", 0);
     String codecName = context.getString("hdfs.codeC");
-    fileType = context.getString("hdfs.fileType", defaultFileType);
-    maxOpenFiles = context.getInteger("hdfs.maxOpenFiles", defaultMaxOpenFiles);
-    callTimeout = context.getLong("hdfs.callTimeout", defaultCallTimeout);
+    fileType = context.getString("hdfs.fileType", DEFAULT_FILE_TYPE);
+    maxOpenFiles = context.getInteger("hdfs.maxOpenFiles", DEFAULT_MAX_OPEN_FILES);
+    callTimeout = context.getLong("hdfs.callTimeout", DEFAULT_CALL_TIMEOUT);
     threadsPoolSize = context.getInteger("hdfs.threadsPoolSize",
-        defaultThreadPoolSize);
+            DEFAULT_THREAD_POOL_SIZE);
     rollTimerPoolSize = context.getInteger("hdfs.rollTimerPoolSize",
-        defaultRollTimerPoolSize);
+            DEFAULT_ROLL_TIMER_POOL_SIZE);
     String kerbConfPrincipal = context.getString("hdfs.kerberosPrincipal");
     String kerbKeytab = context.getString("hdfs.kerberosKeytab");
     String proxyUser = context.getString("hdfs.proxyUser");
-    tryCount = context.getInteger("hdfs.closeTries", defaultTryCount);
+    tryCount = context.getInteger("hdfs.closeTries", DEFAULT_TRY_COUNT);
     processId = context.getString("hdfs.processId");
     if(tryCount <= 0) {
       LOGGER.warn("Retry count value : " + tryCount + " is not " +
         "valid. The sink will try to close the file until the file " +
         "is eventually closed.");
-      tryCount = defaultTryCount;
+      tryCount = DEFAULT_TRY_COUNT;
     }
     retryInterval = context.getLong("hdfs.retryInterval",
-      defaultRetryInterval);
+            DEFAULT_RETRY_INTERVAL);
     if(retryInterval <= 0) {
       LOGGER.warn("Retry Interval value: " + retryInterval + " is not " +
         "valid. If the first close of a file fails, " +
@@ -232,7 +233,6 @@ public class BDREHDFSEventSink extends AbstractSink implements Configurable {
       compType = CompressionType.NONE;
     } else {
       codeC = getCodec(codecName);
-      // TODO : set proper compression type
       compType = CompressionType.BLOCK;
     }
 
@@ -357,6 +357,7 @@ public class BDREHDFSEventSink extends AbstractSink implements Configurable {
    * This method is not thread safe.
    */
   @Override
+  @SuppressWarnings("squid:MethodCyclomaticComplexity")
   public Status process() throws EventDeliveryException {
     Channel channel = getChannel();
     Transaction transaction = channel.getTransaction();
@@ -445,7 +446,7 @@ public class BDREHDFSEventSink extends AbstractSink implements Configurable {
     }
   }
 
-  @SuppressWarnings("squid:S1166")
+  @SuppressWarnings({"squid:S1166","squid:S1226"})
   private void writeTheDataToHDFS(Event event, String realPath, String realName, String lookupPath, BucketWriter bucketWriter, WriterCallback closeCallback) throws IOException, InterruptedException {
     HDFSWriter hdfsWriter;
     try {
@@ -472,7 +473,7 @@ public class BDREHDFSEventSink extends AbstractSink implements Configurable {
       suffix, codeC, compType, hdfsWriter, timedRollerPool,
       privExecutor, sinkCounter, idleTimeout, closeCallback,
       lookupPath, callTimeout, callTimeoutPool, retryInterval,
-      tryCount, processId);
+      tryCount);
     if(mockFs != null) {
       bucketWriter.setFileSystem(mockFs);
       bucketWriter.setMockStream(mockWriter);
@@ -501,13 +502,13 @@ public class BDREHDFSEventSink extends AbstractSink implements Configurable {
     }
 
     // shut down all our thread pools
-    ExecutorService toShutdown[] = {callTimeoutPool, timedRollerPool};
+    ExecutorService [] toShutdown = {callTimeoutPool, timedRollerPool};
     for (ExecutorService execService : toShutdown) {
       execService.shutdown();
       try {
-        while (execService.isTerminated() == false) {
+        while (!execService.isTerminated()) {
           execService.awaitTermination(
-                  Math.max(defaultCallTimeout, callTimeout), TimeUnit.MILLISECONDS);
+                  Math.max(DEFAULT_CALL_TIMEOUT, callTimeout), TimeUnit.MILLISECONDS);
         }
       } catch (InterruptedException ex) {
         LOGGER.warn("shutdown interrupted on " + execService, ex);
