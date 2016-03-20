@@ -185,7 +185,7 @@ public class AvroEventSerializer implements EventSerializer, Configurable {
     return false;
   }
 
-  public static class MyBuilder implements EventSerializer.Builder {
+  public static class AvroEventSerializerBuilder implements EventSerializer.Builder {
 
     @Override
     public EventSerializer build(Context context, OutputStream out) {

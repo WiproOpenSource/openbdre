@@ -63,7 +63,7 @@ public class HDFSSequenceFile extends AbstractHDFSWriter {
 
     // use binary writable serialize by default
     writeFormat = context.getString("hdfs.writeFormat",
-      SequenceFileSerializerType.Writable.name());
+      SequenceFileSerializerType.WRITABLE.name());
     useRawLocalFileSystem = context.getBoolean("hdfs.useRawLocalFileSystem",
         false);
     serializerContext = new Context(
@@ -88,6 +88,7 @@ public class HDFSSequenceFile extends AbstractHDFSWriter {
     open(dstPath, codeC, compType, conf, hdfs);
   }
 
+  @SuppressWarnings("squid:S1226")
   protected void open(Path dstPath, CompressionCodec codeC,
       CompressionType compType, Configuration conf, FileSystem hdfs)
           throws IOException {
