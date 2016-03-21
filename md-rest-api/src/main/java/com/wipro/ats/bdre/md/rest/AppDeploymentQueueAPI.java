@@ -1,19 +1,21 @@
 package com.wipro.ats.bdre.md.rest;
 
+import com.wipro.ats.bdre.MDConfig;
 import com.wipro.ats.bdre.exception.MetadataException;
 import com.wipro.ats.bdre.md.api.util.AddJson;
 import com.wipro.ats.bdre.md.app.AppStore;
+import com.wipro.ats.bdre.md.app.AppValues;
+import com.wipro.ats.bdre.md.app.StoreJson;
 import com.wipro.ats.bdre.md.beans.table.AppDeploymentQueue;
 import com.wipro.ats.bdre.md.beans.table.Process;
 import com.wipro.ats.bdre.md.beans.table.Properties;
-import com.wipro.ats.bdre.md.dao.AppDeploymentQueueDAO;
-import com.wipro.ats.bdre.md.dao.ProcessDAO;
-import com.wipro.ats.bdre.md.dao.PropertiesDAO;
-import com.wipro.ats.bdre.md.dao.jpa.AppDeploymentQueueStatus;
-import com.wipro.ats.bdre.md.dao.jpa.Users;
+import com.wipro.ats.bdre.md.dao.*;
 import com.wipro.ats.bdre.md.rest.beans.ProcessExport;
 import com.wipro.ats.bdre.md.rest.util.BindingResultError;
 import com.wipro.ats.bdre.md.rest.util.DateConverter;
+import org.apache.commons.exec.CommandLine;
+import org.apache.commons.exec.DefaultExecutor;
+import org.apache.commons.exec.ExecuteException;
 import org.apache.log4j.Logger;
 import org.codehaus.jackson.map.DeserializationConfig;
 import org.codehaus.jackson.map.ObjectMapper;
@@ -23,14 +25,11 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
-import java.io.BufferedReader;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.IOException;
+import java.io.*;
 import java.security.Principal;
 import java.util.ArrayList;
 import java.util.List;
-
+import java.util.UUID;
 /**
  * Created by cloudera on 3/8/16.
  */
@@ -46,9 +45,201 @@ public class AppDeploymentQueueAPI {
     private ProcessDAO processDAO;
     @Autowired
     private PropertiesDAO propertiesDAO;
+    @Autowired
+    private AppDeploymentQueueStatusDAO appDeploymentQueueStatusDAO;
+    @Autowired
+    private UsersDAO usersDAO;
+    @RequestMapping(value = {"/", ""}, method = RequestMethod.POST)
+    @ResponseBody
+    public
+    RestWrapper insert(@ModelAttribute("acq")
+                       @Valid AppDeploymentQueue appDeploymentQueue, BindingResult bindingResult, Principal principal) {
+        RestWrapper restWrapper = null;
+        if (bindingResult.hasErrors()) {
+            BindingResultError bindingResultError = new BindingResultError();
+            return bindingResultError.errorMessage(bindingResult);
+        }
+            AppDeploymentQueue returnedAppDeploymentQueue=new AppDeploymentQueue();
+        ProcessExport processExport = new ProcessExport();
+        try{
+            LOGGER.info("app domain = "+appDeploymentQueue.getAppDomain()+"app name = "+appDeploymentQueue.getAppName()+" processID = "+appDeploymentQueue.getProcessId());
 
 
-   /**
+            Process process = new Process();
+            process.setProcessId(appDeploymentQueue.getProcessId());
+            List<Process> processList = new ArrayList<>();
+            List<com.wipro.ats.bdre.md.dao.jpa.Process> daoProcessList = processDAO.selectProcessList(appDeploymentQueue.getProcessId());
+            for (com.wipro.ats.bdre.md.dao.jpa.Process daoProcess : daoProcessList) {
+                Process tableProcess = new Process();
+                tableProcess.setProcessId(daoProcess.getProcessId());
+                tableProcess.setBusDomainId(daoProcess.getBusDomain().getBusDomainId());
+                if (daoProcess.getWorkflowType() != null) {
+                    tableProcess.setWorkflowId(daoProcess.getWorkflowType().getWorkflowId());
+                }
+                tableProcess.setDescription(daoProcess.getDescription());
+                tableProcess.setProcessName(daoProcess.getProcessName());
+                tableProcess.setProcessTypeId(daoProcess.getProcessType().getProcessTypeId());
+                if (daoProcess.getProcess() != null) {
+                    tableProcess.setParentProcessId(daoProcess.getProcess().getProcessId());
+                }
+                tableProcess.setCanRecover(daoProcess.getCanRecover());
+                if (daoProcess.getProcessTemplate() != null) {
+                    tableProcess.setProcessTemplateId(daoProcess.getProcessTemplate().getProcessTemplateId());
+                }
+                tableProcess.setEnqProcessId(daoProcess.getEnqueuingProcessId());
+                tableProcess.setNextProcessIds(daoProcess.getNextProcessId());
+                tableProcess.setBatchPattern(daoProcess.getBatchCutPattern());
+                if (daoProcess.getBatchCutPattern() != null) {
+                    tableProcess.setTableAddTS(DateConverter.dateToString(daoProcess.getAddTs()));
+                }
+                tableProcess.setTableEditTS(DateConverter.dateToString(daoProcess.getEditTs()));
+                tableProcess.setDeleteFlag(daoProcess.getDeleteFlag());
+                tableProcess.setProcessCode(daoProcess.getProcessCode());
+                processList.add(tableProcess);
+            }
+            List<Properties> propertiesList = new ArrayList<>();
+            for (com.wipro.ats.bdre.md.dao.jpa.Process process1 : daoProcessList){
+                List<com.wipro.ats.bdre.md.dao.jpa.Properties> daoPropertiesList = propertiesDAO.getByProcessId(process1);
+                for (com.wipro.ats.bdre.md.dao.jpa.Properties daoProperties : daoPropertiesList) {
+                    Properties tableProperties = new Properties();
+                    tableProperties.setProcessId(daoProperties.getProcess().getProcessId());
+                    tableProperties.setConfigGroup(daoProperties.getConfigGroup());
+                    tableProperties.setKey(daoProperties.getId().getPropKey());
+                    tableProperties.setValue(daoProperties.getPropValue());
+                    tableProperties.setDescription(daoProperties.getDescription());
+                    propertiesList.add(tableProperties);
+                }}
+            processExport.setProcessList(processList);
+            processExport.setPropertiesList(propertiesList);
+            LOGGER.info("export object is "+processExport);
+            AddJson addJson=new AddJson();
+            String status=addJson.addJsonToProcessId(appDeploymentQueue.getProcessId().toString(),processExport);
+            LOGGER.info("status of process.json addition "+status);
+            com.wipro.ats.bdre.md.dao.jpa.AppDeploymentQueue jpaAppDeploymentQueue=new com.wipro.ats.bdre.md.dao.jpa.AppDeploymentQueue();
+            jpaAppDeploymentQueue.setAppDeploymentQueueStatus(appDeploymentQueueStatusDAO.get((short) 0));
+            jpaAppDeploymentQueue.setProcess(processDAO.get(appDeploymentQueue.getProcessId()));
+            jpaAppDeploymentQueue.setAppDomain(appDeploymentQueue.getAppDomain());
+            jpaAppDeploymentQueue.setAppName(appDeploymentQueue.getAppName());
+            jpaAppDeploymentQueue.setUsers(usersDAO.get(principal.getName()));
+            Long adqId=appDeploymentQueueDAO.insert(jpaAppDeploymentQueue);
+            LOGGER.info("app deployment queue Id is "+adqId);
+             returnedAppDeploymentQueue.setProcessId(appDeploymentQueue.getProcessId());
+             returnedAppDeploymentQueue.setAppName(appDeploymentQueue.getAppName());
+             returnedAppDeploymentQueue.setAppDomain(appDeploymentQueue.getAppDomain());
+             returnedAppDeploymentQueue.setUsername(principal.getName());
+             returnedAppDeploymentQueue.setAppDeploymentQueueId(adqId);
+             returnedAppDeploymentQueue.setAppDeploymentStatusId((short) 0);
+             restWrapper = new RestWrapper(returnedAppDeploymentQueue, RestWrapper.OK);
+        } catch (MetadataException e) {
+            LOGGER.error(e);
+            restWrapper = new RestWrapper(e.getMessage(), RestWrapper.ERROR);
+        }
+        return restWrapper;
+    }
+
+
+    @RequestMapping(value = "/merge/{id}", method = RequestMethod.POST)
+    @ResponseBody
+    public
+    RestWrapper merge(@PathVariable("id") Long queueId, Principal principal) {
+        RestWrapper restWrapper = null;
+        LOGGER.info("queue id is "+queueId);
+        LOGGER.info("user name is "+principal.getName());
+        AppDeploymentQueue returnedAppDeploymentQueue=new AppDeploymentQueue();
+        try{
+            String temp;
+            BufferedReader br = null;
+            String jsonfile="";
+            String homeDir = System.getProperty("user.home");
+            LOGGER.info("home directory" + homeDir);
+            br = new BufferedReader(new FileReader(homeDir+"/bdreappstore/store.json"));
+            while ((temp=br.readLine()) != null) {
+                jsonfile=jsonfile+temp;
+            }
+            ObjectMapper mapper = new ObjectMapper();
+            mapper.configure(DeserializationConfig.Feature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+            AppStore appStore = mapper.readValue(jsonfile, AppStore.class);
+            LOGGER.info("size of app catagory is "+appStore.getApplicationList().size());
+            com.wipro.ats.bdre.md.dao.jpa.AppDeploymentQueue appDeploymentQueue=appDeploymentQueueDAO.get(queueId);
+            LOGGER.info("AppDeploymentQueue  is "+appDeploymentQueue);
+            for (StoreJson storeJson:appStore.getApplicationList())
+            {
+                if (storeJson.getId().equals(appDeploymentQueue.getAppDomain()))
+                {
+                    LOGGER.info("no of apps in this catagory without updating is "+storeJson.getColumns().size());
+                    int alreadyExistedApp=0;
+                    AppValues addedApp=new AppValues();
+                    for (AppValues appValues:storeJson.getColumns())
+                    {
+                        if (appValues.getName().equals(appDeploymentQueue.getAppName()))
+                        {
+                            alreadyExistedApp=1;
+                        }
+                    }
+
+                    if (alreadyExistedApp==0)
+                    {
+                        UUID idOne = UUID.randomUUID();
+                        String temprory=storeJson.getId()+"/"+appDeploymentQueue.getAppName().toLowerCase().replace(" ","_");
+                        addedApp.setCategory("Category 1");
+                        addedApp.setDescription(appDeploymentQueue.getAppName());
+                        addedApp.setName(appDeploymentQueue.getAppName());
+                        addedApp.setIcon(temprory+"/analytic.png");
+                        addedApp.setLocation("bdreappstore-apps/"+temprory+".zip");
+                        addedApp.setId(idOne.toString());
+                    }
+                    storeJson.getColumns().add(addedApp);
+                    LOGGER.info("no of apps in this catagory after updating is "+storeJson.getColumns().size());
+
+                }
+            }
+            ObjectMapper mapper1 = new ObjectMapper();
+               FileWriter fileOut = new FileWriter(homeDir+"/bdreappstore/store.json");
+                LOGGER.info(fileOut);
+                 mapper1.writeValue(new File(homeDir+"/bdreappstore/store.json"),appStore);
+
+            returnedAppDeploymentQueue.setUsername(appDeploymentQueue.getUsers().getUsername());
+            returnedAppDeploymentQueue.setAppDomain(appDeploymentQueue.getAppDomain());
+            returnedAppDeploymentQueue.setAppName(appDeploymentQueue.getAppName());
+            returnedAppDeploymentQueue.setProcessId(appDeploymentQueue.getProcess().getProcessId());
+            returnedAppDeploymentQueue.setAppDeploymentQueueId(appDeploymentQueue.getAppDeploymentQueueId());
+            returnedAppDeploymentQueue.setAppDeploymentStatusId(appDeploymentQueue.getAppDeploymentQueueStatus().getAppDeploymentStatusId());
+
+                int iExitValue;
+            String sCommandString;
+            String[] command = {MDConfig.getProperty("deploy.script-path") + "/appstore-push.sh",appDeploymentQueue.getProcess().getProcessId().toString(),appDeploymentQueue.getAppDomain().toString(),appDeploymentQueue.getAppName().toLowerCase().replace(" ","_").toString()};
+
+            sCommandString = "sh "+command[0]+" "+command[1]+" "+command[2]+" "+command[3];
+              iExitValue=AppDeploymentQueueAPI.pushToAppstore(sCommandString);
+              if (iExitValue!=0){
+                  LOGGER.info("App could not be sent in appstore with exit code is "+iExitValue);
+              }
+            else
+              {
+              LOGGER.info("App exported to appstore successfully with exit code is "+iExitValue);
+                  com.wipro.ats.bdre.md.dao.jpa.AppDeploymentQueue jpaAppDeploymentQueue=appDeploymentQueueDAO.get(queueId);
+                  jpaAppDeploymentQueue.setAppDeploymentQueueStatus(appDeploymentQueueStatusDAO.get((short)1));
+                  appDeploymentQueueDAO.update(jpaAppDeploymentQueue);
+                  returnedAppDeploymentQueue.setAppDeploymentStatusId((short) 1);
+              }
+
+            restWrapper = new RestWrapper(returnedAppDeploymentQueue, RestWrapper.OK);
+        } catch (MetadataException e) {
+            LOGGER.error(e);
+            restWrapper = new RestWrapper(e.getMessage(), RestWrapper.ERROR);
+        } catch (FileNotFoundException e) {
+            LOGGER.error(e);
+            restWrapper = new RestWrapper(e.getMessage(), RestWrapper.ERROR);
+        } catch (IOException e) {
+            LOGGER.error(e);
+            restWrapper = new RestWrapper(e.getMessage(), RestWrapper.ERROR);
+        }
+        return restWrapper;
+    }
+
+
+
+    /**
      * This method fetches a list records from
      * AppDeploymentQueues table.
      *
@@ -85,6 +276,55 @@ public class AppDeploymentQueueAPI {
             restWrapper = new RestWrapper(e.getMessage(), RestWrapper.ERROR);
         }
         return restWrapper;
+    }
+
+
+    @RequestMapping(value = "/reject/{id}", method = RequestMethod.POST)
+    @ResponseBody
+    public
+    RestWrapper reject(@PathVariable("id") Long queueId, Principal principal) {
+        RestWrapper restWrapper = null;
+        try{
+        LOGGER.info("queue id is "+queueId);
+        LOGGER.info("user name is "+principal.getName());
+        AppDeploymentQueue returnedAppDeploymentQueue=new AppDeploymentQueue();
+        com.wipro.ats.bdre.md.dao.jpa.AppDeploymentQueue appDeploymentQueue=appDeploymentQueueDAO.get(queueId);
+            appDeploymentQueue.setAppDeploymentQueueStatus(appDeploymentQueueStatusDAO.get((short)2));
+            appDeploymentQueueDAO.update(appDeploymentQueue);
+        restWrapper = new RestWrapper(returnedAppDeploymentQueue, RestWrapper.OK);
+    } catch (MetadataException e) {
+        LOGGER.error(e);
+        restWrapper = new RestWrapper(e.getMessage(), RestWrapper.ERROR);
+    }
+        return restWrapper;
+}
+
+
+
+     private static int  pushToAppstore(String sCommandString){
+         int iExitValue=0;
+         CommandLine oCmdLine = CommandLine.parse(sCommandString);
+         DefaultExecutor oDefaultExecutor = new DefaultExecutor();
+         oDefaultExecutor.setExitValue(0);
+         try {
+             iExitValue = oDefaultExecutor.execute(oCmdLine);
+             LOGGER.info("exit value of the shell script"+iExitValue);
+         } catch (ExecuteException e) {
+             iExitValue=-1;
+             LOGGER.info("Execution failed.");
+             LOGGER.error(e);
+         } catch (IOException e) {
+             iExitValue=-1;
+             LOGGER.info("permission denied.");
+             LOGGER.error(e);
+
+         }
+         catch (Exception e) {
+             iExitValue=-1;
+             LOGGER.error(e);
+         }
+         return iExitValue;
+
     }
 
 }

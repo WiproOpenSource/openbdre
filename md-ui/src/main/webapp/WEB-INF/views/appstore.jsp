@@ -56,7 +56,7 @@ $.ajax({
   async:false,
   success: function(response) {
     console.log(response);
-    $scope.rows =response;
+    $scope.rows =response.applicationList;
     }
 });
 

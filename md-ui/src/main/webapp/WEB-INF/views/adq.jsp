@@ -39,8 +39,8 @@
 		    sorting: true,
 		    actions: {
 		    listAction: function (postData, jtParams) {
-		    console.log(postData);
-			    return $.Deferred(function ($dfd) {
+	         	    console.log(postData);
+     			    return $.Deferred(function ($dfd) {
 			    $.ajax({
 			    url: '/mdrest/adq?page=' + jtParams.jtStartIndex + '&size='+jtParams.jtPageSize,
 				    type: 'GET',
@@ -131,7 +131,8 @@
 			 create: false,
 			 edit: false,
 			 display: function(data) {
-				 return '<span class="label label-primary" onclick="mergeApp(' + data.record.processId + ')">Merge</span> ';
+
+				 return '<span class="label label-primary" onclick="mergeApp(' + data.record.appDeploymentQueueId + ')">Merge</span> ';
 			 },
 		 },
 		 rejectButton: {
@@ -142,7 +143,7 @@
          			 create: false,
          			 edit: false,
          			 display: function(data) {
-         				 return '<span class="label label-primary" onclick="rejectApp(' + data.record.processId + ')">Reject</span> ';
+         				 return '<span class="label label-primary" onclick="rejectApp(' + data.record.appDeploymentQueueId + ')">Reject</span> ';
          			 },
          		 }
 
@@ -150,6 +151,56 @@
 	    });
 		    $('#Container').jtable('load');
 	    });
+
+	    mergeApp =function (appDeploymentQueueId){
+                                                console.log(appDeploymentQueueId);
+                                        $.ajax({
+                                             url: '/mdrest/adq/merge/'+appDeploymentQueueId,
+                                              type: 'POST',
+                                              dataType: 'json',
+                                               success: function(data) {
+                                               if (data.Result == "OK") {
+                                               console.log(data);
+                                               alert("merge completed");
+
+
+                                            }
+                                                 if (data.Result == "ERROR")
+                                                   alert(data.Message);
+                                              },
+                                               error: function() {
+                                               alert('Error in app merge to appstore');
+                                           }
+                                       });
+
+
+                                        }
+
+
+         rejectApp =function (appDeploymentQueueId){
+                                                         console.log(appDeploymentQueueId);
+                                                 $.ajax({
+                                                      url: '/mdrest/adq/reject/'+appDeploymentQueueId,
+                                                       type: 'POST',
+                                                       dataType: 'json',
+                                                        success: function(data) {
+                                                        if (data.Result == "OK") {
+                                                        console.log(data);
+                                                        alert("app rejected");
+
+                                                     }
+                                                          if (data.Result == "ERROR")
+                                                            alert(data.Message);
+                                                       },
+                                                        error: function() {
+                                                        alert('Error in app reject to appstore');
+                                                    }
+                                                });
+
+
+                                                 }
+
+
 	</script>
     </head>
     <body>
@@ -157,7 +208,6 @@
     <section style="width:100%;text-align:center;">
 	<div id="Container"></div>
     </section>
-
 
 </body>
 </html>

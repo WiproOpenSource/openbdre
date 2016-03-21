@@ -60,11 +60,11 @@ public class AppDeploymentQueueDAOTest {
         LOGGER.info("Adq is added with Id:" + adqId);
 
         appDeploymentQueueDAO.update(adq);
-        adq = appDeploymentQueueDAO.get(adqId.intValue());
+        adq = appDeploymentQueueDAO.get(adqId);
         assertEquals("Test Updated",adq.getAppName());
         LOGGER.info("Updated Description is:" + adqStatus.getDescription());
         appDeploymentQueueDAO.delete(adqId);
-        LOGGER.info("Deleted AdqStatus Entry with ID" + adq.getAppDeploymentQueueStatus().getAppDeploymentStatusId());
+        LOGGER.info("Deleted AdqStatus Entry with ID" +  adq.getAppDeploymentQueueStatus().getAppDeploymentStatusId());
     }
 
 }
