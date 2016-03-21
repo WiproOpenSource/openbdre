@@ -25,7 +25,7 @@ import org.slf4j.LoggerFactory;
 
 public class SequenceFileSerializerFactory {
 
-  private static final Logger logger =
+  private static final Logger LOGGER =
       LoggerFactory.getLogger(SequenceFileSerializerFactory.class);
 
   /**
@@ -33,20 +33,21 @@ public class SequenceFileSerializerFactory {
    */
   static final String CTX_PREFIX = "writeFormat.";
 
-  @SuppressWarnings("unchecked")
+  private SequenceFileSerializerFactory(){
+  }
+
+  @SuppressWarnings({"squid:MethodCyclomaticComplexity","squid:S1166"})
   static SequenceFileSerializer getSerializer(String formatType,
                                               Context context) {
-
-    Preconditions.checkNotNull(formatType,
-        "serialize type must not be null");
+    Preconditions.checkNotNull(formatType, "serialize type must not be null");
 
     // try to find builder class in enum of known formatters
     SequenceFileSerializerType type;
     try {
       type = SequenceFileSerializerType.valueOf(formatType);
     } catch (IllegalArgumentException e) {
-      logger.debug("Not in enum, loading builder class: {}", formatType);
-      type = SequenceFileSerializerType.Other;
+      LOGGER.debug("Not in enum, loading builder class: {}" + formatType);
+      type = SequenceFileSerializerType.OTHER;
     }
     Class<? extends SequenceFileSerializer.Builder> builderClass =
         type.getBuilderClass();
@@ -58,14 +59,14 @@ public class SequenceFileSerializerFactory {
         if (c != null && SequenceFileSerializer.Builder.class.isAssignableFrom(c)) {
           builderClass = (Class<? extends SequenceFileSerializer.Builder>) c;
         } else {
-          logger.error("Unable to instantiate Builder from {}", formatType);
+          LOGGER.error("Unable to instantiate AvroEventSerializerBuilder from {}", formatType);
           return null;
         }
       } catch (ClassNotFoundException ex) {
-        logger.error("Class not found: " + formatType, ex);
+        LOGGER.error("Class not found: " + formatType, ex);
         return null;
       } catch (ClassCastException ex) {
-        logger.error("Class does not extend " +
+        LOGGER.error("Class does not extend " +
             SequenceFileSerializer.Builder.class.getCanonicalName() + ": " +
             formatType, ex);
         return null;
@@ -77,10 +78,10 @@ public class SequenceFileSerializerFactory {
     try {
       builder = builderClass.newInstance();
     } catch (InstantiationException ex) {
-      logger.error("Cannot instantiate builder: " + formatType, ex);
+      LOGGER.error("Cannot instantiate builder: " + formatType, ex);
       return null;
     } catch (IllegalAccessException ex) {
-      logger.error("Cannot instantiate builder: " + formatType, ex);
+      LOGGER.error("Cannot instantiate builder: " + formatType, ex);
       return null;
     }
 

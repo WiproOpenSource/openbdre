@@ -48,37 +48,37 @@ import java.util.concurrent.TimeUnit;
 /*
 *   Custom HDFS Event Sink class
 * */
-
+@SuppressWarnings("squid:S1068")
 public class BDREHDFSEventSink extends AbstractSink implements Configurable {
   public interface WriterCallback {
     public void run(String filePath);
   }
 
-  private static final Logger LOG = LoggerFactory
+  private static final Logger LOGGER = LoggerFactory
       .getLogger(BDREHDFSEventSink.class);
 
   private static String DIRECTORY_DELIMITER = System.getProperty("file.separator");
 
-  private static final long defaultRollInterval = 30;
-  private static final long defaultRollSize = 1024;
-  private static final long defaultRollCount = 10;
-  private static final String defaultFileName = "FlumeData";
-  private static final String defaultSuffix = "";
-  private static final String defaultInUsePrefix = "";
-  private static final String defaultInUseSuffix = ".tmp";
-  private static final long defaultBatchSize = 100;
-  private static final String defaultFileType = HDFSWriterFactory.SequenceFileType;
-  private static final int defaultMaxOpenFiles = 5000;
+  private static final long DEFAULT_ROLL_INTERVAL = 30;
+  private static final long DEFAULT_ROLL_SIZE = 1024;
+  private static final long DEFAULT_ROLL_COUNT = 10;
+  private static final String DEFAULT_FILE_NAME = "FlumeData";
+  private static final String DEFAULT_SUFFIX = "";
+  private static final String DEFAULT_IN_USE_PREFIX = "";
+  private static final String DEFAULT_IN_USE_SUFFIX = ".tmp";
+  private static final long DEFAULT_BATCH_SIZE = 100;
+  private static final String DEFAULT_FILE_TYPE = HDFSWriterFactory.SEQUENCE_FILE_TYPE;
+  private static final int DEFAULT_MAX_OPEN_FILES = 5000;
   // Time between close retries, in seconds
-  private static final long defaultRetryInterval = 180;
+  private static final long DEFAULT_RETRY_INTERVAL = 180;
   // Retry forever.
-  private static final int defaultTryCount = Integer.MAX_VALUE;
+  private static final int DEFAULT_TRY_COUNT = Integer.MAX_VALUE;
 
   /**
    * Default length of time we wait for blocking BucketWriter calls
    * before timing out the operation. Intended to prevent server hangs.
    */
-  private static final long defaultCallTimeout = 10000;
+  private static final long DEFAULT_CALL_TIMEOUT = 10000;
   /**
    * Default number of threads available for tasks
    * such as append/open/close/flush with hdfs.
@@ -86,8 +86,8 @@ public class BDREHDFSEventSink extends AbstractSink implements Configurable {
    * the case that they take too long. In which
    * case we create a new file and move on.
    */
-  private static final int defaultThreadPoolSize = 10;
-  private static final int defaultRollTimerPoolSize = 1;
+  private static final int DEFAULT_THREAD_POOL_SIZE = 10;
+  private static final int DEFAULT_ROLL_TIMER_POOL_SIZE = 1;
 
   private final HDFSWriterFactory writerFactory;
   private WriterLinkedHashMap sfWriters;
@@ -136,6 +136,7 @@ public class BDREHDFSEventSink extends AbstractSink implements Configurable {
    * Extended Java LinkedHashMap for open file handle LRU queue.
    * We want to clear the oldest file handle if there are too many open ones.
    */
+  @SuppressWarnings("squid:S2160")
   private static class WriterLinkedHashMap
       extends LinkedHashMap<String, BucketWriter> {
 
@@ -154,9 +155,9 @@ public class BDREHDFSEventSink extends AbstractSink implements Configurable {
         try {
           eldest.getValue().close();
         } catch (IOException e) {
-          LOG.warn(eldest.getKey().toString(), e);
+          LOGGER.warn(eldest.getKey().toString(), e);
         } catch (InterruptedException e) {
-          LOG.warn(eldest.getKey().toString(), e);
+          LOGGER.warn(eldest.getKey().toString(), e);
           Thread.currentThread().interrupt();
         }
         return true;
@@ -181,45 +182,46 @@ public class BDREHDFSEventSink extends AbstractSink implements Configurable {
 
   // read configuration and setup thresholds
   @Override
+  @SuppressWarnings("squid:MethodCyclomaticComplexity")
   public void configure(Context context) {
     this.context = context;
 
     filePath = Preconditions.checkNotNull(
         context.getString("hdfs.path"), "hdfs.path is required");
-    fileName = context.getString("hdfs.filePrefix", defaultFileName);
-    this.suffix = context.getString("hdfs.fileSuffix", defaultSuffix);
-    inUsePrefix = context.getString("hdfs.inUsePrefix", defaultInUsePrefix);
-    inUseSuffix = context.getString("hdfs.inUseSuffix", defaultInUseSuffix);
+    fileName = context.getString("hdfs.filePrefix", DEFAULT_FILE_NAME);
+    this.suffix = context.getString("hdfs.fileSuffix", DEFAULT_SUFFIX);
+    inUsePrefix = context.getString("hdfs.inUsePrefix", DEFAULT_IN_USE_PREFIX);
+    inUseSuffix = context.getString("hdfs.inUseSuffix", DEFAULT_IN_USE_SUFFIX);
     String tzName = context.getString("hdfs.timeZone");
     timeZone = tzName == null ? null : TimeZone.getTimeZone(tzName);
-    rollInterval = context.getLong("hdfs.rollInterval", defaultRollInterval);
-    rollSize = context.getLong("hdfs.rollSize", defaultRollSize);
-    rollCount = context.getLong("hdfs.rollCount", defaultRollCount);
-    batchSize = context.getLong("hdfs.batchSize", defaultBatchSize);
+    rollInterval = context.getLong("hdfs.rollInterval", DEFAULT_ROLL_INTERVAL);
+    rollSize = context.getLong("hdfs.rollSize", DEFAULT_ROLL_SIZE);
+    rollCount = context.getLong("hdfs.rollCount", DEFAULT_ROLL_COUNT);
+    batchSize = context.getLong("hdfs.batchSize", DEFAULT_BATCH_SIZE);
     idleTimeout = context.getInteger("hdfs.idleTimeout", 0);
     String codecName = context.getString("hdfs.codeC");
-    fileType = context.getString("hdfs.fileType", defaultFileType);
-    maxOpenFiles = context.getInteger("hdfs.maxOpenFiles", defaultMaxOpenFiles);
-    callTimeout = context.getLong("hdfs.callTimeout", defaultCallTimeout);
+    fileType = context.getString("hdfs.fileType", DEFAULT_FILE_TYPE);
+    maxOpenFiles = context.getInteger("hdfs.maxOpenFiles", DEFAULT_MAX_OPEN_FILES);
+    callTimeout = context.getLong("hdfs.callTimeout", DEFAULT_CALL_TIMEOUT);
     threadsPoolSize = context.getInteger("hdfs.threadsPoolSize",
-        defaultThreadPoolSize);
+            DEFAULT_THREAD_POOL_SIZE);
     rollTimerPoolSize = context.getInteger("hdfs.rollTimerPoolSize",
-        defaultRollTimerPoolSize);
+            DEFAULT_ROLL_TIMER_POOL_SIZE);
     String kerbConfPrincipal = context.getString("hdfs.kerberosPrincipal");
     String kerbKeytab = context.getString("hdfs.kerberosKeytab");
     String proxyUser = context.getString("hdfs.proxyUser");
-    tryCount = context.getInteger("hdfs.closeTries", defaultTryCount);
+    tryCount = context.getInteger("hdfs.closeTries", DEFAULT_TRY_COUNT);
     processId = context.getString("hdfs.processId");
     if(tryCount <= 0) {
-      LOG.warn("Retry count value : " + tryCount + " is not " +
+      LOGGER.warn("Retry count value : " + tryCount + " is not " +
         "valid. The sink will try to close the file until the file " +
         "is eventually closed.");
-      tryCount = defaultTryCount;
+      tryCount = DEFAULT_TRY_COUNT;
     }
     retryInterval = context.getLong("hdfs.retryInterval",
-      defaultRetryInterval);
+            DEFAULT_RETRY_INTERVAL);
     if(retryInterval <= 0) {
-      LOG.warn("Retry Interval value: " + retryInterval + " is not " +
+      LOGGER.warn("Retry Interval value: " + retryInterval + " is not " +
         "valid. If the first close of a file fails, " +
         "it may remain open and will not be renamed.");
       tryCount = 1;
@@ -232,20 +234,19 @@ public class BDREHDFSEventSink extends AbstractSink implements Configurable {
       compType = CompressionType.NONE;
     } else {
       codeC = getCodec(codecName);
-      // TODO : set proper compression type
       compType = CompressionType.BLOCK;
     }
 
     // Do not allow user to set fileType DataStream with codeC together
     // To prevent output file with compress extension (like .snappy)
-    if(fileType.equalsIgnoreCase(HDFSWriterFactory.DataStreamType)
+    if(fileType.equalsIgnoreCase(HDFSWriterFactory.DATA_STREAM_TYPE)
         && codecName != null) {
       throw new IllegalArgumentException("fileType: " + fileType +
           " which does NOT support compressed output. Please don't set codeC" +
           " or change the fileType if compressed output is desired.");
     }
 
-    if(fileType.equalsIgnoreCase(HDFSWriterFactory.CompStreamType)) {
+    if(fileType.equalsIgnoreCase(HDFSWriterFactory.COMP_STREAM_TYPE)) {
       Preconditions.checkNotNull(codeC, "It's essential to set compress codec"
           + " when fileType is: " + fileType);
     }
@@ -261,14 +262,14 @@ public class BDREHDFSEventSink extends AbstractSink implements Configurable {
 
     if(needRounding) {
       String unit = context.getString("hdfs.roundUnit", "second");
-      if (unit.equalsIgnoreCase("hour")) {
+      if ("hour".equalsIgnoreCase(unit)) {
         this.roundUnit = Calendar.HOUR_OF_DAY;
-      } else if (unit.equalsIgnoreCase("minute")) {
+      } else if ("minute".equalsIgnoreCase(unit)) {
         this.roundUnit = Calendar.MINUTE;
-      } else if (unit.equalsIgnoreCase("second")){
+      } else if ("second".equalsIgnoreCase(unit)){
         this.roundUnit = Calendar.SECOND;
       } else {
-        LOG.warn("Rounding unit is not valid, please set one of" +
+        LOGGER.warn("Rounding unit is not valid, please set one of" +
             "minute, hour, or second. Rounding will be disabled");
         needRounding = false;
       }
@@ -294,6 +295,7 @@ public class BDREHDFSEventSink extends AbstractSink implements Configurable {
     }
   }
 
+  @SuppressWarnings("squid:S1872")
   private static boolean codecMatches(Class<? extends CompressionCodec> cls,
       String codecName) {
     String simpleName = cls.getSimpleName();
@@ -312,6 +314,7 @@ public class BDREHDFSEventSink extends AbstractSink implements Configurable {
   }
 
   @VisibleForTesting
+  @SuppressWarnings("squid:S1166")
   static CompressionCodec getCodec(String codecName) {
     Configuration conf = new Configuration();
     List<Class<? extends CompressionCodec>> codecs = CompressionCodecFactory
@@ -319,7 +322,7 @@ public class BDREHDFSEventSink extends AbstractSink implements Configurable {
     // Wish we could base this on DefaultCodec but appears not all codec's
     // extend DefaultCodec(Lzo)
     CompressionCodec codec = null;
-    ArrayList<String> codecStrs = new ArrayList<String>();
+    List<String> codecStrs = new ArrayList<String>();
     codecStrs.add("None");
     for (Class<? extends CompressionCodec> cls : codecs) {
       codecStrs.add(cls.getSimpleName());
@@ -327,15 +330,15 @@ public class BDREHDFSEventSink extends AbstractSink implements Configurable {
         try {
           codec = cls.newInstance();
         } catch (InstantiationException e) {
-          LOG.error("Unable to instantiate " + cls + " class");
+          LOGGER.error("Unable to instantiate " + cls + " class");
         } catch (IllegalAccessException e) {
-          LOG.error("Unable to access " + cls + " class");
+          LOGGER.error("Unable to access " + cls + " class");
         }
       }
     }
 
     if (codec == null) {
-      if (!codecName.equalsIgnoreCase("None")) {
+      if (!"None".equalsIgnoreCase(codecName)) {
         throw new IllegalArgumentException("Unsupported compression codec "
             + codecName + ".  Please choose from: " + codecStrs);
       }
@@ -356,6 +359,8 @@ public class BDREHDFSEventSink extends AbstractSink implements Configurable {
    * HDFS. <br/>
    * This method is not thread safe.
    */
+  @Override
+  @SuppressWarnings("squid:MethodCyclomaticComplexity")
   public Status process() throws EventDeliveryException {
     Channel channel = getChannel();
     Transaction transaction = channel.getTransaction();
@@ -384,7 +389,7 @@ public class BDREHDFSEventSink extends AbstractSink implements Configurable {
         WriterCallback closeCallback = new WriterCallback() {
           @Override
           public void run(String bucketPath) {
-            LOG.info("Writer callback called.");
+            LOGGER.info("Writer callback called.");
             synchronized (sfWritersLock) {
               sfWriters.remove(bucketPath);
             }
@@ -407,19 +412,7 @@ public class BDREHDFSEventSink extends AbstractSink implements Configurable {
         }
 
         // Write the data to HDFS
-        try {
-          bucketWriter.append(event);
-        } catch (BucketClosedException ex) {
-          LOG.info("Bucket was closed while trying to append, " +
-            "reinitializing bucket and writing event.");
-          hdfsWriter = writerFactory.getWriter(fileType);
-          bucketWriter = initializeBucketWriter(realPath, realName,
-            lookupPath, hdfsWriter, closeCallback);
-          synchronized (sfWritersLock) {
-            sfWriters.put(lookupPath, bucketWriter);
-          }
-          bucketWriter.append(event);
-        }
+        writeTheDataToHDFS(event, realPath, realName, lookupPath, bucketWriter, closeCallback);
       }
 
       if (txnEventCount == 0) {
@@ -445,18 +438,32 @@ public class BDREHDFSEventSink extends AbstractSink implements Configurable {
       }
     } catch (IOException eIO) {
       transaction.rollback();
-      LOG.warn("HDFS IO error", eIO);
+      LOGGER.warn("HDFS IO error", eIO);
       return Status.BACKOFF;
-    } catch (Throwable th) {
+    } catch (Exception ex) {
       transaction.rollback();
-      LOG.error("process failed", th);
-      if (th instanceof Error) {
-        throw (Error) th;
-      } else {
-        throw new EventDeliveryException(th);
-      }
+      LOGGER.error("process failed", ex);
+      throw new EventDeliveryException(ex);
     } finally {
       transaction.close();
+    }
+  }
+
+  @SuppressWarnings({"squid:S1166","squid:S1226"})
+  private void writeTheDataToHDFS(Event event, String realPath, String realName, String lookupPath, BucketWriter bucketWriter, WriterCallback closeCallback) throws IOException, InterruptedException {
+    HDFSWriter hdfsWriter;
+    try {
+      bucketWriter.append(event);
+    } catch (BucketClosedException ex) {
+      LOGGER.info("Bucket was closed while trying to append, " +
+        "reinitializing bucket and writing event.");
+      hdfsWriter = writerFactory.getWriter(fileType);
+      bucketWriter = initializeBucketWriter(realPath, realName,
+        lookupPath, hdfsWriter, closeCallback);
+      synchronized (sfWritersLock) {
+        sfWriters.put(lookupPath, bucketWriter);
+      }
+      bucketWriter.append(event);
     }
   }
 
@@ -482,31 +489,32 @@ public class BDREHDFSEventSink extends AbstractSink implements Configurable {
     // do not constrain close() calls with a timeout
     synchronized (sfWritersLock) {
       for (Entry<String, BucketWriter> entry : sfWriters.entrySet()) {
-        LOG.info("Closing {}", entry.getKey());
+        LOGGER.info("Closing {}", entry.getKey());
 
         try {
           entry.getValue().close();
+        } catch (InterruptedException ie) {
+          LOGGER.warn("Exception while closing " + entry.getKey() + ". " +
+                  "Exception follows.", ie);
+          Thread.currentThread().interrupt();
         } catch (Exception ex) {
-          LOG.warn("Exception while closing " + entry.getKey() + ". " +
+          LOGGER.warn("Exception while closing " + entry.getKey() + ". " +
                   "Exception follows.", ex);
-          if (ex instanceof InterruptedException) {
-            Thread.currentThread().interrupt();
-          }
         }
       }
     }
 
     // shut down all our thread pools
-    ExecutorService toShutdown[] = {callTimeoutPool, timedRollerPool};
+    ExecutorService [] toShutdown = {callTimeoutPool, timedRollerPool};
     for (ExecutorService execService : toShutdown) {
       execService.shutdown();
       try {
-        while (execService.isTerminated() == false) {
+        while (!execService.isTerminated()) {
           execService.awaitTermination(
-                  Math.max(defaultCallTimeout, callTimeout), TimeUnit.MILLISECONDS);
+                  Math.max(DEFAULT_CALL_TIMEOUT, callTimeout), TimeUnit.MILLISECONDS);
         }
       } catch (InterruptedException ex) {
-        LOG.warn("shutdown interrupted on " + execService, ex);
+        LOGGER.warn("shutdown interrupted on " + execService, ex);
       }
     }
 

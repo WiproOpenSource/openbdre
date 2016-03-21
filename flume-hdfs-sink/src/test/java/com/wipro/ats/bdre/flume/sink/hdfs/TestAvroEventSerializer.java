@@ -103,7 +103,7 @@ public class TestAvroEventSerializer {
       Files.write(schema.toString(), schemaFile, Charsets.UTF_8);
     }
 
-    EventSerializer.Builder builder = new AvroEventSerializer.Builder();
+    EventSerializer.Builder builder = new AvroEventSerializer.AvroEventSerializerBuilder();
     EventSerializer serializer = builder.build(ctx, out);
 
     serializer.afterCreate();
