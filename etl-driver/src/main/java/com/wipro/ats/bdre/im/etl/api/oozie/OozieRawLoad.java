@@ -20,6 +20,8 @@ import com.wipro.ats.bdre.im.etl.api.RawLoad;
  * Created by vishnu on 12/24/14.
  */
 public class OozieRawLoad {
+    private OozieRawLoad(){
+    }
 
     public static void main(String[] args) {
         RawLoad rawLoad = new RawLoad();
