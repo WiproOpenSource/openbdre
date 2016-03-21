@@ -8,7 +8,7 @@ mkdir ~/bdreappstore/$2/$3
 cp $BDRE_HOME-wfd/$1/* ~/bdreappstore/$2/$3
 cd ~/bdreappstore
 git add ~/bdreappstore/$2/$3
-git commit -am "adding new app"
+git commit -m "adding new app"
 git push origin develop
 
 
