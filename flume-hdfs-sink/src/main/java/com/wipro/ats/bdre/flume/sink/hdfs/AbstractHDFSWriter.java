@@ -50,7 +50,9 @@ public abstract class AbstractHDFSWriter implements HDFSWriter {
   private Integer numberOfCloseRetries = null;
   private long timeBetweenCloseRetries = Long.MAX_VALUE;
 
-  private final static Object [] NO_ARGS = new Object []{};
+  private static final  Object [] NO_ARGS = new Object []{};
+  
+  private static final String UNEXPECTED_ERROR = "Unexpected error while checking replication factor";
 
   @Override
   public void configure(Context context) {
@@ -63,7 +65,7 @@ public abstract class AbstractHDFSWriter implements HDFSWriter {
 
     if (numberOfCloseRetries > 1) {
       try {
-        timeBetweenCloseRetries = context.getLong("hdfs.callTimeout", 10000l);
+        timeBetweenCloseRetries = context.getLong("hdfs.callTimeout", 10000L);
       } catch (NumberFormatException e) {
         LOGGER.warn("hdfs.callTimeout can not be parsed to a long: " + context.getLong("hdfs.callTimeout"));
       }
@@ -93,11 +95,11 @@ public abstract class AbstractHDFSWriter implements HDFSWriter {
       }
       return numBlocks < desiredBlocks;
     } catch (IllegalAccessException e) {
-      LOGGER.error("Unexpected error while checking replication factor", e);
+      LOGGER.error(UNEXPECTED_ERROR, e);
     } catch (InvocationTargetException e) {
-      LOGGER.error("Unexpected error while checking replication factor", e);
+      LOGGER.error(UNEXPECTED_ERROR, e);
     } catch (IllegalArgumentException e) {
-      LOGGER.error("Unexpected error while checking replication factor", e);
+      LOGGER.error(UNEXPECTED_ERROR, e);
     }
     return false;
   }
@@ -156,6 +158,7 @@ public abstract class AbstractHDFSWriter implements HDFSWriter {
    * @throws IllegalAccessException
    * @throws IllegalArgumentException
    */
+  @SuppressWarnings("squid:S1160")
   public int getNumCurrentReplicas()
       throws IllegalArgumentException, IllegalAccessException,
           InvocationTargetException {

@@ -38,6 +38,7 @@ public class KerberosUser {
   }
 
   @Override
+  @SuppressWarnings("squid:MethodCyclomaticComplexity")
   public boolean equals(Object obj) {
     if (obj == null) {
       return false;
