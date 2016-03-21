@@ -194,31 +194,34 @@ public class AppDeploymentQueueAPI {
                 }
             }
             ObjectMapper mapper1 = new ObjectMapper();
-            try {
                FileWriter fileOut = new FileWriter(homeDir+"/bdreappstore/store.json");
                 LOGGER.info(fileOut);
                  mapper1.writeValue(new File(homeDir+"/bdreappstore/store.json"),appStore);
-            } catch (IOException e) {
-                LOGGER.error(e);
-            }
-            int iExitValue;
+
+            returnedAppDeploymentQueue.setUsername(appDeploymentQueue.getUsers().getUsername());
+            returnedAppDeploymentQueue.setAppDomain(appDeploymentQueue.getAppDomain());
+            returnedAppDeploymentQueue.setAppName(appDeploymentQueue.getAppName());
+            returnedAppDeploymentQueue.setProcessId(appDeploymentQueue.getProcess().getProcessId());
+            returnedAppDeploymentQueue.setAppDeploymentQueueId(appDeploymentQueue.getAppDeploymentQueueId());
+            returnedAppDeploymentQueue.setAppDeploymentStatusId(appDeploymentQueue.getAppDeploymentQueueStatus().getAppDeploymentStatusId());
+
+                int iExitValue;
             String sCommandString;
             String[] command = {MDConfig.getProperty("deploy.script-path") + "/appstore-push.sh",appDeploymentQueue.getProcess().getProcessId().toString(),appDeploymentQueue.getAppDomain().toString(),appDeploymentQueue.getAppName().toLowerCase().replace(" ","_").toString()};
 
             sCommandString = "sh "+command[0]+" "+command[1]+" "+command[2]+" "+command[3];
-            CommandLine oCmdLine = CommandLine.parse(sCommandString);
-            DefaultExecutor oDefaultExecutor = new DefaultExecutor();
-            oDefaultExecutor.setExitValue(0);
-            try {
-                iExitValue = oDefaultExecutor.execute(oCmdLine);
-                LOGGER.info("exit value of the shell script"+iExitValue);
-            } catch (ExecuteException e) {
-                LOGGER.info("Execution failed.");
-                LOGGER.error(e);
-            } catch (IOException e) {
-                LOGGER.info("permission denied.");
-                LOGGER.error(e);
-            }
+              iExitValue=AppDeploymentQueueAPI.pushToAppstore(sCommandString);
+              if (iExitValue!=0){
+                  LOGGER.info("App could not be sent in appstore with exit code is "+iExitValue);
+              }
+            else
+              {
+              LOGGER.info("App exported to appstore successfully with exit code is "+iExitValue);
+                  com.wipro.ats.bdre.md.dao.jpa.AppDeploymentQueue jpaAppDeploymentQueue=appDeploymentQueueDAO.get(queueId);
+                  jpaAppDeploymentQueue.setAppDeploymentQueueStatus(appDeploymentQueueStatusDAO.get((short)1));
+                  appDeploymentQueueDAO.update(jpaAppDeploymentQueue);
+                  returnedAppDeploymentQueue.setAppDeploymentStatusId((short) 1);
+              }
 
             restWrapper = new RestWrapper(returnedAppDeploymentQueue, RestWrapper.OK);
         } catch (MetadataException e) {
@@ -295,5 +298,33 @@ public class AppDeploymentQueueAPI {
     }
         return restWrapper;
 }
+
+
+
+     private static int  pushToAppstore(String sCommandString){
+         int iExitValue=0;
+         CommandLine oCmdLine = CommandLine.parse(sCommandString);
+         DefaultExecutor oDefaultExecutor = new DefaultExecutor();
+         oDefaultExecutor.setExitValue(0);
+         try {
+             iExitValue = oDefaultExecutor.execute(oCmdLine);
+             LOGGER.info("exit value of the shell script"+iExitValue);
+         } catch (ExecuteException e) {
+             iExitValue=-1;
+             LOGGER.info("Execution failed.");
+             LOGGER.error(e);
+         } catch (IOException e) {
+             iExitValue=-1;
+             LOGGER.info("permission denied.");
+             LOGGER.error(e);
+
+         }
+         catch (Exception e) {
+             iExitValue=-1;
+             LOGGER.error(e);
+         }
+         return iExitValue;
+
+    }
 
 }
