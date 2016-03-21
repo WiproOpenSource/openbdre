@@ -29,7 +29,7 @@ public class TestSequenceFileSerializerFactory {
   @Test  @Ignore
   public void getTextFormatter() {
     SequenceFileSerializer formatter =
-        SequenceFileSerializerFactory.getSerializer("Text", new Context());
+        SequenceFileSerializerFactory.getSerializer("TEXT", new Context());
 
     assertTrue(formatter != null);
     assertTrue(formatter.getClass().getName(),
@@ -39,7 +39,7 @@ public class TestSequenceFileSerializerFactory {
   @Test  @Ignore
   public void getWritableFormatter() {
     SequenceFileSerializer formatter =
-        SequenceFileSerializerFactory.getSerializer("Writable", new Context());
+        SequenceFileSerializerFactory.getSerializer("WRITABLE", new Context());
 
     assertTrue(formatter != null);
     assertTrue(formatter.getClass().getName(),
@@ -50,7 +50,7 @@ public class TestSequenceFileSerializerFactory {
   public void getCustomFormatter() {
     SequenceFileSerializer formatter = SequenceFileSerializerFactory
       .getSerializer(
-        "MyCustomSerializer$MyBuilder", new Context());
+        "MyCustomSerializer$AvroEventSerializerBuilder", new Context());
 
     assertTrue(formatter != null);
     assertTrue(formatter.getClass().getName(),

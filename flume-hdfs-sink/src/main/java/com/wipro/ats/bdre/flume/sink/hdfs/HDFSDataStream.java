@@ -81,6 +81,7 @@ public class HDFSDataStream extends AbstractHDFSWriter {
     return  dstPath.getFileSystem(conf);
   }
 
+  @SuppressWarnings("squid:S1226")
   protected void doOpen(Configuration conf,
     Path dstPath, FileSystem hdfs) throws
     IOException {
