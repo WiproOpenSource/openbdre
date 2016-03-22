@@ -41,12 +41,17 @@ public class LineageDotGen extends BaseStructure {
     };
 
     public static void main(String[] args) throws Exception {
-        GetProcess getProcess = new GetProcess();
-        List<ProcessInfo> subProcessList = getProcess.getSubProcesses(args);
-        for (ProcessInfo processInfo:subProcessList) {
-            subProcessId = processInfo.getProcessId().toString();
-            LOGGER.info("subProcessId=" + subProcessId);
-            getDot(subProcessId);
+        if(args.length==0){
+            LOGGER.info("No process ID provided. Running the LineageDotGen for all queries");
+            getDot("EMPTY");
+        } else {
+            GetProcess getProcess = new GetProcess();
+            List<ProcessInfo> subProcessList = getProcess.getSubProcesses(args);
+            for (ProcessInfo processInfo : subProcessList) {
+                subProcessId = processInfo.getProcessId().toString();
+                LOGGER.info("subProcessId=" + subProcessId);
+                getDot(subProcessId);
+            }
         }
     }
 

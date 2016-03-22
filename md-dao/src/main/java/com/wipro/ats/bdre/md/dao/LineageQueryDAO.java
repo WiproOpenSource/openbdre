@@ -54,6 +54,16 @@ public class LineageQueryDAO {
         return lineageQuerys;
     }
 
+    public List<LineageQuery> listAll() {
+        Session session = sessionFactory.openSession();
+        session.beginTransaction();
+        Criteria criteria = session.createCriteria(LineageQuery.class);
+        List<LineageQuery> lineageQuerys = criteria.list();
+        session.getTransaction().commit();
+        session.close();
+        return lineageQuerys;
+    }
+
     //get Instance exec ids for the process id from LQ table
     private Long getInstanceExecIds(Integer processId) {
 
