@@ -56,7 +56,7 @@
                                              <div class="col-md-3"> </div>
                                              <div class="col-md-6" >
                                                   <div class="panel panel-primary" >
-                                                       <div class="panel-heading">Download Zip or export to Github</div>
+                                                       <div class="panel-heading">Download Zip or Export to App Store</div>
                                                        <div  class="col-md-3"></div>
                                                        <div class="col-md-3 ">
                                                            <div class="row">&nbsp;</div>
@@ -89,7 +89,7 @@
                                                 <input type="text" class="form-control" name="appName"  placeholder="Application Name" required>
                                             </div>
                                             <div class="form-group">
-                                                <label >Select Application Domain</label>
+                                                <label >Select Business Domain</label>
                                                 <select class="form-control" name="appDomain">
                                                     <option value="banking">Banking</option>
                                                     <option value="retail"> Retail</option>
