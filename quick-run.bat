@@ -9,3 +9,4 @@ java -jar md-rest-api/target/dependency/jetty-runner.jar --port 28850 ^
   md-rest-api/context.xml ^
   md-ui/context.xml ^
   appstore-context.xml
+
