@@ -187,8 +187,9 @@ public class AppDeploymentQueueAPI {
                         addedApp.setIcon(temprory+"/analytic.png");
                         addedApp.setLocation("bdreappstore-apps/"+temprory+".zip");
                         addedApp.setId(idOne.toString());
+                        storeJson.getColumns().add(addedApp);
                     }
-                    storeJson.getColumns().add(addedApp);
+
                     LOGGER.info("no of apps in this catagory after updating is "+storeJson.getColumns().size());
 
                 }
