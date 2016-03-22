@@ -23,18 +23,12 @@ import org.apache.commons.cli.CommandLine;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.AutowireCapableBeanFactory;
-import org.springframework.context.ApplicationContext;
-import org.springframework.context.support.ClassPathXmlApplicationContext;
 
 
 /**
  * Created by arijit on 12/8/14.
  */
 public class CopyFile extends MetadataAPIBase {
-    public CopyFile() {
-        AutowireCapableBeanFactory acbFactory = getAutowireCapableBeanFactory();
-        acbFactory.autowireBean(this);
-    }
 
     @Autowired
     CopyFileDAO copyFileDAO;
@@ -46,6 +40,11 @@ public class CopyFile extends MetadataAPIBase {
             {"prefix", "destination-path-prefix", "Destination path prefix"}
     };
 
+    public CopyFile() {
+        AutowireCapableBeanFactory acbFactory = getAutowireCapableBeanFactory();
+        acbFactory.autowireBean(this);
+    }
+
     /**
      * This method runs CopyFile proc for a batchid and make an entry in file table.
      *
@@ -55,6 +54,7 @@ public class CopyFile extends MetadataAPIBase {
      * file and server specifications.
      */
 
+    @Override
     public FileInfo execute(String[] params) {
         try {
             CommandLine commandLine = getCommandLine(params, PARAMS_STRUCTURE);
@@ -74,10 +74,8 @@ public class CopyFile extends MetadataAPIBase {
             copyFileInfo.setDestServerId(dsid);
             copyFileInfo.setSourceBatchId(sbid);
             //This takes CopyFileInfo as input and emits FileInfo bean as output
-            //FileInfo fileInfo = s.selectOne("call_procedures.CopyFile", copyFileInfo);
 
-            FileInfo fileInfo = copyFileDAO.copyFile(copyFileInfo);
-            return fileInfo;
+            return copyFileDAO.copyFile(copyFileInfo);
         } catch (Exception e) {
             LOGGER.error("Error occurred", e);
             throw new MetadataException(e);

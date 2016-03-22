@@ -1,4 +1,6 @@
 SET SCHEMA BDRE;
+DROP TABLE app_deployment_queue;
+DROP TABLE app_deployment_queue_status;
 DROP TABLE process_deployment_queue;
 DROP TABLE deploy_status;
 DROP TABLE general_config;

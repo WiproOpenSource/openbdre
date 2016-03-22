@@ -30,9 +30,17 @@ public class BatchStatus {
     @NotNull
     @Min(value = 0)
     @Digits(fraction = 0, integer = 11)
-
     private Integer batchStateId;
     private Integer pageSize;
+    @NotNull
+    @Size(max = 45)
+    private String description;
+    private Integer page;
+
+    @Override
+    public String toString() {
+        return " batchStateId:" + batchStateId + " page:" + page + " description:" + description.substring(0, Math.min(description.length(), 45));
+    }
 
     public Integer getPageSize() {
         return pageSize;
@@ -41,19 +49,6 @@ public class BatchStatus {
     public void setPageSize(Integer pageSize) {
         this.pageSize = pageSize;
     }
-
-
-    @Override
-    public String toString() {
-        return " batchStateId:" + batchStateId + " page:" + page + " description:" + description.substring(0, Math.min(description.length(), 45));
-    }
-
-    @NotNull
-    @Size(max = 45)
-    private String description;
-
-    private Integer page;
-
 
     public Integer getPage() {
         return page;

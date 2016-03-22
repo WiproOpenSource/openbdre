@@ -42,6 +42,8 @@ public class PropertiesTemplateDAO {
     private static final Logger LOGGER = Logger.getLogger(PropertiesTemplateDAO.class);
     @Autowired
     SessionFactory sessionFactory;
+    private static final String PROPTEMPKEY="id.propTempKey";
+    private static final String PROCESSTEMPLATEID="id.processTemplateId";
 
     public List<com.wipro.ats.bdre.md.beans.table.PropertiesTemplate> listPropertiesTemplateBean(Integer processTemplateId) {
         Session session = sessionFactory.openSession();
@@ -50,10 +52,10 @@ public class PropertiesTemplateDAO {
         try {
             session.beginTransaction();
             if (processTemplateId == 0 || processTemplateId == null) {
-                Criteria countCriteria = session.createCriteria(PropertiesTemplate.class).addOrder(Order.asc("id.processTemplateId")).addOrder(Order.asc("id.propTempKey"));
+                Criteria countCriteria = session.createCriteria(PropertiesTemplate.class).addOrder(Order.asc(PROCESSTEMPLATEID)).addOrder(Order.asc(PROPTEMPKEY));
                 int counter = countCriteria.list().size();
 
-                Criteria criteria = session.createCriteria(PropertiesTemplate.class).addOrder(Order.asc("id.propTempKey"));
+                Criteria criteria = session.createCriteria(PropertiesTemplate.class).addOrder(Order.asc(PROPTEMPKEY));
                 List<PropertiesTemplate> jpapropertiesTemplateList = criteria.list();
 
                 for (PropertiesTemplate jparopertiesTemplate : jpapropertiesTemplateList) {
@@ -68,10 +70,10 @@ public class PropertiesTemplateDAO {
                 }
 
             } else {
-                Criteria countCriteria = session.createCriteria(PropertiesTemplate.class).addOrder(Order.asc("id.propTempKey")).add(Restrictions.eq("id.processTemplateId", processTemplateId)).setProjection(Projections.distinct(Projections.property("id.propTempKey")));
+                Criteria countCriteria = session.createCriteria(PropertiesTemplate.class).addOrder(Order.asc(PROPTEMPKEY)).add(Restrictions.eq(PROCESSTEMPLATEID, processTemplateId)).setProjection(Projections.distinct(Projections.property(PROPTEMPKEY)));
                 int counter = countCriteria.list().size();
 
-                Criteria criteria = session.createCriteria(PropertiesTemplate.class).add(Restrictions.eq("id.processTemplateId", processTemplateId)).addOrder(Order.asc("id.propTempKey"));
+                Criteria criteria = session.createCriteria(PropertiesTemplate.class).add(Restrictions.eq(PROCESSTEMPLATEID, processTemplateId)).addOrder(Order.asc(PROPTEMPKEY));
 
                 List<PropertiesTemplate> jpapropertiesTemplateList = criteria.list();
 
@@ -188,7 +190,7 @@ public class PropertiesTemplateDAO {
             PropertiesTemplateId propertiesTemplateId = (PropertiesTemplateId) session.save(jpaPropertiesTemplateInsert);
             LOGGER.info("Inserted properties Template:" + jpaPropertiesTemplateInsert);
 
-            Criteria returningCriteria = session.createCriteria(com.wipro.ats.bdre.md.dao.jpa.PropertiesTemplate.class).add(Restrictions.eq("id.processTemplateId", propertiesTemplateId.getProcessTemplateId())).add(Restrictions.eq("id.propTempKey", propertiesTemplateId.getPropTempKey()));
+            Criteria returningCriteria = session.createCriteria(com.wipro.ats.bdre.md.dao.jpa.PropertiesTemplate.class).add(Restrictions.eq(PROCESSTEMPLATEID, propertiesTemplateId.getProcessTemplateId())).add(Restrictions.eq(PROPTEMPKEY, propertiesTemplateId.getPropTempKey()));
 
             List<PropertiesTemplate> jpaPropertiesTemplateList = returningCriteria.list();
             for (PropertiesTemplate jpaPropertiesTemplate : jpaPropertiesTemplateList) {
@@ -235,7 +237,7 @@ public class PropertiesTemplateDAO {
 
         try {
             session.beginTransaction();
-            Criteria updatingCriteria = session.createCriteria(PropertiesTemplate.class).add(Restrictions.eq("id.processTemplateId", propertiesTemplate.getProcessTemplateId())).add(Restrictions.eq("id.propTempKey", propertiesTemplate.getKey()));
+            Criteria updatingCriteria = session.createCriteria(PropertiesTemplate.class).add(Restrictions.eq(PROCESSTEMPLATEID, propertiesTemplate.getProcessTemplateId())).add(Restrictions.eq(PROPTEMPKEY, propertiesTemplate.getKey()));
             List<PropertiesTemplate> jpaPropertiesTemplateList = updatingCriteria.list();
             for (PropertiesTemplate jpaPropertiesTemplate : jpaPropertiesTemplateList) {
                 jpaPropertiesTemplate.setDescription(propertiesTemplate.getDescription());
@@ -266,7 +268,7 @@ public class PropertiesTemplateDAO {
         } finally {
             session.close();
         }
-        if (propertiesTemplateList.size() != 0) {
+        if (!propertiesTemplateList.isEmpty()) {
             return propertiesTemplateList.get(0);
         } else return null;
     }
@@ -290,7 +292,7 @@ public class PropertiesTemplateDAO {
         try {
             session.beginTransaction();
 
-            Criteria deletingCriteria = session.createCriteria(PropertiesTemplate.class).add(Restrictions.eq("id.processTemplateId", processTemplateId));
+            Criteria deletingCriteria = session.createCriteria(PropertiesTemplate.class).add(Restrictions.eq(PROCESSTEMPLATEID, processTemplateId));
             List<PropertiesTemplate> propertiesTemplateList = deletingCriteria.list();
             LOGGER.info("delete Properties Template List size: " + propertiesTemplateList.size());
             for (PropertiesTemplate propertiesTemplate : propertiesTemplateList) {
@@ -311,7 +313,7 @@ public class PropertiesTemplateDAO {
         try {
             session.beginTransaction();
 
-            Criteria deletingCriteria = session.createCriteria(PropertiesTemplate.class).add(Restrictions.eq("id.processTemplateId", processTemplateId)).add(Restrictions.eq("id.propTempKey", key));
+            Criteria deletingCriteria = session.createCriteria(PropertiesTemplate.class).add(Restrictions.eq(PROCESSTEMPLATEID, processTemplateId)).add(Restrictions.eq(PROPTEMPKEY, key));
             List<PropertiesTemplate> propertiesTemplateList = deletingCriteria.list();
             for (PropertiesTemplate propertiesTemplate : propertiesTemplateList) {
                 session.delete(propertiesTemplate);

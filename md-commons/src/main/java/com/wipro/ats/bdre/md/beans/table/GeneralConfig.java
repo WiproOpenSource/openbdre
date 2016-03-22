@@ -29,15 +29,6 @@ public class GeneralConfig {
     @Size(max = 128)
     private String configGroup;
     private Integer pageSize;
-
-    public Integer getPageSize() {
-        return pageSize;
-    }
-
-    public void setPageSize(Integer pageSize) {
-        this.pageSize = pageSize;
-    }
-
     @NotNull
     @Size(max = 128)
     @Pattern(regexp = "([0-z][\\.|_|-]?)+")
@@ -56,6 +47,13 @@ public class GeneralConfig {
     private String type;
     private Boolean enabled;
 
+    public Integer getPageSize() {
+        return pageSize;
+    }
+
+    public void setPageSize(Integer pageSize) {
+        this.pageSize = pageSize;
+    }
 
     public String getConfigGroup() {
         return configGroup;

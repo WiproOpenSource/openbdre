@@ -30,7 +30,9 @@ public class FileScan {
 
     private static final Logger LOGGER = Logger.getLogger(FileScan.class);
 
-    private FileScan(){}
+    private FileScan(){
+
+    }
 
     public static void scanAndAddToQueue() {
         try {
