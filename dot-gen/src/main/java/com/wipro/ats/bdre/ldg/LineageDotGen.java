@@ -31,7 +31,6 @@ public class LineageDotGen extends BaseStructure {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(LineageDotGen.class);
     private static String defaultHiveDbName = LineageConstants.defaultHiveDbName;
-    private static final String PARENTPROCESSID = "parent-process-id";
     private static String subProcessId = "";
 
     public static void main(String[] args) throws Exception {
