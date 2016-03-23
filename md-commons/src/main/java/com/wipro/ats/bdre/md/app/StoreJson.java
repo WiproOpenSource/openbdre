@@ -8,16 +8,15 @@ import java.util.List;
 public class StoreJson {
     private String name;
     private String id;
+    private List<AppValues> columns;
 
-    public List<AppValues> getAppValuesList() {
-        return appValuesList;
+    public List<AppValues> getColumns() {
+        return columns;
     }
 
-    public void setAppValuesList(List<AppValues> appValuesList) {
-        this.appValuesList = appValuesList;
+    public void setColumns(List<AppValues> columns) {
+        this.columns = columns;
     }
-
-    private List<AppValues> appValuesList;
 
     public String getName() {
         return name;

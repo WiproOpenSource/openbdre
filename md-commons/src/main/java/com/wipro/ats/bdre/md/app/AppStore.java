@@ -5,6 +5,8 @@ import java.util.List;
  * Created by cloudera on 3/10/16.
  */
 public class AppStore {
+
+    List<StoreJson> applicationList;
     public List<StoreJson> getApplicationList() {
         return applicationList;
     }
@@ -13,5 +15,5 @@ public class AppStore {
         this.applicationList = applicationList;
     }
 
-    List<StoreJson> applicationList;
+
 }
