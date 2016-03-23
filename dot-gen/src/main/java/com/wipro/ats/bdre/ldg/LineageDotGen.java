@@ -17,8 +17,9 @@ import com.wipro.ats.bdre.BaseStructure;
 import com.wipro.ats.bdre.GetLineageQueryByProcessId;
 import com.wipro.ats.bdre.lineage.LineageConstants;
 import com.wipro.ats.bdre.lineage.LineageMain;
+import com.wipro.ats.bdre.md.api.GetProcess;
+import com.wipro.ats.bdre.md.beans.ProcessInfo;
 import com.wipro.ats.bdre.md.dao.jpa.LineageQuery;
-import org.apache.commons.cli.CommandLine;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import java.util.List;
@@ -30,16 +31,21 @@ public class LineageDotGen extends BaseStructure {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(LineageDotGen.class);
     private static String defaultHiveDbName = LineageConstants.defaultHiveDbName;
-
-    private static final String[][] PARAMS_STRUCTURE = {
-            {"p", "sub-process-id", "Sub Process id of the step"},
-    };
+    private static String subProcessId = "";
 
     public static void main(String[] args) throws Exception {
-        CommandLine commandLine = new LineageDotGen().getCommandLine(args, PARAMS_STRUCTURE);
-        String processId = commandLine.getOptionValue("sub-process-id");
-        getDot(processId);
-
+        if(args.length==0){
+            LOGGER.info("No process ID provided. Running the LineageDotGen for all queries");
+            getDot("EMPTY");
+        } else {
+            GetProcess getProcess = new GetProcess();
+            List<ProcessInfo> subProcessList = getProcess.getSubProcesses(args);
+            for (ProcessInfo processInfo : subProcessList) {
+                subProcessId = processInfo.getProcessId().toString();
+                LOGGER.info("subProcessId=" + subProcessId);
+                getDot(subProcessId);
+            }
+        }
     }
 
     private static void getDot(String processId) {
