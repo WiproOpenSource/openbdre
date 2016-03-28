@@ -15,8 +15,10 @@
 package com.wipro.ats.bdre.md.dao;
 
 import com.wipro.ats.bdre.exception.MetadataException;
+import com.wipro.ats.bdre.md.beans.SLAMonitoringBean;
 import com.wipro.ats.bdre.md.dao.jpa.Batch;
 import com.wipro.ats.bdre.md.dao.jpa.InstanceExec;
+import com.wipro.ats.bdre.md.dao.jpa.Process;
 import org.apache.log4j.Logger;
 import org.hibernate.Criteria;
 import org.hibernate.Session;
@@ -159,5 +161,44 @@ public class InstanceExecDAO {
         } finally {
             session.close();
         }
+    }
+
+
+   public List<SLAMonitoringBean> slaMonitoringData(List<Process> subProcessList)
+    {
+        Session session = sessionFactory.openSession();
+        List<SLAMonitoringBean> slaMonitoringBeanList=new ArrayList<>();
+        try {
+            session.beginTransaction();
+
+            for(Process process:subProcessList)
+            {
+               Criteria instanceExecListCriteria= session.createCriteria(InstanceExec.class).add(Restrictions.eq("process",process)).addOrder(Order.asc("startTs")).setMaxResults(25);
+                List<InstanceExec> instanceExecList=instanceExecListCriteria.list();
+                long sumTime=0;
+                long currentTime=0;
+                int total=instanceExecList.size();
+                for (InstanceExec instanceExec:instanceExecList)
+                {
+                    sumTime += (instanceExec.getEndTs().getTime() - instanceExec.getStartTs().getTime());
+                    currentTime=instanceExec.getEndTs().getTime() - instanceExec.getStartTs().getTime();
+                }
+                SLAMonitoringBean slaMonitoringBean=new SLAMonitoringBean();
+                slaMonitoringBean.setProcessId(process.getProcessId());
+                if(total!=0)
+                slaMonitoringBean.setAverageExecutionTime(sumTime/total);
+                slaMonitoringBean.setCurrentExecutionTime(currentTime);
+                slaMonitoringBean.setsLATime(0);
+                slaMonitoringBeanList.add(slaMonitoringBean);
+            }
+            LOGGER.info("total size of slaMonitotingBeanList "+slaMonitoringBeanList.size());
+        } catch (MetadataException e) {
+            session.getTransaction().rollback();
+            LOGGER.error(e);
+        } finally {
+            session.close();
+        }
+
+        return slaMonitoringBeanList;
     }
 }

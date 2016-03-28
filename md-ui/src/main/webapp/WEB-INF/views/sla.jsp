@@ -23,12 +23,13 @@ body {
 
 </style>
 <body>
+<div>
 <script src="//d3js.org/d3.v3.min.js"></script>
 <script>
 
-var margin = {top: 20, right: 20, bottom: 30, left: 40},
-    width = 1800 - margin.left - margin.right,
-    height = 1000 - margin.top - margin.bottom;
+var margin = {top: 20, right: 40, bottom: 30, left: 200},
+    width = 1500 - margin.left - margin.right,
+    height = 900 - margin.top - margin.bottom;
 
 var x0 = d3.scale.ordinal()
     .rangeRoundBands([0, width], .1);
@@ -39,7 +40,7 @@ var y = d3.scale.linear()
     .range([height, 0]);
 
 var color = d3.scale.ordinal()
-    .range(["#98abc5", "#8a89a6", "#7b6888"]);
+    .range(["#98abc5", "#8a89a6", "#d0743c"]);
 
 var xAxis = d3.svg.axis()
     .scale(x0)
@@ -57,12 +58,12 @@ var svg = d3.select("body").append("svg")
     .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
 var data=[
-{State:'CA',Years:2704659, to13Years:4499890, to17Years:2159981},
-{State:'TX',Years:2027307, to13Years:3277946, to17Years:1420518},
-{State:'NY',Years:1208495, to13Years:2141490, to17Years:1058031},
-{State:'FL',Years:1140516, to13Years:1938695, to17Years:925060},
-{State:'IL',Years:894368, to13Years:1558919,  to17Years:725973},
-{State:'PA',Years:737462, to13Years:1345341,  to17Years:679201}
+{State:'CA',Years:2704, to13Years:4499, to17Years:2159},
+{State:'TX',Years:2027, to13Years:3277, to17Years:1420},
+{State:'NY',Years:1208, to13Years:2141, to17Years:1058},
+{State:'FL',Years:1140, to13Years:1938, to17Years:925},
+{State:'IL',Years:894, to13Years:1558,  to17Years:725},
+{State:'PA',Years:737, to13Years:1345,  to17Years:679}
 ];
 
  function draw(data) {
@@ -77,9 +78,9 @@ var data=[
   y.domain([0, d3.max(data, function(d) { return d3.max(d.ages, function(d) { return d.value; }); })]);
 
   svg.append("g")
-      .attr("class", "x axis")
-      .attr("transform", "translate(0," + height + ")")
-      .call(xAxis);
+        .attr("class", "x axis")
+        .attr("transform", "translate(0," + height + ")")
+        .call(xAxis);
 
   svg.append("g")
       .attr("class", "y axis")
@@ -128,3 +129,6 @@ var data=[
 };
 draw(data);
 </script>
+</div>
+<hr width="80%" COLOR="#6699FF" SIZE="6">
+<center><b>ProcessIDs</b></center>

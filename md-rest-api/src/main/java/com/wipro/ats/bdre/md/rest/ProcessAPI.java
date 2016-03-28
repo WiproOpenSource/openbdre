@@ -20,8 +20,10 @@ import com.wipro.ats.bdre.md.api.Export;
 import com.wipro.ats.bdre.md.api.Import;
 import com.wipro.ats.bdre.md.api.base.MetadataAPIBase;
 import com.wipro.ats.bdre.md.beans.ExecutionInfo;
+import com.wipro.ats.bdre.md.beans.SLAMonitoringBean;
 import com.wipro.ats.bdre.md.beans.table.Process;
 import com.wipro.ats.bdre.md.beans.table.Properties;
+import com.wipro.ats.bdre.md.dao.InstanceExecDAO;
 import com.wipro.ats.bdre.md.dao.ProcessDAO;
 import com.wipro.ats.bdre.md.dao.PropertiesDAO;
 import com.wipro.ats.bdre.md.dao.jpa.BusDomain;
@@ -36,9 +38,7 @@ import org.codehaus.jackson.map.DeserializationConfig;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.ModelMap;
 import org.springframework.validation.BindingResult;
-
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletResponse;
@@ -65,7 +65,8 @@ public class ProcessAPI extends MetadataAPIBase {
     private ProcessDAO processDAO;
     @Autowired
     private PropertiesDAO propertiesDAO;
-
+    @Autowired
+    InstanceExecDAO instanceExecDAO;
     /**
      * This method calls proc GetProcess and fetches a record corresponding to processId passed.
      *
@@ -893,5 +894,27 @@ public class ProcessAPI extends MetadataAPIBase {
     @Override
     public Object execute(String[] params) {
         return null;
+    }
+
+
+
+    @RequestMapping(value = {"/SLAMonitoring/{id}", "/SLAMonitoring/{id}/"}, method = RequestMethod.GET)
+    @ResponseBody public
+    RestWrapper SLAMonitoring(@PathVariable("id") Integer processId
+    ) {
+        RestWrapper restWrapper = null;
+       try {
+           LOGGER.info("processid for slaMonitoring is " + processId);
+           List<com.wipro.ats.bdre.md.dao.jpa.Process> subProcessList = processDAO.subProcesslist(processId);
+           LOGGER.info("number of subprocesses is " + subProcessList.size());
+           List<SLAMonitoringBean> slaMonitoringBeanList = instanceExecDAO.slaMonitoringData(subProcessList);
+           LOGGER.info("total size of slaMonitotingBeanList " + slaMonitoringBeanList.size());
+           LOGGER.info("slaMonitotingBean are "+slaMonitoringBeanList);
+           restWrapper = new RestWrapper(slaMonitoringBeanList, RestWrapper.OK);
+       }catch (MetadataException e) {
+           LOGGER.error(e);
+           restWrapper = new RestWrapper(e.getMessage(), RestWrapper.ERROR);
+       }
+         return restWrapper;
     }
 }

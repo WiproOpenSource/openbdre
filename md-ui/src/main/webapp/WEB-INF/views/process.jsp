@@ -894,6 +894,20 @@
                                      },
 
                                 },
+
+
+                                SLAMonitoring: {
+                                    title: 'SLA Monitoring',
+                                    width: '10%',
+                                    sorting: false,
+                                    create: false,
+                                    edit: false,
+                                    display: function(data) {
+
+                                     return '<span class="label label-primary" onclick="SLAMonitoring(' + data.record.processId + ')">SLA Monitoring</span> ';
+                                     },
+
+                                },
                                 EditGraphically: {
                                     title: 'Edit Graphically',
                                     sorting: false,
@@ -983,6 +997,26 @@
                         console.log(pid);
                         location.href = '<c:url value="/pages/appexport.page?processId="/>' + pid;
 
+                     }
+
+                     function SLAMonitoring(pid)
+                     {
+                     $.ajax({
+                                   url: '/mdrest/process/SLAMonitoring/' + pid,
+                                    type: 'GET',
+                                    dataType: 'json',
+                                     success: function(data) {
+                                     if (data.Result == "OK") {
+                                    console.log(data);
+                                    alert('success');
+                                  }
+                               if (data.Result == "ERROR")
+                                 alert(data.Message);
+                            },
+                             error: function() {
+                             alert('Error in SLAMonitoring');
+                         }
+                          });
                      }
 
 
