@@ -558,3 +558,6 @@
 'mainframe', 'serdeClass', 'Serde Class','serde class to be used' , 1, ' ', 'text' , 1
 'mainframe', 'inputFormat', 'Input Format','input format to be used' , 1, 'com.cloudera.sa.copybook.mapred.CopybookInputFormat', 'text' , 1
 'mainframe', 'outputFormat', 'Output Format','output format to be used' , 1, 'org.apache.hadoop.hive.ql.io.HiveIgnoreKeyTextOutputFormat', 'text' , 1
+'src_Env', 'cluster1', 'CLUSTER1','first cluster' , 1, 'cluster1', 'text' , 1
+'src_Env', 'cluster2', 'CLUSTER2','second cluster' , 1, 'cluster2', 'text' , 1
+'src_Env', 'cluster3', 'CLUSTER3','third cluster' , 1, 'cluster3', 'text' , 1

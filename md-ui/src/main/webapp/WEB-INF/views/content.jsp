@@ -424,7 +424,12 @@
                                             collapse: "1",
                                             url: "flumepropertieswizard.page",
                                             children: []
-					}, </security:authorize>]
+					},{
+                                                                  label: "Cluster to cluster data Migration",
+                                                                  collapse: "1",
+                                                                  url: "clustertoclusterwizard.page",
+                                                                  children: []
+                      					}, </security:authorize>]
                                     },
                                     <security:authorize access = "hasRole('ROLE_ADMIN')"> {
                                         label: "Administration",
