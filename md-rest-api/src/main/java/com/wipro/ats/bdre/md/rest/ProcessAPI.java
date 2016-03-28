@@ -908,8 +908,8 @@ public class ProcessAPI extends MetadataAPIBase {
            List<com.wipro.ats.bdre.md.dao.jpa.Process> subProcessList = processDAO.subProcesslist(processId);
            LOGGER.info("number of subprocesses is " + subProcessList.size());
            List<SLAMonitoringBean> slaMonitoringBeanList = instanceExecDAO.slaMonitoringData(subProcessList);
-           LOGGER.info("total size of slaMonitotingBeanList " + slaMonitoringBeanList.size());
-           LOGGER.info("slaMonitotingBean are "+slaMonitoringBeanList);
+           LOGGER.info("total size of slaMonitoringBeanList " + slaMonitoringBeanList.size());
+           LOGGER.info("slaMonitoringBean are "+slaMonitoringBeanList);
            restWrapper = new RestWrapper(slaMonitoringBeanList, RestWrapper.OK);
        }catch (MetadataException e) {
            LOGGER.error(e);
