@@ -25,6 +25,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.AutowireCapableBeanFactory;
 
 import java.sql.Timestamp;
+import java.util.List;
 
 /**
  * Created by IshitaParekh on 11-03-2015.
@@ -150,6 +151,31 @@ public class ProcessLog extends MetadataAPIBase {
             throw new MetadataException(e);
         }
 
+    }
+
+    public void logList(List<ProcessLogInfo> processLogInfo) {
+        try {
+
+            //calling addprocesslog function of Addprocesslogdao
+            processLogDAO.logList(processLogInfo);
+
+        } catch (Exception e) {
+            LOGGER.error("Error occurred.", e);
+            throw new MetadataException(e);
+        }
+
+    }
+
+    public List<ProcessLogInfo> listLastInstanceRef(int processId) {
+        try {
+
+            //calling addprocesslog function of Addprocesslogdao
+            List<ProcessLogInfo> processLogInfos=processLogDAO.listLastInstanceRef(processId);
+            return processLogInfos;
+        } catch (Exception e) {
+            LOGGER.error("Error occurred.", e);
+            throw new MetadataException(e);
+        }
     }
 }
 

@@ -52,6 +52,7 @@
         <module>spark-core</module>
         <module>genconf-dump</module>
         <module>dot-gen</module>
+        <module>cluster-migration</module>
     </modules>
 
     <dependencies>
