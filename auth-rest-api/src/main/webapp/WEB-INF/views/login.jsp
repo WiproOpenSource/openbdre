@@ -3,7 +3,6 @@
 <html>
     <head>
 	<link href="../../css/bootstrap.min.css" rel="stylesheet" type="text/css" />
-	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.0/jquery.min.js"></script>
 	<title>Login Page</title>
 	<style>
 	     body{background-image: url("../../css/images/BDRE_BG.png");}
