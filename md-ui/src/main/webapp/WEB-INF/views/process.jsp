@@ -1007,8 +1007,10 @@
                                     dataType: 'json',
                                      success: function(data) {
                                      if (data.Result == "OK") {
-                                    console.log(data);
-                                    alert('success');
+                                     console.log(data);
+                                    var od = JSON.stringify(data.Record) ;
+                                                    console.log(od);
+                                    location.href = '<c:url value="/pages/sla.page?slaMonitoringBeanList="/>' + od;
                                   }
                                if (data.Result == "ERROR")
                                  alert(data.Message);

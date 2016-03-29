@@ -910,6 +910,7 @@ public class ProcessAPI extends MetadataAPIBase {
            List<SLAMonitoringBean> slaMonitoringBeanList = instanceExecDAO.slaMonitoringData(subProcessList);
            LOGGER.info("total size of slaMonitoringBeanList " + slaMonitoringBeanList.size());
            LOGGER.info("slaMonitoringBean are "+slaMonitoringBeanList);
+
            restWrapper = new RestWrapper(slaMonitoringBeanList, RestWrapper.OK);
        }catch (MetadataException e) {
            LOGGER.error(e);

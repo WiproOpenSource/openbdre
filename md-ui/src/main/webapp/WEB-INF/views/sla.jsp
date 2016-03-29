@@ -23,10 +23,40 @@ body {
 
 </style>
 <body>
+<script>
+var jsSLAMonitoringObjectList=[];
+</script>
+<%@ page import="java.util.*,com.wipro.ats.bdre.md.beans.SLAMonitoringBean,org.codehaus.jackson.map.ObjectMapper,org.codehaus.jackson.map.type.TypeFactory" %>
+<%
+ String slaMonitoringBeanList=request.getParameter("slaMonitoringBeanList");
+  ObjectMapper mapper = new ObjectMapper();
+  List<SLAMonitoringBean> list2 = mapper.readValue(slaMonitoringBeanList,
+  TypeFactory.collectionType(List.class, SLAMonitoringBean.class));
+          for(int i=0;i<list2.size();i++)
+          {
+          SLAMonitoringBean slaMonitoringBean=list2.get(i);
+          int processId=slaMonitoringBean.getProcessId();
+          long currentExecutionTime=slaMonitoringBean.getCurrentExecutionTime();
+          long averageExecutionTime=slaMonitoringBean.getAverageExecutionTime();
+          long sLATime=slaMonitoringBean.getsLATime();
+           %>
+              <script>
+              function jsSLAMonitoringObject(processId, currentExecutionTime, averageExecutionTime, sLATime) {
+                     this.processId = processId;
+                     this.currentExecutionTime = currentExecutionTime;
+                     this.averageExecutionTime = averageExecutionTime;
+                     this.sLATime = sLATime;
+                 }
+               var slaBean=new jsSLAMonitoringObject("<%=processId %>","<%=currentExecutionTime %>","<%=averageExecutionTime %>","<%=sLATime %>");
+                    jsSLAMonitoringObjectList.push(slaBean);
+                    </script>
+               <%
+          }
+
+%>
 <div>
 <script src="//d3js.org/d3.v3.min.js"></script>
 <script>
-
 var margin = {top: 20, right: 40, bottom: 30, left: 200},
     width = 1500 - margin.left - margin.right,
     height = 900 - margin.top - margin.bottom;
@@ -58,22 +88,22 @@ var svg = d3.select("body").append("svg")
     .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
 var data=[
-{State:'CA',Years:2704, to13Years:4499, to17Years:2159},
-{State:'TX',Years:2027, to13Years:3277, to17Years:1420},
-{State:'NY',Years:1208, to13Years:2141, to17Years:1058},
-{State:'FL',Years:1140, to13Years:1938, to17Years:925},
-{State:'IL',Years:894, to13Years:1558,  to17Years:725},
-{State:'PA',Years:737, to13Years:1345,  to17Years:679}
+{processId:'CA',Years:2704, to13Years:4499, to17Years:2159},
+{processId:'TX',Years:2027, to13Years:3277, to17Years:1420},
+{processId:'NY',Years:1208, to13Years:2141, to17Years:1058},
+{processId:'FL',Years:1140, to13Years:1938, to17Years:925},
+{processId:'IL',Years:894, to13Years:1558,  to17Years:725},
+{processId:'PA',Years:737, to13Years:1345,  to17Years:679}
 ];
 
  function draw(data) {
-  var ageNames = d3.keys(data[0]).filter(function(key) { return key !== "State"; });
+  var ageNames = d3.keys(data[0]).filter(function(key) { return key !== "processId"; });
 
   data.forEach(function(d) {
     d.ages = ageNames.map(function(name) { return {name: name, value: +d[name]}; });
   });
 
-  x0.domain(data.map(function(d) { return d.State; }));
+  x0.domain(data.map(function(d) { return d.processId; }));
   x1.domain(ageNames).rangeRoundBands([0, x0.rangeBand()]);
   y.domain([0, d3.max(data, function(d) { return d3.max(d.ages, function(d) { return d.value; }); })]);
 
@@ -90,15 +120,15 @@ var data=[
       .attr("y", 6)
       .attr("dy", ".71em")
       .style("text-anchor", "end")
-      .text("Population");
+      .text("Time in milliSeconds");
 
-  var state = svg.selectAll(".state")
+  var processId = svg.selectAll(".processId")
       .data(data)
     .enter().append("g")
-      .attr("class", "state")
-      .attr("transform", function(d) { return "translate(" + x0(d.State) + ",0)"; });
+      .attr("class", "processId")
+      .attr("transform", function(d) { return "translate(" + x0(d.processId) + ",0)"; });
 
-  state.selectAll("rect")
+  processId.selectAll("rect")
       .data(function(d) { return d.ages; })
     .enter().append("rect")
       .attr("width", x1.rangeBand())
@@ -127,8 +157,8 @@ var data=[
       .text(function(d) { return d; });
 
 };
-draw(data);
+draw(jsSLAMonitoringObjectList);
 </script>
 </div>
-<hr width="80%" COLOR="#6699FF" SIZE="6">
+<hr width="80%" COLOR="#6699FF" SIZE="2">
 <center><b>ProcessIDs</b></center>

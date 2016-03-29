@@ -170,7 +170,7 @@ public class InstanceExecDAO {
         List<SLAMonitoringBean> slaMonitoringBeanList=new ArrayList<>();
         try {
             session.beginTransaction();
-
+            int counter=subProcessList.size();
             for(Process process:subProcessList)
             {
                Criteria instanceExecListCriteria= session.createCriteria(InstanceExec.class).add(Restrictions.eq("process",process)).addOrder(Order.asc("startTs")).setMaxResults(25);
