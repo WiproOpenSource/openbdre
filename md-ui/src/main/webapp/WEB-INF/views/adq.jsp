@@ -39,8 +39,8 @@
 		    sorting: true,
 		    actions: {
 		    listAction: function (postData, jtParams) {
-		    console.log(postData);
-			    return $.Deferred(function ($dfd) {
+	         	    console.log(postData);
+     			    return $.Deferred(function ($dfd) {
 			    $.ajax({
 			    url: '/mdrest/adq?page=' + jtParams.jtStartIndex + '&size='+jtParams.jtPageSize,
 				    type: 'GET',
@@ -131,7 +131,8 @@
 			 create: false,
 			 edit: false,
 			 display: function(data) {
-				 return '<span class="label label-primary" onclick="mergeApp(' + data.record.processId + ')">Merge</span> ';
+
+				 return '<span class="label label-primary" onclick="mergeApp(' + data.record.appDeploymentQueueId + ')">Merge</span> ';
 			 },
 		 },
 		 rejectButton: {
@@ -142,7 +143,7 @@
          			 create: false,
          			 edit: false,
          			 display: function(data) {
-         				 return '<span class="label label-primary" onclick="rejectApp(' + data.record.processId + ')">Reject</span> ';
+         				 return '<span class="label label-primary" onclick="rejectApp(' + data.record.appDeploymentQueueId + ')">Reject</span> ';
          			 },
          		 }
 
@@ -150,6 +151,123 @@
 	    });
 		    $('#Container').jtable('load');
 	    });
+
+	    mergeApp =function (appDeploymentQueueId){
+                                                console.log(appDeploymentQueueId);
+                                        $("#dialog-confirm").dialog({
+                                                                    resizable: false,
+                                                                    height: 'auto',
+                                                                    modal: true,
+                                                                    buttons: {
+                                                                        "Yes merge": function() {
+                                                                            $(this).dialog("close");
+                                                                            $("#during-merge").dialog({
+                                                                                    resizable: false,
+                                                                                    height: 'auto',
+                                                                                    modal: true
+                                                                                    }).html("Merging.......");
+                                                                             console.log(appDeploymentQueueId);
+                                                                            return $.Deferred(function($dfd) {
+                                                                                $.ajax({
+                                                                                 url: '/mdrest/adq/merge/'+appDeploymentQueueId,
+                                                                                  type: 'POST',
+                                                                                  dataType: 'json',
+                                                                                   success: function(data) {
+                                                                                   if (data.Result == "OK") {
+                                                                                   $("#during-merge").dialog("close");
+                                                                                   console.log(data);
+                                                                                  $("#execute-result").dialog({
+                                                                                                    resizable: false,
+                                                                                                    height: 'auto',
+                                                                                                    modal: true,
+                                                                                                    buttons: {
+                                                                                                        "OK": function() {
+                                                                                                            $(this).dialog("close");
+
+                                                                                                        }
+                                                                                                    }
+                                                                                                }).html("Application having  appDeploymentQueueId <b>" +appDeploymentQueueId +"</b> successfully merged</b>");
+
+
+                                                                                }
+                                                                                     if (data.Result == "ERROR")
+                                                                                       alert(data.Message);
+                                                                                  },
+                                                                                   error: function() {
+                                                                                   alert('Error in app merge to appstore');
+                                                                               }
+                                                                           });
+                                                                        });
+
+                                                                        },
+                                                                        Cancel: function() {
+                                                                            $(this).dialog("close");
+                                                                        }
+                                                                    }
+                                                                });
+
+
+                                        }
+
+
+         rejectApp =function (appDeploymentQueueId){
+                                                         console.log(appDeploymentQueueId);
+                                                 $("#dialog-reject").dialog({
+                                                     resizable: false,
+                                                     height: 'auto',
+                                                     modal: true,
+                                                     buttons: {
+                                                         "Yes reject": function() {
+                                                             $(this).dialog("close");
+                                                             $("#during-merge").dialog({
+                                                                     resizable: false,
+                                                                     height: 'auto',
+                                                                     modal: true
+                                                                     }).html("rejecting.......");
+                                                              console.log(appDeploymentQueueId);
+                                                             return $.Deferred(function($dfd) {
+                                                                 $.ajax({
+                                                                  url: '/mdrest/adq/reject/'+appDeploymentQueueId,
+                                                                   type: 'POST',
+                                                                   dataType: 'json',
+                                                                    success: function(data) {
+                                                                    if (data.Result == "OK") {
+                                                                    $("#during-merge").dialog("close");
+                                                                    console.log(data);
+                                                                   $("#execute-result").dialog({
+                                                                                     resizable: false,
+                                                                                     height: 'auto',
+                                                                                     modal: true,
+                                                                                     buttons: {
+                                                                                         "OK": function() {
+                                                                                             $(this).dialog("close");
+
+                                                                                         }
+                                                                                     }
+                                                                                 }).html("Application having  appDeploymentQueueId <b>" +appDeploymentQueueId +"</b> successfully rejected</b>");
+
+
+                                                                 }
+                                                                      if (data.Result == "ERROR")
+                                                                        alert(data.Message);
+                                                                   },
+                                                                    error: function() {
+                                                                    alert('Error in app merge to appstore');
+                                                                }
+                                                            });
+                                                         });
+
+                                                         },
+                                                         Cancel: function() {
+                                                             $(this).dialog("close");
+                                                         }
+                                                     }
+                                                 });
+
+
+                                                 }
+
+
 	</script>
     </head>
     <body>
@@ -157,7 +275,18 @@
     <section style="width:100%;text-align:center;">
 	<div id="Container"></div>
     </section>
+<div id="dialog-confirm" title="Are you sure?" style="display:none;">
+              <p><span class="ui-icon ui-icon-alert" style="float:left; margin:0 7px 20px 0;"></span>This will export the application to appstore</p>
+          </div>
 
-
+<div id="dialog-reject" title="Are you sure?" style="display:none;">
+              <p><span class="ui-icon ui-icon-alert" style="float:left; margin:0 7px 20px 0;"></span>This will reject exporting of the application to appstore</p>
+          </div>
+  <div id="execute-result" title="Process Started" style="display:none;">
+               <p><span class="ui-icon ui-icon-alert" style="float:left; margin:0 7px 20px 0;"></span>Process Started Successfully</p>
+              </div>
+  <div id="during-merge" title="Process Started" style="display:none;">
+                 <p><span class="ui-icon ui-icon-alert" style="float:left; margin:0 7px 20px 0;"></span>Process Started Successfully</p>
+                </div>
 </body>
 </html>

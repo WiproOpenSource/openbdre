@@ -678,7 +678,7 @@
 
                                 },
                                 busDomainId: {
-                                    title: 'Application',
+                                    title: 'Business Domain',
                                     type: 'combobox',
                                     options: '/mdrest/busdomain/options/',
                                     defaultValue: "1"

@@ -19,9 +19,9 @@
 package com.wipro.ats.bdre.flume.sink.hdfs;
 
 public enum SequenceFileSerializerType {
-  Writable(HDFSWritableSerializer.Builder.class),
-  Text(HDFSTextSerializer.Builder.class),
-  Other(null);
+  WRITABLE(HDFSWritableSerializer.Builder.class),
+  TEXT(HDFSTextSerializer.HDFSTextSerializerBuilder.class),
+  OTHER(null);
 
   private final Class<? extends SequenceFileSerializer.Builder> builderClass;
 

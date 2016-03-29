@@ -55,7 +55,7 @@ public class AppDeploymentQueueDAO {
         session.close();
         return size;
     }
-    public AppDeploymentQueue get(Integer id) {
+    public AppDeploymentQueue get(Long id) {
         Session session = sessionFactory.openSession();
         session.beginTransaction();
         AppDeploymentQueue adq = (AppDeploymentQueue) session.get(AppDeploymentQueue.class, id);
