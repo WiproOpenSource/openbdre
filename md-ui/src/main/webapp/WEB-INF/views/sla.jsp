@@ -22,38 +22,81 @@ body {
 }
 
 </style>
+
+<script>
+	  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+	  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+	  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+	  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+	  //Please replace with your own analytics id
+	  ga('create', 'UA-72345517-1', 'auto');
+	  ga('send', 'pageview');
+	</script>
+
+                <!-- Include one of jTable styles. -->
+
+                <link href="../css/css/bootstrap.min.css" rel="stylesheet" type="text/css" />
+                <link href="../css/jtables-bdre.css" rel="stylesheet" type="text/css" />
+                <link href="../css/jquery-ui-1.10.3.custom.css" rel="stylesheet" type="text/css" />
+
+                <!-- Include jTable script file. -->
+                <script src="../js/jquery.min.js" type="text/javascript"></script>
+                <script src="../js/jquery-ui-1.10.3.custom.js" type="text/javascript"></script>
+                <script src="../js/jquery.jtable.js" type="text/javascript"></script>
+
+
 <body>
 <script>
 var jsSLAMonitoringObjectList=[];
 </script>
-<%@ page import="java.util.*,com.wipro.ats.bdre.md.beans.SLAMonitoringBean,org.codehaus.jackson.map.ObjectMapper,org.codehaus.jackson.map.type.TypeFactory" %>
 <%
- String slaMonitoringBeanList=request.getParameter("slaMonitoringBeanList");
-  ObjectMapper mapper = new ObjectMapper();
-  List<SLAMonitoringBean> list2 = mapper.readValue(slaMonitoringBeanList,
-  TypeFactory.collectionType(List.class, SLAMonitoringBean.class));
-          for(int i=0;i<list2.size();i++)
-          {
-          SLAMonitoringBean slaMonitoringBean=list2.get(i);
-          int processId=slaMonitoringBean.getProcessId();
-          long currentExecutionTime=slaMonitoringBean.getCurrentExecutionTime();
-          long averageExecutionTime=slaMonitoringBean.getAverageExecutionTime();
-          long sLATime=slaMonitoringBean.getsLATime();
-           %>
-              <script>
-              function jsSLAMonitoringObject(processId, currentExecutionTime, averageExecutionTime, sLATime) {
+String processId=request.getParameter("processId");
+%>
+<script>
+SLAMonitoring("<%=processId %>");
+
+function jsSLAMonitoringObject(processId, currentExecutionTime, averageExecutionTime, sLATime) {
                      this.processId = processId;
                      this.currentExecutionTime = currentExecutionTime;
                      this.averageExecutionTime = averageExecutionTime;
                      this.sLATime = sLATime;
                  }
-               var slaBean=new jsSLAMonitoringObject("<%=processId %>","<%=currentExecutionTime %>","<%=averageExecutionTime %>","<%=sLATime %>");
-                    jsSLAMonitoringObjectList.push(slaBean);
-                    </script>
-               <%
-          }
 
-%>
+function SLAMonitoring(pid)
+                     {
+                     $.ajax({
+                                   url: '/mdrest/process/SLAMonitoring/' + pid,
+                                    type: 'GET',
+                                    dataType: 'json',
+                                     success: function(data) {
+                                     if (data.Result == "OK") {
+                                     console.log(data);
+                                   jsSLAMonitoringObjectArrayList(data);
+                                  }
+                               if (data.Result == "ERROR")
+                                 alert(data.Message);
+                            },
+                             error: function() {
+                             alert('Error in SLAMonitoring');
+                         }
+                          });
+                     }
+
+
+  function jsSLAMonitoringObjectArrayList(data){
+  for(var i=0;i<data.Record.length;i++)
+  {
+  var obj=data.Record[i];
+  var slaBean=new jsSLAMonitoringObject(obj.processId,obj.currentExecutionTime,obj.averageExecutionTime,obj.sLATime);
+            jsSLAMonitoringObjectList.push(slaBean);
+
+  }
+  draw(jsSLAMonitoringObjectList);
+  }
+
+
+</script>
+
 <div>
 <script src="//d3js.org/d3.v3.min.js"></script>
 <script>
@@ -87,14 +130,6 @@ var svg = d3.select("body").append("svg")
   .append("g")
     .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
-var data=[
-{processId:'CA',Years:2704, to13Years:4499, to17Years:2159},
-{processId:'TX',Years:2027, to13Years:3277, to17Years:1420},
-{processId:'NY',Years:1208, to13Years:2141, to17Years:1058},
-{processId:'FL',Years:1140, to13Years:1938, to17Years:925},
-{processId:'IL',Years:894, to13Years:1558,  to17Years:725},
-{processId:'PA',Years:737, to13Years:1345,  to17Years:679}
-];
 
  function draw(data) {
   var ageNames = d3.keys(data[0]).filter(function(key) { return key !== "processId"; });
@@ -157,8 +192,7 @@ var data=[
       .text(function(d) { return d; });
 
 };
-draw(jsSLAMonitoringObjectList);
 </script>
 </div>
-<hr width="80%" COLOR="#6699FF" SIZE="2">
+<hr width="80%" COLOR="#6699FF" SIZE="4">
 <center><b>ProcessIDs</b></center>

@@ -904,7 +904,7 @@
                                     edit: false,
                                     display: function(data) {
 
-                                     return '<span class="label label-primary" onclick="SLAMonitoring(' + data.record.processId + ')">SLA Monitoring</span> ';
+                                     return '<span class="label label-primary" onclick="goToSLAMonitoringPage(' + data.record.processId + ')">SLA Monitoring</span> ';
                                      },
 
                                 },
@@ -999,29 +999,12 @@
 
                      }
 
-                     function SLAMonitoring(pid)
-                     {
-                     $.ajax({
-                                   url: '/mdrest/process/SLAMonitoring/' + pid,
-                                    type: 'GET',
-                                    dataType: 'json',
-                                     success: function(data) {
-                                     if (data.Result == "OK") {
-                                     console.log(data);
-                                    var od = JSON.stringify(data.Record) ;
-                                                    console.log(od);
-                                    location.href = '<c:url value="/pages/sla.page?slaMonitoringBeanList="/>' + od;
-                                  }
-                               if (data.Result == "ERROR")
-                                 alert(data.Message);
-                            },
-                             error: function() {
-                             alert('Error in SLAMonitoring');
-                         }
-                          });
-                     }
+                     function goToSLAMonitoringPage(pid)
+                                          {
+                                             console.log(pid);
+                                             location.href = '<c:url value="/pages/sla.page?processId="/>' + pid;
 
-
+                                          }
                 </script>
                 <%--  --%>
                     <script>
