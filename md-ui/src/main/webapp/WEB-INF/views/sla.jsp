@@ -194,5 +194,5 @@ var svg = d3.select("body").append("svg")
 };
 </script>
 </div>
-<hr style="width:80%">
+<hr  style="width:80%">
 <center><b>SubProcessIDs ------> </b></center>
