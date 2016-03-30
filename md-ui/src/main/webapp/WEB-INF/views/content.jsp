@@ -356,7 +356,12 @@
                                             collapse: "1",
                                             url: "pdq.page",
                                             children: []
-						}, 
+						}, {
+                                       label: "Table Column Lineage",
+                                       collapse: "1",
+                                       url: "tablecolumnlineage.page",
+                                       children: []
+                        },
                         <security:authorize access = "hasRole('ROLE_ADMIN')">
                                                                               {
                                             label: "App Deployment",
