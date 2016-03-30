@@ -155,7 +155,7 @@ var svg = d3.select("body").append("svg")
       .attr("y", 6)
       .attr("dy", ".71em")
       .style("text-anchor", "end")
-      .text("Time in milliSeconds");
+      .text("Time in milliSeconds --->");
 
   var processId = svg.selectAll(".processId")
       .data(data)
@@ -194,5 +194,5 @@ var svg = d3.select("body").append("svg")
 };
 </script>
 </div>
-<hr width="80%" COLOR="#6699FF" SIZE="4">
-<center><b>ProcessIDs</b></center>
+<hr style="width:80%">
+<center><b>SubProcessIDs ------> </b></center>

@@ -19,6 +19,7 @@ import com.wipro.ats.bdre.md.beans.SLAMonitoringBean;
 import com.wipro.ats.bdre.md.dao.jpa.Batch;
 import com.wipro.ats.bdre.md.dao.jpa.InstanceExec;
 import com.wipro.ats.bdre.md.dao.jpa.Process;
+import com.wipro.ats.bdre.md.dao.jpa.Properties;
 import org.apache.log4j.Logger;
 import org.hibernate.Criteria;
 import org.hibernate.Session;
@@ -182,12 +183,19 @@ public class InstanceExecDAO {
                     sumTime += (instanceExec.getEndTs().getTime() - instanceExec.getStartTs().getTime());
                     currentTime=instanceExec.getEndTs().getTime() - instanceExec.getStartTs().getTime();
                 }
+
+                Criteria propertyCriteria=session.createCriteria(Properties.class).add(Restrictions.eq("process",process)).add(Restrictions.eq("configGroup","groupbar"));
+                Properties properties= (Properties) propertyCriteria.uniqueResult();
+
                 SLAMonitoringBean slaMonitoringBean=new SLAMonitoringBean();
                 slaMonitoringBean.setProcessId(process.getProcessId());
                 if(total!=0)
                 slaMonitoringBean.setAverageExecutionTime(sumTime/total);
                 slaMonitoringBean.setCurrentExecutionTime(currentTime);
+                if(properties==null)
                 slaMonitoringBean.setsLATime(0);
+                else
+                slaMonitoringBean.setsLATime(Long.parseLong(properties.getPropValue()));
                 slaMonitoringBeanList.add(slaMonitoringBean);
             }
             LOGGER.info("total size of slaMonitotingBeanList "+slaMonitoringBeanList.size());
