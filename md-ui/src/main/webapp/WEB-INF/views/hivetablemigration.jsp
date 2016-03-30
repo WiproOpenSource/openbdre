@@ -351,7 +351,7 @@
             	$('#createjobs').on('click', function(e) {
                         $.ajax({
                             type: "POST",
-                            url: "/mdrest/hivemigration/createjob",
+                            url: "/mdrest/hivemigration/createjobs",
                             data: jQuery.param(map),
                             success: function(data) {
                                 if(data.Result == "OK") {

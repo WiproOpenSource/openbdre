@@ -148,7 +148,7 @@ public class HiveTableMigrationAPI {
     }
 
 
-    @RequestMapping(value = "/createjob", method = RequestMethod.POST)
+    @RequestMapping(value = "{/createjobs}", method = RequestMethod.POST)
     @ResponseBody public
     RestWrapper createJob(@RequestParam Map<String, String> map, Principal principal) {
         LOGGER.debug(" value of map is " + map.size());
