@@ -306,11 +306,11 @@ public class ProcessLogDAO {
         return processLogInfoList;
     }
 
-    public List<ProcessLogInfo> listLastInstanceRef(int processId) {
+    public List<ProcessLogInfo> listLastInstanceRef(int processId, String messageId) {
         Session session = sessionFactory.openSession();
         session.beginTransaction();
-        Criteria criteriaList = session.createCriteria(ProcessLog.class).add(Restrictions.eq("process.processId",processId));
-        Criteria criteriaMaxInstanceRef = session.createCriteria(ProcessLog.class).add(Restrictions.eq("process.processId",processId)).addOrder(Order.desc("instanceRef")).setMaxResults(1);
+        Criteria criteriaList = session.createCriteria(ProcessLog.class).add(Restrictions.eq("process.processId",processId)).add(Restrictions.eq("messageId",messageId));
+        Criteria criteriaMaxInstanceRef = session.createCriteria(ProcessLog.class).add(Restrictions.eq("process.processId",processId)).add(Restrictions.eq("messageId",messageId)).addOrder(Order.desc("instanceRef")).setMaxResults(1);
         ProcessLog maxInstanceRef=criteriaMaxInstanceRef.list().size()>0?(ProcessLog)criteriaMaxInstanceRef.list().get(0):null;
         List<ProcessLog> processLogs = maxInstanceRef!=null?criteriaList.add(Restrictions.eq("instanceRef",maxInstanceRef.getInstanceRef())).list():new ArrayList<>();
         List<ProcessLogInfo> processLogInfos = new ArrayList<>();

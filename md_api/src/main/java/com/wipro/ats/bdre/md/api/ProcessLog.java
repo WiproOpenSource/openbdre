@@ -166,11 +166,11 @@ public class ProcessLog extends MetadataAPIBase {
 
     }
 
-    public List<ProcessLogInfo> listLastInstanceRef(int processId) {
+    public List<ProcessLogInfo> listLastInstanceRef(int processId, String messageId) {
         try {
 
             //calling addprocesslog function of Addprocesslogdao
-            List<ProcessLogInfo> processLogInfos=processLogDAO.listLastInstanceRef(processId);
+            List<ProcessLogInfo> processLogInfos=processLogDAO.listLastInstanceRef(processId,messageId);
             return processLogInfos;
         } catch (Exception e) {
             LOGGER.error("Error occurred.", e);
