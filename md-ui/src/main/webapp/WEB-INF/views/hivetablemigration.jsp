@@ -32,9 +32,14 @@
     		<script src="../js/jquery.steps.min.js"></script>
     		<link rel="stylesheet" href="../css/jquery.steps.css" />
     		<script src="../js/bootstrap.js" type="text/javascript"></script>
+            <script src = "../js/jquery.fancytree.js" ></script >
+            <link rel = "stylesheet" href = "../css/ui.fancytree.css" />
+            <script src = "../js/jquery.fancytree.gridnav.js" type = "text/javascript" ></script >
+            <script src = "../js/jquery.fancytree.table.js" type = "text/javascript" ></script >
     		<script src="../js/jquery.jtable.js" type="text/javascript"></script>
     		<script src="../js/angular.min.js" type="text/javascript"></script>
     		<link href="../css/jtables-bdre.css" rel="stylesheet" type="text/css" />
+
 
    	<script>
    var jsonObj = {"Result":"OK","Records":[],"Message":null,"TotalRecordCount":0,"Record":[]};
@@ -72,7 +77,7 @@
    <script>
    function displayProcess(records) {
    	$('#Process').jtable({
-   		title: 'Cluster to Cluster Data Migration Processes',
+   		title: 'Cluster to Cluster Hive Table Migration Processes',
    		paging: false,
    		sorting: false,
    		create: false,
@@ -332,8 +337,45 @@
         },
   		onStepChanged: function(event, currentIndex, priorIndex) {
 
-  		    formIntoMap('srcEnv_', 'processDetailsForm');
+
   			console.log(currentIndex + " " + priorIndex);
+
+                formIntoMap('srcEnv_', 'processDetailsForm');
+
+				 formIntoMap('srcDB_', 'srcDBForm');
+
+				 formIntoMap('tables_','tablesForm');
+
+				 formIntoMap('destEnv_','destEnvForm');
+
+            	$('#createjobs').on('click', function(e) {
+                        $.ajax({
+                            type: "POST",
+                            url: "/mdrest/hivemigration/createjobs",
+                            data: jQuery.param(map),
+                            success: function(data) {
+                                if(data.Result == "OK") {
+                                    created = 1;
+                                    $("#div-dialog-warning").dialog({
+                                        title: "",
+                                        resizable: false,
+                                        height: 'auto',
+                                        modal: true,
+                                        buttons: {
+                                            "Ok": function() {
+                                                $(this).dialog("close");
+                                            }
+                                        }
+                                    }).text("Jobs successfully created.");
+                                    createJobResult = data;
+                                    displayProcess(createJobResult);
+                                }
+                                console.log(createJobResult);
+                            }
+
+                        });
+                    return false;
+                    });
   			return true;
   		},
   		onFinished: function(event, currentIndex) {
@@ -354,16 +396,44 @@
   			}
   		},
   		onCanceled: function(event) {
-  			location.href = '<c:url value="/pages/clustertoclusterwizard.page"/>';
+  			location.href = '<c:url value="/pages/hivetablemigration.page"/>';
   		}
   	});
   });
+
+
   </script>
 
   		<script>
                   var app = angular.module('myApp', []);
                   app.controller('myCtrl', function($scope) {
                       $scope.srcEnvs= getGenConfigMap('src_Env');
+                      $scope.databases= {};
+                       $.ajax({
+                            url: '/mdrest/hivemigration/databases/',
+                                type: 'GET',
+                                dataType: 'json',
+                                async: false,
+                                success: function (data) {
+                                    $scope.databases = data;
+                                },
+                                error: function () {
+                                    alert('database danger');
+                                }
+                            });
+                       $scope.tables= {};
+                         $.ajax({
+                              url: '/mdrest/hivemigration/tables/',
+                                  type: 'GET',
+                                  dataType: 'json',
+                                  async: false,
+                                  success: function (data) {
+                                      $scope.tables = data;
+                                  },
+                                  error: function () {
+                                      alert('table danger');
+                                  }
+                              });
                       $scope.formatMap=null;
                       $scope.busDomains = {};
                       $.ajax({
@@ -402,7 +472,7 @@
                 <h3>Source Environment</h3>
                             <section>
                               <form class="form-horizontal" role="form" id="processDetailsForm">
-                                  <div id="fileFormatDiv">
+                                  <div id="processDetails">
 
                                             <!-- btn-group -->
                                             <div id="process">
@@ -434,14 +504,55 @@
                                     <label class="control-label col-sm-2" for="srcDB">Select a database:</label>
                                       <div class="col-sm-10">
                                         <select class="form-control" id="srcDB" name="srcDB" >
-                                            <option>database1</option>
+                                           <option ng-repeat="srcDB in databases.Options" value="{{srcDB.Value}}" name="srcDB">{{srcDB.DisplayText}}</option>
                                         </select>
                                       </div>
                                   </div>
 
                           </form>
                 </section>
+			<h3>Tables</h3>
+			<section>
+			  <form class="form-horizontal" role="form" id="tablesForm">
+                  <div id="tablesDiv">
+                     <div class="form-group">
+                        <label class="control-label col-sm-2" for="tabl">Select Table:</label>
+                          <div class="col-sm-10">
+                            <select class="form-control" id="tabl" name="tabl" >
+                               <option ng-repeat="tabl in tables.Options" value="{{tabl.Value}}" name="tabl">{{tabl.DisplayText}}</option>
+                            </select>
+                          </div>
+                      </div>
 
+              </form>
+
+             </section>
+
+             <h3>Destination Environment</h3>
+             <section>
+             <form class="form-horizontal" role="form" id="destEnvForm">
+				   <div id="fileFormatDiv">
+								 <div class="form-group">
+									 <label class="control-label col-sm-2" for="destEnv">Select Destination Environment:</label>
+									 <div class="col-sm-10">
+										 <select class="form-control" id="destEnv" name="destEnv" >
+											 <option ng-repeat="destEnv in srcEnvs" value="{{destEnv.defaultVal}}" name="destEnv">{{destEnv.value}}</option>
+										 </select>
+								     </div>
+						 </div>
+				</form>
+
+              </section>
+            <h3>Confirm</h3>
+             <section>
+               <div id="Process">
+               		<button id="createjobs" type="button" class="btn btn-primary btn-lg">Create Jobs</button>
+               	</div>
+             </section>
+
+             <div style="display:none" id="div-dialog-warning">
+             			<p><span class="ui-icon ui-icon-alert" style="float:left;"></span></p>
+             		</div>
 
     </body>
 </html>

@@ -544,6 +544,59 @@ public List<Process> createOneChildJob(Process parentProcess, Process childProce
     return processList;
 }
 
+    public List<Process> createHiveMigrationJob(Process parentProcess, List<Process> childProcesses) {
+        Session session = sessionFactory.openSession();
+        Integer parentPid = null;
+        com.wipro.ats.bdre.md.dao.jpa.Process preprocessingProcess = null;
+        com.wipro.ats.bdre.md.dao.jpa.Process sourcestageloadProcess = null;
+        com.wipro.ats.bdre.md.dao.jpa.Process sourcetodeststagecopyProcess = null;
+        com.wipro.ats.bdre.md.dao.jpa.Process desttableloadProcess = null;
+        com.wipro.ats.bdre.md.dao.jpa.Process registerpartitionProcess = null;
+        List<Process> processList = new ArrayList<Process>();
+        try {
+            session.beginTransaction();
+            parentPid = (Integer) session.save(parentProcess);
+            LOGGER.info("parent processId:" + parentPid);
+            parentProcess.setProcessId(parentPid);
+            for (Process childProcess : childProcesses) {
+                childProcess.setProcess(parentProcess);
+                if (childProcess.getProcessType().getProcessTypeId() == 32) {
+                    preprocessingProcess = childProcess;
+                    preprocessingProcess.setNextProcessId(parentPid.toString());
+                    preprocessingProcess.setProcessId((Integer) session.save(preprocessingProcess));
+                } else if (childProcess.getProcessType().getProcessTypeId() == 33) {
+                    sourcestageloadProcess = childProcess;
+                    sourcestageloadProcess.setNextProcessId(parentPid.toString());
+                    sourcestageloadProcess.setProcessId((Integer) session.save(sourcestageloadProcess));
+                } else if (childProcess.getProcessType().getProcessTypeId() == 34) {
+                    sourcetodeststagecopyProcess = childProcess;
+                    sourcetodeststagecopyProcess.setNextProcessId(parentPid.toString());
+                    sourcetodeststagecopyProcess.setProcessId((Integer) session.save(sourcetodeststagecopyProcess));
+                } else if (childProcess.getProcessType().getProcessTypeId() == 35) {
+                    desttableloadProcess = childProcess;
+                    desttableloadProcess.setNextProcessId(parentPid.toString());
+                    desttableloadProcess.setProcessId((Integer) session.save(desttableloadProcess));
+                } else if (childProcess.getProcessType().getProcessTypeId() == 36) {
+                    registerpartitionProcess = childProcess;
+                    registerpartitionProcess.setNextProcessId(parentPid.toString());
+                    registerpartitionProcess.setProcessId((Integer) session.save(registerpartitionProcess));
+                }
+            }
+            processList.add(parentProcess);
+            processList.add(preprocessingProcess);
+            processList.add(sourcestageloadProcess);
+            processList.add(sourcetodeststagecopyProcess);
+            processList.add(desttableloadProcess);
+            processList.add(registerpartitionProcess);
+        }
+        catch (MetadataException e) {
+            session.getTransaction().rollback();
+            LOGGER.error(e);
+        } finally {
+            session.close();
+        }
+        return processList;
+    }
     public List<Process> createDataloadJob(Process parentProcess, List<Process> childProcesses, List<Properties> parentProps, Map<Process,List<Properties>> childProps ){
         Session session = sessionFactory.openSession();
         Integer parentPid = null;

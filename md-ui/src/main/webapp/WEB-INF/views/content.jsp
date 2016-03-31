@@ -425,9 +425,9 @@
                                             url: "flumepropertieswizard.page",
                                             children: []
 					},{
-                                                                  label: "Cluster to cluster data Migration",
+                                                                  label: "Hive Table Migration",
                                                                   collapse: "1",
-                                                                  url: "clustertoclusterwizard.page",
+                                                                  url: "hivetablemigration.page",
                                                                   children: []
                       					}, </security:authorize>]
                                     },
