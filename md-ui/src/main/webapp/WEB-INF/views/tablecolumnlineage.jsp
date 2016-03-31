@@ -268,17 +268,36 @@
             <body>
                 <br/>
 
-                <button type='button' class='btn btn-primary' aria-label='Left Align' onClick='saveSVG("execution",0)'><span class='glyphicon glyphicon-save' aria-hidden='true'></span>Save</button>
+<div class="row">&nbsp;</div>
+                        <div class="row">
+                            <div class="col-md-3"> </div>
+                            <div class="col-md-9" id="divEncloseHeading">
                 <c:if test="${empty param.tableName}">
-                    <section>
-                        Table Name is: <input type="text" name="tableName" id="tableName" value =""/>
-                        Column Name is: <input type="text" name="colName" id="colName" value =""/>
-                        <button onClick="resetGraph();
-                                         getTableName(jQuery('#tableName').val(), jQuery('#colName').val())" href="#">Show Lineage</button>
-                    </section>
+                    <div class="col-md-6" id="divEncloseHeading">
+                        <div class="panel panel-primary">
+                            <div class="panel-heading">File Monitoring Creating Process <button type='button' class='btn btn-default pull-right' aria-label='Left Align' onClick='saveSVG("execution",0)'><span class='glyphicon glyphicon-save-file' aria-hidden='true'></span> Save </button></div>
+                                <div class="panel-body">
+                                <form role="form" id="propertiesFieldsForm">
+                                    <div class="form-group">
+                                        <label>Table Name is:</label>
+                                        <input type="text" class="form-control" name="tableName" id="tableName" value =""/>
+                                    </div>
+                                    <div class="form-group">
+                                        <label>Column Name is:</label>
+                                        <input type="text" class="form-control" name="colName" id="colName" value =""/>
+                                    </div>
+                                        <button class="btn btn-primary form-control" onClick="resetGraph();
+                                                         getTableName(jQuery('#tableName').val(), jQuery('#colName').val())" href="#"><span class='glyphicon glyphicon-blackboard'></span>Show Lineage</button>
+
+                                </form>
+                                </div>
+                        </div>
+                    </div>
                 </c:if>
                 <div id="graphviz_svg_div" style="width:100%;text-align:left;">
                     <!-- Target for dynamic svg generation -->
+                </div>
+                </div>
                 </div>
                 <div id="div-dialog-warning"/>
             </body>
