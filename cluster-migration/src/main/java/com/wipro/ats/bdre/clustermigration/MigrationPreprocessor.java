@@ -3,6 +3,7 @@ package com.wipro.ats.bdre.clustermigration;
 import com.wipro.ats.bdre.im.IMConstant;
 import com.wipro.ats.bdre.md.api.ProcessLog;
 import com.wipro.ats.bdre.md.beans.ProcessLogInfo;
+import org.apache.log4j.Logger;
 
 import java.sql.*;
 import java.util.*;
@@ -12,7 +13,12 @@ import java.util.Date;
  * Created by cloudera on 3/29/16.
  */
 public class MigrationPreprocessor {
-
+    private static final Logger LOGGER = Logger.getLogger(MigrationPreprocessor.class);
+    public static String sourceRegularColumns=new String();   //comma-separated with datatype
+    public static String sourcePartitionColumns=new String(); //comma-separated with datatype
+    public static String stgPartitionColumns=new String();    //replacing source tech_partition with bdre tech partition
+    public static String stgTableDDL=new String();            //contains source stage table ddl
+    public static String destTableDDL=new String();           //contains destination table ddl
     protected static Connection getHiveJDBCConnection(String dbName) throws Exception {
         try {
             Class.forName(IMConstant.HIVE_DRIVER_NAME);
@@ -36,6 +42,8 @@ public class MigrationPreprocessor {
         String instanceExecId = args[1];
         String table = "account";
         String sourceDb = "sourcedb";
+        String destDb= "destdb";
+        String bdreTechPartition="instanceexecid bigint";
         Connection conn = getHiveJDBCConnection(sourceDb);
         Statement st = conn.createStatement();
         List<String> sourcePartitionList = getCurrentSourcePartitionList(st, sourceDb, table);
@@ -57,7 +65,17 @@ public class MigrationPreprocessor {
         logCurrentSourceColumns(sourceColumnList, processId, instanceExecId, table);
 
         //creating the source stage table
-        createSourceStgTable(st, sourceColumnList, sourceDb, table);
+        formStageAndDestTableDDLs(st, sourceColumnList, sourceDb, destDb, table, bdreTechPartition);
+
+        if(checkIfDestTableExists(destDb,table))
+            alterDestTable(st,addedColumnList,destDb,table);
+        else
+            execDestTableDDL(st);
+
+        String filterCondition=formFilterCondition(modifiedBusinessPartitionSet,sourcePartitionColumns);
+        LOGGER.debug("filterCondition = " + filterCondition);
+        st.close();
+        conn.close();
     }
 
     public static List<String> getCurrentSourcePartitionList(Statement st, String sourceDb, String table) throws Exception {
@@ -66,6 +84,7 @@ public class MigrationPreprocessor {
         while (rsPartitions.next()) {
             sourcePartitionList.add(rsPartitions.getString(1));
         }
+        rsPartitions.close();
         return sourcePartitionList;
     }
 
@@ -100,7 +119,7 @@ public class MigrationPreprocessor {
         businessPartitionSet.addAll(addedBusinessPartitionList);
 
         for (String editedBusinessPartition : businessPartitionSet) {
-            System.out.println("editedBusinessPartition = " + editedBusinessPartition);
+            LOGGER.debug("editedBusinessPartition = " + editedBusinessPartition);
         }
         return businessPartitionSet;
     }
@@ -108,12 +127,13 @@ public class MigrationPreprocessor {
     public static List<String> getCurrentSourceColumnList(String sourceDb, String table) throws Exception {
         List<String> sourceColumnList = new ArrayList<>();
         DatabaseMetaData metaData = getHiveJDBCConnection(sourceDb).getMetaData();
-        ResultSet rsColumns = metaData.getColumns(null, null, table, null);
+        ResultSet rsColumns = metaData.getColumns(null, sourceDb, table, null);
         while (rsColumns.next()) {
             String columnName = rsColumns.getString("COLUMN_NAME");
             String dataType = rsColumns.getString("TYPE_NAME");
             sourceColumnList.add(columnName + " " + dataType);
         }
+        rsColumns.close();
         return sourceColumnList;
     }
 
@@ -133,7 +153,7 @@ public class MigrationPreprocessor {
         addedColumnList.removeAll(previousColumnList);
 
         for (String addedColumn : addedColumnList) {
-            System.out.println("addedColumn = " + addedColumn);
+            LOGGER.debug("addedColumn = " + addedColumn);
         }
         return addedColumnList;
     }
@@ -170,7 +190,7 @@ public class MigrationPreprocessor {
         processLog.logList(columnLogInfoList);
     }
 
-    public static void createSourceStgTable(Statement st, List<String> sourceColumnList, String sourceDb, String table) throws Exception {
+    public static void formStageAndDestTableDDLs(Statement st, List<String> sourceColumnList, String sourceDb, String destDb, String table, String bdreTechPartition) throws Exception {
         ResultSet rsPartitionList = st.executeQuery("desc account");
         int index = 0;
         StringBuffer partitionList = new StringBuffer("");
@@ -193,10 +213,84 @@ public class MigrationPreprocessor {
         for (String sourceColumn : sourceColumnList) {
             finalColumns.append(sourceColumn + ",");
         }
-        String stgTableDDL = "create table " + sourceDb + "." + table + "_stg" + " (" + finalColumns.substring(0, finalColumns.length() - 1) + ") " + "partitioned by (" + partitionList.substring(0, partitionList.length() - 1) + ") stored as orc";
-        System.out.println("stgTableDDL = " + stgTableDDL);
+        sourceRegularColumns=finalColumns.substring(0, finalColumns.length() - 1);
+        sourcePartitionColumns=partitionList.substring(0, partitionList.length() - 1);
+        stgPartitionColumns=sourcePartitionColumns.substring(0,sourcePartitionColumns.lastIndexOf(","))+","+bdreTechPartition;
+        stgTableDDL = "create table " + sourceDb + "." + table + "_stg" + " (" + sourceRegularColumns + ") " + "partitioned by (" + stgPartitionColumns + ") stored as orc";
+        destTableDDL = "create table " + destDb + "." + table  + " (" + sourceRegularColumns + ") " + "partitioned by (" + stgPartitionColumns + ") stored as orc";
+        LOGGER.debug("stgTableDDL = " + stgTableDDL);
+        LOGGER.debug("destTableDDL = " + destTableDDL);
+        execStageTableDDL(st,sourceDb,table);
+        rsPartitionList.close();
+    }
+
+    public static void execStageTableDDL(Statement st,String sourceDb, String table) throws Exception{
         st.executeUpdate("drop table if exists " + sourceDb + "." + table + "_stg");
         st.executeUpdate(stgTableDDL);
+    }
+
+    public static boolean checkIfDestTableExists(String destDb,String table) throws Exception{
+        Connection conn = getHiveJDBCConnection(destDb);
+        Statement st = conn.createStatement();
+        ResultSet rsPartitions = st.executeQuery("show tables");
+        boolean destTableExists=false;
+        while (rsPartitions.next()) {
+            if(rsPartitions.getString(1).equalsIgnoreCase(table)) {
+                destTableExists=true;
+                break;
+            }
+        }
+        rsPartitions.close();
+        st.close();
+        conn.close();
+        return destTableExists;
+    }
+
+    public static void alterDestTable(Statement st, List<String> addedColumnList, String destDb,String table) throws Exception{
+        StringBuffer addedColumnsWithDatatypes = new StringBuffer("");
+        for(String addedColumn:addedColumnList){
+            addedColumnsWithDatatypes.append(addedColumn+",");
+        }
+        if(addedColumnsWithDatatypes.length()>0){
+            LOGGER.debug("Additional columns have been found");
+            String alterDestTableDDL="alter table "+destDb+"."+table+" add columns ("+addedColumnsWithDatatypes.substring(0,addedColumnsWithDatatypes.length()-1)+")";
+            LOGGER.debug("alterDestTableDDL = " + alterDestTableDDL);
+            st.executeUpdate(alterDestTableDDL);
+        }
+        else {
+            LOGGER.debug("No additional columns have been found");
+        }
+    }
+    public static void execDestTableDDL(Statement st) throws Exception{
+        LOGGER.debug("Destination table not found. Hence creating one");
+        st.executeUpdate(destTableDDL);
+    }
+
+    public static String formFilterCondition(Set<String> modifiedBusinessPartitionSet, String sourcePartitionColumns){
+        StringBuffer filterCondition=new StringBuffer();
+        Map<String,String> partitionDataTypeMap = new HashMap<>();
+        String[] partitionArray = sourcePartitionColumns.split(",");
+        for(int i=0;i<partitionArray.length;i++){
+            partitionDataTypeMap.put(partitionArray[i].toUpperCase().substring(0,partitionArray[i].indexOf(" ")),partitionArray[i].toUpperCase().substring(partitionArray[i].indexOf(" "),partitionArray[i].length()));
+        }
+        for(String busPartition:modifiedBusinessPartitionSet){
+            String onePartition="";
+            String[] eachPartitionValue = busPartition.split("/");
+            StringBuffer totalRow=new StringBuffer("");
+            for(int i=0; i<eachPartitionValue.length;i++){
+                String partitionDataType=partitionDataTypeMap.get(eachPartitionValue[i].split("=")[0].toUpperCase());
+                String colAndPartitionValue[]=eachPartitionValue[i].split("=");
+                if(partitionDataType.trim().contains("STRING")||partitionDataType.trim().contains("CHAR")||partitionDataType.trim().contains("DATE")||partitionDataType.trim().contains("TIME")) {
+                    colAndPartitionValue[1]="'"+colAndPartitionValue[1]+"'";
+                }
+                onePartition=colAndPartitionValue[0]+"="+colAndPartitionValue[1] +" AND ";
+                totalRow.append(onePartition);
+            }
+            String trimmedTotalRow=totalRow.substring(0,totalRow.lastIndexOf(" AND "));
+            filterCondition.append(trimmedTotalRow).append(" OR ");
+        }
+
+        return(filterCondition.toString().isEmpty()?"":filterCondition.substring(0,filterCondition.lastIndexOf(" OR ")));
     }
 
 }
