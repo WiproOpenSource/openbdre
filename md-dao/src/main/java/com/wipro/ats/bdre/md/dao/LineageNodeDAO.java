@@ -17,18 +17,14 @@ package com.wipro.ats.bdre.md.dao;
 
 import com.wipro.ats.bdre.exception.MetadataException;
 import com.wipro.ats.bdre.md.dao.jpa.LineageNode;
-import com.wipro.ats.bdre.md.dao.jpa.LineageQuery;
 import org.apache.log4j.Logger;
 import org.hibernate.Criteria;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
-import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -74,26 +70,26 @@ public class LineageNodeDAO {
         return lineageNode;
     }
 
-    //get table node by the name passed
-    public LineageNode getTableNode(String tableName) {
-
+    //get all table node(s) by the name passed
+    public List<LineageNode> getTableNode(String tableName) {
+        List<LineageNode> lineageNodeList;
         Session session = sessionFactory.openSession();
         session.beginTransaction();
         Criteria getLastElementCriteria = session.createCriteria(LineageNode.class).add(Restrictions.eq("displayName", tableName));
-        LineageNode lineageNode = (LineageNode) getLastElementCriteria.list().get(0);
+        lineageNodeList = getLastElementCriteria.list();
         session.getTransaction().commit();
         session.close();
-        return lineageNode;
+        return lineageNodeList;
     }
 
     //get node by nodeid
     public String getContainerDot(String nodeid) {
-        String dotString;
+        String dotString  = "";
         Session session = sessionFactory.openSession();
         session.beginTransaction();
         Criteria getLastElementCriteria = session.createCriteria(LineageNode.class).add(Restrictions.eq("nodeId", nodeid));
         LineageNode lineageNode = (LineageNode) getLastElementCriteria.list().get(0);
-        dotString = lineageNode.getLineageNode().getDotString();
+        dotString += lineageNode.getLineageNode().getDotString();
         session.getTransaction().commit();
         session.close();
         return dotString;
@@ -116,16 +112,16 @@ public class LineageNodeDAO {
         return id;
     }
 
-    public List<LineageNode> getColNodeId(String col_name) {
-        Long instanceExecId;
-        List<LineageNode> lineageNodeList = new ArrayList<LineageNode>();
+    public LineageNode getColNodeId(String colName, LineageNode tableNode) {
+        LineageNode lineageNode;
         Session session = sessionFactory.openSession();
         session.beginTransaction();
-        Criteria getLastElementCriteria = session.createCriteria(LineageNode.class).add(Restrictions.eq("displayName", col_name));
-        lineageNodeList = getLastElementCriteria.list();
+        Criteria getLastElementCriteria = session.createCriteria(LineageNode.class).add(Restrictions.eq("lineageNode", tableNode)).add(Restrictions.eq("displayName", colName));
+        lineageNode = (LineageNode) getLastElementCriteria.list().get(0);
+        LOGGER.info("LN value when getting the col: "+ lineageNode.getDisplayName() + lineageNode.getNodeId());
         session.getTransaction().commit();
         session.close();
-        return lineageNodeList;
+        return lineageNode;
     }
 
     public void update(LineageNode lineageNode) {

@@ -46,8 +46,7 @@ public class ArrangePositionsAPI extends MetadataAPIBase {
      */
     @RequestMapping(value = "/{id}", method = RequestMethod.GET)
 
-    public
-    @ResponseBody
+    @ResponseBody public
     RestWrapper get(
             @PathVariable("id") Integer processId, Principal principal
     ) {
@@ -55,8 +54,7 @@ public class ArrangePositionsAPI extends MetadataAPIBase {
         ArrangePositions arrangePositions = new ArrangePositions();
         Map<String, PositionsInfo> positionsInfoList = arrangePositions.getListPositionInfo(processId);
         LOGGER.info("Record with ID:" + processId + " arranged by User:" + principal.getName());
-        RestWrapper restWrapper = new RestWrapper(positionsInfoList, RestWrapper.OK);
-        return restWrapper;
+        return new RestWrapper(positionsInfoList, RestWrapper.OK);
 
     }
 

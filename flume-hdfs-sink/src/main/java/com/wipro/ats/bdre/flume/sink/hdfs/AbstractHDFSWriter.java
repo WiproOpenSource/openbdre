@@ -37,7 +37,7 @@ import java.lang.reflect.Method;
 @InterfaceStability.Evolving
 public abstract class AbstractHDFSWriter implements HDFSWriter {
 
-  private static final Logger logger =
+  private static final Logger LOGGER =
       LoggerFactory.getLogger(AbstractHDFSWriter.class);
 
   private FSDataOutputStream outputStream;
@@ -50,7 +50,9 @@ public abstract class AbstractHDFSWriter implements HDFSWriter {
   private Integer numberOfCloseRetries = null;
   private long timeBetweenCloseRetries = Long.MAX_VALUE;
 
-  final static Object [] NO_ARGS = new Object []{};
+  private static final  Object [] NO_ARGS = new Object []{};
+  
+  private static final String UNEXPECTED_ERROR = "Unexpected error while checking replication factor";
 
   @Override
   public void configure(Context context) {
@@ -63,9 +65,9 @@ public abstract class AbstractHDFSWriter implements HDFSWriter {
 
     if (numberOfCloseRetries > 1) {
       try {
-        timeBetweenCloseRetries = context.getLong("hdfs.callTimeout", 10000l);
+        timeBetweenCloseRetries = context.getLong("hdfs.callTimeout", 10000L);
       } catch (NumberFormatException e) {
-        logger.warn("hdfs.callTimeout can not be parsed to a long: " + context.getLong("hdfs.callTimeout"));
+        LOGGER.warn("hdfs.callTimeout can not be parsed to a long: " + context.getLong("hdfs.callTimeout"));
       }
       timeBetweenCloseRetries = Math.max(timeBetweenCloseRetries/numberOfCloseRetries, 1000);
     }
@@ -93,11 +95,11 @@ public abstract class AbstractHDFSWriter implements HDFSWriter {
       }
       return numBlocks < desiredBlocks;
     } catch (IllegalAccessException e) {
-      logger.error("Unexpected error while checking replication factor", e);
+      LOGGER.error(UNEXPECTED_ERROR, e);
     } catch (InvocationTargetException e) {
-      logger.error("Unexpected error while checking replication factor", e);
+      LOGGER.error(UNEXPECTED_ERROR, e);
     } catch (IllegalArgumentException e) {
-      logger.error("Unexpected error while checking replication factor", e);
+      LOGGER.error(UNEXPECTED_ERROR, e);
     }
     return false;
   }
@@ -132,9 +134,9 @@ public abstract class AbstractHDFSWriter implements HDFSWriter {
         try {
           replication = (Short) refGetDefaultReplication.invoke(fs, destPath);
         } catch (IllegalAccessException e) {
-          logger.warn("Unexpected error calling getDefaultReplication(Path)", e);
+          LOGGER.warn("Unexpected error calling getDefaultReplication(Path)", e);
         } catch (InvocationTargetException e) {
-          logger.warn("Unexpected error calling getDefaultReplication(Path)", e);
+          LOGGER.warn("Unexpected error calling getDefaultReplication(Path)", e);
         }
       } else {
         // will not work on Federated HDFS (see HADOOP-8014)
@@ -156,6 +158,7 @@ public abstract class AbstractHDFSWriter implements HDFSWriter {
    * @throws IllegalAccessException
    * @throws IllegalArgumentException
    */
+  @SuppressWarnings("squid:S1160")
   public int getNumCurrentReplicas()
       throws IllegalArgumentException, IllegalAccessException,
           InvocationTargetException {
@@ -185,18 +188,18 @@ public abstract class AbstractHDFSWriter implements HDFSWriter {
             new Class<?>[] {});
         m.setAccessible(true);
       } catch (NoSuchMethodException e) {
-        logger.info("FileSystem's output stream doesn't support"
+        LOGGER.info("FileSystem's output stream doesn't support"
             + " getNumCurrentReplicas; --HDFS-826 not available; fsOut="
             + wrappedStreamClass.getName() + "; err=" + e);
       } catch (SecurityException e) {
-        logger.info("Doesn't have access to getNumCurrentReplicas on "
+        LOGGER.info("Doesn't have access to getNumCurrentReplicas on "
             + "FileSystems's output stream --HDFS-826 not available; fsOut="
             + wrappedStreamClass.getName(), e);
         m = null; // could happen on setAccessible()
       }
     }
     if (m != null) {
-      logger.debug("Using getNumCurrentReplicas--HDFS-826");
+      LOGGER.debug("Using getNumCurrentReplicas--HDFS-826");
     }
     return m;
   }
@@ -214,22 +217,23 @@ public abstract class AbstractHDFSWriter implements HDFSWriter {
         m = fsClass.getMethod("getDefaultReplication",
             new Class<?>[] { Path.class });
       } catch (NoSuchMethodException e) {
-        logger.debug("FileSystem implementation doesn't support"
+        LOGGER.debug("FileSystem implementation doesn't support"
             + " getDefaultReplication(Path); -- HADOOP-8014 not available; " +
             "className = " + fsClass.getName() + "; err = " + e);
       } catch (SecurityException e) {
-        logger.debug("No access to getDefaultReplication(Path) on "
+        LOGGER.debug("No access to getDefaultReplication(Path) on "
             + "FileSystem implementation -- HADOOP-8014 not available; " +
             "className = " + fsClass.getName() + "; err = " + e);
       }
     }
     if (m != null) {
-      logger.debug("Using FileSystem.getDefaultReplication(Path) from " +
+      LOGGER.debug("Using FileSystem.getDefaultReplication(Path) from " +
           "HADOOP-8014");
     }
     return m;
   }
 
+  @SuppressWarnings("squid:S1166")
   private Method reflectHflushOrSync(FSDataOutputStream os) {
     Method m = null;
     if(os != null) {
@@ -237,14 +241,14 @@ public abstract class AbstractHDFSWriter implements HDFSWriter {
       try {
         m = fsDataOutputStreamClass.getMethod("hflush");
       } catch (NoSuchMethodException ex) {
-        logger.debug("HFlush not found. Will use sync() instead");
+        LOGGER.debug("HFlush not found. Will use sync() instead");
         try {
           m = fsDataOutputStreamClass.getMethod("sync");
         } catch (Exception ex1) {
           String msg = "Neither hflush not sync were found. That seems to be " +
             "a problem!";
-          logger.error(msg);
-          throw new FlumeException(msg, ex1);
+          LOGGER.error(msg);
+          throw new FlumeException(ex1);
         }
       }
     }
@@ -264,7 +268,7 @@ public abstract class AbstractHDFSWriter implements HDFSWriter {
       this.refHflushOrSync.invoke(os);
     } catch (InvocationTargetException e) {
       String msg = "Error while trying to hflushOrSync!";
-      logger.error(msg);
+      LOGGER.error(msg);
       Throwable cause = e.getCause();
       if(cause != null && cause instanceof IOException) {
         throw (IOException)cause;
@@ -272,7 +276,7 @@ public abstract class AbstractHDFSWriter implements HDFSWriter {
       throw new FlumeException(msg, e);
     } catch (Exception e) {
       String msg = "Error while trying to hflushOrSync!";
-      logger.error(msg);
+      LOGGER.error(msg);
       throw new FlumeException(msg, e);
     }
   }

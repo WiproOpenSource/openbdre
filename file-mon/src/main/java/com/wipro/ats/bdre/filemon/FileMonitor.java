@@ -20,7 +20,6 @@ import org.apache.commons.collections4.map.LinkedMap;
 import org.apache.commons.vfs2.*;
 import org.apache.log4j.Logger;
 
-import java.text.SimpleDateFormat;
 
 
 /**
@@ -29,12 +28,21 @@ import java.text.SimpleDateFormat;
 public class FileMonitor implements FileListener {
     private static final Logger LOGGER = Logger.getLogger(FileMonRunnableMain.class);
     private static FileMonitor fileMonitor = null;
-    private SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
 
+    private String monDir = null;
+    private String archiveDirName = null;
+    private String filePattern = null;
+    /* this data structure is used to maintain order and getting eldest element
+   * Map contain Filename as key and FileCopyInfo as value    * */
+    private static LinkedMap<String, FileCopyInfo> fileToCopyMap =
+            new LinkedMap<String, FileCopyInfo>();
+
+    private FileMonitor() {
+        init();
+    }
     public static synchronized FileCopyInfo getFileInfoFromQueue() {
         String key = FileMonitor.fileToCopyMap.firstKey();
-        FileCopyInfo fileCopyInfo=fileToCopyMap.remove(key);
-        return fileCopyInfo;
+        return fileToCopyMap.remove(key);
     }
 
     public static synchronized void addToQueue(String fileName, FileCopyInfo fileCopyInfo) {
@@ -44,14 +52,7 @@ public class FileMonitor implements FileListener {
         return fileToCopyMap.size();
     }
 
-    /* this data structure is used to maintain order and getting eldest element
-       * Map contain Filename as key and FileCopyInfo as value    * */
-    private static LinkedMap<String, FileCopyInfo> fileToCopyMap =
-            new LinkedMap<String, FileCopyInfo>();
 
-    private FileMonitor() {
-        init();
-    }
 
     //Singleton pattern
     public static FileMonitor getInstance() {
@@ -63,8 +64,9 @@ public class FileMonitor implements FileListener {
 
     //Read the monitored directories, file patterns, subprocessIds and serverIds and build the HashTable
     private void init() {
-        String dirList = FileMonRunnableMain.getMonitoredDirName();
-        String filePattern = FileMonRunnableMain.getFilePattern();
+        monDir = FileMonRunnableMain.getMonitoredDirName();
+        filePattern = FileMonRunnableMain.getFilePattern();
+        archiveDirName = FileMonRunnableMain.ARCHIVE;
     }
 
     //This method will get invoked when a file created in the directory.
@@ -76,7 +78,7 @@ public class FileMonitor implements FileListener {
         LOGGER.debug("Full path "+obj.getName().getPath());
 
         //Don't process anything with _archive
-        if(dirPath.startsWith(FileMonRunnableMain.getMonitoredDirName()+"/"+FileMonRunnableMain.ARCHIVE)){
+        if(dirPath.startsWith(monDir+"/"+archiveDirName)){
             return;
         }
         //Don't process directory
@@ -87,7 +89,7 @@ public class FileMonitor implements FileListener {
         String fileName = obj.getName().getPath();
 
         //Checking if the file name matches with the given pattern
-        if (fileName.matches(FileMonRunnableMain.getFilePattern())) {
+        if (fileName.matches(filePattern)) {
             FileContent fc = obj.getContent();
             LOGGER.debug("Matched File Pattern by " + fileName);
             putEligibleFileInfoInMap(fileName, fc);
@@ -98,10 +100,9 @@ public class FileMonitor implements FileListener {
         // *Start*   Eligible files moved to data structure for ingestion to HDFS
         FileCopyInfo fileCopyInfo = new FileCopyInfo();
         try {
-          //  String exactFileName = fc.getFile().getName().getBaseName();
             fileCopyInfo.setFileName(fileName);
             fileCopyInfo.setSubProcessId(FileMonRunnableMain.getSubProcessId());
-            fileCopyInfo.setServerId(new Integer(123461).toString());
+            fileCopyInfo.setServerId(Integer.toString(123461));
             fileCopyInfo.setSrcLocation(fc.getFile().getName().getPath());
             fileCopyInfo.setDstLocation(new java.io.File(fileName).getParent().replace(FileMonRunnableMain.getMonitoredDirName(), FileMonRunnableMain.getHdfsUploadDir()));
             fileCopyInfo.setFileHash(DigestUtils.md5Hex(fc.getInputStream()));

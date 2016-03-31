@@ -16,8 +16,6 @@ package com.wipro.ats.bdre;
 
 import com.wipro.ats.bdre.exception.MetadataException;
 import com.wipro.ats.bdre.md.api.base.MetadataAPIBase;
-import com.wipro.ats.bdre.md.beans.GetLineageByInstanceExecInfo;
-import com.wipro.ats.bdre.md.dao.LineageByInstanceExecDAO;
 import com.wipro.ats.bdre.md.dao.LineageQueryDAO;
 import com.wipro.ats.bdre.md.dao.jpa.LineageQuery;
 import org.apache.commons.cli.CommandLine;
@@ -33,6 +31,16 @@ import java.util.List;
  * Created by AshutoshRai on 1/19/16.
  */
 public class GetLineageQueryByProcessId extends MetadataAPIBase {
+
+    private static final Logger LOGGER = Logger.getLogger(GetLineageQueryByProcessId.class);
+
+    @Autowired
+    private LineageQueryDAO lineageQueryDAO;
+
+    private static final String[][] PARAMS_STRUCTURE = {
+            {"pid", "sub-process-id", " Process id whose lineage query to be extracted"},
+    };
+
     public GetLineageQueryByProcessId() {
         /* Hibernate Auto-Wire */
         ApplicationContext context = new ClassPathXmlApplicationContext("spring-dao.xml");
@@ -40,24 +48,17 @@ public class GetLineageQueryByProcessId extends MetadataAPIBase {
         acbFactory.autowireBean(this);
     }
 
-    private static final Logger LOGGER = Logger.getLogger(GetLineageQueryByProcessId.class);
 
-    private static final String[][] PARAMS_STRUCTURE = {
-            {"pid", "sub-process-id", " Process id whose lineage query to be extracted"},
-    };
-
-
-    @Autowired
-    private LineageQueryDAO lineageQueryDAO;
-
+    @Override
     public List<LineageQuery> execute(String[] params) {
-        List<LineageQuery> lineageByInstanceExecInfos;
         try {
             CommandLine commandLine = getCommandLine(params, PARAMS_STRUCTURE);
             String pid = commandLine.getOptionValue("sub-process-id");
-            LOGGER.debug("Instance exec id  is " + pid);
-            List<LineageQuery> lineageQueryList = lineageQueryDAO.getLastInstanceExecLists(Integer.parseInt(pid));
-            return lineageQueryList;
+            LOGGER.debug("Sub-Process id  is " + pid);
+            if("EMPTY".equals(pid)){
+                return lineageQueryDAO.listAll();
+            }
+            return lineageQueryDAO.getLastInstanceExecLists(Integer.parseInt(pid));
         } catch (Exception e) {
             LOGGER.error("Error occurred", e);
             throw new MetadataException(e);

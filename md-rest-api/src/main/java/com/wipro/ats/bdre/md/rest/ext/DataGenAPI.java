@@ -18,18 +18,18 @@ import com.wipro.ats.bdre.md.api.base.MetadataAPIBase;
 import com.wipro.ats.bdre.md.beans.table.GeneralConfig;
 
 import com.wipro.ats.bdre.md.dao.ProcessDAO;
-import com.wipro.ats.bdre.md.dao.PropertiesDAO;
 import com.wipro.ats.bdre.md.dao.jpa.*;
 import com.wipro.ats.bdre.md.dao.jpa.Process;
 import com.wipro.ats.bdre.md.dao.jpa.Properties;
 import com.wipro.ats.bdre.md.rest.RestWrapper;
+import com.wipro.ats.bdre.md.rest.util.BindingResultError;
 import com.wipro.ats.bdre.md.rest.util.Dao2TableUtil;
 import com.wipro.ats.bdre.md.rest.util.DateConverter;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
-import org.springframework.validation.FieldError;
+
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -46,15 +46,14 @@ import java.util.*;
 @RequestMapping("/datagenproperties")
 public class DataGenAPI extends MetadataAPIBase {
     private static final Logger LOGGER = Logger.getLogger(DataGenAPI.class);
-    @Autowired
-    private PropertiesDAO propertiesDAO;
+    private static final String TABLE = "table";
     @Autowired
     private ProcessDAO processDAO;
 
     @RequestMapping(value = {"/createjobs"}, method = RequestMethod.POST)
 
-    public
-    @ResponseBody
+
+    @ResponseBody public
     RestWrapper createJobs(@RequestParam Map<String, String> map, Principal principal) {
         LOGGER.debug(" value of map is " + map.size());
         RestWrapper restWrapper = null;
@@ -65,16 +64,15 @@ public class DataGenAPI extends MetadataAPIBase {
 
         String processName = null;
         String processDescription = null;
-        String outputPath = null;
         Integer busDomainId = null;
 
-        StringBuffer tableSchema = new StringBuffer("");
+        StringBuilder tableSchema = new StringBuilder("");
         //to handle argument id's in sequence if rows are deleted and added in UI
         int fieldArgCounter = 1;
         int fieldTypeCounter = 0;
         int fieldCounter = 1;
         String[] dateContent;
-        StringBuffer unifiedDate = new StringBuffer("");
+        StringBuilder unifiedDate = new StringBuilder("");
         Date date = null, date2 = null;
 
         List<Properties> childProps=new ArrayList<>();
@@ -89,35 +87,36 @@ public class DataGenAPI extends MetadataAPIBase {
             String key = string.substring(splitIndex + 1, string.length());
             LOGGER.debug("key is " + key);
 
-            if (string.startsWith("type_genArg")) {
-//                String keySplit[] = key.split(".");
-//                LOGGER.debug("keySplit length"+keySplit.length);
-                fieldTypeCounter = Integer.parseInt(string.substring((string.lastIndexOf(".") + 1), string.length()));
+            if (string.startsWith("type_genArg") && map.get(string).split(",").length == 3) {
+                fieldTypeCounter = Integer.parseInt(string.substring(string.lastIndexOf(".") + 1, string.length()));
                 LOGGER.debug("genArg key Index" + fieldTypeCounter);
-                if ((dateContent = map.get(string).split(",")).length == 3) {
-                    DateFormat dF = new SimpleDateFormat(dateContent[2]);
-                    try {
-                        date = dF.parse(dateContent[0]);
-                        date2 = dF.parse(dateContent[1]);
-                    } catch (ParseException e) {
-                        LOGGER.debug("error in Date entry");
-                        e.printStackTrace();
-                    }
-                    unifiedDate.append(date.getTime() + "," + date2.getTime() + "," + dateContent[2]);
-                    jpaProperties =Dao2TableUtil.buildJPAProperties("data", "args." + fieldArgCounter, unifiedDate.toString(), "Generated Argument");
-                    childProps.add(jpaProperties );
-                    jpaProperties  =Dao2TableUtil.buildJPAProperties("data", "data-gen-id." + fieldArgCounter, map.get("type_generatedType." + fieldTypeCounter), "Generated Type");
-                    childProps.add(jpaProperties );
 
-                } else {
-                    jpaProperties =Dao2TableUtil.buildJPAProperties("data", "args." + fieldArgCounter, map.get(string), "Generated Argument");
-                    childProps.add(jpaProperties );
-                    jpaProperties =Dao2TableUtil.buildJPAProperties("data", "data-gen-id." + fieldArgCounter, map.get("type_generatedType." + fieldTypeCounter), "Generated Type");
-                    childProps.add(jpaProperties );
-
+                dateContent = map.get(string).split(",");
+                DateFormat dF = new SimpleDateFormat(dateContent[2]);
+                try {
+                    date = dF.parse(dateContent[0]);
+                    date2 = dF.parse(dateContent[1]);
+                } catch (ParseException e) {
+                    LOGGER.debug("error in Date entry");
                 }
+                unifiedDate.append(date.getTime() + "," + date2.getTime() + "," + dateContent[2]);
+                jpaProperties = Dao2TableUtil.buildJPAProperties("data", "args." + fieldArgCounter, unifiedDate.toString(), "Generated Argument");
+                childProps.add(jpaProperties);
+                jpaProperties = Dao2TableUtil.buildJPAProperties("data", "data-gen-id." + fieldArgCounter, map.get("type_generatedType." + fieldTypeCounter), "Generated Type");
+                childProps.add(jpaProperties);
                 fieldArgCounter++;
-            } else if (string.startsWith("type_fieldName")) {
+            }
+            else if(string.startsWith("type_genArg")){
+                fieldTypeCounter = Integer.parseInt(string.substring(string.lastIndexOf(".") + 1, string.length()));
+                LOGGER.debug("genArg key Index" + fieldTypeCounter);
+                jpaProperties =Dao2TableUtil.buildJPAProperties("data", "args." + fieldArgCounter, map.get(string), "Generated Argument");
+                childProps.add(jpaProperties);
+                jpaProperties =Dao2TableUtil.buildJPAProperties("data", "data-gen-id." + fieldArgCounter, map.get("type_generatedType." + fieldTypeCounter), "Generated Type");
+                childProps.add(jpaProperties);
+                fieldArgCounter++;
+            }
+
+            else if (string.startsWith("type_fieldName")) {
                 LOGGER.debug("type_fieldName" + tableSchema);
                 tableSchema.append(map.get(string) + ":" + fieldCounter++ + ",");
             } else if (string.startsWith("other_numRows")) {
@@ -130,19 +129,18 @@ public class DataGenAPI extends MetadataAPIBase {
                 childProps.add(jpaProperties );
             } else if (string.startsWith("other_tableName")) {
                 LOGGER.debug("other_tableName" + map.get(string));
-                jpaProperties =Dao2TableUtil.buildJPAProperties("table", key, map.get(string), "Table Name");
+                jpaProperties =Dao2TableUtil.buildJPAProperties(TABLE, key, map.get(string), "Table Name");
                 childProps.add(jpaProperties );
             } else if (string.startsWith("other_separator")) {
                 LOGGER.debug("other_separator" + map.get(string));
-                jpaProperties =Dao2TableUtil.buildJPAProperties("table", key, map.get(string), "Separator");
+                jpaProperties =Dao2TableUtil.buildJPAProperties(TABLE, key, map.get(string), "Separator");
                 childProps.add(jpaProperties );
             }else if (string.startsWith("process_processName")) {
                 LOGGER.debug("process_processName" + map.get(string));
                 processName = map.get(string);
             }else if (string.startsWith("process_outputPath")) {
                 LOGGER.debug("process_outputPath" + map.get(string));
-                //outputPath = map.get(string);
-                jpaProperties =Dao2TableUtil.buildJPAProperties("table", key, map.get(string), "Output path");
+                jpaProperties =Dao2TableUtil.buildJPAProperties(TABLE, key, map.get(string), "Output path");
                 childProps.add(jpaProperties );
             }else if (string.startsWith("process_processDescription")) {
                 LOGGER.debug("process_processDescription" + map.get(string));
@@ -159,7 +157,7 @@ public class DataGenAPI extends MetadataAPIBase {
 
         //remove last : in tableSchema String
         tableSchema.deleteCharAt(tableSchema.length() - 1);
-        jpaProperties =Dao2TableUtil.buildJPAProperties("table", "tableSchema", tableSchema.toString(), "Table Schema");
+        jpaProperties =Dao2TableUtil.buildJPAProperties(TABLE, "tableSchema", tableSchema.toString(), "Table Schema");
         childProps.add(jpaProperties );
         //creating parent and child processes and inserting properties
         List<Process> processList = processDAO.createOneChildJob(parentProcess,childProcess,null,childProps);
@@ -171,13 +169,13 @@ public class DataGenAPI extends MetadataAPIBase {
             process.setTableEditTS(DateConverter.dateToString(process.getEditTS()));
         }
         restWrapper = new RestWrapper(tableProcessList, RestWrapper.OK);
+        LOGGER.info("Process and Properties for data generation process inserted by" + principal.getName());
         return restWrapper;
     }
 
 
     @RequestMapping(value = {"/", ""}, method = RequestMethod.PUT)
-    public
-    @ResponseBody
+    @ResponseBody public
     RestWrapper insert(@ModelAttribute("generalconfig")
                        @Valid GeneralConfig generalConfig, BindingResult bindingResult, Principal principal) {
         LOGGER.debug("Updating jtable for new advanced config");
@@ -185,18 +183,8 @@ public class DataGenAPI extends MetadataAPIBase {
 
         RestWrapper restWrapper = null;
         if (bindingResult.hasErrors()) {
-            StringBuilder errorMessages = new StringBuilder("<p>Please fix following errors and try again<p><ul>");
-            List<FieldError> errors = bindingResult.getFieldErrors();
-            for (FieldError error : errors) {
-                errorMessages.append("<li>");
-                errorMessages.append(error.getField());
-                errorMessages.append(". Bad value: '");
-                errorMessages.append(error.getRejectedValue());
-                errorMessages.append("'</li>");
-            }
-            errorMessages.append("</ul>");
-            restWrapper = new RestWrapper(errorMessages.toString(), RestWrapper.ERROR);
-            return restWrapper;
+            BindingResultError bindingResultError = new BindingResultError();
+            return bindingResultError.errorMessage(bindingResult);
         }
 
         try {
@@ -204,7 +192,9 @@ public class DataGenAPI extends MetadataAPIBase {
             restWrapper = new RestWrapper(generalConfig, RestWrapper.OK);
             LOGGER.info("Record with configGroup:" + generalConfig.getConfigGroup() + " inserted in Jtable by User:" + principal.getName() + generalConfig);
         } catch (Exception e) {
+            LOGGER.error("error occured " + e.getMessage());
             restWrapper = new RestWrapper(e.getMessage(), RestWrapper.ERROR);
+            throw e;
         }
         return restWrapper;
     }

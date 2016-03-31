@@ -40,7 +40,7 @@ import java.util.Properties;
  */
 public class DQMapper extends Mapper<LongWritable, Text, Text, Text> {
 
-    private static Logger LOGGER = Logger.getLogger(DQMapper.class);
+    private static final Logger LOGGER = Logger.getLogger(DQMapper.class);
     Text mOutputKey = new Text();
     Text mOutputValue = new Text();
     private int goodRecords;
@@ -71,7 +71,7 @@ public class DQMapper extends Mapper<LongWritable, Text, Text, Text> {
                         props.getProperty("rules.package") + "/binary");
         LOGGER.info("urlResource=" + urlResource);
         urlResource.setBasicAuthentication("enabled");
-        System.out.println("props = " + props);
+        LOGGER.info("props = " + props);
         urlResource.setUsername(props.getProperty("rules.username"));
         urlResource.setPassword(props.getProperty("rules.password"));
         kbuilder.add(urlResource, ResourceType.PKG);
@@ -115,6 +115,7 @@ public class DQMapper extends Mapper<LongWritable, Text, Text, Text> {
             mos.write(DQConstants.FILE_REPORT_FILE, new Text(DQConstants.GOOD_RECORDS_FILE + " : " + goodRecords), NullWritable.get(), DQConstants.INTERMEDIATE_REPORT_OUTPUT_DIR);
             mos.write(DQConstants.FILE_REPORT_FILE, new Text(DQConstants.BAD_RECORDS_FILE + " : " + badRecords), NullWritable.get(), DQConstants.INTERMEDIATE_REPORT_OUTPUT_DIR);
         } catch (Exception e) {
+            LOGGER.info(e);
             LOGGER.info("cleanup : " + e.toString());
         } finally {
             mos.close();

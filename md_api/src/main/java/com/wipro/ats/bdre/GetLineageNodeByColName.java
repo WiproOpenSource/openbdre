@@ -15,12 +15,8 @@
 package com.wipro.ats.bdre;
 
 import com.wipro.ats.bdre.exception.MetadataException;
-import com.wipro.ats.bdre.md.api.base.MetadataAPIBase;
 import com.wipro.ats.bdre.md.dao.LineageNodeDAO;
-import com.wipro.ats.bdre.md.dao.LineageQueryDAO;
 import com.wipro.ats.bdre.md.dao.jpa.LineageNode;
-import com.wipro.ats.bdre.md.dao.jpa.LineageQuery;
-import org.apache.commons.cli.CommandLine;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.AutowireCapableBeanFactory;
@@ -33,6 +29,12 @@ import java.util.List;
  * Created by AshutoshRai on 1/21/16.
  */
 public class GetLineageNodeByColName {
+
+    private static final Logger LOGGER = Logger.getLogger(GetLineageNodeByColName.class);
+
+    @Autowired
+    private LineageNodeDAO lineageNodeDAO;
+
     public GetLineageNodeByColName() {
         /* Hibernate Auto-Wire */
         ApplicationContext context = new ClassPathXmlApplicationContext("spring-dao.xml");
@@ -40,39 +42,29 @@ public class GetLineageNodeByColName {
         acbFactory.autowireBean(this);
     }
 
-    private static final Logger LOGGER = Logger.getLogger(GetLineageNodeByColName.class);
-
-    /*private static final String[][] PARAMS_STRUCTURE = {
-            {"col", "column-name", " Name of column to get Node id for"},
-    };*/
-
-
-    @Autowired
-    private LineageNodeDAO lineageNodeDAO;
-
-    public List<LineageNode> execute(String col) {
+    public LineageNode execute(String col, LineageNode tableNode) {
 
         try {
-            //CommandLine commandLine = getCommandLine(params, PARAMS_STRUCTURE);
-            //String col = commandLine.getOptionValue("column-name");
             LOGGER.debug("Column name is " + col);
-            List<LineageNode> lineageNodeList = lineageNodeDAO.getColNodeId(col);
-
-            return lineageNodeList;
+            return lineageNodeDAO.getColNodeId(col, tableNode);
         } catch (Exception e) {
-            LOGGER.error("Error occurred", e);
+            LOGGER.error("Error occurred: check the LNDAO", e);
             throw new MetadataException(e);
         }
     }
 
-    public LineageNode getTableDotFromTableName (String tableName) {
+    public List<LineageNode> getTableDotFromTableName (String tableName) {
         LOGGER.debug("Table name is: " + tableName);
-        LineageNode lineageNode = lineageNodeDAO.getTableNode(tableName);
-        return lineageNode;
+        return lineageNodeDAO.getTableNode(tableName);
     }
 
     //returns the container node
-    public String getTableDotFromNodeId (LineageNode lineageNode) {
-        return lineageNodeDAO.getContainerDot(lineageNode.getNodeId());
+    public String getTableDotFromNodeId (LineageNode lineageNode, LineageNode lineageNode1) {
+        String node = lineageNodeDAO.getContainerDot(lineageNode.getNodeId());
+        if(node.equals(lineageNode1.getDotString())) {
+            return "same-nodes";
+        } else {
+            return node;
+        }
     }
 }

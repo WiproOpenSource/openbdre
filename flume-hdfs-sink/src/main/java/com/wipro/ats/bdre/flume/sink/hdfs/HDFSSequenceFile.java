@@ -30,15 +30,12 @@ import org.apache.hadoop.io.SequenceFile.CompressionType;
 import org.apache.hadoop.io.compress.CompressionCodec;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.config.AutowireCapableBeanFactory;
-import org.springframework.context.ApplicationContext;
-import org.springframework.context.support.ClassPathXmlApplicationContext;
 
 import java.io.IOException;
 
 public class HDFSSequenceFile extends AbstractHDFSWriter {
 
-  private static final Logger logger =
+  private static final Logger LOGGER =
       LoggerFactory.getLogger(HDFSSequenceFile.class);
   private SequenceFile.Writer writer;
   private String writeFormat;
@@ -59,9 +56,6 @@ public class HDFSSequenceFile extends AbstractHDFSWriter {
   @Override
   public void configure(Context context) {
     super.configure(context);
-    ApplicationContext appCtx = new ClassPathXmlApplicationContext("spring-dao.xml");
-    AutowireCapableBeanFactory acbFactory = appCtx.getAutowireCapableBeanFactory();
-    acbFactory.autowireBean(this);
     // extracting in use suffix
     inUseSuffix = context.getString("hdfs.inUseSuffix","");
     // extracting process id
@@ -69,14 +63,14 @@ public class HDFSSequenceFile extends AbstractHDFSWriter {
 
     // use binary writable serialize by default
     writeFormat = context.getString("hdfs.writeFormat",
-      SequenceFileSerializerType.Writable.name());
+      SequenceFileSerializerType.WRITABLE.name());
     useRawLocalFileSystem = context.getBoolean("hdfs.useRawLocalFileSystem",
         false);
     serializerContext = new Context(
             context.getSubProperties(SequenceFileSerializerFactory.CTX_PREFIX));
     serializer = SequenceFileSerializerFactory
             .getSerializer(writeFormat, serializerContext);
-    logger.info("writeFormat = " + writeFormat + ", UseRawLocalFileSystem = "
+    LOGGER.info("writeFormat = " + writeFormat + ", UseRawLocalFileSystem = "
         + useRawLocalFileSystem);
   }
 
@@ -94,6 +88,7 @@ public class HDFSSequenceFile extends AbstractHDFSWriter {
     open(dstPath, codeC, compType, conf, hdfs);
   }
 
+  @SuppressWarnings("squid:S1226")
   protected void open(Path dstPath, CompressionCodec codeC,
       CompressionType compType, Configuration conf, FileSystem hdfs)
           throws IOException {
@@ -101,11 +96,11 @@ public class HDFSSequenceFile extends AbstractHDFSWriter {
       if(hdfs instanceof LocalFileSystem) {
         hdfs = ((LocalFileSystem)hdfs).getRaw();
       } else {
-        logger.warn("useRawLocalFileSystem is set to true but file system " +
+        LOGGER.warn("useRawLocalFileSystem is set to true but file system " +
             "is not of type LocalFileSystem: " + hdfs.getClass().getName());
       }
     }
-    if (conf.getBoolean("hdfs.append.support", false) == true && hdfs.isFile
+    if (conf.getBoolean("hdfs.append.support", false) && hdfs.isFile
             (dstPath)) {
       outStream = hdfs.append(dstPath);
     } else {

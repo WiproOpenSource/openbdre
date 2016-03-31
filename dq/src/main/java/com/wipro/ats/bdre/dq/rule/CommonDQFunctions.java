@@ -14,83 +14,87 @@
 
 package com.wipro.ats.bdre.dq.rule;
 import org.apache.commons.lang.StringUtils;
+
+import org.apache.log4j.Logger;
+
 /**
  * Created by IshitaParekh on 31-03-2015.
  */
 public class CommonDQFunctions {
-    public String checkString(String min, String max, String left_pad, String right_pad, String word)
+    private static final Logger LOGGER = Logger.getLogger(CommonDQFunctions.class);
+    public String checkString(String min, String max, String leftPad, String word)
     {
-        int min_len = Integer.parseInt(min);
-        int max_len = Integer.parseInt(max);
-        if (word.length()>min_len && word.length()<max_len)
+        int minLen = Integer.parseInt(min);
+        int maxLen = Integer.parseInt(max);
+        if (word.length()>minLen && word.length()<maxLen)
         {
-            System.out.println("The string entered falls in the acceptable range. ");
+            LOGGER.info("The string entered falls in the acceptable range. ");
             return word;
         }
         // if smaller than minimum length
-        else if (word.length() > max_len)
+        else if (word.length() > maxLen)
         {
             return "String entered exceeds maximum length";
         }
-        else if (word.length() < min_len)
+        else if (word.length() < minLen)
         {
-            System.out.println("String entered is smaller than the minimum length. ");
-            String result = StringUtils.leftPad(word,min_len,left_pad);
+            LOGGER.info("String entered is smaller than the minimum length. ");
+            String result = StringUtils.leftPad(word,minLen,leftPad);
             return "Modified string:" +result;
         }
         else
             return null;
     }
-    public String checkInteger(String num, String range_min, String range_max)
+    public String checkInteger(String num, String rangeMin, String rangeMax)
     {
         try {
             int n = Integer.parseInt(num);
-            int min = Integer.parseInt(range_min);
-            int max = Integer.parseInt(range_max);
+            int min = Integer.parseInt(rangeMin);
+            int max = Integer.parseInt(rangeMax);
             if (n > min && n < max)
                 return num;
             else return "Integer not in range";
         } catch (NumberFormatException ex) {
-            System.out.println("Not a valid integer!");
+            LOGGER.info("Not a valid integer!");
             return "null";
         }
     }
-    public String checkLong(String num, String range_min, String range_max) {
+    public String checkLong(String num, String rangeMin, String rangeMax) {
         try {
             Long n = Long.parseLong(num);
-            Long min = Long.parseLong(range_min);
-            Long max = Long.parseLong(range_max);
+            Long min = Long.parseLong(rangeMin);
+            Long max = Long.parseLong(rangeMax);
             if (n > min && n < max)
                 return num;
             else return "Long number not in range";
         } catch (NumberFormatException ex) {
-            System.out.println("Not a valid long number!");
+            LOGGER.info("Not a valid long number!");
             return "null";
         }
     }
-    public String checkDouble(String num, String range_min, String range_max) {
+    public String checkDouble(String num, String rangeMin, String rangeMax) {
         try {
             Double n = Double.parseDouble(num);
-            Double min = Double.parseDouble(range_min);
-            Double max = Double.parseDouble(range_max);
+            Double min = Double.parseDouble(rangeMin);
+            Double max = Double.parseDouble(rangeMax);
             if (n > min && n < max)
                 return num;
             else return "Double number not in range";
         } catch (NumberFormatException ex) {
-            System.out.println("Not a valid double number!");
+            LOGGER.info("Not a valid double number!");
             return "null";
         }
     }
-    public String checkFloat(String num, String range_min, String range_max) {
+    public String checkFloat(String num, String rangeMin, String rangeMax) {
         try {
             Float n = Float.parseFloat(num);
-            Float min = Float.parseFloat(range_min);
-            Float max = Float.parseFloat(range_max);
+            Float min = Float.parseFloat(rangeMin);
+            Float max = Float.parseFloat(rangeMax);
             if (n > min && n < max)
                 return num;
             else return "Float number not in range";
         } catch (NumberFormatException ex) {
-            System.out.println("Not a valid float number!");
+            LOGGER.info("Not a valid float number!");
             return "null";
         }
     }

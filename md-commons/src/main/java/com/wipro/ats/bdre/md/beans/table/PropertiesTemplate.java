@@ -31,15 +31,6 @@ public class PropertiesTemplate {
     @Size(max = 10)
     private String configGroup;
     private Integer pageSize;
-
-    public Integer getPageSize() {
-        return pageSize;
-    }
-
-    public void setPageSize(Integer pageSize) {
-        this.pageSize = pageSize;
-    }
-
     @NotNull
     @Size(max = 128)
     @Pattern(regexp = "([0-z][\\.|_|-]?)+")
@@ -59,6 +50,14 @@ public class PropertiesTemplate {
     public String toString() {
         return " processId:" + processId + " processTemplateId:" + processTemplateId + " configGroup:" + configGroup + " key:" + key + " description:" + description.substring(0, Math.min(description.length(), 45)) +
                 " page:" + page + " parentProcessTemplateId:" + parentProcessTemplateId + " subProcessTemplateId:" + subProcessTemplateId;
+    }
+
+    public Integer getPageSize() {
+        return pageSize;
+    }
+
+    public void setPageSize(Integer pageSize) {
+        this.pageSize = pageSize;
     }
 
     public Integer getPage() {

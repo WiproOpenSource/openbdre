@@ -52,6 +52,10 @@ import java.util.*;
 @Scope("session")
 public class DataImportAPI extends MetadataAPIBase {
     private static final Logger LOGGER = Logger.getLogger(DataImportAPI.class);
+    private static final String INGESTONLY = "ingestOnly_";
+    private static final String INCREMENTTYPE = "incrementType_";
+    private static final String PRIMARYKEYCOLUMN = "primaryKeyColumn_";
+    private static final String ESCAPESEQ = "\\..+";
     private Connection conn;
     @Autowired
     private HistoryDataImportDAO historyDataImportDAO;
@@ -59,8 +63,7 @@ public class DataImportAPI extends MetadataAPIBase {
     private IntermediateDAO intermediateDAO;
 
     @RequestMapping(value = "/createjobs", method = {RequestMethod.POST})
-    public
-    @ResponseBody
+    @ResponseBody public
     RestWrapper createJobs(HttpServletRequest request) {
         String rawDBName = request.getParameter("common_rawDBHive");
         String baseDBName = request.getParameter("common_baseDBHive");
@@ -104,9 +107,9 @@ public class DataImportAPI extends MetadataAPIBase {
             pushToIntermediate(uuid, "columnList_" + count, table.getColumnList());
 
             LOGGER.info("value is " + table.getIngestOrNot());
-            pushToIntermediate(uuid, "ingestOnly_" + count, table.getIngestOrNot());
-            pushToIntermediate(uuid, "incrementType_" + count, table.getIncrementType());
-            pushToIntermediate(uuid, "primaryKeyColumn_" + count, table.getPrimaryKeyColumn());
+            pushToIntermediate(uuid, INGESTONLY + count, table.getIngestOrNot());
+            pushToIntermediate(uuid, INCREMENTTYPE + count, table.getIncrementType());
+            pushToIntermediate(uuid, PRIMARYKEYCOLUMN + count, table.getPrimaryKeyColumn());
 
 
         }
@@ -118,7 +121,6 @@ public class DataImportAPI extends MetadataAPIBase {
             intermediateInfo.setUuid(uuid);
             LOGGER.info("uuid is = " + uuid);
             //Calling proc HistoryDataImport which creates the data import job and data load job
-//            List<Process> process = s.selectList("call_procedures.HistoryDataImport", intermediateInfo);
             List<Process> process = historyDataImportDAO.historyDataImport(intermediateInfo);
             LOGGER.debug("process ids are :" + process.size());
             restWrapper = new RestWrapper(process, RestWrapper.OK);
@@ -132,8 +134,7 @@ public class DataImportAPI extends MetadataAPIBase {
 
     //Fetching all the tables from connected database and populating the  RdbmsEntity class
     @RequestMapping(value = "/tables", method = {RequestMethod.GET})
-    public
-    @ResponseBody
+    @ResponseBody public
     RestWrapper getTableList(@RequestParam("common_dbURL") String connectionURL,
                              @RequestParam("common_dbUser") String dbUser,
                              @RequestParam("common_dbPassword") String dbPassword,
@@ -168,6 +169,7 @@ public class DataImportAPI extends MetadataAPIBase {
             result.close();
 
         } catch (Exception e) {
+            LOGGER.error("error occured :" + e);
             restWrapper = new RestWrapper(e.getMessage(), RestWrapper.ERROR);
         }
         return restWrapper;
@@ -175,8 +177,7 @@ public class DataImportAPI extends MetadataAPIBase {
 
     //Fetching all the columns of a particular table from connected database and populating the  RdbmsEntity class
     @RequestMapping(value = "/tables/{tableName}", method = {RequestMethod.GET})
-    public
-    @ResponseBody
+    @ResponseBody public
     List<RdbmsEntity> getColumnsForTable(
             @PathVariable("tableName") String tableName
     ) {
@@ -196,13 +197,12 @@ public class DataImportAPI extends MetadataAPIBase {
 
             return columns;
         } catch (SQLException e) {
-            e.printStackTrace();
-            return null;
+            LOGGER.error("error occured :" + e);
+            return Collections.emptyList();
         }
     }
 
-    /*{entityName: "Table1", folder: true, key: "Table1",lazy: true}
-       }*/
+
 
     public class RdbmsEntity {
 
@@ -299,20 +299,20 @@ public class DataImportAPI extends MetadataAPIBase {
 
         for (String key : keyList) {
             String value = params.get(key)[0];
-            System.out.println("key = " + key + " value=" + value);
+            LOGGER.debug("key = " + key + " value=" + value);
             if (key.startsWith("srcTableName_")) {
                 Table table = new Table(value);
                 tables.put(table.getSrcTableName(), table);
-            } else if (key.startsWith("ingestOnly_")) {
-                String srcTableName = key.replaceAll("ingestOnly_", "");
+            } else if (key.startsWith(INGESTONLY)) {
+                String srcTableName = key.replaceAll(INGESTONLY, "");
                 Table table = tables.get(srcTableName);
                 table.setIngestOrNot(value);
-            } else if (key.startsWith("primaryKeyColumn_")) {
-                String srcTableName = key.replaceAll("primaryKeyColumn_", "");
+            } else if (key.startsWith(PRIMARYKEYCOLUMN)) {
+                String srcTableName = key.replaceAll(PRIMARYKEYCOLUMN, "");
                 Table table = tables.get(srcTableName);
                 table.setPrimaryKeyColumn(value);
-            } else if (key.startsWith("incrementType_")) {
-                String srcTableName = key.replaceAll("incrementType_", "");
+            } else if (key.startsWith(INCREMENTTYPE)) {
+                String srcTableName = key.replaceAll(INCREMENTTYPE, "");
                 Table table = tables.get(srcTableName);
                 table.setIncrementType(value);
             } else if (key.startsWith("destTableName_")) {
@@ -321,13 +321,13 @@ public class DataImportAPI extends MetadataAPIBase {
                 table.setDestTableName(value);
             } else if (key.startsWith("srcColumnName_")) {
                 String srcColName = value;
-                String srcTableName = key.replaceAll("srcColumnName_", "").replaceAll("\\..+", "");
+                String srcTableName = key.replaceAll("srcColumnName_", "").replaceAll(ESCAPESEQ, "");
                 Column column = new Column(srcColName);
                 Table table = tables.get(srcTableName);
                 table.addColumn(column);
             } else if (key.startsWith("srcColumnDType_")) {
                 String srcColDType = value;
-                String srcTableName = key.replaceAll("srcColumnDType_", "").replaceAll("\\..+", "");
+                String srcTableName = key.replaceAll("srcColumnDType_", "").replaceAll(ESCAPESEQ, "");
                 String srcColName = key.replaceAll("srcColumnDType_.+\\.", "");
                 Table table = tables.get(srcTableName);
                 Column column = table.getColumnByName(srcColName);
@@ -335,21 +335,21 @@ public class DataImportAPI extends MetadataAPIBase {
 
             } else if (key.startsWith("srcColumnIndex_")) {
                 String srcColIndex = value;
-                String srcTableName = key.replaceAll("srcColumnIndex_", "").replaceAll("\\..+", "");
+                String srcTableName = key.replaceAll("srcColumnIndex_", "").replaceAll(ESCAPESEQ, "");
                 String srcColName = key.replaceAll("srcColumnIndex_.+\\.", "");
                 Table table = tables.get(srcTableName);
                 Column column = table.getColumnByName(srcColName);
                 column.setSrcColumnIndex(srcColIndex);
             } else if (key.startsWith("hiveDataType_")) {
                 String destColDType = value;
-                String srcTableName = key.replaceAll("hiveDataType_", "").replaceAll("\\..+", "");
+                String srcTableName = key.replaceAll("hiveDataType_", "").replaceAll(ESCAPESEQ, "");
                 String srcColName = key.replaceAll("hiveDataType_.+\\.", "");
                 Table table = tables.get(srcTableName);
                 Column column = table.getColumnByName(srcColName);
                 column.setDestDataType(destColDType);
             } else if (key.startsWith("destColumnName_")) {
                 String destColName = value;
-                String srcTableName = key.replaceAll("destColumnName_", "").replaceAll("\\..+", "");
+                String srcTableName = key.replaceAll("destColumnName_", "").replaceAll(ESCAPESEQ, "");
                 String srcColName = key.replaceAll("destColumnName_.+\\.", "");
                 Table table = tables.get(srcTableName);
                 Column column = table.getColumnByName(srcColName);
@@ -357,27 +357,6 @@ public class DataImportAPI extends MetadataAPIBase {
             }
 
         }
-
-
-
-       /* // add columns to table
-        for (String key : keyList) {
-            if (key.startsWith("srcColumnName_")) {
-                String colName = params.get(key);
-                String string  = key.replace("srcColumnName_", "");
-
-                System.out.println(key.replace("srcColumnName_", "").split("\\.")[0]);
-                String tableName = (key.replace("srcColumnName_", "").split("\\."))[0];
-                String colIndex = (key.replace("srcColumnName_", "").split("\\."))[1];
-                Column column = new Column(colName, colIndex);
-
-                Table table = tables.get(tableName);
-                table.addColumn(column);
-            }
-        }*/
-
-        // TODO add additional properties like column types, data types to each columns in similar manner
-        // TODO fetch column by its column index e.g. col10
 
         return tables;
     }
@@ -401,8 +380,6 @@ public class DataImportAPI extends MetadataAPIBase {
             intermediate.setInterValue(val);
 
             LOGGER.debug(key + ":" + val);
-            //Calling proc InsertIntermediate
-//            s.selectOne("call_procedures.InsertIntermediate", intermediateInfo);
             intermediateDAO.insert(intermediate);
 
         } catch (Exception e) {

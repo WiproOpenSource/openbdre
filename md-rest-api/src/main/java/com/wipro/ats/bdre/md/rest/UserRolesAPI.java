@@ -18,12 +18,12 @@ import com.wipro.ats.bdre.md.api.base.MetadataAPIBase;
 import com.wipro.ats.bdre.md.beans.table.UserRoles;
 import com.wipro.ats.bdre.md.dao.UserRolesDAO;
 import com.wipro.ats.bdre.md.dao.jpa.Users;
+import com.wipro.ats.bdre.md.rest.util.BindingResultError;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.ModelMap;
 import org.springframework.validation.BindingResult;
-import org.springframework.validation.FieldError;
+
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -49,31 +49,29 @@ public class UserRolesAPI extends MetadataAPIBase {
      */
 
     @RequestMapping(value = "/{uname}", method = RequestMethod.GET)
-    public
+
     @ResponseBody
-    RestWrapper list(
-            @PathVariable("uname") String username, Principal principal,
-            ModelMap model) {
+    public RestWrapper list(
+            @PathVariable("uname") String username, Principal principal) {
         RestWrapper restWrapper = null;
         try {
             List<com.wipro.ats.bdre.md.dao.jpa.UserRoles> jpaUserRolesList = userRolesDAO.listByName(username);
             List<UserRoles> userRolesList = new ArrayList<UserRoles>();
 
-            Integer counter=jpaUserRolesList.size();
+            Integer counter = jpaUserRolesList.size();
             for (com.wipro.ats.bdre.md.dao.jpa.UserRoles userRoles : jpaUserRolesList) {
                 UserRoles userRole = new UserRoles();
                 userRole.setUserRoleId(userRoles.getUserRoleId());
                 userRole.setUsername(userRoles.getUsers().getUsername());
                 userRole.setRole(userRoles.getRole());
-             userRole.setCounter(counter);
-
+                userRole.setCounter(counter);
                 userRolesList.add(userRole);
             }
-            //  List<UserRoles> userRolesList = s.selectList("call_procedures.ListUserRoles", userroles);
             restWrapper = new RestWrapper(userRolesList, RestWrapper.OK);
             LOGGER.info("Records with username:" + username + " selected from  by UserRoles:" + principal.getName());
 
         } catch (Exception e) {
+            LOGGER.error(e);
             restWrapper = new RestWrapper(e.getMessage(), RestWrapper.ERROR);
         }
         return restWrapper;
@@ -83,24 +81,21 @@ public class UserRolesAPI extends MetadataAPIBase {
      * This method calls the proc deleteUserRoles and deletes a record corresponding to the id passed.
      *
      * @param userRoleId
-     * @param model
      * @return nothing.
      */
     @RequestMapping(value = "/{urid}", method = RequestMethod.DELETE)
-    public
+
     @ResponseBody
-    RestWrapper delete(
-            @PathVariable("urid") Integer userRoleId, Principal principal,
-            ModelMap model) {
+    public RestWrapper delete(
+            @PathVariable("urid") Integer userRoleId, Principal principal) {
         RestWrapper restWrapper = null;
         try {
             userRolesDAO.delete(userRoleId);
-            // s.delete("call_procedures.DeleteUserRoles", userroles);
-
             restWrapper = new RestWrapper(null, RestWrapper.OK);
             LOGGER.info("Record with ID:" + userRoleId + " deleted from UserRoles by User:" + principal.getName());
 
         } catch (Exception e) {
+            LOGGER.error(e);
             restWrapper = new RestWrapper(e.getMessage(), RestWrapper.ERROR);
         }
         return restWrapper;
@@ -114,24 +109,14 @@ public class UserRolesAPI extends MetadataAPIBase {
      * @return restWrapper Contains updated instance of UserRoles .
      */
     @RequestMapping(value = {"/", ""}, method = RequestMethod.POST)
-    public
+
     @ResponseBody
-    RestWrapper update(@ModelAttribute("userroles")
+    public RestWrapper update(@ModelAttribute("userroles")
                        @Valid UserRoles userRoles, BindingResult bindingResult, Principal principal) {
         RestWrapper restWrapper = null;
         if (bindingResult.hasErrors()) {
-            StringBuilder errorMessages = new StringBuilder("<p>Please fix following errors and try again<p><ul>");
-            List<FieldError> errors = bindingResult.getFieldErrors();
-            for (FieldError error : errors) {
-                errorMessages.append("<li>");
-                errorMessages.append(error.getField());
-                errorMessages.append(". Bad value: '");
-                errorMessages.append(error.getRejectedValue());
-                errorMessages.append("'</li>");
-            }
-            errorMessages.append("</ul>");
-            restWrapper = new RestWrapper(errorMessages.toString(), RestWrapper.ERROR);
-            return restWrapper;
+            BindingResultError bindingResultError = new BindingResultError();
+            return bindingResultError.errorMessage(bindingResult);
         }
         try {
 
@@ -142,12 +127,11 @@ public class UserRolesAPI extends MetadataAPIBase {
             users.setUsername(userRoles.getUsername());
             jpaUserRoles.setUsers(users);
             userRolesDAO.update(jpaUserRoles);
-            //  UserRoles userRolesUpdate = s.selectOne("call_procedures.UpdateUserRoles", userroles);
-
             restWrapper = new RestWrapper(userRoles, RestWrapper.OK);
             LOGGER.info("Record with ID:" + userRoles.getUserRoleId() + " updated in UserRoles by User:" + principal.getName() + userRoles);
 
         } catch (Exception e) {
+            LOGGER.error(e);
             restWrapper = new RestWrapper(e.getMessage(), RestWrapper.ERROR);
         }
         return restWrapper;
@@ -161,24 +145,14 @@ public class UserRolesAPI extends MetadataAPIBase {
      * @return restWrapper It contains an instance of UserRoles newly added.
      */
     @RequestMapping(value = {"/", ""}, method = RequestMethod.PUT)
-    public
+
     @ResponseBody
-    RestWrapper insert(@ModelAttribute("userroles")
+    public RestWrapper insert(@ModelAttribute("userroles")
                        @Valid UserRoles userRoles, BindingResult bindingResult, Principal principal) {
         RestWrapper restWrapper = null;
         if (bindingResult.hasErrors()) {
-            StringBuilder errorMessages = new StringBuilder("<p>Please fix following errors and try again<p><ul>");
-            List<FieldError> errors = bindingResult.getFieldErrors();
-            for (FieldError error : errors) {
-                errorMessages.append("<li>");
-                errorMessages.append(error.getField());
-                errorMessages.append(". Bad value: '");
-                errorMessages.append(error.getRejectedValue());
-                errorMessages.append("'</li>");
-            }
-            errorMessages.append("</ul>");
-            restWrapper = new RestWrapper(errorMessages.toString(), RestWrapper.ERROR);
-            return restWrapper;
+            BindingResultError bindingResultError = new BindingResultError();
+            return bindingResultError.errorMessage(bindingResult);
         }
         try {
             com.wipro.ats.bdre.md.dao.jpa.UserRoles jpaUserRoles = new com.wipro.ats.bdre.md.dao.jpa.UserRoles();
@@ -189,12 +163,11 @@ public class UserRolesAPI extends MetadataAPIBase {
             jpaUserRoles.setUsers(users);
             Integer userRolesId = userRolesDAO.insert(jpaUserRoles);
             userRoles.setUserRoleId(userRolesId);
-            //  UserRoles userRolesInsert = s.selectOne("call_procedures.InsertUserRoles", userroles);
-
             restWrapper = new RestWrapper(userRoles, RestWrapper.OK);
             LOGGER.info("Record with ID:" + userRoles.getUserRoleId() + " inserted in UserRoles by User:" + principal.getName() + userRoles);
 
         } catch (Exception e) {
+            LOGGER.error(e);
             restWrapper = new RestWrapper(e.getMessage(), RestWrapper.ERROR);
         }
 

@@ -24,9 +24,11 @@ import java.util.List;
  * main class to run ProcessDeploy
  */
 public class ProcessDeployMain {
-    private static final Logger LOGGER = Logger.getLogger(ProcessDeployMain.class);
 
-    public static void main(String args[]) {
+    private static final Logger LOGGER = Logger.getLogger(ProcessDeployMain.class);
+    private ProcessDeployMain()
+    {}
+    public static void main(String[] args) {
         FetchDeploy fetchDeploy = new FetchDeploy();
         List<ProcessDeploymentQueue> pdqList = fetchDeploy.execute(args);
         for (ProcessDeploymentQueue list : pdqList) {

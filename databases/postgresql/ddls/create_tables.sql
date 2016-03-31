@@ -127,6 +127,7 @@ CREATE TABLE process (
   description varchar(256) NOT NULL,
   add_ts timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   process_name varchar(45) NOT NULL,
+  process_code VARCHAR(256),
   bus_domain_id int NOT NULL references bus_domain(bus_domain_id) ON DELETE NO ACTION ON
 UPDATE NO ACTION,
   process_type_id int NOT NULL references process_type(process_type_id) ON DELETE NO ACTION
@@ -163,49 +164,7 @@ ACTION,
 
 );
 
-
-/* etlmd_hive_tables.sql */
-
-
-
-
-CREATE TABLE hive_tables (
-  table_id SERIAL NOT NULL,
-  comments varchar(256) NOT NULL,
-  location_type varchar(45) NOT NULL,
-  dbname varchar(45) DEFAULT NULL,
-  batch_id_partition_col varchar(45) DEFAULT NULL,
-  table_name varchar(45) NOT NULL,
-  type varchar(45) NOT NULL,
-  ddl varchar(2048) NOT NULL,
-  PRIMARY KEY (table_id)
-);
-
-
-/* etlmd_etl_driver.sql */
-
-
-
-
-CREATE TABLE IF NOT EXISTS etl_driver (
-  etl_process_id INT NOT NULL references process(process_id) ON DELETE NO ACTION ON UPDATE
-NO ACTION,
-  raw_table_id INT NOT NULL references hive_tables(table_id) ON DELETE NO ACTION ON UPDATE
-NO ACTION,
-  base_table_id INT NULL references hive_tables(table_id) ON DELETE NO ACTION ON UPDATE NO
-ACTION ,
-  insert_type SMALLINT NULL,
-  drop_raw boolean  DEFAULT false,
-  raw_view_id INT NOT NULL references hive_tables(table_id) ON DELETE NO ACTION ON UPDATE NO
-ACTION,
-  PRIMARY KEY (etl_process_id)
-);
-
-
 /* etlmd_instance_exec.sql */
-
-
-
 
 
 CREATE TABLE instance_exec (
@@ -296,37 +255,6 @@ UPDATE NO ACTION,
 ACTION,
   PRIMARY KEY (queue_id)
  );
-
-
-/* etlmd_etljob.sql */
-
-
-
-
-CREATE TABLE etlstep (
-  uuid varchar(128) NOT NULL,
-  serial_number bigint NOT NULL,
-  bus_domain_id int NOT NULL,
-  process_name varchar(256) NOT NULL,
-  description varchar(2048) NOT NULL,
-  base_table_name varchar(45) DEFAULT NULL,
-  raw_table_name varchar(45) DEFAULT NULL,
-  raw_view_name varchar(45) DEFAULT NULL,
-  base_db_name varchar(45) DEFAULT NULL,
-  raw_db_name varchar(45) DEFAULT NULL,
-  base_table_ddl varchar(2048) DEFAULT NULL,
-  raw_table_ddl varchar(2048) DEFAULT NULL,
-  raw_view_ddl varchar(2048) DEFAULT NULL,
-  raw_partition_col varchar(45) DEFAULT NULL,
-  drop_raw boolean DEFAULT false,
-  enq_id int DEFAULT NULL,
-  column_info varchar(2048) DEFAULT NULL,
-  serde_properties varchar(2048) DEFAULT NULL,
-  table_properties varchar(2048) DEFAULT NULL,
-  input_format varchar(2048) DEFAULT NULL,
-  PRIMARY KEY (serial_number,uuid)
-);
-
 
 /*etlmd_user.sql*/
 
@@ -556,4 +484,21 @@ CREATE TABLE Weburlsdb (
    priority int NOT NULL,
    tag varchar(255),
    PRIMARY KEY (uniqid)
+);
+
+CREATE TABLE app_deployment_queue_status (
+  app_deployment_status_id smallint not null,
+  description varchar(45) not null,
+  PRIMARY KEY (app_deployment_status_id)
+);
+
+
+CREATE TABLE app_deployment_queue (
+  app_deployment_queue_id bigserial not null,
+  process_id int not null REFERENCES process(process_id) ON DELETE NO ACTION ON UPDATE NO ACTION,,
+  username varchar(45)  not null  REFERENCES users(username) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  app_domain varchar(45) not null,
+  app_name varchar(45) not null,
+  app_deployment_status_id smallint not null REFERENCES app_deployment_queue_status(app_deployment_status_id) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  PRIMARY KEY (app_deployment_queue_id),
 );

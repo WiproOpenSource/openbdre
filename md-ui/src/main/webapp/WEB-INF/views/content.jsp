@@ -265,7 +265,13 @@
                                                 collapse: "1",
                                                 url: "deploystatus.page",
                                                 children: []
-							}, {
+							},
+							{
+                                                label: "App Deployment Status",
+                                                collapse: "1",
+                                                url: "adqstatus.page",
+                                                children: []
+                            },{
                                                 label: "Workflow Type",
                                                 collapse: "1",
                                                 url: "workflowtype.page",
@@ -289,16 +295,6 @@
                                                     label: "Process Domains",
                                                     collapse: "1",
                                                     url: "busdomain.page",
-                                                    children: []
-								}, {
-                                                    label: "Data Load",
-                                                    collapse: "1",
-                                                    url: "etldriver.page",
-                                                    children: []
-								}, {
-                                                    label: "Hive Tables",
-                                                    collapse: "1",
-                                                    url: "hivetables.page",
                                                     children: []
 								}, {
                                                     label: "Servers",
@@ -360,8 +356,19 @@
                                             collapse: "1",
                                             url: "pdq.page",
                                             children: []
-						}, 
-                        <security:authorize access = "hasRole('ROLE_ADMIN')"> {
+						}, {
+                                       label: "Table Column Lineage",
+                                       collapse: "1",
+                                       url: "tablecolumnlineage.page",
+                                       children: []
+                        },
+                        <security:authorize access = "hasRole('ROLE_ADMIN')">
+                                                                              {
+                                            label: "App Deployment",
+                                            collapse: "1",
+                                            url: "adq.page",
+                                            children: []
+                                                                            },{
                                             label: "Job Import Wizard",
                                             collapse: "1",
                                             url: "processimportwizard.page",
@@ -371,7 +378,12 @@
                                             collapse: "1",
                                             url: "processtemplate.page",
                                             children: []
-                                                         					}
+                                                         					},{
+                                              label: "App Store",
+                                              collapse: "1",
+                                              url: "appstore.page",
+                                              children: []
+                                                                            }
 					]
 				}, {
                                     label: "Data Ingestion",

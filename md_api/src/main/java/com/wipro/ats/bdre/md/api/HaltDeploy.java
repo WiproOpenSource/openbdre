@@ -22,19 +22,12 @@ import org.apache.commons.cli.CommandLine;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.AutowireCapableBeanFactory;
-import org.springframework.context.ApplicationContext;
-import org.springframework.context.support.ClassPathXmlApplicationContext;
 
 
 /**
  * Created by MI294210 on 9/1/2015.
  */
 public class HaltDeploy extends MetadataAPIBase {
-    public HaltDeploy() {
-        ApplicationContext context = new ClassPathXmlApplicationContext("spring-dao.xml");
-        AutowireCapableBeanFactory acbFactory = context.getAutowireCapableBeanFactory();
-        acbFactory.autowireBean(this);
-    }
 
     private static final Logger LOGGER = Logger.getLogger(HaltDeploy.class);
     private static final String[][] PARAMS_STRUCTURE = {
@@ -44,6 +37,12 @@ public class HaltDeploy extends MetadataAPIBase {
     @Autowired
     DeployDAO deployDAO;
 
+    public HaltDeploy() {
+        AutowireCapableBeanFactory acbFactory = getAutowireCapableBeanFactory();
+        acbFactory.autowireBean(this);
+    }
+
+    @Override
     public HaltDeployInfo execute(String[] params) {
 
         try {
@@ -53,7 +52,6 @@ public class HaltDeploy extends MetadataAPIBase {
             LOGGER.debug("deploymentId is " + deployId);
 
             haltDeployInfo.setDeploymentId(Integer.parseInt(deployId));
-            // s.selectOne("call_procedures.HaltDeploy", haltDeployInfo);
             deployDAO.haltDeploy(Long.valueOf(deployId));
             return haltDeployInfo;
         } catch (Exception e) {

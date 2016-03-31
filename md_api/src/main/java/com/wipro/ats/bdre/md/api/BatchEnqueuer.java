@@ -22,9 +22,6 @@ import org.apache.commons.cli.CommandLine;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.AutowireCapableBeanFactory;
-import org.springframework.context.ApplicationContext;
-import org.springframework.context.support.ClassPathXmlApplicationContext;
-import org.springframework.stereotype.Component;
 
 import java.sql.Timestamp;
 import java.util.List;
@@ -32,13 +29,7 @@ import java.util.List;
 /**
  * Created by SR294224 on 5/29/2015.
  */
-@Component
 public class BatchEnqueuer extends MetadataAPIBase {
-    public BatchEnqueuer() {
-        /*ApplicationContext context = new ClassPathXmlApplicationContext("spring-dao.xml");
-        AutowireCapableBeanFactory acbFactory = context.getAutowireCapableBeanFactory();
-        acbFactory.autowireBean(this);*/
-    }
 
     @Autowired
     BatchEnqueuerDAO batchEnqueuerDAO;
@@ -54,6 +45,10 @@ public class BatchEnqueuer extends MetadataAPIBase {
             {"bm", "batch-marking", "Batch marking"}
     };
 
+    public BatchEnqueuer() {
+        AutowireCapableBeanFactory acbFactory = getAutowireCapableBeanFactory();
+        acbFactory.autowireBean(this);
+    }
     /**
      * This method runs BatchEnqueuer proc for a process id and registers the file and
      * enqueues the batch to the downstream process.
@@ -63,6 +58,7 @@ public class BatchEnqueuer extends MetadataAPIBase {
      * @return This method return output of BatchEnqueuer proc having information regarding
      * batch queued in batch_consump_queue.
      */
+    @Override
     public List<BatchConsumpQueue> execute(String[] params) {
 
         try {
@@ -101,7 +97,6 @@ public class BatchEnqueuer extends MetadataAPIBase {
             registerFileInfo.setCreationTs(Timestamp.valueOf(creationTs));
             registerFileInfo.setBatchMarking(batchMarking);
             //Calling the BatchEnqueuerDAO with registerFileInfo as parameter
-            // bcqs = s.selectList("call_procedures.BatchEnqueuer", registerFileInfo);
 
             bcqs = batchEnqueuerDAO.batchEnqueue(registerFileInfo);
             LOGGER.debug("registerFileInfo " + registerFileInfo.getPath() + " " + registerFileInfo.getBatchId());

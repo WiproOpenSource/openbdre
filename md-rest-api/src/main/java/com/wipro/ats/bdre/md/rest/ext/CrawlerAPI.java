@@ -18,8 +18,8 @@ import com.wipro.ats.bdre.md.api.base.MetadataAPIBase;
 import com.wipro.ats.bdre.md.beans.CrawlerInfo;
 import com.wipro.ats.bdre.md.beans.table.Process;
 import com.wipro.ats.bdre.md.dao.ProcessDAO;
-import com.wipro.ats.bdre.md.dao.PropertiesDAO;
 import com.wipro.ats.bdre.md.rest.RestWrapper;
+import com.wipro.ats.bdre.md.rest.util.BindingResultError;
 import com.wipro.ats.bdre.md.rest.util.Dao2TableUtil;
 import com.wipro.ats.bdre.md.rest.util.DateConverter;
 import org.apache.log4j.Logger;
@@ -27,7 +27,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
-import org.springframework.validation.FieldError;
+
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -46,33 +46,22 @@ import java.util.List;
 @Scope("session")
 public class CrawlerAPI extends MetadataAPIBase {
     private static final Logger LOGGER = Logger.getLogger(CrawlerAPI.class);
+    private static final String CRAWLER = "crawler";
+
     @Autowired
     private ProcessDAO processDAO;
-    @Autowired
-    private PropertiesDAO propertiesDAO;
 
     @RequestMapping(value = {"/", ""}, method = RequestMethod.POST)
 
-    public
     @ResponseBody
-    RestWrapper createCrawlerProcess(@ModelAttribute("crawlerInfo")
+    public RestWrapper createCrawlerProcess(@ModelAttribute("crawlerInfo")
                                      @Valid CrawlerInfo crawlerInfo, BindingResult bindingResult, Principal principal) {
 
         RestWrapper restWrapper = null;
 
         if (bindingResult.hasErrors()) {
-            StringBuilder errorMessages = new StringBuilder("<p>Please fix following errors and try again<p><ul>");
-            List<FieldError> errors = bindingResult.getFieldErrors();
-            for (FieldError error : errors) {
-                errorMessages.append("<li>");
-                errorMessages.append(error.getField());
-                errorMessages.append(". Bad value: '");
-                errorMessages.append(error.getRejectedValue());
-                errorMessages.append("'</li>");
-            }
-            errorMessages.append("</ul>");
-            restWrapper = new RestWrapper(errorMessages.toString(), RestWrapper.ERROR);
-            return restWrapper;
+            BindingResultError bindingResultError = new BindingResultError();
+            return bindingResultError.errorMessage(bindingResult);
         }
 
 
@@ -82,46 +71,44 @@ public class CrawlerAPI extends MetadataAPIBase {
         List<com.wipro.ats.bdre.md.dao.jpa.Properties> childProps=new ArrayList<>();
 
         //inserting in properties table
-        com.wipro.ats.bdre.md.dao.jpa.Properties jpaProperties = Dao2TableUtil.buildJPAProperties("crawler", "politenessDelay", crawlerInfo.getPolitenessDelay().toString(), "Delay between requests");
+        com.wipro.ats.bdre.md.dao.jpa.Properties jpaProperties = Dao2TableUtil.buildJPAProperties(CRAWLER, "politenessDelay", crawlerInfo.getPolitenessDelay().toString(), "Delay between requests");
         childProps.add(jpaProperties);
-        jpaProperties = Dao2TableUtil.buildJPAProperties("crawler", "maxDepthOfCrawling", crawlerInfo.getMaxDepthOfCrawling().toString(), "Depth of crawling");
+        jpaProperties = Dao2TableUtil.buildJPAProperties(CRAWLER, "maxDepthOfCrawling", crawlerInfo.getMaxDepthOfCrawling().toString(), "Depth of crawling");
         childProps.add(jpaProperties);
-        jpaProperties = Dao2TableUtil.buildJPAProperties("crawler", "maxPagesToFetch", crawlerInfo.getMaxPagesToFetch().toString(), "no. of pages to fetch");
+        jpaProperties = Dao2TableUtil.buildJPAProperties(CRAWLER, "maxPagesToFetch", crawlerInfo.getMaxPagesToFetch().toString(), "no. of pages to fetch");
         childProps.add(jpaProperties);
-        jpaProperties = Dao2TableUtil.buildJPAProperties("crawler", "includeBinaryContentInCrawling", crawlerInfo.getIncludeBinaryContentInCrawling().toString(), "to include binary content");
+        jpaProperties = Dao2TableUtil.buildJPAProperties(CRAWLER, "includeBinaryContentInCrawling", crawlerInfo.getIncludeBinaryContentInCrawling().toString(), "to include binary content");
         childProps.add(jpaProperties);
-        jpaProperties = Dao2TableUtil.buildJPAProperties("crawler", "resumableCrawling", crawlerInfo.getResumableCrawling().toString(), "set resumable crawling");
+        jpaProperties = Dao2TableUtil.buildJPAProperties(CRAWLER, "resumableCrawling", crawlerInfo.getResumableCrawling().toString(), "set resumable crawling");
         childProps.add(jpaProperties);
-        jpaProperties = Dao2TableUtil.buildJPAProperties("crawler", "userAgentString", crawlerInfo.getUserAgentString(), "User agent string");
+        jpaProperties = Dao2TableUtil.buildJPAProperties(CRAWLER, "userAgentString", crawlerInfo.getUserAgentString(), "User agent string");
         childProps.add(jpaProperties);
-        jpaProperties = Dao2TableUtil.buildJPAProperties("crawler", "outputPath", crawlerInfo.getOutputPath(), "HDFS output path");
+        jpaProperties = Dao2TableUtil.buildJPAProperties(CRAWLER, "outputPath", crawlerInfo.getOutputPath(), "HDFS output path");
         childProps.add(jpaProperties);
 
         if (crawlerInfo.getProxyHost() != null && crawlerInfo.getProxyHost() != "") {
-            jpaProperties = Dao2TableUtil.buildJPAProperties("crawler", "proxyHost", crawlerInfo.getProxyHost(), "Proxy Host");
+            jpaProperties = Dao2TableUtil.buildJPAProperties(CRAWLER, "proxyHost", crawlerInfo.getProxyHost(), "Proxy Host");
             childProps.add(jpaProperties);
             if (crawlerInfo.getProxyPort() != null && crawlerInfo.getProxyPort() != 0) {
-                jpaProperties = Dao2TableUtil.buildJPAProperties("crawler", "proxyPort", crawlerInfo.getProxyPort().toString(), "Proxy Port");
+                jpaProperties = Dao2TableUtil.buildJPAProperties(CRAWLER, "proxyPort", crawlerInfo.getProxyPort().toString(), "Proxy Port");
                 childProps.add(jpaProperties);
-                if (crawlerInfo.getProxyUserName() != null && crawlerInfo.getProxyUserName() != "") {
-                    jpaProperties = Dao2TableUtil.buildJPAProperties("crawler", "proxyUsername", crawlerInfo.getProxyUserName(), "Proxy Username");
+                if (crawlerInfo.getProxyUserName() != null && crawlerInfo.getProxyUserName() != "" && crawlerInfo.getProxyPassword() != null && crawlerInfo.getProxyPassword() != "") {
+                    jpaProperties = Dao2TableUtil.buildJPAProperties(CRAWLER, "proxyUsername", crawlerInfo.getProxyUserName(), "Proxy Username");
                     childProps.add(jpaProperties);
-                    if (crawlerInfo.getProxyPassword() != null && crawlerInfo.getProxyPassword() != "") {
-                        jpaProperties = Dao2TableUtil.buildJPAProperties("crawler", "proxyPassword", crawlerInfo.getProxyPassword(), "Proxy Password");
-                        childProps.add(jpaProperties);
-                    }
+                    jpaProperties = Dao2TableUtil.buildJPAProperties(CRAWLER, "proxyPassword", crawlerInfo.getProxyPassword(), "Proxy Password");
+                    childProps.add(jpaProperties);
                 }
 
             }
 
         }
-        jpaProperties = Dao2TableUtil.buildJPAProperties("crawler", "url", crawlerInfo.getUrl(), "Base Url to crawl");
+        jpaProperties = Dao2TableUtil.buildJPAProperties(CRAWLER, "url", crawlerInfo.getUrl(), "Base Url to crawl");
         childProps.add(jpaProperties);
-        jpaProperties = Dao2TableUtil.buildJPAProperties("crawler", "urlsToSearch", crawlerInfo.getUrlsToSearch(), "urls to include in search");
+        jpaProperties = Dao2TableUtil.buildJPAProperties(CRAWLER, "urlsToSearch", crawlerInfo.getUrlsToSearch(), "urls to include in search");
         childProps.add(jpaProperties);
-        jpaProperties = Dao2TableUtil.buildJPAProperties("crawler", "urlsNotToSearch", crawlerInfo.getUrlsNotToSearch(), "urls not to include in search");
+        jpaProperties = Dao2TableUtil.buildJPAProperties(CRAWLER, "urlsNotToSearch", crawlerInfo.getUrlsNotToSearch(), "urls not to include in search");
         childProps.add(jpaProperties);
-        jpaProperties = Dao2TableUtil.buildJPAProperties("crawler", "numberOfMappers", crawlerInfo.getNumMappers().toString(), "number of mappers to run");
+        jpaProperties = Dao2TableUtil.buildJPAProperties(CRAWLER, "numberOfMappers", crawlerInfo.getNumMappers().toString(), "number of mappers to run");
         childProps.add(jpaProperties);
 
         List<com.wipro.ats.bdre.md.dao.jpa.Process> processList = processDAO.createOneChildJob(parentProcess,childProcess,null,childProps);
@@ -133,6 +120,7 @@ public class CrawlerAPI extends MetadataAPIBase {
             process.setTableEditTS(DateConverter.dateToString(process.getEditTS()));
         }
         restWrapper = new RestWrapper(tableProcessList, RestWrapper.OK);
+        LOGGER.info("Process and Properties for crawler process inserted by" + principal.getName());
         return restWrapper;
     }
 

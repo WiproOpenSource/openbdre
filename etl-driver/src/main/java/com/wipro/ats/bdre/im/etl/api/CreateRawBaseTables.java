@@ -31,6 +31,7 @@ import java.util.*;
  */
 public class CreateRawBaseTables extends ETLBase {
     private static final Logger LOGGER = Logger.getLogger(CreateRawBaseTables.class);
+    private static final String PROCESSID = "process-id";
     private static final String[][] PARAMS_STRUCTURE = {
             {"p", "process-id", " Process id of ETLDriver"},
             {"instExecId", "instance-exec-id", " instance exec id"},
@@ -38,8 +39,7 @@ public class CreateRawBaseTables extends ETLBase {
     public void executeRawLoad(String[] params) {
 
         CommandLine commandLine = getCommandLine(params, PARAMS_STRUCTURE);
-        String processId = commandLine.getOptionValue("process-id");
-        String instanceExecId = commandLine.getOptionValue("instance-exec-id");
+        String processId = commandLine.getOptionValue(PROCESSID);
         rawLoad=processId;
 
 
@@ -49,9 +49,6 @@ public class CreateRawBaseTables extends ETLBase {
         String rawTableName = rawPropertiesOfTable.getProperty("table_name");
         String rawTableDbName = rawPropertiesOfTable.getProperty("table_db");
         String fileType = rawPropertiesOfTable.getProperty("file_type");
-        String rawInputFormat = rawPropertiesOfTable.getProperty("input.format");
-        String rawOutputFormat = rawPropertiesOfTable.getProperty("output.format");
-        String rawSerdeClass = rawPropertiesOfTable.getProperty("serde.class");
         String rawSerdeProperties = "";
         String rawTableProperties = "";
         String rawColumnList = "";
@@ -63,7 +60,7 @@ public class CreateRawBaseTables extends ETLBase {
         List<String> orderOfCloumns = Collections.list(columns);
         Collections.sort(orderOfCloumns);
         List<String> rawColumns = new ArrayList<String>();
-        if (rawPropertiesOfColumns.size() != 0) {
+        if (!rawPropertiesOfColumns.isEmpty()) {
             for (String columnOrder : orderOfCloumns) {
                 String key = columnOrder;
                 rawColumns.add(rawPropertiesOfColumns.getProperty(key));
@@ -77,7 +74,7 @@ public class CreateRawBaseTables extends ETLBase {
         List<String> orderOfDataTypes = Collections.list(dataTypes);
         Collections.sort(orderOfDataTypes);
         List<String> rawDataTypes = new ArrayList<String>();
-        if (rawPropertiesOfColumns.size() != 0) {
+        if (!rawPropertiesOfColumns.isEmpty()) {
             for (String columnOrder : orderOfDataTypes) {
                 String key = columnOrder;
                 rawDataTypes.add(rawPropertiesOfDataTypes.getProperty(key));
@@ -96,7 +93,7 @@ public class CreateRawBaseTables extends ETLBase {
             GetProperties getSerdeProperties = new GetProperties();
             java.util.Properties listForRawSerdeProps = getSerdeProperties.getProperties(rawLoad, "raw-serde-props");
             Enumeration e = listForRawSerdeProps.propertyNames();
-            if (listForRawSerdeProps.size() != 0) {
+            if (!listForRawSerdeProps.isEmpty()) {
                 while (e.hasMoreElements()) {
                     String key = (String) e.nextElement();
                     sList.append("'" + key + "' = '" + listForRawSerdeProps.getProperty(key) + "',");
@@ -114,7 +111,7 @@ public class CreateRawBaseTables extends ETLBase {
             GetProperties getSerdeProperties = new GetProperties();
             java.util.Properties listForRawSerdeProps = getSerdeProperties.getProperties(rawLoad, "raw-serde-props");
             Enumeration e = listForRawSerdeProps.propertyNames();
-            if (listForRawSerdeProps.size() != 0) {
+            if (!listForRawSerdeProps.isEmpty()) {
                 while (e.hasMoreElements()) {
                     String key = (String) e.nextElement();
                     sList.append("\"" + key + "\" = \"" + listForRawSerdeProps.getProperty(key) + "\",");
@@ -132,7 +129,7 @@ public class CreateRawBaseTables extends ETLBase {
             GetProperties getTableProperties = new GetProperties();
             java.util.Properties listForRawTableProps = getTableProperties.getProperties(rawLoad, "raw-table-props");
             Enumeration e = listForRawTableProps.propertyNames();
-            if (listForRawTableProps.size() != 0) {
+            if (!listForRawTableProps.isEmpty()) {
                 while (e.hasMoreElements()) {
                     String key = (String) e.nextElement();
                     tList.append("\"" + key + "\" = \"" + listForRawTableProps.getProperty(key) + "\",");
@@ -146,7 +143,7 @@ public class CreateRawBaseTables extends ETLBase {
             GetProperties getTableProperties = new GetProperties();
             java.util.Properties listForRawTableProps = getTableProperties.getProperties(rawLoad, "raw-table-props");
             Enumeration e = listForRawTableProps.propertyNames();
-            if (listForRawTableProps.size() != 0) {
+            if (!listForRawTableProps.isEmpty()) {
                 while (e.hasMoreElements()) {
                     String key = (String) e.nextElement();
                     tList.append("'" + key + "' = '" + listForRawTableProps.getProperty(key) + "',");
@@ -189,12 +186,10 @@ public class CreateRawBaseTables extends ETLBase {
     public void executeStageLoad(String[] params) {
 
         CommandLine commandLine = getCommandLine(params, PARAMS_STRUCTURE);
-        String processId = commandLine.getOptionValue("process-id");
+        String processId = commandLine.getOptionValue(PROCESSID);
         String instanceExecId = commandLine.getOptionValue("instance-exec-id");
         stgLoad = processId;
 
-
-//        Integer baseLoadProcessId = baseLoad.getProcessId();
 
         //Getting raw table information from properties with raw-table as config group
         GetProperties getPropertiesOfRawTable = new GetProperties();
@@ -222,7 +217,7 @@ public class CreateRawBaseTables extends ETLBase {
         java.util.Properties viewPropertiesOfColumns = getPropertiesOfViewColumns.getProperties(stgLoad, "base-columns");
         Enumeration viewColumnsList = viewPropertiesOfColumns.propertyNames();
         StringBuilder viewColumns = new StringBuilder();
-        if (viewPropertiesOfColumns.size() != 0) {
+        if (!viewPropertiesOfColumns.isEmpty()) {
             while (viewColumnsList.hasMoreElements()) {
                 String key = (String) viewColumnsList.nextElement();
                 viewColumns.append(viewPropertiesOfColumns.getProperty(key) + " AS " + key.replaceAll("transform_", "") + ",");
@@ -253,7 +248,7 @@ public class CreateRawBaseTables extends ETLBase {
         java.util.Properties basePropertiesOfDataTypes = getPropertiesOfBaseColumns.getProperties(stgLoad, "base-data-types");
         Enumeration baseColumnsList = basePropertiesOfColumns.propertyNames();
         StringBuilder baseColumns = new StringBuilder();
-        if (basePropertiesOfColumns.size() != 0) {
+        if (!basePropertiesOfColumns.isEmpty()) {
             while (baseColumnsList.hasMoreElements()) {
                 String key = (String) baseColumnsList.nextElement();
                 baseColumns.append(basePropertiesOfColumns.getProperty(key) + " " + basePropertiesOfDataTypes .getProperty(key.replaceAll("transform_","")) + ",");
@@ -263,7 +258,8 @@ public class CreateRawBaseTables extends ETLBase {
         String baseColumnsWithDataTypes = baseColumns.substring(0, baseColumns.length() - 1);
         java.util.Properties partitionproperties = getPropertiesOfRawTable.getProperties(stgLoad, "partition");
         String partitionColumns = partitionproperties.getProperty("partition_columns");
-        if (partitionColumns == null) partitionColumns = "";
+        if (partitionColumns == null)
+            partitionColumns = "";
         baseTableDdl += "CREATE TABLE IF NOT EXISTS " + baseTableDbName + "." + baseTableName + " (" + baseColumnsWithDataTypes + ") partitioned by (" + partitionColumns + " instanceexecid bigint) stored as orc";
 
         LOGGER.debug(baseTableDdl);
@@ -278,16 +274,19 @@ public class CreateRawBaseTables extends ETLBase {
     }
 
 
+    private static String getQuery(String name){
+        return "SHOW TABLES LIKE '" + name + "'";
+    }
 
     private void checkAndCreateRawTable(String dbName, String tableName, String ddl) {
         try {
             LOGGER.debug("Reading Hive Connection details from Properties File");
             Connection con = getHiveJDBCConnection(dbName);
             Statement stmt = con.createStatement();
-            ResultSet rs = stmt.executeQuery("SHOW TABLES LIKE '" + tableName + "'");
+            ResultSet rs = stmt.executeQuery(CreateRawBaseTables.getQuery(tableName));
             if (!rs.next()) {
                 LOGGER.info("Raw table does not exist Creating table " + tableName);
-                LOGGER.info("Creating raw table using "+ddl);
+                LOGGER.info("Creating raw table using " + ddl);
                 stmt.executeUpdate(ddl);
                 LOGGER.info("Raw table created.");
             }
@@ -305,10 +304,10 @@ public class CreateRawBaseTables extends ETLBase {
 
             Connection con = getHiveJDBCConnection(dbName);
             Statement stmt = con.createStatement();
-            ResultSet rs = stmt.executeQuery("SHOW TABLES LIKE '" + stageViewName + "'");
+            ResultSet rs = stmt.executeQuery(CreateRawBaseTables.getQuery(stageViewName));
             if (!rs.next()) {
                 LOGGER.debug("View does not exist. Creating View " + stageViewName);
-                LOGGER.info("Creating view using "+ddl);
+                LOGGER.info("Creating view using " + ddl);
                 stmt.executeUpdate(ddl);
             }
             stmt.close();
@@ -324,7 +323,7 @@ public class CreateRawBaseTables extends ETLBase {
 
             Connection con = getHiveJDBCConnection(dbName);
             Statement stmt = con.createStatement();
-            ResultSet rs = stmt.executeQuery("SHOW TABLES LIKE '" + baseTable + "'");
+            ResultSet rs = stmt.executeQuery(CreateRawBaseTables.getQuery(baseTable));
             if (!rs.next()) {
                 LOGGER.info("Base table does not exist.Creating Table " + baseTable);
                 LOGGER.info("Creating base table using "+ddl);
@@ -343,7 +342,7 @@ public class CreateRawBaseTables extends ETLBase {
 
             Connection con = getHiveJDBCConnection(dbName);
             Statement stmt = con.createStatement();
-            ResultSet rs = stmt.executeQuery("SHOW TABLES LIKE '" + baseTable + "'");
+            ResultSet rs = stmt.executeQuery(CreateRawBaseTables.getQuery(baseTable));
             if (!rs.next()) {
                 LOGGER.info("Stage table does not exist.Creating Table " + baseTable);
                 LOGGER.info("Creating stage table using "+ddl);

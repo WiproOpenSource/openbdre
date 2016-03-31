@@ -47,6 +47,11 @@ public class Function extends Node {
 //		++counter;
 		this.name = label.toUpperCase();
 		this.inColumnNameList = inColumnNameList;
+		if(outAlias==null){
+			this.outAlias = label.toUpperCase();
+		}
+		else
+
 		this.outAlias = outAlias;
 	}
 
@@ -59,7 +64,9 @@ public class Function extends Node {
 	public void setOutNode(Node outNode) {this.outNode = outNode;}
 	public List<String> getInColumnNameList() {return inColumnNameList;}
 	public void setInColumnNameList(List<String> inColumnNameList) {this.inColumnNameList = inColumnNameList;}
-	public String getOutAlias() {return outAlias;}
+	public String getOutAlias() {
+		return outAlias;
+	}
 	public void setOutAlias(String outAlias) {this.outAlias = outAlias;}
 
 	public static void updateFunctions(List<Table> inTableNodes, List<Table> outTableNodes, List<Column> inColumnNodes,

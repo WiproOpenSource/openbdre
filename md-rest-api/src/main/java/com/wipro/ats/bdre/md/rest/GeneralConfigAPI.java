@@ -14,6 +14,7 @@
 
 package com.wipro.ats.bdre.md.rest;
 
+import com.wipro.ats.bdre.exception.MetadataException;
 import com.wipro.ats.bdre.md.api.GetGeneralConfig;
 import com.wipro.ats.bdre.md.api.base.MetadataAPIBase;
 import com.wipro.ats.bdre.md.beans.table.GeneralConfig;
@@ -48,14 +49,13 @@ public class GeneralConfigAPI extends MetadataAPIBase {
     GeneralConfigDAO generalConfigDAO;
 
     @RequestMapping(value = {"/{cg}", "/{cg}/"}, method = RequestMethod.GET)
-    public
-    @ResponseBody
+    @ResponseBody public
     RestWrapper listUsingRequired(@PathVariable("cg") String configGroup, @RequestParam(value = "required", defaultValue = "2") Integer required, Principal principal) {
 
         RestWrapper restWrapper = null;
         GetGeneralConfig generalConfigs = new GetGeneralConfig();
         List<GeneralConfig> generalConfigList = generalConfigs.byConigGroupOnly(configGroup, required);
-        if (generalConfigList.size() > 0) {
+        if (!generalConfigList.isEmpty()) {
             if (generalConfigList.get(0).getRequired() == 2) {
                 restWrapper = new RestWrapper("Listing of Records Failed", RestWrapper.ERROR);
             } else {
@@ -79,8 +79,7 @@ public class GeneralConfigAPI extends MetadataAPIBase {
      * @return restWrapper It contains an instance of GeneralConfig corresponding to config group and key passed.
      */
     @RequestMapping(value = {"/{cg}/{k}", "{cg}/{k}/"}, method = RequestMethod.GET)
-    public
-    @ResponseBody
+    @ResponseBody public
     RestWrapper listUsingKey(@PathVariable("cg") String configGroup, @PathVariable("k") String key, Principal principal) {
 
         RestWrapper restWrapper = null;
@@ -106,8 +105,7 @@ public class GeneralConfigAPI extends MetadataAPIBase {
      */
 
     @RequestMapping(value = {"/admin/", "/admin"}, method = RequestMethod.POST)
-    public
-    @ResponseBody
+    @ResponseBody public
     RestWrapper update(@RequestParam Map<String, String> map, Principal principal) {
         RestWrapper restWrapper = null;
         try {
@@ -131,13 +129,13 @@ public class GeneralConfigAPI extends MetadataAPIBase {
                 jpaGeneralConfig.setDefaultVal(generalConfig.getDefaultVal());
                 //Calling Update method of generalConfigDAO
                 generalConfigDAO.update(jpaGeneralConfig);
-                //generalConfigUpdate = s.selectOne("call_procedures.UpdateGeneralConfig", generalConfig);
                 generalConfigUpdate = generalConfig;
             }
             restWrapper = new RestWrapper(generalConfigUpdate, RestWrapper.OK);
             LOGGER.info(" Record with key:" + generalConfigUpdate.getKey() + " and config group:" + generalConfigUpdate.getConfigGroup() + " updated in general_config by User:" + principal.getName());
 
-        } catch (Exception e) {
+        }catch (MetadataException e) {
+            LOGGER.error(e);
             restWrapper = new RestWrapper(e.getMessage(), RestWrapper.ERROR);
         }
         return restWrapper;
@@ -154,8 +152,7 @@ public class GeneralConfigAPI extends MetadataAPIBase {
 
 
     @RequestMapping(value = {"/{cg}/{key}", "/{cg}/{key}/"}, method = RequestMethod.DELETE)
-    public
-    @ResponseBody
+    @ResponseBody public
     RestWrapper delete(@PathVariable("cg") String configGroup, @PathVariable("key") String key,
                        Principal principal) {
         RestWrapper restWrapper = null;
@@ -167,13 +164,12 @@ public class GeneralConfigAPI extends MetadataAPIBase {
             GeneralConfigId jpaGeneralConfigId = new GeneralConfigId();
             jpaGeneralConfigId.setConfigGroup(generalConfig.getConfigGroup());
             jpaGeneralConfigId.setGcKey(generalConfig.getKey());
-            //Calling delete method of generalConfigDAO
             generalConfigDAO.delete(jpaGeneralConfigId);
-            //s.delete("call_procedures.DeleteGeneralConfig", generalConfig);
             restWrapper = new RestWrapper(null, RestWrapper.OK);
             LOGGER.info("Record with key:" + key + " deleted from general_config by User:" + principal.getName());
 
-        } catch (Exception e) {
+        } catch (MetadataException e) {
+            LOGGER.error(e);
             restWrapper = new RestWrapper(e.getMessage(), RestWrapper.ERROR);
         }
         return restWrapper;

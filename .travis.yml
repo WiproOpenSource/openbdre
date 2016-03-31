@@ -1,0 +1,34 @@
+language: java
+jdk:
+  - oraclejdk7
+before_install:
+    - sudo apt-get install mysql-server -y
+    - sudo apt-get install curl -y
+    - sudo service mysql restart
+    - echo hibernate.current_session_context_class=thread > md-dao/src/main/resources/db.properties
+    - echo hibernate.transaction.factory_class=org.hibernate.transaction.JDBCTransactionFactory >> md-dao/src/main/resources/db.properties
+    - echo hibernate.show_sql=false >> md-dao/src/main/resources/db.properties
+    - echo hibernate.connection.driver_class=com.mysql.jdbc.Driver >> md-dao/src/main/resources/db.properties
+    - echo "hibernate.connection.url=jdbc:mysql://localhost:3306/bdre?createDatabaseIfNotExist=true" >> md-dao/src/main/resources/db.properties
+    - echo hibernate.connection.password= >> md-dao/src/main/resources/db.properties
+    - echo hibernate.connection.username=root >> md-dao/src/main/resources/db.properties
+    - echo hibernate.dialect=org.hibernate.dialect.MySQLDialect >> md-dao/src/main/resources/db.properties
+    - echo hibernate.default_schema=bdre >> md-dao/src/main/resources/db.properties
+    - cat md-dao/src/main/resources/db.properties
+    - mysql -uroot -e "create database if not exists bdre"
+    - mysql -uroot bdre < databases/mysql/ddls/drop_tables.sql
+    - mysql -uroot bdre < databases/mysql/ddls/create_tables.sql
+    - wget http://www.us.apache.org/dist/maven/maven-3/3.3.9/binaries/apache-maven-3.3.9-bin.zip
+    - unzip apache-maven-3.3.9-bin.zip
+    - export PATH=$PWD/apache-maven-3.3.9/bin:$PATH
+    - export M2_HOME=$PWD/apache-maven-3.3.9
+install: /bin/true
+script:
+    - mvn -s settings.xml clean install -P hdp22 -pl '!im-crawler' --quiet
+    - sh install-scripts.sh local
+    - sudo service bdre start
+after_success:
+    - echo "Looks like success !"
+after_failure:
+    - cat /var/log/BDRE/daemon.log
+    

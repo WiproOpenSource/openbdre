@@ -22,8 +22,6 @@ import org.apache.commons.cli.CommandLine;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.AutowireCapableBeanFactory;
-import org.springframework.context.ApplicationContext;
-import org.springframework.context.support.ClassPathXmlApplicationContext;
 
 import java.util.List;
 
@@ -31,18 +29,19 @@ import java.util.List;
  * This class gets list of Upstream and Downstream processes of a particular process.
  */
 public class GetProcessDependency extends MetadataAPIBase {
-    public GetProcessDependency() {
-        ApplicationContext context = new ClassPathXmlApplicationContext("spring-dao.xml");
-        AutowireCapableBeanFactory acbFactory = context.getAutowireCapableBeanFactory();
-        acbFactory.autowireBean(this);
-    }
 
     private static final Logger LOGGER = Logger.getLogger(GetProcessDependency.class);
 
     private static final String[][] PARAMS_STRUCTURE = {
             {"p", "process-id", " Process id of the process to get it's immediate Upstream and Downstream Processes"},
     };
+    @Autowired
+    private ProcessDependencyDAO processDependencyDAO;
 
+    public GetProcessDependency() {
+        AutowireCapableBeanFactory acbFactory = getAutowireCapableBeanFactory();
+        acbFactory.autowireBean(this);
+    }
     /**
      * This method gets list of Upstream and Downstream processes of a particular process.
      *
@@ -50,19 +49,15 @@ public class GetProcessDependency extends MetadataAPIBase {
      * command line notations.
      * @return This method returns list of Upstream and Downstream processes of a particular process.
      */
-    @Autowired
-    private ProcessDependencyDAO processDependencyDAO;
-
+    @Override
     public List<ProcessDependencyInfo> execute(String[] params) {
         List<ProcessDependencyInfo> udList;
         try {
-            ProcessDependencyInfo processDependencyInfo = new ProcessDependencyInfo();
             CommandLine commandLine = getCommandLine(params, PARAMS_STRUCTURE);
             String pid = commandLine.getOptionValue("process-id");
             LOGGER.debug("process-id  is " + pid);
 
             //calling proc ListUD
-//            udList = s.selectList("call_procedures.GetListUD", processDependencyInfo);
             udList = processDependencyDAO.listUD(Integer.parseInt(pid));
             LOGGER.debug("Details of process is\n" + udList);
             return udList;

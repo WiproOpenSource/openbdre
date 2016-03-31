@@ -30,6 +30,10 @@ public class FileScan {
 
     private static final Logger LOGGER = Logger.getLogger(FileScan.class);
 
+    private FileScan(){
+
+    }
+
     public static void scanAndAddToQueue() {
         try {
             String scanDir = FileMonRunnableMain.getMonitoredDirName();
@@ -52,7 +56,7 @@ public class FileScan {
                 fileCopyInfo = new FileCopyInfo();
                 fileCopyInfo.setFileName(fileName);
                 fileCopyInfo.setSubProcessId(FileMonRunnableMain.getSubProcessId());
-                fileCopyInfo.setServerId(new Integer(123461).toString());
+                fileCopyInfo.setServerId(Integer.toString(123461));
                 fileCopyInfo.setSrcLocation(file.getAbsolutePath());
                 fileCopyInfo.setDstLocation(file.getParent().replace(FileMonRunnableMain.getMonitoredDirName(), FileMonRunnableMain.getHdfsUploadDir()));
                 fileCopyInfo.setFileHash(DigestUtils.md5Hex(FileUtils.readFileToByteArray(file)));

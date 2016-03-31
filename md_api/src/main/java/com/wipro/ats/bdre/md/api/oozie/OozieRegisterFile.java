@@ -20,25 +20,12 @@ import com.wipro.ats.bdre.md.api.RegisterFile;
 import com.wipro.ats.bdre.md.beans.RegisterFileInfo;
 import com.wipro.ats.bdre.util.OozieUtil;
 import org.apache.log4j.Logger;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.config.AutowireCapableBeanFactory;
-import org.springframework.context.ApplicationContext;
-import org.springframework.context.support.ClassPathXmlApplicationContext;
 
 /**
  * Created by leela on 12-12-2014.
  */
 public class OozieRegisterFile {
     private static final Logger LOGGER = Logger.getLogger(OozieRegisterFile.class);
-
-    /**
-     * default constructor
-     */
-    private OozieRegisterFile() {
-        ApplicationContext context = new ClassPathXmlApplicationContext("spring-dao.xml");
-        AutowireCapableBeanFactory acbFactory = context.getAutowireCapableBeanFactory();
-        acbFactory.autowireBean(this);
-    }
 
     /**
      * This method calls execute method and persist the output till runtime.
@@ -48,10 +35,9 @@ public class OozieRegisterFile {
     public static void main(String[] args) {
         new OozieRegisterFile().execute(args);
     }
-    @Autowired
-    private RegisterFile rf;
+
     public void execute(String[] args){
-        RegisterFileInfo fileInfo = rf.execute(args);
+        RegisterFileInfo fileInfo = new RegisterFile().execute(args);
         OozieUtil oozieUtil = new OozieUtil();
         try {
             oozieUtil.persistBeanData(fileInfo, false);

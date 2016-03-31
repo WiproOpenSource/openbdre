@@ -15,16 +15,14 @@
 package com.wipro.ats.bdre.md.triggers;
 
 import com.wipro.ats.bdre.exception.MetadataException;
-import com.wipro.ats.bdre.md.dao.ProcessTypeDAO;
 import com.wipro.ats.bdre.md.dao.jpa.Process;
-import com.wipro.ats.bdre.md.dao.jpa.ProcessType;
-import org.apache.commons.lang.builder.ReflectionToStringBuilder;
 import org.apache.log4j.Logger;
 import org.hibernate.event.spi.*;
 import org.springframework.stereotype.Component;
 
 import java.util.HashMap;
-import java.util.List;
+import java.util.Map;
+import java.util.UUID;
 
 /**
  * Created by SH324337 on 12/18/2015.
@@ -33,8 +31,8 @@ import java.util.List;
 public class MetadataPersistenceTrigger implements PreUpdateEventListener, PreInsertEventListener, PostUpdateEventListener, PostInsertEventListener {
 
     private static final Logger LOGGER = Logger.getLogger(MetadataPersistenceTrigger.class);
-    private static HashMap<Integer,Integer> processTypeMap=new HashMap<>();
-    //TODO:We have to populate this from DB
+    private static Map<Integer,Integer> processTypeMap=new HashMap<>();
+    //TO DO:We have to populate this from DB
     static {
         processTypeMap.put(1,0);
         processTypeMap.put(2,0);
@@ -97,7 +95,11 @@ public class MetadataPersistenceTrigger implements PreUpdateEventListener, PreIn
 
     @Override
     public boolean onPreInsert(PreInsertEvent event) {
+        UUID idOne = UUID.randomUUID();
         if (event.getEntity() instanceof Process) {
+            if (((Process) event.getEntity()).getProcessCode()==null)
+            ((Process) event.getEntity()).setProcessCode(idOne.toString());
+
             processTypeValidator(event.getEntity());
         }
         return false;
@@ -105,12 +107,12 @@ public class MetadataPersistenceTrigger implements PreUpdateEventListener, PreIn
 
     @Override
     public void onPostInsert(PostInsertEvent event) {
-        //TODO: Update edit_ts property if its Process and Properties
+        //tod o: Update edit_ts property if its Process and Properties
     }
 
     @Override
     public void onPostUpdate(PostUpdateEvent event) {
-        //TODO: Update edit_ts property if its Process and Properties
+        //TOD O: Update edit_ts property if its Process and Properties
     }
 }
 

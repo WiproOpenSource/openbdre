@@ -20,14 +20,12 @@ import org.springframework.ui.ModelMap;
 
 import java.security.Principal;
 import java.util.HashMap;
+import java.util.Map;
 
 public class GeneralConfigAPITest extends TestCase {
     @Ignore
     public void testList() throws Exception {
-        GeneralConfigAPI generalConfigAPI = new GeneralConfigAPI();
-        ModelMap modelMap = null;
-        Principal principal = null;
-        HashMap<String, String> hashMap = new HashMap<String, String>();
+        Map<String, String> hashMap = new HashMap<String, String>();
         hashMap.put("source_a", "a");
         hashMap.put("sink_b", "b");
         hashMap.put("source_c", "c");

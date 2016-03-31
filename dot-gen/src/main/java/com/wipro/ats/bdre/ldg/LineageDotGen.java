@@ -17,11 +17,11 @@ import com.wipro.ats.bdre.BaseStructure;
 import com.wipro.ats.bdre.GetLineageQueryByProcessId;
 import com.wipro.ats.bdre.lineage.LineageConstants;
 import com.wipro.ats.bdre.lineage.LineageMain;
+import com.wipro.ats.bdre.md.api.GetProcess;
+import com.wipro.ats.bdre.md.beans.ProcessInfo;
 import com.wipro.ats.bdre.md.dao.jpa.LineageQuery;
-import org.apache.commons.cli.CommandLine;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 import java.util.List;
 
 /**
@@ -29,19 +29,23 @@ import java.util.List;
  */
 public class LineageDotGen extends BaseStructure {
 
-    protected static final Logger logger = LoggerFactory.getLogger(LineageDotGen.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(LineageDotGen.class);
     private static String defaultHiveDbName = LineageConstants.defaultHiveDbName;
-    private String dotString;
-
-    private static final String[][] PARAMS_STRUCTURE = {
-            {"p", "sub-process-id", "Sub Process id of the step"},
-    };
+    private static String subProcessId = "";
 
     public static void main(String[] args) throws Exception {
-        CommandLine commandLine = new LineageDotGen().getCommandLine(args, PARAMS_STRUCTURE);
-        String processId = commandLine.getOptionValue("sub-process-id");
-        getDot(processId);
-
+        if(args.length==0){
+            LOGGER.info("No process ID provided. Running the LineageDotGen for all queries");
+            getDot("EMPTY");
+        } else {
+            GetProcess getProcess = new GetProcess();
+            List<ProcessInfo> subProcessList = getProcess.getSubProcesses(args);
+            for (ProcessInfo processInfo : subProcessList) {
+                subProcessId = processInfo.getProcessId().toString();
+                LOGGER.info("subProcessId=" + subProcessId);
+                getDot(subProcessId);
+            }
+        }
     }
 
     private static void getDot(String processId) {
@@ -51,12 +55,12 @@ public class LineageDotGen extends BaseStructure {
         List<LineageQuery> lineageQueryList = getLineageQueryByProcessId.execute(args);
 
         for (LineageQuery lineageQuery:lineageQueryList) {
-            logger.debug("Query extracted from LineageQuery Table: " + lineageQuery.getQueryString());
+            LOGGER.debug("Query extracted from LineageQuery Table: " + lineageQuery.getQueryString());
         }
 
         for (LineageQuery lineageQuery:lineageQueryList) {
             String query = lineageQuery.getQueryString();
-
+            LOGGER.info("The Query provided is: " + query);
             String instanceid= lineageQuery.getInstanceExecId().toString();
 
             //to select which HiveDB to use by default
@@ -65,15 +69,14 @@ public class LineageDotGen extends BaseStructure {
                 // use last split to determine the db
                 String[] splits = query.split(" ");
                 defaultHiveDbName = splits[splits.length - 1].toUpperCase();
-                logger.debug("DefaulHiveDbName is set to " + defaultHiveDbName);
-
+                LOGGER.debug("DefaulHiveDbName is set to " + defaultHiveDbName);
             }
 
             try {
-                LineageMain.main(new String[]{query, defaultHiveDbName, processId, instanceid});
+                LineageMain.lineageMain(lineageQuery, defaultHiveDbName, processId, instanceid);
             } catch (Exception e) {
-                logger.info("Error while calling LineageMain's main()");
-                e.printStackTrace();
+                LOGGER.info("Error while calling LineageMain's main()" + e);
+                LOGGER.error("context", e);
             }
         }
     }

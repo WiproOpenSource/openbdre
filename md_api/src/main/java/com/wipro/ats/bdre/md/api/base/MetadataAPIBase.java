@@ -15,6 +15,9 @@
 package com.wipro.ats.bdre.md.api.base;
 
 import com.wipro.ats.bdre.BaseStructure;
+import org.springframework.beans.factory.config.AutowireCapableBeanFactory;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.support.ClassPathXmlApplicationContext;
 
 
 /**
@@ -22,27 +25,14 @@ import com.wipro.ats.bdre.BaseStructure;
  */
 public abstract class MetadataAPIBase extends BaseStructure {
 
-/*
-    private static SqlSessionFactory sqlSessionFactory;
-    private static Reader reader = null;
-    private static final Logger LOGGER = Logger.getLogger(MetadataAPIBase.class);
-
-    static {
-        try {
-
-
-            String resource;
-            resource = "mybatis-config.xml";
-            reader = Resources.getResourceAsReader(resource);
-
-        } catch (FileNotFoundException e) {
-            throw new MetadataException("Config file not found", e);
-        } catch (IOException e) {
-            throw new MetadataException("Config file not found", e);
+    private static AutowireCapableBeanFactory acbFactory = null;
+    protected static AutowireCapableBeanFactory getAutowireCapableBeanFactory(){
+        if(acbFactory==null) {
+            ApplicationContext context = new ClassPathXmlApplicationContext("spring-dao.xml");
+            acbFactory = context.getAutowireCapableBeanFactory();
         }
+        return acbFactory;
     }
-
-    */
 
     /**
      * This is an abstract method defining structure of execute method.
@@ -52,26 +42,5 @@ public abstract class MetadataAPIBase extends BaseStructure {
      */
 
     public abstract Object execute(String[] params);
-
-
-/**
- * This method creates an instance of SqlSessionFactory and build a sql session.
- *
- * @param env Environment variable which defines connection setting for sql server.
- * @return The method returns instance of SqlSessionFactory.
- *//*
-
-
-    public SqlSessionFactory getSqlSessionFactory(String env) {
-        if (env == null) {
-            env = getDefaultEnv();
-            LOGGER.debug("env was null so adding env from default:env= " + env);
-        }
-        if (sqlSessionFactory == null) {
-            sqlSessionFactory = new SqlSessionFactoryBuilder().build(reader, env);
-        }
-        return sqlSessionFactory;
-    }
-*/
 
 }

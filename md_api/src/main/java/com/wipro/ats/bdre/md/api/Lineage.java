@@ -13,6 +13,7 @@
  */
 package com.wipro.ats.bdre.md.api;
 
+import com.wipro.ats.bdre.md.api.base.MetadataAPIBase;
 import com.wipro.ats.bdre.md.beans.LineageNodeInfo;
 import com.wipro.ats.bdre.md.beans.LineageQueryInfo;
 import com.wipro.ats.bdre.md.beans.LineageRelationInfo;
@@ -23,27 +24,30 @@ import com.wipro.ats.bdre.md.dao.jpa.*;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.AutowireCapableBeanFactory;
-import org.springframework.context.ApplicationContext;
-import org.springframework.context.support.ClassPathXmlApplicationContext;
 
 import java.util.Date;
 
 /**
  * Created by KA294215 on 17-12-2015.
  */
-public class Lineage {
-    private static final Logger LOGGER = Logger.getLogger(BatchEnqueuer.class);
-    public Lineage() {
-        ApplicationContext context = new ClassPathXmlApplicationContext("spring-dao.xml");
-        AutowireCapableBeanFactory acbFactory = context.getAutowireCapableBeanFactory();
-        acbFactory.autowireBean(this);
-    }
+public class Lineage extends MetadataAPIBase {
+    private static final Logger LOGGER = Logger.getLogger(Lineage.class);
+
     @Autowired
     LineageQueryDAO lineageQueryDAO;
     @Autowired
     LineageNodeDAO lineageNodeDAO;
     @Autowired
     LineageRelationDAO lineageRelationDAO;
+
+    public Lineage() {
+        AutowireCapableBeanFactory acbFactory = getAutowireCapableBeanFactory();
+        acbFactory.autowireBean(this);
+    }
+    @Override
+    public Lineage execute(String[] params) {
+        return null;
+    }
 
     public void insertLineageQuery(LineageQueryInfo lineageQueryInfo){
         LineageQuery lineageQuery = new LineageQuery();
@@ -62,6 +66,7 @@ public class Lineage {
             lineageQuery.setInstanceExecId(lineageQueryInfo.getInstanceExecId());
         }
         lineageQueryDAO.insert(lineageQuery);
+        LOGGER.info("id of lineage query inserted:"+lineageQuery.getQueryId());
     }
 
     public void insertLineageNode(LineageNodeInfo lineageNodeInfo){

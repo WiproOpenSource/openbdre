@@ -17,13 +17,15 @@
 
 package com.wipro.ats.bdre.imcrawler.crawler;
 
+import com.wipro.ats.bdre.md.api.base.MetadataAPIBase;
+
 /**
  * Several core components of crawler4j extend this class
  * to make them configurable.
  *
  * @author Yasser Ganjisaffar
  */
-public abstract class Configurable {
+public abstract class Configurable extends MetadataAPIBase{
 
     protected CrawlConfig config;
 
@@ -34,4 +36,6 @@ public abstract class Configurable {
     public CrawlConfig getConfig() {
         return config;
     }
+
+    public Object execute(String[] params){ return null; }
 }

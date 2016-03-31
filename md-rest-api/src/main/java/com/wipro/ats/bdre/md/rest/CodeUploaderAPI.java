@@ -38,23 +38,20 @@ import java.util.List;
 @RequestMapping("/filehandler")
 public class CodeUploaderAPI extends MetadataAPIBase {
     private static final Logger LOGGER = Logger.getLogger(CodeUploaderAPI.class);
+    private static final String UPLOADBASEDIRECTORY = "upload.base-directory";
 
     //Multipart does not support put
     @RequestMapping(value = "/upload/{parentProcessId}/{subDir}", method = RequestMethod.POST)
-
-    public
-    @ResponseBody
+    @ResponseBody public
     RestWrapper handleFileUpload(@PathVariable("parentProcessId") Integer parentProcessId,
                                  //This is lib, hql etc according to file to be uploaded
                                  @PathVariable("subDir") String subDir,
                                  @RequestParam("file") MultipartFile file, Principal principal) {
 
         if (!file.isEmpty()) {
-            RestWrapper restWrapper = null;
-
             try {
 
-                String uploadedFilesDirectory = MDConfig.getProperty("upload.base-directory");
+                String uploadedFilesDirectory = MDConfig.getProperty(UPLOADBASEDIRECTORY);
                 String name = file.getOriginalFilename();
                 byte[] bytes = file.getBytes();
                 String uploadLocation = uploadedFilesDirectory + "/" + parentProcessId + "/" + subDir;
@@ -79,7 +76,7 @@ public class CodeUploaderAPI extends MetadataAPIBase {
 
                 return new RestWrapper(uploadedFile, RestWrapper.OK);
             } catch (Exception e) {
-                LOGGER.error("error occurred while uploading file", e);
+                LOGGER.error( e);
                 return new RestWrapper(e.getMessage(), RestWrapper.ERROR);
             }
         } else {
@@ -89,19 +86,15 @@ public class CodeUploaderAPI extends MetadataAPIBase {
     }
 
     @RequestMapping(value = "/upload/{parentProcessId}/{subDir}/{fileName:.+}", method = RequestMethod.DELETE)
-    public
-    @ResponseBody
+    @ResponseBody public
     RestWrapper delete(@PathVariable("parentProcessId") Integer parentProcessId,
                        //This is lib, hql etc
                        @PathVariable("subDir") String subDir,
                        @PathVariable("fileName") String fileName, Principal principal) {
-
-
-        RestWrapper restWrapper = null;
         UploadedFile uploadedFile = new UploadedFile();
 
         try {
-            String uploadedFilesDirectory = MDConfig.getProperty("upload.base-directory");
+            String uploadedFilesDirectory = MDConfig.getProperty(UPLOADBASEDIRECTORY);
             String deleteFile = uploadedFilesDirectory + "/" + parentProcessId + "/" + subDir + "/" + fileName;
             File file = new File(deleteFile);
             Path fp = file.toPath();
@@ -117,9 +110,7 @@ public class CodeUploaderAPI extends MetadataAPIBase {
     }
 
     @RequestMapping(value = "/upload/{parentProcessId}/{subDir}", method = RequestMethod.GET)
-
-    public
-    @ResponseBody
+    @ResponseBody public
     RestWrapper listJars(@PathVariable("parentProcessId") Integer parentProcessId,
                          //This is lib, hql etc
                          @PathVariable("subDir") String subDir, Principal principal) {
@@ -127,9 +118,7 @@ public class CodeUploaderAPI extends MetadataAPIBase {
 
         List<String> fileList = new ArrayList<String>();
         try {
-            String uploadedFilesDirectory = MDConfig.getProperty("upload.base-directory") + "/" + parentProcessId + "/" + subDir;
-            ;
-
+            String uploadedFilesDirectory = MDConfig.getProperty(UPLOADBASEDIRECTORY) + "/" + parentProcessId + "/" + subDir;
             File[] files = new File(uploadedFilesDirectory).listFiles();
             //If this pathname does not denote a directory, then listFiles() returns null.
             for (File file : files) {
@@ -145,19 +134,67 @@ public class CodeUploaderAPI extends MetadataAPIBase {
         }
     }
 
-    @RequestMapping(value = "/upload/{parentProcessId}/{subDir}/{fileName:.+}", method = RequestMethod.GET)
+    @RequestMapping(value = "/uploadzip/{subDir}", method = RequestMethod.POST)
+    @ResponseBody public
+    RestWrapper zipUpload(   //This is lib, hql ,zip etc according to file to be uploaded
+                                 @PathVariable("subDir") String subDir,
+                                 @RequestParam("file") MultipartFile file, Principal principal) {
+        if (!file.isEmpty()) {
+            try {
+                String uploadedFilesDirectory = MDConfig.getProperty(UPLOADBASEDIRECTORY);
+                String name = file.getOriginalFilename();
+                byte[] bytes = file.getBytes();
+                String uploadLocation = uploadedFilesDirectory + "/" + subDir;
+                LOGGER.debug("Upload location of zip file: " + uploadLocation);
+                File fileDir = new File(uploadLocation);
+                fileDir.mkdirs();
+                File f = new File(uploadLocation+"/"+name);
+                if(f.exists()) {
+                   f.delete();
+                }
+                File fileToBeSaved = new File(uploadLocation + "/" + name);
+                BufferedOutputStream stream =
+                        new BufferedOutputStream(new FileOutputStream(fileToBeSaved));
+                stream.write(bytes);
+                stream.close();
+                //Populating Uploaded file bean to return in RestWrapper
+                LOGGER.info("name of the file is + "+name);
+                if (CodeUploaderAPI.isNumeric(subDir))
+                {
+                    File oldName = new File(uploadLocation+"/"+name);
+                    File newName = new File(uploadLocation+"/"+"analytic.png");
+                    if(oldName.renameTo(newName)) {
+                        System.out.println("renamed");
+                    } else {
+                        System.out.println("Error");
+                    }
+                }
+                UploadedFile uploadedFile = new UploadedFile();
+                uploadedFile.setParentProcessId(null);
+                uploadedFile.setSubDir(subDir);
+                uploadedFile.setFileName(name);
+                uploadedFile.setFileSize(fileToBeSaved.length());
+                LOGGER.debug("The UploadedFile bean:" + uploadedFile);
+                LOGGER.info("File uploaded : " + uploadedFile + " uploaded by User:" + principal.getName());
+                return new RestWrapper(uploadedFile, RestWrapper.OK);
+            } catch (Exception e) {
+                LOGGER.error("error occurred while uploading file", e);
+                return new RestWrapper(e.getMessage(), RestWrapper.ERROR);
+            }
+        } else {
+            return new RestWrapper("You failed to upload because the file was empty.", RestWrapper.ERROR);
 
-    public
-    @ResponseBody
+        }
+    }
+
+    @RequestMapping(value = "/upload/{parentProcessId}/{subDir}/{fileName:.+}", method = RequestMethod.GET)
+    @ResponseBody public
     void download(@PathVariable("parentProcessId") Integer parentProcessId,
                   //This is lib, hql etc
                   @PathVariable("subDir") String subDir,
                   @PathVariable("fileName") String fileName, HttpServletResponse response, Principal principal) {
-
-
-        UploadedFile uploadedFile = new UploadedFile();
         try {
-            String uploadedFilesDirectory = MDConfig.getProperty("upload.base-directory");
+            String uploadedFilesDirectory = MDConfig.getProperty(UPLOADBASEDIRECTORY);
             String downloadFile = uploadedFilesDirectory + "/" + parentProcessId + "/" + subDir + "/" + fileName;
             File file = new File(downloadFile);
             InputStream in = new BufferedInputStream(new FileInputStream(file));
@@ -170,12 +207,6 @@ public class CodeUploaderAPI extends MetadataAPIBase {
             response.flushBuffer();
 
             LOGGER.info("File downloaded : " + downloadFile + " downloaded by User:" + principal.getName());
-
-            //TODO: download file
-            //Todo: Use FileInputStream to read and write to HttpServletResponse's output stream
-            //TOdo: READ in to out stream copy here-> http://commons.apache.org/proper/commons-io/apidocs/org/apache/commons/io/IOUtils.html#copy(java.io.InputStream, java.io.OutputStream)
-            //TODO: Send error if the file does not exist
-            //TODO: Ask Harsha about Spring file download. He did Json file download for process export
         } catch (Exception e) {
             LOGGER.error("Error occurred while downloading file", e);
         }
@@ -237,9 +268,7 @@ public class CodeUploaderAPI extends MetadataAPIBase {
     }
 
     @RequestMapping(value = "/check/{parentProcessId}/{subDir}", method = RequestMethod.POST)
-
-    public
-    @ResponseBody
+    @ResponseBody public
     RestWrapper checkFileExists(@PathVariable("parentProcessId") Integer parentProcessId,
                                  //This is lib, hql etc according to file to be uploaded
                                  @PathVariable("subDir") String subDir,
@@ -248,16 +277,16 @@ public class CodeUploaderAPI extends MetadataAPIBase {
         boolean fileExists=false;
             try {
 
-                String uploadedFilesDirectory = MDConfig.getProperty("upload.base-directory");
+                String uploadedFilesDirectory = MDConfig.getProperty(UPLOADBASEDIRECTORY);
                 String fileName = file;
-               // byte[] bytes = file.getBytes();
                 String fileLocation = uploadedFilesDirectory + "/" + parentProcessId + "/" + subDir;
-                LOGGER.debug("Upload location: " + fileLocation);
+                LOGGER.debug("Upload location of file: " + fileLocation);
                 File fileToBeChecked = new File(fileLocation + "/" + fileName);
                 LOGGER.debug("Checking if file: " + fileToBeChecked+ " exists");
                 fileExists=fileToBeChecked.exists() && !fileToBeChecked.isDirectory();
                 UploadedFile uploadedFile = new UploadedFile();
                 uploadedFile.setFileExists(fileExists);
+                LOGGER.info("file upload checked by " + principal.getName());
                 return new RestWrapper(uploadedFile, RestWrapper.OK);
             } catch (Exception e) {
                 LOGGER.error("error occurred while checking if file exists", e);
@@ -267,5 +296,19 @@ public class CodeUploaderAPI extends MetadataAPIBase {
     @Override
     public Object execute(String[] params) {
         return null;
+    }
+
+
+    public static boolean isNumeric(String str)
+    {
+        try
+        {
+            double d = Double.parseDouble(str);
+        }
+        catch(NumberFormatException nfe)
+        {
+            return false;
+        }
+        return true;
     }
 }

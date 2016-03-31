@@ -17,13 +17,13 @@ package com.wipro.ats.bdre.md.rest;
 import com.wipro.ats.bdre.md.api.base.MetadataAPIBase;
 import com.wipro.ats.bdre.md.beans.table.Users;
 import com.wipro.ats.bdre.md.dao.UsersDAO;
+import com.wipro.ats.bdre.md.rest.util.BindingResultError;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.ModelMap;
 import org.springframework.validation.BindingResult;
-import org.springframework.validation.FieldError;
+
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -49,9 +49,9 @@ public class UsersAPI extends MetadataAPIBase {
      * @return restWraper Instance of Users corresponding to passed username.
      */
     @RequestMapping(value = "/{uname}", method = RequestMethod.GET)
-    public
+
     @ResponseBody
-    RestWrapper get(
+    public RestWrapper get(
             @PathVariable("uname") String username, Principal principal
     ) {
 
@@ -63,15 +63,14 @@ public class UsersAPI extends MetadataAPIBase {
                 users.setUsername(jpaUsers.getUsername());
                 users.setPassword(jpaUsers.getPassword());
 
-                users.setEnabled((jpaUsers.getEnabled() == true) ? (short) 1 : 0);
+                users.setEnabled((jpaUsers.getEnabled()) ? (short) 1 : 0);
 
             }
-            //  users = s.selectOne("call_procedures.GetUsers", users);
-
             restWrapper = new RestWrapper(users, RestWrapper.OK);
             LOGGER.info("Record with name:" + username + " selected from Users by User:" + principal.getName());
 
         } catch (Exception e) {
+            LOGGER.error(e);
             restWrapper = new RestWrapper(e.getMessage(), RestWrapper.ERROR);
         }
         return restWrapper;
@@ -81,26 +80,25 @@ public class UsersAPI extends MetadataAPIBase {
      * This method calls proc DeleteUsers and removes record corresponding to username passed.
      *
      * @param username
-     * @param model
      * @return nothing.
      */
     @RequestMapping(value = "/{uname}", method = RequestMethod.DELETE)
-    public
+
     @ResponseBody
-    RestWrapper delete(
-            @PathVariable("uname") String username, Principal principal,
-            ModelMap model) {
+    public RestWrapper delete(
+            @PathVariable("uname") String username, Principal principal
+    ) {
 
         RestWrapper restWrapper = null;
         try {
 
             usersDAO.delete(username);
-            // s.delete("call_procedures.DeleteUsers", users);
 
             restWrapper = new RestWrapper(null, RestWrapper.OK);
             LOGGER.info("Record with name:" + username + " deleted from Users by User:" + principal.getName());
 
         } catch (Exception e) {
+            LOGGER.error(e);
             restWrapper = new RestWrapper(e.getMessage(), RestWrapper.ERROR);
         }
         return restWrapper;
@@ -115,14 +113,14 @@ public class UsersAPI extends MetadataAPIBase {
 
     @RequestMapping(value = {"", "/"}, method = RequestMethod.GET)
 
-    public
+
     @ResponseBody
-    RestWrapper list(@RequestParam(value = "page", defaultValue = "0") int startPage,
+    public RestWrapper list(@RequestParam(value = "page", defaultValue = "0") int startPage,
                      @RequestParam(value = "size", defaultValue = "10") int pageSize, Principal principal) {
 
         RestWrapper restWrapper = null;
         try {
-            Integer counter=usersDAO.totalRecordCount();
+            Integer counter = usersDAO.totalRecordCount();
             List<com.wipro.ats.bdre.md.dao.jpa.Users> jpaUsers = usersDAO.list(startPage, pageSize);
             List<Users> usersList = new ArrayList<Users>();
             for (com.wipro.ats.bdre.md.dao.jpa.Users users : jpaUsers) {
@@ -130,16 +128,16 @@ public class UsersAPI extends MetadataAPIBase {
                 returnUsers.setUsername(users.getUsername());
                 returnUsers.setPassword(users.getPassword());
 
-                returnUsers.setEnabled((users.getEnabled() == true) ? (short) 1 : 0);
+                returnUsers.setEnabled((users.getEnabled()) ? (short) 1 : 0);
                 returnUsers.setCounter(counter);
                 usersList.add(returnUsers);
             }
-            // List<Users> userslist = s.selectList("call_procedures.ListUsers", users);
 
             restWrapper = new RestWrapper(usersList, RestWrapper.OK);
             LOGGER.info("All records listed from Users by User:" + principal.getName());
 
         } catch (Exception e) {
+            LOGGER.error(e);
             restWrapper = new RestWrapper(e.getMessage(), RestWrapper.ERROR);
         }
         return restWrapper;
@@ -154,24 +152,14 @@ public class UsersAPI extends MetadataAPIBase {
      * @return restWrapper It contains the updated instance of Users passed.
      */
     @RequestMapping(value = {"/", ""}, method = RequestMethod.POST)
-    public
+
     @ResponseBody
-    RestWrapper update(@ModelAttribute("users")
+    public RestWrapper update(@ModelAttribute("users")
                        @Valid Users users, BindingResult bindingResult, Principal principal) {
         RestWrapper restWrapper = null;
         if (bindingResult.hasErrors()) {
-            StringBuilder errorMessages = new StringBuilder("<p>Please fix following errors and try again<p><ul>");
-            List<FieldError> errors = bindingResult.getFieldErrors();
-            for (FieldError error : errors) {
-                errorMessages.append("<li>");
-                errorMessages.append(error.getField());
-                errorMessages.append(". Bad value: '");
-                errorMessages.append(error.getRejectedValue());
-                errorMessages.append("'</li>");
-            }
-            errorMessages.append("</ul>");
-            restWrapper = new RestWrapper(errorMessages.toString(), RestWrapper.ERROR);
-            return restWrapper;
+            BindingResultError bindingResultError = new BindingResultError();
+            return bindingResultError.errorMessage(bindingResult);
         }
         try {
             String hashedPassword = DigestUtils.sha1Hex(users.getPassword());
@@ -183,12 +171,12 @@ public class UsersAPI extends MetadataAPIBase {
             jpaUsers.setEnabled((users.getEnabled() == 1) ? true : false);
             usersDAO.update(jpaUsers);
 
-            //Users usersupdate = s.selectOne("call_procedures.UpdateUsers", users);
 
             restWrapper = new RestWrapper(users, RestWrapper.OK);
             LOGGER.info("Record with name:" + users.getUsername() + " updated in Users by User:" + principal.getName() + users);
 
         } catch (Exception e) {
+            LOGGER.error(e);
             restWrapper = new RestWrapper(e.getMessage(), RestWrapper.ERROR);
         }
 
@@ -203,25 +191,15 @@ public class UsersAPI extends MetadataAPIBase {
      * @return restWrapper Instance of Users newly added.
      */
     @RequestMapping(value = {"/", ""}, method = RequestMethod.PUT)
-    public
+
     @ResponseBody
-    RestWrapper insert(@ModelAttribute("users")
+    public RestWrapper insert(@ModelAttribute("users")
                        @Valid Users users, BindingResult bindingResult, Principal principal) {
 
         RestWrapper restWrapper = null;
         if (bindingResult.hasErrors()) {
-            StringBuilder errorMessages = new StringBuilder("<p>Please fix following errors and try again<p><ul>");
-            List<FieldError> errors = bindingResult.getFieldErrors();
-            for (FieldError error : errors) {
-                errorMessages.append("<li>");
-                errorMessages.append(error.getField());
-                errorMessages.append(". Bad value: '");
-                errorMessages.append(error.getRejectedValue());
-                errorMessages.append("'</li>");
-            }
-            errorMessages.append("</ul>");
-            restWrapper = new RestWrapper(errorMessages.toString(), RestWrapper.ERROR);
-            return restWrapper;
+            BindingResultError bindingResultError = new BindingResultError();
+            return bindingResultError.errorMessage(bindingResult);
         }
         try {
 
@@ -231,12 +209,12 @@ public class UsersAPI extends MetadataAPIBase {
             jpaUsers.setUsername(users.getUsername());
             jpaUsers.setEnabled((users.getEnabled() == 1) ? true : false);
             usersDAO.insert(jpaUsers);
-            //Users usersupdate = s.selectOne("call_procedures.InsertUsers", users);
 
             restWrapper = new RestWrapper(users, RestWrapper.OK);
             LOGGER.info("Record with ID:" + users.getUsername() + " inserted in Users by User:" + principal.getName() + users);
 
         } catch (Exception e) {
+            LOGGER.error(e);
             restWrapper = new RestWrapper(e.getMessage(), RestWrapper.ERROR);
         }
         return restWrapper;

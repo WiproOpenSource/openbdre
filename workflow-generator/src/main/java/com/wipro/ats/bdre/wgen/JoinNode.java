@@ -14,6 +14,8 @@
 
 package com.wipro.ats.bdre.wgen;
 
+import com.wipro.ats.bdre.exception.BDREException;
+
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -72,12 +74,12 @@ public class JoinNode extends OozieNode {
 
     @Override
     public OozieNode getTermNode() {
-        throw new RuntimeException("Setting getTermStepNode is not supported");
+        throw new BDREException("Setting getTermStepNode is not supported");
     }
 
     @Override
     public void setTermNode(OozieNode node) {
-        throw new RuntimeException("Setting setTermStepNode is not supported");
+        throw new BDREException("Setting setTermStepNode is not supported");
     }
 
     @Override

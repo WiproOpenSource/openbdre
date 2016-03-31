@@ -21,8 +21,6 @@ import org.apache.commons.cli.CommandLine;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.AutowireCapableBeanFactory;
-import org.springframework.context.ApplicationContext;
-import org.springframework.context.support.ClassPathXmlApplicationContext;
 
 import java.util.List;
 
@@ -35,11 +33,6 @@ import java.util.List;
  * rows to picked from not started.
  */
 public class FetchDeploy extends MetadataAPIBase {
-    public FetchDeploy() {
-        ApplicationContext context = new ClassPathXmlApplicationContext("spring-dao.xml");
-        AutowireCapableBeanFactory acbFactory = context.getAutowireCapableBeanFactory();
-        acbFactory.autowireBean(this);
-    }
 
     @Autowired
     FetchDeployDAO fetchDeployDAO;
@@ -49,21 +42,23 @@ public class FetchDeploy extends MetadataAPIBase {
             {"num", "fetch-num", "Fetch limit"}
     };
 
+    public FetchDeploy() {
+        AutowireCapableBeanFactory acbFactory = getAutowireCapableBeanFactory();
+        acbFactory.autowireBean(this);
+    }
+
     /**
      * @param params Sting array of Command line arguments.
      * @return
      */
+    @Override
     public List<ProcessDeploymentQueue> execute(String[] params) {
         try {
-            ProcessDeploymentQueue processDeploymentQueue = new ProcessDeploymentQueue();
             CommandLine commandLine = getCommandLine(params, PARAMS_STRUCTURE);
             String fetchNum = commandLine.getOptionValue("fetch-num");
             LOGGER.debug("fetch-num is " + fetchNum);
 
-            // List<ProcessDeploymentQueue> processDeploymentQueues = s.selectList("call_procedures.FetchDeploy", processDeploymentQueue);
-
-            List<ProcessDeploymentQueue> processDeploymentQueues = fetchDeployDAO.fetchDeploy(Integer.parseInt(fetchNum));
-            return processDeploymentQueues;
+            return fetchDeployDAO.fetchDeploy(Integer.parseInt(fetchNum));
         } catch (Exception e) {
             LOGGER.error("Error occurred", e);
             throw new MetadataException(e);

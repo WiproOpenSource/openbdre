@@ -134,7 +134,25 @@ public final class OozieUtil {
      * @param printOnly whether to print it or not
      */
     public void persistBeanData(Object bean, boolean printOnly) {
+        persistBeanTryCatch(bean);
+        callPersistEmittedKeyValue(printOnly);
+    }
 
+    /**
+     * This method make beans persist depending on annotations used.
+     *
+     * @param beans     The List we want to persist
+     * @param printOnly whether to print it or not
+     */
+
+    public void persistBeanList(List beans, boolean printOnly) {
+        for (Object bean : beans) {
+            persistBeanTryCatch(bean);
+        }
+        callPersistEmittedKeyValue(printOnly);
+    }
+
+    private void persistBeanTryCatch(Object bean){
         try {
             persistSingleBean(bean);
         } catch (IntrospectionException e) {
@@ -147,34 +165,9 @@ public final class OozieUtil {
             LOGGER.error(e);
             throw new MetadataException(e);
         }
-        LOGGER.info("propertiesToBeSaved=" + propertiesToBeSaved);
-        if (!printOnly) {
-            persistEmittedKeyValue();
-        }
     }
 
-    /**
-     * This method make beans persist depending on annotations used.
-     *
-     * @param beans     The List we want to persist
-     * @param printOnly whether to print it or not
-     */
-
-    public void persistBeanList(List beans, boolean printOnly) {
-        for (Object bean : beans) {
-            try {
-                persistSingleBean(bean);
-            } catch (IntrospectionException e) {
-                LOGGER.error(e);
-                throw new MetadataException(e);
-            } catch (InvocationTargetException e) {
-                LOGGER.error(e);
-                throw new MetadataException(e);
-            } catch (IllegalAccessException e) {
-                LOGGER.error(e);
-                throw new MetadataException(e);
-            }
-        }
+    private void callPersistEmittedKeyValue(boolean printOnly){
         LOGGER.info("propertiesToBeSaved=" + propertiesToBeSaved);
         if (!printOnly) {
             persistEmittedKeyValue();

@@ -32,15 +32,6 @@ public class Servers {
     @Pattern(regexp = "([0-z][-]?)+")
     private String serverType;
     private Integer pageSize;
-
-    public Integer getPageSize() {
-        return pageSize;
-    }
-
-    public void setPageSize(Integer pageSize) {
-        this.pageSize = pageSize;
-    }
-
     @NotNull
     @Size(max = 45)
     @Pattern(regexp = "([0-z][-]?[\\.]?)+")
@@ -66,6 +57,14 @@ public class Servers {
                 " serverMetaInfo:" + serverMetaInfo + " loginUser:" + loginUser + " loginPassword:" + loginPassword +
                 " sshPrivateKey:" + sshPrivateKey + " serverIp:" + serverIp +
                 " page:" + page;
+    }
+
+    public Integer getPageSize() {
+        return pageSize;
+    }
+
+    public void setPageSize(Integer pageSize) {
+        this.pageSize = pageSize;
     }
 
     public Integer getPage() {

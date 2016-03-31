@@ -45,7 +45,11 @@ public class ProcessDAO {
     private static final Logger LOGGER = Logger.getLogger(ProcessDAO.class);
     @Autowired
     SessionFactory sessionFactory;
-
+    private static final String PROCESS="process";
+    private static final String DELETE_FLAG="deleteFlag";
+    private static final String PARENTPROCESSID="process.processId";
+    private static final String PROCESSID="processId";
+    private static final String PROCESSCODE="processCode";
     public List<com.wipro.ats.bdre.md.dao.jpa.Process> list(Integer pid, Integer pageNum, Integer numResults) {
         Session session = sessionFactory.openSession();
         List<Process> processes = new ArrayList<Process>();
@@ -59,23 +63,23 @@ public class ProcessDAO {
                 argument.setProcessId(pid);
                 process = (Process) session.get(Process.class, pid);
             }
-            Criteria checkSubProcessCriteria = session.createCriteria(Process.class).add(Restrictions.eq("process", argument)).add(Restrictions.eq("deleteFlag", false));
+            Criteria checkSubProcessCriteria = session.createCriteria(Process.class).add(Restrictions.eq(PROCESS, argument)).add(Restrictions.eq(DELETE_FLAG, false));
 
             if (pid == null) {
-                Criteria criteria = session.createCriteria(Process.class).add(Restrictions.isNull("process.processId")).add(Restrictions.eq("deleteFlag", false))
-                        .addOrder(Order.desc("processId"));
+                Criteria criteria = session.createCriteria(Process.class).add(Restrictions.isNull(PARENTPROCESSID)).add(Restrictions.eq(DELETE_FLAG, false))
+                        .addOrder(Order.desc(PROCESSID));
                 criteria.setFirstResult(pageNum);
                 criteria.setMaxResults(numResults);
                 processes = criteria.list();
-            } else if (checkSubProcessCriteria.list().size() == 0 && process.getProcessId() == pid) {
-                Criteria listOfRelatedSP = session.createCriteria(Process.class).add(Restrictions.eq("processId", process.getProcess().getProcessId())).add(Restrictions.eq("deleteFlag", false))
-                        .addOrder(Order.desc("processId"));
+            } else if (checkSubProcessCriteria.list().isEmpty() && process.getProcessId() == pid) {
+                Criteria listOfRelatedSP = session.createCriteria(Process.class).add(Restrictions.eq(PROCESSID, process.getProcess().getProcessId())).add(Restrictions.eq(DELETE_FLAG, false))
+                        .addOrder(Order.desc(PROCESSID));
                 listOfRelatedSP.setFirstResult(pageNum);
                 listOfRelatedSP.setMaxResults(numResults);
                 processes = listOfRelatedSP.list();
             } else {
-                Criteria processList = session.createCriteria(Process.class).add(Restrictions.isNull("process.processId")).add(Restrictions.eq("processId", pid))
-                        .add(Restrictions.eq("deleteFlag", false));
+                Criteria processList = session.createCriteria(Process.class).add(Restrictions.isNull(PARENTPROCESSID)).add(Restrictions.eq(PROCESSID, pid))
+                        .add(Restrictions.eq(DELETE_FLAG, false));
                 processList.setFirstResult(pageNum);
                 processList.setMaxResults(numResults);
                 processes = processList.list();
@@ -103,18 +107,18 @@ public class ProcessDAO {
                 argument.setProcessId(pid);
                 process = (Process) session.get(Process.class, pid);
             }
-            Criteria checkSubProcessCriteria = session.createCriteria(Process.class).add(Restrictions.eq("process", argument)).add(Restrictions.eq("deleteFlag", false));
+            Criteria checkSubProcessCriteria = session.createCriteria(Process.class).add(Restrictions.eq(PROCESS, argument)).add(Restrictions.eq(DELETE_FLAG, false));
 
             if (pid == null) {
-                Criteria criteria = session.createCriteria(Process.class).add(Restrictions.isNull("process.processId")).add(Restrictions.eq("deleteFlag", false));
+                Criteria criteria = session.createCriteria(Process.class).add(Restrictions.isNull(PARENTPROCESSID)).add(Restrictions.eq(DELETE_FLAG, false));
                 size = criteria.list().size();
-            } else if (checkSubProcessCriteria.list().size() == 0 && process.getProcessId() == pid) {
-                Criteria listOfRelatedSP = session.createCriteria(Process.class).add(Restrictions.eq("processId", process.getProcess().getProcessId())).add(Restrictions.eq("deleteFlag", false))
-                        .addOrder(Order.desc("processId"));
+            } else if (checkSubProcessCriteria.list().isEmpty() && process.getProcessId() == pid) {
+                Criteria listOfRelatedSP = session.createCriteria(Process.class).add(Restrictions.eq(PROCESSID, process.getProcess().getProcessId())).add(Restrictions.eq(DELETE_FLAG, false))
+                        .addOrder(Order.desc(PROCESSID));
                 size = listOfRelatedSP.list().size();
             } else {
-                Criteria processList = session.createCriteria(Process.class).add(Restrictions.isNull("process.processId")).add(Restrictions.eq("processId", pid))
-                        .add(Restrictions.eq("deleteFlag", false));
+                Criteria processList = session.createCriteria(Process.class).add(Restrictions.isNull(PARENTPROCESSID)).add(Restrictions.eq(PROCESSID, pid))
+                        .add(Restrictions.eq(DELETE_FLAG, false));
                 LOGGER.info("size of pro is " + processList.list().size());
                 size = processList.list().size();
             }
@@ -176,6 +180,28 @@ public class ProcessDAO {
             session.beginTransaction();
             Process process = (Process) session.get(Process.class, id);
             process.setDeleteFlag(true);
+            session.update(process);
+            List<Process> subProcessList = subProcesslist(id);
+            if (!subProcessList.isEmpty()){
+                for(Process subProcess : subProcessList){
+                    subProcess.setDeleteFlag(true);
+                    session.update(subProcess);
+                }
+            }
+            session.getTransaction().commit();
+        } catch (MetadataException e) {
+            session.getTransaction().rollback();
+            LOGGER.error(e);
+        } finally {
+            session.close();
+        }
+    }
+
+    public void testDelete(Integer id) {
+        Session session = sessionFactory.openSession();
+        try {
+            session.beginTransaction();
+            Process process = (Process) session.get(Process.class, id);
             session.delete(process);
             session.getTransaction().commit();
         } catch (MetadataException e) {
@@ -190,7 +216,7 @@ public class ProcessDAO {
         Session session = sessionFactory.openSession();
         session.beginTransaction();
         Process parentProcess = (Process) session.get(Process.class, processId);
-        Criteria listSubProcessCriteria = session.createCriteria(Process.class).add(Restrictions.eq("process", parentProcess)).add(Restrictions.eq("deleteFlag", false));
+        Criteria listSubProcessCriteria = session.createCriteria(Process.class).add(Restrictions.eq(PROCESS, parentProcess)).add(Restrictions.eq(DELETE_FLAG, false));
         List<Process> subProcesses = listSubProcessCriteria.list();
         LOGGER.info("Total number of sub processes:" + listSubProcessCriteria.list().size());
         session.getTransaction().commit();
@@ -205,7 +231,7 @@ public class ProcessDAO {
         List<Process> processSubProcessList = new ArrayList<Process>();
         try {
             Process parentProcess = (Process) session.get(Process.class, processId);
-            Criteria checkProcessSubProcessList = session.createCriteria(Process.class).add(Restrictions.or(Restrictions.eq("processId", processId), Restrictions.eq("process", parentProcess)));
+            Criteria checkProcessSubProcessList = session.createCriteria(Process.class).add(Restrictions.or(Restrictions.eq(PROCESSID, processId), Restrictions.eq(PROCESS, parentProcess))).add(Restrictions.eq(DELETE_FLAG, false));
             processSubProcessList = checkProcessSubProcessList.list();
             session.getTransaction().commit();
         } catch (MetadataException e) {
@@ -217,6 +243,43 @@ public class ProcessDAO {
         return processSubProcessList;
     }
 
+    public List<Process> selectProcessList(String processCode) {
+        Session session = sessionFactory.openSession();
+        session.beginTransaction();
+        List<Process> processSubProcessList = new ArrayList<Process>();
+        try {
+             Process parentProcess = (Process) session.createCriteria(Process.class).add(Restrictions.eq(PROCESSCODE,processCode)).uniqueResult();
+            Criteria checkProcessSubProcessList = session.createCriteria(Process.class).add(Restrictions.or(Restrictions.eq(PROCESSCODE, processCode), Restrictions.eq(PROCESS, parentProcess)));
+            processSubProcessList = checkProcessSubProcessList.list();
+            session.getTransaction().commit();
+        } catch (MetadataException e) {
+            session.getTransaction().rollback();
+            LOGGER.error(e);
+        } finally {
+            session.close();
+        }
+        return processSubProcessList;
+    }
+
+    public Process returnProcess(String processCode) {
+
+        Session session = sessionFactory.openSession();
+        session.beginTransaction();
+        Process parentProcess=null;
+
+        try {
+           parentProcess = (Process) session.createCriteria(Process.class).add(Restrictions.eq(PROCESSCODE,processCode)).uniqueResult();
+            session.getTransaction().commit();
+        } catch (MetadataException e) {
+            session.getTransaction().rollback();
+            LOGGER.error(e);
+        } finally {
+            session.close();
+        }
+        return parentProcess;
+
+    }
+
     public void updateProcessId(Integer oldProcessId, Integer newProcessId) {
         Session session = sessionFactory.openSession();
         try {
@@ -224,7 +287,7 @@ public class ProcessDAO {
             Process parentProcess = (Process) session.get(Process.class, newProcessId);
             Process nullProcess = new Process();
             nullProcess.setProcessId(null);
-            Criteria updateProcessCriteria = session.createCriteria(Process.class).add(Restrictions.eq("process", parentProcess));
+            Criteria updateProcessCriteria = session.createCriteria(Process.class).add(Restrictions.eq(PROCESS, parentProcess));
             if (parentProcess.getProcess().getProcessId() == null) {
                 List<Process> updateProcessList = updateProcessCriteria.list();
 
@@ -234,7 +297,7 @@ public class ProcessDAO {
                     session.update(updateProcess);
                 }
             }
-            Criteria deletePropCriteria = session.createCriteria(Properties.class).add(Restrictions.eq("process", parentProcess));
+            Criteria deletePropCriteria = session.createCriteria(Properties.class).add(Restrictions.eq(PROCESS, parentProcess));
             List<Properties> deletePropertiesList = deletePropCriteria.list();
             for (Properties deleteProperty : deletePropertiesList) {
                 session.delete(deleteProperty);
@@ -259,22 +322,18 @@ public class ProcessDAO {
     public Process cloneProcess(Integer processId) {
         Session session = sessionFactory.openSession();
         Process newProcess = new Process();
-       /* insert into process (description,process_name, bus_domain_id, process_type_id, parent_process_id, can_recover, enqueuing_process_id, batch_cut_pattern, next_process_id, workflow_id,process_template_id)
-        select  description,concat(process_name, ' - copy'), bus_domain_id, process_type_id, parent_process_id, can_recover,0, batch_cut_pattern, '0', workflow_id,process_template_id from process where (process_id = p_id and delete_flag != 1)  ;
-*/
         Process updateProcess=new Process();
 
         try {
             session.beginTransaction();
-            Criteria fetchReferenceProcess = session.createCriteria(Process.class).add(Restrictions.eq("processId", processId)).add(Restrictions.eq("deleteFlag", false));
+            Criteria fetchReferenceProcess = session.createCriteria(Process.class).add(Restrictions.eq(PROCESSID, processId)).add(Restrictions.eq(DELETE_FLAG, false));
 
             Process referencedProcess = (Process) fetchReferenceProcess.uniqueResult();
             Integer newProcessId = null;
-            if (fetchReferenceProcess.list().size() != 0) {
+            if (!fetchReferenceProcess.list().isEmpty()) {
                 newProcess.setProcessName(referencedProcess.getProcessName() + "-copy");
                 newProcess.setEnqueuingProcessId(0);
                 newProcess.setNextProcessId("0");
-
                 newProcess.setProcessType(referencedProcess.getProcessType());
                 newProcess.setWorkflowType(referencedProcess.getWorkflowType());
                 newProcess.setBusDomain(referencedProcess.getBusDomain());
@@ -287,10 +346,6 @@ public class ProcessDAO {
                 newProcess.setDeleteFlag(referencedProcess.getDeleteFlag());
 
                 newProcessId = (Integer) session.save(newProcess);
-
-
-                //insert into properties (process_id,config_group,prop_key,prop_value,description) select (select last_insert_id() from process limit 1),config_group,prop_key,prop_value,description  from properties where process_id=p_id ;
-
                 Criteria copyPropertiesCriteraia = session.createCriteria(Properties.class).add(Restrictions.eq("id.processId", processId));
                 List<Properties> insertProperties = copyPropertiesCriteraia.list();
                 for (Properties insertProperty : insertProperties) {
@@ -349,15 +404,15 @@ public class ProcessDAO {
                     vEndTs = new Date();
                 }
 
-                Criteria fetchProcessList = session.createCriteria(Process.class).add(Restrictions.or(Restrictions.eq("process.processId", processId), Restrictions.eq("processId", processId))).add(Restrictions.eq("deleteFlag", false));
+                Criteria fetchProcessList = session.createCriteria(Process.class).add(Restrictions.or(Restrictions.eq(PARENTPROCESSID, processId), Restrictions.eq(PROCESSID, processId))).add(Restrictions.eq(DELETE_FLAG, false));
                 List<Process> processList = fetchProcessList.list();
                 LOGGER.info("Process list size:" + fetchProcessList.list().size());
 
-                fetchProcessList.setProjection(Projections.property("processId"));
+                fetchProcessList.setProjection(Projections.property(PROCESSID));
                 List<Integer> processIdList = fetchProcessList.list();
                 LOGGER.info("process id list size:" + fetchProcessList.list().size());
-                if (processIdList.size() != 0) {
-                    Criteria fetchInstanceExecList = session.createCriteria(InstanceExec.class).add(Restrictions.ge("instanceExecId", instanceExecId)).add(Restrictions.in("process.processId", processIdList)).add(Restrictions.between("startTs", vStartTs, vEndTs));
+                if (!processIdList.isEmpty()) {
+                    Criteria fetchInstanceExecList = session.createCriteria(InstanceExec.class).add(Restrictions.ge("instanceExecId", instanceExecId)).add(Restrictions.in(PARENTPROCESSID, processIdList)).add(Restrictions.between("startTs", vStartTs, vEndTs));
                     List<InstanceExec> instanceExecList = fetchInstanceExecList.list();
                     LOGGER.info("instance exec list size:" + fetchInstanceExecList.list().size());
 
@@ -401,12 +456,12 @@ public class ProcessDAO {
                 for (ProcessInfo processInfo : returnProcessList) {
                     processInfo.setCounter(returnProcessList.size());
                 }
-                if (returnProcessList.size() != 0) {
+                if (!returnProcessList.isEmpty()) {
                     LOGGER.info("processInfo bean:" + returnProcessList.get(0).getCounter());
                 }
 
             } else {
-                Criteria fetchProcessList = session.createCriteria(Process.class).add(Restrictions.or(Restrictions.eq("process.processId", processId), Restrictions.eq("processId", processId))).add(Restrictions.eq("deleteFlag", false));
+                Criteria fetchProcessList = session.createCriteria(Process.class).add(Restrictions.or(Restrictions.eq(PARENTPROCESSID, processId), Restrictions.eq(PROCESSID, processId))).add(Restrictions.eq(DELETE_FLAG, false));
                 List<Process> processList = fetchProcessList.list();
                 Integer sizeOfProcessList = fetchProcessList.list().size();
                 LOGGER.info("Process list size:" + sizeOfProcessList);
@@ -445,7 +500,7 @@ public List<Process> createOneChildJob(Process parentProcess, Process childProce
     Session session = sessionFactory.openSession();
     Integer parentPid = null;
     Integer childPid = null;
-    List<Process> processList=new ArrayList<Process>();
+    List<Process> processList=new ArrayList<>();
     try {
         session.beginTransaction();
         parentPid = (Integer) session.save(parentProcess);

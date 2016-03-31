@@ -924,7 +924,15 @@ wizard = $(document).ready(function() {
 
 				create: true,
 				title: 'Data Type',
-				edit: true
+				edit: true,
+				options:{ 'BigInt':'BigInt',
+                          'SmallInt':'SmallInt',
+                          'Float':'Float',
+                          'Double':'Double',
+                          'Decimal':'Decimal',
+                          'Timestamp':'Timestamp',
+                          'Date':'Date',
+                          'String':'String'}
 			}
 		},
 
@@ -1074,7 +1082,15 @@ wizard = $(document).ready(function() {
 
                             create: true,
                             title: 'Data Type',
-                            edit: true
+                            edit: true,
+                            options:{ 'BigInt':'BigInt',
+									  'SmallInt':'SmallInt',
+									  'Float':'Float',
+									  'Double':'Double',
+									  'Decimal':'Decimal',
+									  'Timestamp':'Timestamp',
+									  'Date':'Date',
+									  'String':'String'}
 
                         },
                          transformations: {

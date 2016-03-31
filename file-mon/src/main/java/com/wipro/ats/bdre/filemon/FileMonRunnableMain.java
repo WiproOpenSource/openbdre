@@ -21,7 +21,6 @@ import com.wipro.ats.bdre.md.api.GetProcess;
 import com.wipro.ats.bdre.md.api.GetProperties;
 import com.wipro.ats.bdre.md.beans.ProcessInfo;
 import com.wipro.ats.bdre.md.beans.table.GeneralConfig;
-import org.apache.commons.cli.CommandLine;
 import org.apache.commons.vfs2.FileObject;
 import org.apache.commons.vfs2.FileSystemManager;
 import org.apache.commons.vfs2.VFS;
@@ -95,11 +94,6 @@ public class FileMonRunnableMain extends BaseStructure {
         return defaultFSName;
     }
 
-    //Created a dummy PARAMS_STRUCTURE variable to get the environment value.
-    private static final String[][] PARAMS_STRUCTURE = {
-            {"p", "process-id", "Process Id of the process to begin"}
-
-    };
 
     public static void main(String[] args) {
         FileMonRunnableMain f2SFileMonitorMain = new FileMonRunnableMain();
@@ -108,8 +102,6 @@ public class FileMonRunnableMain extends BaseStructure {
 
     private void execute(String[] params) {
         try {
-            CommandLine commandLine = getCommandLine(params, PARAMS_STRUCTURE);
-
             GetProcess getProcess = new GetProcess();
             List<ProcessInfo> subProcessList = getProcess.getSubProcesses(params);
             subProcessId = subProcessList.get(0).getProcessId().toString();

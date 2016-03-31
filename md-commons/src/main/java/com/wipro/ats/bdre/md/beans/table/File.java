@@ -33,15 +33,6 @@ public class File {
     @Digits(fraction = 0, integer = 20)
     private Long batchId;
     private Integer pageSize;
-
-    public Integer getPageSize() {
-        return pageSize;
-    }
-
-    public void setPageSize(Integer pageSize) {
-        this.pageSize = pageSize;
-    }
-
     @NotNull
     @Min(value = 1)
     @Digits(fraction = 0, integer = 11)
@@ -53,6 +44,11 @@ public class File {
     @Min(value = 1)
     @Digits(fraction = 0, integer = 20)
     private Long fileSize;
+    private String tableCreationTS;
+    private Date creationTS;
+    private String fileHash;
+    private Integer page;
+    private Integer counter;
 
     @Override
     public String toString() {
@@ -60,7 +56,13 @@ public class File {
                 " fileSize:" + fileSize + " creationTS:" + creationTS + " page:" + page;
     }
 
-    private String fileHash;
+    public Integer getPageSize() {
+        return pageSize;
+    }
+
+    public void setPageSize(Integer pageSize) {
+        this.pageSize = pageSize;
+    }
 
     public String getTableCreationTS() {
         return tableCreationTS;
@@ -70,8 +72,6 @@ public class File {
         this.tableCreationTS = tableCreationTS;
     }
 
-    private String tableCreationTS;
-
     public String getPath() {
         return path;
     }
@@ -79,10 +79,6 @@ public class File {
     public void setPath(String path) {
         this.path = path;
     }
-
-
-    private Date creationTS;
-
 
     public Integer getPage() {
         return page;
@@ -99,10 +95,6 @@ public class File {
     public void setCounter(Integer counter) {
         this.counter = counter;
     }
-
-
-    private Integer page;
-    private Integer counter;
 
     public Long getBatchId() {
         return batchId;

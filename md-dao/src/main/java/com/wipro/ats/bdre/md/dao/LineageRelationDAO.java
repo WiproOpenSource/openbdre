@@ -16,7 +16,6 @@ package com.wipro.ats.bdre.md.dao;
 
 import com.wipro.ats.bdre.exception.MetadataException;
 import com.wipro.ats.bdre.md.dao.jpa.LineageNode;
-import com.wipro.ats.bdre.md.dao.jpa.LineageQueryType;
 import com.wipro.ats.bdre.md.dao.jpa.LineageRelation;
 import org.apache.log4j.Logger;
 import org.hibernate.Criteria;
@@ -52,7 +51,7 @@ public class LineageRelationDAO {
         return lineageRelations;
     }
 
-    //to list all rows of LR table
+    //getting those relations where the col is in src table
     public List<LineageRelation> getNodeIdForNode(String nodeid) {
         List<LineageRelation> lineageRelations = new ArrayList<>();
         Session session = sessionFactory.openSession();
@@ -60,6 +59,19 @@ public class LineageRelationDAO {
         LineageNode lineageNode = new LineageNode();
         lineageNode.setNodeId(nodeid);
         Criteria criteria = session.createCriteria(LineageRelation.class).add(Restrictions.eq("lineageNodeBySrcNodeId", lineageNode));
+        lineageRelations = criteria.list();
+        session.getTransaction().commit();
+        session.close();
+        return lineageRelations;
+    }
+    //getting those relations where the col is in target table
+    public List<LineageRelation> getNodeIdForNodeWhenTarget(String nodeid) {
+        List<LineageRelation> lineageRelations = new ArrayList<>();
+        Session session = sessionFactory.openSession();
+        session.beginTransaction();
+        LineageNode lineageNode = new LineageNode();
+        lineageNode.setNodeId(nodeid);
+        Criteria criteria = session.createCriteria(LineageRelation.class).add(Restrictions.eq("lineageNodeByTargetNodeId", lineageNode));
         lineageRelations = criteria.list();
         session.getTransaction().commit();
         session.close();
@@ -92,10 +104,6 @@ public class LineageRelationDAO {
         String id = null;
         try {
             session.beginTransaction();
-//            LineageQueryType lineageQueryType = new LineageQueryType(1, "HIVE");
-//            lineageRelation.getLineageQuery().setLineageQueryType(lineageQueryType);
-            //session.save(lineageRelation.getLineageQuery());
-            LOGGER.info("LQ: " + lineageRelation.getLineageQuery().getQueryId());
             id = (String) session.save(lineageRelation);
             session.getTransaction().commit();
         } catch (MetadataException e) {

@@ -17,12 +17,12 @@ package com.wipro.ats.bdre.md.rest;
 import com.wipro.ats.bdre.md.api.base.MetadataAPIBase;
 import com.wipro.ats.bdre.md.beans.table.WorkflowType;
 import com.wipro.ats.bdre.md.dao.WorkflowTypeDAO;
+import com.wipro.ats.bdre.md.rest.util.BindingResultError;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.ModelMap;
 import org.springframework.validation.BindingResult;
-import org.springframework.validation.FieldError;
+
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -53,10 +53,10 @@ public class WorkflowTypeAPI extends MetadataAPIBase {
     private WorkflowTypeDAO workflowTypeDAO;
 
     @RequestMapping(value = "/{id}", method = RequestMethod.GET)
-    public
+
 
     @ResponseBody
-    RestWrapper get(
+    public RestWrapper get(
             @PathVariable("id") Integer workflowTypeId, Principal principal
     ) {
         RestWrapper restWrapper = null;
@@ -64,7 +64,6 @@ public class WorkflowTypeAPI extends MetadataAPIBase {
 
             WorkflowType workflowType = new WorkflowType();
             com.wipro.ats.bdre.md.dao.jpa.WorkflowType jpaWorkflowType = workflowTypeDAO.get(workflowTypeId);
-            //workflowType = s.selectOne("call_procedures.GetWorkflowType", workflowType);
             if (jpaWorkflowType != null) {
                 workflowType.setWorkflowId(jpaWorkflowType.getWorkflowId());
                 workflowType.setWorkflowTypeName(jpaWorkflowType.getWorkflowTypeName());
@@ -73,6 +72,7 @@ public class WorkflowTypeAPI extends MetadataAPIBase {
             LOGGER.info("Record with ID:" + workflowTypeId + " selected from WorkflowType by User:" + principal.getName());
 
         } catch (Exception e) {
+            LOGGER.error(e);
             restWrapper = new RestWrapper(e.getMessage(), RestWrapper.ERROR);
         }
         return restWrapper;
@@ -83,25 +83,24 @@ public class WorkflowTypeAPI extends MetadataAPIBase {
      * WorkflowId.
      *
      * @param workflowId
-     * @param model
      * @return nothing
      */
     @RequestMapping(value = "/{id}", method = RequestMethod.DELETE)
-    public
+
 
     @ResponseBody
-    RestWrapper delete(
+    public RestWrapper delete(
             @PathVariable("id") Integer workflowId,
-            ModelMap model, Principal principal) {
+            Principal principal) {
 
         RestWrapper restWrapper = null;
         try {
             workflowTypeDAO.delete(workflowId);
-            //  s.delete("call_procedures.DeleteWorkflowType", workflowType);
             restWrapper = new RestWrapper(null, RestWrapper.OK);
             LOGGER.info("Record with ID:" + workflowId + " deleted from WorkflowType by User:" + principal.getName());
 
         } catch (Exception e) {
+            LOGGER.error(e);
             restWrapper = new RestWrapper(e.getMessage(), RestWrapper.ERROR);
         }
         return restWrapper;
@@ -115,10 +114,10 @@ public class WorkflowTypeAPI extends MetadataAPIBase {
      */
     @RequestMapping(value = {"", "/"}, method = RequestMethod.GET)
 
-    public
+
 
     @ResponseBody
-    RestWrapper list(@RequestParam(value = "page", defaultValue = "0") int startPage,
+    public RestWrapper list(@RequestParam(value = "page", defaultValue = "0") int startPage,
                      @RequestParam(value = "size", defaultValue = "10") int pageSize, Principal principal) {
 
         RestWrapper restWrapper = null;
@@ -134,11 +133,11 @@ public class WorkflowTypeAPI extends MetadataAPIBase {
                 workflowTypes.add(workflowType);
 
             }
-            // List<ProcessType> workflowTypes = s.selectList("call_procedures.GetWorkflowTypes", workflowType);
             restWrapper = new RestWrapper(workflowTypes, RestWrapper.OK);
             LOGGER.info("All records listed from WorkflowType by User:" + principal.getName());
 
         } catch (Exception e) {
+            LOGGER.error(e);
             restWrapper = new RestWrapper(e.getMessage(), RestWrapper.ERROR);
         }
         return restWrapper;
@@ -153,38 +152,28 @@ public class WorkflowTypeAPI extends MetadataAPIBase {
      * @return restWrapper Updated instance of WorkflowType.
      */
     @RequestMapping(value = {"/", ""}, method = RequestMethod.POST)
-    public
+
 
     @ResponseBody
-    RestWrapper update(@ModelAttribute("processtype")
+    public RestWrapper update(@ModelAttribute("processtype")
                        @Valid WorkflowType workflowType, BindingResult bindingResult, Principal principal) {
 
         RestWrapper restWrapper = null;
         if (bindingResult.hasErrors()) {
-            StringBuilder errorMessages = new StringBuilder("<p>Please fix following errors and try again<p><ul>");
-            List<FieldError> errors = bindingResult.getFieldErrors();
-            for (FieldError error : errors) {
-                errorMessages.append("<li>");
-                errorMessages.append(error.getField());
-                errorMessages.append(". Bad value: '");
-                errorMessages.append(error.getRejectedValue());
-                errorMessages.append("'</li>");
-            }
-            errorMessages.append("</ul>");
-            restWrapper = new RestWrapper(errorMessages.toString(), RestWrapper.ERROR);
-            return restWrapper;
+            BindingResultError bindingResultError = new BindingResultError();
+            return bindingResultError.errorMessage(bindingResult);
         }
         try {
             com.wipro.ats.bdre.md.dao.jpa.WorkflowType jpaWorkflowType = new com.wipro.ats.bdre.md.dao.jpa.WorkflowType();
             jpaWorkflowType.setWorkflowId(workflowType.getWorkflowId());
             jpaWorkflowType.setWorkflowTypeName(workflowType.getWorkflowTypeName());
             workflowTypeDAO.update(jpaWorkflowType);
-            //  WorkflowType workflowTypes = s.selectOne("call_procedures.UpdateWorkflowType", workflowType);
 
             restWrapper = new RestWrapper(workflowType, RestWrapper.OK);
             LOGGER.info("Record with ID:" + workflowType.getWorkflowId() + " updated in BatchStatus by User:" + principal.getName() + workflowType);
 
         } catch (Exception e) {
+            LOGGER.error(e);
             restWrapper = new RestWrapper(e.getMessage(), RestWrapper.ERROR);
         }
         return restWrapper;
@@ -199,37 +188,26 @@ public class WorkflowTypeAPI extends MetadataAPIBase {
      * @return restWrapper Instance of WorkflowType passed.
      */
     @RequestMapping(value = {"/", ""}, method = RequestMethod.PUT)
-    public
+
 
     @ResponseBody
-    RestWrapper insert(@ModelAttribute("processtype")
+    public RestWrapper insert(@ModelAttribute("processtype")
                        @Valid WorkflowType workflowType, BindingResult bindingResult, Principal principal) {
 
         RestWrapper restWrapper = null;
         if (bindingResult.hasErrors()) {
-            StringBuilder errorMessages = new StringBuilder("<p>Please fix following errors and try again<p><ul>");
-            List<FieldError> errors = bindingResult.getFieldErrors();
-            for (FieldError error : errors) {
-                errorMessages.append("<li>");
-                errorMessages.append(error.getField());
-                errorMessages.append(". Bad value: '");
-                errorMessages.append(error.getRejectedValue());
-                errorMessages.append("'</li>");
-            }
-            errorMessages.append("</ul>");
-            restWrapper = new RestWrapper(errorMessages.toString(), RestWrapper.ERROR);
-            return restWrapper;
+            BindingResultError bindingResultError = new BindingResultError();
+            return bindingResultError.errorMessage(bindingResult);
         }
         try {
             com.wipro.ats.bdre.md.dao.jpa.WorkflowType jpaWorkflowType = new com.wipro.ats.bdre.md.dao.jpa.WorkflowType();
             jpaWorkflowType.setWorkflowId(workflowType.getWorkflowId());
             jpaWorkflowType.setWorkflowTypeName(workflowType.getWorkflowTypeName());
             workflowTypeDAO.insert(jpaWorkflowType);
-            // WorkflowType workflowTypes = s.selectOne("call_procedures.InsertWorkflowType", workflowType);
-
             restWrapper = new RestWrapper(workflowType, RestWrapper.OK);
             LOGGER.info("Record with ID:" + workflowType.getWorkflowId() + " inserted in BatchStatus by User:" + principal.getName() + workflowType);
         } catch (Exception e) {
+            LOGGER.error(e);
             restWrapper = new RestWrapper(e.getMessage(), RestWrapper.ERROR);
         }
         return restWrapper;
@@ -242,9 +220,9 @@ public class WorkflowTypeAPI extends MetadataAPIBase {
      */
     @RequestMapping(value = {"/optionslist"}, method = RequestMethod.POST)
 
-    public
+
     @ResponseBody
-    RestWrapperOptions listOptions() {
+    public RestWrapperOptions listOptions() {
 
         RestWrapperOptions restWrapperOptions = null;
         try {
@@ -258,7 +236,6 @@ public class WorkflowTypeAPI extends MetadataAPIBase {
                 workflowType.setCounter(jpaWorkflowTypes.size());
                 workflowTypes.add(workflowType);
             }
-            //  List<WorkflowType> workflowTypes = s.selectList("call_procedures.GetWorkflowTypes", workflowType);
 
             LOGGER.debug(workflowTypes.get(0).getWorkflowId());
             if (workflowTypes.get(0).getWorkflowId() == 0) {
@@ -273,6 +250,7 @@ public class WorkflowTypeAPI extends MetadataAPIBase {
             }
             restWrapperOptions = new RestWrapperOptions(options, RestWrapperOptions.OK);
         } catch (Exception e) {
+            LOGGER.error(e);
             restWrapperOptions = new RestWrapperOptions(e.getMessage(), RestWrapperOptions.ERROR);
         }
         return restWrapperOptions;

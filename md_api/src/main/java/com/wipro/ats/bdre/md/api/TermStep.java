@@ -22,23 +22,24 @@ import org.apache.commons.cli.CommandLine;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.AutowireCapableBeanFactory;
-import org.springframework.context.ApplicationContext;
-import org.springframework.context.support.ClassPathXmlApplicationContext;
 
 /**
  * Created by arijit on 12/8/14.
  */
 public class TermStep extends MetadataAPIBase {
-    public TermStep() {
-        ApplicationContext context = new ClassPathXmlApplicationContext("spring-dao.xml");
-        AutowireCapableBeanFactory acbFactory = context.getAutowireCapableBeanFactory();
-        acbFactory.autowireBean(this);
-    }
 
     private static final Logger LOGGER = Logger.getLogger(TermStep.class);
     private static final String[][] PARAMS_STRUCTURE = {
             {"p", "sub-process-id", "Sub Process id of the step"}
     };
+
+    @Autowired
+    private StepDAO stepDAO;
+
+    public TermStep() {
+        AutowireCapableBeanFactory acbFactory = getAutowireCapableBeanFactory();
+        acbFactory.autowireBean(this);
+    }
 
     /**
      * This method calls TermStep proc which updates instance_exec and batch_consump_queue table.
@@ -46,9 +47,8 @@ public class TermStep extends MetadataAPIBase {
      * @param params String array having environment and process-id with their command line notations.
      * @return nothing.
      */
-    @Autowired
-    private StepDAO stepDAO;
 
+    @Override
     public TermStepInfo execute(String[] params) {
         try {
             TermStepInfo termStepInfo = new TermStepInfo();
@@ -59,7 +59,6 @@ public class TermStep extends MetadataAPIBase {
 
             termStepInfo.setSubProcessId(Integer.parseInt(subPid));
             //calling proc TermStep
-            //  s.selectOne("call_procedures.TermStep", termStepInfo);
             stepDAO.termStep(Integer.parseInt(subPid));
             return termStepInfo;
         } catch (Exception e) {
@@ -67,6 +66,5 @@ public class TermStep extends MetadataAPIBase {
             throw new MetadataException(e);
         }
     }
-
 
 }
