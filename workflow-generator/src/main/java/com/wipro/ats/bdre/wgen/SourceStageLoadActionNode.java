@@ -34,7 +34,7 @@ for the current action node, appropriately formatted as XML.
 
 public class SourceStageLoadActionNode extends GenericActionNode {
 
-    private static final Logger LOGGER = Logger.getLogger(HiveActionNode.class);
+    private static final Logger LOGGER = Logger.getLogger(SourceStageLoadActionNode.class);
     private ProcessInfo processInfo = new ProcessInfo();
     private ActionNode actionNode = null;
 
@@ -72,39 +72,20 @@ public class SourceStageLoadActionNode extends GenericActionNode {
         if (isSecurityEnabled(this.getProcessInfo().getParentProcessId(), "security") != 0) {
             ret.append(" cred='hive_credentials'");
         }
-
         ret.append("\">\n" +
                 "        <hive xmlns=\"uri:oozie:hive-action:0.2\">\n" +
-                "            <job-tracker>${jobTracker}</job-tracker>\n" +
-                "            <name-node>${nameNode}</name-node>\n" +
-                "            <job-xml>hive-site.xml</job-xml>\n" +
-                "            <configuration>\n" +
-                "            <property>\n" +
-                "                <name>run_id</name>\n" +
-                "                <value>${wf:actionData(\"init-job\")[\"min-batch-id-map." + getId() + "\"]}</value>\n" +
-                "            </property>\n" +
-                "            <property>\n" +
-                "                <name>hive.exec.post.hooks</name>\n" +
-                "                <value>com.wipro.ats.bdre.hiveplugin.hook.LineageHook</value>\n" +
-                "                </property>" +
-                "                <property>\n" +
-                "                <name>bdre.lineage.processId</name>\n" +
-                "                <value>" + getId() + "</value>\n" +
-                "                </property>\n" +
-                "                <property>\n" +
-                "                <name>bdre.lineage.instanceExecId</name>\n" +
-                "                <value>${wf:actionData(\"init-job\")[\"instance-exec-id\"]}</value>\n" +
-                "                </property>\n" +
-
-                "                </configuration>");
-        ret.append(getQueryPath(getId(), "query"));
-
-
+                "            <job-tracker>${wf:actionData(\"migration-preprocessor\")[\"job-tracker-address\"]}</job-tracker>\n" +
+                "            <name-node>${wf:actionData(\"migration-preprocessor\")[\"name-node-address\"]}</name-node>\n");
+        ret.append(getQueryPath());
         ret.append("            <param>exec-id=${wf:actionData(\"init-job\")[\"instance-exec-id\"]}</param>\n");
-
-
-        ret.append(getParams(getId(), "param"));
-
+        ret.append("            <param>source-stg-db=${wf:actionData(\"migration-preprocessor\")[\"source-stg-db\"]}</param>\n");
+        ret.append("            <param>source-stg-table=${wf:actionData(\"migration-preprocessor\")[\"source-stg-table\"]}</param>\n");
+        ret.append("            <param>stg-all-part-cols=${wf:actionData(\"migration-preprocessor\")[\"stg-all-part-cols\"]}</param>\n");
+        ret.append("            <param>source-reg-cols=${wf:actionData(\"migration-preprocessor\")[\"source-reg-cols\"]}</param>\n");
+        ret.append("            <param>source-bp-cols=${wf:actionData(\"migration-preprocessor\")[\"source-bp-cols\"]}</param>\n");
+        ret.append("            <param>source-db=${wf:actionData(\"migration-preprocessor\")[\"source-db\"]}</param>\n");
+        ret.append("            <param>source-table=${wf:actionData(\"migration-preprocessor\")[\"source-table\"]}</param>\n");
+        ret.append("            <param>filter-condition=${wf:actionData(\"migration-preprocessor\")[\"filter-condition\"]}</param>\n");
         ret.append("        </hive>\n" +
                 "        <ok to=\"" + getToNode().getName() + "\"/>\n" +
                 "        <error to=\"" + getTermNode().getName() + "\"/>\n" +
@@ -115,53 +96,27 @@ public class SourceStageLoadActionNode extends GenericActionNode {
 
     /**
      * This method gets path for Hive Query
-     *
-     * @param pid         process-id of Hive Query
-     * @param configGroup config_group entry in properties table "query" for query path
      * @return String containing query path to be appended to workflow string
      */
-    public String getQueryPath(Integer pid, String configGroup) {
-        GetProperties getProperties = new GetProperties();
-        java.util.Properties queryPath = getProperties.getProperties(getId().toString(), configGroup);
-        Enumeration e = queryPath.propertyNames();
+    public String getQueryPath() {
+
         StringBuilder addQueryPath = new StringBuilder();
-        if (!queryPath.isEmpty()) {
-            while (e.hasMoreElements()) {
-                String key = (String) e.nextElement();
-                addQueryPath.append("            <script>" + queryPath.getProperty(key) + "</script>\n");
-
-            }
-        } else {
-            addQueryPath.append("            <script>hql/query" + getId() + ".hql</script>\n");
-        }
+        addQueryPath.append("            <script>hql/query" + getId() + ".hql</script>\n");
         return addQueryPath.toString();
-    }
-
-    /**
-     * This method gets all the extra arguments required for Hive Query
-     *
-     * @param pid         process-id of Hive Query
-     * @param configGroup config_group entry in properties table "param" for arguments
-     * @return String containing arguments to be appended to workflow string.
-     */
-    public String getParams(Integer pid, String configGroup) {
-        GetProperties getProperties = new GetProperties();
-        java.util.Properties listForParams = getProperties.getProperties(getId().toString(), configGroup);
-        Enumeration e = listForParams.propertyNames();
-        StringBuilder addParams = new StringBuilder();
-        if (!listForParams.isEmpty()) {
-            while (e.hasMoreElements()) {
-                String key = (String) e.nextElement();
-                addParams.append("            <param>" + key + "=" + listForParams.getProperty(key) + "</param>\n");
-            }
-        }
-        return addParams.toString();
     }
 
     public Integer isSecurityEnabled(Integer pid, String configGroup) {
         GetProperties getProperties = new GetProperties();
         java.util.Properties properties = getProperties.getProperties(pid.toString(), configGroup);
         return properties.size();
+    }
+
+    public String getJobTrackerDetails(){
+        return "hdfs://quickstart.cloudera:8020";
+    }
+
+    public String getNameNodeDetails(){
+        return "quickstart.cloudera:8032";
     }
 }
 

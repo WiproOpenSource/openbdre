@@ -25,16 +25,9 @@ import java.util.Enumeration;
  */
 
 
-/*
-Action nodes are the mechanism by which a workflow triggers the execution of a task
-Here, we set the id and return name of the action node.
-The method getXML() returns a string which contains name, Id, next success node(ToNode) and next failure node(TermNode)
-for the current action node, appropriately formatted as XML.
-*/
-
 public class SourceToDestCopyActionNode extends GenericActionNode {
 
-    private static final Logger LOGGER = Logger.getLogger(HiveActionNode.class);
+    private static final Logger LOGGER = Logger.getLogger(SourceToDestCopyActionNode.class);
     private ProcessInfo processInfo = new ProcessInfo();
     private ActionNode actionNode = null;
 
@@ -56,7 +49,7 @@ public class SourceToDestCopyActionNode extends GenericActionNode {
 
     public String getName() {
 
-        String nodeName = "dest-table-load" + getId() + "-" + processInfo.getProcessName().replace(' ', '_');
+        String nodeName = "src-dest-copy" + getId() + "-" + processInfo.getProcessName().replace(' ', '_');
         return nodeName.substring(0, Math.min(nodeName.length(), 45));
 
     }
@@ -74,36 +67,17 @@ public class SourceToDestCopyActionNode extends GenericActionNode {
         }
 
         ret.append("\">\n" +
-                "        <fs>" +
-                "        <move source= target="+
-                "        </fs>   "+
+                "        <distcp xmlns=\"uri:oozie:distcp-action:0.2\">\n" +
+                "            <job-tracker>${jobTracker}</job-tracker>\n" +
+                "            <name-node>${nameNode}</name-node>\n" +
+                "            <arg>${wf:actionData(\"migration-preprocessor\")[\"src-stg-tbl-path\"]}</arg>\n" +
+                "            <arg>${wf:actionData(\"migration-preprocessor\")[\"dest-stg-folder-path\"]}</arg>\n");
+        ret.append("        </distcp>\n" +
                 "        <ok to=\"" + getToNode().getName() + "\"/>\n" +
                 "        <error to=\"" + getTermNode().getName() + "\"/>\n" +
                 "    </action>");
 
         return ret.toString();
-    }
-
-
-    /**
-     * This method gets all the extra arguments required for Hive Query
-     *
-     * @param pid         process-id of Hive Query
-     * @param configGroup config_group entry in properties table "param" for arguments
-     * @return String containing arguments to be appended to workflow string.
-     */
-    public String getParams(Integer pid, String configGroup) {
-        GetProperties getProperties = new GetProperties();
-        java.util.Properties listForParams = getProperties.getProperties(getId().toString(), configGroup);
-        Enumeration e = listForParams.propertyNames();
-        StringBuilder addParams = new StringBuilder();
-        if (!listForParams.isEmpty()) {
-            while (e.hasMoreElements()) {
-                String key = (String) e.nextElement();
-                addParams.append("            <param>" + key + "=" + listForParams.getProperty(key) + "</param>\n");
-            }
-        }
-        return addParams.toString();
     }
 
     public Integer isSecurityEnabled(Integer pid, String configGroup) {

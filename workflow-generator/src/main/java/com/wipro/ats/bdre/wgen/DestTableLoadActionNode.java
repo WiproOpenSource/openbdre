@@ -25,16 +25,9 @@ import java.util.Enumeration;
  */
 
 
-/*
-Action nodes are the mechanism by which a workflow triggers the execution of a task
-Here, we set the id and return name of the action node.
-The method getXML() returns a string which contains name, Id, next success node(ToNode) and next failure node(TermNode)
-for the current action node, appropriately formatted as XML.
-*/
-
 public class DestTableLoadActionNode extends GenericActionNode {
 
-    private static final Logger LOGGER = Logger.getLogger(HiveActionNode.class);
+    private static final Logger LOGGER = Logger.getLogger(DestTableLoadActionNode.class);
     private ProcessInfo processInfo = new ProcessInfo();
     private ActionNode actionNode = null;
 
@@ -56,7 +49,7 @@ public class DestTableLoadActionNode extends GenericActionNode {
 
     public String getName() {
 
-        String nodeName = "source-dest-copy-" + getId() + "-" + processInfo.getProcessName().replace(' ', '_');
+        String nodeName = "dest-table-load" + getId() + "-" + processInfo.getProcessName().replace(' ', '_');
         return nodeName.substring(0, Math.min(nodeName.length(), 45));
 
     }
@@ -72,14 +65,10 @@ public class DestTableLoadActionNode extends GenericActionNode {
         if (isSecurityEnabled(this.getProcessInfo().getParentProcessId(), "security") != 0) {
             ret.append(" cred='hive_credentials'");
         }
-
         ret.append("\">\n" +
-                "        <distcp xmlns=\"uri:oozie:distcp-action:0.2\">\n" +
-                "            <job-tracker>${jobTracker}</job-tracker>\n" +
-                "            <name-node>${nameNode}</name-node>\n" +
-                "            <arg>${src_Name_Node}/${src_stg_table_bp_path}</arg>\n" +
-                "            <arg>${dest_Name_Node}/${dest_stg_folder_path}</arg>\n");
-        ret.append("        </hive>\n" +
+                "        <fs>" +
+                "        <move source=${wf:actionData(\"migration-preprocessor\")[\"dest-stg-folder-content-path\"]} target=${wf:actionData(\"migration-preprocessor\")[\"dest-table-path\"]}"+
+                "        </fs>   "+
                 "        <ok to=\"" + getToNode().getName() + "\"/>\n" +
                 "        <error to=\"" + getTermNode().getName() + "\"/>\n" +
                 "    </action>");
@@ -87,32 +76,10 @@ public class DestTableLoadActionNode extends GenericActionNode {
         return ret.toString();
     }
 
-
-    /**
-     * This method gets all the extra arguments required for Hive Query
-     *
-     * @param pid         process-id of Hive Query
-     * @param configGroup config_group entry in properties table "param" for arguments
-     * @return String containing arguments to be appended to workflow string.
-     */
-    public String getParams(Integer pid, String configGroup) {
-        GetProperties getProperties = new GetProperties();
-        java.util.Properties listForParams = getProperties.getProperties(getId().toString(), configGroup);
-        Enumeration e = listForParams.propertyNames();
-        StringBuilder addParams = new StringBuilder();
-        if (!listForParams.isEmpty()) {
-            while (e.hasMoreElements()) {
-                String key = (String) e.nextElement();
-                addParams.append("            <param>" + key + "=" + listForParams.getProperty(key) + "</param>\n");
-            }
-        }
-        return addParams.toString();
-    }
-
     public Integer isSecurityEnabled(Integer pid, String configGroup) {
         GetProperties getProperties = new GetProperties();
         java.util.Properties properties = getProperties.getProperties(pid.toString(), configGroup);
         return properties.size();
     }
-}
 
+}

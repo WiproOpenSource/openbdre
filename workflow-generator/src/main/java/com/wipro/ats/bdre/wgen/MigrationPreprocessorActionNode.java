@@ -5,7 +5,8 @@ import com.wipro.ats.bdre.md.beans.ProcessInfo;
 /**
  * Created by cloudera on 3/31/16.
  */
-    /*
+
+/*
 Action nodes are the mechanism by which a workflow triggers the execution of a task
 Here, we set the id and return name of the action node.
 The method getXML() returns a string which contains name, Id, next success node(ToNode) and next failure node(TermNode)
@@ -36,7 +37,7 @@ for the current action node, appropriately formatted as XML.
 
         public String getName() {
 
-            String nodeName = "prepare-migrate-" + getId() + "-" + processInfo.getProcessName().replace(' ', '_');
+            String nodeName = "migration-preprocessor";
             return nodeName.substring(0, Math.min(nodeName.length(), 45));
 
         }

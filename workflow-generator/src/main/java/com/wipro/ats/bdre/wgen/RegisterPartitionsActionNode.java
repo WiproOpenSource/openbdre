@@ -34,7 +34,7 @@ for the current action node, appropriately formatted as XML.
 
 public class RegisterPartitionsActionNode extends GenericActionNode {
 
-    private static final Logger LOGGER = Logger.getLogger(HiveActionNode.class);
+    private static final Logger LOGGER = Logger.getLogger(RegisterPartitionsActionNode.class);
     private ProcessInfo processInfo = new ProcessInfo();
     private ActionNode actionNode = null;
 
@@ -72,68 +72,30 @@ public class RegisterPartitionsActionNode extends GenericActionNode {
         if (isSecurityEnabled(this.getProcessInfo().getParentProcessId(), "security") != 0) {
             ret.append(" cred='hive_credentials'");
         }
-
         ret.append("\">\n" +
                 "        <hive xmlns=\"uri:oozie:hive-action:0.2\">\n" +
                 "            <job-tracker>${jobTracker}</job-tracker>\n" +
-                "            <name-node>${nameNode}</name-node>\n" +
-                "            <job-xml>hive-site.xml</job-xml>\n"                );
-        ret.append(getQueryPath(getId(), "query"));
-
-        ret.append(getParams(getId(), "param"));
-
+                "            <name-node>${nameNode}</name-node>\n" );
+        ret.append(getQueryPath());
+        ret.append("            <param>dest-table=${wf:actionData(\"migration-preprocessor\")[\"dest-table\"]}</param>\n");
+        ret.append("            <param>dest-db=${wf:actionData(\"migration-preprocessor\")[\"dest-db\"]}</param>\n");
         ret.append("        </hive>\n" +
                 "        <ok to=\"" + getToNode().getName() + "\"/>\n" +
                 "        <error to=\"" + getTermNode().getName() + "\"/>\n" +
                 "    </action>");
-
         return ret.toString();
     }
 
     /**
      * This method gets path for Hive Query
-     *
-     * @param pid         process-id of Hive Query
-     * @param configGroup config_group entry in properties table "query" for query path
      * @return String containing query path to be appended to workflow string
      */
-    public String getQueryPath(Integer pid, String configGroup) {
-        GetProperties getProperties = new GetProperties();
-        java.util.Properties queryPath = getProperties.getProperties(getId().toString(), configGroup);
-        Enumeration e = queryPath.propertyNames();
+    public String getQueryPath() {
         StringBuilder addQueryPath = new StringBuilder();
-        if (!queryPath.isEmpty()) {
-            while (e.hasMoreElements()) {
-                String key = (String) e.nextElement();
-                addQueryPath.append("            <script>" + queryPath.getProperty(key) + "</script>\n");
-
-            }
-        } else {
-            addQueryPath.append("            <script>hql/query" + getId() + ".hql</script>\n");
-        }
+        addQueryPath.append("            <script>hql/query" + getId() + ".hql</script>\n");
         return addQueryPath.toString();
     }
 
-    /**
-     * This method gets all the extra arguments required for Hive Query
-     *
-     * @param pid         process-id of Hive Query
-     * @param configGroup config_group entry in properties table "param" for arguments
-     * @return String containing arguments to be appended to workflow string.
-     */
-    public String getParams(Integer pid, String configGroup) {
-        GetProperties getProperties = new GetProperties();
-        java.util.Properties listForParams = getProperties.getProperties(getId().toString(), configGroup);
-        Enumeration e = listForParams.propertyNames();
-        StringBuilder addParams = new StringBuilder();
-        if (!listForParams.isEmpty()) {
-            while (e.hasMoreElements()) {
-                String key = (String) e.nextElement();
-                addParams.append("            <param>" + key + "=" + listForParams.getProperty(key) + "</param>\n");
-            }
-        }
-        return addParams.toString();
-    }
 
     public Integer isSecurityEnabled(Integer pid, String configGroup) {
         GetProperties getProperties = new GetProperties();
