@@ -17,16 +17,18 @@
                     ga('send', 'pageview');
                 </script>
 
+                <link href="../css/css/bootstrap.min.css" rel="stylesheet" type="text/css" />
+                <link href="../css/jtables-bdre.css" rel="stylesheet" type="text/css" />
+                <link href="../css/jquery-ui-1.10.3.custom.css" rel="stylesheet" type="text/css" />
+
+                <!-- Include jTable script file. -->
+                <script src="../js/jquery.min.js" type="text/javascript"></script>
+                <script src="../js/jquery-ui-1.10.3.custom.js" type="text/javascript"></script>
+                <script src="../js/jquery.jtable.js" type="text/javascript"></script>
                 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-                <script src="../js/jquery.min.js"></script>
-                <link href="../css/jquery-ui-1.10.3.custom.css" rel="stylesheet">
-                <link href="../css/css/bootstrap.min.css" rel="stylesheet" />
-                <script src="../js/jquery-ui-1.10.3.custom.js"></script>
                 <script src="../js/jquery.steps.min.js"></script>
                 <link rel="stylesheet" href="../css/jquery.steps.css" />
                 <script src="../js/bootstrap.js" type="text/javascript"></script>
-                <script src="../js/jquery.jtable.js" type="text/javascript"></script>
-                <link href="../css/jtables-bdre.css" rel="stylesheet" type="text/css" />
                 <script src="../js/angular.min.js" type="text/javascript"></script>
                 <script src="../js/svgutil.js" type="text/javascript"></script>
                 <script language="javascript" type="text/javascript" src="../js/graph/viz.js"></script>
@@ -78,8 +80,18 @@
                                     }).html(getData.Message);
                                 }
                             },
-                            error : function(){
-                                alert('Danger: You have entered wrong Table Name or Column Name');
+                             error : function() { $("#div-dialog-warning").dialog({
+
+                                 resizable: false,
+                                 height: 'auto',
+                                 modal: true,
+                                 buttons: {
+                                     "Ok": function() {
+                                         $(this).dialog("close");
+                                     }
+                                 }
+                             }).html("You have entered or selected wrong Table Name or Column Name");
+
                             }
                         });
                     }
@@ -270,40 +282,47 @@
 
                 <div class="row">&nbsp;</div>
                 <div class="row">
-                    <div class="col-md-4"> </div>
-                    <div class="col-md-8" id="divEncloseHeading">
+                    <div class="col-md-2"> </div>
+                    <div class="col-md-10" id="divEncloseHeading">
                         <c:if test="${empty param.tableName}">
-                            <div class="col-md-6" id="divEncloseHeading">
+                            <div class="col-md-10" id="divEncloseHeading">
                                 <div class="panel panel-primary">
-                                    <div class="panel-heading">Table Column Lineage 
+                                    <div class="panel-heading">Table Column Lineage
+
                                         <div class="text-right">
                                             <button type='button' class='btn btn-default' aria-label='Left Align' onClick='saveSVG("execution",0)'><span class='glyphicon glyphicon-save-file' aria-hidden='true'></span> Save </button>
                                         </div>
                                     </div>
+
                                     <div class="panel-body">
-                                        <form role="form" id="propertiesFieldsForm">
-                                            <div class="form-group">
-                                                <label>Table Name is:</label>
-                                                <input type="text" class="form-control" name="tableName" id="tableName" value =""/>
-                                            </div>
-                                            <div class="form-group">
-                                                <label>Column Name is:</label>
-                                                <input type="text" class="form-control" name="colName" id="colName" value =""/>
-                                            </div>
-                                            <div class="text-left">
-                                            <button class="btn btn-primary" onClick="resetGraph();
-                                                                                                  getTableName(jQuery('#tableName').val(), jQuery('#colName').val())" href="#"><span class='glyphicon glyphicon-blackboard'></span> Show Lineage </button>
-                                            </div>
-                                        </form>
+                                            <div class="row">
+                                                 <div class="col-xs-4">
+
+                                                    <label>Table Name is:</label>
+                                                    <input type="text" class="form-control" name="tableName" id="tableName" value =""/>
+
+                                                </div>
+                                                <div class="col-xs-4">
+                                                    <label>Column Name is:</label>
+                                                    <input type="text" class="form-control" name="colName" id="colName" value =""/>
+                                                </div>
+											</div>
+<br>
+											<div class="text-left">
+											    <button class="btn btn-primary" onClick="resetGraph(); getTableName(jQuery('#tableName').val(), jQuery('#colName').val())" href="#"><span class='glyphicon glyphicon-blackboard'></span> Show Lineage </button>
+											</div>
                                     </div>
                                 </div>
                             </div>
                         </c:if>
-                        <div id="graphviz_svg_div" style="width:100%;text-align:left;">
-                            <!-- Target for dynamic svg generation -->
-                        </div>
                     </div>
                 </div>
-                <div id="div-dialog-warning"/>
+                <div id="graphviz_svg_div" style="width:100%;text-align:left;">
+                    <!-- Target for dynamic svg generation -->
+                </div>
+
+                <div id="div-dialog-warning" title="Process Not Found" style="display:none;">
+                    <p><span class="ui-icon ui-icon-alert" style="float:left; margin:0 7px 20px 0;"></span>Process Not Found</p>
+                </div>
             </body>
         </html>
