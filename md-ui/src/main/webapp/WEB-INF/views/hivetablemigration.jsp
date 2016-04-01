@@ -39,6 +39,11 @@
     		<script src="../js/jquery.jtable.js" type="text/javascript"></script>
     		<script src="../js/angular.min.js" type="text/javascript"></script>
     		<link href="../css/jtables-bdre.css" rel="stylesheet" type="text/css" />
+	<script >
+		function fetchPipelineInfo(pid){
+			location.href = '<c:url value="/pages/lineage.page?pid="/>' + pid;
+		}
+		</script >
 
 
    	<script>
@@ -339,19 +344,29 @@
 
 
   			console.log(currentIndex + " " + priorIndex);
+  			if(currentIndex == 1 && priorIndex == 0) {
+				 formIntoMap('srcEnv_', 'processDetailsForm');
+				 }
 
-                formIntoMap('srcEnv_', 'processDetailsForm');
-
+				 if(currentIndex == 2 && priorIndex == 1) {
 				 formIntoMap('srcDB_', 'srcDBForm');
+				 }
 
+				 if(currentIndex == 3 && priorIndex == 2) {
 				 formIntoMap('tables_','tablesForm');
+				 }
 
-				 formIntoMap('destEnv_','destEnvForm');
+				 if(currentIndex == 4 && priorIndex == 3) {
+                 formIntoMap('destEnv_','destEnvForm');
+                 }
+
+				if(currentIndex == 5 && priorIndex == 4) {
+				formIntoMap('destDB_', 'destDBForm');
 
             	$('#createjobs').on('click', function(e) {
                         $.ajax({
                             type: "POST",
-                            url: "/mdrest/hivemigration/createjobs",
+                            url: "/mdrest/hivemigration/createjobs/",
                             data: jQuery.param(map),
                             success: function(data) {
                                 if(data.Result == "OK") {
@@ -376,6 +391,7 @@
                         });
                     return false;
                     });
+                 }
   			return true;
   		},
   		onFinished: function(event, currentIndex) {
@@ -408,6 +424,7 @@
                   var app = angular.module('myApp', []);
                   app.controller('myCtrl', function($scope) {
                       $scope.srcEnvs= getGenConfigMap('src_Env');
+
                       $scope.databases= {};
                        $.ajax({
                             url: '/mdrest/hivemigration/databases/',
@@ -418,9 +435,10 @@
                                     $scope.databases = data;
                                 },
                                 error: function () {
-                                    alert('database danger');
+                                    alert(' src database danger');
                                 }
                             });
+
                        $scope.tables= {};
                          $.ajax({
                               url: '/mdrest/hivemigration/tables/',
@@ -432,6 +450,19 @@
                                   },
                                   error: function () {
                                       alert('table danger');
+                                  }
+                              });
+                       $scope.destdatabases= {};
+                         $.ajax({
+                              url: '/mdrest/hivemigration/destdatabases/',
+                                  type: 'GET',
+                                  dataType: 'json',
+                                  async: false,
+                                  success: function (data) {
+                                      $scope.destdatabases = data;
+                                  },
+                                  error: function () {
+                                      alert('dest database danger');
                                   }
                               });
                       $scope.formatMap=null;
@@ -496,24 +527,30 @@
                                         </div>
                                         </form>
                             </section>
-                 <h3>Source Database</h3>
-                <section>
-                          <form class="form-horizontal" role="form" id="srcDBForm">
-                              <div id="srcDBDiv">
-                                 <div class="form-group">
-                                    <label class="control-label col-sm-2" for="srcDB">Select a database:</label>
-                                      <div class="col-sm-10">
-                                        <select class="form-control" id="srcDB" name="srcDB" >
-                                           <option ng-repeat="srcDB in databases.Options" value="{{srcDB.Value}}" name="srcDB">{{srcDB.DisplayText}}</option>
-                                        </select>
-                                      </div>
-                                  </div>
+               <h3>Source Database</h3>
+              <section>
+                        <form class="form-horizontal" role="form" id="srcDBForm">
+                            <div id="srcDBDiv">
+                               <div class="form-group">
+                                  <label class="control-label col-sm-2" for="srcDB">Select a source database:</label>
+                                    <div class="col-sm-10">
+                                      <select class="form-control" id="srcDB" name="srcDB" >
+                                         <option ng-repeat="srcDB in databases.Options" value="{{srcDB.Value}}" name="srcDB">{{srcDB.DisplayText}}</option>
+                                      </select>
+                                    </div>
+                                </div>
 
-                          </form>
-                </section>
+                        </form>
+              </section>
 			<h3>Tables</h3>
 			<section>
 			  <form class="form-horizontal" role="form" id="tablesForm">
+                     <div class="form-group">
+			        <label class="control-label col-sm-2" for="instexecId">Technical Partition:</label>
+                        <div class="col-sm-10">
+                            <input type="text" class="form-control"  id="instexecId" name="instexecId"  value="instanceExecId" required>
+                        </div>
+                        </div>
                   <div id="tablesDiv">
                      <div class="form-group">
                         <label class="control-label col-sm-2" for="tabl">Select Table:</label>
@@ -543,6 +580,21 @@
 				</form>
 
               </section>
+                   <h3>Destination Database</h3>
+                  <section>
+                            <form class="form-horizontal" role="form" id="destDBForm">
+                                <div id="destDBDiv">
+                                   <div class="form-group">
+                                      <label class="control-label col-sm-2" for="destDB">Select a destination database:</label>
+                                        <div class="col-sm-10">
+                                          <select class="form-control" id="destDB" name="destDB" >
+                                             <option ng-repeat="destDB in destdatabases.Options" value="{{destDB.Value}}" name="destDB">{{destDB.DisplayText}}</option>
+                                          </select>
+                                        </div>
+                                    </div>
+
+                            </form>
+                  </section>
             <h3>Confirm</h3>
              <section>
                <div id="Process">
