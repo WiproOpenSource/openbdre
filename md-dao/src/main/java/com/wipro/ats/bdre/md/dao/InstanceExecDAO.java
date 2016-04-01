@@ -32,6 +32,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -180,8 +181,15 @@ public class InstanceExecDAO {
                 int total=instanceExecList.size();
                 for (InstanceExec instanceExec:instanceExecList)
                 {
+                    if(instanceExec.getEndTs()!=null){
                     sumTime += (instanceExec.getEndTs().getTime() - instanceExec.getStartTs().getTime());
                     currentTime=instanceExec.getEndTs().getTime() - instanceExec.getStartTs().getTime();
+                    }
+                    else
+                    {
+                        sumTime += (new Date().getTime() - instanceExec.getStartTs().getTime());
+                        currentTime=new Date().getTime() - instanceExec.getStartTs().getTime();
+                    }
                 }
 
                 Criteria propertyCriteria=session.createCriteria(Properties.class).add(Restrictions.eq("process",process)).add(Restrictions.eq("configGroup","groupbar"));
@@ -190,12 +198,12 @@ public class InstanceExecDAO {
                 SLAMonitoringBean slaMonitoringBean=new SLAMonitoringBean();
                 slaMonitoringBean.setProcessId(process.getProcessId());
                 if(total!=0)
-                slaMonitoringBean.setAverageExecutionTime(sumTime/total);
-                slaMonitoringBean.setCurrentExecutionTime(currentTime);
+                slaMonitoringBean.setAverageExecutionTime(sumTime/(total*1000));
+                slaMonitoringBean.setCurrentExecutionTime(currentTime/1000);
                 if(properties==null)
                 slaMonitoringBean.setsLATime(0);
                 else
-                slaMonitoringBean.setsLATime(Long.parseLong(properties.getPropValue()));
+                slaMonitoringBean.setsLATime(Long.parseLong(properties.getPropValue())/1000);
                 slaMonitoringBeanList.add(slaMonitoringBean);
             }
             LOGGER.info("total size of slaMonitotingBeanList "+slaMonitoringBeanList.size());
