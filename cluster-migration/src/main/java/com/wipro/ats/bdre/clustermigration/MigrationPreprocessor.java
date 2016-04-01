@@ -1,8 +1,10 @@
 package com.wipro.ats.bdre.clustermigration;
 
+import com.wipro.ats.bdre.BaseStructure;
 import com.wipro.ats.bdre.im.IMConstant;
 import com.wipro.ats.bdre.md.api.ProcessLog;
 import com.wipro.ats.bdre.md.beans.ProcessLogInfo;
+import org.apache.commons.cli.CommandLine;
 import org.apache.log4j.Logger;
 
 import java.sql.*;
@@ -12,17 +14,21 @@ import java.util.Date;
 /**
  * Created by cloudera on 3/29/16.
  */
-public class MigrationPreprocessor {
+public class MigrationPreprocessor extends BaseStructure{
     private static final Logger LOGGER = Logger.getLogger(MigrationPreprocessor.class);
     public static String sourceRegularColumns=new String();   //comma-separated with datatype
     public static String sourcePartitionColumns=new String(); //comma-separated with datatype
     public static String stgPartitionColumns=new String();    //replacing source tech_partition with bdre tech partition
     public static String stgTableDDL=new String();            //contains source stage table ddl
     public static String destTableDDL=new String();           //contains destination table ddl
-    protected static Connection getHiveJDBCConnection(String dbName) throws Exception {
+    private static final String[][] PARAMS_STRUCTURE = {
+            {"p", "process-id", " Process id of migration preprocessor"},
+            {"ied", "instance-exec-id", " instance exec id of preprocessor"}
+    };
+    protected static Connection getHiveJDBCConnection(String dbName, String hiveConnection) throws Exception {
         try {
             Class.forName(IMConstant.HIVE_DRIVER_NAME);
-            String hiveConnection = "jdbc:hive2://quickstart.cloudera:10000";
+            //String hiveConnection = "jdbc:hive2://quickstart.cloudera:10000";
             String hiveUser = "cloudera";
             String hivePassword = "cloudera";
             Connection con = DriverManager.getConnection(hiveConnection + "/" + dbName, hiveUser, hivePassword);
@@ -37,14 +43,24 @@ public class MigrationPreprocessor {
         }
     }
 
-    public static void main(String[] args) throws Exception {
-        String processId = args[0];
-        String instanceExecId = args[1];
+    public void execute(String[] params) throws Exception{
+
+        CommandLine commandLine = getCommandLine(params, PARAMS_STRUCTURE);
+
+        String processId = commandLine.getOptionValue("process-id");
+        String instanceExecId = commandLine.getOptionValue("instance-exec-id");
+        prepareMigrate(processId,instanceExecId);
+
+    }
+    private void prepareMigrate(String processId, String instanceExecId) throws Exception {
+
         String table = "account";
         String sourceDb = "sourcedb";
         String destDb= "destdb";
         String bdreTechPartition="instanceexecid bigint";
-        Connection conn = getHiveJDBCConnection(sourceDb);
+        String sourceHiveConnection="jdbc:hive2://quickstart.cloudera:10000";
+        String destHiveConnection="jdbc:hive2://quickstart.cloudera:10000";
+        Connection conn = getHiveJDBCConnection(sourceDb,sourceHiveConnection);
         Statement st = conn.createStatement();
         List<String> sourcePartitionList = getCurrentSourcePartitionList(st, sourceDb, table);
 
@@ -52,7 +68,7 @@ public class MigrationPreprocessor {
 
         Set<String> modifiedBusinessPartitionSet = getChangedBusinessPartitionSet(sourcePartitionList, previousPartitionList);
 
-        List<String> sourceColumnList = getCurrentSourceColumnList(sourceDb, table);
+        List<String> sourceColumnList = getCurrentSourceColumnList(sourceDb, table, sourceHiveConnection);
 
         List<String> destColumnList = getDestColumnList(processId, table);
 
@@ -67,10 +83,10 @@ public class MigrationPreprocessor {
         //creating the source stage table
         formStageAndDestTableDDLs(st, sourceColumnList, sourceDb, destDb, table, bdreTechPartition);
 
-        if(checkIfDestTableExists(destDb,table))
+        if(checkIfDestTableExists(destDb,table,destHiveConnection))
             alterDestTable(st,addedColumnList,destDb,table);
         else
-            execDestTableDDL(st);
+            execDestTableDDL(destDb,destHiveConnection);
 
         String filterCondition=formFilterCondition(modifiedBusinessPartitionSet,sourcePartitionColumns);
         LOGGER.debug("filterCondition = " + filterCondition);
@@ -78,7 +94,7 @@ public class MigrationPreprocessor {
         conn.close();
     }
 
-    public static List<String> getCurrentSourcePartitionList(Statement st, String sourceDb, String table) throws Exception {
+    private static List<String> getCurrentSourcePartitionList(Statement st, String sourceDb, String table) throws Exception {
         ResultSet rsPartitions = st.executeQuery("show partitions " + sourceDb + "." + table);
         List<String> sourcePartitionList = new ArrayList<>();
         while (rsPartitions.next()) {
@@ -88,7 +104,7 @@ public class MigrationPreprocessor {
         return sourcePartitionList;
     }
 
-    public static List<String> getLastSourcePartitionList(String processId, String table) {
+    private static List<String> getLastSourcePartitionList(String processId, String table) {
         //obtaining the partition data corresponding to the previous execution for comparison with current partition data
         ProcessLog processLog = new ProcessLog();
         List<ProcessLogInfo> partitionLogInfos = processLog.listLastInstanceRef(Integer.parseInt(processId), table + " partition");
@@ -99,7 +115,7 @@ public class MigrationPreprocessor {
         return previousPartitionList;
     }
 
-    public static Set<String> getChangedBusinessPartitionSet(List<String> sourcePartitionList, List<String> previousPartitionList) {
+    private static Set<String> getChangedBusinessPartitionSet(List<String> sourcePartitionList, List<String> previousPartitionList) {
         List<String> deletedPartitionList = new ArrayList<>(previousPartitionList);
         deletedPartitionList.removeAll(sourcePartitionList);
         List<String> addedPartitionList = new ArrayList<>(sourcePartitionList);
@@ -124,9 +140,9 @@ public class MigrationPreprocessor {
         return businessPartitionSet;
     }
 
-    public static List<String> getCurrentSourceColumnList(String sourceDb, String table) throws Exception {
+    private static List<String> getCurrentSourceColumnList(String sourceDb, String table, String sourceHiveConnection) throws Exception {
         List<String> sourceColumnList = new ArrayList<>();
-        DatabaseMetaData metaData = getHiveJDBCConnection(sourceDb).getMetaData();
+        DatabaseMetaData metaData = getHiveJDBCConnection(sourceDb,sourceHiveConnection).getMetaData();
         ResultSet rsColumns = metaData.getColumns(null, sourceDb, table, null);
         while (rsColumns.next()) {
             String columnName = rsColumns.getString("COLUMN_NAME");
@@ -137,7 +153,7 @@ public class MigrationPreprocessor {
         return sourceColumnList;
     }
 
-    public static List<String> getDestColumnList(String processId, String table) {
+    private static List<String> getDestColumnList(String processId, String table) {
         //obtaining the column data corresponding to the previous execution for comparison with current partition data
         ProcessLog processLog = new ProcessLog();
         List<ProcessLogInfo> columnLogInfos = processLog.listLastInstanceRef(Integer.parseInt(processId), table + " column");
@@ -148,7 +164,7 @@ public class MigrationPreprocessor {
         return previousColumnList;
     }
 
-    public static List<String> getNewRegularColumnsAtSourceList(List<String> sourceColumnList, List<String> previousColumnList) {
+    private static List<String> getNewRegularColumnsAtSourceList(List<String> sourceColumnList, List<String> previousColumnList) {
         List<String> addedColumnList = new ArrayList<>(sourceColumnList);
         addedColumnList.removeAll(previousColumnList);
 
@@ -158,7 +174,7 @@ public class MigrationPreprocessor {
         return addedColumnList;
     }
 
-    public static void logCurrentSourcePartitions(List<String> sourcePartitionList, String processId, String instanceExecId, String table) {
+    private static void logCurrentSourcePartitions(List<String> sourcePartitionList, String processId, String instanceExecId, String table) {
         ProcessLog processLog = new ProcessLog();
         List<ProcessLogInfo> partitionLogInfoList = new ArrayList<>();
         for (String sourcePartition : sourcePartitionList) {
@@ -174,7 +190,7 @@ public class MigrationPreprocessor {
         processLog.logList(partitionLogInfoList);
     }
 
-    public static void logCurrentSourceColumns(List<String> sourceColumnList, String processId, String instanceExecId, String table) {
+    private static void logCurrentSourceColumns(List<String> sourceColumnList, String processId, String instanceExecId, String table) {
         ProcessLog processLog = new ProcessLog();
         List<ProcessLogInfo> columnLogInfoList = new ArrayList<>();
         for (String sourceColumn : sourceColumnList) {
@@ -190,7 +206,7 @@ public class MigrationPreprocessor {
         processLog.logList(columnLogInfoList);
     }
 
-    public static void formStageAndDestTableDDLs(Statement st, List<String> sourceColumnList, String sourceDb, String destDb, String table, String bdreTechPartition) throws Exception {
+    private static void formStageAndDestTableDDLs(Statement st, List<String> sourceColumnList, String sourceDb, String destDb, String table, String bdreTechPartition) throws Exception {
         ResultSet rsPartitionList = st.executeQuery("desc account");
         int index = 0;
         StringBuffer partitionList = new StringBuffer("");
@@ -224,13 +240,13 @@ public class MigrationPreprocessor {
         rsPartitionList.close();
     }
 
-    public static void execStageTableDDL(Statement st,String sourceDb, String table) throws Exception{
+    private static void execStageTableDDL(Statement st,String sourceDb, String table) throws Exception{
         st.executeUpdate("drop table if exists " + sourceDb + "." + table + "_stg");
         st.executeUpdate(stgTableDDL);
     }
 
-    public static boolean checkIfDestTableExists(String destDb,String table) throws Exception{
-        Connection conn = getHiveJDBCConnection(destDb);
+    private static boolean checkIfDestTableExists(String destDb,String table, String destHiveConnection) throws Exception{
+        Connection conn = getHiveJDBCConnection(destDb,destHiveConnection);
         Statement st = conn.createStatement();
         ResultSet rsPartitions = st.executeQuery("show tables");
         boolean destTableExists=false;
@@ -246,7 +262,7 @@ public class MigrationPreprocessor {
         return destTableExists;
     }
 
-    public static void alterDestTable(Statement st, List<String> addedColumnList, String destDb,String table) throws Exception{
+    private static void alterDestTable(Statement st, List<String> addedColumnList, String destDb,String table) throws Exception{
         StringBuffer addedColumnsWithDatatypes = new StringBuffer("");
         for(String addedColumn:addedColumnList){
             addedColumnsWithDatatypes.append(addedColumn+",");
@@ -261,12 +277,16 @@ public class MigrationPreprocessor {
             LOGGER.debug("No additional columns have been found");
         }
     }
-    public static void execDestTableDDL(Statement st) throws Exception{
+    private static void execDestTableDDL(String destDb,String destHiveConnection) throws Exception{
+        Connection conn = getHiveJDBCConnection(destDb,destHiveConnection);
+        Statement st = conn.createStatement();
         LOGGER.debug("Destination table not found. Hence creating one");
         st.executeUpdate(destTableDDL);
+        st.close();
+        conn.close();
     }
 
-    public static String formFilterCondition(Set<String> modifiedBusinessPartitionSet, String sourcePartitionColumns){
+    private static String formFilterCondition(Set<String> modifiedBusinessPartitionSet, String sourcePartitionColumns){
         StringBuffer filterCondition=new StringBuffer();
         Map<String,String> partitionDataTypeMap = new HashMap<>();
         String[] partitionArray = sourcePartitionColumns.split(",");
