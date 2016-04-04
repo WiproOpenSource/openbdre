@@ -364,6 +364,7 @@
   <script>
   var app2 = angular.module('app2',[]);
   var created = 0;
+   var checkedTables = [];
   var wizard = null;
   wizard = $(document).ready(function() {
 
@@ -429,18 +430,44 @@
                                                        alert('table danger');
                                                    }
                                                });
-                                 var str;
-										 var x = document.getElementById("tabl");
-									 for( str in tables["Options"]){
-										 var option = document.createElement("option");
-										 option.text = tables["Options"][str].Value;
-										 option.value = tables["Options"][str].Value;
-										 x.appendChild(option);
-									 }
+                                 var a;
+										 var objDiv = document.getElementById("srctables");
+
+                                        for(a in tables["Options"]){
+                                                var radioItem1 = document.createElement("input");
+                                                radioItem1.type = "checkbox";
+                                                radioItem1.name = "radioGrp";
+                                                radioItem1.id = "radioDiv";
+                                                radioItem1.value = tables["Options"][a].Value;
+
+                                                var objTextNode1 = document.createTextNode(tables["Options"][a].Value);
+
+                                                var objLabel = document.createElement("label");
+                                                objLabel.htmlFor = radioItem1.id;
+                                                objLabel.appendChild(radioItem1);
+                                                objLabel.appendChild(objTextNode1);
+
+                                                objDiv.appendChild(objLabel);
+                                        }
 				 }
 
 				 if(currentIndex == 3 && priorIndex == 2) {
-				 formIntoMap('tables_','tablesForm');
+                     var inputs = document.forms["tablesForm"].elements;
+                     var cbs = [];
+
+                     var i;
+
+                     for ( i = 0; i < inputs.length; i++) {
+                       if (inputs[i].type == "checkbox") {
+                         cbs.push(inputs[i]);
+                         if (inputs[i].checked) {
+                           checkedTables.push(inputs[i].value);
+                            }
+                         }
+                       }
+                     var nbCbs = cbs.length;
+                     var nbChecked = checkedTables.length;
+
 				 srcTableVar();
 				 }
 
@@ -476,9 +503,10 @@
 				destDBVar();
 
             	$('#createjobs').on('click', function(e) {
+            	    console.log("checked tables"+checkedTables);
                         $.ajax({
                             type: "POST",
-                            url: "/mdrest/hivemigration/createjobs/",
+                            url: "/mdrest/hivemigration/createjobs/"+checkedTables,
                             data: jQuery.param(map),
                             success: function(data) {
                                 if(data.Result == "OK") {
@@ -537,8 +565,6 @@
                  var app = angular.module('myApp', []);
                   app.controller('myCtrl', function($scope) {
                       $scope.srcEnvs= getGenConfigMap('cluster');
-
-
 
                       $scope.formatMap=null;
                       $scope.busDomains = {};
@@ -637,20 +663,9 @@
 			<h3>Tables</h3>
 			<section>
 			  <form class="form-horizontal" role="form" id="tablesForm">
-                     <div class="form-group">
-			        <label class="control-label col-sm-2" for="instexecId">Technical Partition:</label>
-                        <div class="col-sm-10">
-                            <input type="text" class="form-control"  id="instexecId" name="instexecId"  value="instanceExecId" required>
-                        </div>
-                        </div>
-                  <div id="tablesDiv">
-                     <div class="form-group">
-                        <label class="control-label col-sm-2" for="tabl">Select Table:</label>
-                          <div class="col-sm-10">
-                            <select class="form-control" id="tabl" name="tabl" >
-                            </select>
+                          <div id ="srctables" class="col-sm-10">
+
                           </div>
-                      </div>
 
               </form>
 
@@ -659,6 +674,12 @@
              <h3>Destination Environment</h3>
              <section>
              <form class="form-horizontal" role="form" id="destEnvForm">
+              <div class="form-group">
+             			        <label class="control-label col-sm-2" for="instexecId">Technical Partition:</label>
+                                     <div class="col-sm-10">
+                                         <input type="text" class="form-control"  id="instexecId" name="instexecId"  value="instanceExecId" required>
+                                     </div>
+                                     </div>
 				   <div id="fileFormatDiv" ng-controller="myCtrl">
 								 <div class="form-group">
 									 <label class="control-label col-sm-2" for="destEnv">Select Destination Environment:</label>
