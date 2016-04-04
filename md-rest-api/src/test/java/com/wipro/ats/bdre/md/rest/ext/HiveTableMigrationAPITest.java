@@ -31,7 +31,8 @@ public class HiveTableMigrationAPITest {
         HiveTableMigrationAPI hiveTableMigrationAPI = new HiveTableMigrationAPI();
         Map<String,String> map = new TreeMap<String, String>();
         map.put("srcDB_default","default");
-        RestWrapperOptions restWrapperOptions = hiveTableMigrationAPI.getTableList(map);
+        RestWrapperOptions restWrapperOptions = null;
+       // hiveTableMigrationAPI.getTableList(map);
         LOGGER.info(restWrapperOptions.getOptions().toString());
     }
 }

@@ -39,6 +39,7 @@
     		<script src="../js/jquery.jtable.js" type="text/javascript"></script>
     		<script src="../js/angular.min.js" type="text/javascript"></script>
     		<link href="../css/jtables-bdre.css" rel="stylesheet" type="text/css" />
+
 	<script >
 		function fetchPipelineInfo(pid){
 			location.href = '<c:url value="/pages/lineage.page?pid="/>' + pid;
@@ -325,43 +326,154 @@
   }
   </script>
 
+     <script>
+     var databases;
+     var srcEnvi;
+     var srcDatabase;
+     var srcTable;
+     var destEnvi;
+     var destDatabase;
+     function srcEnvVar(){
+          srcEnvi = $('#srcEnv').val();
+          $('#showSrcEnv').val(srcEnvi);
+          }
+     function srcDBVar(){
+               srcDatabase = $('#srcDB').val();
+               $('#showSrcDB').val(srcDatabase);
+               }
+     function srcTableVar(){
+               srcTable = $('#tabl').val();
+               $('#showSrcTables').val(srcTable);
+               }
+     function destEnvVar(){
+               destEnvi = $('#destEnv').val();
+               $('#showDestEnv').val(destEnvi);
+               }
+    function destDBVar(){
+              destDatabase = $('#destDB').val();
+              $('#showDestDB').val(destDatabase);
+              }
+
+    function dbs(){
+
+    }
+
+
+
+         </script>
   <script>
+  var app2 = angular.module('app2',[]);
   var created = 0;
   var wizard = null;
   wizard = $(document).ready(function() {
+
   	$("#bdre-data-migration").steps({
   		headerTag: "h3",
   		bodyTag: "section",
   		transitionEffect: "slideLeft",
   		stepsOrientation: "vertical",
   		enableCancelButton: true,
+
   		onStepChanging: function(event, currentIndex, newIndex) {
   			console.log(currentIndex + 'current ' + newIndex );
 
   			return true;
         },
   		onStepChanged: function(event, currentIndex, priorIndex) {
-
-
   			console.log(currentIndex + " " + priorIndex);
-  			if(currentIndex == 1 && priorIndex == 0) {
-				 formIntoMap('srcEnv_', 'processDetailsForm');
-				 }
 
+  			if(currentIndex == 1 && priorIndex == 0) {
+  			 formIntoMap('srcEnv_', 'processDetailsForm');
+            srcEnvVar();
+                        console.log(srcEnvi);
+                        var urlEnv = "/mdrest/hivemigration/databases/"+srcEnvi;
+                        console.log("url:"+urlEnv);
+                              var  databases=[];
+                                $.ajax({
+                                     url: urlEnv,
+                                         type: 'GET',
+                                         dataType: 'json',
+                                         async: false,
+                                         success: function (data) {
+                                         databases=data;
+                                         },
+                                         error: function () {
+                                             alert(' src database danger');
+                                         }
+
+                                     });
+
+                                     var str;
+                                         var x = document.getElementById("srcDB");
+                                     for( str in databases["Options"]){
+                                         var option = document.createElement("option");
+                                         option.text = databases["Options"][str].Value;
+            							 option.value = databases["Options"][str].Value;
+                                         x.appendChild(option);
+                                     }
+
+            }
 				 if(currentIndex == 2 && priorIndex == 1) {
 				 formIntoMap('srcDB_', 'srcDBForm');
+				 srcDBVar();
+				   				var tables= [];
+                                          $.ajax({
+                                               url: '/mdrest/hivemigration/tables/'+srcEnvi+"/"+srcDatabase,
+                                                   type: 'GET',
+                                                   dataType: 'json',
+                                                   async: false,
+                                                   success: function (data) {
+                                                      tables = data;
+                                                   },
+                                                   error: function () {
+                                                       alert('table danger');
+                                                   }
+                                               });
+                                 var str;
+										 var x = document.getElementById("tabl");
+									 for( str in tables["Options"]){
+										 var option = document.createElement("option");
+										 option.text = tables["Options"][str].Value;
+										 option.value = tables["Options"][str].Value;
+										 x.appendChild(option);
+									 }
 				 }
 
 				 if(currentIndex == 3 && priorIndex == 2) {
 				 formIntoMap('tables_','tablesForm');
+				 srcTableVar();
 				 }
 
 				 if(currentIndex == 4 && priorIndex == 3) {
                  formIntoMap('destEnv_','destEnvForm');
+                 destEnvVar();
+
+                 		 var destdatabases= [];
+						  $.ajax({
+							   url: '/mdrest/hivemigration/destdatabases/'+destEnvi,
+								   type: 'GET',
+								   dataType: 'json',
+								   async: false,
+								   success: function (data) {
+									   destdatabases = data;
+								   },
+								   error: function () {
+									   alert('dest database danger');
+								   }
+							   });
+						 var str;
+                             var x = document.getElementById("destDB");
+                         for( str in destdatabases["Options"]){
+                             var option = document.createElement("option");
+                             option.text = destdatabases["Options"][str].Value;
+                             option.value = destdatabases["Options"][str].Value;
+                             x.appendChild(option);
+                         }
                  }
 
 				if(currentIndex == 5 && priorIndex == 4) {
 				formIntoMap('destDB_', 'destDBForm');
+				destDBVar();
 
             	$('#createjobs').on('click', function(e) {
                         $.ajax({
@@ -420,51 +532,14 @@
 
   </script>
 
-  		<script>
-                  var app = angular.module('myApp', []);
+        <script>
+
+                 var app = angular.module('myApp', []);
                   app.controller('myCtrl', function($scope) {
-                      $scope.srcEnvs= getGenConfigMap('src_Env');
+                      $scope.srcEnvs= getGenConfigMap('cluster');
 
-                      $scope.databases= {};
-                       $.ajax({
-                            url: '/mdrest/hivemigration/databases/',
-                                type: 'GET',
-                                dataType: 'json',
-                                async: false,
-                                success: function (data) {
-                                    $scope.databases = data;
-                                },
-                                error: function () {
-                                    alert(' src database danger');
-                                }
-                            });
 
-                       $scope.tables= {};
-                         $.ajax({
-                              url: '/mdrest/hivemigration/tables/',
-                                  type: 'GET',
-                                  dataType: 'json',
-                                  async: false,
-                                  success: function (data) {
-                                      $scope.tables = data;
-                                  },
-                                  error: function () {
-                                      alert('table danger');
-                                  }
-                              });
-                       $scope.destdatabases= {};
-                         $.ajax({
-                              url: '/mdrest/hivemigration/destdatabases/',
-                                  type: 'GET',
-                                  dataType: 'json',
-                                  async: false,
-                                  success: function (data) {
-                                      $scope.destdatabases = data;
-                                  },
-                                  error: function () {
-                                      alert('dest database danger');
-                                  }
-                              });
+
                       $scope.formatMap=null;
                       $scope.busDomains = {};
                       $.ajax({
@@ -483,27 +558,27 @@
           </script>
 
         <script>
-                       function formIntoMap(typeProp, typeOf) {
-                       	var x = '';
-                       	x = document.getElementById(typeOf);
-                       	console.log(x);
-                       	var text = "";
-                       	var i;
-                       	for(i = 0; i < x.length; i++) {
-                       		map[typeProp + x.elements[i].name] = x.elements[i].value;
-                       	}
-                       }
+               function formIntoMap(typeProp, typeOf) {
+                var x = '';
+                x = document.getElementById(typeOf);
+                console.log(x);
+                var text = "";
+                var i;
+                for(i = 0; i < x.length; i++) {
+                    map[typeProp + x.elements[i].name] = x.elements[i].value;
+                }
+               }
         </script>
 
     </head>
 
 
-    <body ng-app="myApp" ng-controller="myCtrl">
-        <div id="bdre-data-migration" ng-controller="myCtrl">
+    <body ng-app="myApp">
+        <div id="bdre-data-migration" >
                 <h3>Source Environment</h3>
                             <section>
                               <form class="form-horizontal" role="form" id="processDetailsForm">
-                                  <div id="processDetails">
+                                  <div id="processDetails" ng-controller="myCtrl">
 
                                             <!-- btn-group -->
                                             <div id="process">
@@ -511,6 +586,23 @@
                                                             <label class="control-label col-sm-2" for="processName">Process Name:</label>
                                                             <div class="col-sm-10">
                                                                 <input type="text" class="form-control"  id="processName" name="processName" placeholder="Enter Process Name" value="" required>
+                                                            </div>
+                                                        </div>
+
+                                                   <div id="processDes">
+                                                    <div class="form-group">
+                                                                    <label class="control-label col-sm-2" for="processDesc">Process Description:</label>
+                                                                    <div class="col-sm-10">
+                                                                        <input type="text" class="form-control"  id="processDesc" name="processDesc" placeholder="Enter Process Description" value="" required>
+                                                                    </div>
+                                                                </div>
+                                                    <div class="form-group">
+                                                            <label class="control-label col-sm-2" for="busDomainId">Bus Domain Id:</label>
+                                                            <div class="col-sm-10">
+                                                                <select class="form-control" id="busDomainId" name="busDomainId">
+                                                                    <option ng-repeat="busDomain in busDomains.Options" value="{{busDomain.Value}}" name="busDomainId">{{busDomain.DisplayText}}</option>
+
+                                                                </select>
                                                             </div>
                                                         </div>
                                                 <div class="form-group">
@@ -529,13 +621,13 @@
                             </section>
                <h3>Source Database</h3>
               <section>
+
                         <form class="form-horizontal" role="form" id="srcDBForm">
                             <div id="srcDBDiv">
                                <div class="form-group">
                                   <label class="control-label col-sm-2" for="srcDB">Select a source database:</label>
                                     <div class="col-sm-10">
                                       <select class="form-control" id="srcDB" name="srcDB" >
-                                         <option ng-repeat="srcDB in databases.Options" value="{{srcDB.Value}}" name="srcDB">{{srcDB.DisplayText}}</option>
                                       </select>
                                     </div>
                                 </div>
@@ -556,7 +648,6 @@
                         <label class="control-label col-sm-2" for="tabl">Select Table:</label>
                           <div class="col-sm-10">
                             <select class="form-control" id="tabl" name="tabl" >
-                               <option ng-repeat="tabl in tables.Options" value="{{tabl.Value}}" name="tabl">{{tabl.DisplayText}}</option>
                             </select>
                           </div>
                       </div>
@@ -568,7 +659,7 @@
              <h3>Destination Environment</h3>
              <section>
              <form class="form-horizontal" role="form" id="destEnvForm">
-				   <div id="fileFormatDiv">
+				   <div id="fileFormatDiv" ng-controller="myCtrl">
 								 <div class="form-group">
 									 <label class="control-label col-sm-2" for="destEnv">Select Destination Environment:</label>
 									 <div class="col-sm-10">
@@ -588,7 +679,6 @@
                                       <label class="control-label col-sm-2" for="destDB">Select a destination database:</label>
                                         <div class="col-sm-10">
                                           <select class="form-control" id="destDB" name="destDB" >
-                                             <option ng-repeat="destDB in destdatabases.Options" value="{{destDB.Value}}" name="destDB">{{destDB.DisplayText}}</option>
                                           </select>
                                         </div>
                                     </div>
@@ -597,14 +687,58 @@
                   </section>
             <h3>Confirm</h3>
              <section>
+
+
+               	<div class="form-group">
+                    <label class="control-label col-sm-4" for="showSrcEnv">Source Environment:</label>
+                    <div class="col-sm-4">
+                        <input type="text" class="form-control"  id="showSrcEnv" name="showSrcEnv"  disabled="disabled" >
+                    </div>
+                </div>
+                </br>
+
+
+                <div class="form-group">
+                    <label class="control-label col-sm-4" for="showSrcDB">Source Database:</label>
+                    <div class="col-sm-4">
+                        <input type="text" class="form-control"  id="showSrcDB" name="showSrcDB"  disabled="disabled" >
+                    </div>
+                </div>
+                </br>
+
+               <div class="form-group">
+                    <label class="control-label col-sm-4" for="showSrcTables">Source Table:</label>
+                    <div class="col-sm-4">
+                        <input type="text" class="form-control"  id="showSrcTables" name="showSrcTables"  disabled="disabled" >
+                    </div>
+                </div>
+                </br>
+
+                <div class="form-group">
+                    <label class="control-label col-sm-4" for="showDestEnv">Destination Environment:</label>
+                    <div class="col-sm-4">
+                        <input type="text" class="form-control"  id="showDestEnv" name="showDestEnv"  disabled="disabled" >
+                    </div>
+                </div>
+                </br>
+
+                 <div class="form-group">
+                    <label class="control-label col-sm-4" for="showDestDB">Destination Database:</label>
+                    <div class="col-sm-4">
+                        <input type="text" class="form-control"  id="showDestDB" name="showDestDB"  disabled="disabled" >
+                    </div>
+                </div>
+                </br>
+
                <div id="Process">
-               		<button id="createjobs" type="button" class="btn btn-primary btn-lg">Create Jobs</button>
-               	</div>
-             </section>
+                    <button id="createjobs" type="button" class="btn btn-primary btn-lg">Create Jobs</button>
+                </div>
+
 
              <div style="display:none" id="div-dialog-warning">
              			<p><span class="ui-icon ui-icon-alert" style="float:left;"></span></p>
              		</div>
 
     </body>
+
 </html>

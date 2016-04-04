@@ -14,11 +14,9 @@ import com.wipro.ats.bdre.md.rest.util.DateConverter;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import java.security.Principal;
 import java.sql.*;
@@ -34,7 +32,9 @@ import java.util.TreeMap;
 @RequestMapping("/hivemigration")
 public class HiveTableMigrationAPI {
 
+
     private static final Logger LOGGER = Logger.getLogger(HiveTableMigrationAPI.class);
+
     private static Connection connection;
     private static String driverName = "org.apache.hive.jdbc.HiveDriver";
 
@@ -42,70 +42,15 @@ public class HiveTableMigrationAPI {
     @Autowired
     private ProcessDAO processDAO;
     //Fetching all the databases from hive of source cluster
-    @RequestMapping(value = "/databases", method = {RequestMethod.GET})
+    @RequestMapping(value = "/databases/{srcEnv:.+}", method = {RequestMethod.GET})
     @ResponseBody
-    public RestWrapperOptions getDBList(@RequestParam Map<String, String> map) {
-        //parameters: @RequestParam("srcEnv") String se ,HttpServletRequest request,@RequestParam Map<String, String> map,Principal principal
+    public RestWrapperOptions getDBList(@PathVariable("srcEnv") String sourceEnv) {
+
         RestWrapperOptions restWrapperOptions = null;
-        LOGGER.info(map.size()+": map size");
-        String srcEnv = null;
-        for (String string : map.keySet()) {
-            LOGGER.info("In databases, String is" + string);
-            if (string.startsWith("srcEnv_srcEnv")) {
-                srcEnv = map.get(string);
-                LOGGER.info("source Environment is"+srcEnv);
-            }
-        }
-
-        /*srcEnv = request.getParameter("srcEnv");
-        LOGGER.info("Request source Environment is"+srcEnv);
-
-        LOGGER.info("request param src env "+se);*/
+        LOGGER.info(sourceEnv + "srcEnv");
         try {
             Class.forName(driverName);
-            connection=  DriverManager.getConnection("jdbc:hive2://192.168.56.102:10000/default", "", "");
-            ResultSet rs = connection.createStatement().executeQuery("SHOW DATABASES");
-
-            List<String> databases = new ArrayList<String>();
-            while (rs.next()) {
-                String dbName = rs.getString(1);
-                databases.add(dbName.toUpperCase());
-            }
-            List<RestWrapperOptions.Option> options = new ArrayList<RestWrapperOptions.Option>();
-            for(String database : databases)
-            {
-                RestWrapperOptions.Option option = new RestWrapperOptions.Option(database,database);
-                options.add(option);
-            }
-            restWrapperOptions = new RestWrapperOptions(options, RestWrapperOptions.OK);
-        } catch (Exception e) {
-            LOGGER.error("error occured :" + e);
-            restWrapperOptions = new RestWrapperOptions(e.getMessage(), RestWrapper.ERROR);
-        }
-        return restWrapperOptions;
-    }
-
-    //Fetching all the databases from hive of source cluster
-    @RequestMapping(value = "/destdatabases", method = {RequestMethod.GET})
-    @ResponseBody
-    public RestWrapperOptions getdestDBList() {
-        RestWrapperOptions restWrapperOptions = null;
-
-        /*LOGGER.info("map size is:"+map.size());
-        String destEnv = null;
-        for (String string : map.keySet()) {
-            LOGGER.info("String is" + string);
-            if (map.get(string) == null || ("").equals(map.get(string))) {
-                continue;
-            }
-            if (string.startsWith("destEnv_")) {
-                destEnv = map.get(string);
-            }
-        }
-        LOGGER.info("source Environment is"+destEnv);*/
-        try {
-            Class.forName(driverName);
-            connection=  DriverManager.getConnection("jdbc:hive2://192.168.56.102:10000/default", "", "");
+            connection=  DriverManager.getConnection("jdbc:hive2://"+sourceEnv+"/default", "", "");
             ResultSet rs = connection.createStatement().executeQuery("SHOW DATABASES");
 
             List<String> databases = new ArrayList<String>();
@@ -128,7 +73,70 @@ public class HiveTableMigrationAPI {
     }
 
 
-    protected static Connection getHiveJDBCConnection(String dbName) throws SQLException {
+    //Fetching all the databases from hive of dest cluster
+    @RequestMapping(value = "/destdatabases/{destEnv:.+}", method = {RequestMethod.GET})
+    @ResponseBody
+    public RestWrapperOptions getdestDBList(@PathVariable("destEnv") String destEnv) {
+        LOGGER.info(destEnv+"destENV");
+        RestWrapperOptions restWrapperOptions = null;
+        try {
+            Class.forName(driverName);
+            connection=  DriverManager.getConnection("jdbc:hive2://"+destEnv+"/default", "", "");
+            ResultSet rs = connection.createStatement().executeQuery("SHOW DATABASES");
+
+            List<String> databases = new ArrayList<String>();
+            while (rs.next()) {
+                String dbName = rs.getString(1);
+                databases.add(dbName.toUpperCase());
+            }
+            List<RestWrapperOptions.Option> options = new ArrayList<RestWrapperOptions.Option>();
+            for(String database : databases)
+            {
+                RestWrapperOptions.Option option = new RestWrapperOptions.Option(database,database);
+                options.add(option);
+            }
+            restWrapperOptions = new RestWrapperOptions(options, RestWrapperOptions.OK);
+        } catch (Exception e) {
+            LOGGER.error("error occured :" + e);
+            restWrapperOptions = new RestWrapperOptions(e.getMessage(), RestWrapper.ERROR);
+        }
+        return restWrapperOptions;
+    }
+
+
+    //Fetching all the databases from hive of dest cluster
+    @RequestMapping(value = "/tables/{srcEnv}/{srcDB}", method = {RequestMethod.GET})
+    @ResponseBody
+    public RestWrapperOptions getTablesList(@PathVariable("srcEnv") String srcEnv,@PathVariable("srcDB") String srcDB) {
+        RestWrapperOptions restWrapperOptions = null;
+        LOGGER.info(srcEnv + "srcEnvi");
+        LOGGER.info(srcDB+"srcDB");
+        try {
+            Class.forName(driverName);
+            connection=  DriverManager.getConnection("jdbc:hive2://"+srcEnv+"/"+srcDB.toLowerCase(), "", "");
+            ResultSet rs = connection.createStatement().executeQuery("SHOW TABLES");
+
+            List<String> databases = new ArrayList<String>();
+            while (rs.next()) {
+                String dbName = rs.getString(1);
+                databases.add(dbName.toUpperCase());
+            }
+            List<RestWrapperOptions.Option> options = new ArrayList<RestWrapperOptions.Option>();
+            for(String database : databases)
+            {
+                RestWrapperOptions.Option option = new RestWrapperOptions.Option(database,database);
+                options.add(option);
+            }
+            restWrapperOptions = new RestWrapperOptions(options, RestWrapperOptions.OK);
+        } catch (Exception e) {
+            LOGGER.error("error occured :" + e);
+            restWrapperOptions = new RestWrapperOptions(e.getMessage(), RestWrapper.ERROR);
+        }
+        return restWrapperOptions;
+    }
+
+
+   /* protected static Connection getHiveJDBCConnection(String dbName) throws SQLException {
         if (connection == null || connection.isClosed()) {
             try {
                 Class.forName(IMConstant.HIVE_DRIVER_NAME);
@@ -200,12 +208,12 @@ public class HiveTableMigrationAPI {
             restWrapperOptions = new RestWrapperOptions(options, RestWrapperOptions.OK);
         } catch (Exception e) {
             LOGGER.error("error occured :" + e);
-            restWrapperOptions = new RestWrapperOptions(e.getMessage(), RestWrapper.ERROR);
+            restWrapperOptions = new RestWrapperOptions(e.getMessage(), RestWrapperOptions.ERROR);
         }
         return restWrapperOptions;
     }
 
-
+*/
     @RequestMapping(value = "/createjobs", method = RequestMethod.POST)
     @ResponseBody public
     RestWrapper createJob(@RequestParam Map<String, String> map, Principal principal) {
@@ -213,6 +221,8 @@ public class HiveTableMigrationAPI {
         RestWrapper restWrapper = null;
 
         String processName = null;
+        String processDesc = null;
+        Integer busDomainID = null;
         Integer tablesSize = 0;
         List<Properties> propertiesList = new ArrayList<Properties>();
         com.wipro.ats.bdre.md.dao.jpa.Properties jpaProperties = null;
@@ -237,6 +247,14 @@ public class HiveTableMigrationAPI {
                 LOGGER.debug("srcEnv_processName" + map.get(string));
                 processName = map.get(string);
             }
+            else if (string.startsWith("srcEnv_processDesc")) {
+                LOGGER.debug("srcEnv_processDescription" + map.get(string));
+                processDesc = map.get(string);
+            }
+            else if (string.startsWith("srcEnv_busDomainId")) {
+                LOGGER.debug("srcEnv_busDomainID" + map.get(string));
+                busDomainID = new Integer(map.get(string));
+            }
             else if(string.startsWith("srcDB_")){
                 jpaProperties = Dao2TableUtil.buildJPAProperties("hiveMigration", "src_db.", map.get(string), "source database");
                 propertiesList.add(jpaProperties);
@@ -260,7 +278,7 @@ public class HiveTableMigrationAPI {
         }
 
         List<com.wipro.ats.bdre.md.dao.jpa.Process> childProcesses=new ArrayList<com.wipro.ats.bdre.md.dao.jpa.Process>();
-        com.wipro.ats.bdre.md.dao.jpa.Process parentProcess = Dao2TableUtil.buildJPAProcess(31, processName, "parent description of c2c", 1,1);
+        com.wipro.ats.bdre.md.dao.jpa.Process parentProcess = Dao2TableUtil.buildJPAProcess(31, processName,processDesc, 1,busDomainID);
 
         com.wipro.ats.bdre.md.dao.jpa.Process preprocessingProcess = new com.wipro.ats.bdre.md.dao.jpa.Process();
         com.wipro.ats.bdre.md.dao.jpa.Process sourcestageloadProcess = new com.wipro.ats.bdre.md.dao.jpa.Process();
@@ -270,11 +288,11 @@ public class HiveTableMigrationAPI {
 
 
 
-            preprocessingProcess = Dao2TableUtil.buildJPAProcess(32,"preprocessing process for "+processName+":table","preprocessing:table",1,1);
-            sourcestageloadProcess = Dao2TableUtil.buildJPAProcess(33,"sourcestageload process for "+processName+":table","sourcestageload:table",1,1);
-            sourcetodeststagecopyProcess = Dao2TableUtil.buildJPAProcess(34,"sourcetodeststagecopy process for "+processName+":table","sourcetodeststagecopy:table",1,1);
-            desttableloadProcess = Dao2TableUtil.buildJPAProcess(35,"desttableload process for "+processName+":table","desttableload:table",1,1);
-            registerpartitionProcess = Dao2TableUtil.buildJPAProcess(36,"registerpartition process for "+processName+":table","registerpartition:table",1,1);
+            preprocessingProcess = Dao2TableUtil.buildJPAProcess(32,"preprocessing process for "+processName+":table","preprocessing:table",1,busDomainID);
+            sourcestageloadProcess = Dao2TableUtil.buildJPAProcess(33,"sourcestageload process for "+processName+":table","sourcestageload:table",1,busDomainID);
+            sourcetodeststagecopyProcess = Dao2TableUtil.buildJPAProcess(34,"sourcetodeststagecopy process for "+processName+":table","sourcetodeststagecopy:table",1,busDomainID);
+            desttableloadProcess = Dao2TableUtil.buildJPAProcess(35,"desttableload process for "+processName+":table","desttableload:table",1,busDomainID);
+            registerpartitionProcess = Dao2TableUtil.buildJPAProcess(36,"registerpartition process for "+processName+":table","registerpartition:table",1,busDomainID);
             childProcesses.add(preprocessingProcess);
             childProcesses.add(sourcestageloadProcess);
             childProcesses.add(sourcetodeststagecopyProcess);
