@@ -894,6 +894,20 @@
                                      },
 
                                 },
+
+
+                                SLAMonitoring: {
+                                    title: 'SLA Monitoring',
+                                    width: '10%',
+                                    sorting: false,
+                                    create: false,
+                                    edit: false,
+                                    display: function(data) {
+
+                                     return '<span class="label label-primary" onclick="goToSLAMonitoringPage(' + data.record.processId + ')">SLA Monitoring</span> ';
+                                     },
+
+                                },
                                 EditGraphically: {
                                     title: 'Edit Graphically',
                                     sorting: false,
@@ -985,7 +999,12 @@
 
                      }
 
+                     function goToSLAMonitoringPage(pid)
+                                          {
+                                             console.log(pid);
+                                             location.href = '<c:url value="/pages/sla.page?processId="/>' + pid;
 
+                                          }
                 </script>
                 <%--  --%>
                     <script>
