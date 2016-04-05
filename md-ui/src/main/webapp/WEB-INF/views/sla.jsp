@@ -53,10 +53,10 @@ var jsSLAMonitoringObjectList=[];
 String processId=request.getParameter("processId");
 %>
 <div style="text-align: center;">
-<h2>Execution Time graph of sub processes of process id <%=processId %><h2>
+<h2>Execution Time graph of sub processes of process <%=processId %><h2>
 </div>
 <div>
-<script src="//d3js.org/d3.v3.min.js"></script>
+<script src="../js/d3.min.js"></script>
 <script>
 var margin = {top: 20, right: 40, bottom: 30, left: 200},
     width = 1800 - margin.left - margin.right,
@@ -196,4 +196,4 @@ function SLAMonitoring(pid)
 </script>
 </div>
 <hr  style="width:80%">
-<center><b>SubProcessIDs --> </b></center>
+<center><b>SubprocessIDs --> </b></center>
