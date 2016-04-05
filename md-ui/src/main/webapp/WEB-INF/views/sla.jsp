@@ -52,56 +52,14 @@ var jsSLAMonitoringObjectList=[];
 <%
 String processId=request.getParameter("processId");
 %>
-<script>
-SLAMonitoring("<%=processId %>");
-
-function jsSLAMonitoringObject(processId, currentExecutionTime, averageExecutionTime, sLATime) {
-                     this.processId = processId;
-                     this.currentExecutionTime = currentExecutionTime;
-                     this.averageExecutionTime = averageExecutionTime;
-                     this.sLATime = sLATime;
-                 }
-
-function SLAMonitoring(pid)
-                     {
-                     $.ajax({
-                                   url: '/mdrest/process/SLAMonitoring/' + pid,
-                                    type: 'GET',
-                                    dataType: 'json',
-                                     success: function(data) {
-                                     if (data.Result == "OK") {
-                                     console.log(data);
-                                   jsSLAMonitoringObjectArrayList(data);
-                                  }
-                               if (data.Result == "ERROR")
-                                 alert(data.Message);
-                            },
-                             error: function() {
-                             alert('Error in SLAMonitoring');
-                         }
-                          });
-                     }
-
-
-  function jsSLAMonitoringObjectArrayList(data){
-  for(var i=0;i<data.Record.length;i++)
-  {
-  var obj=data.Record[i];
-  var slaBean=new jsSLAMonitoringObject(obj.processId,obj.currentExecutionTime,obj.averageExecutionTime,obj.sLATime);
-            jsSLAMonitoringObjectList.push(slaBean);
-
-  }
-  draw(jsSLAMonitoringObjectList);
-  }
-
-
-</script>
-
+<div style="text-align: center;">
+<h2>Execution Time graph of sub processes of process <%=processId %><h2>
+</div>
 <div>
-<script src="//d3js.org/d3.v3.min.js"></script>
+<script src="../js/d3.min.js"></script>
 <script>
 var margin = {top: 20, right: 40, bottom: 30, left: 200},
-    width = 1500 - margin.left - margin.right,
+    width = 1800 - margin.left - margin.right,
     height = 900 - margin.top - margin.bottom;
 
 var x0 = d3.scale.ordinal()
@@ -130,7 +88,8 @@ var svg = d3.select("body").append("svg")
   .append("g")
     .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
-
+</script>
+<script>
  function draw(data) {
   var ageNames = d3.keys(data[0]).filter(function(key) { return key !== "processId"; });
 
@@ -155,7 +114,7 @@ var svg = d3.select("body").append("svg")
       .attr("y", 6)
       .attr("dy", ".71em")
       .style("text-anchor", "end")
-      .text("Time in milliSeconds --->");
+      .text("Time in Seconds -->");
 
   var processId = svg.selectAll(".processId")
       .data(data)
@@ -193,6 +152,48 @@ var svg = d3.select("body").append("svg")
 
 };
 </script>
+<script>
+  function jsSLAMonitoringObjectArrayList(data){
+  for(var i=0;i<data.Record.length;i++)
+  {
+  var obj=data.Record[i];
+  var slaBean=new jsSLAMonitoringObject(obj.processId,obj.currentExecutionTime,obj.averageExecutionTime,obj.sLATime);
+            jsSLAMonitoringObjectList.push(slaBean);
+
+  }
+  draw(jsSLAMonitoringObjectList);
+  }
+</script>
+<script>
+SLAMonitoring("<%=processId %>");
+
+function jsSLAMonitoringObject(processId, currentExecutionTime, averageExecutionTime, sLATime) {
+                     this.processId = processId;
+                     this.Current = currentExecutionTime;
+                     this.Average = averageExecutionTime;
+                     this.SLA = sLATime;
+                 }
+
+function SLAMonitoring(pid)
+                     {
+                     $.ajax({
+                                   url: '/mdrest/process/SLAMonitoring/' + pid,
+                                    type: 'GET',
+                                    dataType: 'json',
+                                     success: function(data) {
+                                     if (data.Result == "OK") {
+                                     console.log(data);
+                                   jsSLAMonitoringObjectArrayList(data);
+                                  }
+                               if (data.Result == "ERROR")
+                                 alert(data.Message);
+                            },
+                             error: function() {
+                             alert('Error in SLAMonitoring');
+                         }
+                          });
+                     }
+</script>
 </div>
 <hr  style="width:80%">
-<center><b>SubProcessIDs ------> </b></center>
+<center><b>SubprocessIDs --> </b></center>
