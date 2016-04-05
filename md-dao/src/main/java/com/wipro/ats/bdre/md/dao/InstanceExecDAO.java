@@ -178,6 +178,7 @@ public class InstanceExecDAO {
                 List<InstanceExec> instanceExecList=instanceExecListCriteria.list();
                 long sumTime=0;
                 long currentTime=0;
+                boolean processRunning = false;
                 int total=instanceExecList.size();
                 for (InstanceExec instanceExec:instanceExecList)
                 {
@@ -187,6 +188,7 @@ public class InstanceExecDAO {
                     }
                     else
                     {
+                        processRunning = true;
                         sumTime += (new Date().getTime() - instanceExec.getStartTs().getTime());
                         currentTime=new Date().getTime() - instanceExec.getStartTs().getTime();
                     }
@@ -197,6 +199,7 @@ public class InstanceExecDAO {
 
                 SLAMonitoringBean slaMonitoringBean=new SLAMonitoringBean();
                 slaMonitoringBean.setProcessId(process.getProcessId());
+                slaMonitoringBean.setProcessRunning(processRunning);
                 if(total!=0)
                 slaMonitoringBean.setAverageExecutionTime(sumTime/(total*1000));
                 slaMonitoringBean.setCurrentExecutionTime(currentTime/1000);

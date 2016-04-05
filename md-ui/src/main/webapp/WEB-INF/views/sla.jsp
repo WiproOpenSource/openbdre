@@ -48,6 +48,7 @@ body {
 <body>
 <script>
 var jsSLAMonitoringObjectList=[];
+var processrunning = [];
 </script>
 <%
 String processId=request.getParameter("processId");
@@ -90,6 +91,7 @@ var svg = d3.select("body").append("svg")
 
 </script>
 <script>
+var counter = 0;
  function draw(data) {
   var ageNames = d3.keys(data[0]).filter(function(key) { return key !== "processId"; });
 
@@ -126,10 +128,14 @@ var svg = d3.select("body").append("svg")
       .data(function(d) { return d.ages; })
     .enter().append("rect")
       .attr("width", x1.rangeBand())
-      .attr("x", function(d) { return x1(d.name); })
-      .attr("y", function(d) { return y(d.value); })
+      .attr("x", function(d) {console.log("d.name "+d.name); return x1(d.name); })
+      .attr("y", function(d) {console.log("d.value "+d.value); return y(d.value); })
       .attr("height", function(d) { return height - y(d.value); })
-      .style("fill", function(d) { return color(d.name); });
+      .style("fill", function(d) {
+      if(d.name=="Current" && processrunning[counter]==true)
+      {counter++;return "#FF0000";}
+      else
+      return color(d.name); });
 
   var legend = svg.selectAll(".legend")
       .data(ageNames.slice().reverse())
@@ -159,6 +165,8 @@ var svg = d3.select("body").append("svg")
   var obj=data.Record[i];
   var slaBean=new jsSLAMonitoringObject(obj.processId,obj.currentExecutionTime,obj.averageExecutionTime,obj.sLATime);
             jsSLAMonitoringObjectList.push(slaBean);
+            processrunning.push(obj.processRunning);
+            console.log("PR"+obj.processRunning);
 
   }
   draw(jsSLAMonitoringObjectList);

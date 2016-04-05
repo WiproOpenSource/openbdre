@@ -8,6 +8,16 @@ public class SLAMonitoringBean {
     private long currentExecutionTime;
     private long averageExecutionTime;
     private long sLATime;
+    private boolean processRunning;
+
+    public boolean isProcessRunning() {
+        return processRunning;
+    }
+
+    public void setProcessRunning(boolean processRunning) {
+        this.processRunning = processRunning;
+    }
+
     public Integer getProcessId() {
         return processId;
     }
