@@ -92,7 +92,7 @@ public class RegisterPartitionsActionNode extends GenericActionNode {
      */
     public String getQueryPath() {
         StringBuilder addQueryPath = new StringBuilder();
-        addQueryPath.append("            <script>hql/query" + getId() + ".hql</script>\n");
+        addQueryPath.append("            <script>hql/repair-table.hql</script>\n");
         return addQueryPath.toString();
     }
 

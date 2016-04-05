@@ -101,7 +101,7 @@ public class SourceStageLoadActionNode extends GenericActionNode {
     public String getQueryPath() {
 
         StringBuilder addQueryPath = new StringBuilder();
-        addQueryPath.append("            <script>hql/query" + getId() + ".hql</script>\n");
+        addQueryPath.append("            <script>hql/source-stage-load.hql</script>\n");
         return addQueryPath.toString();
     }
 

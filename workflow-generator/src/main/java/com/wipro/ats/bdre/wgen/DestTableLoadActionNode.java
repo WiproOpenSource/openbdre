@@ -67,7 +67,7 @@ public class DestTableLoadActionNode extends GenericActionNode {
         }
         ret.append("\">\n" +
                 "        <fs>" +
-                "        <move source=${wf:actionData(\"migration-preprocessor\")[\"dest-stg-folder-content-path\"]} target=${wf:actionData(\"migration-preprocessor\")[\"dest-table-path\"]}"+
+                "        <move source='${wf:actionData(\"migration-preprocessor\")[\"dest-stg-folder-content-path\"]}' target='${wf:actionData(\"migration-preprocessor\")[\"dest-table-path\"]}' />"+
                 "        </fs>   "+
                 "        <ok to=\"" + getToNode().getName() + "\"/>\n" +
                 "        <error to=\"" + getTermNode().getName() + "\"/>\n" +
