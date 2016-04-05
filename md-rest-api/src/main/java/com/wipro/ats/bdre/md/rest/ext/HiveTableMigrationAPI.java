@@ -240,7 +240,7 @@ public class HiveTableMigrationAPI {
                 continue;
             }
             if (string.startsWith("srcEnv_srcEnv")) {
-                jpaProperties = Dao2TableUtil.buildJPAProperties("hiveMigration", "src_env.", map.get(string), "source environment");
+                jpaProperties = Dao2TableUtil.buildJPAProperties("hive-migration", "src_env", map.get(string), "source environment");
                 propertiesList.add(jpaProperties);
             }
             else if (string.startsWith("srcEnv_processName")) {
@@ -256,23 +256,23 @@ public class HiveTableMigrationAPI {
                 busDomainID = new Integer(map.get(string));
             }
             else if(string.startsWith("srcDB_")){
-                jpaProperties = Dao2TableUtil.buildJPAProperties("hiveMigration", "src_db.", map.get(string), "source database");
+                jpaProperties = Dao2TableUtil.buildJPAProperties("hiveMigration", "src_db", map.get(string), "source database");
                 propertiesList.add(jpaProperties);
             }
             else if(string.startsWith("tables_tabl")){
-                jpaProperties = Dao2TableUtil.buildJPAProperties("hiveMigration", "tables.", map.get(string), "source tables");
+                jpaProperties = Dao2TableUtil.buildJPAProperties("hiveMigration", "tables", map.get(string), "source tables");
                 propertiesList.add(jpaProperties);
             }
             else if(string.startsWith("destEnv_")){
-                jpaProperties = Dao2TableUtil.buildJPAProperties("hiveMigration", "dest_env.", map.get(string), "destination environment");
+                jpaProperties = Dao2TableUtil.buildJPAProperties("hiveMigration", "dest_env", map.get(string), "destination environment");
                 propertiesList.add(jpaProperties);
             }
             else if(string.startsWith("destDB_")){
-                jpaProperties = Dao2TableUtil.buildJPAProperties("hiveMigration", "dest_db.", map.get(string), "destination database");
+                jpaProperties = Dao2TableUtil.buildJPAProperties("hiveMigration", "dest_db", map.get(string), "destination database");
                 propertiesList.add(jpaProperties);
             }
             else if(string.startsWith("tables_instexecId")){
-                jpaProperties = Dao2TableUtil.buildJPAProperties("hiveMigration", "technical_partition.", map.get(string), "technical partition");
+                jpaProperties = Dao2TableUtil.buildJPAProperties("hiveMigration", "technical_partition", map.get(string), "technical partition");
                 propertiesList.add(jpaProperties);
             }
         }
