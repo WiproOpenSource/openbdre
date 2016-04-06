@@ -9,6 +9,15 @@ public class SLAMonitoringBean {
     private long averageExecutionTime;
     private long sLATime;
     private boolean processRunning;
+    private int stateOfProcess;
+
+    public int getStateOfProcess() {
+        return stateOfProcess;
+    }
+
+    public void setStateOfProcess(int stateOfProcess) {
+        this.stateOfProcess = stateOfProcess;
+    }
 
     public boolean isProcessRunning() {
         return processRunning;

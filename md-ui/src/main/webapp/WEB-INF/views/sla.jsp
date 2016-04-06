@@ -49,6 +49,7 @@ body {
 <script>
 var jsSLAMonitoringObjectList=[];
 var processrunning = [];
+var stateOfProcess = [];
 </script>
 <%
 String processId=request.getParameter("processId");
@@ -60,8 +61,8 @@ String processId=request.getParameter("processId");
 <script src="../js/d3.min.js"></script>
 <script>
 var margin = {top: 20, right: 40, bottom: 30, left: 200},
-    width = 1800 - margin.left - margin.right,
-    height = 900 - margin.top - margin.bottom;
+    width = 1150 - margin.left - margin.right,
+    height = 600 - margin.top - margin.bottom;
 
 var x0 = d3.scale.ordinal()
     .rangeRoundBands([0, width], .1);
@@ -72,7 +73,7 @@ var y = d3.scale.linear()
     .range([height, 0]);
 
 var color = d3.scale.ordinal()
-    .range(["#98abc5", "#8a89a6", "#d0743c"]);
+    .range(["#98abc5", "#008000", "#d0743c"]);
 
 var xAxis = d3.svg.axis()
     .scale(x0)
@@ -92,6 +93,7 @@ var svg = d3.select("body").append("svg")
 </script>
 <script>
 var counter = 0;
+var legendCounter = 0;
  function draw(data) {
   var ageNames = d3.keys(data[0]).filter(function(key) { return key !== "processId"; });
 
@@ -128,14 +130,34 @@ var counter = 0;
       .data(function(d) { return d.ages; })
     .enter().append("rect")
       .attr("width", x1.rangeBand())
-      .attr("x", function(d) {console.log("d.name "+d.name); return x1(d.name); })
-      .attr("y", function(d) {console.log("d.value "+d.value); return y(d.value); })
+      .attr("x", function(d) {return x1(d.name); })
+      .attr("y", function(d) {return y(d.value); })
       .attr("height", function(d) { return height - y(d.value); })
       .style("fill", function(d) {
-      if(d.name=="Current" && processrunning[counter]==true)
-      {counter++;return "#FF0000";}
-      else
-      return color(d.name); });
+          if(d.name=="Current" && processrunning[counter]==true)
+          {
+            counter++;
+            return "#FFFF00";
+          }
+          else if (d.name=="Current")
+          {
+
+            if(stateOfProcess[counter]==6) {
+
+                counter++;
+                return "#FF0000";
+            }
+            counter++;
+            return "#d0743c";
+          }
+          else
+          {
+            if(d.name=="Average")
+                return "#98abc5";
+            else (d.name=="SLA")
+                return "#008000";
+          }
+       });
 
   var legend = svg.selectAll(".legend")
       .data(ageNames.slice().reverse())
@@ -147,7 +169,14 @@ var counter = 0;
       .attr("x", width - 18)
       .attr("width", 18)
       .attr("height", 18)
-      .style("fill", color);
+      .style("fill", function(d){
+        if (d=="SLA")
+            return "#008000";
+        else if (d=="Average")
+            return "#98abc5";
+        else if (d=="Current")
+            return "#d0743c";
+      });
 
   legend.append("text")
       .attr("x", width - 24)
@@ -166,7 +195,8 @@ var counter = 0;
   var slaBean=new jsSLAMonitoringObject(obj.processId,obj.currentExecutionTime,obj.averageExecutionTime,obj.sLATime);
             jsSLAMonitoringObjectList.push(slaBean);
             processrunning.push(obj.processRunning);
-            console.log("PR"+obj.processRunning);
+            stateOfProcess.push(obj.stateOfProcess)
+
 
   }
   draw(jsSLAMonitoringObjectList);
