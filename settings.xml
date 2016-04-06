@@ -100,6 +100,7 @@
         <profile>
             <id>javascript</id>
             <properties>
+                <d3js.version>3.4.4-1</d3js.version>
                 <jquery.version>1.11.2</jquery.version>
                 <bootstrap.version>3.3.2</bootstrap.version>
                 <angularjs.version>1.2.15</angularjs.version>
