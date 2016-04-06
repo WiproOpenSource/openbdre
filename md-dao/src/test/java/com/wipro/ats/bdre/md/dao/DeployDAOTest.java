@@ -14,13 +14,19 @@
 
 package com.wipro.ats.bdre.md.dao;
 
-import org.apache.log4j.Logger;
-import org.junit.Before;
-import org.junit.Test;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.AutowireCapableBeanFactory;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
+import com.wipro.ats.bdre.md.dao.jpa.*;
+import com.wipro.ats.bdre.md.dao.jpa.Process;
+import org.apache.log4j.Logger;
+import org.junit.Before;
+import org.junit.Test;
+
+
+import java.util.Date;
 
 public class DeployDAOTest {
     private static final Logger LOGGER = Logger.getLogger(DeployDAOTest.class);
@@ -34,22 +40,113 @@ public class DeployDAOTest {
 
     @Autowired
     DeployDAO deployDAO;
+    @Autowired
+    ProcessDeploymentQueueDAO processDeploymentQueueDAO;
+    @Autowired
+    ProcessDAO processDAO;
+    @Autowired
+    BusDomainDAO busDomainDAO;
+    @Autowired
+    ProcessTypeDAO processTypeDAO;
+    @Autowired
+    DeployStatusDAO deployStatusDAO;
 
     @Test
     public void testInitDeploy() throws Exception {
-        deployDAO.initDeploy(2l);
+        BusDomain busDomain = busDomainDAO.get(1);
+        ProcessType processType = processTypeDAO.get(2);
+        com.wipro.ats.bdre.md.dao.jpa.Process process = new Process();
+        process.setProcessName("Test");
+        process.setDescription("Test Process");
+        process.setBusDomain(busDomain);
+        process.setProcessType(processType);
+        process.setAddTs(new Date());
+        process.setCanRecover(true);
+        process.setEnqueuingProcessId(0);
+        process.setNextProcessId("10802");
+        process.setDeleteFlag(false);
+        process.setEditTs(new Date());
+        Integer id = processDAO.insert(process);
+        DeployStatus deployStatus = deployStatusDAO.get((short) 5);
+        ProcessDeploymentQueue processDeploymentQueue = new ProcessDeploymentQueue();
+        processDeploymentQueue.setProcess(process);
+        processDeploymentQueue.setBusDomain(busDomain);
+        processDeploymentQueue.setDeployStatus(deployStatus);
+        processDeploymentQueue.setInsertTs(new Date());
+        processDeploymentQueue.setProcessType(processType);
+        processDeploymentQueue.setUserName("Test");
+        Long processDeploymentQueueId = processDeploymentQueueDAO.insert(processDeploymentQueue);
+        LOGGER.info("New ProcessDeploymentQueue added with ID:" + processDeploymentQueueId);
+        processDeploymentQueue = processDeploymentQueueDAO.get(processDeploymentQueueId);
+        deployDAO.initDeploy((long)processDeploymentQueueId);
+        processDeploymentQueueDAO.delete(processDeploymentQueueId);
+        LOGGER.info("ProcessDeploymentQueue Deleted with ID:" + processDeploymentQueueId);
         LOGGER.info("The init deploy test executed ");
     }
 
     @Test
     public void testTermDeploy() throws Exception {
-        deployDAO.termDeploy(1l);
+        BusDomain busDomain = busDomainDAO.get(1);
+        ProcessType processType = processTypeDAO.get(1);
+        com.wipro.ats.bdre.md.dao.jpa.Process process = new Process();
+        process.setProcessName("Test");
+        process.setDescription("Test Process");
+        process.setBusDomain(busDomain);
+        process.setProcessType(processType);
+        process.setAddTs(new Date());
+        process.setCanRecover(true);
+        process.setEnqueuingProcessId(0);
+        process.setNextProcessId("10802");
+        process.setDeleteFlag(false);
+        process.setEditTs(new Date());
+        Integer id = processDAO.insert(process);
+        DeployStatus deployStatus = deployStatusDAO.get((short) 2);
+        ProcessDeploymentQueue processDeploymentQueue = new ProcessDeploymentQueue();
+        processDeploymentQueue.setProcess(process);
+        processDeploymentQueue.setBusDomain(busDomain);
+        processDeploymentQueue.setDeployStatus(deployStatus);
+        processDeploymentQueue.setInsertTs(new Date());
+        processDeploymentQueue.setProcessType(processType);
+        processDeploymentQueue.setUserName("Test");
+        Long processDeploymentQueueId = processDeploymentQueueDAO.insert(processDeploymentQueue);
+        LOGGER.info("New ProcessDeploymentQueue added with ID:" + processDeploymentQueueId);
+        processDeploymentQueue = processDeploymentQueueDAO.get(processDeploymentQueueId);
+        deployDAO.termDeploy((long)processDeploymentQueueId);
+        processDeploymentQueueDAO.delete(processDeploymentQueueId);
+        LOGGER.info("ProcessDeploymentQueue Deleted with ID:" + processDeploymentQueueId);
         LOGGER.info("The term deploy test executed ");
     }
 
     @Test
     public void testHaltDeploy() throws Exception {
-        deployDAO.haltDeploy(4L);
+        BusDomain busDomain = busDomainDAO.get(1);
+        ProcessType processType = processTypeDAO.get(1);
+        com.wipro.ats.bdre.md.dao.jpa.Process process = new Process();
+        process.setProcessName("Test");
+        process.setDescription("Test Process");
+        process.setBusDomain(busDomain);
+        process.setProcessType(processType);
+        process.setAddTs(new Date());
+        process.setCanRecover(true);
+        process.setEnqueuingProcessId(0);
+        process.setNextProcessId("10802");
+        process.setDeleteFlag(false);
+        process.setEditTs(new Date());
+        Integer id = processDAO.insert(process);
+        DeployStatus deployStatus = deployStatusDAO.get((short) 2);
+        ProcessDeploymentQueue processDeploymentQueue = new ProcessDeploymentQueue();
+        processDeploymentQueue.setProcess(process);
+        processDeploymentQueue.setBusDomain(busDomain);
+        processDeploymentQueue.setDeployStatus(deployStatus);
+        processDeploymentQueue.setInsertTs(new Date());
+        processDeploymentQueue.setProcessType(processType);
+        processDeploymentQueue.setUserName("Test");
+        Long processDeploymentQueueId = processDeploymentQueueDAO.insert(processDeploymentQueue);
+        LOGGER.info("New ProcessDeploymentQueue added with ID:" + processDeploymentQueueId);
+        processDeploymentQueue = processDeploymentQueueDAO.get(processDeploymentQueueId);
+        deployDAO.haltDeploy((long) processDeploymentQueueId);
+        processDeploymentQueueDAO.delete(processDeploymentQueueId);
+        LOGGER.info("ProcessDeploymentQueue Deleted with ID:" + processDeploymentQueueId);
         LOGGER.info("The halt deploy test executed ");
     }
 }
