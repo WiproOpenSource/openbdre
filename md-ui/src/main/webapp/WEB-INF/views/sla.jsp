@@ -176,6 +176,10 @@ var legendCounter = 0;
             return "#98abc5";
         else if (d=="Current")
             return "#d0743c";
+        else if (d=="Running")
+            return "#FFFF00";
+        else if (d=="Failed")
+            return "#FF0000";
       });
 
   legend.append("text")
@@ -192,12 +196,10 @@ var legendCounter = 0;
   for(var i=0;i<data.Record.length;i++)
   {
   var obj=data.Record[i];
-  var slaBean=new jsSLAMonitoringObject(obj.processId,obj.currentExecutionTime,obj.averageExecutionTime,obj.sLATime);
+  var slaBean=new jsSLAMonitoringObject(obj.processId,obj.currentExecutionTime,obj.averageExecutionTime,obj.sLATime,obj.running,obj.failed);
             jsSLAMonitoringObjectList.push(slaBean);
             processrunning.push(obj.processRunning);
             stateOfProcess.push(obj.stateOfProcess)
-
-
   }
   draw(jsSLAMonitoringObjectList);
   }
@@ -205,11 +207,13 @@ var legendCounter = 0;
 <script>
 SLAMonitoring("<%=processId %>");
 
-function jsSLAMonitoringObject(processId, currentExecutionTime, averageExecutionTime, sLATime) {
+function jsSLAMonitoringObject(processId, currentExecutionTime, averageExecutionTime, sLATime, running, failed) {
                      this.processId = processId;
                      this.Current = currentExecutionTime;
                      this.Average = averageExecutionTime;
                      this.SLA = sLATime;
+                     this.Running = running;
+                     this.Failed = failed;
                  }
 
 function SLAMonitoring(pid)

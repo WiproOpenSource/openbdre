@@ -10,6 +10,24 @@ public class SLAMonitoringBean {
     private long sLATime;
     private boolean processRunning;
     private int stateOfProcess;
+    private int running;
+    private int failed;
+
+    public int getRunning() {
+        return running;
+    }
+
+    public void setRunning(int running) {
+        this.running = running;
+    }
+
+    public int getFailed() {
+        return failed;
+    }
+
+    public void setFailed(int failed) {
+        this.failed = failed;
+    }
 
     public int getStateOfProcess() {
         return stateOfProcess;

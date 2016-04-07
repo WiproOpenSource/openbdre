@@ -180,6 +180,8 @@ public class InstanceExecDAO {
                 long currentTime=0;
                 boolean processRunning = false;
                 int stateOfProcess = 0;
+                int running = 0;
+                int failed = 0;
                 int total=instanceExecList.size();
                 for (InstanceExec instanceExec:instanceExecList)
                 {
@@ -204,6 +206,8 @@ public class InstanceExecDAO {
                 slaMonitoringBean.setProcessId(process.getProcessId());
                 slaMonitoringBean.setProcessRunning(processRunning);
                 slaMonitoringBean.setStateOfProcess(stateOfProcess);
+                slaMonitoringBean.setRunning(running);
+                slaMonitoringBean.setFailed(failed);
                 if(total!=0)
                 slaMonitoringBean.setAverageExecutionTime(sumTime/(total*1000));
                 slaMonitoringBean.setCurrentExecutionTime(currentTime/1000);
