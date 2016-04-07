@@ -54,7 +54,7 @@ public class DestTableLoadActionNode extends GenericActionNode {
 
     }
 
-    @Override
+   /* @Override
     public String getXML() {
 
         if (this.getProcessInfo().getParentProcessId() == 0) {
@@ -67,7 +67,7 @@ public class DestTableLoadActionNode extends GenericActionNode {
         }
         ret.append("\">\n" +
                 "        <fs>" +
-                "        <move source='${wf:actionData(\"migration-preprocessor\")[\"dest-stg-folder-content-path\"]}' target='${wf:actionData(\"migration-preprocessor\")[\"dest-table-path\"]}' />"+
+                "        <move source=\"${wf:actionData(\'migration-preprocessor\')[\'dest-stg-folder-content-path\']}\" target=\"${wf:actionData(\'migration-preprocessor\')[\'dest-table-path\']}\" />"+
                 "        </fs>   "+
                 "        <ok to=\"" + getToNode().getName() + "\"/>\n" +
                 "        <error to=\"" + getTermNode().getName() + "\"/>\n" +
@@ -75,6 +75,26 @@ public class DestTableLoadActionNode extends GenericActionNode {
 
         return ret.toString();
     }
+*/
+   public String getXML() {
+
+       return "\n<action name=\"" + getName() + "\">\n" +
+               "        <java>\n" +
+               "            <job-tracker>${jobTracker}</job-tracker>\n" +
+               "            <name-node>${nameNode}</name-node>\n" +
+               "            <main-class>com.wipro.ats.bdre.clustermigration.oozie.OozieDestTableLoad</main-class>\n" +
+               "            <arg>--source-path</arg>\n" +
+               "            <arg>${wf:actionData(\'migration-preprocessor\')[\'dest-stg-folder-content-path\']}</arg>\n" +
+               "            <arg>--dest-path</arg>\n" +
+               "            <arg>${wf:actionData(\'migration-preprocessor\')[\'dest-table-path\']}</arg>\n" +
+               "            <arg>--dest-fs</arg>\n" +
+               "            <arg>${wf:actionData(\'migration-preprocessor\')[\'dest-fs\']}</arg>\n" +
+               "            <capture-output />\n" +
+               "        </java>\n" +
+               "        <ok to=\"" + getToNode().getName() + "\"/>\n" +
+               "        <error to=\"" + getTermNode().getName() + "\"/>\n" +
+               "</action>";
+   }
 
     public Integer isSecurityEnabled(Integer pid, String configGroup) {
         GetProperties getProperties = new GetProperties();

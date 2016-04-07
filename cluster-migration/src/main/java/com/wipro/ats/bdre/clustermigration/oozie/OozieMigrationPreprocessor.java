@@ -24,17 +24,13 @@ import com.wipro.ats.bdre.util.OozieUtil;
  */
 public class OozieMigrationPreprocessor {
 
-    private OozieMigrationPreprocessor(){
-    }
-
     public static void main(String[] args) {
         try {
             MigrationPreprocessor migrationPreprocessor = new MigrationPreprocessor();
-            MigrationPreprocessorInfo migrationPreprocessorInfo=migrationPreprocessor.execute(args);
+            MigrationPreprocessorInfo migrationPreprocessorInfo = migrationPreprocessor.execute(args);
             OozieUtil oozieUtil = new OozieUtil();
             oozieUtil.persistBeanData(migrationPreprocessorInfo, false);
-        }
-        catch(Exception e){
+        } catch (Exception e) {
             throw new BDREException(e);
         }
     }

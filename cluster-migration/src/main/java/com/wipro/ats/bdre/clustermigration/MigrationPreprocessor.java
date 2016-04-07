@@ -121,7 +121,7 @@ public class MigrationPreprocessor extends BaseStructure{
         logCurrentSourceColumns(sourceColumnList, processId, instanceExecId, table);
 
         //creating the source stage table
-        formStageAndDestTableDDLs(st, sourceColumnList, sourceDb, destDb, table,sourceStgtable,bdreTechPartition);
+        formStageAndDestTableDDLs(st, sourceColumnList, sourceDb, destDb, table,sourceStgtable,bdreTechPartition, processId,instanceExecId);
 
         if(checkIfDestTableExists(destDb,table,destHiveConnection))
             alterDestTable(st,addedColumnList,destDb,table);
@@ -254,7 +254,7 @@ public class MigrationPreprocessor extends BaseStructure{
         processLog.logList(columnLogInfoList);
     }
 
-    private void formStageAndDestTableDDLs(Statement st, List<String> sourceColumnList, String sourceDb, String destDb, String table, String sourceStgtable, String bdreTechPartition) throws Exception {
+    private void formStageAndDestTableDDLs(Statement st, List<String> sourceColumnList, String sourceDb, String destDb, String table, String sourceStgtable, String bdreTechPartition, String processId,String instanceExecId) throws Exception {
         ResultSet rsPartitionList = st.executeQuery("desc account");
         int index = 0;
         StringBuffer partitionList = new StringBuffer("");
@@ -280,7 +280,7 @@ public class MigrationPreprocessor extends BaseStructure{
         sourceRegularColumns=finalColumns.substring(0, finalColumns.length() - 1);
         sourcePartitionColumns=partitionList.substring(0, partitionList.length() - 1);
         stgPartitionColumns=sourcePartitionColumns.substring(0,sourcePartitionColumns.lastIndexOf(","))+","+bdreTechPartition;
-        stgTableDDL = "create table " + sourceDb + "." + sourceStgtable + " (" + sourceRegularColumns + ") " + "partitioned by (" + stgPartitionColumns + ") stored as orc";
+        stgTableDDL = "create external table " + sourceDb + "." + sourceStgtable + " (" + sourceRegularColumns + ") " + "partitioned by (" + stgPartitionColumns + ") stored as orc location '/tmp/"+processId+"/"+instanceExecId+"'";
         destTableDDL = "create table " + destDb + "." + table  + " (" + sourceRegularColumns + ") " + "partitioned by (" + stgPartitionColumns + ") stored as orc";
         LOGGER.debug("stgTableDDL = " + stgTableDDL);
         LOGGER.debug("destTableDDL = " + destTableDDL);
@@ -426,10 +426,11 @@ public class MigrationPreprocessor extends BaseStructure{
         migrationPreprocessorInfo.setNnAddress(sourceNameNodeAddress);
         migrationPreprocessorInfo.setSrcStgTablePath(srcStgTableLocation);
         migrationPreprocessorInfo.setDestStgFolderPath(destNameNodeAddress+"/tmp/"+processId+"/"+instanceExecId);
-        migrationPreprocessorInfo.setDestStgFolderContentPath(destNameNodeAddress+"/tmp/"+processId+"/"+instanceExecId+"/*");
+        migrationPreprocessorInfo.setDestStgFolderContentPath(destNameNodeAddress+"/tmp/"+processId+"/"+instanceExecId+"/");
         migrationPreprocessorInfo.setDestTablePath(destTableLocation);
         migrationPreprocessorInfo.setDestDb(destDb);
         migrationPreprocessorInfo.setDestTable(table);
+        migrationPreprocessorInfo.setDestFileSystem(destNameNodeAddress);
         return migrationPreprocessorInfo;
     }
 

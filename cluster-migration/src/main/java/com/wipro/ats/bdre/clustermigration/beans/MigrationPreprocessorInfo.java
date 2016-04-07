@@ -182,4 +182,14 @@ public class MigrationPreprocessorInfo {
     private String destTable;
     @PersistableParam(keyName = "dest-db")
     private String destDb;
+    @PersistableParam(keyName = "dest-fs")
+    private String destFileSystem;
+
+    public String getDestFileSystem() {
+        return destFileSystem;
+    }
+
+    public void setDestFileSystem(String destFileSystem) {
+        this.destFileSystem = destFileSystem;
+    }
 }
