@@ -17,8 +17,8 @@
 				.glyphicon-arrow-right-process{color: #606161 !important;}
 				.btn-primary-process{background-color: #ADAFAF !important;border: 1px solid #828283 !important;padding-top:7.5px !important;padding-bottom: 7.5px !important;border-radius: 1px !important;}
                 .input-box-processfilter{background: #4A4B4B;background: -webkit-linear-gradient(#4A4B4B 50%, #3A3B3B 50%);background: -o-linear-gradient(#4A4B4B 50%, #3A3B3B 50%);background: -moz-linear-gradient(#4A4B4B 50%, #3A3B3B 50%);background: -ms-linear-gradient(#4A4B4B 50%, #3A3B3B 50%);background: linear-gradient(#4A4B4B 50%, #3A3B3B 50%);position: absolute;top: 0;right: 134px;color:white;padding:5px;cursor:pointer}
-                .process-filter-icon{background-image: url('../css/images/filter-icon.png');background-size: 100%;background-repeat: no-repeat;  display: inline-block;margin: 2px;vertical-align: middle;width: 16px;height: 16px;}
-                .process-filter-text{display: inline-block;margin: 2px;vertical-align: middle;font-size: 0.9em;font-family: 'Segoe UI Semilight', 'Open Sans', Verdana, Arial, Helvetica, sans-serif;font-weight: 300;}
+				.process-filter-icon{background-image: url('../css/images/filter_icon.png');background-size: 100%;background-repeat: no-repeat;  display: inline-block;margin: 2px;vertical-align: middle;width: 16px;height: 16px;}
+				.process-filter-text{display: inline-block;margin: 2px;vertical-align: middle;font-size: 0.9em;font-family: 'Segoe UI Semilight', 'Open Sans', Verdana, Arial, Helvetica, sans-serif;font-weight: 300;}
                 .process-input-box-button{display:none;position: absolute;top: 34px;right: 133px; width: 129px;}
                 </style>
                
