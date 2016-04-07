@@ -415,7 +415,11 @@
             </dependency>
 
             <!-- org webjars - for javascripts -->
-
+            <dependency>
+                <groupId>org.webjars</groupId>
+                <artifactId>d3js</artifactId>
+                <version>${d3js.version}</version>
+            </dependency>
             <dependency>
                 <groupId>org.webjars</groupId>
                 <artifactId>jquery</artifactId>

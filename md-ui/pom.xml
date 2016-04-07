@@ -24,6 +24,10 @@
     <packaging>war</packaging>
 
     <dependencies>
+        <dependency>
+            <groupId>org.webjars</groupId>
+            <artifactId>d3js</artifactId>
+        </dependency>
         <!-- Spring 3 dependencies -->
         <dependency>
             <groupId>org.springframework</groupId>
@@ -197,7 +201,7 @@
                         <configuration>
                             <includeGroupIds>org.webjars,org.webjars.bower</includeGroupIds>
                             <includes>
-                                **/jquery.min.js,**/bootstrap.js,**/angular.min.js,**/moment.js,**/Chart.js,**/jquery.fancytree.js,**/jquery.fancytree.table.js,**/jquery.fancytree.gridnav.js,**/jquery.steps.min.js,**/handsontable.full.js,**/*jquery.jtable.js,**/viz.js,**/localization/jquery.jtable*js,**/external/json2*js,**/extensions/jquery.jtable.aspnet*js,**/*.png,**/*.css,**/*.less,**/*.gif,**/*.map,**/fonts/*.eot,**/*.svg,**/*.ttf,**/*.woff,**/*.woff2
+                                **/d3.min.js,**/jquery.min.js,**/bootstrap.js,**/angular.min.js,**/moment.js,**/Chart.js,**/jquery.fancytree.js,**/jquery.fancytree.table.js,**/jquery.fancytree.gridnav.js,**/jquery.steps.min.js,**/handsontable.full.js,**/*jquery.jtable.js,**/viz.js,**/localization/jquery.jtable*js,**/external/json2*js,**/extensions/jquery.jtable.aspnet*js,**/*.png,**/*.css,**/*.less,**/*.gif,**/*.map,**/fonts/*.eot,**/*.svg,**/*.ttf,**/*.woff,**/*.woff2
                             </includes>
                             <outputDirectory>${project.build.directory}/js-dependencies</outputDirectory>
                         </configuration>
