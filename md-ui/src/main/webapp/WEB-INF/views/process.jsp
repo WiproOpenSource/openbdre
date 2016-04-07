@@ -683,6 +683,27 @@
                                     options: '/mdrest/busdomain/options/',
                                     defaultValue: "1"
                                 },
+                                permissionTypeByUserAccessId: {
+                                    title: 'User Access',
+                                    type: 'combobox',
+                                    list: false,
+                                    options: '/mdrest/process/options/',
+                                    defaultValue: "7"
+                                },
+                                permissionTypeByGroupAccessId: {
+                                  title: 'Group Access',
+                                  type: 'combobox',
+                                  list: false,
+                                  options: '/mdrest/process/options/',
+                                  defaultValue: "6"
+                               },
+                               permissionTypeByOthersAccessId: {
+                                  title: 'Other Access',
+                                  type: 'combobox',
+                                  list: false,
+                                  options: '/mdrest/process/options/',
+                                  defaultValue: "0"
+                               },
                                 processTypeId: {
                                     title: 'Type',
                                     type: 'combobox',

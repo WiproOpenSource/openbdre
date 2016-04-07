@@ -16,10 +16,8 @@ package com.wipro.ats.bdre.md.dao;
 
 import com.wipro.ats.bdre.exception.MetadataException;
 import com.wipro.ats.bdre.md.beans.ProcessInfo;
-import com.wipro.ats.bdre.md.dao.jpa.InstanceExec;
+import com.wipro.ats.bdre.md.dao.jpa.*;
 import com.wipro.ats.bdre.md.dao.jpa.Process;
-import com.wipro.ats.bdre.md.dao.jpa.Properties;
-import com.wipro.ats.bdre.md.dao.jpa.PropertiesId;
 import org.apache.log4j.Logger;
 import org.hibernate.Criteria;
 import org.hibernate.Session;
@@ -623,6 +621,9 @@ public List<Process> createOneChildJob(Process parentProcess, Process childProce
         }
         return processList;
     }
+
+
+
 
 
 }

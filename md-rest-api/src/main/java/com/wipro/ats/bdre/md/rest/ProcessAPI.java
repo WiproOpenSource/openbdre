@@ -19,17 +19,15 @@ import com.wipro.ats.bdre.exception.MetadataException;
 import com.wipro.ats.bdre.md.api.Export;
 import com.wipro.ats.bdre.md.api.Import;
 import com.wipro.ats.bdre.md.api.base.MetadataAPIBase;
-import com.wipro.ats.bdre.md.beans.ExecutionInfo;
-import com.wipro.ats.bdre.md.beans.SLAMonitoringBean;
+import com.wipro.ats.bdre.md.beans.*;
 import com.wipro.ats.bdre.md.beans.table.Process;
 import com.wipro.ats.bdre.md.beans.table.Properties;
+import com.wipro.ats.bdre.md.dao.AppPermissionDAO;
 import com.wipro.ats.bdre.md.dao.InstanceExecDAO;
 import com.wipro.ats.bdre.md.dao.ProcessDAO;
 import com.wipro.ats.bdre.md.dao.PropertiesDAO;
-import com.wipro.ats.bdre.md.dao.jpa.BusDomain;
-import com.wipro.ats.bdre.md.dao.jpa.ProcessTemplate;
-import com.wipro.ats.bdre.md.dao.jpa.PropertiesId;
-import com.wipro.ats.bdre.md.dao.jpa.WorkflowType;
+import com.wipro.ats.bdre.md.dao.jpa.*;
+import com.wipro.ats.bdre.md.dao.jpa.PermissionType;
 import com.wipro.ats.bdre.md.rest.beans.ProcessExport;
 import com.wipro.ats.bdre.md.rest.util.BindingResultError;
 import com.wipro.ats.bdre.md.rest.util.DateConverter;
@@ -67,6 +65,8 @@ public class ProcessAPI extends MetadataAPIBase {
     private PropertiesDAO propertiesDAO;
     @Autowired
     InstanceExecDAO instanceExecDAO;
+    @Autowired
+    AppPermissionDAO appPermissionDAO;
     /**
      * This method calls proc GetProcess and fetches a record corresponding to processId passed.
      *
@@ -258,6 +258,9 @@ public class ProcessAPI extends MetadataAPIBase {
                 updateDaoProcess.setDeleteFlag(process.getDeleteFlag());
 
             updateDaoProcess.setEditTs(DateConverter.stringToDate(process.getTableEditTS()));
+            updateDaoProcess.setPermissionTypeByUserAccessId(appPermissionDAO.get(process.getPermissionTypeByUserAccessId()));
+            updateDaoProcess.setPermissionTypeByGroupAccessId(appPermissionDAO.get(process.getPermissionTypeByGroupAccessId()));
+            updateDaoProcess.setPermissionTypeByOthersAccessId(appPermissionDAO.get(process.getPermissionTypeByOthersAccessId()));
             updateDaoProcess = processDAO.update(updateDaoProcess);
             process.setTableAddTS(DateConverter.dateToString(updateDaoProcess.getAddTs()));
             process.setTableEditTS(DateConverter.dateToString(updateDaoProcess.getEditTs()));
@@ -325,7 +328,12 @@ public class ProcessAPI extends MetadataAPIBase {
             } else {
                 insertDaoProcess.setDeleteFlag(process.getDeleteFlag());
             }
+
+            insertDaoProcess.setPermissionTypeByUserAccessId(appPermissionDAO.get(process.getPermissionTypeByUserAccessId()));
+            insertDaoProcess.setPermissionTypeByGroupAccessId(appPermissionDAO.get(process.getPermissionTypeByGroupAccessId()));
+            insertDaoProcess.setPermissionTypeByOthersAccessId(appPermissionDAO.get(process.getPermissionTypeByOthersAccessId()));
             insertDaoProcess.setEditTs(DateConverter.stringToDate(process.getTableEditTS()));
+            insertDaoProcess.setUserName(principal.getName());
             Integer processId = processDAO.insert(insertDaoProcess);
             process.setProcessId(processId);
             process.setTableAddTS(DateConverter.dateToString(insertDaoProcess.getAddTs()));
@@ -492,7 +500,7 @@ public class ProcessAPI extends MetadataAPIBase {
     @RequestMapping(value = {"/import", "/import/"}, method = RequestMethod.POST)
     @ResponseBody public
     RestWrapper importData(@ModelAttribute("fileString")
-                           @Valid String uploadedFileName, BindingResult bindingResult) {
+                           @Valid String uploadedFileName, BindingResult bindingResult,Principal principal) {
         RestWrapper restWrapper = null;
         if (bindingResult.hasErrors()) {
             BindingResultError bindingResultError = new BindingResultError();
@@ -564,8 +572,21 @@ public class ProcessAPI extends MetadataAPIBase {
                     insertDaoProcess.setDeleteFlag(false);
                 else
                     insertDaoProcess.setDeleteFlag(parentProcess.getDeleteFlag());
+                if(parentProcess.getPermissionTypeByUserAccessId()!=null)
+                insertDaoProcess.setPermissionTypeByUserAccessId(appPermissionDAO.get(parentProcess.getPermissionTypeByUserAccessId()));
+                else
+                    insertDaoProcess.setPermissionTypeByUserAccessId(appPermissionDAO.get(7));
+                if(parentProcess.getPermissionTypeByGroupAccessId()!=null)
+                insertDaoProcess.setPermissionTypeByGroupAccessId(appPermissionDAO.get(parentProcess.getPermissionTypeByGroupAccessId()));
+                else
+                insertDaoProcess.setPermissionTypeByGroupAccessId(appPermissionDAO.get(6));
+                if (parentProcess.getPermissionTypeByOthersAccessId()!=null)
+                insertDaoProcess.setPermissionTypeByOthersAccessId(appPermissionDAO.get(parentProcess.getPermissionTypeByOthersAccessId()));
+                else
+                insertDaoProcess.setPermissionTypeByOthersAccessId(appPermissionDAO.get(0));
                 insertDaoProcess.setEditTs(DateConverter.stringToDate(parentProcess.getTableEditTS()));
                 insertDaoProcess.setProcessCode(parentProcess.getProcessCode());
+                insertDaoProcess.setUserName(principal.getName());
                 parentProcessId = processDAO.insert(insertDaoProcess);
                 parentProcess.setProcessId(parentProcessId);
                 processExport.getProcessList().get(0).setProcessId(parentProcessId);
@@ -683,6 +704,7 @@ public class ProcessAPI extends MetadataAPIBase {
                         insertDaoProcess.setDeleteFlag(process.getDeleteFlag());
                     insertDaoProcess.setEditTs(DateConverter.stringToDate(process.getTableEditTS()));
                     insertDaoProcess.setProcessCode(process.getProcessCode());
+                    insertDaoProcess.setUserName(principal.getName());
                     Integer processId = processDAO.insert(insertDaoProcess);
                     process.setProcessId(processId);
                     process.setTableAddTS(DateConverter.dateToString(insertDaoProcess.getAddTs()));
@@ -732,7 +754,6 @@ public class ProcessAPI extends MetadataAPIBase {
                         updateDaoProcess.setDeleteFlag(false);
                     else
                         updateDaoProcess.setDeleteFlag(process.getDeleteFlag());
-
                     updateDaoProcess.setEditTs(DateConverter.stringToDate(process.getTableEditTS()));
                     updateDaoProcess = processDAO.update(updateDaoProcess);
                     process.setProcessId(updateDaoProcess.getProcessId());
@@ -918,4 +939,36 @@ public class ProcessAPI extends MetadataAPIBase {
        }
          return restWrapper;
     }
+
+
+
+    @RequestMapping(value = {"/options", "/options/"}, method = RequestMethod.POST)
+    @ResponseBody public
+    RestWrapperOptions listOptions(Principal principal) {
+        RestWrapperOptions restWrapperOptions = null;
+        try {
+            List<PermissionType> permissionTypeList=appPermissionDAO.permissionTypeList();
+            List<com.wipro.ats.bdre.md.beans.PermissionType> permissionTypes=new ArrayList<>();
+            for (PermissionType permissionType:permissionTypeList)
+            {
+                com.wipro.ats.bdre.md.beans.PermissionType pType =new com.wipro.ats.bdre.md.beans.PermissionType();
+                pType.setPermissionTypeName(permissionType.getPermissionTypeName());
+                pType.setPermissionTypeId(permissionType.getPermissionTypeId());
+                pType.setCounter(permissionTypeList.size());
+                permissionTypes.add(pType);
+            }
+
+            List<RestWrapperOptions.Option> options = new ArrayList<RestWrapperOptions.Option>();
+            for (com.wipro.ats.bdre.md.beans.PermissionType permissionType : permissionTypes) {
+                RestWrapperOptions.Option option = new RestWrapperOptions.Option(permissionType.getPermissionTypeName(), permissionType.getPermissionTypeId());
+                options.add(option);
+            }
+            restWrapperOptions = new RestWrapperOptions(options, RestWrapperOptions.OK);
+            LOGGER.info("size of permission types "+permissionTypes.size());
+    } catch (MetadataException e) {
+        LOGGER.error(e);
+        restWrapperOptions = new RestWrapperOptions(e.getMessage(), RestWrapper.ERROR);
+    }
+    return restWrapperOptions;
+}
 }
