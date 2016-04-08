@@ -11,7 +11,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.wipro.ats.bdre.md.ui;
+package com.wipro.ats.bdre.md.analyticsui;
 
 import com.wipro.ats.bdre.md.api.GetProcess;
 import com.wipro.ats.bdre.md.beans.ProcessInfo;
