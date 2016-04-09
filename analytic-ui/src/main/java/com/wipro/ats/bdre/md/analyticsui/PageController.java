@@ -36,56 +36,9 @@ import java.util.List;
 @Controller
 @RequestMapping("/pages")
 public class PageController {
-    private static final String PARENTPROCESSID = "--parent-process-id";
-    private static final String WORKFLOWCON = "workflow-";
-
     @RequestMapping(value = "/{page}.page", method = RequestMethod.GET)
     public String welcome(@PathVariable("page") String page) {
         return page;
-    }
-
-    @RequestMapping(value = "/workflow/{pid}.page", method = RequestMethod.GET)
-    @ResponseBody
-    public String getWorkflowDot(@PathVariable("pid") String pid) {
-        List<ProcessInfo> processInfos = new GetProcess().execute(new String[]{PARENTPROCESSID, pid});
-        Workflow workflow = new WorkflowPrinter().execute(processInfos, WORKFLOWCON + pid);
-        return workflow.getDot().toString();
-    }
-
-    @RequestMapping(value = "/details/{pid}/{ieid}.page", method = RequestMethod.GET)
-    @ResponseBody
-    public String getDashboardDot(@PathVariable("pid") String pid, @PathVariable("ieid") String ieid) {
-
-        List<ProcessInfo> processInfos = new GetProcess().execInfo(new String[]{PARENTPROCESSID, pid, "--instance-exec-id", ieid});
-        Workflow workflow = new WorkflowPrinter().execInfo(processInfos, WORKFLOWCON + pid);
-        return workflow.getDot().toString();
-
-    }
-
-    @RequestMapping(value = "/workflowxml/{pid}.page", method = RequestMethod.GET)
-    @ResponseBody
-    public String getWorkflowXML(@PathVariable("pid") String pid) {
-        List<ProcessInfo> processInfos = new GetProcess().execute(new String[]{PARENTPROCESSID, pid});
-        Workflow workflow = new WorkflowPrinter().execute(processInfos, WORKFLOWCON + pid);
-        return workflow.getXml().toString();
-    }
-
-    @RequestMapping(value = "/auth/login.page", method = RequestMethod.GET)
-    public ModelAndView login(@RequestParam(value = "error", required = false) String error,
-                              @RequestParam(value = "logout", required = false) String logout) {
-
-        ModelAndView model = new ModelAndView();
-        if (error != null) {
-            model.addObject("error", "Invalid username and password!");
-        }
-
-        if (logout != null) {
-            model.addObject("msg", "You've been logged out successfully.");
-        }
-        model.setViewName("login");
-
-        return model;
-
     }
 
     //for 403 access denied page
