@@ -5,60 +5,43 @@
 	<link href="../../css/bootstrap.min.css" rel="stylesheet" type="text/css" />
 	<title>Login Page</title>
 	<style>
-
-	    body{
-		color: #514B4B;
-		background: #FaFaFa;
-	    }
-
-	    #login-box {
-		width: 370px;
-		padding: 20px;
-		margin-top:20px;
-		border-top: 1px solid #e4e4e4;
-		border-bottom: 1px solid #e4e4e4;
-		border-radius:1px;
-	    }
-	    .hide{
-		display:none;
-	    }
-	    #logo{
-		width:100px;
-	    }
+	     body{background-image: url("../../css/images/BDRE_BG.png");width: 100%;height: 100%;background-size: cover;overflow: hidden;}
+		.login-box{width: 425px;height: 315px;margin: auto;border: 1px solid #e4e4e4;background-color: #e4e4e4;border-radius: 5px;position: absolute;top: 55%;bottom: 50%;left:0;right:0;}
+		.logo{width: 110px;top: -51px;position: absolute;left: 0;right:0;}
+		.btn-signin{background-color: #005352;height: 37px;width: 111px;padding-top: 0px;padding-bottom: 0px;float:right;margin-bottom:20px}
+		.form-group-pdiv .form-control{height: 38px;width: 95%;margin:0 auto;padding: 6px 38px;}
+		.form-group-pdiv .form-group {position: relative;margin-bottom:30px;margin-left:13px;}
+		.loginForm{margin: 24% 20px 0px 20px;}
+		.icon-circle{width: 40px;height: 40px;border-radius: 80px;background: #005352 no-repeat center;}
+	    .pwordicon{background-image:  url("../../css/images/password-icon.png")  ;background-size: 65% 65%;position: absolute;left: -5px;}
+	    .usericon{background-image: url("../../css/images/user.png");background-size: 55% 55%;position: absolute;left: -5px;}
+	    .login-links{width: 95%;margin: 0 auto;}
+	    .login-fp{float: left;color: #000000;font-family: sans-serif;font-weight: 500; margin-left:13px;margin-top: 2%;}
+	    .text-info{color: #FFFFFF;font-size:60px;border-radius: 5px;padding-top: 4%;padding-bottom: 4%;}
+	    .login-alert-danger{border: none;background: none;position: absolute;top: 18%;margin-left:16px}
 	</style>
 	<script>
-
-    // Break out of an iframe
-    //
+	// Break out of an iframe
     // Passing `this` and re-aliasing as `window` ensures
     // that the window object hasn't been overwritten.
-    //
-
-    (function(window) {
+	(function(window) {
       if (window.location !== window.top.location) {
         window.top.location = window.location;
       }
     })(this);
-
-    </script>
+	</script>
     </head>
     <body onload='document.loginForm.username.focus();'>
-
-
-	<h1 class="text-center text-info">  Welcome to Big Data Ready Enterprise  </h1>
-	<img id="logo" class="center-block img-responsive" src="../../css/images/bdre-logo.png"/>
-	<div id="login-box" class="center-block">
-
-	    <p class="lead text-info">Please login </p>
-
-	    <c:if test="${not empty error}">
-		<div class="alert alert-danger " role="alert">
+	<div class="text-center text-info">Big Data Ready Enterprise</div>
+	<div id="login-box" class="center-block login-box">
+	<img id="logo" class="center-block img-responsive logo" src="../../css/images/logo.png"/>
+		<c:if test="${not empty error}">
+		<div class="alert alert-danger login-alert-danger " role="alert">
 		    <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
 		    <span class="sr-only">Error:</span>
 		    ${error}
 		</div>
-
-	    </c:if>
+		</c:if>
 	    <c:if test="${not empty msg}">
 		<div class="alert alert-info " role="alert">
 		    <span class="glyphicon glyphicon-info-sign" aria-hidden="true"></span>
@@ -66,57 +49,23 @@
 		    ${msg}
 		</div>
 	    </c:if>
-
-	    <form name='loginForm'
+		<form name='loginForm' class="loginForm"
 		  action="<c:url value='/j_spring_security_check' />" method='POST'>
-
-		<div class="form-group">
-		    <label for="username">Username</label>
-		    <input type="text" class="form-control" id="InputEmail" name='username' placeholder="Username">
+		<div class="form-group-pdiv">
+			<div class="form-group">
+			    <div class="icon-circle usericon"></div><input type="text" class="form-control" id="InputEmail" name='username' placeholder="Username">
+			</div>
+			<div class="form-group">
+			    <div class="icon-circle pwordicon"></div><input type="password" class="form-control" id="password" name='password' placeholder="Password">
+			</div>
 		</div>
-		<div class="form-group">
-		    <label for="password">Password</label>
-		    <input type="password" class="form-control" id="password" name='password' placeholder="Password">
+		<div class="login-links">
+			<div class="login-fp">Forgot Password?</div>
+			<button type="submit" class="btn btn-default btn-lg btn-primary btn-signin"><span id="sizing-addon2">Sign in</span></button>
+			<div class="clearfix"></div>
 		</div>
-
-
-		<!--<table>
-		<div class="input-group">
-		  
-		  <input class="form-control" placeholder="Password" type='password' name='password' aria-describedby="sizing-addon2">
-		  <span class="input-group-addon" id="sizing-addon2"><span class="glyphicon glyphicon-lock" aria-hidden="true"></span></span>
-		</div>
-		<div class="input-group">
-		  <input type="text" class="form-control" name='username' placeholder="Username" aria-describedby="sizing-addon2">
-		  <span class="input-group-addon" id="sizing-addon2"><span class="glyphicon glyphicon-user" aria-hidden="true"></span></span>
-		</div>
-			<tr>
-				<td>User:</td>
-				<td><input type='text' name='username'></td>
-			</tr>
-			<tr>
-				<td>Password:</td>
-				<td><input type='password' name='password' /></td>
-			</tr>
-			<tr>
-				<td colspan='2'><input name="submit" type="submit"
-					value="submit" /></td>
-			</tr>
-			<input class="btn btn-lg btn-default" name="submit" type="submit" value="Sign In" />
-		</table> -->
-
-		<button type="submit" class="btn btn-default btn-lg btn-primary"><span id="sizing-addon2"><span class="glyphicon glyphicon-arrow-right" aria-hidden="true"></span> Sign in </button>
-		<!-- *************below are the buttons with different css***********
-		<button type="submit" class="btn btn-default btn-lg btn-info"><span id="sizing-addon2"><span class="glyphicon glyphicon-arrow-right" aria-hidden="true"></span> Sign in </button>
-		<button type="submit" class="btn btn-default btn-lg btn-warning"><span id="sizing-addon2"><span class="glyphicon glyphicon-arrow-right" aria-hidden="true"></span> Sign in </button>
-		<button type="submit" class="btn btn-default btn-lg btn-danger"><span id="sizing-addon2"><span class="glyphicon glyphicon-arrow-right" aria-hidden="true"></span> Sign in </button>
-		<button type="submit" class="btn btn-default btn-lg btn-block"><span id="sizing-addon2"><span class="glyphicon glyphicon-arrow-right" aria-hidden="true"></span> Sign in </button>
-		<button type="submit" class="btn btn-default btn-lg"><span id="sizing-addon2"><span class="glyphicon glyphicon-arrow-right" aria-hidden="true"></span> Sign in </button> -->
-		<input type="hidden" name="${_csrf.parameterName}"
-		       value="${_csrf.token}" />
-
-	    </form>
+		<input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}" />
+ 		</form>
 	</div>
-
     </body>
 </html>
