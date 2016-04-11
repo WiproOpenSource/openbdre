@@ -51,16 +51,14 @@ public class DestTableLoad extends BaseStructure {
         RemoteIterator<LocatedFileStatus> srcFiles = hdfs.listFiles(srcPath, true);
         while(srcFiles.hasNext()){
             String absolutePath=srcFiles.next().getPath().toUri().toString();
-            if(!absolutePath.endsWith("/"))absolutePath=absolutePath.concat("/");
+            if(absolutePath.endsWith("/")) absolutePath=absolutePath.substring(0,absolutePath.length()-1);
             LOGGER.info("absolutePath of source business partition= " + absolutePath);
             String relativePath=absolutePath.replace(src,"");
             if(relativePath.endsWith("/")) relativePath=relativePath.substring(0,relativePath.length()-1);
             LOGGER.info("relativePath of source business partition= = " + relativePath);
             if(!dest.endsWith("/")) dest=dest+"/";
             String destCheckPathString=dest+relativePath;
-            if(!destCheckPathString.endsWith("/")) destCheckPathString=destCheckPathString.concat("/");
             Path destCheckPath=new Path(destCheckPathString);
-            LOGGER.info("destCheckPathString = " + destCheckPathString);
             LOGGER.info("destCheckPath = " + destCheckPath);
             //find first index that contains a "/" from the end of the string, after first find the second such occurrence, finally trim the '/instanceexecid=number/part_0000' from the whole path, do this for both source and dest paths
             int destIndex=destCheckPathString.lastIndexOf("/");
