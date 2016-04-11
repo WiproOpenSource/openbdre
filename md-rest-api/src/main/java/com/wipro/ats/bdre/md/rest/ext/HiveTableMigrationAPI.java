@@ -224,14 +224,16 @@ public class HiveTableMigrationAPI {
         String processDesc = null;
         Integer busDomainID = null;
         Integer tablesSize = 0;
-        List<Properties> propertiesList = new ArrayList<Properties>();
-        com.wipro.ats.bdre.md.dao.jpa.Properties jpaProperties = null;
 
-        List<com.wipro.ats.bdre.md.beans.table.Process> tableProcessList = new ArrayList<com.wipro.ats.bdre.md.beans.table.Process>();
+        com.wipro.ats.bdre.md.dao.jpa.Properties jpaProperties = null;
+        for(int i = 1; i <= checkedTables.length; i++)
+                LOGGER.info("table is "+checkedTables[i-1]);
+        List<com.wipro.ats.bdre.md.beans.table.Process> allTableProcessList = new ArrayList<com.wipro.ats.bdre.md.beans.table.Process>();
 
         for (int i = 1; i <= checkedTables.length; i++){
+            List<Properties> propertiesList = new ArrayList<Properties>();
             LOGGER.info("table name is "+checkedTables[i-1]);
-            jpaProperties = Dao2TableUtil.buildJPAProperties("hiveMigration", "tables"+i,checkedTables[i-1] , "source Tables");
+            jpaProperties = Dao2TableUtil.buildJPAProperties("hiveMigration", "table-"+i,checkedTables[i-1] , "source Tables");
             propertiesList.add(jpaProperties);
             for (String string : map.keySet()) {
             LOGGER.info("String is" + string);
@@ -254,16 +256,19 @@ public class HiveTableMigrationAPI {
                 jpaProperties = Dao2TableUtil.buildJPAProperties("hiveMigration", "src_db-"+i, map.get(string), "source database");
                 propertiesList.add(jpaProperties);
 
-            } else if (string.startsWith("destEnv_")) {
-                jpaProperties = Dao2TableUtil.buildJPAProperties("hiveMigration", "dest_env-"+i, map.get(string), "destination environment");
+            }
+            else if (string.startsWith("destEnv_instexecId")) {
+                jpaProperties = Dao2TableUtil.buildJPAProperties("hiveMigration", "technical_partition-" + i, map.get(string), "technical partition");
+                propertiesList.add(jpaProperties);
+            }
+            else if (string.startsWith("destEnv_destEnv")) {
+                jpaProperties = Dao2TableUtil.buildJPAProperties("hiveMigration", "dest-env-"+i, map.get(string), "destination environment");
                 propertiesList.add(jpaProperties);
             } else if (string.startsWith("destDB_")) {
                 jpaProperties = Dao2TableUtil.buildJPAProperties("hiveMigration", "dest_db-"+i, map.get(string), "destination database");
                 propertiesList.add(jpaProperties);
-            } else if (string.startsWith("destEnv_instexecId")) {
-                jpaProperties = Dao2TableUtil.buildJPAProperties("hiveMigration", "technical_partition-"+i, map.get(string), "technical partition");
-                propertiesList.add(jpaProperties);
             }
+
         }
 
 
@@ -277,11 +282,11 @@ public class HiveTableMigrationAPI {
         com.wipro.ats.bdre.md.dao.jpa.Process registerpartitionProcess = new com.wipro.ats.bdre.md.dao.jpa.Process();
 
 
-        preprocessingProcess = Dao2TableUtil.buildJPAProcess(32, "preprocessing process for " + processName + ":table-"+i, "preprocessing:table-"+i, 1, busDomainID);
-        sourcestageloadProcess = Dao2TableUtil.buildJPAProcess(33, "sourcestageload process for " + processName + ":table-"+i, "sourcestageload:table-"+i, 1, busDomainID);
-        sourcetodeststagecopyProcess = Dao2TableUtil.buildJPAProcess(34, "sourcetodeststagecopy process for " + processName + ":table-"+i, "sourcetodeststagecopy:table-"+i, 1, busDomainID);
-        desttableloadProcess = Dao2TableUtil.buildJPAProcess(35, "desttableload process for " + processName + ":table-"+i, "desttableload:table-"+i, 1, busDomainID);
-        registerpartitionProcess = Dao2TableUtil.buildJPAProcess(36, "registerpartition process for " + processName + ":table-"+i, "registerpartition:table-"+i, 1, busDomainID);
+        preprocessingProcess = Dao2TableUtil.buildJPAProcess(32, "preprocessing for " + processName + ":table-"+i, "preprocessing:table-"+i, 1, busDomainID);
+        sourcestageloadProcess = Dao2TableUtil.buildJPAProcess(33, "sourcestageload for " + processName + ":table-"+i, "sourcestageload:table-"+i, 1, busDomainID);
+        sourcetodeststagecopyProcess = Dao2TableUtil.buildJPAProcess(34, "src-deststagecopy for " + processName + ":table-"+i, "sourcetodeststagecopy:table-"+i, 1, busDomainID);
+        desttableloadProcess = Dao2TableUtil.buildJPAProcess(35, "desttableload for " + processName + ":table-"+i, "desttableload:table-"+i, 1, busDomainID);
+        registerpartitionProcess = Dao2TableUtil.buildJPAProcess(36, "registerpartition for " + processName + ":table-"+i, "registerpartition:table-"+i, 1, busDomainID);
         childProcesses.add(preprocessingProcess);
         childProcesses.add(sourcestageloadProcess);
         childProcesses.add(sourcetodeststagecopyProcess);
@@ -289,18 +294,22 @@ public class HiveTableMigrationAPI {
         childProcesses.add(registerpartitionProcess);
 
         LOGGER.info("childprocess size" + childProcesses.size());
+            LOGGER.info("Properties size" + propertiesList.size());
         List<com.wipro.ats.bdre.md.dao.jpa.Process> processList = processDAO.createHiveMigrationJob(parentProcess, childProcesses, propertiesList);
         LOGGER.info("after method size" + processList.size());
-        tableProcessList = Dao2TableUtil.jpaList2TableProcessList(processList);
+         List<com.wipro.ats.bdre.md.beans.table.Process> tableProcessList = new ArrayList<com.wipro.ats.bdre.md.beans.table.Process>();
+            tableProcessList = Dao2TableUtil.jpaList2TableProcessList(processList);
         Integer counter = tableProcessList.size();
         LOGGER.info(counter + "counter");
         for (com.wipro.ats.bdre.md.beans.table.Process process : tableProcessList) {
             process.setCounter(counter);
             process.setTableAddTS(DateConverter.dateToString(process.getAddTS()));
             process.setTableEditTS(DateConverter.dateToString(process.getEditTS()));
+            allTableProcessList.add(process);
         }
+
     }
-        restWrapper = new RestWrapper(tableProcessList, RestWrapper.OK);
+        restWrapper = new RestWrapper(allTableProcessList, RestWrapper.OK);
         LOGGER.info("Process and Properties for data load process inserted by" + principal.getName());
 
         return restWrapper;

@@ -342,7 +342,7 @@
                $('#showSrcDB').val(srcDatabase);
                }
      function srcTableVar(){
-               srcTable = $('#tabl').val();
+               srcTable = checkedTables;
                $('#showSrcTables').val(srcTable);
                }
      function destEnvVar(){
@@ -362,7 +362,7 @@
 
          </script>
   <script>
-  var app2 = angular.module('app2',[]);
+
   var created = 0;
    var checkedTables = [];
   var wizard = null;
@@ -377,7 +377,20 @@
 
   		onStepChanging: function(event, currentIndex, newIndex) {
   			console.log(currentIndex + 'current ' + newIndex );
-
+            if(currentIndex == 0 && newIndex == 1 && document.getElementById('processName').value == "" && document.getElementById('processDesc').value == "") {
+            				$("#div-dialog-warning").dialog({
+            					title: "",
+            					resizable: false,
+            					height: 'auto',
+            					modal: true,
+            					buttons: {
+            						"Ok": function() {
+            							$(this).dialog("close");
+            						}
+            					}
+            				}).text("Please Enter Process Name and Description");
+            				return false;
+            			}
   			return true;
         },
   		onStepChanged: function(event, currentIndex, priorIndex) {
@@ -434,20 +447,21 @@
 										 var objDiv = document.getElementById("srctables");
 
                                         for(a in tables["Options"]){
-                                                var radioItem1 = document.createElement("input");
-                                                radioItem1.type = "checkbox";
-                                                radioItem1.name = "radioGrp";
-                                                radioItem1.id = "radioDiv";
-                                                radioItem1.value = tables["Options"][a].Value;
+                                                var item = document.createElement("input");
+                                                item.type = "checkbox";
+                                                item.name = "tablesGrp";
+                                                item.id = "tablesDiv";
+                                                item.value = tables["Options"][a].Value;
 
                                                 var objTextNode1 = document.createTextNode(tables["Options"][a].Value);
 
                                                 var objLabel = document.createElement("label");
-                                                objLabel.htmlFor = radioItem1.id;
-                                                objLabel.appendChild(radioItem1);
+                                                objLabel.htmlFor = item.id;
+                                                objLabel.appendChild(item);
                                                 objLabel.appendChild(objTextNode1);
 
                                                 objDiv.appendChild(objLabel);
+                                                objDiv.appendChild(document.createElement('br'));
                                         }
 				 }
 
@@ -564,7 +578,7 @@
 
                  var app = angular.module('myApp', []);
                   app.controller('myCtrl', function($scope) {
-                      $scope.srcEnvs= getGenConfigMap('cluster');
+                      $scope.srcEnvs= getGenConfigMap('HiveAddress');
 
                       $scope.formatMap=null;
                       $scope.busDomains = {};
@@ -635,7 +649,7 @@
                                                     <label class="control-label col-sm-2" for="srcEnv">Source Environment:</label>
                                                     <div class="col-sm-10">
                                                         <select class="form-control" id="srcEnv" name="srcEnv" >
-                                                            <option ng-repeat="srcEnv in srcEnvs" value="{{srcEnv.defaultVal}}" name="srcEnv">{{srcEnv.value}}</option>
+                                                            <option ng-repeat="srcEnv in srcEnvs" value="{{srcEnv.defaultVal}}" label="{{srcEnv.description}}">{{srcEnv.description}}</option>
 
                                                         </select>
                                                     </div>
@@ -662,7 +676,8 @@
               </section>
 			<h3>Tables</h3>
 			<section>
-			  <form class="form-horizontal" role="form" id="tablesForm">
+			 <label class="control-label col-sm-2" for="tabl">Select source Table(s):</label>
+			  <form class="form-horizontal"  id="tablesForm">
                           <div id ="srctables" class="col-sm-10">
 
                           </div>
@@ -675,7 +690,7 @@
              <section>
              <form class="form-horizontal" role="form" id="destEnvForm">
               <div class="form-group">
-             			        <label class="control-label col-sm-2" for="instexecId">Technical Partition:</label>
+             			        <label class="control-label col-sm-2" for="instexecId">BDRE Technical Partition:</label>
                                      <div class="col-sm-10">
                                          <input type="text" class="form-control"  id="instexecId" name="instexecId"  value="instanceExecId" required>
                                      </div>
