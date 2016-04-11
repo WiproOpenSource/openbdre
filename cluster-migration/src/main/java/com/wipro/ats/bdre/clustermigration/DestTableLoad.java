@@ -50,30 +50,33 @@ public class DestTableLoad extends BaseStructure {
         RemoteIterator<LocatedFileStatus> srcFiles = hdfs.listFiles(srcPath, true);
         while(srcFiles.hasNext()){
             String absolutePath=srcFiles.next().getPath().toUri().toString();
-            LOGGER.debug("absolutePath of source business partition= " + absolutePath);
+            LOGGER.info("absolutePath of source business partition= " + absolutePath);
             String relativePath=absolutePath.replace(src,"");
             if(relativePath.endsWith("/")) relativePath=relativePath.substring(0,relativePath.length()-1);
-            LOGGER.debug("relativePath of source business partition= = " + relativePath);
+            LOGGER.info("relativePath of source business partition= = " + relativePath);
+            if(!dest.endsWith("/")) dest=dest+"/";
             String destCheckPathString=dest+relativePath;
             Path destCheckPath=new Path(destCheckPathString);
-            LOGGER.debug("destCheckPath = " + destCheckPath);
+            LOGGER.info("destCheckPath = " + destCheckPath);
             //find first index that contains a "/" from the end of the string, after first find the second such occurrence, finally trim the '/instanceexecid=number/part_0000' from the whole path, do this for both source and dest paths
             int destIndex=destCheckPath.toString().lastIndexOf("/");
             int secondLastDestIndex=destCheckPath.toString().lastIndexOf("/",destIndex-1);
             int srcIndex=absolutePath.lastIndexOf("/");
             int secondLastSrcIndex=absolutePath.substring(0,srcIndex).lastIndexOf("/",srcIndex-1);
             String truncatedSrcPath=absolutePath.substring(0,secondLastSrcIndex);
-            LOGGER.debug("truncated Src Path = " + truncatedSrcPath);
+            LOGGER.info("truncated Src Path = " + truncatedSrcPath);
             String truncatedDestPath=destCheckPath.toString().substring(0,secondLastDestIndex);
-            LOGGER.debug("truncated Dest Path = " +truncatedDestPath) ;
+            LOGGER.info("truncated Dest Path = " +truncatedDestPath) ;
             Path existsPathCheck=new Path(truncatedDestPath);
             Path srcPathToMove=new Path(truncatedSrcPath);
             //check if the business partition to be copied already exists inside the destination table, if it does, it has to be overwritten (in this case delete at dest and move from source to dest
-            LOGGER.debug("Does the business partition exist already inside the table? True/False? = " + hdfs.exists(existsPathCheck));
+            LOGGER.info("Does the business partition exist already inside the table? True/False? = " + hdfs.exists(existsPathCheck));
             if(hdfs.exists(existsPathCheck)){
+                LOGGER.info("bus partitions to be copied already exist at the destination, hence deleting them at destination");
                 hdfs.delete(existsPathCheck,true);
-                hdfs.rename(srcPathToMove,existsPathCheck);
             }
+            LOGGER.info("moving the business partitions to the destination table");
+            hdfs.rename(srcPathToMove,existsPathCheck);
         }
     }
 }
