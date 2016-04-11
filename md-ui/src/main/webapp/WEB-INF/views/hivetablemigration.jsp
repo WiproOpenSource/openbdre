@@ -342,7 +342,7 @@
                $('#showSrcDB').val(srcDatabase);
                }
      function srcTableVar(){
-               srcTable = $('#tabl').val();
+               srcTable = checkedTables;
                $('#showSrcTables').val(srcTable);
                }
      function destEnvVar(){
@@ -362,8 +362,9 @@
 
          </script>
   <script>
-  var app2 = angular.module('app2',[]);
+
   var created = 0;
+   var checkedTables = [];
   var wizard = null;
   wizard = $(document).ready(function() {
 
@@ -376,7 +377,20 @@
 
   		onStepChanging: function(event, currentIndex, newIndex) {
   			console.log(currentIndex + 'current ' + newIndex );
-
+            if(currentIndex == 0 && newIndex == 1 && document.getElementById('processName').value == "" && document.getElementById('processDesc').value == "") {
+            				$("#div-dialog-warning").dialog({
+            					title: "",
+            					resizable: false,
+            					height: 'auto',
+            					modal: true,
+            					buttons: {
+            						"Ok": function() {
+            							$(this).dialog("close");
+            						}
+            					}
+            				}).text("Please Enter Process Name and Description");
+            				return false;
+            			}
   			return true;
         },
   		onStepChanged: function(event, currentIndex, priorIndex) {
@@ -429,18 +443,45 @@
                                                        alert('table danger');
                                                    }
                                                });
-                                 var str;
-										 var x = document.getElementById("tabl");
-									 for( str in tables["Options"]){
-										 var option = document.createElement("option");
-										 option.text = tables["Options"][str].Value;
-										 option.value = tables["Options"][str].Value;
-										 x.appendChild(option);
-									 }
+                                 var a;
+										 var objDiv = document.getElementById("srctables");
+
+                                        for(a in tables["Options"]){
+                                                var item = document.createElement("input");
+                                                item.type = "checkbox";
+                                                item.name = "tablesGrp";
+                                                item.id = "tablesDiv";
+                                                item.value = tables["Options"][a].Value;
+
+                                                var objTextNode1 = document.createTextNode(tables["Options"][a].Value);
+
+                                                var objLabel = document.createElement("label");
+                                                objLabel.htmlFor = item.id;
+                                                objLabel.appendChild(item);
+                                                objLabel.appendChild(objTextNode1);
+
+                                                objDiv.appendChild(objLabel);
+                                                objDiv.appendChild(document.createElement('br'));
+                                        }
 				 }
 
 				 if(currentIndex == 3 && priorIndex == 2) {
-				 formIntoMap('tables_','tablesForm');
+                     var inputs = document.forms["tablesForm"].elements;
+                     var cbs = [];
+
+                     var i;
+
+                     for ( i = 0; i < inputs.length; i++) {
+                       if (inputs[i].type == "checkbox") {
+                         cbs.push(inputs[i]);
+                         if (inputs[i].checked) {
+                           checkedTables.push(inputs[i].value);
+                            }
+                         }
+                       }
+                     var nbCbs = cbs.length;
+                     var nbChecked = checkedTables.length;
+
 				 srcTableVar();
 				 }
 
@@ -476,9 +517,10 @@
 				destDBVar();
 
             	$('#createjobs').on('click', function(e) {
+            	    console.log("checked tables"+checkedTables);
                         $.ajax({
                             type: "POST",
-                            url: "/mdrest/hivemigration/createjobs/",
+                            url: "/mdrest/hivemigration/createjobs/"+checkedTables,
                             data: jQuery.param(map),
                             success: function(data) {
                                 if(data.Result == "OK") {
@@ -536,9 +578,7 @@
 
                  var app = angular.module('myApp', []);
                   app.controller('myCtrl', function($scope) {
-                      $scope.srcEnvs= getGenConfigMap('cluster');
-
-
+                      $scope.srcEnvs= getGenConfigMap('HiveAddress');
 
                       $scope.formatMap=null;
                       $scope.busDomains = {};
@@ -609,7 +649,7 @@
                                                     <label class="control-label col-sm-2" for="srcEnv">Source Environment:</label>
                                                     <div class="col-sm-10">
                                                         <select class="form-control" id="srcEnv" name="srcEnv" >
-                                                            <option ng-repeat="srcEnv in srcEnvs" value="{{srcEnv.defaultVal}}" name="srcEnv">{{srcEnv.value}}</option>
+                                                            <option ng-repeat="srcEnv in srcEnvs" value="{{srcEnv.defaultVal}}" label="{{srcEnv.description}}">{{srcEnv.description}}</option>
 
                                                         </select>
                                                     </div>
@@ -636,21 +676,11 @@
               </section>
 			<h3>Tables</h3>
 			<section>
-			  <form class="form-horizontal" role="form" id="tablesForm">
-                     <div class="form-group">
-			        <label class="control-label col-sm-2" for="instexecId">Technical Partition:</label>
-                        <div class="col-sm-10">
-                            <input type="text" class="form-control"  id="instexecId" name="instexecId"  value="instanceExecId" required>
-                        </div>
-                        </div>
-                  <div id="tablesDiv">
-                     <div class="form-group">
-                        <label class="control-label col-sm-2" for="tabl">Select Table:</label>
-                          <div class="col-sm-10">
-                            <select class="form-control" id="tabl" name="tabl" >
-                            </select>
+			 <label class="control-label col-sm-2" for="tabl">Select source Table(s):</label>
+			  <form class="form-horizontal"  id="tablesForm">
+                          <div id ="srctables" class="col-sm-10">
+
                           </div>
-                      </div>
 
               </form>
 
@@ -659,6 +689,12 @@
              <h3>Destination Environment</h3>
              <section>
              <form class="form-horizontal" role="form" id="destEnvForm">
+              <div class="form-group">
+             			        <label class="control-label col-sm-2" for="instexecId">BDRE Technical Partition:</label>
+                                     <div class="col-sm-10">
+                                         <input type="text" class="form-control"  id="instexecId" name="instexecId"  value="instanceExecId" required>
+                                     </div>
+                                     </div>
 				   <div id="fileFormatDiv" ng-controller="myCtrl">
 								 <div class="form-group">
 									 <label class="control-label col-sm-2" for="destEnv">Select Destination Environment:</label>

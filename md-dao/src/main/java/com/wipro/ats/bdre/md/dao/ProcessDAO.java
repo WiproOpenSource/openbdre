@@ -554,9 +554,10 @@ public List<Process> createOneChildJob(Process parentProcess, Process childProce
             LOGGER.info("parent processId:" + parentPid);
             parentProcess.setProcessId(parentPid);
 
+
             if(parentProperties!=null && !parentProperties.isEmpty()){
                 for(Properties properties: parentProperties){
-
+                    LOGGER.info("properties key"+properties.getId().getPropKey());
                     properties.getId().setProcessId(parentPid);
                     properties.setProcess(parentProcess);
                     session.save(properties);
