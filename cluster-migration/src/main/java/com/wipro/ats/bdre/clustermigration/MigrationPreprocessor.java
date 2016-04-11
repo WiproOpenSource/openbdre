@@ -426,7 +426,7 @@ public class MigrationPreprocessor extends BaseStructure{
         migrationPreprocessorInfo.setNnAddress(sourceNameNodeAddress);
         migrationPreprocessorInfo.setSrcStgTablePath(srcStgTableLocation);
         migrationPreprocessorInfo.setDestStgFolderPath(destNameNodeAddress+"/tmp/"+processId+"/"+instanceExecId);
-        migrationPreprocessorInfo.setDestStgFolderContentPath(destNameNodeAddress+"/tmp/"+processId+"/"+instanceExecId+"/");
+        migrationPreprocessorInfo.setDestStgFolderContentPath(destNameNodeAddress+"/tmp/"+processId+"/"+instanceExecId+"/*");
         migrationPreprocessorInfo.setDestTablePath(destTableLocation);
         migrationPreprocessorInfo.setDestDb(destDb);
         migrationPreprocessorInfo.setDestTable(table);
