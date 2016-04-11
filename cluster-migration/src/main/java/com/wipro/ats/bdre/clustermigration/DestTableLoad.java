@@ -51,16 +51,19 @@ public class DestTableLoad extends BaseStructure {
         RemoteIterator<LocatedFileStatus> srcFiles = hdfs.listFiles(srcPath, true);
         while(srcFiles.hasNext()){
             String absolutePath=srcFiles.next().getPath().toUri().toString();
+            if(!absolutePath.endsWith("/"))absolutePath=absolutePath.concat("/");
             LOGGER.info("absolutePath of source business partition= " + absolutePath);
             String relativePath=absolutePath.replace(src,"");
             if(relativePath.endsWith("/")) relativePath=relativePath.substring(0,relativePath.length()-1);
             LOGGER.info("relativePath of source business partition= = " + relativePath);
             if(!dest.endsWith("/")) dest=dest+"/";
             String destCheckPathString=dest+relativePath;
+            if(!destCheckPathString.endsWith("/")) destCheckPathString=destCheckPathString.concat("/");
             Path destCheckPath=new Path(destCheckPathString);
+            LOGGER.info("destCheckPathString = " + destCheckPathString);
             LOGGER.info("destCheckPath = " + destCheckPath);
             //find first index that contains a "/" from the end of the string, after first find the second such occurrence, finally trim the '/instanceexecid=number/part_0000' from the whole path, do this for both source and dest paths
-            int destIndex=destCheckPath.toString().lastIndexOf("/");
+            int destIndex=destCheckPathString.lastIndexOf("/");
             int secondLastDestIndex=destCheckPath.toString().lastIndexOf("/",destIndex-1);
             int srcIndex=absolutePath.lastIndexOf("/");
             int secondLastSrcIndex=absolutePath.substring(0,srcIndex).lastIndexOf("/",srcIndex-1);
@@ -76,10 +79,12 @@ public class DestTableLoad extends BaseStructure {
                 LOGGER.info("bus partitions to be copied already exist at the destination, hence deleting them at destination");
                 hdfs.delete(existsPathCheck,true);
             }
+            String destPartitionPath=truncatedDestPath.substring(0,truncatedDestPath.lastIndexOf("/"));
+            Path partitionWisePath=new Path(destPartitionPath);
+            hdfs.mkdirs(partitionWisePath);
             LOGGER.info("moving the business partitions to the destination table");
-            LOGGER.info("moving " +srcPathToMove + " to " +existsPathCheck);
-            hdfs.mkdirs(existsPathCheck);
-            hdfs.rename(srcPathToMove,existsPathCheck);
+            LOGGER.info("moving " +srcPathToMove + " to " +partitionWisePath);
+            hdfs.rename(srcPathToMove,partitionWisePath);
         }
         hdfs.delete(srcPath,true);
     }
