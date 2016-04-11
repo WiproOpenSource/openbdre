@@ -64,8 +64,8 @@ public class MigrationPreprocessor extends BaseStructure{
         try {
             Class.forName(IMConstant.HIVE_DRIVER_NAME);
             //String hiveConnection = "jdbc:hive2://quickstart.cloudera:10000";
-            String hiveUser = "cloudera";
-            String hivePassword = "cloudera";
+            String hiveUser = "openbdre";
+            String hivePassword = "openbdre";
             Connection con = DriverManager.getConnection(hiveConnection + "/" + dbName, hiveUser, hivePassword);
             con.createStatement().execute("set hive.exec.dynamic.partition.mode=nonstrict");
             con.createStatement().execute("set hive.exec.dynamic.partition=true");

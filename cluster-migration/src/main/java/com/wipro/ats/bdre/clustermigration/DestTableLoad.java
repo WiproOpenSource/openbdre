@@ -47,6 +47,7 @@ public class DestTableLoad extends BaseStructure {
         config.set("fs.defaultFS",destFs);
         FileSystem hdfs = FileSystem.get(config);
         Path srcPath = new Path(src);
+        Path destPath = new Path(dest);
         RemoteIterator<LocatedFileStatus> srcFiles = hdfs.listFiles(srcPath, true);
         while(srcFiles.hasNext()){
             String absolutePath=srcFiles.next().getPath().toUri().toString();
@@ -76,7 +77,10 @@ public class DestTableLoad extends BaseStructure {
                 hdfs.delete(existsPathCheck,true);
             }
             LOGGER.info("moving the business partitions to the destination table");
+            LOGGER.info("moving " +srcPathToMove + " to " +existsPathCheck);
+            hdfs.mkdirs(existsPathCheck);
             hdfs.rename(srcPathToMove,existsPathCheck);
         }
+        hdfs.delete(srcPath,true);
     }
 }
