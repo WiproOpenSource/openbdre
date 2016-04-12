@@ -19,6 +19,7 @@ package com.wipro.ats.bdre.clustermigration;
 import com.wipro.ats.bdre.BaseStructure;
 import com.wipro.ats.bdre.IMConfig;
 import com.wipro.ats.bdre.im.IMConstant;
+import com.wipro.ats.bdre.md.api.GetProperties;
 import org.apache.commons.cli.CommandLine;
 import org.apache.log4j.Logger;
 
@@ -26,6 +27,7 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.Properties;
 
 /**
  * Created by cloudera on 4/12/16.
@@ -43,7 +45,7 @@ public class SourceStageLoad extends BaseStructure{
             {"src-db", "source-db", " Source database"},
             {"src-tbl", "source-table", "Source table"},
             {"fil-con", "filter-condition", "Filter condition"},
-            {"src-hive", "source-hive-connection", "Source hive connection"}
+            {"ppid", "parent-process-id", "Parent Process Id"}
     };
 
     protected static Connection getHiveJDBCConnection(String dbName, String hiveConnection) throws Exception {
@@ -73,7 +75,8 @@ public class SourceStageLoad extends BaseStructure{
         String sourceDb=commandLine.getOptionValue("source-db");
         String sourceTable = commandLine.getOptionValue("source-table");
         String filterCondition = commandLine.getOptionValue("filter-condition");
-        String sourceHiveConnection = commandLine.getOptionValue("source-hive");
+        String parentProcessId=commandLine.getOptionValue("parent-process-id");
+        String sourceHiveConnection = getSourceHiveConnection(parentProcessId,"hive-migration");
 
         Connection conn = getHiveJDBCConnection(sourceDb,sourceHiveConnection);
         Statement st = conn.createStatement();
@@ -82,6 +85,12 @@ public class SourceStageLoad extends BaseStructure{
         st.close();
         conn.close();
         return ;
+    }
+    public String getSourceHiveConnection(String pid, String configGroup) {
+        GetProperties getProperties = new GetProperties();
+        java.util.Properties listForParams = getProperties.getProperties(pid, configGroup);
+        String sourceHiveConnection=listForParams.get("src-hive").toString();
+        return sourceHiveConnection;
     }
 
 

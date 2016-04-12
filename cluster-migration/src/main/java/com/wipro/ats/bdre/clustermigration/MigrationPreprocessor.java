@@ -390,7 +390,6 @@ public class MigrationPreprocessor extends BaseStructure{
         migrationPreprocessorInfo.setDestDb(destDb);
         migrationPreprocessorInfo.setDestTable(table);
         migrationPreprocessorInfo.setDestFileSystem(destNameNodeAddress);
-        migrationPreprocessorInfo.setSrcHiveConnection(srcHiveConnection);
         return migrationPreprocessorInfo;
     }
 

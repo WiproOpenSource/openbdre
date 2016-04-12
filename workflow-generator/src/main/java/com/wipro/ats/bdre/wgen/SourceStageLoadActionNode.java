@@ -124,8 +124,8 @@ public class SourceStageLoadActionNode extends GenericActionNode {
                 "            <arg>${wf:actionData(\"migration-preprocessor\")[\"source-table\"]}</arg>\n" +
                 "            <arg>--filter-condition</arg>\n" +
                 "            <arg>${wf:actionData(\"migration-preprocessor\")[\"filter-condition\"]}</arg>\n" +
-                "            <arg>--source-hive-connection</arg>\n" +
-                "            <arg>${wf:actionData(\"migration-preprocessor\")[\"src-hive\"]}</arg>\n" +
+                "            <arg>--parent-process-id</arg>\n" +
+                "            <arg>"+getProcessInfo().getParentProcessId()+"</arg>\n" +
                 "            <capture-output/>\n" +
                 "        </java>\n" +
                 "        <ok to=\"" + getToNode().getName() + "\"/>\n" +
