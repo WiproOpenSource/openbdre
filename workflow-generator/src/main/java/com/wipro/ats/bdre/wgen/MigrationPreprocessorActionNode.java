@@ -53,6 +53,8 @@ for the current action node, appropriately formatted as XML.
                     "            <job-tracker>${jobTracker}</job-tracker>\n" +
                     "            <name-node>${nameNode}</name-node>\n" +
                     "            <main-class>com.wipro.ats.bdre.clustermigration.oozie.OozieMigrationPreprocessor</main-class>\n" +
+                    "            <arg>--parent-process-id</arg>\n" +
+                    "            <arg>" + processInfo.getParentProcessId() + "</arg>\n" +
                     "            <arg>--process-id</arg>\n" +
                     "            <arg>" + getId() + "</arg>\n" +
                     "            <arg>--instance-exec-id</arg>\n" +

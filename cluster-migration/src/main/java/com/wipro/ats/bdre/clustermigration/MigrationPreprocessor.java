@@ -15,12 +15,11 @@
 package com.wipro.ats.bdre.clustermigration;
 
 import com.wipro.ats.bdre.BaseStructure;
+import com.wipro.ats.bdre.IMConfig;
 import com.wipro.ats.bdre.clustermigration.beans.MigrationPreprocessorInfo;
-import com.wipro.ats.bdre.exception.BDREException;
 import com.wipro.ats.bdre.im.IMConstant;
-import com.wipro.ats.bdre.md.api.GetProcess;
+import com.wipro.ats.bdre.md.api.GetProperties;
 import com.wipro.ats.bdre.md.api.ProcessLog;
-import com.wipro.ats.bdre.md.beans.ProcessInfo;
 import com.wipro.ats.bdre.md.beans.ProcessLogInfo;
 import org.apache.commons.cli.CommandLine;
 import org.apache.log4j.Logger;
@@ -39,15 +38,11 @@ public class MigrationPreprocessor extends BaseStructure{
     private static String stgPartitionColumns=new String();    //replacing source tech_partition with bdre tech partition
     private static String stgTableDDL=new String();            //contains source stage table ddl
     private static String destTableDDL=new String();           //contains destination table ddl
-    private static int preprocessorId;
-    private static int sourceStageLoadId;
-    private static int sourceToDestCopyId;
-    private static int destTableLoadId;
-    private static int registerPartitionsId;
     private static String filterCondition=new String();
     private static String srcStgTableLocation=new String();
     private static String destTableLocation=new String();
     private static final String[][] PARAMS_STRUCTURE = {
+            {"pp", "parent-process-id", "Parent Process id of migration preprocessor"},
             {"p", "process-id", " Process id of migration preprocessor"},
             {"ied", "instance-exec-id", " instance exec id of preprocessor"}
     };
@@ -56,9 +51,8 @@ public class MigrationPreprocessor extends BaseStructure{
     protected static Connection getHiveJDBCConnection(String dbName, String hiveConnection) throws Exception {
         try {
             Class.forName(IMConstant.HIVE_DRIVER_NAME);
-            //String hiveConnection = "jdbc:hive2://quickstart.cloudera:10000";
-            String hiveUser = "openbdre";
-            String hivePassword = "openbdre";
+            String hiveUser = IMConfig.getProperty("etl.hive-jdbcuser");
+            String hivePassword = IMConfig.getProperty("etl.hive-jdbcpassword");
             Connection con = DriverManager.getConnection(hiveConnection + "/" + dbName, hiveUser, hivePassword);
             con.createStatement().execute("set hive.exec.dynamic.partition.mode=nonstrict");
             con.createStatement().execute("set hive.exec.dynamic.partition=true");
@@ -74,24 +68,26 @@ public class MigrationPreprocessor extends BaseStructure{
     public MigrationPreprocessorInfo execute(String[] params) throws Exception{
 
         CommandLine commandLine = getCommandLine(params, PARAMS_STRUCTURE);
+        String parentProcessId=commandLine.getOptionValue("parent-process-id");
         String processId = commandLine.getOptionValue("process-id");
         String instanceExecId = commandLine.getOptionValue("instance-exec-id");
-        MigrationPreprocessorInfo mpInfo = prepareMigrate(processId,instanceExecId);
+        MigrationPreprocessorInfo mpInfo = prepareMigrate(parentProcessId,processId,instanceExecId);
         return mpInfo;
     }
-    private MigrationPreprocessorInfo prepareMigrate(String processId, String instanceExecId) throws Exception {
+    private MigrationPreprocessorInfo prepareMigrate(String parentProcessId, String processId, String instanceExecId) throws Exception {
         MigrationPreprocessorInfo migrationPreprocessorInfo = new MigrationPreprocessorInfo();
-        String table = "account";
-        String sourceDb = "sourcedb";
-        String destDb= "destdb";
+        Properties params=getParams(parentProcessId,"hive-migration");
+        String table = params.get("src-table").toString();
+        String sourceDb = params.get("src-db").toString();
+        String destDb= params.get("dest-db").toString();
         String sourceStgtable=table + "_stg";
-        String bdreTechPartition="instanceexecid bigint";
-        String sourceNameNodeAddress="hdfs://192.168.56.102:8020";
-        String destNameNodeAddress="hdfs://sandbox.hortonworks.com:8020";
-        String sourceJobTrackerAddress="192.168.56.102:8032";
-        String destJobTrackerAddress="sandbox.hortonworks.com:8050";
-        String sourceHiveConnection="jdbc:hive2://192.168.56.102:10000";
-        String destHiveConnection="jdbc:hive2://sandbox.hortonworks.com:10000";
+        String bdreTechPartition=params.get("bdre-tech-pt").toString();
+        String sourceNameNodeAddress=params.get("src-nn").toString();
+        String destNameNodeAddress=params.get("dest-nn").toString();
+        String sourceJobTrackerAddress=params.get("src-jt").toString();
+        String destJobTrackerAddress=params.get("dest-jt").toString();
+        String sourceHiveConnection=params.get("src-hive").toString();
+        String destHiveConnection=params.get("dest-hive").toString();
         Connection conn = getHiveJDBCConnection(sourceDb,sourceHiveConnection);
         Statement st = conn.createStatement();
         List<String> sourcePartitionList = getCurrentSourcePartitionList(st, sourceDb, table);
@@ -395,6 +391,12 @@ public class MigrationPreprocessor extends BaseStructure{
         migrationPreprocessorInfo.setDestTable(table);
         migrationPreprocessorInfo.setDestFileSystem(destNameNodeAddress);
         return migrationPreprocessorInfo;
+    }
+
+    public Properties getParams(String pid, String configGroup) {
+        GetProperties getProperties = new GetProperties();
+        java.util.Properties listForParams = getProperties.getProperties(pid, configGroup);
+        return listForParams;
     }
 
 }
