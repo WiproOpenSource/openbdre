@@ -419,13 +419,13 @@ var destjobTrackerIp;
   			 formIntoMap('srcEnv_', 'processDetailsForm');
             srcEnvVar();
 
-            var nameNode =  getGenConfigMap('NamenodeAddress');
+            var nameNode =  getGenConfigMap('cluster.nn-address');
             for(var i in nameNode){
                 if(i.valueOf() == srcName.valueOf())
                     nameNodeIp = nameNode[i].defaultVal;
             }
 
-             var jobTracker =  getGenConfigMap('JobTrackerAddress');
+             var jobTracker =  getGenConfigMap('cluster.jt-address');
                         for(var i in jobTracker){
                             if(i.valueOf() == srcName.valueOf())
                                 jobTrackerIp = jobTracker[i].defaultVal;
@@ -524,13 +524,13 @@ var destjobTrackerIp;
                  formIntoMap('destEnv_','destEnvForm');
                  destEnvVar();
 
-                  var destnameNode =  getGenConfigMap('NamenodeAddress');
+                  var destnameNode =  getGenConfigMap('cluster.nn-address');
                              for(var i in destnameNode){
                                  if(i.valueOf() == destName.valueOf())
                                      destnameNodeIp = destnameNode[i].defaultVal;
                              }
 
-                              var destjobTracker =  getGenConfigMap('JobTrackerAddress');
+                              var destjobTracker =  getGenConfigMap('cluster.jt-address');
                                          for(var i in destjobTracker){
                                              if(i.valueOf() == destName.valueOf())
                                                  destjobTrackerIp = destjobTracker[i].defaultVal;
@@ -632,7 +632,7 @@ var destjobTrackerIp;
 
                  var app = angular.module('myApp', []);
                   app.controller('myCtrl', function($scope) {
-                      $scope.srcEnvs= getGenConfigMap('HiveAddress');
+                      $scope.srcEnvs= getGenConfigMap('cluster.hive-address');
 
                       $scope.formatMap=null;
                       $scope.busDomains = {};
@@ -743,12 +743,7 @@ var destjobTrackerIp;
              <h3>Destination Environment</h3>
              <section>
              <form class="form-horizontal" role="form" id="destEnvForm">
-              <div class="form-group">
-             			        <label class="control-label col-sm-2" for="instexecId">BDRE Technical Partition:</label>
-                                     <div class="col-sm-10">
-                                         <input type="text" class="form-control"  id="instexecId" name="instexecId"  value="instanceExecId" required>
-                                     </div>
-                                     </div>
+
 				   <div id="fileFormatDiv" ng-controller="myCtrl">
 								 <div class="form-group">
 									 <label class="control-label col-sm-2" for="destEnv">Select Destination Environment:</label>
@@ -758,6 +753,29 @@ var destjobTrackerIp;
 										 </select>
 								     </div>
 						 </div>
+
+						  <div class="form-group">
+                                                             <label class="control-label col-sm-2" for="instexecId">BDRE Technical Partition:</label>
+                                                                  <div class="col-sm-10">
+                                                                      <input type="text" class="form-control"  id="instexecId" name="instexecId"  value="instanceExecId" required>
+                                                                  </div>
+                                                                  </div>
+
+                      <div class="form-group">
+                                          <label class="control-label col-sm-2" for="instexectype">BDRE Technical Partition Type:</label>
+                                            <div class="col-sm-10">
+                                              <select class="form-control" id="instexectype" name="instexectype" >
+                                                    <option value="bigint" selected>Big Integer</option>
+                                                    <option value="int">Integer</option>
+                                                    <option value="smallint">Small Integer</option>
+                                                    <option value="tinyint">Tiny Integer</option>
+                                              </select>
+                                            </div>
+                                        </div>
+
+
+
+
 				</form>
 
               </section>
