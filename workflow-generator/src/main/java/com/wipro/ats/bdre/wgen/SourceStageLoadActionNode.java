@@ -117,7 +117,7 @@ public class SourceStageLoadActionNode extends GenericActionNode {
                 "            <arg>--stg-bp-cols</arg>\n" +
                 "            <arg>${wf:actionData(\"migration-preprocessor\")[\"source-bp-cols\"]}</arg>\n" +
                 "            <arg>--instance-exec-id</arg>\n" +
-                "            <arg>${wf:actionData(\"migration-preprocessor\")[\"instance-exec-id\"]}</arg>\n" +
+                "            <arg>${wf:actionData(\"init-job\")[\"instance-exec-id\"]}</arg>\n" +
                 "            <arg>--source-db</arg>\n" +
                 "            <arg>${wf:actionData(\"migration-preprocessor\")[\"source-db\"]}</arg>\n" +
                 "            <arg>--source-table</arg>\n" +
