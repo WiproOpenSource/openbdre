@@ -50,6 +50,7 @@
    	<script>
    var jsonObj = {"Result":"OK","Records":[],"Message":null,"TotalRecordCount":0,"Record":[]};
    var map = new Object();
+
    var createJobResult;
    var requiredProperties;
    var sourceFlag;
@@ -329,12 +330,22 @@
      <script>
      var databases;
      var srcEnvi;
+     var srcName;
      var srcDatabase;
      var srcTable;
      var destEnvi;
      var destDatabase;
+     var str;
+     var destName;
      function srcEnvVar(){
-          srcEnvi = $('#srcEnv').val();
+
+         str = $('#srcEnv').val();
+          console.log("Str "+str);
+           var pos = str.indexOf(',"-%%-",');
+           srcEnvi = str.slice(0,pos);
+          srcName = str.slice(pos+8);
+          console.log("SrcEnvi is " +srcEnvi);
+          console.log("SrcName is " +srcName);
           $('#showSrcEnv').val(srcEnvi);
           }
      function srcDBVar(){
@@ -346,7 +357,11 @@
                $('#showSrcTables').val(srcTable);
                }
      function destEnvVar(){
-               destEnvi = $('#destEnv').val();
+               var str = $('#destEnv').val();
+               console.log("Str "+str);
+               var pos = str.indexOf(',"-%%-",');
+               destEnvi = str.slice(0,pos);
+               destName = str.slice(pos+8);
                $('#showDestEnv').val(destEnvi);
                }
     function destDBVar(){
@@ -362,7 +377,11 @@
 
          </script>
   <script>
-
+var ips= new Object();;
+var nameNodeIp;
+var jobTrackerIp;
+var destnameNodeIp;
+var destjobTrackerIp;
   var created = 0;
    var checkedTables = [];
   var wizard = null;
@@ -399,6 +418,21 @@
   			if(currentIndex == 1 && priorIndex == 0) {
   			 formIntoMap('srcEnv_', 'processDetailsForm');
             srcEnvVar();
+
+            var nameNode =  getGenConfigMap('NamenodeAddress');
+            for(var i in nameNode){
+                if(i.valueOf() == srcName.valueOf())
+                    nameNodeIp = nameNode[i].defaultVal;
+            }
+
+             var jobTracker =  getGenConfigMap('JobTrackerAddress');
+                        for(var i in jobTracker){
+                            if(i.valueOf() == srcName.valueOf())
+                                jobTrackerIp = jobTracker[i].defaultVal;
+                        }
+                console.log("namenode "+nameNodeIp);
+                console.log("jobTrac "+jobTrackerIp);
+
                         console.log(srcEnvi);
                         var urlEnv = "/mdrest/hivemigration/databases/"+srcEnvi;
                         console.log("url:"+urlEnv);
@@ -430,6 +464,7 @@
 				 if(currentIndex == 2 && priorIndex == 1) {
 				 formIntoMap('srcDB_', 'srcDBForm');
 				 srcDBVar();
+
 				   				var tables= [];
                                           $.ajax({
                                                url: '/mdrest/hivemigration/tables/'+srcEnvi+"/"+srcDatabase,
@@ -489,6 +524,20 @@
                  formIntoMap('destEnv_','destEnvForm');
                  destEnvVar();
 
+                  var destnameNode =  getGenConfigMap('NamenodeAddress');
+                             for(var i in destnameNode){
+                                 if(i.valueOf() == destName.valueOf())
+                                     destnameNodeIp = destnameNode[i].defaultVal;
+                             }
+
+                              var destjobTracker =  getGenConfigMap('JobTrackerAddress');
+                                         for(var i in destjobTracker){
+                                             if(i.valueOf() == destName.valueOf())
+                                                 destjobTrackerIp = destjobTracker[i].defaultVal;
+                                         }
+                                 console.log("namenode "+nameNodeIp);
+                                 console.log("jobTrac "+jobTrackerIp);
+
                  		 var destdatabases= [];
 						  $.ajax({
 							   url: '/mdrest/hivemigration/destdatabases/'+destEnvi,
@@ -515,6 +564,11 @@
 				if(currentIndex == 5 && priorIndex == 4) {
 				formIntoMap('destDB_', 'destDBForm');
 				destDBVar();
+
+                map["scrNameNode"] = nameNodeIp;
+                map["srcJobTracker"]=jobTrackerIp;
+                map["destNameNode"] = destnameNodeIp;
+                map["destjobTracker"]=destjobTrackerIp;
 
             	$('#createjobs').on('click', function(e) {
             	    console.log("checked tables"+checkedTables);
@@ -649,7 +703,7 @@
                                                     <label class="control-label col-sm-2" for="srcEnv">Source Environment:</label>
                                                     <div class="col-sm-10">
                                                         <select class="form-control" id="srcEnv" name="srcEnv" >
-                                                            <option ng-repeat="srcEnv in srcEnvs" value="{{srcEnv.defaultVal}}" label="{{srcEnv.description}}">{{srcEnv.description}}</option>
+                                                            <option ng-repeat="srcEnv in srcEnvs" value='{{srcEnv.defaultVal}},"-%%-",{{srcEnv.description}}'  label="{{srcEnv.description}} ">{{srcEnv.description}}</option>
 
                                                         </select>
                                                     </div>
@@ -700,7 +754,7 @@
 									 <label class="control-label col-sm-2" for="destEnv">Select Destination Environment:</label>
 									 <div class="col-sm-10">
 										 <select class="form-control" id="destEnv" name="destEnv" >
-											 <option ng-repeat="destEnv in srcEnvs" value="{{destEnv.defaultVal}}" name="destEnv">{{destEnv.value}}</option>
+                                               <option ng-repeat="destEnv in srcEnvs" value='{{destEnv.defaultVal}},"-%%-",{{destEnv.description}}'  label="{{destEnv.description}} ">{{destEnv.description}}</option>
 										 </select>
 								     </div>
 						 </div>

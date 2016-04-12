@@ -558,9 +558,10 @@
 'mainframe', 'serdeClass', 'Serde Class','serde class to be used' , 1, ' ', 'text' , 1
 'mainframe', 'inputFormat', 'Input Format','input format to be used' , 1, 'com.cloudera.sa.copybook.mapred.CopybookInputFormat', 'text' , 1
 'mainframe', 'outputFormat', 'Output Format','output format to be used' , 1, 'org.apache.hadoop.hive.ql.io.HiveIgnoreKeyTextOutputFormat', 'text' , 1
-'NamenodeAddress', 'cluster1', '192.168.56.101:10000','NameNode of cluster1(192.168.56.101:10000)' , 1, '192.168.56.101:10000', 'text' , 1
-'JobTrackerAddress', 'cluster1', '192.168.56.101:10000','JobTracker of cluster1(192.168.56.101:10000)' , 1, '192.168.56.101:10000', 'text' , 1
-'HiveAddress', 'cluster1', '192.168.56.101:10000','Hive address of cluster1(192.168.56.101:10000)' , 1, '192.168.56.101:10000', 'text' , 1
-'NamenodeAddress', 'cluster2', '192.168.56.102:10000','NameNode of cluster2(192.168.56.102:10000)' , 1, '192.168.56.102:10000', 'text' , 1
-'JobTrackerAddress', 'cluster2', '192.168.56.102:10000','JobTracker of  cluster2(192.168.56.102:10000)' , 1, '192.168.56.102:10000', 'text' , 1
-'HiveAddress', 'cluster2', '192.168.56.102:10000','Hive address of cluster2(192.168.56.102:10000)' , 1, '192.168.56.102:10000', 'text' , 1
+'NamenodeAddress', 'cluster1', '192.168.56.101:8020','cluster1' , 1, '192.168.56.101:8020', 'text' , 1
+'JobTrackerAddress', 'cluster1', '192.168.56.101:8050','cluster1' , 1, '192.168.56.101:8050', 'text' , 1
+'HiveAddress', 'cluster1', '192.168.56.101:10000','cluster1' , 1, '192.168.56.101:10000', 'text' , 1
+'NamenodeAddress', 'cluster2', '192.168.56.102:8020','cluster2' , 1, '192.168.56.102:8020', 'text' , 1
+'JobTrackerAddress', 'cluster2', '192.168.56.102:8050','cluster2' , 1, '192.168.56.102:8050', 'text' , 1
+'HiveAddress', 'cluster2', '192.168.56.102:10000','cluster2' , 1, '192.168.56.102:10000', 'text' , 1
+

@@ -216,7 +216,7 @@ public class HiveTableMigrationAPI {
 */
     @RequestMapping(value = "/createjobs/{checked}", method = RequestMethod.POST)
     @ResponseBody public
-    RestWrapper createJob(@RequestParam Map<String, String> map, Principal principal,@PathVariable("checked") String[] checkedTables) {
+    RestWrapper createJob(@RequestParam Map<String, String> map,Principal principal,@PathVariable("checked") String[] checkedTables ) {
         LOGGER.debug(" value of map is " + map.size());
         RestWrapper restWrapper = null;
 
@@ -224,7 +224,12 @@ public class HiveTableMigrationAPI {
         String processDesc = null;
         Integer busDomainID = null;
         Integer tablesSize = 0;
-
+        String nameNodeIp = map.get("scrNameNode");
+        String jobTrackerIp =  map.get("srcJobTracker");
+        String destnameNodeIp =  map.get("destNameNode");
+        String destjobTrackerIp = map.get("destjobTracker");
+        LOGGER.info("nameNOde ip"+nameNodeIp);
+        LOGGER.info("jobTracker "+jobTrackerIp);
         com.wipro.ats.bdre.md.dao.jpa.Properties jpaProperties = null;
         for(int i = 1; i <= checkedTables.length; i++)
                 LOGGER.info("table is "+checkedTables[i-1]);
@@ -233,6 +238,16 @@ public class HiveTableMigrationAPI {
         for (int i = 1; i <= checkedTables.length; i++){
             List<Properties> propertiesList = new ArrayList<Properties>();
             LOGGER.info("table name is "+checkedTables[i-1]);
+            jpaProperties = Dao2TableUtil.buildJPAProperties("hiveMigration", "SourceNameNodeAddress-"+i,nameNodeIp , "SourcNameNodeAddress");
+            propertiesList.add(jpaProperties);
+            jpaProperties = Dao2TableUtil.buildJPAProperties("hiveMigration", "SourceJobTrackerAddress-"+i,jobTrackerIp , "SourcJobTrackerAddress");
+            propertiesList.add(jpaProperties);
+
+            jpaProperties = Dao2TableUtil.buildJPAProperties("hiveMigration", "DestNameNodeAddress-"+i,destnameNodeIp , "DestNameNodeAddress");
+            propertiesList.add(jpaProperties);
+            jpaProperties = Dao2TableUtil.buildJPAProperties("hiveMigration", "DestJobTrackerAddress-"+i,destjobTrackerIp , "DestJobTrackerAddress");
+            propertiesList.add(jpaProperties);
+
             jpaProperties = Dao2TableUtil.buildJPAProperties("hiveMigration", "table-"+i,checkedTables[i-1] , "source Tables");
             propertiesList.add(jpaProperties);
             for (String string : map.keySet()) {
@@ -241,7 +256,7 @@ public class HiveTableMigrationAPI {
                 continue;
             }
             if (string.startsWith("srcEnv_srcEnv")) {
-                jpaProperties = Dao2TableUtil.buildJPAProperties("hiveMigration", "src_env-"+i, map.get(string), "source environment");
+                jpaProperties = Dao2TableUtil.buildJPAProperties("hiveMigration", "SourceHiveAddress-"+i, map.get(string), "source environment");
                 propertiesList.add(jpaProperties);
             } else if (string.startsWith("srcEnv_processName")) {
                 LOGGER.debug("srcEnv_processName" + map.get(string));
@@ -262,7 +277,7 @@ public class HiveTableMigrationAPI {
                 propertiesList.add(jpaProperties);
             }
             else if (string.startsWith("destEnv_destEnv")) {
-                jpaProperties = Dao2TableUtil.buildJPAProperties("hiveMigration", "dest-env-"+i, map.get(string), "destination environment");
+                jpaProperties = Dao2TableUtil.buildJPAProperties("hiveMigration", "destHiveAddress-"+i, map.get(string), "destination environment");
                 propertiesList.add(jpaProperties);
             } else if (string.startsWith("destDB_")) {
                 jpaProperties = Dao2TableUtil.buildJPAProperties("hiveMigration", "dest_db-"+i, map.get(string), "destination database");
