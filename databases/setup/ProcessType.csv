@@ -29,8 +29,8 @@
 29,'Web Crawler',28
 30,'Hadoop Streaming', 2
 31,'Migration',null
-32,'preprocessing',31
-33,'sourcestageload',31
-34,'sourcetodeststagecopy',31
-35,'desttableload',31
-36,'registerpartition',31
+32,'Preprocessing',31
+33,'Source Stage Load',31
+34,'Source to Dest Stage Copy',31
+35,'Destination Table Load',31
+36,'Register Partition',31

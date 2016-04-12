@@ -228,8 +228,6 @@ public class HiveTableMigrationAPI {
         String jobTrackerIp =  map.get("srcJobTracker");
         String destnameNodeIp =  map.get("destNameNode");
         String destjobTrackerIp = map.get("destjobTracker");
-        LOGGER.info("nameNOde ip"+nameNodeIp);
-        LOGGER.info("jobTracker "+jobTrackerIp);
         com.wipro.ats.bdre.md.dao.jpa.Properties jpaProperties = null;
         for(int i = 1; i <= checkedTables.length; i++)
                 LOGGER.info("table is "+checkedTables[i-1]);
@@ -238,17 +236,17 @@ public class HiveTableMigrationAPI {
         for (int i = 1; i <= checkedTables.length; i++){
             List<Properties> propertiesList = new ArrayList<Properties>();
             LOGGER.info("table name is "+checkedTables[i-1]);
-            jpaProperties = Dao2TableUtil.buildJPAProperties("hiveMigration", "SourceNameNodeAddress-"+i,nameNodeIp , "SourcNameNodeAddress");
+            jpaProperties = Dao2TableUtil.buildJPAProperties("hive-migration", "src-nn",nameNodeIp , "SourceNameNodeAddress");
             propertiesList.add(jpaProperties);
-            jpaProperties = Dao2TableUtil.buildJPAProperties("hiveMigration", "SourceJobTrackerAddress-"+i,jobTrackerIp , "SourcJobTrackerAddress");
-            propertiesList.add(jpaProperties);
-
-            jpaProperties = Dao2TableUtil.buildJPAProperties("hiveMigration", "DestNameNodeAddress-"+i,destnameNodeIp , "DestNameNodeAddress");
-            propertiesList.add(jpaProperties);
-            jpaProperties = Dao2TableUtil.buildJPAProperties("hiveMigration", "DestJobTrackerAddress-"+i,destjobTrackerIp , "DestJobTrackerAddress");
+            jpaProperties = Dao2TableUtil.buildJPAProperties("hive-migration", "src-jt",jobTrackerIp , "SourceJobTrackerAddress");
             propertiesList.add(jpaProperties);
 
-            jpaProperties = Dao2TableUtil.buildJPAProperties("hiveMigration", "table-"+i,checkedTables[i-1] , "source Tables");
+            jpaProperties = Dao2TableUtil.buildJPAProperties("hive-migration", "dest-nn",destnameNodeIp , "DestNameNodeAddress");
+            propertiesList.add(jpaProperties);
+            jpaProperties = Dao2TableUtil.buildJPAProperties("hive-migration", "dest-jt",destjobTrackerIp , "DestJobTrackerAddress");
+            propertiesList.add(jpaProperties);
+
+            jpaProperties = Dao2TableUtil.buildJPAProperties("hive-migration", "src-table",checkedTables[i-1] , "source Table");
             propertiesList.add(jpaProperties);
             for (String string : map.keySet()) {
             LOGGER.info("String is" + string);
@@ -256,7 +254,12 @@ public class HiveTableMigrationAPI {
                 continue;
             }
             if (string.startsWith("srcEnv_srcEnv")) {
-                jpaProperties = Dao2TableUtil.buildJPAProperties("hiveMigration", "SourceHiveAddress-"+i, map.get(string), "source environment");
+                String str =  map.get(string);
+                int pos = str.indexOf(",\"-%%-\",");
+                LOGGER.info("pos is "+pos);
+                String srcHiveAddr = str.substring(0,pos);
+                LOGGER.info("SrcHIve "+srcHiveAddr);
+                jpaProperties = Dao2TableUtil.buildJPAProperties("hive-migration", "src-hive",srcHiveAddr, "source Hive address");
                 propertiesList.add(jpaProperties);
             } else if (string.startsWith("srcEnv_processName")) {
                 LOGGER.debug("srcEnv_processName" + map.get(string));
@@ -268,19 +271,24 @@ public class HiveTableMigrationAPI {
                 LOGGER.debug("srcEnv_busDomainID" + map.get(string));
                 busDomainID = new Integer(map.get(string));
             } else if (string.startsWith("srcDB_")) {
-                jpaProperties = Dao2TableUtil.buildJPAProperties("hiveMigration", "src_db-"+i, map.get(string), "source database");
+                jpaProperties = Dao2TableUtil.buildJPAProperties("hive-migration", "src-db", map.get(string), "source database");
                 propertiesList.add(jpaProperties);
 
             }
             else if (string.startsWith("destEnv_instexecId")) {
-                jpaProperties = Dao2TableUtil.buildJPAProperties("hiveMigration", "technical_partition-" + i, map.get(string), "technical partition");
+                jpaProperties = Dao2TableUtil.buildJPAProperties("hive-migration", "bdre-tech-pt", map.get(string), "technical partition");
                 propertiesList.add(jpaProperties);
             }
             else if (string.startsWith("destEnv_destEnv")) {
-                jpaProperties = Dao2TableUtil.buildJPAProperties("hiveMigration", "destHiveAddress-"+i, map.get(string), "destination environment");
+                String str =  map.get(string);
+                int pos = str.indexOf(",\"-%%-\",");
+                String destHiveAddr = str.substring(0,pos);
+                LOGGER.info("dest pos "+pos);
+                LOGGER.info("DestHive "+destHiveAddr);
+                jpaProperties = Dao2TableUtil.buildJPAProperties("hive-migration", "dest-hive" ,destHiveAddr, "destination Hive address");
                 propertiesList.add(jpaProperties);
             } else if (string.startsWith("destDB_")) {
-                jpaProperties = Dao2TableUtil.buildJPAProperties("hiveMigration", "dest_db-"+i, map.get(string), "destination database");
+                jpaProperties = Dao2TableUtil.buildJPAProperties("hive-migration", "dest-db", map.get(string), "destination database");
                 propertiesList.add(jpaProperties);
             }
 
@@ -288,7 +296,7 @@ public class HiveTableMigrationAPI {
 
 
             List<com.wipro.ats.bdre.md.dao.jpa.Process> childProcesses = new ArrayList<com.wipro.ats.bdre.md.dao.jpa.Process>();
-        com.wipro.ats.bdre.md.dao.jpa.Process parentProcess = Dao2TableUtil.buildJPAProcess(31, "table:"+i+"-"+ processName,"table:"+i+"-"+ processDesc, 1, busDomainID);
+        com.wipro.ats.bdre.md.dao.jpa.Process parentProcess = Dao2TableUtil.buildJPAProcess(31, processName+"-"+i,"table:"+i+"-"+ processDesc, 1, busDomainID);
 
         com.wipro.ats.bdre.md.dao.jpa.Process preprocessingProcess = new com.wipro.ats.bdre.md.dao.jpa.Process();
         com.wipro.ats.bdre.md.dao.jpa.Process sourcestageloadProcess = new com.wipro.ats.bdre.md.dao.jpa.Process();
@@ -297,11 +305,11 @@ public class HiveTableMigrationAPI {
         com.wipro.ats.bdre.md.dao.jpa.Process registerpartitionProcess = new com.wipro.ats.bdre.md.dao.jpa.Process();
 
 
-        preprocessingProcess = Dao2TableUtil.buildJPAProcess(32, "preprocessing for " + processName + ":table-"+i, "preprocessing:table-"+i, 1, busDomainID);
-        sourcestageloadProcess = Dao2TableUtil.buildJPAProcess(33, "sourcestageload for " + processName + ":table-"+i, "sourcestageload:table-"+i, 1, busDomainID);
-        sourcetodeststagecopyProcess = Dao2TableUtil.buildJPAProcess(34, "src-deststagecopy for " + processName + ":table-"+i, "sourcetodeststagecopy:table-"+i, 1, busDomainID);
-        desttableloadProcess = Dao2TableUtil.buildJPAProcess(35, "desttableload for " + processName + ":table-"+i, "desttableload:table-"+i, 1, busDomainID);
-        registerpartitionProcess = Dao2TableUtil.buildJPAProcess(36, "registerpartition for " + processName + ":table-"+i, "registerpartition:table-"+i, 1, busDomainID);
+        preprocessingProcess = Dao2TableUtil.buildJPAProcess(32, "PreProcessing of table-"+i, "preprocessing:table-"+i, 1, busDomainID);
+        sourcestageloadProcess = Dao2TableUtil.buildJPAProcess(33, "source stage load of table-"+i, "sourcestageload:table-"+i, 1, busDomainID);
+        sourcetodeststagecopyProcess = Dao2TableUtil.buildJPAProcess(34, "src-dest stagecopy of table-"+i, "sourcetodeststagecopy:table-"+i, 1, busDomainID);
+        desttableloadProcess = Dao2TableUtil.buildJPAProcess(35, "dest table load of table-"+i, "desttableload:table-"+i, 1, busDomainID);
+        registerpartitionProcess = Dao2TableUtil.buildJPAProcess(36, "register partition of table-"+i, "registerpartition:table-"+i, 1, busDomainID);
         childProcesses.add(preprocessingProcess);
         childProcesses.add(sourcestageloadProcess);
         childProcesses.add(sourcetodeststagecopyProcess);
