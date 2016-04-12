@@ -36,15 +36,15 @@ public class SourceStageLoad extends BaseStructure{
 
     private static final Logger LOGGER = Logger.getLogger(MigrationPreprocessor.class);
     private static final String[][] PARAMS_STRUCTURE = {
-            {"stg-db", "src-stage-db", "Source stage database"},
-            {"stg-tbl", "src-stg-table", " Source stage table"},
-            {"stg-pts", "stg-part-cols", "Source Stg partition columns"},
-            {"src-cols", "src-reg-cols", "Source stage regular columns"},
-            {"stg-bp", "stg-bp-cols", " Business partition columns"},
-            {"exec-id", "instance-exec-id", "Instance execution id"},
-            {"src-db", "source-db", " Source database"},
-            {"src-tbl", "source-table", "Source table"},
-            {"fil-con", "filter-condition", "Filter condition"},
+            {"stgDb", "src-stage-db", "Source stage database"},
+            {"stgTbl", "src-stg-table", " Source stage table"},
+            {"stgPts", "stg-part-cols", "Source Stg partition columns"},
+            {"srcCols", "src-reg-cols", "Source stage regular columns"},
+            {"stgBp", "stg-bp-cols", " Business partition columns"},
+            {"execId", "instance-exec-id", "Instance execution id"},
+            {"srcDb", "source-db", " Source database"},
+            {"srcTbl", "source-table", "Source table"},
+            {"filCon", "filter-condition", "Filter condition"},
             {"ppid", "parent-process-id", "Parent Process Id"}
     };
 
