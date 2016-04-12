@@ -223,8 +223,6 @@ public class HiveTableMigrationAPI {
         String processName = null;
         String processDesc = null;
         Integer busDomainID = null;
-        String partitionType = null;
-        String instExecName = null;
         Integer tablesSize = 0;
         String nameNodeIp = map.get("scrNameNode");
         String jobTrackerIp =  map.get("srcJobTracker");
@@ -277,12 +275,9 @@ public class HiveTableMigrationAPI {
                 propertiesList.add(jpaProperties);
 
             }
-            else if (string.startsWith("destEnv_instexectype")) {
-                LOGGER.info("instance exec "+map.get(string));
-                partitionType = map.get(string);
-            }
             else if (string.startsWith("destEnv_instexecId")) {
-                instExecName = map.get(string);
+                jpaProperties = Dao2TableUtil.buildJPAProperties("hive-migration", "bdre-tech-pt", map.get(string), "technical partition");
+                propertiesList.add(jpaProperties);
             }
             else if (string.startsWith("destEnv_destEnv")) {
                 String str =  map.get(string);
@@ -298,8 +293,6 @@ public class HiveTableMigrationAPI {
             }
 
         }
-            jpaProperties = Dao2TableUtil.buildJPAProperties("hive-migration", "bdre-tech-pt",instExecName+" "+partitionType, "technical partition");
-            propertiesList.add(jpaProperties);
 
 
             List<com.wipro.ats.bdre.md.dao.jpa.Process> childProcesses = new ArrayList<com.wipro.ats.bdre.md.dao.jpa.Process>();

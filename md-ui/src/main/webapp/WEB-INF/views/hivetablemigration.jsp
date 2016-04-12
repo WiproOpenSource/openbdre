@@ -761,21 +761,6 @@ var destjobTrackerIp;
                                                                   </div>
                                                                   </div>
 
-                      <div class="form-group">
-                                          <label class="control-label col-sm-2" for="instexectype">BDRE Technical Partition Type:</label>
-                                            <div class="col-sm-10">
-                                              <select class="form-control" id="instexectype" name="instexectype" >
-                                                    <option value="bigint" selected>Big Integer</option>
-                                                    <option value="int">Integer</option>
-                                                    <option value="smallint">Small Integer</option>
-                                                    <option value="tinyint">Tiny Integer</option>
-                                              </select>
-                                            </div>
-                                        </div>
-
-
-
-
 				</form>
 
               </section>
