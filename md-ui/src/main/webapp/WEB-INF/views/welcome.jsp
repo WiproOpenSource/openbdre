@@ -1,6 +1,8 @@
+<%@taglib uri="http://www.springframework.org/tags" prefix="spring"%>
+
 <html id="ng-app">
     <head>
-	<title>BDRE | Bigdata Ready Enterprise</title>
+	<title><spring:message code="welcome.page.bdre"/></title>
 	<script>
 	  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
 	  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
@@ -33,13 +35,13 @@
 	<div class="container-fluid" ng-app="myApp" ng-controller="myCtrl">
 	<div class="jumbotron  alert-info">
         <h1><spring:message code="welcome.page.bdre"/></h1>
-        <p>Our product attempts to make big data technology simpler by optimizing and integrating various big data solutions and providing them under one integrated package, Big Data Ready Enterprises, or BDRE. BDRE is a Bigdata/Hadoop unified framework developed with the goal of drastically minimizing development time.</p>
+        <p><spring:message code="welcome.page.bdre_description"/></p>
       </div>
-
+    <script>document.write("${properties['welcome.page.test']}")</script>
 	    <div class="row ">
 		<span ng-repeat="value in text track by $index" ng-class="{row:($index + 1) % 3 == 0}">
 		    <canvas id="myCanvas{{$index}}" class="col-md-2" >
-			Your browser does not support the HTML5 canvas tag.</canvas>
+			<spring:message code="welcome.page.canvas_error"/></canvas>
 		    <div class="col-md-2 "><p class="lead">{{head[$index]}}</p><p>{{desc[$index]}} <a href="{{taillinks[$index]}}">{{tail[$index]}}</a></p>
 		    </div>
 		</span>
