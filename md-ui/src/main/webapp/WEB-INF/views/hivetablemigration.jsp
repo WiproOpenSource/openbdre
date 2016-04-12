@@ -419,13 +419,13 @@ var destjobTrackerIp;
   			 formIntoMap('srcEnv_', 'processDetailsForm');
             srcEnvVar();
 
-            var nameNode =  getGenConfigMap('NamenodeAddress');
+            var nameNode =  getGenConfigMap('cluster.nn-address');
             for(var i in nameNode){
                 if(i.valueOf() == srcName.valueOf())
                     nameNodeIp = nameNode[i].defaultVal;
             }
 
-             var jobTracker =  getGenConfigMap('JobTrackerAddress');
+             var jobTracker =  getGenConfigMap('cluster.jt-address');
                         for(var i in jobTracker){
                             if(i.valueOf() == srcName.valueOf())
                                 jobTrackerIp = jobTracker[i].defaultVal;
@@ -524,13 +524,13 @@ var destjobTrackerIp;
                  formIntoMap('destEnv_','destEnvForm');
                  destEnvVar();
 
-                  var destnameNode =  getGenConfigMap('NamenodeAddress');
+                  var destnameNode =  getGenConfigMap('cluster.nn-address');
                              for(var i in destnameNode){
                                  if(i.valueOf() == destName.valueOf())
                                      destnameNodeIp = destnameNode[i].defaultVal;
                              }
 
-                              var destjobTracker =  getGenConfigMap('JobTrackerAddress');
+                              var destjobTracker =  getGenConfigMap('cluster.jt-address');
                                          for(var i in destjobTracker){
                                              if(i.valueOf() == destName.valueOf())
                                                  destjobTrackerIp = destjobTracker[i].defaultVal;
@@ -632,7 +632,7 @@ var destjobTrackerIp;
 
                  var app = angular.module('myApp', []);
                   app.controller('myCtrl', function($scope) {
-                      $scope.srcEnvs= getGenConfigMap('HiveAddress');
+                      $scope.srcEnvs= getGenConfigMap('cluster.hive-address');
 
                       $scope.formatMap=null;
                       $scope.busDomains = {};
