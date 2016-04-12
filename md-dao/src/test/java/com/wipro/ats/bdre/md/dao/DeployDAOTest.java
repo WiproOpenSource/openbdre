@@ -66,7 +66,7 @@ public class DeployDAOTest {
         process.setNextProcessId("10802");
         process.setDeleteFlag(false);
         process.setEditTs(new Date());
-        Integer id = processDAO.insert(process);
+        Integer pid = processDAO.insert(process);
         DeployStatus deployStatus = deployStatusDAO.get((short) 5);
         ProcessDeploymentQueue processDeploymentQueue = new ProcessDeploymentQueue();
         processDeploymentQueue.setProcess(process);
@@ -80,6 +80,8 @@ public class DeployDAOTest {
         processDeploymentQueue = processDeploymentQueueDAO.get(processDeploymentQueueId);
         deployDAO.initDeploy((long)processDeploymentQueueId);
         processDeploymentQueueDAO.delete(processDeploymentQueueId);
+        processDAO.delete(pid);
+        LOGGER.info("Process Deleted with ID:" + pid);
         LOGGER.info("ProcessDeploymentQueue Deleted with ID:" + processDeploymentQueueId);
         LOGGER.info("The init deploy test executed ");
     }
@@ -99,7 +101,7 @@ public class DeployDAOTest {
         process.setNextProcessId("10802");
         process.setDeleteFlag(false);
         process.setEditTs(new Date());
-        Integer id = processDAO.insert(process);
+        Integer pid = processDAO.insert(process);
         DeployStatus deployStatus = deployStatusDAO.get((short) 2);
         ProcessDeploymentQueue processDeploymentQueue = new ProcessDeploymentQueue();
         processDeploymentQueue.setProcess(process);
@@ -113,6 +115,8 @@ public class DeployDAOTest {
         processDeploymentQueue = processDeploymentQueueDAO.get(processDeploymentQueueId);
         deployDAO.termDeploy((long)processDeploymentQueueId);
         processDeploymentQueueDAO.delete(processDeploymentQueueId);
+        processDAO.delete(pid);
+        LOGGER.info("Process Deleted with ID:" + pid);
         LOGGER.info("ProcessDeploymentQueue Deleted with ID:" + processDeploymentQueueId);
         LOGGER.info("The term deploy test executed ");
     }
@@ -132,7 +136,7 @@ public class DeployDAOTest {
         process.setNextProcessId("10802");
         process.setDeleteFlag(false);
         process.setEditTs(new Date());
-        Integer id = processDAO.insert(process);
+        Integer pid = processDAO.insert(process);
         DeployStatus deployStatus = deployStatusDAO.get((short) 2);
         ProcessDeploymentQueue processDeploymentQueue = new ProcessDeploymentQueue();
         processDeploymentQueue.setProcess(process);
@@ -146,6 +150,8 @@ public class DeployDAOTest {
         processDeploymentQueue = processDeploymentQueueDAO.get(processDeploymentQueueId);
         deployDAO.haltDeploy((long) processDeploymentQueueId);
         processDeploymentQueueDAO.delete(processDeploymentQueueId);
+        processDAO.delete(pid);
+        LOGGER.info("Process Deleted with ID:" + pid);
         LOGGER.info("ProcessDeploymentQueue Deleted with ID:" + processDeploymentQueueId);
         LOGGER.info("The halt deploy test executed ");
     }
