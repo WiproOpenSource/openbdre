@@ -22,10 +22,7 @@ import com.wipro.ats.bdre.md.api.base.MetadataAPIBase;
 import com.wipro.ats.bdre.md.beans.*;
 import com.wipro.ats.bdre.md.beans.table.Process;
 import com.wipro.ats.bdre.md.beans.table.Properties;
-import com.wipro.ats.bdre.md.dao.AppPermissionDAO;
-import com.wipro.ats.bdre.md.dao.InstanceExecDAO;
-import com.wipro.ats.bdre.md.dao.ProcessDAO;
-import com.wipro.ats.bdre.md.dao.PropertiesDAO;
+import com.wipro.ats.bdre.md.dao.*;
 import com.wipro.ats.bdre.md.dao.jpa.*;
 import com.wipro.ats.bdre.md.dao.jpa.PermissionType;
 import com.wipro.ats.bdre.md.rest.beans.ProcessExport;
@@ -67,6 +64,8 @@ public class ProcessAPI extends MetadataAPIBase {
     InstanceExecDAO instanceExecDAO;
     @Autowired
     AppPermissionDAO appPermissionDAO;
+    @Autowired
+    UserRolesDAO userRolesDAO;
     /**
      * This method calls proc GetProcess and fetches a record corresponding to processId passed.
      *
@@ -189,6 +188,8 @@ public class ProcessAPI extends MetadataAPIBase {
                 tableProcess.setTableAddTS(DateConverter.dateToString(daoProcess.getAddTs()));
                 tableProcess.setTableEditTS(DateConverter.dateToString(daoProcess.getEditTs()));
                 tableProcess.setDeleteFlag(daoProcess.getDeleteFlag());
+                if (daoProcess.getUserRoles()!=null)
+                tableProcess.setOwnerRoleId(daoProcess.getUserRoles().getUserRoleId());
                 tableProcess.setCounter(counter);
                 processes.add(tableProcess);
             }
@@ -261,6 +262,9 @@ public class ProcessAPI extends MetadataAPIBase {
             updateDaoProcess.setPermissionTypeByUserAccessId(appPermissionDAO.get(process.getPermissionTypeByUserAccessId()));
             updateDaoProcess.setPermissionTypeByGroupAccessId(appPermissionDAO.get(process.getPermissionTypeByGroupAccessId()));
             updateDaoProcess.setPermissionTypeByOthersAccessId(appPermissionDAO.get(process.getPermissionTypeByOthersAccessId()));
+            LOGGER.info("process.getowner roleId "+process.getOwnerRoleId());
+            if (process.getOwnerRoleId()!=null)
+            updateDaoProcess.setUserRoles(userRolesDAO.get(process.getOwnerRoleId()));
             updateDaoProcess = processDAO.update(updateDaoProcess);
             process.setTableAddTS(DateConverter.dateToString(updateDaoProcess.getAddTs()));
             process.setTableEditTS(DateConverter.dateToString(updateDaoProcess.getEditTs()));
@@ -328,7 +332,7 @@ public class ProcessAPI extends MetadataAPIBase {
             } else {
                 insertDaoProcess.setDeleteFlag(process.getDeleteFlag());
             }
-
+            insertDaoProcess.setUserRoles(userRolesDAO.get(process.getOwnerRoleId()));
             insertDaoProcess.setPermissionTypeByUserAccessId(appPermissionDAO.get(process.getPermissionTypeByUserAccessId()));
             insertDaoProcess.setPermissionTypeByGroupAccessId(appPermissionDAO.get(process.getPermissionTypeByGroupAccessId()));
             insertDaoProcess.setPermissionTypeByOthersAccessId(appPermissionDAO.get(process.getPermissionTypeByOthersAccessId()));
@@ -586,6 +590,7 @@ public class ProcessAPI extends MetadataAPIBase {
                 insertDaoProcess.setPermissionTypeByOthersAccessId(appPermissionDAO.get(0));
                 insertDaoProcess.setEditTs(DateConverter.stringToDate(parentProcess.getTableEditTS()));
                 insertDaoProcess.setProcessCode(parentProcess.getProcessCode());
+                insertDaoProcess.setUserRoles(userRolesDAO.minUserRoleId(principal.getName()));
                 insertDaoProcess.setUserName(principal.getName());
                 parentProcessId = processDAO.insert(insertDaoProcess);
                 parentProcess.setProcessId(parentProcessId);

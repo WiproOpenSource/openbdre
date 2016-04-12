@@ -14,6 +14,7 @@
 
 package com.wipro.ats.bdre.md.rest;
 
+import com.wipro.ats.bdre.exception.MetadataException;
 import com.wipro.ats.bdre.md.api.base.MetadataAPIBase;
 import com.wipro.ats.bdre.md.beans.table.UserRoles;
 import com.wipro.ats.bdre.md.dao.UserRolesDAO;
@@ -29,7 +30,9 @@ import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
 import java.security.Principal;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by leela on 26-02-2015.
@@ -180,5 +183,28 @@ public class UserRolesAPI extends MetadataAPIBase {
         return null;
     }
 
+
+    @RequestMapping(value = {"/options", "/options/"}, method = RequestMethod.POST)
+    @ResponseBody public
+    RestWrapperOptions listOptions(Principal principal) {
+        RestWrapperOptions restWrapperOptions = null;
+        try {
+            Map<String,Integer> objects=userRolesDAO.diffRoleList();
+            Iterator it = objects.entrySet().iterator();
+            List<RestWrapperOptions.Option> options = new ArrayList<RestWrapperOptions.Option>();
+            while (it.hasNext()) {
+                Map.Entry pair = (Map.Entry)it.next();
+                System.out.println(pair.getKey() + " = " + pair.getValue());
+                RestWrapperOptions.Option option = new RestWrapperOptions.Option((String) pair.getKey(), (pair.getValue()));
+                options.add(option);
+                it.remove(); // avoids a ConcurrentModificationException
+            }
+            restWrapperOptions = new RestWrapperOptions(options, RestWrapperOptions.OK);
+        } catch (MetadataException e) {
+            LOGGER.error(e);
+            restWrapperOptions = new RestWrapperOptions(e.getMessage(), RestWrapper.ERROR);
+        }
+        return restWrapperOptions;
+    }
 
 }

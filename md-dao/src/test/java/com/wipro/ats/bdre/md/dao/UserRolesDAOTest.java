@@ -24,9 +24,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.AutowireCapableBeanFactory;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
-import static org.junit.Assert.*;
 
+import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 
 /**
  * Created by PR324290 on 10/28/2015.
@@ -93,5 +97,15 @@ public class UserRolesDAOTest {
         List<UserRoles> userRolesList = userRolesDAO.listByName("admin");
         LOGGER.info("No. of records fetched:" + userRolesList.get(0).getRole());
 
+    }
+   @Test
+    public  void testDiffRoles() throws Exception{
+        Map<String,Integer> objects=userRolesDAO.diffRoleList();
+       Iterator it = objects.entrySet().iterator();
+       while (it.hasNext()) {
+           Map.Entry pair = (Map.Entry)it.next();
+           System.out.println(pair.getKey() + " = " + pair.getValue());
+           it.remove(); // avoids a ConcurrentModificationException
+       }
     }
 }

@@ -39,6 +39,17 @@ public class Process {
     private Integer permissionTypeByUserAccessId;
     private Integer permissionTypeByGroupAccessId;
     private String userName;
+
+    public Integer getOwnerRoleId() {
+        return ownerRoleId;
+    }
+
+    public void setOwnerRoleId(Integer ownerRoleId) {
+        this.ownerRoleId = ownerRoleId;
+    }
+
+    private Integer ownerRoleId;
+
     public String getUserName() {
         return userName;
     }

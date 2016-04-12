@@ -718,6 +718,12 @@
                                   options: '/mdrest/process/options/',
                                   defaultValue: "0"
                                },
+                               ownerRoleId: {
+                                 title: 'Owmer Group',
+                                 type: 'combobox',
+                                 list: false,
+                                 options: '/mdrest/userroles/options/',
+                              },
                                 processTypeId: {
                                     title: 'Type',
                                     type: 'combobox',
