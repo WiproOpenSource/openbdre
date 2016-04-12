@@ -544,6 +544,43 @@ public List<Process> createOneChildJob(Process parentProcess, Process childProce
     return processList;
 }
 
+    public List<Process> createHiveMigrationJob(Process parentProcess, List<Process> childProcesses, List<Properties> parentProperties) {
+        Session session = sessionFactory.openSession();
+        Integer parentPid = null;
+        List<Process> processList = new ArrayList<Process>();
+        try {
+            session.beginTransaction();
+            parentPid = (Integer) session.save(parentProcess);
+            LOGGER.info("parent processId:" + parentPid);
+            parentProcess.setProcessId(parentPid);
+
+
+            if(parentProperties!=null && !parentProperties.isEmpty()){
+                for(Properties properties: parentProperties){
+                    LOGGER.info("properties key"+properties.getId().getPropKey());
+                    properties.getId().setProcessId(parentPid);
+                    properties.setProcess(parentProcess);
+                    session.save(properties);
+                }
+            }
+            processList.add(parentProcess);
+            for (Process childProcess : childProcesses) {
+                childProcess.setProcess(parentProcess);
+                childProcess.setNextProcessId(parentPid.toString());
+                childProcess.setProcessId((Integer)session.save(childProcess));
+                processList.add(childProcess);
+            }
+
+            session.getTransaction().commit();
+        }
+        catch (MetadataException e) {
+            session.getTransaction().rollback();
+            LOGGER.error(e);
+        } finally {
+            session.close();
+        }
+        return processList;
+    }
     public List<Process> createDataloadJob(Process parentProcess, List<Process> childProcesses, List<Properties> parentProps, Map<Process,List<Properties>> childProps ){
         Session session = sessionFactory.openSession();
         Integer parentPid = null;
