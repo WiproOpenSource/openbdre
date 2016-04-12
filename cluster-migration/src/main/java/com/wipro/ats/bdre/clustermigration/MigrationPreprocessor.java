@@ -81,7 +81,6 @@ public class MigrationPreprocessor extends BaseStructure{
     }
     private MigrationPreprocessorInfo prepareMigrate(String processId, String instanceExecId) throws Exception {
         MigrationPreprocessorInfo migrationPreprocessorInfo = new MigrationPreprocessorInfo();
-        assignProcessIds(processId);
         String table = "account";
         String sourceDb = "sourcedb";
         String destDb= "destdb";
@@ -352,36 +351,7 @@ public class MigrationPreprocessor extends BaseStructure{
             filterCondition.append(trimmedTotalRow).append(" OR ");
         }
 
-        return(filterCondition.toString().isEmpty()?"":filterCondition.substring(0,filterCondition.lastIndexOf(" OR ")));
-    }
-
-    private void assignProcessIds(String processId){
-        GetProcess getProcess = new GetProcess();
-        String arguments[]={"-p",processId};
-        List<ProcessInfo> processList= getProcess.execute(arguments);
-        for(ProcessInfo process:processList){
-            switch (process.getProcessTypeId()){
-                case 31:
-                    break;
-                case 32:
-                    preprocessorId=process.getProcessId();
-                    break;
-                case 33:
-                    sourceStageLoadId=process.getProcessId();
-                    break;
-                case 34:
-                    sourceToDestCopyId=process.getProcessId();
-                    break;
-                case 35:
-                    destTableLoadId=process.getProcessId();
-                    break;
-                case 36:
-                    registerPartitionsId=process.getProcessId();
-                    break;
-                default:
-                    throw new BDREException("Not a valid process definition");
-            }
-        }
+        return(filterCondition.toString().isEmpty()?"'a'='a'":filterCondition.substring(0,filterCondition.lastIndexOf(" OR ")));
     }
 
     private String removeDataTypesFromColumnList(String commaSeparatedColumns){
