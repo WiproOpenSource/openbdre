@@ -61,7 +61,7 @@ public class SourceStageLoadActionNode extends GenericActionNode {
 
     }
 
-    @Override
+ /*   @Override
     public String getXML() {
 
         if (this.getProcessInfo().getParentProcessId() == 0) {
@@ -93,6 +93,47 @@ public class SourceStageLoadActionNode extends GenericActionNode {
 
         return ret.toString();
     }
+*/
+
+    @Override
+    public String getXML() {
+        if (this.getProcessInfo().getParentProcessId() == 0) {
+            return "";
+        }
+        StringBuilder ret = new StringBuilder();
+        ret.append("\n<action name=\"" + getName() + "\">\n" +
+                "<java>\n" +
+                "            <job-tracker>${jobTracker}</job-tracker>\n" +
+                "            <name-node>${nameNode}</name-node>\n" +
+                "            <main-class>com.wipro.ats.bdre.clustermigration.oozie.OozieSourceStageLoad</main-class>\n" +
+                "            <arg>--src-stage-db</arg>\n" +
+                "            <arg>${wf:actionData(\"migration-preprocessor\")[\"source-stg-db\"]}</arg>\n" +
+                "            <arg>--src-stg-table</arg>\n" +
+                "            <arg>${wf:actionData(\"migration-preprocessor\")[\"source-stg-table\"]}</arg>\n" +
+                "            <arg>--stg-part-cols</arg>\n" +
+                "            <arg>${wf:actionData(\"migration-preprocessor\")[\"stg-all-part-cols\"]}</arg>\n" +
+                "            <arg>--src-reg-cols</arg>\n" +
+                "            <arg>${wf:actionData(\"migration-preprocessor\")[\"source-reg-cols\"]}</arg>\n" +
+                "            <arg>--stg-bp-cols</arg>\n" +
+                "            <arg>${wf:actionData(\"migration-preprocessor\")[\"source-bp-cols\"]}</arg>\n" +
+                "            <arg>--instance-exec-id</arg>\n" +
+                "            <arg>${wf:actionData(\"migration-preprocessor\")[\"instance-exec-id\"]}</arg>\n" +
+                "            <arg>--source-db</arg>\n" +
+                "            <arg>${wf:actionData(\"migration-preprocessor\")[\"source-db\"]}</arg>\n" +
+                "            <arg>--source-table</arg>\n" +
+                "            <arg>${wf:actionData(\"migration-preprocessor\")[\"source-table\"]}</arg>\n" +
+                "            <arg>--filter-condition</arg>\n" +
+                "            <arg>${wf:actionData(\"migration-preprocessor\")[\"filter-condition\"]}</arg>\n" +
+                "            <arg>--source-hive-connection</arg>\n" +
+                "            <arg>${wf:actionData(\"migration-preprocessor\")[\"src-hive\"]}</arg>\n" +
+                "            <capture-output/>\n" +
+                "        </java>\n" +
+                "        <ok to=\"" + getToNode().getName() + "\"/>\n" +
+                "        <error to=\"" + getTermNode().getName() + "\"/>\n" +
+                "    </action>");
+
+        return ret.toString();
+    }
 
     /**
      * This method gets path for Hive Query
@@ -111,12 +152,5 @@ public class SourceStageLoadActionNode extends GenericActionNode {
         return properties.size();
     }
 
-    public String getJobTrackerDetails(){
-        return "hdfs://quickstart.cloudera:8020";
-    }
-
-    public String getNameNodeDetails(){
-        return "quickstart.cloudera:8032";
-    }
 }
 

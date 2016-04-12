@@ -558,10 +558,9 @@
 'mainframe', 'serdeClass', 'Serde Class','serde class to be used' , 1, ' ', 'text' , 1
 'mainframe', 'inputFormat', 'Input Format','input format to be used' , 1, 'com.cloudera.sa.copybook.mapred.CopybookInputFormat', 'text' , 1
 'mainframe', 'outputFormat', 'Output Format','output format to be used' , 1, 'org.apache.hadoop.hive.ql.io.HiveIgnoreKeyTextOutputFormat', 'text' , 1
-'cluster.nn-address', 'cloudera cluster', 'hdfs://quickstart.cloudera:8020','cloudera cluster' , 1, 'quickstart.cloudera:8020', 'text' , 1
-'cluster.jt-address', 'cloudera cluster', 'quickstart.cloudera:8032','cloudera cluster' , 1, 'quickstart.cloudera:8050', 'text' , 1
-'cluster.hive-address', 'cloudera cluster', 'jdbc:hive2://quickstart.cloudera:10000','cloudera cluster' , 1, 'quickstart.cloudera:10000', 'text' , 1
-'cluster.nn-address', 'hortonworks cluster', 'hdfs://sandbox.hortonworks.com:8020','hortonworks cluster' , 1, 'sandbox.hortonworks.com:8020', 'text' , 1
-'cluster.jt-address', 'hortonworks cluster', 'sandbox.hortonworks.com:8050','hortonworks cluster' , 1, 'sandbox.hortonworks.com:8050', 'text' , 1
-'cluster.hive-address', 'hortonworks cluster', 'jdbc:hive2://sandbox.hortonworks.com:10000','hortonworks cluster' , 1, 'sandbox.hortonworks.com:10000', 'text' , 1
-
+'cluster.nn-address', 'cloudera cluster', 'Namenode Address','cloudera cluster' , 1, 'hdfs://quickstart.cloudera:8020', 'text' , 1
+'cluster.jt-address', 'cloudera cluster', 'Job Tracker Address','cloudera cluster' , 1, 'quickstart.cloudera:8050', 'text' , 1
+'cluster.hive-address', 'cloudera cluster', 'Hive Server2 Address','cloudera cluster' , 1, 'quickstart.cloudera:10000', 'text' , 1
+'cluster.nn-address', 'hortonworks cluster', 'Namenode Address','hortonworks cluster' , 1, 'hdfs://sandbox.hortonworks.com:8020', 'text' , 1
+'cluster.jt-address', 'hortonworks cluster', 'Job Tracker Address','hortonworks cluster' , 1, 'sandbox.hortonworks.com:8050', 'text' , 1
+'cluster.hive-address', 'hortonworks cluster', 'Hive Server2 Address','hortonworks cluster' , 1, 'sandbox.hortonworks.com:10000', 'text' , 1

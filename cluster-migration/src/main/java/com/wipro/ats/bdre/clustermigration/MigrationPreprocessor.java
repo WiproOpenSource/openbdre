@@ -122,7 +122,7 @@ public class MigrationPreprocessor extends BaseStructure{
 
         srcStgTableLocation=getTableLocation(sourceDb,sourceHiveConnection,sourceStgtable);
         destTableLocation=getTableLocation(destDb,destHiveConnection,table);
-        migrationPreprocessorInfo=setOozieUtilProperties(sourceDb,destDb,sourceStgtable,table,sourceJobTrackerAddress,sourceNameNodeAddress,destNameNodeAddress,processId,instanceExecId,migrationPreprocessorInfo);
+        migrationPreprocessorInfo=setOozieUtilProperties(sourceDb,destDb,sourceStgtable,table,sourceJobTrackerAddress,sourceNameNodeAddress,destNameNodeAddress,sourceHiveConnection,processId,instanceExecId,migrationPreprocessorInfo);
 
         st.close();
         conn.close();
@@ -370,7 +370,7 @@ public class MigrationPreprocessor extends BaseStructure{
         return tableLocation;
     }
 
-    private MigrationPreprocessorInfo setOozieUtilProperties(String sourceDb,String destDb,String sourceStgtable,String table, String sourceJobTrackerAddress, String sourceNameNodeAddress, String destNameNodeAddress, String processId, String instanceExecId, MigrationPreprocessorInfo migrationPreprocessorInfo){
+    private MigrationPreprocessorInfo setOozieUtilProperties(String sourceDb,String destDb,String sourceStgtable,String table, String sourceJobTrackerAddress, String sourceNameNodeAddress, String destNameNodeAddress, String srcHiveConnection,String processId, String instanceExecId, MigrationPreprocessorInfo migrationPreprocessorInfo){
         String stgPartitionsWithoutDataTypes=removeDataTypesFromColumnList(stgPartitionColumns);
         String stgRegColumnsWithoutDataTypes=removeDataTypesFromColumnList(sourceRegularColumns);
         migrationPreprocessorInfo.setSrcStgDb(sourceDb);
@@ -390,6 +390,7 @@ public class MigrationPreprocessor extends BaseStructure{
         migrationPreprocessorInfo.setDestDb(destDb);
         migrationPreprocessorInfo.setDestTable(table);
         migrationPreprocessorInfo.setDestFileSystem(destNameNodeAddress);
+        migrationPreprocessorInfo.setSrcHiveConnection(srcHiveConnection);
         return migrationPreprocessorInfo;
     }
 

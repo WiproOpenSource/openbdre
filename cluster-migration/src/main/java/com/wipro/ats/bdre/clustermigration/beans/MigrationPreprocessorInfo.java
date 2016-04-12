@@ -185,6 +185,17 @@ public class MigrationPreprocessorInfo {
     @PersistableParam(keyName = "dest-fs")
     private String destFileSystem;
 
+    public String getSrcHiveConnection() {
+        return srcHiveConnection;
+    }
+
+    public void setSrcHiveConnection(String srcHiveConnection) {
+        this.srcHiveConnection = srcHiveConnection;
+    }
+
+    @PersistableParam(keyName ="src-hive")
+    private String srcHiveConnection;
+
     public String getDestFileSystem() {
         return destFileSystem;
     }
