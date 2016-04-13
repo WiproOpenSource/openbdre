@@ -243,7 +243,7 @@ public class MigrationPreprocessor extends BaseStructure{
     }
 
     private void formStageAndDestTableDDLs(Statement st, List<String> sourceColumnList, String sourceDb, String destDb, String table, String sourceStgtable, String bdreTechPartition, String processId,String instanceExecId) throws Exception {
-        ResultSet rsPartitionList = st.executeQuery("desc account");
+        ResultSet rsPartitionList = st.executeQuery("desc "+table);
         int index = 0;
         StringBuffer partitionList = new StringBuffer("");
         List<String> sourcePartitionColumnList = new ArrayList<>();
