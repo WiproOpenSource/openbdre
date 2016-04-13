@@ -273,10 +273,9 @@ public class HiveTableMigrationAPI {
             } else if (string.startsWith("srcDB_")) {
                 jpaProperties = Dao2TableUtil.buildJPAProperties("hive-migration", "src-db", map.get(string), "source database");
                 propertiesList.add(jpaProperties);
-
             }
             else if (string.startsWith("destEnv_instexecId")) {
-                jpaProperties = Dao2TableUtil.buildJPAProperties("hive-migration", "bdre-tech-pt", map.get(string), "technical partition");
+                jpaProperties = Dao2TableUtil.buildJPAProperties("hive-migration", "bdre-tech-pt", map.get(string)+" bigint", "technical partition");
                 propertiesList.add(jpaProperties);
             }
             else if (string.startsWith("destEnv_destEnv")) {
