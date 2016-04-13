@@ -383,14 +383,14 @@ public class MigrationPreprocessor extends BaseStructure{
         migrationPreprocessorInfo.setFilterCondition(filterCondition);
         migrationPreprocessorInfo.setJtAddress(sourceJobTrackerAddress);
         migrationPreprocessorInfo.setNnAddress(sourceNameNodeAddress);
-        migrationPreprocessorInfo.setSrcStgTablePath(srcStgTableLocation+"/*");
+        //replacing the source namenode(quickstart.cloudera or sandbox.hortonworks.com) with actual public ip obtained from through properties (src-nn)
+        migrationPreprocessorInfo.setSrcStgTablePath(sourceNameNodeAddress+srcStgTableLocation.substring(srcStgTableLocation.indexOf("/",7),srcStgTableLocation.length())+"/");
         migrationPreprocessorInfo.setDestStgFolderPath(destNameNodeAddress+"/tmp/"+processId+"/"+instanceExecId);
         migrationPreprocessorInfo.setDestStgFolderContentPath(destNameNodeAddress+"/tmp/"+processId+"/"+instanceExecId+"/");
         migrationPreprocessorInfo.setDestTablePath(destTableLocation);
         migrationPreprocessorInfo.setDestDb(destDb);
         migrationPreprocessorInfo.setDestTable(table);
         migrationPreprocessorInfo.setDestFileSystem(destNameNodeAddress);
-        migrationPreprocessorInfo.setSrcHiveConnection(srcHiveConnection);
         return migrationPreprocessorInfo;
     }
 
