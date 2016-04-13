@@ -8,8 +8,40 @@
 <html>
 
 <head>
+<<<<<<< HEAD
     <title><spring:message code="common.page.title_bdre_2"/></title>
 
+=======
+    <title>BDRE | Bigdata Ready Enterprise</title>
+	<style>
+   .body{
+    width: 100% !important;
+    padding: 0 !important;
+    }
+    #processFieldsForm1 .form-group{
+	    width: 90%;
+	    margin: 0 auto 2% auto;
+    }
+    
+     #processFieldsForm1 .form-group div{
+     margin-left: 3%;
+     }
+   #deletediv{
+	padding-left:9%;
+   }
+	#deletediv .add-more{
+		background-color: #389DD0;
+		border: none;
+		padding: 10px;
+		color: #fff;
+	}
+	.alert-redfont{
+	color: #C85659;
+	letter-spacing: 1px;
+	}
+   
+    </style>
+>>>>>>> 8b8d7e21096fd2bf9d569c33af938f4d9a2c1e92
 	<script>
 	  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
 	  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
@@ -27,10 +59,13 @@
     <script src="../js/jquery-ui-1.10.3.custom.js"></script>
     <script src="../js/jquery.steps.min.js"></script>
     <link rel="stylesheet" href="../css/jquery.steps.css" />
+    <link rel="stylesheet" href="../css/data-ingestion.css" />
+    <link rel="stylesheet" href="../css/data-ingestion-horizontal.css" />
 
     <script src="../js/bootstrap.js" type="text/javascript"></script>
     <script src="../js/jquery.jtable.js" type="text/javascript"></script>
     <link href="../css/jtables-bdre.css" rel="stylesheet" type="text/css" />
+    
 
     <script src="../js/angular.min.js" type="text/javascript"></script>
     <script type="text/javascript">
@@ -82,28 +117,27 @@ function formIntoMap(typeProp, typeOf) {
 </script>
 
 </head>
-<body ng-app="myApp" ng-controller="myCtrl">
-
+<body ng-app="myApp" ng-controller="myCtrl" class="bodystyle">
+	<div class="alert-info-outer">
+	<div class="alert alert-info" role="alert">
+       <div style="font-size:24px;" ><b class="alert-redfont">How To:</b> </div>
+           <b>For Date type use format:</b> <span class="alert-redfont">2012-09-09,2013-09-08,yyyy-MM-dd</span>
+           <br>
+           <b>For Regex pattern use format:</b><span class="alert-redfont"> string1|string2</span>
+           <br>
+           <b>For number type use format:</b> <span class="alert-redfont">min Value,max Value</span>
+           <br>
+           <b>Enter the Column Name : Column Type as:</b> <span class="alert-redfont">name:type for e.g.:- account_type:string or open_date:date</span>
+    	</div>
+	</div>
 
 
     <div id="datagen" >
 
-            <h3>Data Type Details</h3>
+            <h3><div class="number-circular">1</div>Data Type Details</h3>
             <section>
             <form class="form-horizontal" role="form" id="processFieldsForm1">
                 <div id="dataTypeDetails">
-                    <div class="alert alert-info" role="alert">
-                        <div style="font-size:24px;" ><b>How To:</b> </div>
-                        <b>For Date type use format:</b> 2012-09-09,2013-09-08,yyyy-MM-dd
-                        <br>
-                        <b>For Regex pattern use format:</b> string1|string2
-                        <br>
-                        <b>For number type use format:</b> min Value,max Value
-                        <br>
-                        <b>Enter the Column Name : Column Type as:</b> name:type for e.g.:- account_type:string or open_date:date
-                        
-                    </div>
-                    
                     <!-- btn-group -->
                     <div class="form-group" id="formGroup1" >
                         <div class="col-md-3">
@@ -133,7 +167,7 @@ function formIntoMap(typeProp, typeOf) {
                 
             </section>
 
-            <h3>Table Type Details</h3>
+            <h3><div class="number-circular">2</div>Table Type Details</h3>
             <section>
             <form class="form-horizontal" role="form" id="processFieldsForm2">
                 <div id="tableDetails">
@@ -174,7 +208,7 @@ function formIntoMap(typeProp, typeOf) {
             </form>
             </section>
 
-            <h3>Process Details</h3>
+            <h3><div class="number-circular">3</div>Process Details</h3>
                             <section>
                                 <form class="form-horizontal" role="form" id="processFieldsForm3">
                                     <div id="processDetails">
@@ -217,7 +251,7 @@ function formIntoMap(typeProp, typeOf) {
                                     </form>
                                     </section>
 
-            <h3>Confirm</h3>
+            <h3><div class="number-circular">4</div>Confirm</h3>
             <section>
             <div id="createProcess">
                 <button ng-click="createJob()" id="createjobs" type="button" class="btn">Create Job</button>
