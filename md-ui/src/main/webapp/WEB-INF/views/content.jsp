@@ -134,7 +134,7 @@
                     width: 100% !important;
                 }
    
-                /* CUSTOM  */
+                /* HEADER and NAV-BAR*/
                 .navbar-height{
                 min-height: 110px;
                 }
@@ -144,37 +144,39 @@
                 .bor{
                 border: 1px solid red;
                 }
-                .nav-center > li{float:none;display:inline-block;padding: 0.5%;font-size: 18px}
-				.nav-center {    width: 100%;
-				    text-align: center;
-				    position: absolute;
-				    top: 53%;
-				    left: 0px;}
-				    .input-sm-search{
-				    width: 250px !important;
-				    }
-				    .glyphicon-arrow-position{
-				    font-size: 12px;
-				    }
-				    .navbar{
-				    margin-bottom: 0px;
-				    border-radius: 0px;
-				    }
-				    .navbar-inverse{
-				    border: none;
-				    background-color: rgb(51,51,51);
-				    }
-				    .usericon{display:block;width: 30px;height: 30px;border-radius: 80px;background: #1ca7f7 no-repeat center;background-image:  url("../css/images/user_icon.png");background-size: 65% 65%;}
-					.dropdown-toggle-usericon{
-				    padding-top: 9px !important;
-				    }
-				    .bdretextlogo{
-				    color: #1ca7f7;
-				   	position: relative;
-				    font-size: 3em;
-				    top: 11px;
-				    right: 10px;
-				    }
+                .nav-center > li{float:none;display:inline-block;font-size: 18px}
+				.nav-center {    
+				width: 100%;
+			   	text-align: center;
+			    position: absolute;
+			    top: 53%;
+			    left: 0px;}
+			    .input-sm-search{
+			    width: 250px !important;
+			    }
+			    .glyphicon-arrow-position{
+			    font-size: 12px;
+			    }
+			    .navbar{
+			    margin-bottom: 0px;
+			    border-radius: 0px;
+			    }
+			    .navbar-inverse{
+			    border: none;
+			    background-color: rgb(51,51,51);
+			    }
+			    .usericon{display:block;width: 30px;height: 30px;border-radius: 80px;background: #1ca7f7 no-repeat center;background-image:  url("../css/images/user_icon.png");background-size: 65% 65%;}
+				.dropdown-toggle-usericon{
+			    padding-top: 9px !important;
+			    }
+			    .bdretextlogo{
+			    color: #1ca7f7;
+			   	position: relative;
+			    font-size: 3em;
+			    top: 11px;
+			    right: 10px;
+			    }
+			    
         </style>
 
         </head>

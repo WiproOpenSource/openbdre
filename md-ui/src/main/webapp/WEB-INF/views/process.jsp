@@ -20,6 +20,11 @@
 				.process-filter-icon{background-image: url('../css/images/filter_icon.png');background-size: 100%;background-repeat: no-repeat;  display: inline-block;margin: 2px;vertical-align: middle;width: 16px;height: 16px;}
 				.process-filter-text{display: inline-block;margin: 2px;vertical-align: middle;font-size: 0.9em;font-family: 'Segoe UI Semilight', 'Open Sans', Verdana, Arial, Helvetica, sans-serif;font-weight: 300;}
                 .process-input-box-button{display:none;position: absolute;top: 34px;right: 133px; width: 129px;}
+                .subprocess-arrow-down{
+                    -ms-transform: rotate(90deg); /* IE 9 */
+    				-webkit-transform: rotate(90deg); /* Chrome, Safari, Opera */
+    				transform: rotate(90deg);
+                }
                 </style>
                
 	<script>
@@ -217,10 +222,12 @@
                                     listClass: 'bdre-jtable-button',
                                         display: function(item) {                         //Create an image that will be used to open child table
                                                                 
-                                        var $img = $('<img class="abhi" src="../css/images/subprocess-rarrow.png" title="Sub processes info" />');                         //Open child table when user clicks the image
+                                        var $img = $('<img class="subprocess-arrow" src="../css/images/subprocess-rarrow.png" title="Sub processes info" />');                         //Open child table when user clicks the image
                                                                 
-                                        $img.click(function() {                            
-                                            $('#Container').jtable('openChildTable',                                     
+                                        $img.click(function() {
+                                        	$('.subprocess-arrow').removeClass('subprocess-arrow-down');
+                                        	$(this).addClass('subprocess-arrow-down');
+                                        	$('#Container').jtable('openChildTable',                                     
                                                 $img.closest('tr'),                                      {                                        
                                                     title: ' Sub processes of ' + item.record.processId,
                                                         actions: {                                        
@@ -1059,11 +1066,11 @@
                         </div>
                     </form>
                 </div>
-                <div id="dialog-confirm" title="Are you sure?" style="display:none;">
-                    <p><span class="ui-icon ui-icon-alert" style="float:left; margin:0 7px 20px 0;"></span>This will build the workflow for this process and deploy necessary codes in cluster. Existing workflow may be replaced.</p>
+				<div id="dialog-confirm" style="display:none;">
+                    <span class="ui-icon-alert-custom"></span><div class="dialog-title-custom">Are you sure?</div><p>This will build the workflow for this process and deploy necessary codes in cluster. Existing workflow may be replaced.</p>
                 </div>
                 <div id="execute-dialog-confirm" title="Are you sure?" style="display:none;">
-                    <p><span class="ui-icon ui-icon-alert" style="float:left; margin:0 7px 0 0 ;"></span>This will start the execution of process in cluster.</p>
+                    <span class="ui-icon-alert-custom"></span><div class="dialog-title-custom">Are you sure?</div><p>This will start the execution of process in cluster.</p>
                 </div>
                 <div id="execute-result" title="Process Started" style="display:none;">
                     <p><span class="ui-icon ui-icon-alert" style="float:left; margin:0 7px 20px 0;"></span>Process Started Successfully</p>
@@ -1077,7 +1084,6 @@
                 <div id="dialog-form" title="Are you sure?" style="display:none;">
                     <p><span class="ui-icon ui-icon-alert" style="float:left; margin:0 7px 20px 0;"></span>This will export process and related properties.</p>
                 </div>
-
-            </body>
+			</body>
 
             </html>
