@@ -1,0 +1,1 @@
+This should have 2 buttons to take the user to the dashboard page. For now just have one button and take the user to the dashboard page.
