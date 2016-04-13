@@ -544,6 +544,57 @@ public List<Process> createOneChildJob(Process parentProcess, Process childProce
     return processList;
 }
 
+    public List<Process> createAnalyticsAppJob(Process parentProcess, List<Process> childProcesses, List<Properties> appProperties) {
+        Session session = sessionFactory.openSession();
+        com.wipro.ats.bdre.md.dao.jpa.Process subProcess1 = null;
+
+        Integer parentPid = null;
+        Integer subProcessId = null;
+        List<Process> processList = new ArrayList<Process>();
+        try {
+            session.beginTransaction();
+            parentPid = (Integer) session.save(parentProcess);
+            LOGGER.info("parent processId:" + parentPid);
+            parentProcess.setProcessId(parentPid);
+
+
+
+
+            processList.add(parentProcess);
+            for (Process childProcess : childProcesses) {
+                childProcess.setProcess(parentProcess);
+                if (childProcess.getProcessType().getProcessTypeId() == 38){
+                    subProcess1 = childProcess;
+                    subProcess1.setNextProcessId(parentPid.toString());
+                    subProcessId = (Integer) session.save(subProcess1);
+                    subProcess1.setProcessId(subProcessId);
+                }
+
+                processList.add(childProcess);
+            }
+            parentProcess.setNextProcessId(subProcess1.getProcessId().toString());
+
+            session.update(parentProcess);
+
+
+            if(appProperties!=null && !appProperties.isEmpty()){
+                for (Properties properties : appProperties) {
+                    LOGGER.info("properties key"+properties.getId().getPropKey());
+                    properties.getId().setProcessId(subProcessId);
+                    properties.setProcess(subProcess1);
+                    session.save(properties);
+                }
+            }
+            session.getTransaction().commit();
+        }
+        catch (MetadataException e) {
+            session.getTransaction().rollback();
+            LOGGER.error(e);
+        } finally {
+            session.close();
+        }
+        return processList;
+    }
     public List<Process> createDataloadJob(Process parentProcess, List<Process> childProcesses, List<Properties> parentProps, Map<Process,List<Properties>> childProps ){
         Session session = sessionFactory.openSession();
         Integer parentPid = null;

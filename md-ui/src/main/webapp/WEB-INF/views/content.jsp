@@ -471,7 +471,12 @@
                                             collapse: "1",
                                             url: "flumepropertieswizard.page",
                                             children: []
-					}, </security:authorize>]
+					}, {
+                                         label: "Analytics App",
+                                         collapse: "1",
+                                         url: "analyticsui.page",
+                                         children: []
+                     					}, </security:authorize>]
                                     },
                                     <security:authorize access = "hasRole('ROLE_ADMIN')"> {
                                         label: "Administration",
