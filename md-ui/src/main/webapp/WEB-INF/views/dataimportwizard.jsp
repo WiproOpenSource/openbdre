@@ -12,8 +12,8 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html >
-	<head >
-
+	<head>
+		
 	<script>
 	  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
 	  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
@@ -37,6 +37,9 @@
 		<script src = "../js/jquery.fancytree.table.js" type = "text/javascript" ></script >
 		<script src = "../js/jquery.jtable.js" type = "text/javascript" ></script >
 		<link href = "../css/jtables-bdre.css" rel = "stylesheet" type = "text/css" />
+		<link rel="stylesheet" href="../css/data-ingestion.css" />
+		<link rel="stylesheet" href="../css/data-ingestion-horizontal.css" />
+	
 		<script >
         function fetchPipelineInfo(pid){
 			location.href = '<c:url value="/pages/lineage.page?pid="/>' + pid;
@@ -639,11 +642,11 @@ isInit=true;
 		</script >
 
 	</head >
-	<body >
+	<body class="bodystyle">
 		<form action = "#" method = "POST" id = "wizardform" >
 			<br />
 			<div id = "bdre-dataload" ng-controller = "myCtrl" >
-				<h3 >Database</h3 >
+				<h3 ><div class="number-circular">1</div>Database</h3 >
 				<section >
 					<div >
 					<fmt:bundle basename="db">
@@ -666,7 +669,7 @@ isInit=true;
 					</div >
                     </fmt:bundle>
 				</section >
-				<h3 >Table and Columns</h3 >
+				<h3 ><div class="number-circular">2</div>Table and Columns</h3 >
 				<section style = "display: block; overflow: scroll;" >
 					<table id = "tree0" class = "table-striped" width = "290px" >
 						<thead >
@@ -724,7 +727,7 @@ isInit=true;
 
 				</section >
 
-				<h3 >Submission</h3 >
+				<h3 ><div class="number-circular">3</div>Submission</h3 >
 
 				<section >
 					<table id = "tree0" class = "table-striped" width = "290px" >
@@ -784,7 +787,7 @@ isInit=true;
 
 
 
-				<h3 >Confirm</h3 >
+				<h3 ><div class="number-circular">4</div>Confirm</h3 >
 				<section >
 					<div id = "Container" >
 					</div >
