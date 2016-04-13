@@ -2,7 +2,7 @@
 
 <html id="ng-app">
     <head>
-	<title><spring:message code="welcome.page.bdre"/></title>
+	<title><spring:message code="common.page.title_bdre_2"/></title>
 	<script>
 	  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
 	  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
@@ -34,10 +34,9 @@
 
 	<div class="container-fluid" ng-app="myApp" ng-controller="myCtrl">
 	<div class="jumbotron  alert-info">
-        <h1><spring:message code="welcome.page.bdre"/></h1>
+        <h1><spring:message code="common.page.title_bdre_1"/></h1>
         <p><spring:message code="welcome.page.bdre_description"/></p>
       </div>
-    <script>document.write("${properties['welcome.page.test']}")</script>
 	    <div class="row ">
 		<span ng-repeat="value in text track by $index" ng-class="{row:($index + 1) % 3 == 0}">
 		    <canvas id="myCanvas{{$index}}" class="col-md-2" >
@@ -49,23 +48,12 @@
 	</div>
 	<script>
 	    //**********************************************Just update these arrays with appropriate data*********************
-	    var text = ["Automation1", "Automation2", "Automation3", "Automation4", "Automation1", "", "", "", "", "", "", ""];
-	    var head = ["Metadata Management", "Data Integrity", "Batch Lineage", "Data Quality", "Automation", "Data Extraction", "Run Control", "Test Data Generation", "Dependency Management", "Data Loading", "Visualization", "Analytics"];
-	    var desc = ["End-to-end process and governance framework.",
-		"End-to-end data integrity protection by error checking and validation at necessary steps.",
-		"Detailed end-to-end batch lineage information.",
-		"Makes data reliable for making business decisions.",
-		"Enables business streamlining.Drastically reduces errors and prevents jobs from falling through the cracks.",
-		"Extraction of data to retrieve relevant information from data sources.",
-		"Monitoring and controlling the process execution.",
-		"Automated bulk test data generation.",
-		"Process and workflow dependencies for auditing.",
-		"Fast dataset loading.",
-		"Graphical representaion of workflows and dependencies.",
-		"Analysis of process run execution time."];
-	    var tail = ["", "", "", "", ""];
-	    var taillinks = ["url1", "url2", "url3", "url4", "url1", "url2", "url3", "url4"]
-	    var imgs = ["../css/images/metadata.jpg", "../css/images/dataintegrity.jpg", "../css/images/datalineage.jpg", "../css/images/dataquality.jpg", "../css/images/automation.jpg", "../css/images/extraction.jpg", "../css/images/runcontrol.jpg", "../css/images/datagen.jpg", "../css/images/dependancy.jpg", "../css/images/loading.jpg", "../css/images/visualization.jpg", "../css/images/analytic.jpg"];
+	    var text = [<spring:message code="welcome.page.text_var"/>];
+	    var head = [<spring:message code="welcome.page.head_var"/>]
+	    var desc = [<spring:message code="welcome.page.desc_var"/>];
+	    var tail = [<spring:message code="welcome.page.tail_var"/>];
+	    var taillinks = [<spring:message code="welcome.page.taillinks_var"/>];
+	    var imgs = [<spring:message code="welcome.page.imgs_var"/>];
 
 	    //*************************************
 	    var app = angular.module("myApp", []);

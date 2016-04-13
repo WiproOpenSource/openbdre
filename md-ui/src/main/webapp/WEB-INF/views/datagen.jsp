@@ -8,7 +8,7 @@
 <html>
 
 <head>
-    <title>BDRE | Bigdata Ready Enterprise</title>
+    <title><spring:message code="common.page.title_bdre_2"/></title>
 
 	<script>
 	  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){

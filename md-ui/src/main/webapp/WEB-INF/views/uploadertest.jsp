@@ -1,9 +1,11 @@
+<%@taglib uri="http://www.springframework.org/tags" prefix="spring"%>
+
 <html>
 <head>
     <title>Sample Upload Form</title>
      <head>
     	<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
-    	<title>Bigdata Ready Enterprise</title>
+    	<title><spring:message code="common.page.title_bdre_1"/></title>
 	<script>
 	  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
 	  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
