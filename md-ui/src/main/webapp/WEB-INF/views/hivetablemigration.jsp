@@ -743,12 +743,7 @@ var destjobTrackerIp;
              <h3>Destination Environment</h3>
              <section>
              <form class="form-horizontal" role="form" id="destEnvForm">
-              <div class="form-group">
-             			        <label class="control-label col-sm-2" for="instexecId">BDRE Technical Partition:</label>
-                                     <div class="col-sm-10">
-                                         <input type="text" class="form-control"  id="instexecId" name="instexecId"  value="instanceExecId" required>
-                                     </div>
-                                     </div>
+
 				   <div id="fileFormatDiv" ng-controller="myCtrl">
 								 <div class="form-group">
 									 <label class="control-label col-sm-2" for="destEnv">Select Destination Environment:</label>
@@ -758,6 +753,14 @@ var destjobTrackerIp;
 										 </select>
 								     </div>
 						 </div>
+
+						  <div class="form-group">
+                                                             <label class="control-label col-sm-2" for="instexecId">BDRE Technical Partition:</label>
+                                                                  <div class="col-sm-10">
+                                                                      <input type="text" class="form-control"  id="instexecId" name="instexecId"  value="instanceExecId" required>
+                                                                  </div>
+                                                                  </div>
+
 				</form>
 
               </section>
