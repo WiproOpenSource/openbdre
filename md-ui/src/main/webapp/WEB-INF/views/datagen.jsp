@@ -8,11 +8,7 @@
 <html>
 
 <head>
-<<<<<<< HEAD
     <title><spring:message code="common.page.title_bdre_2"/></title>
-
-=======
-    <title>BDRE | Bigdata Ready Enterprise</title>
 	<style>
    .body{
     width: 100% !important;
@@ -41,7 +37,6 @@
 	}
    
     </style>
->>>>>>> 8b8d7e21096fd2bf9d569c33af938f4d9a2c1e92
 	<script>
 	  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
 	  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
