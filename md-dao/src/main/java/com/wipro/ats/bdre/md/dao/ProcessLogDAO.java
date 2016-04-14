@@ -144,6 +144,30 @@ public class ProcessLogDAO {
         }
     }
 
+    public void logList(List<ProcessLogInfo> processLogInfoList) {
+        Session session = sessionFactory.openSession();
+        try {
+            session.beginTransaction();
+            for(ProcessLogInfo processLogInfo:processLogInfoList){
+            ProcessLog processLog = new ProcessLog();
+            //setting the values of processloginfo to processlog and adding to database
+            processLog.setProcess((Process) session.get(Process.class, processLogInfo.getProcessId()));
+            processLog.setAddTs(processLogInfo.getAddTs());
+            processLog.setLogCategory(processLogInfo.getLogCategory());
+            processLog.setMessage(processLogInfo.getMessage());
+            processLog.setMessageId(processLogInfo.getMessageId());
+            processLog.setInstanceRef(processLogInfo.getInstanceRef());
+            session.save(processLog);
+            }
+            session.getTransaction().commit();
+        } catch (MetadataException e) {
+            session.getTransaction().rollback();
+            LOGGER.error(e);
+        } finally {
+            session.close();
+        }
+    }
+
     public ProcessLogInfo getLastValue(ProcessLogInfo processLogInfo) {
 
         Session session = sessionFactory.openSession();
@@ -282,5 +306,32 @@ public class ProcessLogDAO {
         return processLogInfoList;
     }
 
+    public List<ProcessLogInfo> listLastInstanceRef(int processId, String messageId) {
+        Session session = sessionFactory.openSession();
+        session.beginTransaction();
+        Criteria criteriaList = session.createCriteria(ProcessLog.class).add(Restrictions.eq("process.processId",processId)).add(Restrictions.eq("messageId",messageId));
+        Criteria criteriaMaxInstanceRef = session.createCriteria(ProcessLog.class).add(Restrictions.eq("process.processId",processId)).add(Restrictions.eq("messageId",messageId)).addOrder(Order.desc("instanceRef")).setMaxResults(1);
+        ProcessLog maxInstanceRef=criteriaMaxInstanceRef.list().size()>0?(ProcessLog)criteriaMaxInstanceRef.list().get(0):null;
+        List<ProcessLog> processLogs = maxInstanceRef!=null?criteriaList.add(Restrictions.eq("instanceRef",maxInstanceRef.getInstanceRef())).list():new ArrayList<>();
+        List<ProcessLogInfo> processLogInfos = new ArrayList<>();
+        if (!processLogs.isEmpty()) {
+            //mapping values to returnProcessLogInfo bean
+            for(ProcessLog processLog:processLogs){
+                ProcessLogInfo processLogInfo = new ProcessLogInfo();
+                processLogInfo.setInstanceRef(processLog.getInstanceRef());
+                processLogInfo.setAddTs(processLog.getAddTs());
+                processLogInfo.setLogCategory(processLog.getLogCategory());
+                processLogInfo.setLogId(processLog.getLogId());
+                processLogInfo.setMessage(processLog.getMessage());
+                processLogInfo.setMessageId(processLog.getMessageId());
+                processLogInfo.setLogCategory(processLog.getLogCategory());
+                processLogInfo.setProcessId(processLog.getProcess().getProcessId());
+                processLogInfos.add(processLogInfo);
+            }
+        }
+        session.getTransaction().commit();
+        session.close();
+        return processLogInfos;
+    }
 
 }
