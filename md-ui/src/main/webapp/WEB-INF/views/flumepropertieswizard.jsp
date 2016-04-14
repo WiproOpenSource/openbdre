@@ -16,6 +16,16 @@
 	  ga('create', 'UA-72345517-1', 'auto');
 	  ga('send', 'pageview');
 	</script>
+	<style>
+	#bdre-flume-ingestion{
+    background-color: #F8F9FB;
+        padding-top: 2%;
+    }
+    .steps ul{
+    padding-bottom: 4% !important;
+    }
+		
+	</style>
 
 		<script src="../js/jquery.min.js"></script>
 		<link href="../css/jquery-ui-1.10.3.custom.css" rel="stylesheet">
@@ -27,6 +37,8 @@
 		<script src="../js/bootstrap.js" type="text/javascript"></script>
 		<script src="../js/jquery.jtable.js" type="text/javascript"></script>
 		<link href="../css/jtables-bdre.css" rel="stylesheet" type="text/css" />
+		<link rel="stylesheet" href="../css/data-ingestion.css" />
+		
 		<script >
                 function fetchPipelineInfo(pid){
         			location.href = '<c:url value="/pages/lineage.page?pid="/>' + pid;
@@ -498,16 +510,17 @@ wizard = $(document).ready(function() {
 
 	</head>
 
-	<body ng-app="myApp" ng-controller="myCtrl">
-
-		<div id="bdre-flume-ingestion" ng-controller="myCtrl">
-			<h3>Select Source Type</h3>
+	<body ng-app="myApp" ng-controller="myCtrl" class="bodystyle">
+			<div class="alert-info-outer">
+				<div class="alert alert-info" role="alert">
+			        Application requires source type which depends on how you are getting your data
+			    </div>
+			</div>
+			<div id="bdre-flume-ingestion" ng-controller="myCtrl">
+			<h3><div class="number-circular">1</div>Select Source Type</h3>
 			<section>
 
 				<div id="dropdownSource">
-					<div class="alert alert-info" role="alert">
-						Application requires source type which depends on how you are getting your data
-					</div>
 					<!-- btn-group -->
 					<div class="btn-group">
 						<button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="false" aria-expanded="true" id="srcDropdown">
@@ -522,7 +535,7 @@ wizard = $(document).ready(function() {
 					<!-- /btn-group -->
 				</div>
 			</section>
-			<h3>Required Source Properties</h3>
+			<h3><div class="number-circular">2</div>Required Source Properties</h3>
 			<section>
 				<div class="alert alert-info" role="alert">
 					Form contains required configuration properties related with your selected source type.
@@ -530,7 +543,7 @@ wizard = $(document).ready(function() {
 				<div id="sourceRequiredFields"></div>
 			</section>
 
-			<h3>Advanced Source Properties</h3>
+			<h3><div class="number-circular">3</div>Advanced Source Properties</h3>
 			<section>
 				<div class="alert alert-info" role="alert">
 					Table contains advanced configuration properties related with your selected source type. Use edit and delete button to change or delete properties.
@@ -540,7 +553,7 @@ wizard = $(document).ready(function() {
 			</section>
 
 
-			<h3>Select Channel Type</h3>
+			<h3><div class="number-circular">4</div>Select Channel Type</h3>
 			<section>
 
 				<div id="dropdownChannel">
@@ -560,7 +573,7 @@ wizard = $(document).ready(function() {
 				</div>
 			</section>
 
-			<h3>Required Channel Properties</h3>
+			<h3><div class="number-circular">5</div>Required Channel Properties</h3>
 			<section>
 				<div class="alert alert-info" role="alert">
 					Form contains required configuration properties related with your selected channel type.
@@ -569,7 +582,7 @@ wizard = $(document).ready(function() {
 
 			</section>
 
-			<h3>Advanced Channel Properties</h3>
+			<h3><div class="number-circular">6</div>Advanced Channel Properties</h3>
 			<section>
 				<div class="alert alert-info" role="alert">
 					Table contains advanced configuration properties related with your selected channel type. Use edit and delete button to change or delete properties.
@@ -578,7 +591,7 @@ wizard = $(document).ready(function() {
 
 			</section>
 
-			<h3>Select Sink Type</h3>
+			<h3><div class="number-circular">7</div>Select Sink Type</h3>
 			<section>
 
 				<div id="dropdownSink">
@@ -599,7 +612,7 @@ wizard = $(document).ready(function() {
 
 			</section>
 
-			<h3>Required Sink Properties</h3>
+			<h3><div class="number-circular">8</div>Required Sink Properties</h3>
 			<section>
 				<div class="alert alert-info" role="alert">
 					Form contains required configuration properties related with your selected sink type.
@@ -608,7 +621,7 @@ wizard = $(document).ready(function() {
 
 			</section>
 
-			<h3>Advanced Sink Properties</h3>
+			<h3><div class="number-circular">9</div>Advanced Sink Properties</h3>
 			<section>
 				<div class="alert alert-info" role="alert">
 					Table contains advanced configuration properties related with your selected sink type. Use edit and delete button to change or delete properties.
@@ -616,7 +629,7 @@ wizard = $(document).ready(function() {
 				<div id='sinkAdvancedFields'></div>
 
 			</section>
- 						<h3>Process Details</h3>
+ 						<h3><div class="number-circular">10</div>Process Details</h3>
                              <section>
                                  <form class="form-horizontal" role="form" id="processFieldsForm">
                                      <div id="processDetails">
@@ -654,7 +667,7 @@ wizard = $(document).ready(function() {
                                      </section>
 
 
-			<h3>Confirm</h3>
+			<h3><div class="number-circular">11</div>Confirm</h3>
 			<section>
 				<div id="Process">
 					<button id="createjobs" type="button" class="btn btn-primary btn-lg">Create Jobs</button>
