@@ -134,7 +134,7 @@ public class MigrationPreprocessor extends BaseStructure{
     }
 
     private static String getShowPartitionsQuery(String srcDb, String tableName){
-        return "show partitions " + sourceDb + "." + tableName;
+        return "show partitions " + srcDb + "." + tableName;
     }
 
     private List<String> getCurrentSourcePartitionList(Statement st, String sourceDb, String table) throws SQLException {
