@@ -12,8 +12,32 @@
 		<link href="../css/css/bootstrap.min.css" rel="stylesheet" />
 		<script src="../js/jquery-ui-1.10.3.custom.js"></script>
 		<script src="../js/jquery.steps.min.js"></script>
+		<style>
+		.form-group label{
+			width: 100%;
+			float: none;
+			text-align: left !important;
+		}
+		label + div{
+			width: 80% !important;
+		}
+		.form-group{
+		width: 50%;
+		}
+		
+    
+    #bdre-data-load{
+    background-color: #F8F9FB;
+        padding-top: 2%;
+    }
+    .steps ul{
+    padding-bottom: 4% !important;
+    }
+		
+	</style>
+		
 		<link rel="stylesheet" href="../css/jquery.steps.css" />
-
+		<link rel="stylesheet" href="../css/data-ingestion.css" />
 		<script src="../js/bootstrap.js" type="text/javascript"></script>
 		<script src="../js/jquery.jtable.js" type="text/javascript"></script>
 		<script src="../js/angular.min.js" type="text/javascript"></script>
@@ -641,43 +665,45 @@ wizard = $(document).ready(function() {
 
 
 	</head>
-<body ng-app="myApp" ng-controller="myCtrl">
+<body ng-app="myApp" ng-controller="myCtrl" class="bodystyle">
 
+<div class="alert-info-outer">
+	<div class="alert alert-info" role="alert">
+        Application requires process details to create process entries in metadata
+    </div>
+	</div>
 		<div id="bdre-data-load" ng-controller="myCtrl">
-			<h3>Provide Process Details</h3>
+		
+			<h3><div class="number-circular">1</div>Provide Process Details</h3>
 			<section>
-<form class="form-horizontal" role="form" id="processFieldsForm1">
+			<form class="form-horizontal" role="form" id="processFieldsForm1">
                         <div id="processDetails">
-                            <div class="alert alert-info" role="alert">
-                                Application requires process details to create process entries in metadata
-                            </div>
-                            <!-- btn-group -->
+                           <!-- btn-group -->
                             <div id="processFields">
-
-                                <div class="form-group">
-                                    <label class="control-label col-sm-2" for="processName">Process Name:</label>
-                                    <div class="col-sm-10">
+								<div class="form-group pull-left">
+                                    <label class="control-label col-sm-6" for="processName" >Process Name:</label>
+                                    <div class="col-sm-8">
                                         <input type="text" class="form-control"  id="processName" name="processName" placeholder="Enter Process Name" value="" required>
                                     </div>
                                 </div>
-                                <div class="form-group">
-                                    <label class="control-label col-sm-2" for="processDescription">Process Description:</label>
-                                    <div class="col-sm-10">
+                                <div class="form-group pull-right">
+                                    <label class="control-label col-sm-6 " for="processDescription">Process Description:</label>
+                                    <div class="col-sm-8">
                                         <input type="text" class="form-control" id="processDescription" name="processDescription" placeholder="Enter Process Description" value="" required>
                                     </div>
                                 </div>
-                                <div class="form-group">
-                                    <label class="control-label col-sm-2" for="busDomainId">Bus Domain Id:</label>
-                                    <div class="col-sm-10">
+                                <div class="form-group pull-left">
+                                    <label class="control-label col-sm-6" for="busDomainId">Bus Domain Id:</label>
+                                    <div class="col-sm-8">
                                         <select class="form-control" id="busDomainId" name="busDomainId">
                                             <option ng-repeat="busDomain in busDomains.Options" value="{{busDomain.Value}}" name="busDomainId">{{busDomain.DisplayText}}</option>
 
                                         </select>
                                     </div>
                                 </div>
-                                 <div class="form-group">
-                                    <label class="control-label col-sm-2" for="enqueueId">Enqueing Id:</label>
-                                    <div class="col-sm-10">
+                                 <div class="form-group pull-right">
+                                    <label class="control-label col-sm-6" for="enqueueId">Enqueing Id:</label>
+                                    <div class="col-sm-8">
                                         <input type="text" class="form-control" id="enqueueId" name="enqueueId" placeholder="Enter Enqueing Process Id" value="" required>
                                     </div>
                                 </div>
@@ -686,7 +712,7 @@ wizard = $(document).ready(function() {
                         </div>
                         </form>
 			</section>
-			<h3>Raw Table Details</h3>
+			<h3><div class="number-circular">2</div>Raw Table Details</h3>
             			<section>
             <form class="form-horizontal" role="form" id="fileFormat">
                                     <div id="fileFormatDiv">
@@ -695,13 +721,13 @@ wizard = $(document).ready(function() {
                                         </div>
                                         <!-- btn-group -->
                                         <div id="rawTablDetailsDB">
-                                        <div class="form-group">
+                                        <div class="form-group pull-left" >
                                             <label class="control-label col-sm-2" for="rawDBName">Raw DB Name:</label>
                                             <div class="col-sm-10">
                                                 <input type="text" class="form-control"  id="rawDBName" name="rawDBName" placeholder="Enter RAW DB Name" value="" required>
                                             </div>
                                         </div>
-                                            <div class="form-group">
+                                            <div class="form-group pull-right">
                                                 <label class="control-label col-sm-2" for="fileformat">File Format:</label>
                                                 <div class="col-sm-10">
                                                     <select class="form-control" id="fileformat" name="fileformat" >
@@ -715,19 +741,19 @@ wizard = $(document).ready(function() {
                                     </div>
                                     </form>
             			</section>
-			<h3>Raw Table Properties</h3>
+			<h3><div class="number-circular">3</div>Raw Table Properties</h3>
 			<section>
 			    <div id="rawTableColumnDetails"></div>
 
             </section>
 
-			<h3>Serde, OutPut and Input Format</h3>
+			<h3><div class="number-circular">4</div>Serde, OutPut and Input Format</h3>
             <section>
                   <div id="fileFormatDetails"></div>
             </section>
 
 
-			<h3>Provide Serde Properties</h3>
+			<h3><div class="number-circular">5</div>Provide Serde Properties</h3>
 			<section>
                                     <form class="form-horizontal" role="form" id="serdeProperties">
                                         <div id="serdePropertiesDiv">
@@ -762,7 +788,7 @@ wizard = $(document).ready(function() {
 
                                     </section>
 
-			<h3>Provide Table Properties</h3>
+			<h3><div class="number-circular">6</div>Provide Table Properties</h3>
             			<section>
                                                 <form class="form-horizontal" role="form" id="tableProperties">
                                                     <div id="tablePropertiesDiv">
@@ -797,7 +823,7 @@ wizard = $(document).ready(function() {
 
                                                 </section>
 
-		<h3>Base Table Name AND DB</h3>
+		<h3><div class="number-circular">7</div>Base Table Name AND DB</h3>
                 			<section>
                 <form class="form-horizontal" role="form" id="baseTableDetails">
                                         <div id="baseTableDetailsDiv">
@@ -807,13 +833,13 @@ wizard = $(document).ready(function() {
                                             <!-- btn-group -->
                                             <div id="baseTablDetailsDB">
 
-                                                <div class="form-group">
+                                                <div class="form-group pull-left">
                                                     <label class="control-label col-sm-2" for="baseDBName">BASE DB Name:</label>
                                                     <div class="col-sm-10">
                                                         <input type="text" class="form-control"  id="baseDBName" name="baseDBName" placeholder="Enter BASE DB Name" required>
                                                     </div>
                                                 </div>
-                                                <div class="form-group">
+                                                <div class="form-group pull-right">
                                                     <label class="control-label col-sm-2" for="baseTableName">Base Table Name:</label>
                                                     <div class="col-sm-10">
                                                         <input type="text" class="form-control" id="baseTableName" name="baseTableName" placeholder="Enter BASE TABLE NAME" required>
@@ -825,17 +851,18 @@ wizard = $(document).ready(function() {
                                         </div>
                                         </form>
                 			</section>
-                <h3>Base Table Details</h3>
+                <h3><div class="number-circular">8</div>Base Table Details</h3>
                             <section>
                                 <div id="baseTableColumnDetails"> </div>
                             </section>
-			<h3>Confirm</h3>
+			<h3><div class="number-circular">9</div>Confirm</h3>
 			<section>
 				<div id="Process">
 					<button id="createjobs" type="button" class="btn btn-primary btn-lg">Create Jobs</button>
 				</div>
 			</section>
 		</div>
+		
 		<div style="display:none" id="div-dialog-warning">
 			<p><span class="ui-icon ui-icon-alert" style="float:left;"></span></p>
 		</div>

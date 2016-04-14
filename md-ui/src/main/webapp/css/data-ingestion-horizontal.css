@@ -1,0 +1,30 @@
+.wizard.vertical > .steps{
+    width: 100% !important;
+    }
+    .steps li{
+    width: 25% !important;
+    margin: 0 10px 10px 0;
+    }
+    .steps li:last-child{
+    margin-right: 0 !important;
+    }
+    .steps ul{display: flex;}
+    .wizard.vertical > .content{
+    margin: 0 !important;
+    width: 100% !important;
+    }
+   
+    .form-group label{
+			width: 50%;
+			float: none;
+			text-align: left !important;
+	}
+	label + div{
+		width: 100% !important;
+	}
+	.form-group{
+	width: 100%;
+	}
+    .wizard > .steps a, .wizard > .steps a:hover, .wizard > .steps a:active{
+     margin: 0 !important;
+    }
