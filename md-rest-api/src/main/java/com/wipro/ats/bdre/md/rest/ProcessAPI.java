@@ -130,11 +130,20 @@ public class ProcessAPI extends MetadataAPIBase {
             @PathVariable("id") Integer processId, Principal principal) {
         RestWrapper restWrapper = null;
         try {
-            processDAO.delete(processId);
+            com.wipro.ats.bdre.md.dao.jpa.Process parentProcess=processDAO.get(processId);
+            if (parentProcess.getProcess()!=null)
+                processDAO.securityCheck(parentProcess.getProcess().getProcessId(),principal.getName(),"write");
+             else
+                processDAO.securityCheck(processId,principal.getName(),"write");
+                processDAO.delete(processId);
 
             restWrapper = new RestWrapper(null, RestWrapper.OK);
             LOGGER.info("Record with ID:" + processId + " deleted from Process by User:" + principal.getName());
         } catch (MetadataException e) {
+            LOGGER.error(e);
+            restWrapper = new RestWrapper(e.getMessage(), RestWrapper.ERROR);
+        }
+        catch (SecurityException e) {
             LOGGER.error(e);
             restWrapper = new RestWrapper(e.getMessage(), RestWrapper.ERROR);
         }
@@ -190,6 +199,9 @@ public class ProcessAPI extends MetadataAPIBase {
                 tableProcess.setDeleteFlag(daoProcess.getDeleteFlag());
                 if (daoProcess.getUserRoles()!=null)
                 tableProcess.setOwnerRoleId(daoProcess.getUserRoles().getUserRoleId());
+                tableProcess.setPermissionTypeByGroupAccessId(daoProcess.getPermissionTypeByGroupAccessId().getPermissionTypeId());
+                tableProcess.setPermissionTypeByUserAccessId(daoProcess.getPermissionTypeByUserAccessId().getPermissionTypeId());
+                tableProcess.setPermissionTypeByOthersAccessId(daoProcess.getPermissionTypeByOthersAccessId().getPermissionTypeId());
                 tableProcess.setCounter(counter);
                 processes.add(tableProcess);
             }
@@ -220,6 +232,11 @@ public class ProcessAPI extends MetadataAPIBase {
             return bindingResultError.errorMessage(bindingResult);
         }
         try {
+            com.wipro.ats.bdre.md.dao.jpa.Process parentProcess1=processDAO.get(process.getProcessId());
+            if (parentProcess1.getProcess()!=null)
+                processDAO.securityCheck(parentProcess1.getProcess().getProcessId(),principal.getName(),"write");
+            else
+                processDAO.securityCheck(process.getProcessId(),principal.getName(),"write");
             com.wipro.ats.bdre.md.dao.jpa.Process updateDaoProcess =processDAO.get(process.getProcessId());
             com.wipro.ats.bdre.md.dao.jpa.ProcessType daoProcessType = new com.wipro.ats.bdre.md.dao.jpa.ProcessType();
             daoProcessType.setProcessTypeId(process.getProcessTypeId());
@@ -259,8 +276,11 @@ public class ProcessAPI extends MetadataAPIBase {
                 updateDaoProcess.setDeleteFlag(process.getDeleteFlag());
 
             updateDaoProcess.setEditTs(DateConverter.stringToDate(process.getTableEditTS()));
+            if (process.getPermissionTypeByUserAccessId()!=null)
             updateDaoProcess.setPermissionTypeByUserAccessId(appPermissionDAO.get(process.getPermissionTypeByUserAccessId()));
+            if (process.getPermissionTypeByGroupAccessId()!=null)
             updateDaoProcess.setPermissionTypeByGroupAccessId(appPermissionDAO.get(process.getPermissionTypeByGroupAccessId()));
+            if (process.getPermissionTypeByOthersAccessId()!=null)
             updateDaoProcess.setPermissionTypeByOthersAccessId(appPermissionDAO.get(process.getPermissionTypeByOthersAccessId()));
             LOGGER.info("process.getowner roleId "+process.getOwnerRoleId());
             if (process.getOwnerRoleId()!=null)
@@ -271,6 +291,10 @@ public class ProcessAPI extends MetadataAPIBase {
             restWrapper = new RestWrapper(process, RestWrapper.OK);
             LOGGER.info("Record with ID:" + process.getProcessId() + " updated in Process by User:" + principal.getName() + process);
         }catch (MetadataException e) {
+            LOGGER.error(e);
+            restWrapper = new RestWrapper(e.getMessage(), RestWrapper.ERROR);
+        }
+        catch (SecurityException e) {
             LOGGER.error(e);
             restWrapper = new RestWrapper(e.getMessage(), RestWrapper.ERROR);
         }
@@ -332,9 +356,13 @@ public class ProcessAPI extends MetadataAPIBase {
             } else {
                 insertDaoProcess.setDeleteFlag(process.getDeleteFlag());
             }
+            if (process.getOwnerRoleId()!=null)
             insertDaoProcess.setUserRoles(userRolesDAO.get(process.getOwnerRoleId()));
+            if (process.getPermissionTypeByUserAccessId()!=null)
             insertDaoProcess.setPermissionTypeByUserAccessId(appPermissionDAO.get(process.getPermissionTypeByUserAccessId()));
+            if (process.getPermissionTypeByGroupAccessId()!=null)
             insertDaoProcess.setPermissionTypeByGroupAccessId(appPermissionDAO.get(process.getPermissionTypeByGroupAccessId()));
+            if (process.getPermissionTypeByOthersAccessId()!=null)
             insertDaoProcess.setPermissionTypeByOthersAccessId(appPermissionDAO.get(process.getPermissionTypeByOthersAccessId()));
             insertDaoProcess.setEditTs(DateConverter.stringToDate(process.getTableEditTS()));
             insertDaoProcess.setUserName(principal.getName());

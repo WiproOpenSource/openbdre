@@ -622,8 +622,93 @@ public List<Process> createOneChildJob(Process parentProcess, Process childProce
         return processList;
     }
 
+public String securityCheck(Integer processId,String username,String action){
+    Session session = sessionFactory.openSession();
+    session.beginTransaction();
+    Process process = (Process) session.get(Process.class, processId);
+    Criteria criteria = session.createCriteria(UserRoles.class).add(Restrictions.eq("users.username", username));
+    List<UserRoles> userRoles = criteria.list();
+    session.getTransaction().commit();
+    session.close();
+    List<Integer> readList=new ArrayList<>();
+    readList.add(4);
+    readList.add(5);
+    readList.add(6);
+    readList.add(7);
+    List<Integer> writeList=new ArrayList<>();
+    writeList.add(2);
+    writeList.add(3);
+    writeList.add(6);
+    writeList.add(7);
+    List<Integer> executeList=new ArrayList<>();
+    executeList.add(1);
+    executeList.add(3);
+    executeList.add(5);
+    executeList.add(7);
+    UserRoles ownerRole=process.getUserRoles();
+    if (process.getUserName().equals(username))
+    {
+        switch (action){
+            case "write": if (writeList.contains(process.getPermissionTypeByUserAccessId().getPermissionTypeId())
+                    || (userRoles.contains(ownerRole)&&writeList.contains(process.getPermissionTypeByGroupAccessId().getPermissionTypeId()))
+                    || (!userRoles.contains(ownerRole)&&writeList.contains(process.getPermissionTypeByOthersAccessId().getPermissionTypeId()))
+                    )
+            {return "ACCESS GRANTED";}
+            else
+                throw new SecurityException("ACCESS DENIED");
+            case "read": if (readList.contains(process.getPermissionTypeByUserAccessId().getPermissionTypeId()) ||
+                    (userRoles.contains(ownerRole)&&readList.contains(process.getPermissionTypeByGroupAccessId().getPermissionTypeId()))
+                    || (!userRoles.contains(ownerRole)&&readList.contains(process.getPermissionTypeByOthersAccessId().getPermissionTypeId()))
+                    )
+            {return "ACCESS GRANTED";}
+            else
+                throw new SecurityException("ACCESS DENIED");
+            case "execute": if (executeList.contains(process.getPermissionTypeByUserAccessId().getPermissionTypeId())||
+                    (userRoles.contains(ownerRole)&&executeList.contains(process.getPermissionTypeByGroupAccessId().getPermissionTypeId()))
+                    || (!userRoles.contains(ownerRole)&&executeList.contains(process.getPermissionTypeByOthersAccessId().getPermissionTypeId()))
+                    )
+            {return "ACCESS GRANTED";}
+            else
+                throw new SecurityException("ACCESS DENIED");
+        }
+        throw new SecurityException("ACCESS DENIED");    }
+    else{
+    if (userRoles.contains(ownerRole))
+    {
+        switch (action){
+            case "write": if (writeList.contains(process.getPermissionTypeByGroupAccessId().getPermissionTypeId()))
+                               {return "ACCESS GRANTED";}
+                           else
+                           throw new SecurityException("ACCESS DENIED");
+            case "read": if (readList.contains(process.getPermissionTypeByGroupAccessId().getPermissionTypeId()))
+                               {return "ACCESS GRANTED";}
+                           else
+                           throw new SecurityException("ACCESS DENIED");
+            case "execute": if (readList.contains(process.getPermissionTypeByGroupAccessId().getPermissionTypeId()))
+                            {return "ACCESS GRANTED";}
+                            else
+                            throw new SecurityException("ACCESS DENIED");
+        }
+        throw new SecurityException("ACCESS DENIED");
+    }
+    else {
+        switch (action){
+            case "write": if (writeList.contains(process.getPermissionTypeByOthersAccessId().getPermissionTypeId()))
+            {return "ACCESS GRANTED";}
+            else
+                throw new SecurityException("ACCESS DENIED");
+            case "read": if (readList.contains(process.getPermissionTypeByOthersAccessId().getPermissionTypeId()))
+            {return "ACCESS GRANTED";}
+            else
+                throw new SecurityException("ACCESS DENIED");
+            case "execute": if (readList.contains(process.getPermissionTypeByOthersAccessId().getPermissionTypeId()))
+            {return "ACCESS GRANTED";}
+            else
+                throw new SecurityException("ACCESS DENIED");
+        }
+        throw new SecurityException("ACCESS DENIED");
+    }
 
-
-
-
+}
+}
 }

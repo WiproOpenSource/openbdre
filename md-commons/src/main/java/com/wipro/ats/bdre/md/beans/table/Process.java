@@ -39,7 +39,7 @@ public class Process {
     private Integer permissionTypeByUserAccessId;
     private Integer permissionTypeByGroupAccessId;
     private String userName;
-
+    private Integer ownerRoleId;
     public Integer getOwnerRoleId() {
         return ownerRoleId;
     }
@@ -48,7 +48,7 @@ public class Process {
         this.ownerRoleId = ownerRoleId;
     }
 
-    private Integer ownerRoleId;
+
 
     public String getUserName() {
         return userName;
