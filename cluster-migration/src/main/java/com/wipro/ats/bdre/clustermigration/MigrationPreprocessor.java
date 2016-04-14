@@ -89,7 +89,6 @@ public class MigrationPreprocessor extends BaseStructure{
         String sourceNameNodeAddress=params.get("src-nn").toString();
         String destNameNodeAddress=params.get("dest-nn").toString();
         String sourceJobTrackerAddress=params.get("src-jt").toString();
-        String destJobTrackerAddress=params.get("dest-jt").toString();
         String sourceHiveConnection=params.get("src-hive").toString();
         String destHiveConnection=params.get("dest-hive").toString();
         Connection conn = getHiveJDBCConnection(sourceDb,sourceHiveConnection);
