@@ -85,11 +85,12 @@ public class MigrationPreprocessor extends BaseStructure{
         String sourceNameNodeAddress=params.get("src-nn").toString();
         String destNameNodeAddress=params.get("dest-nn").toString();
         String sourceJobTrackerAddress=params.get("src-jt").toString();
-        String destJobTrackerAddress=params.get("dest-jt").toString();
         String sourceHiveConnection=params.get("src-hive").toString();
         String destHiveConnection=params.get("dest-hive").toString();
         Connection conn = getHiveJDBCConnection(sourceDb,sourceHiveConnection);
         Statement st = conn.createStatement();
+        Connection destConn = getHiveJDBCConnection(destDb,destHiveConnection);
+        Statement destSt = destConn.createStatement();
         List<String> sourcePartitionList = getCurrentSourcePartitionList(st, sourceDb, table);
 
         List<String> previousPartitionList = getLastSourcePartitionList(processId, table);
@@ -112,7 +113,7 @@ public class MigrationPreprocessor extends BaseStructure{
         formStageAndDestTableDDLs(st, sourceColumnList, sourceDb, destDb, table,sourceStgtable,bdreTechPartition, processId,instanceExecId);
 
         if(checkIfDestTableExists(destDb,table,destHiveConnection))
-            alterDestTable(st,addedColumnList,destDb,table);
+            alterDestTable(destSt,addedColumnList,destDb,table);
         else
             execDestTableDDL(destDb,destHiveConnection);
 
@@ -125,7 +126,9 @@ public class MigrationPreprocessor extends BaseStructure{
         migrationPreprocessorInfo=setOozieUtilProperties(sourceDb,destDb,sourceStgtable,table,sourceJobTrackerAddress,sourceNameNodeAddress,destNameNodeAddress,sourceHiveConnection,processId,instanceExecId,migrationPreprocessorInfo);
 
         st.close();
+	destSt.close();
         conn.close();
+	destConn.close();
         return migrationPreprocessorInfo;
     }
 
