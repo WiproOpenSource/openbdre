@@ -10,7 +10,7 @@
                 <title>Bigdata Ready Enterprise</title>
                 <style>
                 div.jtable-main-container > table.jtable > tbody > tr.jtable-data-row > td:nth-child(2){color: #F75C17;font-size: 24px;font-weight: 500;}
-				div.jtable-main-container > table.jtable > thead th:nth-child(2){width: 3% !important;}
+                div.jtable-main-container > table.jtable > thead th:nth-child(2){width: 3% !important;}
 				div.jtable-main-container > table.jtable > thead th:nth-child(2),div.jtable-main-container > table.jtable > thead th:nth-child(12),div.jtable-main-container > table.jtable > thead th:nth-child(15),div.jtable-main-container > table.jtable > thead th:nth-child(17),div.jtable-main-container > table.jtable > thead th:nth-child(18){padding-top: 0px !important;padding-bottom: 20px !important;}
 				div.jtable-main-container > table.jtable > tbody > tr.jtable-data-row > td img{width: 15px;height: 15px;	}
 				.form-control-process{background-color: #e4e5e6 !important;height: 36px !important;border-radius: 1px !important;}
