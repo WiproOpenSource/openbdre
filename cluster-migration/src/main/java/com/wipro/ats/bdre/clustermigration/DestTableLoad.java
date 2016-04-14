@@ -25,6 +25,8 @@ import org.apache.hadoop.fs.Path;
 import org.apache.hadoop.fs.RemoteIterator;
 import org.apache.log4j.Logger;
 
+import java.lang.RuntimeException;
+
 /**
  * Created by cloudera on 4/7/16.
  */
@@ -36,7 +38,7 @@ public class DestTableLoad extends BaseStructure {
             {"destFs", "dest-fs", " Destination file system"}
     };
 
-    public void execute(String[] params) throws Exception{
+    public void execute(String[] params) throws RuntimeException{
 
         CommandLine commandLine = getCommandLine(params, PARAMS_STRUCTURE);
         String src = commandLine.getOptionValue("source-path");
@@ -47,16 +49,18 @@ public class DestTableLoad extends BaseStructure {
         config.set("fs.defaultFS",destFs);
         FileSystem hdfs = FileSystem.get(config);
         Path srcPath = new Path(src);
-        Path destPath = new Path(dest);
         RemoteIterator<LocatedFileStatus> srcFiles = hdfs.listFiles(srcPath, true);
         while(srcFiles.hasNext()){
             String absolutePath=srcFiles.next().getPath().toUri().toString();
-            if(absolutePath.endsWith("/")) absolutePath=absolutePath.substring(0,absolutePath.length()-1);
+            if(absolutePath.endsWith("/"))
+                absolutePath=absolutePath.substring(0,absolutePath.length()-1);
             LOGGER.info("absolutePath of source business partition= " + absolutePath);
             String relativePath=absolutePath.replace(src,"");
-            if(relativePath.endsWith("/")) relativePath=relativePath.substring(0,relativePath.length()-1);
+            if(relativePath.endsWith("/"))
+                relativePath=relativePath.substring(0,relativePath.length()-1);
             LOGGER.info("relativePath of source business partition= = " + relativePath);
-            if(!dest.endsWith("/")) dest=dest+"/";
+            if(!dest.endsWith("/"))
+                dest=dest+"/";
             String destCheckPathString=dest+relativePath;
             Path destCheckPath=new Path(destCheckPathString);
             LOGGER.info("destCheckPath = " + destCheckPath);

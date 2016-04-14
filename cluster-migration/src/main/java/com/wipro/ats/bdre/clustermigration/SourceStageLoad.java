@@ -17,24 +17,22 @@
 package com.wipro.ats.bdre.clustermigration;
 
 import com.wipro.ats.bdre.BaseStructure;
-import com.wipro.ats.bdre.IMConfig;
 import com.wipro.ats.bdre.im.IMConstant;
 import com.wipro.ats.bdre.md.api.GetProperties;
 import org.apache.commons.cli.CommandLine;
-import org.apache.log4j.Logger;
+import com.wipro.ats.bdre.im.etl.api.exception.ETLException;
+
 
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.util.Properties;
 
 /**
  * Created by cloudera on 4/12/16.
  */
 public class SourceStageLoad extends BaseStructure{
 
-    private static final Logger LOGGER = Logger.getLogger(MigrationPreprocessor.class);
     private static final String[][] PARAMS_STRUCTURE = {
             {"stgDb", "src-stage-db", "Source stage database"},
             {"stgTbl", "src-stg-table", " Source stage table"},
@@ -48,7 +46,7 @@ public class SourceStageLoad extends BaseStructure{
             {"ppid", "parent-process-id", "Parent Process Id"}
     };
 
-    protected static Connection getHiveJDBCConnection(String dbName, String hiveConnection) throws Exception {
+    protected static Connection getHiveJDBCConnection(String dbName, String hiveConnection) throws SQLException {
         try {
             Class.forName(IMConstant.HIVE_DRIVER_NAME);
             Connection con = DriverManager.getConnection(hiveConnection + "/" + dbName, null, null);
@@ -57,13 +55,13 @@ public class SourceStageLoad extends BaseStructure{
             con.createStatement().execute("set hive.exec.max.dynamic.partitions.pernode=1000");
             return con;
         } catch (ClassNotFoundException e) {
-            throw new Exception(e);
+            throw new ETLException(e);
         } catch (SQLException e) {
-            throw new Exception(e);
+            throw new ETLException(e);
         }
     }
 
-    public void execute(String[] params) throws Exception{
+    public void execute(String[] params) throws SQLException{
 
         CommandLine commandLine = getCommandLine(params, PARAMS_STRUCTURE);
         String sourceStageDb=commandLine.getOptionValue("src-stage-db");
@@ -89,8 +87,8 @@ public class SourceStageLoad extends BaseStructure{
     public String getSourceHiveConnection(String pid, String configGroup) {
         GetProperties getProperties = new GetProperties();
         java.util.Properties listForParams = getProperties.getProperties(pid, configGroup);
-        String sourceHiveConnection=listForParams.get("src-hive").toString();
-        return sourceHiveConnection;
+        return  listForParams.get("src-hive").toString();
+
     }
 
 

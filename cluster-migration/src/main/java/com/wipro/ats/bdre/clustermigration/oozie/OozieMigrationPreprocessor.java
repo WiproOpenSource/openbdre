@@ -24,6 +24,9 @@ import com.wipro.ats.bdre.util.OozieUtil;
  */
 public class OozieMigrationPreprocessor {
 
+    private OozieMigrationPreprocessor(){
+    }
+
     public static void main(String[] args) {
         try {
             MigrationPreprocessor migrationPreprocessor = new MigrationPreprocessor();

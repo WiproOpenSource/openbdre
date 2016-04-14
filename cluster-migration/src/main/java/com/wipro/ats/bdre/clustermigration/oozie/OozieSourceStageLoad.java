@@ -24,6 +24,9 @@ import com.wipro.ats.bdre.exception.BDREException;
  */
 public class OozieSourceStageLoad {
 
+    private OozieSourceStageLoad(){
+    }
+
     public static void main(String[] args) {
         try {
             SourceStageLoad sourceStageLoad = new SourceStageLoad();

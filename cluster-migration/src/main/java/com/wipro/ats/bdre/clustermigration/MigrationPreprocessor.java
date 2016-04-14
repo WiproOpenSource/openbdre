@@ -18,18 +18,14 @@ import com.wipro.ats.bdre.BaseStructure;
 import com.wipro.ats.bdre.IMConfig;
 import com.wipro.ats.bdre.clustermigration.beans.MigrationPreprocessorInfo;
 import com.wipro.ats.bdre.im.IMConstant;
+import com.wipro.ats.bdre.im.etl.api.exception.ETLException;
 import com.wipro.ats.bdre.md.api.GetProperties;
 import com.wipro.ats.bdre.md.api.ProcessLog;
 import com.wipro.ats.bdre.md.beans.ProcessLogInfo;
 import org.apache.commons.cli.CommandLine;
 import org.apache.log4j.Logger;
-import com.wipro.ats.bdre.im.etl.api.exception.ETLException;
 
-import java.lang.String;
-import java.lang.StringBuilder;
-import java.sql.*;
 import java.sql.SQLException;
-import java.util.*;
 import java.util.Date;
 
 /**
@@ -134,7 +130,7 @@ public class MigrationPreprocessor extends BaseStructure{
     }
 
     private static String getShowPartitionsQuery(String srcDb, String tableName){
-        return "show partitions " + sourceDb + "." + tableName;
+        return "show partitions " + srcDb + "." + tableName;
     }
 
     private List<String> getCurrentSourcePartitionList(Statement st, String sourceDb, String table) throws SQLException {
