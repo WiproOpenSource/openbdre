@@ -31,7 +31,7 @@ for the current action node, appropriately formatted as XML.
 */
 
 public class RegisterPartitionsActionNode extends GenericActionNode {
-
+    private static final Logger LOGGER = Logger.getLogger(RegisterPartitionsActionNode.class);
     private ProcessInfo processInfo = new ProcessInfo();
     private ActionNode actionNode = null;
 
