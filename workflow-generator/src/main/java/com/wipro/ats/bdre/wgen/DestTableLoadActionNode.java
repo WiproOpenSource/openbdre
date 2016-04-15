@@ -16,9 +16,7 @@ package com.wipro.ats.bdre.wgen;
 
 import com.wipro.ats.bdre.md.api.GetProperties;
 import com.wipro.ats.bdre.md.beans.ProcessInfo;
-import org.apache.log4j.Logger;
 
-import java.util.Enumeration;
 
 /**
  * Created by cloudera on 3/31/16.
@@ -27,7 +25,6 @@ import java.util.Enumeration;
 
 public class DestTableLoadActionNode extends GenericActionNode {
 
-    private static final Logger LOGGER = Logger.getLogger(DestTableLoadActionNode.class);
     private ProcessInfo processInfo = new ProcessInfo();
     private ActionNode actionNode = null;
 
@@ -47,6 +44,7 @@ public class DestTableLoadActionNode extends GenericActionNode {
     }
 
 
+    @Override
     public String getName() {
 
         String nodeName = "dest-table-load" + getId() + "-" + processInfo.getProcessName().replace(' ', '_');
@@ -54,28 +52,7 @@ public class DestTableLoadActionNode extends GenericActionNode {
 
     }
 
-   /* @Override
-    public String getXML() {
-
-        if (this.getProcessInfo().getParentProcessId() == 0) {
-            return "";
-        }
-        StringBuilder ret = new StringBuilder();
-        ret.append("\n<action name=\"" + getName());
-        if (isSecurityEnabled(this.getProcessInfo().getParentProcessId(), "security") != 0) {
-            ret.append(" cred='hive_credentials'");
-        }
-        ret.append("\">\n" +
-                "        <fs>" +
-                "        <move source=\"${wf:actionData(\'migration-preprocessor\')[\'dest-stg-folder-content-path\']}\" target=\"${wf:actionData(\'migration-preprocessor\')[\'dest-table-path\']}\" />"+
-                "        </fs>   "+
-                "        <ok to=\"" + getToNode().getName() + "\"/>\n" +
-                "        <error to=\"" + getTermNode().getName() + "\"/>\n" +
-                "    </action>");
-
-        return ret.toString();
-    }
-*/
+  @Override
    public String getXML() {
 
        return "\n<action name=\"" + getName() + "\">\n" +

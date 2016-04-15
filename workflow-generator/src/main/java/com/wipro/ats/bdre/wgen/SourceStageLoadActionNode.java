@@ -16,9 +16,7 @@ package com.wipro.ats.bdre.wgen;
 
 import com.wipro.ats.bdre.md.api.GetProperties;
 import com.wipro.ats.bdre.md.beans.ProcessInfo;
-import org.apache.log4j.Logger;
 
-import java.util.Enumeration;
 
 /**
  * Created by cloudera on 3/31/16.
@@ -34,7 +32,6 @@ for the current action node, appropriately formatted as XML.
 
 public class SourceStageLoadActionNode extends GenericActionNode {
 
-    private static final Logger LOGGER = Logger.getLogger(SourceStageLoadActionNode.class);
     private ProcessInfo processInfo = new ProcessInfo();
     private ActionNode actionNode = null;
 
@@ -54,6 +51,7 @@ public class SourceStageLoadActionNode extends GenericActionNode {
     }
 
 
+    @Override
     public String getName() {
 
         String nodeName = "source-stg-load-" + getId() + "-" + processInfo.getProcessName().replace(' ', '_');
@@ -61,39 +59,7 @@ public class SourceStageLoadActionNode extends GenericActionNode {
 
     }
 
- /*   @Override
-    public String getXML() {
 
-        if (this.getProcessInfo().getParentProcessId() == 0) {
-            return "";
-        }
-        StringBuilder ret = new StringBuilder();
-        ret.append("\n<action name=\"" + getName());
-        if (isSecurityEnabled(this.getProcessInfo().getParentProcessId(), "security") != 0) {
-            ret.append(" cred='hive_credentials'");
-        }
-        ret.append("\">\n" +
-                "        <hive xmlns=\"uri:oozie:hive-action:0.2\">\n" +
-                "            <job-tracker>${wf:actionData(\"migration-preprocessor\")[\"job-tracker-address\"]}</job-tracker>\n" +
-                "            <name-node>${wf:actionData(\"migration-preprocessor\")[\"name-node-address\"]}</name-node>\n");
-        ret.append(getQueryPath());
-        ret.append("            <param>exec-id=${wf:actionData(\"init-job\")[\"instance-exec-id\"]}</param>\n");
-        ret.append("            <param>source-stg-db=${wf:actionData(\"migration-preprocessor\")[\"source-stg-db\"]}</param>\n");
-        ret.append("            <param>source-stg-table=${wf:actionData(\"migration-preprocessor\")[\"source-stg-table\"]}</param>\n");
-        ret.append("            <param>stg-all-part-cols=${wf:actionData(\"migration-preprocessor\")[\"stg-all-part-cols\"]}</param>\n");
-        ret.append("            <param>source-reg-cols=${wf:actionData(\"migration-preprocessor\")[\"source-reg-cols\"]}</param>\n");
-        ret.append("            <param>source-bp-cols=${wf:actionData(\"migration-preprocessor\")[\"source-bp-cols\"]}</param>\n");
-        ret.append("            <param>source-db=${wf:actionData(\"migration-preprocessor\")[\"source-db\"]}</param>\n");
-        ret.append("            <param>source-table=${wf:actionData(\"migration-preprocessor\")[\"source-table\"]}</param>\n");
-        ret.append("            <param>filter-condition=${wf:actionData(\"migration-preprocessor\")[\"filter-condition\"]}</param>\n");
-        ret.append("        </hive>\n" +
-                "        <ok to=\"" + getToNode().getName() + "\"/>\n" +
-                "        <error to=\"" + getTermNode().getName() + "\"/>\n" +
-                "    </action>");
-
-        return ret.toString();
-    }
-*/
 
     @Override
     public String getXML() {

@@ -22,6 +22,42 @@ import com.wipro.ats.bdre.annotation.PersistableParam;
  * Created by cloudera on 4/1/16.
  */
 public class MigrationPreprocessorInfo {
+
+    @PersistableParam(keyName = "source-stg-db")
+    private String srcStgDb;
+    @PersistableParam(keyName = "source-stg-table")
+    private String srcStgTable;
+    @PersistableParam(keyName = "stg-all-part-cols")
+    private String stgAllPartCols;
+    @PersistableParam(keyName = "source-reg-cols")
+    private String srcRegularCols;
+    @PersistableParam(keyName = "source-bp-cols")
+    private String srcBPCols;
+    @PersistableParam(keyName = "source-db")
+    private String srcDb;
+    @PersistableParam(keyName = "source-table")
+    private String srcTable;
+    @PersistableParam(keyName = "filter-condition")
+    private String filterCondition;
+    @PersistableParam(keyName = "job-tracker-address")
+    private String jtAddress;
+    @PersistableParam(keyName = "name-node-address")
+    private String nnAddress;
+    @PersistableParam(keyName = "src-stg-tbl-path")
+    private String srcStgTablePath;
+    @PersistableParam(keyName = "dest-stg-folder-path")
+    private String destStgFolderPath;
+    @PersistableParam(keyName = "dest-stg-folder-content-path")
+    private String destStgFolderContentPath;
+    @PersistableParam(keyName = "dest-table-path")
+    private String destTablePath;
+    @PersistableParam(keyName = "dest-table")
+    private String destTable;
+    @PersistableParam(keyName = "dest-db")
+    private String destDb;
+    @PersistableParam(keyName = "dest-fs")
+    private String destFileSystem;
+
     public String getSrcStgDb() {
         return srcStgDb;
     }
@@ -149,41 +185,6 @@ public class MigrationPreprocessorInfo {
     public void setDestDb(String destDb) {
         this.destDb = destDb;
     }
-
-    @PersistableParam(keyName = "source-stg-db")
-    private String srcStgDb;
-    @PersistableParam(keyName = "source-stg-table")
-    private String srcStgTable;
-    @PersistableParam(keyName = "stg-all-part-cols")
-    private String stgAllPartCols;
-    @PersistableParam(keyName = "source-reg-cols")
-    private String srcRegularCols;
-    @PersistableParam(keyName = "source-bp-cols")
-    private String srcBPCols;
-    @PersistableParam(keyName = "source-db")
-    private String srcDb;
-    @PersistableParam(keyName = "source-table")
-    private String srcTable;
-    @PersistableParam(keyName = "filter-condition")
-    private String filterCondition;
-    @PersistableParam(keyName = "job-tracker-address")
-    private String jtAddress;
-    @PersistableParam(keyName = "name-node-address")
-    private String nnAddress;
-    @PersistableParam(keyName = "src-stg-tbl-path")
-    private String srcStgTablePath;
-    @PersistableParam(keyName = "dest-stg-folder-path")
-    private String destStgFolderPath;
-    @PersistableParam(keyName = "dest-stg-folder-content-path")
-    private String destStgFolderContentPath;
-    @PersistableParam(keyName = "dest-table-path")
-    private String destTablePath;
-    @PersistableParam(keyName = "dest-table")
-    private String destTable;
-    @PersistableParam(keyName = "dest-db")
-    private String destDb;
-    @PersistableParam(keyName = "dest-fs")
-    private String destFileSystem;
 
     public String getDestFileSystem() {
         return destFileSystem;

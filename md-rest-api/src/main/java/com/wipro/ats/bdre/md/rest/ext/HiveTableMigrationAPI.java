@@ -60,7 +60,7 @@ public class HiveTableMigrationAPI {
             }
             restWrapperOptions = new RestWrapperOptions(options, RestWrapperOptions.OK);
         } catch (Exception e) {
-            LOGGER.error("error occured :" + e);
+            LOGGER.error("error occured:" + e);
             restWrapperOptions = new RestWrapperOptions(e.getMessage(), RestWrapper.ERROR);
         }
         return restWrapperOptions;
@@ -121,91 +121,12 @@ public class HiveTableMigrationAPI {
             }
             restWrapperOptions = new RestWrapperOptions(options, RestWrapperOptions.OK);
         } catch (Exception e) {
-            LOGGER.error("error occured :" + e);
+            LOGGER.error("error occured " + e);
             restWrapperOptions = new RestWrapperOptions(e.getMessage(), RestWrapper.ERROR);
         }
         return restWrapperOptions;
     }
 
-
-    /* protected static Connection getHiveJDBCConnection(String dbName) throws SQLException {
-         if (connection == null || connection.isClosed()) {
-             try {
-                 Class.forName(IMConstant.HIVE_DRIVER_NAME);
- //                              String hiveConnectionString = MDConfig.getProperty("hive.hive-connection", null);
-                 String hiveConnectionString = IMConfig.getProperty("etl.hive-connection");
-                 LOGGER.info("hiveConn is " +hiveConnectionString);
-                 connection = DriverManager.getConnection("jdbc:hive2://192.168.56.102:10000" +"/"+ dbName, "", "");
-
-             } catch (Exception e) {
-                 LOGGER.error(e);
-                 throw new ETLException(e);
-             }
-             LOGGER.info("Connection successful");
-         }
-         return connection;
-     }
-
-     public static void closeResultset(ResultSet resultSet) throws SQLException {
-         if (resultSet != null)
-             resultSet.close();
-     }
-
-     public static void closeConnection() throws SQLException {
-         if (connection != null)
-             connection.close();
-     }
-
-     //Fetching all the tables from connected database
-     @RequestMapping(value = "/tables", method = {RequestMethod.GET})
-     @ResponseBody
-     public RestWrapperOptions getTableList(@RequestParam Map<String, String> map
-     ) {
-         String dbName = null;
-         for (String string : map.keySet()) {
-             LOGGER.info("String is" + string);
-             if (map.get(string) == null || ("").equals(map.get(string))) {
-                 continue;
-             }
-             if (string.startsWith("srcDB_")) {
-                 dbName = map.get(string);
-             }
-         }
-         LOGGER.info("Database is"+dbName);
-         RestWrapperOptions restWrapperOptions = null;
-         try {
-             DatabaseMetaData metaData = getHiveJDBCConnection(dbName).getMetaData();
-
-             ResultSet rs = metaData.getTables(null, null, null, null);
-             List<String> tables = new ArrayList<String>();
-             while (rs.next()) {
-                 String tableName = rs.getString("TABLE_NAME");
-                 tables.add(tableName.toUpperCase());
-             }
-
-             try {
-                 closeResultset(rs);
-                 closeConnection();
-             } catch (SQLException ex) {
-                 LOGGER.error("Error in close");
-             } finally {
-                 connection = null;
-             }
-             List<RestWrapperOptions.Option> options = new ArrayList<RestWrapperOptions.Option>();
-             for(String table : tables)
-             {
-                 RestWrapperOptions.Option option = new RestWrapperOptions.Option(table,table);
-                 options.add(option);
-             }
-             restWrapperOptions = new RestWrapperOptions(options, RestWrapperOptions.OK);
-         } catch (Exception e) {
-             LOGGER.error("error occured :" + e);
-             restWrapperOptions = new RestWrapperOptions(e.getMessage(), RestWrapperOptions.ERROR);
-         }
-         return restWrapperOptions;
-     }
-
- */
     @RequestMapping(value = "/createjobs/{checked}", method = RequestMethod.POST)
     @ResponseBody
     public RestWrapper createJob(@RequestParam Map<String, String> map, Principal principal, @PathVariable("checked") String[] checkedTables) {
@@ -215,7 +136,6 @@ public class HiveTableMigrationAPI {
         String processName = null;
         String processDesc = null;
         Integer busDomainID = null;
-        Integer tablesSize = 0;
         String nameNodeIp = map.get("scrNameNode");
         String jobTrackerIp = map.get("srcJobTracker");
         String destnameNodeIp = map.get("destNameNode");
@@ -326,44 +246,5 @@ public class HiveTableMigrationAPI {
         return restWrapper;
 
     }
-
-  /*  public static Map<Integer, String> getAllColumnsMap(String dbName, String tableName) throws ETLException {
-        Map<Integer, String> columnsMap = new TreeMap<Integer, String>();
-
-            try {
-
-                DatabaseMetaData metaData = getHiveJDBCConnection(dbName).getMetaData();
-
-                ResultSet rs = metaData.getColumns(null, null, tableName, null);
-
-                while (rs.next()) {
-                    Integer ordinalPosition = Integer.valueOf(rs.getString("ORDINAL_POSITION"));
-                    String columnName = rs.getString("COLUMN_NAME");
-                    columnsMap.put(ordinalPosition, columnName.toUpperCase());
-                }
-
-                try {
-                    closeResultset(rs);
-                    closeConnection();
-                } catch (SQLException ex) {
-                    LOGGER.error("Error in close");
-                } finally {
-                    connection = null;
-                }
-
-            } catch (SQLException ex) {
-                LOGGER.error("Error in Hive DB operation", ex);
-                throw new ETLException(ex);
-            }
-
-        if (columnsMap.size() == 0) {
-            LOGGER.warn("Table " + tableName + " does not exist in Hive db; inferring it to be a Temp table");
-        }
-
-        System.out.println("List of columns: ");
-        for (Map.Entry<Integer, String> entry : columnsMap.entrySet())
-            System.out.println(entry.getKey() + " ::: " + entry.getValue());
-        return columnsMap;
-    }*/
 
 }

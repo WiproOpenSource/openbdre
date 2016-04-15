@@ -24,6 +24,9 @@ import com.wipro.ats.bdre.exception.BDREException;
  */
 public class OozieDestTableLoad {
 
+    private OozieDestTableLoad(){
+
+    }
     public static void main(String[] args) {
         try {
             DestTableLoad destTableLoad = new DestTableLoad();

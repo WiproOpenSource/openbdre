@@ -16,9 +16,7 @@ package com.wipro.ats.bdre.wgen;
 
 import com.wipro.ats.bdre.md.api.GetProperties;
 import com.wipro.ats.bdre.md.beans.ProcessInfo;
-import org.apache.log4j.Logger;
 
-import java.util.Enumeration;
 
 /**
  * Created by cloudera on 3/31/16.
@@ -27,7 +25,6 @@ import java.util.Enumeration;
 
 public class SourceToDestCopyActionNode extends GenericActionNode {
 
-    private static final Logger LOGGER = Logger.getLogger(SourceToDestCopyActionNode.class);
     private ProcessInfo processInfo = new ProcessInfo();
     private ActionNode actionNode = null;
 
@@ -47,6 +44,7 @@ public class SourceToDestCopyActionNode extends GenericActionNode {
     }
 
 
+    @Override
     public String getName() {
 
         String nodeName = "src-dest-copy" + getId() + "-" + processInfo.getProcessName().replace(' ', '_');
