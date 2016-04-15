@@ -28,7 +28,7 @@ public class HiveTableMigrationAPI {
 
 
     private static final Logger LOGGER = Logger.getLogger(HiveTableMigrationAPI.class);
-
+    private static final String HIVEMIGRATION = "hive-migration";
     private static Connection connection;
     private static String driverName = "org.apache.hive.jdbc.HiveDriver";
 
@@ -148,17 +148,17 @@ public class HiveTableMigrationAPI {
         for (int i = 1; i <= checkedTables.length; i++) {
             List<Properties> propertiesList = new ArrayList<Properties>();
             LOGGER.info("table name is " + checkedTables[i - 1]);
-            jpaProperties = Dao2TableUtil.buildJPAProperties("hive-migration", "src-nn", nameNodeIp, "SourceNameNodeAddress");
+            jpaProperties = Dao2TableUtil.buildJPAProperties(HIVEMIGRATION, "src-nn", nameNodeIp, "SourceNameNodeAddress");
             propertiesList.add(jpaProperties);
-            jpaProperties = Dao2TableUtil.buildJPAProperties("hive-migration", "src-jt", jobTrackerIp, "SourceJobTrackerAddress");
-            propertiesList.add(jpaProperties);
-
-            jpaProperties = Dao2TableUtil.buildJPAProperties("hive-migration", "dest-nn", destnameNodeIp, "DestNameNodeAddress");
-            propertiesList.add(jpaProperties);
-            jpaProperties = Dao2TableUtil.buildJPAProperties("hive-migration", "dest-jt", destjobTrackerIp, "DestJobTrackerAddress");
+            jpaProperties = Dao2TableUtil.buildJPAProperties(HIVEMIGRATION, "src-jt", jobTrackerIp, "SourceJobTrackerAddress");
             propertiesList.add(jpaProperties);
 
-            jpaProperties = Dao2TableUtil.buildJPAProperties("hive-migration", "src-table", checkedTables[i - 1], "source Table");
+            jpaProperties = Dao2TableUtil.buildJPAProperties(HIVEMIGRATION, "dest-nn", destnameNodeIp, "DestNameNodeAddress");
+            propertiesList.add(jpaProperties);
+            jpaProperties = Dao2TableUtil.buildJPAProperties(HIVEMIGRATION, "dest-jt", destjobTrackerIp, "DestJobTrackerAddress");
+            propertiesList.add(jpaProperties);
+
+            jpaProperties = Dao2TableUtil.buildJPAProperties(HIVEMIGRATION, "src-table", checkedTables[i - 1], "source Table");
             propertiesList.add(jpaProperties);
             for (String string : map.keySet()) {
                 LOGGER.info("String is" + string);
@@ -171,7 +171,7 @@ public class HiveTableMigrationAPI {
                     LOGGER.info("pos is " + pos);
                     String srcHiveAddr = str.substring(0, pos);
                     LOGGER.info("SrcHIve " + srcHiveAddr);
-                    jpaProperties = Dao2TableUtil.buildJPAProperties("hive-migration", "src-hive", "jdbc:hive2://" + srcHiveAddr, "source Hive address");
+                    jpaProperties = Dao2TableUtil.buildJPAProperties(HIVEMIGRATION, "src-hive", "jdbc:hive2://" + srcHiveAddr, "source Hive address");
                     propertiesList.add(jpaProperties);
                 } else if (string.startsWith("srcEnv_processName")) {
                     LOGGER.debug("srcEnv_processName" + map.get(string));
@@ -183,10 +183,10 @@ public class HiveTableMigrationAPI {
                     LOGGER.debug("srcEnv_busDomainID" + map.get(string));
                     busDomainID = new Integer(map.get(string));
                 } else if (string.startsWith("srcDB_")) {
-                    jpaProperties = Dao2TableUtil.buildJPAProperties("hive-migration", "src-db", map.get(string), "source database");
+                    jpaProperties = Dao2TableUtil.buildJPAProperties(HIVEMIGRATION, "src-db", map.get(string), "source database");
                     propertiesList.add(jpaProperties);
                 } else if (string.startsWith("destEnv_instexecId")) {
-                    jpaProperties = Dao2TableUtil.buildJPAProperties("hive-migration", "bdre-tech-pt", map.get(string) + " bigint", "technical partition");
+                    jpaProperties = Dao2TableUtil.buildJPAProperties(HIVEMIGRATION, "bdre-tech-pt", map.get(string) + " bigint", "technical partition");
                     propertiesList.add(jpaProperties);
                 } else if (string.startsWith("destEnv_destEnv")) {
                     String str = map.get(string);
@@ -194,10 +194,10 @@ public class HiveTableMigrationAPI {
                     String destHiveAddr = str.substring(0, pos);
                     LOGGER.info("dest pos " + pos);
                     LOGGER.info("DestHive " + destHiveAddr);
-                    jpaProperties = Dao2TableUtil.buildJPAProperties("hive-migration", "dest-hive", "jdbc:hive2://" + destHiveAddr, "destination Hive address");
+                    jpaProperties = Dao2TableUtil.buildJPAProperties(HIVEMIGRATION, "dest-hive", "jdbc:hive2://" + destHiveAddr, "destination Hive address");
                     propertiesList.add(jpaProperties);
                 } else if (string.startsWith("destDB_")) {
-                    jpaProperties = Dao2TableUtil.buildJPAProperties("hive-migration", "dest-db", map.get(string), "destination database");
+                    jpaProperties = Dao2TableUtil.buildJPAProperties(HIVEMIGRATION, "dest-db", map.get(string), "destination database");
                     propertiesList.add(jpaProperties);
                 }
 
