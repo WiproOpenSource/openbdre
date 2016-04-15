@@ -28,3 +28,5 @@
 28,'Crawler Parent', null
 29,'Web Crawler',28
 30,'Hadoop Streaming', 2
+37,'Analytics UI',null
+38,'(sub process1 of analytics ui)',37
