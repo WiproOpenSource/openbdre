@@ -25,7 +25,9 @@ import org.apache.hadoop.fs.Path;
 import org.apache.hadoop.fs.RemoteIterator;
 import org.apache.log4j.Logger;
 
+import java.io.IOException;
 import java.lang.RuntimeException;
+import java.sql.SQLException;
 
 /**
  * Created by cloudera on 4/7/16.
@@ -38,7 +40,7 @@ public class DestTableLoad extends BaseStructure {
             {"destFs", "dest-fs", " Destination file system"}
     };
 
-    public void execute(String[] params) throws RuntimeException{
+    public void execute(String[] params) throws SQLException, IOException{
 
         CommandLine commandLine = getCommandLine(params, PARAMS_STRUCTURE);
         String src = commandLine.getOptionValue("source-path");

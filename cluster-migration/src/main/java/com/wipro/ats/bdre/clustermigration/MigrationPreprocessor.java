@@ -25,7 +25,8 @@ import com.wipro.ats.bdre.md.beans.ProcessLogInfo;
 import org.apache.commons.cli.CommandLine;
 import org.apache.log4j.Logger;
 
-import java.sql.SQLException;
+import java.sql.*;
+import java.util.*;
 import java.util.Date;
 
 /**
