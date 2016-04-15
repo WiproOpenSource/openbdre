@@ -195,7 +195,7 @@
                                                  data.Result="OK";
                                                  $dfd.resolve(data);
                                                  alert(data.Message);
-
+                                                 $('#Container').jtable('load');
                                                  }
                                                  else
                                                  $dfd.resolve(data);
@@ -351,7 +351,7 @@
                                                                      data.Result="OK";
                                                                      $dfd.resolve(data);
                                                                      alert(data.Message);
-
+                                                                     $('#Container').jtable('load');
                                                                      }
                                                                      else
                                                                      $dfd.resolve(data);
@@ -512,7 +512,7 @@
                                                                                                  data.Result="OK";
                                                                                                  $dfd.resolve(data);
                                                                                                  alert(data.Message);
-
+                                                                                                 $('#Container').jtable('load');
                                                                                                  }
                                                                                                  else
                                                                                                  $dfd.resolve(data);
@@ -786,6 +786,7 @@
                                                                          data.Result="OK";
                                                                          $dfd.resolve(data);
                                                                          alert(data.Message);
+                                                                          $('#Container').jtable('load');
 
                                                                          }
                                                                          else

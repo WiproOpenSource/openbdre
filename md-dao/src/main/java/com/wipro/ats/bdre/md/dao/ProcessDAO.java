@@ -684,7 +684,7 @@ public String securityCheck(Integer processId,String username,String action){
                                {return "ACCESS GRANTED";}
                            else
                            throw new SecurityException("ACCESS DENIED");
-            case "execute": if (readList.contains(process.getPermissionTypeByGroupAccessId().getPermissionTypeId()))
+            case "execute": if (executeList.contains(process.getPermissionTypeByGroupAccessId().getPermissionTypeId()))
                             {return "ACCESS GRANTED";}
                             else
                             throw new SecurityException("ACCESS DENIED");
@@ -701,7 +701,7 @@ public String securityCheck(Integer processId,String username,String action){
             {return "ACCESS GRANTED";}
             else
                 throw new SecurityException("ACCESS DENIED");
-            case "execute": if (readList.contains(process.getPermissionTypeByOthersAccessId().getPermissionTypeId()))
+            case "execute": if (executeList.contains(process.getPermissionTypeByOthersAccessId().getPermissionTypeId()))
             {return "ACCESS GRANTED";}
             else
                 throw new SecurityException("ACCESS DENIED");
