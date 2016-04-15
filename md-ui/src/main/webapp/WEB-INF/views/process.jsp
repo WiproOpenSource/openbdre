@@ -186,6 +186,7 @@
                                                 if(data.Result == "OK") {
 
                                                     $dfd.resolve(data);
+                                                   $('#Container').jtable('load');
 
                                                 }
                                                 else

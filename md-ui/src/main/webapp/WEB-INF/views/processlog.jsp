@@ -90,8 +90,24 @@
 							    data: item,
 							    dataType: 'json',
 							    success: function(data) {
-							    $dfd.resolve(data);
-							    },
+                                        if(data.Result == "OK") {
+
+                                            $dfd.resolve(data);
+
+                                        }
+                                        else
+                                        {
+                                         if(data.Message == "ACCESS DENIED")
+                                         {
+                                         data.Result="OK";
+                                         $dfd.resolve(data);
+                                         alert(data.Message);
+                                         $('#Container').jtable('load');
+                                         }
+                                         else
+                                         $dfd.resolve(data);
+                                        }
+                                    },
 							    error: function() {
 							    $dfd.reject();
 							    }
