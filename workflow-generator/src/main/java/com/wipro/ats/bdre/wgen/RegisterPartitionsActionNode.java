@@ -18,8 +18,6 @@ import com.wipro.ats.bdre.md.api.GetProperties;
 import com.wipro.ats.bdre.md.beans.ProcessInfo;
 import org.apache.log4j.Logger;
 
-import java.util.Enumeration;
-
 /**
  * Created by cloudera on 3/31/16.
  */
@@ -33,7 +31,6 @@ for the current action node, appropriately formatted as XML.
 */
 
 public class RegisterPartitionsActionNode extends GenericActionNode {
-
     private static final Logger LOGGER = Logger.getLogger(RegisterPartitionsActionNode.class);
     private ProcessInfo processInfo = new ProcessInfo();
     private ActionNode actionNode = null;
@@ -53,10 +50,11 @@ public class RegisterPartitionsActionNode extends GenericActionNode {
         return processInfo;
     }
 
-
+    @Override
     public String getName() {
 
         String nodeName = "reg-partitions" + getId() + "-" + processInfo.getProcessName().replace(' ', '_');
+        LOGGER.info("nodeName is: "+nodeName);
         return nodeName.substring(0, Math.min(nodeName.length(), 45));
 
     }
