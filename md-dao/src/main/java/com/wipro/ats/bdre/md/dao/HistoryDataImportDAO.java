@@ -22,6 +22,7 @@ import org.apache.log4j.Logger;
 import org.hibernate.Criteria;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
+import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -49,12 +50,19 @@ public class HistoryDataImportDAO {
     private static final String RAW_TABLE_NAME="Raw Table Name";
     private static final String TABLE_DB="table_db";
     private static final String BASE_TABLE="base-table";
-    public List<com.wipro.ats.bdre.md.beans.table.Process> historyDataImport(IntermediateInfo intermediateInfo){
+    public List<com.wipro.ats.bdre.md.beans.table.Process> historyDataImport(IntermediateInfo intermediateInfo,String username){
         Session session = sessionFactory.openSession();
         List<com.wipro.ats.bdre.md.beans.table.Process> createdProcesses = new ArrayList<com.wipro.ats.bdre.md.beans.table.Process>();
 
         try {
             session.beginTransaction();
+
+            UserRoles userRoles=new UserRoles();
+            Criteria criteria = session.createCriteria(UserRoles.class).add(Restrictions.eq("users.username", username)).addOrder(Order.asc("userRoleId"));
+            if (criteria.list()!=null){
+                userRoles = (UserRoles) criteria.list().get(0);
+            }
+
             IntermediateId intermediateId = new IntermediateId();
             LOGGER.info("uuid is =" + intermediateInfo.getUuid());
             intermediateId.setUuid(intermediateInfo.getUuid());
@@ -143,6 +151,17 @@ public class HistoryDataImportDAO {
                 dataLoadParent.setBatchCutPattern(null);
                 dataLoadParent.setDeleteFlag(false);
                 dataLoadParent.setWorkflowType(oozieType);
+                PermissionType permissionType=new PermissionType();
+                permissionType.setPermissionTypeId(7);
+                dataLoadParent.setPermissionTypeByUserAccessId(permissionType);
+                PermissionType permissionType1=new PermissionType();
+                permissionType1.setPermissionTypeId(4);
+                dataLoadParent.setPermissionTypeByGroupAccessId(permissionType1);
+                PermissionType permissionType2=new PermissionType();
+                permissionType2.setPermissionTypeId(0);
+                dataLoadParent.setPermissionTypeByOthersAccessId(permissionType2);
+                dataLoadParent.setUserRoles(userRoles);
+                dataLoadParent.setUserName(username);
                 session.save(dataLoadParent);
 
                 LOGGER.info("the inserted data load parent is " + dataLoadParent.getProcessId());
@@ -164,6 +183,18 @@ public class HistoryDataImportDAO {
                 dataImportProcess.setBatchCutPattern(null);
                 dataImportProcess.setWorkflowType(oozieType);
                 dataImportProcess.setDeleteFlag(false);
+                PermissionType permissionType=new PermissionType();
+                permissionType.setPermissionTypeId(7);
+                dataImportProcess.setPermissionTypeByUserAccessId(permissionType);
+                PermissionType permissionType1=new PermissionType();
+                permissionType1.setPermissionTypeId(4);
+                dataImportProcess.setPermissionTypeByGroupAccessId(permissionType1);
+                PermissionType permissionType2=new PermissionType();
+                permissionType2.setPermissionTypeId(0);
+                dataImportProcess.setPermissionTypeByOthersAccessId(permissionType2);
+                dataImportProcess.setUserRoles(userRoles);
+                dataImportProcess.setUserName(username);
+
                 session.save(dataImportProcess);
 
                 //

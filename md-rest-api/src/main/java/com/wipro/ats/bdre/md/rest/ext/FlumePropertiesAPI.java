@@ -18,6 +18,7 @@ import com.wipro.ats.bdre.md.api.base.MetadataAPIBase;
 import com.wipro.ats.bdre.md.beans.table.GeneralConfig;
 import com.wipro.ats.bdre.md.beans.table.Process;
 import com.wipro.ats.bdre.md.dao.ProcessDAO;
+import com.wipro.ats.bdre.md.dao.UserRolesDAO;
 import com.wipro.ats.bdre.md.rest.RestWrapper;
 import com.wipro.ats.bdre.md.rest.util.BindingResultError;
 import com.wipro.ats.bdre.md.rest.util.Dao2TableUtil;
@@ -47,7 +48,8 @@ public class FlumePropertiesAPI extends MetadataAPIBase {
     private static final String CHANNEL = "channel";
     @Autowired
     private ProcessDAO processDAO;
-
+    @Autowired
+    UserRolesDAO userRolesDAO;
     @RequestMapping(value = {"/createjobs"}, method = RequestMethod.POST)
 
     @ResponseBody public
@@ -104,6 +106,8 @@ public class FlumePropertiesAPI extends MetadataAPIBase {
         childProps.add(jpaProperties);
 
         com.wipro.ats.bdre.md.dao.jpa.Process parentProcess = Dao2TableUtil.buildJPAProcess(1, processName, processDescription, 2,busDomainId);
+        parentProcess.setUserRoles(userRolesDAO.minUserRoleId(principal.getName()));
+        parentProcess.setUserName(principal.getName());
         com.wipro.ats.bdre.md.dao.jpa.Process childProcess = Dao2TableUtil.buildJPAProcess(23, "SubProcess of "+processName , processDescription, 0,busDomainId);
 
         List<com.wipro.ats.bdre.md.dao.jpa.Process> processList = processDAO.createOneChildJob(parentProcess,childProcess,null,childProps);

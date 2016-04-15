@@ -16,6 +16,7 @@ package com.wipro.ats.bdre.md.rest.ext;
 
 import com.wipro.ats.bdre.md.beans.FileMonitorInfo;
 import com.wipro.ats.bdre.md.dao.ProcessDAO;
+import com.wipro.ats.bdre.md.dao.UserRolesDAO;
 import com.wipro.ats.bdre.md.dao.jpa.Process;
 import com.wipro.ats.bdre.md.dao.jpa.Properties;
 import com.wipro.ats.bdre.md.rest.RestWrapper;
@@ -49,7 +50,8 @@ public class FileMoniterAPI {
     private static final String FILEMON = "fileMon";
     @Autowired
     private ProcessDAO processDAO;
-
+    @Autowired
+    UserRolesDAO userRolesDAO;
     @RequestMapping(value = {"/", ""}, method = RequestMethod.POST)
     @ResponseBody public
     RestWrapper createFileMonitorProperties(@ModelAttribute("fileMonitorInfo")
@@ -61,6 +63,8 @@ public class FileMoniterAPI {
         }
         //making process
         Process parentProcess = Dao2TableUtil.buildJPAProcess(26, fileMonitorInfo.getProcessName(), fileMonitorInfo.getProcessDescription(), 2,fileMonitorInfo.getBusDomainId());
+        parentProcess.setUserName(principal.getName());
+        parentProcess.setUserRoles(userRolesDAO.minUserRoleId(principal.getName()));
         Process childProcess = Dao2TableUtil.buildJPAProcess(27, "SubProcess of " + fileMonitorInfo.getProcessName(), fileMonitorInfo.getProcessDescription(), 0,fileMonitorInfo.getBusDomainId());
         List<Properties> childProps=new ArrayList<>();
         //inserting in properties table
