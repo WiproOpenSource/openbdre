@@ -940,7 +940,7 @@
                                 permissionTypeByGroupAccessId: {
                                   title: 'Group Access',
                                   type: 'combobox',
-                                  list: false,
+                                  list: true,
                                   options: '/mdrest/process/options/',
                                   defaultValue: "6"
                                },
@@ -954,6 +954,7 @@
                                ownerRoleId: {
                                  title: 'Owner Group',
                                  type: 'combobox',
+                                 list:true,
                                  options: '/mdrest/userroles/options/',
                               },
                                 processTypeId: {

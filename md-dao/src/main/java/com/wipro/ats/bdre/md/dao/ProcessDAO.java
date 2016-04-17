@@ -241,14 +241,15 @@ public class ProcessDAO {
         return processSubProcessList;
     }
 
-    public List<Process> selectProcessList(String processCode) {
+    public List<Process> selectProcessList(String processCode,String username) {
         Session session = sessionFactory.openSession();
         session.beginTransaction();
         List<Process> processSubProcessList = new ArrayList<Process>();
         try {
-             Process parentProcess = (Process) session.createCriteria(Process.class).add(Restrictions.eq(PROCESSCODE,processCode)).uniqueResult();
-            Criteria checkProcessSubProcessList = session.createCriteria(Process.class).add(Restrictions.or(Restrictions.eq(PROCESSCODE, processCode), Restrictions.eq(PROCESS, parentProcess)));
+             Process parentProcess = (Process) session.createCriteria(Process.class).add(Restrictions.eq(PROCESSCODE,processCode)).add(Restrictions.eq("userName",username)).uniqueResult();
+            Criteria checkProcessSubProcessList = session.createCriteria(Process.class).add(Restrictions.eq(PROCESS, parentProcess));
             processSubProcessList = checkProcessSubProcessList.list();
+            processSubProcessList.add(parentProcess);
             session.getTransaction().commit();
         } catch (MetadataException e) {
             session.getTransaction().rollback();
@@ -259,14 +260,14 @@ public class ProcessDAO {
         return processSubProcessList;
     }
 
-    public Process returnProcess(String processCode) {
+    public Process returnProcess(String processCode,String username) {
 
         Session session = sessionFactory.openSession();
         session.beginTransaction();
         Process parentProcess=null;
 
         try {
-           parentProcess = (Process) session.createCriteria(Process.class).add(Restrictions.eq(PROCESSCODE,processCode)).uniqueResult();
+           parentProcess = (Process) session.createCriteria(Process.class).add(Restrictions.eq(PROCESSCODE,processCode)).add(Restrictions.eq("userName",username)).uniqueResult();
             session.getTransaction().commit();
         } catch (MetadataException e) {
             session.getTransaction().rollback();
@@ -277,6 +278,31 @@ public class ProcessDAO {
         return parentProcess;
 
     }
+
+
+
+
+    public List<Process> returnProcesses(String processCode) {
+
+        Session session = sessionFactory.openSession();
+        session.beginTransaction();
+        Process parentProcess=null;
+        List<Process> processes=new ArrayList<>();
+        try {
+            processes = session.createCriteria(Process.class).add(Restrictions.eq(PROCESSCODE,processCode)).list();
+            session.getTransaction().commit();
+        } catch (MetadataException e) {
+            session.getTransaction().rollback();
+            LOGGER.error(e);
+        } finally {
+            session.close();
+        }
+        return processes;
+
+    }
+
+
+
 
     public void updateProcessId(Integer oldProcessId, Integer newProcessId) {
         Session session = sessionFactory.openSession();
@@ -628,6 +654,11 @@ public String securityCheck(Integer processId,String username,String action){
     Process process = (Process) session.get(Process.class, processId);
     Criteria criteria = session.createCriteria(UserRoles.class).add(Restrictions.eq("users.username", username));
     List<UserRoles> userRoles = criteria.list();
+    List<String> userRolesNameList=new ArrayList<>();
+    String processCreater=process.getUserRoles().getRole();
+    for(UserRoles userRoles1:userRoles)
+    {userRolesNameList.add(userRoles1.getRole());}
+
     session.getTransaction().commit();
     session.close();
     List<Integer> readList=new ArrayList<>();
@@ -645,68 +676,67 @@ public String securityCheck(Integer processId,String username,String action){
     executeList.add(3);
     executeList.add(5);
     executeList.add(7);
-    UserRoles ownerRole=process.getUserRoles();
     if (process.getUserName().equals(username))
     {
         switch (action){
             case "write": if (writeList.contains(process.getPermissionTypeByUserAccessId().getPermissionTypeId())
-                    || (userRoles.contains(ownerRole)&&writeList.contains(process.getPermissionTypeByGroupAccessId().getPermissionTypeId()))
-                    || (!userRoles.contains(ownerRole)&&writeList.contains(process.getPermissionTypeByOthersAccessId().getPermissionTypeId()))
+                    || (userRolesNameList.contains(processCreater)&&writeList.contains(process.getPermissionTypeByGroupAccessId().getPermissionTypeId()))
+                    || (!userRolesNameList.contains(processCreater)&&writeList.contains(process.getPermissionTypeByOthersAccessId().getPermissionTypeId()))
                     )
             {return "ACCESS GRANTED";}
             else
-                throw new SecurityException("ACCESS DENIED");
+            {LOGGER.info("user write");throw new SecurityException("ACCESS DENIED");}
             case "read": if (readList.contains(process.getPermissionTypeByUserAccessId().getPermissionTypeId()) ||
-                    (userRoles.contains(ownerRole)&&readList.contains(process.getPermissionTypeByGroupAccessId().getPermissionTypeId()))
-                    || (!userRoles.contains(ownerRole)&&readList.contains(process.getPermissionTypeByOthersAccessId().getPermissionTypeId()))
+                    (userRolesNameList.contains(processCreater)&&readList.contains(process.getPermissionTypeByGroupAccessId().getPermissionTypeId()))
+                    || (!userRolesNameList.contains(processCreater)&&readList.contains(process.getPermissionTypeByOthersAccessId().getPermissionTypeId()))
                     )
             {return "ACCESS GRANTED";}
             else
-                throw new SecurityException("ACCESS DENIED");
+            {LOGGER.info("user read");throw new SecurityException("ACCESS DENIED");}
             case "execute": if (executeList.contains(process.getPermissionTypeByUserAccessId().getPermissionTypeId())||
-                    (userRoles.contains(ownerRole)&&executeList.contains(process.getPermissionTypeByGroupAccessId().getPermissionTypeId()))
-                    || (!userRoles.contains(ownerRole)&&executeList.contains(process.getPermissionTypeByOthersAccessId().getPermissionTypeId()))
+                    (userRolesNameList.contains(processCreater)&&executeList.contains(process.getPermissionTypeByGroupAccessId().getPermissionTypeId()))
+                    || (!userRolesNameList.contains(processCreater)&&executeList.contains(process.getPermissionTypeByOthersAccessId().getPermissionTypeId()))
                     )
             {return "ACCESS GRANTED";}
             else
-                throw new SecurityException("ACCESS DENIED");
+            {LOGGER.info("user execute");throw new SecurityException("ACCESS DENIED");}
         }
-        throw new SecurityException("ACCESS DENIED");    }
+        {LOGGER.info("no user");throw new SecurityException("ACCESS DENIED");}    }
     else{
-    if (userRoles.contains(ownerRole))
+    if (userRolesNameList.contains(processCreater))
     {
         switch (action){
             case "write": if (writeList.contains(process.getPermissionTypeByGroupAccessId().getPermissionTypeId()))
                                {return "ACCESS GRANTED";}
                            else
-                           throw new SecurityException("ACCESS DENIED");
+                          {LOGGER.info("group write");throw new SecurityException("ACCESS DENIED");}
             case "read": if (readList.contains(process.getPermissionTypeByGroupAccessId().getPermissionTypeId()))
                                {return "ACCESS GRANTED";}
                            else
-                           throw new SecurityException("ACCESS DENIED");
+                          {LOGGER.info("group read");throw new SecurityException("ACCESS DENIED");}
             case "execute": if (executeList.contains(process.getPermissionTypeByGroupAccessId().getPermissionTypeId()))
                             {return "ACCESS GRANTED";}
                             else
-                            throw new SecurityException("ACCESS DENIED");
+                            {LOGGER.info("group execute");throw new SecurityException("ACCESS DENIED");}
         }
-        throw new SecurityException("ACCESS DENIED");
+        {LOGGER.info("group");throw new SecurityException("ACCESS DENIED");}
     }
     else {
         switch (action){
             case "write": if (writeList.contains(process.getPermissionTypeByOthersAccessId().getPermissionTypeId()))
             {return "ACCESS GRANTED";}
             else
-                throw new SecurityException("ACCESS DENIED");
+            {LOGGER.info("other write");throw new SecurityException("ACCESS DENIED");}
             case "read": if (readList.contains(process.getPermissionTypeByOthersAccessId().getPermissionTypeId()))
             {return "ACCESS GRANTED";}
             else
-                throw new SecurityException("ACCESS DENIED");
+            {LOGGER.info("other read");throw new SecurityException("ACCESS DENIED");}
             case "execute": if (executeList.contains(process.getPermissionTypeByOthersAccessId().getPermissionTypeId()))
             {return "ACCESS GRANTED";}
             else
-                throw new SecurityException("ACCESS DENIED");
+            {LOGGER.info("other execute");throw new SecurityException("ACCESS DENIED");}
         }
-        throw new SecurityException("ACCESS DENIED");
+        {LOGGER.info("other");throw new SecurityException("ACCESS DENIED");}
     }
 
 }

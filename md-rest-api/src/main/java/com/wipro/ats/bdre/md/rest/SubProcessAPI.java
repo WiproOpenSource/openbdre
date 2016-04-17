@@ -14,6 +14,7 @@
 
 package com.wipro.ats.bdre.md.rest;
 
+import com.wipro.ats.bdre.exception.MetadataException;
 import com.wipro.ats.bdre.md.api.base.MetadataAPIBase;
 import com.wipro.ats.bdre.md.beans.table.Process;
 import com.wipro.ats.bdre.md.dao.ProcessDAO;
@@ -100,7 +101,7 @@ public class SubProcessAPI extends MetadataAPIBase {
             LOGGER.info("Record with ID:" + processId + " selected from Process by User:" + principal.getName());
             LOGGER.info(processes);
 
-        } catch (Exception e) {
+        } catch (MetadataException e) {
             LOGGER.error(e);
             restWrapper = new RestWrapper(e.getMessage(), RestWrapper.ERROR);
         }
