@@ -46,7 +46,7 @@
 
     <table name="ARCHIVE_CONSUMP_QUEUE">
         <primary-key>
-            <!-- setting up a specific id generator for a table -->
+            <!-- setting up a specific id com.wipro.ats.bdre.augen for a table -->
             <generator class="org.hibernate.id.enhanced.SequenceStyleGenerator">
                 <param name="sequence_name">ARCHIVE_CONSUMP_QUEUE_SEQ</param>
                 <param name="increment_size">1</param>
@@ -57,7 +57,7 @@
 
     <table name="BATCH">
         <primary-key>
-            <!-- setting up a specific id generator for a table -->
+            <!-- setting up a specific id com.wipro.ats.bdre.augen for a table -->
             <generator class="org.hibernate.id.enhanced.SequenceStyleGenerator">
                 <param name="sequence_name">BATCH_SEQ</param>
                 <param name="increment_size">1</param>
@@ -68,7 +68,7 @@
 
     <table name="BATCH_CONSUMP_QUEUE">
         <primary-key>
-            <!-- setting up a specific id generator for a table -->
+            <!-- setting up a specific id com.wipro.ats.bdre.augen for a table -->
             <generator class="org.hibernate.id.enhanced.SequenceStyleGenerator">
                 <param name="sequence_name">BATCH_CONSUMP_QUEUE_SEQ</param>
                 <param name="increment_size">1</param>
@@ -79,7 +79,7 @@
 
     <table name="BUS_DOMAIN">
         <primary-key>
-            <!-- setting up a specific id generator for a table -->
+            <!-- setting up a specific id com.wipro.ats.bdre.augen for a table -->
             <generator class="org.hibernate.id.enhanced.SequenceStyleGenerator">
                 <param name="sequence_name">BUS_DOMAIN_SEQ</param>
                 <param name="increment_size">1</param>
@@ -91,7 +91,7 @@
 
     <table name="HIVE_TABLES">
         <primary-key>
-            <!-- setting up a specific id generator for a table -->
+            <!-- setting up a specific id com.wipro.ats.bdre.augen for a table -->
             <generator class="org.hibernate.id.enhanced.SequenceStyleGenerator">
                 <param name="sequence_name">HIVE_TABLES_SEQ</param>
                 <param name="increment_size">1</param>
@@ -102,7 +102,7 @@
 
     <table name="INSTANCE_EXEC">
         <primary-key>
-            <!-- setting up a specific id generator for a table -->
+            <!-- setting up a specific id com.wipro.ats.bdre.augen for a table -->
             <generator class="org.hibernate.id.enhanced.SequenceStyleGenerator">
                 <param name="sequence_name">INSTANCE_EXEC_SEQ</param>
                 <param name="increment_size">1</param>
@@ -113,7 +113,7 @@
 
     <table name="PROCESS_DEPLOYMENT_QUEUE">
         <primary-key>
-            <!-- setting up a specific id generator for a table -->
+            <!-- setting up a specific id com.wipro.ats.bdre.augen for a table -->
             <generator class="org.hibernate.id.enhanced.SequenceStyleGenerator">
                 <param name="sequence_name">PROCESS_DEPLOYMENT_QUEUE_SEQ</param>
                 <param name="increment_size">1</param>
@@ -124,7 +124,7 @@
 
     <table name="PROCESS_LOG">
         <primary-key>
-            <!-- setting up a specific id generator for a table -->
+            <!-- setting up a specific id com.wipro.ats.bdre.augen for a table -->
             <generator class="org.hibernate.id.enhanced.SequenceStyleGenerator">
                 <param name="sequence_name">PROCESS_LOG_SEQ</param>
                 <param name="increment_size">1</param>
@@ -135,7 +135,7 @@
 
     <table name="PROCESS_TEMPLATE">
         <primary-key>
-            <!-- setting up a specific id generator for a table -->
+            <!-- setting up a specific id com.wipro.ats.bdre.augen for a table -->
             <generator class="org.hibernate.id.enhanced.SequenceStyleGenerator">
                 <param name="sequence_name">PROCESS_TEMPLATE_SEQ</param>
                 <param name="increment_size">1</param>
@@ -146,7 +146,7 @@
 
     <table name="SERVERS">
         <primary-key>
-            <!-- setting up a specific id generator for a table -->
+            <!-- setting up a specific id com.wipro.ats.bdre.augen for a table -->
             <generator class="org.hibernate.id.enhanced.SequenceStyleGenerator">
                 <param name="sequence_name">SERVERS_SEQ</param>
                 <param name="increment_size">1</param>
@@ -157,7 +157,7 @@
 
     <table name="USER_ROLES">
         <primary-key>
-            <!-- setting up a specific id generator for a table -->
+            <!-- setting up a specific id com.wipro.ats.bdre.augen for a table -->
             <generator class="org.hibernate.id.enhanced.SequenceStyleGenerator">
                 <param name="sequence_name">USER_ROLES_SEQ</param>
                 <param name="increment_size">1</param>
@@ -168,7 +168,7 @@
 
     <table name="LINEAGE_QUERY_TYPE">
         <primary-key>
-            <!-- setting up a specific id generator for a table -->
+            <!-- setting up a specific id com.wipro.ats.bdre.augen for a table -->
             <generator class="org.hibernate.id.enhanced.SequenceStyleGenerator">
                 <param name="sequence_name">LINEAGE_QUERY_TYPE_SEQ</param>
                 <param name="increment_size">1</param>
@@ -179,7 +179,7 @@
 
     <table name="PROCESS">
         <primary-key>
-            <!-- setting up a specific id generator for a table -->
+            <!-- setting up a specific id com.wipro.ats.bdre.augen for a table -->
             <generator class="org.hibernate.id.enhanced.SequenceStyleGenerator">
                 <param name="sequence_name">PROCESS_SEQ</param>
                 <param name="increment_size">1</param>
@@ -190,7 +190,7 @@
 
     <table name="DocIDsDB">
         <primary-key>
-            <!-- setting up a specific id generator for a table -->
+            <!-- setting up a specific id com.wipro.ats.bdre.augen for a table -->
             <generator class="org.hibernate.id.enhanced.SequenceStyleGenerator">
                 <param name="sequence_name">DocIDsDB_SEQ</param>
                 <param name="increment_size">1</param>
@@ -201,7 +201,7 @@
 
     <table name="STATISTICSDB">
         <primary-key>
-            <!-- setting up a specific id generator for a table -->
+            <!-- setting up a specific id com.wipro.ats.bdre.augen for a table -->
             <generator class="org.hibernate.id.enhanced.SequenceStyleGenerator">
                 <param name="sequence_name">STATISTICSDB_SEQ</param>
                 <param name="increment_size">1</param>
@@ -212,7 +212,7 @@
 
     <table name="PENDINGURLSDB">
         <primary-key>
-            <!-- setting up a specific id generator for a table -->
+            <!-- setting up a specific id com.wipro.ats.bdre.augen for a table -->
             <generator class="org.hibernate.id.enhanced.SequenceStyleGenerator">
                 <param name="sequence_name">PENDINGURLSDB_SEQ</param>
                 <param name="increment_size">1</param>
@@ -223,7 +223,7 @@
 
     <table name="WEBURLSDB">
         <primary-key>
-            <!-- setting up a specific id generator for a table -->
+            <!-- setting up a specific id com.wipro.ats.bdre.augen for a table -->
             <generator class="org.hibernate.id.enhanced.SequenceStyleGenerator">
                 <param name="sequence_name">WEBURLSDB_SEQ</param>
                 <param name="increment_size">1</param>
@@ -234,7 +234,7 @@
 
     <table name="APP_DEPLOYMENT_QUEUE">
         <primary-key>
-            <!-- setting up a specific id generator for a table -->
+            <!-- setting up a specific id com.wipro.ats.bdre.augen for a table -->
             <generator class="org.hibernate.id.enhanced.SequenceStyleGenerator">
                 <param name="sequence_name">APP_DEPLOYMENT_SEQ</param>
                 <param name="increment_size">1</param>
