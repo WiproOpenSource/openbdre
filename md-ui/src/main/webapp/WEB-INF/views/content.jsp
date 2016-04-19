@@ -430,7 +430,12 @@
                                               collapse: "1",
                                               url: "appstore.page",
                                               children: []
-                                                                            }
+                                                                            },{
+                                               label: "DDP visualization",
+                                               collapse: "1",
+                                               url: "http://ddpdemo.mybluemix.net/menu.html",
+                                               children: []
+                                                                             }
 					]
 				}, {
                                     label: "Data Ingestion",
