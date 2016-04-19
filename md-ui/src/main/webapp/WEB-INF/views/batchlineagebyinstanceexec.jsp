@@ -273,7 +273,7 @@
 	<button type='button' class='btn btn-primary' aria-label='Left Align' onClick='saveSVG("execution",0)'><span class='glyphicon glyphicon-save' aria-hidden='true'></span>Save</button>
 	<c:if test="${empty param.ied}">
 	<section>
-	    Instance Exec Id: <input type="number" name="ied" id="ied" value =""/>
+	    <spring:message code="batchlineagebyinstanceexec.page.instance_exec_id"/><input type="number" name="ied" id="ied" value =""/>
 	    <button onClick="resetGraph();
 		    getIed(jQuery('#ied').val())" href="#">Show Lineage</button>
 	</section>

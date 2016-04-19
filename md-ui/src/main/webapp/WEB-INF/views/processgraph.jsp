@@ -100,8 +100,8 @@
     <div style="width:100%;">
 	<div>
 	    <canvas id="canvas"></canvas>
-	    <p>X axis : Sample time(from current) in hours</p>
-	    <p>Y axis : Duration of the execution in section</p>
+	    <p><spring:message code="processgraph.page.x_axis"/></p>
+	    <p><spring:message code="processgraph.page.y_axis"/></p>
 	</div>
     </div>
 </body>

@@ -29,9 +29,6 @@
     <beans:bean class="org.springframework.web.servlet.view.InternalResourceViewResolver">
         <beans:property name="prefix" value="/WEB-INF/views/"/>
         <beans:property name="suffix" value=".jsp"/>
-        <beans:property name="exposedContextBeanNames">
-        	<list><value>properties</value></list>
-    	</beans:property>
     </beans:bean>
 
     <bean id="messageSource"
@@ -44,12 +41,6 @@
           class="org.springframework.web.servlet.i18n.CookieLocaleResolver">
         <property name="defaultLocale" value="en"/>
     </bean>
-
-    <bean id="properties" class="org.springframework.beans.factory.config.PropertiesFactoryBean">
-    <property name="locations">
-        <list><value>classpath:messages_en.properties</value></list>
-    </property>
-</bean>
 </beans:beans>
 
 

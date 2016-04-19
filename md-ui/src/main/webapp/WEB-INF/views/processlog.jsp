@@ -236,7 +236,7 @@
     <div id="input-box-button" >
 	<form onsubmit="showProcessPage(jQuery('#pid').val()); return false;">
 	    <div class="input-group">
-		<input class="form-control" type="number" name="pid" id="pid" value ="" placeholder="Filter by processid"/>
+		<input class="form-control" type="number" name="pid" id="pid" value ="" placeholder=<spring:message code="processlog.page.filter_by_processid_placeholder"/>/>
 		<!-- <button  class="btn btn-default btn-lg btn-primary"><span id="sizing-addon2"><span class="glyphicon glyphicon-arrow-right" aria-hidden="true"></span> Show Lineage </button> -->
 		<span class="input-group-btn">
 		    <button class="btn btn-default  btn-primary" type="submit" onClick="showProcessPage(jQuery('#pid').val())"><span id="sizing-addon2"><span class="glyphicon glyphicon-arrow-right" aria-hidden="true"></span>&nbsp;</button>

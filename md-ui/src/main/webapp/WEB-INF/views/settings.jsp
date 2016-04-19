@@ -130,7 +130,7 @@ function buildFormDisplay(configGroup, typeDiv) {
 					</div>
     			</div>
     			<div class="alert alert-info" role="alert" align="center" style="margin-top:20px" >
-                                   Application requires configuration type which is needed for setting or seeing configuration value
+                                   <spring:message code="settings.page.configuration_alert"/>
                 </div>
 				<div id="Settings" ></div>
     </section>

@@ -197,7 +197,7 @@
                         <a class="navbar-brand" href="#">
 							<img alt="<spring:message code="common.page.title_bdre_1"/>" class="img-responsive logo" src="../css/images/bdre_logo.png" style="width:55px;">
                         </a>
-						<span class="bdretextlogo">BDRE</span>
+						<span class="bdretextlogo"><spring:message code="content.page.app_abbrevation"/></span>
                     </div>
 
                     <!-- Collect the nav links, forms, and other content for toggling -->

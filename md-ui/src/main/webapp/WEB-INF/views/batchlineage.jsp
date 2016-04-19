@@ -238,7 +238,7 @@
 	<div id="input-box-button" >
 	    <form>
 		<div class="input-group">
-		    <input class="form-control" type="number" name="bid" id="bid" value ="" placeholder="Enter a batchid"/>
+		    <input class="form-control" type="number" name="bid" id="bid" value ="" placeholder=<spring:message code="batchlineage.page.placeholder"/> />
 		    <!-- <button  class="btn btn-default btn-lg btn-primary"><span id="sizing-addon2"><span class="glyphicon glyphicon-arrow-right" aria-hidden="true"></span> Show Lineage </button> -->
 		    <span class="input-group-btn">
 			<button class="btn btn-default  btn-primary" type="button" onClick="resetGraph();

@@ -1,6 +1,7 @@
 <%@ taglib prefix="security"
        uri="http://www.springframework.org/security/tags" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+<%@taglib uri="http://www.springframework.org/tags" prefix="spring"%>
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1"
      pageEncoding="ISO-8859-1"%>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
@@ -115,28 +116,28 @@ function formIntoMap(typeProp, typeOf) {
 <body ng-app="myApp" ng-controller="myCtrl" class="bodystyle">
 	<div class="alert-info-outer">
 	<div class="alert alert-info" role="alert">
-       <div style="font-size:24px;" ><b class="alert-redfont">How To:</b> </div>
-           <b>For Date type use format:</b> <span class="alert-redfont">2012-09-09,2013-09-08,yyyy-MM-dd</span>
+       <div style="font-size:24px;" ><b class="alert-redfont"><spring:message code="datagen.page.how_to"/></b> </div>
+           <b><spring:message code="datagen.page.b_datatype_format"/></b> <span class="alert-redfont"><spring:message code="datagen.page.b_span"/></span>
            <br>
-           <b>For Regex pattern use format:</b><span class="alert-redfont"> string1|string2</span>
+           <b><spring:message code="datagen.page.b_regex_pattern"/></b><span class="alert-redfont"><spring:message code="datagen.page.b_regex_pattern_span"/></span>
            <br>
-           <b>For number type use format:</b> <span class="alert-redfont">min Value,max Value</span>
+           <b><spring:message code="datagen.page.number_format"/></b> <span class="alert-redfont"><spring:message code="datagen.page.number_format_span"/></span>
            <br>
-           <b>Enter the Column Name : Column Type as:</b> <span class="alert-redfont">name:type for e.g.:- account_type:string or open_date:date</span>
+           <b><spring:message code="datagen.page.column_type"/></b> <span class="alert-redfont"><spring:message code="datagen.page.column_type_span"/></span>
     	</div>
 	</div>
 
 
     <div id="datagen" >
 
-            <h3><div class="number-circular">1</div>Data Type Details</h3>
+            <h3><div class="number-circular">1</div><spring:message code="datagen.page.data_types"/></h3>
             <section>
             <form class="form-horizontal" role="form" id="processFieldsForm1">
                 <div id="dataTypeDetails">
                     <!-- btn-group -->
                     <div class="form-group" id="formGroup1" >
                         <div class="col-md-3">
-                            <input type="text" class="form-control input-sm" id="fieldName.1" value="" name="fieldName" placeholder="Column Name : Column Type" />
+                            <input type="text" class="form-control input-sm" id="fieldName.1" value="" name="fieldName" placeholder=<spring:message code="datagen.page.colname_type_placeholder"/> />
                         </div>
                         <div class="col-md-3">
                             <select class="form-control input-sm" id="generatedType.1" name="generatedType.1">
@@ -144,7 +145,7 @@ function formIntoMap(typeProp, typeOf) {
                             </select>
                         </div>
                         <div class="col-md-4">
-                            <input type="text" class="form-control input-sm" id="genArg.1" value="" name="genArg.1" placeholder="Generator Argument" />
+                            <input type="text" class="form-control input-sm" id="genArg.1" value="" name="genArg.1" placeholder=<spring:message code="datagen.page.generator_argument_placeholder"/> />
                         </div>
                         <button id="remove1" class="btn btn-danger remove-me"><span class="glyphicon glyphicon-trash"></span></button>
                         
@@ -162,37 +163,37 @@ function formIntoMap(typeProp, typeOf) {
                 
             </section>
 
-            <h3><div class="number-circular">2</div>Table Type Details</h3>
+            <h3><div class="number-circular">2</div><spring:message code="datagen.page.table_types"/></h3>
             <section>
             <form class="form-horizontal" role="form" id="processFieldsForm2">
                 <div id="tableDetails">
                     <div class="alert alert-info" role="alert">
-                        Application requires Table type details to
+                        <spring:message code="datagen.page.alert_info"/>
                     </div>
                     <!-- btn-group -->
                     <div id="tableFields">
                     	<div class="form-group">
-                    	    <label class="control-label col-sm-2" for="numRows">Number of records:</label>
+                    	    <label class="control-label col-sm-2" for="numRows"><spring:message code="datagen.page.number_of_records"/></label>
                     	    <div class="col-sm-10">
-                    	        <input type="text" class="form-control"  id="numRows" name="numRows" placeholder="Enter Number of records generation" required>
+                    	        <input type="text" class="form-control"  id="numRows" name="numRows" placeholder=<spring:message code="datagen.page.number_of_records_placeholder"/>required>
                     	    </div>
                     	</div>
                     	<div class="form-group">
-                    	    <label class="control-label col-sm-2" for="numSplits">Number of Splits:</label>
+                    	    <label class="control-label col-sm-2" for="numSplits"><spring:message code="datagen.page.number_of_splits"/></label>
                     	    <div class="col-sm-10">
-                    	        <input type="text" class="form-control" id="numSplits" name="numSplits" placeholder="Enter Number of Splits" required>
+                    	        <input type="text" class="form-control" id="numSplits" name="numSplits" placeholder=<spring:message code="datagen.page.number_of_splits_placeholder"/>required>
                     	    </div>
                     	</div>
                     	<div class="form-group">
-                    	    <label class="control-label col-sm-2" for="separator">Field Separator:</label>
+                    	    <label class="control-label col-sm-2" for="separator"><spring:message code="datagen.page.field_separator"/></label>
                     	    <div class="col-sm-10">
-                    	        <input type="text" class="form-control" id="separator" name="separator" placeholder="Field Separator" required>
+                    	        <input type="text" class="form-control" id="separator" name="separator" placeholder=<spring:message code="datagen.page.field_separator_placeholder"/> required>
                     	    </div>
                     	</div>
                     	<div class="form-group">
-                    	    <label class="control-label col-sm-2" for="tableName">Table Name:</label>
+                    	    <label class="control-label col-sm-2" for="tableName"><spring:message code="datagen.page.table_name"/></label>
                     	    <div class="col-sm-10">
-                    	        <input type="text" class="form-control" id="tableName" name="tableName" placeholder="Table Name" required>
+                    	        <input type="text" class="form-control" id="tableName" name="tableName" placeholder=<spring:message code="datagen.page.table_name_placeholder"/>required>
                     	    </div>
                     	</div>
 
@@ -203,36 +204,36 @@ function formIntoMap(typeProp, typeOf) {
             </form>
             </section>
 
-            <h3><div class="number-circular">3</div>Process Details</h3>
+            <h3><div class="number-circular">3</div><spring:message code="datagen.page.proc_details"/></h3>
                             <section>
                                 <form class="form-horizontal" role="form" id="processFieldsForm3">
                                     <div id="processDetails">
                                         <div class="alert alert-info" role="alert">
-                                            Application requires process details to create process entries in metadata
+										<spring:message code="datagen.page.alert-info_2"/>
                                         </div>
                                         <!-- btn-group -->
                                         <div id="processFields">
 
                                             <div class="form-group">
-                                                <label class="control-label col-sm-2" for="processName">Process Name:</label>
+                                                <label class="control-label col-sm-2" for="processName"><spring:message code="datagen.page.proc_name"/></label>
                                                 <div class="col-sm-10">
-                                                    <input type="text" class="form-control"  id="processName" name="processName" placeholder="Enter Process Name" required>
+                                                    <input type="text" class="form-control"  id="processName" name="processName" placeholder=<spring:message code="datagen.page.proc_name_placeholder"/> required>
                                                 </div>
                                             </div>
                                             <div class="form-group">
-                                                <label class="control-label col-sm-2" for="processDescription">Process Description:</label>
+                                                <label class="control-label col-sm-2" for="processDescription"><spring:message code="datagen.page.proc_desc"/></label>
                                                 <div class="col-sm-10">
-                                                    <input type="text" class="form-control" id="processDescription" name="processDescription" placeholder="Enter Process Description" required>
+                                                    <input type="text" class="form-control" id="processDescription" name="processDescription" placeholder=<spring:message code="datagen.page.proc_desc_placeholder"/> required>
                                                 </div>
                                             </div>
                                             <div class="form-group">
-                                                <label class="control-label col-sm-2" for="outputPath">HDFS Output Path:</label>
+                                                <label class="control-label col-sm-2" for="outputPath"><spring:message code="datagen.page.hdfs_op_path"/></label>
                                                 <div class="col-sm-10">
-                                                    <input type="text" class="form-control" id="outputPath" name="outputPath" placeholder="Enter the absolute Output Path" required>
+                                                    <input type="text" class="form-control" id="outputPath" name="outputPath" placeholder=<spring:message code="datagen.page.hdfs_op_path_placeholder"/> required>
                                                 </div>
                                             </div>
                                             <div class="form-group">
-                                                <label class="control-label col-sm-2" for="busDomainId">Bus Domain Id:</label>
+                                                <label class="control-label col-sm-2" for="busDomainId"><spring:message code="datagen.page.bus_domain_id"/></label>
                                                 <div class="col-sm-10">
                                                     <select class="form-control" id="busDomainId" name="busDomainId">
                                                         <option ng-repeat="busDomain in busDomains.Options" value="{{busDomain.Value}}" name="busDomainId">{{busDomain.DisplayText}}</option>
@@ -246,7 +247,7 @@ function formIntoMap(typeProp, typeOf) {
                                     </form>
                                     </section>
 
-            <h3><div class="number-circular">4</div>Confirm</h3>
+            <h3><div class="number-circular">4</div><spring:message code="datagen.page.confirm"/></h3>
             <section>
             <div id="createProcess">
                 <button ng-click="createJob()" id="createjobs" type="button" class="btn">Create Job</button>

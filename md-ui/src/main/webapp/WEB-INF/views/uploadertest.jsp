@@ -51,11 +51,11 @@
 </head>
 
 <body>
-<p class="alert alert-danger">Please delete this JSP file when the feature is implemented in WFD. This is just a sample.</p>
+<p class="alert alert-danger"><spring:message code="uploadertest.page.file_alert"/></p>
 
     <form method="post" id="fileinfo" name="fileinfo" onsubmit="return submitForm();">
     <div class="form-group">
-        <label>Select a file:</label><br>
+        <label><spring:message code="uploadertest.page.select_file"/></label><br>
         <input type="file" id="file" name="file" required class="form-control"/>
      </div>
         <input type="button" onClick="uoloadFile(100,'hql');" value="Upload" class="btn btn-primary"/>

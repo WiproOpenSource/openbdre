@@ -448,7 +448,7 @@
 
 
 				<div id = "bdre-dataload" ng-controller = "myCtrl" >
-				<h3 >Zip File Upload</h3 >
+				<h3 ><spring:message code="processimportwizard.page.zip_file_upload"/></h3 >
 				<section >
 					<div class="col-sm-2">
 					<input type="file" name="file" class="form-control" id="zip-id" required>
@@ -462,7 +462,7 @@
 					</div>
 				</section >
 
-                <h3 >Imported Details</h3 >
+                <h3 ><spring:message code="processimportwizard.page.imported_details"/></h3 >
                 <section>
                 <div id = "ProcessContainer" >
                 </div >

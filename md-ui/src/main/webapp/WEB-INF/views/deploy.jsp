@@ -4,7 +4,7 @@
 <html lang="en">
     <head>
 	<meta charset="utf-8">
-	<title>BDRE | Deployment</title>
+	<title><spring:message code="deploy.page.title"/></title>
 
 	<script>
 	  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
@@ -159,9 +159,9 @@
     </head>
     <body>
 	<br/>
-	<h3>BDRE Job Deployment</h3>
+	<h3><spring:message code="deploy.page.heading"/></h3>
 	<div role="alert" id="parameters"> </div>
-	<div id="progressbar-2"><div id="progressbar-label" class="progress-label">Loading...</div></div>
+	<div id="progressbar-2"><div id="progressbar-label" class="progress-label"><spring:message code="deploy.page.progress_label"/></div></div>
 	<br/>
 	<div role="alert" id="buildResult"> </div>
     </body>

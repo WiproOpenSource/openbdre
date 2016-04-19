@@ -126,38 +126,38 @@
                         <div class="row">
                             <div class="col-md-3 sidebar-nav">
                                 <div class="panel panel-default" ng-if="chartViewModel.selectedProcess.processName == null" class="animate-if">
-                                    <div class="panel-heading" data-toggle="collapse" data-parent="#accordion">Information</div>
-                                    <div class="panel-body">Click on the node to see node properties</div>
+                                    <div class="panel-heading" data-toggle="collapse" data-parent="#accordion"><spring:message code="wfdesigner.page.panel_heading"/></div>
+                                    <div class="panel-body"><spring:message code="wfdesigner.page.panel_body"/></div>
                                 </div>
                                 <div class="panel-group" id="accordion" ng-if="chartViewModel.selectedProcess.processName != null" class="animate-if">
                                     <div class="panel panel-default">
                                         <div class="panel-heading foldablearrow" data-toggle="collapse" data-parent="#accordion" data-target="#processdetails">
-                                            Process Details
+                                            <spring:message code="wfdesigner.page.process_details"/>
                                         </div>
                                         <div id="processdetails" class="panel-collapse collapse in">
                                             <div class="panel-body">
                                                 <form role="form" class="form-horizontal">
                                                     <div class="form-group">
-                                                        <label class="control-label col-md-4">Id: </label>
+                                                        <label class="control-label col-md-4"><spring:message code="wfdesigner.page.id"/></label>
                                                         <div class="col-md-8">
                                                             <h5><span class="label label-info">{{ chartViewModel.selectedProcess.processId }}</span></h5>
                                                         </div>
                                                     </div>
 
                                                     <div class="form-group">
-                                                        <label class="control-label col-md-4">Type: </label>
+                                                        <label class="control-label col-md-4"><spring:message code="wfdesigner.page.type"/></label>
                                                         <div class="col-md-8">
                                                             <h5><span class="label label-default">{{ chartViewModel.selectedProcess.processTypeId }}</span></h5>
                                                         </div>
                                                     </div>
                                                     <div class="form-group">
-                                                        <label class="control-label col-md-4" for="process.name">Name: </label>
+                                                        <label class="control-label col-md-4" for="process.name"><spring:message code="wfdesigner.page.name"/></label>
                                                         <div class="col-md-8">
                                                             <input name="processName" id="process.name" class="form-control input-sm" type="text" ng-model="chartViewModel.selectedProcess.processName">
                                                         </div>
                                                     </div>
                                                     <div class="form-group">
-                                                        <label class="control-label col-md-4" for="process.description">Description: </label>
+                                                        <label class="control-label col-md-4" for="process.description"><spring:message code="wfdesigner.page.description"/></label>
                                                         <div class="col-md-8">
                                                             <input name="description" id="process.description" class="form-control input-sm" type="text" ng-model="chartViewModel.selectedProcess.description">
                                                         </div>
@@ -172,14 +172,14 @@
                                                     <input type="hidden" name="processTypeId" value="{{ chartViewModel.selectedProcess.processTypeId }}">
                                                     <input type="hidden" name="workflowId" value="{{ chartViewModel.selectedProcess.workflowId }}">
                                                     <input type="hidden" name="processTemplateId" value="{{ chartViewModel.selectedProcess.processTemplateId }}">
-                                                    <button type="button" class="btn btn-sm btn-primary pull-right" ng-click="updateProcessDetails()">Update Process Details</button>
+                                                    <button type="button" class="btn btn-sm btn-primary pull-right" ng-click="updateProcessDetails()"><spring:message code="wfdesigner.page.update_process_details"/></button>
                                                 </form>
                                             </div>
                                         </div>
                                     </div>
                                     <div class="panel panel-default" ng-if="chartViewModel.selectedProcess.parentProcessId == null">
                                         <div class="panel-heading foldablearrow" data-toggle="collapse" data-parent="#accordion" data-target="#jarupload" ng-click="getJarList()">
-                                            Jar Configuration
+                                            <spring:message code="wfdesigner.page.jar_configuration"/>
                                         </div>
                                         <div id="jarupload" class="panel-collapse collapse">
                                             <div class="panel-body">
@@ -197,14 +197,14 @@
                                                 <hr/>
                                                 <form role="form" class="form-horizontal">
                                                     <div class="form-group">
-                                                        <label class="control-label col-sm-3">Select file :</label>
+                                                        <label class="control-label col-sm-3"><spring:message code="wfdesigner.page.select_file"/></label>
                                                     </div>
                                                     <div class="form-group">
                                                         <div class="col-sm-10">
                                                             <input type="file" name="file" class="form-control" id="jar-id" required>
                                                         </div>
                                                     </div>
-                                                    <button type="button" class="btn btn-sm btn-primary pull-right" ng-click="uploadJar(chartViewModel.selectedProcess.processId,'lib','jar-id')">Upload jar</button>
+                                                    <button type="button" class="btn btn-sm btn-primary pull-right" ng-click="uploadJar(chartViewModel.selectedProcess.processId,'lib','jar-id')"><spring:message code="wfdesigner.page.upload_jar"/></button>
                                                 </form>
                                             </div>
                                         </div>
@@ -217,7 +217,7 @@
                                         <div id="-{{genConfig.key}}" class="panel-collapse collapse">
 
                                             <div id="propertySearchBox">
-                                                <input type="text" class="form-control input-sm" placeholder="Search Property" ng-model="searchText">
+                                                <input type="text" class="form-control input-sm" placeholder=<spring:message code="wfdesigner.page.search_property_placeholder"/> ng-model="searchText">
                                             </div>
 
                                             <div class="panel-body">
@@ -278,22 +278,22 @@
                                                 <hr/>
                                                 <form class="form-horizontal" role="form" ng-if="genConfig.type != 'hql'  && genConfig.type != 'hadoopstream' && genConfig.type != 'r'  && genConfig.type != 'spark' && genConfig.type != 'pig' && genConfig.type != 'shell' && genConfig.type != 'addFiles'">
                                                     <div class="form-group">
-                                                        <label class="control-label col-sm-2" for="{{genConfig.key}}-propkey">Name:</label>
+                                                        <label class="control-label col-sm-2" for="{{genConfig.key}}-propkey"><spring:message code="wfdesigner.page.propkey_name"/></label>
                                                         <div class="col-sm-10">
-                                                            <input type="{{genConfig.key}}" class="form-control" id="{{genConfig.key}}-propkey" placeholder="Enter name" required>
+                                                            <input type="{{genConfig.key}}" class="form-control" id="{{genConfig.key}}-propkey" placeholder=<spring:message code="wfdesigner.page.propkey_name_placeholder"/> required>
                                                         </div>
                                                     </div>
                                                     <div class="form-group">
-                                                        <label class="control-label col-sm-2" for="{{genConfig.key}}-propkey">Value:</label>
+                                                        <label class="control-label col-sm-2" for="{{genConfig.key}}-propkey"><spring:message code="wfdesigner.page.propkey_value"/></label>
                                                         <div class="col-sm-10">
-                                                            <input type="text" class="form-control" id="{{genConfig.key}}-propval" placeholder="Enter value" required>
+                                                            <input type="text" class="form-control" id="{{genConfig.key}}-propval" placeholder=<spring:message code="wfdesigner.page.propval_value_placeholder"/> required>
                                                         </div>
                                                     </div>
                                                     <button type="submit" ng-click="insertProp(genConfig)" class="btn btn-primary  pull-right">Add {{genConfig.value}}</button>
                                                 </form>
                                                 <form class="form-horizontal" role="form" ng-if="genConfig.type == 'hql'">
                                                     <div class="form-group">
-                                                        <label class="control-label col-sm-3" for="{{genConfig.key}}-propkey">Select HQL file :</label>
+                                                        <label class="control-label col-sm-3" for="{{genConfig.key}}-propkey"><spring:message code="wfdesigner.page.select_hql_file"/></label>
                                                     </div>
                                                     <div class="form-group">
                                                         <div class="col-sm-10">
@@ -306,7 +306,7 @@
                                                 </form>
                                                  <form class="form-horizontal" role="form" ng-if="genConfig.type == 'r'">
                                                     <div class="form-group">
-                                                        <label class="control-label col-sm-3" for="{{genConfig.key}}-propkey">Select R file :</label>
+                                                        <label class="control-label col-sm-3" for="{{genConfig.key}}-propkey"><spring:message code="wfdesigner.page.select_r_file"/></label>
                                                     </div>
                                                     <div class="form-group">
                                                         <div class="col-sm-10">
@@ -333,7 +333,7 @@
 
                                                 <form class="form-horizontal" role="form" ng-if="genConfig.type == 'shell'">
                                                     <div class="form-group">
-                                                        <label class="control-label col-sm-3" for="{{genConfig.key}}-propkey">Select shell script :</label>
+                                                        <label class="control-label col-sm-3" for="{{genConfig.key}}-propkey"><spring:message code="wfdesigner.page.select_shell_script"/></label>
                                                     </div>
                                                     <div class="form-group">
                                                         <div class="col-sm-10">
@@ -346,7 +346,7 @@
                                                 </form>
                                                 <form class="form-horizontal" role="form" ng-if="genConfig.type == 'addFiles'">
                                                     <div class="form-group">
-                                                        <label class="control-label col-sm-3" for="{{genConfig.key}}-propkey">Add files:</label>
+                                                        <label class="control-label col-sm-3" for="{{genConfig.key}}-propkey"><spring:message code="wfdesigner.page.add_files"/></label>
                                                     </div>
                                                     <div class="form-group">
                                                         <div class="col-sm-10">
@@ -359,7 +359,7 @@
                                                 </form>
                                                 <form class="form-horizontal" role="form" ng-if="genConfig.type == 'pig'">
                                                     <div class="form-group">
-                                                        <label class="control-label col-sm-3" for="{{genConfig.key}}-propkey">Select pig script :</label>
+                                                        <label class="control-label col-sm-3" for="{{genConfig.key}}-propkey"><spring:message code="wfdesigner.page.select_pig_script"/></label>
                                                     </div>
                                                     <div class="form-group">
                                                         <div class="col-sm-10">
@@ -372,7 +372,7 @@
                                                 </form>
                                                 <form class="form-horizontal" role="form" ng-if="genConfig.type == 'spark'">
                                                     <div class="form-group">
-                                                        <label class="control-label col-sm-3" for="{{genConfig.key}}-propkey">Select spark jar:</label>
+                                                        <label class="control-label col-sm-3" for="{{genConfig.key}}-propkey"><spring:message code="wfdesigner.page.select_spark_jar"/></label>
                                                     </div>
                                                     <div class="form-group">
                                                         <div class="col-sm-10">
@@ -465,36 +465,36 @@
                             <div class="col-md-3"> </div>
                             <div class="col-md-6 ">
                                 <div class="panel panel-primary">
-                                    <div class="panel-heading">Create New Workflow</div>
+                                    <div class="panel-heading"><spring:message code="wfdesigner.page.create_new_workflow"/></div>
                                     <div class="panel-body">
                                         <form role="form">
                                             <div class="form-group">
-                                                <label for="processName">Process Name</label>
+                                                <label for="processName"><spring:message code="wfdesigner.page.process_name"/></label>
                                                 <input type="text" class="form-control" id="processname" required>
                                             </div>
                                             <div class="form-group">
-                                                <label for="description">Description</label>
+                                                <label for="description"><spring:message code="wfdesigner.page.description"/></label>
                                                 <input type="text" class="form-control" id="description" required>
                                             </div>
                                             <div class="form-group">
-                                                <label for="application">Domain</label>
+                                                <label for="application"><spring:message code="wfdesigner.page.domain"/></label>
                                                 <select class="form-control" id="domain">
                                                     <option ng-repeat="busdomain in newPageBusDomain" id="{{$index}}" value="{{ busdomain.Value }}">{{ busdomain.DisplayText }}</option>
                                                 </select>
                                             </div>
                                             <div class="form-group">
-                                                <label for="type">Type</label>
+                                                <label for="type"><spring:message code="wfdesigner.page.type"/></label>
                                                 <select class="form-control" id="type">
                                                     <option ng-repeat="type in newPageProcessType" id="{{$index}}" value="{{ type.Value }}">{{ type.DisplayText }}</option>
                                                 </select>
                                             </div>
                                             <div class="form-group">
-                                                <label for="workflowtype">Workflow Type</label>
+                                                <label for="workflowtype"><spring:message code="wfdesigner.page.workflow_type"/></label>
                                                 <select class="form-control" id="workflowtype">
                                                     <option ng-repeat="workflowtype in newPageWorkflowType" id="{{$index}}" value="{{ workflowtype.Value }}">{{ workflowtype.DisplayText }}</option>
                                                 </select>
                                             </div>
-                                            <button type="submit" class="btn btn-primary" ng-click="createFirstProcess()">Create Process</button>
+                                            <button type="submit" class="btn btn-primary" ng-click="createFirstProcess()"><spring:message code="wfdesigner.page.create_process"/></button>
                                         </form>
                                     </div>
                                 </div>

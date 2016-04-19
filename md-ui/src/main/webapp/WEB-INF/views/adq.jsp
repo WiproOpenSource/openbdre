@@ -277,17 +277,17 @@
 	<div id="Container"></div>
     </section>
 <div id="dialog-confirm" title="Are you sure?" style="display:none;">
-              <p><span class="ui-icon ui-icon-alert" style="float:left; margin:0 7px 20px 0;"></span>This will export the application to appstore</p>
+              <p><span class="ui-icon ui-icon-alert" style="float:left; margin:0 7px 20px 0;"></span><spring:message code="adq.page.export_to_app_store"/></p>
           </div>
 
 <div id="dialog-reject" title="Are you sure?" style="display:none;">
-              <p><span class="ui-icon ui-icon-alert" style="float:left; margin:0 7px 20px 0;"></span>This will reject exporting of the application to appstore</p>
+              <p><span class="ui-icon ui-icon-alert" style="float:left; margin:0 7px 20px 0;"></span><spring:message code="adq.page.export_reject"/></p>
           </div>
   <div id="execute-result" title="Process Started" style="display:none;">
-               <p><span class="ui-icon ui-icon-alert" style="float:left; margin:0 7px 20px 0;"></span>Process Started Successfully</p>
+               <p><span class="ui-icon ui-icon-alert" style="float:left; margin:0 7px 20px 0;"><spring:message code="adq.page.process_initiation_status"/></span></p>
               </div>
   <div id="during-merge" title="Process Started" style="display:none;">
-                 <p><span class="ui-icon ui-icon-alert" style="float:left; margin:0 7px 20px 0;"></span>Process Started Successfully</p>
+                 <p><span class="ui-icon ui-icon-alert" style="float:left; margin:0 7px 20px 0;"></span><spring:message code="adq.page.process_initiation_status"/></p>
                 </div>
 </body>
 </html>
