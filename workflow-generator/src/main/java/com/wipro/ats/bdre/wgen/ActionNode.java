@@ -66,6 +66,14 @@ public class ActionNode extends OozieNode {
     //Hadoop streaming action
     public static final int HADOOP_STREAMING_ACTION=30;
 
+    //Cluster to Cluster Hive Table Migration
+    public static final int HIVE_MIGRATION_ACTION=31;
+    public static final int MIGRATION_PREPROCESSOR_ACTION=32;
+    public static final int SOURCE_STAGE_LOAD_ACTION=33;
+    public static final int SOURCE_TO_DEST_COPY_ACTION=34;
+    public static final int DEST_TABLE_LOAD_ACTION=35;
+    public static final int REGISTER_PARTITIONS_ACTION=36;
+
     private ProcessInfo processInfo = new ProcessInfo();
     private List<GenericActionNode> containingNodes = new ArrayList<GenericActionNode>();
 
@@ -165,7 +173,9 @@ public class ActionNode extends OozieNode {
 
         } else if (processInfo.getProcessTypeId() == HIVE_GEN_PARENT_ACTION) {
 
-        }  else if (processInfo.getProcessTypeId() == SFTP) {
+        } else if (processInfo.getProcessTypeId() == HIVE_MIGRATION_ACTION) {
+
+        } else if (processInfo.getProcessTypeId() == SFTP) {
 
             SFTPNonOozieActionNode sftpNonOozieActionNode = new SFTPNonOozieActionNode(this);
             containingNodes.add(sftpNonOozieActionNode);
@@ -184,6 +194,21 @@ public class ActionNode extends OozieNode {
         } else if (processInfo.getProcessTypeId() == CRAWLER_CHILD_ACTION) {
             CrawlerActionNode crawlerActionNode = new CrawlerActionNode(this);
             containingNodes.add(crawlerActionNode);
+        } else if (processInfo.getProcessTypeId() == MIGRATION_PREPROCESSOR_ACTION) {
+            MigrationPreprocessorActionNode migrationPreprocessorActionNodeNode = new MigrationPreprocessorActionNode(this);
+            containingNodes.add(migrationPreprocessorActionNodeNode);
+        } else if (processInfo.getProcessTypeId() == SOURCE_STAGE_LOAD_ACTION) {
+            SourceStageLoadActionNode sourceStageLoadActionNode = new SourceStageLoadActionNode(this);
+            containingNodes.add(sourceStageLoadActionNode);
+        } else if (processInfo.getProcessTypeId() == SOURCE_TO_DEST_COPY_ACTION) {
+            SourceToDestCopyActionNode sourceToDestCopyActionNode = new SourceToDestCopyActionNode(this);
+            containingNodes.add(sourceToDestCopyActionNode);
+        } else if (processInfo.getProcessTypeId() == DEST_TABLE_LOAD_ACTION) {
+            DestTableLoadActionNode destTableLoadActionNode = new DestTableLoadActionNode(this);
+            containingNodes.add(destTableLoadActionNode);
+        } else if (processInfo.getProcessTypeId() == REGISTER_PARTITIONS_ACTION) {
+            RegisterPartitionsActionNode registerPartitionsActionNode = new RegisterPartitionsActionNode(this);
+            containingNodes.add(registerPartitionsActionNode);
         } else {
             throw new BDREException("Don't know how to handle processInfo.getProcessTypeId()=" + processInfo.getProcessTypeId());
         }
