@@ -567,3 +567,10 @@
 'banking',  'customer_attrition',  'Customer Attrition',  'customer_attrition', 1,  'customer_attrition', 'text', 1
 'banking',  'category2',  'category2',  'category2', 1,  'category2', 'text', 1
 'banking',  'category3',  'category3',  'category3', 1,  'category3', 'text', 1
+'cluster.nn-address', 'Cloudera cluster', 'Namenode Address','Cloudera cluster' , 1, 'hdfs://quickstart.cloudera:8020', 'text' , 1
+'cluster.jt-address', 'Cloudera cluster', 'Job Tracker Address','Cloudera cluster' , 1, 'quickstart.cloudera:8050', 'text' , 1
+'cluster.hive-address', 'Cloudera cluster', 'Hive Server2 Address','Cloudera cluster' , 1, 'quickstart.cloudera:10000', 'text' , 1
+'cluster.nn-address', 'Hortonworks cluster', 'Namenode Address','Hortonworks cluster' , 1, 'hdfs://sandbox.hortonworks.com:8020', 'text' , 1
+'cluster.jt-address', 'Hortonworks cluster', 'Job Tracker Address','Hortonworks cluster' , 1, 'sandbox.hortonworks.com:8050', 'text' , 1
+'cluster.hive-address', 'Hortonworks cluster', 'Hive Server2 Address','Hortonworks cluster' , 1, 'sandbox.hortonworks.com:10000', 'text' , 1
+

@@ -28,5 +28,11 @@
 28,'Crawler Parent', null
 29,'Web Crawler',28
 30,'Hadoop Streaming', 2
+31,'Migration',null
+32,'Preprocessing',31
+33,'Source Stage Load',31
+34,'Source to Dest Stage Copy',31
+35,'Destination Table Load',31
+36,'Register Partition',31
 37,'Analytics UI',null
 38,'(sub process1 of analytics ui)',37

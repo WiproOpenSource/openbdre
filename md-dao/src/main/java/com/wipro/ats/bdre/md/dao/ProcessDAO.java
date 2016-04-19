@@ -550,16 +550,13 @@ public List<Process> createOneChildJob(Process parentProcess, Process childProce
 
         Integer parentPid = null;
         Integer subProcessId = null;
+
         List<Process> processList = new ArrayList<Process>();
         try {
             session.beginTransaction();
             parentPid = (Integer) session.save(parentProcess);
             LOGGER.info("parent processId:" + parentPid);
             parentProcess.setProcessId(parentPid);
-
-
-
-
             processList.add(parentProcess);
             for (Process childProcess : childProcesses) {
                 childProcess.setProcess(parentProcess);
@@ -572,19 +569,7 @@ public List<Process> createOneChildJob(Process parentProcess, Process childProce
 
                 processList.add(childProcess);
             }
-            parentProcess.setNextProcessId(subProcess1.getProcessId().toString());
 
-            session.update(parentProcess);
-
-
-            if(appProperties!=null && !appProperties.isEmpty()){
-                for (Properties properties : appProperties) {
-                    LOGGER.info("properties key"+properties.getId().getPropKey());
-                    properties.getId().setProcessId(subProcessId);
-                    properties.setProcess(subProcess1);
-                    session.save(properties);
-                }
-            }
             session.getTransaction().commit();
         }
         catch (MetadataException e) {
@@ -676,4 +661,76 @@ public List<Process> createOneChildJob(Process parentProcess, Process childProce
     }
 
 
-}
+
+
+    public List<Process> createHiveMigrationJob(Process parentProcess, List<Process> childProcesses, List<Properties> parentProperties) {
+        Session session = sessionFactory.openSession();
+        com.wipro.ats.bdre.md.dao.jpa.Process preprocessingProcess = null;
+        com.wipro.ats.bdre.md.dao.jpa.Process sourcestageloadProcess = null;
+        com.wipro.ats.bdre.md.dao.jpa.Process sourcetodeststagecopyProcess = null;
+        com.wipro.ats.bdre.md.dao.jpa.Process desttableloadProcess = null;
+        com.wipro.ats.bdre.md.dao.jpa.Process registerpartitionProcess = null;
+
+        Integer parentPid = null;
+
+        if(parentProperties!=null && !parentProperties.isEmpty()){
+            for (Properties properties : parentProperties) {
+                LOGGER.info("properties key"+properties.getId().getPropKey());
+                properties.getId().setProcessId(parentPid);
+                properties.setProcess(parentProcess);
+                session.save(properties);
+            }
+        }
+        if (childProcess.getProcessType().getProcessTypeId() == 32){
+            preprocessingProcess = childProcess;
+            preprocessingProcess.setNextProcessId(parentPid.toString());
+            preprocessingProcess.setProcessId((Integer) session.save(preprocessingProcess));
+        }else  if (childProcess.getProcessType().getProcessTypeId() == 33){
+            sourcestageloadProcess = childProcess;
+            sourcestageloadProcess.setNextProcessId(parentPid.toString());
+            sourcestageloadProcess.setProcessId((Integer) session.save(sourcestageloadProcess));
+        }
+        else  if (childProcess.getProcessType().getProcessTypeId() == 34){
+            sourcetodeststagecopyProcess = childProcess;
+            sourcetodeststagecopyProcess.setNextProcessId(parentPid.toString());
+            sourcetodeststagecopyProcess.setProcessId((Integer) session.save(sourcetodeststagecopyProcess));
+        }
+        else  if (childProcess.getProcessType().getProcessTypeId() == 35){
+            desttableloadProcess = childProcess;
+            desttableloadProcess.setNextProcessId(parentPid.toString());
+            desttableloadProcess.setProcessId((Integer) session.save(desttableloadProcess));
+        }
+        else  if (childProcess.getProcessType().getProcessTypeId() == 36) {
+            registerpartitionProcess = childProcess;
+            registerpartitionProcess.setNextProcessId(parentPid.toString());
+            registerpartitionProcess.setProcessId((Integer) session.save(registerpartitionProcess));
+
+
+            parentProcess.setNextProcessId(subProcess1.getProcessId().toString());
+
+            session.update(parentProcess);
+
+
+            if (appProperties != null && !appProperties.isEmpty()) {
+                for (Properties properties : appProperties) {
+                    LOGGER.info("properties key" + properties.getId().getPropKey());
+                    properties.getId().setProcessId(subProcessId);
+                    properties.setProcess(subProcess1);
+                    session.save(properties);
+                }
+            }
+            parentProcess.setNextProcessId(preprocessingProcess.getProcessId().toString());
+            preprocessingProcess.setNextProcessId(sourcestageloadProcess.getProcessId().toString());
+            sourcestageloadProcess.setNextProcessId(sourcetodeststagecopyProcess.getProcessId().toString());
+            sourcetodeststagecopyProcess.setNextProcessId(desttableloadProcess.getProcessId().toString());
+            desttableloadProcess.setNextProcessId(registerpartitionProcess.getProcessId().toString());
+
+            session.update(parentProcess);
+            session.update(preprocessingProcess);
+            session.update(sourcestageloadProcess);
+            session.update(sourcetodeststagecopyProcess);
+            session.update(desttableloadProcess);
+        }
+
+
+        }
