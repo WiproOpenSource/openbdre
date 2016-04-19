@@ -1,10 +1,11 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
     <%@ taglib prefix="security"
 	   uri="http://www.springframework.org/security/tags" %>
+	   <%@taglib uri="http://www.springframework.org/tags" prefix="spring"%>
         <html id="ng-app">
 
         <head>
-            <title>BDRE | Bigdata Ready Enterprise</title>
+            <title><spring:message code="common.page.title_bdre_2"/></title>
 	<script>
 	  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
 	  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
@@ -194,9 +195,9 @@
                         </button>
 
                         <a class="navbar-brand" href="#">
-							<img alt="Bigdata Ready Enterprise" class="img-responsive logo" src="../css/images/bdre_logo.png" style="width:55px;">
+							<img alt="<spring:message code="common.page.title_bdre_1"/>" class="img-responsive logo" src="../css/images/bdre_logo.png" style="width:55px;">
                         </a>
-						<span class="bdretextlogo">BDRE</span>
+						<span class="bdretextlogo"><spring:message code="content.page.app_abbrevation"/></span>
                     </div>
 
                     <!-- Collect the nav links, forms, and other content for toggling -->
