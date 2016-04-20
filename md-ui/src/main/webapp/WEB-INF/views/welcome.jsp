@@ -1,6 +1,8 @@
+<%@taglib uri="http://www.springframework.org/tags" prefix="spring"%>
+
 <html id="ng-app">
     <head>
-	<title>BDRE | Bigdata Ready Enterprise</title>
+	<title><spring:message code="common.page.title_bdre_2"/></title>
 	<script>
 	  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
 	  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
@@ -122,12 +124,10 @@
 	</script>
     </head>
     <body>
-
-
 	<div class="container-fluid nopadding" ng-app="myApp" ng-controller="myCtrl">
 	<div class="jumbotron">
-        <h1>Bigdata Ready Enterprise</h1>
-        <p class="col-md-6 col-xs-6 col-sm-6 col-lg-6 nopadding">Our product attempts to make big data technology simpler by optimizing and integrating various big data solutions and providing them under one integrated package, Big Data Ready Enterprises, or BDRE. BDRE is a Bigdata/Hadoop unified framework developed with the goal of drastically minimizing development time.</p>
+        <h1><spring:message code="common.page.title_bdre_1"/></h1>
+        <p class="col-md-6 col-xs-6 col-sm-6 col-lg-6 nopadding"><spring:message code="welcome.page.bdre_description"/></p>
       </div>
 
 	    <div class="row-container">
@@ -143,26 +143,13 @@
 	</div>
 	<script>
 	    //**********************************************Just update these arrays with appropriate data*********************
-	    var text = ["Automation1", "Automation2", "Automation3", "Automation4", "Automation1", "", "", "", "", "", "", ""];
-	    var head = ["Metadata Management", "Data Integrity", "Batch Lineage", "Data Quality", "Automation", "Data Extraction", "Run Control", "Test Data Generation", "Dependency Management", "Data Loading", "Visualization", "Analytics"];
-	    var desc = ["End-to-end process and governance framework.",
-		"End-to-end data integrity protection by error checking and validation at necessary steps.",
-		"Detailed end-to-end batch lineage information.",
-		"Makes data reliable for making business decisions.",
-		"Enables business streamlining.Drastically reduces errors and prevents jobs from falling through the cracks.",
-		"Extraction of data to retrieve relevant information from data sources.",
-		"Monitoring and controlling the process execution.",
-		"Automated bulk test data generation.",
-		"Process and workflow dependencies for auditing.",
-		"Fast dataset loading.",
-		"Graphical representaion of workflows and dependencies.",
-		"Analysis of process run execution time."];
-	    var tail = ["", "", "", "", ""];
-	    var taillinks = ["url1", "url2", "url3", "url4", "url1", "url2", "url3", "url4"]
-	    var imgs = ["../css/images/metadata.png", "../css/images/dataintegrity.png", "../css/images/datalineage.png", "../css/images/dataquality.png", "../css/images/automation.png", "../css/images/extraction.png", "../css/images/runcontrol.png", "../css/images/datagen.png", "../css/images/dependancy.png", "../css/images/loading.png", "../css/images/visualization.png", "../css/images/analytic.png"];
-
-	    //*************************************
-	    var app = angular.module("myApp", []);
+		var text = [<spring:message code="welcome.page.text_var"/>];
+	    var head = [<spring:message code="welcome.page.head_var"/>]
+	    var desc = [<spring:message code="welcome.page.desc_var"/>];
+	    var tail = [<spring:message code="welcome.page.tail_var"/>];
+	    var taillinks = [<spring:message code="welcome.page.taillinks_var"/>];
+	    var imgs = [<spring:message code="welcome.page.imgs_var"/>];
+		var app = angular.module("myApp", []);
 	    app.controller("myCtrl", function ($scope) {
 		$scope.text = text;
 		$scope.desc = desc;

@@ -1,6 +1,7 @@
 <%@ taglib prefix="security"
        uri="http://www.springframework.org/security/tags" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+<%@taglib uri="http://www.springframework.org/tags" prefix="spring"%>
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1"
      pageEncoding="ISO-8859-1"%>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
@@ -8,7 +9,8 @@
 <html>
 
 <head>
-    <title>BDRE | Bigdata Ready Enterprise</title>
+    <title><spring:message code="common.page.title_bdre_2"/></title>
+
 	<script>
 	  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
 	  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
@@ -73,7 +75,7 @@
 <body ng-app="myApp" ng-controller="myCtrl">
 	<div class="alert-info-outer">
 	<div class="alert alert-info" role="alert">
-        Application requires crawling details to be entered
+	    <spring:message code="crawler.page.alert_info_outer"/>
     </div>
 	</div>
 
@@ -84,71 +86,71 @@
 
 
 
-            <h3><div class="number-circular">1</div>Crawler Details</h3>
+            <h3><div class="number-circular">1</div><spring:message code="crawler.page.crawler_details"/></h3>
             <section>
             <form class="form-horizontal" role="form" id="processFieldsForm2">
                 <div id="crawlerDetails">
                     <!-- btn-group -->
                     <div id="crawlerFields">
                         <div class="form-group">
-                            <label class="control-label col-sm-3" for="url">Urls to crawl:</label>
+                            <label class="control-label col-sm-3" for="url"><spring:message code="crawler.page.urls_to_crawl"/></label>
                             <div class="col-sm-9">
-                                <input type="text" class="form-control" name="url" placeholder="Enter Urls to crawl (comma seperated)" value="{{ crawlerMap['url'].defaultVal }}">
+                                <input type="text" class="form-control" name="url" placeholder=<spring:message code="crawler.page.urls_to_crawl_placeholder"/> value="{{ crawlerMap['url'].defaultVal }}">
                             </div>
                         </div>
                         <div class="form-group">
-                            <label class="control-label col-sm-3" for="urlsToSearch">Regex Pattern to search:</label>
+                            <label class="control-label col-sm-3" for="urlsToSearch"><spring:message code="crawler.page.regex_search_pattern"/></label>
                             <div class="col-sm-9">
-                                <input type="text" class="form-control" name="urlsToSearch" placeholder="Enter Regex Pattern to search" value="{{ crawlerMap['urlsToSearch'].defaultVal }}">
+                                <input type="text" class="form-control" name="urlsToSearch" placeholder=<spring:message code="crawler.page.regex_search_pattern_placeholder"/>value="{{ crawlerMap['urlsToSearch'].defaultVal }}">
                             </div>
                         </div>
                         <div class="form-group">
-                            <label class="control-label col-sm-3" for="urlsNotToSearch">Regex Pattern not to search:</label>
+                            <label class="control-label col-sm-3" for="urlsNotToSearch"><spring:message code="crawler.page.regex_dont_search_pattern"/></label>
                             <div class="col-sm-9">
-                                <input type="text" class="form-control" name="urlsNotToSearch" placeholder="Enter Regex Pattern not to search" value="{{ crawlerMap['urlsNotToSearch'].defaultVal }}">
+                                <input type="text" class="form-control" name="urlsNotToSearch" placeholder=<spring:message code="crawler.page.regex_dont_search_pattern_placeholder"/>value="{{ crawlerMap['urlsNotToSearch'].defaultVal }}">
                             </div>
                         </div>
                         <div class="form-group">
-                            <label class="control-label col-sm-3" for="politenessDelay">Politeness Delay:</label>
+                            <label class="control-label col-sm-3" for="politenessDelay"><spring:message code="crawler.page.politeness_delay"/></label>
                             <div class="col-sm-9">
-                                <input type="number" class="form-control" id="politenessDelay" value="{{ crawlerMap['politenessDelay'].defaultVal }}" name="politenessDelay" placeholder="Enter Politeness Delay" >
+                                <input type="number" class="form-control" id="politenessDelay" value="{{ crawlerMap['politenessDelay'].defaultVal }}" name="politenessDelay" placeholder=<spring:message code="crawler.page.politeness_delay_placeholder"/> >
                             </div>
                         </div>
                         <div class="form-group">
-                            <label class="control-label col-sm-3" for="maxDepthOfCrawling">Max depth of crawling:</label>
+                            <label class="control-label col-sm-3" for="maxDepthOfCrawling"><spring:message code="crawler.page.max_crawl_depth"/></label>
                             <div class="col-sm-9">
-                                <input type="number" class="form-control" id="maxDepthOfCrawling" placeholder="Enter max depth of crawling" value="{{ crawlerMap['maxDepthOfCrawling'].defaultVal }}" name="maxDepthOfCrawling">
+                                <input type="number" class="form-control" id="maxDepthOfCrawling" placeholder=<spring:message code="crawler.page.max_crawl_depth_placeholder"/> value="{{ crawlerMap['maxDepthOfCrawling'].defaultVal }}" name="maxDepthOfCrawling">
                             </div>
                         </div>
                         <div class="form-group">
-                            <label class="control-label col-sm-3" for="maxPagesToFetch">Max pages to fetch:</label>
+                            <label class="control-label col-sm-3" for="maxPagesToFetch"><spring:message code="crawler.page.max_pages_to_fetch"/></label>
                             <div class="col-sm-9">
-                                <input type="number" class="form-control" id="maxPagesToFetch" placeholder="Enter max pages to fetch" value="{{ crawlerMap['maxPagesToFetch'].defaultVal }}" name="maxPagesToFetch">
+                                <input type="number" class="form-control" id="maxPagesToFetch" placeholder=<spring:message code="crawler.page.max_pages_to_fetch_placeholder"/> value="{{ crawlerMap['maxPagesToFetch'].defaultVal }}" name="maxPagesToFetch">
                             </div>
                         </div>
                         <div class="form-group">
-                            <label class="control-label col-sm-3" for="includeBinaryContent">Include binary content:</label>
+                            <label class="control-label col-sm-3" for="includeBinaryContent"><spring:message code="crawler.page.include_binary_content"/></label>
                             <div class="col-sm-9">
                                 <input type="text" class="form-control" id="includeBinaryContent" name="includeBinaryContent" value="{{crawlerMap['includeBinaryContentInCrawling'].defaultVal}}" >
                             </div>
                         </div>
                        
                         <div class="form-group">
-                            <label class="control-label col-sm-3" for="resumableCrawling">Resumable crawling:</label>
+                            <label class="control-label col-sm-3" for="resumableCrawling"><spring:message code="crawler.page.resumable_crawling"/></label>
                             <div class="col-sm-9">
-                                <input type="text" class="form-control" id="resumableCrawling" name="resumableCrawling" placeholder="Crawling should be resumable?" value="{{ crawlerMap['resumableCrawling'].defaultVal }}">
+                                <input type="text" class="form-control" id="resumableCrawling" name="resumableCrawling" placeholder=<spring:message code="crawler.page.resumable_crawling_placeholder"/> value="{{ crawlerMap['resumableCrawling'].defaultVal }}">
                             </div>
                         </div>
                         <div class="form-group">
-                            <label class="control-label col-sm-3" for="userAgentString">User agent string:</label>
+                            <label class="control-label col-sm-3" for="userAgentString"><spring:message code="crawler.page.user_agent_string"/></label>
                             <div class="col-sm-9">
-                                <input type="text" class="form-control" name="userAgentString" placeholder="Enter user agent string" value="{{ crawlerMap['userAgentString'].defaultVal }}">
+                                <input type="text" class="form-control" name="userAgentString" placeholder=<spring:message code="crawler.page.user_agent_string_placeholder"/> value="{{ crawlerMap['userAgentString'].defaultVal }}">
                             </div>
                         </div>
                         <div class="form-group">
-                            <label class="control-label col-sm-3" for="noOfMappers">Number of mappers:</label>
+                            <label class="control-label col-sm-3" for="noOfMappers"><spring:message code="crawler.page.num_of_mappers"/></label>
                             <div class="col-sm-9">
-                                <input type="number" class="form-control" name="numMappers" placeholder="Enter number of mappers" value="{{ crawlerMap['numberOfMappers'].defaultVal }}">
+                                <input type="number" class="form-control" name="numMappers" placeholder=<spring:message code="crawler.page.num_of_mappers_placeholder"/> value="{{ crawlerMap['numberOfMappers'].defaultVal }}">
                             </div>
                         </div>
 
@@ -162,37 +164,37 @@
 
 
 
-            <h3><div class="number-circular">2</div>Proxy Details</h3>
+            <h3><div class="number-circular">2</div><spring:message code="crawler.page.h3_div"/></h3>
             <section>
             <form class="form-horizontal" role="form" id="processFieldsForm3">
                 <div id="proxyDetails">
                     <div class="alert alert-info" role="alert">
-                        Application requires proxy details (if you are using proxy to access internet)
+					<spring:message code="crawler.page.alert_info_2"/>
                     </div>
                     <!-- btn-group -->
                     <div id="proxyFields">
                         <div class="form-group">
-                            <label class="control-label col-sm-2" for="proxyPort">Proxy-port:</label>
+                            <label class="control-label col-sm-2" for="proxyPort"><spring:message code="crawler.page.proxy_port"/></label>
                             <div class="col-sm-10">
-                                <input type="number" class="form-control" name="proxyPort" placeholder="Enter proxy-port">
+                                <input type="number" class="form-control" name="proxyPort" placeholder=<spring:message code="crawler.page.proxy_port_placeholder"/> >
                             </div>
                         </div>
                         <div class="form-group">
-                            <label class="control-label col-sm-2" for="proxyHost">Proxy-host:</label>
+                            <label class="control-label col-sm-2" for="proxyHost"><spring:message code="crawler.page.proxy_host"/></label>
                             <div class="col-sm-10">
-                                <input type="text" class="form-control" name="proxyHost" placeholder="Enter proxy-host e.g.:proxy.domain.com">
+                                <input type="text" class="form-control" name="proxyHost" placeholder= <spring:message code="crawler.page.proxy_host_placeholder"/> >
                             </div>
                         </div>
                         <div class="form-group">
-                            <label class="control-label col-sm-2" for="proxyUsername">Proxy-username:</label>
+                            <label class="control-label col-sm-2" for="proxyUsername"><spring:message code="crawler.page.proxy_user_name"/></label>
                             <div class="col-sm-10">
-                                <input type="text" class="form-control" name="proxyUsername" placeholder="Enter proxy-username">
+                                <input type="text" class="form-control" name="proxyUsername" placeholder=<spring:message code="crawler.page.proxy_user_name_placeholder"/>>
                             </div>
                         </div>
                         <div class="form-group">
-                            <label class="control-label col-sm-2" for="proxyPassword">Proxy-password:</label>
+                            <label class="control-label col-sm-2" for="proxyPassword"><spring:message code="crawler.page.proxy_password"/></label>
                             <div class="col-sm-10">
-                                <input type="password" class="form-control" name="proxyPassword" placeholder="Enter proxy-password">
+                                <input type="password" class="form-control" name="proxyPassword" placeholder=<spring:message code="crawler.page.proxy_password_placeholder"/>>
                             </div>
                         </div>
                     </div>
@@ -200,36 +202,36 @@
                 </div>
                 </form>
                 </section>
-                <h3><div class="number-circular">3</div>Process Details</h3>
+                <h3><div class="number-circular">3</div><spring:message code="crawler.page.process_details"/></h3>
                 <section>
                     <form class="form-horizontal" role="form" id="processFieldsForm1">
                         <div id="processDetails">
                             <div class="alert alert-info" role="alert">
-                                Application requires process details to create process entries in metadata
+                                <spring:message code="crawler.page.alert_info_3"/>
                             </div>
                             <!-- btn-group -->
                             <div id="processFields">
 
                                 <div class="form-group">
-                                    <label class="control-label col-sm-2" for="processName">Process Name:</label>
+                                    <label class="control-label col-sm-2" for="processName"><spring:message code="crawler.page.proc_name"/></label>
                                     <div class="col-sm-10">
-                                        <input type="text" class="form-control"  id="processName" name="processName" placeholder="Enter Process Name" required>
+                                        <input type="text" class="form-control"  id="processName" name="processName" placeholder=<spring:message code="crawler.page.proc_name_placeholder"/> required>
                                     </div>
                                 </div>
                                 <div class="form-group">
-                                    <label class="control-label col-sm-2" for="processDescription">Process Description:</label>
+                                    <label class="control-label col-sm-2" for="processDescription"><spring:message code="crawler.page.proc_desc"/></label>
                                     <div class="col-sm-10">
-                                        <input type="text" class="form-control" id="processDescription" name="processDescription" placeholder="Enter Process Description" required>
+                                        <input type="text" class="form-control" id="processDescription" name="processDescription" placeholder=<spring:message code="crawler.page.proc_desc_placeholder"/> required>
                                     </div>
                                 </div>
                                 <div class="form-group">
-                                    <label class="control-label col-sm-2" for="outputPath">HDFS Output Path:</label>
+                                    <label class="control-label col-sm-2" for="outputPath"><spring:message code="crawler.page.hdfs_output_path"/></label>
                                     <div class="col-sm-10">
-                                        <input type="text" class="form-control" id="outputPath" name="outputPath" placeholder="Enter the absolute Output Path" required>
+                                        <input type="text" class="form-control" id="outputPath" name="outputPath" placeholder=<spring:message code="crawler.page.hdfs_output_path_placeholder"/> required>
                                     </div>
                                 </div>
                                 <div class="form-group">
-                                    <label class="control-label col-sm-2" for="busDomainId">Bus Domain Id:</label>
+                                    <label class="control-label col-sm-2" for="busDomainId"><spring:message code="crawler.page.bus_domain_id"/></label>
                                     <div class="col-sm-10">
                                         <select class="form-control" id="busDomainId" name="busDomainId">
                                             <option ng-repeat="busDomain in busDomains.Options" value="{{busDomain.Value}}" name="busDomainId">{{busDomain.DisplayText}}</option>
@@ -242,10 +244,12 @@
                         </div>
                         </form>
                         </section>
-                <h3><div class="number-circular">4</div>Confirm</h3>
+                <h3><div class="number-circular">4</div><spring:message code="crawler.page.confirm"/></h3>
                 <section>
                 <div id="createProcess">
-                    <button ng-click="createJob()" id="createjobs" type="button" class="btn btn-primary">Create Crawler</button>
+                    <button ng-click="createJob()" id="createjobs" type="button" class="btn btn-primary"><spring:message code="crawler.page.create_crawler"/>
+
+</button>
                 </div>
                 <div id="Process"></div>
                 </section>

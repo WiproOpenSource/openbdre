@@ -1,6 +1,7 @@
 <%@ taglib prefix="security"
     uri="http://www.springframework.org/security/tags" %>
     <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+    <%@taglib uri="http://www.springframework.org/tags" prefix="spring"%>
         <%@ page language="java" contentType="text/html; charset=ISO-8859-1"
             pageEncoding="ISO-8859-1"%>
             <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
@@ -9,7 +10,7 @@
 
             <head>
                 <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
-                <title>Bigdata Ready Enterprise</title>
+                <title><spring:message code="common.page.title_bdre_1"/></title>
 
                 <script>
                   (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
@@ -83,50 +84,52 @@
                     <div class="col-md-2"> </div>
                     <div class="col-md-8">
                         <div class="panel panel-primary">
+                            <%-- <div class="panel-heading"><spring:message code="dqprocess.page.panel_heading"/></div> --%>
+
                             <div class="panel-body">
                                 <form role="form">
                                     <div class="form-group">
-                                        <label for="rulesUserNameValue">Rules Username</label>
+                                        <label for="rulesUserNameValue"><spring:message code="dqprocess.page.form_rules_username"/></label>
                                         <input type="text" class="form-control" id="rulesUserNameValue" required>
                                     </div>
                                     <div class="form-group">
-                                        <label for="rulesPasswordValue">Rules Password</label>
+                                        <label for="rulesPasswordValue"><spring:message code="dqprocess.page.form_rules_psswd"/></label>
                                         <input type="password" class="form-control" id="rulesPasswordValue" required>
                                     </div>
                                     <div class="form-group">
-                                        <label for="rulesPackageValue">Rules Packages</label>
+                                        <label for="rulesPackageValue"><spring:message code="dqprocess.page.form_rules_pckgs"/></label>
                                         <input type="text" class="form-control" id="rulesPackageValue">
                                     </div>
                                     <div class="form-group">
-                                        <label for="fileDelimiterRegexValue">File Delimiter</label>
+                                        <label for="fileDelimiterRegexValue"><spring:message code="dqprocess.page.form_file_delimiter"/></label>
                                         <input type="text" class="form-control" id="fileDelimiterRegexValue">
                                     </div>
                                     <div class="form-group">
-                                        <label for="minPassThresholdPercentValue">Min pass threshold %</label>
+                                        <label for="minPassThresholdPercentValue"><spring:message code="dqprocess.page.form_threshold_min_val"/></label>
                                         <input type="number" class="form-control" id="minPassThresholdPercentValue">
                                     </div>
                                     <div class="form-group">
-                                        <label for="busDomainId">Application</label>
+                                        <label for="busDomainId"><spring:message code="dqprocess.page.form_bus_domainID"/></label>
                                         <select class="form-control" id="busDomainId">
                                             <option ng-repeat="busdomainId in busDomainIds" id="{{$index}}" value="{{ busdomainId.Value }}">{{ busdomainId.DisplayText }}</option>
                                         </select>
                                      </div>
                                      <div class="form-group">
-                                         <label for="canRecover">Can Recover</label>
-                                         <input type="text" class="form-control" id="canRecover">
-                                     </div>
-                                     <div class="form-group">
-                                         <label for="enqId">Enq Id</label>
-                                         <input type="text" class="form-control" id="enqId">
-                                     </div>
-                                     <div class="form-group">
-                                         <label for="processName">Process Name</label>
-                                         <input type="text" class="form-control" id="processName">
-                                     </div>
-                                     <div class="form-group">
-                                         <label for="description">Description</label>
-                                         <input type="text" class="form-control" id="description">
-                                     </div>
+                                            <label for="canRecover"><spring:message code="dqprocess.page.form_recoverability"/></label>
+                                            <input type="text" class="form-control" id="canRecover">
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="enqId"><spring:message code="dqprocess.page.form_enq_id"/></label>
+                                            <input type="text" class="form-control" id="enqId">
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="processName"><spring:message code="dqprocess.page.form_process_name"/></label>
+                                            <input type="text" class="form-control" id="processName">
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="description"><spring:message code="dqprocess.page.form_desc"/></label>
+                                            <input type="text" class="form-control" id="description">
+                                        </div>
                                      <div class="actions text-center pull-right">
                                      <button type="submit" class="btn btn-primary" onclick="addRecord()">Add Record</button>
                                      </div>
