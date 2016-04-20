@@ -434,7 +434,7 @@
                                                                             },{
                                                label: "DDP visualization",
                                                collapse: "1",
-                                               url: "http://ddp1.mybluemix.net",
+                                               url: "http://ddp1.mybluemix.net/menu.html",
                                                children: []
                                                                              }
 					]
