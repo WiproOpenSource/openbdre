@@ -52,21 +52,21 @@ public class UserRolesDAO {
         return userRoles;
     }
 
-    public Map<String,Integer> diffRoleList() {
+    public Map<Integer,String> diffRoleList() {
         Session session = sessionFactory.openSession();
         session.beginTransaction();
-        Criteria criteria = session.createCriteria(UserRoles.class).setProjection(Projections.distinct(Projections.property("role")));
+        Criteria criteria = session.createCriteria(UserRoles.class);
         ProjectionList p1=Projections.projectionList();
         p1.add(Projections.property("role"));
         p1.add(Projections.property("userRoleId"));
         criteria.setProjection(p1);
         List l=criteria.list();
         Iterator it=l.iterator();
-        Map<String,Integer> diffRoles=new HashMap<>();
+        Map<Integer,String> diffRoles=new HashMap<>();
         while(it.hasNext())
         {
             Object ob[] = (Object[])it.next();
-            diffRoles.put((String) ob[0],(Integer)ob[1]);
+            diffRoles.put( (Integer) ob[1],(String) ob[0]);
         }
         session.getTransaction().commit();
         session.close();

@@ -196,13 +196,13 @@ public class UserRolesAPI extends MetadataAPIBase {
     RestWrapperOptions listOptions(Principal principal) {
         RestWrapperOptions restWrapperOptions = null;
         try {
-            Map<String,Integer> objects=userRolesDAO.diffRoleList();
+            Map<Integer,String> objects=userRolesDAO.diffRoleList();
             Iterator it = objects.entrySet().iterator();
             List<RestWrapperOptions.Option> options = new ArrayList<RestWrapperOptions.Option>();
             while (it.hasNext()) {
                 Map.Entry pair = (Map.Entry)it.next();
                 System.out.println(pair.getKey() + " = " + pair.getValue());
-                RestWrapperOptions.Option option = new RestWrapperOptions.Option((String) pair.getKey(), (pair.getValue()));
+                RestWrapperOptions.Option option = new RestWrapperOptions.Option((String) pair.getValue(), (pair.getKey()));
                 options.add(option);
                 it.remove(); // avoids a ConcurrentModificationException
             }

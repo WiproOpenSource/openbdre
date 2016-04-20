@@ -36,4 +36,16 @@
         <sql-type jdbc-type="BIGINT" hibernate-type="java.lang.Long"></sql-type>
         <sql-type jdbc-type="TINYINT" hibernate-type="java.lang.Boolean"></sql-type>
     </type-mapping>
+
+
+
+    <table name="PROCESS">
+        <foreign-key
+                constraint-name="PROCESS_TYPE_ID1"
+                foreign-table="PROCESS_TYPE"
+        >
+            <column-ref local-column="PROCESS_TYPE" foreign-column="PROCESS_TYPE_ID"/>
+
+        </foreign-key>
+    </table>
 </hibernate-reverse-engineering>

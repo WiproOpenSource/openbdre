@@ -100,7 +100,7 @@ public class UserRolesDAOTest {
     }
    @Test
     public  void testDiffRoles() throws Exception{
-        Map<String,Integer> objects=userRolesDAO.diffRoleList();
+        Map<Integer,String> objects=userRolesDAO.diffRoleList();
        Iterator it = objects.entrySet().iterator();
        while (it.hasNext()) {
            Map.Entry pair = (Map.Entry)it.next();
