@@ -37,7 +37,7 @@
 	<div class="text-center text-info"><spring:message code="login.page.title_bdre"/></div>
 	<div class="text-center text-footer"><spring:message code="login.page.footer_bdre"/></div>
 	<div id="login-box" class="center-block login-box">
-	<img id="logo" class="center-block img-responsive logo" src="../../css/images/logo.png"/>
+	<img id="logo" class="center-block img-responsive logo" src="../../css/images/Wipro-logo.png"/>
 		<c:if test="${not empty error}">
 		<div class="alert alert-danger login-alert-danger " role="alert">
 		    <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
