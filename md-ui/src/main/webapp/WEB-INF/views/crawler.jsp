@@ -9,7 +9,6 @@
 
 <head>
     <title>BDRE | Bigdata Ready Enterprise</title>
-
 	<script>
 	  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
 	  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
@@ -26,11 +25,14 @@
     <link href="../css/css/bootstrap.min.css" rel="stylesheet" />
     <script src="../js/jquery-ui-1.10.3.custom.js"></script>
     <script src="../js/jquery.steps.min.js"></script>
+    
     <link rel="stylesheet" href="../css/jquery.steps.css" />
 
     <script src="../js/bootstrap.js" type="text/javascript"></script>
     <script src="../js/jquery.jtable.js" type="text/javascript"></script>
     <link href="../css/jtables-bdre.css" rel="stylesheet" type="text/css" />
+    <link rel="stylesheet" href="../css/data-ingestion.css" />
+	<link rel="stylesheet" href="../css/data-ingestion-horizontal.css" />
 
     <script src="../js/angular.min.js" type="text/javascript"></script>
     <script type="text/javascript">
@@ -68,24 +70,24 @@
         }
 </script >
 </head>
-<body ng-app="myApp" ng-controller="myCtrl">
-
-
+<body ng-app="myApp" ng-controller="myCtrl" class="bodystyle">
+	<div class="alert-info-outer">
+	<div class="alert alert-info" role="alert">
+        Application requires crawling details to be entered
+    </div>
+	</div>
 
     <div id="bdre-crawler" >
       
+	
 
 
 
 
-
-            <h3>Crawler Details</h3>
+            <h3><div class="number-circular">1</div>Crawler Details</h3>
             <section>
             <form class="form-horizontal" role="form" id="processFieldsForm2">
                 <div id="crawlerDetails">
-                    <div class="alert alert-info" role="alert">
-                        Application requires crawling details to be entered
-                    </div>
                     <!-- btn-group -->
                     <div id="crawlerFields">
                         <div class="form-group">
@@ -160,7 +162,7 @@
 
 
 
-            <h3>Proxy Details</h3>
+            <h3><div class="number-circular">2</div>Proxy Details</h3>
             <section>
             <form class="form-horizontal" role="form" id="processFieldsForm3">
                 <div id="proxyDetails">
@@ -198,7 +200,7 @@
                 </div>
                 </form>
                 </section>
-                <h3>Process Details</h3>
+                <h3><div class="number-circular">3</div>Process Details</h3>
                 <section>
                     <form class="form-horizontal" role="form" id="processFieldsForm1">
                         <div id="processDetails">
@@ -240,7 +242,7 @@
                         </div>
                         </form>
                         </section>
-                <h3>Confirm</h3>
+                <h3><div class="number-circular">4</div>Confirm</h3>
                 <section>
                 <div id="createProcess">
                     <button ng-click="createJob()" id="createjobs" type="button" class="btn btn-primary">Create Crawler</button>

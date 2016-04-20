@@ -495,10 +495,25 @@ CREATE TABLE app_deployment_queue_status (
 
 CREATE TABLE app_deployment_queue (
   app_deployment_queue_id bigserial not null,
-  process_id int not null REFERENCES process(process_id) ON DELETE NO ACTION ON UPDATE NO ACTION,,
+  process_id int not null REFERENCES process(process_id) ON DELETE NO ACTION ON UPDATE NO ACTION,
   username varchar(45)  not null  REFERENCES users(username) ON DELETE NO ACTION ON UPDATE NO ACTION,
   app_domain varchar(45) not null,
   app_name varchar(45) not null,
   app_deployment_status_id smallint not null REFERENCES app_deployment_queue_status(app_deployment_status_id) ON DELETE NO ACTION ON UPDATE NO ACTION,
   PRIMARY KEY (app_deployment_queue_id),
 );
+
+CREATE TABLE analytics_apps (
+  analytic_apps_id bigserial not null,
+  process_id int not null REFERENCES process(process_id) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  industry_name varchar(45) not null,
+  category_name varchar(45) not null,
+  app_description varchar(45) not null,
+  app_name varchar(45) not null,
+  questions_json varchar(45) not null,
+  dashboard_url varchar(45) not null,
+  ddp_url varchar(45) not null,
+  app_image varchar(45) not null,
+  PRIMARY KEY (ANALYTIC_APPS_ID),
+ );
+

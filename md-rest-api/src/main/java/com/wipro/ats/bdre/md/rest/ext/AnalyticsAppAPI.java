@@ -102,11 +102,7 @@ public class AnalyticsAppAPI {
                 propertiesList.add(jpaProperties);
                 LOGGER.debug("appproperties_ddpurl" + map.get(string));
             }
-            else if (string.startsWith("appImage")) {
-                jpaProperties = Dao2TableUtil.buildJPAProperties("analytics-app", "app-image", map.get(string), "appimage");
-                propertiesList.add(jpaProperties);
-                LOGGER.debug("appproperties_appimage" + map.get(string));
-            }
+
 
 
 

@@ -112,9 +112,7 @@ uri="http://www.springframework.org/security/tags" %>
 
                                             <div class="form-group">
                                                 <label >Category </label>
-                                                    <select class="form-control" id="category" name="category" >
-                                                        <option ng-repeat="category in categories" value="{{category.defaultVal}}" name="category">{{category.value}}</option>
-                                                    </select>
+                                                <input type="text" class="form-control" name="category" id="category" placeholder="category" required>
                                              </div>
 
                                             <div class="form-group">
@@ -183,12 +181,15 @@ uri="http://www.springframework.org/security/tags" %>
 
 
                <script>
+
                $("#successHeader").hide();
                         var createJobResult;
                         var app = angular.module('myApp', []);
                         app.controller('myCtrl', function($scope) {
+
+                        $scope.uploadedFileName ="";
+                        $scope.imgstatus="";
                         $scope.industries= getGenConfigMap('industry_name');
-                        $scope.categories= getGenConfigMap('category_name');
                                             $scope.busDomains = {};
                                             $.ajax({
                                             url: '/mdrest/busdomain/options/',
@@ -204,7 +205,10 @@ uri="http://www.springframework.org/security/tags" %>
                                             });
 
 
+
+
                       $scope.createJob =function (){
+
                       var appImage = document.getElementById("appimage").value;
                        formIntoMap('appproperties_','propertiesFieldsForm');
                        map["appImage"] = appImage;
@@ -227,6 +231,8 @@ uri="http://www.springframework.org/security/tags" %>
                                                                          $("#divEncloseHeading").hide();
                                                                          $("#successHeader").show();
                                                                           createJobResult = data;
+                                                                          console.log(createJobResult.Records[0].processId);
+                                                                          uploadImg(createJobResult.Records[0].processId,"appimage");
                                                                           displayProcess(createJobResult);
                                                                           $(this).dialog("close");
                                                                          }
@@ -255,6 +261,42 @@ uri="http://www.springframework.org/security/tags" %>
                              }
                          });
                     </script>
+
+                    <script>
+                                                                     var uploadedFileName ="";
+                                                                     var imgstatus="";
+                                                                   function uploadImg (subDir,fileId){
+                                                                  var arg= [subDir,fileId];
+                                                                    var fd = new FormData();
+                                                                   		                var fileObj = $("#"+arg[1])[0].files[0];
+                                                                                           var fileName=fileObj.name;
+                                                                                           fd.append("file", fileObj);
+                                                                                           fd.append("name", fileName);
+                                                                                           $.ajax({
+                                                                                             url: '/mdrest/filehandler/uploadzip/'+arg[0],
+                                                                                             type: "POST",
+                                                                                             data: fd,
+                                                                                             async: false,
+                                                                                             enctype: 'multipart/form-data',
+                                                                                             processData: false,  // tell jQuery not to process the data
+                                                                                             contentType: false,  // tell jQuery not to set contentType
+                                                                                             success:function (data) {
+                                                                                                   uploadedFileName=data.Record.fileName;
+                                                                                                   console.log( data );
+                                                                                                   imgstatus="uploaded";
+                                                                                                   return false;
+                                                                   							},
+                                                                   						  error: function () {
+                                                                   							   imgstatus="failed";
+                                                                                               return false;
+                                                                   							}
+                                                                   						 });
+
+                                                                   }
+
+
+
+                                                                   </script>
 
 
 

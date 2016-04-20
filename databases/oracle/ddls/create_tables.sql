@@ -586,4 +586,26 @@ CREATE TABLE app_deployment_queue (
        INCREMENT BY 1
        CACHE 2;
 
+CREATE TABLE analytics_apps (
+  analytic_apps_id number(19,0) not null,
+  process_id number(10,0) not null,
+  industry_name varchar(45) not null,
+  category_name varchar(45) not null,
+  app_description varchar(45) not null,
+  app_name varchar(45) not null,
+  questions_json varchar(45) not null,
+  dashboard_url varchar(45) not null,
+  ddp_url varchar(45) not null,
+  app_image varchar(45) not null,
+  PRIMARY KEY (analytic_apps_id),
+  CONSTRAINT process_id_analytic_constraint FOREIGN KEY (process_id) REFERENCES process(process_id) enable
+ );
+
+ CREATE SEQUENCE analytics_apps_SEQ
+        MINVALUE 1
+        MAXVALUE 9999999999999999999
+        START WITH 1
+        INCREMENT BY 1
+        CACHE 2;
+
 commit;

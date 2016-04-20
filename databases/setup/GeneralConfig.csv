@@ -558,9 +558,19 @@
 'mainframe', 'serdeClass', 'Serde Class','serde class to be used' , 1, ' ', 'text' , 1
 'mainframe', 'inputFormat', 'Input Format','input format to be used' , 1, 'com.cloudera.sa.copybook.mapred.CopybookInputFormat', 'text' , 1
 'mainframe', 'outputFormat', 'Output Format','output format to be used' , 1, 'org.apache.hadoop.hive.ql.io.HiveIgnoreKeyTextOutputFormat', 'text' , 1
-'industry_name', 'industry1',  'industry1',  'industry1', 1,  'industry1', 'text', 1
-'industry_name', 'industry2',  'industry2',  'industry2', 1,  'industry2', 'text', 1
-'industry_name', 'industry3',  'industry3',  'industry3', 1,  'industry3', 'text', 1
-'category_name',  'category1',  'category1',  'category1', 1,  'category1', 'text', 1
-'category_name',  'category2',  'category2',  'category2', 1,  'category2', 'text', 1
-'category_name',  'category3',  'category3',  'category3', 1,  'category3', 'text', 1
+'industry_name', 'banking',  'Banking',  'banking', 1,  'banking', 'text', 1
+'industry_name', 'telecom',  'Telecom',  'telecom', 1,  'telecom', 'text', 1
+'industry_name', 'insurance',  'Insurance',  'insurance', 1,  'insurance', 'text', 1
+'industry_name', 'retail',  'Retail',  'retail', 1,  'retail', 'text', 1
+'industry_name', 'healthcare',  'Health Care',  'healthcare', 1,  'healthcare', 'text', 1
+'industry_name', 'energy',  'Energy And Utilities',  'energy', 1,  'energy', 'text', 1
+'banking',  'customer_attrition',  'Customer Attrition',  'customer_attrition', 1,  'customer_attrition', 'text', 1
+'banking',  'category2',  'category2',  'category2', 1,  'category2', 'text', 1
+'banking',  'category3',  'category3',  'category3', 1,  'category3', 'text', 1
+'cluster.nn-address', 'Cloudera cluster', 'Namenode Address','Cloudera cluster' , 1, 'hdfs://quickstart.cloudera:8020', 'text' , 1
+'cluster.jt-address', 'Cloudera cluster', 'Job Tracker Address','Cloudera cluster' , 1, 'quickstart.cloudera:8050', 'text' , 1
+'cluster.hive-address', 'Cloudera cluster', 'Hive Server2 Address','Cloudera cluster' , 1, 'quickstart.cloudera:10000', 'text' , 1
+'cluster.nn-address', 'Hortonworks cluster', 'Namenode Address','Hortonworks cluster' , 1, 'hdfs://sandbox.hortonworks.com:8020', 'text' , 1
+'cluster.jt-address', 'Hortonworks cluster', 'Job Tracker Address','Hortonworks cluster' , 1, 'sandbox.hortonworks.com:8050', 'text' , 1
+'cluster.hive-address', 'Hortonworks cluster', 'Hive Server2 Address','Hortonworks cluster' , 1, 'sandbox.hortonworks.com:10000', 'text' , 1
+
