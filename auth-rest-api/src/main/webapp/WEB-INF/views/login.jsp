@@ -18,7 +18,8 @@
 	    .usericon{background-image: url("../../css/images/user.png");background-size: 55% 55%;position: absolute;left: -5px;}
 	    .login-links{width: 95%;margin: 0 auto;}
 	    .login-fp{float: left;color: #000000;font-family: sans-serif;font-weight: 500; margin-left:13px;margin-top: 2%;}
-	    .text-info{color: #FFFFFF;font-size:60px;border-radius: 5px;padding-top: 4%;padding-bottom: 4%;}
+	    .text-info{color: #FFFFFF;font-size:60px;border-radius: 5px;padding-top: 4%;padding-bottom: 0%;}
+	    .text-footer{color: #FFFFFF;font-size:30px;border-radius: 5px;padding-top: 0%;padding-bottom: 2%;}
 	    .login-alert-danger{border: none;background: none;position: absolute;top: 18%;margin-left:16px}
 	</style>
 	<script>
@@ -34,6 +35,7 @@
     </head>
     <body onload='document.loginForm.username.focus();'>
 	<div class="text-center text-info"><spring:message code="login.page.title_bdre"/></div>
+	<div class="text-center text-footer"><spring:message code="login.page.footer_bdre"/></div>
 	<div id="login-box" class="center-block login-box">
 	<img id="logo" class="center-block img-responsive logo" src="../../css/images/logo.png"/>
 		<c:if test="${not empty error}">
