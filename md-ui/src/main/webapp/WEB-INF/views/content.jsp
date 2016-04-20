@@ -195,7 +195,7 @@
                         </button>
 
                         <a class="navbar-brand" href="#">
-							<img alt="<spring:message code="common.page.title_bdre_1"/>" class="img-responsive logo" src="../css/images/bdre_logo.png" style="width:55px;">
+							<img alt="<spring:message code="common.page.title_bdre_1"/>" class="img-responsive logo" src="../css/images/Wipro-logo.png" style="width:55px;">
                         </a>
 						<span class="bdretextlogo"><spring:message code="content.page.app_abbrevation"/></span>
                     </div>
@@ -434,7 +434,7 @@
                                                                             },{
                                                label: "DDP visualization",
                                                collapse: "1",
-                                               url: "http://ddpdemo.mybluemix.net/menu.html",
+                                               url: "http://ddp1.mybluemix.net",
                                                children: []
                                                                              }
 					]
