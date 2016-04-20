@@ -1,13 +1,14 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ taglib prefix="security"
 	   uri="http://www.springframework.org/security/tags" %>
+<%@taglib uri="http://www.springframework.org/tags" prefix="spring"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-        <title>Bigdata Ready Enterprise</title>
+        <title><spring:message code="common.page.title_bdre_1"/></title>
 	<script>
 	  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
 	  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
@@ -578,7 +579,7 @@ SubProcesses: {                    
     <div id="input-box-button" >
 	<form onsubmit="showProcessTemplatePage(jQuery('#pid').val()); return false;">
 	    <div class="input-group">
-		<input class="form-control" type="number" name="pid" id="pid" value ="" placeholder="Filter by processtemplateid"/>
+		<input class="form-control" type="number" name="pid" id="pid" value ="" placeholder=<spring:message code="processtemplate.page.filter_by_processtemplateid_placeholder"/>/>
 		<span class="input-group-btn">
 		    <button class="btn btn-default  btn-primary" type="submit" onClick="showProcessTemplatePage(jQuery('#pid').val())"><span id="sizing-addon2"><span class="glyphicon glyphicon-arrow-right" aria-hidden="true"></span>&nbsp;</button>
 		</span>
@@ -586,18 +587,18 @@ SubProcesses: {                    
 	</form>
     </div>
     <div id="dialog-confirm1" title="Are you sure?" style="display:none;">
-    <p><span class="ui-icon ui-icon-alert" style="float:left; margin:0 7px 20px 0;"></span>This will create a new process in the process table with the same configuration as this. Do you want to proceed?</p>
+    <p><span class="ui-icon ui-icon-alert" style="float:left; margin:0 7px 20px 0;"></span><spring:message code="processtemplate.page.filter_by_new_process_placeholder"/></p>
     </div>
     <div id="dialog-confirm2" title="Are you sure?" style="display:none;">
-	<p><span class="ui-icon ui-icon-alert" style="float:left; margin:0 7px 20px 0;"></span>This will edit all the relevant process entries in the process table as per this configuration. Do you want to proceed?</p>
+	<p><span class="ui-icon ui-icon-alert" style="float:left; margin:0 7px 20px 0;"></span><spring:message code="processtemplate.page.filter_by_edit_process_placeholder"/></p>
 	</div>
 	  <div id="dialog-form" style="display:none;">
     	<form>
-    	<div class="jtable-input-label">Process Name</div>
+    	<div class="jtable-input-label"><spring:message code="processtemplate.page.process_name"/></div>
 		<div class="jtable-input jtable-text-input"><input class="" id="Edit-processName" type="text" name="processName" value=""/>
 		</div>
 
-		<div class="jtable-input-label">Process Description</div>
+		<div class="jtable-input-label"><spring:message code="processtemplate.page.process_description"/></div>
 		<div class="jtable-input jtable-text-input"><input class="" id="Edit-processDescription" type="text" name="description" value=""/>
 		</div>
     </form>
