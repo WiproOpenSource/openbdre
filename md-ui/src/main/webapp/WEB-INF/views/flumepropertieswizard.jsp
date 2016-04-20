@@ -510,7 +510,7 @@ wizard = $(document).ready(function() {
 
 	</head>
 
-	<body ng-app="myApp" ng-controller="myCtrl" class="bodystyle">
+	<body ng-app="myApp" ng-controller="myCtrl" >
 			<div class="alert-info-outer">
 				<div class="alert alert-info" role="alert">
 			        Application requires source type which depends on how you are getting your data

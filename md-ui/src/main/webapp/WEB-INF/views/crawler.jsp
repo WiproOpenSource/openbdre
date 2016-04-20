@@ -70,7 +70,7 @@
         }
 </script >
 </head>
-<body ng-app="myApp" ng-controller="myCtrl" class="bodystyle">
+<body ng-app="myApp" ng-controller="myCtrl">
 	<div class="alert-info-outer">
 	<div class="alert alert-info" role="alert">
         Application requires crawling details to be entered

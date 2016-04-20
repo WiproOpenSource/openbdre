@@ -13,28 +13,37 @@
 		<script src="../js/jquery-ui-1.10.3.custom.js"></script>
 		<script src="../js/jquery.steps.min.js"></script>
 		<style>
-		.form-group label{
-			width: 100%;
-			float: none;
-			text-align: left !important;
-		}
-		label + div{
-			width: 80% !important;
-		}
-		.form-group{
-		width: 50%;
-		}
-		
-    
-    #bdre-data-load{
-    background-color: #F8F9FB;
-        padding-top: 2%;
-    }
-    .steps ul{
-    padding-bottom: 4% !important;
-    }
-		
-	</style>
+			.form-group label {
+				width: 100%;
+				float: none;
+				text-align: left !important;
+			}
+			
+			label+div {
+				width: 80% !important;
+			}
+			
+			.form-group {
+				width: 50%;
+			}
+			
+			div.form-group:nth-child(even) {
+				float: right;
+			}
+			
+			div.form-group:nth-child(odd) {
+				float: left;
+			}
+			
+			#bdre-data-load {
+				background-color: #F8F9FB;
+				padding-top: 2%;
+			}
+			
+			.steps ul {
+				padding-bottom: 4% !important;
+			}
+		</style>
 		
 		<link rel="stylesheet" href="../css/jquery.steps.css" />
 		<link rel="stylesheet" href="../css/data-ingestion.css" />
@@ -665,7 +674,7 @@ wizard = $(document).ready(function() {
 
 
 	</head>
-<body ng-app="myApp" ng-controller="myCtrl" class="bodystyle">
+<body ng-app="myApp" ng-controller="myCtrl" >
 
 <div class="alert-info-outer">
 	<div class="alert alert-info" role="alert">
@@ -680,19 +689,19 @@ wizard = $(document).ready(function() {
                         <div id="processDetails">
                            <!-- btn-group -->
                             <div id="processFields">
-								<div class="form-group pull-left">
+								<div class="form-group">
                                     <label class="control-label col-sm-6" for="processName" >Process Name:</label>
                                     <div class="col-sm-8">
                                         <input type="text" class="form-control"  id="processName" name="processName" placeholder="Enter Process Name" value="" required>
                                     </div>
                                 </div>
-                                <div class="form-group pull-right">
+                                <div class="form-group">
                                     <label class="control-label col-sm-6 " for="processDescription">Process Description:</label>
                                     <div class="col-sm-8">
                                         <input type="text" class="form-control" id="processDescription" name="processDescription" placeholder="Enter Process Description" value="" required>
                                     </div>
                                 </div>
-                                <div class="form-group pull-left">
+                                <div class="form-group">
                                     <label class="control-label col-sm-6" for="busDomainId">Bus Domain Id:</label>
                                     <div class="col-sm-8">
                                         <select class="form-control" id="busDomainId" name="busDomainId">
@@ -701,7 +710,7 @@ wizard = $(document).ready(function() {
                                         </select>
                                     </div>
                                 </div>
-                                 <div class="form-group pull-right">
+                                 <div class="form-group">
                                     <label class="control-label col-sm-6" for="enqueueId">Enqueing Id:</label>
                                     <div class="col-sm-8">
                                         <input type="text" class="form-control" id="enqueueId" name="enqueueId" placeholder="Enter Enqueing Process Id" value="" required>
@@ -721,13 +730,13 @@ wizard = $(document).ready(function() {
                                         </div>
                                         <!-- btn-group -->
                                         <div id="rawTablDetailsDB">
-                                        <div class="form-group pull-left" >
+                                        <div class="form-group" >
                                             <label class="control-label col-sm-2" for="rawDBName">Raw DB Name:</label>
                                             <div class="col-sm-10">
                                                 <input type="text" class="form-control"  id="rawDBName" name="rawDBName" placeholder="Enter RAW DB Name" value="" required>
                                             </div>
                                         </div>
-                                            <div class="form-group pull-right">
+                                            <div class="form-group">
                                                 <label class="control-label col-sm-2" for="fileformat">File Format:</label>
                                                 <div class="col-sm-10">
                                                     <select class="form-control" id="fileformat" name="fileformat" >
@@ -833,13 +842,13 @@ wizard = $(document).ready(function() {
                                             <!-- btn-group -->
                                             <div id="baseTablDetailsDB">
 
-                                                <div class="form-group pull-left">
+                                                <div class="form-group">
                                                     <label class="control-label col-sm-2" for="baseDBName">BASE DB Name:</label>
                                                     <div class="col-sm-10">
                                                         <input type="text" class="form-control"  id="baseDBName" name="baseDBName" placeholder="Enter BASE DB Name" required>
                                                     </div>
                                                 </div>
-                                                <div class="form-group pull-right">
+                                                <div class="form-group">
                                                     <label class="control-label col-sm-2" for="baseTableName">Base Table Name:</label>
                                                     <div class="col-sm-10">
                                                         <input type="text" class="form-control" id="baseTableName" name="baseTableName" placeholder="Enter BASE TABLE NAME" required>

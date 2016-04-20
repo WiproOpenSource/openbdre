@@ -25,6 +25,8 @@
 
                 <link href="../css/css/bootstrap.min.css" rel="stylesheet" type="text/css" />
                 <link href="../css/jquery-ui-1.10.3.custom.css" rel="stylesheet" type="text/css" />
+                <link rel="stylesheet" href="../css/data-ingestion.css" />
+                <link rel="stylesheet" href="../css/data-ingestion-forms.css" />
 
                 <!-- Include jTable script file. -->
                 <script src="../js/jquery.min.js" type="text/javascript"></script>
@@ -70,6 +72,7 @@
                     .foldablearrow.collapsed:after {
                         content: "\e080";
                     }
+                    
                 </style>
 
             </head>
@@ -77,10 +80,9 @@
             <body ng-app="myApp" ng-controller="myCtrlr" ng-init="init()">
                 <div class="row">&nbsp;</div>
                 <div class="row">
-                    <div class="col-md-3"> </div>
-                    <div class="col-md-6 ">
+                    <div class="col-md-2"> </div>
+                    <div class="col-md-8">
                         <div class="panel panel-primary">
-                            <div class="panel-heading">Setup DQ Job</div>
                             <div class="panel-body">
                                 <form role="form">
                                     <div class="form-group">
@@ -108,28 +110,31 @@
                                         <select class="form-control" id="busDomainId">
                                             <option ng-repeat="busdomainId in busDomainIds" id="{{$index}}" value="{{ busdomainId.Value }}">{{ busdomainId.DisplayText }}</option>
                                         </select>
-                                        <div class="form-group">
-                                            <label for="canRecover">Can Recover</label>
-                                            <input type="text" class="form-control" id="canRecover">
-                                        </div>
-                                        <div class="form-group">
-                                            <label for="enqId">Enq Id</label>
-                                            <input type="text" class="form-control" id="enqId">
-                                        </div>
-                                        <div class="form-group">
-                                            <label for="processName">Process Name</label>
-                                            <input type="text" class="form-control" id="processName">
-                                        </div>
-                                        <div class="form-group">
-                                            <label for="description">Description</label>
-                                            <input type="text" class="form-control" id="description">
-                                        </div>
-                                        <button type="submit" class="btn btn-primary" onclick="addRecord()">Add Record</button>
+                                     </div>
+                                     <div class="form-group">
+                                         <label for="canRecover">Can Recover</label>
+                                         <input type="text" class="form-control" id="canRecover">
+                                     </div>
+                                     <div class="form-group">
+                                         <label for="enqId">Enq Id</label>
+                                         <input type="text" class="form-control" id="enqId">
+                                     </div>
+                                     <div class="form-group">
+                                         <label for="processName">Process Name</label>
+                                         <input type="text" class="form-control" id="processName">
+                                     </div>
+                                     <div class="form-group">
+                                         <label for="description">Description</label>
+                                         <input type="text" class="form-control" id="description">
+                                     </div>
+                                     <div class="actions text-center pull-right">
+                                     <button type="submit" class="btn btn-primary" onclick="addRecord()">Add Record</button>
+                                     </div>
                                 </form>
                                 </div>
                             </div>
                         </div>
-                        <div class="col-md-3"> </div>
+                        <div class="col-md-2"> </div>
                         <script type="text/javascript">
                             var myApp = angular.module('myApp', []);
                             myApp.controller('myCtrlr', function ($scope) {
