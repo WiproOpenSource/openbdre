@@ -496,13 +496,9 @@
                                                     <option ng-repeat="workflowtype in newPageWorkflowType" id="{{$index}}" value="{{ workflowtype.Value }}">{{ workflowtype.DisplayText }}</option>
                                                 </select>
                                             </div>
-<<<<<<< HEAD
                                             <div class="actions text-center pull-right">
-                                            <button type="submit" class="btn btn-primary" ng-click="createFirstProcess()">Create Process</button>
-                                            </div>
-=======
                                             <button type="submit" class="btn btn-primary" ng-click="createFirstProcess()"><spring:message code="wfdesigner.page.create_process"/></button>
->>>>>>> predevelop
+                                            </div>
                                         </form>
                                     </div>
                                 </div>
