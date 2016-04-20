@@ -1,6 +1,7 @@
 <%@ taglib prefix="security"
 	   uri="http://www.springframework.org/security/tags" %>
     <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+    <%@taglib uri="http://www.springframework.org/tags" prefix="spring"%>
         <%@ page language="java" contentType="text/html; charset=ISO-8859-1"
 	 pageEncoding="ISO-8859-1"%>
             <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
@@ -9,7 +10,7 @@
 
 <html id="ng-app">
     <head>
-	<title>BDRE | Bigdata Ready Enterprise</title>
+	<title><spring:message code="common.page.title_bdre_2"/></title>
 	<link href="../css/css/bootstrap.min.css" rel="stylesheet" type="text/css" />
     <script src="../js/angular.min.js" type="text/javascript"></script>
     <script src="../js/jquery.min.js" type="text/javascript"></script>
@@ -51,7 +52,7 @@ $(document).ready(function(){
 angular.module('myApp', [])
   .controller('myCtrl', function($scope, $window, $http) {
 $.ajax({
-  url: "../../store/store.json?rand="+Math.random(),
+  url: "/bdreappstore/store.json?rand="+Math.random(),
   dataType: "json",
   async:false,
   success: function(response) {
@@ -107,7 +108,7 @@ $scope.createApp = function(location) {
     	<div class="col-md-2 appimage" ng-repeat="column in row.columns">
 		<div class="alert alert-info thumbnail">
 			<button class="btn btn-info ng-binding center-block" ng-click="createApp(column.location)">{{column.name}}</button>
-			<img src="../../store/{{ column.icon }}"   ng-click="createApp(column.location)" alt="App image" width="150" height="118">
+			<img src="/bdreappstore/{{ column.icon }}"   ng-click="createApp(column.location)" alt="App image" width="150" height="118">
 			<br >{{column.description}}{{column.name}}
 		</div>
 	</div>
@@ -119,10 +120,10 @@ $scope.createApp = function(location) {
     <div class="modal-dialog modal-sm">
       <div class="modal-content">
         <div class="modal-header">
-          <h4 class="modal-title">Install</h4>
+          <h4 class="modal-title"><spring:message code="appstore.page.install"/></h4>
         </div>
         <div class="modal-body">
-          <p>Are you sure you want to install this app?</p>
+          <p><spring:message code="appstore.page.p_confirmation"/></p>
         </div>
         <div class="modal-footer">
 			<button type="button" data-dismiss="modal" class="btn btn-primary" id="yes">Yes</button>
@@ -135,10 +136,10 @@ $scope.createApp = function(location) {
       <div class="modal-dialog modal-sm">
         <div class="modal-content">
           <div class="modal-header">
-            <h4 class="modal-title">Install</h4>
+            <h4 class="modal-title"><spring:message code="appstore.page.install"/></h4>
           </div>
           <div class="modal-body">
-            <p>Installing Please wait....</p>
+            <p><spring:message code="appstore.page.install_progress"/></p>
           </div>
         </div>
       </div>
@@ -147,10 +148,10 @@ $scope.createApp = function(location) {
       <div class="modal-dialog modal-sm">
         <div class="modal-content">
           <div class="modal-header">
-            <h4 class="modal-title">Install</h4>
+            <h4 class="modal-title"><spring:message code="appstore.page.install"/></h4>
           </div>
           <div class="modal-body">
-            <p>Process installed Successfully</p>
+            <p><spring:message code="appstore.page.install_complete"/></p>
           </div>
           <div class="modal-footer">
   			<button type="button" data-dismiss="modal" class="btn btn-primary" id="ok">OK</button>
@@ -162,10 +163,10 @@ $scope.createApp = function(location) {
           <div class="modal-dialog modal-sm">
             <div class="modal-content">
               <div class="modal-header">
-                <h4 class="modal-title">Install</h4>
+                <h4 class="modal-title"><spring:message code="appstore.page.install"/></h4>
               </div>
               <div class="modal-body">
-                <p>Error in app installation.</p>
+                <p><spring:message code="appstore.page.installtall_error"/></p>
               </div>
               <div class="modal-footer">
       			<button type="button" data-dismiss="modal" class="btn btn-primary" id="ok">OK</button>
