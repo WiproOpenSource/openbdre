@@ -16,6 +16,11 @@
             <artifactId>md_api</artifactId>
             <version>${project.version}</version>
         </dependency>
+        <dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>md-dao</artifactId>
+            <version>${project.version}</version>
+        </dependency>
     </dependencies>
 
     <build>

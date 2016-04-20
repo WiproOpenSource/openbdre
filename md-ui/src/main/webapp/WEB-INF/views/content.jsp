@@ -471,22 +471,18 @@
                                             collapse: "1",
                                             url: "flumepropertieswizard.page",
                                             children: []
-<<<<<<< HEAD
-					}, {
-                                         label: "Analytics App",
-                                         collapse: "1",
-                                         url: "analyticsui.page",
-                                         children: []
-                     					}, </security:authorize>]
-=======
-					},{
-                                                                  label: "Hive Table Migration",
-                                                                  collapse: "1",
-                                                                  url: "hivetablemigration.page",
-                                                                  children: []
-                      					}, </security:authorize>]
->>>>>>> 39f2e643566c400089ba9f8764af4077e2119590
-                                    },
+	                }, {
+                                             label: "Analytics App",
+                                             collapse: "1",
+                                             url: "analyticsui.page",
+                                             children: []
+                    },{
+                                              label: "Hive Table Migration",
+                                              collapse: "1",
+                                              url: "hivetablemigration.page",
+                                              children: []
+                     },</security:authorize>]
+                                },
                                     <security:authorize access = "hasRole('ROLE_ADMIN')"> {
                                         label: "Administration",
                                         collapse: "1",
