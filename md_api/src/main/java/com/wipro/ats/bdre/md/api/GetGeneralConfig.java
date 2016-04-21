@@ -72,7 +72,7 @@ public class GetGeneralConfig extends MetadataAPIBase {
                 newRequired = 2;
             }
             generalConfigs = generalConfigDAO.getLikeGeneralConfig(configGroup, newRequired);
-            LOGGER.info("All records listed with config group" + configGroup);
+            LOGGER.info("All records listed with config group " + configGroup);
             LOGGER.info("generalConfigs" + generalConfigs);
 
         } catch (Exception e) {

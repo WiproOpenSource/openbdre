@@ -75,7 +75,7 @@ public class GeneralConfigAPI extends MetadataAPIBase {
 
     }
 
-    @RequestMapping(value = {"likegc/{cg}", "likegc/{cg}/"}, method = RequestMethod.GET)
+    @RequestMapping(value = {"/likegc/{cg}", "/likegc/{cg}/"}, method = RequestMethod.GET)
     @ResponseBody public
     RestWrapper listLikeGCUsingRequired(@PathVariable("cg") String configGroup, @RequestParam(value = "required", defaultValue = "2") Integer required, Principal principal) {
 

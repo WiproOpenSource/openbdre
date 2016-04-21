@@ -81,9 +81,10 @@
     $('#configDropdown').change(function() {
 		console.log($(this).val());
 		var config=$(this).val();
-		if(config == "cluster.hive-address"){
-            var cfgGrp = 'cluster.hive-address';
-                		    $(document).ready(function () {
+		if(config == "cluster"){
+		$("#clusterDiv").show();
+            var cfgGrp = 'cluster';
+                		$(document).ready(function () {
                 	    $('#clusterDiv').jtable({
                 	     title: 'Clusters',
                 	      messages: {
@@ -95,7 +96,7 @@
                 		    console.log(postData);
                 			    return $.Deferred(function ($dfd) {
                 			    $.ajax({
-                			    url:'/mdrest/genconfig/'+cfgGrp+'/?required=2',
+                			    url:'/mdrest/genconfig/likegc/'+cfgGrp+'/?required=2',
                 				    type: 'GET',
                 				    data: postData,
                 				    dataType: 'json',
@@ -118,7 +119,7 @@
                 				    data: postData,
                 				    dataType: 'json',
                 				    success: function (data) {
-
+                                    window.location.reload();
                 				    $dfd.resolve(data);
                 				    },
                 				    error: function () {
@@ -126,7 +127,7 @@
                 				    }
                 			    });
                 			    });
-                			    window.location.load();
+
                 		    }
 
 
@@ -186,12 +187,12 @@
                             	    });
 
 
-		}
+
 
 		configGroupVal = config;
 		$.ajax({
         		type: "GET",
-        		url: "/mdrest/genconfig/likegc" + config + "/?required=1",
+        		url: "/mdrest/genconfig/likegc/" + config + "/?required=1",
         		dataType: 'json',
         		success: function(data) {
         			var root = 'Records';
@@ -212,7 +213,9 @@
         		}
         	});
 
+        }
 		else{
+        $("#clusterDiv").hide();
 		buildFormDisplay(config,'Settings');
 		}
 	});
@@ -258,7 +261,7 @@ function buildFormDisplay(configGroup, typeDiv) {
     						<option value="mdconfig">mdconfig</option>
     						<option value="imconfig">imconfig</option>
     						<option value="scripts_config">scriptsconfig</option>
-    						<option value="cluster.hive-address">cluster hive address</option>
+    						<option value="cluster">cluster hive address</option>
 						</select>
 					</form>
 					</div>
