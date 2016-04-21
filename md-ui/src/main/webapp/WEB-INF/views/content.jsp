@@ -376,7 +376,7 @@
                                                                           url: "appstore.page",
                                                                           children: []
                                                                                                         },{
-                                                                           label: "DDP visualization",
+                                                                           label: "Industry Use Cases",
                                                                            collapse: "1",
                                                                            url: "http://ddp1.mybluemix.net/menu.html",
                                                                            children: []
