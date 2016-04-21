@@ -14,28 +14,37 @@
 		<script src="../js/jquery-ui-1.10.3.custom.js"></script>
 		<script src="../js/jquery.steps.min.js"></script>
 		<style>
-		.form-group label{
-			width: 100%;
-			float: none;
-			text-align: left !important;
-		}
-		label + div{
-			width: 80% !important;
-		}
-		.form-group{
-		width: 50%;
-		}
-		
-    
-    #bdre-data-load{
-    background-color: #F8F9FB;
-        padding-top: 2%;
-    }
-    .steps ul{
-    padding-bottom: 4% !important;
-    }
-		
-	</style>
+			.form-group label {
+				width: 100%;
+				float: none;
+				text-align: left !important;
+			}
+			
+			label+div {
+				width: 80% !important;
+			}
+			
+			.form-group {
+				width: 50%;
+			}
+			
+			div.form-group:nth-child(even) {
+				float: right;
+			}
+			
+			div.form-group:nth-child(odd) {
+				float: left;
+			}
+			
+			#bdre-data-load {
+				background-color: #F8F9FB;
+				padding-top: 2%;
+			}
+			
+			.steps ul {
+				padding-bottom: 4% !important;
+			}
+		</style>
 		
 		<link rel="stylesheet" href="../css/jquery.steps.css" />
 		<link rel="stylesheet" href="../css/data-ingestion.css" />
@@ -666,7 +675,7 @@ wizard = $(document).ready(function() {
 
 
 	</head>
-<body ng-app="myApp" ng-controller="myCtrl" class="bodystyle">
+<body ng-app="myApp" ng-controller="myCtrl" >
 
 <div class="alert-info-outer">
 	<div class="alert alert-info" role="alert">
@@ -681,28 +690,28 @@ wizard = $(document).ready(function() {
                         <div id="processDetails">
                            <!-- btn-group -->
                             <div id="processFields">
-								<div class="form-group pull-left">
+								<div class="form-group">
                                     <label class="control-label col-sm-6" for="processName" ><spring:message code="dataload.page.form_left_procname"/></label>
                                     <div class="col-sm-8">
                                         <input type="text" class="form-control"  id="processName" name="processName" placeholder=<spring:message code="dataload.page.form_left_procname_placeholder"/> value="" required>
                                     </div>
                                 </div>
-                                <div class="form-group pull-right">
+                                <div class="form-group">
                                     <label class="control-label col-sm-6 " for="processDescription"><spring:message code="dataload.page.form_left_procdesc"/></label>
-                                    <div class="col-sm-8">
+									 <div class="col-sm-8">
                                         <input type="text" class="form-control" id="processDescription" name="processDescription" placeholder=<spring:message code="dataload.page.form_left_procdesc_placeholder"/> value="" required>
                                     </div>
                                 </div>
-                                <div class="form-group pull-left">
+                                <div class="form-group">
                                     <label class="control-label col-sm-6" for="busDomainId"><spring:message code="dataload.page.form_left_bus_domain_id"/></label>
-                                    <div class="col-sm-8">
+									<div class="col-sm-8">
                                         <select class="form-control" id="busDomainId" name="busDomainId">
                                             <option ng-repeat="busDomain in busDomains.Options" value="{{busDomain.Value}}" name="busDomainId">{{busDomain.DisplayText}}</option>
 
                                         </select>
                                     </div>
                                 </div>
-                                 <div class="form-group pull-right">
+                                 <div class="form-group">
                                     <label class="control-label col-sm-6" for="enqueueId"><spring:message code="dataload.page.form_right_enqueing_id"/></label>
                                     <div class="col-sm-8">
                                         <input type="text" class="form-control" id="enqueueId" name="enqueueId" placeholder=<spring:message code="dataload.page.form_right_enqueing_id_placeholder"/> value="" required>
@@ -722,13 +731,13 @@ wizard = $(document).ready(function() {
                                         </div>
                                         <!-- btn-group -->
                                         <div id="rawTablDetailsDB">
-                                        <div class="form-group pull-left" >
+                                        <div class="form-group" >
                                             <label class="control-label col-sm-2" for="rawDBName"><spring:message code="dataload.page.raw_db_name"/></label>
                                             <div class="col-sm-10">
                                                 <input type="text" class="form-control"  id="rawDBName" name="rawDBName" placeholder=<spring:message code="dataload.page.raw_db_name_placeholder"/>value="" required>
                                             </div>
                                         </div>
-                                            <div class="form-group pull-right">
+                                            <div class="form-group">
                                                 <label class="control-label col-sm-2" for="fileformat"><spring:message code="dataload.page.file_format"/></label>
                                                 <div class="col-sm-10">
                                                     <select class="form-control" id="fileformat" name="fileformat" >
@@ -833,15 +842,14 @@ wizard = $(document).ready(function() {
                                             </div>
                                             <!-- btn-group -->
                                             <div id="baseTablDetailsDB">
-
-                                                <div class="form-group pull-left">
+                                                <div class="form-group">
                                                     <label class="control-label col-sm-2" for="baseDBName"><spring:message code="dataload.page.base_db_name"/></label>
                                                     <div class="col-sm-10">
                                                         <input type="text" class="form-control"  id="baseDBName" name="baseDBName" placeholder=<spring:message code="dataload.page.base_db_name_placeholder"/> required>
                                                     </div>
                                                 </div>
-                                                <div class="form-group pull-right">
-                                                    <label class="control-label col-sm-2" for="baseTableName"><spring:message code="dataload.page.base_table_name_single"/></label>
+                                                <div class="form-group">
+                                                    <label class="control-label col-sm-2" for="baseTableName"><spring:message code="dataload.page.base_db_name"/></label>
                                                     <div class="col-sm-10">
                                                         <input type="text" class="form-control" id="baseTableName" name="baseTableName" placeholder=<spring:message code="dataload.page.enter_base_table_name_placeholder"/> required>
                                                     </div>

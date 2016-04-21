@@ -6,7 +6,7 @@
 	<link href="../../css/bootstrap.min.css" rel="stylesheet" type="text/css" />
 	<title><spring:message code="login.page.title"/></title>
 	<style>
-	     body{background-image: url("../../css/images/BDRE_BG.png");width: 100%;height: 100%;background-size: cover;overflow: hidden;}
+	     body{background-image: url("../../css/images/BDRE_BG.jpg");width: 100%;height: 100%;background-size: cover;overflow: hidden;}
 		.login-box{width: 425px;height: 315px;margin: auto;border: 1px solid #e4e4e4;background-color: #e4e4e4;border-radius: 5px;position: absolute;top: 55%;bottom: 50%;left:0;right:0;}
 		.logo{width: 110px;top: -51px;position: absolute;left: 0;right:0;}
 		.btn-signin{background-color: #005352;height: 37px;width: 111px;padding-top: 0px;padding-bottom: 0px;float:right;margin-bottom:20px}
@@ -18,7 +18,8 @@
 	    .usericon{background-image: url("../../css/images/user.png");background-size: 55% 55%;position: absolute;left: -5px;}
 	    .login-links{width: 95%;margin: 0 auto;}
 	    .login-fp{float: left;color: #000000;font-family: sans-serif;font-weight: 500; margin-left:13px;margin-top: 2%;}
-	    .text-info{color: #FFFFFF;font-size:60px;border-radius: 5px;padding-top: 4%;padding-bottom: 4%;}
+	    .text-info{color: #FFFFFF;font-size:60px;border-radius: 5px;padding-top: 4%;padding-bottom: 0%;}
+	    .text-footer{color: #FFFFFF;font-size:30px;border-radius: 5px;padding-top: 0%;padding-bottom: 2%;}
 	    .login-alert-danger{border: none;background: none;position: absolute;top: 18%;margin-left:16px}
 	</style>
 	<script>
@@ -34,6 +35,7 @@
     </head>
     <body onload='document.loginForm.username.focus();'>
 	<div class="text-center text-info"><spring:message code="login.page.title_bdre"/></div>
+	<div class="text-center text-footer"><spring:message code="login.page.footer_bdre"/></div>
 	<div id="login-box" class="center-block login-box">
 	<img id="logo" class="center-block img-responsive logo" src="../../css/images/logo.png"/>
 		<c:if test="${not empty error}">

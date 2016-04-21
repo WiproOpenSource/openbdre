@@ -27,8 +27,9 @@
     <script src="../js/jquery-ui-1.10.3.custom.js"></script>
     <script src="../js/jquery.steps.min.js"></script>
     <link rel="stylesheet" href="../css/jquery.steps.css" />
-
-    <script src="../js/bootstrap.js" type="text/javascript"></script>
+    <link rel="stylesheet" href="../css/data-ingestion.css" />
+    <link rel="stylesheet" href="../css/data-ingestion-forms.css" />
+	<script src="../js/bootstrap.js" type="text/javascript"></script>
     <script src="../js/jquery.jtable.js" type="text/javascript"></script>
     <link href="../css/jtables-bdre.css" rel="stylesheet" type="text/css" />
 
@@ -45,17 +46,18 @@
         horizontal-align: middle;
         padding-top: 2cm;
     }
+    
     </style>
   </head>
 
   <body ng-app="myApp" ng-controller="myCtrl">
-
                         <div class="row">&nbsp;</div>
                         <div class="row">
-                            <div class="col-md-3"> </div>
-                            <div class="col-md-6" id="divEncloseHeading">
+                            <div class="col-md-2"></div>
+                            <div class="col-md-8" id="divEncloseHeading" >
                                 <div class="panel panel-primary">
-                                    <div class="panel-heading"><spring:message code="filemonitor.page.panel_heading_file_monitoring_creation"/></div>
+
+                                    <%-- <div class="panel-heading"><spring:message code="filemonitor.page.panel_heading_file_monitoring_creation"/></div> --%>
                                     <div class="panel-body">
                                         <form role="form" id="propertiesFieldsForm">
                                             <div class="form-group">
@@ -74,10 +76,9 @@
 
                                                 </select>
                                             </div>
-
                                             <div class="form-group">
                                                 <label ><spring:message code="filemonitor.page.property_form_field_hdfs_upload_dir"/></label>
-                                                <input type="text" class="form-control" name="hdfsUploadDir" id="hdfsUploadDir" placeholder=<spring:message code="filemonitor.page.property_form_field_hdfs_upload_dir_placeholder"/>required>
+                                                <input type="text" class="form-control" name="hdfsUploadDir" id="hdfsUploadDir" placeholder=<spring:message code="filemonitor.page.property_form_field_hdfs_upload_dir_placeholder"/> required>
                                             </div>
 
                                             <div class="form-group">
@@ -99,14 +100,14 @@
                                                     <option ng-repeat="busDomain in busDomains.Options" value="{{busDomain.Value}}" name="busDomainId">{{busDomain.DisplayText}}</option>
                                                     </select>
                                              </div>
-
-                                            <input type="submit" id="createJobButton" class="btn btn-primary" ng-click="createJob()"/>
+                                             <div class="actions text-center pull-right">
+                                             	<input type="submit" id="createJobButton" class="btn btn-primary" ng-click="createJob()"/>
+                                             </div>
                                         </form>
-
-                                    </div>
+									</div>
                                 </div>
                             </div>
-                            <div class="col-md-3"> </div>
+                            <div class="col-md-2"> </div>
                 <div class="row">&nbsp;</div>
                     <div class="row">
                         <div class="col-md-3"> </div>
