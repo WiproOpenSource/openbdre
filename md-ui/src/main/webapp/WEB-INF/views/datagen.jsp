@@ -113,7 +113,7 @@ function formIntoMap(typeProp, typeOf) {
 </script>
 
 </head>
-<body ng-app="myApp" ng-controller="myCtrl" class="bodystyle">
+<body ng-app="myApp" ng-controller="myCtrl" >
 	<div class="alert-info-outer">
 	<div class="alert alert-info" role="alert">
        <div style="font-size:24px;" ><b class="alert-redfont"><spring:message code="datagen.page.how_to"/></b> </div>
