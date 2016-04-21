@@ -136,15 +136,12 @@
                 }
    
                 /* HEADER and NAV-BAR*/
-                .navbar-height{
-                min-height: 110px;
+               	.navbar-height{
+               	min-height: 110px;
                 }
                 .navbar-inverse .navbar-nav>li>a:hover{
          		color: rgb(9,147,219);
          		}
-                .bor{
-                border: 1px solid red;
-                }
                 .nav-center > li{float:none;display:inline-block;font-size: 18px}
 				.nav-center {    
 				width: 100%;
@@ -177,10 +174,18 @@
 			    top: 11px;
 			    right: 10px;
 			    }
-			    
+			    .dropdown-menu{
+			    background-color: #353535;
+			    }
+			    .dropdown-menu>li>a{
+			     color: #fff;
+			    }
+			    .dropdown-menu>li>a:focus, .dropdown-menu>li>a:hover{
+			     background-color: #1D1D1D;
+			     color: #fff;
+			    }
         </style>
-
-        </head>
+		</head>
 
         <body class="container-fluid" ng-app="myApp" ng-controller="myCtrl">
             <nav class="navbar navbar-inverse navbar-height">
