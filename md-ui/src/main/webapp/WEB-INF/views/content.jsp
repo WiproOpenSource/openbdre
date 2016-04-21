@@ -170,9 +170,9 @@
 			    .bdretextlogo{
 			    color: #1ca7f7;
 			   	position: relative;
-			    font-size: 3em;
-			    top: 11px;
-			    right: 10px;
+			    font-size: 2em;
+			    top: 35px;
+			    right: 1px;
 			    }
 			    .dropdown-menu{
 			    background-color: #353535;
