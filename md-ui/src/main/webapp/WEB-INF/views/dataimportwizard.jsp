@@ -643,7 +643,7 @@ isInit=true;
 		</script >
 
 	</head >
-	<body class="bodystyle">
+	<body >
 		<form action = "#" method = "POST" id = "wizardform" >
 			<br />
 			<div id = "bdre-dataload" ng-controller = "myCtrl" >
