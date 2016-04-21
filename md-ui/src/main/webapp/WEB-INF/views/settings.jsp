@@ -82,13 +82,11 @@
 		console.log($(this).val());
 		var config=$(this).val();
 		if(config == "cluster"){
-        $("#clusterDiv").show();
+		$("#clusterDiv").show();
             var cfgGrp = 'cluster';
                 		$(document).ready(function () {
-
                 	    $('#clusterDiv').jtable({
                 	     title: 'Clusters',
-
                 	      messages: {
                                  addNewRecord: 'Add new cluster'
                              },
