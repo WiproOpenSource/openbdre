@@ -6,7 +6,7 @@
 	<link href="../../css/bootstrap.min.css" rel="stylesheet" type="text/css" />
 	<title><spring:message code="login.page.title"/></title>
 	<style>
-	     body{background-image: url("../../css/images/BDRE_BG.png");width: 100%;height: 100%;background-size: cover;overflow: hidden;}
+	     body{background-image: url("../../css/images/BDRE_BG.jpg");width: 100%;height: 100%;background-size: cover;overflow: hidden;}
 		.login-box{width: 425px;height: 315px;margin: auto;border: 1px solid #e4e4e4;background-color: #e4e4e4;border-radius: 5px;position: absolute;top: 55%;bottom: 50%;left:0;right:0;}
 		.logo{width: 110px;top: -51px;position: absolute;left: 0;right:0;}
 		.btn-signin{background-color: #005352;height: 37px;width: 111px;padding-top: 0px;padding-bottom: 0px;float:right;margin-bottom:20px}

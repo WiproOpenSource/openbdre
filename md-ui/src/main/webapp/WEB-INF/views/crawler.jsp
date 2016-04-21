@@ -72,7 +72,7 @@
         }
 </script >
 </head>
-<body ng-app="myApp" ng-controller="myCtrl" class="bodystyle">
+<body ng-app="myApp" ng-controller="myCtrl">
 	<div class="alert-info-outer">
 	<div class="alert alert-info" role="alert">
 	    <spring:message code="crawler.page.alert_info_outer"/>
