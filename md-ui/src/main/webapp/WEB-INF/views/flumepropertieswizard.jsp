@@ -511,7 +511,7 @@ wizard = $(document).ready(function() {
 
 	</head>
 
-	<body ng-app="myApp" ng-controller="myCtrl" class="bodystyle">
+	<body ng-app="myApp" ng-controller="myCtrl" >
 			<div class="alert-info-outer">
 				<div class="alert alert-info" role="alert">
 			        <spring:message code="flumepropertieswizard.page.source_type_alert"/>

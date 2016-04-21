@@ -25,6 +25,8 @@
 
                 <link href="../css/css/bootstrap.min.css" rel="stylesheet" type="text/css" />
                 <link href="../css/jtables-bdre.css" rel="stylesheet" type="text/css" />
+                <link rel="stylesheet" href="../css/data-ingestion.css" />
+                <link rel="stylesheet" href="../css/data-ingestion-forms.css" />
                 <link href="../css/jquery-ui-1.10.3.custom.css" rel="stylesheet" type="text/css" />
 
                 <!-- Include jTable script file. -->
@@ -462,11 +464,11 @@
                     <body ng-app="app" data-ng-init="intialiseNewProcessPage()" ng-controller="AppCtrl">
                         <div class="row">&nbsp;</div>
                         <div class="row">
-                            <div class="col-md-3"> </div>
-                            <div class="col-md-6 ">
+                            <div class="col-md-2"> </div>
+                            <div class="col-md-8 ">
                                 <div class="panel panel-primary">
-                                    <div class="panel-heading"><spring:message code="wfdesigner.page.create_new_workflow"/></div>
-                                    <div class="panel-body">
+									<%-- <div class="panel-heading"><spring:message code="wfdesigner.page.create_new_workflow"/></div> --%>
+									<div class="panel-body">
                                         <form role="form">
                                             <div class="form-group">
                                                 <label for="processName"><spring:message code="wfdesigner.page.process_name"/></label>
@@ -494,12 +496,14 @@
                                                     <option ng-repeat="workflowtype in newPageWorkflowType" id="{{$index}}" value="{{ workflowtype.Value }}">{{ workflowtype.DisplayText }}</option>
                                                 </select>
                                             </div>
+                                            <div class="actions text-center pull-right">
                                             <button type="submit" class="btn btn-primary" ng-click="createFirstProcess()"><spring:message code="wfdesigner.page.create_process"/></button>
+                                            </div>
                                         </form>
                                     </div>
                                 </div>
                             </div>
-                            <div class="col-md-3"> </div>
+                            <div class="col-md-2"> </div>
                     </body>
                 </c:otherwise>
             </c:choose>
