@@ -17,14 +17,18 @@ package com.wipro.ats.bdre.md.rest;
 import com.wipro.ats.bdre.exception.MetadataException;
 import com.wipro.ats.bdre.md.api.GetGeneralConfig;
 import com.wipro.ats.bdre.md.api.base.MetadataAPIBase;
+import com.wipro.ats.bdre.md.beans.ClusterInfo;
 import com.wipro.ats.bdre.md.beans.table.GeneralConfig;
 import com.wipro.ats.bdre.md.dao.GeneralConfigDAO;
 import com.wipro.ats.bdre.md.dao.jpa.GeneralConfigId;
+import com.wipro.ats.bdre.md.rest.util.BindingResultError;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.security.Principal;
 import java.util.List;
 import java.util.Map;
@@ -55,6 +59,29 @@ public class GeneralConfigAPI extends MetadataAPIBase {
         RestWrapper restWrapper = null;
         GetGeneralConfig generalConfigs = new GetGeneralConfig();
         List<GeneralConfig> generalConfigList = generalConfigs.byConigGroupOnly(configGroup, required);
+        if (!generalConfigList.isEmpty()) {
+            if (generalConfigList.get(0).getRequired() == 2) {
+                restWrapper = new RestWrapper("Listing of Records Failed", RestWrapper.ERROR);
+            } else {
+                restWrapper = new RestWrapper(generalConfigList, RestWrapper.OK);
+                LOGGER.info("All records listed with config group :" + configGroup + "from General  Config by User:" + principal.getName());
+            }
+        } else {
+            restWrapper = new RestWrapper(generalConfigList, RestWrapper.OK);
+
+            LOGGER.info("All records listed with config group :" + configGroup + "from General  Config by User:" + principal.getName());
+        }
+        return restWrapper;
+
+    }
+
+    @RequestMapping(value = {"likegc/{cg}", "likegc/{cg}/"}, method = RequestMethod.GET)
+    @ResponseBody public
+    RestWrapper listLikeGCUsingRequired(@PathVariable("cg") String configGroup, @RequestParam(value = "required", defaultValue = "2") Integer required, Principal principal) {
+
+        RestWrapper restWrapper = null;
+        GetGeneralConfig generalConfigs = new GetGeneralConfig();
+        List<GeneralConfig> generalConfigList = generalConfigs.byLikeConigGroup(configGroup, required);
         if (!generalConfigList.isEmpty()) {
             if (generalConfigList.get(0).getRequired() == 2) {
                 restWrapper = new RestWrapper("Listing of Records Failed", RestWrapper.ERROR);
@@ -174,6 +201,33 @@ public class GeneralConfigAPI extends MetadataAPIBase {
         }
         return restWrapper;
     }
+
+    @RequestMapping(value = {"/", ""}, method = RequestMethod.PUT)
+
+    @ResponseBody
+    public RestWrapper insert(@ModelAttribute("properties")
+                              @Valid ClusterInfo cluster, BindingResult bindingResult, Principal principal) {
+
+        RestWrapper restWrapper = null;
+        if (bindingResult.hasErrors()) {
+            BindingResultError bindingResultError = new BindingResultError();
+            return bindingResultError.errorMessage(bindingResult);
+        }
+        try {
+            LOGGER.info("name_node_host "+cluster.getNameNodeHostName()+":"+cluster.getNameNodePort());
+            generalConfigDAO.insertCluster(cluster);
+
+
+            restWrapper = new RestWrapper(cluster, RestWrapper.OK);
+            LOGGER.info("Record inserted in General Config by User:" + principal.getName());
+
+        } catch (MetadataException e) {
+            LOGGER.error(e);
+            restWrapper = new RestWrapper(e.getMessage(), RestWrapper.ERROR);
+        }
+        return restWrapper;
+    }
+
 
     @Override
     public Object execute(String[] params) {

@@ -62,6 +62,27 @@ public class GetGeneralConfig extends MetadataAPIBase {
         return generalConfigs;
     }
 
+    public List<GeneralConfig> byLikeConigGroup(String configGroup, Integer required) {
+
+        GeneralConfig generalConfig = new GeneralConfig();
+        List<GeneralConfig> generalConfigs = new ArrayList<GeneralConfig>();
+        try {
+            Integer newRequired = required;
+            if (required == null) {
+                newRequired = 2;
+            }
+            generalConfigs = generalConfigDAO.getLikeGeneralConfig(configGroup, newRequired);
+            LOGGER.info("All records listed with config group" + configGroup);
+            LOGGER.info("generalConfigs" + generalConfigs);
+
+        } catch (Exception e) {
+            generalConfig.setRequired(2);
+            generalConfigs.add(generalConfig);
+            LOGGER.error("Listing of Records Failed",e);
+        }
+        return generalConfigs;
+    }
+
     public GeneralConfig byConigGroupAndKey(String configGroup, String key) {
 
         GeneralConfig generalConfig = new GeneralConfig();

@@ -32,8 +32,9 @@
     <script src="../js/jquery.steps.min.js"></script>
      <script src="../js/angular.min.js" type="text/javascript"></script>
 
-	<script type="text/javascript">
 
+	<script type="text/javascript">
+         var map = new Object();
 		var configGroupVal = '';
             var updateSettings = function (){
 
@@ -80,8 +81,140 @@
     $('#configDropdown').change(function() {
 		console.log($(this).val());
 		var config=$(this).val();
+		if(config == "cluster.hive-address"){
+            var cfgGrp = 'cluster.hive-address';
+                		    $(document).ready(function () {
+                	    $('#clusterDiv').jtable({
+                	     title: 'Clusters',
+                	      messages: {
+                                 addNewRecord: 'Add new cluster'
+                             },
+
+                		    actions: {
+                		    listAction: function (postData, jtParams) {
+                		    console.log(postData);
+                			    return $.Deferred(function ($dfd) {
+                			    $.ajax({
+                			    url:'/mdrest/genconfig/'+cfgGrp+'/?required=2',
+                				    type: 'GET',
+                				    data: postData,
+                				    dataType: 'json',
+                				    success: function (data) {
+                				    $dfd.resolve(data);
+                				    },
+                				    error: function () {
+                				    $dfd.reject();
+                				    }
+                			    });
+                			    });
+                		    },
+
+                		    createAction:function (postData) {
+                		    console.log(postData);
+                			    return $.Deferred(function ($dfd) {
+                			    $.ajax({
+                			    url: '/mdrest/genconfig/',
+                				    type: 'PUT',
+                				    data: postData,
+                				    dataType: 'json',
+                				    success: function (data) {
+
+                				    $dfd.resolve(data);
+                				    },
+                				    error: function () {
+                				    $dfd.reject();
+                				    }
+                			    });
+                			    });
+                			    window.location.load();
+                		    }
+
+
+                		    },fields: {
+
+
+                                    nameNodeHostName: {
+                                    title :'name_node_hostname',
+                                        key : true,
+                                        list: false,
+                                        create:true,
+                                        edit: false,
+
+                                    }, nameNodePort: {
+                              		    title: ' name_node_port',
+                              			    key : true,
+                              			    list: false,
+                              			    create:true,
+                              			    edit: false,
+
+                              		    }, jobTrackerHostName: {
+                              		    title: 'job_tracker_hostname',
+                              			    key : true,
+                              			    list : false,
+                              			    create : true,
+                              			    edit : false,
+
+
+                              		    },
+                              			    jobTrackerPort: {
+                              			    title: 'job_tracker_port',
+                              				    list : false,
+                              				    create : true,
+                              				    edit : false,
+                              				    key : true,
+
+                              			    },
+                              			    hiveHostName: {
+                              			        title: 'hive_server_hostname',
+                              				    list: false,
+                              				    create:true,
+                              				    edit: false,
+                              				    key : true,
+
+                              			    },
+                              			    clusterName: {
+                                                title: 'cluster_name',
+                                                list: false,
+                                                create:true,
+                                                edit: false,
+                                                key : true,
+
+                                            },
+                              		    }
+                		     });
+                            		    $('#clusterDiv').jtable('load');
+                            	    });
+
+
+		}
+
 		configGroupVal = config;
+		$.ajax({
+        		type: "GET",
+        		url: "/mdrest/genconfig/likegc" + config + "/?required=1",
+        		dataType: 'json',
+        		success: function(data) {
+        			var root = 'Records';
+        			var div = document.getElementById('Settings');
+        			var formHTML = '';
+        			formHTML = formHTML + '<form role="form" id = "' + 'Settings' + 'Form" >';
+        			console.log(data[root]);
+        			$.each(data[root], function(i, v) {
+        				formHTML = formHTML + '<div class="form-group" > <label for="' + v.key + '">' + v.key + '</label>';
+        				formHTML = formHTML + '<span class="glyphicon glyphicon-question-sign" title="' + v.description + '"></span>';
+        				formHTML = formHTML + '<input name="'+v.key+'" value="' + v.defaultVal + '" class="form-control" id="' + v.key + '"></div>';
+        			});
+
+        			    formHTML = formHTML + '<div id="editSettings"><button onclick="updateSettings()" id="editMdSetting" type="button" class="btn btn-primary">save</button></div>';
+        			formHTML = formHTML + '</form>';
+        			div.innerHTML = formHTML;
+        			console.log(div);
+        		}
+        	});
+
+		else{
 		buildFormDisplay(config,'Settings');
+		}
 	});
     });
 
@@ -125,6 +258,7 @@ function buildFormDisplay(configGroup, typeDiv) {
     						<option value="mdconfig">mdconfig</option>
     						<option value="imconfig">imconfig</option>
     						<option value="scripts_config">scriptsconfig</option>
+    						<option value="cluster.hive-address">cluster hive address</option>
 						</select>
 					</form>
 					</div>
@@ -132,6 +266,8 @@ function buildFormDisplay(configGroup, typeDiv) {
     			<div class="alert alert-info" role="alert" align="center" style="margin-top:20px" >
                                    <spring:message code="settings.page.configuration_alert"/>
                 </div>
+
+				<div id="clusterDiv" ></div>
 				<div id="Settings" ></div>
     </section>
     <div id="div-dialog-warning"/>

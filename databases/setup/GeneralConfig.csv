@@ -558,10 +558,6 @@
 'mainframe', 'serdeClass', 'Serde Class','serde class to be used' , 1, ' ', 'text' , 1
 'mainframe', 'inputFormat', 'Input Format','input format to be used' , 1, 'com.cloudera.sa.copybook.mapred.CopybookInputFormat', 'text' , 1
 'mainframe', 'outputFormat', 'Output Format','output format to be used' , 1, 'org.apache.hadoop.hive.ql.io.HiveIgnoreKeyTextOutputFormat', 'text' , 1
-'cluster.nn-address', 'Cloudera cluster', 'Namenode Address','Cloudera cluster' , 1, 'hdfs://quickstart.cloudera:8020', 'text' , 1
-'cluster.jt-address', 'Cloudera cluster', 'Job Tracker Address','Cloudera cluster' , 1, 'quickstart.cloudera:8050', 'text' , 1
-'cluster.hive-address', 'Cloudera cluster', 'Hive Server2 Address','Cloudera cluster' , 1, 'quickstart.cloudera:10000', 'text' , 1
-'cluster.nn-address', 'Hortonworks cluster', 'Namenode Address','Hortonworks cluster' , 1, 'hdfs://sandbox.hortonworks.com:8020', 'text' , 1
-'cluster.jt-address', 'Hortonworks cluster', 'Job Tracker Address','Hortonworks cluster' , 1, 'sandbox.hortonworks.com:8050', 'text' , 1
-'cluster.hive-address', 'Hortonworks cluster', 'Hive Server2 Address','Hortonworks cluster' , 1, 'sandbox.hortonworks.com:10000', 'text' , 1
-
+'cluster.nn-address', 'Local cluster', 'Namenode Address','Local cluster' , 1, 'hdfs://${name_node_hostname}:${name_node_port}', 'text' , 1
+'cluster.jt-address', 'Local cluster', 'Job Tracker Address','Local cluster' , 1, '${job_tracker_hostname}:${job_tracker_port}', 'text' , 1
+'cluster.hive-address', 'Local cluster', 'Hive Server2 Address','Local cluster' , 1, '${hive_server_hostname}:10000', 'text' , 1
