@@ -33,10 +33,8 @@
     <script src="../js/bootstrap.js" type="text/javascript"></script>
     <script src="../js/jquery.jtable.js" type="text/javascript"></script>
     <link href="../css/jtables-bdre.css" rel="stylesheet" type="text/css" />
-    <link rel="stylesheet" href="../css/data-ingestion.css" />
-	<link rel="stylesheet" href="../css/data-ingestion-horizontal.css" />
-
-    <script src="../js/angular.min.js" type="text/javascript"></script>
+    <link rel="stylesheet" href="../css/jquery.steps.custom.css" />
+	<script src="../js/angular.min.js" type="text/javascript"></script>
     <script type="text/javascript">
 
     var map = new Object();
@@ -79,14 +77,8 @@
     </div>
 	</div>
 
-    <div id="bdre-crawler" >
-      
-	
-
-
-
-
-            <h3><div class="number-circular">1</div><spring:message code="crawler.page.crawler_details"/></h3>
+    <div id="bdre-crawler" class="steps-horizontal" >
+      <h3><div class="number-circular">1</div><spring:message code="crawler.page.crawler_details"/></h3>
             <section>
             <form class="form-horizontal" role="form" id="processFieldsForm2">
                 <div id="crawlerDetails">

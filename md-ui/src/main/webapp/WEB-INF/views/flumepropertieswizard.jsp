@@ -17,29 +17,17 @@
 	  ga('create', 'UA-72345517-1', 'auto');
 	  ga('send', 'pageview');
 	</script>
-	<style>
-	#bdre-flume-ingestion{
-    background-color: #F8F9FB;
-        padding-top: 2%;
-    }
-    .steps ul{
-    padding-bottom: 4% !important;
-    }
-		
-	</style>
-
 		<script src="../js/jquery.min.js"></script>
 		<link href="../css/jquery-ui-1.10.3.custom.css" rel="stylesheet">
 		<link href="../css/css/bootstrap.min.css" rel="stylesheet" />
 		<script src="../js/jquery-ui-1.10.3.custom.js"></script>
 		<script src="../js/jquery.steps.min.js"></script>
 		<link rel="stylesheet" href="../css/jquery.steps.css" />
+		<link rel="stylesheet" href="../css/jquery.steps.custom.css" />
 		<script src="../js/angular.min.js" type="text/javascript"></script>
 		<script src="../js/bootstrap.js" type="text/javascript"></script>
 		<script src="../js/jquery.jtable.js" type="text/javascript"></script>
 		<link href="../css/jtables-bdre.css" rel="stylesheet" type="text/css" />
-		<link rel="stylesheet" href="../css/data-ingestion.css" />
-		
 		<script >
                 function fetchPipelineInfo(pid){
         			location.href = '<c:url value="/pages/lineage.page?pid="/>' + pid;
@@ -517,7 +505,7 @@ wizard = $(document).ready(function() {
 			        <spring:message code="flumepropertieswizard.page.source_type_alert"/>
 			    </div>
 			</div>
-			<div id="bdre-flume-ingestion" ng-controller="myCtrl">
+			<div id="bdre-flume-ingestion" class="steps-vertical" ng-controller="myCtrl">
 			<h3><div class="number-circular">1</div><spring:message code="flumepropertieswizard.page.source_type"/></h3>
 			<section>
 

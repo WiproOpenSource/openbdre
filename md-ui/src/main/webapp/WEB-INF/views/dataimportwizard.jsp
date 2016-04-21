@@ -32,15 +32,13 @@
 		<script src = "../js/jquery-ui-1.10.3.custom.js" ></script >
 		<script src = "../js/jquery.steps.min.js" ></script >
 		<link rel = "stylesheet" href = "../css/jquery.steps.css" />
+		<link rel="stylesheet" href="../css/jquery.steps.custom.css" />
 		<script src = "../js/jquery.fancytree.js" ></script >
 		<link rel = "stylesheet" href = "../css/ui.fancytree.css" />
 		<script src = "../js/jquery.fancytree.gridnav.js" type = "text/javascript" ></script >
 		<script src = "../js/jquery.fancytree.table.js" type = "text/javascript" ></script >
 		<script src = "../js/jquery.jtable.js" type = "text/javascript" ></script >
 		<link href = "../css/jtables-bdre.css" rel = "stylesheet" type = "text/css" />
-		<link rel="stylesheet" href="../css/data-ingestion.css" />
-		<link rel="stylesheet" href="../css/data-ingestion-horizontal.css" />
-	
 		<script >
         function fetchPipelineInfo(pid){
 			location.href = '<c:url value="/pages/lineage.page?pid="/>' + pid;
@@ -646,7 +644,7 @@ isInit=true;
 	<body >
 		<form action = "#" method = "POST" id = "wizardform" >
 			<br />
-			<div id = "bdre-dataload" ng-controller = "myCtrl" >
+			<div id= "bdre-dataload" class="steps-horizontal" ng-controller = "myCtrl" >
 				<h3 ><div class="number-circular">1</div><spring:message code="dataimportwizard.page.db"/></h3 >
 				<section >
 					<div >

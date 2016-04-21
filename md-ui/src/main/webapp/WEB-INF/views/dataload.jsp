@@ -13,41 +13,8 @@
 		<link href="../css/css/bootstrap.min.css" rel="stylesheet" />
 		<script src="../js/jquery-ui-1.10.3.custom.js"></script>
 		<script src="../js/jquery.steps.min.js"></script>
-		<style>
-			.form-group label {
-				width: 100%;
-				float: none;
-				text-align: left !important;
-			}
-			
-			label+div {
-				width: 80% !important;
-			}
-			
-			.form-group {
-				width: 50%;
-			}
-			
-			div.form-group:nth-child(even) {
-				float: right;
-			}
-			
-			div.form-group:nth-child(odd) {
-				float: left;
-			}
-			
-			#bdre-data-load {
-				background-color: #F8F9FB;
-				padding-top: 2%;
-			}
-			
-			.steps ul {
-				padding-bottom: 4% !important;
-			}
-		</style>
-		
 		<link rel="stylesheet" href="../css/jquery.steps.css" />
-		<link rel="stylesheet" href="../css/data-ingestion.css" />
+		<link rel="stylesheet" href="../css/jquery.steps.custom.css" />
 		<script src="../js/bootstrap.js" type="text/javascript"></script>
 		<script src="../js/jquery.jtable.js" type="text/javascript"></script>
 		<script src="../js/angular.min.js" type="text/javascript"></script>
@@ -682,7 +649,7 @@ wizard = $(document).ready(function() {
         <spring:message code="dataload.page.alert_info_outer_heading"/>
     </div>
 	</div>
-		<div id="bdre-data-load" ng-controller="myCtrl">
+		<div id="bdre-data-load" class="steps-vertical" ng-controller="myCtrl">
 		
 			<h3><div class="number-circular">1</div><spring:message code="dataload.page.h3_div"/></h3>
 			<section>

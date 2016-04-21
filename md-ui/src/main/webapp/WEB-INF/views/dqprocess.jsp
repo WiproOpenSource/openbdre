@@ -26,10 +26,8 @@
 
                 <link href="../css/css/bootstrap.min.css" rel="stylesheet" type="text/css" />
                 <link href="../css/jquery-ui-1.10.3.custom.css" rel="stylesheet" type="text/css" />
-                <link rel="stylesheet" href="../css/data-ingestion.css" />
-                <link rel="stylesheet" href="../css/data-ingestion-forms.css" />
-
-                <!-- Include jTable script file. -->
+                <link rel="stylesheet" href="../css/jquery.steps.custom.css" />
+				<!-- Include jTable script file. -->
                 <script src="../js/jquery.min.js" type="text/javascript"></script>
                 <script src="../js/jquery-ui-1.10.3.custom.js" type="text/javascript"></script>
                 <script src="../js/bootstrap.js" type="text/javascript"></script>
@@ -80,7 +78,7 @@
 
             <body ng-app="myApp" ng-controller="myCtrlr" ng-init="init()">
                 <div class="row">&nbsp;</div>
-                <div class="row">
+                <div class="row basic-forms">
                     <div class="col-md-2"> </div>
                     <div class="col-md-8">
                         <div class="panel panel-primary">
