@@ -1,10 +1,11 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
     <%@ taglib prefix="security"
 	   uri="http://www.springframework.org/security/tags" %>
+	   <%@taglib uri="http://www.springframework.org/tags" prefix="spring"%>
         <html id="ng-app">
 
         <head>
-            <title>BDRE | Bigdata Ready Enterprise</title>
+            <title><spring:message code="common.page.title_bdre_2"/></title>
 	<script>
 	  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
 	  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
@@ -135,15 +136,12 @@
                 }
    
                 /* HEADER and NAV-BAR*/
-                .navbar-height{
-                min-height: 110px;
+               	.navbar-height{
+               	min-height: 110px;
                 }
                 .navbar-inverse .navbar-nav>li>a:hover{
          		color: rgb(9,147,219);
          		}
-                .bor{
-                border: 1px solid red;
-                }
                 .nav-center > li{float:none;display:inline-block;font-size: 18px}
 				.nav-center {    
 				width: 100%;
@@ -176,10 +174,18 @@
 			    top: 11px;
 			    right: 10px;
 			    }
-			    
+			    .dropdown-menu{
+			    background-color: #353535;
+			    }
+			    .dropdown-menu>li>a{
+			     color: #fff;
+			    }
+			    .dropdown-menu>li>a:focus, .dropdown-menu>li>a:hover{
+			     background-color: #1D1D1D;
+			     color: #fff;
+			    }
         </style>
-
-        </head>
+		</head>
 
         <body class="container-fluid" ng-app="myApp" ng-controller="myCtrl">
             <nav class="navbar navbar-inverse navbar-height">
@@ -194,9 +200,9 @@
                         </button>
 
                         <a class="navbar-brand" href="#">
-							<img alt="Bigdata Ready Enterprise" class="img-responsive logo" src="../css/images/bdre_logo.png" style="width:55px;">
+							<img alt="<spring:message code="common.page.title_bdre_1"/>" class="img-responsive logo" src="../css/images/bdre_logo.png" style="width:55px;">
                         </a>
-						<span class="bdretextlogo">BDRE</span>
+						<span class="bdretextlogo"><spring:message code="content.page.app_abbrevation"/></span>
                     </div>
 
                     <!-- Collect the nav links, forms, and other content for toggling -->
@@ -471,7 +477,12 @@
                                             collapse: "1",
                                             url: "flumepropertieswizard.page",
                                             children: []
-					}, </security:authorize>]
+					},{
+                                                                  label: "Hive Table Migration",
+                                                                  collapse: "1",
+                                                                  url: "hivetablemigration.page",
+                                                                  children: []
+                      					}, </security:authorize>]
                                     },
                                     <security:authorize access = "hasRole('ROLE_ADMIN')"> {
                                         label: "Administration",

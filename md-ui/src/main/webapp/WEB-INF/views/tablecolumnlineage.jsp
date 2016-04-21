@@ -1,12 +1,13 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+<%@taglib uri="http://www.springframework.org/tags" prefix="spring"%>
     <%@ page language="java" contentType="text/html; charset=ISO-8859-1"
         pageEncoding="ISO-8859-1"%>
         <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
         <html>
-            <title>Table Column Lineage | BDRE</title>
+            <title><spring:message code="tablecolumnlineage.page.table_column_lineage_bdre"/></title>
             <head>
                 <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
-                <title>Bigdata Ready Enterprise</title>
+                <title><spring:message code="common.page.title_bdre_1"/></title>
                 <script>
                     (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
                         (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
@@ -28,12 +29,40 @@
                 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
                 <script src="../js/jquery.steps.min.js"></script>
                 <link rel="stylesheet" href="../css/jquery.steps.css" />
+                <link rel="stylesheet" href="../css/data-ingestion.css" />
                 <script src="../js/bootstrap.js" type="text/javascript"></script>
                 <script src="../js/angular.min.js" type="text/javascript"></script>
                 <script src="../js/svgutil.js" type="text/javascript"></script>
                 <script language="javascript" type="text/javascript" src="../js/graph/viz.js"></script>
                 <script language="javascript" type="text/javascript" src="../js/graph/site.js"></script>
-
+				<style>
+					#divEncloseHeading .panel-body, .panel-primary>.panel-heading {
+						background-color: #F8F9FB;
+					}
+					#divEncloseHeading .panel-body{
+					padding-bottom: 53px;
+					}
+					.panel-primary>.panel-heading {
+						border: none;
+					}
+					.actions .btn-primary {
+						background-color: #23C9A4 !important;
+						color: #404040 !important;
+						padding: 0.25em 1.1em !important;
+						border-radius: 4px !important;
+						border-color: transparent;
+					}
+					
+					.panel-primary {
+						border-color: #B0B0B0 !important;
+					}
+					.leftpad{
+					padding-left: 10%;
+					}
+					.rightpad{
+					padding-right: 10%;
+					}
+				</style>
                 <script type="text/javascript">
                     var graphViz = "";
                     var prefix = "strict digraph{\n" +
@@ -287,31 +316,29 @@
                         <c:if test="${empty param.tableName}">
                             <div class="col-md-10" id="divEncloseHeading">
                                 <div class="panel panel-primary">
-                                    <div class="panel-heading">Table Column Lineage
-
-                                        <div class="text-right">
-                                            <button type='button' class='btn btn-default' aria-label='Left Align' onClick='saveSVG("execution",0)'><span class='glyphicon glyphicon-save-file' aria-hidden='true'></span> Save </button>
+                                    <div class="panel-heading">
+										<div class="text-right">
+                                    <%-- <div class="panel-heading"><spring:message code="tablecolumnlineage.page.table_column_lineage"/> --%>
+											<button type='button' class='btn btn-default' aria-label='Left Align' onClick='saveSVG("execution",0)'><span class='glyphicon glyphicon-save-file' aria-hidden='true'></span> Save </button>
                                         </div>
                                     </div>
 
                                     <div class="panel-body">
                                             <div class="row">
-                                                 <div class="col-xs-4">
-
-                                                    <label>Table Name is:</label>
+                                                 <div class="col-xs-5 leftpad">
+													<label><spring:message code="tablecolumnlineage.page.table_name"/></label>
                                                     <input type="text" class="form-control" name="tableName" id="tableName" value =""/>
-
-                                                </div>
-                                                <div class="col-xs-4">
-                                                    <label>Column Name is:</label>
-                                                    <input type="text" class="form-control" name="colName" id="colName" value =""/>
+												</div>
+                                                <div class="col-xs-5 pull-right rightpad">
+                                                    <label><spring:message code="tablecolumnlineage.page.column_name"/></label>
+													<input type="text" class="form-control" name="colName" id="colName" value =""/>
                                                 </div>
 											</div>
-<br>
-											<div class="text-left">
-											    <button class="btn btn-primary" onClick="resetGraph(); getTableName(jQuery('#tableName').val(), jQuery('#colName').val())" href="#"><span class='glyphicon glyphicon-blackboard'></span> Show Lineage </button>
-											</div>
+											
                                     </div>
+                                    <div class="text-right actions">
+											    <button class="btn btn-primary" onClick="resetGraph(); getTableName(jQuery('#tableName').val(), jQuery('#colName').val())" href="#">Show Lineage </button>
+											</div>
                                 </div>
                             </div>
                         </c:if>
@@ -322,7 +349,7 @@
                 </div>
 
                 <div id="div-dialog-warning" title="Process Not Found" style="display:none;">
-                    <p><span class="ui-icon ui-icon-alert" style="float:left; margin:0 7px 20px 0;"></span>Process Not Found</p>
+                    <p><span class="ui-icon ui-icon-alert" style="float:left; margin:0 7px 20px 0;"></span><spring:message code="tablecolumnlineage.page.process_not_found"/></p>
                 </div>
             </body>
         </html>

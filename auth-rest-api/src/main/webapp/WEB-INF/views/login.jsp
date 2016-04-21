@@ -1,11 +1,12 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+<%@taglib uri="http://www.springframework.org/tags" prefix="spring"%>
 <%@page session="true"%>
 <html>
     <head>
 	<link href="../../css/bootstrap.min.css" rel="stylesheet" type="text/css" />
-	<title>Login Page</title>
+	<title><spring:message code="login.page.title"/></title>
 	<style>
-	     body{background-image: url("../../css/images/BDRE_BG.png");width: 100%;height: 100%;background-size: cover;overflow: hidden;}
+	     body{background-image: url("../../css/images/BDRE_BG.jpg");width: 100%;height: 100%;background-size: cover;overflow: hidden;}
 		.login-box{width: 425px;height: 315px;margin: auto;border: 1px solid #e4e4e4;background-color: #e4e4e4;border-radius: 5px;position: absolute;top: 55%;bottom: 50%;left:0;right:0;}
 		.logo{width: 110px;top: -51px;position: absolute;left: 0;right:0;}
 		.btn-signin{background-color: #005352;height: 37px;width: 111px;padding-top: 0px;padding-bottom: 0px;float:right;margin-bottom:20px}
@@ -32,20 +33,20 @@
 	</script>
     </head>
     <body onload='document.loginForm.username.focus();'>
-	<div class="text-center text-info">Big Data Ready Enterprise</div>
+	<div class="text-center text-info"><spring:message code="login.page.title_bdre"/></div>
 	<div id="login-box" class="center-block login-box">
 	<img id="logo" class="center-block img-responsive logo" src="../../css/images/logo.png"/>
 		<c:if test="${not empty error}">
 		<div class="alert alert-danger login-alert-danger " role="alert">
 		    <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
-		    <span class="sr-only">Error:</span>
+		    <span class="sr-only"><spring:message code="login.page.error"/></span>
 		    ${error}
 		</div>
 		</c:if>
 	    <c:if test="${not empty msg}">
 		<div class="alert alert-info " role="alert">
 		    <span class="glyphicon glyphicon-info-sign" aria-hidden="true"></span>
-		    <span class="sr-only">Info:</span>
+		    <span class="sr-only"><spring:message code="login.page.info"/></span>
 		    ${msg}
 		</div>
 	    </c:if>
@@ -53,15 +54,15 @@
 		  action="<c:url value='/j_spring_security_check' />" method='POST'>
 		<div class="form-group-pdiv">
 			<div class="form-group">
-			    <div class="icon-circle usericon"></div><input type="text" class="form-control" id="InputEmail" name='username' placeholder="Username">
+			    <div class="icon-circle usericon"></div><input type="text" class="form-control" id="InputEmail" name='username' placeholder=<spring:message code="login.page.username"/> >
 			</div>
 			<div class="form-group">
-			    <div class="icon-circle pwordicon"></div><input type="password" class="form-control" id="password" name='password' placeholder="Password">
+			    <div class="icon-circle pwordicon"></div><input type="password" class="form-control" id="password" name='password' placeholder=<spring:message code="login.page.password"/> >
 			</div>
 		</div>
 		<div class="login-links">
-			<div class="login-fp">Forgot Password?</div>
-			<button type="submit" class="btn btn-default btn-lg btn-primary btn-signin"><span id="sizing-addon2">Sign in</span></button>
+			<div class="login-fp"><spring:message code="login.page.forgot_password"/></div>
+			<button type="submit" class="btn btn-default btn-lg btn-primary btn-signin"><span id="sizing-addon2"><spring:message code="login.page.sign_button"/></span></button>
 			<div class="clearfix"></div>
 		</div>
 		<input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}" />
