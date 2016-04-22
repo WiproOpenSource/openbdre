@@ -34,7 +34,7 @@
 
 
 	<script type="text/javascript">
-         var map = new Object();
+
 		var configGroupVal = '';
             var updateSettings = function (){
 
@@ -81,141 +81,197 @@
     $('#configDropdown').change(function() {
 		console.log($(this).val());
 		var config=$(this).val();
-		if(config == "cluster"){
-		$("#clusterDiv").show();
-            var cfgGrp = 'cluster';
-                		$(document).ready(function () {
-                	    $('#clusterDiv').jtable({
-                	     title: 'Clusters',
-                	      messages: {
-                                 addNewRecord: 'Add new cluster'
-                             },
-
-                		    actions: {
-                		    listAction: function (postData, jtParams) {
-                		    console.log(postData);
-                			    return $.Deferred(function ($dfd) {
-                			    $.ajax({
-                			    url:'/mdrest/genconfig/likegc/'+cfgGrp+'/?required=2',
-                				    type: 'GET',
-                				    data: postData,
-                				    dataType: 'json',
-                				    success: function (data) {
-                				    $dfd.resolve(data);
-                				    },
-                				    error: function () {
-                				    $dfd.reject();
-                				    }
-                			    });
-                			    });
-                		    },
-
-                		    createAction:function (postData) {
-                		    console.log(postData);
-                			    return $.Deferred(function ($dfd) {
-                			    $.ajax({
-                			    url: '/mdrest/genconfig/',
-                				    type: 'PUT',
-                				    data: postData,
-                				    dataType: 'json',
-                				    success: function (data) {
-
-                				    $dfd.resolve(data);
-                				    },
-                				    error: function () {
-                				    $dfd.reject();
-                				    }
-                			    });
-                			    });
-
-                		    }
-
-
-                		    },fields: {
-
-
-                                    nameNodeHostName: {
-                                    title :'name_node_hostname',
-                                        key : true,
-                                        list: false,
-                                        create:true,
-                                        edit: false,
-
-                                    }, nameNodePort: {
-                              		    title: ' name_node_port',
-                              			    key : true,
-                              			    list: false,
-                              			    create:true,
-                              			    edit: false,
-
-                              		    }, jobTrackerHostName: {
-                              		    title: 'job_tracker_hostname',
-                              			    key : true,
-                              			    list : false,
-                              			    create : true,
-                              			    edit : false,
-
-
-                              		    },
-                              			    jobTrackerPort: {
-                              			    title: 'job_tracker_port',
-                              				    list : false,
-                              				    create : true,
-                              				    edit : false,
-                              				    key : true,
-
-                              			    },
-                              			    hiveHostName: {
-                              			        title: 'hive_server_hostname',
-                              				    list: false,
-                              				    create:true,
-                              				    edit: false,
-                              				    key : true,
-
-                              			    },
-                              			    clusterName: {
-                                                title: 'cluster_name',
-                                                list: false,
-                                                create:true,
-                                                edit: false,
-                                                key : true,
-
-                                            },
-                              		    }
-                		     });
-                            		    $('#clusterDiv').jtable('load');
-                            	    });
-
-
-
-
 		configGroupVal = config;
-		$.ajax({
-        		type: "GET",
-        		url: "/mdrest/genconfig/likegc/" + config + "/?required=1",
-        		dataType: 'json',
-        		success: function(data) {
-        			var root = 'Records';
-        			var div = document.getElementById('Settings');
-        			var formHTML = '';
-        			formHTML = formHTML + '<form role="form" id = "' + 'Settings' + 'Form" >';
-        			console.log(data[root]);
-        			$.each(data[root], function(i, v) {
-        				formHTML = formHTML + '<div class="form-group" > <label for="' + v.key + '">' + v.key + '</label>';
-        				formHTML = formHTML + '<span class="glyphicon glyphicon-question-sign" title="' + v.description + '"></span>';
-        				formHTML = formHTML + '<input name="'+v.key+'" value="' + v.defaultVal + '" class="form-control" id="' + v.key + '"></div>';
-        			});
+		if(config == "cluster.hive-address"){
+       $("#Container").show();
+        $("#Settings").hide();
+        $('#Container').jtable({
+       	    title: 'Clusters List',
+       		    paging: true,
+       		    pageSize: 10,
+       		    sorting: true,
+       		    actions: {
+       		    listAction: function (postData, jtParams) {
+       		    console.log(postData);
+       			    return $.Deferred(function ($dfd) {
+       			    $.ajax({
+       			    url: "/mdrest/genconfig/" + config + "/?required=1",
+       				    type: 'GET',
+       				    data: postData,
+       				    dataType: 'json',
+       				    success: function (data) {
+       				    $dfd.resolve(data);
+       				    },
+       				    error: function () {
+       				    $dfd.reject();
+       				    }
+       			    });
+       			    });
+       		    },
+       	    <security:authorize access="hasAnyRole('ROLE_ADMIN','ROLE_USER')">
+       		    createAction:function (postData) {
+       		    console.log(postData);
+       			    return $.Deferred(function ($dfd) {
+       			    $.ajax({
+       			    url: '/mdrest/genconfig/insertcluster',
+       				    type: 'PUT',
+       				    data: postData,
+       				    dataType: 'json',
+       				    success: function (data) {
+       				    $dfd.resolve(data);
+       				    },
+       				    error: function () {
+       				    $dfd.reject();
+       				    }
+       			    });
+       			    });
+       		    }
+       			   </security:authorize>
+       		    },
+       		    fields: {
 
-        			    formHTML = formHTML + '<div id="editSettings"><button onclick="updateSettings()" id="editMdSetting" type="button" class="btn btn-primary">save</button></div>';
-        			formHTML = formHTML + '</form>';
-        			div.innerHTML = formHTML;
-        			console.log(div);
-        		}
-        	});
+       		    Clusters: {
+       		    title: 'Click to expand',
+       			    width: '5%',
+       			    sorting: false,
+       			    edit: false,
+       			    create: false,
+       			    listClass: 'bdre-jtable-button',
+       			    display: function(item) {                         //Create an image that will be used to open child table
+
+       			    var $img = $('<img src="../css/images/three-bar.png" title="Clusters info" />'); //Open child table when user clicks the image
+
+       				    $img.click(function() {
+       				    $('#Container').jtable('openChildTable',
+       					    $img.closest('tr'), {
+       				    title: ' Details of ' + item.record.description,
+       					    paging: true,
+       					    pageSize: 10,
+       					    actions: {
+       					    listAction: function(postData) {
+       					    return $.Deferred(function($dfd) {
+       					    console.log(item);
+       						    $.ajax({
+       						    url: '/mdrest/genconfig/cluster/' + item.record.description,
+       							    type: 'GET',
+       							    data: item,
+       							    dataType: 'json',
+       							    success: function(data) {
+       							    $dfd.resolve(data);
+       							    },
+       							    error: function() {
+       							    $dfd.reject();
+       							    }
+       						    }); ;
+       					    });
+       					    },
+
+       						    updateAction: function(postData) {
+       						    console.log(postData);
+       							    return $.Deferred(function($dfd) {
+       							    $.ajax({
+       							    url: '/mdrest/genconfig/updatecluster',
+       								    type: 'POST',
+       								    data: postData + '&description=' + item.record.description,
+       								    dataType: 'json',
+       								    success: function(data) {
+       								    console.log(data);
+       									    $dfd.resolve(data);
+       								    },
+       								    error: function() {
+       								    $dfd.reject();
+       								    }
+       							    });
+       							    });
+       						    },
+
+       					    },
+       					    fields: {
+       						    key: {
+       						    title: 'Type',
+       						    edit: true,
+       							defaultValue: item.record.key,
+       						  },
+       						    defaultVal: {
+       						    title: 'Address',
+       						    edit: true,
+       							defaultValue: item.record.defaultVal,
+       						    },
+       					    }
+       				    },
+       					    function(data) { //opened handler
+
+       					    data.childTable.jtable('load');
+       					    });
+       				    }); //Return image to show on the person row
+
+       				    return $img;
+       			    }
+       		    },
+       			    nameNodeHostName: {
+					   title :'namenode hostname',
+						   key : true,
+						   list: false,
+						   create:true,
+						   edit: false,
+
+					   }, nameNodePort: {
+							title: ' namenode port',
+								key : true,
+								list: false,
+								create:true,
+								edit: false,
+
+							}, jobTrackerHostName: {
+							title: 'jobtracker hostname',
+								key : true,
+								list : false,
+								create : true,
+								edit : false,
+
+
+							},
+								jobTrackerPort: {
+								title: 'jobtracker port',
+									list : false,
+									create : true,
+									edit : false,
+									key : true,
+
+								},
+								hiveHostName: {
+									title: 'hive hostname',
+									list: false,
+									create:true,
+									edit: false,
+									key : true,
+
+								},
+								clusterName: {
+								   title: 'cluster name',
+								   list: false,
+								   create:true,
+								   edit: false,
+								   key : true,
+								   },
+       			    description: {
+       			    	key : true,
+       				    list: true,
+       				    create:false,
+       				    edit: false,
+       				    title: 'Clusters'
+
+       			    }
+       		    }
+       	    });
+       		    $('#Container').jtable('load');
+
+
 
         }
 		else{
-        $("#clusterDiv").hide();
+        $("#Container").hide();
+         $("#Settings").show();
 		buildFormDisplay(config,'Settings');
 		}
 	});
@@ -261,7 +317,7 @@ function buildFormDisplay(configGroup, typeDiv) {
     						<option value="mdconfig">mdconfig</option>
     						<option value="imconfig">imconfig</option>
     						<option value="scripts_config">scriptsconfig</option>
-    						<option value="cluster">cluster hive address</option>
+    						<option value="cluster.hive-address">clusters</option>
 						</select>
 					</form>
 					</div>
@@ -270,7 +326,10 @@ function buildFormDisplay(configGroup, typeDiv) {
                                    <spring:message code="settings.page.configuration_alert"/>
                 </div>
 
-				<div id="clusterDiv" ></div>
+                <section style="width:100%;text-align:center;">
+				<div id="Container" ></div>
+				</section>
+
 				<div id="Settings" ></div>
     </section>
     <div id="div-dialog-warning"/>

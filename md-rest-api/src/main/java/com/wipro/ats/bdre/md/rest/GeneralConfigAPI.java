@@ -38,8 +38,6 @@ import java.util.Map;
  */
 @Controller
 @RequestMapping("/genconfig")
-
-
 public class GeneralConfigAPI extends MetadataAPIBase {
     private static final Logger LOGGER = Logger.getLogger(GeneralConfigAPI.class);
 
@@ -51,6 +49,66 @@ public class GeneralConfigAPI extends MetadataAPIBase {
      */
     @Autowired
     GeneralConfigDAO generalConfigDAO;
+
+    @RequestMapping(value = {"cluster/{description}"}, method = RequestMethod.GET)
+    @ResponseBody
+    public RestWrapper list(@PathVariable("description") String description, Principal principal) {
+
+        RestWrapper restWrapper = null;
+        try {
+
+            GetGeneralConfig generalConfigs = new GetGeneralConfig();
+            List<GeneralConfig> generalConfigList = generalConfigs.byLikeConfigGroup(description, 1);
+            if (!generalConfigList.isEmpty()) {
+                if (generalConfigList.get(0).getRequired() == 2) {
+                    restWrapper = new RestWrapper("Listing of Records Failed", RestWrapper.ERROR);
+                } else {
+                    restWrapper = new RestWrapper(generalConfigList, RestWrapper.OK);
+                    LOGGER.info("All records listed with config group :" + "cluster" + "from General  Config by User:" + principal.getName());
+                }
+            } else {
+                restWrapper = new RestWrapper(generalConfigList, RestWrapper.OK);
+
+                LOGGER.info("All records listed with config group :" + "cluster" + "from General  Config by User:" + principal.getName());
+            }
+
+        } catch (MetadataException e) {
+            LOGGER.error(e);
+            restWrapper = new RestWrapper(e.getMessage(), RestWrapper.ERROR);
+        }
+        return restWrapper;
+    }
+
+
+
+    @RequestMapping(value = {"/cluster", "/cluster/"}, method = RequestMethod.GET)
+    @ResponseBody
+    public RestWrapper list( Principal principal) {
+
+        RestWrapper restWrapper = null;
+        try {
+
+            GetGeneralConfig generalConfigs = new GetGeneralConfig();
+            List<GeneralConfig> generalConfigList = generalConfigs.byLikeConfigGroup("cluster", 1);
+            if (!generalConfigList.isEmpty()) {
+                if (generalConfigList.get(0).getRequired() == 2) {
+                    restWrapper = new RestWrapper("Listing of Records Failed", RestWrapper.ERROR);
+                } else {
+                    restWrapper = new RestWrapper(generalConfigList, RestWrapper.OK);
+                    LOGGER.info("All records listed with config group :" + "cluster" + "from General  Config by User:" + principal.getName());
+                }
+            } else {
+                restWrapper = new RestWrapper(generalConfigList, RestWrapper.OK);
+
+                LOGGER.info("All records listed with config group :" + "cluster" + "from General  Config by User:" + principal.getName());
+            }
+
+        } catch (MetadataException e) {
+            LOGGER.error(e);
+            restWrapper = new RestWrapper(e.getMessage(), RestWrapper.ERROR);
+        }
+        return restWrapper;
+    }
 
     @RequestMapping(value = {"/{cg}", "/{cg}/"}, method = RequestMethod.GET)
     @ResponseBody public
@@ -75,13 +133,17 @@ public class GeneralConfigAPI extends MetadataAPIBase {
 
     }
 
-    @RequestMapping(value = {"/likegc/{cg}", "/likegc/{cg}/"}, method = RequestMethod.GET)
+
+
+
+
+  /*  @RequestMapping(value = {"/likegc/{cg}", "/likegc/{cg}/"}, method = RequestMethod.GET)
     @ResponseBody public
     RestWrapper listLikeGCUsingRequired(@PathVariable("cg") String configGroup, @RequestParam(value = "required", defaultValue = "2") Integer required, Principal principal) {
 
         RestWrapper restWrapper = null;
         GetGeneralConfig generalConfigs = new GetGeneralConfig();
-        List<GeneralConfig> generalConfigList = generalConfigs.byLikeConigGroup(configGroup, required);
+        List<GeneralConfig> generalConfigList = generalConfigs.byLikeConfigGroup(configGroup, required);
         if (!generalConfigList.isEmpty()) {
             if (generalConfigList.get(0).getRequired() == 2) {
                 restWrapper = new RestWrapper("Listing of Records Failed", RestWrapper.ERROR);
@@ -97,7 +159,7 @@ public class GeneralConfigAPI extends MetadataAPIBase {
         return restWrapper;
 
     }
-
+*/
     /**
      * This method calls proc GetGenConfigProperty and fetches a record from GeneralConfig table corresponding to
      * Config group and key passed.
@@ -202,10 +264,10 @@ public class GeneralConfigAPI extends MetadataAPIBase {
         return restWrapper;
     }
 
-    @RequestMapping(value = {"/", ""}, method = RequestMethod.PUT)
+    @RequestMapping(value = {"/insertcluster", "insertcluster"}, method = RequestMethod.PUT)
 
     @ResponseBody
-    public RestWrapper insert(@ModelAttribute("properties")
+    public RestWrapper insertCluster(@ModelAttribute("clusterInfo")
                               @Valid ClusterInfo cluster, BindingResult bindingResult, Principal principal) {
 
         RestWrapper restWrapper = null;
@@ -214,7 +276,7 @@ public class GeneralConfigAPI extends MetadataAPIBase {
             return bindingResultError.errorMessage(bindingResult);
         }
         try {
-            LOGGER.info("name_node_host "+cluster.getNameNodeHostName()+":"+cluster.getNameNodePort());
+            LOGGER.info("name_node_host " + cluster.getNameNodeHostName() + ":" + cluster.getNameNodePort());
             generalConfigDAO.insertCluster(cluster);
 
 
@@ -227,6 +289,59 @@ public class GeneralConfigAPI extends MetadataAPIBase {
         }
         return restWrapper;
     }
+
+    @RequestMapping(value = {"/updatecluster", "updatecluster"}, method = RequestMethod.POST)
+
+    @ResponseBody
+    public RestWrapper updateCluster(@RequestParam Map<String, String> map, Principal principal) {
+
+        RestWrapper restWrapper = null;
+        String description;
+        String defaultVal;
+        try {
+            String cgKey = map.get("key");
+            defaultVal = map.get("defaultVal");
+            description = map.get("description");
+
+
+            GeneralConfig generalConfigUpdate = new GeneralConfig();
+            GeneralConfig generalConfig = new GeneralConfig();
+
+            CharSequence nn = "Namenode";
+            CharSequence jt = "Job Tracker";
+            CharSequence hive = "Hive Server2";
+
+            if(cgKey.contains(nn))
+                generalConfig.setConfigGroup("cluster.nn-address");
+            if(cgKey.contains(jt))
+                generalConfig.setConfigGroup("cluster.jt-address");
+            if(cgKey.contains(hive))
+                generalConfig.setConfigGroup("cluster.hive-address");
+
+                generalConfig.setKey(cgKey);
+                generalConfig.setDefaultVal(defaultVal);
+                //initialising values to generalConfigId of dao
+                GeneralConfigId jpaGeneralConfigId = new GeneralConfigId();
+                jpaGeneralConfigId.setConfigGroup(generalConfig.getConfigGroup());
+                jpaGeneralConfigId.setGcKey(generalConfig.getKey());
+                //initialising values to generalConfig of dao
+                com.wipro.ats.bdre.md.dao.jpa.GeneralConfig jpaGeneralConfig = generalConfigDAO.get(jpaGeneralConfigId);
+                jpaGeneralConfig.setDefaultVal(generalConfig.getDefaultVal());
+                //Calling Update method of generalConfigDAO
+                generalConfigDAO.update(jpaGeneralConfig);
+                generalConfigUpdate = generalConfig;
+
+            restWrapper = new RestWrapper(generalConfigUpdate, RestWrapper.OK);
+            LOGGER.info(" Record with key:" + generalConfigUpdate.getKey() + " and config group:" + generalConfigUpdate.getConfigGroup() + " updated in general_config by User:" + principal.getName());
+
+        } catch (MetadataException e) {
+            LOGGER.error(e);
+            restWrapper = new RestWrapper(e.getMessage(), RestWrapper.ERROR);
+        }
+        return restWrapper;
+    }
+
+
 
 
     @Override

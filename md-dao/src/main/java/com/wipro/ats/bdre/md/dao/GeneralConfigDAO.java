@@ -181,7 +181,7 @@ public class GeneralConfigDAO {
         return generalConfigList;
     }
 
-    public List<com.wipro.ats.bdre.md.beans.table.GeneralConfig> getLikeGeneralConfig(String configGroup, int required) {
+    public List<com.wipro.ats.bdre.md.beans.table.GeneralConfig> getLikeGeneralConfig(String description, int required) {
         Session session = sessionFactory.openSession();
         List<com.wipro.ats.bdre.md.beans.table.GeneralConfig> generalConfigList = new ArrayList<com.wipro.ats.bdre.md.beans.table.GeneralConfig>();
 
@@ -189,7 +189,7 @@ public class GeneralConfigDAO {
             session.beginTransaction();
 
             if (required == 2) {
-                Criteria getGeneralConfigCriteria = session.createCriteria(GeneralConfig.class).add(Restrictions.like(CONFIG_GROUP, configGroup+"%")).add(Restrictions.eq("enabled", true));
+                Criteria getGeneralConfigCriteria = session.createCriteria(GeneralConfig.class).add(Restrictions.like(CONFIG_GROUP, "cluster%")).add(Restrictions.eq("description", description)).add(Restrictions.eq("enabled", true));
                 List<GeneralConfig> jpaGeneralConfigList = getGeneralConfigCriteria.list();
                 for (GeneralConfig jpaGeneralConfig : jpaGeneralConfigList) {
                     com.wipro.ats.bdre.md.beans.table.GeneralConfig generalConfig = new com.wipro.ats.bdre.md.beans.table.GeneralConfig();
@@ -211,7 +211,7 @@ public class GeneralConfigDAO {
             } else {
                 // only difference in both criteria is that requiredRestriction is added in this one.
                 boolean req = (required == 1) ? true : false;
-                Criteria getGeneralConfigCriteria = session.createCriteria(GeneralConfig.class).add(Restrictions.like(CONFIG_GROUP, configGroup+"%")).add(Restrictions.eq("enabled", true)).add(Restrictions.eq("required", req));
+                Criteria getGeneralConfigCriteria = session.createCriteria(GeneralConfig.class).add(Restrictions.like(CONFIG_GROUP, "cluster%")).add(Restrictions.eq("description", description)).add(Restrictions.eq("enabled", true)).add(Restrictions.eq("required", req));
                 List<GeneralConfig> jpaGeneralConfigList = getGeneralConfigCriteria.list();
                 for (GeneralConfig jpaGeneralConfig : jpaGeneralConfigList) {
                     com.wipro.ats.bdre.md.beans.table.GeneralConfig generalConfig = new com.wipro.ats.bdre.md.beans.table.GeneralConfig();
@@ -288,7 +288,7 @@ public class GeneralConfigDAO {
             GeneralConfig nnGeneralConfig = new GeneralConfig();
             GeneralConfigId nnGeneralConfigId = new GeneralConfigId();
             nnGeneralConfigId.setConfigGroup("cluster.nn-address");
-            nnGeneralConfigId.setGcKey(cluster.getClusterName() +" - Name Node Adrress");
+            nnGeneralConfigId.setGcKey(cluster.getClusterName() +" - Name Node Address");
             nnGeneralConfig.setId(nnGeneralConfigId);
             nnGeneralConfig.setGcValue("Name Node Address");
             nnGeneralConfig.setDescription(cluster.getClusterName());
@@ -314,7 +314,7 @@ public class GeneralConfigDAO {
             GeneralConfig hiveGeneralConfig = new GeneralConfig();
             GeneralConfigId hiveGeneralConfigId = new GeneralConfigId();
             hiveGeneralConfigId.setConfigGroup("cluster.hive-address");
-            hiveGeneralConfigId.setGcKey(cluster.getClusterName()+" - Hive Server Address");
+            hiveGeneralConfigId.setGcKey(cluster.getClusterName()+" - Hive Server2 Address");
             hiveGeneralConfig.setId(hiveGeneralConfigId);
             hiveGeneralConfig.setGcValue("Hive Server2 Address");
             hiveGeneralConfig.setDescription(cluster.getClusterName());
@@ -333,6 +333,11 @@ public class GeneralConfigDAO {
         } finally {
             session.close();
         }
+
+    }
+
+    public void updateCluster(ClusterInfo cluster){
+
 
     }
 

@@ -104,7 +104,7 @@ public class GeneralConfigDAOTest {
     }
 
 
-    @Ignore
+
     @Test
     public void getLikeGeneralConfigTest() throws Exception {
         List<com.wipro.ats.bdre.md.beans.table.GeneralConfig> generalConfigList = generalConfigDAO.getLikeGeneralConfig("cluster", 1);
