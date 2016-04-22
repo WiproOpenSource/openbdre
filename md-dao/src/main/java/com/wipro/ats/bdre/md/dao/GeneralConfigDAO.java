@@ -336,10 +336,4 @@ public class GeneralConfigDAO {
 
     }
 
-    public void updateCluster(ClusterInfo cluster){
-
-
-    }
-
-
 }
