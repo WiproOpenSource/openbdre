@@ -308,7 +308,7 @@
             </head>
             <body>
                 <br/>
-
+				<div class="page-heading"><spring:message code="tablecolumnlineage.page.table_column_lineage"/></div>
                 <div class="row">&nbsp;</div>
                 <div class="row">
                     <div class="col-md-2"> </div>

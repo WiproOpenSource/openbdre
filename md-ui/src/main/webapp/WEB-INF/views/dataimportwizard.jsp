@@ -13,8 +13,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html >
-	<head>
-		
+	<head>	
 	<script>
 	  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
 	  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
@@ -642,15 +641,14 @@ isInit=true;
 
 	</head >
 	<body >
+	
 		<form action = "#" method = "POST" id = "wizardform" >
-			<br />
+			<div class="page-heading">RDBMS Import Data design</div>
 			<div id= "bdre-dataload" class="steps-horizontal" ng-controller = "myCtrl" >
 				<h3 ><div class="number-circular">1</div><spring:message code="dataimportwizard.page.db"/></h3 >
 				<section >
 					<div >
 					<fmt:bundle basename="db">
-
-
 						<label for = "dbURL" ><spring:message code="dataimportwizard.page.db_url"/></label >
 						<input id = "dbURL" onchange = "treeData=null;" name = "common_dbURL" type = "text" class = "form-control" value = "<fmt:message key='hibernate.connection.url' />" />
 						<label for = "dbUser" ><spring:message code="dataimportwizard.page.db_user"/></label >

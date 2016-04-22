@@ -50,6 +50,7 @@
   </head>
 
   <body ng-app="myApp" ng-controller="myCtrl">
+  						<div class="page-heading"><spring:message code="filemonitor.page.panel_heading_file_monitoring_creation"/></div>
                         <div class="row">&nbsp;</div>
                         <div class="row basic-forms">
                             <div class="col-md-2"></div>

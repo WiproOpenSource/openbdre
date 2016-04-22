@@ -116,6 +116,7 @@
                 </style>
 
             </head>
+            <div class="page-heading"><spring:message code="wfdesigner.page.create_new_workflow"/></div>
             <c:choose>
                 <c:when test="${not empty param.processId}">
 

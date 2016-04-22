@@ -112,6 +112,7 @@ function formIntoMap(typeProp, typeOf) {
 
 </head>
 <body ng-app="myApp" ng-controller="myCtrl" >
+	<div class="page-heading">Generate Bulk Data</div>
 	<div class="alert-info-outer">
 	<div class="alert alert-info" role="alert">
        <div style="font-size:24px;" ><b class="alert-redfont"><spring:message code="datagen.page.how_to"/></b> </div>

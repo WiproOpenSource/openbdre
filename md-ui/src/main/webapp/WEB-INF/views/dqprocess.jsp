@@ -77,14 +77,13 @@
             </head>
 
             <body ng-app="myApp" ng-controller="myCtrlr" ng-init="init()">
+            <div class="page-heading"><spring:message code="dqprocess.page.panel_heading"/></div>
                 <div class="row">&nbsp;</div>
                 <div class="row basic-forms">
                     <div class="col-md-2"> </div>
                     <div class="col-md-8">
                         <div class="panel panel-primary">
-                            <%-- <div class="panel-heading"><spring:message code="dqprocess.page.panel_heading"/></div> --%>
-
-                            <div class="panel-body">
+							<div class="panel-body">
                                 <form role="form">
                                     <div class="form-group">
                                         <label for="rulesUserNameValue"><spring:message code="dqprocess.page.form_rules_username"/></label>
