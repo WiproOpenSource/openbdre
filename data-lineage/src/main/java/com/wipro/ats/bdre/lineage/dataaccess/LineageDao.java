@@ -110,7 +110,7 @@ public class LineageDao {
 					closeResultset(rs);
 					closeConnection();
 				} catch (SQLException ex) {
-					LOGGER.error("Error in close");
+					LOGGER.error("Error in close" + ex.getMessage());
 				} finally {
 					connection = null;
 				}
@@ -126,9 +126,9 @@ public class LineageDao {
 //			throw new ETLException("Table " + tableName + " does not exist in Hive db");
 		}
 
-		System.out.println("List of columns: ");
+		LOGGER.info("List of columns: ");
 		for (Map.Entry<Integer, String> entry : columnsMap.entrySet())
-			System.out.println(entry.getKey() + " ::: " + entry.getValue());
+			LOGGER.info(entry.getKey() + " ::: " + entry.getValue());
 		return columnsMap;
 	}
 
