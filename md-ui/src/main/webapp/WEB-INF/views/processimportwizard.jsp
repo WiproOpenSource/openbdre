@@ -28,6 +28,7 @@
 		<script src = "../js/jquery-ui-1.10.3.custom.js" ></script >
 		<script src = "../js/jquery.steps.min.js" ></script >
 		<link rel = "stylesheet" href = "../css/jquery.steps.css" />
+		<link rel="stylesheet" href="../css/jquery.steps.custom.css" />
 		<script src = "../js/jquery.fancytree.js" ></script >
 		<link rel = "stylesheet" href = "../css/ui.fancytree.css" />
 		<script src = "../js/jquery.fancytree.gridnav.js" type = "text/javascript" ></script >
@@ -446,9 +447,9 @@
                                 }
                        </script>
 
-
+				<div class="page-heading"><spring:message code="processimportwizard.page.zip_file_upload"/></div>
 				<div id = "bdre-dataload" ng-controller = "myCtrl" >
-				<h3 ><spring:message code="processimportwizard.page.zip_file_upload"/></h3 >
+				<h3 ><div class="number-circular">1</div><spring:message code="processimportwizard.page.zip_file_upload"/></h3 >
 				<section >
 					<div class="col-sm-2">
 					<input type="file" name="file" class="form-control" id="zip-id" required>
@@ -462,7 +463,7 @@
 					</div>
 				</section >
 
-                <h3 ><spring:message code="processimportwizard.page.imported_details"/></h3 >
+                <h3 ><div class="number-circular">2</div><spring:message code="processimportwizard.page.imported_details"/></h3 >
                 <section>
                 <div id = "ProcessContainer" >
                 </div >
