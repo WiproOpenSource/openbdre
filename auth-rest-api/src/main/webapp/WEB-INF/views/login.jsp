@@ -19,7 +19,7 @@
 	    .login-links{width: 95%;margin: 0 auto;}
 	    .login-fp{float: left;color: #000000;font-family: sans-serif;font-weight: 500; margin-left:13px;margin-top: 2%;}
 	    .text-info{color: #FFFFFF;font-size:60px;border-radius: 5px;padding-top: 4%;padding-bottom: 0%;}
-	    .text-footer{color: #FFFFFF;font-size:30px;border-radius: 5px;padding-top: 0%;padding-bottom: 2%;}
+	    .text-footer{color: #FFFFFF;font-size:20px;border-radius: 5px;padding-top: 0%;padding-bottom: 2%;}
 	    .login-alert-danger{border: none;background: none;position: absolute;top: 18%;margin-left:16px}
 	</style>
 	<script>
