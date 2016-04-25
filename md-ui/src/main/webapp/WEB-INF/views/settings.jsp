@@ -113,7 +113,7 @@
        		    console.log(postData);
        			    return $.Deferred(function ($dfd) {
        			    $.ajax({
-       			    url: '/mdrest/genconfig/insertcluster',
+       			    url: '/mdrest/hivemigration/insertcluster',
        				    type: 'PUT',
        				    data: postData,
        				    dataType: 'json',
@@ -150,9 +150,9 @@
        					    actions: {
        					    listAction: function(postData) {
        					    return $.Deferred(function($dfd) {
-       					    console.log(item);
+       					    console.log(item.record.description);
        						    $.ajax({
-       						    url: '/mdrest/genconfig/cluster/' + item.record.description,
+       						    url: '/mdrest/hivemigration/cluster/' + item.record.description,
        							    type: 'GET',
        							    data: item,
        							    dataType: 'json',
@@ -170,7 +170,7 @@
        						    console.log(postData);
        							    return $.Deferred(function($dfd) {
        							    $.ajax({
-       							    url: '/mdrest/genconfig/updatecluster',
+       							    url: '/mdrest/hivemigration/updatecluster',
        								    type: 'POST',
        								    data: postData + '&description=' + item.record.description,
        								    dataType: 'json',
