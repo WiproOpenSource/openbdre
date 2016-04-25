@@ -9,11 +9,11 @@
 <%@ taglib prefix="security"
 	   uri="http://www.springframework.org/security/tags" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
+<%@taglib uri="http://www.springframework.org/tags" prefix="spring"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html >
-	<head>
-		
+	<head>	
 	<script>
 	  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
 	  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
@@ -31,15 +31,13 @@
 		<script src = "../js/jquery-ui-1.10.3.custom.js" ></script >
 		<script src = "../js/jquery.steps.min.js" ></script >
 		<link rel = "stylesheet" href = "../css/jquery.steps.css" />
+		<link rel="stylesheet" href="../css/jquery.steps.custom.css" />
 		<script src = "../js/jquery.fancytree.js" ></script >
 		<link rel = "stylesheet" href = "../css/ui.fancytree.css" />
 		<script src = "../js/jquery.fancytree.gridnav.js" type = "text/javascript" ></script >
 		<script src = "../js/jquery.fancytree.table.js" type = "text/javascript" ></script >
 		<script src = "../js/jquery.jtable.js" type = "text/javascript" ></script >
 		<link href = "../css/jtables-bdre.css" rel = "stylesheet" type = "text/css" />
-		<link rel="stylesheet" href="../css/data-ingestion.css" />
-		<link rel="stylesheet" href="../css/data-ingestion-horizontal.css" />
-	
 		<script >
         function fetchPipelineInfo(pid){
 			location.href = '<c:url value="/pages/lineage.page?pid="/>' + pid;
@@ -642,25 +640,24 @@ isInit=true;
 		</script >
 
 	</head >
-	<body class="bodystyle">
+	<body >
+	
 		<form action = "#" method = "POST" id = "wizardform" >
-			<br />
-			<div id = "bdre-dataload" ng-controller = "myCtrl" >
-				<h3 ><div class="number-circular">1</div>Database</h3 >
+			<div class="page-heading">RDBMS Import Data design</div>
+			<div id= "bdre-dataload" class="steps-horizontal" ng-controller = "myCtrl" >
+				<h3 ><div class="number-circular">1</div><spring:message code="dataimportwizard.page.db"/></h3 >
 				<section >
 					<div >
 					<fmt:bundle basename="db">
-
-
-						<label for = "dbURL" >Database URL</label >
+						<label for = "dbURL" ><spring:message code="dataimportwizard.page.db_url"/></label >
 						<input id = "dbURL" onchange = "treeData=null;" name = "common_dbURL" type = "text" class = "form-control" value = "<fmt:message key='hibernate.connection.url' />" />
-						<label for = "dbUser" >Database User</label >
+						<label for = "dbUser" ><spring:message code="dataimportwizard.page.db_user"/></label >
 						<input id = "dbUser" onchange = "treeData=null;" name = "common_dbUser" type = "text" class = "form-control" value = "<fmt:message key='hibernate.connection.username' />" />
-						<label for = "dbPassword" >Database Password</label >
+						<label for = "dbPassword" ><spring:message code="dataimportwizard.page.db_psswd"/></label >
 						<input id = "dbPassword" onchange = "treeData=null;" name = "common_dbPassword" type = "password" class = "form-control" value = "<fmt:message key='hibernate.connection.password' />" />
-						<label for = "dbDriver" >Database Driver</label >
+						<label for = "dbDriver" ><spring:message code="dataimportwizard.page.db_driver"/></label >
 						<input id = "dbDriver" onchange = "treeData=null;" name = "common_dbDriver" type = "text" class = "form-control" value = "<fmt:message key='hibernate.connection.driver_class' />" />
-						<label for = "dbSchema" >Schema</label >
+						<label for = "dbSchema" ><spring:message code="dataimportwizard.page.schema"/></label >
                         <input id = "dbSchema" onchange = "treeData=null;" name = "common_dbSchema" type = "text" class = "form-control" value = "<fmt:message key='hibernate.default_schema' />" />
 						<div ><br /></div >
 						<button class = "btn btn-default  btn-success" type = "button" onClick = "verifyConnection()" href = "#" >
@@ -669,12 +666,12 @@ isInit=true;
 					</div >
                     </fmt:bundle>
 				</section >
-				<h3 ><div class="number-circular">2</div>Table and Columns</h3 >
+				<h3 ><div class="number-circular">2</div><spring:message code="dataimportwizard.page.table_and_cols"/></h3 >
 				<section style = "display: block; overflow: scroll;" >
 					<table id = "tree0" class = "table-striped" width = "290px" >
 						<thead >
 						<tr >
-							<th ><label for = "rawDBHive" >RAW Hive DB</label ></th >
+							<th ><label for = "rawDBHive" ><spring:message code="dataimportwizard.page.hive_db"/></label ></th >
 						</tr >
 						</thead >
 						<tbody >
@@ -686,7 +683,7 @@ isInit=true;
 						</tbody >
 						<thead >
                         <tr >
-                            <th ><label for = "baseDBHive" >BASE Hive DB</label ></th >
+                            <th ><label for = "baseDBHive" ><spring:message code="dataimportwizard.page.hive_base"/></label ></th >
                         </tr >
                         </thead >
                         <tbody >
@@ -727,12 +724,12 @@ isInit=true;
 
 				</section >
 
-				<h3 ><div class="number-circular">3</div>Submission</h3 >
+				<h3 ><div class="number-circular">3</div><spring:message code="dataimportwizard.page.submission"/></h3 >
 
 				<section >
 					<table id = "tree0" class = "table-striped" width = "290px" >
 
-                                <th ><label for = "busDomainId" > Business Domain Id</label ></th >
+                                <th ><label for = "busDomainId" ><spring:message code="dataimportwizard.page.business_domain_id"/></label ></th >
                             </tr >
                             </thead >
                             <tbody >
@@ -743,7 +740,7 @@ isInit=true;
                             </tr >
                             </tbody >
 
-                             <th ><label for = "processName" >Process Name</label ></th >
+                             <th ><label for = "processName" ><spring:message code="dataimportwizard.page.process_name"/></label ></th >
                                                         </tr >
                                                         </thead >
                                                         <tbody >
@@ -754,7 +751,7 @@ isInit=true;
                                                         </tr >
                                                         </tbody >
 
-                               <th ><label for = "processDescription" > Process Description</label ></th >
+                               <th ><label for = "processDescription" ><spring:message code="dataimportwizard.page.process_desc"/></label ></th >
                                                           </tr >
                                                           </thead >
                                                           <tbody >
@@ -766,20 +763,20 @@ isInit=true;
                                                           </tbody >
 
 					</table >
-					<p >Pressing 'Create Job' will make the system build following job workflows</p >
+					<p ><spring:message code="dataimportwizard.page.p_section"/></p >
 
 					<div class = "list-group" >
                     <span href = "#" class = "list-group-item" >
-                        <span class = "glyphicon glyphicon-export" ></span >Data Extraction Workflows to ingest the data from selected RDBMS tables to Hadoop
+                        <span class = "glyphicon glyphicon-export" ></span ><spring:message code="dataimportwizard.page.span_a"/>
                     </span >
                     <span href = "#" class = "list-group-item" >
-                        <span class = "glyphicon glyphicon-import" ></span >A Data Loading Workflow to load the ingested data into Hive table in ORC format.
+                        <span class = "glyphicon glyphicon-import" ></span ><spring:message code="dataimportwizard.page.span_b"/>
                     </span >
 
 					</div >
 
-					<div class = "alert alert-success" role = "alert" >Create Jobs will be connected automatically so
-						upon completion of Data Extraction Workflow, Data Loading Workflow is enqueued automatically.
+					<div class = "alert alert-success" role = "alert" ><spring:message code="dataimportwizard.page.div_alert"/>
+						
 					</div >
 
 					<input type = "submit" class = "btn btn-warning" value = "Create Data import Jobs" >
@@ -787,7 +784,7 @@ isInit=true;
 
 
 
-				<h3 ><div class="number-circular">4</div>Confirm</h3 >
+				<h3 ><div class="number-circular">4</div><spring:message code="dataimportwizard.page.confirm"/></h3 >
 				<section >
 					<div id = "Container" >
 					</div >
