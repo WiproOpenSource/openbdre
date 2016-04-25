@@ -34,6 +34,7 @@
     <script src="../js/jquery.jtable.js" type="text/javascript"></script>
     <link href="../css/jtables-bdre.css" rel="stylesheet" type="text/css" />
     <link rel="stylesheet" href="../css/jquery.steps.custom.css" />
+    <link href="../css/bootstrap.custom.css" rel="stylesheet" type="text/css" />
 	<script src="../js/angular.min.js" type="text/javascript"></script>
     <script type="text/javascript">
 
