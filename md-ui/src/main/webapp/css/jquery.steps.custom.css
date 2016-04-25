@@ -236,3 +236,27 @@ font-weight: bold;
 .divEncloseHeading .rightpad {
 	padding-right: 10%;
 }
+#processFieldsForm1 .form-group {
+	width: 90%;
+	margin: 0 auto 2% auto;
+}
+
+#processFieldsForm1 .form-group div {
+	margin-left: 3%;
+}
+
+#deletediv {
+	padding-left: 9%;
+}
+
+#deletediv .add-more {
+	background-color: #389DD0;
+	border: none;
+	padding: 10px;
+	color: #fff;
+}
+
+.alert-redfont {
+	color: #C85659;
+	letter-spacing: 1px;
+}
