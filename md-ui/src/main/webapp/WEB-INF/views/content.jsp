@@ -171,7 +171,7 @@
 			    color: #1ca7f7;
 			   	position: relative;
 			    font-size: 2em;
-			    top: 35px;
+			    top: 7px;
 			    right: 1px;
 			    }
 			    .dropdown-menu{
@@ -340,7 +340,7 @@
                                                                                                   url: "http://zeppelin.openbdre.org:9995",
                                                                                                   children: []
                                                     } ,  {
-                                                    label: "Job Management",
+                                                    label: "Insights Management",
                                                     collapse: "1",
                                                     children: [
                                                         {
