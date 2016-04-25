@@ -116,7 +116,7 @@ function buildFormDisplay(configGroup, typeDiv) {
 
 	</head>
     <body ng-controller="myCtrl">
-    		<div class="page-heading">Settings</div>
+    		<div class="page-heading"><spring:message code="settings.page.panel_heading"/></div>
     		<section>
     			<div class="alert-info-outer">
 	    			<div class="alert alert-info" role="alert">

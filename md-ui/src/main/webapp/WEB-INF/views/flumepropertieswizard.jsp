@@ -307,6 +307,7 @@ function displayProcess(records) {
 
 		</script>
 		<script>
+
 var wizard = null;
 var finalJson;
 wizard = $(document).ready(function() {
@@ -501,6 +502,7 @@ wizard = $(document).ready(function() {
 	</head>
 
 	<body ng-app="myApp" ng-controller="myCtrl" >
+	<div class="page-heading"><spring:message code="flumepropertieswizrd.page.panel_heading"/></div>
 			<div class="alert-info-outer">
 				<div class="alert alert-info" role="alert">
 			        <spring:message code="flumepropertieswizard.page.source_type_alert"/>

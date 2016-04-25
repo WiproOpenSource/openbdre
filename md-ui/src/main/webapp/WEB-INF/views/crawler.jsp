@@ -72,7 +72,7 @@
 </script >
 </head>
 <body ng-app="myApp" ng-controller="myCtrl">
-	<div class="page-heading">Web Crawler</div>
+	<div class="page-heading"><spring:message code="crawler.page.panel_heading"/></div>
 	<div class="alert-info-outer">
 	<div class="alert alert-info" role="alert">
 	    <spring:message code="crawler.page.alert_info_outer"/>
