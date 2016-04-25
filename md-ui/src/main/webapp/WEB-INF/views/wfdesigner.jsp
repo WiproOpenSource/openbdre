@@ -26,6 +26,7 @@
                 <link href="../css/css/bootstrap.min.css" rel="stylesheet" type="text/css" />
                 <link href="../css/jtables-bdre.css" rel="stylesheet" type="text/css" />
                 <link rel="stylesheet" href="../css/jquery.steps.custom.css" />
+                <link href="../css/bootstrap.custom.css" rel="stylesheet" type="text/css" />
                 <link href="../css/jquery-ui-1.10.3.custom.css" rel="stylesheet" type="text/css" />
 
                 <!-- Include jTable script file. -->
@@ -113,6 +114,23 @@
                         filter: alpha(opacity=40);
                         /* For IE8 and earlier */
                     }
+                    
+                    
+                    .panel-heading-wfd{
+                   	    background-color: #3D525F !important;
+    					color: #fff !important;
+                    }
+                    
+                    .btn-primary-abhi{
+                    	padding: 3px 40px;
+    border-radius: 2px;
+    background: #359bd0;
+    background: -webkit-linear-gradient(#359bd0, #037dbc);
+    background: -o-linear-gradient(#359bd0, #037dbc);
+    background: -moz-linear-gradient(#359bd0, #037dbc);
+    background: -ms-linear-gradient(#359bd0, #037dbc);
+    background: linear-gradient(#359bd0, #037dbc);
+                    }
                 </style>
 
             </head>
@@ -133,7 +151,7 @@
                                 </div>
                                 <div class="panel-group" id="accordion" ng-if="chartViewModel.selectedProcess.processName != null" class="animate-if">
                                     <div class="panel panel-default">
-                                        <div class="panel-heading foldablearrow" data-toggle="collapse" data-parent="#accordion" data-target="#processdetails">
+                                        <div class="panel-heading foldablearrow panel-heading-wfd" data-toggle="collapse" data-parent="#accordion" data-target="#processdetails">
                                             <spring:message code="wfdesigner.page.process_details"/>
                                         </div>
                                         <div id="processdetails" class="panel-collapse collapse in">
@@ -174,7 +192,7 @@
                                                     <input type="hidden" name="processTypeId" value="{{ chartViewModel.selectedProcess.processTypeId }}">
                                                     <input type="hidden" name="workflowId" value="{{ chartViewModel.selectedProcess.workflowId }}">
                                                     <input type="hidden" name="processTemplateId" value="{{ chartViewModel.selectedProcess.processTemplateId }}">
-                                                    <button type="button" class="btn btn-sm btn-primary pull-right" ng-click="updateProcessDetails()"><spring:message code="wfdesigner.page.update_process_details"/></button>
+                                                    <button type="button" class="btn btn-sm btn-primary pull-right btn-primary-abhi" ng-click="updateProcessDetails()"><spring:message code="wfdesigner.page.update_process_details"/></button>
                                                 </form>
                                             </div>
                                         </div>
@@ -463,7 +481,7 @@
 
                     <body ng-app="app" data-ng-init="intialiseNewProcessPage()" ng-controller="AppCtrl">
                         <div class="row">&nbsp;</div>
-                        <div class="row basic-forms">
+                        <div class="row bdre-process-creation-form">
                             <div class="col-md-2"> </div>
                             <div class="col-md-8 ">
                                 <div class="panel panel-primary">

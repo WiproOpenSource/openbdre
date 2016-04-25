@@ -156,27 +156,27 @@ body {
 }
 
 /* normal forms screens without tabs */
-.basic-forms .panel-body {
+.bdre-process-creation-form .panel-body {
 	padding: 0px;
 }
 
-.basic-forms .panel-primary {
+.bdre-process-creation-form .panel-primary {
 	background-color: #F8F9FB;
 	border-color: #B0B0B0 !important;
 	padding-top: 7%;
 }
 
-.basic-forms .form-grouplabel {
+.bdre-process-creation-form .form-grouplabel {
 	width: 100%;
 	float: none;
 	text-align: left !important;
 }
 
-.basic-forms label+input {
+.bdre-process-creation-form label+input {
 	width: 100% !important;
 }
 
-.basic-forms .form-group {
+.bdre-process-creation-form .form-group {
 	width: 50%;
 	padding-left: 10%;
 	padding-right: 10%;
@@ -185,23 +185,15 @@ body {
 	padding-bottom: 15px;
 }
 
-.basic-forms div.form-group:nth-child(even) {
+.bdre-process-creation-form div.form-group:nth-child(even) {
 	float: right;
 }
 
-.basic-forms div.form-group:nth-child(odd) {
+.bdre-process-creation-form div.form-group:nth-child(odd) {
 	float: left;
 }
 
-.basic-forms .actions input, .btn-primary {
-	background-color: #23C9A4 !important;
-	color: #404040 !important;
-	padding: 0.25em 1.1em !important;
-	border-radius: 4px !important;
-	border-color: transparent;
-}
-
-.basic-forms .actions {
+.bdre-process-creation-form .actions {
 	margin-top: 5% !important;
 }
 
@@ -220,21 +212,51 @@ font-weight: bold;
 #SettingsForm .form-group{
 	padding-left: 7%;
 }
-.page-heading{
-	position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-	padding-left: 20px;
-	font-family: 'Segoe UI Semilight', 'Open Sans', Verdana, Arial, Helvetica, sans-serif;
-	font-weight: 300;
-	font-size: 19px;
-	line-height: 34px;
+.divEncloseHeading .panel-body, .divEncloseHeading .panel-primary>.panel-heading
+	{
+	background-color: #F8F9FB;
+}
+
+.divEncloseHeading .panel-body {
+	padding-bottom: 53px;
+}
+
+.divEncloseHeading .panel-primary>.panel-heading {
+	border: none !important;
+}
+
+.divEncloseHeading .panel-primary {
+	border-color: #B0B0B0 !important;
+}
+
+.divEncloseHeading .leftpad {
+	padding-left: 10%;
+}
+
+.divEncloseHeading .rightpad {
+	padding-right: 10%;
+}
+#processFieldsForm1 .form-group {
+	width: 90%;
+	margin: 0 auto 2% auto;
+}
+
+#processFieldsForm1 .form-group div {
+	margin-left: 3%;
+}
+
+#deletediv {
+	padding-left: 9%;
+}
+
+#deletediv .add-more {
+	background-color: #389DD0;
+	border: none;
+	padding: 10px;
 	color: #fff;
-	background: #6a6b6b;
-	background: -webkit-linear-gradient(#6a6b6b, #3a3b3b);
-    background: -o-linear-gradient(#6a6b6b, #3a3b3b);
-    background: -moz-linear-gradient(#6a6b6b, #3a3b3b);
-    background: -ms-linear-gradient(#6a6b6b, #3a3b3b);
-    background: linear-gradient(#6a6b6b, #3a3b3b); 
+}
+
+.alert-redfont {
+	color: #C85659;
+	letter-spacing: 1px;
 }
