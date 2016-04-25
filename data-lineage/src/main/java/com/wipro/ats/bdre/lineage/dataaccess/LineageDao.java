@@ -110,7 +110,7 @@ public class LineageDao {
 					closeResultset(rs);
 					closeConnection();
 				} catch (SQLException ex) {
-					LOGGER.error("Error in close" + ex.getMessage());
+					LOGGER.error(ex);
 				} finally {
 					connection = null;
 				}
