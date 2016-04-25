@@ -643,7 +643,7 @@ isInit=true;
 	<body >
 	
 		<form action = "#" method = "POST" id = "wizardform" >
-			<div class="page-heading">RDBMS Import Data design</div>
+			<div class="page-heading"><spring:message code="dataimportwizard.page.panel_heading"/></div>
 			<div id= "bdre-dataload" class="steps-horizontal" ng-controller = "myCtrl" >
 				<h3 ><div class="number-circular">1</div><spring:message code="dataimportwizard.page.db"/></h3 >
 				<section >
