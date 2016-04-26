@@ -23,15 +23,14 @@
 	<link href="../css/jtables-bdre.css" rel="stylesheet" type="text/css" />
 	<link href="../css/jquery-ui-1.10.3.custom.css" rel="stylesheet" type="text/css" />
 	<link rel="stylesheet" href="../css/jquery.steps.css" />
-
+	<link rel="stylesheet" href="../css/jquery.steps.custom.css" />
 	<!-- Include jTable script file. -->
 	<script src="../js/jquery.min.js" type="text/javascript"></script>
     <script src="../js/bootstrap.js" type="text/javascript"></script>
 	<script src="../js/jquery-ui-1.10.3.custom.js" type="text/javascript"></script>
 	<script src="../js/jquery.jtable.js" type="text/javascript"></script>
     <script src="../js/jquery.steps.min.js"></script>
-     <script src="../js/angular.min.js" type="text/javascript"></script>
-
+    <script src="../js/angular.min.js" type="text/javascript"></script>
 
 	<script type="text/javascript">
 
@@ -291,11 +290,11 @@ function buildFormDisplay(configGroup, typeDiv) {
 			console.log(data[root]);
 			$.each(data[root], function(i, v) {
 				formHTML = formHTML + '<div class="form-group" > <label for="' + v.key + '">' + v.key + '</label>';
-				formHTML = formHTML + '<span class="glyphicon glyphicon-question-sign" title="' + v.description + '"></span>';
+				formHTML = formHTML + '<span class="" title="' + v.description + '"></span>';
 				formHTML = formHTML + '<input name="'+v.key+'" value="' + v.defaultVal + '" class="form-control" id="' + v.key + '"></div>';
 			});
 
-			    formHTML = formHTML + '<div id="editSettings"><button onclick="updateSettings()" id="editMdSetting" type="button" class="btn btn-primary">save</button></div>';
+			    formHTML = formHTML + '<div class="clearfix"></div><div id="editSettings" class="actions text-center pull-right"><button onclick="updateSettings()" id="editMdSetting" type="button" class="btn btn-primary">save</button></div>';
 			formHTML = formHTML + '</form>';
 			div.innerHTML = formHTML;
 			console.log(div);
@@ -307,11 +306,17 @@ function buildFormDisplay(configGroup, typeDiv) {
 
 	</head>
     <body ng-controller="myCtrl">
+    		<div class="page-heading"><spring:message code="settings.page.panel_heading"/></div>
     		<section>
-    			<div id="config">
-    				<div style="display: inline-block;" id="configDiv" align="center">
+    			<div class="alert-info-outer">
+	    			<div class="alert alert-info" role="alert">
+	                     <spring:message code="settings.page.configuration_alert"/>
+	                </div>
+                </div>
+                <div id="config">
+    				<div id="configDiv">
 					<form id="configForm" >
-					<span>Select Configuration</span>
+					<div>Select Configuration</div>
     					<select id="configDropdown" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="false" aria-expanded="true">
     						<option value="" disabled selected>Select your option</option>
     						<option value="mdconfig">mdconfig</option>
@@ -322,15 +327,9 @@ function buildFormDisplay(configGroup, typeDiv) {
 					</form>
 					</div>
     			</div>
-    			<div class="alert alert-info" role="alert" align="center" style="margin-top:20px" >
-                                   <spring:message code="settings.page.configuration_alert"/>
-                </div>
 
-                <section style="width:100%;text-align:center;">
-				<div id="Container" ></div>
-				</section>
+             	<div id="Settings" class="steps-vertical"></div>
 
-				<div id="Settings" ></div>
     </section>
     <div id="div-dialog-warning"/>
 </body>

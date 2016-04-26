@@ -13,8 +13,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html >
-	<head>
-		
+	<head>	
 	<script>
 	  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
 	  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
@@ -32,15 +31,13 @@
 		<script src = "../js/jquery-ui-1.10.3.custom.js" ></script >
 		<script src = "../js/jquery.steps.min.js" ></script >
 		<link rel = "stylesheet" href = "../css/jquery.steps.css" />
+		<link rel="stylesheet" href="../css/jquery.steps.custom.css" />
 		<script src = "../js/jquery.fancytree.js" ></script >
 		<link rel = "stylesheet" href = "../css/ui.fancytree.css" />
 		<script src = "../js/jquery.fancytree.gridnav.js" type = "text/javascript" ></script >
 		<script src = "../js/jquery.fancytree.table.js" type = "text/javascript" ></script >
 		<script src = "../js/jquery.jtable.js" type = "text/javascript" ></script >
 		<link href = "../css/jtables-bdre.css" rel = "stylesheet" type = "text/css" />
-		<link rel="stylesheet" href="../css/data-ingestion.css" />
-		<link rel="stylesheet" href="../css/data-ingestion-horizontal.css" />
-	
 		<script >
         function fetchPipelineInfo(pid){
 			location.href = '<c:url value="/pages/lineage.page?pid="/>' + pid;
@@ -644,15 +641,14 @@ isInit=true;
 
 	</head >
 	<body >
+	
 		<form action = "#" method = "POST" id = "wizardform" >
-			<br />
-			<div id = "bdre-dataload" ng-controller = "myCtrl" >
+			<div class="page-heading"><spring:message code="dataimportwizard.page.panel_heading"/></div>
+			<div id= "bdre-dataload" class="steps-horizontal" ng-controller = "myCtrl" >
 				<h3 ><div class="number-circular">1</div><spring:message code="dataimportwizard.page.db"/></h3 >
 				<section >
 					<div >
 					<fmt:bundle basename="db">
-
-
 						<label for = "dbURL" ><spring:message code="dataimportwizard.page.db_url"/></label >
 						<input id = "dbURL" onchange = "treeData=null;" name = "common_dbURL" type = "text" class = "form-control" value = "<fmt:message key='hibernate.connection.url' />" />
 						<label for = "dbUser" ><spring:message code="dataimportwizard.page.db_user"/></label >

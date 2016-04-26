@@ -55,9 +55,7 @@
     <script src="../js/jquery-ui-1.10.3.custom.js"></script>
     <script src="../js/jquery.steps.min.js"></script>
     <link rel="stylesheet" href="../css/jquery.steps.css" />
-    <link rel="stylesheet" href="../css/data-ingestion.css" />
-    <link rel="stylesheet" href="../css/data-ingestion-horizontal.css" />
-
+    <link rel="stylesheet" href="../css/jquery.steps.custom.css" />
     <script src="../js/bootstrap.js" type="text/javascript"></script>
     <script src="../js/jquery.jtable.js" type="text/javascript"></script>
     <link href="../css/jtables-bdre.css" rel="stylesheet" type="text/css" />
@@ -114,6 +112,7 @@ function formIntoMap(typeProp, typeOf) {
 
 </head>
 <body ng-app="myApp" ng-controller="myCtrl" >
+	<div class="page-heading"><spring:message code="datagen.page.panel_heading"/></div>
 	<div class="alert-info-outer">
 	<div class="alert alert-info" role="alert">
        <div style="font-size:24px;" ><b class="alert-redfont"><spring:message code="datagen.page.how_to"/></b> </div>
@@ -128,7 +127,7 @@ function formIntoMap(typeProp, typeOf) {
 	</div>
 
 
-    <div id="datagen" >
+    <div id="datagen" class="steps-horizontal">
 
             <h3><div class="number-circular">1</div><spring:message code="datagen.page.data_types"/></h3>
             <section>

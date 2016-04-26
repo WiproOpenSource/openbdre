@@ -107,7 +107,7 @@ $scope.createApp = function(location) {
     <div class="row" >
     	<div class="col-md-2 appimage" ng-repeat="column in row.columns">
 		<div class="alert alert-info thumbnail">
-			<button class="btn btn-info ng-binding center-block" ng-click="createApp(column.location)">{{column.name}}</button>
+			<button class="btn btn-info ng-binding center-block" ng-click="createApp(column.location)">Install</button>
 			<img src="../../store/{{ column.icon }}"   ng-click="createApp(column.location)" alt="App image" width="150" height="118">
 			<br >{{column.description}}{{column.name}}
 		</div>
