@@ -25,6 +25,7 @@
 
 		<link href = "../css/jquery-ui-1.10.3.custom.css" rel = "stylesheet" >
 		<link href = "../css/css/bootstrap.min.css" rel = "stylesheet" />
+		<link href="../css/bootstrap.custom.css" rel="stylesheet" type="text/css" />
 		<script src = "../js/jquery-ui-1.10.3.custom.js" ></script >
 		<script src = "../js/jquery.steps.min.js" ></script >
 		<link rel = "stylesheet" href = "../css/jquery.steps.css" />

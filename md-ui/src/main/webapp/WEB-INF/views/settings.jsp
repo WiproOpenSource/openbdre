@@ -24,6 +24,7 @@
 	<link href="../css/jquery-ui-1.10.3.custom.css" rel="stylesheet" type="text/css" />
 	<link rel="stylesheet" href="../css/jquery.steps.css" />
 	<link rel="stylesheet" href="../css/jquery.steps.custom.css" />
+	<link href="../css/bootstrap.custom.css" rel="stylesheet" type="text/css" />
 	<!-- Include jTable script file. -->
 	<script src="../js/jquery.min.js" type="text/javascript"></script>
     <script src="../js/bootstrap.js" type="text/javascript"></script>
