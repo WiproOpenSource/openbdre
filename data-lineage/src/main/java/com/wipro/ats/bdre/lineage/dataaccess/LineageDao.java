@@ -45,7 +45,7 @@ public class LineageDao {
 				Class.forName(IMConstant.HIVE_DRIVER_NAME);
 //				String hiveConnectionString = MDConfig.getProperty("hive.hive-connection", null);
 				String hiveConnectionString = IMConfig.getProperty("etl.hive-connection");
-				connection = DriverManager.getConnection(hiveConnectionString + dbName, "", "");
+				connection = DriverManager.getConnection(hiveConnectionString + "/" + dbName, "", "");
 
 			} catch (Exception e) {
 				LOGGER.error(e);
@@ -110,7 +110,7 @@ public class LineageDao {
 					closeResultset(rs);
 					closeConnection();
 				} catch (SQLException ex) {
-					LOGGER.error("Error in close");
+					LOGGER.error(ex);
 				} finally {
 					connection = null;
 				}
@@ -126,9 +126,9 @@ public class LineageDao {
 //			throw new ETLException("Table " + tableName + " does not exist in Hive db");
 		}
 
-		System.out.println("List of columns: ");
+		LOGGER.info("List of columns: ");
 		for (Map.Entry<Integer, String> entry : columnsMap.entrySet())
-			System.out.println(entry.getKey() + " ::: " + entry.getValue());
+			LOGGER.info(entry.getKey() + " ::: " + entry.getValue());
 		return columnsMap;
 	}
 

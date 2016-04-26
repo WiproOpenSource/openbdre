@@ -1,3 +1,4 @@
+<%@taglib uri="http://www.springframework.org/tags" prefix="spring"%>
 <!DOCTYPE html>
 <meta charset="utf-8">
 <style>
@@ -55,7 +56,7 @@ var stateOfProcess = [];
 String processId=request.getParameter("processId");
 %>
 <div style="text-align: center;">
-<h2>Execution Time graph of sub processes of process <%=processId %><h2>
+<h2><spring:message code="sla.page.sub_process_execution_time_graph"/> <%=processId %><h2>
 </div>
 <div>
 <script src="../js/d3.min.js"></script>
@@ -238,4 +239,4 @@ function SLAMonitoring(pid)
 </script>
 </div>
 <hr  style="width:80%">
-<center><b>SubprocessIDs --> </b></center>
+<center><b><spring:message code="sla.page.subprocess_ids"/> </b></center>
