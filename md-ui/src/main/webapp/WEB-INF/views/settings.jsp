@@ -328,6 +328,9 @@ function buildFormDisplay(configGroup, typeDiv) {
 					</div>
     			</div>
 
+					 <section style="width:100%;text-align:center;">
+                    				<div id="Container" ></div>
+                    				</section>
              	<div id="Settings" class="steps-vertical"></div>
 
     </section>
