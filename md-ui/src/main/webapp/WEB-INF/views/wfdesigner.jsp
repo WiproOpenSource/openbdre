@@ -25,8 +25,7 @@
 
                 <link href="../css/css/bootstrap.min.css" rel="stylesheet" type="text/css" />
                 <link href="../css/jtables-bdre.css" rel="stylesheet" type="text/css" />
-                <link rel="stylesheet" href="../css/data-ingestion.css" />
-                <link rel="stylesheet" href="../css/data-ingestion-forms.css" />
+                <link rel="stylesheet" href="../css/jquery.steps.custom.css" />
                 <link href="../css/jquery-ui-1.10.3.custom.css" rel="stylesheet" type="text/css" />
 
                 <!-- Include jTable script file. -->
@@ -117,6 +116,7 @@
                 </style>
 
             </head>
+            <div class="page-heading"><spring:message code="wfdesigner.page.create_new_workflow"/></div>
             <c:choose>
                 <c:when test="${not empty param.processId}">
 
@@ -463,7 +463,7 @@
 
                     <body ng-app="app" data-ng-init="intialiseNewProcessPage()" ng-controller="AppCtrl">
                         <div class="row">&nbsp;</div>
-                        <div class="row">
+                        <div class="row basic-forms">
                             <div class="col-md-2"> </div>
                             <div class="col-md-8 ">
                                 <div class="panel panel-primary">

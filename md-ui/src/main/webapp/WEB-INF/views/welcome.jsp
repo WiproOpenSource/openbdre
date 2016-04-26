@@ -34,7 +34,8 @@
 	    color: #ecebea;
 	    border-radius: 0 !important;
 	    margin-bottom: 0 !important;
-	    padding-bottom: 110px !important;
+	    padding-bottom: 8% !important;
+    	padding-top: 7% !important;
 	    }
 	    .jumbotron p{
 	     font-size: 18px;
@@ -49,7 +50,6 @@
 	    .slick-dots button{
 	    display: none;
 	    }
-	    
 	    .carousel-container{
 	    	margin: 0 auto;
 	    	float: none;
