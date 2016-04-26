@@ -88,7 +88,7 @@ public class GetGeneralConfig extends MetadataAPIBase {
         GeneralConfig generalConfig = new GeneralConfig();
         try {
 
-            generalConfig = generalConfigDAO.GetGenConfigProperty(configGroup, key);
+            generalConfig = generalConfigDAO.getGenConfigProperty(configGroup, key);
 
             LOGGER.info("Record with config group:" + configGroup + " and key:" + key + "selected from General Config " + generalConfig);
 

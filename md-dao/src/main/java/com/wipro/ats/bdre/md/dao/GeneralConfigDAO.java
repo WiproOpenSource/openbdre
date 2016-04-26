@@ -22,7 +22,6 @@ import org.apache.log4j.Logger;
 import org.hibernate.Criteria;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
-import org.hibernate.criterion.MatchMode;
 import org.hibernate.criterion.Restrictions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -242,7 +241,7 @@ public class GeneralConfigDAO {
         return generalConfigList;
     }
 
-    public com.wipro.ats.bdre.md.beans.table.GeneralConfig GetGenConfigProperty(String configGroup, String key) {
+    public com.wipro.ats.bdre.md.beans.table.GeneralConfig getGenConfigProperty(String configGroup, String key) {
         Session session = sessionFactory.openSession();
         com.wipro.ats.bdre.md.beans.table.GeneralConfig generalConfig = new com.wipro.ats.bdre.md.beans.table.GeneralConfig();
 

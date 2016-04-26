@@ -321,13 +321,10 @@ public class HiveTableMigrationAPI {
     public RestWrapper updateCluster(@RequestParam Map<String, String> map, Principal principal) {
 
         RestWrapper restWrapper = null;
-        String description;
         String defaultVal;
         try {
             String cgKey = map.get("key");
             defaultVal = map.get("defaultVal");
-            description = map.get("description");
-
 
             GeneralConfig generalConfigUpdate = new GeneralConfig();
             GeneralConfig generalConfig = new GeneralConfig();
