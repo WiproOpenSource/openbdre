@@ -3,6 +3,7 @@ body {
 }
 .appStoreContainer .nav-tabs {
 	border: none !important;
+	margin-top:3%;
 }
 
 .appStoreContainer .nav-tabs>li.active>a, .appStoreContainer .nav-tabs>li.active>a:focus,
@@ -26,7 +27,6 @@ body {
 	background-color: #fff;
 	border-color: #B0B0B0 !important;
 }
-
 
 .appStoreContainer .appimage {
 	padding-top: 2%;
@@ -72,4 +72,34 @@ body {
 .panel-heading-wfd {
 	background-color: #3D525F !important;
 	color: #fff !important;
+}
+.bdre-jtable-button .label-primary,.jtable-child-table-container .label-primary{
+	background: #359bd0;
+    background: -webkit-linear-gradient(#359bd0, #037dbc);
+    background: -o-linear-gradient(#359bd0, #037dbc);
+    background: -moz-linear-gradient(#359bd0, #037dbc);
+    background: -ms-linear-gradient(#359bd0, #037dbc);
+    background: linear-gradient(#359bd0, #037dbc);
+}
+.jtable-data-row .label-warning,.jtable-data-row .label-danger, .label-primary{
+	padding: .4em 0.8em .5em;
+}
+.jtable-child-table-container .label-primary{
+	border-radius:2px;
+	font-size: 9px;
+}
+.bdre-jtable-button .label-primary,.jtable-child-table-container .label-primary{
+	background: #359bd0;
+    background: -webkit-linear-gradient(#359bd0, #037dbc);
+    background: -o-linear-gradient(#359bd0, #037dbc);
+    background: -moz-linear-gradient(#359bd0, #037dbc);
+    background: -ms-linear-gradient(#359bd0, #037dbc);
+    background: linear-gradient(#359bd0, #037dbc);
+}
+.jtable-data-row .label-warning,.jtable-data-row .label-danger, .label-primary{
+	padding: .4em 0.8em .5em;
+}
+.jtable-child-table-container .label-primary{
+	border-radius:2px;
+	font-size: 9px;
 }
