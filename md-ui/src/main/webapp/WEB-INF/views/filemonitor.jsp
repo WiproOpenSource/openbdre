@@ -24,6 +24,7 @@
     <script src="../js/jquery.min.js"></script>
     <link href="../css/jquery-ui-1.10.3.custom.css" rel="stylesheet">
     <link href="../css/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="../css/bootstrap.custom.css" rel="stylesheet" type="text/css" />
     <script src="../js/jquery-ui-1.10.3.custom.js"></script>
     <script src="../js/jquery.steps.min.js"></script>
     <link rel="stylesheet" href="../css/jquery.steps.css" />
@@ -52,7 +53,7 @@
   <body ng-app="myApp" ng-controller="myCtrl">
   						<div class="page-heading"><spring:message code="filemonitor.page.panel_heading_file_monitoring_creation"/></div>
                         <div class="row">&nbsp;</div>
-                        <div class="row basic-forms">
+                        <div class="row bdre-process-creation-form">
                             <div class="col-md-2"></div>
                             <div class="col-md-8" id="divEncloseHeading" >
                                 <div class="panel panel-primary">

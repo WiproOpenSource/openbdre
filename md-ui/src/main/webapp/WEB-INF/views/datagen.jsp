@@ -15,27 +15,7 @@
     width: 100% !important;
     padding: 0 !important;
     }
-    #processFieldsForm1 .form-group{
-	    width: 90%;
-	    margin: 0 auto 2% auto;
-    }
     
-     #processFieldsForm1 .form-group div{
-     margin-left: 3%;
-     }
-   #deletediv{
-	padding-left:9%;
-   }
-	#deletediv .add-more{
-		background-color: #389DD0;
-		border: none;
-		padding: 10px;
-		color: #fff;
-	}
-	.alert-redfont{
-	color: #C85659;
-	letter-spacing: 1px;
-	}
    
     </style>
 	<script>
@@ -52,6 +32,7 @@
     <script src="../js/jquery.min.js"></script>
     <link href="../css/jquery-ui-1.10.3.custom.css" rel="stylesheet">
     <link href="../css/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="../css/bootstrap.custom.css" rel="stylesheet" type="text/css" />
     <script src="../js/jquery-ui-1.10.3.custom.js"></script>
     <script src="../js/jquery.steps.min.js"></script>
     <link rel="stylesheet" href="../css/jquery.steps.css" />
