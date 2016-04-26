@@ -24,6 +24,7 @@
 	<link href="../css/jquery-ui-1.10.3.custom.css" rel="stylesheet" type="text/css" />
 	<link rel="stylesheet" href="../css/jquery.steps.css" />
 	<link rel="stylesheet" href="../css/jquery.steps.custom.css" />
+	<link href="../css/bootstrap.custom.css" rel="stylesheet" type="text/css" />
 	<!-- Include jTable script file. -->
 	<script src="../js/jquery.min.js" type="text/javascript"></script>
     <script src="../js/bootstrap.js" type="text/javascript"></script>
@@ -115,7 +116,7 @@ function buildFormDisplay(configGroup, typeDiv) {
 
 	</head>
     <body ng-controller="myCtrl">
-    		<div class="page-heading">Settings</div>
+    		<div class="page-heading"><spring:message code="settings.page.panel_heading"/></div>
     		<section>
     			<div class="alert-info-outer">
 	    			<div class="alert alert-info" role="alert">
