@@ -68,3 +68,8 @@ body {
     background: -ms-linear-gradient(#6a6b6b, #3a3b3b);
     background: linear-gradient(#6a6b6b, #3a3b3b); 
 }
+
+.panel-heading-wfd {
+	background-color: #3D525F !important;
+	color: #fff !important;
+}
