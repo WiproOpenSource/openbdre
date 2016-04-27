@@ -16,9 +16,8 @@ package com.wipro.ats.bdre.md.rest.ext;
 
 import com.wipro.ats.bdre.md.api.base.MetadataAPIBase;
 import com.wipro.ats.bdre.md.beans.table.GeneralConfig;
-
 import com.wipro.ats.bdre.md.dao.ProcessDAO;
-import com.wipro.ats.bdre.md.dao.jpa.*;
+import com.wipro.ats.bdre.md.dao.UserRolesDAO;
 import com.wipro.ats.bdre.md.dao.jpa.Process;
 import com.wipro.ats.bdre.md.dao.jpa.Properties;
 import com.wipro.ats.bdre.md.rest.RestWrapper;
@@ -29,7 +28,6 @@ import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
-
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -49,7 +47,8 @@ public class DataGenAPI extends MetadataAPIBase {
     private static final String TABLE = "table";
     @Autowired
     private ProcessDAO processDAO;
-
+    @Autowired
+    UserRolesDAO userRolesDAO;
     @RequestMapping(value = {"/createjobs"}, method = RequestMethod.POST)
 
 
@@ -152,6 +151,8 @@ public class DataGenAPI extends MetadataAPIBase {
 
         }
         parentProcess = Dao2TableUtil.buildJPAProcess(18,processName, processDescription, 1,busDomainId);
+        parentProcess.setUserName(principal.getName());
+        parentProcess.setUserRoles(userRolesDAO.minUserRoleId(principal.getName()));
         childProcess = Dao2TableUtil.buildJPAProcess(14, "SubProcess of "+processName, processDescription, 0,busDomainId);
 
 

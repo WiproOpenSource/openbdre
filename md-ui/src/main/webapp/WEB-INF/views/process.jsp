@@ -186,9 +186,27 @@
                                             data: postData,
                                             dataType: 'json',
                                             success: function(data) {
-                                                $dfd.resolve(data);
+                                                if(data.Result == "OK") {
+
+                                                    $dfd.resolve(data);
+                                                   $('#Container').jtable('load');
+
+                                                }
+                                                else
+                                                {
+                                                if(data.Message == "ACCESS DENIED")
+                                                 {
+                                                 data.Result="OK";
+                                                 $dfd.resolve(data);
+                                                 alert(data.Message);
+                                                 $('#Container').jtable('load');
+                                                 }
+                                                 else
+                                                 $dfd.resolve(data);
+                                                }
                                             },
                                             error: function() {
+
                                                 $dfd.reject();
                                             }
                                         });
@@ -203,8 +221,24 @@
                                             data: item,
                                             dataType: 'json',
                                             success: function(data) {
-                                                $dfd.resolve(data);
-                                            },
+                                           if(data.Result == "OK") {
+
+                                               $dfd.resolve(data);
+
+                                           }
+                                           else
+                                           {
+                                            if(data.Message == "ACCESS DENIED")
+                                            {
+                                            data.Result="OK";
+                                            $dfd.resolve(data);
+                                            alert(data.Message);
+
+                                            }
+                                            else
+                                            $dfd.resolve(data);
+                                           }
+                                       },
                                             error: function() {
                                                 $dfd.reject();
                                             }
@@ -242,8 +276,24 @@
                                                                     type: 'GET',
                                                                     data: item,
                                                                     dataType: 'json',
-                                                                    success: function(data) {
-                                                                        $dfd.resolve(data);
+                                                                     success: function(data) {
+                                                                        if(data.Result == "OK") {
+
+                                                                            $dfd.resolve(data);
+
+                                                                        }
+                                                                        else
+                                                                        {
+                                                                         if(data.Message == "ACCESS DENIED")
+                                                                         {
+
+                                                                         alert(data.Message);
+                                                                         data.Result="OK";
+                                                                         $dfd.resolve(data);
+                                                                         }
+                                                                         else
+                                                                         $dfd.resolve(data);
+                                                                        }
                                                                     },
                                                                     error: function() {
                                                                         $dfd.reject();
@@ -259,9 +309,25 @@
                                                                     type: 'DELETE',
                                                                     data: item,
                                                                     dataType: 'json',
-                                                                    success: function(data) {
+                                                                     success: function(data) {
+                                                                    if(data.Result == "OK") {
+
                                                                         $dfd.resolve(data);
-                                                                    },
+
+                                                                    }
+                                                                    else
+                                                                    {
+                                                                     if(data.Message == "ACCESS DENIED")
+                                                                     {
+                                                                     data.Result="OK";
+                                                                     $dfd.resolve(data);
+                                                                     alert(data.Message);
+
+                                                                     }
+                                                                     else
+                                                                     $dfd.resolve(data);
+                                                                    }
+                                                                },
                                                                     error: function() {
                                                                         $dfd.reject();
                                                                     }
@@ -276,10 +342,25 @@
                                                                     type: 'POST',
                                                                     data: postData,
                                                                     dataType: 'json',
-                                                                    success: function(data) {
-                                                                        console.log(data);
+                                                                     success: function(data) {
+                                                                    if(data.Result == "OK") {
+
                                                                         $dfd.resolve(data);
-                                                                    },
+
+                                                                    }
+                                                                    else
+                                                                    {
+                                                                     if(data.Message == "ACCESS DENIED")
+                                                                     {
+                                                                     data.Result="OK";
+                                                                     $dfd.resolve(data);
+                                                                     alert(data.Message);
+                                                                     $('#Container').jtable('load');
+                                                                     }
+                                                                     else
+                                                                     $dfd.resolve(data);
+                                                                    }
+                                                                },
                                                                     error: function() {
                                                                         $dfd.reject();
                                                                     }
@@ -294,8 +375,24 @@
                                                                     type: 'PUT',
                                                                     data: postData,
                                                                     dataType: 'json',
-                                                                    success: function(data) {
-                                                                        $dfd.resolve(data);
+                                                                     success: function(data) {
+                                                                        if(data.Result == "OK") {
+
+                                                                            $dfd.resolve(data);
+
+                                                                        }
+                                                                        else
+                                                                        {
+                                                                         if(data.Message == "ACCESS DENIED")
+                                                                         {
+
+                                                                          data.Result="OK";
+                                                                          $dfd.resolve(data);
+                                                                          alert(data.Message);
+                                                                         }
+                                                                         else
+                                                                         $dfd.resolve(data);
+                                                                        }
                                                                     },
                                                                     error: function() {
                                                                         $dfd.reject();
@@ -341,8 +438,24 @@
                                                                                             data: item,
                                                                                             dataType: 'json',
                                                                                             success: function(data) {
+                                                                                               if(data.Result == "OK") {
+
+                                                                                                   $dfd.resolve(data);
+
+                                                                                               }
+                                                                                               else
+                                                                                               {
+                                                                                                if(data.Message == "ACCESS DENIED")
+                                                                                                {
+                                                                                                  alert(data.Message);
+                                                                                                  data.Result="OK";
+                                                                                                  $dfd.resolve(data);
+
+                                                                                                }
+                                                                                                else
                                                                                                 $dfd.resolve(data);
-                                                                                            },
+                                                                                               }
+                                                                                           },
                                                                                             error: function() {
                                                                                                 $dfd.reject();
                                                                                             }
@@ -357,8 +470,24 @@
                                                                                             type: 'DELETE',
                                                                                             data: item,
                                                                                             dataType: 'json',
-                                                                                            success: function(data) {
-                                                                                                $dfd.resolve(data);
+                                                                                             success: function(data) {
+                                                                                                if(data.Result == "OK") {
+
+                                                                                                    $dfd.resolve(data);
+
+                                                                                                }
+                                                                                                else
+                                                                                                {
+                                                                                                 if(data.Message == "ACCESS DENIED")
+                                                                                                 {
+                                                                                                 data.Result="OK";
+                                                                                                 $dfd.resolve(data);
+                                                                                                 alert(data.Message);
+
+                                                                                                 }
+                                                                                                 else
+                                                                                                 $dfd.resolve(data);
+                                                                                                }
                                                                                             },
                                                                                             error: function() {
                                                                                                 $dfd.reject();
@@ -374,9 +503,24 @@
                                                                                             type: 'POST',
                                                                                             data: postData + '&processId=' + item.record.processId,
                                                                                             dataType: 'json',
-                                                                                            success: function(data) {
-                                                                                                console.log(data);
-                                                                                                $dfd.resolve(data);
+                                                                                             success: function(data) {
+                                                                                                if(data.Result == "OK") {
+
+                                                                                                    $dfd.resolve(data);
+
+                                                                                                }
+                                                                                                else
+                                                                                                {
+                                                                                                 if(data.Message == "ACCESS DENIED")
+                                                                                                 {
+                                                                                                 data.Result="OK";
+                                                                                                 $dfd.resolve(data);
+                                                                                                 alert(data.Message);
+                                                                                                 $('#Container').jtable('load');
+                                                                                                 }
+                                                                                                 else
+                                                                                                 $dfd.resolve(data);
+                                                                                                }
                                                                                             },
                                                                                             error: function() {
                                                                                                 $dfd.reject();
@@ -392,8 +536,25 @@
                                                                                             type: 'PUT',
                                                                                             data: postData + '&processId=' + item.record.processId,
                                                                                             dataType: 'json',
-                                                                                            success: function(data) {
-                                                                                                $dfd.resolve(data);
+                                                                                             success: function(data) {
+                                                                                                if(data.Result == "OK") {
+
+                                                                                                    $dfd.resolve(data);
+
+                                                                                                }
+                                                                                                else
+                                                                                                {
+                                                                                                 if(data.Message == "ACCESS DENIED")
+                                                                                                 {
+                                                                                                  alert(data.Message);
+                                                                                                 data.Result="OK";
+                                                                                                 $dfd.resolve(data);
+
+
+                                                                                                 }
+                                                                                                 else
+                                                                                                 $dfd.resolve(data);
+                                                                                                }
                                                                                             },
                                                                                             error: function() {
                                                                                                 $dfd.reject();
@@ -550,9 +711,25 @@
                                                                     type: 'GET',
                                                                     data: item,
                                                                     dataType: 'json',
-                                                                    success: function(data) {
+                                                                     success: function(data) {
+                                                                    if(data.Result == "OK") {
+
                                                                         $dfd.resolve(data);
-                                                                    },
+
+                                                                    }
+                                                                    else
+                                                                    {
+                                                                     if(data.Message == "ACCESS DENIED")
+                                                                     {
+                                                                      alert(data.Message);
+                                                                      data.Result="OK";
+                                                                      $dfd.resolve(data);
+
+                                                                     }
+                                                                     else
+                                                                     $dfd.resolve(data);
+                                                                    }
+                                                                },
                                                                     error: function() {
                                                                         $dfd.reject();
                                                                     }
@@ -567,8 +744,24 @@
                                                                     type: 'DELETE',
                                                                     data: item,
                                                                     dataType: 'json',
-                                                                    success: function(data) {
-                                                                        $dfd.resolve(data);
+                                                                     success: function(data) {
+                                                                        if(data.Result == "OK") {
+
+                                                                            $dfd.resolve(data);
+
+                                                                        }
+                                                                        else
+                                                                        {
+                                                                         if(data.Message == "ACCESS DENIED")
+                                                                         {
+                                                                         data.Result="OK";
+                                                                         $dfd.resolve(data);
+                                                                         alert(data.Message);
+
+                                                                         }
+                                                                         else
+                                                                         $dfd.resolve(data);
+                                                                        }
                                                                     },
                                                                     error: function() {
                                                                         $dfd.reject();
@@ -584,9 +777,25 @@
                                                                     type: 'POST',
                                                                     data: postData + '&processId=' + item.record.processId,
                                                                     dataType: 'json',
-                                                                    success: function(data) {
-                                                                        console.log(data);
-                                                                        $dfd.resolve(data);
+                                                                     success: function(data) {
+                                                                        if(data.Result == "OK") {
+
+                                                                            $dfd.resolve(data);
+
+                                                                        }
+                                                                        else
+                                                                        {
+                                                                         if(data.Message == "ACCESS DENIED")
+                                                                         {
+                                                                         data.Result="OK";
+                                                                         $dfd.resolve(data);
+                                                                         alert(data.Message);
+                                                                          $('#Container').jtable('load');
+
+                                                                         }
+                                                                         else
+                                                                         $dfd.resolve(data);
+                                                                        }
                                                                     },
                                                                     error: function() {
                                                                         $dfd.reject();
@@ -602,8 +811,25 @@
                                                                     type: 'PUT',
                                                                     data: postData + '&processId=' + item.record.processId,
                                                                     dataType: 'json',
-                                                                    success: function(data) {
-                                                                        $dfd.resolve(data);
+                                                                     success: function(data) {
+                                                                        if(data.Result == "OK") {
+
+                                                                            $dfd.resolve(data);
+
+                                                                        }
+                                                                        else
+                                                                        {
+                                                                         if(data.Message == "ACCESS DENIED")
+                                                                         {
+                                                                         alert(data.Message);
+                                                                         data.Result="OK";
+                                                                         $dfd.resolve(data);
+
+
+                                                                         }
+                                                                         else
+                                                                         $dfd.resolve(data);
+                                                                        }
                                                                     },
                                                                     error: function() {
                                                                         $dfd.reject();
@@ -707,6 +933,33 @@
                                     options: '/mdrest/busdomain/options/',
                                     defaultValue: "1"
                                 },
+                                permissionTypeByUserAccessId: {
+                                    title: 'User Access',
+                                    type: 'combobox',
+                                    list: false,
+                                    options: '/mdrest/process/options/',
+                                    defaultValue: "7"
+                                },
+                                permissionTypeByGroupAccessId: {
+                                  title: 'Group Access',
+                                  type: 'combobox',
+                                  list: true,
+                                  options: '/mdrest/process/options/',
+                                  defaultValue: "6"
+                               },
+                               permissionTypeByOthersAccessId: {
+                                  title: 'Other Access',
+                                  type: 'combobox',
+                                  list: false,
+                                  options: '/mdrest/process/options/',
+                                  defaultValue: "0"
+                               },
+                               ownerRoleId: {
+                                 title: 'Owner Group',
+                                 type: 'combobox',
+                                 list:true,
+                                 options: '/mdrest/userroles/options/',
+                              },
                                 processTypeId: {
                                     title: 'Type',
                                     type: 'combobox',
@@ -787,6 +1040,9 @@
                                 											}
                                 										}).html("Process <b>" +data.Record.processId +"</b> successfully launched from Edge node with OS process id: <b>" + data.Record.osprocessId + "</b>");
                                 									} else {
+                                									       if(data.Message == "ACCESS DENIED")
+                                									        {alert(data.Message);}
+                                									         else{
                                 										console.log(data);
                                 										$("#execute-fail").dialog({
                                 											resizable: false,
@@ -798,7 +1054,7 @@
                                 												}
                                 											}
                                 										}).html("Process failed to launch.");;
-                                									}
+                                									}}
                                 								},
                                 								error: function() {
                                 									$dfd.reject();
@@ -842,9 +1098,22 @@
                                                                     type: 'GET',
                                                                     data: postData,
                                                                     dataType: 'json',
-                                                                    success: function(data) {
-                                                                        $dfd.resolve(data);
-                                                                    },
+                                                                     success: function(data) {
+                                                                                    if(data.Result == "OK") {
+                                                                                        $dfd.resolve(data);
+                                                                                    }
+                                                                                    else
+                                                                                    {
+                                                                                     if(data.Message == "ACCESS DENIED")
+                                                                                     {
+                                                                                     alert(data.Message);
+                                                                                     data.Result="OK";
+                                                                                     $dfd.resolve(data);
+                                                                                     }
+                                                                                     else
+                                                                                     $dfd.resolve(data);
+                                                                                    }
+                                                                                },
                                                                     error: function() {
                                                                         $dfd.reject();
                                                                     }
@@ -985,8 +1254,26 @@
                                             data: '&processId=' + processId,
                                             dataType: 'json',
                                             success: function(data) {
-                                                $dfd.resolve(data);
+                                            if(data.Result == "OK")
+                                                {
+                                                 $dfd.resolve(data);
                                                  $('div#Container').jtable('load');
+                                                 }
+                                                 else
+                                                 {
+                                                 if(data.Message == "ACCESS DENIED")
+                                                 {
+                                                 data.Result == "OK";
+                                                 $dfd.resolve(data);
+                                                 $('div#Container').jtable('load');
+                                                 alert(data.Message);
+                                                 }
+                                                 else
+                                                 {
+                                                 $dfd.resolve(data);
+                                                 $('div#Container').jtable('load');
+                                                 }
+                                                 }
                                             },
 
                                             error: function() {
@@ -1007,30 +1294,105 @@
 
                 <script>
                     function fetchPipelineInfo(pid) {
-                        location.href = '<c:url value="/pages/lineage.page?pid="/>' + pid;
+                    $.ajax({
+                            url: '/mdrest/process/permission/'+pid,
+                            type: 'PUT',
+                            dataType: 'json',
+                             success: function(data) {
+                                if(data.Result == "OK") {
+                                  location.href = '<c:url value="/pages/lineage.page?pid="/>' + pid;
+                                }
+                                else
+                                {
+                                 alert(data.Message);
+                                }
+                            },
+                            error: function() {
+                                $dfd.reject();
+                            }
+                        });
                     }
 
                     function fetchBatchLineageInfo(pid) {
-                        location.href = '<c:url value="/pages/columnlineage.page?pid="/>' + pid;
+                                      $.ajax({
+                                                url: '/mdrest/process/permission/'+pid,
+                                                type: 'PUT',
+                                                dataType: 'json',
+                                                 success: function(data) {
+                                                    if(data.Result == "OK") {
+                                                    location.href = '<c:url value="/pages/columnlineage.page?pid="/>' + pid;
+                                                    }
+                                                    else
+                                                    {
+                                                     alert(data.Message);
+                                                    }
+                                                },
+                                                error: function() {
+                                                    $dfd.reject();
+                                                }
+                                            });
                     }
 
                      function goToEditGraphically(pid) {
-                        location.href = '<c:url value="/pages/wfdesigner.page?processId="/>' + pid;
+                                      $.ajax({
+                                               url: '/mdrest/process/permission/'+pid,
+                                               type: 'PUT',
+                                               dataType: 'json',
+                                                success: function(data) {
+                                                   if(data.Result == "OK") {
+                                                location.href = '<c:url value="/pages/wfdesigner.page?processId="/>' + pid;
+                                                   }
+                                                   else
+                                                   {
+                                                    alert(data.Message);
+                                                   }
+                                               },
+                                               error: function() {
+                                                   $dfd.reject();
+                                               }
+                                           });
                     }
 
                      function goToExportPage(pid)
-                     {
-                        console.log(pid);
-                        location.href = '<c:url value="/pages/appexport.page?processId="/>' + pid;
-
-                     }
+                           {
+                               $.ajax({
+                                            url: '/mdrest/process/permission/'+pid,
+                                            type: 'PUT',
+                                            dataType: 'json',
+                                             success: function(data) {
+                                                if(data.Result == "OK") {
+                                               location.href = '<c:url value="/pages/appexport.page?processId="/>' + pid;
+                                                }
+                                                else
+                                                {
+                                                 alert(data.Message);
+                                                }
+                                            },
+                                            error: function() {
+                                                $dfd.reject();
+                                            }
+                                        });
+                           }
 
                      function goToSLAMonitoringPage(pid)
                                           {
-                                             console.log(pid);
-                                             location.href = '<c:url value="/pages/sla.page?processId="/>' + pid;
-
-                                          }
+                                           $.ajax({
+                                                 url: '/mdrest/process/permission/'+pid,
+                                                 type: 'PUT',
+                                                 dataType: 'json',
+                                                  success: function(data) {
+                                                     if(data.Result == "OK") {
+                                                        location.href = '<c:url value="/pages/sla.page?processId="/>' + pid;                                                     }
+                                                     else
+                                                     {
+                                                      alert(data.Message);
+                                                     }
+                                                 },
+                                                 error: function() {
+                                                     $dfd.reject();
+                                                 }
+                                             });
+                                         }
                 </script>
                 <%--  --%>
                     <script>

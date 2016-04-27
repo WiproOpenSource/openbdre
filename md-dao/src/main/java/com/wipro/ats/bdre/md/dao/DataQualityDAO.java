@@ -113,12 +113,17 @@ public class DataQualityDAO {
     }
 
 
-    public List<com.wipro.ats.bdre.md.beans.table.Properties> insertDQSetup(DQSetupInfo dqSetupInfo) {
+    public List<com.wipro.ats.bdre.md.beans.table.Properties> insertDQSetup(DQSetupInfo dqSetupInfo,String username) {
         Session session = sessionFactory.openSession();
         List<com.wipro.ats.bdre.md.beans.table.Properties> tablePropertiesList = new ArrayList<com.wipro.ats.bdre.md.beans.table.Properties>();
 
         try {
             session.beginTransaction();
+            UserRoles userRoles=new UserRoles();
+            Criteria criteria = session.createCriteria(UserRoles.class).add(Restrictions.eq("users.username", username)).addOrder(Order.asc("userRoleId"));
+            if (criteria.list()!=null){
+                userRoles = (UserRoles) criteria.list().get(0);
+            }
             LOGGER.info("process came in insertDQ");
             com.wipro.ats.bdre.md.dao.jpa.Process jpaProcess = new com.wipro.ats.bdre.md.dao.jpa.Process();
             jpaProcess.setAddTs(new Date());
@@ -137,7 +142,17 @@ public class DataQualityDAO {
             jpaProcess.setNextProcessId(" ");
             WorkflowType workflowType = (WorkflowType) session.get(WorkflowType.class, 1);
             jpaProcess.setWorkflowType(workflowType);
-
+            PermissionType permissionType=new PermissionType();
+            permissionType.setPermissionTypeId(7);
+            jpaProcess.setPermissionTypeByUserAccessId(permissionType);
+            PermissionType permissionType1=new PermissionType();
+            permissionType1.setPermissionTypeId(4);
+            jpaProcess.setPermissionTypeByGroupAccessId(permissionType1);
+            PermissionType permissionType2=new PermissionType();
+            permissionType2.setPermissionTypeId(0);
+            jpaProcess.setPermissionTypeByOthersAccessId(permissionType2);
+            jpaProcess.setUserRoles(userRoles);
+            jpaProcess.setUserName(username);
             Integer parentProcessId = (Integer) session.save(jpaProcess);
 
             LOGGER.info("inserted ppid is " + parentProcessId);

@@ -35,6 +35,54 @@ public class Process {
     private String tableEditTS;
     private Boolean deleteFlag;
     private Integer workflowId;
+    private Integer permissionTypeByOthersAccessId;
+    private Integer permissionTypeByUserAccessId;
+    private Integer permissionTypeByGroupAccessId;
+    private String userName;
+    private Integer ownerRoleId;
+    public Integer getOwnerRoleId() {
+        return ownerRoleId;
+    }
+
+    public void setOwnerRoleId(Integer ownerRoleId) {
+        this.ownerRoleId = ownerRoleId;
+    }
+
+
+
+    public String getUserName() {
+        return userName;
+    }
+
+    public void setUserName(String userName) {
+        this.userName = userName;
+    }
+
+
+
+    public Integer getPermissionTypeByOthersAccessId() {
+        return permissionTypeByOthersAccessId;
+    }
+
+    public void setPermissionTypeByOthersAccessId(Integer permissionTypeByOthersAccessId) {
+        this.permissionTypeByOthersAccessId = permissionTypeByOthersAccessId;
+    }
+
+    public Integer getPermissionTypeByUserAccessId() {
+        return permissionTypeByUserAccessId;
+    }
+
+    public void setPermissionTypeByUserAccessId(Integer permissionTypeByUserAccessId) {
+        this.permissionTypeByUserAccessId = permissionTypeByUserAccessId;
+    }
+
+    public Integer getPermissionTypeByGroupAccessId() {
+        return permissionTypeByGroupAccessId;
+    }
+
+    public void setPermissionTypeByGroupAccessId(Integer permissionTypeByGroupAccessId) {
+        this.permissionTypeByGroupAccessId = permissionTypeByGroupAccessId;
+    }
     @NotNull
     @Size(min = 1, max = 256)
     private String description;

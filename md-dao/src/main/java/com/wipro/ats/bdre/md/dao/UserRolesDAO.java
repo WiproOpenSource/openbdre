@@ -20,12 +20,15 @@ import org.apache.log4j.Logger;
 import org.hibernate.Criteria;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
+import org.hibernate.criterion.Order;
+import org.hibernate.criterion.ProjectionList;
+import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Restrictions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
+import java.util.*;
 
 /**
  * Created by PR324290 on 10/28/2015.
@@ -49,11 +52,46 @@ public class UserRolesDAO {
         return userRoles;
     }
 
+    public Map<Integer,String> diffRoleList() {
+        Session session = sessionFactory.openSession();
+        session.beginTransaction();
+        Criteria criteria = session.createCriteria(UserRoles.class);
+        ProjectionList p1=Projections.projectionList();
+        p1.add(Projections.property("role"));
+        p1.add(Projections.property("userRoleId"));
+        criteria.setProjection(p1);
+        List l=criteria.list();
+        Iterator it=l.iterator();
+        Map<Integer,String> diffRoles=new HashMap<>();
+        while(it.hasNext())
+        {
+            Object ob[] = (Object[])it.next();
+            diffRoles.put( (Integer) ob[1],(String) ob[0]);
+        }
+        session.getTransaction().commit();
+        session.close();
+        return diffRoles;
+    }
+
     public List<UserRoles> listByName(String userName) {
         Session session = sessionFactory.openSession();
         session.beginTransaction();
         Criteria criteria = session.createCriteria(UserRoles.class).add(Restrictions.eq("users.username", userName));
         List<UserRoles> userRoles = criteria.list();
+        session.getTransaction().commit();
+        session.close();
+        return userRoles;
+    }
+
+
+    public UserRoles minUserRoleId(String userName) {
+        Session session = sessionFactory.openSession();
+        session.beginTransaction();
+        UserRoles userRoles=new UserRoles();
+        Criteria criteria = session.createCriteria(UserRoles.class).add(Restrictions.eq("users.username", userName)).addOrder(Order.asc("userRoleId"));
+        if (criteria.list()!=null){
+         userRoles = (UserRoles) criteria.list().get(0);
+        }
         session.getTransaction().commit();
         session.close();
         return userRoles;
