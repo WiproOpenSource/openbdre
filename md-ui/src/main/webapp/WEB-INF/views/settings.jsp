@@ -7,6 +7,17 @@
     <head>
 	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 	<title><spring:message code="common.page.title_bdre_1"/></title>
+	<style>
+	#SettingsForm .form-group{
+		padding-left: 7%;
+	}
+	.configDropdown{
+		width: 20%;
+		margin: 8px 0 16px;
+		padding-top: 6px;
+		padding-bottom: 6px;
+	}
+	</style>
 	<script>
 	  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
 	  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
@@ -116,7 +127,7 @@ function buildFormDisplay(configGroup, typeDiv) {
 
 	</head>
     <body ng-controller="myCtrl">
-    		<div class="page-heading"><spring:message code="settings.page.panel_heading"/></div>
+    		<div class="page-header"><spring:message code="settings.page.panel_heading"/></div>
     		<section>
     			<div class="alert-info-outer">
 	    			<div class="alert alert-info" role="alert">
@@ -126,7 +137,7 @@ function buildFormDisplay(configGroup, typeDiv) {
                 <div id="config">
     				<div id="configDiv">
 					<form id="configForm" >
-					<div>Select Configuration</div>
+					<div><strong></>Select Configuration</strong></div>
    					<select id="configDropdown" class="btn btn-default dropdown-toggle configDropdown" data-toggle="dropdown" aria-haspopup="false" aria-expanded="true">
    						<option value="" disabled selected>Select your option</option>
    						<option value="mdconfig">mdconfig</option>
@@ -136,7 +147,7 @@ function buildFormDisplay(configGroup, typeDiv) {
 					</form>
 					</div>
     			</div>
-				<div id="Settings" class="steps-vertical"></div>
+				<div id="Settings" class="wizard-vertical"></div>
 				
     </section>
     <div id="div-dialog-warning"/>

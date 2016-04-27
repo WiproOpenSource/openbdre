@@ -36,6 +36,11 @@
 		<script src = "../js/jquery.fancytree.table.js" type = "text/javascript" ></script >
 		<script src = "../js/jquery.jtable.js" type = "text/javascript" ></script >
 		<link href = "../css/jtables-bdre.css" rel = "stylesheet" type = "text/css" />
+		<style>
+		#bdre-dataload.wizard > .content{
+			margin: 0 !important;
+		}
+		</style>
 		<script >
                 function fetchPipelineInfo(pid){
         			location.href = '<c:url value="/pages/lineage.page?pid="/>' + pid;
@@ -448,7 +453,7 @@
                                 }
                        </script>
 
-				<div class="page-heading"><spring:message code="processimportwizard.page.zip_file_upload"/></div>
+				<div class="page-header"><spring:message code="processimportwizard.page.zip_file_upload"/></div>
 				<div id = "bdre-dataload" ng-controller = "myCtrl" >
 				<h3 ><div class="number-circular">1</div><spring:message code="processimportwizard.page.zip_file_upload"/></h3 >
 				<section >

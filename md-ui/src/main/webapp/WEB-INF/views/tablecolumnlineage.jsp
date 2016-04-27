@@ -36,7 +36,7 @@
                 <script src="../js/svgutil.js" type="text/javascript"></script>
                 <script language="javascript" type="text/javascript" src="../js/graph/viz.js"></script>
                 <script language="javascript" type="text/javascript" src="../js/graph/site.js"></script>
-				<script type="text/javascript">
+                <script type="text/javascript">
                     var graphViz = "";
                     var prefix = "strict digraph{\n" +
                         "ranksep=0.4;" +
@@ -183,6 +183,16 @@
                         top:-7px;
                         right:-7px;
                     }
+                    .divEncloseHeading .leftpad {
+						padding-left: 10%;
+					}
+					
+					.divEncloseHeading .rightpad {
+						padding-right: 10%;
+					}
+					.divEncloseHeading .panel-body {
+						padding-bottom: 53px;
+					}
                 </style>
 
                 <script>
@@ -281,7 +291,7 @@
             </head>
             <body>
                 <br/>
-				<div class="page-heading"><spring:message code="tablecolumnlineage.page.table_column_lineage"/></div>
+				<div class="page-header"><spring:message code="tablecolumnlineage.page.table_column_lineage"/></div>
                 <div class="row">&nbsp;</div>
                 <div class="row">
                     <div class="col-md-2"> </div>
