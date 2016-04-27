@@ -246,7 +246,7 @@ public class ProcessDAO {
         session.beginTransaction();
         List<Process> processSubProcessList = new ArrayList<Process>();
         try {
-             Process parentProcess = (Process) session.createCriteria(Process.class).add(Restrictions.eq(PROCESSCODE,processCode)).add(Restrictions.eq("userName",username)).uniqueResult();
+             Process parentProcess = (Process) session.createCriteria(Process.class).add(Restrictions.eq(PROCESSCODE,processCode)).add(Restrictions.eq("users.username",username)).uniqueResult();
             Criteria checkProcessSubProcessList = session.createCriteria(Process.class).add(Restrictions.eq(PROCESS, parentProcess));
             processSubProcessList = checkProcessSubProcessList.list();
             processSubProcessList.add(parentProcess);
@@ -267,7 +267,7 @@ public class ProcessDAO {
         Process parentProcess=null;
 
         try {
-           parentProcess = (Process) session.createCriteria(Process.class).add(Restrictions.eq(PROCESSCODE,processCode)).add(Restrictions.eq("userName",username)).uniqueResult();
+           parentProcess = (Process) session.createCriteria(Process.class).add(Restrictions.eq(PROCESSCODE,processCode)).add(Restrictions.eq("users.username",username)).uniqueResult();
             session.getTransaction().commit();
         } catch (MetadataException e) {
             session.getTransaction().rollback();
@@ -754,7 +754,7 @@ public String securityCheck(Integer processId,String username,String action){
     executeList.add(3);
     executeList.add(5);
     executeList.add(7);
-    if (process.getUserName().equals(username))
+    if (process.getUsers().getUsername().equals(username))
     {
         switch (action){
             case "write": if (writeList.contains(process.getPermissionTypeByUserAccessId().getPermissionTypeId())

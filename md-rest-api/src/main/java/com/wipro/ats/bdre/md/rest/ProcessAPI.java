@@ -24,6 +24,7 @@ import com.wipro.ats.bdre.md.beans.table.Process;
 import com.wipro.ats.bdre.md.beans.table.Properties;
 import com.wipro.ats.bdre.md.dao.*;
 import com.wipro.ats.bdre.md.dao.jpa.*;
+import com.wipro.ats.bdre.md.dao.jpa.Users;
 import com.wipro.ats.bdre.md.dao.jpa.PermissionType;
 import com.wipro.ats.bdre.md.rest.beans.ProcessExport;
 import com.wipro.ats.bdre.md.rest.util.BindingResultError;
@@ -368,7 +369,9 @@ public class ProcessAPI extends MetadataAPIBase {
             if (process.getPermissionTypeByOthersAccessId() != null)
                 insertDaoProcess.setPermissionTypeByOthersAccessId(appPermissionDAO.get(process.getPermissionTypeByOthersAccessId()));
             insertDaoProcess.setEditTs(DateConverter.stringToDate(process.getTableEditTS()));
-            insertDaoProcess.setUserName(principal.getName());
+              Users users=new Users();
+              users.setUsername(principal.getName());
+              insertDaoProcess.setUsers(users);
             Integer processId = processDAO.insert(insertDaoProcess);
             process.setProcessId(processId);
             process.setTableAddTS(DateConverter.dateToString(insertDaoProcess.getAddTs()));
@@ -574,7 +577,7 @@ public class ProcessAPI extends MetadataAPIBase {
                SameProcessCodeProcess sameProcessCodeProcess=new SameProcessCodeProcess();
                 sameProcessCodeProcess.setProcessExport(processExport);
                 sameProcessCodeProcess.setParentProcessId(process.getProcessId());
-                sameProcessCodeProcess.setProcessCreaterName(process.getUserName());
+                sameProcessCodeProcess.setProcessCreaterName(process.getUsers().getUsername());
                 sameProcessCodeParentProcessList.add(sameProcessCodeProcess);
             }
 
@@ -635,7 +638,9 @@ public class ProcessAPI extends MetadataAPIBase {
                 insertDaoProcess.setEditTs(DateConverter.stringToDate(parentProcess.getTableEditTS()));
                 insertDaoProcess.setProcessCode(parentProcess.getProcessCode());
                 insertDaoProcess.setUserRoles(userRolesDAO.minUserRoleId(principal.getName()));
-                insertDaoProcess.setUserName(principal.getName());
+                Users users=new Users();
+                users.setUsername(principal.getName());
+                insertDaoProcess.setUsers(users);
                 parentProcessId = processDAO.insert(insertDaoProcess);
                 parentProcess.setProcessId(parentProcessId);
                 processExport.getProcessList().get(0).setProcessId(parentProcessId);
@@ -750,7 +755,9 @@ public class ProcessAPI extends MetadataAPIBase {
                         insertDaoProcess.setDeleteFlag(process.getDeleteFlag());
                     insertDaoProcess.setEditTs(DateConverter.stringToDate(process.getTableEditTS()));
                     insertDaoProcess.setProcessCode(process.getProcessCode());
-                    insertDaoProcess.setUserName(principal.getName());
+                    Users users=new Users();
+                    users.setUsername(principal.getName());
+                    insertDaoProcess.setUsers(users);
                     Integer processId = processDAO.insert(insertDaoProcess);
                     process.setProcessId(processId);
                     process.setTableAddTS(DateConverter.dateToString(insertDaoProcess.getAddTs()));

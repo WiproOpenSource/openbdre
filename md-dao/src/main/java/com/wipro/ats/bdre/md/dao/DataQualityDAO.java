@@ -152,7 +152,9 @@ public class DataQualityDAO {
             permissionType2.setPermissionTypeId(0);
             jpaProcess.setPermissionTypeByOthersAccessId(permissionType2);
             jpaProcess.setUserRoles(userRoles);
-            jpaProcess.setUserName(username);
+            Users users=new Users();
+            users.setUsername(username);
+            jpaProcess.setUsers(users);
             Integer parentProcessId = (Integer) session.save(jpaProcess);
 
             LOGGER.info("inserted ppid is " + parentProcessId);

@@ -20,6 +20,7 @@ import com.wipro.ats.bdre.md.dao.ProcessDAO;
 import com.wipro.ats.bdre.md.dao.UserRolesDAO;
 import com.wipro.ats.bdre.md.dao.jpa.Process;
 import com.wipro.ats.bdre.md.dao.jpa.Properties;
+import com.wipro.ats.bdre.md.dao.jpa.Users;
 import com.wipro.ats.bdre.md.rest.RestWrapper;
 import com.wipro.ats.bdre.md.rest.util.BindingResultError;
 import com.wipro.ats.bdre.md.rest.util.Dao2TableUtil;
@@ -151,7 +152,9 @@ public class DataGenAPI extends MetadataAPIBase {
 
         }
         parentProcess = Dao2TableUtil.buildJPAProcess(18,processName, processDescription, 1,busDomainId);
-        parentProcess.setUserName(principal.getName());
+        Users users=new Users();
+        users.setUsername(principal.getName());
+        parentProcess.setUsers(users);
         parentProcess.setUserRoles(userRolesDAO.minUserRoleId(principal.getName()));
         childProcess = Dao2TableUtil.buildJPAProcess(14, "SubProcess of "+processName, processDescription, 0,busDomainId);
 

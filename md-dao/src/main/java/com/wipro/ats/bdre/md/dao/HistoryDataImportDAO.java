@@ -161,7 +161,9 @@ public class HistoryDataImportDAO {
                 permissionType2.setPermissionTypeId(0);
                 dataLoadParent.setPermissionTypeByOthersAccessId(permissionType2);
                 dataLoadParent.setUserRoles(userRoles);
-                dataLoadParent.setUserName(username);
+                Users users=new Users();
+                users.setUsername(username);
+                dataLoadParent.setUsers(users);
                 session.save(dataLoadParent);
 
                 LOGGER.info("the inserted data load parent is " + dataLoadParent.getProcessId());
@@ -193,7 +195,9 @@ public class HistoryDataImportDAO {
                 permissionType2.setPermissionTypeId(0);
                 dataImportProcess.setPermissionTypeByOthersAccessId(permissionType2);
                 dataImportProcess.setUserRoles(userRoles);
-                dataImportProcess.setUserName(username);
+                Users users=new Users();
+                users.setUsername(username);
+                dataImportProcess.setUsers(users);
 
                 session.save(dataImportProcess);
 

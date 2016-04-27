@@ -19,6 +19,7 @@ import com.wipro.ats.bdre.md.beans.CrawlerInfo;
 import com.wipro.ats.bdre.md.beans.table.Process;
 import com.wipro.ats.bdre.md.dao.ProcessDAO;
 import com.wipro.ats.bdre.md.dao.UserRolesDAO;
+import com.wipro.ats.bdre.md.dao.jpa.Users;
 import com.wipro.ats.bdre.md.rest.RestWrapper;
 import com.wipro.ats.bdre.md.rest.util.BindingResultError;
 import com.wipro.ats.bdre.md.rest.util.Dao2TableUtil;
@@ -68,7 +69,9 @@ public class CrawlerAPI extends MetadataAPIBase {
 
         //making process
         com.wipro.ats.bdre.md.dao.jpa.Process parentProcess = Dao2TableUtil.buildJPAProcess(28, crawlerInfo.getProcessName(), crawlerInfo.getProcessDescription(), 1,crawlerInfo.getBusDomainId());
-        parentProcess.setUserName(principal.getName());
+        Users users=new Users();
+        users.setUsername(principal.getName());
+        parentProcess.setUsers(users);
         parentProcess.setUserRoles(userRolesDAO.minUserRoleId(principal.getName()));
         com.wipro.ats.bdre.md.dao.jpa.Process childProcess = Dao2TableUtil.buildJPAProcess(29, "child of " + crawlerInfo.getProcessName(), "SubProcess of " + crawlerInfo.getProcessDescription(), 0,crawlerInfo.getBusDomainId());
         List<com.wipro.ats.bdre.md.dao.jpa.Properties> childProps=new ArrayList<>();
