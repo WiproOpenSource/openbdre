@@ -15,7 +15,7 @@
 		<script src="../js/jquery.steps.min.js"></script>
 		<link rel="stylesheet" href="../css/jquery.steps.css" />
 		<link rel="stylesheet" href="../css/jquery.steps.custom.css" />
-		<link href="../css/bootstrap.custom.css" rel="stylesheet" type="text/css" />
+		<link href="../css/bootstrap.custom.css" rel="stylesheet" />
 		<script src="../js/bootstrap.js" type="text/javascript"></script>
 		<script src="../js/jquery.jtable.js" type="text/javascript"></script>
 		<script src="../js/angular.min.js" type="text/javascript"></script>

@@ -29,10 +29,12 @@ $(document).ready(function(){
 </script>
 	<style>
 body {
-	overflow: scroll;
 	padding: 10px;
-	margin-left: 10%;
+	margin-left: 5%;
+	margin-right:5%;
+	overflow: scroll;
 }
+
 
 </style>
     </head>
