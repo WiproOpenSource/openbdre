@@ -132,21 +132,26 @@ CREATE TABLE process (
   add_ts timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   process_name varchar(45) NOT NULL,
   process_code VARCHAR(256),
-  bus_domain_id int NOT NULL references bus_domain(bus_domain_id) ON DELETE NO ACTION ON
-UPDATE NO ACTION,
-  process_type_id int NOT NULL references process_type(process_type_id) ON DELETE NO ACTION
-ON UPDATE NO ACTION,
-  parent_process_id int DEFAULT NULL references process(process_id) ON DELETE NO ACTION ON
-UPDATE NO ACTION,
+   user_name VARCHAR(45),
+      owner_role_id int(11),
+      user_access_id int(1)  DEFAULT '7',
+      group_access_id int(1)  DEFAULT '4',
+      others_access_id int(1)  DEFAULT '0',
+  bus_domain_id int NOT NULL references bus_domain(bus_domain_id) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  process_type_id int NOT NULL references process_type(process_type_id) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  parent_process_id int DEFAULT NULL references process(process_id) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  user_access_id REFERENCES permission_type (permission_type_id) ON DELETE NO ACTION ON UPDATE NO ACTION,
+     group_access_id REFERENCES permission_type (permission_type_id) ON DELETE NO ACTION ON UPDATE NO ACTION,
+     others_access_id REFERENCES permission_type (permission_type_id) ON DELETE NO ACTION ON UPDATE NO ACTION,
+     owner_role_id REFERENCES user_roles (user_role_id) ON DELETE NO ACTION ON UPDATE NO ACTION,
+      user_name REFERENCES users (username) ON DELETE NO ACTION ON UPDATE NO ACTION,
   can_recover boolean  DEFAULT 'true',
   enqueuing_process_id int NOT NULL DEFAULT '0',
   batch_cut_pattern varchar(45) DEFAULT NULL,
   next_process_id varchar(256) NOT NULL DEFAULT '',
   delete_flag boolean  DEFAULT 'false',
-  workflow_id int DEFAULT '1' references workflow_type(workflow_id) ON DELETE NO ACTION ON
-UPDATE NO ACTION,
-  process_template_id int DEFAULT '0' references process_template(process_template_id) ON
-DELETE NO ACTION ON UPDATE NO ACTION,
+  workflow_id int DEFAULT '1' references workflow_type(workflow_id) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  process_template_id int DEFAULT '0' references process_template(process_template_id) ON DELETE NO ACTION ON UPDATE NO ACTION,
   edit_ts timestamp DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (process_id)
 
