@@ -304,7 +304,7 @@ public class GeneralConfigDAO {
             jtGeneralConfig.setId(jtGeneralConfigId);
             jtGeneralConfig.setGcValue("Job Tracker Address");
             jtGeneralConfig.setDescription(cluster.getClusterName());
-            jtGeneralConfig.setDefaultVal(cluster.getNameNodeHostName()+":"+cluster.getJobTrackerPort());
+            jtGeneralConfig.setDefaultVal(cluster.getJobTrackerHostName()+":"+cluster.getJobTrackerPort());
             jtGeneralConfig.setType("text");
             jtGeneralConfig.setEnabled(true);
             jtGeneralConfig.setRequired(true);
@@ -317,7 +317,7 @@ public class GeneralConfigDAO {
             hiveGeneralConfig.setId(hiveGeneralConfigId);
             hiveGeneralConfig.setGcValue("Hive Server2 Address");
             hiveGeneralConfig.setDescription(cluster.getClusterName());
-            hiveGeneralConfig.setDefaultVal(cluster.getNameNodeHostName() + ":10000");
+            hiveGeneralConfig.setDefaultVal(cluster.getHiveHostName() + ":10000");
             hiveGeneralConfig.setType("text");
             hiveGeneralConfig.setEnabled(true);
             hiveGeneralConfig.setRequired(true);
