@@ -524,21 +524,6 @@ div.jtable-main-container > table.jtable > tbody > tr.jtable-row-even{
 div.jtable-main-container > table.jtable > tbody > tr{
 	background-color: #EFF2F4;
 }
-.bdre-jtable-button .label-primary,.jtable-child-table-container .label-primary{
-	background: #359bd0;
-    background: -webkit-linear-gradient(#359bd0, #037dbc);
-    background: -o-linear-gradient(#359bd0, #037dbc);
-    background: -moz-linear-gradient(#359bd0, #037dbc);
-    background: -ms-linear-gradient(#359bd0, #037dbc);
-    background: linear-gradient(#359bd0, #037dbc);
-}
-.jtable-data-row .label-warning,.jtable-data-row .label-danger, .label-primary{
-	padding: .4em 0.8em .5em;
-}
-.jtable-child-table-container .label-primary{
-	border-radius:2px;
-	font-size: 9px;
-}
 div.jtable-main-container > table.jtable > tbody > tr.jtable-data-row > td{
 font-weight: 400;
 }
@@ -565,7 +550,7 @@ div.jtable-main-container > div.jtable-bottom-panel span.jtable-page-info{
    	-webkit-appearance: none;    
     -moz-appearance: none;
  	color: #ccc;
-	background: #303338 url('../css/images/pagination_select.png') no-repeat right;
+	background: #303338 url('../css/images/pagination_dropdown.png') no-repeat right;
 	width: 50px;
  	outline: none;
  	background-size: 38%;
@@ -597,144 +582,4 @@ div.jtable-main-container > table.jtable > tbody > tr.jtable-data-row > td > .jt
   background: url('../css/images/delete_icon.png') no-repeat;
   background-size: 100% 100%;
   opacity:1;
-}
-/* jquery ui css*/
-.jtable-dialog-form .jtable-input-label,.jtable-dialog-form .jtable-text-input,.jtable-dialog-form .jtable-dropdown-input{
-	display: inline-block !important;
-}
-.jtable-dialog-form .jtable-text-input,.jtable-dialog-form  .jtable-dropdown-input{
-	width: 70% !important;
-}
-.jtable-dialog-form .jtable-input-label{
-	width: 30% !important;
-}
-.jtable-dialog-form select,.jtable-dialog-form input{
-	width: 90% !important;
-	border-radius: 4px;
-    border: 1px solid gainsboro;
-    line-height: 26px;
-    padding-left:5px !important;
-}
-.jtable-dialog-form select{height: 30px;padding-left:5px !important;}
-form.jtable-dialog-form div.jtable-input-field-container{
-	border: none;
-	margin-bottom: 10px;
-	padding-left: 35px;
-}
-
-/* ui dialog no jtable container */
-[aria-describedby="ui-id-3"], [aria-describedby="ui-id-5"] {
-    background: #f9fafa !important;
-    top:35px !important;
-    right: 5px !important;
-    left: initial !important;
-    width: 35% !important;
-    border-radius: 4px 4px 0px 0px!important;
-}
-[aria-describedby="ui-id-3"] .ui-dialog-buttonpane,[aria-describedby="ui-id-5"] .ui-dialog-buttonpane{
-	top: 61px;
-    left: -3px;
-    position: relative;
-	background-color: #515663 !important;
-	border-radius: 0 0 8px 8px;
-	text-align: center;
-	margin-top: 0px !important;
-	width:102%; 
-}
-[aria-describedby="execute-dialog-confirm"],[aria-describedby="dialog-confirm"],[aria-describedby="ui-id-7"]{
-   background: #525764 !important;
-   border-radius: 6px !important;
-   width: 365px !important;
-   top: 10% !important;
-}
-[aria-describedby="execute-dialog-confirm"] .ui-dialog-buttonpane,[aria-describedby="dialog-confirm"] .ui-dialog-buttonpane,[aria-describedby="ui-id-7"] .ui-dialog-buttonpane{
-	background: none !important;
-	margin-top: 0 !important;
-}
-#execute-dialog-confirm p, #dialog-confirm p{
-	padding: 25px !important;
-	background: #e0e2e3 !important;
-	border-radius: 4px !important;
-	font-size: 14px !important;
-}
-.jtable-delete-confirm-message{
-	font-size: 14px !important;
-	background: #e0e2e3 !important;
-}
-#ui-id-9,#ui-id-10{
-	text-align: center;
-	color: #e0e2e3;
-	font-weight: bold;
-	font-size:16px;
-}
-.ui-dialog-title{
-	display: none !important;
-}
-#ui-id-3{
-	top: 30px !important;
-}
-.ui-dialog-titlebar{
-    background: none !important;
-	border: none !important;
-}
-.ui-dialog-buttonset{
-	float: none !important;
-	text-align:center !important;
-}
-.ui-button-text{
-	font-weight: normal !important;
-}
-.ui-dialog-buttonset button{
-	border-radius: 4px !important;
-	padding:2px 6px !important;
-	background-image: none !important;
-	border: none !important;
-}
-#AddRecordDialogSaveButton,#EditDialogSaveButton,#DeleteDialogButton, [aria-describedby="execute-dialog-confirm"] button:nth-child(1),[aria-describedby="dialog-confirm"] button:nth-child(1),ui-id-7{
-	background: #20C8A3 !important;
-}
-.ui-widget-overlay{background: rgb(0,0,0) !important;opacity: 0.7 !important;}
-.ui-dialog-buttonpane .ui-widget-content.ui-helper-clearfix{
-	border-width: 0 !important;
-}
-.ui-widget-content{
-	border: none !important;
-}
-.ui-icon-closethick{
-	    background-image: url(images/close.png) !important;
-	    background-repeat: no-repeat !important;
-	    background-position: 0 0 !important;
-	    background-size: 80% !important;
-}
-.ui-icon-closethick ,.ui-icon-closethick{
-	margin-top: 0px !important;
-}
-
-.ui-dialog-titlebar-close{
-	border: none !important;
-	background: none !important;
-}
-.ui-icon-alert-custom,#ui-id-7 .ui-icon-alert{
-	background: url("images/alert_icon.png") no-repeat center;
-	width: 50px;
-    background-size: 100%;
-    height: 50px;
-    display: block;
-    margin:0 auto !important;
-}
-.dialog-title-custom{
-	text-align: center;
-	color: #e0e2e3;
-	font-size: 24px;
-	padding-bottom: 5px;
-}
-.jtable-delete-confirm-message{
-	padding: 5px;
-    top: 10px;
-    left: 10%;
-    position: relative;
-    border-radius: 4px !important;
-}
-#ui-id-7 .ui-icon-alert{
-	float: none !important;
 }

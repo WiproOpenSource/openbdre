@@ -2,6 +2,7 @@
                     <%@ taglib prefix="security"
        uri="http://www.springframework.org/security/tags" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+<%@taglib uri="http://www.springframework.org/tags" prefix="spring"%>
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1"
      pageEncoding="ISO-8859-1"%>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
@@ -23,11 +24,12 @@
     <script src="../js/jquery.min.js"></script>
     <link href="../css/jquery-ui-1.10.3.custom.css" rel="stylesheet">
     <link href="../css/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="../css/bootstrap.custom.css" rel="stylesheet" type="text/css" />
     <script src="../js/jquery-ui-1.10.3.custom.js"></script>
     <script src="../js/jquery.steps.min.js"></script>
     <link rel="stylesheet" href="../css/jquery.steps.css" />
-
-    <script src="../js/bootstrap.js" type="text/javascript"></script>
+    <link rel="stylesheet" href="../css/jquery.steps.custom.css" />
+	<script src="../js/bootstrap.js" type="text/javascript"></script>
     <script src="../js/jquery.jtable.js" type="text/javascript"></script>
     <link href="../css/jtables-bdre.css" rel="stylesheet" type="text/css" />
 
@@ -44,74 +46,75 @@
         horizontal-align: middle;
         padding-top: 2cm;
     }
+    
     </style>
   </head>
 
   <body ng-app="myApp" ng-controller="myCtrl">
-
+  						<div class="page-heading"><spring:message code="filemonitor.page.panel_heading_file_monitoring_creation"/></div>
                         <div class="row">&nbsp;</div>
-                        <div class="row">
-                            <div class="col-md-3"> </div>
-                            <div class="col-md-6" id="divEncloseHeading">
+                        <div class="row bdre-process-creation-form">
+                            <div class="col-md-2"></div>
+                            <div class="col-md-8" id="divEncloseHeading" >
                                 <div class="panel panel-primary">
-                                    <div class="panel-heading">File Monitoring Creating Process</div>
+
+                                    <%-- <div class="panel-heading"><spring:message code="filemonitor.page.panel_heading_file_monitoring_creation"/></div> --%>
                                     <div class="panel-body">
                                         <form role="form" id="propertiesFieldsForm">
                                             <div class="form-group">
-                                                <label >File Monitoring Dir Name</label>
-                                                <input type="text" class="form-control" name="monitoredDirName" placeholder="File Monitoring Dir Name" value=<%=System.getProperty("user.home")+"/mondir"%> required>
+                                                <label><spring:message code="filemonitor.page.property_form_field_dir_name"/></label>
+                                                <input type="text" class="form-control" name="monitoredDirName" placeholder=<spring:message code="filemonitor.page.property_form_field_dir_name_placeholder"/> value=<%=System.getProperty("user.home")+"/mondir"%> required>
                                             </div>
                                             <div class="form-group">
-                                                <label >File Pattern</label>
-                                                <input type="text" class="form-control" name="filePattern" value=".+" placeholder="File Pattern Monitored" required>
+                                                <label ><spring:message code="filemonitor.page.property_form_field_file_pattern"/></label>
+                                                <input type="text" class="form-control" name="filePattern" value=".+" placeholder=<spring:message code="filemonitor.page.property_form_field_file_pattern_placeholder"/>required>
                                             </div>
                                             <div class="form-group">
-                                                <label >Copied Source File Action</label>
+                                                <label><spring:message code="filemonitor.page.property_form_field_srcfile_action"/></label>
                                                 <select class="form-control" name="deleteCopiedSource">
                                                     <option value="true">Source File Delete</option>
                                                     <option value="false">Move Archive Dir </option>
 
                                                 </select>
                                             </div>
-
                                             <div class="form-group">
-                                                <label >HDFS Upload Dir Name</label>
-                                                <input type="text" class="form-control" name="hdfsUploadDir" id="hdfsUploadDir" placeholder="HDFS Upload Directory Name" required>
+                                                <label ><spring:message code="filemonitor.page.property_form_field_hdfs_upload_dir"/></label>
+                                                <input type="text" class="form-control" name="hdfsUploadDir" id="hdfsUploadDir" placeholder=<spring:message code="filemonitor.page.property_form_field_hdfs_upload_dir_placeholder"/> required>
                                             </div>
 
                                             <div class="form-group">
-                                                <label>Polling Interval(in milliseconds)</label>
-                                                <input type="number" class="form-control" name="sleepTime" value="500" placeholder="time in milliseconds" required>
+                                                <label><spring:message code="filemonitor.page.property_form_field_polling_interval"/></label>
+                                                <input type="number" class="form-control" name="sleepTime" value="500" placeholder=<spring:message code="filemonitor.page.property_form_field_polling_interval_placeholder"/> required>
                                             </div>
 
                                              <div class="form-group">
-                                                 <label>Process Name:</label>
-                                                 <input type="text" class="form-control"  id="processName" name="processName" placeholder="Enter Process Name" required>
+                                                 <label><spring:message code="filemonitor.page.property_form_field_process_name"/></label>
+                                                 <input type="text" class="form-control"  id="processName" name="processName" placeholder=<spring:message code="filemonitor.page.property_form_field_process_name_placeholder"/> required>
                                              </div>
                                              <div class="form-group">
-                                                 <label>Process Description:</label>
-                                                  <input type="text" class="form-control" id="processDescription" name="processDescription" placeholder="Enter Process Description" required>
+                                                 <label><spring:message code="filemonitor.page.property_form_field_process_desc"/></label>
+                                                  <input type="text" class="form-control" id="processDescription" name="processDescription" placeholder=<spring:message code="filemonitor.page.property_form_field_process_desc_placeholder"/> required>
                                              </div>
                                              <div class="form-group">
-                                                  <label>Bus Domain Id:</label>
+                                                  <label><spring:message code="filemonitor.page.property_form_field_bus_domain_id"/></label>
                                                    <select class="form-control" id="busDomainId" name="busDomainId">
                                                     <option ng-repeat="busDomain in busDomains.Options" value="{{busDomain.Value}}" name="busDomainId">{{busDomain.DisplayText}}</option>
                                                     </select>
                                              </div>
-
-                                            <input type="submit" id="createJobButton" class="btn btn-primary" ng-click="createJob()"/>
+                                             <div class="actions text-center pull-right">
+                                             	<input type="submit" id="createJobButton" class="btn btn-primary" ng-click="createJob()"/>
+                                             </div>
                                         </form>
-
-                                    </div>
+									</div>
                                 </div>
                             </div>
-                            <div class="col-md-3"> </div>
+                            <div class="col-md-2"> </div>
                 <div class="row">&nbsp;</div>
                     <div class="row">
                         <div class="col-md-3"> </div>
                         <div class="col-md-6 ">
                         <div class="panel panel-success">
-                            <div class="panel-heading" name="successHeader" id="successHeader">Job Created Successfully</div>
+                            <div class="panel-heading" name="successHeader" id="successHeader"><spring:message code="filemonitor.page.success_header"/></div>
                             <div id="Process"></div>
                         </div>
                         </div>
