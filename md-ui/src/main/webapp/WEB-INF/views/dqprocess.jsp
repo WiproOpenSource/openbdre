@@ -80,7 +80,7 @@
             <body ng-app="myApp" ng-controller="myCtrlr" ng-init="init()">
             <div class="page-header"><spring:message code="dqprocess.page.panel_heading"/></div>
                 <div class="row">&nbsp;</div>
-                <div class="row bdre-process-creation-form">
+                <div class="row">
                     <div class="col-md-2"> </div>
                     <div class="col-md-8">
                         <div class="panel panel-primary">

@@ -8,14 +8,17 @@
 	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 	<title><spring:message code="common.page.title_bdre_1"/></title>
 	<style>
-	#SettingsForm .form-group{
-		padding-left: 7%;
+	#Settings{
+		background-color: #F8F9FB;
+		padding-top: 4%;
+		height: 33em;
+    	overflow-y: scroll;
 	}
-	.configDropdown{
+	.btn-default{
 		width: 20%;
-		margin: 8px 0 16px;
-		padding-top: 6px;
-		padding-bottom: 6px;
+		margin: 8px 0 16px 6px !important;
+		padding-top: 6px 6px !important;;
+		padding-bottom: 6px !important;
 	}
 	</style>
 	<script>
@@ -129,11 +132,10 @@ function buildFormDisplay(configGroup, typeDiv) {
     <body ng-controller="myCtrl">
     		<div class="page-header"><spring:message code="settings.page.panel_heading"/></div>
     		<section>
-    			<div class="alert-info-outer">
-	    			<div class="alert alert-info" role="alert">
-	                     <spring:message code="settings.page.configuration_alert"/>
+    				<div class="alert alert-info" role="alert">
+	                     <div><spring:message code="settings.page.configuration_alert"/></div>
 	                </div>
-                </div>
+            
                 <div id="config">
     				<div id="configDiv">
 					<form id="configForm" >
@@ -147,7 +149,7 @@ function buildFormDisplay(configGroup, typeDiv) {
 					</form>
 					</div>
     			</div>
-				<div id="Settings" class="wizard-vertical"></div>
+				<div id="Settings"></div>
 				
     </section>
     <div id="div-dialog-warning"/>

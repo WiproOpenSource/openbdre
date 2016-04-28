@@ -669,7 +669,7 @@ var destjobTrackerIp;
 
     <body ng-app="myApp">
         <div id="bdre-data-migration" >
-                <h3>Source Environment</h3>
+                <h3 class="stepNumber">Source Environment</h3>
                             <section>
                               <form class="form-horizontal" role="form" id="processDetailsForm">
                                   <div id="processDetails" ng-controller="myCtrl">
@@ -713,7 +713,7 @@ var destjobTrackerIp;
                                         </div>
                                         </form>
                             </section>
-               <h3>Source Database</h3>
+               <h3 class="stepNumber">Source Database</h3>
               <section>
 
                         <form class="form-horizontal" role="form" id="srcDBForm">
@@ -728,7 +728,7 @@ var destjobTrackerIp;
 
                         </form>
               </section>
-			<h3>Tables</h3>
+			<h3 class="stepNumber">Tables</h3>
 			<section>
 			 <label class="control-label col-sm-2" for="tabl">Select source Table(s):</label>
 			  <form class="form-horizontal"  id="tablesForm">
@@ -740,7 +740,7 @@ var destjobTrackerIp;
 
              </section>
 
-             <h3>Destination Environment</h3>
+             <h3 class="stepNumber">Destination Environment</h3>
              <section>
              <form class="form-horizontal" role="form" id="destEnvForm">
 
@@ -764,7 +764,7 @@ var destjobTrackerIp;
 				</form>
 
               </section>
-                   <h3>Destination Database</h3>
+                   <h3 class="stepNumber">Destination Database</h3>
                   <section>
                             <form class="form-horizontal" role="form" id="destDBForm">
                                 <div id="destDBDiv">
@@ -778,7 +778,7 @@ var destjobTrackerIp;
 
                             </form>
                   </section>
-            <h3>Confirm</h3>
+            <h3 class="stepNumber">Confirm</h3>
              <section>
 
 
