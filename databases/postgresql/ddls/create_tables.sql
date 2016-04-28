@@ -60,6 +60,26 @@ CREATE TABLE permission_type (
   permission_type_name varchar(45) NOT NULL,
   PRIMARY KEY (permission_type_id)
 );
+/*etlmd_user.sql*/
+
+
+
+
+CREATE  TABLE users (
+  username VARCHAR(45) NOT NULL ,
+  password VARCHAR(45) NOT NULL ,
+  enabled boolean DEFAULT true ,
+  PRIMARY KEY (username));
+
+
+CREATE TABLE user_roles (
+  user_role_id SERIAL NOT NULL,
+  username VARCHAR(45) NOT NULL REFERENCES users(username),
+  ROLE VARCHAR(45) NOT NULL,
+  PRIMARY KEY (user_role_id),
+  CONSTRAINT uni_username_role UNIQUE(ROLE,username));
+
+
 
 
 /* etlmd_servers.sql */
@@ -264,25 +284,6 @@ UPDATE NO ACTION,
 ACTION,
   PRIMARY KEY (queue_id)
  );
-
-/*etlmd_user.sql*/
-
-
-
-
-CREATE  TABLE users (
-  username VARCHAR(45) NOT NULL ,
-  password VARCHAR(45) NOT NULL ,
-  enabled boolean DEFAULT true ,
-  PRIMARY KEY (username));
-
-
-CREATE TABLE user_roles (
-  user_role_id SERIAL NOT NULL,
-  username VARCHAR(45) NOT NULL REFERENCES users(username),
-  ROLE VARCHAR(45) NOT NULL,
-  PRIMARY KEY (user_role_id),
-  CONSTRAINT uni_username_role UNIQUE(ROLE,username));
 
 
 

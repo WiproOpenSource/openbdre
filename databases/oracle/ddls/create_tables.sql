@@ -103,6 +103,21 @@ CREATE TABLE process_template
      INCREMENT BY 1
      CACHE 2;
 
+CREATE  TABLE users (
+  username varchar2(45) NOT NULL ,
+  password varchar2(45) NOT NULL ,
+  enabled number(1,0)  DEFAULT 1 NOT NULL,
+  CONSTRAINT USERS_PK PRIMARY KEY (username)
+);
+
+
+CREATE TABLE user_roles (
+  user_role_id number(10,0) NOT NULL,
+  username varchar2(45) NOT NULL,
+  ROLE varchar2(45) NOT NULL,
+  CONSTRAINT user_roles_PK PRIMARY KEY (user_role_id),
+  CONSTRAINT fk_username FOREIGN KEY (username) REFERENCES users (username)
+);
 
 
 
@@ -313,21 +328,6 @@ end;
 /
 
 
-CREATE  TABLE users (
-  username varchar2(45) NOT NULL ,
-  password varchar2(45) NOT NULL ,
-  enabled number(1,0)  DEFAULT 1 NOT NULL,
-  CONSTRAINT USERS_PK PRIMARY KEY (username)
-);
-
-
-CREATE TABLE user_roles (
-  user_role_id number(10,0) NOT NULL,
-  username varchar2(45) NOT NULL,
-  ROLE varchar2(45) NOT NULL,
-  CONSTRAINT user_roles_PK PRIMARY KEY (user_role_id),
-  CONSTRAINT fk_username FOREIGN KEY (username) REFERENCES users (username)
-);
 
 CREATE SEQUENCE user_roles_seq
   MINVALUE 3
