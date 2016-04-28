@@ -329,13 +329,13 @@ function buildFormDisplay(configGroup, typeDiv) {
     				<div id="configDiv">
 					<form id="configForm" >
 
-					<div><strong>Select Configuration</strong></div>
+					<div><strong><spring:message code="settings.page.select_conf"/></strong></div>
     					<select id="configDropdown" class="btn btn-default dropdown-toggle configDropdown" data-toggle="dropdown" aria-haspopup="false" aria-expanded="true">
-    						<option value="" disabled selected>Select your option</option>
-    						<option value="mdconfig">mdconfig</option>
-    						<option value="imconfig">imconfig</option>
-    						<option value="scripts_config">scriptsconfig</option>
-    						<option value="cluster.hive-address">clusters</option>
+    						<option value="" disabled selected><spring:message code="settings.page.select_option"/></option>
+    						<option value="mdconfig"><spring:message code="settings.page.mdconfig"/></option>
+    						<option value="imconfig"><spring:message code="settings.page.imconfig"/></option>
+    						<option value="scripts_config"><spring:message code="settings.page.scripts_config"/></option>
+    						<option value="cluster.hive-address"><spring:message code="settings.page.cluster"/></option>
 						</select>
 					</form>
 					</div>
