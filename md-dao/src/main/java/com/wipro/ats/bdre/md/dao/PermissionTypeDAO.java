@@ -1,7 +1,6 @@
 package com.wipro.ats.bdre.md.dao;
 
 import com.wipro.ats.bdre.md.dao.jpa.PermissionType;
-import org.apache.log4j.Logger;
 import org.hibernate.Criteria;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
@@ -17,7 +16,6 @@ import java.util.List;
 @Transactional
 @Service
 public class PermissionTypeDAO {
-    private static final Logger LOGGER = Logger.getLogger(PermissionTypeDAO.class);
     @Autowired
     SessionFactory sessionFactory;
     public PermissionType get(Integer id) {

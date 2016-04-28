@@ -880,7 +880,7 @@ public class ProcessAPI extends MetadataAPIBase {
     @RequestMapping(value = {"/execute", "/execute/"}, method = RequestMethod.POST)
     @ResponseBody
     public RestWrapper executeProcess(@ModelAttribute("process")
-                                      @Valid Process process, BindingResult bindingResult, Principal principal) {
+                                      @Valid Process process, Principal principal) {
         RestWrapper restWrapper = null;
         ExecutionInfo executionInfo = new ExecutionInfo();
         executionInfo.setProcessId(process.getProcessId());
@@ -997,7 +997,7 @@ public class ProcessAPI extends MetadataAPIBase {
 
     @RequestMapping(value = {"/options", "/options/"}, method = RequestMethod.POST)
     @ResponseBody
-    public RestWrapperOptions listOptions(Principal principal) {
+    public RestWrapperOptions listOptions() {
         RestWrapperOptions restWrapperOptions = null;
         try {
             List<PermissionType> permissionTypeList = appPermissionDAO.permissionTypeList();

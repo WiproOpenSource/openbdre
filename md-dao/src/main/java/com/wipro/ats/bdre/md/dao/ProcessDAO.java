@@ -286,7 +286,6 @@ public class ProcessDAO {
 
         Session session = sessionFactory.openSession();
         session.beginTransaction();
-        Process parentProcess=null;
         List<Process> processes=new ArrayList<>();
         try {
             processes = session.createCriteria(Process.class).add(Restrictions.eq(PROCESSCODE,processCode)).list();
@@ -735,7 +734,9 @@ public String securityCheck(Integer processId,String username,String action){
     List<String> userRolesNameList=new ArrayList<>();
     String processCreater=process.getUserRoles().getRole();
     for(UserRoles userRoles1:userRoles)
-    {userRolesNameList.add(userRoles1.getRole());}
+    {
+        userRolesNameList.add(userRoles1.getRole());
+    }
 
     session.getTransaction().commit();
     session.close();
@@ -756,65 +757,121 @@ public String securityCheck(Integer processId,String username,String action){
     executeList.add(7);
     if (process.getUsers().getUsername().equals(username))
     {
-        switch (action){
+        switch (action) {
             case "write": if (writeList.contains(process.getPermissionTypeByUserAccessId().getPermissionTypeId())
                     || (userRolesNameList.contains(processCreater)&&writeList.contains(process.getPermissionTypeByGroupAccessId().getPermissionTypeId()))
                     || (!userRolesNameList.contains(processCreater)&&writeList.contains(process.getPermissionTypeByOthersAccessId().getPermissionTypeId()))
                     )
-            {return "ACCESS GRANTED";}
+            {
+                return "ACCESS GRANTED";
+            }
             else
-            {LOGGER.info("user write");throw new SecurityException("ACCESS DENIED");}
+            {
+                LOGGER.info("user write");
+                throw new SecurityException("ACCESS DENIED");
+            }
             case "read": if (readList.contains(process.getPermissionTypeByUserAccessId().getPermissionTypeId()) ||
                     (userRolesNameList.contains(processCreater)&&readList.contains(process.getPermissionTypeByGroupAccessId().getPermissionTypeId()))
                     || (!userRolesNameList.contains(processCreater)&&readList.contains(process.getPermissionTypeByOthersAccessId().getPermissionTypeId()))
                     )
-            {return "ACCESS GRANTED";}
+            {
+                return "ACCESS GRANTED";
+            }
             else
-            {LOGGER.info("user read");throw new SecurityException("ACCESS DENIED");}
+            {
+                LOGGER.info("user read");
+                throw new SecurityException("ACCESS DENIED");
+            }
             case "execute": if (executeList.contains(process.getPermissionTypeByUserAccessId().getPermissionTypeId())||
                     (userRolesNameList.contains(processCreater)&&executeList.contains(process.getPermissionTypeByGroupAccessId().getPermissionTypeId()))
                     || (!userRolesNameList.contains(processCreater)&&executeList.contains(process.getPermissionTypeByOthersAccessId().getPermissionTypeId()))
                     )
-            {return "ACCESS GRANTED";}
+            {
+                return "ACCESS GRANTED";
+            }
             else
-            {LOGGER.info("user execute");throw new SecurityException("ACCESS DENIED");}
+            {
+                LOGGER.info("user execute");
+                throw new SecurityException("ACCESS DENIED");
+            }
+            default: {LOGGER.info("no operation");
+                throw new SecurityException("no operation");
+            }
+
         }
-        {LOGGER.info("no user");throw new SecurityException("ACCESS DENIED");}    }
+
+
+    }
     else{
     if (userRolesNameList.contains(processCreater))
     {
         switch (action){
             case "write": if (writeList.contains(process.getPermissionTypeByGroupAccessId().getPermissionTypeId()))
-                               {return "ACCESS GRANTED";}
+                               {
+                                   return "ACCESS GRANTED";
+                               }
                            else
-                          {LOGGER.info("group write");throw new SecurityException("ACCESS DENIED");}
+                          {
+                              LOGGER.info("group write");
+                              throw new SecurityException("ACCESS DENIED");
+                          }
             case "read": if (readList.contains(process.getPermissionTypeByGroupAccessId().getPermissionTypeId()))
-                               {return "ACCESS GRANTED";}
+                               {
+                                   return "ACCESS GRANTED";
+                               }
                            else
-                          {LOGGER.info("group read");throw new SecurityException("ACCESS DENIED");}
+                          {
+                              LOGGER.info("group read");
+                              throw new SecurityException("ACCESS DENIED");
+                          }
             case "execute": if (executeList.contains(process.getPermissionTypeByGroupAccessId().getPermissionTypeId()))
-                            {return "ACCESS GRANTED";}
+                            {
+                                return "ACCESS GRANTED";
+                            }
                             else
-                            {LOGGER.info("group execute");throw new SecurityException("ACCESS DENIED");}
+                            {
+                                LOGGER.info("group execute");
+                                throw new SecurityException("ACCESS DENIED");
+                            }
+            default: {LOGGER.info("no operation");
+                throw new SecurityException("no operation");
+            }
         }
-        {LOGGER.info("group");throw new SecurityException("ACCESS DENIED");}
     }
     else {
         switch (action){
             case "write": if (writeList.contains(process.getPermissionTypeByOthersAccessId().getPermissionTypeId()))
-            {return "ACCESS GRANTED";}
+            {
+                return "ACCESS GRANTED";
+            }
             else
-            {LOGGER.info("other write");throw new SecurityException("ACCESS DENIED");}
+            {
+                LOGGER.info("other write");
+                throw new SecurityException("ACCESS DENIED");
+            }
             case "read": if (readList.contains(process.getPermissionTypeByOthersAccessId().getPermissionTypeId()))
-            {return "ACCESS GRANTED";}
+            {
+                return "ACCESS GRANTED";
+            }
             else
-            {LOGGER.info("other read");throw new SecurityException("ACCESS DENIED");}
+            {
+                LOGGER.info("other read");
+                throw new SecurityException("ACCESS DENIED");
+            }
             case "execute": if (executeList.contains(process.getPermissionTypeByOthersAccessId().getPermissionTypeId()))
-            {return "ACCESS GRANTED";}
+            {
+                return "ACCESS GRANTED";
+            }
             else
-            {LOGGER.info("other execute");throw new SecurityException("ACCESS DENIED");}
+            {
+                LOGGER.info("other execute");
+                throw new SecurityException("ACCESS DENIED");
+            }
+            default: {LOGGER.info("no operation");
+                throw new SecurityException("no operation");
+            }
         }
-        {LOGGER.info("other");throw new SecurityException("ACCESS DENIED");}
+
     }
 
 }

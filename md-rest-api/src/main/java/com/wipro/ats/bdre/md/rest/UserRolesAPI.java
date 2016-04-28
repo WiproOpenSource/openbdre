@@ -193,7 +193,7 @@ public class UserRolesAPI extends MetadataAPIBase {
 
     @RequestMapping(value = {"/options", "/options/"}, method = RequestMethod.POST)
     @ResponseBody public
-    RestWrapperOptions listOptions(Principal principal) {
+    RestWrapperOptions listOptions() {
         RestWrapperOptions restWrapperOptions = null;
         try {
             Map<Integer,String> objects=userRolesDAO.diffRoleList();
@@ -201,8 +201,7 @@ public class UserRolesAPI extends MetadataAPIBase {
             List<RestWrapperOptions.Option> options = new ArrayList<RestWrapperOptions.Option>();
             while (it.hasNext()) {
                 Map.Entry pair = (Map.Entry)it.next();
-                System.out.println(pair.getKey() + " = " + pair.getValue());
-                RestWrapperOptions.Option option = new RestWrapperOptions.Option((String) pair.getValue(), (pair.getKey()));
+                RestWrapperOptions.Option option = new RestWrapperOptions.Option((String) pair.getValue(), pair.getKey());
                 options.add(option);
                 it.remove(); // avoids a ConcurrentModificationException
             }
