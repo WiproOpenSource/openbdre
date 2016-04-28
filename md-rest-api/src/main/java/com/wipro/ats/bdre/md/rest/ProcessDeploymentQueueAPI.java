@@ -16,6 +16,7 @@ package com.wipro.ats.bdre.md.rest;
 import com.wipro.ats.bdre.exception.MetadataException;
 import com.wipro.ats.bdre.md.api.base.MetadataAPIBase;
 import com.wipro.ats.bdre.md.beans.table.ProcessDeploymentQueue;
+import com.wipro.ats.bdre.md.dao.ProcessDAO;
 import com.wipro.ats.bdre.md.dao.ProcessDeploymentQueueDAO;
 import com.wipro.ats.bdre.md.dao.jpa.BusDomain;
 import com.wipro.ats.bdre.md.dao.jpa.DeployStatus;
@@ -26,9 +27,7 @@ import com.wipro.ats.bdre.md.rest.util.DateConverter;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.ModelMap;
 import org.springframework.validation.BindingResult;
-
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -47,7 +46,8 @@ public class ProcessDeploymentQueueAPI extends MetadataAPIBase {
 
     @Autowired
     ProcessDeploymentQueueDAO processDeploymentQueueDAO;
-
+    @Autowired
+    ProcessDAO processDAO;
     /**
      * This method calls proc GetProcessDeploymentQueue and fetches a record corresponding to
      * the passed queueId.
@@ -251,7 +251,7 @@ public class ProcessDeploymentQueueAPI extends MetadataAPIBase {
         }
 
         try {
-
+            processDAO.securityCheck(processId,principal.getName(),"execute");
             com.wipro.ats.bdre.md.dao.jpa.ProcessDeploymentQueue jpaPdq = processDeploymentQueueDAO.insertProcessDeploymentQueue(processId, principal.getName());
 
             if (jpaPdq != null) {
@@ -276,6 +276,9 @@ public class ProcessDeploymentQueueAPI extends MetadataAPIBase {
             restWrapper = new RestWrapper(processDeploymentQueue, RestWrapper.OK);
             LOGGER.info("Record with ID:" + processDeploymentQueue.getDeploymentId() + " inserted in ProcessDeploymentQueue by User:" + principal.getName() + processDeploymentQueue);
         } catch (MetadataException e) {
+            LOGGER.error(e);
+            restWrapper = new RestWrapper(e.getMessage(), RestWrapper.ERROR);
+        }catch (SecurityException e) {
             LOGGER.error(e);
             restWrapper = new RestWrapper(e.getMessage(), RestWrapper.ERROR);
         }

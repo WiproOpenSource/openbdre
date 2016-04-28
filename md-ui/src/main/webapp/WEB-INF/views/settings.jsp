@@ -96,7 +96,198 @@
 		console.log($(this).val());
 		var config=$(this).val();
 		configGroupVal = config;
+		if(config == "cluster.hive-address"){
+       $("#Container").show();
+        $("#Settings").hide();
+        $('#Container').jtable({
+       	    title: 'Clusters List',
+       		    paging: true,
+       		    pageSize: 10,
+       		    sorting: true,
+       		    actions: {
+       		    listAction: function (postData, jtParams) {
+       		    console.log(postData);
+       			    return $.Deferred(function ($dfd) {
+       			    $.ajax({
+       			    url: "/mdrest/genconfig/" + config + "/?required=1",
+       				    type: 'GET',
+       				    data: postData,
+       				    dataType: 'json',
+       				    success: function (data) {
+       				    $dfd.resolve(data);
+       				    },
+       				    error: function () {
+       				    $dfd.reject();
+       				    }
+       			    });
+       			    });
+       		    },
+       	    <security:authorize access="hasAnyRole('ROLE_ADMIN','ROLE_USER')">
+       		    createAction:function (postData) {
+       		    console.log(postData);
+       			    return $.Deferred(function ($dfd) {
+       			    $.ajax({
+       			    url: '/mdrest/hivemigration/insertcluster',
+       				    type: 'PUT',
+       				    data: postData,
+       				    dataType: 'json',
+       				    success: function (data) {
+       				    $dfd.resolve(data);
+       				    },
+       				    error: function () {
+       				    $dfd.reject();
+       				    }
+       			    });
+       			    });
+       		    }
+       			   </security:authorize>
+       		    },
+       		    fields: {
+
+       		    Clusters: {
+       		    title: 'Click to expand',
+       			    width: '5%',
+       			    sorting: false,
+       			    edit: false,
+       			    create: false,
+       			    listClass: 'bdre-jtable-button',
+       			    display: function(item) {                         //Create an image that will be used to open child table
+
+       			    var $img = $('<img src="../css/images/three-bar.png" title="Clusters info" />'); //Open child table when user clicks the image
+
+       				    $img.click(function() {
+       				    $('#Container').jtable('openChildTable',
+       					    $img.closest('tr'), {
+       				    title: ' Details of ' + item.record.description,
+       					    paging: true,
+       					    pageSize: 10,
+       					    actions: {
+       					    listAction: function(postData) {
+       					    return $.Deferred(function($dfd) {
+       					    console.log(item.record.description);
+       						    $.ajax({
+       						    url: '/mdrest/hivemigration/cluster/' + item.record.description,
+       							    type: 'GET',
+       							    data: item,
+       							    dataType: 'json',
+       							    success: function(data) {
+       							    $dfd.resolve(data);
+       							    },
+       							    error: function() {
+       							    $dfd.reject();
+       							    }
+       						    }); ;
+       					    });
+       					    },
+
+       						    updateAction: function(postData) {
+       						    console.log(postData);
+       							    return $.Deferred(function($dfd) {
+       							    $.ajax({
+       							    url: '/mdrest/hivemigration/updatecluster',
+       								    type: 'POST',
+       								    data: postData + '&description=' + item.record.description,
+       								    dataType: 'json',
+       								    success: function(data) {
+       								    console.log(data);
+       									    $dfd.resolve(data);
+       								    },
+       								    error: function() {
+       								    $dfd.reject();
+       								    }
+       							    });
+       							    });
+       						    },
+
+       					    },
+       					    fields: {
+       						    key: {
+       						    title: 'Type',
+       						    edit: true,
+       							defaultValue: item.record.key,
+       						  },
+       						    defaultVal: {
+       						    title: 'Address',
+       						    edit: true,
+       							defaultValue: item.record.defaultVal,
+       						    },
+       					    }
+       				    },
+       					    function(data) { //opened handler
+
+       					    data.childTable.jtable('load');
+       					    });
+       				    }); //Return image to show on the person row
+
+       				    return $img;
+       			    }
+       		    },
+       			    nameNodeHostName: {
+					   title :'namenode hostname',
+						   key : true,
+						   list: false,
+						   create:true,
+						   edit: false,
+
+					   }, nameNodePort: {
+							title: ' namenode port',
+								key : true,
+								list: false,
+								create:true,
+								edit: false,
+
+							}, jobTrackerHostName: {
+							title: 'jobtracker hostname',
+								key : true,
+								list : false,
+								create : true,
+								edit : false,
+
+
+							},
+								jobTrackerPort: {
+								title: 'jobtracker port',
+									list : false,
+									create : true,
+									edit : false,
+									key : true,
+
+								},
+								hiveHostName: {
+									title: 'hive hostname',
+									list: false,
+									create:true,
+									edit: false,
+									key : true,
+
+								},
+								clusterName: {
+								   title: 'cluster name',
+								   list: false,
+								   create:true,
+								   edit: false,
+								   key : true,
+								   },
+       			    description: {
+       			    	key : true,
+       				    list: true,
+       				    create:false,
+       				    edit: false,
+       				    title: 'Clusters'
+
+       			    }
+       		    }
+       	    });
+       		    $('#Container').jtable('load');
+
+
+
+        }
+		else{
+        $("#Container").hide();
+         $("#Settings").show();
 		buildFormDisplay(config,'Settings');
+		}
 	});
     });
 
@@ -139,18 +330,25 @@ function buildFormDisplay(configGroup, typeDiv) {
                 <div id="config">
     				<div id="configDiv">
 					<form id="configForm" >
-					<div><strong></>Select Configuration</strong></div>
-   					<select id="configDropdown" class="btn btn-default dropdown-toggle configDropdown" data-toggle="dropdown" aria-haspopup="false" aria-expanded="true">
-   						<option value="" disabled selected>Select your option</option>
-   						<option value="mdconfig">mdconfig</option>
-   						<option value="imconfig">imconfig</option>
-   						<option value="scripts_config">scriptsconfig</option>
-					</select>
+
+					<div><strong><spring:message code="settings.page.select_conf"/></strong></div>
+    					<select id="configDropdown" class="btn btn-default dropdown-toggle configDropdown" data-toggle="dropdown" aria-haspopup="false" aria-expanded="true">
+    						<option value="" disabled selected><spring:message code="settings.page.select_option"/></option>
+    						<option value="mdconfig"><spring:message code="settings.page.mdconfig"/></option>
+    						<option value="imconfig"><spring:message code="settings.page.imconfig"/></option>
+    						<option value="scripts_config"><spring:message code="settings.page.scripts_config"/></option>
+    						<option value="cluster.hive-address"><spring:message code="settings.page.cluster"/></option>
+						</select>
 					</form>
 					</div>
     			</div>
 				<div id="Settings"></div>
 				
+
+
+					 <section style="width:100%;text-align:center;">
+                    				<div id="Container" ></div>
+                    				</section>
     </section>
     <div id="div-dialog-warning"/>
 </body>

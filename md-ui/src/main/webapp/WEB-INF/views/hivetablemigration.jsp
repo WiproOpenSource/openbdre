@@ -9,6 +9,7 @@
 <%@ taglib prefix="security"
 	   uri="http://www.springframework.org/security/tags" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
+<%@taglib uri="http://www.springframework.org/tags" prefix="spring"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
@@ -31,6 +32,8 @@
     		<script src="../js/jquery-ui-1.10.3.custom.js"></script>
     		<script src="../js/jquery.steps.min.js"></script>
     		<link rel="stylesheet" href="../css/jquery.steps.css" />
+            <link rel="stylesheet" href="../css/jquery.steps.custom.css" />
+            <link href="../css/bootstrap.custom.css" rel="stylesheet" type="text/css" />
     		<script src="../js/bootstrap.js" type="text/javascript"></script>
             <script src = "../js/jquery.fancytree.js" ></script >
             <link rel = "stylesheet" href = "../css/ui.fancytree.css" />
@@ -148,7 +151,7 @@
    												dataType: 'json',
    												success: function(data) {
    													$dfd.resolve(data);
-   												},
+   												},fcontai
    												error: function() {
    													$dfd.reject();
    												}
@@ -668,8 +671,9 @@ var destjobTrackerIp;
 
 
     <body ng-app="myApp">
-        <div id="bdre-data-migration" >
-                <h3 class="stepNumber">Source Environment</h3>
+    <div class="page-heading"><spring:message code="hivemigration.page.panel_heading"/></div>
+        <div id="bdre-data-migration">
+                <h3><div class="number-circular">1</div>Source Environment</h3>
                             <section>
                               <form class="form-horizontal" role="form" id="processDetailsForm">
                                   <div id="processDetails" ng-controller="myCtrl">
@@ -683,37 +687,38 @@ var destjobTrackerIp;
                                                             </div>
                                                         </div>
 
-                                                   <div id="processDes">
-                                                    <div class="form-group">
+
+                                                                <div class="form-group">
                                                                     <label class="control-label col-sm-2" for="processDesc">Process Description:</label>
                                                                     <div class="col-sm-10">
                                                                         <input type="text" class="form-control"  id="processDesc" name="processDesc" placeholder="Enter Process Description" value="" required>
                                                                     </div>
                                                                 </div>
-                                                    <div class="form-group">
-                                                            <label class="control-label col-sm-2" for="busDomainId">Bus Domain Id:</label>
-                                                            <div class="col-sm-10">
-                                                                <select class="form-control" id="busDomainId" name="busDomainId">
-                                                                    <option ng-repeat="busDomain in busDomains.Options" value="{{busDomain.Value}}" name="busDomainId">{{busDomain.DisplayText}}</option>
+                                                                <div class="form-group">
+                                                                        <label class="control-label col-sm-2" for="busDomainId">Bus Domain Id:</label>
+                                                                        <div class="col-sm-10">
+                                                                            <select class="form-control" id="busDomainId" name="busDomainId">
+                                                                                <option ng-repeat="busDomain in busDomains.Options" value="{{busDomain.Value}}" name="busDomainId">{{busDomain.DisplayText}}</option>
 
-                                                                </select>
-                                                            </div>
-                                                        </div>
-                                                <div class="form-group">
-                                                    <label class="control-label col-sm-2" for="srcEnv">Source Environment:</label>
-                                                    <div class="col-sm-10">
-                                                        <select class="form-control" id="srcEnv" name="srcEnv" >
-                                                            <option ng-repeat="srcEnv in srcEnvs" value='{{srcEnv.defaultVal}},"-%%-",{{srcEnv.description}}'  label="{{srcEnv.description}} ">{{srcEnv.description}}</option>
+                                                                            </select>
+                                                                        </div>
+                                                                    </div>
+                                                                <div class="form-group">
+                                                                    <label class="control-label col-sm-2" for="srcEnv">Source Environment:</label>
+                                                                    <div class="col-sm-10">
+                                                                        <select class="form-control" id="srcEnv" name="srcEnv" >
+                                                                            <option ng-repeat="srcEnv in srcEnvs" value='{{srcEnv.defaultVal}},"-%%-",{{srcEnv.description}}'  label="{{srcEnv.description}} ">{{srcEnv.description}}</option>
 
-                                                        </select>
-                                                    </div>
-                                                </div>
-                                            </div>
+                                                                        </select>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="clearfix"></div>
+
                                             <!-- /btn-group -->
                                         </div>
                                         </form>
                             </section>
-               <h3 class="stepNumber">Source Database</h3>
+               <h3><div class="number-circular">2</div>Source Database</h3>
               <section>
 
                         <form class="form-horizontal" role="form" id="srcDBForm">
@@ -728,7 +733,7 @@ var destjobTrackerIp;
 
                         </form>
               </section>
-			<h3 class="stepNumber">Tables</h3>
+			<h3><div class="number-circular">3</div>Tables</h3>
 			<section>
 			 <label class="control-label col-sm-2" for="tabl">Select source Table(s):</label>
 			  <form class="form-horizontal"  id="tablesForm">
@@ -740,7 +745,7 @@ var destjobTrackerIp;
 
              </section>
 
-             <h3 class="stepNumber">Destination Environment</h3>
+             <h3><div class="number-circular">4</div>Destination Environment</h3>
              <section>
              <form class="form-horizontal" role="form" id="destEnvForm">
 
@@ -759,12 +764,12 @@ var destjobTrackerIp;
                                                                   <div class="col-sm-10">
                                                                       <input type="text" class="form-control"  id="instexecId" name="instexecId"  value="instanceExecId" required>
                                                                   </div>
-                                                                  </div>
+                                                                  </div><div class="clearfix"></div>
 
 				</form>
 
               </section>
-                   <h3 class="stepNumber">Destination Database</h3>
+                   <h3><div class="number-circular">5</div>Destination Database</h3>
                   <section>
                             <form class="form-horizontal" role="form" id="destDBForm">
                                 <div id="destDBDiv">
@@ -778,7 +783,7 @@ var destjobTrackerIp;
 
                             </form>
                   </section>
-            <h3 class="stepNumber">Confirm</h3>
+            <h3><div class="number-circular">6</div>Confirm</h3>
              <section>
 
 
@@ -788,7 +793,7 @@ var destjobTrackerIp;
                         <input type="text" class="form-control"  id="showSrcEnv" name="showSrcEnv"  disabled="disabled" >
                     </div>
                 </div>
-                </br>
+              
 
 
                 <div class="form-group">
@@ -797,7 +802,7 @@ var destjobTrackerIp;
                         <input type="text" class="form-control"  id="showSrcDB" name="showSrcDB"  disabled="disabled" >
                     </div>
                 </div>
-                </br>
+              
 
                <div class="form-group">
                     <label class="control-label col-sm-4" for="showSrcTables">Source Table:</label>
@@ -805,7 +810,7 @@ var destjobTrackerIp;
                         <input type="text" class="form-control"  id="showSrcTables" name="showSrcTables"  disabled="disabled" >
                     </div>
                 </div>
-                </br>
+              
 
                 <div class="form-group">
                     <label class="control-label col-sm-4" for="showDestEnv">Destination Environment:</label>
@@ -813,7 +818,7 @@ var destjobTrackerIp;
                         <input type="text" class="form-control"  id="showDestEnv" name="showDestEnv"  disabled="disabled" >
                     </div>
                 </div>
-                </br>
+              
 
                  <div class="form-group">
                     <label class="control-label col-sm-4" for="showDestDB">Destination Database:</label>
@@ -821,7 +826,8 @@ var destjobTrackerIp;
                         <input type="text" class="form-control"  id="showDestDB" name="showDestDB"  disabled="disabled" >
                     </div>
                 </div>
-                </br>
+                <div class="clearfix"></div>
+              
 
                <div id="Process">
                     <button id="createjobs" type="button" class="btn btn-primary btn-lg">Create Jobs</button>
