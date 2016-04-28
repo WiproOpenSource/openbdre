@@ -661,7 +661,16 @@ var destjobTrackerIp;
 
 
     <body ng-app="myApp">
-        <div id="bdre-data-migration" class="steps-vertical"  >
+
+    <div class="page-header"><spring:message code="hivetablemigration.page.panel_heading"/></div>
+    <div class="alert-info-outer">
+    	<div class="alert alert-info" role="alert">
+            <spring:message code="hivetablemigration.page.alert_info_outer_heading"/>
+        </div>
+    	</div>
+
+
+        <div id="bdre-data-migration" class="wizard-vertical"  >
         <h3><div class="number-circular">1</div><spring:message code="hivemigration.page.h3_div_1"/></h3>
 
                             <section>
