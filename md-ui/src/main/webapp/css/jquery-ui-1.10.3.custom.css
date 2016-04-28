@@ -1252,11 +1252,11 @@ div.jtable-main-container > table.jtable > tbody > tr.jtable-data-row > td > .jt
 }
 
 .jtable-dialog-form .jtable-input-label, .jtable-dialog-form .jtable-text-input,
-	.jtable-dialog-form .jtable-dropdown-input {
+	.jtable-dialog-form .jtable-dropdown-input, .jtable-dialog-form .jtable-password-input {
 	display: inline-block !important;
 }
 
-.jtable-dialog-form .jtable-text-input, .jtable-dialog-form  .jtable-dropdown-input
+.jtable-dialog-form .jtable-text-input, .jtable-dialog-form  .jtable-dropdown-input,.jtable-dialog-form .jtable-password-input
 	{
 	width: 70% !important;
 }
@@ -1265,7 +1265,7 @@ div.jtable-main-container > table.jtable > tbody > tr.jtable-data-row > td > .jt
 	width: 30% !important;
 }
 
-.jtable-dialog-form select, .jtable-dialog-form input {
+.jtable-dialog-form select, .jtable-dialog-form .jtable-text-input input, .jtable-dialog-form .jtable-password-input input {
 	width: 90% !important;
 	border-radius: 4px;
 	border: 1px solid gainsboro;
@@ -1288,7 +1288,7 @@ form.jtable-dialog-form div.jtable-input-field-container {
 	[aria-describedby="execute-dialog-confirm"] button:nth-child(1), [aria-describedby="dialog-confirm"] button:nth-child(1),
 	ui-id-7, [aria-describedby="div-dialog-warning"] .ui-dialog-buttonset button,
 	[aria-describedby="ui-id-1"] .ui-dialog-buttonset button, [aria-describedby="execute-fail"] .ui-dialog-buttonset button
-	{
+{
 	background: #20C8A3 !important;
 }
 

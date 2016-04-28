@@ -644,13 +644,13 @@ wizard = $(document).ready(function() {
 
 	</head>
 <body ng-app="myApp" ng-controller="myCtrl" >
-<div class="page-heading"><spring:message code="dataload.page.panel_heading"/></div>
+<div class="page-header"><spring:message code="dataload.page.panel_heading"/></div>
 <div class="alert-info-outer">
 	<div class="alert alert-info" role="alert">
         <spring:message code="dataload.page.alert_info_outer_heading"/>
     </div>
 	</div>
-		<div id="bdre-data-load" class="steps-vertical" ng-controller="myCtrl">
+		<div id="bdre-data-load" class="wizard-vertical" ng-controller="myCtrl">
 		
 			<h3><div class="number-circular">1</div><spring:message code="dataload.page.h3_div"/></h3>
 			<section>
