@@ -148,7 +148,7 @@
 	    var desc = [<spring:message code="welcome.page.desc_var"/>];
 	    var tail = [<spring:message code="welcome.page.tail_var"/>];
 	    var taillinks = [<spring:message code="welcome.page.taillinks_var"/>];
-	    var imgs = [<spring:message code="welcome.page.imgs_var"/>];
+	    var imgs = ["../css/images/metadata.png", "../css/images/dataintegrity.png", "../css/images/datalineage.png", "../css/images/dataquality.png", "../css/images/automation.png", "../css/images/extraction.png", "../css/images/runcontrol.png", "../css/images/datagen.png", "../css/images/dependancy.png", "../css/images/loading.png", "../css/images/visualization.png", "../css/images/analytic.png"];
 		var app = angular.module("myApp", []);
 	    app.controller("myCtrl", function ($scope) {
 		$scope.text = text;

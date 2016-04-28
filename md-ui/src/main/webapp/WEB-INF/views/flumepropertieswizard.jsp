@@ -24,6 +24,7 @@
 		<script src="../js/jquery.steps.min.js"></script>
 		<link rel="stylesheet" href="../css/jquery.steps.css" />
 		<link rel="stylesheet" href="../css/jquery.steps.custom.css" />
+		<link href="../css/bootstrap.custom.css" rel="stylesheet" type="text/css" />
 		<script src="../js/angular.min.js" type="text/javascript"></script>
 		<script src="../js/bootstrap.js" type="text/javascript"></script>
 		<script src="../js/jquery.jtable.js" type="text/javascript"></script>
@@ -306,6 +307,7 @@ function displayProcess(records) {
 
 		</script>
 		<script>
+
 var wizard = null;
 var finalJson;
 wizard = $(document).ready(function() {
@@ -500,12 +502,13 @@ wizard = $(document).ready(function() {
 	</head>
 
 	<body ng-app="myApp" ng-controller="myCtrl" >
+	<div class="page-header"><spring:message code="flumepropertieswizrd.page.panel_heading"/></div>
 			<div class="alert-info-outer">
 				<div class="alert alert-info" role="alert">
 			        <spring:message code="flumepropertieswizard.page.source_type_alert"/>
 			    </div>
 			</div>
-			<div id="bdre-flume-ingestion" class="steps-vertical" ng-controller="myCtrl">
+			<div id="bdre-flume-ingestion" class="wizard-vertical" ng-controller="myCtrl">
 			<h3><div class="number-circular">1</div><spring:message code="flumepropertieswizard.page.source_type"/></h3>
 			<section>
 

@@ -27,6 +27,7 @@
                 <link href="../css/css/bootstrap.min.css" rel="stylesheet" type="text/css" />
                 <link href="../css/jquery-ui-1.10.3.custom.css" rel="stylesheet" type="text/css" />
                 <link rel="stylesheet" href="../css/jquery.steps.custom.css" />
+                <link href="../css/bootstrap.custom.css" rel="stylesheet" type="text/css" />
 				<!-- Include jTable script file. -->
                 <script src="../js/jquery.min.js" type="text/javascript"></script>
                 <script src="../js/jquery-ui-1.10.3.custom.js" type="text/javascript"></script>
@@ -77,9 +78,9 @@
             </head>
 
             <body ng-app="myApp" ng-controller="myCtrlr" ng-init="init()">
-            <div class="page-heading"><spring:message code="dqprocess.page.panel_heading"/></div>
+            <div class="page-header"><spring:message code="dqprocess.page.panel_heading"/></div>
                 <div class="row">&nbsp;</div>
-                <div class="row basic-forms">
+                <div class="row bdre-process-creation-form">
                     <div class="col-md-2"> </div>
                     <div class="col-md-8">
                         <div class="panel panel-primary">

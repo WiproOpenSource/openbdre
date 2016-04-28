@@ -34,6 +34,7 @@
     <script src="../js/jquery.jtable.js" type="text/javascript"></script>
     <link href="../css/jtables-bdre.css" rel="stylesheet" type="text/css" />
     <link rel="stylesheet" href="../css/jquery.steps.custom.css" />
+    <link href="../css/bootstrap.custom.css" rel="stylesheet" type="text/css" />
 	<script src="../js/angular.min.js" type="text/javascript"></script>
     <script type="text/javascript">
 
@@ -71,14 +72,14 @@
 </script >
 </head>
 <body ng-app="myApp" ng-controller="myCtrl">
-	<div class="page-heading">Web Crawler</div>
+	<div class="page-header"><spring:message code="crawler.page.panel_heading"/></div>
 	<div class="alert-info-outer">
 	<div class="alert alert-info" role="alert">
 	    <spring:message code="crawler.page.alert_info_outer"/>
     </div>
 	</div>
 
-    <div id="bdre-crawler" class="steps-horizontal" >
+    <div id="bdre-crawler" class="wizard-horizontal" >
       <h3><div class="number-circular">1</div><spring:message code="crawler.page.crawler_details"/></h3>
             <section>
             <form class="form-horizontal" role="form" id="processFieldsForm2">

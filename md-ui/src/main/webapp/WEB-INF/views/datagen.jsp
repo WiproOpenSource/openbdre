@@ -15,29 +15,20 @@
     width: 100% !important;
     padding: 0 !important;
     }
-    #processFieldsForm1 .form-group{
-	    width: 90%;
-	    margin: 0 auto 2% auto;
-    }
-    
-     #processFieldsForm1 .form-group div{
-     margin-left: 3%;
-     }
-   #deletediv{
-	padding-left:9%;
-   }
-	#deletediv .add-more{
-		background-color: #389DD0;
-		border: none;
-		padding: 10px;
-		color: #fff;
-	}
-	.alert-redfont{
+    .alert-info span {
 	color: #C85659;
 	letter-spacing: 1px;
 	}
-   
-    </style>
+	#deletediv {
+		padding-left: 4%;
+	}
+	#deletediv .add-more {
+		background-color: #389DD0;
+		border: none;
+		padding: 10px !important;
+		color: #fff;
+	}
+   	</style>
 	<script>
 	  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
 	  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
@@ -52,6 +43,7 @@
     <script src="../js/jquery.min.js"></script>
     <link href="../css/jquery-ui-1.10.3.custom.css" rel="stylesheet">
     <link href="../css/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="../css/bootstrap.custom.css" rel="stylesheet" type="text/css" />
     <script src="../js/jquery-ui-1.10.3.custom.js"></script>
     <script src="../js/jquery.steps.min.js"></script>
     <link rel="stylesheet" href="../css/jquery.steps.css" />
@@ -112,22 +104,22 @@ function formIntoMap(typeProp, typeOf) {
 
 </head>
 <body ng-app="myApp" ng-controller="myCtrl" >
-	<div class="page-heading">Generate Bulk Data</div>
+	<div class="page-header"><spring:message code="datagen.page.panel_heading"/></div>
 	<div class="alert-info-outer">
 	<div class="alert alert-info" role="alert">
-       <div style="font-size:24px;" ><b class="alert-redfont"><spring:message code="datagen.page.how_to"/></b> </div>
-           <b><spring:message code="datagen.page.b_datatype_format"/></b> <span class="alert-redfont"><spring:message code="datagen.page.b_span"/></span>
+       <div style="font-size:24px;" ><b><spring:message code="datagen.page.how_to"/></b> </div>
+           <b><spring:message code="datagen.page.b_datatype_format"/></b> <span><spring:message code="datagen.page.b_span"/></span>
            <br>
-           <b><spring:message code="datagen.page.b_regex_pattern"/></b><span class="alert-redfont"><spring:message code="datagen.page.b_regex_pattern_span"/></span>
+           <b><spring:message code="datagen.page.b_regex_pattern"/></b><span><spring:message code="datagen.page.b_regex_pattern_span"/></span>
            <br>
-           <b><spring:message code="datagen.page.number_format"/></b> <span class="alert-redfont"><spring:message code="datagen.page.number_format_span"/></span>
+           <b><spring:message code="datagen.page.number_format"/></b> <span><spring:message code="datagen.page.number_format_span"/></span>
            <br>
-           <b><spring:message code="datagen.page.column_type"/></b> <span class="alert-redfont"><spring:message code="datagen.page.column_type_span"/></span>
+           <b><spring:message code="datagen.page.column_type"/></b> <span><spring:message code="datagen.page.column_type_span"/></span>
     	</div>
 	</div>
 
 
-    <div id="datagen" class="steps-horizontal">
+    <div id="datagen" class="wizard-horizontal">
 
             <h3><div class="number-circular">1</div><spring:message code="datagen.page.data_types"/></h3>
             <section>
@@ -249,7 +241,7 @@ function formIntoMap(typeProp, typeOf) {
             <h3><div class="number-circular">4</div><spring:message code="datagen.page.confirm"/></h3>
             <section>
             <div id="createProcess">
-                <button ng-click="createJob()" id="createjobs" type="button" class="btn">Create Job</button>
+                <button ng-click="createJob()" id="createjobs" type="button" class="btn btn-primary btn-lg">Create Job</button>
             </div>
             <div id="Process"></div>
             </section>

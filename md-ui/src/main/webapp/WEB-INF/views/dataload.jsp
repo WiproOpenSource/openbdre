@@ -15,6 +15,7 @@
 		<script src="../js/jquery.steps.min.js"></script>
 		<link rel="stylesheet" href="../css/jquery.steps.css" />
 		<link rel="stylesheet" href="../css/jquery.steps.custom.css" />
+		<link href="../css/bootstrap.custom.css" rel="stylesheet" />
 		<script src="../js/bootstrap.js" type="text/javascript"></script>
 		<script src="../js/jquery.jtable.js" type="text/javascript"></script>
 		<script src="../js/angular.min.js" type="text/javascript"></script>
@@ -643,13 +644,13 @@ wizard = $(document).ready(function() {
 
 	</head>
 <body ng-app="myApp" ng-controller="myCtrl" >
-<div class="page-heading">Load File in Hive</div>
+<div class="page-header"><spring:message code="dataload.page.panel_heading"/></div>
 <div class="alert-info-outer">
 	<div class="alert alert-info" role="alert">
         <spring:message code="dataload.page.alert_info_outer_heading"/>
     </div>
 	</div>
-		<div id="bdre-data-load" class="steps-vertical" ng-controller="myCtrl">
+		<div id="bdre-data-load" class="wizard-vertical" ng-controller="myCtrl">
 		
 			<h3><div class="number-circular">1</div><spring:message code="dataload.page.h3_div"/></h3>
 			<section>

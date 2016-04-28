@@ -99,7 +99,15 @@ public class GeneralConfigDAOTest {
     @Ignore
     @Test
     public void getGenConfigPropTest() throws Exception {
-        com.wipro.ats.bdre.md.beans.table.GeneralConfig generalConfig = generalConfigDAO.GetGenConfigProperty("1", "credential");
+        com.wipro.ats.bdre.md.beans.table.GeneralConfig generalConfig = generalConfigDAO.getGenConfigProperty("1", "credential");
         LOGGER.info("generalConfig" + generalConfig);
+    }
+
+
+    @Ignore
+    @Test
+    public void getLikeGeneralConfigTest() throws Exception {
+        List<com.wipro.ats.bdre.md.beans.table.GeneralConfig> generalConfigList = generalConfigDAO.getLikeGeneralConfig("cluster", 1);
+        LOGGER.info("generalConfig" + generalConfigList);
     }
 }
