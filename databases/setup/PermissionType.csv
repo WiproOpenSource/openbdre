@@ -1,0 +1,8 @@
+0,'No Permission'
+1,'Execute'
+2,'Write'
+3,'Execute and Write'
+4,'Read'
+5,'Read and Execute'
+6,'Read and Write'
+7,'Read,Write and Execute'
