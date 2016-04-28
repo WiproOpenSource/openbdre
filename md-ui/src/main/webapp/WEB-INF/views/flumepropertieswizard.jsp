@@ -502,13 +502,13 @@ wizard = $(document).ready(function() {
 	</head>
 
 	<body ng-app="myApp" ng-controller="myCtrl" >
-	<div class="page-heading"><spring:message code="flumepropertieswizrd.page.panel_heading"/></div>
+	<div class="page-header"><spring:message code="flumepropertieswizrd.page.panel_heading"/></div>
 			<div class="alert-info-outer">
 				<div class="alert alert-info" role="alert">
 			        <spring:message code="flumepropertieswizard.page.source_type_alert"/>
 			    </div>
 			</div>
-			<div id="bdre-flume-ingestion" class="steps-vertical" ng-controller="myCtrl">
+			<div id="bdre-flume-ingestion" class="wizard-vertical" ng-controller="myCtrl">
 			<h3><div class="number-circular">1</div><spring:message code="flumepropertieswizard.page.source_type"/></h3>
 			<section>
 
