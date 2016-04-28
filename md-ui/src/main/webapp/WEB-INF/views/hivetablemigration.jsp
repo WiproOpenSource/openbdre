@@ -24,6 +24,7 @@
     		<script src="../js/jquery.steps.min.js"></script>
     		<link rel="stylesheet" href="../css/jquery.steps.css" />
     		<link rel="stylesheet" href="../css/jquery.steps.custom.css" />
+    		<link href="../css/bootstrap.custom.css" rel="stylesheet" />
     		<script src="../js/bootstrap.js" type="text/javascript"></script>
             <script src = "../js/jquery.fancytree.js" ></script >
             <link rel = "stylesheet" href = "../css/ui.fancytree.css" />
@@ -672,10 +673,10 @@ var destjobTrackerIp;
 
     <body ng-app="myApp">
 
-    <div class="page-header"><spring:message code="hivetablemigration.page.panel_heading"/></div>
+    <div class="page-header"><spring:message code="hivemigration.page.panel_heading"/></div>
     <div class="alert-info-outer">
     	<div class="alert alert-info" role="alert">
-            <spring:message code="hivetablemigration.page.alert_info_outer_heading"/>
+            <spring:message code="hivemigration.page.alert_info_outer_heading"/>
         </div>
     	</div>
 
