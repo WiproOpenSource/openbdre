@@ -61,7 +61,7 @@ public class UserRolesAPI extends MetadataAPIBase {
 
             List<com.wipro.ats.bdre.md.dao.jpa.UserRoles> jpaUserRolesList = new ArrayList<>();
             LOGGER.info("username is "+username+"principal.getname "+principal.getName());
-            if (!username.equals("cur_user"))
+            if (!"cur_user".equals(username))
                 jpaUserRolesList = userRolesDAO.listByName(username);
             else {
                 jpaUserRolesList = userRolesDAO.listByName(principal.getName());

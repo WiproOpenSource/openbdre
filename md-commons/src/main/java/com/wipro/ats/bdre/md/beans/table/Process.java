@@ -40,6 +40,35 @@ public class Process {
     private Integer permissionTypeByGroupAccessId;
     private String userName;
     private Integer ownerRoleId;
+
+    @NotNull
+    @Size(min = 1, max = 256)
+    private String description;
+    private Date addTS;
+    @NotNull
+    @Size(max = 45)
+    private String processName;
+    @Min(value = 1)
+    @Max(value = Integer.MAX_VALUE)
+    @NotNull
+    private Integer busDomainId;
+    @Min(value = 0)
+    @Max(value = Integer.MAX_VALUE)
+    @NotNull
+    private Integer processTypeId;
+    private Integer parentProcessId; // new Integer(0); //To avoid NPE during parent row processing
+    @NotNull
+    private Boolean canRecover;
+    private Integer processTemplateId;
+    @Min(value = 0)
+    @Max(value = Integer.MAX_VALUE)
+    private Integer enqProcessId;
+    @NotNull
+    @Pattern(regexp = "^[0-9]+(,[0-9]+)*$")
+    private String nextProcessIds;
+    private String batchPattern;
+    private Integer page;
+    private Integer counter;
     public Integer getOwnerRoleId() {
         return ownerRoleId;
     }
@@ -83,34 +112,7 @@ public class Process {
     public void setPermissionTypeByGroupAccessId(Integer permissionTypeByGroupAccessId) {
         this.permissionTypeByGroupAccessId = permissionTypeByGroupAccessId;
     }
-    @NotNull
-    @Size(min = 1, max = 256)
-    private String description;
-    private Date addTS;
-    @NotNull
-    @Size(max = 45)
-    private String processName;
-    @Min(value = 1)
-    @Max(value = Integer.MAX_VALUE)
-    @NotNull
-    private Integer busDomainId;
-    @Min(value = 0)
-    @Max(value = Integer.MAX_VALUE)
-    @NotNull
-    private Integer processTypeId;
-    private Integer parentProcessId; // new Integer(0); //To avoid NPE during parent row processing
-    @NotNull
-    private Boolean canRecover;
-    private Integer processTemplateId;
-    @Min(value = 0)
-    @Max(value = Integer.MAX_VALUE)
-    private Integer enqProcessId;
-    @NotNull
-    @Pattern(regexp = "^[0-9]+(,[0-9]+)*$")
-    private String nextProcessIds;
-    private String batchPattern;
-    private Integer page;
-    private Integer counter;
+
 
     public String getProcessCode() {
         return this.processCode;

@@ -53,6 +53,7 @@ public class UserRolesDAO {
     }
 
     public Map<Integer,String> diffRoleList() {
+        Object ob[];
         Session session = sessionFactory.openSession();
         session.beginTransaction();
         Criteria criteria = session.createCriteria(UserRoles.class);
@@ -65,7 +66,7 @@ public class UserRolesDAO {
         Map<Integer,String> diffRoles=new HashMap<>();
         while(it.hasNext())
         {
-            Object ob[] = (Object[])it.next();
+             ob = (Object[])it.next();
             diffRoles.put( (Integer) ob[1],(String) ob[0]);
         }
         session.getTransaction().commit();

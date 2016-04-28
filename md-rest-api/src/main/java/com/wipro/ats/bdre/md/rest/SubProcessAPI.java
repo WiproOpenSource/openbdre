@@ -45,6 +45,8 @@ import java.util.List;
 
 public class SubProcessAPI extends MetadataAPIBase {
     private static final Logger LOGGER = Logger.getLogger(SubProcessAPI.class);
+    private static final String WRITE="write";
+
     @Autowired
     private ProcessDAO processDAO;
     @Autowired
@@ -98,7 +100,7 @@ public class SubProcessAPI extends MetadataAPIBase {
                 processes.add(tableProcess);
             }
             restWrapper = new RestWrapper(processes, RestWrapper.OK);
-            LOGGER.info("Record with ID:" + processId + " selected from Process by User:" + principal.getName());
+            LOGGER.info("Record with ID : " + processId + " selected from Process by User:" + principal.getName());
             LOGGER.info(processes);
 
         } catch (MetadataException e) {
@@ -123,10 +125,10 @@ public class SubProcessAPI extends MetadataAPIBase {
         RestWrapper restWrapper = null;
         try {
             com.wipro.ats.bdre.md.dao.jpa.Process parentProcess=processDAO.get(processId);
-            processDAO.securityCheck(parentProcess.getProcessId(),principal.getName(),"write");
+            processDAO.securityCheck(parentProcess.getProcessId(),principal.getName(),WRITE);
             processDAO.delete(processId);
             restWrapper = new RestWrapper(null, RestWrapper.OK);
-            LOGGER.info("Record with ID:" + processId + " deleted from Process by User:" + principal.getName());
+            LOGGER.info("Record  with ID:" + processId + " deleted from Process by User:" + principal.getName());
 
         } catch (Exception e) {
             LOGGER.error(e);
@@ -153,7 +155,7 @@ public class SubProcessAPI extends MetadataAPIBase {
             return bindingResultError.errorMessage(bindingResult);
         }
         try {
-            processDAO.securityCheck(process.getParentProcessId(),principal.getName(),"write");
+            processDAO.securityCheck(process.getParentProcessId(),principal.getName(),WRITE);
             com.wipro.ats.bdre.md.dao.jpa.Process updateDaoProcess = processDAO.get(process.getProcessId());
             com.wipro.ats.bdre.md.dao.jpa.ProcessType daoProcessType =processTypeDAO.get(process.getProcessTypeId());
             updateDaoProcess.setProcessType(daoProcessType);
@@ -200,7 +202,7 @@ public class SubProcessAPI extends MetadataAPIBase {
             process.setTableEditTS(DateConverter.dateToString(updateDaoProcess.getEditTs()));
 
             restWrapper = new RestWrapper(process, RestWrapper.OK);
-            LOGGER.info("Record with ID:" + process.getProcessId() + " updated in Process by User:" + principal.getName() + process);
+            LOGGER.info("Record with  ID:" + process.getProcessId() + " updated in Process by User:" + principal.getName() + process);
 
         } catch (Exception e) {
             LOGGER.error(e);
@@ -229,7 +231,7 @@ public class SubProcessAPI extends MetadataAPIBase {
             return bindingResultError.errorMessage(bindingResult);
         }
         try {
-            processDAO.securityCheck(process.getParentProcessId(),principal.getName(),"write");
+            processDAO.securityCheck(process.getParentProcessId(),principal.getName(),WRITE);
             com.wipro.ats.bdre.md.dao.jpa.Process insertDaoProcess = new com.wipro.ats.bdre.md.dao.jpa.Process();
             com.wipro.ats.bdre.md.dao.jpa.ProcessType daoProcessType =processTypeDAO.get(process.getProcessTypeId());
             insertDaoProcess.setProcessType(daoProcessType);

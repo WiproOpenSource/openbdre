@@ -57,6 +57,8 @@ import java.util.*;
 
 public class ProcessAPI extends MetadataAPIBase {
     private static final Logger LOGGER = Logger.getLogger(ProcessAPI.class);
+    private static final String WRITE="write";
+
     @Autowired
     private ProcessDAO processDAO;
     @Autowired
@@ -134,9 +136,9 @@ public class ProcessAPI extends MetadataAPIBase {
         try {
             com.wipro.ats.bdre.md.dao.jpa.Process parentProcess = processDAO.get(processId);
             if (parentProcess.getProcess() != null)
-                processDAO.securityCheck(parentProcess.getProcess().getProcessId(), principal.getName(), "write");
+                processDAO.securityCheck(parentProcess.getProcess().getProcessId(), principal.getName(), WRITE);
             else
-                processDAO.securityCheck(processId, principal.getName(), "write");
+                processDAO.securityCheck(processId, principal.getName(), WRITE);
             processDAO.delete(processId);
 
             restWrapper = new RestWrapper(null, RestWrapper.OK);
@@ -239,9 +241,9 @@ public class ProcessAPI extends MetadataAPIBase {
         try {
             com.wipro.ats.bdre.md.dao.jpa.Process parentProcess1 = processDAO.get(process.getProcessId());
             if (parentProcess1.getProcess() != null)
-                processDAO.securityCheck(parentProcess1.getProcess().getProcessId(), principal.getName(), "write");
+                processDAO.securityCheck(parentProcess1.getProcess().getProcessId(), principal.getName(), WRITE);
             else
-                processDAO.securityCheck(process.getProcessId(), principal.getName(), "write");
+                processDAO.securityCheck(process.getProcessId(), principal.getName(), WRITE);
             com.wipro.ats.bdre.md.dao.jpa.Process updateDaoProcess = processDAO.get(process.getProcessId());
             com.wipro.ats.bdre.md.dao.jpa.ProcessType daoProcessType = new com.wipro.ats.bdre.md.dao.jpa.ProcessType();
             daoProcessType.setProcessTypeId(process.getProcessTypeId());

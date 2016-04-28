@@ -43,6 +43,8 @@ import java.util.List;
 
 public class PropertiesAPI extends MetadataAPIBase {
     private static final Logger LOGGER = Logger.getLogger(PropertiesAPI.class);
+    private static final String WRITE="write";
+
     @Autowired
     private PropertiesDAO propertiesDAO;
     @Autowired
@@ -62,9 +64,9 @@ public class PropertiesAPI extends MetadataAPIBase {
         try {
             Process parentProcess=processDAO.get(processId);
             if (parentProcess.getProcess()!=null)
-                  processDAO.securityCheck(parentProcess.getProcess().getProcessId(),principal.getName(),"write");
+                  processDAO.securityCheck(parentProcess.getProcess().getProcessId(),principal.getName(),WRITE);
             else
-               processDAO.securityCheck(processId,principal.getName(),"write");
+               processDAO.securityCheck(processId,principal.getName(),WRITE);
                     com.wipro.ats.bdre.md.dao.jpa.Process process = new Process();
             process.setProcessId(processId);
             propertiesDAO.deleteByProcessId(process);
@@ -134,9 +136,9 @@ public class PropertiesAPI extends MetadataAPIBase {
         try {
             Process parentProcess=processDAO.get(processId);
             if (parentProcess.getProcess()!=null)
-                processDAO.securityCheck(parentProcess.getProcess().getProcessId(),principal.getName(),"write");
+                processDAO.securityCheck(parentProcess.getProcess().getProcessId(),principal.getName(),WRITE);
             else
-                processDAO.securityCheck(processId,principal.getName(),"write");
+                processDAO.securityCheck(processId,principal.getName(),WRITE);
             com.wipro.ats.bdre.md.dao.jpa.PropertiesId propertiesId = new com.wipro.ats.bdre.md.dao.jpa.PropertiesId();
             propertiesId.setProcessId(processId);
             propertiesId.setPropKey(key);
@@ -279,9 +281,9 @@ public class PropertiesAPI extends MetadataAPIBase {
         try {
             Process parentProcess=processDAO.get(properties.getProcessId());
             if (parentProcess.getProcess()!=null)
-                processDAO.securityCheck(parentProcess.getProcess().getProcessId(),principal.getName(),"write");
+                processDAO.securityCheck(parentProcess.getProcess().getProcessId(),principal.getName(),WRITE);
             else
-                processDAO.securityCheck(properties.getProcessId(),principal.getName(),"write");
+                processDAO.securityCheck(properties.getProcessId(),principal.getName(),WRITE);
             com.wipro.ats.bdre.md.dao.jpa.Properties updateProperties = new com.wipro.ats.bdre.md.dao.jpa.Properties();
             PropertiesId propertiesId = new PropertiesId();
             propertiesId.setPropKey(properties.getKey());
@@ -330,9 +332,9 @@ public class PropertiesAPI extends MetadataAPIBase {
         try {
             Process parentProcess=processDAO.get(properties.getProcessId());
             if (parentProcess.getProcess()!=null)
-                processDAO.securityCheck(parentProcess.getProcess().getProcessId(),principal.getName(),"write");
+                processDAO.securityCheck(parentProcess.getProcess().getProcessId(),principal.getName(),WRITE);
             else
-                processDAO.securityCheck(properties.getProcessId(),principal.getName(),"write");
+                processDAO.securityCheck(properties.getProcessId(),principal.getName(),WRITE);
             com.wipro.ats.bdre.md.dao.jpa.Properties insertProperties = new com.wipro.ats.bdre.md.dao.jpa.Properties();
             PropertiesId propertiesId = new PropertiesId();
             propertiesId.setPropKey(properties.getKey());
@@ -375,9 +377,9 @@ public class PropertiesAPI extends MetadataAPIBase {
         try {
             Process parentProcess=processDAO.get(parentProcessId);
             if (parentProcess.getProcess()!=null)
-                processDAO.securityCheck(parentProcess.getProcess().getProcessId(),principal.getName(),"write");
+                processDAO.securityCheck(parentProcess.getProcess().getProcessId(),principal.getName(),WRITE);
             else
-                processDAO.securityCheck(parentProcessId,principal.getName(),"write");
+                processDAO.securityCheck(parentProcessId,principal.getName(),WRITE);
             List<Properties> propertiesList = new ArrayList<Properties>();
             Process process = new Process();
             process.setProcessId(parentProcessId);
