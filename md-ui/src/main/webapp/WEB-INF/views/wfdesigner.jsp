@@ -114,11 +114,15 @@
                         filter: alpha(opacity=40);
                         /* For IE8 and earlier */
                     }
+                    .panel-heading-wfd{
+                    	background-color: #3D525F !important;
+						color: #fff !important;
+                    }
                     
                 </style>
 
             </head>
-            <div class="page-heading"><spring:message code="wfdesigner.page.create_new_workflow"/></div>
+            <div class="page-header"><spring:message code="wfdesigner.page.create_new_workflow"/></div>
             <c:choose>
                 <c:when test="${not empty param.processId}">
 
