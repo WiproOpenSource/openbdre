@@ -1,10 +1,11 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
     <%@ taglib prefix="security"
 	   uri="http://www.springframework.org/security/tags" %>
+	   <%@taglib uri="http://www.springframework.org/tags" prefix="spring"%>
         <html id="ng-app">
 
         <head>
-            <title>BDRE | Bigdata Ready Enterprise</title>
+            <title><spring:message code="common.page.title_bdre_2"/></title>
 	<script>
 	  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
 	  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
@@ -18,9 +19,10 @@
             <meta name="viewport" content="width=device-width, initial-scale=1">
             <link rel="stylesheet" href="../css/css/bootstrap.min.css" />
             <link rel="stylesheet" href="../css/submenu.css" />
-            <script src="../js/jquery.min.js"></script>
+           	<script src="../js/jquery.min.js"></script>
             <script src="../js/bootstrap.js"></script>
             <script src="../js/angular.min.js"></script>
+            
             <style>
                 body {
                     overflow: visible;
@@ -46,7 +48,7 @@
                 
                 .activ,
                 .activ:hover {
-                    border-left: 3px solid #f91;
+                    /* border-left: 3px solid #f91; */
                     font-weight: bold;
                     padding-left: 17px;
                     color: black;
@@ -132,12 +134,61 @@
                 .bdre-full-body {
                     width: 100% !important;
                 }
-            </style>
-
-        </head>
+   
+                /* HEADER and NAV-BAR*/
+               	.navbar-height{
+               	min-height: 110px;
+                }
+                .navbar-inverse .navbar-nav>li>a:hover{
+         		color: rgb(9,147,219);
+         		}
+                .nav-center > li{float:none;display:inline-block;font-size: 18px}
+				.nav-center {    
+				width: 100%;
+			   	text-align: center;
+			    position: absolute;
+			    top: 53%;
+			    left: 0px;}
+			    .input-sm-search{
+			    width: 250px !important;
+			    }
+			    .glyphicon-arrow-position{
+			    font-size: 12px;
+			    }
+			    .navbar{
+			    margin-bottom: 0px;
+			    border-radius: 0px;
+			    }
+			    .navbar-inverse{
+			    border: none;
+			    background-color: rgb(51,51,51);
+			    }
+			    .usericon{display:block;width: 30px;height: 30px;border-radius: 80px;background: #1ca7f7 no-repeat center;background-image:  url("../css/images/user_icon.png");background-size: 65% 65%;}
+				.dropdown-toggle-usericon{
+			    padding-top: 9px !important;
+			    }
+			    .bdretextlogo{
+			    color: #1ca7f7;
+			   	position: relative;
+			    font-size: 3em;
+			    top: 11px;
+			    right: 10px;
+			    }
+			    .dropdown-menu{
+			    background-color: #353535;
+			    }
+			    .dropdown-menu>li>a{
+			     color: #fff;
+			    }
+			    .dropdown-menu>li>a:focus, .dropdown-menu>li>a:hover{
+			     background-color: #1D1D1D;
+			     color: #fff;
+			    }
+        </style>
+		</head>
 
         <body class="container-fluid" ng-app="myApp" ng-controller="myCtrl">
-            <nav class="navbar navbar-default">
+            <nav class="navbar navbar-inverse navbar-height">
                 <div class="container-fluid">
                     <!-- Brand and toggle get grouped for better mobile display -->
                     <div class="navbar-header">
@@ -149,16 +200,16 @@
                         </button>
 
                         <a class="navbar-brand" href="#">
-                            <img alt="Bigdata Ready Enterprise" height="30" width="40" src="../css/images/bdre-logo.png">
+							<img alt="<spring:message code="common.page.title_bdre_1"/>" class="img-responsive logo" src="../css/images/bdre_logo.png" style="width:55px;">
                         </a>
-
+						<span class="bdretextlogo"><spring:message code="content.page.app_abbrevation"/></span>
                     </div>
 
                     <!-- Collect the nav links, forms, and other content for toggling -->
                     <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
-                        <ul class="nav navbar-nav">
+                        <ul class="nav navbar-nav navbar-nav-position nav-center">
                             <li ng-repeat="item in menu" ng-class="{dropdown:item.children.length!=0,activ:item.active}">
-                                <a href="#" ng-hide="item.children.length==0" class="dropdown-toggle text-muted " data-toggle="dropdown" role="button" aria-expanded="false">{{item.label}} <span class="caret"></span></a>
+                                <a href="#" ng-hide="item.children.length==0" class="dropdown-toggle text-muted " data-toggle="dropdown" role="button" aria-expanded="false">{{item.label}} <span class="glyphicon glyphicon-chevron-down glyphicon-arrow-position"></span></a>
                                 <a href="#" ng-show="item.children.length==0" class="text-muted level1" ng-click="openlink($event,item.url)">{{item.label}}</a>
                                 <ul class="dropdown-menu" ng-hide="item.children.length==0" role="menu">
                                     <li ng-repeat="x in item.children" ng-class="{'dropdown-submenu':x.children.length!=0,'node':x.children.length==0}" ng-click="reset($event.currentTarget,this.item)">
@@ -173,9 +224,18 @@
                                 </ul>
                             </li>
                         </ul>
-                        <form class="navbar-form navbar-left" role="search">
+                        
+                        <ul class="nav navbar-nav navbar-right" >
+                            <li class="dropdown user-icon-style"><a href="#" class="dropdown-toggle dropdown-toggle-usericon" data-toggle="dropdown" role="button" aria-expanded="false"><span class="usericon"></span></a>
+                                <ul class="dropdown-menu" role="menu">
+                                    <li><a href="/auth/bdre/security/logout">Logout <security:authentication property="principal.username"/></a></li>
+                                </ul>
+                            </li>
+                        </ul>
+                        <form class="navbar-form navbar-left" role="search" style="float: right !important">
                             <div class="btn-group">
-                                <input type="text" class="form-control input-sm dropdown-toggle" placeholder="Search" ng-model="searchText" id="srch" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                <input type="text" class="form-control input-sm dropdown-toggle input-sm-search" placeholder="" ng-model="searchText" id="srch" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                <span class="glyphicon glyphicon-search form-control-feedback"></span>
                                 <ul class="dropdown-menu" ng-show="searchText">
                                     <li ng-repeat="m in linearMenu  | filter:searchText">
                                         <a href="#" ng-click="openlink($event, m.url)">{{m.label}}</a>
@@ -183,13 +243,6 @@
                                 </ul>
                             </div>
                         </form>
-                        <ul class="nav navbar-nav navbar-right">
-                            <li class="dropdown"><a href="# " class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false"><span class="glyphicon glyphicon-user" style="font-size:large"></span></a>
-                                <ul class="dropdown-menu" role="menu">
-                                    <li><a href="/auth/bdre/security/logout">Logout <security:authentication property="principal.username"/></a></li>
-                                </ul>
-                            </li>
-                        </ul>
                     </div>
                     <!-- /.navbar-collapse -->
                 </div>
@@ -197,7 +250,7 @@
             </nav>
 
             <div>
-                <iframe id="dframe" src="welcome.page" style="overflow-y:visible;width:100%; height: 800px; border: none;"></iframe>
+                <iframe id="dframe" src="welcome.page" scrolling="no" style="overflow-y:visible;width:100%; height: 800px; border: none;"></iframe>
             </div>
 
             <!--
@@ -424,7 +477,12 @@
                                             collapse: "1",
                                             url: "flumepropertieswizard.page",
                                             children: []
-					}, </security:authorize>]
+					},{
+                                                                  label: "Hive Table Migration",
+                                                                  collapse: "1",
+                                                                  url: "hivetablemigration.page",
+                                                                  children: []
+                      					}, </security:authorize>]
                                     },
                                     <security:authorize access = "hasRole('ROLE_ADMIN')"> {
                                         label: "Administration",

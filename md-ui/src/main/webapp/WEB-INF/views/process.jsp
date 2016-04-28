@@ -1,13 +1,33 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
     <%@ taglib prefix="security"
 	   uri="http://www.springframework.org/security/tags" %>
+        <%@taglib uri="http://www.springframework.org/tags" prefix="spring"%>
         <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
             <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
             <html>
 
             <head>
                 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-                <title>Bigdata Ready Enterprise</title>
+                <title><spring:message code="common.page.title_bdre_1"/></title>
+                <style>
+                div.jtable-main-container > table.jtable > tbody > tr.jtable-data-row > td:nth-child(2){color: #F75C17;font-size: 24px;font-weight: 500;}
+                div.jtable-main-container > table.jtable > thead th:nth-child(2){width: 3% !important;}
+				div.jtable-main-container > table.jtable > thead th:nth-child(2),div.jtable-main-container > table.jtable > thead th:nth-child(12),div.jtable-main-container > table.jtable > thead th:nth-child(15),div.jtable-main-container > table.jtable > thead th:nth-child(17),div.jtable-main-container > table.jtable > thead th:nth-child(18){padding-top: 0px !important;padding-bottom: 20px !important;}
+				div.jtable-main-container > table.jtable > tbody > tr.jtable-data-row > td img{width: 15px;height: 15px;	}
+				.form-control-process{background-color: #e4e5e6 !important;height: 36px !important;border-radius: 1px !important;}
+				.glyphicon-arrow-right{color: #606161 !important;}
+				.btn-primary-process{background-color: #ADAFAF !important;border: 1px solid #828283 !important;padding-top:7.5px !important;padding-bottom: 7.5px !important;border-radius: 1px !important;}
+                .input-box-button-filter{background: #4A4B4B;background: -webkit-linear-gradient(#4A4B4B 50%, #3A3B3B 50%);background: -o-linear-gradient(#4A4B4B 50%, #3A3B3B 50%);background: -moz-linear-gradient(#4A4B4B 50%, #3A3B3B 50%);background: -ms-linear-gradient(#4A4B4B 50%, #3A3B3B 50%);background: linear-gradient(#4A4B4B 50%, #3A3B3B 50%);position: absolute;top: 0;right: 134px;color:white;padding:5px;cursor:pointer}
+				.filter-icon{background-image: url('../css/images/filter_icon.png');background-size: 100%;background-repeat: no-repeat;  display: inline-block;margin: 2px;vertical-align: middle;width: 16px;height: 16px;}
+				.filter-text{display: inline-block;margin: 2px;vertical-align: middle;font-size: 0.9em;font-family: 'Segoe UI Semilight', 'Open Sans', Verdana, Arial, Helvetica, sans-serif;font-weight: 300;}
+                .input-box-button{display:none;position: absolute;top: 34px;right: 133px; width: 129px;}
+                .subprocess-arrow-down{
+                    -ms-transform: rotate(90deg); /* IE 9 */
+    				-webkit-transform: rotate(90deg); /* Chrome, Safari, Opera */
+    				transform: rotate(90deg);
+                }
+                </style>
+               
 	<script>
 	  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
 	  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
@@ -23,6 +43,8 @@
                 <link href="../css/css/bootstrap.min.css" rel="stylesheet" type="text/css" />
                 <link href="../css/jtables-bdre.css" rel="stylesheet" type="text/css" />
                 <link href="../css/jquery-ui-1.10.3.custom.css" rel="stylesheet" type="text/css" />
+                <link href="../css/bootstrap.custom.css" rel="stylesheet" />
+                
 
                 <!-- Include jTable script file. -->
                 <script src="../js/jquery.min.js" type="text/javascript"></script>
@@ -31,7 +53,7 @@
 
                 <script type="text/javascript">
                     $(document).ready(function() {
-                        $('#Container').jtable({
+                    	$('#Container').jtable({
                             title: 'Process List',
                             paging: true,
                             pageSize: 10,
@@ -196,17 +218,19 @@
 
 
                                 SubProcesses: {                    
-                                    width: '5%',
+                                    width: '0%',
                                     sorting: false,
                                     edit: false,
                                     create: false,
                                     listClass: 'bdre-jtable-button',
                                         display: function(item) {                         //Create an image that will be used to open child table
                                                                 
-                                        var $img = $('<img src="../css/images/three-bar.png" title="Sub processes info" />');                         //Open child table when user clicks the image
+                                        var $img = $('<img class="subprocess-arrow" src="../css/images/subprocess-rarrow.png" title="Sub processes info" />');                         //Open child table when user clicks the image
                                                                 
-                                        $img.click(function() {                            
-                                            $('#Container').jtable('openChildTable',                                     
+                                        $img.click(function() {
+                                        	$('.subprocess-arrow').removeClass('subprocess-arrow-down');
+                                        	$(this).addClass('subprocess-arrow-down');
+                                        	$('#Container').jtable('openChildTable',                                     
                                                 $img.closest('tr'),                                      {                                        
                                                     title: ' Sub processes of ' + item.record.processId,
                                                         actions: {                                        
@@ -299,7 +323,7 @@
                                                             listClass: 'bdre-jtable-button',
                                                             display: function(item) { //Create an image that will be used to open child table
 
-                                                                var $img = $('<span class="label label-primary">Show</span>'); //Open child table when user clicks the image
+                                                                var $img = $('<span class="label label-primary">Show<span class="glyphicon glyphicon-chevron-right "></span></span>'); //Open child table when user clicks the image
 
                                                                 $img.click(function() {
                                                                     $('#Container').jtable('openChildTable',
@@ -509,7 +533,7 @@
                                     listClass: 'bdre-jtable-button',
                                     display: function(item) { //Create an image that will be used to open child table
 
-                                        var $img = $('<span class="label label-primary">Show</span>'); //Open child table when user clicks the image
+                                        var $img = $('<span class="label label-primary">Show<span class="glyphicon glyphicon-chevron-right"></span>'); //Open child table when user clicks the image
 
                                         $img.click(function() {
                                             $('#Container').jtable('openChildTable',
@@ -678,7 +702,7 @@
 
                                 },
                                 busDomainId: {
-                                    title: 'Business Domain',
+                                    title: 'Application',
                                     type: 'combobox',
                                     options: '/mdrest/busdomain/options/',
                                     defaultValue: "1"
@@ -879,10 +903,9 @@
                                     title: 'Workflow Type',
                                     type: 'combobox',
                                     options: '/mdrest/workflowtype/optionslist',
-                                    defaultValue: "1",
+                                    defaultValue: "1"
                                 },
-
-                                Export: {
+								Export: {
                                     title: 'Export',
                                     width: '10%',
                                     sorting: false,
@@ -930,6 +953,9 @@
                             }
                         });
                         $('#Container').jtable('load');
+                        $('#input-box-button-filter').click(function () {
+                        	$('#input-box-button').toggle();
+						});
                     });
 
                 </script>
@@ -1029,22 +1055,25 @@
                 <section style="width:100%;text-align:center;">
                     <div id="Container"></div>
                 </section>
-                <div id="input-box-button">
+                <div id="input-box-button-filter" class="input-box-button-filter">
+                	<span class="filter-icon"></span><span class="filter-text">Filter By Process</span>
+                </div>
+                <div id="input-box-button" class="input-box-button">
                     <form onsubmit="showProcessPage(jQuery('#pid').val()); return false;">
                         <div class="input-group">
-                            <input class="form-control" type="number" name="pid" id="pid" value="" placeholder="Filter by processid" />
+                            <input class="form-control form-control-process" type="number" name="pid" id="pid" value="" placeholder=<spring:message code="process.page.pid_placeholder"/> />
                             <!-- <button  class="btn btn-default btn-lg btn-primary"><span id="sizing-addon2"><span class="glyphicon glyphicon-arrow-right" aria-hidden="true"></span> Show Lineage </button> -->
                             <span class="input-group-btn">
-		    <button class="btn btn-default  btn-primary" type="submit" onClick="showProcessPage(jQuery('#pid').val())"><span id="sizing-addon2"><span class="glyphicon glyphicon-arrow-right" aria-hidden="true"></span>&nbsp;</button>
+		    <button class="btn btn-default  btn-primary-process" type="submit" onClick="showProcessPage(jQuery('#pid').val())"><span id="sizing-addon2"><span class="glyphicon glyphicon-arrow-right" aria-hidden="true"></span>&nbsp;</button>
                             </span>
                         </div>
                     </form>
                 </div>
-                <div id="dialog-confirm" title="Are you sure?" style="display:none;">
-                    <p><span class="ui-icon ui-icon-alert" style="float:left; margin:0 7px 20px 0;"></span>This will build the workflow for this process and deploy necessary codes in cluster. Existing workflow may be replaced.</p>
+				<div id="dialog-confirm" style="display:none;">
+                    <span class="ui-icon-alert-custom"></span><div class="dialog-title-custom">Are you sure?</div><p>This will build the workflow for this process and deploy necessary codes in cluster. Existing workflow may be replaced.</p>
                 </div>
                 <div id="execute-dialog-confirm" title="Are you sure?" style="display:none;">
-                    <p><span class="ui-icon ui-icon-alert" style="float:left; margin:0 7px 20px 0;"></span>This will start the execution of process in cluster.</p>
+                    <span class="ui-icon-alert-custom"></span><div class="dialog-title-custom">Are you sure?</div><p>This will start the execution of process in cluster.</p>
                 </div>
                 <div id="execute-result" title="Process Started" style="display:none;">
                     <p><span class="ui-icon ui-icon-alert" style="float:left; margin:0 7px 20px 0;"></span>Process Started Successfully</p>
@@ -1058,7 +1087,6 @@
                 <div id="dialog-form" title="Are you sure?" style="display:none;">
                     <p><span class="ui-icon ui-icon-alert" style="float:left; margin:0 7px 20px 0;"></span>This will export process and related properties.</p>
                 </div>
-
-            </body>
+			</body>
 
             </html>

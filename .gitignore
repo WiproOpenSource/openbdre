@@ -36,3 +36,4 @@ glassfish-web.xml
 .derbydb
 /md-dao/src/main/resources/db.properties
 spark-core/dependency-reduced-pom.xml
+/bin/

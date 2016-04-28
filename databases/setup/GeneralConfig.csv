@@ -485,7 +485,7 @@
 'mdconfig', 'upload.base-directory', 'Base Directory For Upload', 'Base Directory where you want to upload jars and hqls',  1, '/home/${bdre_user_name}/bdre-wfd', 'text', 1
 'mdconfig', 'r.shell-script', 'Location of R shell script', 'Location of R shell script', 1, 'Rhadoop.sh', 'text', 1
 'imconfig', 'common.default-fs-name', 'Default file system name','Default file system name', 1, 'hdfs://${name_node_hostname}:${name_node_port}', 'text', 1
-'imconfig', 'etl.hive-connection', 'URL of Hive connection','URL of Hive connection', 1, 'jdbc:hive2://${hive_server_hostname}:10000/', 'text', 1
+'imconfig', 'etl.hive-connection', 'URL of Hive connection','URL of Hive connection', 1, 'jdbc:hive2://${hive_server_hostname}:10000', 'text', 1
 'imconfig', 'etl.hive-jdbcuser', 'Hive JDBC User','Hive JDBC User', 1, '${hive_jdbc_user}', 'text', 1
 'imconfig', 'etl.hive-jdbcpassword', 'Hive JDBC Pwd','Hive JDBC Pwd', 1, '${hive_jdbc_password}', 'text', 1
 'imconfig', 'etl.hdfs-raw-directory', 'Hadoop raw directory','Hadoop raw directory' , 1, '/raw', 'text', 1
@@ -558,3 +558,10 @@
 'mainframe', 'serdeClass', 'Serde Class','serde class to be used' , 1, ' ', 'text' , 1
 'mainframe', 'inputFormat', 'Input Format','input format to be used' , 1, 'com.cloudera.sa.copybook.mapred.CopybookInputFormat', 'text' , 1
 'mainframe', 'outputFormat', 'Output Format','output format to be used' , 1, 'org.apache.hadoop.hive.ql.io.HiveIgnoreKeyTextOutputFormat', 'text' , 1
+'cluster.nn-address', 'Cloudera cluster', 'Namenode Address','Cloudera cluster' , 1, 'hdfs://quickstart.cloudera:8020', 'text' , 1
+'cluster.jt-address', 'Cloudera cluster', 'Job Tracker Address','Cloudera cluster' , 1, 'quickstart.cloudera:8050', 'text' , 1
+'cluster.hive-address', 'Cloudera cluster', 'Hive Server2 Address','Cloudera cluster' , 1, 'quickstart.cloudera:10000', 'text' , 1
+'cluster.nn-address', 'Hortonworks cluster', 'Namenode Address','Hortonworks cluster' , 1, 'hdfs://sandbox.hortonworks.com:8020', 'text' , 1
+'cluster.jt-address', 'Hortonworks cluster', 'Job Tracker Address','Hortonworks cluster' , 1, 'sandbox.hortonworks.com:8050', 'text' , 1
+'cluster.hive-address', 'Hortonworks cluster', 'Hive Server2 Address','Hortonworks cluster' , 1, 'sandbox.hortonworks.com:10000', 'text' , 1
+

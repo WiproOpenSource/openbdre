@@ -1,0 +1,76 @@
+body {
+	background-color: #DFDDDD !important;
+}
+.nav-tabs {
+	border: none !important;
+	margin-top:3%;
+}
+.nav-tabs>li.active>a,.nav-tabs>li.active>a:focus,.nav-tabs>li.active>a:hover {
+	border: 1px solid #fff !important;
+	background-color: #F2B30B !important;
+	color: #000 !important;
+	border-radius: 4px !important;
+}
+.nav-tabs>li>a,.nav-tabs>li>a:hover{
+	background-color: #3D525F !important;
+	color: #fff !important;
+	border-radius: 4px !important;
+	margin-right: 15px;
+}
+.btn-info {
+	padding: 3px 40px;
+	border-radius: 2px;
+	background: #359bd0;
+	background: -webkit-linear-gradient(#359bd0, #037dbc);
+	background: -o-linear-gradient(#359bd0, #037dbc);
+	background: -moz-linear-gradient(#359bd0, #037dbc);
+	background: -ms-linear-gradient(#359bd0, #037dbc);
+	background: linear-gradient(#359bd0, #037dbc);
+}
+.btn-primary {
+	background-color: #23C9A4 !important;
+	color: #404040 !important;
+	padding: 0.25em 1.1em !important;
+	border-radius: 4px !important;
+	border-color: transparent;
+}
+.page-header{
+	position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+	padding: 0 0 0 20px;
+	font-family: 'Segoe UI Semilight', 'Open Sans', Verdana, Arial, Helvetica, sans-serif;
+	font-weight: 300;
+	font-size: 19px;
+	line-height: 34px;
+	color: #fff;
+	background: #6a6b6b;
+	margin: 0;
+	background: -webkit-linear-gradient(#6a6b6b, #3a3b3b);
+    background: -o-linear-gradient(#6a6b6b, #3a3b3b);
+    background: -moz-linear-gradient(#6a6b6b, #3a3b3b);
+    background: -ms-linear-gradient(#6a6b6b, #3a3b3b);
+    background: linear-gradient(#6a6b6b, #3a3b3b); 
+}
+.panel-body, .panel-primary>.panel-heading
+{
+	background-color: #F8F9FB;
+}
+.panel-primary>.panel-heading {
+	border: none !important;
+}
+.panel-primary {
+	border-color: #B0B0B0 !important;
+}
+.label-primary{
+	background: #359bd0;
+    background: -webkit-linear-gradient(#359bd0, #037dbc);
+    background: -o-linear-gradient(#359bd0, #037dbc);
+    background: -moz-linear-gradient(#359bd0, #037dbc);
+    background: -ms-linear-gradient(#359bd0, #037dbc);
+    background: linear-gradient(#359bd0, #037dbc);
+}
+.label-primary{
+	padding: .4em 0.8em .5em;
+}
