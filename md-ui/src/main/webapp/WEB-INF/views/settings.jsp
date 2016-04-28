@@ -328,7 +328,7 @@ function buildFormDisplay(configGroup, typeDiv) {
                 <div id="config">
     				<div id="configDiv">
 					<form id="configForm" >
-<<<<<<< HEAD
+
 					<div><strong></>Select Configuration</strong></div>
     					<select id="configDropdown" class="btn btn-default dropdown-toggle configDropdown" data-toggle="dropdown" aria-haspopup="false" aria-expanded="true">
     						<option value="" disabled selected>Select your option</option>
