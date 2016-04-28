@@ -29,10 +29,22 @@ $(document).ready(function(){
 </script>
 	<style>
 body {
-	overflow: scroll;
 	padding: 10px;
-	margin-left: 10%;
+	margin-left: 5%;
+	margin-right:5%;
+	overflow: scroll;
 }
+.alert-info {
+	color: #31708f;
+	background-color: #fff;
+	border-color: #B0B0B0 !important;
+}
+
+.appimage {
+	padding-top: 2%;
+	padding-bottom: 2%;
+}
+
 
 </style>
     </head>
@@ -128,8 +140,8 @@ body {
 
 					});
 </script>
-<div ng-app="myApp" ng-controller="myCtrl" class="appStoreContainer">
-<div class="page-heading">App Store</div>
+<div ng-app="myApp" ng-controller="myCtrl">
+<div class="page-header">App Store</div>
 <ul class="nav nav-tabs" ng-if="rows">
   <li ng-repeat="row in rows" ng-class="addClass($first,'active')"><a data-toggle="tab" class='bdretab{{ row.id }}'>{{ row.name }}</a></li>
 </ul>
