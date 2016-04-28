@@ -72,14 +72,14 @@
 </script >
 </head>
 <body ng-app="myApp" ng-controller="myCtrl">
-	<div class="page-heading"><spring:message code="crawler.page.panel_heading"/></div>
+	<div class="page-header"><spring:message code="crawler.page.panel_heading"/></div>
 	<div class="alert-info-outer">
 	<div class="alert alert-info" role="alert">
 	    <spring:message code="crawler.page.alert_info_outer"/>
     </div>
 	</div>
 
-    <div id="bdre-crawler" class="steps-horizontal" >
+    <div id="bdre-crawler" class="wizard-horizontal" >
       <h3><div class="number-circular">1</div><spring:message code="crawler.page.crawler_details"/></h3>
             <section>
             <form class="form-horizontal" role="form" id="processFieldsForm2">
