@@ -64,7 +64,7 @@ public class ProcessAPI extends MetadataAPIBase {
     @Autowired
     InstanceExecDAO instanceExecDAO;
     @Autowired
-    AppPermissionDAO appPermissionDAO;
+    PermissionTypeDAO appPermissionDAO;
     @Autowired
     UserRolesDAO userRolesDAO;
 
@@ -910,6 +910,7 @@ public class ProcessAPI extends MetadataAPIBase {
             LOGGER.error(e + " Executing workflow failed " + e.getCause());
             restWrapper = new RestWrapper(e.getMessage(), RestWrapper.ERROR);
         }catch (SecurityException e) {
+            LOGGER.error(e + " security check failed " + e.getCause());
             restWrapper = new RestWrapper(e.getMessage(), RestWrapper.ERROR);
         }catch (IOException e) {
             LOGGER.error(e + " Executing workflow failed " + e.getCause());
@@ -1000,9 +1001,9 @@ public class ProcessAPI extends MetadataAPIBase {
         RestWrapperOptions restWrapperOptions = null;
         try {
             List<PermissionType> permissionTypeList = appPermissionDAO.permissionTypeList();
-            List<com.wipro.ats.bdre.md.beans.PermissionType> permissionTypes = new ArrayList<>();
+            List<com.wipro.ats.bdre.md.beans.table.PermissionType> permissionTypes = new ArrayList<>();
             for (PermissionType permissionType : permissionTypeList) {
-                com.wipro.ats.bdre.md.beans.PermissionType pType = new com.wipro.ats.bdre.md.beans.PermissionType();
+                com.wipro.ats.bdre.md.beans.table.PermissionType pType = new com.wipro.ats.bdre.md.beans.table.PermissionType();
                 pType.setPermissionTypeName(permissionType.getPermissionTypeName());
                 pType.setPermissionTypeId(permissionType.getPermissionTypeId());
                 pType.setCounter(permissionTypeList.size());
@@ -1010,7 +1011,7 @@ public class ProcessAPI extends MetadataAPIBase {
             }
 
             List<RestWrapperOptions.Option> options = new ArrayList<RestWrapperOptions.Option>();
-            for (com.wipro.ats.bdre.md.beans.PermissionType permissionType : permissionTypes) {
+            for (com.wipro.ats.bdre.md.beans.table.PermissionType permissionType : permissionTypes) {
                 RestWrapperOptions.Option option = new RestWrapperOptions.Option(permissionType.getPermissionTypeName(), permissionType.getPermissionTypeId());
                 options.add(option);
             }

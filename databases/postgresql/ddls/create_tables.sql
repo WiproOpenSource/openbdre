@@ -53,12 +53,16 @@ CREATE TABLE workflow_type (
     workflow_type_name VARCHAR(45) NOT NULL,
     PRIMARY KEY (workflow_id)
 );
+/* permission_type.sql */
+
+CREATE TABLE permission_type (
+  permission_type_id number(11) NOT NULL,
+  permission_type_name varchar(45) NOT NULL,
+  PRIMARY KEY (permission_type_id)
+);
+
 
 /* etlmd_servers.sql */
-
-
-
-
 
 CREATE TABLE servers (
   server_id SERIAL NOT NULL,

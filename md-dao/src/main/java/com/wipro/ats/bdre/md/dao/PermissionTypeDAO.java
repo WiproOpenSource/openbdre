@@ -16,8 +16,8 @@ import java.util.List;
  */
 @Transactional
 @Service
-public class AppPermissionDAO {
-    private static final Logger LOGGER = Logger.getLogger(AppPermissionDAO.class);
+public class PermissionTypeDAO {
+    private static final Logger LOGGER = Logger.getLogger(PermissionTypeDAO.class);
     @Autowired
     SessionFactory sessionFactory;
     public PermissionType get(Integer id) {

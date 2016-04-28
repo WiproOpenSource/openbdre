@@ -46,7 +46,11 @@ CREATE TABLE workflow_type (
   workflow_type_name varchar(45) NOT NULL,
   PRIMARY KEY (workflow_id)) ;
 
-
+CREATE TABLE permission_type (
+  permission_type_id number(11) NOT NULL,
+  permission_type_name varchar(45) NOT NULL,
+  PRIMARY KEY (permission_type_id)
+);
 
 CREATE TABLE servers (
 	  server_id number(10,0) NOT NULL,
@@ -123,6 +127,11 @@ CREATE TABLE properties_template (
 	 PROCESS_TYPE_ID  number(10,0) NOT NULL ENABLE,
 	 PARENT_PROCESS_ID  number(10,0) DEFAULT NULL,
 	 PROCESS_CODE VARCHAR(256),
+	 user_name VARCHAR(45),
+         owner_role_id number(11),
+         user_access_id number(1)  DEFAULT '7',
+         group_access_id number(1)  DEFAULT '4',
+         others_access_id number(1)  DEFAULT '0',
 	 CAN_RECOVER  number(1,0) DEFAULT 1 NOT NULL ENABLE,
 	 ENQUEUING_PROCESS_ID  number(10,0) DEFAULT 0 NOT NULL ENABLE,
 	 BATCH_CUT_PATTERN  VARCHAR2(45 BYTE),
@@ -135,12 +144,14 @@ CREATE TABLE properties_template (
 	  REFERENCES  BUS_DOMAIN  (BUS_DOMAIN_ID) ENABLE,
 	 CONSTRAINT  ORIGINAL_PROCESS_ID1  FOREIGN KEY (PARENT_PROCESS_ID)
 	  REFERENCES   PROCESS  (PROCESS_ID) ENABLE,
-	 CONSTRAINT  WORKFLOW_ID  FOREIGN KEY (WORKFLOW_ID)
-	  REFERENCES   WORKFLOW_TYPE  (WORKFLOW_ID) ENABLE,
-	 CONSTRAINT  PROCESS_TYPE_ID1  FOREIGN KEY (PROCESS_TYPE_ID)
-	  REFERENCES   PROCESS_TYPE  (PROCESS_TYPE_ID) ENABLE,
-    CONSTRAINT PROCESS_IBFK_1 FOREIGN KEY (PROCESS_TEMPLATE_ID)
-    REFERENCES PROCESS_TEMPLATE (PROCESS_TEMPLATE_ID) ENABLE
+	 CONSTRAINT  WORKFLOW_ID  FOREIGN KEY (WORKFLOW_ID) REFERENCES   WORKFLOW_TYPE  (WORKFLOW_ID) ENABLE,
+	 CONSTRAINT  PROCESS_TYPE_ID1  FOREIGN KEY (PROCESS_TYPE_ID) REFERENCES   PROCESS_TYPE  (PROCESS_TYPE_ID) ENABLE,
+    CONSTRAINT PROCESS_IBFK_1 FOREIGN KEY (PROCESS_TEMPLATE_ID) REFERENCES PROCESS_TEMPLATE (PROCESS_TEMPLATE_ID) ENABLE,
+     CONSTRAINT permission_type_id1 FOREIGN KEY (user_access_id) REFERENCES permission_type (permission_type_id) ENABLE,
+        CONSTRAINT permission_type_id2 FOREIGN KEY (group_access_id) REFERENCES permission_type (permission_type_id) ENABLE,
+        CONSTRAINT permission_type_id3 FOREIGN KEY (others_access_id) REFERENCES permission_type (permission_type_id) ENABLE,
+        CONSTRAINT owner_check FOREIGN KEY(owner_role_id) REFERENCES user_roles (user_role_id) ENABLE,
+          CONSTRAINT user_contreint FOREIGN KEY (user_name) REFERENCES users (username) ENABLE
    ) ;
 
     CREATE SEQUENCE process_seq

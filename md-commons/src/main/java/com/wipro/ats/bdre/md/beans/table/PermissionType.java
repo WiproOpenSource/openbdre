@@ -1,4 +1,4 @@
-package com.wipro.ats.bdre.md.beans;
+package com.wipro.ats.bdre.md.beans.table;
 
 /**
  * Created by cloudera on 4/6/16.
