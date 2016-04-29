@@ -125,9 +125,8 @@
                            if(currentIndex == 3 && priorIndex == 2) {
                                       app = $('#app').val();
                                       console.log("app is "+app);
-
-
                           }
+
                       }
           	});
             });
@@ -194,6 +193,10 @@
                                 });
                           console.log(json["Records"][0].questionsJson);
 
+                          $('#json').empty();
+                          var objDiv = document.getElementById("json");
+                          var objTextNode = document.createTextNode(json["Records"][0].questionsJson);
+                          objDiv.appendChild(objTextNode);
                       }
 
                   </script>
@@ -269,11 +272,15 @@
 
                          </div>
 
-                          <div id=dashboard>
+                          <div id=ddp>
                                   <button class="control-label col-sm-2" onclick="gotoDdpurl()">DDP URL</button>
 
                               </div>
+
+                          <div id=json>
+                                </div>
                         </section>
+
 
 
     </body>
