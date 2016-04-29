@@ -172,7 +172,7 @@ public class ProcessAPI extends MetadataAPIBase {
                 processId = null;
             }
             Integer counter = processDAO.totalRecordCount(processId);
-            List<com.wipro.ats.bdre.md.dao.jpa.Process> processList = processDAO.list(processId, startPage, pageSize);
+            List<com.wipro.ats.bdre.md.dao.jpa.Process> processList = processDAO.list(processId, startPage, pageSize,principal.getName());
             List<Process> processes = new ArrayList<Process>();
 
             for (com.wipro.ats.bdre.md.dao.jpa.Process daoProcess : processList) {
@@ -209,6 +209,7 @@ public class ProcessAPI extends MetadataAPIBase {
                 tableProcess.setPermissionTypeByUserAccessId(daoProcess.getPermissionTypeByUserAccessId().getPermissionTypeId());
                 if(daoProcess.getPermissionTypeByOthersAccessId()!=null)
                 tableProcess.setPermissionTypeByOthersAccessId(daoProcess.getPermissionTypeByOthersAccessId().getPermissionTypeId());
+                tableProcess.setUserName(daoProcess.getUsers().getUsername());
                 tableProcess.setCounter(counter);
                 processes.add(tableProcess);
             }
@@ -364,12 +365,21 @@ public class ProcessAPI extends MetadataAPIBase {
             }
             if (process.getOwnerRoleId() != null)
                 insertDaoProcess.setUserRoles(userRolesDAO.get(process.getOwnerRoleId()));
+            else
+                insertDaoProcess.setUserRoles(userRolesDAO.minUserRoleId(principal.getName()));
+
             if (process.getPermissionTypeByUserAccessId() != null)
                 insertDaoProcess.setPermissionTypeByUserAccessId(appPermissionDAO.get(process.getPermissionTypeByUserAccessId()));
+            else
+                insertDaoProcess.setPermissionTypeByUserAccessId(appPermissionDAO.get(7));
             if (process.getPermissionTypeByGroupAccessId() != null)
                 insertDaoProcess.setPermissionTypeByGroupAccessId(appPermissionDAO.get(process.getPermissionTypeByGroupAccessId()));
+            else
+                insertDaoProcess.setPermissionTypeByGroupAccessId(appPermissionDAO.get(4));
             if (process.getPermissionTypeByOthersAccessId() != null)
                 insertDaoProcess.setPermissionTypeByOthersAccessId(appPermissionDAO.get(process.getPermissionTypeByOthersAccessId()));
+            else
+                insertDaoProcess.setPermissionTypeByOthersAccessId(appPermissionDAO.get(0));
             insertDaoProcess.setEditTs(DateConverter.stringToDate(process.getTableEditTS()));
               Users users=new Users();
               users.setUsername(principal.getName());
