@@ -39,11 +39,7 @@
 		<script src = "../js/jquery.fancytree.table.js" type = "text/javascript" ></script >
 		<script src = "../js/jquery.jtable.js" type = "text/javascript" ></script >
 		<link href = "../css/jtables-bdre.css" rel = "stylesheet" type = "text/css" />
-		<style>
-		#bdre-dataload.wizard > .content{
-			margin: 0 !important;
-		}
-		</style>
+		
 		<script >
         function fetchPipelineInfo(pid){
 			location.href = '<c:url value="/pages/lineage.page?pid="/>' + pid;
@@ -650,7 +646,7 @@ isInit=true;
 	
 		<form action = "#" method = "POST" id = "wizardform" >
 			<div class="page-header"><spring:message code="dataimportwizard.page.panel_heading"/></div>
-			<div id="bdre-dataload" class="wizard-horizontal" ng-controller = "myCtrl" >
+			<div id="bdre-dataload" ng-controller = "myCtrl" >
 				<h3 ><div class="number-circular">1</div><spring:message code="dataimportwizard.page.db"/></h3 >
 				<section >
 					<div >
