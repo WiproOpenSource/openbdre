@@ -644,6 +644,8 @@ $scope.exportSVG = function() {
 //
 $scope.newPageBusDomain = {};
 $scope.newPageProcessType = {};
+$scope.newPagePermissionType={};
+$scope.newPageUserRoles={};
 $scope.newPageWorkflowType = {};
 $scope.intialiseNewProcessPage =function() {
 
@@ -662,6 +664,24 @@ $scope.intialiseNewProcessPage =function() {
     else {
         console.log('processtypeOptionlist not loaded');
     }
+    var permissiontypeOptionslist = permissiontypeOptionslistAC('/mdrest/process/options/', 'POST', '');
+        if (permissiontypeOptionslist) {
+            $scope.newPagePermissionType = permissiontypeOptionslist;
+            console.log('info -- PermissiontypeOptionlist Type Options Listed');
+        }
+        else {
+            console.log('PermissiontypeOptionlist not loaded');
+        }
+
+        var userrolestypeOptionslist = userrolestypeOptionslistAC('/mdrest/userroles/options/', 'POST', '');
+                if (permissiontypeOptionslist) {
+                    $scope.newPageUserRoles = userrolestypeOptionslist;
+                    console.log('info -- UserRoles Type Options Listed');
+                }
+                else {
+                    console.log('UserRoles not loaded');
+                }
+
     var workflowtypeOptionslist = workflowtypeOptionslistAC('/mdrest/workflowtype/optionslist',  'POST', '');
     if (workflowtypeOptionslist) {
         $scope.newPageWorkflowType = workflowtypeOptionslist;
@@ -684,6 +704,10 @@ $scope.createFirstProcess = function() {
         'nextProcessIds': '0',
         'enqProcessId': '0',
         'busDomainId': $('#domain').val(),
+        'ownerRoleId':$('#ownerRoleId').val(),
+         'permissionTypeByUserAccessId': $('#permissionTypeByUserAccessId').val(),
+         'permissionTypeByGroupAccessId': $('#permissionTypeByGroupAccessId').val(),
+         'permissionTypeByOthersAccessId': $('#permissionTypeByOthersAccessId').val(),
         'processTypeId': $('#type').val(),
         'processTemplateId': '',
         'workflowId': $('#workflowtype').val()

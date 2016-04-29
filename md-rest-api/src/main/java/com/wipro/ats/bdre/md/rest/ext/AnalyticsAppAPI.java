@@ -112,6 +112,7 @@ public class AnalyticsAppAPI {
 
 
         com.wipro.ats.bdre.md.dao.jpa.Process parentProcess = Dao2TableUtil.buildJPAProcess(37, processName, processDescription, 1,busDomainId);
+
         com.wipro.ats.bdre.md.dao.jpa.Process childProcess1 = Dao2TableUtil.buildJPAProcess(38, "subprocess1 of "+processName, "subprocess1 of "+processDescription, 1,busDomainId);
         //    com.wipro.ats.bdre.md.dao.jpa.Process childProcess2 = Dao2TableUtil.buildJPAProcess(38, "subprocess2 of "+processName, "subprocess1 of "+processDescription, 1,busDomainId);
 
