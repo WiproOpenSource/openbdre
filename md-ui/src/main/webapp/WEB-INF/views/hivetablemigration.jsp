@@ -16,7 +16,7 @@
     <head>
 
 
-    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     		<script src="../js/jquery.min.js"></script>
     		<link href="../css/jquery-ui-1.10.3.custom.css" rel="stylesheet">
     		<link href="../css/css/bootstrap.min.css" rel="stylesheet" />
@@ -24,7 +24,7 @@
     		<script src="../js/jquery.steps.min.js"></script>
     		<link rel="stylesheet" href="../css/jquery.steps.css" />
     		<link rel="stylesheet" href="../css/jquery.steps.custom.css" />
-    		<link href="../css/bootstrap.custom.css" rel="stylesheet" />
+    		<link href="../css/bootstrap.custom.css" rel="stylesheet" type="text/css" />
     		<script src="../js/bootstrap.js" type="text/javascript"></script>
             <script src = "../js/jquery.fancytree.js" ></script >
             <link rel = "stylesheet" href = "../css/ui.fancytree.css" />
@@ -673,12 +673,11 @@ var destjobTrackerIp;
 
     <body ng-app="myApp">
 
-    <div class="page-header"><spring:message code="hivemigration.page.panel_heading"/></div>
-    <div class="alert-info-outer">
-    	<div class="alert alert-info" role="alert">
-            <spring:message code="hivemigration.page.alert_info_outer_heading"/>
-        </div>
-    	</div>
+    <div class="page-header"><spring:message code="hivetablemigration.page.panel_heading"/></div>
+    <div class="alert alert-info" role="alert">
+           <div><spring:message code="hivetablemigration.page.alert_info_outer_heading"/></div>
+    </div>
+   	
 
 
         <div id="bdre-data-migration" class="wizard-vertical"  >
@@ -696,9 +695,7 @@ var destjobTrackerIp;
                                                                 <input type="text" class="form-control"  id="processName" name="processName" placeholder="Enter Process Name" value="" required>
                                                             </div>
                                                         </div>
-
-                                                   <div id="processDes">
-                                                    <div class="form-group">
+																<div class="form-group">
                                                                     <label class="control-label col-sm-2" for="processDesc"><spring:message code="hivemigration.page.form_procdesc"/></label>
                                                                     <div class="col-sm-10">
                                                                         <input type="text" class="form-control"  id="processDesc" name="processDesc" placeholder="Enter Process Description" value="" required>
@@ -726,8 +723,9 @@ var destjobTrackerIp;
                                                                 </select>
                                                             </div>
                                                         </div>
+                                                        <div class="clearfix"></div>
 
-                                            </div>
+                                           
                                             <!-- /btn-group -->
                                         </div>
                                         </form>
@@ -745,6 +743,7 @@ var destjobTrackerIp;
                                       </select>
                                     </div>
                                 </div>
+                                <div class="clearfix"></div>
 
                         </form>
               </section>
@@ -774,6 +773,7 @@ var destjobTrackerIp;
 										 </select>
 								     </div>
 						 </div>
+						 <div class="clearfix"></div>
 
 						  <div class="form-group">
                                                              <label class="control-label col-sm-2" for="instexecId"><spring:message code="hivemigration.page.form_inst_exec"/></label>
@@ -781,6 +781,7 @@ var destjobTrackerIp;
                                                                       <input type="text" class="form-control"  id="instexecId" name="instexecId"  value="instanceExecId" required>
                                                                   </div>
                                                                   </div>
+                                                                  <div class="clearfix"></div>
 
 				</form>
 
@@ -796,6 +797,7 @@ var destjobTrackerIp;
                                           </select>
                                         </div>
                                     </div>
+                                    <div class="clearfix"></div>
 
                             </form>
                   </section>
@@ -809,7 +811,7 @@ var destjobTrackerIp;
                         <input type="text" class="form-control"  id="showSrcEnv" name="showSrcEnv"  disabled="disabled" >
                     </div>
                 </div>
-                </br>
+                
 
 
                 <div class="form-group">
@@ -818,7 +820,7 @@ var destjobTrackerIp;
                         <input type="text" class="form-control"  id="showSrcDB" name="showSrcDB"  disabled="disabled" >
                     </div>
                 </div>
-                </br>
+                
 
                <div class="form-group">
                     <label class="control-label col-sm-4" for="showSrcTables"><spring:message code="hivemigration.page.h3_div_3"/></label>
@@ -826,7 +828,7 @@ var destjobTrackerIp;
                         <input type="text" class="form-control"  id="showSrcTables" name="showSrcTables"  disabled="disabled" >
                     </div>
                 </div>
-                </br>
+                
 
                 <div class="form-group">
                     <label class="control-label col-sm-4" for="showDestEnv"><spring:message code="hivemigration.page.h3_div_4"/></label>
@@ -834,7 +836,7 @@ var destjobTrackerIp;
                         <input type="text" class="form-control"  id="showDestEnv" name="showDestEnv"  disabled="disabled" >
                     </div>
                 </div>
-                </br>
+                
 
                  <div class="form-group">
                     <label class="control-label col-sm-4" for="showDestDB"><spring:message code="hivemigration.page.h3_div_5"/></label>
@@ -842,7 +844,7 @@ var destjobTrackerIp;
                         <input type="text" class="form-control"  id="showDestDB" name="showDestDB"  disabled="disabled" >
                     </div>
                 </div>
-                </br>
+                <div class="clearfix"></div>
 
                <div id="Process">
                     <button id="createjobs" type="button" class="btn btn-primary btn-lg"><spring:message code="hivemigration.page.create_jobs"/></button>

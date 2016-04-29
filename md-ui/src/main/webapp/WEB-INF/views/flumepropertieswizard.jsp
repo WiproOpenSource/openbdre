@@ -503,12 +503,10 @@ wizard = $(document).ready(function() {
 
 	<body ng-app="myApp" ng-controller="myCtrl" >
 	<div class="page-header"><spring:message code="flumepropertieswizrd.page.panel_heading"/></div>
-			<div class="alert-info-outer">
 				<div class="alert alert-info" role="alert">
-			        <spring:message code="flumepropertieswizard.page.source_type_alert"/>
-			    </div>
-			</div>
-			<div id="bdre-flume-ingestion" class="wizard-vertical" ng-controller="myCtrl">
+				     <div><spring:message code="flumepropertieswizard.page.source_type_alert"/></div>
+				</div>
+			<div id="bdre-flume-ingestion" ng-controller="myCtrl">
 			<h3><div class="number-circular">1</div><spring:message code="flumepropertieswizard.page.source_type"/></h3>
 			<section>
 
@@ -530,7 +528,7 @@ wizard = $(document).ready(function() {
 			<h3><div class="number-circular">2</div><spring:message code="flumepropertieswizard.page.required_source_properties"/></h3>
 			<section>
 				<div class="alert alert-info" role="alert">
-					<spring:message code="flumepropertieswizard.page.source_type_configuration_properties_alert"/>
+					<div><spring:message code="flumepropertieswizard.page.source_type_configuration_properties_alert"/></div>
 				</div>
 				<div id="sourceRequiredFields"></div>
 			</section>
@@ -538,7 +536,7 @@ wizard = $(document).ready(function() {
 			<h3><div class="number-circular">3</div><spring:message code="flumepropertieswizard.page.advanced_source_properties"/></h3>
 			<section>
 				<div class="alert alert-info" role="alert">
-					<spring:message code="flumepropertieswizard.page.source_type_advanced_configuration_properties_alert"/>
+					<div><spring:message code="flumepropertieswizard.page.source_type_advanced_configuration_properties_alert"/></div>
 				</div>
 				<div id='sourceAdvancedFields'></div>
 
@@ -550,7 +548,7 @@ wizard = $(document).ready(function() {
 
 				<div id="dropdownChannel">
 					<div class="alert alert-info" role="alert">
-						<spring:message code="flumepropertieswizard.page.channel_type_alert"/>
+						<div><spring:message code="flumepropertieswizard.page.channel_type_alert"/></div>
 					</div>
 					<!-- btn-group -->
 					<div class="btn-group">
@@ -568,7 +566,7 @@ wizard = $(document).ready(function() {
 			<h3><div class="number-circular">5</div><spring:message code="flumepropertieswizard.page.required_channel_properties"/></h3>
 			<section>
 				<div class="alert alert-info" role="alert">
-					<spring:message code="flumepropertieswizard.page.channel_type_configuration_properies_alert"/>
+					<div><spring:message code="flumepropertieswizard.page.channel_type_configuration_properies_alert"/></div>
 				</div>
 				<div id='channelRequiredFields'></div>
 
@@ -577,7 +575,7 @@ wizard = $(document).ready(function() {
 			<h3><div class="number-circular">6</div><spring:message code="flumepropertieswizard.page.advanced_channel_properties"/></h3>
 			<section>
 				<div class="alert alert-info" role="alert">
-					<spring:message code="flumepropertieswizard.page.advanced_channel_type_configuration_properities_alert"/>
+					<div><spring:message code="flumepropertieswizard.page.advanced_channel_type_configuration_properities_alert"/></div>
 				</div>
 				<div id='channelAdvancedFields'></div>
 
@@ -588,7 +586,7 @@ wizard = $(document).ready(function() {
 
 				<div id="dropdownSink">
 					<div class="alert alert-info" role="alert">
-						<spring:message code="flumepropertieswizard.page.sink_type_alert"/>
+						<div><spring:message code="flumepropertieswizard.page.sink_type_alert"/></div>
 					</div>
 					<!-- btn-group -->
 					<div class="btn-group">
@@ -607,7 +605,7 @@ wizard = $(document).ready(function() {
 			<h3><div class="number-circular">8</div><spring:message code="flumepropertieswizard.page.required_sink_properties"/></h3>
 			<section>
 				<div class="alert alert-info" role="alert">
-					<spring:message code="flumepropertieswizard.page.sink_type_configuration_properies_alert"/>
+					<div><spring:message code="flumepropertieswizard.page.sink_type_configuration_properies_alert"/></div>
 				</div>
 				<div id='sinkRequiredFields'></div>
 
@@ -616,7 +614,7 @@ wizard = $(document).ready(function() {
 			<h3><div class="number-circular">9</div><spring:message code="flumepropertieswizard.page.advanced_sink_properties"/></h3>
 			<section>
 				<div class="alert alert-info" role="alert">
-					<spring:message code="flumepropertieswizard.page.sink_type_advanced_configuration_properies_alert"/>
+					<div><spring:message code="flumepropertieswizard.page.sink_type_advanced_configuration_properies_alert"/></div>
 				</div>
 				<div id='sinkAdvancedFields'></div>
 
@@ -626,7 +624,7 @@ wizard = $(document).ready(function() {
                                  <form class="form-horizontal" role="form" id="processFieldsForm">
                                      <div id="processDetails">
                                          <div class="alert alert-info" role="alert">
-                                             <spring:message code="flumepropertieswizard.page.process_details_alert"/>
+                                             <div><spring:message code="flumepropertieswizard.page.process_details_alert"/></div>
                                          </div>
                                          <!-- btn-group -->
                                          <div id="processFields">

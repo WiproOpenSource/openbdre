@@ -11,22 +11,15 @@
 <head>
     <title><spring:message code="common.page.title_bdre_2"/></title>
 	<style>
-   .body{
-    width: 100% !important;
-    padding: 0 !important;
-    }
     .alert-info span {
-	color: #C85659;
-	letter-spacing: 1px;
+		color: #C85659;
+		letter-spacing: 1px;
 	}
-	#deletediv {
-		padding-left: 4%;
-	}
-	#deletediv .add-more {
-		background-color: #389DD0;
-		border: none;
+	.add-more {
+		background-color: #389DD0 !important;
+		border: none !important;
 		padding: 10px !important;
-		color: #fff;
+		color: #fff !important;
 	}
    	</style>
 	<script>
@@ -105,9 +98,9 @@ function formIntoMap(typeProp, typeOf) {
 </head>
 <body ng-app="myApp" ng-controller="myCtrl" >
 	<div class="page-header"><spring:message code="datagen.page.panel_heading"/></div>
-	<div class="alert-info-outer">
 	<div class="alert alert-info" role="alert">
-       <div style="font-size:24px;" ><b><spring:message code="datagen.page.how_to"/></b> </div>
+	<div>
+       	   <b style="font-size:24px;"><spring:message code="datagen.page.how_to"/></b><br/>
            <b><spring:message code="datagen.page.b_datatype_format"/></b> <span><spring:message code="datagen.page.b_span"/></span>
            <br>
            <b><spring:message code="datagen.page.b_regex_pattern"/></b><span><spring:message code="datagen.page.b_regex_pattern_span"/></span>
@@ -116,10 +109,11 @@ function formIntoMap(typeProp, typeOf) {
            <br>
            <b><spring:message code="datagen.page.column_type"/></b> <span><spring:message code="datagen.page.column_type_span"/></span>
     	</div>
-	</div>
+    </div>
+	
 
 
-    <div id="datagen" class="wizard-horizontal">
+    <div id="datagen">
 
             <h3><div class="number-circular">1</div><spring:message code="datagen.page.data_types"/></h3>
             <section>
@@ -145,7 +139,7 @@ function formIntoMap(typeProp, typeOf) {
                     <!-- /btn-group -->
                 </div>
                 <div class="col-md-2" id="deletediv">
-                            <button id="b1" class="btn btn-primary add-more">
+                            <button id="b1" class="btn add-more">
                                 <span class="glyphicon glyphicon-plus" style="font-size:large"></span>
                             </button>
                 </div>
@@ -159,7 +153,7 @@ function formIntoMap(typeProp, typeOf) {
             <form class="form-horizontal" role="form" id="processFieldsForm2">
                 <div id="tableDetails">
                     <div class="alert alert-info" role="alert">
-                        <spring:message code="datagen.page.alert_info"/>
+                        <div><spring:message code="datagen.page.alert_info"/></div>
                     </div>
                     <!-- btn-group -->
                     <div id="tableFields">
@@ -200,7 +194,7 @@ function formIntoMap(typeProp, typeOf) {
                                 <form class="form-horizontal" role="form" id="processFieldsForm3">
                                     <div id="processDetails">
                                         <div class="alert alert-info" role="alert">
-										<spring:message code="datagen.page.alert-info_2"/>
+											<div><spring:message code="datagen.page.alert-info_2"/></div>
                                         </div>
                                         <!-- btn-group -->
                                         <div id="processFields">
@@ -403,7 +397,7 @@ function getGenTypes(){
             headerTag: "h3",
             bodyTag: "section",
             transitionEffect: "slideLeft",
-            stepsOrientation: "vertical",
+            stepsOrientation: "horizontal",
             enableCancelButton: true,
             
             onFinished: function(event, currentIndex) {
