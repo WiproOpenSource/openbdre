@@ -880,9 +880,9 @@ public class ProcessAPI extends MetadataAPIBase {
     }
 
     @RequestMapping(value = {"/execute", "/execute/"}, method = RequestMethod.POST)
-    @ResponseBody
-    public RestWrapper executeProcess(@ModelAttribute("process")
-                                      @Valid Process process, Principal principal) {
+    @ResponseBody public
+    RestWrapper executeProcess(@ModelAttribute("process")
+                               @Valid Process process, BindingResult bindingResult, Principal principal) {
         RestWrapper restWrapper = null;
         ExecutionInfo executionInfo = new ExecutionInfo();
         executionInfo.setProcessId(process.getProcessId());
