@@ -54,7 +54,7 @@ public class ProcessDAOTest {
     @Test
     @Ignore
     public void testList() throws Exception {
-        LOGGER.info("Size of Process list is atleast:" + processDAO.list(10802, 0, 10).size());
+        LOGGER.info("Size of Process list is atleast:" + processDAO.list(10802, 0, 10,"admin").size());
     }
 
     @Test
