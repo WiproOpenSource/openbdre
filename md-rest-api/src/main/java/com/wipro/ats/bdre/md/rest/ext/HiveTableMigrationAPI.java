@@ -6,8 +6,10 @@ import com.wipro.ats.bdre.md.beans.ClusterInfo;
 import com.wipro.ats.bdre.md.beans.table.GeneralConfig;
 import com.wipro.ats.bdre.md.dao.GeneralConfigDAO;
 import com.wipro.ats.bdre.md.dao.ProcessDAO;
+import com.wipro.ats.bdre.md.dao.UserRolesDAO;
 import com.wipro.ats.bdre.md.dao.jpa.GeneralConfigId;
 import com.wipro.ats.bdre.md.dao.jpa.Properties;
+import com.wipro.ats.bdre.md.dao.jpa.Users;
 import com.wipro.ats.bdre.md.rest.RestWrapper;
 import com.wipro.ats.bdre.md.rest.RestWrapperOptions;
 import com.wipro.ats.bdre.md.rest.util.BindingResultError;
@@ -41,7 +43,8 @@ public class HiveTableMigrationAPI {
     private static Connection connection;
     private static String driverName = "org.apache.hive.jdbc.HiveDriver";
 
-
+    @Autowired
+    UserRolesDAO userRolesDAO;
     @Autowired
     private ProcessDAO processDAO;
 
@@ -217,7 +220,10 @@ public class HiveTableMigrationAPI {
 
             List<com.wipro.ats.bdre.md.dao.jpa.Process> childProcesses = new ArrayList<com.wipro.ats.bdre.md.dao.jpa.Process>();
             com.wipro.ats.bdre.md.dao.jpa.Process parentProcess = Dao2TableUtil.buildJPAProcess(31, processName + "-" + i, "table:" + i + "-" + processDesc, 1, busDomainID);
-
+            Users users=new Users();
+            users.setUsername(principal.getName());
+            parentProcess.setUsers(users);
+            parentProcess.setUserRoles(userRolesDAO.minUserRoleId(principal.getName()));
             com.wipro.ats.bdre.md.dao.jpa.Process preprocessingProcess = new com.wipro.ats.bdre.md.dao.jpa.Process();
             com.wipro.ats.bdre.md.dao.jpa.Process sourcestageloadProcess = new com.wipro.ats.bdre.md.dao.jpa.Process();
             com.wipro.ats.bdre.md.dao.jpa.Process sourcetodeststagecopyProcess = new com.wipro.ats.bdre.md.dao.jpa.Process();
