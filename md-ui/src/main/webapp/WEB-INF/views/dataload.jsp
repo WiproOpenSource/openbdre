@@ -644,13 +644,11 @@ wizard = $(document).ready(function() {
 
 	</head>
 <body ng-app="myApp" ng-controller="myCtrl" >
-<div class="page-header"><spring:message code="dataload.page.panel_heading"/></div>
-<div class="alert-info-outer">
+	<div class="page-header"><spring:message code="dataload.page.panel_heading"/></div>
 	<div class="alert alert-info" role="alert">
-        <spring:message code="dataload.page.alert_info_outer_heading"/>
-    </div>
+		<div><spring:message code="dataload.page.alert_info_outer_heading" /></div>
 	</div>
-		<div id="bdre-data-load" class="wizard-vertical" ng-controller="myCtrl">
+	<div id="bdre-data-load" ng-controller="myCtrl">
 		
 			<h3><div class="number-circular">1</div><spring:message code="dataload.page.h3_div"/></h3>
 			<section>
@@ -685,6 +683,7 @@ wizard = $(document).ready(function() {
                                         <input type="text" class="form-control" id="enqueueId" name="enqueueId" placeholder=<spring:message code="dataload.page.form_right_enqueing_id_placeholder"/> value="" required>
                                     </div>
                                 </div>
+                                <div class="clearfix"></div>
                             </div>
                             <!-- /btn-group -->
                         </div>
@@ -695,7 +694,7 @@ wizard = $(document).ready(function() {
             <form class="form-horizontal" role="form" id="fileFormat">
                                     <div id="fileFormatDiv">
                                         <div class="alert alert-info" role="alert">
-                                            <spring:message code="dataload.page.alert_info_form"/>
+                                            <div><spring:message code="dataload.page.alert_info_form"/></div>
                                         </div>
                                         <!-- btn-group -->
                                         <div id="rawTablDetailsDB">
@@ -705,16 +704,18 @@ wizard = $(document).ready(function() {
                                                 <input type="text" class="form-control"  id="rawDBName" name="rawDBName" placeholder=<spring:message code="dataload.page.raw_db_name_placeholder"/>value="" required>
                                             </div>
                                         </div>
-                                            <div class="form-group">
-                                                <label class="control-label col-sm-2" for="fileformat"><spring:message code="dataload.page.file_format"/></label>
-                                                <div class="col-sm-10">
-                                                    <select class="form-control" id="fileformat" name="fileformat" >
-                                                        <option ng-repeat="fileformat in fileformats" value="{{fileformat.defaultVal}}" name="fileformat">{{fileformat.value}}</option>
+                                        <div class="form-group">
+                                            <label class="control-label col-sm-2" for="fileformat"><spring:message code="dataload.page.file_format"/></label>
+                                            <div class="col-sm-10">
+                                                <select class="form-control" id="fileformat" name="fileformat" >
+                                                    <option ng-repeat="fileformat in fileformats" value="{{fileformat.defaultVal}}" name="fileformat">{{fileformat.value}}</option>
 
-                                                    </select>
-                                                </div>
+                                                </select>
                                             </div>
                                         </div>
+                                        <div class="clearfix"></div>
+                                        </div>
+                                        
                                         <!-- /btn-group -->
                                     </div>
                                     </form>
@@ -739,8 +740,7 @@ wizard = $(document).ready(function() {
                                                 <div style="font-size:24px;" ><b><spring:message code="dataload.page.how_to"/></b> </div>
                                                 <b><spring:message code="dataload.page.enter_props"/></b>
                                                 <br>
-
-                                            </div>
+											</div>
 
                                             <!-- btn-group -->
                                             <div class="form-group" id="formGroupSerde1">
@@ -789,6 +789,7 @@ wizard = $(document).ready(function() {
 
 
                                                         </div>
+                                                        <div class="clearfix"></div>
                                                         <!-- /btn-group -->
                                                     </div>
                                                     <div class="col-md-2" id="tablePropDiv">
@@ -822,6 +823,7 @@ wizard = $(document).ready(function() {
                                                         <input type="text" class="form-control" id="baseTableName" name="baseTableName" placeholder=<spring:message code="dataload.page.enter_base_table_name_placeholder"/> required>
                                                     </div>
                                                 </div>
+                                                <div class="clearfix"></div>
 
                                             </div>
                                             <!-- /btn-group -->
@@ -1130,7 +1132,7 @@ function buildForm(fileformat) {
 			var formHTML = '';
 			formHTML = formHTML + '<form class="form-horizontal" role="form" id = "formatFields">';
 			formHTML = formHTML + '<div id="Serde, OutPut and Input Format">';
-			formHTML = formHTML + '<div class="alert alert-info" role="alert">Application requires serde class and input/output format details to be entered</div>';
+			formHTML = formHTML + '<div class="alert alert-info" role="alert"><div>Application requires serde class and input/output format details to be entered</div></div>';
 
 			console.log(data[root].length);
 			if (data[root].length == 0){

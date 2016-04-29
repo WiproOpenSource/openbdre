@@ -960,6 +960,10 @@
                                  list:true,
                                  options: '/mdrest/userroles/options/',
                               },
+                              userName: {
+                                       title: 'Username',
+
+                                    },
                                 processTypeId: {
                                     title: 'Type',
                                     type: 'combobox',

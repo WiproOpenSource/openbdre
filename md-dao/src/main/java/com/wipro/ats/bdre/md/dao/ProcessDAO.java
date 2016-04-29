@@ -52,13 +52,11 @@ public class ProcessDAO {
     private static final String ACCESSGRANTED="ACCESS GRANTED";
     private static final String ACCESSDENIED="ACCESS DENIED";
 
-    public List<com.wipro.ats.bdre.md.dao.jpa.Process> list(Integer pid, Integer pageNum, Integer numResults) {
+    public List<com.wipro.ats.bdre.md.dao.jpa.Process> list(Integer pid, Integer pageNum, Integer numResults,String userName) {
         Session session = sessionFactory.openSession();
         List<Process> processes = new ArrayList<Process>();
         try {
             session.beginTransaction();
-
-
             Process argument = new Process();
             Process process = new Process();
             if (pid != null) {
@@ -68,11 +66,40 @@ public class ProcessDAO {
             Criteria checkSubProcessCriteria = session.createCriteria(Process.class).add(Restrictions.eq(PROCESS, argument)).add(Restrictions.eq(DELETE_FLAG, false));
 
             if (pid == null) {
-                Criteria criteria = session.createCriteria(Process.class).add(Restrictions.isNull(PARENTPROCESSID)).add(Restrictions.eq(DELETE_FLAG, false))
-                        .addOrder(Order.desc(PROCESSID));
-                criteria.setFirstResult(pageNum);
-                criteria.setMaxResults(numResults);
-                processes = criteria.list();
+
+                Criteria roleCriteria = session.createCriteria(UserRoles.class).add(Restrictions.eq("users.username", userName));
+                List<UserRoles> userRoles = roleCriteria.list();
+                List<String>   userRoleListOfLoggedUser=new ArrayList<>();
+                for (UserRoles userRoles1 : userRoles){
+                   userRoleListOfLoggedUser.add(userRoles1.getRole());
+                }
+                List<Integer>   userRoleIdListOfLoggedUser=new ArrayList<>();
+                Criteria userRoleIdCriteria = session.createCriteria(UserRoles.class).add(Restrictions.in("role", userRoleListOfLoggedUser)).setProjection(Projections.property("userRoleId"));
+                userRoleIdListOfLoggedUser=userRoleIdCriteria.list();
+
+                if(userRoleListOfLoggedUser.contains("ROLE_ADMIN")){
+                    Criteria criteria = session.createCriteria(Process.class).add(Restrictions.isNull(PARENTPROCESSID)).add(Restrictions.eq(DELETE_FLAG, false))
+                            .addOrder(Order.desc(PROCESSID));
+                    criteria.setFirstResult(pageNum);
+                    criteria.setMaxResults(numResults);
+                    processes = criteria.list();
+                }
+                else {
+                    Criteria criteria = session.createCriteria(Process.class).
+                            add(Restrictions.isNull(PARENTPROCESSID)).
+                            add(Restrictions.eq(DELETE_FLAG, false)).
+                            addOrder(Order.desc(PROCESSID)).
+                            add(Restrictions.disjunction().
+                            add(Restrictions.and(Restrictions.eq("users.username",userName),Restrictions.gt("permissionTypeByUserAccessId.permissionTypeId",3))).
+                            add(Restrictions.and(Restrictions.in("userRoles.userRoleId",userRoleIdListOfLoggedUser),Restrictions.gt("permissionTypeByGroupAccessId.permissionTypeId",3))).
+                            add(Restrictions.and(Restrictions.not(Restrictions.in("userRoles.userRoleId",userRoleIdListOfLoggedUser)),Restrictions.gt("permissionTypeByOthersAccessId.permissionTypeId",3))));
+                    criteria.setFirstResult(pageNum);
+                    criteria.setMaxResults(numResults);
+                    LOGGER.info("size of list is " + criteria.list().size());
+                    processes = criteria.list();
+                }
+
+
             } else if (checkSubProcessCriteria.list().isEmpty() && process.getProcessId() == pid) {
                 Criteria listOfRelatedSP = session.createCriteria(Process.class).add(Restrictions.eq(PROCESSID, process.getProcess().getProcessId())).add(Restrictions.eq(DELETE_FLAG, false))
                         .addOrder(Order.desc(PROCESSID));
@@ -744,6 +771,8 @@ public String securityCheck(Integer processId,String username,String action){
 
     session.getTransaction().commit();
     session.close();
+    if (userRolesNameList.contains("ROLE_ADMIN"))
+        return "NOT REQUIRED";
     List<Integer> readList=new ArrayList<>();
     readList.add(4);
     readList.add(5);
