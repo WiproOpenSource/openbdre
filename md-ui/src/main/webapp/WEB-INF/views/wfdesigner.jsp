@@ -486,30 +486,6 @@
                                                 </select>
                                             </div>
 
-                                             <div class="form-group">
-                                             <label for="permissionTypeByUserAccessId">User Access</label>
-                                             <select class="form-control" id="permissionTypeByUserAccessId">
-                                                 <option ng-repeat="permissiontype in newPagePermissionType" id="{{$index}}" value="{{ permissiontype.Value }}">{{ permissiontype.DisplayText }}</option>
-                                             </select>
-                                         </div>
-                                            <div class="form-group">
-                                            <label for="permissionTypeByGroupAccessId">Group Access</label>
-                                            <select class="form-control" id="permissionTypeByGroupAccessId">
-                                                <option ng-repeat="permissiontype in newPagePermissionType" id="{{$index}}" value="{{ permissiontype.Value }}">{{ permissiontype.DisplayText }}</option>
-                                            </select>
-                                        </div>
-                                         <div class="form-group">
-                                            <label for="permissionTypeByOthersAccessId">Other Access</label>
-                                            <select class="form-control" id="permissionTypeByOthersAccessId">
-                                                <option ng-repeat="permissiontype in newPagePermissionType" id="{{$index}}" value="{{ permissiontype.Value }}">{{ permissiontype.DisplayText }}</option>
-                                            </select>
-                                         </div>
-                                         <div class="form-group">
-                                             <label for="ownerRoleId">Owner Group</label>
-                                             <select class="form-control" id="ownerRoleId">
-                                                 <option ng-repeat="role in newPageUserRoles" id="{{$index}}" value="{{ role.Value }}">{{ role.DisplayText }}</option>
-                                             </select>
-                                          </div>
                                             <div class="form-group">
                                                 <label for="type"><spring:message code="wfdesigner.page.type"/></label>
                                                 <select class="form-control" id="type">
