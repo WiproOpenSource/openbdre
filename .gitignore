@@ -38,3 +38,4 @@ glassfish-web.xml
 spark-core/dependency-reduced-pom.xml
 /analytic-ui/src/main/webapp/css/*
 /analytic-ui/src/main/webapp/js/*
+/bin/
