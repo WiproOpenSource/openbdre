@@ -56,9 +56,8 @@ public class PageController {
             List<ProcessInfo> processInfos = new GetProcess().execute(new String[]{PARENTPROCESSID, pid,"--username",principal.getName()});
              workflow = new WorkflowPrinter().execute(processInfos, WORKFLOWCON + pid);
             return workflow.getDot().toString();
-        }
-        catch (SecurityException e) {
-            System.out.println("in pagecontroller ");
+        } catch (SecurityException e) {
+            LOGGER.info(e.getMessage());
             workflow.setDot(new StringBuilder("not allowed"));
             return workflow.getDot().toString();
         }
@@ -81,9 +80,9 @@ public class PageController {
         try{
         List<ProcessInfo> processInfos = new GetProcess().execute(new String[]{PARENTPROCESSID, pid,"--username",principal.getName()});
          workflow = new WorkflowPrinter().execute(processInfos, WORKFLOWCON + pid);
-        return workflow.getXml().toString(); }
-        catch (SecurityException e) {
-            System.out.println("in pagecontroller ");
+        return workflow.getXml().toString();
+        } catch (SecurityException e) {
+           LOGGER.info(e.getMessage());
             workflow.setDot(new StringBuilder("not allowed"));
             return workflow.getDot().toString();
         }
