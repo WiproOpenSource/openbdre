@@ -62,10 +62,23 @@
 				    type: 'PUT',
 				    data: postData,
 				    dataType: 'json',
-				    success: function (data) {
-				    $dfd.resolve(data);
-				    },
-				    error: function () {
+				   success: function(data) {
+                       if(data.Result == "OK") {
+                           $dfd.resolve(data);
+                       }
+                       else
+                       {
+                        if(data.Message == "ACCESS DENIED")
+                        {
+                        alert(data.Message);
+                        data.Result="OK";
+                        $dfd.resolve(data);
+                        }
+                        else
+                        $dfd.resolve(data);
+                       }
+                   },
+            error: function () {
 				    $dfd.reject();
 				    }
 			    });
@@ -80,8 +93,21 @@
 					    data: item,
 					    dataType: 'json',
 					    success: function(data) {
-					    $dfd.resolve(data);
-					    },
+                                    if(data.Result == "OK") {
+                                        $dfd.resolve(data);
+                                    }
+                                    else
+                                    {
+                                     if(data.Message == "ACCESS DENIED")
+                                     {
+                                     alert(data.Message);
+                                     data.Result="OK";
+                                     $dfd.resolve(data);
+                                     }
+                                     else
+                                     $dfd.resolve(data);
+                                    }
+                                },
 					    error: function() {
 					    $dfd.reject();
 					    }
@@ -119,8 +145,21 @@
 							    data: item,
 							    dataType: 'json',
 							    success: function(data) {
-							    $dfd.resolve(data);
-							    },
+                                            if(data.Result == "OK") {
+                                                $dfd.resolve(data);
+                                            }
+                                            else
+                                            {
+                                             if(data.Message == "ACCESS DENIED")
+                                             {
+                                             alert(data.Message);
+                                             data.Result="OK";
+                                             $dfd.resolve(data);
+                                             }
+                                             else
+                                             $dfd.resolve(data);
+                                            }
+                                        },
 							    error: function() {
 							    $dfd.reject();
 							    }

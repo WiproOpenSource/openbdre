@@ -114,11 +114,6 @@
                         filter: alpha(opacity=40);
                         /* For IE8 and earlier */
                     }
-                    .panel-heading-wfd{
-                    	background-color: #3D525F !important;
-						color: #fff !important;
-                    }
-                    
                 </style>
 
             </head>
@@ -139,7 +134,7 @@
                                 </div>
                                 <div class="panel-group" id="accordion" ng-if="chartViewModel.selectedProcess.processName != null" class="animate-if">
                                     <div class="panel panel-default">
-                                        <div class="panel-heading foldablearrow panel-heading-wfd" data-toggle="collapse" data-parent="#accordion" data-target="#processdetails">
+                                        <div class="panel-heading foldablearrow " data-toggle="collapse" data-parent="#accordion" data-target="#processdetails">
                                             <spring:message code="wfdesigner.page.process_details"/>
                                         </div>
                                         <div id="processdetails" class="panel-collapse collapse in">
@@ -186,7 +181,7 @@
                                         </div>
                                     </div>
                                     <div class="panel panel-default" ng-if="chartViewModel.selectedProcess.parentProcessId == null">
-                                        <div class="panel-heading foldablearrow panel-heading-wfd" data-toggle="collapse" data-parent="#accordion" data-target="#jarupload" ng-click="getJarList()">
+                                        <div class="panel-heading foldablearrow " data-toggle="collapse" data-parent="#accordion" data-target="#jarupload" ng-click="getJarList()">
                                             <spring:message code="wfdesigner.page.jar_configuration"/>
                                         </div>
                                         <div id="jarupload" class="panel-collapse collapse">
@@ -219,7 +214,7 @@
                                     </div>
 
                                     <div class="panel panel-default" ng-repeat="genConfig in chartViewModel.selectedProcessGenConfigProp">
-                                        <div class="panel-heading foldablearrow panel-heading-wfd" data-toggle="collapse" data-parent="#accordion" data-target="#-{{genConfig.key}}" ng-click="chartViewModel.getKeyValueFunction(genConfig)">
+                                        <div class="panel-heading foldablearrow" data-toggle="collapse" data-parent="#accordion" data-target="#-{{genConfig.key}}" ng-click="chartViewModel.getKeyValueFunction(genConfig)">
                                             {{genConfig.value}}
                                         </div>
                                         <div id="-{{genConfig.key}}" class="panel-collapse collapse">
@@ -469,7 +464,7 @@
 
                     <body ng-app="app" data-ng-init="intialiseNewProcessPage()" ng-controller="AppCtrl">
                         <div class="row">&nbsp;</div>
-                        <div class="row bdre-process-creation-form">
+                        <div class="row">
                             <div class="col-md-2"> </div>
                             <div class="col-md-8 ">
                                 <div class="panel panel-primary">
@@ -490,6 +485,7 @@
                                                     <option ng-repeat="busdomain in newPageBusDomain" id="{{$index}}" value="{{ busdomain.Value }}">{{ busdomain.DisplayText }}</option>
                                                 </select>
                                             </div>
+
                                             <div class="form-group">
                                                 <label for="type"><spring:message code="wfdesigner.page.type"/></label>
                                                 <select class="form-control" id="type">

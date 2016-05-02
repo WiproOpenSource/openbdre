@@ -1,16 +1,27 @@
 package com.wipro.ats.bdre.md.rest.ext;
 
+import com.wipro.ats.bdre.exception.MetadataException;
+import com.wipro.ats.bdre.md.api.GetGeneralConfig;
+import com.wipro.ats.bdre.md.beans.ClusterInfo;
+import com.wipro.ats.bdre.md.beans.table.GeneralConfig;
+import com.wipro.ats.bdre.md.dao.GeneralConfigDAO;
 import com.wipro.ats.bdre.md.dao.ProcessDAO;
+import com.wipro.ats.bdre.md.dao.UserRolesDAO;
+import com.wipro.ats.bdre.md.dao.jpa.GeneralConfigId;
 import com.wipro.ats.bdre.md.dao.jpa.Properties;
+import com.wipro.ats.bdre.md.dao.jpa.Users;
 import com.wipro.ats.bdre.md.rest.RestWrapper;
 import com.wipro.ats.bdre.md.rest.RestWrapperOptions;
+import com.wipro.ats.bdre.md.rest.util.BindingResultError;
 import com.wipro.ats.bdre.md.rest.util.Dao2TableUtil;
 import com.wipro.ats.bdre.md.rest.util.DateConverter;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.security.Principal;
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -32,9 +43,13 @@ public class HiveTableMigrationAPI {
     private static Connection connection;
     private static String driverName = "org.apache.hive.jdbc.HiveDriver";
 
-
+    @Autowired
+    UserRolesDAO userRolesDAO;
     @Autowired
     private ProcessDAO processDAO;
+
+    @Autowired
+    GeneralConfigDAO generalConfigDAO;
 
     //Fetching all the databases from hive of source cluster
     @RequestMapping(value = "/databases/{srcEnv:.+}", method = {RequestMethod.GET})
@@ -205,7 +220,10 @@ public class HiveTableMigrationAPI {
 
             List<com.wipro.ats.bdre.md.dao.jpa.Process> childProcesses = new ArrayList<com.wipro.ats.bdre.md.dao.jpa.Process>();
             com.wipro.ats.bdre.md.dao.jpa.Process parentProcess = Dao2TableUtil.buildJPAProcess(31, processName + "-" + i, "table:" + i + "-" + processDesc, 1, busDomainID);
-
+            Users users=new Users();
+            users.setUsername(principal.getName());
+            parentProcess.setUsers(users);
+            parentProcess.setUserRoles(userRolesDAO.minUserRoleId(principal.getName()));
             com.wipro.ats.bdre.md.dao.jpa.Process preprocessingProcess = new com.wipro.ats.bdre.md.dao.jpa.Process();
             com.wipro.ats.bdre.md.dao.jpa.Process sourcestageloadProcess = new com.wipro.ats.bdre.md.dao.jpa.Process();
             com.wipro.ats.bdre.md.dao.jpa.Process sourcetodeststagecopyProcess = new com.wipro.ats.bdre.md.dao.jpa.Process();
@@ -246,5 +264,113 @@ public class HiveTableMigrationAPI {
         return restWrapper;
 
     }
+
+
+    @RequestMapping(value = {"/cluster/{description}"}, method = RequestMethod.GET)
+    @ResponseBody
+    public RestWrapper list(@PathVariable("description") String description, Principal principal) {
+
+        RestWrapper restWrapper = null;
+        try {
+
+            GetGeneralConfig generalConfigs = new GetGeneralConfig();
+            List<GeneralConfig> generalConfigList = generalConfigs.byLikeConfigGroup(description, 1);
+            if (!generalConfigList.isEmpty()) {
+                if (generalConfigList.get(0).getRequired() == 2) {
+                    restWrapper = new RestWrapper("Listing of Records Failed", RestWrapper.ERROR);
+                } else {
+                    restWrapper = new RestWrapper(generalConfigList, RestWrapper.OK);
+                    LOGGER.info("All records listed with config group :" + "cluster" + "from General  Config by User:" + principal.getName());
+                }
+            } else {
+                restWrapper = new RestWrapper(generalConfigList, RestWrapper.OK);
+
+                LOGGER.info("All records listed with config group :" + "cluster" + "from General  Config by User:" + principal.getName());
+            }
+
+        } catch (MetadataException e) {
+            LOGGER.error(e);
+            restWrapper = new RestWrapper("Exception while fetching details of cluster", RestWrapper.ERROR);
+        }
+        return restWrapper;
+    }
+
+    @RequestMapping(value = {"/insertcluster", "insertcluster"}, method = RequestMethod.PUT)
+
+    @ResponseBody
+    public RestWrapper insertCluster(@ModelAttribute("clusterInfo")
+                                     @Valid ClusterInfo cluster, BindingResult bindingResult, Principal principal) {
+
+        RestWrapper restWrapper = null;
+        if (bindingResult.hasErrors()) {
+            BindingResultError bindingResultError = new BindingResultError();
+            return bindingResultError.errorMessage(bindingResult);
+        }
+        try {
+            LOGGER.info("name_node_host " + cluster.getNameNodeHostName() + ":" + cluster.getNameNodePort());
+            generalConfigDAO.insertCluster(cluster);
+
+
+            restWrapper = new RestWrapper(cluster, RestWrapper.OK);
+            LOGGER.info("Record inserted in General Config by User:" + principal.getName());
+
+        } catch (MetadataException e) {
+            LOGGER.error(e);
+            restWrapper = new RestWrapper(e.getMessage(), RestWrapper.ERROR);
+        }
+        return restWrapper;
+    }
+
+    @RequestMapping(value = {"/updatecluster", "updatecluster"}, method = RequestMethod.POST)
+
+    @ResponseBody
+    public RestWrapper updateCluster(@RequestParam Map<String, String> map, Principal principal) {
+
+        RestWrapper restWrapper = null;
+        String defaultVal;
+        try {
+            String cgKey = map.get("key");
+            defaultVal = map.get("defaultVal");
+
+            GeneralConfig generalConfigUpdate = new GeneralConfig();
+            GeneralConfig generalConfig = new GeneralConfig();
+
+            CharSequence nn = "Namenode";
+            CharSequence jt = "Job Tracker";
+            CharSequence hive = "Hive Server2";
+
+            if(cgKey.contains(nn))
+                generalConfig.setConfigGroup("cluster.nn-address");
+            if(cgKey.contains(jt))
+                generalConfig.setConfigGroup("cluster.jt-address");
+            if(cgKey.contains(hive))
+                generalConfig.setConfigGroup("cluster.hive-address");
+
+            generalConfig.setKey(cgKey);
+            generalConfig.setDefaultVal(defaultVal);
+            //initialising values to generalConfigId of dao
+            GeneralConfigId jpaGeneralConfigId = new GeneralConfigId();
+            jpaGeneralConfigId.setConfigGroup(generalConfig.getConfigGroup());
+            jpaGeneralConfigId.setGcKey(generalConfig.getKey());
+            //initialising values to generalConfig of dao
+            com.wipro.ats.bdre.md.dao.jpa.GeneralConfig jpaGeneralConfig = generalConfigDAO.get(jpaGeneralConfigId);
+            jpaGeneralConfig.setDefaultVal(generalConfig.getDefaultVal());
+            //Calling Update method of generalConfigDAO
+            generalConfigDAO.update(jpaGeneralConfig);
+            generalConfigUpdate = generalConfig;
+
+            restWrapper = new RestWrapper(generalConfigUpdate, RestWrapper.OK);
+            LOGGER.info(" Record with key:" + generalConfigUpdate.getKey() + " and config group:" + generalConfigUpdate.getConfigGroup() + " updated in general_config by User:" + principal.getName());
+
+        } catch (MetadataException e) {
+            LOGGER.error(e);
+            restWrapper = new RestWrapper(e.getMessage(), RestWrapper.ERROR);
+        }
+        return restWrapper;
+    }
+
+
+
+
 
 }

@@ -183,16 +183,9 @@
                         top:-7px;
                         right:-7px;
                     }
-                    .divEncloseHeading .leftpad {
-						padding-left: 10%;
-					}
-					
-					.divEncloseHeading .rightpad {
-						padding-right: 10%;
-					}
-					.divEncloseHeading .panel-body {
-						padding-bottom: 53px;
-					}
+                    .panel-primary{
+                    padding-top: 0% !important;
+                    }
                 </style>
 
                 <script>
@@ -308,11 +301,11 @@
 
                                     <div class="panel-body">
                                             <div class="row">
-                                                 <div class="col-xs-5 leftpad">
+                                                 <div class="col-xs-5 form-group">
 													<label><spring:message code="tablecolumnlineage.page.table_name"/></label>
                                                     <input type="text" class="form-control" name="tableName" id="tableName" value =""/>
 												</div>
-                                                <div class="col-xs-5 pull-right rightpad">
+                                                <div class="col-xs-5 form-group">
                                                     <label><spring:message code="tablecolumnlineage.page.column_name"/></label>
 													<input type="text" class="form-control" name="colName" id="colName" value =""/>
                                                 </div>

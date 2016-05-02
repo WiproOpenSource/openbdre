@@ -23,7 +23,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.AutowireCapableBeanFactory;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
-import static org.junit.Assert.*;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 
 
 /**
@@ -64,7 +66,7 @@ public class UsersDAOTest {
         LOGGER.info("Users(0) passwd:" + usersDAO.get("admin").getUsername());
     }
 
-
+    @Ignore
     @Test
     public void testInsertUpdateAndDelete() throws Exception {
         Users users = new Users();
@@ -85,4 +87,7 @@ public class UsersDAOTest {
         LOGGER.info("Size of Users is:" + usersDAO.totalRecordCount());
 
     }
+
+
+
 }

@@ -73,15 +73,15 @@
 </head>
 <body ng-app="myApp" ng-controller="myCtrl">
 	<div class="page-header"><spring:message code="crawler.page.panel_heading"/></div>
-	<div class="alert-info-outer">
+	
 	<div class="alert alert-info" role="alert">
-	    <spring:message code="crawler.page.alert_info_outer"/>
+	    <div><spring:message code="crawler.page.alert_info_outer"/></div>
     </div>
-	</div>
+	
 
-    <div id="bdre-crawler" class="wizard-horizontal" >
+    <div id="bdre-crawler"  >
       <h3><div class="number-circular">1</div><spring:message code="crawler.page.crawler_details"/></h3>
-            <section>
+            <section >
             <form class="form-horizontal" role="form" id="processFieldsForm2">
                 <div id="crawlerDetails">
                     <!-- btn-group -->
@@ -147,6 +147,7 @@
                                 <input type="number" class="form-control" name="numMappers" placeholder=<spring:message code="crawler.page.num_of_mappers_placeholder"/> value="{{ crawlerMap['numberOfMappers'].defaultVal }}">
                             </div>
                         </div>
+                        <div class="clearfix"></div>
 
                     </div>
                     <!-- /btn-group -->
@@ -163,7 +164,7 @@
             <form class="form-horizontal" role="form" id="processFieldsForm3">
                 <div id="proxyDetails">
                     <div class="alert alert-info" role="alert">
-					<spring:message code="crawler.page.alert_info_2"/>
+					<div><spring:message code="crawler.page.alert_info_2"/></div>
                     </div>
                     <!-- btn-group -->
                     <div id="proxyFields">
@@ -201,7 +202,7 @@
                     <form class="form-horizontal" role="form" id="processFieldsForm1">
                         <div id="processDetails">
                             <div class="alert alert-info" role="alert">
-                                <spring:message code="crawler.page.alert_info_3"/>
+                                <div><spring:message code="crawler.page.alert_info_3"/></div>
                             </div>
                             <!-- btn-group -->
                             <div id="processFields">
@@ -321,7 +322,7 @@
             headerTag: "h3",
             bodyTag: "section",
             transitionEffect: "slideLeft",
-            stepsOrientation: "vertical",
+            stepsOrientation: "horizontal",
             enableCancelButton: true,
             onStepChanging: function(event, currentIndex, newIndex) {
             			console.log(currentIndex + 'current ' + newIndex + 'process Name');
