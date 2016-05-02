@@ -759,7 +759,6 @@ public List<Process> createOneChildJob(Process parentProcess, Process childProce
 public String securityCheck(Integer processId,String username,String action){
     Session session = sessionFactory.openSession();
     session.beginTransaction();
-    LOGGER.info("usernme of logged user  "+username);
     Process process = (Process) session.get(Process.class, processId);
     Criteria criteria = session.createCriteria(UserRoles.class).add(Restrictions.eq(USERNAME, username));
     List<UserRoles> userRoles = criteria.list();
@@ -769,9 +768,7 @@ public String securityCheck(Integer processId,String username,String action){
     for(UserRoles userRoles1:userRoles)
     {
         userRolesNameList.add(userRoles1.getRole());
-        LOGGER.info("roles of the logged in user is "+userRoles1.getRole());
     }
-    LOGGER.info("size of the user's roles name list is  "+userRoles.size());
     session.getTransaction().commit();
     session.close();
     if (userRolesNameList.contains("ROLE_ADMIN"))
