@@ -75,7 +75,7 @@
 	<div class="page-header"><spring:message code="crawler.page.panel_heading"/></div>
 	
 	<div class="alert alert-info" role="alert">
-	    <div><spring:message code="crawler.page.alert_info_outer"/></div>
+	   <spring:message code="crawler.page.alert_info_outer"/>
     </div>
 	
 
@@ -164,7 +164,7 @@
             <form class="form-horizontal" role="form" id="processFieldsForm3">
                 <div id="proxyDetails">
                     <div class="alert alert-info" role="alert">
-					<div><spring:message code="crawler.page.alert_info_2"/></div>
+						<spring:message code="crawler.page.alert_info_2"/>
                     </div>
                     <!-- btn-group -->
                     <div id="proxyFields">
@@ -202,7 +202,7 @@
                     <form class="form-horizontal" role="form" id="processFieldsForm1">
                         <div id="processDetails">
                             <div class="alert alert-info" role="alert">
-                                <div><spring:message code="crawler.page.alert_info_3"/></div>
+                                <spring:message code="crawler.page.alert_info_3"/>
                             </div>
                             <!-- btn-group -->
                             <div id="processFields">
