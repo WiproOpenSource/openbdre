@@ -55,12 +55,12 @@ public class PageController {
             LOGGER.info("username is "+principal.getName());
             List<ProcessInfo> processInfos = new GetProcess().execute(new String[]{PARENTPROCESSID, pid,"--username",principal.getName()});
              workflow = new WorkflowPrinter().execute(processInfos, WORKFLOWCON + pid);
-            return workflow.getDot().toString();
         } catch (SecurityException e) {
             LOGGER.info(e.getMessage());
             workflow.setDot(new StringBuilder("not allowed"));
-            return workflow.getDot().toString();
         }
+        return workflow.getDot().toString();
+
     }
 
     @RequestMapping(value = "/details/{pid}/{ieid}.page", method = RequestMethod.GET)
@@ -80,12 +80,11 @@ public class PageController {
         try{
         List<ProcessInfo> processInfos = new GetProcess().execute(new String[]{PARENTPROCESSID, pid,"--username",principal.getName()});
          workflow = new WorkflowPrinter().execute(processInfos, WORKFLOWCON + pid);
-        return workflow.getXml().toString();
         } catch (SecurityException e) {
            LOGGER.info(e.getMessage());
-            workflow.setDot(new StringBuilder("not allowed"));
-            return workflow.getDot().toString();
+            workflow.setXml(new StringBuilder("not allowed"));
         }
+        return workflow.getXml().toString();
     }
 
     @RequestMapping(value = "/auth/login.page", method = RequestMethod.GET)
