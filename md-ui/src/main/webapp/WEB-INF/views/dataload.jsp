@@ -646,7 +646,7 @@ wizard = $(document).ready(function() {
 <body ng-app="myApp" ng-controller="myCtrl" >
 	<div class="page-header"><spring:message code="dataload.page.panel_heading"/></div>
 	<div class="alert alert-info" role="alert">
-		<div><spring:message code="dataload.page.alert_info_outer_heading" /></div>
+		<spring:message code="dataload.page.alert_info_outer_heading" />
 	</div>
 	<div id="bdre-data-load" ng-controller="myCtrl">
 		
@@ -694,7 +694,7 @@ wizard = $(document).ready(function() {
             <form class="form-horizontal" role="form" id="fileFormat">
                                     <div id="fileFormatDiv">
                                         <div class="alert alert-info" role="alert">
-                                            <div><spring:message code="dataload.page.alert_info_form"/></div>
+                                          <spring:message code="dataload.page.alert_info_form"/>
                                         </div>
                                         <!-- btn-group -->
                                         <div id="rawTablDetailsDB">
@@ -737,7 +737,7 @@ wizard = $(document).ready(function() {
                                     <form class="form-horizontal" role="form" id="serdeProperties">
                                         <div id="serdePropertiesDiv">
                                             <div class="alert alert-info" role="alert">
-                                                <div style="font-size:24px;" ><b><spring:message code="dataload.page.how_to"/></b> </div>
+                                                <b style="font-size:24px;"><spring:message code="dataload.page.how_to"/></b>
                                                 <b><spring:message code="dataload.page.enter_props"/></b>
                                                 <br>
 											</div>
@@ -771,7 +771,7 @@ wizard = $(document).ready(function() {
                                                 <form class="form-horizontal" role="form" id="tableProperties">
                                                     <div id="tablePropertiesDiv">
                                                         <div class="alert alert-info" role="alert">
-                                                            <div style="font-size:24px;" ><b><spring:message code="dataload.page.how_to"/></b> </div>
+                                                            <b style="font-size:24px;"><spring:message code="dataload.page.how_to"/></b>
                                                             <b><spring:message code="dataload.page.enter_table_key_value"/></b>
                                                             <br>
 
@@ -1132,7 +1132,7 @@ function buildForm(fileformat) {
 			var formHTML = '';
 			formHTML = formHTML + '<form class="form-horizontal" role="form" id = "formatFields">';
 			formHTML = formHTML + '<div id="Serde, OutPut and Input Format">';
-			formHTML = formHTML + '<div class="alert alert-info" role="alert"><div>Application requires serde class and input/output format details to be entered</div></div>';
+			formHTML = formHTML + '<div class="alert alert-info" role="alert">Application requires serde class and input/output format details to be entered</div>';
 
 			console.log(data[root].length);
 			if (data[root].length == 0){
