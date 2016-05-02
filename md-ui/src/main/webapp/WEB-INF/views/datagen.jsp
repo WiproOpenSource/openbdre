@@ -99,8 +99,7 @@ function formIntoMap(typeProp, typeOf) {
 <body ng-app="myApp" ng-controller="myCtrl" >
 	<div class="page-header"><spring:message code="datagen.page.panel_heading"/></div>
 	<div class="alert alert-info" role="alert">
-	<div>
-       	   <b style="font-size:24px;"><spring:message code="datagen.page.how_to"/></b><br/>
+			<b style="font-size:24px;"><spring:message code="datagen.page.how_to"/></b><br/>
            <b><spring:message code="datagen.page.b_datatype_format"/></b> <span><spring:message code="datagen.page.b_span"/></span>
            <br>
            <b><spring:message code="datagen.page.b_regex_pattern"/></b><span><spring:message code="datagen.page.b_regex_pattern_span"/></span>
@@ -108,7 +107,6 @@ function formIntoMap(typeProp, typeOf) {
            <b><spring:message code="datagen.page.number_format"/></b> <span><spring:message code="datagen.page.number_format_span"/></span>
            <br>
            <b><spring:message code="datagen.page.column_type"/></b> <span><spring:message code="datagen.page.column_type_span"/></span>
-    	</div>
     </div>
 	
 
@@ -153,7 +151,7 @@ function formIntoMap(typeProp, typeOf) {
             <form class="form-horizontal" role="form" id="processFieldsForm2">
                 <div id="tableDetails">
                     <div class="alert alert-info" role="alert">
-                        <div><spring:message code="datagen.page.alert_info"/></div>
+                        <spring:message code="datagen.page.alert_info"/>
                     </div>
                     <!-- btn-group -->
                     <div id="tableFields">
@@ -194,7 +192,7 @@ function formIntoMap(typeProp, typeOf) {
                                 <form class="form-horizontal" role="form" id="processFieldsForm3">
                                     <div id="processDetails">
                                         <div class="alert alert-info" role="alert">
-											<div><spring:message code="datagen.page.alert-info_2"/></div>
+											<spring:message code="datagen.page.alert-info_2"/>
                                         </div>
                                         <!-- btn-group -->
                                         <div id="processFields">
