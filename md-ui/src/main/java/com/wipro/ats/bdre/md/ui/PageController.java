@@ -52,7 +52,6 @@ public class PageController {
     public String getWorkflowDot(@PathVariable("pid") String pid, java.security.Principal principal) {
         Workflow workflow=new Workflow();
         try{
-            LOGGER.info("username is "+principal.getName());
             List<ProcessInfo> processInfos = new GetProcess().execute(new String[]{PARENTPROCESSID, pid,"--username",principal.getName()});
              workflow = new WorkflowPrinter().execute(processInfos, WORKFLOWCON + pid);
         } catch (SecurityException e) {

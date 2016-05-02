@@ -764,7 +764,6 @@ public String securityCheck(Integer processId,String username,String action){
     List<UserRoles> userRoles = criteria.list();
     List<String> userRolesNameList=new ArrayList<>();
     String processCreater=process.getUserRoles().getRole();
-    LOGGER.info("process created for the group is "+processCreater);
     for(UserRoles userRoles1:userRoles)
     {
         userRolesNameList.add(userRoles1.getRole());
