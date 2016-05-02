@@ -56,7 +56,7 @@ public class PageController {
             List<ProcessInfo> processInfos = new GetProcess().execute(new String[]{PARENTPROCESSID, pid,"--username",principal.getName()});
              workflow = new WorkflowPrinter().execute(processInfos, WORKFLOWCON + pid);
         } catch (SecurityException e) {
-            LOGGER.info(e.getMessage());
+            LOGGER.info(e);
             workflow.setDot(new StringBuilder("not allowed"));
         }
         return workflow.getDot().toString();
@@ -81,7 +81,7 @@ public class PageController {
         List<ProcessInfo> processInfos = new GetProcess().execute(new String[]{PARENTPROCESSID, pid,"--username",principal.getName()});
          workflow = new WorkflowPrinter().execute(processInfos, WORKFLOWCON + pid);
         } catch (SecurityException e) {
-           LOGGER.info(e.getMessage());
+           LOGGER.info(e);
             workflow.setXml(new StringBuilder("not allowed"));
         }
         return workflow.getXml().toString();
