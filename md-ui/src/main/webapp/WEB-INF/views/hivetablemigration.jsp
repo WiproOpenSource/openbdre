@@ -675,13 +675,13 @@ var destjobTrackerIp;
 
     <div class="page-header"><spring:message code="hivetablemigration.page.panel_heading"/></div>
     <div class="alert alert-info" role="alert">
-           <div><spring:message code="hivetablemigration.page.alert_info_outer_heading"/></div>
+           <spring:message code="hivetablemigration.page.alert_info_outer_heading"/>
     </div>
    	
 
 
         <div id="bdre-data-migration" class="wizard-vertical"  >
-        <h3><div class="number-circular">1</div><spring:message code="hivemigration.page.h3_div_1"/></h3>
+        <h3><div class="number-circular">1</div><spring:message code="hivetablemigration.page.h3_div_1"/></h3>
 
                             <section>
                               <form class="form-horizontal" role="form" id="processDetailsForm">
@@ -690,13 +690,13 @@ var destjobTrackerIp;
                                             <!-- btn-group -->
                                             <div id="process">
                                             <div class="form-group">
-                                                            <label class="control-label col-sm-2" for="processName"><spring:message code="hivemigration.page.form_procname"/></label>
+                                                            <label class="control-label col-sm-2" for="processName"><spring:message code="hivetablemigration.page.form_procname"/></label>
                                                             <div class="col-sm-10">
                                                                 <input type="text" class="form-control"  id="processName" name="processName" placeholder="Enter Process Name" value="" required>
                                                             </div>
                                                         </div>
 																<div class="form-group">
-                                                                    <label class="control-label col-sm-2" for="processDesc"><spring:message code="hivemigration.page.form_procdesc"/></label>
+                                                                    <label class="control-label col-sm-2" for="processDesc"><spring:message code="hivetablemigration.page.form_procdesc"/></label>
                                                                     <div class="col-sm-10">
                                                                         <input type="text" class="form-control"  id="processDesc" name="processDesc" placeholder="Enter Process Description" value="" required>
                                                                     </div>
@@ -704,7 +704,7 @@ var destjobTrackerIp;
                                                                </div>
 
                                                                 <div class="form-group">
-                                                               <label class="control-label col-sm-2" for="srcEnv"><spring:message code="hivemigration.page.form_src_env"/></label>
+                                                               <label class="control-label col-sm-2" for="srcEnv"><spring:message code="hivetablemigration.page.form_src_env"/></label>
                                                                <div class="col-sm-10">
                                                                    <select class="form-control" id="srcEnv" name="srcEnv" >
                                                                        <option ng-repeat="srcEnv in srcEnvs" value='{{srcEnv.defaultVal}},"-%%-",{{srcEnv.description}}'  label="{{srcEnv.description}} ">{{srcEnv.description}}</option>
@@ -715,7 +715,7 @@ var destjobTrackerIp;
 
 
                                                     <div class="form-group">
-                                                            <label class="control-label col-sm-2" for="busDomainId"><spring:message code="hivemigration.page.form_bus_domain_id"/></label>
+                                                            <label class="control-label col-sm-2" for="busDomainId"><spring:message code="hivetablemigration.page.form_bus_domain_id"/></label>
                                                             <div class="col-sm-10">
                                                                 <select class="form-control" id="busDomainId" name="busDomainId">
                                                                     <option ng-repeat="busDomain in busDomains.Options" value="{{busDomain.Value}}" name="busDomainId">{{busDomain.DisplayText}}</option>
@@ -730,14 +730,14 @@ var destjobTrackerIp;
                                         </div>
                                         </form>
                             </section>
-              <h3><div class="number-circular">2</div><spring:message code="hivemigration.page.h3_div_2"/></h3>
+              <h3><div class="number-circular">2</div><spring:message code="hivetablemigration.page.h3_div_2"/></h3>
 
               <section>
 
                         <form class="form-horizontal" role="form" id="srcDBForm">
                             <div id="srcDBDiv">
                                <div class="form-group">
-                                  <label class="control-label col-sm-2" for="srcDB"><spring:message code="hivemigration.page.form_src_db"/></label>
+                                  <label class="control-label col-sm-2" for="srcDB"><spring:message code="hivetablemigration.page.form_src_db"/></label>
                                     <div class="col-sm-10">
                                       <select class="form-control" id="srcDB" name="srcDB" >
                                       </select>
@@ -748,9 +748,9 @@ var destjobTrackerIp;
                         </form>
               </section>
 
-	    <h3><div class="number-circular">3</div><spring:message code="hivemigration.page.h3_div_3"/></h3>
+	    <h3><div class="number-circular">3</div><spring:message code="hivetablemigration.page.h3_div_3"/></h3>
 			<section>
-			 <label class="control-label col-sm-2" for="tabl"><spring:message code="hivemigration.page.form_src_tables"/></label>
+			 <label class="control-label col-sm-2" for="tabl"><spring:message code="hivetablemigration.page.form_src_tables"/></label>
 			  <form class="form-horizontal"  id="tablesForm">
                           <div id ="srctables" class="col-sm-10">
 
@@ -760,13 +760,13 @@ var destjobTrackerIp;
 
              </section>
 
-         <h3><div class="number-circular">4</div><spring:message code="hivemigration.page.h3_div_4"/></h3>
+         <h3><div class="number-circular">4</div><spring:message code="hivetablemigration.page.h3_div_4"/></h3>
              <section>
              <form class="form-horizontal" role="form" id="destEnvForm">
 
 				   <div id="fileFormatDiv" ng-controller="myCtrl">
 								 <div class="form-group">
-									 <label class="control-label col-sm-2" for="destEnv"><spring:message code="hivemigration.page.form_dest_env"/></label>
+									 <label class="control-label col-sm-2" for="destEnv"><spring:message code="hivetablemigration.page.form_dest_env"/></label>
 									 <div class="col-sm-10">
 										 <select class="form-control" id="destEnv" name="destEnv" >
                                                <option ng-repeat="destEnv in srcEnvs" value='{{destEnv.defaultVal}},"-%%-",{{destEnv.description}}'  label="{{destEnv.description}} ">{{destEnv.description}}</option>
@@ -776,7 +776,7 @@ var destjobTrackerIp;
 						 <div class="clearfix"></div>
 
 						  <div class="form-group">
-                                                             <label class="control-label col-sm-2" for="instexecId"><spring:message code="hivemigration.page.form_inst_exec"/></label>
+                                                             <label class="control-label col-sm-2" for="instexecId"><spring:message code="hivetablemigration.page.form_inst_exec"/></label>
                                                                   <div class="col-sm-10">
                                                                       <input type="text" class="form-control"  id="instexecId" name="instexecId"  value="instanceExecId" required>
                                                                   </div>
@@ -786,12 +786,12 @@ var destjobTrackerIp;
 				</form>
 
               </section>
-         <h3><div class="number-circular">5</div><spring:message code="hivemigration.page.h3_div_5"/></h3>
+         <h3><div class="number-circular">5</div><spring:message code="hivetablemigration.page.h3_div_5"/></h3>
                   <section>
                             <form class="form-horizontal" role="form" id="destDBForm">
                                 <div id="destDBDiv">
                                    <div class="form-group">
-                                      <label class="control-label col-sm-2" for="destDB"><spring:message code="hivemigration.page.form_dest_db"/>:</label>
+                                      <label class="control-label col-sm-2" for="destDB"><spring:message code="hivetablemigration.page.form_dest_db"/>:</label>
                                         <div class="col-sm-10">
                                           <select class="form-control" id="destDB" name="destDB" >
                                           </select>
@@ -801,12 +801,12 @@ var destjobTrackerIp;
 
                             </form>
                   </section>
-          <h3><div class="number-circular">6</div><spring:message code="hivemigration.page.h3_div_6"/></h3>
+          <h3><div class="number-circular">6</div><spring:message code="hivetablemigration.page.h3_div_6"/></h3>
              <section>
 
 
                	<div class="form-group">
-                    <label class="control-label col-sm-4" for="showSrcEnv"><spring:message code="hivemigration.page.h3_div_1"/></label>
+                    <label class="control-label col-sm-4" for="showSrcEnv"><spring:message code="hivetablemigration.page.h3_div_1"/></label>
                     <div class="col-sm-4">
                         <input type="text" class="form-control"  id="showSrcEnv" name="showSrcEnv"  disabled="disabled" >
                     </div>
@@ -815,7 +815,7 @@ var destjobTrackerIp;
 
 
                 <div class="form-group">
-                    <label class="control-label col-sm-4" for="showSrcDB"><spring:message code="hivemigration.page.h3_div_2"/></label>
+                    <label class="control-label col-sm-4" for="showSrcDB"><spring:message code="hivetablemigration.page.h3_div_2"/></label>
                     <div class="col-sm-4">
                         <input type="text" class="form-control"  id="showSrcDB" name="showSrcDB"  disabled="disabled" >
                     </div>
@@ -823,7 +823,7 @@ var destjobTrackerIp;
                 
 
                <div class="form-group">
-                    <label class="control-label col-sm-4" for="showSrcTables"><spring:message code="hivemigration.page.h3_div_3"/></label>
+                    <label class="control-label col-sm-4" for="showSrcTables"><spring:message code="hivetablemigration.page.h3_div_3"/></label>
                     <div class="col-sm-4">
                         <input type="text" class="form-control"  id="showSrcTables" name="showSrcTables"  disabled="disabled" >
                     </div>
@@ -831,7 +831,7 @@ var destjobTrackerIp;
                 
 
                 <div class="form-group">
-                    <label class="control-label col-sm-4" for="showDestEnv"><spring:message code="hivemigration.page.h3_div_4"/></label>
+                    <label class="control-label col-sm-4" for="showDestEnv"><spring:message code="hivetablemigration.page.h3_div_4"/></label>
                     <div class="col-sm-4">
                         <input type="text" class="form-control"  id="showDestEnv" name="showDestEnv"  disabled="disabled" >
                     </div>
@@ -839,22 +839,27 @@ var destjobTrackerIp;
                 
 
                  <div class="form-group">
-                    <label class="control-label col-sm-4" for="showDestDB"><spring:message code="hivemigration.page.h3_div_5"/></label>
+                    <label class="control-label col-sm-4" for="showDestDB"><spring:message code="hivetablemigration.page.h3_div_5"/></label>
                     <div class="col-sm-4">
                         <input type="text" class="form-control"  id="showDestDB" name="showDestDB"  disabled="disabled" >
                     </div>
                 </div>
                 <div class="clearfix"></div>
 
-               <div id="Process">
-                    <button id="createjobs" type="button" class="btn btn-primary btn-lg"><spring:message code="hivemigration.page.create_jobs"/></button>
+
+    </section>
+
+    <h3><div class="number-circular">7</div><spring:message code="hivetablemigration.page.h3_div_7"/></h3>
+                 <section>
+                 <div id="Process">
+                <button id="createjobs" type="button" class="btn btn-primary btn-lg"><spring:message code="hivetablemigration.page.create_jobs"/></button>
                 </div>
 
 
-             <div style="display:none" id="div-dialog-warning">
-             			<p><span class="ui-icon ui-icon-alert" style="float:left;"></span></p>
-             		</div>
-
+                <div style="display:none" id="div-dialog-warning">
+                <p><span class="ui-icon ui-icon-alert" style="float:left;"></span></p>
+                </div>
+                 </section>
     </body>
 
 </html>
