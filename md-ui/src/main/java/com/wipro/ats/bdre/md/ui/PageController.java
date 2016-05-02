@@ -17,6 +17,7 @@ import com.wipro.ats.bdre.md.api.GetProcess;
 import com.wipro.ats.bdre.md.beans.ProcessInfo;
 import com.wipro.ats.bdre.wgen.Workflow;
 import com.wipro.ats.bdre.wgen.WorkflowPrinter;
+import org.apache.log4j.Logger;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -38,6 +39,8 @@ import java.util.List;
 public class PageController {
     private static final String PARENTPROCESSID = "--parent-process-id";
     private static final String WORKFLOWCON = "workflow-";
+    private static final Logger LOGGER = Logger.getLogger(PageController.class);
+
 
     @RequestMapping(value = "/{page}.page", method = RequestMethod.GET)
     public String welcome(@PathVariable("page") String page) {
@@ -46,10 +49,19 @@ public class PageController {
 
     @RequestMapping(value = "/workflow/{pid}.page", method = RequestMethod.GET)
     @ResponseBody
-    public String getWorkflowDot(@PathVariable("pid") String pid) {
-        List<ProcessInfo> processInfos = new GetProcess().execute(new String[]{PARENTPROCESSID, pid});
-        Workflow workflow = new WorkflowPrinter().execute(processInfos, WORKFLOWCON + pid);
-        return workflow.getDot().toString();
+    public String getWorkflowDot(@PathVariable("pid") String pid, java.security.Principal principal) {
+        Workflow workflow=new Workflow();
+        try{
+            LOGGER.info("username is "+principal.getName());
+            List<ProcessInfo> processInfos = new GetProcess().execute(new String[]{PARENTPROCESSID, pid,"--username",principal.getName()});
+             workflow = new WorkflowPrinter().execute(processInfos, WORKFLOWCON + pid);
+            return workflow.getDot().toString();
+        }
+        catch (SecurityException e) {
+            System.out.println("in pagecontroller ");
+            workflow.setDot(new StringBuilder("not allowed"));
+            return workflow.getDot().toString();
+        }
     }
 
     @RequestMapping(value = "/details/{pid}/{ieid}.page", method = RequestMethod.GET)
@@ -64,10 +76,17 @@ public class PageController {
 
     @RequestMapping(value = "/workflowxml/{pid}.page", method = RequestMethod.GET)
     @ResponseBody
-    public String getWorkflowXML(@PathVariable("pid") String pid) {
-        List<ProcessInfo> processInfos = new GetProcess().execute(new String[]{PARENTPROCESSID, pid});
-        Workflow workflow = new WorkflowPrinter().execute(processInfos, WORKFLOWCON + pid);
-        return workflow.getXml().toString();
+    public String getWorkflowXML(@PathVariable("pid") String pid,java.security.Principal principal) {
+        Workflow workflow=new Workflow();
+        try{
+        List<ProcessInfo> processInfos = new GetProcess().execute(new String[]{PARENTPROCESSID, pid,"--username",principal.getName()});
+         workflow = new WorkflowPrinter().execute(processInfos, WORKFLOWCON + pid);
+        return workflow.getXml().toString(); }
+        catch (SecurityException e) {
+            System.out.println("in pagecontroller ");
+            workflow.setDot(new StringBuilder("not allowed"));
+            return workflow.getDot().toString();
+        }
     }
 
     @RequestMapping(value = "/auth/login.page", method = RequestMethod.GET)
