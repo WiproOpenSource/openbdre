@@ -324,7 +324,7 @@ function buildFormDisplay(configGroup, typeDiv) {
     		<div class="page-header"><spring:message code="settings.page.panel_heading"/></div>
     		<section>
     				<div class="alert alert-info" role="alert">
-	                     <div><spring:message code="settings.page.configuration_alert"/></div>
+	                     <spring:message code="settings.page.configuration_alert"/>
 	                </div>
             
                 <div id="config">

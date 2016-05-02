@@ -675,7 +675,7 @@ var destjobTrackerIp;
 
     <div class="page-header"><spring:message code="hivetablemigration.page.panel_heading"/></div>
     <div class="alert alert-info" role="alert">
-           <div><spring:message code="hivetablemigration.page.alert_info_outer_heading"/></div>
+           <spring:message code="hivetablemigration.page.alert_info_outer_heading"/>
     </div>
    	
 
