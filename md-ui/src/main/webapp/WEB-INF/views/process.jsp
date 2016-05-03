@@ -1020,6 +1020,9 @@
                                 				height: 'auto',
                                 				modal: true,
                                 				buttons: {
+                                					Cancel: function() {
+                                						$(this).dialog("close");
+                                					},
                                 					"Yes Execute": function() {
                                 						$(this).dialog("close");
                                 						return $.Deferred(function($dfd) {
@@ -1066,10 +1069,8 @@
                                 
                                 							});
                                 						});
-                                					},
-                                					Cancel: function() {
-                                						$(this).dialog("close");
                                 					}
+                                					
                                 				}
                                 			});
                                 		});
@@ -1248,6 +1249,9 @@
                             height: 'auto',
                             modal: true,
                             buttons: {
+                            	Cancel: function() {
+                                    $(this).dialog("close");
+                                },
                                 "Yes Deploy": function() {
                                     $(this).dialog("close");
                                     console.log(processId);
@@ -1286,10 +1290,8 @@
                                         });
                                     });
 
-                                },
-                                Cancel: function() {
-                                    $(this).dialog("close");
                                 }
+                                
                             }
                         });
                     }

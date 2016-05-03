@@ -1187,17 +1187,12 @@ div.jtable-main-container > table.jtable > tbody > tr.jtable-data-row > td > .jt
 }
 
 /*dialogs bdre*/
-[aria-describedby="ui-id-3"], [aria-describedby="ui-id-5"] {
+[aria-describedby="ui-id-3"], [aria-describedby="ui-id-5"],[aria-describedby="ui-id-11"] {
 	background: #f9fafa !important;
-	top: 35px !important;
-	right: 5px !important;
-	left: initial !important;
 	width: 35% !important;
 	border-radius: 4px 4px 0px 0px !important;
 }
-
-[aria-describedby="ui-id-3"] .ui-dialog-buttonpane, [aria-describedby="ui-id-5"] .ui-dialog-buttonpane
-	{
+[aria-describedby="ui-id-3"] .ui-dialog-buttonpane, [aria-describedby="ui-id-5"] .ui-dialog-buttonpane,[aria-describedby="ui-id-11"] .ui-dialog-buttonpane{
 	top: 61px;
 	left: -3px;
 	position: relative;
@@ -1205,7 +1200,7 @@ div.jtable-main-container > table.jtable > tbody > tr.jtable-data-row > td > .jt
 	border-radius: 0 0 8px 8px;
 	text-align: center;
 	margin-top: 0px !important;
-	width: 102%;
+	width: 101%;
 }
 
 #ui-id-9, #ui-id-10 {
@@ -1214,11 +1209,6 @@ div.jtable-main-container > table.jtable > tbody > tr.jtable-data-row > td > .jt
 	font-weight: bold;
 	font-size: 16px;
 }
-
-#ui-id-3 {
-	top: 30px !important;
-}
-
 .ui-icon-alert-custom, #ui-id-7 .ui-icon-alert {
 	background: url("images/alert_icon.png") no-repeat center;
 	width: 50px;
@@ -1227,7 +1217,6 @@ div.jtable-main-container > table.jtable > tbody > tr.jtable-data-row > td > .jt
 	display: block;
 	margin: 0 auto !important;
 }
-
 #ui-id-7 .ui-icon-alert {
 	float: none !important;
 }
@@ -1241,6 +1230,9 @@ div.jtable-main-container > table.jtable > tbody > tr.jtable-data-row > td > .jt
 	padding-top: 0 !important;
 }
 
+#div-dialog-warning, #ui-id-1, #execute-fail {
+	margin: 30px 40px 0px;
+}
 .jtable-delete-confirm-message {
 	padding: 30px 5px !important;
 	top: 40px !important;
@@ -1283,15 +1275,6 @@ form.jtable-dialog-form div.jtable-input-field-container {
 	margin-bottom: 10px;
 	padding-left: 35px;
 }
-
-#AddRecordDialogSaveButton, #EditDialogSaveButton, #DeleteDialogButton,
-	[aria-describedby="execute-dialog-confirm"] button:nth-child(1), [aria-describedby="dialog-confirm"] button:nth-child(1),
-	ui-id-7, [aria-describedby="div-dialog-warning"] .ui-dialog-buttonset button,
-	[aria-describedby="ui-id-1"] .ui-dialog-buttonset button, [aria-describedby="execute-fail"] .ui-dialog-buttonset button
-{
-	background: #20C8A3 !important;
-}
-
 [aria-describedby="execute-dialog-confirm"], [aria-describedby="dialog-confirm"],
 	[aria-describedby="ui-id-7"], [aria-describedby="div-dialog-warning"],
 	[aria-describedby="ui-id-1"], [aria-describedby="execute-fail"] {
@@ -1301,11 +1284,10 @@ form.jtable-dialog-form div.jtable-input-field-container {
 	top: 10% !important;
 }
 
-#div-dialog-warning, #ui-id-1, #execute-fail {
-	margin: 30px 40px 0px;
-}
-
 /*common css for all pop ups*/
+.ui-dialog-buttonset button:nth-child(2){
+	background: #20C8A3 !important;
+}
 .ui-dialog-buttonpane {
 	background: none !important;
 	margin-top: 0 !important;
@@ -1365,7 +1347,7 @@ form.jtable-dialog-form div.jtable-input-field-container {
 }
 
 .ui-icon-closethick, .ui-icon-closethick {
-	margin-top: 0px !important;
+	margin-top: 0 !important;
 }
 
 .dialog-title-custom {
