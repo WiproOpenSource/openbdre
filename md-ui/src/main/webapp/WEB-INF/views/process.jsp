@@ -136,18 +136,24 @@
 
 					   });
 			}else {
-			    $dfd.reject();
-			    $("#process-not-found").dialog({
-                    resizable: false,
-                    height: 'auto',
-                    modal: true,
-                    buttons: {
-                        "OK": function() {
-                            $(this).dialog("close");
-                             location.href = location.href = '<c:url value="/pages/process.page"/>';
-                        }
-                    }
-                }).html("No Process exist for mentioned ID.");;
+			    if(data.Message == "ACCESS DENIED")
+                             {
+                             alert(data.Message);
+                              location.href = location.href = '<c:url value="/pages/process.page"/>';
+                             }
+                             else{
+                			    $("#process-not-found").dialog({
+                                    resizable: false,
+                                    height: 'auto',
+                                    modal: true,
+                                    buttons: {
+                                        "OK": function() {
+                                            $(this).dialog("close");
+                                             location.href = location.href = '<c:url value="/pages/process.page"/>';
+                                        }
+                                    }
+                                }).html("No Process exist for mentioned ID.");
+                				}
 
 			}
 
