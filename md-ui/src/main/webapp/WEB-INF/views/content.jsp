@@ -415,7 +415,6 @@
                                        url: "tablecolumnlineage.page",
                                        children: []
                         },
-                        <security:authorize access = "hasRole('ROLE_ADMIN')">
                                                                               {
                                             label: "App Deployment",
                                             collapse: "1",
@@ -482,7 +481,7 @@
                                                                   collapse: "1",
                                                                   url: "hivetablemigration.page",
                                                                   children: []
-                      					}, </security:authorize>]
+                      					}, ]
                                     },
                                     <security:authorize access = "hasRole('ROLE_ADMIN')"> {
                                         label: "Administration",

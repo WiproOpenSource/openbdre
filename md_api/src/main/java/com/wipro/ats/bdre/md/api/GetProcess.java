@@ -35,7 +35,8 @@ public class GetProcess extends MetadataAPIBase {
     private static final Logger LOGGER = Logger.getLogger(GetProcess.class);
     private static final String PARENTPROCESSID = "parent-process-id";
     private static final String[][] PARAMS_STRUCTURE = {
-            {"p", PARENTPROCESSID, "Parent process id for a given workflow"}
+            {"p", PARENTPROCESSID, "Parent process id for a given workflow"},
+            {"u", "username", "logged in user"}
     };
     private static final String[][] PARAMS_STRUCTURE_WITH_EXEC = {
             {"p", PARENTPROCESSID, "Parent process id for a given workflow"},
@@ -59,14 +60,15 @@ public class GetProcess extends MetadataAPIBase {
      */
 
     @Override
-    public List<ProcessInfo> execute(String[] params) {
+    public List<ProcessInfo> execute (String[] params) throws SecurityException{
         List<ProcessInfo> processInfoList = new ArrayList<ProcessInfo>();
         try {
 
             CommandLine commandLine = getCommandLine(params, PARAMS_STRUCTURE);
             String subPid = commandLine.getOptionValue(PARENTPROCESSID);
             LOGGER.info("Parent Pid is " + subPid);
-
+            String username=commandLine.getOptionValue("username");
+            processDAO.securityCheck(Integer.parseInt(subPid),username, "read");
             //Calling proc select-process-list
             List<com.wipro.ats.bdre.md.dao.jpa.Process> jpaProcessList = processDAO.selectProcessList(Integer.parseInt(subPid));
             for (Process process : jpaProcessList) {
@@ -92,7 +94,8 @@ public class GetProcess extends MetadataAPIBase {
             }
 
             return processInfoList;
-        } catch (Exception e) {
+        }
+        catch (MetadataException e) {
             LOGGER.error("Error occurred.", e);
             throw new MetadataException(e);
         }
@@ -104,7 +107,7 @@ public class GetProcess extends MetadataAPIBase {
 
             CommandLine commandLine = getCommandLine(params, PARAMS_STRUCTURE);
             String subPid = commandLine.getOptionValue(PARENTPROCESSID);
-            LOGGER.info("Parent Pid is " + subPid);
+            LOGGER.info("Parent Pid  " + subPid);
 
             //Calling proc select-process-list
             List<com.wipro.ats.bdre.md.dao.jpa.Process> jpaProcessList = processDAO.subProcesslist(Integer.parseInt(subPid));
