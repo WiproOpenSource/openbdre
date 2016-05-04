@@ -84,13 +84,11 @@ body {
     background-color: #3D525F !important;
 	color: #fff !important;
 }
-.alert{
-	border: 1em solid #F8F9FB;
-}
 .alert-info {
 	margin-bottom: 10px !important;
 	font-weight: bold;
 	padding: 10px;
+	border: 1em solid #F8F9FB;
 }
 .form-group {
 	width: 50% !important;
@@ -114,4 +112,11 @@ div.form-group:nth-child(even) {
 div.form-group:nth-child(odd) {
 	float: left;
 }
-         
+.panel-group .btn-primary{
+	margin-bottom: 6% !important;
+	margin-right: 6%;
+}
+.panel-collapse .form-group{
+ 	padding-left: 0;
+ 	padding-right: 0;
+}      
