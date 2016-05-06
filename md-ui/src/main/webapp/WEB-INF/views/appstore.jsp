@@ -37,7 +37,7 @@ body {
 .alert-info {
 	color: #31708f;
 	background-color: #fff;
-	border-color: #B0B0B0 !important;
+	border: 1px solid #B0B0B0 !important;
 }
 
 .appimage {
