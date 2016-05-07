@@ -17,10 +17,14 @@ package com.wipro.ats.bdre.wgen;
 
 import com.wipro.ats.bdre.BaseStructure;
 import com.wipro.ats.bdre.md.api.GetProcess;
+import com.wipro.ats.bdre.md.api.base.MetadataAPIBase;
 import com.wipro.ats.bdre.md.beans.ProcessInfo;
+import com.wipro.ats.bdre.md.dao.ProcessDAO;
 import org.apache.commons.cli.CommandLine;
 import org.apache.log4j.Logger;
 import org.apache.oozie.cli.OozieCLI;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.config.AutowireCapableBeanFactory;
 
 import java.io.FileNotFoundException;
 import java.io.PrintWriter;
@@ -29,12 +33,20 @@ import java.util.List;
 /**
  * Created by arijit on 12/24/14.
  */
-public class WorkflowGenerator extends BaseStructure {
+public class WorkflowGenerator extends MetadataAPIBase {
     private static final Logger LOGGER = Logger.getLogger(WorkflowGenerator.class);
     private static final String[][] PARAMS_STRUCTURE = {
             {"p", "parent-process-id", "Process Id of the process to begin"},
             {"f", "file-name", "Output XML file name where the xml would be saved"},
+            {"u", "username", "Username"}
     };
+    @Autowired
+    ProcessDAO processDAO;
+
+    public WorkflowGenerator() {
+        AutowireCapableBeanFactory acbFactory = getAutowireCapableBeanFactory();
+        acbFactory.autowireBean(this);
+    }
 
     /**
      * This method generates workflow
@@ -43,11 +55,18 @@ public class WorkflowGenerator extends BaseStructure {
      * @throws java.io.FileNotFoundException xmlFile is not found then it will throw this exception
      */
     public static void main(String[] args) throws FileNotFoundException {
+        WorkflowGenerator workflowGenerator = new WorkflowGenerator();
+        workflowGenerator.workflowGenerator(args);
+    }
+    public void workflowGenerator(String [] args) throws FileNotFoundException{
         CommandLine commandLine = new WorkflowGenerator().getCommandLine(args, PARAMS_STRUCTURE);
         String pid = commandLine.getOptionValue("parent-process-id");
         LOGGER.debug("processId is " + pid);
         String outputFile = commandLine.getOptionValue("file-name");
         LOGGER.debug("Output file " + outputFile);
+        String username = commandLine.getOptionValue("username");
+        LOGGER.debug("username is " + username);
+        processDAO.securityCheck(Integer.parseInt(pid),username, "execute");
 
         //Fetching process details from metadata using API calls
         List<ProcessInfo> processInfos = new GetProcess().execute(new String[]{"--parent-process-id", pid});
@@ -76,5 +95,10 @@ public class WorkflowGenerator extends BaseStructure {
             dotOut.close();
             LOGGER.info("DOT is written to " + outputFile + ".dot");
         }
+    }
+
+    @Override
+    public String execute(String[] args){
+        return null;
     }
 }
