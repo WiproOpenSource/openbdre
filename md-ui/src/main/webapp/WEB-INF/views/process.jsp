@@ -136,18 +136,24 @@
 
 					   });
 			}else {
-			    $dfd.reject();
-			    $("#process-not-found").dialog({
-                    resizable: false,
-                    height: 'auto',
-                    modal: true,
-                    buttons: {
-                        "OK": function() {
-                            $(this).dialog("close");
-                             location.href = location.href = '<c:url value="/pages/process.page"/>';
-                        }
-                    }
-                }).html("No Process exist for mentioned ID.");;
+			    if(data.Message == "ACCESS DENIED")
+                             {
+                             alert(data.Message);
+                              location.href = location.href = '<c:url value="/pages/process.page"/>';
+                             }
+                             else{
+                			    $("#process-not-found").dialog({
+                                    resizable: false,
+                                    height: 'auto',
+                                    modal: true,
+                                    buttons: {
+                                        "OK": function() {
+                                            $(this).dialog("close");
+                                             location.href = location.href = '<c:url value="/pages/process.page"/>';
+                                        }
+                                    }
+                                }).html("No Process exist for mentioned ID.");
+                				}
 
 			}
 
@@ -1020,6 +1026,9 @@
                                 				height: 'auto',
                                 				modal: true,
                                 				buttons: {
+                                					Cancel: function() {
+                                						$(this).dialog("close");
+                                					},
                                 					"Yes Execute": function() {
                                 						$(this).dialog("close");
                                 						return $.Deferred(function($dfd) {
@@ -1057,7 +1066,7 @@
                                 													$(this).dialog("close");
                                 												}
                                 											}
-                                										}).html("Process failed to launch.");;
+                                										}).html("<p>Process failed to launch.</p>");;
                                 									}}
                                 								},
                                 								error: function() {
@@ -1066,10 +1075,8 @@
                                 
                                 							});
                                 						});
-                                					},
-                                					Cancel: function() {
-                                						$(this).dialog("close");
                                 					}
+                                					
                                 				}
                                 			});
                                 		});
@@ -1248,6 +1255,9 @@
                             height: 'auto',
                             modal: true,
                             buttons: {
+                            	Cancel: function() {
+                                    $(this).dialog("close");
+                                },
                                 "Yes Deploy": function() {
                                     $(this).dialog("close");
                                     console.log(processId);
@@ -1286,10 +1296,8 @@
                                         });
                                     });
 
-                                },
-                                Cancel: function() {
-                                    $(this).dialog("close");
                                 }
+                                
                             }
                         });
                     }
@@ -1436,10 +1444,10 @@
                     </form>
                 </div>
 				<div id="dialog-confirm" style="display:none;">
-                    <span class="ui-icon-alert-custom"></span><div class="dialog-title-custom">Are you sure?</div><p>This will build the workflow for this process and deploy necessary codes in cluster. Existing workflow may be replaced.</p>
+                    <span class="ui-icon-alert"></span><div class="dialog-title-custom">Are you sure?</div><p>This will build the workflow for this process and deploy necessary codes in cluster. Existing workflow may be replaced.</p>
                 </div>
                 <div id="execute-dialog-confirm" title="Are you sure?" style="display:none;">
-                    <span class="ui-icon-alert-custom"></span><div class="dialog-title-custom">Are you sure?</div><p>This will start the execution of process in cluster.</p>
+                    <span class="ui-icon-alert"></span><div class="dialog-title-custom">Are you sure?</div><p>This will start the execution of process in cluster.</p>
                 </div>
                 <div id="execute-result" title="Process Started" style="display:none;">
                     <p><span class="ui-icon ui-icon-alert" style="float:left; margin:0 7px 20px 0;"></span>Process Started Successfully</p>

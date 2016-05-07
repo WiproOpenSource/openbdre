@@ -92,7 +92,7 @@
                                          $(this).dialog("close");
                                      }
                                  }
-                             }).html("You have entered or selected wrong Table Name or Column Name");
+                             }).html("<span class=\"ui-icon-alert-custom\"></span><p>You have entered or selected wrong Table Name or Column Name</p>");
 
                             }
                         });
