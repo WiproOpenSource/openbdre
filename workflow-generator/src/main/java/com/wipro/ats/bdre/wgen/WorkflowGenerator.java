@@ -15,7 +15,6 @@
 package com.wipro.ats.bdre.wgen;
 
 
-import com.wipro.ats.bdre.BaseStructure;
 import com.wipro.ats.bdre.md.api.GetProcess;
 import com.wipro.ats.bdre.md.api.base.MetadataAPIBase;
 import com.wipro.ats.bdre.md.beans.ProcessInfo;
