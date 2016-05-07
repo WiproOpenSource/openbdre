@@ -47,10 +47,10 @@ public class FlumeConfGeneratorMain extends MetadataAPIBase {
         acbFactory.autowireBean(this);
     }
 
-    public static void main(String[] args) throws FileNotFoundException {
+    public static void main(String[] args) throws FileNotFoundException,SecurityException {
 
         FlumeConfGeneratorMain flumeConfGeneratorMain = new FlumeConfGeneratorMain();
-        flumeConfGeneratorMain.execute(args);
+        flumeConfGeneratorMain.flumeConfGenerator(args);
     }
 
     public void flumeConfGenerator(String[] params) throws SecurityException, FileNotFoundException {
@@ -61,7 +61,7 @@ public class FlumeConfGeneratorMain extends MetadataAPIBase {
         LOGGER.debug("username is " + username);
         processDAO.securityCheck(Integer.parseInt(pid),username, "execute");
         //Getting sub-process for process-id
-        List<ProcessInfo> processInfos = new GetProcess().execute(new String[]{"--parent-process-id", pid});
+        List<ProcessInfo> processInfos = new GetProcess().execute(new String[]{"--parent-process-id", pid, "--username",username});
         // Getting properties related with flume action for every process
         StringBuilder addFlumeProperties = new StringBuilder();
         for (ProcessInfo processInfo : processInfos) {
@@ -84,7 +84,7 @@ public class FlumeConfGeneratorMain extends MetadataAPIBase {
         }
         String outputFile = "flume-" + processInfos.get(0).getProcessId() + ".conf";
         PrintWriter confOut = new PrintWriter(outputFile);
-        confOut.println(outputFile);
+        confOut.println(addFlumeProperties);
         confOut.close();
         LOGGER.info("XML is written to " + outputFile);
 

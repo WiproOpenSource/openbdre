@@ -69,7 +69,7 @@ public class WorkflowGenerator extends MetadataAPIBase {
         processDAO.securityCheck(Integer.parseInt(pid),username, "execute");
 
         //Fetching process details from metadata using API calls
-        List<ProcessInfo> processInfos = new GetProcess().execute(new String[]{"--parent-process-id", pid});
+        List<ProcessInfo> processInfos = new GetProcess().execute(new String[]{"--parent-process-id", pid , "--username",username});
         LOGGER.info("Workflow Type Id is " + processInfos.get(0).getWorkflowId() + " for pid=" + processInfos.get(0).getProcessId());
         Workflow workflow = new WorkflowPrinter().execute(processInfos, "workflow-" + pid);
         if (processInfos.get(0).getWorkflowId() == 1) {
