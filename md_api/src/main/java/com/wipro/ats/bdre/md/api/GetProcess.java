@@ -68,7 +68,7 @@ public class GetProcess extends MetadataAPIBase {
             String subPid = commandLine.getOptionValue(PARENTPROCESSID);
             LOGGER.info("Parent Pid is " + subPid);
             String username=commandLine.getOptionValue("username");
-            processDAO.securityCheck(Integer.parseInt(subPid),username, "read");
+            processDAO.securityCheck(Integer.parseInt(subPid),username, "execute");
             //Calling proc select-process-list
             List<com.wipro.ats.bdre.md.dao.jpa.Process> jpaProcessList = processDAO.selectProcessList(Integer.parseInt(subPid));
             for (Process process : jpaProcessList) {

@@ -13,7 +13,7 @@
 BDRE_HOME=~/bdre
 BDRE_APPS_HOME=~/bdre_apps
 
-if [ -z "$1" ] || [ -z "$2" ] || [ -z "$3" ] ; then
+if [ -z "$1" ] || [ -z "$2" ] || [ -z "$3" ] || [ -z "$4" ]; then
         echo Insufficient parameters !
         exit 1
 fi
@@ -21,5 +21,6 @@ fi
 busDomainId=$1
 processTypeId=$2
 processId=$3
+userName=$4
 
-sh $(dirname $0)/process-type-$processTypeId.sh $busDomainId $processTypeId $processId
+sh $(dirname $0)/process-type-$processTypeId.sh $busDomainId $processTypeId $processId $userName
