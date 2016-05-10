@@ -13,8 +13,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html >
-	<head>
-		
+	<head>	
 	<script>
 	  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
 	  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
@@ -29,18 +28,22 @@
 		<script src = "../js/jquery.min.js" ></script >
 		<link href = "../css/jquery-ui-1.10.3.custom.css" rel = "stylesheet" >
 		<link href = "../css/css/bootstrap.min.css" rel = "stylesheet" />
+		<link href = "../css/bootstrap.custom.css" rel = "stylesheet" />
 		<script src = "../js/jquery-ui-1.10.3.custom.js" ></script >
 		<script src = "../js/jquery.steps.min.js" ></script >
 		<link rel = "stylesheet" href = "../css/jquery.steps.css" />
+		<link rel="stylesheet" href="../css/jquery.steps.custom.css" />
 		<script src = "../js/jquery.fancytree.js" ></script >
 		<link rel = "stylesheet" href = "../css/ui.fancytree.css" />
 		<script src = "../js/jquery.fancytree.gridnav.js" type = "text/javascript" ></script >
 		<script src = "../js/jquery.fancytree.table.js" type = "text/javascript" ></script >
 		<script src = "../js/jquery.jtable.js" type = "text/javascript" ></script >
 		<link href = "../css/jtables-bdre.css" rel = "stylesheet" type = "text/css" />
-		<link rel="stylesheet" href="../css/data-ingestion.css" />
-		<link rel="stylesheet" href="../css/data-ingestion-horizontal.css" />
-	
+		<style>
+		.btn-success{
+		margin-left: 10%;
+		}
+		</style>
 		<script >
         function fetchPipelineInfo(pid){
 			location.href = '<c:url value="/pages/lineage.page?pid="/>' + pid;
@@ -644,26 +647,35 @@ isInit=true;
 
 	</head >
 	<body >
+	
 		<form action = "#" method = "POST" id = "wizardform" >
-			<br />
-			<div id = "bdre-dataload" ng-controller = "myCtrl" >
+			<div class="page-header"><spring:message code="dataimportwizard.page.panel_heading"/></div>
+			<div id="bdre-dataload" ng-controller = "myCtrl" >
 				<h3 ><div class="number-circular">1</div><spring:message code="dataimportwizard.page.db"/></h3 >
 				<section >
 					<div >
 					<fmt:bundle basename="db">
-
-
+						<div class="form-group">
 						<label for = "dbURL" ><spring:message code="dataimportwizard.page.db_url"/></label >
 						<input id = "dbURL" onchange = "treeData=null;" name = "common_dbURL" type = "text" class = "form-control" value = "<fmt:message key='hibernate.connection.url' />" />
+						</div>
+						<div class="form-group">
 						<label for = "dbUser" ><spring:message code="dataimportwizard.page.db_user"/></label >
 						<input id = "dbUser" onchange = "treeData=null;" name = "common_dbUser" type = "text" class = "form-control" value = "<fmt:message key='hibernate.connection.username' />" />
+						</div>
+						<div class="form-group">
 						<label for = "dbPassword" ><spring:message code="dataimportwizard.page.db_psswd"/></label >
 						<input id = "dbPassword" onchange = "treeData=null;" name = "common_dbPassword" type = "password" class = "form-control" value = "<fmt:message key='hibernate.connection.password' />" />
+						</div>
+						<div class="form-group">
 						<label for = "dbDriver" ><spring:message code="dataimportwizard.page.db_driver"/></label >
 						<input id = "dbDriver" onchange = "treeData=null;" name = "common_dbDriver" type = "text" class = "form-control" value = "<fmt:message key='hibernate.connection.driver_class' />" />
+						</div>
+						<div class="form-group">
 						<label for = "dbSchema" ><spring:message code="dataimportwizard.page.schema"/></label >
                         <input id = "dbSchema" onchange = "treeData=null;" name = "common_dbSchema" type = "text" class = "form-control" value = "<fmt:message key='hibernate.default_schema' />" />
-						<div ><br /></div >
+						</div>
+						<div class="clearfix"></div>
 						<button class = "btn btn-default  btn-success" type = "button" onClick = "verifyConnection()" href = "#" >
 							Test Connection
 						</button >

@@ -32,7 +32,7 @@
 	<script type="text/javascript">
 		    $(document).ready(function () {
 	    $('#Container').jtable({
-	    title: 'Archive Consump Queue List',
+	    title: '<spring:message code="acq.page.title_acq_list"/>',
 		    paging: true,
 		    pageSize: 10,
 		    sorting: true,
@@ -117,44 +117,44 @@
 			    edit: false
 		    },
 			    sourceBatchId: {
-			    title: 'Source Batch ID'
+			    title: '<spring:message code="acq.page.title_src_batch_id"/>'
 			    },
 			    targetBatchId: {
-			    title: 'Target Batch ID'
+			    title: '<spring:message code="acq.page.title_tar_batch_id"/>'
 
 			    },
 			    sourceProcessId: {
-			    title: ' Source Process ID',
+			    title: '<spring:message code="acq.page.title_src_process_id"/>'
 			    },
 			    tableInsertTS: {
-			    title: 'Insert Time',
+			    title: '<spring:message code="acq.page.title_insert_time"/>',
 				    create:true,
 				    edit: true
 
 			    },
 			    tableStartTS: {
-			    title: 'Start Time',
+			    title: '<spring:message code="acq.page.title_start_time"/>',
 				    create:true,
 				    edit: true
 			    },
 			    tableEndTS: {
-			    title: 'End Time',
+			    title: '<spring:message code="acq.page.title_end_time"/>',
 				    create:true,
 				    edit: true
 
 			    },
 			    batchState: {
-			    title: 'Batch State',
+			    title: '<spring:message code="acq.page.title_batch_state"/>',
 				    type:'Integer',
 				    type: 'combobox',
 				    options: '/mdrest/batchstatus/options',
 				    defaultValue: "0"
 			    },
 			    batchMarking: {
-			    title: 'Batch Marking'
+			    title: '<spring:message code="acq.page.title_batch_marking"/>'
 			    },
 			    processId: {
-			    title: 'Process ID '
+			    title: '<spring:message code="acq.page.title_p_id"/>'
 			    }
 		    }
 	    });

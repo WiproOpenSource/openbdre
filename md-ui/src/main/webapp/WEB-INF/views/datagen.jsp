@@ -11,33 +11,26 @@
 <head>
     <title><spring:message code="common.page.title_bdre_2"/></title>
 	<style>
-   .body{
-    width: 100% !important;
-    padding: 0 !important;
-    }
-    #processFieldsForm1 .form-group{
-	    width: 90%;
-	    margin: 0 auto 2% auto;
-    }
-    
-     #processFieldsForm1 .form-group div{
-     margin-left: 3%;
-     }
-   #deletediv{
-	padding-left:9%;
-   }
-	#deletediv .add-more{
-		background-color: #389DD0;
-		border: none;
-		padding: 10px;
-		color: #fff;
+    .alert-info span {
+		color: #C85659;
+		letter-spacing: 1px;
 	}
-	.alert-redfont{
-	color: #C85659;
-	letter-spacing: 1px;
+	.add-more {
+		background-color: #389DD0 !important;
+		border: none !important;
+		padding: 10px !important;
+		color: #fff !important;
 	}
-   
-    </style>
+	#processFieldsForm1 .form-group{
+	 padding-left: 0; 
+	 padding-right: 0;
+	 width: 100% !important;
+	 margin: 0 auto; 
+	}
+	#processFieldsForm1 div.form-group:nth-child(odd),#processFieldsForm1 div.form-group:nth-child(even){
+		float: none;
+	}
+   	</style>
 	<script>
 	  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
 	  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
@@ -52,12 +45,11 @@
     <script src="../js/jquery.min.js"></script>
     <link href="../css/jquery-ui-1.10.3.custom.css" rel="stylesheet">
     <link href="../css/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="../css/bootstrap.custom.css" rel="stylesheet" type="text/css" />
     <script src="../js/jquery-ui-1.10.3.custom.js"></script>
     <script src="../js/jquery.steps.min.js"></script>
     <link rel="stylesheet" href="../css/jquery.steps.css" />
-    <link rel="stylesheet" href="../css/data-ingestion.css" />
-    <link rel="stylesheet" href="../css/data-ingestion-horizontal.css" />
-
+    <link rel="stylesheet" href="../css/jquery.steps.custom.css" />
     <script src="../js/bootstrap.js" type="text/javascript"></script>
     <script src="../js/jquery.jtable.js" type="text/javascript"></script>
     <link href="../css/jtables-bdre.css" rel="stylesheet" type="text/css" />
@@ -114,27 +106,26 @@ function formIntoMap(typeProp, typeOf) {
 
 </head>
 <body ng-app="myApp" ng-controller="myCtrl" >
-	<div class="alert-info-outer">
+	<div class="page-header"><spring:message code="datagen.page.panel_heading"/></div>
 	<div class="alert alert-info" role="alert">
-       <div style="font-size:24px;" ><b class="alert-redfont"><spring:message code="datagen.page.how_to"/></b> </div>
-           <b><spring:message code="datagen.page.b_datatype_format"/></b> <span class="alert-redfont"><spring:message code="datagen.page.b_span"/></span>
+			<b style="font-size:24px;"><spring:message code="datagen.page.how_to"/></b><br/>
+           <b><spring:message code="datagen.page.b_datatype_format"/></b> <span><spring:message code="datagen.page.b_span"/></span>
            <br>
-           <b><spring:message code="datagen.page.b_regex_pattern"/></b><span class="alert-redfont"><spring:message code="datagen.page.b_regex_pattern_span"/></span>
+           <b><spring:message code="datagen.page.b_regex_pattern"/></b><span><spring:message code="datagen.page.b_regex_pattern_span"/></span>
            <br>
-           <b><spring:message code="datagen.page.number_format"/></b> <span class="alert-redfont"><spring:message code="datagen.page.number_format_span"/></span>
+           <b><spring:message code="datagen.page.number_format"/></b> <span><spring:message code="datagen.page.number_format_span"/></span>
            <br>
-           <b><spring:message code="datagen.page.column_type"/></b> <span class="alert-redfont"><spring:message code="datagen.page.column_type_span"/></span>
-    	</div>
-	</div>
+           <b><spring:message code="datagen.page.column_type"/></b> <span><spring:message code="datagen.page.column_type_span"/></span>
+    </div>
+	
 
 
-    <div id="datagen" >
+    <div id="datagen">
 
             <h3><div class="number-circular">1</div><spring:message code="datagen.page.data_types"/></h3>
             <section>
             <form class="form-horizontal" role="form" id="processFieldsForm1">
-                <div id="dataTypeDetails">
-                    <!-- btn-group -->
+                	<!-- btn-group -->
                     <div class="form-group" id="formGroup1" >
                         <div class="col-md-3">
                             <input type="text" class="form-control input-sm" id="fieldName.1" value="" name="fieldName" placeholder=<spring:message code="datagen.page.colname_type_placeholder"/> />
@@ -152,9 +143,8 @@ function formIntoMap(typeProp, typeOf) {
                         
                     </div>
                     <!-- /btn-group -->
-                </div>
-                <div class="col-md-2" id="deletediv">
-                            <button id="b1" class="btn btn-primary add-more">
+               <div class="col-md-2" id="deletediv">
+                            <button id="b1" class="btn add-more">
                                 <span class="glyphicon glyphicon-plus" style="font-size:large"></span>
                             </button>
                 </div>
@@ -209,7 +199,7 @@ function formIntoMap(typeProp, typeOf) {
                                 <form class="form-horizontal" role="form" id="processFieldsForm3">
                                     <div id="processDetails">
                                         <div class="alert alert-info" role="alert">
-										<spring:message code="datagen.page.alert-info_2"/>
+											<spring:message code="datagen.page.alert-info_2"/>
                                         </div>
                                         <!-- btn-group -->
                                         <div id="processFields">
@@ -250,7 +240,7 @@ function formIntoMap(typeProp, typeOf) {
             <h3><div class="number-circular">4</div><spring:message code="datagen.page.confirm"/></h3>
             <section>
             <div id="createProcess">
-                <button ng-click="createJob()" id="createjobs" type="button" class="btn">Create Job</button>
+                <button ng-click="createJob()" id="createjobs" type="button" class="btn btn-primary btn-lg">Create Job</button>
             </div>
             <div id="Process"></div>
             </section>
@@ -412,7 +402,7 @@ function getGenTypes(){
             headerTag: "h3",
             bodyTag: "section",
             transitionEffect: "slideLeft",
-            stepsOrientation: "vertical",
+            stepsOrientation: "horizontal",
             enableCancelButton: true,
             
             onFinished: function(event, currentIndex) {

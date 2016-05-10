@@ -8,29 +8,23 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ taglib prefix="security"
 	   uri="http://www.springframework.org/security/tags" %>
+<%@taglib uri="http://www.springframework.org/tags" prefix="spring"%>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
     <head>
 
-	<script>
-	  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-	  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-	  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-	  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
-	  //Please replace with your own analytics id
-	  ga('create', 'UA-72345517-1', 'auto');
-	  ga('send', 'pageview');
-	</script>
 
-    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     		<script src="../js/jquery.min.js"></script>
     		<link href="../css/jquery-ui-1.10.3.custom.css" rel="stylesheet">
     		<link href="../css/css/bootstrap.min.css" rel="stylesheet" />
     		<script src="../js/jquery-ui-1.10.3.custom.js"></script>
     		<script src="../js/jquery.steps.min.js"></script>
     		<link rel="stylesheet" href="../css/jquery.steps.css" />
+    		<link rel="stylesheet" href="../css/jquery.steps.custom.css" />
+    		<link href="../css/bootstrap.custom.css" rel="stylesheet" type="text/css" />
     		<script src="../js/bootstrap.js" type="text/javascript"></script>
             <script src = "../js/jquery.fancytree.js" ></script >
             <link rel = "stylesheet" href = "../css/ui.fancytree.css" />
@@ -39,6 +33,16 @@
     		<script src="../js/jquery.jtable.js" type="text/javascript"></script>
     		<script src="../js/angular.min.js" type="text/javascript"></script>
     		<link href="../css/jtables-bdre.css" rel="stylesheet" type="text/css" />
+
+	<script>
+    	  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+    	  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+    	  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+    	  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+    	  //Please replace with your own analytics id
+    	  ga('create', 'UA-72345517-1', 'auto');
+    	  ga('send', 'pageview');
+    	</script>
 
 	<script >
 		function fetchPipelineInfo(pid){
@@ -668,8 +672,17 @@ var destjobTrackerIp;
 
 
     <body ng-app="myApp">
-        <div id="bdre-data-migration" >
-                <h3>Source Environment</h3>
+
+    <div class="page-header"><spring:message code="hivetablemigration.page.panel_heading"/></div>
+    <div class="alert alert-info" role="alert">
+           <spring:message code="hivetablemigration.page.alert_info_outer_heading"/>
+    </div>
+   	
+
+
+        <div id="bdre-data-migration" class="wizard-vertical"  >
+        <h3><div class="number-circular">1</div><spring:message code="hivetablemigration.page.h3_div_1"/></h3>
+
                             <section>
                               <form class="form-horizontal" role="form" id="processDetailsForm">
                                   <div id="processDetails" ng-controller="myCtrl">
@@ -677,21 +690,32 @@ var destjobTrackerIp;
                                             <!-- btn-group -->
                                             <div id="process">
                                             <div class="form-group">
-                                                            <label class="control-label col-sm-2" for="processName">Process Name:</label>
+                                                            <label class="control-label col-sm-2" for="processName"><spring:message code="hivetablemigration.page.form_procname"/></label>
                                                             <div class="col-sm-10">
                                                                 <input type="text" class="form-control"  id="processName" name="processName" placeholder="Enter Process Name" value="" required>
                                                             </div>
                                                         </div>
-
-                                                   <div id="processDes">
-                                                    <div class="form-group">
-                                                                    <label class="control-label col-sm-2" for="processDesc">Process Description:</label>
+																<div class="form-group">
+                                                                    <label class="control-label col-sm-2" for="processDesc"><spring:message code="hivetablemigration.page.form_procdesc"/></label>
                                                                     <div class="col-sm-10">
                                                                         <input type="text" class="form-control"  id="processDesc" name="processDesc" placeholder="Enter Process Description" value="" required>
                                                                     </div>
-                                                                </div>
+
+                                                               </div>
+
+                                                                <div class="form-group">
+                                                               <label class="control-label col-sm-2" for="srcEnv"><spring:message code="hivetablemigration.page.form_src_env"/></label>
+                                                               <div class="col-sm-10">
+                                                                   <select class="form-control" id="srcEnv" name="srcEnv" >
+                                                                       <option ng-repeat="srcEnv in srcEnvs" value='{{srcEnv.defaultVal}},"-%%-",{{srcEnv.description}}'  label="{{srcEnv.description}} ">{{srcEnv.description}}</option>
+
+                                                                   </select>
+                                                               </div>
+                                                           </div>
+
+
                                                     <div class="form-group">
-                                                            <label class="control-label col-sm-2" for="busDomainId">Bus Domain Id:</label>
+                                                            <label class="control-label col-sm-2" for="busDomainId"><spring:message code="hivetablemigration.page.form_bus_domain_id"/></label>
                                                             <div class="col-sm-10">
                                                                 <select class="form-control" id="busDomainId" name="busDomainId">
                                                                     <option ng-repeat="busDomain in busDomains.Options" value="{{busDomain.Value}}" name="busDomainId">{{busDomain.DisplayText}}</option>
@@ -699,38 +723,34 @@ var destjobTrackerIp;
                                                                 </select>
                                                             </div>
                                                         </div>
-                                                <div class="form-group">
-                                                    <label class="control-label col-sm-2" for="srcEnv">Source Environment:</label>
-                                                    <div class="col-sm-10">
-                                                        <select class="form-control" id="srcEnv" name="srcEnv" >
-                                                            <option ng-repeat="srcEnv in srcEnvs" value='{{srcEnv.defaultVal}},"-%%-",{{srcEnv.description}}'  label="{{srcEnv.description}} ">{{srcEnv.description}}</option>
+                                                        <div class="clearfix"></div>
 
-                                                        </select>
-                                                    </div>
-                                                </div>
-                                            </div>
+                                           
                                             <!-- /btn-group -->
                                         </div>
                                         </form>
                             </section>
-               <h3>Source Database</h3>
+              <h3><div class="number-circular">2</div><spring:message code="hivetablemigration.page.h3_div_2"/></h3>
+
               <section>
 
                         <form class="form-horizontal" role="form" id="srcDBForm">
                             <div id="srcDBDiv">
                                <div class="form-group">
-                                  <label class="control-label col-sm-2" for="srcDB">Select a source database:</label>
+                                  <label class="control-label col-sm-2" for="srcDB"><spring:message code="hivetablemigration.page.form_src_db"/></label>
                                     <div class="col-sm-10">
                                       <select class="form-control" id="srcDB" name="srcDB" >
                                       </select>
                                     </div>
                                 </div>
+                                <div class="clearfix"></div>
 
                         </form>
               </section>
-			<h3>Tables</h3>
+
+	    <h3><div class="number-circular">3</div><spring:message code="hivetablemigration.page.h3_div_3"/></h3>
 			<section>
-			 <label class="control-label col-sm-2" for="tabl">Select source Table(s):</label>
+			 <label class="control-label col-sm-2" for="tabl"><spring:message code="hivetablemigration.page.form_src_tables"/></label>
 			  <form class="form-horizontal"  id="tablesForm">
                           <div id ="srctables" class="col-sm-10">
 
@@ -740,98 +760,106 @@ var destjobTrackerIp;
 
              </section>
 
-             <h3>Destination Environment</h3>
+         <h3><div class="number-circular">4</div><spring:message code="hivetablemigration.page.h3_div_4"/></h3>
              <section>
              <form class="form-horizontal" role="form" id="destEnvForm">
 
 				   <div id="fileFormatDiv" ng-controller="myCtrl">
 								 <div class="form-group">
-									 <label class="control-label col-sm-2" for="destEnv">Select Destination Environment:</label>
+									 <label class="control-label col-sm-2" for="destEnv"><spring:message code="hivetablemigration.page.form_dest_env"/></label>
 									 <div class="col-sm-10">
 										 <select class="form-control" id="destEnv" name="destEnv" >
                                                <option ng-repeat="destEnv in srcEnvs" value='{{destEnv.defaultVal}},"-%%-",{{destEnv.description}}'  label="{{destEnv.description}} ">{{destEnv.description}}</option>
 										 </select>
 								     </div>
 						 </div>
+						 <div class="clearfix"></div>
 
 						  <div class="form-group">
-                                                             <label class="control-label col-sm-2" for="instexecId">BDRE Technical Partition:</label>
+                                                             <label class="control-label col-sm-2" for="instexecId"><spring:message code="hivetablemigration.page.form_inst_exec"/></label>
                                                                   <div class="col-sm-10">
                                                                       <input type="text" class="form-control"  id="instexecId" name="instexecId"  value="instanceExecId" required>
                                                                   </div>
                                                                   </div>
+                                                                  <div class="clearfix"></div>
 
 				</form>
 
               </section>
-                   <h3>Destination Database</h3>
+         <h3><div class="number-circular">5</div><spring:message code="hivetablemigration.page.h3_div_5"/></h3>
                   <section>
                             <form class="form-horizontal" role="form" id="destDBForm">
                                 <div id="destDBDiv">
                                    <div class="form-group">
-                                      <label class="control-label col-sm-2" for="destDB">Select a destination database:</label>
+                                      <label class="control-label col-sm-2" for="destDB"><spring:message code="hivetablemigration.page.form_dest_db"/>:</label>
                                         <div class="col-sm-10">
                                           <select class="form-control" id="destDB" name="destDB" >
                                           </select>
                                         </div>
                                     </div>
+                                    <div class="clearfix"></div>
 
                             </form>
                   </section>
-            <h3>Confirm</h3>
+          <h3><div class="number-circular">6</div><spring:message code="hivetablemigration.page.h3_div_6"/></h3>
              <section>
 
 
                	<div class="form-group">
-                    <label class="control-label col-sm-4" for="showSrcEnv">Source Environment:</label>
+                    <label class="control-label col-sm-4" for="showSrcEnv"><spring:message code="hivetablemigration.page.h3_div_1"/></label>
                     <div class="col-sm-4">
                         <input type="text" class="form-control"  id="showSrcEnv" name="showSrcEnv"  disabled="disabled" >
                     </div>
                 </div>
-                </br>
+                
 
 
                 <div class="form-group">
-                    <label class="control-label col-sm-4" for="showSrcDB">Source Database:</label>
+                    <label class="control-label col-sm-4" for="showSrcDB"><spring:message code="hivetablemigration.page.h3_div_2"/></label>
                     <div class="col-sm-4">
                         <input type="text" class="form-control"  id="showSrcDB" name="showSrcDB"  disabled="disabled" >
                     </div>
                 </div>
-                </br>
+                
 
                <div class="form-group">
-                    <label class="control-label col-sm-4" for="showSrcTables">Source Table:</label>
+                    <label class="control-label col-sm-4" for="showSrcTables"><spring:message code="hivetablemigration.page.h3_div_3"/></label>
                     <div class="col-sm-4">
                         <input type="text" class="form-control"  id="showSrcTables" name="showSrcTables"  disabled="disabled" >
                     </div>
                 </div>
-                </br>
+                
 
                 <div class="form-group">
-                    <label class="control-label col-sm-4" for="showDestEnv">Destination Environment:</label>
+                    <label class="control-label col-sm-4" for="showDestEnv"><spring:message code="hivetablemigration.page.h3_div_4"/></label>
                     <div class="col-sm-4">
                         <input type="text" class="form-control"  id="showDestEnv" name="showDestEnv"  disabled="disabled" >
                     </div>
                 </div>
-                </br>
+                
 
                  <div class="form-group">
-                    <label class="control-label col-sm-4" for="showDestDB">Destination Database:</label>
+                    <label class="control-label col-sm-4" for="showDestDB"><spring:message code="hivetablemigration.page.h3_div_5"/></label>
                     <div class="col-sm-4">
                         <input type="text" class="form-control"  id="showDestDB" name="showDestDB"  disabled="disabled" >
                     </div>
                 </div>
-                </br>
+                <div class="clearfix"></div>
 
-               <div id="Process">
-                    <button id="createjobs" type="button" class="btn btn-primary btn-lg">Create Jobs</button>
+
+    </section>
+
+    <h3><div class="number-circular">7</div><spring:message code="hivetablemigration.page.h3_div_7"/></h3>
+                 <section>
+                 <div id="Process">
+                <button id="createjobs" type="button" class="btn btn-primary btn-lg"><spring:message code="hivetablemigration.page.create_jobs"/></button>
                 </div>
 
 
-             <div style="display:none" id="div-dialog-warning">
-             			<p><span class="ui-icon ui-icon-alert" style="float:left;"></span></p>
-             		</div>
-
+                <div style="display:none" id="div-dialog-warning">
+                <p><span class="ui-icon ui-icon-alert" style="float:left;"></span></p>
+                </div>
+                 </section>
     </body>
 
 </html>

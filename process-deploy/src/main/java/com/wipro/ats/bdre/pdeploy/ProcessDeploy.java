@@ -63,7 +63,7 @@ public class ProcessDeploy implements Runnable {
         //using Apache Commons Exec library
 
         String sCommandString;
-        String command = "sh " + pdq.getDeployScriptLocation() + " " + pdq.getBusDomainId() + " " + pdq.getProcessTypeId() + " " + pdq.getProcessId();
+        String command = "sh " + pdq.getDeployScriptLocation() + " " + pdq.getBusDomainId() + " " + pdq.getProcessTypeId() + " " + pdq.getProcessId() + " " + pdq.getUserName();
         sCommandString = command;
         CommandLine oCmdLine = CommandLine.parse(sCommandString);
         LOGGER.debug("executing command with deploymentId=" + pdq.getDeploymentId());
