@@ -10,7 +10,7 @@
 		<h2><spring:message code="403.page.error_desciption"/></h2>
 	    </c:when>
 	    <c:otherwise>
-		<h2>Username : ${username} <br/><spring:message code="403.page.error_desciption"/></h2>
+		<h2><spring:message code="403.page.username"/> ${username} <br/><spring:message code="403.page.error_desciption"/></h2>
 		</c:otherwise>
 	    </c:choose>
 

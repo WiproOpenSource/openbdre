@@ -1185,3 +1185,117 @@ div.jtable-main-container > table.jtable > tbody > tr.jtable-data-row > td > .jt
   height: 16px;
   opacity: 0.4;
 }
+[aria-describedby="execute-dialog-confirm"], [aria-describedby="dialog-confirm"],
+	[aria-describedby="ui-id-7"], [aria-describedby="div-dialog-warning"],
+	[aria-describedby="ui-id-1"], [aria-describedby="execute-fail"] {
+	background: #525764 !important;
+}
+#ui-id-7 .ui-icon-alert {
+	float: none !important;
+	background-image: url("images/alert_icon.png");
+}
+
+#ui-id-7 p{
+	background-color: transparent !important;
+	width: 100%;
+}
+#div-dialog-warning, #ui-id-1, #execute-fail {
+	margin: 30px 40px 0px;
+}
+
+.ui-dialog.ui-widget{
+	background: #f9fafa;
+	width: 35% !important;
+	border-radius: 4px 4px 0px 0px !important;
+}
+.ui-dialog-buttonpane{
+	top: 10px !important;
+	left: -3px !important;
+	position: relative !important;
+	background-color: #515663 !important;
+	border-radius: 0 0 8px 8px !important;
+	text-align: center;
+	margin-top: 0px !important;
+	width: 101%;
+}
+.ui-dialog-buttonset button:nth-child(2){
+	background: #20C8A3 !important;
+}
+.ui-dialog-buttonpane {
+	margin-top: 0 !important;
+}
+.ui-dialog-title {
+	display: none !important;
+}
+
+.ui-dialog-titlebar {
+	background: none !important;
+	border: none !important;
+}
+
+.ui-dialog-buttonset {
+	float: none !important;
+	text-align: center !important;
+}
+
+.ui-button-text {
+	font-weight: normal !important;
+}
+
+.ui-dialog-buttonset button {
+	border-radius: 4px !important;
+	padding: 5px 25px !important;
+	background-image: none !important;
+	border: none !important;
+}
+
+.ui-dialog-buttonpane .ui-widget-content.ui-helper-clearfix {
+	border-width: 0 !important;
+}
+
+.ui-widget-overlay {
+	background: rgb(0, 0, 0) !important;
+	opacity: 0.7 !important;
+}
+
+.ui-widget-content {
+	border: none !important;
+}
+
+.ui-icon-closethick {
+	background-image: url(images/close.png) !important;
+	background-repeat: no-repeat !important;
+	background-position: 0 0 !important;
+	background-size: 80% !important;
+	margin-top: 0 !important;
+}
+.dialog-title-custom {
+	text-align: center;
+	color: #e0e2e3;
+	font-size: 24px;
+	padding-bottom: 5px;
+}
+.ui-dialog-titlebar-close {
+	border: none !important;
+	background: none !important;
+}
+.ui-icon-alert {
+	background: url("images/alert_icon.png") no-repeat center;
+	width: 50px;
+	background-size: 100%;
+	height: 50px;
+	display: block;
+	margin: 0 auto 10px auto !important;
+}
+.ui-dialog-content.ui-widget-content p, .ui-dialog-content.ui-widget-content ul{
+	padding: 25px ;
+	background: #e0e2e3;
+	border-radius: 4px ;
+	font-size: 14px;
+	text-align: center;
+	color: #333;
+}
+.ui-dialog-content.ui-widget-content{
+	color: #fff;
+	font-size: 14px;
+}

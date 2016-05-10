@@ -21,6 +21,7 @@
                 <link href="../css/css/bootstrap.min.css" rel="stylesheet" type="text/css" />
                 <link href="../css/jtables-bdre.css" rel="stylesheet" type="text/css" />
                 <link href="../css/jquery-ui-1.10.3.custom.css" rel="stylesheet" type="text/css" />
+                <link href="../css/bootstrap.custom.css" rel="stylesheet" type="text/css" />
 
                 <!-- Include jTable script file. -->
                 <script src="../js/jquery.min.js" type="text/javascript"></script>
@@ -29,40 +30,12 @@
                 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
                 <script src="../js/jquery.steps.min.js"></script>
                 <link rel="stylesheet" href="../css/jquery.steps.css" />
-                <link rel="stylesheet" href="../css/data-ingestion.css" />
+                <link rel="stylesheet" href="../css/jquery.steps.custom.css" />
                 <script src="../js/bootstrap.js" type="text/javascript"></script>
                 <script src="../js/angular.min.js" type="text/javascript"></script>
                 <script src="../js/svgutil.js" type="text/javascript"></script>
                 <script language="javascript" type="text/javascript" src="../js/graph/viz.js"></script>
                 <script language="javascript" type="text/javascript" src="../js/graph/site.js"></script>
-				<style>
-					#divEncloseHeading .panel-body, .panel-primary>.panel-heading {
-						background-color: #F8F9FB;
-					}
-					#divEncloseHeading .panel-body{
-					padding-bottom: 53px;
-					}
-					.panel-primary>.panel-heading {
-						border: none;
-					}
-					.actions .btn-primary {
-						background-color: #23C9A4 !important;
-						color: #404040 !important;
-						padding: 0.25em 1.1em !important;
-						border-radius: 4px !important;
-						border-color: transparent;
-					}
-					
-					.panel-primary {
-						border-color: #B0B0B0 !important;
-					}
-					.leftpad{
-					padding-left: 10%;
-					}
-					.rightpad{
-					padding-right: 10%;
-					}
-				</style>
                 <script type="text/javascript">
                     var graphViz = "";
                     var prefix = "strict digraph{\n" +
@@ -119,7 +92,7 @@
                                          $(this).dialog("close");
                                      }
                                  }
-                             }).html("You have entered or selected wrong Table Name or Column Name");
+                             }).html("<span class=\"ui-icon-alert-custom\"></span><p>You have entered or selected wrong Table Name or Column Name</p>");
 
                             }
                         });
@@ -209,6 +182,9 @@
                         text-indent:-9999px;
                         top:-7px;
                         right:-7px;
+                    }
+                    .panel-primary{
+                    padding-top: 0% !important;
                     }
                 </style>
 
@@ -308,11 +284,11 @@
             </head>
             <body>
                 <br/>
-
+				<div class="page-header"><spring:message code="tablecolumnlineage.page.table_column_lineage"/></div>
                 <div class="row">&nbsp;</div>
                 <div class="row">
                     <div class="col-md-2"> </div>
-                    <div class="col-md-10" id="divEncloseHeading">
+                    <div class="col-md-10 divEncloseHeading" id="divEncloseHeading">
                         <c:if test="${empty param.tableName}">
                             <div class="col-md-10" id="divEncloseHeading">
                                 <div class="panel panel-primary">
@@ -325,11 +301,11 @@
 
                                     <div class="panel-body">
                                             <div class="row">
-                                                 <div class="col-xs-5 leftpad">
+                                                 <div class="col-xs-5 form-group">
 													<label><spring:message code="tablecolumnlineage.page.table_name"/></label>
                                                     <input type="text" class="form-control" name="tableName" id="tableName" value =""/>
 												</div>
-                                                <div class="col-xs-5 pull-right rightpad">
+                                                <div class="col-xs-5 form-group">
                                                     <label><spring:message code="tablecolumnlineage.page.column_name"/></label>
 													<input type="text" class="form-control" name="colName" id="colName" value =""/>
                                                 </div>

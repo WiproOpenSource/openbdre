@@ -233,14 +233,22 @@
 
 	    function popModal(pid) {
 		$.get('workflow/' + pid + '.page', function (data) {
+		    console.log("data is"+data);
+		    if(data=="not allowed")
+		     alert("ACCESS DENIED");
+		     else{
 		    modal.open({content: "<b>Loading</b>"});
 		    UpdateGraphviz(data);
 		    modal.center();
+		    }
 		});
 	    }
 
 	    function popModalXml(pid) {
 		$.get('workflowxml/' + pid + '.page', function (data) {
+		 if(data=="not allowed")
+        		     alert("ACCESS DENIED");
+        		     else{
 		    modal.open({content: "<b>Loading</b>"});
 		    showXML(data);
 		    $('#content').each(function (i, block) {
@@ -248,6 +256,7 @@
 			console.log(block);
 		    });
 		    modal.center();
+		    }
 		});
 	    }
 	    function GotoProcess(pid) {
