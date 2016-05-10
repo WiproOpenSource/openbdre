@@ -680,7 +680,7 @@ var destjobTrackerIp;
    	
 
 
-        <div id="bdre-data-migration" class="wizard-vertical"  >
+        <div id="bdre-data-migration">
         <h3><div class="number-circular">1</div><spring:message code="hivetablemigration.page.h3_div_1"/></h3>
 
                             <section>

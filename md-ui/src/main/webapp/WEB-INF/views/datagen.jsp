@@ -22,13 +22,7 @@
 		color: #fff !important;
 	}
 	#processFieldsForm1 .form-group{
-	 padding-left: 0; 
-	 padding-right: 0;
-	 width: 100% !important;
-	 margin: 0 auto; 
-	}
-	#processFieldsForm1 div.form-group:nth-child(odd),#processFieldsForm1 div.form-group:nth-child(even){
-		float: none;
+		 
 	}
    	</style>
 	<script>
@@ -124,7 +118,7 @@ function formIntoMap(typeProp, typeOf) {
 
             <h3><div class="number-circular">1</div><spring:message code="datagen.page.data_types"/></h3>
             <section>
-            <form class="form-horizontal" role="form" id="processFieldsForm1">
+            <form class="form-horizontal pull-none" role="form" id="processFieldsForm1">
                 	<!-- btn-group -->
                     <div class="form-group" id="formGroup1" >
                         <div class="col-md-3">

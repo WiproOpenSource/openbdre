@@ -655,7 +655,6 @@ wizard = $(document).ready(function() {
 			<form class="form-horizontal" role="form" id="processFieldsForm1">
                         <div id="processDetails">
                            <!-- btn-group -->
-                            <div id="processFields">
 								<div class="form-group">
                                     <label class="control-label col-sm-6" for="processName" ><spring:message code="dataload.page.form_left_procname"/></label>
                                     <div class="col-sm-8">
@@ -686,16 +685,17 @@ wizard = $(document).ready(function() {
                                 <div class="clearfix"></div>
                             </div>
                             <!-- /btn-group -->
-                        </div>
+                        
                         </form>
 			</section>
 			<h3><div class="number-circular">2</div><spring:message code="dataload.page.h3_div_2"/></h3>
             			<section>
-            <form class="form-horizontal" role="form" id="fileFormat">
-                                    <div id="fileFormatDiv">
-                                        <div class="alert alert-info" role="alert">
+            			 <div class="alert alert-info" role="alert">
                                           <spring:message code="dataload.page.alert_info_form"/>
                                         </div>
+            <form class="form-horizontal" role="form" id="fileFormat">
+                                    
+                                       
                                         <!-- btn-group -->
                                         <div id="rawTablDetailsDB">
                                         <div class="form-group" >
@@ -717,7 +717,7 @@ wizard = $(document).ready(function() {
                                         </div>
                                         
                                         <!-- /btn-group -->
-                                    </div>
+                                
                                     </form>
             			</section>
 			<h3><div class="number-circular">3</div><spring:message code="dataload.page.raw_table_props"/></h3>
@@ -734,13 +734,14 @@ wizard = $(document).ready(function() {
 
 			<h3><div class="number-circular">5</div><spring:message code="dataload.page.provide_props"/></h3>
 			<section>
-                                    <form class="form-horizontal" role="form" id="serdeProperties">
-                                        <div id="serdePropertiesDiv">
-                                            <div class="alert alert-info" role="alert">
+			<div class="alert alert-info" role="alert">
                                                 <b style="font-size:24px;"><spring:message code="dataload.page.how_to"/></b>
                                                 <b><spring:message code="dataload.page.enter_props"/></b>
                                                 <br>
 											</div>
+                                    <form class="form-horizontal pull-none" role="form" id="serdeProperties">
+                                        
+                                            
 
                                             <!-- btn-group -->
                                             <div class="form-group" id="formGroupSerde1">
@@ -754,8 +755,9 @@ wizard = $(document).ready(function() {
 
 
                                             </div>
+                                            <div class="clearfix"></div>
                                             <!-- /btn-group -->
-                                        </div>
+                                       
                                         <div class="col-md-2" id="serdePropDiv">
                                                     <button id="serdeButton1" class="btn btn-primary add-more">
                                                         <span class="glyphicon glyphicon-plus" style="font-size:large"></span>
@@ -768,16 +770,14 @@ wizard = $(document).ready(function() {
 
 			<h3><div class="number-circular">6</div><spring:message code="dataload.page.provide_table_props"/></h3>
             			<section>
-                                                <form class="form-horizontal" role="form" id="tableProperties">
-                                                    <div id="tablePropertiesDiv">
-                                                        <div class="alert alert-info" role="alert">
+            			 <div class="alert alert-info" role="alert">
                                                             <b style="font-size:24px;"><spring:message code="dataload.page.how_to"/></b>
                                                             <b><spring:message code="dataload.page.enter_table_key_value"/></b>
                                                             <br>
 
                                                         </div>
-
-                                                        <!-- btn-group -->
+                                                <form class="form-horizontal pull-none" role="form" id="tableProperties">
+														<!-- btn-group -->
                                                         <div class="form-group" id="formGroupTable1">
                                                             <div class="col-md-3">
                                                                 <input type="text" class="form-control input-sm" id="tablePropKey.1" value="" name="tablePropKey.1" placeholder=<spring:message code="dataload.page.table_prop_key_placeholder"/> />
@@ -791,7 +791,7 @@ wizard = $(document).ready(function() {
                                                         </div>
                                                         <div class="clearfix"></div>
                                                         <!-- /btn-group -->
-                                                    </div>
+                                                   
                                                     <div class="col-md-2" id="tablePropDiv">
                                                                 <button id="tableButton1" class="btn btn-primary add-more">
                                                                     <span class="glyphicon glyphicon-plus" style="font-size:large"></span>
@@ -1130,9 +1130,11 @@ function buildForm(fileformat) {
 			var root = 'Records';
 			var div = document.getElementById('fileFormatDetails');
 			var formHTML = '';
-			formHTML = formHTML + '<form class="form-horizontal" role="form" id = "formatFields">';
-			formHTML = formHTML + '<div id="Serde, OutPut and Input Format">';
 			formHTML = formHTML + '<div class="alert alert-info" role="alert">Application requires serde class and input/output format details to be entered</div>';
+			formHTML = formHTML + '<div id="Serde, OutPut and Input Format">';
+			formHTML = formHTML + '<form class="form-horizontal" role="form" id = "formatFields">';
+			
+			
 
 			console.log(data[root].length);
 			if (data[root].length == 0){
