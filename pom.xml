@@ -28,6 +28,7 @@
         <module>md-commons</module>
         <module>md-rest-api</module>
         <module>md-ui</module>
+        <module>analytic-ui</module>
         <module>md-dao</module>
         <module>md_api</module>
         <module>login-module</module>
