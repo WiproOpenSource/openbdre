@@ -171,8 +171,10 @@ public class ProcessAPI extends MetadataAPIBase {
             if (pid == 0) {
                 processId = null;
             }
-            Integer counter = processDAO.totalRecordCount(processId);
+            if (pid!=0)
+                processDAO.securityCheck(pid,principal.getName(), "read");
             List<com.wipro.ats.bdre.md.dao.jpa.Process> processList = processDAO.list(processId, startPage, pageSize,principal.getName());
+            Integer counter = processDAO.totalRecordCount(processId);
             List<Process> processes = new ArrayList<Process>();
 
             for (com.wipro.ats.bdre.md.dao.jpa.Process daoProcess : processList) {
@@ -215,6 +217,9 @@ public class ProcessAPI extends MetadataAPIBase {
             }
             restWrapper = new RestWrapper(processes, RestWrapper.OK);
             LOGGER.info("All records listed from Process by User:" + principal.getName());
+        }catch (SecurityException e) {
+            LOGGER.error(e);
+            restWrapper = new RestWrapper(e.getMessage(), RestWrapper.ERROR);
         } catch (MetadataException e) {
             LOGGER.error(e);
             restWrapper = new RestWrapper(e.getMessage(), RestWrapper.ERROR);

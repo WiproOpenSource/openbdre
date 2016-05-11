@@ -1,7 +1,9 @@
 
-<%@ taglib prefix="security"
-uri="http://www.springframework.org/security/tags" %>
+
+                    <%@ taglib prefix="security"
+       uri="http://www.springframework.org/security/tags" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+<%@taglib uri="http://www.springframework.org/tags" prefix="spring"%>
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1"
      pageEncoding="ISO-8859-1"%>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
@@ -20,18 +22,19 @@ uri="http://www.springframework.org/security/tags" %>
 	  ga('send', 'pageview');
 	</script>
 
-    <script src="../js/jquery.min.js"></script>
-    <link href="../css/jquery-ui-1.10.3.custom.css" rel="stylesheet">
-    <link href="../css/css/bootstrap.min.css" rel="stylesheet" />
-    <script src="../js/jquery-ui-1.10.3.custom.js"></script>
-    <script src="../js/jquery.steps.min.js"></script>
-    <link rel="stylesheet" href="../css/jquery.steps.css" />
+   <script src="../js/jquery.min.js"></script>
+       <link href="../css/jquery-ui-1.10.3.custom.css" rel="stylesheet">
+       <link href="../css/css/bootstrap.min.css" rel="stylesheet" />
+       <link href="../css/bootstrap.custom.css" rel="stylesheet" type="text/css" />
+       <script src="../js/jquery-ui-1.10.3.custom.js"></script>
+       <script src="../js/jquery.steps.min.js"></script>
+       <link rel="stylesheet" href="../css/jquery.steps.css" />
+       <link rel="stylesheet" href="../css/jquery.steps.custom.css" />
+   	    <script src="../js/bootstrap.js" type="text/javascript"></script>
+       <script src="../js/jquery.jtable.js" type="text/javascript"></script>
+       <link href="../css/jtables-bdre.css" rel="stylesheet" type="text/css" />
 
-    <script src="../js/bootstrap.js" type="text/javascript"></script>
-    <script src="../js/jquery.jtable.js" type="text/javascript"></script>
-    <link href="../css/jtables-bdre.css" rel="stylesheet" type="text/css" />
-
-    <script src="../js/angular.min.js" type="text/javascript"></script>
+       <script src="../js/angular.min.js" type="text/javascript"></script>
     <style>
     html, body, .container-table {
         height: 100%;
@@ -94,79 +97,80 @@ uri="http://www.springframework.org/security/tags" %>
   </head>
 
   <body ng-app="myApp" ng-controller="myCtrl">
-
+                        <div class="page-header"><spring:message code="analytics.ui.page.panel_heading"/></div>
                         <div class="row">&nbsp;</div>
-                        <div class="row">
+                        <div class="row bdre-process-creation-form">
                             <div class="col-md-3"> </div>
                             <div class="col-md-6" id="divEncloseHeading">
                                 <div class="panel panel-primary">
-                                    <div class="panel-heading">Analytics App</div>
                                     <div class="panel-body">
                                         <form role="form" id="propertiesFieldsForm">
                                             <div class="form-group">
-                                                <label >Industry Name:</label>
+                                                <label ><spring:message code="analytics.ui.page.industry.name"/></label>
                                                     <select class="form-control" id="industry" name="industry" >
                                                         <option ng-repeat="industry in industries" value="{{industry.defaultVal}}" name="industry">{{industry.value}}</option>
                                                     </select>
                                               </div>
 
                                             <div class="form-group">
-                                                <label >Category </label>
+                                                <label ><spring:message code="analytics.ui.page.category"/> </label>
                                                 <input type="text" class="form-control" name="category" id="category" placeholder="category" required>
                                              </div>
 
                                             <div class="form-group">
-                                                <label >App Name</label>
+                                                <label ><spring:message code="analytics.ui.page.app.name"/></label>
                                                 <input type="text" class="form-control" name="appname" id="appname" placeholder="App Name" required>
                                             </div>
 
                                              <div class="form-group">
-                                                <label >App Description</label>
+                                                <label ><spring:message code="analytics.ui.page.app.description"/></label>
                                                 <input type="text" class="form-control" name="appdesc" id="appdesc" placeholder="App Description" required>
                                             </div>
 
                                               <div class="form-group">
-                                                 <label >Questions Json</label>
+                                                 <label ><spring:message code="analytics.ui.page.questions.json"/></label>
                                                  <input type="text" class="form-control" name="questionsjson" id="questionsjson" placeholder="Questions Json" required>
                                              </div>
 
                                               <div class="form-group">
-                                                 <label >Dashboard URL</label>
+                                                 <label ><spring:message code="analytics.ui.page.dashboard.url"/></label>
                                                  <input type="text" class="form-control" name="dashboardurl" id="dashboardurl" placeholder="Dashboard URL" required>
                                              </div>
 
                                              <div class="form-group">
-                                                  <label >DDP URL</label>
+                                                  <label ><spring:message code="analytics.ui.page.ddp.url"/></label>
                                                   <input type="text" class="form-control" name="ddpurl" id="ddpurl" placeholder="DDP URL" required>
                                               </div>
 
                                              <div class="form-group">
-                                                <label >App Image</label>
+                                                <label ><spring:message code="analytics.ui.page.app.image"/></label>
                                                 <input type="file" class="form-control" name="appimage" id="appimage"  required>
                                             </div>
 
                                               <div class="form-group">
-                                                 <label>Process Name:</label>
+                                                 <label><spring:message code="analytics.ui.page.process.name"/></label>
                                                  <input type="text" class="form-control"  id="processName" name="processName" placeholder="Enter Process Name" required>
                                              </div>
                                              <div class="form-group">
-                                                 <label>Process Description:</label>
+                                                 <label><spring:message code="analytics.ui.page.process.description"/></label>
                                                   <input type="text" class="form-control" id="processDescription" name="processDescription" placeholder="Enter Process Description" required>
                                              </div>
                                              <div class="form-group">
-                                                  <label>Bus Domain Id:</label>
+                                                  <label><spring:message code="analytics.ui.page.bus.domain.id"/></label>
                                                    <select class="form-control" id="busDomainId" name="busDomainId">
                                                     <option ng-repeat="busDomain in busDomains.Options" value="{{busDomain.Value}}" name="busDomainId">{{busDomain.DisplayText}}</option>
                                                     </select>
                                              </div>
-
+                                               <div class="actions text-center pull-right">
                                             <input type="submit" id="createJobButton" class="btn btn-primary" ng-click="createJob()"/>
+                                            </div>
 
 
                                             </form>
                                     </div>
                                 </div>
                             </div>
+                         </div>
                             <div class="col-md-3"> </div>
 			<div class="row">&nbsp;</div>
                     <div class="row">

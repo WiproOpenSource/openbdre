@@ -1,1 +1,0 @@
-This should be an iframe pointing to Tablau page.

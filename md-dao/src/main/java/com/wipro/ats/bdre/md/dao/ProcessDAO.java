@@ -819,7 +819,6 @@ public String securityCheck(Integer processId,String username,String action){
     {
         userRolesNameList.add(userRoles1.getRole());
     }
-
     session.getTransaction().commit();
     session.close();
     if (userRolesNameList.contains("ROLE_ADMIN"))

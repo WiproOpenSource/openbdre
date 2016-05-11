@@ -1,1 +1,0 @@
-Usecases of selected industry should appear here grouped by category.

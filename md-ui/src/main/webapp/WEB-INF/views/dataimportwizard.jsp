@@ -39,7 +39,11 @@
 		<script src = "../js/jquery.fancytree.table.js" type = "text/javascript" ></script >
 		<script src = "../js/jquery.jtable.js" type = "text/javascript" ></script >
 		<link href = "../css/jtables-bdre.css" rel = "stylesheet" type = "text/css" />
-		
+		<style>
+		.btn-success{
+		margin-left: 10%;
+		}
+		</style>
 		<script >
         function fetchPipelineInfo(pid){
 			location.href = '<c:url value="/pages/lineage.page?pid="/>' + pid;
@@ -651,17 +655,27 @@ isInit=true;
 				<section >
 					<div >
 					<fmt:bundle basename="db">
+						<div class="form-group">
 						<label for = "dbURL" ><spring:message code="dataimportwizard.page.db_url"/></label >
 						<input id = "dbURL" onchange = "treeData=null;" name = "common_dbURL" type = "text" class = "form-control" value = "<fmt:message key='hibernate.connection.url' />" />
+						</div>
+						<div class="form-group">
 						<label for = "dbUser" ><spring:message code="dataimportwizard.page.db_user"/></label >
 						<input id = "dbUser" onchange = "treeData=null;" name = "common_dbUser" type = "text" class = "form-control" value = "<fmt:message key='hibernate.connection.username' />" />
+						</div>
+						<div class="form-group">
 						<label for = "dbPassword" ><spring:message code="dataimportwizard.page.db_psswd"/></label >
 						<input id = "dbPassword" onchange = "treeData=null;" name = "common_dbPassword" type = "password" class = "form-control" value = "<fmt:message key='hibernate.connection.password' />" />
+						</div>
+						<div class="form-group">
 						<label for = "dbDriver" ><spring:message code="dataimportwizard.page.db_driver"/></label >
 						<input id = "dbDriver" onchange = "treeData=null;" name = "common_dbDriver" type = "text" class = "form-control" value = "<fmt:message key='hibernate.connection.driver_class' />" />
+						</div>
+						<div class="form-group">
 						<label for = "dbSchema" ><spring:message code="dataimportwizard.page.schema"/></label >
                         <input id = "dbSchema" onchange = "treeData=null;" name = "common_dbSchema" type = "text" class = "form-control" value = "<fmt:message key='hibernate.default_schema' />" />
-						<div ><br /></div >
+						</div>
+						<div class="clearfix"></div>
 						<button class = "btn btn-default  btn-success" type = "button" onClick = "verifyConnection()" href = "#" >
 							Test Connection
 						</button >
