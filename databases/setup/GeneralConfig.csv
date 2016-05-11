@@ -564,9 +564,6 @@
 'industry_name', 'retail',  'Retail',  'retail', 1,  'retail', 'text', 1
 'industry_name', 'healthcare',  'Health Care',  'healthcare', 1,  'healthcare', 'text', 1
 'industry_name', 'energy',  'Energy And Utilities',  'energy', 1,  'energy', 'text', 1
-'banking',  'customer_attrition',  'Customer Attrition',  'customer_attrition', 1,  'customer_attrition', 'text', 1
-'banking',  'category2',  'category2',  'category2', 1,  'category2', 'text', 1
-'banking',  'category3',  'category3',  'category3', 1,  'category3', 'text', 1
 'cluster.nn-address', 'Local cluster - Namenode Address', 'Namenode Address','Local cluster' , 1, 'hdfs://${name_node_hostname}:${name_node_port}', 'text' , 1
 'cluster.jt-address', 'Local cluster - Job Tracker Address', 'Job Tracker Address','Local cluster' , 1, '${job_tracker_hostname}:${job_tracker_port}', 'text' , 1
 'cluster.hive-address', 'Local cluster - Hive Server2 Address', 'Hive Server2 Address','Local cluster' , 1, '${hive_server_hostname}:10000', 'text' , 1
