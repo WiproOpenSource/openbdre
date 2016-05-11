@@ -9,11 +9,11 @@ import static org.junit.Assert.*;
  * Created by cloudera on 4/20/16.
  */
 public class AnalyticUIGeneratorMainTest {
-    @Ignore
+
     @Test
     public void testMain() throws Exception {
         AnalyticUIGeneratorMain analyticUIGeneratorMain = new AnalyticUIGeneratorMain();
-        String[] args = {"-p", "270"};
+        String[] args = {"-p", "144","-u","admin"};
         analyticUIGeneratorMain.main(args);
     }
 }

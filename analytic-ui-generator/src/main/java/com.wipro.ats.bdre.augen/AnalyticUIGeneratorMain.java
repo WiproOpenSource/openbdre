@@ -9,6 +9,7 @@ import com.wipro.ats.bdre.md.api.GetProperties;
 import com.wipro.ats.bdre.md.api.base.MetadataAPIBase;
 import com.wipro.ats.bdre.md.beans.ProcessInfo;
 import com.wipro.ats.bdre.md.dao.AnalyticsAppsDAO;
+import com.wipro.ats.bdre.md.dao.ProcessDAO;
 import com.wipro.ats.bdre.md.dao.jpa.AnalyticsApps;
 import com.wipro.ats.bdre.md.dao.jpa.Process;
 import org.apache.commons.cli.CommandLine;
@@ -22,10 +23,15 @@ import org.springframework.beans.factory.config.AutowireCapableBeanFactory;
 public class AnalyticUIGeneratorMain extends MetadataAPIBase {
     @Autowired
     AnalyticsAppsDAO analyticsAppsDAO;
+    @Autowired
+    ProcessDAO processDAO;
+
 
     private static final Logger LOGGER = Logger.getLogger(AnalyticUIGeneratorMain.class);
     private static final String[][] PARAMS_STRUCTURE = {
-            {"p", "parent-process-id", "Process Id of the process to begin"}
+            {"p", "parent-process-id", "Process Id of the process to begin"},
+            {"u", "username", "Username"}
+
     };
     public AnalyticUIGeneratorMain() {
         AutowireCapableBeanFactory acbFactory = getAutowireCapableBeanFactory();
@@ -33,14 +39,28 @@ public class AnalyticUIGeneratorMain extends MetadataAPIBase {
     }
 
     public static void main(String[] args)  {
+        AnalyticUIGeneratorMain analyticUIGeneratorMain = new AnalyticUIGeneratorMain();
+        analyticUIGeneratorMain.table2DAOAnalyticUI(args);
+
+
+    }
+    @Override
+    public Object execute(String[] param){
+        return null;
+    }
+
+    public void table2DAOAnalyticUI(String[] args){
         CommandLine commandLine = new AnalyticUIGeneratorMain().getCommandLine(args, PARAMS_STRUCTURE);
         String pid = commandLine.getOptionValue("parent-process-id");
         LOGGER.debug("processId is " + pid);
+        String username = commandLine.getOptionValue("username");
+        LOGGER.debug("username is " + username);
+        processDAO.securityCheck(Integer.parseInt(pid),username, "execute");
         String outputFile = "";
 
 
         //Getting sub-process for process-id
-        List<ProcessInfo> processInfos = new GetProcess().execute(new String[]{"--parent-process-id", pid});
+        List<ProcessInfo> processInfos = new GetProcess().execute(new String[]{"--parent-process-id", pid , "--username" , username});
         // Getting properties related with flume action for every process
         StringBuilder addFlumeProperties = new StringBuilder();
         com.wipro.ats.bdre.md.dao.jpa.AnalyticsApps analyticsApps = new com.wipro.ats.bdre.md.dao.jpa.AnalyticsApps();
@@ -83,15 +103,9 @@ public class AnalyticUIGeneratorMain extends MetadataAPIBase {
         }
         AnalyticUIGeneratorMain analyticUIGeneratorMain = new AnalyticUIGeneratorMain();
         analyticUIGeneratorMain.insertIntoAnalyticTable(analyticsApps);
-
-
-    }
-    @Override
-    public Object execute(String[] param){
-        return null;
     }
 
     public void insertIntoAnalyticTable(AnalyticsApps analyticsApps){
-        Long analyticsAppId = analyticsAppsDAO.insert(analyticsApps);
+        analyticsAppsDAO.insert(analyticsApps);
     }
 }
