@@ -24,7 +24,7 @@
         http://www.springframework.org/schema/context/spring-context-3.0.xsd
         http://www.springframework.org/schema/mvc
         http://www.springframework.org/schema/mvc/spring-mvc-3.0.xsd">
-    <context:component-scan base-package="com.wipro.ats.bdre.md.ui"/>
+    <context:component-scan base-package="com.wipro.ats.bdre.md.analyticui"/>
     <mvc:annotation-driven/>
     <beans:bean class="org.springframework.web.servlet.view.InternalResourceViewResolver">
         <beans:property name="prefix" value="/WEB-INF/views/"/>

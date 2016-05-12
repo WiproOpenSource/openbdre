@@ -3,7 +3,6 @@ package com.wipro.ats.bdre.augen;
 import java.util.Enumeration;
 import java.util.List;
 
-import com.wipro.ats.bdre.BaseStructure;
 import com.wipro.ats.bdre.md.api.GetProcess;
 import com.wipro.ats.bdre.md.api.GetProperties;
 import com.wipro.ats.bdre.md.api.base.MetadataAPIBase;
@@ -56,13 +55,13 @@ public class AnalyticUIGeneratorMain extends MetadataAPIBase {
         String username = commandLine.getOptionValue("username");
         LOGGER.debug("username is " + username);
         processDAO.securityCheck(Integer.parseInt(pid),username, "execute");
-        String outputFile = "";
+
 
 
         //Getting sub-process for process-id
         List<ProcessInfo> processInfos = new GetProcess().execute(new String[]{"--parent-process-id", pid , "--username" , username});
         // Getting properties related with flume action for every process
-        StringBuilder addFlumeProperties = new StringBuilder();
+
         com.wipro.ats.bdre.md.dao.jpa.AnalyticsApps analyticsApps = new com.wipro.ats.bdre.md.dao.jpa.AnalyticsApps();
 
         for (ProcessInfo processInfo : processInfos) {

@@ -11,12 +11,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.wipro.ats.bdre.md.ui;
+package com.wipro.ats.bdre.md.analyticui;
 
-import com.wipro.ats.bdre.md.api.GetProcess;
-import com.wipro.ats.bdre.md.beans.ProcessInfo;
-import com.wipro.ats.bdre.wgen.Workflow;
-import com.wipro.ats.bdre.wgen.WorkflowPrinter;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;

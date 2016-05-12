@@ -50,7 +50,7 @@ public class AnalyticsAppAPI {
         String processDescription = null;
         Integer busDomainId = null;
 
-        Map<Process,List<Properties>> processPropertiesMap = new HashMap<Process, List<Properties>>();
+
 
         List<com.wipro.ats.bdre.md.dao.jpa.Properties> propertiesList = new ArrayList<Properties>();
 
@@ -120,11 +120,9 @@ public class AnalyticsAppAPI {
         parentProcess.setUsers(users);
         parentProcess.setUserRoles(userRolesDAO.minUserRoleId(principal.getName()));
         com.wipro.ats.bdre.md.dao.jpa.Process childProcess1 = Dao2TableUtil.buildJPAProcess(38, "subprocess1 of "+processName, "subprocess1 of "+processDescription, 1,busDomainId);
-        //    com.wipro.ats.bdre.md.dao.jpa.Process childProcess2 = Dao2TableUtil.buildJPAProcess(38, "subprocess2 of "+processName, "subprocess1 of "+processDescription, 1,busDomainId);
 
         List<Process> childProcesses = new ArrayList<Process>();
         childProcesses.add(childProcess1);
-        //     childProcesses.add(childProcess2);
 
 
         List<com.wipro.ats.bdre.md.dao.jpa.Process> processList = processDAO.createAnalyticsAppJob(parentProcess, childProcesses, propertiesList);
@@ -211,7 +209,7 @@ public class AnalyticsAppAPI {
             }
 
             restWrapper = new RestWrapper(analyticsAppsList, RestWrapper.OK);
-            LOGGER.info("All records listed from Properties by User:"+category+industry );
+            LOGGER.info("All records listed from Properties by User:"+ principal.getName());
 
         } catch (MetadataException e) {
             LOGGER.error(e);
@@ -240,7 +238,7 @@ public class AnalyticsAppAPI {
             }
 
             restWrapper = new RestWrapper(analyticsAppsList, RestWrapper.OK);
-            LOGGER.info("All records listed from Properties by User:");
+            LOGGER.info("All records listed from Properties by User:" + principal.getName());
 
         } catch (MetadataException e) {
             LOGGER.error(e);
@@ -269,7 +267,7 @@ public class AnalyticsAppAPI {
             }
 
             restWrapper = new RestWrapper(analyticsAppsList, RestWrapper.OK);
-            LOGGER.info("All records listed from Properties by User:" );
+            LOGGER.info("All records listed from Properties by User:" + principal.getName());
 
         } catch (MetadataException e) {
             LOGGER.error(e);
