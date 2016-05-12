@@ -968,7 +968,8 @@
                               },
                               userName: {
                                        title: 'Username',
-
+                                        create: false,
+                                        list:true,
                                     },
                                 processTypeId: {
                                     title: 'Type',
