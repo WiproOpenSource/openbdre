@@ -27,7 +27,8 @@
     <script src="../js/jquery-ui-1.10.3.custom.js"></script>
     <script src="../js/jquery.steps.min.js"></script>
     <link rel="stylesheet" href="../css/jquery.steps.css" />
-
+	<link rel="stylesheet" href="../css/jquery.steps.custom.css" />
+	<link rel="stylesheet" href="../css/bootstrap.custom.css" />
     <script src="../js/bootstrap.js" type="text/javascript"></script>
     <script src="../js/jquery.jtable.js" type="text/javascript"></script>
     <link href="../css/jtables-bdre.css" rel="stylesheet" type="text/css" />
@@ -49,6 +50,7 @@
   </head>
 
   <body ng-app="myApp" ng-controller="myCtrl">
+  <div class="page-header"><spring:message code="appexport.page.pannel_heading"/></div>
  <%
    String processId=request.getParameter("processId");
   %>
@@ -56,9 +58,7 @@
                                          <div class="row">
                                              <div class="col-md-3"> </div>
                                              <div class="col-md-6" >
-                                                  <div class="panel panel-primary" >
-                                                       <div class="panel-heading"><spring:message code="appexport.page.pannel_heading"/></div>
-                                                       <div  class="col-md-3"></div>
+                                                  	<div  class="col-md-3"></div>
                                                        <div class="col-md-3 ">
                                                            <div class="row">&nbsp;</div>
                                                            <button type="button" width="20px" onclick="downloadZip(<%=processId %>)" class="btn btn-primary btn-large  pull-center"><spring:message code="appexport.page.download"/></button>
@@ -67,7 +67,7 @@
                                                             <div class="row">&nbsp;</div>
                                                             <button type="button" width="20px" onclick="showExportForm()" class="btn btn-primary btn-large pull-center"><spring:message code="appexport.page.export_to_appstore"/></button>
                                                        </div>
-                                                  </div>
+                                                  
                                              </div>
                                          </div>
 
@@ -111,8 +111,9 @@
                                                <label></label>
                                                <input type="hidden" class="form-control" name="processId"  value="<%=processId %>" required>
                                             </div>
-
-                                            <input type="submit" id="submitButton" class="btn btn-primary" onclick="appstorePush();"/>
+											<div class="actions text-center pull-right">
+                                            	<input type="submit" id="submitButton" class="btn btn-primary" onclick="appstorePush();"/>
+                                            </div>
                                         </form>
 
                                     </div>

@@ -991,17 +991,6 @@
                                         return '<span class="label label-primary" onclick="fetchPipelineInfo(' + data.record.processId + ')">Display</span> ';
                                     },
                                 },
-                                DataLineageButton: {
-                                    title: 'Data Lineage',
-                                    sorting: false,
-                                    width: '2%',
-                                    listClass: 'bdre-jtable-button',
-                                    create: false,
-                                    edit: false,
-                                    display: function(data) {
-                                        return '<span class="label label-primary" onclick="fetchBatchLineageInfo(' + data.record.processId + ')">Column Lineage</span> ';
-                                    },
-                                },
                                 DeployProcess: {                    
                                     width: '5%',
                                     sorting: false,
@@ -1324,28 +1313,7 @@
                             }
                         });
                     }
-
-                    function fetchBatchLineageInfo(pid) {
-                                      $.ajax({
-                                                url: '/mdrest/process/permission/'+pid,
-                                                type: 'PUT',
-                                                dataType: 'json',
-                                                 success: function(data) {
-                                                    if(data.Result == "OK") {
-                                                    location.href = '<c:url value="/pages/columnlineage.page?pid="/>' + pid;
-                                                    }
-                                                    else
-                                                    {
-                                                     alert(data.Message);
-                                                    }
-                                                },
-                                                error: function() {
-                                                    $dfd.reject();
-                                                }
-                                            });
-                    }
-
-                     function goToEditGraphically(pid) {
+					function goToEditGraphically(pid) {
                                       $.ajax({
                                                url: '/mdrest/process/permission/'+pid,
                                                type: 'PUT',
