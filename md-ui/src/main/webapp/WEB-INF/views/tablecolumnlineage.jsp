@@ -315,6 +315,10 @@
                     .panel-primary {
                         padding-top: 0% !important;
                     }
+                    .form-group {
+                        width: 50%;
+                        padding: 50px 10% 30px 10%  ;
+                    }
                 </style>
 
 
@@ -479,7 +483,7 @@
 
 
 
-                    < c: if test = "${not empty param.tableName}" >
+                    <c:if test = "${not empty param.tableName}" >
 
                         $(document).ready(function() {
 
@@ -491,7 +495,7 @@
 
                         });
 
-                    < /c:if>
+                    </c:if>
                 </script>
 
 
