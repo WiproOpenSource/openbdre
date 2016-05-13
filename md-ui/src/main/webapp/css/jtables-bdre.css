@@ -602,6 +602,7 @@ div.jtable-main-container > table.jtable > tbody > tr.jtable-data-row > td > .jt
 
 .jtable-dialog-form .jtable-input-label {
 	width: 30% !important;
+	color: #000 !important;
 }
 
 .jtable-dialog-form select, .jtable-dialog-form .jtable-text-input input, .jtable-dialog-form .jtable-password-input input {
@@ -623,13 +624,4 @@ form.jtable-dialog-form div.jtable-input-field-container {
 	border: none;
 	margin-bottom: 10px;
 	padding-left: 35px;
-}
-.jtable-delete-confirm-message {
-	display:block;
-	padding: 25px ;
-	background: #e0e2e3;
-	border-radius: 4px ;
-	font-size: 14px;
-	text-align: center;
-	margin-top: 6%;
 }

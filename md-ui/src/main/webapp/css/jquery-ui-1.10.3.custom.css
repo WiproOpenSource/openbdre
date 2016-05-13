@@ -1185,26 +1185,11 @@ div.jtable-main-container > table.jtable > tbody > tr.jtable-data-row > td > .jt
   height: 16px;
   opacity: 0.4;
 }
-[aria-describedby="execute-dialog-confirm"], [aria-describedby="dialog-confirm"],
-	[aria-describedby="ui-id-7"], [aria-describedby="div-dialog-warning"],
-	[aria-describedby="ui-id-1"], [aria-describedby="execute-fail"] {
-	background: #525764 !important;
-}
-#ui-id-7 .ui-icon-alert {
-	float: none !important;
-	background-image: url("images/alert_icon.png");
-}
-
-#ui-id-7 p{
-	background-color: transparent !important;
-	width: 100%;
-}
 #div-dialog-warning, #ui-id-1, #execute-fail {
 	margin: 30px 40px 0px;
 }
-
 .ui-dialog.ui-widget{
-	background: #f9fafa;
+	background: #f5f5f5 !important;
 	width: 35% !important;
 	border-radius: 4px 4px 0px 0px !important;
 }
@@ -1271,8 +1256,9 @@ div.jtable-main-container > table.jtable > tbody > tr.jtable-data-row > td > .jt
 }
 .dialog-title-custom {
 	text-align: center;
-	color: #e0e2e3;
+	color: #333;
 	font-size: 24px;
+	display:block;
 	padding-bottom: 5px;
 }
 .ui-dialog-titlebar-close {
@@ -1280,22 +1266,26 @@ div.jtable-main-container > table.jtable > tbody > tr.jtable-data-row > td > .jt
 	background: none !important;
 }
 .ui-icon-alert {
-	background: url("images/alert_icon.png") no-repeat center;
-	width: 50px;
-	background-size: 100%;
-	height: 50px;
-	display: block;
+	background: url("images/alert_icon.png") no-repeat center !important;
+	width: 50px !important;
+	background-size: 100% !important;
+	height: 50px !important;
+	display: block !important;
 	margin: 0 auto 10px auto !important;
+	float: none !important;
 }
-.ui-dialog-content.ui-widget-content p, .ui-dialog-content.ui-widget-content ul{
-	padding: 25px ;
+.ui-dialog-content.ui-widget-content{
+	color: #000;
+	font-size: 14px;
+}
+.jtable-confirm-message,.jtable-delete-confirm-message{
+	padding: 25px;
+	width: 80%;
 	background: #e0e2e3;
 	border-radius: 4px ;
 	font-size: 14px;
 	text-align: center;
 	color: #333;
-}
-.ui-dialog-content.ui-widget-content{
-	color: #fff;
-	font-size: 14px;
+	margin: 0 auto;
+	display:block;
 }

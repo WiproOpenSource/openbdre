@@ -79,7 +79,7 @@
                                                 $(this).dialog("close");
                                             }
                                         }
-                                    }).html(getData.Message);
+                                    }).html("<p><span class=\"jtable-confirm-message\">" + getData.Message + "</span></p>");
                                 }
                             },
                              error : function() { $("#div-dialog-warning").dialog({
