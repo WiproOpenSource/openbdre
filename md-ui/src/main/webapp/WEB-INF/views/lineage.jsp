@@ -20,6 +20,7 @@
 	<link href="../css/pages.css" rel="stylesheet" type="text/css" />
 	<link href="../css/highlight.css" rel="stylesheet" type="text/css" />
 	<link href="../css/css/bootstrap.min.css" rel="stylesheet" type="text/css">
+	<link href="../css/bootstrap.custom.css" rel="stylesheet" type="text/css" />
 
 	<!-- Include one of jTable styles. -->
 
@@ -131,15 +132,14 @@
 		background:url(tint20.png) 0 0 repeat;
 		background:rgba(0,0,0,0.2);
 		border-radius:8px;
-
-	    }
-
-	    #content {
+		overflow: hidden !important;
+		}
+		#content {
 		border-radius:8px;
 		background:#fff;
-
+		overflow-y: scroll;
+   		height: 45em;
 	    }
-
 	    #close {
 		position:absolute;
 		background:url('../css/metro/close.png') 14 14 no-repeat;
@@ -158,6 +158,7 @@
 		/* border-bottom: 1px solid #e4e4e4; */
 		border-radius: 10px;
 	    }
+	    
 	</style>
 
 	<script>
