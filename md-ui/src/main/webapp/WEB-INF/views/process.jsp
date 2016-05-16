@@ -26,6 +26,50 @@
     				-webkit-transform: rotate(90deg); /* Chrome, Safari, Opera */
     				transform: rotate(90deg);
                 }
+               	.label-icons{
+                	margin: 0 auto;
+				    width: 45px;
+				    height: 45px;
+				    background-size: 100% !important;
+				    display: block;
+				    background-repeat: no-repeat;
+				    background-position: center;
+                }
+                 .label-properties{
+                	background: url('../css/images/properties.png') no-repeat center;
+                }
+                .label-pipeline{
+                	background: url('../css/images/pipeline.png');
+                }
+                .label-execution{
+                	background: url('../css/images/execution.png');
+                }
+                .label-editgraphically{
+                	background: url('../css/images/editgraphically.png');
+                }
+                .label-export{
+                	background: url('../css/images/export.png');
+                }
+                .label-execute{
+                	background: url('../css/images/execute.png');
+                }
+                .slamonitor{
+                	background: url('../css/images/slamonitor.png');
+                }
+                .label-initial{
+                	background: url('../css/images/label-initial.png');
+                }
+                .label-icons.label-warning{
+                	background: url('../css/images/label-warning.png');
+                }
+                .label-icons.label-success{
+                	background: url('../css/images/label-success.png');
+                }
+                .label-icons.label-danger{
+                	background: url('../css/images/label-danger.png');
+                }
+               	
+                
                 </style>
                
 	<script>
@@ -118,17 +162,17 @@
                      params = obj.Record.processId;
                      console.log("params = "+params+" deploy = "+deploy);
                      if (deploy === 2) {
-                         $jqueryObj.html('<span title="Process is not deployed." class="label label-danger" onclick=fetchDeployPage(' + params + ')  >Deploy</span>');
+                         $jqueryObj.html('<span title="Process is not deployed." class="label-icons label-initial" onclick=fetchDeployPage(' + params + ')  ></span>');
                      } else if (deploy === 1) {
-                         $jqueryObj.html('<span title="Process is updated.Please redeploy." class="label label-warning" onclick=fetchDeployPage(' + params + ')  >Redeploy</span>');
+                         $jqueryObj.html('<span title="Process is updated.Please redeploy." class="label-icons label-warning" onclick=fetchDeployPage(' + params + ')  >Redeploy</span>');
                      }else if (deploy === 3) {
-                         $jqueryObj.html('<span title="Process is in deployment queue." class="label label-warning" onclick=fetchDeployPage(' + params + ')  >Deploy </span>');
+                         $jqueryObj.html('<span title="Process is in deployment queue." class="label-icons label-warning" onclick=fetchDeployPage(' + params + ')  ></span>');
                      }
                      else if (deploy === 4) {
-                         $jqueryObj.html('<span title="Process is failed.Please redeploy." class="label label-danger" onclick=fetchDeployPage(' + params + ')  >Redeploy </span>');
+                         $jqueryObj.html('<span title="Process is failed.Please redeploy." class="label-icons label-danger" onclick=fetchDeployPage(' + params + ')  >Redeploy </span>');
                      }
                      else {
-                         $jqueryObj.html('<span title="No changes in process after last deployment." class="label label-success"  onclick=fetchDeployPage(' + params + ') >Deployed</span>');
+                         $jqueryObj.html('<span title="No changes in process after last deployment." class="label-icons label-success"  onclick=fetchDeployPage(' + params + ') >Deployed</span>');
                      }
                  });
 
@@ -426,7 +470,7 @@
                                                             listClass: 'bdre-jtable-button',
                                                             display: function(item) { //Create an image that will be used to open child table
 
-                                                                var $img = $('<span class="label label-primary">Show<span class="glyphicon glyphicon-chevron-right "></span></span>'); //Open child table when user clicks the image
+                                                                var $img = $('<span class="label-icons label-properties"></span>'); //Open child table when user clicks the image
 
                                                                 $img.click(function() {
                                                                     $('#Container').jtable('openChildTable',
@@ -691,6 +735,108 @@
                                     edit: false,
                                     title: 'Job Id'
                                 },
+                                
+                                processName: {
+                                    title: 'Name'
+                                },
+                                tableAddTS: {
+                                    title: 'Add TS',
+                                    create: false,
+                                    edit: true,
+                                    list: true
+                                },
+                                tableEditTS: {
+                                    title: 'Edit TS',
+                                    list: false,
+                                    create: false,
+                                    edit: false
+                                },
+                                description: {
+                                    title: 'Description',
+                                },
+                                batchPattern: {
+                                    title: 'Batch Mark',
+                                    list: false,
+                                    create: false,
+                                    edit: false
+
+                                },
+                                parentProcessId: {
+                                    title: 'Parent',
+                                    edit: false,
+                                    create: false,
+                                    list: false
+                                },
+                                canRecover: {
+                                    title: 'Restorable',
+                                    type: 'hidden',
+                                    list: false,
+                                    defaultValue: "0"
+                                },
+                                nextProcessIds: {
+                                    title: 'Next'
+
+                                },
+                                enqProcessId: {
+                                    title: 'Enqueuer',
+                                    list: false,
+                                    type: 'hidden',
+                                    defaultValue: "0"
+
+                                },
+                                busDomainId: {
+                                    title: 'Application',
+                                    type: 'combobox',
+                                    options: '/mdrest/busdomain/options/',
+                                    defaultValue: "1"
+                                },
+                                permissionTypeByUserAccessId: {
+                                    title: 'User Access',
+                                    type: 'combobox',
+                                    list: false,
+                                    options: '/mdrest/process/options/',
+                                    defaultValue: "7"
+                                },
+                                permissionTypeByGroupAccessId: {
+                                  title: 'Group Access',
+                                  type: 'combobox',
+                                  list: true,
+                                  options: '/mdrest/process/options/',
+                                  defaultValue: "6"
+                               },
+                               permissionTypeByOthersAccessId: {
+                                  title: 'Other Access',
+                                  type: 'combobox',
+                                  list: false,
+                                  options: '/mdrest/process/options/',
+                                  defaultValue: "0"
+                               },
+                               ownerRoleId: {
+                                 title: 'Owner Group',
+                                 type: 'combobox',
+                                 list:true,
+                                 options: '/mdrest/userroles/options/',
+                              },
+                              userName: {
+                                       title: 'Username',
+
+                                    },
+                                processTypeId: {
+                                    title: 'Type',
+                                    type: 'combobox',
+                                    options: '/mdrest/processtype/optionslist',
+                                    defaultValue: "1",
+                                },
+                                processTemplateId: {
+                                    type: 'hidden',
+                                    defaultValue: null,
+                                },
+                                workflowId: {
+                                    title: 'Workflow Type',
+                                    type: 'combobox',
+                                    options: '/mdrest/workflowtype/optionslist',
+                                    defaultValue: "1"
+                                },
                                 Properties: {
                                     title: 'Properties',
                                     width: '5%',
@@ -700,7 +846,7 @@
                                     listClass: 'bdre-jtable-button',
                                     display: function(item) { //Create an image that will be used to open child table
 
-                                        var $img = $('<span class="label label-primary">Show<span class="glyphicon glyphicon-chevron-right"></span>'); //Open child table when user clicks the image
+                                        var $img = $('<span class="label-icons label-properties"></span>'); //Open child table when user clicks the image
 
                                         $img.click(function() {
                                             $('#Container').jtable('openChildTable',
@@ -885,101 +1031,6 @@
                                         return $img;
                                     }
                                 },
-                                processName: {
-                                    title: 'Name'
-                                },
-                                tableAddTS: {
-                                    title: 'Add TS',
-                                    create: false,
-                                    edit: true,
-                                    list: true
-                                },
-                                tableEditTS: {
-                                    title: 'Edit TS',
-                                    list: false,
-                                    create: false,
-                                    edit: false
-                                },
-                                description: {
-                                    title: 'Description',
-                                },
-                                batchPattern: {
-                                    title: 'Batch Mark',
-                                    list: false,
-                                    create: false,
-                                    edit: false
-
-                                },
-                                parentProcessId: {
-                                    title: 'Parent',
-                                    edit: false,
-                                    create: false,
-                                    list: false
-                                },
-                                canRecover: {
-                                    title: 'Restorable',
-                                    type: 'hidden',
-                                    list: false,
-                                    defaultValue: "0"
-                                },
-                                nextProcessIds: {
-                                    title: 'Next'
-
-                                },
-                                enqProcessId: {
-                                    title: 'Enqueuer',
-                                    list: false,
-                                    type: 'hidden',
-                                    defaultValue: "0"
-
-                                },
-                                busDomainId: {
-                                    title: 'Application',
-                                    type: 'combobox',
-                                    options: '/mdrest/busdomain/options/',
-                                    defaultValue: "1"
-                                },
-                                permissionTypeByUserAccessId: {
-                                    title: 'User Access',
-                                    type: 'combobox',
-                                    list: false,
-                                    options: '/mdrest/process/options/',
-                                    defaultValue: "7"
-                                },
-                                permissionTypeByGroupAccessId: {
-                                  title: 'Group Access',
-                                  type: 'combobox',
-                                  list: true,
-                                  options: '/mdrest/process/options/',
-                                  defaultValue: "6"
-                               },
-                               permissionTypeByOthersAccessId: {
-                                  title: 'Other Access',
-                                  type: 'combobox',
-                                  list: false,
-                                  options: '/mdrest/process/options/',
-                                  defaultValue: "0"
-                               },
-                               ownerRoleId: {
-                                 title: 'Owner Group',
-                                 type: 'combobox',
-                                 list:true,
-                                 options: '/mdrest/userroles/options/',
-                              },
-                              userName: {
-                                       title: 'Username',
-
-                                    },
-                                processTypeId: {
-                                    title: 'Type',
-                                    type: 'combobox',
-                                    options: '/mdrest/processtype/optionslist',
-                                    defaultValue: "1",
-                                },
-                                processTemplateId: {
-                                    type: 'hidden',
-                                    defaultValue: null,
-                                },
                                 ProcessPipelineButton: {
                                     title: 'Pipeline',
                                     sorting: false,
@@ -988,7 +1039,7 @@
                                     create: false,
                                     edit: false,
                                     display: function(data) {
-                                        return '<span class="label label-primary" onclick="fetchPipelineInfo(' + data.record.processId + ')">Display</span> ';
+                                        return '<span class="label-icons label-pipeline" onclick="fetchPipelineInfo(' + data.record.processId + ')"></span> ';
                                     },
                                 },
                                 DeployProcess: {                    
@@ -1007,7 +1058,7 @@
                                 	create: false,
                                 	title: "Run Job",
                                 	display: function(data) {
-                                		var $img2 = $('<span title="Execute the process." class="label label-danger" >Execute</span>');
+                                		var $img2 = $('<span title="Execute the process." class="label-icons label-execute" ></span>');
                                 		$img2.click(function() {
                                 			console.log(data);
                                 			$("#execute-dialog-confirm").dialog({
@@ -1083,7 +1134,7 @@
                                     listClass: 'bdre-jtable-button',
                                         display: function(item) {                         //Create an image that will be used to open child table
                                                                 
-                                        var $img = $('<span class="label label-primary">Show</span>');                      //Open child table when user clicks the image
+                                        var $img = $('<span class="label-icons label-execution"></span>');                      //Open child table when user clicks the image
                                                                 
                                         $img.click(function() {                            
                                             $('#Container').jtable('openChildTable',                                     
@@ -1168,13 +1219,7 @@
                                         return $img;                    
                                     }                
                                 },
-                                workflowId: {
-                                    title: 'Workflow Type',
-                                    type: 'combobox',
-                                    options: '/mdrest/workflowtype/optionslist',
-                                    defaultValue: "1"
-                                },
-								Export: {
+                                Export: {
                                     title: 'Export',
                                     width: '10%',
                                     sorting: false,
@@ -1182,7 +1227,7 @@
                                     edit: false,
                                     display: function(data) {
 
-                                     return '<span class="label label-primary" onclick="goToExportPage(' + data.record.processId + ')">Export</span> ';
+                                     return '<span class="label-icons label-export" onclick="goToExportPage(' + data.record.processId + ')"></span> ';
                                      },
 
                                 },
@@ -1208,7 +1253,7 @@
                                     create: false,
                                     edit: false,
                                     display: function(data) {
-                                        return '<span class="label label-primary" onclick="goToEditGraphically(' + data.record.processId + ')">Edit Graphically</span> ';
+                                        return '<span class="label-icons label-editgraphically" onclick="goToEditGraphically(' + data.record.processId + ')"></span> ';
                                     },
                                 },
                             },
