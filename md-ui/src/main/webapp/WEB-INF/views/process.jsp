@@ -164,12 +164,12 @@
                      if (deploy === 2) {
                          $jqueryObj.html('<span title="Process is not deployed." class="label-icons label-initial" onclick=fetchDeployPage(' + params + ')  ></span>');
                      } else if (deploy === 1) {
-                         $jqueryObj.html('<span title="Process is updated.Please redeploy." class="label-icons label-warning" onclick=fetchDeployPage(' + params + ')  >Redeploy</span>');
+                         $jqueryObj.html('<span title="Process is updated.Please redeploy." class="label label-warning" onclick=fetchDeployPage(' + params + ')  >Redeploy</span>');
                      }else if (deploy === 3) {
                          $jqueryObj.html('<span title="Process is in deployment queue." class="label-icons label-warning" onclick=fetchDeployPage(' + params + ')  ></span>');
                      }
                      else if (deploy === 4) {
-                         $jqueryObj.html('<span title="Process is failed.Please redeploy." class="label-icons label-danger" onclick=fetchDeployPage(' + params + ')  >Redeploy </span>');
+                         $jqueryObj.html('<span title="Process is failed.Please redeploy." class="label label-danger" onclick=fetchDeployPage(' + params + ')  >Redeploy</span>');
                      }
                      else {
                          $jqueryObj.html('<span title="No changes in process after last deployment." class="label-icons label-success"  onclick=fetchDeployPage(' + params + ') >Deployed</span>');
