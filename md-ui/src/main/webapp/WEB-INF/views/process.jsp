@@ -152,7 +152,7 @@
                                              location.href = location.href = '<c:url value="/pages/process.page"/>';
                                         }
                                     }
-                                }).html("No Process exist for mentioned ID.");
+                                }).html("<p><span class=\"jtable-confirm-message\">No Process exist for mentioned ID.</span></p>");
                 				}
 
 			}
@@ -1040,7 +1040,7 @@
                                 													$(this).dialog("close");
                                 												}
                                 											}
-                                										}).html("Process <b>" +data.Record.processId +"</b> successfully launched from Edge node with OS process id: <b>" + data.Record.osprocessId + "</b>");
+                                										}).html("<p><span class=\"jtable-confirm-message\">Process <b>" +data.Record.processId +"</b> successfully launched from Edge node with OS process id: <b>" + data.Record.osprocessId + "</b></span></p>");
                                 									} else {
                                 									       if(data.Message == "ACCESS DENIED")
                                 									        {alert(data.Message);}
@@ -1055,7 +1055,7 @@
                                 													$(this).dialog("close");
                                 												}
                                 											}
-                                										}).html("<p>Process failed to launch.</p>");;
+                                										}).html("<p><span class=\"jtable-confirm-message\">Process failed to launch.</span></p>");;
                                 									}}
                                 								},
                                 								error: function() {
@@ -1411,24 +1411,48 @@
                         </div>
                     </form>
                 </div>
-				<div id="dialog-confirm" style="display:none;">
-                    <span class="ui-icon-alert"></span><div class="dialog-title-custom">Are you sure?</div><p>This will build the workflow for this process and deploy necessary codes in cluster. Existing workflow may be replaced.</p>
-                </div>
-                <div id="execute-dialog-confirm" title="Are you sure?" style="display:none;">
-                    <span class="ui-icon-alert"></span><div class="dialog-title-custom">Are you sure?</div><p>This will start the execution of process in cluster.</p>
-                </div>
-                <div id="execute-result" title="Process Started" style="display:none;">
-                    <p><span class="ui-icon ui-icon-alert" style="float:left; margin:0 7px 20px 0;"></span>Process Started Successfully</p>
-                </div>
-                <div id="execute-fail" title="Process Failed" style="display:none;">
-                    <p><span class="ui-icon ui-icon-warning" style="float:left; margin:0 7px 20px 0;"></span>Process Initiation Failed</p>
-                </div>
-                <div id="process-not-found" title="Process Not Found" style="display:none;">
-                    <p><span class="ui-icon ui-icon-warning" style="float:left; margin:0 7px 20px 0;"></span>Process Not Found</p>
-                </div>
-                <div id="dialog-form" title="Are you sure?" style="display:none;">
-                    <p><span class="ui-icon ui-icon-alert" style="float:left; margin:0 7px 20px 0;"></span>This will export process and related properties.</p>
-                </div>
+				<div id="dialog-confirm" style="display: none;">
+					<p>
+						<span class="ui-icon-alert"></span> 
+						<span class="dialog-title-custom">Are you sure?</span>
+						<span class="jtable-confirm-message">This will build the workflow for this process and deploy necessary codes in cluster. Existing workflow may be replaced.
+						</span>
+					</p>
+				</div>
+				<div id="execute-dialog-confirm" style="display: none;">
+					<p>
+						<span class="ui-icon-alert"></span> 
+						<span class="dialog-title-custom">Are you sure?</span>
+						<span class="jtable-confirm-message">This will start the execution of process in cluster.
+						</span>
+					</p>
+				</div>
+				<div id="dialog-form" style="display: none;">
+					<p>
+						<span class="ui-icon-alert"></span> 
+						<span class="dialog-title-custom">Are you sure?</span>
+						<span class="jtable-confirm-message">This will export process and related properties.
+						</span>
+					</p>
+				</div>
+				<div id="execute-result" style="display: none;">
+					<p>
+						<span class="ui-icon ui-icon-alert"></span> 
+						<span class="jtable-confirm-message">Process Started.</span>
+					</p>
+				</div>
+				<div id="execute-fail" style="display: none;">
+					<p>
+						<span class="ui-icon ui-icon-alert"></span> 
+						<span class="jtable-confirm-message">Process Initiation Failed.</span>
+					</p>
+				</div>
+				<div id="process-not-found" style="display: none;">
+					<p>
+						<span class="ui-icon ui-icon-alert"></span> 
+						<span class="jtable-confirm-message">Process Not Found.</span>
+					</p>
+				</div>
 			</body>
 
             </html>

@@ -353,7 +353,7 @@ wizard = $(document).ready(function() {
 							$(this).dialog("close");
 						}
 					}
-				}).text("Please Enter Process Name and Description");
+				}).html("<p><span class=\"jtable-confirm-message\">Please Enter Process Name and Description</span></p>");
 				return false;
 			}
 			if(currentIndex == 3 && newIndex == 4 ) {
@@ -370,7 +370,7 @@ wizard = $(document).ready(function() {
                 								$(this).dialog("close");
                 							}
                 						}
-                					}).text("Please Provide Value For Required Fields");
+                					}).html("<p><span class=\"jtable-confirm-message\">Please Provide Value For Required Fields</span></p>");
                 					return false;
                 				}
 			}
@@ -387,7 +387,7 @@ wizard = $(document).ready(function() {
             								$(this).dialog("close");
             							}
             						}
-            					}).text("Please Provide Value For Required Fields");
+            					}).html("<p><span class=\"jtable-confirm-message\">Please Provide Value For Required Fields</span></p>");
             					return false;
             				}
 			}
@@ -430,7 +430,7 @@ wizard = $(document).ready(function() {
 												$(this).dialog("close");
 											}
 										}
-									}).text("Jobs successfully created.");
+									}).html("<p><span class=\"jtable-confirm-message\">Jobs successfully created.</span></p>");
 									createJobResult = data;
 									displayProcess(createJobResult);
 								}
@@ -458,7 +458,7 @@ wizard = $(document).ready(function() {
 							$(this).dialog("close");
 						}
 					}
-				}).text("Jobs have not been created.");
+				}).html("<p><span class=\"jtable-confirm-message\">Jobs have not been created.</span></p>");
 			}
 		},
 		onCanceled: function(event) {

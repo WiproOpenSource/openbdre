@@ -331,7 +331,7 @@
                                             $(this).dialog("close");
                                         }
                                     }
-                    }).text("Please 'Test Connection' first to continue");
+                    }).html("<p><span class=\"jtable-confirm-message\">Please 'Test Connection' first to continue</span></p>");
 		            return false;
 		        }
 		        return true;
@@ -358,7 +358,7 @@
                                                                         $(this).dialog("close");
                                                                     }
                                                                 }
-                                                            }).text("Jobs have not been created.");
+                                                            }).html("<p><span class=\"jtable-confirm-message\">Jobs have not been created.</span></p>");
                                                         }
                                         }
 			});
@@ -484,7 +484,7 @@
                                 $(this).dialog("close");
                             }
                         }
-                    }).text("Jobs successfully created.");
+                    }).html("<p><span class=\"jtable-confirm-message\">Jobs successfully created.</span></p>");
                     createJobResult=data;
                     displayProcess(createJobResult);
             }
@@ -620,7 +620,7 @@ isInit=true;
                                             $(this).dialog("close");
                                         }
                                     }
-                                }).text(items.Message);
+                                }).html("<p><span class=\"jtable-confirm-message\">" + items.Message + "</span></p>");
                                 }
                             else if(items.Result=="OK"){
                             treeData=items.Record;
@@ -634,7 +634,7 @@ isInit=true;
                                             $(this).dialog("close");
                                         }
                                     }
-                                }).text("Test Connection Successful !");
+                                }).html("<p><span class=\"jtable-confirm-message\">Test Connection Successful !</span></p>");
 
                             }
                           }

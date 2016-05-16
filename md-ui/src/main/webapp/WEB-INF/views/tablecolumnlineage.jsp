@@ -133,8 +133,8 @@
                                             }
 
                                         }
+                                    }).html("<p><span class=\"jtable-confirm-message\">" + getData.Message + "</span></p>");
 
-                                    }).html(getData.Message);
 
                                 }
 
