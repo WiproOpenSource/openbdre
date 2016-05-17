@@ -163,7 +163,7 @@
                                                                          $(this).dialog("close");
                                                                         }
                                                                     }
-                                                                }).text("Jobs successfully created.");
+                                                                }).html("<p><span class=\"jtable-confirm-message\">Jobs successfully created.</span></p>");
 
                                                             }
                                                             else{
@@ -178,7 +178,7 @@
                                                                             $(this).dialog("close");
                                                                         }
                                                                     }
-                                                                }).html(data.Message);
+                                                                }).html("<p><span class=\"jtable-confirm-message\">" + data.Message + "</span></p>");
                                                             }
                                                             console.log(createJobResult);
                                                         }

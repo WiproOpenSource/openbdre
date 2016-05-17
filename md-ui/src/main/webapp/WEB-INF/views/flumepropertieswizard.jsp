@@ -330,7 +330,7 @@ wizard = $(document).ready(function() {
 							$(this).dialog("close");
 						}
 					}
-				}).text("Please Select Some Value");
+				}).html("<p><span class=\"jtable-confirm-message\">Please Select Some Value</span></p>");
 				return false;
 			}
 			if(currentIndex == 3 && newIndex == 4 && selectedChannelType == "") {
@@ -344,7 +344,7 @@ wizard = $(document).ready(function() {
 							$(this).dialog("close");
 						}
 					}
-				}).text("Please Select Some Value");
+				}).html("<p><span class=\"jtable-confirm-message\">Please Select Some Value</span></p>");
 				return false;
 			}
 			if(currentIndex == 6 && newIndex == 7 && selectedSinkType == "") {
@@ -358,7 +358,7 @@ wizard = $(document).ready(function() {
 							$(this).dialog("close");
 						}
 					}
-				}).text("Please Select Some Value");
+				}).html("<p><span class=\"jtable-confirm-message\">Please Select Some Value</span></p>");
 				return false;
 			}
 			if(currentIndex == 1 && newIndex == 2) {
@@ -375,7 +375,7 @@ wizard = $(document).ready(function() {
 								$(this).dialog("close");
 							}
 						}
-					}).text("Please Provide Value For Required Fields");
+					}).html("<p><span class=\"jtable-confirm-message\">Please Provide Value For Required Fields</span></p>");
 					return false;
 				}
 			}
@@ -393,7 +393,7 @@ wizard = $(document).ready(function() {
 								$(this).dialog("close");
 							}
 						}
-					}).text("Please Provide Value For Required Fields");
+					}).html("<p><span class=\"jtable-confirm-message\">Please Provide Value For Required Fields</span></p>");
 					return false;
 				}
 			}
@@ -412,7 +412,7 @@ wizard = $(document).ready(function() {
 								$(this).dialog("close");
 							}
 						}
-					}).text("Please Provide Value For Required Fields");
+					}).html("<p><span class=\"jtable-confirm-message\">Please Provide Value For Required Fields</span></p>");
 					return false;
 				}
 			}
@@ -459,7 +459,7 @@ wizard = $(document).ready(function() {
 												$(this).dialog("close");
 											}
 										}
-									}).text("Jobs successfully created.");
+									}).html("<p><span class=\"jtable-confirm-message\">Jobs successfully created.</span></p>");
 									createJobResult = data;
 									displayProcess(createJobResult);
 								}
@@ -487,7 +487,7 @@ wizard = $(document).ready(function() {
 							$(this).dialog("close");
 						}
 					}
-				}).text("Jobs have not been created.");
+				}).html("<p><span class=\"jtable-confirm-message\">Jobs have not been created.</span></p>");
 			}
 		},
 		onCanceled: function(event) {

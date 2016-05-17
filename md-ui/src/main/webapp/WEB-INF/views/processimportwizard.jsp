@@ -97,7 +97,7 @@
                                                          $(this).dialog("close");
                                                      }
                                                  }
-                                    }).text("Process and Properties inserted successfully");
+                                    }).html("<p><span class=\"jtable-confirm-message\">Process and Properties inserted successfully</span></p>");
                                     return false;
                                 }
                   		        if(getData.Result =="ERROR"){
@@ -111,7 +111,7 @@
                                                      $(this).dialog("close");
                                                  }
                                              }
-                                    }).text("Error in importing"+getData.Message);
+                                    }).html("<p><span class=\"jtable-confirm-message\">Error in importing "+getData.Message + "</span></p>");
                                     return false;
 
                                 }
@@ -149,7 +149,7 @@
                                                                       $(this).dialog("close");
                                                                   }
                                                               }
-                                              }).text("File Uploaded successfully " + uploadedFileName);
+                                              }).html("<p><span class=\"jtable-confirm-message\">File Uploaded successfully " + uploadedFileName + "</span></p>");
                                               return false;
               							},
               						  error: function () {
@@ -163,7 +163,7 @@
                                                                   $(this).dialog("close");
                                                               }
                                                           }
-                                          }).text("File Upload failed ");
+                                          }).html("<p><span class=\"jtable-confirm-message\">File Upload failed</span></p>");
                                           return false;
               							}
               						 });

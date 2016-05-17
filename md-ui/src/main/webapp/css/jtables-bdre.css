@@ -590,3 +590,38 @@ div.jtable-main-container > table.jtable > tbody > tr.jtable-data-row > td > .jt
 	border-radius:2px;
 	font-size: 9px;
 }
+.jtable-dialog-form .jtable-input-label, .jtable-dialog-form .jtable-text-input,
+	.jtable-dialog-form .jtable-dropdown-input, .jtable-dialog-form .jtable-password-input {
+	display: inline-block !important;
+}
+
+.jtable-dialog-form .jtable-text-input, .jtable-dialog-form  .jtable-dropdown-input,.jtable-dialog-form .jtable-password-input
+	{
+	width: 70% !important;
+}
+
+.jtable-dialog-form .jtable-input-label {
+	width: 30% !important;
+	color: #000 !important;
+}
+
+.jtable-dialog-form select, .jtable-dialog-form .jtable-text-input input, .jtable-dialog-form .jtable-password-input input {
+	width: 90% !important;
+	border-radius: 4px;
+	border: 1px solid gainsboro;
+	line-height: 26px;
+	padding-left: 5px !important;
+	color: #000;
+}
+
+.jtable-dialog-form select {
+	height: 30px;
+	padding-left: 5px !important;
+	color: #000;
+}
+
+form.jtable-dialog-form div.jtable-input-field-container {
+	border: none;
+	margin-bottom: 10px;
+	padding-left: 35px;
+}

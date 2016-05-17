@@ -21,6 +21,9 @@
 		padding: 10px !important;
 		color: #fff !important;
 	}
+	.content{
+		min-height: 32em !important;
+	}
    	</style>
 	<script>
 	  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
@@ -115,9 +118,8 @@ function formIntoMap(typeProp, typeOf) {
 
             <h3><div class="number-circular">1</div><spring:message code="datagen.page.data_types"/></h3>
             <section>
-            <form class="form-horizontal" role="form" id="processFieldsForm1">
-                <div id="dataTypeDetails">
-                    <!-- btn-group -->
+            <form class="form-horizontal pull-none" role="form" id="processFieldsForm1">
+                	<!-- btn-group -->
                     <div class="form-group" id="formGroup1" >
                         <div class="col-md-3">
                             <input type="text" class="form-control input-sm" id="fieldName.1" value="" name="fieldName" placeholder=<spring:message code="datagen.page.colname_type_placeholder"/> />
@@ -135,8 +137,7 @@ function formIntoMap(typeProp, typeOf) {
                         
                     </div>
                     <!-- /btn-group -->
-                </div>
-                <div class="col-md-2" id="deletediv">
+               <div class="col-md-2" id="deletediv">
                             <button id="b1" class="btn add-more">
                                 <span class="glyphicon glyphicon-plus" style="font-size:large"></span>
                             </button>
@@ -363,7 +364,7 @@ function getGenTypes(){
                                                             $(this).dialog("close");
                                                         }
                                                     }
-                                                }).text("Jobs successfully created.");
+                                                }).html("<p><span class=\"jtable-confirm-message\">Jobs successfully created.</span></p>");
                                                 createJobResult = data;
                                                 displayProcess(createJobResult);
                                                 $('#createProcess').hide();
@@ -379,7 +380,7 @@ function getGenTypes(){
                                                             $(this).dialog("close");
                                                         }
                                                     }
-                                                }).html(data.Message);
+                                                }).html("<p><span class=\"jtable-confirm-message\">"+ data.Message+ "</span></p>");
                                             }
                                             console.log(createJobResult);
                                         }
@@ -412,7 +413,7 @@ function getGenTypes(){
                                     $(this).dialog("close");
                                 }
                             }
-                        }).text("Jobs have not been created.");
+                        }).html("<p><span class=\"jtable-confirm-message\">Jobs have not been created.</span></p>");
                     }
                 },
             onCanceled: function(event) {
