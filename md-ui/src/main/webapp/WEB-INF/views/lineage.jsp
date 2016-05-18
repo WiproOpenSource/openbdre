@@ -126,6 +126,9 @@
 		opacity:0.5;
 		filter:alpha(opacity=50);
 	    }
+        body{
+        background:#fff !important ;
+        }
 
 	    #modal {
 		position:absolute;
@@ -140,6 +143,7 @@
 		overflow-y: scroll;
    		height: 45em;
 	    }
+
 	    #close {
 		position:absolute;
 		background:url('../css/metro/close.png') 14 14 no-repeat;
