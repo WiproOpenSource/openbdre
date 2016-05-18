@@ -222,7 +222,7 @@
             </nav>
 
             <div>
-                <iframe id="dframe" src="welcome.page" scrolling="no" style="overflow-y:visible;width:100%; height: 800px; border: none;"></iframe>
+                <iframe id="dframe" src="welcome.page" scrolling="yes" style="overflow-y:visible;width:100%; height: 800px; border: none;"></iframe>
             </div>
 
             <!--

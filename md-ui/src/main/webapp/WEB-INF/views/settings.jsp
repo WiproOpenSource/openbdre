@@ -11,8 +11,6 @@
 	#Settings{
 		background-color: #F8F9FB;
 		padding-top: 4%;
-		height: 42em;
-    	overflow-y: scroll;
 	}
 	.btn-default{
 		width: 20%;
