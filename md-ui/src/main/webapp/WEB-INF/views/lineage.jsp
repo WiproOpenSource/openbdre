@@ -140,8 +140,6 @@
 		#content {
 		border-radius:8px;
 		background:#fff;
-		overflow-y: scroll;
-   		height: 45em;
 	    }
 
 	    #close {
@@ -157,9 +155,7 @@
 	    #input-box-button {
 		width: 370px;
 		padding: 5px;
-		/* margin-top: 20px; */
 		border: 1px solid #e4e4e4;
-		/* border-bottom: 1px solid #e4e4e4; */
 		border-radius: 10px;
 	    }
 	    
