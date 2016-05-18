@@ -293,10 +293,7 @@
                         border-radius: 14px;
                         padding: 8px;
                     }
-                    .modal {
-                        overflow-y: scroll !important;
-                        overflow-x: scroll !important;
-                    }
+
                     #content {
                         border-radius: 8px;
                         background: #fff;
