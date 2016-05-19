@@ -140,6 +140,8 @@ $scope.createApp = function(location) {
 															}
 														});
 											});
+						        };                     
+						
 						};
 
 					});
