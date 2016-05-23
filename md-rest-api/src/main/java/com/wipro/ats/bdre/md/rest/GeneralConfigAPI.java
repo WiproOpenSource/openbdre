@@ -174,6 +174,22 @@ public class GeneralConfigAPI extends MetadataAPIBase {
         }
         return restWrapper;
     }
+    
+    @RequestMapping( method = RequestMethod.GET)
+    @ResponseBody public
+    RestWrapper delete(Principal principal) {
+        RestWrapper restWrapper = null;
+        try {
+        	List<String> cg_list=generalConfigDAO.getDistinctGenerelConfig();
+            restWrapper = new RestWrapper(cg_list, RestWrapper.OK);
+            LOGGER.info("Record with distinct config group");
+
+        } catch (MetadataException e) {
+            LOGGER.error(e);
+            restWrapper = new RestWrapper(e.getMessage(), RestWrapper.ERROR);
+        }
+        return restWrapper;
+    }
 
     @Override
     public Object execute(String[] params) {
