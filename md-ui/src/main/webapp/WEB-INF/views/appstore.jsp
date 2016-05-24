@@ -49,8 +49,7 @@ body {
 </style>
     </head>
 <body>
-
-<script>
+<script >
 
 angular.module('myApp', [])
   .controller('myCtrl', function($scope, $window, $http) {
@@ -140,12 +139,13 @@ $scope.createApp = function(location) {
 															}
 														});
 											});
-						        };                     
-						
 						};
 
-					});
+					};
+	});		
+
 </script>
+
 <div ng-app="myApp" ng-controller="myCtrl">
 <div class="page-header">App Store</div>
 <ul class="nav nav-tabs" ng-if="rows">

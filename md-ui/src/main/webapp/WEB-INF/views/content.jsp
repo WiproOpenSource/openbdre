@@ -337,7 +337,7 @@
                                                                                                   label: "Data Scientist Workbench",
                                                                                                   collapse: "1",
                                                                                                   active: "1",
-                                                                                                  url: "http://zeppelin.openbdre.org:9995",
+                                                                                                  url: "http://129.41.141.106:8181",
                                                                                                   children: []
                                                     } ,  {
                                                     label: "Insights Management",

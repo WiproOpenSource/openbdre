@@ -37,3 +37,5 @@ glassfish-web.xml
 /md-dao/src/main/resources/db.properties
 spark-core/dependency-reduced-pom.xml
 /bin/
+/jetty-runner-9.1.0.RC2.jar
+/quick-r.bat
