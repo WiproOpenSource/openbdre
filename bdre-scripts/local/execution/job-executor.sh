@@ -10,6 +10,7 @@
 #19, 'DQ_Parent', null
 #26,'Filemon Parent',null
 #28, 'Crawler Parent', null
+#37, 'Super Workflow', null
 
 BDRE_HOME=~/bdre
 BDRE_APPS_HOME=~/bdre_apps
@@ -41,6 +42,8 @@ elif [ $processTypeId -eq 31 ]; then
         python $(dirname $0)/Workflow.py $busDomainId $processTypeId $processId
 elif [ $processTypeId -eq 26 ]; then
     sh $(dirname $0)/filemonitor.sh $processId
+elif [ $processTypeId -eq 37 ]; then
+    python $(dirname $0)/Workflow.py $busDomainId $processTypeId $processId
 else
     echo "Don't know how to execute busDomainId=$1 , processTypeId=$2 , processId=$3"
 fi

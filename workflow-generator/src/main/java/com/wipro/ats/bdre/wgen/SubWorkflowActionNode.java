@@ -80,9 +80,6 @@ public class SubWorkflowActionNode extends GenericActionNode {
                 "        <sub-workflow>\n" +
                 "            <app-path>${baseAppPath}" +  getSubWorkflowPath(processInfo.getProcessId(), processInfo.getParentProcessId().toString())       +"</app-path>\n" +
                 "            <propagate-configuration/>\n" +
-                "            <configuration>\n" +
-                "            </configuration>\n" +
-                "            <capture-output />\n" +
                 "       </sub-workflow>\n" +
                 "        <ok to=\"" + getToNode().getName() + "\"/>\n" +
                 "        <error to=\"" + getTermNode().getName() + "\"/>\n" +
@@ -94,11 +91,11 @@ public class SubWorkflowActionNode extends GenericActionNode {
 
 
     /**
-     * This method gets process type of the sub workflow type process
+     * This method gets workflow id of the sub workflow from properties table with key as "workflow_id"
      *
      * @param pid         process-id of Sub Workflow
-     * @param configGroup config_group entry in properties table "workflow_pid" for process type of the sub workflow type process
-     * @return Integer containing query path to be appended to workflow string
+     * @param configGroup config_group entry in properties table is process id of super workflow
+     * @return String containing app path to be appended to workflow string
      */
     public String getSubWorkflowPath(Integer pid, String configGroup) {
 
@@ -111,7 +108,7 @@ public class SubWorkflowActionNode extends GenericActionNode {
         Integer busDomainId=workflowProcess.getBusDomainId();
         Integer processTypeId=workflowProcess.getProcessTypeId();
         StringBuilder workflowPath=new StringBuilder();
-        workflowPath.append("/"+ busDomainId +"/"+ processTypeId +"/" +parentProcessId);
+        workflowPath.append("/"+ busDomainId +"/"+ processTypeId +"/" +parentProcessId +"/workflow-"+parentProcessId+".xml");
 
         return workflowPath.toString();
     }
