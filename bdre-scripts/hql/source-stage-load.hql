@@ -1,0 +1,2 @@
+set hive.exec.dynamic.partition.mode=nonstrict;
+insert overwrite table ${source-stg-db}.${source-stg-table} partition(${stg-all-part-cols}) select ${source-reg-cols},${source-bp-cols},${exec-id} from ${source-db}.${source-table} where ${filter-condition};

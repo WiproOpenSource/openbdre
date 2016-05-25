@@ -30,6 +30,30 @@ var processtypeOptionslistAC = function (ajaxURL, type, arg) {
 	return returnObject;
 }
 
+var permissiontypeOptionslistAC = function (ajaxURL, type, arg) {
+	var returnObject;
+	switch(type) {
+		case 'POST':
+			break;
+		default:
+			console.log('In AC function defualt block');
+	}
+	returnObject = ajaxCall(ajaxURL, type, arg, 'optionscall');
+	return returnObject;
+}
+
+var userrolestypeOptionslistAC = function (ajaxURL, type, arg) {
+	var returnObject;
+	switch(type) {
+		case 'POST':
+			break;
+		default:
+			console.log('In AC function defualt block');
+	}
+	returnObject = ajaxCall(ajaxURL, type, arg, 'optionscall');
+	return returnObject;
+}
+
 var workflowtypeOptionslistAC = function (ajaxURL, type, arg) {
 	var returnObject;
 	switch(type) {

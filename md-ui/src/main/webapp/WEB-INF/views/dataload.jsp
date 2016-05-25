@@ -1,6 +1,7 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ taglib prefix="security"
 	   uri="http://www.springframework.org/security/tags" %>
+<%@taglib uri="http://www.springframework.org/tags" prefix="spring"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
@@ -13,7 +14,8 @@
 		<script src="../js/jquery-ui-1.10.3.custom.js"></script>
 		<script src="../js/jquery.steps.min.js"></script>
 		<link rel="stylesheet" href="../css/jquery.steps.css" />
-
+		<link rel="stylesheet" href="../css/jquery.steps.custom.css" />
+		<link href="../css/bootstrap.custom.css" rel="stylesheet" />
 		<script src="../js/bootstrap.js" type="text/javascript"></script>
 		<script src="../js/jquery.jtable.js" type="text/javascript"></script>
 		<script src="../js/angular.min.js" type="text/javascript"></script>
@@ -351,7 +353,7 @@ wizard = $(document).ready(function() {
 							$(this).dialog("close");
 						}
 					}
-				}).text("Please Enter Process Name and Description");
+				}).html("<p><span class=\"jtable-confirm-message\">Please Enter Process Name and Description</span></p>");
 				return false;
 			}
 			if(currentIndex == 3 && newIndex == 4 ) {
@@ -368,7 +370,7 @@ wizard = $(document).ready(function() {
                 								$(this).dialog("close");
                 							}
                 						}
-                					}).text("Please Provide Value For Required Fields");
+                					}).html("<p><span class=\"jtable-confirm-message\">Please Provide Value For Required Fields</span></p>");
                 					return false;
                 				}
 			}
@@ -385,7 +387,7 @@ wizard = $(document).ready(function() {
             								$(this).dialog("close");
             							}
             						}
-            					}).text("Please Provide Value For Required Fields");
+            					}).html("<p><span class=\"jtable-confirm-message\">Please Provide Value For Required Fields</span></p>");
             					return false;
             				}
 			}
@@ -428,7 +430,7 @@ wizard = $(document).ready(function() {
 												$(this).dialog("close");
 											}
 										}
-									}).text("Jobs successfully created.");
+									}).html("<p><span class=\"jtable-confirm-message\">Jobs successfully created.</span></p>");
 									createJobResult = data;
 									displayProcess(createJobResult);
 								}
@@ -456,7 +458,7 @@ wizard = $(document).ready(function() {
 							$(this).dialog("close");
 						}
 					}
-				}).text("Jobs have not been created.");
+				}).html("<p><span class=\"jtable-confirm-message\">Jobs have not been created.</span></p>");
 			}
 		},
 		onCanceled: function(event) {
@@ -641,34 +643,33 @@ wizard = $(document).ready(function() {
 
 
 	</head>
-<body ng-app="myApp" ng-controller="myCtrl">
-
-		<div id="bdre-data-load" ng-controller="myCtrl">
-			<h3>Provide Process Details</h3>
+<body ng-app="myApp" ng-controller="myCtrl" >
+	<div class="page-header"><spring:message code="dataload.page.panel_heading"/></div>
+	<div class="alert alert-info" role="alert">
+		<spring:message code="dataload.page.alert_info_outer_heading" />
+	</div>
+	<div id="bdre-data-load" ng-controller="myCtrl">
+		
+			<h3><div class="number-circular">1</div><spring:message code="dataload.page.h3_div"/></h3>
 			<section>
-<form class="form-horizontal" role="form" id="processFieldsForm1">
+			<form class="form-horizontal" role="form" id="processFieldsForm1">
                         <div id="processDetails">
-                            <div class="alert alert-info" role="alert">
-                                Application requires process details to create process entries in metadata
-                            </div>
-                            <!-- btn-group -->
-                            <div id="processFields">
-
-                                <div class="form-group">
-                                    <label class="control-label col-sm-2" for="processName">Process Name:</label>
-                                    <div class="col-sm-10">
-                                        <input type="text" class="form-control"  id="processName" name="processName" placeholder="Enter Process Name" value="" required>
+                           <!-- btn-group -->
+								<div class="form-group">
+                                    <label class="control-label col-sm-6" for="processName" ><spring:message code="dataload.page.form_left_procname"/></label>
+                                    <div class="col-sm-8">
+                                        <input type="text" class="form-control"  id="processName" name="processName" placeholder=<spring:message code="dataload.page.form_left_procname_placeholder"/> value="" required>
                                     </div>
                                 </div>
                                 <div class="form-group">
-                                    <label class="control-label col-sm-2" for="processDescription">Process Description:</label>
-                                    <div class="col-sm-10">
-                                        <input type="text" class="form-control" id="processDescription" name="processDescription" placeholder="Enter Process Description" value="" required>
+                                    <label class="control-label col-sm-6 " for="processDescription"><spring:message code="dataload.page.form_left_procdesc"/></label>
+									 <div class="col-sm-8">
+                                        <input type="text" class="form-control" id="processDescription" name="processDescription" placeholder=<spring:message code="dataload.page.form_left_procdesc_placeholder"/> value="" required>
                                     </div>
                                 </div>
                                 <div class="form-group">
-                                    <label class="control-label col-sm-2" for="busDomainId">Bus Domain Id:</label>
-                                    <div class="col-sm-10">
+                                    <label class="control-label col-sm-6" for="busDomainId"><spring:message code="dataload.page.form_left_bus_domain_id"/></label>
+									<div class="col-sm-8">
                                         <select class="form-control" id="busDomainId" name="busDomainId">
                                             <option ng-repeat="busDomain in busDomains.Options" value="{{busDomain.Value}}" name="busDomainId">{{busDomain.DisplayText}}</option>
 
@@ -676,82 +677,87 @@ wizard = $(document).ready(function() {
                                     </div>
                                 </div>
                                  <div class="form-group">
-                                    <label class="control-label col-sm-2" for="enqueueId">Enqueing Id:</label>
-                                    <div class="col-sm-10">
-                                        <input type="text" class="form-control" id="enqueueId" name="enqueueId" placeholder="Enter Enqueing Process Id" value="" required>
+                                    <label class="control-label col-sm-6" for="enqueueId"><spring:message code="dataload.page.form_right_enqueing_id"/></label>
+                                    <div class="col-sm-8">
+                                        <input type="text" class="form-control" id="enqueueId" name="enqueueId" placeholder=<spring:message code="dataload.page.form_right_enqueing_id_placeholder"/> value="" required>
                                     </div>
                                 </div>
+                                <div class="clearfix"></div>
                             </div>
                             <!-- /btn-group -->
-                        </div>
+                        
                         </form>
 			</section>
-			<h3>Raw Table Details</h3>
+			<h3><div class="number-circular">2</div><spring:message code="dataload.page.h3_div_2"/></h3>
             			<section>
-            <form class="form-horizontal" role="form" id="fileFormat">
-                                    <div id="fileFormatDiv">
-                                        <div class="alert alert-info" role="alert">
-                                            Type of file you want to load in hive
+            			 <div class="alert alert-info" role="alert">
+                                          <spring:message code="dataload.page.alert_info_form"/>
                                         </div>
+            <form class="form-horizontal" role="form" id="fileFormat">
+                                    
+                                       
                                         <!-- btn-group -->
                                         <div id="rawTablDetailsDB">
-                                        <div class="form-group">
-                                            <label class="control-label col-sm-2" for="rawDBName">Raw DB Name:</label>
+                                        <div class="form-group" >
+                                            <label class="control-label col-sm-2" for="rawDBName"><spring:message code="dataload.page.raw_db_name"/></label>
                                             <div class="col-sm-10">
-                                                <input type="text" class="form-control"  id="rawDBName" name="rawDBName" placeholder="Enter RAW DB Name" value="" required>
+                                                <input type="text" class="form-control"  id="rawDBName" name="rawDBName" placeholder=<spring:message code="dataload.page.raw_db_name_placeholder"/>value="" required>
                                             </div>
                                         </div>
-                                            <div class="form-group">
-                                                <label class="control-label col-sm-2" for="fileformat">File Format:</label>
-                                                <div class="col-sm-10">
-                                                    <select class="form-control" id="fileformat" name="fileformat" >
-                                                        <option ng-repeat="fileformat in fileformats" value="{{fileformat.defaultVal}}" name="fileformat">{{fileformat.value}}</option>
+                                        <div class="form-group">
+                                            <label class="control-label col-sm-2" for="fileformat"><spring:message code="dataload.page.file_format"/></label>
+                                            <div class="col-sm-10">
+                                                <select class="form-control" id="fileformat" name="fileformat" >
+                                                    <option ng-repeat="fileformat in fileformats" value="{{fileformat.defaultVal}}" name="fileformat">{{fileformat.value}}</option>
 
-                                                    </select>
-                                                </div>
+                                                </select>
                                             </div>
                                         </div>
+                                        <div class="clearfix"></div>
+                                        </div>
+                                        
                                         <!-- /btn-group -->
-                                    </div>
+                                
                                     </form>
             			</section>
-			<h3>Raw Table Properties</h3>
+			<h3><div class="number-circular">3</div><spring:message code="dataload.page.raw_table_props"/></h3>
 			<section>
 			    <div id="rawTableColumnDetails"></div>
 
             </section>
 
-			<h3>Serde, OutPut and Input Format</h3>
+			<h3><div class="number-circular">4</div><spring:message code="dataload.page.formats"/></h3>
             <section>
                   <div id="fileFormatDetails"></div>
             </section>
 
 
-			<h3>Provide Serde Properties</h3>
+			<h3><div class="number-circular">5</div><spring:message code="dataload.page.provide_props"/></h3>
 			<section>
-                                    <form class="form-horizontal" role="form" id="serdeProperties">
-                                        <div id="serdePropertiesDiv">
-                                            <div class="alert alert-info" role="alert">
-                                                <div style="font-size:24px;" ><b>How To:</b> </div>
-                                                <b>Enter Serde Properties key and value</b>
+			<div class="alert alert-info" role="alert">
+                                                <b style="font-size:24px;"><spring:message code="dataload.page.how_to"/></b>
+                                                <b><spring:message code="dataload.page.enter_props"/></b>
                                                 <br>
-
-                                            </div>
+											</div>
+                                    <form class="form-horizontal pull-none" role="form" id="serdeProperties">
+                                        
+                                            
 
                                             <!-- btn-group -->
                                             <div class="form-group" id="formGroupSerde1">
                                                 <div class="col-md-3">
-                                                    <input type="text" class="form-control input-sm" id="serdePropKey.1" value="" name="serdePropKey.1" placeholder="Serde Key" />
+                                                    <input type="text" class="form-control input-sm" id="serdePropKey.1" value="" name="serdePropKey.1" placeholder=<spring:message code="dataload.page.serde_key_placeholder"/> />
                                                 </div>
                                                 <div class="col-md-3">
-                                                    <input type="text" class="form-control input-sm" id="serdePropValue.1" value="" name="serdePropValue.1" placeholder="Serde Property" />
+                                                    <input type="text" class="form-control input-sm" id="serdePropValue.1" value="" name="serdePropValue.1" placeholder=<spring:message code="dataload.page.serde_property_placeholder"/>/>
                                                 </div>
                                                 <button id="removeserde1" class="btn btn-danger remove-me"><span class="glyphicon glyphicon-trash"></span></button>
 
 
                                             </div>
+                                            <div class="clearfix"></div>
                                             <!-- /btn-group -->
-                                        </div>
+                                       
                                         <div class="col-md-2" id="serdePropDiv">
                                                     <button id="serdeButton1" class="btn btn-primary add-more">
                                                         <span class="glyphicon glyphicon-plus" style="font-size:large"></span>
@@ -762,31 +768,30 @@ wizard = $(document).ready(function() {
 
                                     </section>
 
-			<h3>Provide Table Properties</h3>
+			<h3><div class="number-circular">6</div><spring:message code="dataload.page.provide_table_props"/></h3>
             			<section>
-                                                <form class="form-horizontal" role="form" id="tableProperties">
-                                                    <div id="tablePropertiesDiv">
-                                                        <div class="alert alert-info" role="alert">
-                                                            <div style="font-size:24px;" ><b>How To:</b> </div>
-                                                            <b>Enter Table Properties key and value</b>
+            			 <div class="alert alert-info" role="alert">
+                                                            <b style="font-size:24px;"><spring:message code="dataload.page.how_to"/></b>
+                                                            <b><spring:message code="dataload.page.enter_table_key_value"/></b>
                                                             <br>
 
                                                         </div>
-
-                                                        <!-- btn-group -->
+                                                <form class="form-horizontal pull-none" role="form" id="tableProperties">
+														<!-- btn-group -->
                                                         <div class="form-group" id="formGroupTable1">
                                                             <div class="col-md-3">
-                                                                <input type="text" class="form-control input-sm" id="tablePropKey.1" value="" name="tablePropKey.1" placeholder="Table Prop Key" />
+                                                                <input type="text" class="form-control input-sm" id="tablePropKey.1" value="" name="tablePropKey.1" placeholder=<spring:message code="dataload.page.table_prop_key_placeholder"/> />
                                                             </div>
                                                             <div class="col-md-3">
-                                                                <input type="text" class="form-control input-sm" id="tablePropValue.1" value="" name="tablePropValue.1" placeholder="Table Property" />
+                                                                <input type="text" class="form-control input-sm" id="tablePropValue.1" value="" name="tablePropValue.1" placeholder=<spring:message code="dataload.page.table_property_placeholder"/>/>
                                                             </div>
                                                             <button id="removetable1" class="btn btn-danger remove-me"><span class="glyphicon glyphicon-trash"></span></button>
 
 
                                                         </div>
+                                                        <div class="clearfix"></div>
                                                         <!-- /btn-group -->
-                                                    </div>
+                                                   
                                                     <div class="col-md-2" id="tablePropDiv">
                                                                 <button id="tableButton1" class="btn btn-primary add-more">
                                                                     <span class="glyphicon glyphicon-plus" style="font-size:large"></span>
@@ -797,45 +802,46 @@ wizard = $(document).ready(function() {
 
                                                 </section>
 
-		<h3>Base Table Name AND DB</h3>
+		<h3><div class="number-circular">7</div><spring:message code="dataload.page.base_table_name"/></h3>
                 			<section>
                 <form class="form-horizontal" role="form" id="baseTableDetails">
                                         <div id="baseTableDetailsDiv">
                                             <div class="alert alert-info" role="alert">
-                                                Application requires process details to create process entries in metadata
+                                                <spring:message code="dataload.page.alert_info_base_table"/>
                                             </div>
                                             <!-- btn-group -->
                                             <div id="baseTablDetailsDB">
-
                                                 <div class="form-group">
-                                                    <label class="control-label col-sm-2" for="baseDBName">BASE DB Name:</label>
+                                                    <label class="control-label col-sm-2" for="baseDBName"><spring:message code="dataload.page.base_db_name"/></label>
                                                     <div class="col-sm-10">
-                                                        <input type="text" class="form-control"  id="baseDBName" name="baseDBName" placeholder="Enter BASE DB Name" required>
+                                                        <input type="text" class="form-control"  id="baseDBName" name="baseDBName" placeholder=<spring:message code="dataload.page.base_db_name_placeholder"/> required>
                                                     </div>
                                                 </div>
                                                 <div class="form-group">
-                                                    <label class="control-label col-sm-2" for="baseTableName">Base Table Name:</label>
+                                                    <label class="control-label col-sm-2" for="baseTableName"><spring:message code="dataload.page.base_db_name"/></label>
                                                     <div class="col-sm-10">
-                                                        <input type="text" class="form-control" id="baseTableName" name="baseTableName" placeholder="Enter BASE TABLE NAME" required>
+                                                        <input type="text" class="form-control" id="baseTableName" name="baseTableName" placeholder=<spring:message code="dataload.page.enter_base_table_name_placeholder"/> required>
                                                     </div>
                                                 </div>
+                                                <div class="clearfix"></div>
 
                                             </div>
                                             <!-- /btn-group -->
                                         </div>
                                         </form>
                 			</section>
-                <h3>Base Table Details</h3>
+                <h3><div class="number-circular">8</div><spring:message code="dataload.page.base_table_details"/></h3>
                             <section>
                                 <div id="baseTableColumnDetails"> </div>
                             </section>
-			<h3>Confirm</h3>
+			<h3><div class="number-circular">9</div><spring:message code="dataload.page.confirm"/></h3>
 			<section>
 				<div id="Process">
-					<button id="createjobs" type="button" class="btn btn-primary btn-lg">Create Jobs</button>
+					<button id="createjobs" type="button" class="btn btn-primary btn-lg"><spring:message code="dataload.page.create_jobs"/></button>
 				</div>
 			</section>
 		</div>
+		
 		<div style="display:none" id="div-dialog-warning">
 			<p><span class="ui-icon ui-icon-alert" style="float:left;"></span></p>
 		</div>
@@ -1124,9 +1130,11 @@ function buildForm(fileformat) {
 			var root = 'Records';
 			var div = document.getElementById('fileFormatDetails');
 			var formHTML = '';
-			formHTML = formHTML + '<form class="form-horizontal" role="form" id = "formatFields">';
-			formHTML = formHTML + '<div id="Serde, OutPut and Input Format">';
 			formHTML = formHTML + '<div class="alert alert-info" role="alert">Application requires serde class and input/output format details to be entered</div>';
+			formHTML = formHTML + '<div id="Serde, OutPut and Input Format">';
+			formHTML = formHTML + '<form class="form-horizontal" role="form" id = "formatFields">';
+			
+			
 
 			console.log(data[root].length);
 			if (data[root].length == 0){

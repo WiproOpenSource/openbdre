@@ -1,6 +1,7 @@
 
  <%@ taglib prefix="security"
        uri="http://www.springframework.org/security/tags" %>
+<%@taglib uri="http://www.springframework.org/tags" prefix="spring"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1"
      pageEncoding="ISO-8859-1"%>
@@ -26,7 +27,8 @@
     <script src="../js/jquery-ui-1.10.3.custom.js"></script>
     <script src="../js/jquery.steps.min.js"></script>
     <link rel="stylesheet" href="../css/jquery.steps.css" />
-
+	<link rel="stylesheet" href="../css/jquery.steps.custom.css" />
+	<link rel="stylesheet" href="../css/bootstrap.custom.css" />
     <script src="../js/bootstrap.js" type="text/javascript"></script>
     <script src="../js/jquery.jtable.js" type="text/javascript"></script>
     <link href="../css/jtables-bdre.css" rel="stylesheet" type="text/css" />
@@ -48,6 +50,7 @@
   </head>
 
   <body ng-app="myApp" ng-controller="myCtrl">
+  <div class="page-header"><spring:message code="appexport.page.pannel_heading"/></div>
  <%
    String processId=request.getParameter("processId");
   %>
@@ -55,18 +58,16 @@
                                          <div class="row">
                                              <div class="col-md-3"> </div>
                                              <div class="col-md-6" >
-                                                  <div class="panel panel-primary" >
-                                                       <div class="panel-heading">Download Zip or Export to App Store</div>
-                                                       <div  class="col-md-3"></div>
+                                                  	<div  class="col-md-3"></div>
                                                        <div class="col-md-3 ">
                                                            <div class="row">&nbsp;</div>
-                                                           <button type="button" width="20px" onclick="downloadZip(<%=processId %>)" class="btn btn-primary btn-large  pull-center">Download Zip</button>
+                                                           <button type="button" width="20px" onclick="downloadZip(<%=processId %>)" class="btn btn-primary btn-large  pull-center"><spring:message code="appexport.page.download"/></button>
                                                        </div>
                                                        <div  class="col-md-3">
                                                             <div class="row">&nbsp;</div>
-                                                            <button type="button" width="20px" onclick="showExportForm()" class="btn btn-primary btn-large pull-center">Export to AppStore</button>
+                                                            <button type="button" width="20px" onclick="showExportForm()" class="btn btn-primary btn-large pull-center"><spring:message code="appexport.page.export_to_appstore"/></button>
                                                        </div>
-                                                  </div>
+                                                  
                                              </div>
                                          </div>
 
@@ -80,16 +81,16 @@
 
                                 <div class="panel panel-primary" id="export">
 
-                                    <div class="panel-heading">Export To App Store</div>
+                                    <div class="panel-heading"><spring:message code="appexport.page.export_to_appstore"/></div>
                                     <div id="exportForm" class="panel-body">
 
                                         <form role="form" id="exportToAppStoreForm"  >
                                              <div class="form-group">
-                                                <label >Application Name</label>
-                                                <input type="text" class="form-control" name="appName"  placeholder="Application Name" required>
+                                                <label ><spring:message code="appexport.page.application_name"/></label>
+                                                <input type="text" class="form-control" name="appName"  placeholder= <spring:message code="appexport.page.appname_placeholder"/> required>
                                             </div>
                                             <div class="form-group">
-                                                <label >Select Business Domain</label>
+                                                <label ><spring:message code="appexport.page.select_business_domain"/></label>
                                                 <select class="form-control" name="appDomain">
                                                     <option value="banking">Banking</option>
                                                     <option value="retail"> Retail</option>
@@ -102,16 +103,17 @@
                                             </div>
 
                                             <div class="form-group">
-                                                  <label >Upload App Image</label>
-                                                  <input type="file" name="appImage" class="form-control" placeholder="Upload App Image" id="img-id" required>
+                                                  <label ><spring:message code="appexport.page.upload_app_img"/></label>
+                                                  <input type="file" name="appImage" class="form-control" placeholder=<spring:message code="appexport.page.upload_app_img_placeholder"/>id="img-id" required>
 
                                             </div>
                                             <div class="form-group">
                                                <label></label>
                                                <input type="hidden" class="form-control" name="processId"  value="<%=processId %>" required>
                                             </div>
-
-                                            <input type="submit" id="submitButton" class="btn btn-primary" onclick="appstorePush();"/>
+											<div class="actions text-center pull-right">
+                                            	<input type="submit" id="submitButton" class="btn btn-primary" onclick="appstorePush();"/>
+                                            </div>
                                         </form>
 
                                     </div>
