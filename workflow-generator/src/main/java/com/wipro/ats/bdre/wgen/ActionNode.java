@@ -74,6 +74,10 @@ public class ActionNode extends OozieNode {
     public static final int DEST_TABLE_LOAD_ACTION=35;
     public static final int REGISTER_PARTITIONS_ACTION=36;
 
+
+    public static final int SUPER_WF_ACTION=37;
+    public static final int SUB_WF_ACTION=38;
+
     private ProcessInfo processInfo = new ProcessInfo();
     private List<GenericActionNode> containingNodes = new ArrayList<GenericActionNode>();
 
@@ -101,6 +105,7 @@ public class ActionNode extends OozieNode {
 
     public void setProcessInfo(ProcessInfo processInfo) {
         this.processInfo = processInfo;
+
         if (processInfo.getProcessTypeId() == RAW_LOAD_ACTION) {
             RawLoadActionNode rawLoadActionNode = new RawLoadActionNode(this);
             containingNodes.add(rawLoadActionNode);
@@ -144,7 +149,11 @@ public class ActionNode extends OozieNode {
             FileRegistrationNode frActionNode = new FileRegistrationNode(this);
             containingNodes.add(frActionNode);
 
-        } else if (processInfo.getProcessTypeId() == HIVE_GEN_ACTION) {
+        }else if (processInfo.getProcessTypeId() == SUB_WF_ACTION) {
+            SubWorkflowActionNode subWorkflowActionNode = new SubWorkflowActionNode(this);
+            containingNodes.add(subWorkflowActionNode);
+
+        }  else if (processInfo.getProcessTypeId() == HIVE_GEN_ACTION) {
             DataGenerationNode dataGenerationNode = new DataGenerationNode(this);
             FileRegistrationNode fileRegistrationNode = new FileRegistrationNode(this);
             dataGenerationNode.setToNode(fileRegistrationNode);
@@ -175,7 +184,9 @@ public class ActionNode extends OozieNode {
 
         } else if (processInfo.getProcessTypeId() == HIVE_MIGRATION_ACTION) {
 
-        } else if (processInfo.getProcessTypeId() == SFTP) {
+        } else if (processInfo.getProcessTypeId() == SUPER_WF_ACTION) {
+
+        }else if (processInfo.getProcessTypeId() == SFTP) {
 
             SFTPNonOozieActionNode sftpNonOozieActionNode = new SFTPNonOozieActionNode(this);
             containingNodes.add(sftpNonOozieActionNode);
