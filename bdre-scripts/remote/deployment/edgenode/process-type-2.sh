@@ -88,14 +88,16 @@ if [ $? -ne 0 ]
     then exit 1
 fi
 
+# untar tmp files into $uploadBaseDir
+tar xf $BDRE_HOME/tmp/userfile-$processId.tar.gz -C $uploadBaseDir/
 
 #copy all developer checked in files
-
-cp -r $uploadBaseDir/$processId/* $BDRE_APPS_HOME/$busDomainId/$processTypeId/$processId
-
+cp -r $uploadBaseDir/$processId/* $BDRE_APPS_HOME/$busDomainId/$processTypeId/$processId/
+if [ $? -ne 0 ]
+then exit 100
+fi
 
 #copy hive-site.xml
-
 cp $hadoopConfDir/hive-site.xml $BDRE_APPS_HOME/$busDomainId/$processTypeId/$processId
 if [ $? -ne 0 ]
 then exit 1

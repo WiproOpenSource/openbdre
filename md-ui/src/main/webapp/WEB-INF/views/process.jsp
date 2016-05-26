@@ -1051,7 +1051,7 @@
                                 													$(this).dialog("close");
                                 												}
                                 											}
-                                										}).html("Process <b>" +data.Record.processId +"</b> successfully launched from Edge node with OS process id: <b>" + data.Record.osprocessId + "</b>");
+                                										}).html("<p><span class='jtable-confirm-message'> Process <b>" +data.Record.processId +"</b> successfully launched from Edge node with OS process id: <b>" + data.Record.osprocessId + "</b></span></p>");
                                 									} else {
                                 									       if(data.Message == "ACCESS DENIED")
                                 									        {alert(data.Message);}
@@ -1066,7 +1066,7 @@
                                 													$(this).dialog("close");
                                 												}
                                 											}
-                                										}).html("<p>Process failed to launch.</p>");;
+                                										}).html("<p><span class='jtable-confirm-message'> Process failed to launch.</span></p>");;
                                 									}}
                                 								},
                                 								error: function() {
