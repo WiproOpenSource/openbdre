@@ -15,7 +15,6 @@
 package com.wipro.ats.bdre.md.dao;
 
 import com.wipro.ats.bdre.exception.MetadataException;
-
 import com.wipro.ats.bdre.md.beans.ClusterInfo;
 import com.wipro.ats.bdre.md.dao.jpa.GeneralConfig;
 import com.wipro.ats.bdre.md.dao.jpa.GeneralConfigId;
@@ -23,8 +22,8 @@ import org.apache.log4j.Logger;
 import org.hibernate.Criteria;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
-import org.hibernate.criterion.Restrictions;
 import org.hibernate.criterion.Projections;
+import org.hibernate.criterion.Restrictions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -337,14 +336,20 @@ public class GeneralConfigDAO {
 
     }
     
-    public List<String> getDistinctGenerelConfig(){
+    public List<com.wipro.ats.bdre.md.beans.table.GeneralConfig> getDistinctGenerelConfig(){
     	 Session session = sessionFactory.openSession();
-    	 List<String> cg_list = null;
+    	 List<com.wipro.ats.bdre.md.beans.table.GeneralConfig> generalConfiglist = new ArrayList<com.wipro.ats.bdre.md.beans.table.GeneralConfig>();
          try {
              session.beginTransaction();
              Criteria criteria = session.createCriteria(GeneralConfig.class);
              criteria.setProjection(Projections.distinct(Projections.property(CONFIG_GROUP)));
-             cg_list = criteria.list();             
+             List<String> configGroupList= criteria.list();
+             for(String s:configGroupList) {
+                 com.wipro.ats.bdre.md.beans.table.GeneralConfig gc=new com.wipro.ats.bdre.md.beans.table.GeneralConfig();
+                 gc.setConfigGroup(s);
+                 gc.setCounter(configGroupList.size());
+                 generalConfiglist.add(gc);
+             }
              session.getTransaction().commit();
          } catch (MetadataException e) {
              session.getTransaction().rollback();
@@ -352,7 +357,7 @@ public class GeneralConfigDAO {
          } finally {
              session.close();
          }
-         return cg_list;
+         return generalConfiglist;
     }
 
 }
