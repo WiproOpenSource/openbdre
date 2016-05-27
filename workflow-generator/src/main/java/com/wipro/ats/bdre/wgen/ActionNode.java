@@ -16,9 +16,16 @@ package com.wipro.ats.bdre.wgen;
 
 import com.wipro.ats.bdre.exception.BDREException;
 import com.wipro.ats.bdre.md.beans.ProcessInfo;
+import org.apache.log4j.Logger;
 
+import java.io.File;
+import java.lang.reflect.Constructor;
+import java.lang.reflect.Method;
+import java.net.URL;
+import java.net.URLClassLoader;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.jar.JarFile;
 
 /**
  * Created by arijit on 12/21/14
@@ -73,6 +80,10 @@ public class ActionNode extends OozieNode {
     public static final int SOURCE_TO_DEST_COPY_ACTION=34;
     public static final int DEST_TABLE_LOAD_ACTION=35;
     public static final int REGISTER_PARTITIONS_ACTION=36;
+
+    public static final int TDQUERY_ACTION=41;
+
+    private static final Logger LOGGER = Logger.getLogger(ActionNode.class);
 
     private ProcessInfo processInfo = new ProcessInfo();
     private List<GenericActionNode> containingNodes = new ArrayList<GenericActionNode>();
@@ -186,6 +197,33 @@ public class ActionNode extends OozieNode {
         } else if (processInfo.getProcessTypeId() == R_ACTION) {
             RActionNode rActionNode = new RActionNode(this);
             containingNodes.add(rActionNode);
+        } else if (processInfo.getProcessTypeId() == TDQUERY_ACTION) {
+            try{
+                Class classToLoad = Class.forName("com.wipro.ats.bdre.wgen.TeradataQueryActionNode");
+                LOGGER.info("com.wipro.ats.bdre.wgen.TeradataQueryActionNode Class is present in classpath");
+                Constructor[] ctors = classToLoad.getDeclaredConstructors();
+                Object teradataQueryActionNode = ctors[0].newInstance(this);
+                containingNodes.add((GenericActionNode)teradataQueryActionNode);
+            }
+            catch(ClassNotFoundException c){
+                LOGGER.info("com.wipro.ats.bdre.wgen.TeradataQueryActionNode Class is NOT present in classpath");
+                try {
+                    File file = new File("/home/cloudera/Desktop/workflow-generator-1.1-SNAPSHOT.jar");
+                    URL url = file.toURL();
+                    URL[] urls = new URL[]{url};
+                    URLClassLoader child = new URLClassLoader (urls, this.getClass().getClassLoader());
+                    Class classToLoad = Class.forName ("com.wipro.ats.bdre.wgen.TeradataQueryActionNode", true, child);
+                    Constructor[] ctors = classToLoad.getDeclaredConstructors();
+                    Object teradataQueryActionNode = ctors[0].newInstance(this);
+                    containingNodes.add((GenericActionNode)teradataQueryActionNode);
+                } catch (Exception ex) {
+                    ex.printStackTrace();
+                }
+            }
+            catch(Exception e){
+                e.printStackTrace();
+            }
+
         } else if (processInfo.getProcessTypeId() == SPARK_ACTION) {
             SparkActionNode sparkActionNode = new SparkActionNode(this);
             containingNodes.add(sparkActionNode);
