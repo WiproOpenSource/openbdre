@@ -369,23 +369,23 @@
                             fields: {
 
 
-                                SubProcesses: {                    
+                                SubProcesses: {
                                     width: '0%',
                                     sorting: false,
                                     edit: false,
                                     create: false,
                                     listClass: 'bdre-jtable-button',
-                                        display: function(item) {                         //Create an image that will be used to open child table
-                                                                
-                                        var $img = $('<img class="subprocess-arrow" src="../css/images/subprocess-rarrow.png" title="Sub processes info" />');                         //Open child table when user clicks the image
-                                                                
+                                        display: function(item) {                         //Create an image that will be used to open child table
+
+                                        var $img = $('<img class="subprocess-arrow" src="../css/images/subprocess-rarrow.png" title="Sub processes info" />');                         //Open child table when user clicks the image
+
                                         $img.click(function() {
                                         	$('.subprocess-arrow').removeClass('subprocess-arrow-down');
                                         	$(this).addClass('subprocess-arrow-down');
-                                        	$('#Container').jtable('openChildTable',                                     
-                                                $img.closest('tr'),                                      {                                        
+                                        	$('#Container').jtable('openChildTable',
+                                                $img.closest('tr'),                                      {
                                                     title: ' Sub processes of ' + item.record.processId,
-                                                        actions: {                                        
+                                                        actions: {
                                                         listAction: function(postData) {
                                                             return $.Deferred(function($dfd) {
                                                                 console.log(item);
@@ -787,14 +787,14 @@
                                                     }
                                                 },
                                                 function(data) { //opened handler
-                                                                                            
-                                                    data.childTable.jtable('load');                                    
-                                                });                        
 
-                                        });                         //Return image to show on the person row
-                                                                
-                                        return $img;                    
-                                    }                
+                                                    data.childTable.jtable('load');
+                                                });
+
+                                        });                         //Return image to show on the person row
+
+                                        return $img;
+                                    }
                                 },
                                 processId: {
                                     key: true,
@@ -803,7 +803,7 @@
                                     edit: false,
                                     title: 'Job Id'
                                 },
-                                
+
                                 processName: {
                                     title: 'Name'
                                 },
@@ -1110,7 +1110,7 @@
                                         return '<span class="label-icons label-pipeline" onclick="fetchPipelineInfo(' + data.record.processId + ')"></span> ';
                                     },
                                 },
-                                DeployProcess: {                    
+                                DeployProcess: {
                                     width: '5%',
                                     sorting: false,
                                     edit: false,
@@ -1118,8 +1118,8 @@
                                     title: "Deploy Job",
 
                                 },
-                                  
-                                RunProcess: {                    
+
+                                RunProcess: {
                                 	width: '5%',
                                 	sorting: false,
                                 	edit: false,
@@ -1180,11 +1180,11 @@
                                 								error: function() {
                                 									$dfd.reject();
                                 								}
-                                
+
                                 							});
                                 						});
                                 					}
-                                					
+
                                 				}
                                 			});
                                 		});
@@ -1193,22 +1193,22 @@
                                 },
 
 
-                                InstanceExecs: {                    
+                                InstanceExecs: {
                                     width: '10%',
                                     sorting: false,
                                     title: 'Executions',
                                     edit: false,
                                     create: false,
                                     listClass: 'bdre-jtable-button',
-                                        display: function(item) {                         //Create an image that will be used to open child table
-                                                                
-                                        var $img = $('<span class="label-icons label-execution"></span>');                      //Open child table when user clicks the image
-                                                                
-                                        $img.click(function() {                            
-                                            $('#Container').jtable('openChildTable',                                     
-                                                $img.closest('tr'),                                      {                                        
+                                        display: function(item) {                         //Create an image that will be used to open child table
+
+                                        var $img = $('<span class="label-icons label-execution"></span>');                      //Open child table when user clicks the image
+
+                                        $img.click(function() {
+                                            $('#Container').jtable('openChildTable',
+                                                $img.closest('tr'),                                      {
                                                     title: ' Executions of ' + item.record.processName,
-                                                       actions: {
+                                                       actions: {
                                                         listAction: function(postData, jtParams) {
                                                             console.log(postData);
                                                             return $.Deferred(function($dfd) {
@@ -1240,7 +1240,7 @@
                                                             });
                                                         }
                                                     },
-                                                    fields: {                       
+                                                    fields: {
                                                         instanceExecId: {
                                                             key: true,
                                                             list: true,
@@ -1279,13 +1279,13 @@
                                                     }
                                                 },
                                                 function(data) { //opened handler
-                                                                                            
-                                                    data.childTable.jtable('load');                                    
-                                                });                        
-                                        });                         //Return image to show on the person row
-                                                                
-                                        return $img;                    
-                                    }                
+
+                                                    data.childTable.jtable('load');
+                                                });
+                                        });                         //Return image to show on the person row
+
+                                        return $img;
+                                    }
                                 },
                                 Export: {
                                     title: 'Export',
@@ -1399,7 +1399,7 @@
                                     });
 
                                 }
-                                
+
                             }
                         });
                     }
@@ -1526,7 +1526,7 @@
                 </div>
 				<div id="dialog-confirm" style="display: none;">
 					<p>
-						<span class="ui-icon-alert"></span> 
+						<span class="ui-icon-alert"></span>
 						<span class="dialog-title-custom">Are you sure?</span>
 						<span class="jtable-confirm-message">This will build the workflow for this process and deploy necessary codes in cluster. Existing workflow may be replaced.
 						</span>
@@ -1534,7 +1534,7 @@
 				</div>
 				<div id="execute-dialog-confirm" style="display: none;">
 					<p>
-						<span class="ui-icon-alert"></span> 
+						<span class="ui-icon-alert"></span>
 						<span class="dialog-title-custom">Are you sure?</span>
 						<span class="jtable-confirm-message">This will start the execution of process in cluster.
 						</span>
@@ -1542,7 +1542,7 @@
 				</div>
 				<div id="dialog-form" style="display: none;">
 					<p>
-						<span class="ui-icon-alert"></span> 
+						<span class="ui-icon-alert"></span>
 						<span class="dialog-title-custom">Are you sure?</span>
 						<span class="jtable-confirm-message">This will export process and related properties.
 						</span>
@@ -1550,19 +1550,19 @@
 				</div>
 				<div id="execute-result" style="display: none;">
 					<p>
-						<span class="ui-icon ui-icon-alert"></span> 
+						<span class="ui-icon ui-icon-alert"></span>
 						<span class="jtable-confirm-message">Process Started.</span>
 					</p>
 				</div>
 				<div id="execute-fail" style="display: none;">
 					<p>
-						<span class="ui-icon ui-icon-alert"></span> 
+						<span class="ui-icon ui-icon-alert"></span>
 						<span class="jtable-confirm-message">Process Initiation Failed.</span>
 					</p>
 				</div>
 				<div id="process-not-found" style="display: none;">
 					<p>
-						<span class="ui-icon ui-icon-alert"></span> 
+						<span class="ui-icon ui-icon-alert"></span>
 						<span class="jtable-confirm-message">Process Not Found.</span>
 					</p>
 				</div>

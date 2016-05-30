@@ -19,8 +19,10 @@ import com.wipro.ats.bdre.md.api.base.MetadataAPIBase;
 import com.wipro.ats.bdre.md.beans.table.Process;
 import com.wipro.ats.bdre.md.dao.ProcessDAO;
 import com.wipro.ats.bdre.md.dao.ProcessTypeDAO;
+import com.wipro.ats.bdre.md.dao.PropertiesDAO;
 import com.wipro.ats.bdre.md.dao.jpa.BusDomain;
 import com.wipro.ats.bdre.md.dao.jpa.ProcessTemplate;
+import com.wipro.ats.bdre.md.dao.jpa.PropertiesId;
 import com.wipro.ats.bdre.md.dao.jpa.WorkflowType;
 import com.wipro.ats.bdre.md.rest.util.BindingResultError;
 import com.wipro.ats.bdre.md.rest.util.DateConverter;
@@ -51,6 +53,8 @@ public class SubProcessAPI extends MetadataAPIBase {
     private ProcessDAO processDAO;
     @Autowired
     ProcessTypeDAO processTypeDAO;
+    @Autowired
+    PropertiesDAO propertiesDAO;
 
     /**
      * This method calls proc GetSubProcesses and returns a record corresponding to the processid passed.
@@ -286,6 +290,18 @@ public class SubProcessAPI extends MetadataAPIBase {
             process.setTableAddTS(DateConverter.dateToString(insertDaoProcess.getAddTs()));
             process.setTableEditTS(DateConverter.dateToString(insertDaoProcess.getEditTs()));
 
+            if(process.getProcessTypeId()==40) {
+                com.wipro.ats.bdre.md.dao.jpa.Properties insertProperties = new com.wipro.ats.bdre.md.dao.jpa.Properties();
+                insertProperties.setProcess(processDAO.get(processId));
+                PropertiesId propertiesId = new PropertiesId();
+                propertiesId.setPropKey("sub-workflow");
+                propertiesId.setProcessId(processDAO.get(processId).getProcessId());
+                insertProperties.setId(propertiesId);
+                insertProperties.setConfigGroup("Sub Workflow");
+                insertProperties.setPropValue("1");
+                insertProperties.setDescription("Sub Workflow of supar workflow");
+                propertiesDAO.insert(insertProperties);
+            }
             restWrapper = new RestWrapper(process, RestWrapper.OK);
             LOGGER.info("Record with ID:" + process.getProcessId() + " inserted in Process by User:" + principal.getName() + process);
 

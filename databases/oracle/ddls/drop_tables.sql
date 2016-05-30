@@ -33,6 +33,9 @@ DROP TABLE Statisticsdb;
 DROP TABLE Pendingurlsdb;
 DROP TABLE Weburlsdb;
 DROP TABLE permission_type;
+DROP TABLE plugin_dependency;
+DROP TABLE plugin_config;
+DROP TABLE installed_plugins;
 
 DROP SEQUENCE archive_consump_queue_seq;
 DROP SEQUENCE batch_consump_queue_seq;
@@ -53,6 +56,6 @@ DROP SEQUENCE Statisticsdb_seq;
 DROP SEQUENCE Pendingurlsdb_seq;
 DROP SEQUENCE Weburlsdb_seq;
 DROP SEQUENCE App_Deployment_SEQ;
-
+DROP SEQUENCE App_Deployment_SEQ;
 
 commit;

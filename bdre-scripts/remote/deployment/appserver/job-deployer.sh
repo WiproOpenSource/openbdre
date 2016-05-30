@@ -15,6 +15,7 @@ EDGE_NODE_URL=$edgeNodeUserName@$edgeNodeHostName
 #18, 'Hive Generation_Parent', null
 #19, 'DQ_Parent', null
 #26,'Filemon Parent',null
+#39,'SuperWorkflow Parent',null
 
 
 if [ -z "$1" ] || [ -z "$2" ] || [ -z "$3" ] || [ -z "$4" ]; then
