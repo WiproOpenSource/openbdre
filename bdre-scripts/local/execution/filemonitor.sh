@@ -2,7 +2,7 @@
 . $(dirname $0)/../env.properties
 BDRE_HOME=~/bdre
 BDRE_APPS_HOME=~/bdre_app
-if [ -z "$1" ] || [-z "$2"] ; then
+if [ -z "$1" ] || [ -z "$2" ] ; then
         echo Insufficient parameters !
         exit 1
 fi

@@ -905,7 +905,7 @@ public class ProcessAPI extends MetadataAPIBase {
             processDAO.securityCheck(process.getProcessId(),principal.getName(),"execute");
             String[] command = {MDConfig.getProperty("execute.script-path") + "/job-executor.sh", process.getBusDomainId().toString(), process.getProcessTypeId().toString(), process.getProcessId().toString(), principal.getName()};
             LOGGER.info("Running the command : -- " + command[0] + " " + command[1] + " " + command[2] + " " + command[3]);
-            ProcessBuilder processBuilder = new ProcessBuilder(command[0], command[1], command[2], command[3]);
+            ProcessBuilder processBuilder = new ProcessBuilder(command[0], command[1], command[2], command[3], command[4]);
             processBuilder.redirectOutput(new File(MDConfig.getProperty("execute.log-path") + process.getProcessId().toString()));
             LOGGER.info("The output is redirected to " + MDConfig.getProperty("execute.log-path") + process.getProcessId().toString());
             processBuilder.redirectErrorStream(true);
