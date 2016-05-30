@@ -28,6 +28,7 @@
         <module>md-commons</module>
         <module>md-rest-api</module>
         <module>md-ui</module>
+        <module>analytic-ui</module>
         <module>md-dao</module>
         <module>md_api</module>
         <module>login-module</module>
@@ -53,6 +54,7 @@
         <module>genconf-dump</module>
         <module>dot-gen</module>
         <module>cluster-migration</module>
+        <module>analytic-ui-generator</module>
     </modules>
 
     <dependencies>

@@ -9,7 +9,7 @@
 #18, 'Hive Generation_Parent', null
 #19, 'DQ_Parent', null
 #26,'Filemon Parent',null
-#37, 'Super Workflow', null
+#39, 'Super Workflow', null
 
 . $(dirname $0)/../env.properties
 BDRE_HOME=~/bdre
@@ -43,7 +43,7 @@ elif [ $processTypeId -eq 28 ]; then
     ssh $EDGE_NODE_URL sh $BDRE_REMOTE_EXECUTION_DIR/workflow.sh $busDomainId $processTypeId $processId
 elif [ $processTypeId -eq 26 ]; then
     ssh $EDGE_NODE_URL sh $BDRE_REMOTE_EXECUTION_DIR/filemonitor.sh $processId
-elif [ $processTypeId -eq 37 ]; then
+elif [ $processTypeId -eq 39 ]; then
     ssh $EDGE_NODE_URL sh $BDRE_REMOTE_EXECUTION_DIR/workflow.sh $busDomainId $processTypeId $processId
 
 else
