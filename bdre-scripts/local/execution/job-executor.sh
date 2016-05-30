@@ -10,12 +10,13 @@
 #19, 'DQ_Parent', null
 #26,'Filemon Parent',null
 #28, 'Crawler Parent', null
-#37, 'Super Workflow', null
+#37, 'Analytic UI', null
+#39, 'Super Worklfow', null
 
 BDRE_HOME=~/bdre
 BDRE_APPS_HOME=~/bdre_apps
 
-if [ -z "$1" ] || [ -z "$2" ] || [ -z "$3" ] ; then
+if [ -z "$1" ] || [ -z "$2" ] || [ -z "$3" ] || [ -z "$4" ] ; then
         echo Insufficient parameters !
         exit 1
 fi
@@ -23,6 +24,7 @@ fi
 busDomainId=$1
 processTypeId=$2
 processId=$3
+userName=$4
 echo "busDomainId=$1 , processTypeId=$2 , processId=$3"
 if [ $processTypeId -eq 1 ]; then
     sh $(dirname $0)/flume.sh $busDomainId $processTypeId $processId
@@ -41,7 +43,7 @@ elif [ $processTypeId -eq 28 ]; then
 elif [ $processTypeId -eq 31 ]; then
         python $(dirname $0)/Workflow.py $busDomainId $processTypeId $processId
 elif [ $processTypeId -eq 26 ]; then
-    sh $(dirname $0)/filemonitor.sh $processId
+    sh $(dirname $0)/filemonitor.sh $processId $userName
 elif [ $processTypeId -eq 37 ]; then
     python $(dirname $0)/Workflow.py $busDomainId $processTypeId $processId
 else

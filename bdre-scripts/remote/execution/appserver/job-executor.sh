@@ -18,7 +18,7 @@ BDRE_REMOTE_HOME=~$edgeNodeUserName/bdre
 BDRE_REMOTE_EXECUTION_DIR=$BDRE_REMOTE_HOME/bdre-scripts/execution
 EDGE_NODE_URL=$edgeNodeUserName@$edgeNodeHostName
 
-if [ -z "$1" ] || [ -z "$2" ] || [ -z "$3" ] ; then
+if [ -z "$1" ] || [ -z "$2" ] || [ -z "$3" ] || [ -z "$4" ] ; then
         echo Insufficient parameters !
         exit 1
 fi
@@ -26,7 +26,8 @@ fi
 busDomainId=$1
 processTypeId=$2
 processId=$3
-echo "busDomainId=$1 , processTypeId=$2 , processId=$3"
+userName=$4
+echo "busDomainId=$1 , processTypeId=$2 , processId=$3 userName=$4"
 if [ $processTypeId -eq 1 ]; then
     ssh $EDGE_NODE_URL sh $BDRE_REMOTE_EXECUTION_DIR/flume.sh $busDomainId $processTypeId $processId
 elif [ $processTypeId -eq 2 ]; then
@@ -42,7 +43,7 @@ elif [ $processTypeId -eq 19 ]; then
 elif [ $processTypeId -eq 28 ]; then
     ssh $EDGE_NODE_URL sh $BDRE_REMOTE_EXECUTION_DIR/workflow.sh $busDomainId $processTypeId $processId
 elif [ $processTypeId -eq 26 ]; then
-    ssh $EDGE_NODE_URL sh $BDRE_REMOTE_EXECUTION_DIR/filemonitor.sh $processId
+    ssh $EDGE_NODE_URL sh $BDRE_REMOTE_EXECUTION_DIR/filemonitor.sh $processId $userName
 elif [ $processTypeId -eq 37 ]; then
     ssh $EDGE_NODE_URL sh $BDRE_REMOTE_EXECUTION_DIR/workflow.sh $busDomainId $processTypeId $processId
 
