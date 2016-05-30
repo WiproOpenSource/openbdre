@@ -47,274 +47,185 @@
 
 	<script type="text/javascript">
 
-		var configGroupVal = '';
-            var updateSettings = function (){
-
-						$.ajax({
-	        			                    type: "POST",
-                                            url: "/mdrest/genconfig/admin",
-                                            data: $('#SettingsForm').serialize()+"&configGroup="+configGroupVal,
-                                            success: function(data) {
-                                                if(data.Result == "OK") {
-                                                    created = 1;
-                                                    $("#div-dialog-warning").dialog({
-                                                        title: "Success",
-                                                        resizable: false,
-                                                        height: 'auto',
-                                                        modal: true,
-                                                        buttons: {
-                                                            "Ok": function() {
-                                                                $(this).dialog("close");
-                                                            }
-                                                        }
-                                                    }).html("<p><span class=\"jtable-confirm-message\">Saved successfully.</span></p>");
-
-                                                }
-                                                else{
-                                                    $("#div-dialog-warning").dialog({
-                                                        title: "Error",
-                                                        resizable: false,
-                                                        height: 'auto',
-                                                        modal: true,
-                                                        buttons: {
-                                                            "Ok": function() {
-                                                                $(this).dialog("close");
-                                                            }
-                                                        }
-                                                    }).html("<p><span class=\"jtable-confirm-message\">" + data.Message + "</span></p>");
-                                                }
-
-                                            }
-                    		});
-                	}
-
-
 	$(document).ready(function () {
-    $('#configDropdown').change(function() {
-		console.log($(this).val());
-		var config=$(this).val();
-		configGroupVal = config;
-		if(config == "cluster.hive-address"){
-       $("#Container").show();
-        $("#Settings").hide();
-        $('#Container').jtable({
-       	    title: 'Clusters List',
-       		    paging: true,
-       		    pageSize: 10,
-       		    sorting: true,
-       		    actions: {
-       		    listAction: function (postData, jtParams) {
-       		    console.log(postData);
-       			    return $.Deferred(function ($dfd) {
-       			    $.ajax({
-       			    url: "/mdrest/genconfig/" + config + "/?required=1",
-       				    type: 'GET',
-       				    data: postData,
-       				    dataType: 'json',
-       				    success: function (data) {
-       				    $dfd.resolve(data);
-       				    },
-       				    error: function () {
-       				    $dfd.reject();
-       				    }
-       			    });
-       			    });
-       		    },
-       	    <security:authorize access="hasAnyRole('ROLE_ADMIN','ROLE_USER')">
-       		    createAction:function (postData) {
-       		    console.log(postData);
-       			    return $.Deferred(function ($dfd) {
-       			    $.ajax({
-       			    url: '/mdrest/hivemigration/insertcluster',
-       				    type: 'PUT',
-       				    data: postData,
-       				    dataType: 'json',
-       				    success: function (data) {
-       				    $dfd.resolve(data);
-       				    },
-       				    error: function () {
-       				    $dfd.reject();
-       				    }
-       			    });
-       			    });
-       		    }
-       			   </security:authorize>
-       		    },
-       		    fields: {
-
-       		    Clusters: {
-       		    title: 'Click to expand',
-       			    width: '5%',
-       			    sorting: false,
-       			    edit: false,
-       			    create: false,
-       			    listClass: 'bdre-jtable-button',
-       			    display: function(item) {                         //Create an image that will be used to open child table
-
-       			    var $img = $('<img src="../css/images/three-bar.png" title="Clusters info" />'); //Open child table when user clicks the image
-
-       				    $img.click(function() {
-       				    $('#Container').jtable('openChildTable',
-       					    $img.closest('tr'), {
-       				    title: ' Details of ' + item.record.description,
-       					    paging: true,
-       					    pageSize: 10,
-       					    actions: {
-       					    listAction: function(postData) {
-       					    return $.Deferred(function($dfd) {
-       					    console.log(item.record.description);
-       						    $.ajax({
-       						    url: '/mdrest/hivemigration/cluster/' + item.record.description,
-       							    type: 'GET',
-       							    data: item,
-       							    dataType: 'json',
-       							    success: function(data) {
-       							    $dfd.resolve(data);
-       							    },
-       							    error: function() {
-       							    $dfd.reject();
-       							    }
-       						    }); ;
-       					    });
-       					    },
-
-       						    updateAction: function(postData) {
-       						    console.log(postData);
-       							    return $.Deferred(function($dfd) {
-       							    $.ajax({
-       							    url: '/mdrest/hivemigration/updatecluster',
-       								    type: 'POST',
-       								    data: postData + '&description=' + item.record.description,
-       								    dataType: 'json',
-       								    success: function(data) {
-       								    console.log(data);
-       									    $dfd.resolve(data);
-       								    },
-       								    error: function() {
-       								    $dfd.reject();
-       								    }
-       							    });
-       							    });
-       						    },
-
-       					    },
-       					    fields: {
-       						    key: {
-       						    title: 'Type',
-       						    edit: true,
-       							defaultValue: item.record.key,
-       						  },
-       						    defaultVal: {
-       						    title: 'Address',
-       						    edit: true,
-       							defaultValue: item.record.defaultVal,
-       						    },
-       					    }
-       				    },
-       					    function(data) { //opened handler
-
-       					    data.childTable.jtable('load');
-       					    });
-       				    }); //Return image to show on the person row
-
-       				    return $img;
-       			    }
-       		    },
-       			    nameNodeHostName: {
-					   title :'namenode hostname',
-						   key : true,
-						   list: false,
-						   create:true,
-						   edit: false,
-
-					   }, nameNodePort: {
-							title: ' namenode port',
-								key : true,
-								list: false,
-								create:true,
-								edit: false,
-
-							}, jobTrackerHostName: {
-							title: 'jobtracker hostname',
-								key : true,
-								list : false,
-								create : true,
-								edit : false,
 
 
-							},
-								jobTrackerPort: {
-								title: 'jobtracker port',
-									list : false,
-									create : true,
-									edit : false,
-									key : true,
+	 $('#Container').jtable({
+           	    title: 'General Configuration',
+           		    paging: true,
+           		    pageSize: 10,
+           		    sorting: true,
+           		    actions: {
+           		    listAction: function (postData, jtParams) {
+           		    console.log(postData);
+           			    return $.Deferred(function ($dfd) {
+           			    $.ajax({
+           			    url: "/mdrest/genconfig",
+           				    type: 'GET',
+           				    data: postData,
+           				    dataType: 'json',
+           				    success: function (data) {
+           				    $dfd.resolve(data);
+           				    },
+           				    error: function () {
+           				    $dfd.reject();
+           				    }
+           			    });
+           			    });
+           		    },
+           		    },
+           		    fields: {
 
-								},
-								hiveHostName: {
-									title: 'hive hostname',
-									list: false,
-									create:true,
-									edit: false,
-									key : true,
+           		    Groups: {
+           		    title: 'Click to expand',
+           			    width: '5%',
+           			    sorting: false,
+           			    edit: false,
+           			    create: false,
+           			    listClass: 'bdre-jtable-button',
+           			    display: function(item) {                         //Create an image that will be used to open child table
 
-								},
-								clusterName: {
-								   title: 'cluster name',
-								   list: false,
-								   create:true,
-								   edit: false,
-								   key : true,
-								   },
-       			    description: {
-       			    	key : true,
-       				    list: true,
-       				    create:false,
-       				    edit: false,
-       				    title: 'Clusters'
+           			    var $img = $('<img src="../css/images/three-bar.png" title="Clusters info" />'); //Open child table when user clicks the image
 
-       			    }
-       		    }
-       	    });
-       		    $('#Container').jtable('load');
+           				    $img.click(function() {
+           				    if( item.record.configGroup=='cluster.hive-address'){
+           				    console.log(item.record.configGroup);
+           				    cluster
+           				    }else
+           				    $('#Container').jtable('openChildTable',
+           					    $img.closest('tr'), {
+           				    title: ' Details of ' + item.record.configGroup,
+           					    paging: true,
+           					    pageSize: 10,
+           					    actions: {
+           					    listAction: function(postData) {
+           					    return $.Deferred(function($dfd) {
+           					    console.log(item.record.description);
+           						    $.ajax({
+           						    url: '/mdrest/genconfig/'+item.record.configGroup,
+           							    type: 'GET',
+           							    data: item,
+           							    dataType: 'json',
+           							    success: function(data) {
+           							    $dfd.resolve(data);
+           							    },
+           							    error: function() {
+           							    $dfd.reject();
+           							    }
+           						    }); ;
+           					    });
+           					    },
+
+           						    updateAction: function(postData) {
+           						    console.log(postData);
+           							    return $.Deferred(function($dfd) {
+           							    $.ajax({
+           							    url: '/mdrest/genconfig/admin/update',
+           								    type: 'POST',
+           								    data: postData + '&configGroup=' + item.record.configGroup,
+           								    dataType: 'json',
+           								    success: function(data) {
+           								    console.log(data);
+           									    $dfd.resolve(data);
+           								    },
+           								    error: function() {
+           								    $dfd.reject();
+           								    }
+           							    });
+           							    });
+           						    },
+
+           						    <security:authorize access="hasAnyRole('ROLE_ADMIN','ROLE_USER')">
+                                               		    createAction:function (postData) {
+                                               		    console.log(postData);
+                                               			    return $.Deferred(function ($dfd) {
+                                               			    $.ajax({
+                                               			    url: '/mdrest/genconfig/admin/add',
+                                               				    type: 'PUT',
+                                               				    data: postData+'&configGroup=' + item.record.configGroup,
+                                               				    dataType: 'json',
+                                               				    success: function (data) {
+                                               				    $dfd.resolve(data);
+                                               				    },
+                                               				    error: function () {
+                                               				    $dfd.reject();
+                                               				    }
+                                               			    });
+                                               			    });
+                                               		    }
+                                         </security:authorize>
+
+           					    },
+           					    formCreated: function (event, data)
+                                			{
+
+                                				if(data.formType=='edit') {
+                                					//data.form.find('input#Edit-Name').addClass('disabled').attr("disabled", true);
+                                					$('#Edit-key').prop('readonly', true);
+                                					//$('#Edit-Name').addClass('jtable-input-readonly');
+                                				}
+                                			},
+           					    fields: {
+           						    key: {
+           						    title: 'Key',
+           						    edit: true,
+           						    //key: true
+           							//defaultValue: item.record.key,
+           						  },
+           						    defaultVal: {
+           						    title: 'Default Value',
+           						    edit: true,
+           							//defaultValue: item.record.defaultVal,
+           						    },
+           						    value: {
+           						       title: 'Value',
+                                       edit: true,
+           						    },
+           						    description: {
+           						       title: 'Description',
+                                       edit: true,
+           						    },
+           						    type: {
+                                    	title: 'Type',
+                                    	edit: true,
+                                 	},
+									enabled: {
+                                       title: 'IsEnabled?',
+                                       edit: true,
+                                   },
+                                   required: {
+                                    	title: 'Required?',
+                                    	edit: true,
+                                   }
+           					    }
+           				    },
+           					    function(data) { //opened handler
+
+           					    data.childTable.jtable('load');
+           					    }
+           					);
+           				    }); //Return image to show on the person row
+
+           				    return $img;
+           			    }
+           		    },
+           		    configGroup: {
+           			    	key : true,
+           				    list: true,
+           				    create:false,
+           				    edit: false,
+           				    title: 'Config Group'
+
+           			    }
+           		    }
+           	    });
+           		    $('#Container').jtable('load');
+
+
+});
 
 
 
-        }
-		else{
-        $("#Container").hide();
-         $("#Settings").show();
-		buildFormDisplay(config,'Settings');
-		}
-	});
-    });
-
-function buildFormDisplay(configGroup, typeDiv) {
-	console.log('inside the function');
-	$.ajax({
-		type: "GET",
-		url: "/mdrest/genconfig/" + configGroup + "/?required=1",
-		dataType: 'json',
-		success: function(data) {
-			var root = 'Records';
-			var div = document.getElementById(typeDiv);
-			var formHTML = '';
-			formHTML = formHTML + '<form role="form" id = "' + typeDiv + 'Form" >';
-			console.log(data[root]);
-			$.each(data[root], function(i, v) {
-				formHTML = formHTML + '<div class="form-group" > <label for="' + v.key + '">' + v.key + '</label>';
-				formHTML = formHTML + '<span class="" title="' + v.description + '"></span>';
-				formHTML = formHTML + '<input name="'+v.key+'" value="' + v.defaultVal + '" class="form-control" id="' + v.key + '"></div>';
-			});
-
-			    formHTML = formHTML + '<div class="clearfix"></div><div id="editSettings" class="actions text-center pull-right"><button onclick="updateSettings()" id="editMdSetting" type="button" class="btn btn-primary">save</button></div>';
-			formHTML = formHTML + '</form>';
-			div.innerHTML = formHTML;
-			console.log(div);
-		}
-	});
-	return true;
-}
 	</script>
 
 	</head>
@@ -324,26 +235,6 @@ function buildFormDisplay(configGroup, typeDiv) {
     				<div class="alert alert-info" role="alert">
 	                     <spring:message code="settings.page.configuration_alert"/>
 	                </div>
-            
-                <div id="config">
-    				<div id="configDiv">
-					<form id="configForm" >
-
-					<div><strong><spring:message code="settings.page.select_conf"/></strong></div>
-    					<select id="configDropdown" class="btn btn-default dropdown-toggle configDropdown" data-toggle="dropdown" aria-haspopup="false" aria-expanded="true">
-    						<option value="" disabled selected><spring:message code="settings.page.select_option"/></option>
-    						<option value="mdconfig"><spring:message code="settings.page.mdconfig"/></option>
-    						<option value="imconfig"><spring:message code="settings.page.imconfig"/></option>
-    						<option value="scripts_config"><spring:message code="settings.page.scripts_config"/></option>
-    						<option value="cluster.hive-address"><spring:message code="settings.page.cluster"/></option>
-						</select>
-					</form>
-					</div>
-    			</div>
-				<div id="Settings"></div>
-				
-
-
 					 <section style="width:100%;text-align:center;">
                     				<div id="Container" ></div>
                     				</section>

@@ -153,32 +153,87 @@ public class GeneralConfigAPI extends MetadataAPIBase {
 
     @RequestMapping(value = {"/admin/update/", "/admin/update"}, method = RequestMethod.POST)
     @ResponseBody public
-    RestWrapper updateUsingCGAndKey(@ModelAttribute("generalConfig")
-                                    @Valid GeneralConfig generalConfig, BindingResult bindingResult,@PathVariable("cg") String configGroup, @PathVariable("k") String cg_key, Principal principal) {
+    RestWrapper updateOneRecord(@ModelAttribute("generalConfig")
+                                    @Valid GeneralConfig generalConfig, BindingResult bindingResult, Principal principal) {
         RestWrapper restWrapper = null;
         if (bindingResult.hasErrors()) {
             BindingResultError bindingResultError = new BindingResultError();
             return bindingResultError.errorMessage(bindingResult);
         }
         try {
-            com.wipro.ats.bdre.md.dao.jpa.GeneralConfig jpaGeneralConfigUpdate = new com.wipro.ats.bdre.md.dao.jpa.GeneralConfig();
-            GeneralConfigId jpaGeneralConfigId = new GeneralConfigId();
-            jpaGeneralConfigId.setConfigGroup(generalConfig.getConfigGroup());
-            jpaGeneralConfigId.setGcKey(generalConfig.getKey());
-            jpaGeneralConfigUpdate.setDefaultVal(generalConfig.getDefaultVal());
-            jpaGeneralConfigUpdate.setDescription(generalConfig.getDescription());
-            jpaGeneralConfigUpdate.setEnabled(generalConfig.isEnabled());
-            jpaGeneralConfigUpdate.setGcValue(generalConfig.getValue());
-            jpaGeneralConfigUpdate.setId(jpaGeneralConfigId);
-            if(generalConfig.getRequired()==1)
-                jpaGeneralConfigUpdate.setRequired(true);
-            else
-                jpaGeneralConfigUpdate.setRequired(false);
-            jpaGeneralConfigUpdate.setType(generalConfig.getType());
-            generalConfigDAO.update(jpaGeneralConfigUpdate);
-            restWrapper = new RestWrapper(jpaGeneralConfigUpdate, RestWrapper.OK);
-            LOGGER.info(" Record with key:" + jpaGeneralConfigId.getGcKey() + " and config group:" + jpaGeneralConfigId.getConfigGroup() + " updated in general_config by User:" + principal.getName());
+            if(generalConfig.getRequired()<=1) {
+                com.wipro.ats.bdre.md.dao.jpa.GeneralConfig jpaGeneralConfigUpdate = new com.wipro.ats.bdre.md.dao.jpa.GeneralConfig();
+                GeneralConfigId jpaGeneralConfigId = new GeneralConfigId();
+                jpaGeneralConfigId.setConfigGroup(generalConfig.getConfigGroup());
+                jpaGeneralConfigId.setGcKey(generalConfig.getKey());
+                jpaGeneralConfigUpdate.setDefaultVal(generalConfig.getDefaultVal());
+                jpaGeneralConfigUpdate.setDescription(generalConfig.getDescription());
+                jpaGeneralConfigUpdate.setEnabled(generalConfig.isEnabled());
+                jpaGeneralConfigUpdate.setGcValue(generalConfig.getValue());
+                jpaGeneralConfigUpdate.setId(jpaGeneralConfigId);
+                if (generalConfig.getRequired() == 1)
+                    jpaGeneralConfigUpdate.setRequired(true);
+                else
+                    jpaGeneralConfigUpdate.setRequired(false);
+                jpaGeneralConfigUpdate.setType(generalConfig.getType());
+                generalConfigDAO.update(jpaGeneralConfigUpdate);
+                restWrapper = new RestWrapper(generalConfig, RestWrapper.OK);
+                LOGGER.info(" Record with key:" + jpaGeneralConfigId.getGcKey() + " and config group:" + jpaGeneralConfigId.getConfigGroup() + " updated in general_config by User:" + principal.getName());
 
+            }else{
+                LOGGER.error("Invalid required field's data");
+                restWrapper = new RestWrapper("Required field does not accest value other than 0 or 1", RestWrapper.ERROR);
+            }
+
+        }catch (MetadataException e) {
+            LOGGER.error(e);
+            restWrapper = new RestWrapper(e.getMessage(), RestWrapper.ERROR);
+        }
+        return restWrapper;
+    }
+
+    /**
+     * This method adds a record in GeneralConfig table corresponding to object passed.
+     *
+     * @param generalConfig Instance of GeneralConfig
+     * @return restWrapper It contains an added instance of GeneralConfig.
+     */
+
+    @RequestMapping(value = {"/admin/add/", "/admin/add"}, method = RequestMethod.PUT)
+    @ResponseBody public
+    RestWrapper addOneRecord(@ModelAttribute("generalConfig")
+                                @Valid GeneralConfig generalConfig, BindingResult bindingResult, Principal principal) {
+        RestWrapper restWrapper = null;
+        if (bindingResult.hasErrors()) {
+            BindingResultError bindingResultError = new BindingResultError();
+            return bindingResultError.errorMessage(bindingResult);
+        }
+        try {
+            if(generalConfig.getRequired()<=1) {
+                com.wipro.ats.bdre.md.dao.jpa.GeneralConfig jpaGeneralConfig = new com.wipro.ats.bdre.md.dao.jpa.GeneralConfig();
+                GeneralConfigId jpaGeneralConfigId = new GeneralConfigId();
+                jpaGeneralConfigId.setConfigGroup(generalConfig.getConfigGroup());
+                jpaGeneralConfigId.setGcKey(generalConfig.getKey());
+                jpaGeneralConfig.setDefaultVal(generalConfig.getDefaultVal());
+                jpaGeneralConfig.setDescription(generalConfig.getDescription());
+                jpaGeneralConfig.setEnabled(generalConfig.isEnabled());
+                jpaGeneralConfig.setGcValue(generalConfig.getValue());
+                jpaGeneralConfig.setId(jpaGeneralConfigId);
+                if (generalConfig.getRequired() == 1)
+                    jpaGeneralConfig.setRequired(true);
+                else
+                    jpaGeneralConfig.setRequired(false);
+                jpaGeneralConfig.setType(generalConfig.getType());
+                GeneralConfigId id=generalConfigDAO.insert(jpaGeneralConfig);
+                if(id!=null) {
+                    restWrapper = new RestWrapper(generalConfig, RestWrapper.OK);
+                    LOGGER.info(" Record with key:" + jpaGeneralConfigId.getGcKey() + " and config group:" + jpaGeneralConfigId.getConfigGroup() + " added in general_config by User:" + principal.getName());
+                }else
+                    LOGGER.error("Error to insert data");
+            }else{
+                LOGGER.error("Invalid required field's data");
+                restWrapper = new RestWrapper("Required field does not accest value other than 0 or 1", RestWrapper.ERROR);
+            }
         }catch (MetadataException e) {
             LOGGER.error(e);
             restWrapper = new RestWrapper(e.getMessage(), RestWrapper.ERROR);
