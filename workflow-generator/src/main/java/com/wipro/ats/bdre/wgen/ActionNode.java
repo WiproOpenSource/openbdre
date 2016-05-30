@@ -24,7 +24,9 @@ import java.lang.reflect.Method;
 import java.net.URL;
 import java.net.URLClassLoader;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.jar.JarFile;
 
 /**
@@ -81,8 +83,6 @@ public class ActionNode extends OozieNode {
     public static final int DEST_TABLE_LOAD_ACTION=35;
     public static final int REGISTER_PARTITIONS_ACTION=36;
 
-    public static final int TDQUERY_ACTION=41;
-
     private static final Logger LOGGER = Logger.getLogger(ActionNode.class);
 
     private ProcessInfo processInfo = new ProcessInfo();
@@ -109,9 +109,11 @@ public class ActionNode extends OozieNode {
     public ProcessInfo getProcessInfo() {
         return processInfo;
     }
+    public Set processTypeSet=new HashSet<Integer>();
 
     public void setProcessInfo(ProcessInfo processInfo) {
         this.processInfo = processInfo;
+        setPluginProcessInfo(this.processInfo,2,41);
         if (processInfo.getProcessTypeId() == RAW_LOAD_ACTION) {
             RawLoadActionNode rawLoadActionNode = new RawLoadActionNode(this);
             containingNodes.add(rawLoadActionNode);
@@ -197,7 +199,40 @@ public class ActionNode extends OozieNode {
         } else if (processInfo.getProcessTypeId() == R_ACTION) {
             RActionNode rActionNode = new RActionNode(this);
             containingNodes.add(rActionNode);
-        } else if (processInfo.getProcessTypeId() == TDQUERY_ACTION) {
+        } else if (processInfo.getProcessTypeId() == SPARK_ACTION) {
+            SparkActionNode sparkActionNode = new SparkActionNode(this);
+            containingNodes.add(sparkActionNode);
+        } else if (processInfo.getProcessTypeId() == CRAWLER_PARENT_ACTION) {
+
+        } else if (processInfo.getProcessTypeId() == CRAWLER_CHILD_ACTION) {
+            CrawlerActionNode crawlerActionNode = new CrawlerActionNode(this);
+            containingNodes.add(crawlerActionNode);
+        } else if (processInfo.getProcessTypeId() == MIGRATION_PREPROCESSOR_ACTION) {
+            MigrationPreprocessorActionNode migrationPreprocessorActionNodeNode = new MigrationPreprocessorActionNode(this);
+            containingNodes.add(migrationPreprocessorActionNodeNode);
+        } else if (processInfo.getProcessTypeId() == SOURCE_STAGE_LOAD_ACTION) {
+            SourceStageLoadActionNode sourceStageLoadActionNode = new SourceStageLoadActionNode(this);
+            containingNodes.add(sourceStageLoadActionNode);
+        } else if (processInfo.getProcessTypeId() == SOURCE_TO_DEST_COPY_ACTION) {
+            SourceToDestCopyActionNode sourceToDestCopyActionNode = new SourceToDestCopyActionNode(this);
+            containingNodes.add(sourceToDestCopyActionNode);
+        } else if (processInfo.getProcessTypeId() == DEST_TABLE_LOAD_ACTION) {
+            DestTableLoadActionNode destTableLoadActionNode = new DestTableLoadActionNode(this);
+            containingNodes.add(destTableLoadActionNode);
+        } else if (processInfo.getProcessTypeId() == REGISTER_PARTITIONS_ACTION) {
+            RegisterPartitionsActionNode registerPartitionsActionNode = new RegisterPartitionsActionNode(this);
+            containingNodes.add(registerPartitionsActionNode);
+        } else if(!processTypeSet.contains(processInfo.getProcessTypeId())){
+            throw new BDREException("Don't know how to handle processInfo.getProcessTypeId()=" + processInfo.getProcessTypeId());
+        }
+
+    }
+
+
+    public void setPluginProcessInfo(ProcessInfo processInfo, int parentProcessId, int subProcessId){
+        processTypeSet.add(parentProcessId);
+        processTypeSet.add(subProcessId);
+        if (processInfo.getProcessTypeId() == 41) {
             try{
                 Class classToLoad = Class.forName("com.wipro.ats.bdre.wgen.TeradataQueryActionNode");
                 LOGGER.info("com.wipro.ats.bdre.wgen.TeradataQueryActionNode Class is present in classpath");
@@ -224,35 +259,8 @@ public class ActionNode extends OozieNode {
                 e.printStackTrace();
             }
 
-        } else if (processInfo.getProcessTypeId() == SPARK_ACTION) {
-            SparkActionNode sparkActionNode = new SparkActionNode(this);
-            containingNodes.add(sparkActionNode);
-        } else if (processInfo.getProcessTypeId() == CRAWLER_PARENT_ACTION) {
-
-        } else if (processInfo.getProcessTypeId() == CRAWLER_CHILD_ACTION) {
-            CrawlerActionNode crawlerActionNode = new CrawlerActionNode(this);
-            containingNodes.add(crawlerActionNode);
-        } else if (processInfo.getProcessTypeId() == MIGRATION_PREPROCESSOR_ACTION) {
-            MigrationPreprocessorActionNode migrationPreprocessorActionNodeNode = new MigrationPreprocessorActionNode(this);
-            containingNodes.add(migrationPreprocessorActionNodeNode);
-        } else if (processInfo.getProcessTypeId() == SOURCE_STAGE_LOAD_ACTION) {
-            SourceStageLoadActionNode sourceStageLoadActionNode = new SourceStageLoadActionNode(this);
-            containingNodes.add(sourceStageLoadActionNode);
-        } else if (processInfo.getProcessTypeId() == SOURCE_TO_DEST_COPY_ACTION) {
-            SourceToDestCopyActionNode sourceToDestCopyActionNode = new SourceToDestCopyActionNode(this);
-            containingNodes.add(sourceToDestCopyActionNode);
-        } else if (processInfo.getProcessTypeId() == DEST_TABLE_LOAD_ACTION) {
-            DestTableLoadActionNode destTableLoadActionNode = new DestTableLoadActionNode(this);
-            containingNodes.add(destTableLoadActionNode);
-        } else if (processInfo.getProcessTypeId() == REGISTER_PARTITIONS_ACTION) {
-            RegisterPartitionsActionNode registerPartitionsActionNode = new RegisterPartitionsActionNode(this);
-            containingNodes.add(registerPartitionsActionNode);
-        } else {
-            throw new BDREException("Don't know how to handle processInfo.getProcessTypeId()=" + processInfo.getProcessTypeId());
         }
-
     }
-
     @Override
     public void setTermNode(OozieNode termNode) {
         if (this.getProcessInfo().getParentProcessId() != 0) {
