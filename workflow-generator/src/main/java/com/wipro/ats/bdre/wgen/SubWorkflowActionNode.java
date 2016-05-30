@@ -78,7 +78,7 @@ public class SubWorkflowActionNode extends GenericActionNode {
         StringBuilder ret = new StringBuilder();
         ret.append("\n<action name=\"" + getName() + "\">\n" +
                 "        <sub-workflow>\n" +
-                "            <app-path>${baseAppPath}" +  getSubWorkflowPath(processInfo.getProcessId(), processInfo.getParentProcessId().toString())       +"</app-path>\n" +
+                "            <app-path>${baseAppPath}" +  getSubWorkflowPath(processInfo.getProcessId(),"param")       +"</app-path>\n" +
                 "            <propagate-configuration/>\n" +
                 "       </sub-workflow>\n" +
                 "        <ok to=\"" + getToNode().getName() + "\"/>\n" +
