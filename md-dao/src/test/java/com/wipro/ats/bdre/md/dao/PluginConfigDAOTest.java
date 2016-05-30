@@ -55,7 +55,7 @@ public class PluginConfigDAOTest {
         installedPlugins.setAuthor("Test Author");
         installedPlugins.setAddTs(new Date());
         installedPlugins.setPlugin("TestPlugin");
-        installedPlugins.setUninstallabe(1);
+        installedPlugins.setUninstallable(true);
         String installedPluginId = installedPluginsDAO.insert(installedPlugins);
         LOGGER.info("InstalledPlugin is added with Id:" + installedPluginId);
         PluginConfig pluginConfig = new PluginConfig();
@@ -63,10 +63,10 @@ public class PluginConfigDAOTest {
         pluginConfigId.setPluginKey(1);
         pluginConfigId.setPluginUniqueId("Test-1");
         pluginConfig.setId(pluginConfigId);
-        pluginConfig.setInstalledPlugin(installedPlugins);
+        pluginConfig.setInstalledPlugins(installedPlugins);
         pluginConfig.setConfigGroup("Test-config");
         pluginConfig.setPluginValue("TestPluginValue");
-        String pluginConfigIden = pluginconfigDAO.insert(pluginConfig);
+        String pluginConfigIden = pluginConfigDAO.insert(pluginConfig);
         LOGGER.info("PluginConfig is added with Id:" + pluginConfigIden);
         pluginConfig.setConfigGroup("Config");
         pluginConfigDAO.update(pluginConfig);

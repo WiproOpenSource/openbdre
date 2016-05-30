@@ -61,17 +61,17 @@ public class PluginDependencyDAOTest {
         installedPlugins.setAuthor("Test Author");
         installedPlugins.setAddTs(new Date());
         installedPlugins.setPlugin("TestPlugin");
-        installedPlugins.setUninstallabe(1);
+        installedPlugins.setUninstallable(true);
         String installedPluginId = installedPluginsDAO.insert(installedPlugins);
         LOGGER.info("InstalledPlugin is added with Id:" + installedPluginId);
         PluginDependency pluginDependency = new PluginDependency();
         pluginDependency.setDependencyId(1);
-        pluginDependency.setPluginUniqueId(installedPlugins);
-        pluginDependency.setDependentPluginUniqueId(installedPlugins);
+        pluginDependency.setInstalledPluginsByPluginUniqueId(installedPlugins);
+        pluginDependency.setInstalledPluginsByDependentPluginUniqueId(installedPlugins);
         Integer pluginDependencyId = pluginDependencyDAO.insert(pluginDependency);
         LOGGER.info("PluginDependency is added with Id:" + pluginDependencyId);
         pluginDependency = pluginDependencyDAO.get(pluginDependencyId);
-        assertEquals(1,pluginDependency.getDependecyId());
+        assertEquals(1,pluginDependency.getDependencyId());
         assertNotNull(pluginDependencyDAO.list(0, 10));
 
         pluginDependencyDAO.delete(pluginDependencyId);

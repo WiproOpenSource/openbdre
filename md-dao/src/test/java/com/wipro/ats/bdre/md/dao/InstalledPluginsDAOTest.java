@@ -56,7 +56,7 @@ public class InstalledPluginsDAOTest {
         installedPlugins.setAuthor("Test Author");
         installedPlugins.setAddTs(new Date());
         installedPlugins.setPlugin("TestPlugin");
-        installedPlugins.setUninstallabe(1);
+        installedPlugins.setUninstallable(true);
         String installedPluginId = installedPluginsDAO.insert(installedPlugins);
         LOGGER.info("InstalledPlugin is added with Id:" + installedPluginId);
         installedPlugins.setDescription("Test Description 2");
