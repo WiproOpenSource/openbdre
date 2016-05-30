@@ -236,30 +236,5 @@
         <activeProfile>repositories</activeProfile>
     </activeProfiles>
 	
-	<proxies>
-<!--
-proxy| Specification for one proxy, to be used in connecting to the network.
--->
-<proxy>
-<id>optional</id>
-<active>true</active>
-<protocol>http</protocol>
-<username>mr299389</username>
-<password>Credential#26</password>
-<host>kdc-proxy.wipro.com</host>
-<port>8080</port>
-<nonProxyHosts>www.google.com|*.example.com</nonProxyHosts>
-</proxy>
-<proxy>
-<id>optional2</id>
-<active>true</active>
-<protocol>https</protocol>
-<username>mr299389</username>
-<password>Credential#26</password>
-<host>kdc-proxy.wipro.com</host>
-<port>8080</port>
-<nonProxyHosts>www.google.com|*.example.com</nonProxyHosts>
-</proxy>
-</proxies>
 
 </settings>
