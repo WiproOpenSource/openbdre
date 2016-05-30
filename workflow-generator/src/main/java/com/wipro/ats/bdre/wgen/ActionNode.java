@@ -75,8 +75,8 @@ public class ActionNode extends OozieNode {
     public static final int REGISTER_PARTITIONS_ACTION=36;
 
 
-    public static final int SUPER_WF_ACTION=37;
-    public static final int SUB_WF_ACTION=38;
+    public static final int SUPER_WF_ACTION=39;
+    public static final int SUB_WF_ACTION=40;
 
     private ProcessInfo processInfo = new ProcessInfo();
     private List<GenericActionNode> containingNodes = new ArrayList<GenericActionNode>();

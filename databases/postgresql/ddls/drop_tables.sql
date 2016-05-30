@@ -32,3 +32,4 @@ DROP TABLE Pendingurlsdb CASCADE;
 DROP TABLE Weburlsdb CASCADE;
 DROP TABLE Statisticsdb CASCADE;
 DROP TABLE permission_type CASCADE;
+DROP TABLE analytics_apps CASCADE;
