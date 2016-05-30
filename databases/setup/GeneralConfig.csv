@@ -33,6 +33,7 @@
 '30','mapper','Mapper file','Mapper file for Hadoop streaming ', 1,'true','hadoopstream', 1
 '30', 'reducer', 'Reducer file', 'Reducer file Hadoop streaming',1, 'true', 'hadoopstream', 1
 '30','extraFiles','Additional Files','Optional files if any to upload',1,'true','addFiles',1
+'38', 'param', 'Parameters', 'Parameters', 1, 'true', 'text', 1
 'default_val.15','password_enabled','credential','Credentials for authentication', 1,'true','text', 1
 'default_val.5','password_enabled','credential','Credentials for authentication', 1,'true','text', 1
 'default_val.2','password_enabled','credential','Credentials for authentication', 1,'true','text', 1
