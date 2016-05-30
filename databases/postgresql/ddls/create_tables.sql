@@ -505,7 +505,7 @@ CREATE TABLE app_deployment_queue_status (
 
 CREATE TABLE app_deployment_queue (
   app_deployment_queue_id bigserial not null,
-  process_id int not null REFERENCES process(process_id) ON DELETE NO ACTION ON UPDATE NO ACTION,,
+  process_id int not null REFERENCES process(process_id) ON DELETE NO ACTION ON UPDATE NO ACTION,
   username varchar(45)  not null  REFERENCES users(username) ON DELETE NO ACTION ON UPDATE NO ACTION,
   app_domain varchar(45) not null,
   app_name varchar(45) not null,
@@ -541,3 +541,19 @@ CREATE TABLE PLUGIN_CONFIG (
   PLUGIN_VALUE VARCHAR(128),
   PRIMARY KEY (PLUGIN_KEY,PLUGIN_UNIQUE_ID),
 ) ;
+
+CREATE TABLE analytics_apps (
+  analytic_apps_id bigserial not null,
+  process_id int not null REFERENCES process(process_id) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  industry_name varchar(45) not null,
+  category_name varchar(45) not null,
+  app_description varchar(45) not null,
+  app_name varchar(45) not null,
+  questions_json varchar(45) not null,
+  dashboard_url varchar(45) not null,
+  ddp_url varchar(45) not null,
+  app_image varchar(45) not null,
+  PRIMARY KEY (ANALYTIC_APPS_ID),
+ );
+
+
