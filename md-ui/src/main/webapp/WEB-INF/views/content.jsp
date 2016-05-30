@@ -2,7 +2,8 @@
     <%@ taglib prefix="security"
 	   uri="http://www.springframework.org/security/tags" %>
 	   <%@taglib uri="http://www.springframework.org/tags" prefix="spring"%>
-        <html id="ng-app">
+        
+		<html ng-app="myApp"> 
 
         <head>
             <title><spring:message code="common.page.title_bdre_2"/></title>
@@ -250,7 +251,7 @@
             </nav>
 
             <div>
-                <iframe id="dframe" src="welcome.page" scrolling="no" style="overflow-y:visible;width:100%; height: 800px; border: none;"></iframe>
+                <iframe id="dframe" src="welcome.page" scrolling="yes" style="overflow-y:visible;width:100%; height: 110%; border: none;"></iframe>
             </div>
 
             <!--
@@ -287,7 +288,6 @@
                                 }
                             }
                             $scope.menu = [
-                                                <security:authorize access = "hasRole('ROLE_ADMIN')">
                                                     {
                                                            label: "Data Ingestion",
                                                            collapse: "1",
@@ -331,7 +331,7 @@
                                                                                          collapse: "1",
                                                                                          url: "hivetablemigration.page",
                                                                                          children: []
-                                                             }, ] },</security:authorize>
+                                                             }, ] },
 
                                                       {
                                                                                                   label: "Data Scientist Workbench",
