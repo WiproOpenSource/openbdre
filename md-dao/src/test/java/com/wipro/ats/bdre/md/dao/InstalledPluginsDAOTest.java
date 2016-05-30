@@ -44,7 +44,7 @@ public class InstalledPluginsDAOTest {
 
     @Autowired
     InstalledPluginsDAO installedPluginsDAO;
-
+    @Ignore
     @Test
     public void testInsertUpdateAndDelete() throws Exception {
         InstalledPlugins installedPlugins = new InstalledPlugins();

@@ -43,7 +43,7 @@ public class PluginConfigDAOTest {
     InstalledPluginsDAO installedPluginsDAO;
     @Autowired
     PluginConfigDAO pluginConfigDAO;
-
+    @Ignore
     @Test
     public void testInsertUpdateAndDelete() throws Exception {
         InstalledPlugins installedPlugins = new InstalledPlugins();

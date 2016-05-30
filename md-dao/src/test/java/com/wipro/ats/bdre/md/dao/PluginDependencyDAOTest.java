@@ -49,7 +49,7 @@ public class PluginDependencyDAOTest {
     InstalledPluginsDAO installedPluginsDAO;
     @Autowired
     PluginDependencyDAO pluginDependencyDAO;
-
+    @Ignore
     @Test
     public void testInsertUpdateAndDelete() throws Exception {
         InstalledPlugins installedPlugins = new InstalledPlugins();
