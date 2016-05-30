@@ -371,3 +371,36 @@ create table app_deployment_queue (
   constraint adq_user_constraint foreign key (username) references users(username) on delete no action on update no action,
   constraint adq_state_constraint foreign key (app_deployment_status_id) references app_deployment_queue_status(app_deployment_status_id) on delete no action on update no action
 );
+
+
+CREATE TABLE installed_plugins (
+  plugin_unique_id varchar(128) not null,
+  plugin_id varchar(8) not null,
+  name varchar(128),
+  description varchar(128),
+  version int(11) not null default 1,
+  author varchar(128),
+  add_ts TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  plugin varchar(128),
+  unistallable integer(1),
+  primary key (plugin_unique_id)
+);
+
+
+CREATE TABLE plugin_dependency (
+  dependency_id int(11) not null AUTO_INCREMENT,
+  plugin_unique_id varchar(128) not null,
+  dependent_plugin_unique_id varchar(128),
+  primary key (dependency_id),
+  constraint plugin_unique_id foreign key  (plugin_unique_id) references installed_plugins (plugin_unique_id) on delete no action on update no action,
+  constraint dependent_plugin_unique_id foreign key (dependent_plugin_unique_id) references installed_plugins (plugin_unique_id) on delete no action on update no action
+);
+
+CREATE TABLE plugin_config (
+  plugin_unique_id varchar(128) not null,
+  config_group varchar(128),
+  plugin_key int(11),
+  plugin_value varchar(128),
+  primary key (plugin_key,plugin_unique_id),
+  constraint plugin_config_id foreign key (plugin_unique_id) references installed_plugins (plugin_unique_id) on delete no action on update no action
+);
