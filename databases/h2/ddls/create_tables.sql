@@ -373,7 +373,7 @@ create table app_deployment_queue (
 );
 
 
-CREATE TABLE installed_plugins (
+create table installed_plugins (
   plugin_unique_id varchar(128) not null,
   plugin_id varchar(8) not null,
   name varchar(128),
@@ -387,7 +387,7 @@ CREATE TABLE installed_plugins (
 );
 
 
-CREATE TABLE plugin_dependency (
+create table plugin_dependency (
   dependency_id int(11) not null AUTO_INCREMENT,
   plugin_unique_id varchar(128) not null,
   dependent_plugin_unique_id varchar(128),
