@@ -11,8 +11,6 @@
 	#Settings{
 		background-color: #F8F9FB;
 		padding-top: 4%;
-		height: 33em;
-    	overflow-y: scroll;
 	}
 	.btn-default{
 		width: 20%;
@@ -69,7 +67,7 @@
                                                                 $(this).dialog("close");
                                                             }
                                                         }
-                                                    }).text("Saved successfully.");
+                                                    }).html("<p><span class=\"jtable-confirm-message\">Saved successfully.</span></p>");
 
                                                 }
                                                 else{
@@ -83,7 +81,7 @@
                                                                 $(this).dialog("close");
                                                             }
                                                         }
-                                                    }).html(data.Message);
+                                                    }).html("<p><span class=\"jtable-confirm-message\">" + data.Message + "</span></p>");
                                                 }
 
                                             }

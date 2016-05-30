@@ -53,9 +53,9 @@ body {
 	padding: 64px !important;
 	background-color: #DFDDDD !important;
 }
-.content {
+.wizard > .content {
 	background-color: #F8F9FB;
-	min-height: 26em !important;
+	min-height: 38em;
 }
 .wizard > .content{
 	margin: 0;

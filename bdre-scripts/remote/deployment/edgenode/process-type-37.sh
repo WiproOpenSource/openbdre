@@ -9,7 +9,6 @@ hadoopConfDir=/etc/hive/$hiveConfDir
 cd $BDRE_APPS_HOME
 
 if [ -z "$1" ] || [ -z "$2" ] || [ -z "$3" ] || [ -z "$4" ] ; then
-
         echo Insufficient parameters !
         exit 1
 fi
@@ -20,14 +19,6 @@ processId=$3
 userName=$4
 
 
-<<<<<<< HEAD
-#Generating flume conf
-
-java -cp "$BDRE_HOME/lib/analytic-ui-generator/*" com.wipro.ats.bdre.augen.AnalyticUIGeneratorMain --parent-process-id $processId --username $userName
-if [ $? -eq 1 ]
-then exit 1
-fi
-=======
 #Generating workflow
 
 java -cp "$BDRE_HOME/lib/workflow-generator/*" com.wipro.ats.bdre.wgen.WorkflowGenerator --parent-process-id $processId --file-name workflow-$processId.xml --username $userName
@@ -68,7 +59,6 @@ if [ $? -ne 0 ]
     then exit 1
 fi
 
-
 #create/clean hdfs process directory
 hdfs dfs -mkdir -p $hdfsPath/wf/$busDomainId/$processTypeId/$processId
 if [ $? -ne 0 ]
@@ -94,12 +84,15 @@ if [ $? -ne 0 ]
 then exit 1
 fi
 
-#Create job.properties
-echo nameNode=$nameNode > $BDRE_APPS_HOME/$busDomainId/$processTypeId/$processId/job-$processId.properties
-echo jobTracker=$jobTracker >> $BDRE_APPS_HOME/$busDomainId/$processTypeId/$processId/job-$processId.properties
-echo oozie.use.system.libpath=true >> $BDRE_APPS_HOME/$busDomainId/$processTypeId/$processId/job-$processId.properties
-echo queueName=default >> $BDRE_APPS_HOME/$busDomainId/$processTypeId/$processId/job-$processId.properties
-echo oozie.wf.application.path=$hdfsPath/wf/$busDomainId/$processTypeId/$processId/workflow-$processId.xml >> $BDRE_APPS_HOME/$busDomainId/$processTypeId/$processId/job-$processId.properties
-echo oozie.wf.validate.ForkJoin=false >> $BDRE_APPS_HOME/$busDomainId/$processTypeId/$processId/job-$processId.properties
-echo baseAppPath=$hdfsPath/wf >> $BDRE_APPS_HOME/$busDomainId/$processTypeId/$processId/job-$processId.properties
->>>>>>> predevelop
+# Create job.xml
+echo '<?xml version="1.0" encoding="UTF-8"?>' > $BDRE_APPS_HOME/$busDomainId/$processTypeId/$processId/job-$processId.xml
+echo '<configuration>'  >> $BDRE_APPS_HOME/$busDomainId/$processTypeId/$processId/job-$processId.xml
+echo '<property><name>user.name</name><value>'"$bdreLinuxUserName"'</value></property>' >> $BDRE_APPS_HOME/$busDomainId/$processTypeId/$processId/job-$processId.xml
+echo '<property><name>nameNode</name><value>'"$nameNode"'</value></property>' >> $BDRE_APPS_HOME/$busDomainId/$processTypeId/$processId/job-$processId.xml
+echo '<property><name>jobTracker</name><value>'"$jobTracker"'</value></property>' >> $BDRE_APPS_HOME/$busDomainId/$processTypeId/$processId/job-$processId.xml
+echo '<property><name>oozie.use.system.libpath</name><value>true</value></property>' >> $BDRE_APPS_HOME/$busDomainId/$processTypeId/$processId/job-$processId.xml
+echo '<property><name>queueName</name><value>default</value></property>' >> $BDRE_APPS_HOME/$busDomainId/$processTypeId/$processId/job-$processId.xml
+echo '<property><name>oozie.wf.application.path</name><value>'"$hdfsPath/wf/$busDomainId/$processTypeId/$processId/workflow-$processId.xml"'</value></property>' >> $BDRE_APPS_HOME/$busDomainId/$processTypeId/$processId/job-$processId.xml
+echo '<property><name>oozie.wf.validate.ForkJoin</name><value>false</value></property>' >> $BDRE_APPS_HOME/$busDomainId/$processTypeId/$processId/job-$processId.xml
+echo '<property><name>baseAppPath</name><value>'"$hdfsPath/wf"'</value></property>' >> $BDRE_APPS_HOME/$busDomainId/$processTypeId/$processId/job-$processId.xml
+echo '</configuration>' >> $BDRE_APPS_HOME/$busDomainId/$processTypeId/$processId/job-$processId.xml

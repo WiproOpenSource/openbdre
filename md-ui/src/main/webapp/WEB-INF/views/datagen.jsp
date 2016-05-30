@@ -21,8 +21,8 @@
 		padding: 10px !important;
 		color: #fff !important;
 	}
-	#processFieldsForm1 .form-group{
-		 
+	.content{
+		min-height: 32em !important;
 	}
    	</style>
 	<script>
@@ -364,7 +364,7 @@ function getGenTypes(){
                                                             $(this).dialog("close");
                                                         }
                                                     }
-                                                }).text("Jobs successfully created.");
+                                                }).html("<p><span class=\"jtable-confirm-message\">Jobs successfully created.</span></p>");
                                                 createJobResult = data;
                                                 displayProcess(createJobResult);
                                                 $('#createProcess').hide();
@@ -380,7 +380,7 @@ function getGenTypes(){
                                                             $(this).dialog("close");
                                                         }
                                                     }
-                                                }).html(data.Message);
+                                                }).html("<p><span class=\"jtable-confirm-message\">"+ data.Message+ "</span></p>");
                                             }
                                             console.log(createJobResult);
                                         }
@@ -413,7 +413,7 @@ function getGenTypes(){
                                     $(this).dialog("close");
                                 }
                             }
-                        }).text("Jobs have not been created.");
+                        }).html("<p><span class=\"jtable-confirm-message\">Jobs have not been created.</span></p>");
                     }
                 },
             onCanceled: function(event) {

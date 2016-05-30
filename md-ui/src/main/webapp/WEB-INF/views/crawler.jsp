@@ -290,7 +290,7 @@
                                                             $(this).dialog("close");
                                                         }
                                                     }
-                                                }).text("Jobs successfully created.");
+                                                }).html("<p><span class=\"jtable-confirm-message\">Jobs successfully created.</span></p>");
                                                 createJobResult = data;
                                                 displayProcess(createJobResult);
                                                 $('#createProcess').hide();
@@ -306,7 +306,7 @@
                                                             $(this).dialog("close");
                                                         }
                                                     }
-                                                }).html(data.Message);
+                                                }).html("<p><span class=\"jtable-confirm-message\">"+ data.Message+ "</span></p>");
                                             }
                                             console.log(createJobResult);
                                         }
@@ -337,7 +337,7 @@
             							$(this).dialog("close");
             						}
             					}
-            				}).text("Please Enter Process Name and Description");
+            				}).html("<p><span class=\"jtable-confirm-message\">Please Enter Process Name and Description</span></p>");
             				return false;
             			}
             			return true;
@@ -356,7 +356,7 @@
                                                 $(this).dialog("close");
                                             }
                                         }
-                                    }).text("Jobs have not been created.");
+                                    }).html("<p><span class=\"jtable-confirm-message\">Jobs have not been created.</span></p>");
                                 }
                 },
             onCanceled: function(event) {
