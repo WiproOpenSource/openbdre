@@ -23,10 +23,7 @@ import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
 import java.net.URL;
 import java.net.URLClassLoader;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 import java.util.jar.JarFile;
 
 /**
@@ -118,7 +115,7 @@ public class ActionNode extends OozieNode {
 
     public void setProcessInfo(ProcessInfo processInfo) {
         this.processInfo = processInfo;
-        setPluginProcessInfo(this.processInfo,2,41);
+        setPluginProcessInfo(this.processInfo);
         if (processInfo.getProcessTypeId() == RAW_LOAD_ACTION) {
             RawLoadActionNode rawLoadActionNode = new RawLoadActionNode(this);
             containingNodes.add(rawLoadActionNode);
@@ -240,36 +237,75 @@ public class ActionNode extends OozieNode {
     }
 
 
-    public void setPluginProcessInfo(ProcessInfo processInfo, int parentProcessId, int subProcessId){
-        processTypeSet.add(parentProcessId);
-        processTypeSet.add(subProcessId);
-        if (processInfo.getProcessTypeId() == 41) {
-            try{
-                Class classToLoad = Class.forName("com.wipro.ats.bdre.wgen.TeradataQueryActionNode");
-                LOGGER.info("com.wipro.ats.bdre.wgen.TeradataQueryActionNode Class is present in classpath");
-                Constructor[] ctors = classToLoad.getDeclaredConstructors();
-                Object teradataQueryActionNode = ctors[0].newInstance(this);
-                containingNodes.add((GenericActionNode)teradataQueryActionNode);
-            }
-            catch(ClassNotFoundException c){
-                LOGGER.info("com.wipro.ats.bdre.wgen.TeradataQueryActionNode Class is NOT present in classpath");
-                try {
-                    File file = new File("/home/cloudera/Desktop/workflow-generator-1.1-SNAPSHOT.jar");
-                    URL url = file.toURL();
-                    URL[] urls = new URL[]{url};
-                    URLClassLoader child = new URLClassLoader (urls, this.getClass().getClassLoader());
-                    Class classToLoad = Class.forName ("com.wipro.ats.bdre.wgen.TeradataQueryActionNode", true, child);
-                    Constructor[] ctors = classToLoad.getDeclaredConstructors();
-                    Object teradataQueryActionNode = ctors[0].newInstance(this);
-                    containingNodes.add((GenericActionNode)teradataQueryActionNode);
-                } catch (Exception ex) {
-                    ex.printStackTrace();
-                }
-            }
-            catch(Exception e){
-                e.printStackTrace();
-            }
+    public void setPluginProcessInfo(ProcessInfo processInfo){
 
+        Set<String> pluginIdList= new HashSet();
+        //TODO: fill plugin id list by iteration through plugin config and populate with each row's plugin id. Set puts only unique entries
+        pluginIdList.add("td-action-1.0.0");
+
+        for(String pluginId:pluginIdList) {
+
+        //TODO: for each plugin id check for a config group of "wf-gen" for same structure of plugin config for a  action node refer to: http://tinyurl.com/htszl//
+            // TODO: Under each such "wf-gen" config group, read the value with key as 'parent-process-id' for a parent process id
+            Integer parentProcessId=2;
+            processTypeSet.add(parentProcessId);
+        //TODO:   Read corresponding list of sub processes through key as parent-processid.sub-process-id
+            Set<Integer> subProcessSet= new HashSet<>();
+            subProcessSet.add(41);
+            for(Integer subProcessId:subProcessSet) {
+
+                processTypeSet.add(subProcessId);
+                    //TODO: iterate through plugin config with '${subProcessId}.wf-gen' as config group,get corresponding values which are jar paths and  adding all jars to classpath
+                List<String> jarsToLoad = new ArrayList<>();
+                jarsToLoad.add("/home/cloudera/Desktop/workflow-generator-1.1-SNAPSHOT.jar");
+                URL[] urls = new URL[10];
+                for(String jar:jarsToLoad) {
+                    int index=0;
+                    LOGGER.info("adding " + jar + " in classpath");
+                    try {
+                        File file = new File(jar);
+                        URL url = file.toURL();
+                        urls[index]=url;
+                        index++;
+                    } catch (Exception ex) {
+                        ex.printStackTrace();
+                    }
+                }
+                URLClassLoader pluginClassLoader = new URLClassLoader(urls, this.getClass().getClassLoader());
+
+                //TODO: iterate through plugin config for config group as "wf-cont-nodes", form list of nodes in correct order
+                List<String> listOfNodeClasses = new LinkedList<>();   //keys as a list
+                List<Class> listOfClassesToLoad = new LinkedList<>();
+                listOfNodeClasses.add("com.wipro.ats.bdre.wgen.TeradataQueryActionNode");
+                List<GenericActionNode> listOfNodeObjects = new LinkedList<>();
+                //iterate through all nodes and instantiate them
+                for(String eachNode:listOfNodeClasses){
+                    try{
+                    Class classToLoad = Class.forName(eachNode, true, pluginClassLoader);
+                    listOfClassesToLoad.add(classToLoad);
+                    Constructor[] ctors = classToLoad.getDeclaredConstructors();
+                    Object nodeInstance = ctors[0].newInstance(this);
+                    listOfNodeObjects.add((GenericActionNode)nodeInstance);
+                        }
+                    catch(Exception e){
+                        e.printStackTrace();
+                    }
+                }
+
+
+                for(int i=0;i<listOfNodeObjects.size();i++){
+                    try{
+                    Method setToNodeMethod = listOfClassesToLoad.get(i).getDeclaredMethod("setToNode",new Class[] { OozieNode.class });
+                    setToNodeMethod.invoke(listOfNodeObjects.get(i),new Object[]{listOfNodeObjects.get(i++)});
+                    }
+                    catch(Exception e){
+
+                    }
+
+                }
+                containingNodes.addAll(listOfNodeObjects);
+
+            }
         }
     }
     @Override
