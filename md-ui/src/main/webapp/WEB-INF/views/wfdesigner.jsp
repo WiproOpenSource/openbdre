@@ -66,7 +66,6 @@
                     }
                     
                     .alert {
-                        height: 34px !important;
                         padding: 5px;
                     }
                     
@@ -315,11 +314,10 @@
                                                     <button type="submit" ng-click="insertProp(genConfig)" class="btn btn-primary  pull-right">Add {{genConfig.value}}</button>
                                                 </form>
                                                 <form class="form-horizontal" role="form" ng-if="genConfig.type == 'hql'">
-                                                    <div class="form-group">
-                                                        <label class="control-label col-sm-3" for="{{genConfig.key}}-propkey"><spring:message code="wfdesigner.page.select_hql_file"/></label>
-                                                    </div>
+                                                    
                                                     <div class="form-group form-group-file">
-                                                        <div class="col-sm-10">
+                                                        <label class="control-label col-sm-3" for="{{genConfig.key}}-propkey"><spring:message code="wfdesigner.page.select_hql_file"/></label>
+                                                    	<div class="col-sm-10">
                                                             <input type="file" name="file" class="form-control" id="{{genConfig.key}}-propval" required>
                                                         </div>
                                                     </div>
@@ -329,11 +327,9 @@
                                                     <div class="clearfix"></div>
                                                 </form>
                                                  <form class="form-horizontal" role="form" ng-if="genConfig.type == 'r'">
-                                                    <div class="form-group">
-                                                        <label class="control-label col-sm-3" for="{{genConfig.key}}-propkey"><spring:message code="wfdesigner.page.select_r_file"/></label>
-                                                    </div>
                                                     <div class="form-group form-group-file">
-                                                        <div class="col-sm-10">
+                                                        <label class="control-label col-sm-3" for="{{genConfig.key}}-propkey"><spring:message code="wfdesigner.page.select_r_file"/></label>
+                                                    	<div class="col-sm-10">
                                                             <input type="file" name="file" class="form-control" id="{{genConfig.key}}-propval" required>
                                                         </div>
                                                     </div>
@@ -343,11 +339,9 @@
                                                     <div class="clearfix"></div>
                                                 </form>
                                                  <form class="form-horizontal" role="form" ng-if="genConfig.type == 'hadoopstream'">
-                                                    <div class="form-group">
-                                                        <label class="control-label col-sm-3" for="{{genConfig.key}}-propkey">Select  {{genConfig.key}}:</label>
-                                                    </div>
                                                     <div class="form-group form-group-file">
-                                                        <div class="col-sm-10">
+                                                        <label class="control-label col-sm-3" for="{{genConfig.key}}-propkey">Select  {{genConfig.key}}:</label>
+                                                    	<div class="col-sm-10">
                                                             <input type="file" name="file" class="form-control" id="{{genConfig.key}}-propval" required>
                                                         </div>
                                                     </div>
@@ -358,9 +352,7 @@
                                                 </form>
 
                                                 <form class="form-horizontal" role="form" ng-if="genConfig.type == 'shell'">
-                                                    <div class="form-group">
-                                                        <label class="control-label col-sm-3" for="{{genConfig.key}}-propkey"><spring:message code="wfdesigner.page.select_shell_script"/></label>
-                                                    </div>
+                                                    <label class="control-label col-sm-3" for="{{genConfig.key}}-propkey"><spring:message code="wfdesigner.page.select_shell_script"/></label>
                                                     <div class="form-group form-group-file">
                                                         <div class="col-sm-10">
                                                             <input type="file" name="file" class="form-control" id="{{genConfig.key}}-propval" required>
@@ -372,10 +364,8 @@
                                                     <div class="clearfix"></div>
                                                 </form>
                                                 <form class="form-horizontal" role="form" ng-if="genConfig.type == 'addFiles'">
-                                                    <div class="form-group">
-                                                        <label class="control-label col-sm-3" for="{{genConfig.key}}-propkey"><spring:message code="wfdesigner.page.add_files"/></label>
-                                                    </div>
                                                     <div class="form-group form-group-file">
+                                                        <label class="control-label col-sm-3" for="{{genConfig.key}}-propkey"><spring:message code="wfdesigner.page.add_files"/></label>
                                                         <div class="col-sm-10">
                                                             <input type="file" name="file" class="form-control" id="{{genConfig.key}}-propval" required>
                                                         </div>
@@ -386,11 +376,9 @@
                                                     <div class="clearfix"></div>
                                                 </form>
                                                 <form class="form-horizontal" role="form" ng-if="genConfig.type == 'pig'">
-                                                    <div class="form-group">
-                                                        <label class="control-label col-sm-3" for="{{genConfig.key}}-propkey"><spring:message code="wfdesigner.page.select_pig_script"/></label>
-                                                    </div>
                                                     <div class="form-group form-group-file">
-                                                        <div class="col-sm-10">
+                                                        <label class="control-label col-sm-3" for="{{genConfig.key}}-propkey"><spring:message code="wfdesigner.page.select_pig_script"/></label>
+                                                    	<div class="col-sm-10">
                                                             <input type="file" name="file" class="form-control" id="{{genConfig.key}}-propval" required>
                                                         </div>
                                                     </div>
@@ -400,10 +388,8 @@
                                                     <div class="clearfix"></div>
                                                 </form>
                                                 <form class="form-horizontal" role="form" ng-if="genConfig.type == 'spark'">
-                                                    <div class="form-group">
-                                                        <label class="control-label col-sm-3" for="{{genConfig.key}}-propkey"><spring:message code="wfdesigner.page.select_spark_jar"/></label>
-                                                    </div>
                                                     <div class="form-group form-group-file">
+                                                        <label class="control-label col-sm-3" for="{{genConfig.key}}-propkey"><spring:message code="wfdesigner.page.select_spark_jar"/></label>
                                                         <div class="col-sm-10">
                                                             <input type="file" name="file" class="form-control" id="{{genConfig.key}}-propval" required>
                                                         </div>

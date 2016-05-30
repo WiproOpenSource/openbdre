@@ -21,14 +21,8 @@
 		padding: 10px !important;
 		color: #fff !important;
 	}
-	#processFieldsForm1 .form-group{
-	 padding-left: 0; 
-	 padding-right: 0;
-	 width: 100% !important;
-	 margin: 0 auto; 
-	}
-	#processFieldsForm1 div.form-group:nth-child(odd),#processFieldsForm1 div.form-group:nth-child(even){
-		float: none;
+	.content{
+		min-height: 32em !important;
 	}
    	</style>
 	<script>
@@ -124,7 +118,7 @@ function formIntoMap(typeProp, typeOf) {
 
             <h3><div class="number-circular">1</div><spring:message code="datagen.page.data_types"/></h3>
             <section>
-            <form class="form-horizontal" role="form" id="processFieldsForm1">
+            <form class="form-horizontal pull-none" role="form" id="processFieldsForm1">
                 	<!-- btn-group -->
                     <div class="form-group" id="formGroup1" >
                         <div class="col-md-3">
@@ -370,7 +364,7 @@ function getGenTypes(){
                                                             $(this).dialog("close");
                                                         }
                                                     }
-                                                }).text("Jobs successfully created.");
+                                                }).html("<p><span class=\"jtable-confirm-message\">Jobs successfully created.</span></p>");
                                                 createJobResult = data;
                                                 displayProcess(createJobResult);
                                                 $('#createProcess').hide();
@@ -386,7 +380,7 @@ function getGenTypes(){
                                                             $(this).dialog("close");
                                                         }
                                                     }
-                                                }).html(data.Message);
+                                                }).html("<p><span class=\"jtable-confirm-message\">"+ data.Message+ "</span></p>");
                                             }
                                             console.log(createJobResult);
                                         }
@@ -419,7 +413,7 @@ function getGenTypes(){
                                     $(this).dialog("close");
                                 }
                             }
-                        }).text("Jobs have not been created.");
+                        }).html("<p><span class=\"jtable-confirm-message\">Jobs have not been created.</span></p>");
                     }
                 },
             onCanceled: function(event) {

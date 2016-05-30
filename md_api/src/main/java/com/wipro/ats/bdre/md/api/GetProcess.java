@@ -157,5 +157,40 @@ public class GetProcess extends MetadataAPIBase {
     }
 
 
+    /**
+     * This method gets the process with process id passed as parameter
+     *
+     * @param pid         Process id of the process to be fetched
+     * @return This method returns the process with process id passed.
+     */
+
+    public ProcessInfo getProcess(Integer pid) {
+        ProcessInfo processInfo = new ProcessInfo();
+        try {
+
+            com.wipro.ats.bdre.md.dao.jpa.Process jpaProcess= processDAO.get(pid);
+            if(jpaProcess!=null) {
+                processInfo.setProcessId(jpaProcess.getProcessId());
+                processInfo.setBusDomainId(jpaProcess.getBusDomain().getBusDomainId());
+                processInfo.setProcessTypeId(jpaProcess.getProcessType().getProcessTypeId());
+                processInfo.setCanRecover(jpaProcess.getCanRecover());
+                processInfo.setDescription(jpaProcess.getDescription());
+                if (jpaProcess.getProcess() != null) {
+                    processInfo.setParentProcessId(jpaProcess.getProcess().getProcessId());
+                }
+                processInfo.setProcessName(jpaProcess.getProcessName());
+                processInfo.setEnqProcessId(jpaProcess.getEnqueuingProcessId());
+                processInfo.setNextProcessIds(jpaProcess.getNextProcessId());
+                processInfo.setWorkflowId(jpaProcess.getWorkflowType().getWorkflowId());
+                processInfo.setBatchCutPattern(jpaProcess.getBatchCutPattern());
+                processInfo.setDeleteFlag(jpaProcess.getDeleteFlag());
+            }
+        } catch (Exception e) {
+            LOGGER.error(e);
+            throw new MetadataException(e);
+        }
+        return processInfo;
+    }
+
 
 }

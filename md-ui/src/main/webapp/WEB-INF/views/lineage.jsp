@@ -20,6 +20,7 @@
 	<link href="../css/pages.css" rel="stylesheet" type="text/css" />
 	<link href="../css/highlight.css" rel="stylesheet" type="text/css" />
 	<link href="../css/css/bootstrap.min.css" rel="stylesheet" type="text/css">
+	<link href="../css/bootstrap.custom.css" rel="stylesheet" type="text/css" />
 
 	<!-- Include one of jTable styles. -->
 
@@ -125,19 +126,20 @@
 		opacity:0.5;
 		filter:alpha(opacity=50);
 	    }
+        body{
+        background:#fff !important ;
+        }
 
 	    #modal {
 		position:absolute;
 		background:url(tint20.png) 0 0 repeat;
 		background:rgba(0,0,0,0.2);
 		border-radius:8px;
-
-	    }
-
-	    #content {
+		overflow: hidden !important;
+		}
+		#content {
 		border-radius:8px;
 		background:#fff;
-
 	    }
 
 	    #close {
@@ -153,11 +155,10 @@
 	    #input-box-button {
 		width: 370px;
 		padding: 5px;
-		/* margin-top: 20px; */
 		border: 1px solid #e4e4e4;
-		/* border-bottom: 1px solid #e4e4e4; */
 		border-radius: 10px;
 	    }
+	    
 	</style>
 
 	<script>

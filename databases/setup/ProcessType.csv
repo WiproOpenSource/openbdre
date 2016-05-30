@@ -36,5 +36,6 @@
 36,'Register Partition',31
 
 
-39,'Supar Workflow',null
-40,'Sub Workflow',39
+
+39,'SuperWorkflow',null
+40,'SubWorkflow',37
