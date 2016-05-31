@@ -51,7 +51,7 @@
 
 	$(document).ready(function () {
 		$('#Container').jtable({
-        	title: 'General Configuration',
+        	title: '<spring:message code="settings.page.title.outer_table"/>',
            		    paging: true,
            		    pageSize: 10,
            		    sorting: true,
@@ -76,7 +76,7 @@
            		    },
            		    fields: {
            		    	Groups: {
-           		    		title: 'Click to expand',
+           		    		title: '<spring:message code="settings.page.title.expandable_colomn"/>',
            			    	width: '5%',
            			    	sorting: false,
            			    	edit: false,
@@ -84,13 +84,13 @@
            			    	listClass: 'bdre-jtable-button',
            			    	display: function(item) {                         //Create an image that will be used to open child table
 
-           			    	var $img = $('<img src="../css/images/three-bar.png" title="Clusters info" />'); //Open child table when user clicks the image
+           			    	var $img = $('<img src="../css/images/three-bar.png" title=<spring:message code="settings.page.title.clickable_image"/> />'); //Open child table when user clicks the image
 							$img.click(function() {
            				    	if( item.record.configGroup=='cluster.hive-address'){
            				      		console.log(item.record.configGroup);
            				            $('#Container').jtable('openChildTable',
             						  $img.closest('tr'),{
-           		       	          		title: 'Clusters List',
+           		       	          		title: '<spring:message code="settings.page.title.cluser_list"/>',
            		       		      		paging: true,
            		       		      		pageSize: 10,
            		       		      		sorting: true,
@@ -135,7 +135,7 @@
            		       				},
            		       				fields: {
            		       		    		Clusters: {
-           		       		        		title: 'Click to expand',
+           		       		        		title: '<spring:message code="settings.page.title.expandable_colomn"/>',
            		       			    		width: '5%',
            		       			    		sorting: false,
            		       			    		edit: false,
@@ -143,12 +143,12 @@
            		       			    		listClass: 'bdre-jtable-button',
            		       						display: function(cluster_item) {                         //Create an image that will be used to open child table
 
-           	           			    			var $cluster_img = $('<img src="../css/images/three-bar.png" title="Clusters info" />'); //Open child table when user clicks the image
+           	           			    			var $cluster_img = $('<img src="../css/images/three-bar.png" title=<spring:message code="settings.page.title.clickable_image"/> />'); //Open child table when user clicks the image
 
            	           				    		$cluster_img.click(function() {
            	           				    			$('#Container').jtable('openChildTable',
            	            							  $cluster_img.closest('tr'),{
-           	           		       	          			title: 'Details of '+cluster_item.record.description,
+           	           		       	          			title: '<spring:message code="settings.page.title.details"/> '+cluster_item.record.description,
            	           		       		      			paging: true,
            	           		       		      			pageSize: 10,
            	           		       		      			sorting: true,
@@ -191,12 +191,12 @@
            	           		       		    	  },
            	           		       		      fields:{
            	           		       		      	key: {
-           	       						    		title: 'Type',
+           	       						    		title: '<spring:message code="settings.page.title.cluster_key"/>',
            	       						    		edit: true,
            	       									defaultValue: cluster_item.record.key,
            	       						  		},
            	       						    	defaultVal: {
-           	       						    		title: 'Address',
+           	       						    		title: '<spring:message code="settings.page.title.cluster_defaul_val"/>',
            	       						    		edit: true,
            	       									defaultValue: cluster_item.record.defaultVal,
            	       						    	},
@@ -213,42 +213,42 @@
            		       	},
            		       		    
            		       	nameNodeHostName: {
-         					   	   title :'namenode hostname',
+         					   	   title :'<spring:message code="settings.page.title.name_node_host_name"/>',
          						   key : true,
          						   list: false,
          						   create:true,
          						   edit: false,
          					   }, 
          					   nameNodePort: {
-         							title: ' namenode port',
+         							title: '<spring:message code="settings.page.title.name_node_port"/>',
          								key : true,
          								list: false,
          								create:true,
          								edit: false,
          							}, 
          						jobTrackerHostName: {
-         							title: 'jobtracker hostname',
+         							title: '<spring:message code="settings.page.title.job_tracker_host_name"/>',
          								key : true,
          								list : false,
          								create : true,
          								edit : false,
          							},
          						jobTrackerPort: {
-         								title: 'jobtracker port',
+         								title: '<spring:message code="settings.page.title.job_tracker_port"/>',
          									list : false,
          									create : true,
          									edit : false,
          									key : true,
          								},
          						hiveHostName: {
-         									title: 'hive hostname',
+         									title: '<spring:message code="settings.page.title.hive_host_name"/>',
          									list: false,
          									create:true,
          									edit: false,
          									key : true,
          								},
          						clusterName: {
-         								   title: 'cluster name',
+         								   title: '<spring:message code="settings.page.title.cluster_name"/>',
          								   list: false,
          								   create:true,
          								   edit: false,
@@ -259,7 +259,7 @@
                				        list: true,
                				        create:false,
                				        edit: false,
-               				        title: 'Clusters'
+               				        title: '<spring:message code="settings.page.title.cluster_description"/>'
                			        }
                		  }
                	  },
@@ -271,7 +271,7 @@
            		}else
            				    $('#Container').jtable('openChildTable',
            					    $img.closest('tr'), {
-           				    title: ' Details of ' + item.record.configGroup,
+           				    title: '<spring:message code="settings.page.title.details"/>  '+ item.record.configGroup,
            					    paging: true,
            					    pageSize: 10,
            					    actions: {
@@ -341,31 +341,31 @@
                                 			},
            					    fields: {
            						    key: {
-           						    	title: 'Key',
+           						    	title: '<spring:message code="settings.page.title.key"/>',
            						    	edit: true,
            						    },
            						    defaultVal: {
-           						    	title: 'Default Value',
+           						    	title: '<spring:message code="settings.page.title.default_val"/>',
            						    	edit: true,
            							},
            						    value: {
-           						       title: 'Value',
+           						       title: '<spring:message code="settings.page.title.value"/>',
                                        edit: true,
            						    },
            						    description: {
-           						       title: 'Description',
+           						       title: '<spring:message code="settings.page.title.description"/>',
                                        edit: true,
            						    },
            						    type: {
-                                    	title: 'Type',
+                                    	title: '<spring:message code="settings.page.title.type"/>',
                                     	edit: true,
                                  	},
 									enabled: {
-                                       title: 'IsEnabled?',
+                                       title:'<spring:message code="settings.page.title.enabled"/>',
                                        edit: true,
                                    },
                                    required: {
-                                    	title: 'Required?',
+                                    	title: '<spring:message code="settings.page.title.required"/>',
                                     	edit: true,
                                    }
            					    }
@@ -385,7 +385,7 @@
            				    list: true,
            				    create:false,
            				    edit: false,
-           				    title: 'Config Group'
+           				    title: '<spring:message code="settings.page.title.config_group"/>'
 
            			    }
            		    }
