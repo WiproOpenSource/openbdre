@@ -34,4 +34,7 @@ DROP TABLE Pendingurlsdb;
 DROP TABLE Weburlsdb;
 DROP TABLE Statisticsdb;
 DROP TABLE permission_type;
+DROP TABLE plugin_dependency;
+DROP TABLE plugin_config;
+DROP TABLE installed_plugins;
 DROP SCHEMA BDRE;

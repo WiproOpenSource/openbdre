@@ -21,7 +21,7 @@ userName=$4
 
 
 
-#Generating flume conf
+#Inserting data into analytic ui table
 
 java -cp "$BDRE_HOME/lib/analytic-ui-generator/*" com.wipro.ats.bdre.augen.AnalyticUIGeneratorMain --parent-process-id $processId --username $userName
 if [ $? -eq 1 ]
