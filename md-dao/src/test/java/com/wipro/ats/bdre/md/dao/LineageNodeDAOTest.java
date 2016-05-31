@@ -15,6 +15,7 @@
 package com.wipro.ats.bdre.md.dao;
 
 import com.wipro.ats.bdre.md.dao.jpa.LineageNode;
+import com.wipro.ats.bdre.md.dao.jpa.LineageNode;
 import com.wipro.ats.bdre.md.dao.jpa.LineageNodeType;
 import org.apache.log4j.Logger;
 import org.junit.Before;
