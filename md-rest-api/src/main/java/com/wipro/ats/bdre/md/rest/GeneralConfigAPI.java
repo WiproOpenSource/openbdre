@@ -20,11 +20,14 @@ import com.wipro.ats.bdre.md.api.base.MetadataAPIBase;
 import com.wipro.ats.bdre.md.beans.table.GeneralConfig;
 import com.wipro.ats.bdre.md.dao.GeneralConfigDAO;
 import com.wipro.ats.bdre.md.dao.jpa.GeneralConfigId;
+import com.wipro.ats.bdre.md.rest.util.BindingResultError;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.security.Principal;
 import java.util.List;
 import java.util.Map;
@@ -141,6 +144,103 @@ public class GeneralConfigAPI extends MetadataAPIBase {
         return restWrapper;
     }
 
+    /**
+     * This method updates a record in GeneralConfig table corresponding to object passed.
+     *
+     * @param generalConfig Instance of GeneralConfig
+     * @return restWrapper It contains an updated instance of GeneralConfig.
+     */
+
+    @RequestMapping(value = {"/admin/update/", "/admin/update"}, method = RequestMethod.POST)
+    @ResponseBody public
+    RestWrapper updateOneRecord(@ModelAttribute("generalConfig")
+                                    @Valid GeneralConfig generalConfig, BindingResult bindingResult, Principal principal) {
+        RestWrapper restWrapper = null;
+        if (bindingResult.hasErrors()) {
+            BindingResultError bindingResultError = new BindingResultError();
+            return bindingResultError.errorMessage(bindingResult);
+        }
+        try {
+            if(generalConfig.getRequired()<=1) {
+                com.wipro.ats.bdre.md.dao.jpa.GeneralConfig jpaGeneralConfigUpdate = new com.wipro.ats.bdre.md.dao.jpa.GeneralConfig();
+                GeneralConfigId jpaGeneralConfigId = new GeneralConfigId();
+                jpaGeneralConfigId.setConfigGroup(generalConfig.getConfigGroup());
+                jpaGeneralConfigId.setGcKey(generalConfig.getKey());
+                jpaGeneralConfigUpdate.setDefaultVal(generalConfig.getDefaultVal());
+                jpaGeneralConfigUpdate.setDescription(generalConfig.getDescription());
+                jpaGeneralConfigUpdate.setEnabled(generalConfig.isEnabled());
+                jpaGeneralConfigUpdate.setGcValue(generalConfig.getValue());
+                jpaGeneralConfigUpdate.setId(jpaGeneralConfigId);
+                if (generalConfig.getRequired() == 1)
+                    jpaGeneralConfigUpdate.setRequired(true);
+                else
+                    jpaGeneralConfigUpdate.setRequired(false);
+                jpaGeneralConfigUpdate.setType(generalConfig.getType());
+                generalConfigDAO.update(jpaGeneralConfigUpdate);
+                restWrapper = new RestWrapper(generalConfig, RestWrapper.OK);
+                LOGGER.info(" Record with key:" + jpaGeneralConfigId.getGcKey() + " and config group:" + jpaGeneralConfigId.getConfigGroup() + " updated in general_config by User:" + principal.getName());
+
+            }else{
+                LOGGER.error("Invalid required field's data");
+                restWrapper = new RestWrapper("Required field does not accest value other than 0 or 1", RestWrapper.ERROR);
+            }
+
+        }catch (MetadataException e) {
+            LOGGER.error(e);
+            restWrapper = new RestWrapper(e.getMessage(), RestWrapper.ERROR);
+        }
+        return restWrapper;
+    }
+
+    /**
+     * This method adds a record in GeneralConfig table corresponding to object passed.
+     *
+     * @param generalConfig Instance of GeneralConfig
+     * @return restWrapper It contains an added instance of GeneralConfig.
+     */
+
+    @RequestMapping(value = {"/admin/add/", "/admin/add"}, method = RequestMethod.PUT)
+    @ResponseBody public
+    RestWrapper addOneRecord(@ModelAttribute("generalConfig")
+                                @Valid GeneralConfig generalConfig, BindingResult bindingResult, Principal principal) {
+        RestWrapper restWrapper = null;
+        if (bindingResult.hasErrors()) {
+            BindingResultError bindingResultError = new BindingResultError();
+            return bindingResultError.errorMessage(bindingResult);
+        }
+        try {
+            if(generalConfig.getRequired()<=1) {
+                com.wipro.ats.bdre.md.dao.jpa.GeneralConfig jpaGeneralConfig = new com.wipro.ats.bdre.md.dao.jpa.GeneralConfig();
+                GeneralConfigId jpaGeneralConfigId = new GeneralConfigId();
+                jpaGeneralConfigId.setConfigGroup(generalConfig.getConfigGroup());
+                jpaGeneralConfigId.setGcKey(generalConfig.getKey());
+                jpaGeneralConfig.setDefaultVal(generalConfig.getDefaultVal());
+                jpaGeneralConfig.setDescription(generalConfig.getDescription());
+                jpaGeneralConfig.setEnabled(generalConfig.isEnabled());
+                jpaGeneralConfig.setGcValue(generalConfig.getValue());
+                jpaGeneralConfig.setId(jpaGeneralConfigId);
+                if (generalConfig.getRequired() == 1)
+                    jpaGeneralConfig.setRequired(true);
+                else
+                    jpaGeneralConfig.setRequired(false);
+                jpaGeneralConfig.setType(generalConfig.getType());
+                GeneralConfigId id=generalConfigDAO.insert(jpaGeneralConfig);
+                if(id!=null) {
+                    restWrapper = new RestWrapper(generalConfig, RestWrapper.OK);
+                    LOGGER.info(" Record with key:" + jpaGeneralConfigId.getGcKey() + " and config group:" + jpaGeneralConfigId.getConfigGroup() + " added in general_config by User:" + principal.getName());
+                }else
+                    LOGGER.error("Error to insert data");
+            }else{
+                LOGGER.error("Invalid required field's data");
+                restWrapper = new RestWrapper("Required field does not accest value other than 0 or 1", RestWrapper.ERROR);
+            }
+        }catch (MetadataException e) {
+            LOGGER.error(e);
+            restWrapper = new RestWrapper(e.getMessage(), RestWrapper.ERROR);
+        }
+        return restWrapper;
+    }
+
 
     /**
      * This method calls proc DeleteGeneralConfig and deletes a record in GeneralConfig table corresponding to
@@ -168,6 +268,27 @@ public class GeneralConfigAPI extends MetadataAPIBase {
             restWrapper = new RestWrapper(null, RestWrapper.OK);
             LOGGER.info("Record with key:" + key + " deleted from general_config by User:" + principal.getName());
 
+        } catch (MetadataException e) {
+            LOGGER.error(e);
+            restWrapper = new RestWrapper(e.getMessage(), RestWrapper.ERROR);
+        }
+        return restWrapper;
+    }
+
+    /**
+     * This method fetches all distinct record in GeneralConfig table depending on Config group.
+     *
+     * @return restWrapper with the list of instance of GeneralConfig table.
+     */
+
+    @RequestMapping( method = RequestMethod.GET)
+    @ResponseBody public
+    RestWrapper getDistinctGenerelConfig(Principal principal) {
+        RestWrapper restWrapper = null;
+        try {
+        	List<GeneralConfig> generalConfiglist=generalConfigDAO.getDistinctGenerelConfig();
+            restWrapper = new RestWrapper(generalConfiglist, RestWrapper.OK);
+            LOGGER.info("Size of distinct config group:"+generalConfiglist.size()+" by User:"+principal.getName());
         } catch (MetadataException e) {
             LOGGER.error(e);
             restWrapper = new RestWrapper(e.getMessage(), RestWrapper.ERROR);
