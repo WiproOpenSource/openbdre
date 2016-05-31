@@ -7,6 +7,7 @@ package com.wipro.ats.bdre.md.dao;
 
         import com.wipro.ats.bdre.exception.MetadataException;
         import com.wipro.ats.bdre.md.dao.jpa.PluginConfig;
+        import com.wipro.ats.bdre.md.dao.jpa.PluginConfigId;
         import org.apache.log4j.Logger;
         import org.hibernate.Criteria;
         import org.hibernate.Session;
@@ -61,7 +62,7 @@ public class PluginConfigDAO {
         return size;
     }
 
-    public PluginConfig get(String id) {
+    public PluginConfig get(PluginConfigId id) {
         Session session = sessionFactory.openSession();
         session.beginTransaction();
         PluginConfig pluginConfig = (PluginConfig) session.get(PluginConfig.class, id);
@@ -70,12 +71,12 @@ public class PluginConfigDAO {
         return pluginConfig;
     }
 
-    public String insert(PluginConfig pluginConfig) {
+    public PluginConfigId insert(PluginConfig pluginConfig) {
         Session session = sessionFactory.openSession();
         session.beginTransaction();
-        String id = null;
+         PluginConfigId pluginConfigId=new PluginConfigId();
         try {
-            id = (String) session.save(pluginConfig);
+            pluginConfigId = (PluginConfigId) session.save(pluginConfig);
             session.getTransaction().commit();
         } catch (MetadataException e) {
             session.getTransaction().rollback();
@@ -83,7 +84,7 @@ public class PluginConfigDAO {
         } finally {
             session.close();
         }
-        return id;
+        return pluginConfigId;
     }
 
     public void update(PluginConfig pluginConfig) {
@@ -100,7 +101,7 @@ public class PluginConfigDAO {
         }
     }
 
-    public void delete(String id) {
+    public void delete(PluginConfigId id) {
         Session session = sessionFactory.openSession();
         try {
             session.beginTransaction();
