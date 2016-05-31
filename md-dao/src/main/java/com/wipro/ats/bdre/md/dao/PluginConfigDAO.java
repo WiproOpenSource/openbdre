@@ -11,6 +11,8 @@ package com.wipro.ats.bdre.md.dao;
         import org.hibernate.Criteria;
         import org.hibernate.Session;
         import org.hibernate.SessionFactory;
+        import org.hibernate.criterion.Projections;
+        import org.hibernate.criterion.Restrictions;
         import org.springframework.beans.factory.annotation.Autowired;
         import org.springframework.stereotype.Service;
         import org.springframework.transaction.annotation.Transactional;
@@ -23,11 +25,25 @@ public class PluginConfigDAO {
     private static final Logger LOGGER = Logger.getLogger(PluginConfigDAO.class);
     @Autowired
     SessionFactory sessionFactory;
-
-    public List<PluginConfig> list(Integer pageNum, Integer numResults) {
+    public List<Integer> list(Integer pageNum, Integer numResults) {
         Session session = sessionFactory.openSession();
         session.beginTransaction();
         Criteria criteria = session.createCriteria(PluginConfig.class);
+
+        LOGGER.info("number of entries in properties table" + criteria.list().size());
+        criteria.setProjection(Projections.distinct(Projections.property("id.pluginUniqueId")));
+        criteria.setFirstResult(pageNum);
+        criteria.setMaxResults(numResults);
+        List<Integer> listOfProcessIDs = criteria.list();
+        session.getTransaction().commit();
+        session.close();
+        return listOfProcessIDs;
+    }
+
+    public List<PluginConfig> getConfigForPlugin(Integer pluginUniqueId,Integer pageNum, Integer numResults) {
+        Session session = sessionFactory.openSession();
+        session.beginTransaction();
+        Criteria criteria = session.createCriteria(PluginConfig.class).add(Restrictions.eq("id.pluginUniqueId",pluginUniqueId));
         criteria.setFirstResult(pageNum);
         criteria.setMaxResults(numResults);
         List<PluginConfig> pluginConfig = criteria.list();
