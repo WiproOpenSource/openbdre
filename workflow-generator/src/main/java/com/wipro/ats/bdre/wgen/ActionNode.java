@@ -269,6 +269,7 @@ public class ActionNode extends OozieNode {
                         index++;
                     } catch (Exception ex) {
                         ex.printStackTrace();
+                        throw new BDREException(ex);
                     }
                 }
                 URLClassLoader pluginClassLoader = new URLClassLoader(urls, this.getClass().getClassLoader());
@@ -289,17 +290,26 @@ public class ActionNode extends OozieNode {
                         }
                     catch(Exception e){
                         e.printStackTrace();
+                        throw new BDREException(e);
                     }
                 }
 
 
                 for(int i=0;i<listOfNodeObjects.size();i++){
                     try{
-                    Method setToNodeMethod = listOfClassesToLoad.get(i).getDeclaredMethod("setToNode",new Class[] { OozieNode.class });
+                        Class c = listOfClassesToLoad.get(i);
+                        printMethods(c);
+                        Class parent = c.getSuperclass();
+                        while (parent != null) {
+                            printMethods(parent);
+                            parent = parent.getSuperclass();
+                        }
+                        //super class of ActionNode is GenericActionNode and GenericActionNode's super class is OozieNode which contains the setToNode method. Hence invoking the same
+                    Method setToNodeMethod = listOfClassesToLoad.get(i).getSuperclass().getSuperclass().getDeclaredMethod("setToNode",new Class[] { OozieNode.class });
                     setToNodeMethod.invoke(listOfNodeObjects.get(i),new Object[]{listOfNodeObjects.get(i++)});
                     }
                     catch(Exception e){
-
+                        throw new BDREException(e);
                     }
 
                 }
@@ -357,5 +367,17 @@ public class ActionNode extends OozieNode {
 
 
         return ret.toString();
+    }
+
+    private static void printMethods(Class c) {
+        System.out.format("Methods from %s%n", c);
+        Method[] meths = c.getDeclaredMethods();
+        if (meths.length != 0) {
+            for (Method m : meths)
+                System.out.format("  Method:  %s%n", m.toGenericString());
+        } else {
+            System.out.format("  -- no methods --%n");
+        }
+        System.out.format("%n");
     }
 }
