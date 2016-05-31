@@ -43,7 +43,7 @@ public class PluginConfigDAOTest {
     InstalledPluginsDAO installedPluginsDAO;
     @Autowired
     PluginConfigDAO pluginConfigDAO;
-    @Ignore
+
     @Test
     public void testInsertUpdateAndDelete() throws Exception {
         InstalledPlugins installedPlugins = new InstalledPlugins();
@@ -66,7 +66,7 @@ public class PluginConfigDAOTest {
         pluginConfig.setInstalledPlugins(installedPlugins);
         pluginConfig.setConfigGroup("Test-config");
         pluginConfig.setPluginValue("TestPluginValue");
-        String pluginConfigIden = pluginConfigDAO.insert(pluginConfig);
+        PluginConfigId pluginConfigIden = pluginConfigDAO.insert(pluginConfig);
         LOGGER.info("PluginConfig is added with Id:" + pluginConfigIden);
         pluginConfig.setConfigGroup("Config");
         pluginConfigDAO.update(pluginConfig);

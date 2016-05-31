@@ -49,7 +49,6 @@ public class PluginDependencyDAOTest {
     InstalledPluginsDAO installedPluginsDAO;
     @Autowired
     PluginDependencyDAO pluginDependencyDAO;
-    @Ignore
     @Test
     public void testInsertUpdateAndDelete() throws Exception {
         InstalledPlugins installedPlugins = new InstalledPlugins();
@@ -71,7 +70,8 @@ public class PluginDependencyDAOTest {
         Integer pluginDependencyId = pluginDependencyDAO.insert(pluginDependency);
         LOGGER.info("PluginDependency is added with Id:" + pluginDependencyId);
         pluginDependency = pluginDependencyDAO.get(pluginDependencyId);
-        assertEquals(1,pluginDependency.getDependencyId());
+        Integer test=1;
+        assertEquals(test,pluginDependency.getDependencyId());
         assertNotNull(pluginDependencyDAO.list(0, 10));
 
         pluginDependencyDAO.delete(pluginDependencyId);
