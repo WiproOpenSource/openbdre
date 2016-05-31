@@ -44,7 +44,7 @@ public class InstalledPluginsDAOTest {
 
     @Autowired
     InstalledPluginsDAO installedPluginsDAO;
-    @Ignore
+
     @Test
     public void testInsertUpdateAndDelete() throws Exception {
         InstalledPlugins installedPlugins = new InstalledPlugins();
@@ -58,6 +58,7 @@ public class InstalledPluginsDAOTest {
         installedPlugins.setPlugin("TestPlugin");
         installedPlugins.setUninstallable(true);
         String installedPluginId = installedPluginsDAO.insert(installedPlugins);
+        LOGGER.info("plugin_id123 "+installedPluginId);
         LOGGER.info("InstalledPlugin is added with Id:" + installedPluginId);
         installedPlugins.setDescription("Test Description 2");
         installedPluginsDAO.update(installedPlugins);
