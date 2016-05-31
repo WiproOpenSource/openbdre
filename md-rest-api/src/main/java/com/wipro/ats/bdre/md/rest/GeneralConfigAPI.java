@@ -288,7 +288,7 @@ public class GeneralConfigAPI extends MetadataAPIBase {
         try {
         	List<GeneralConfig> generalConfiglist=generalConfigDAO.getDistinctGenerelConfig();
             restWrapper = new RestWrapper(generalConfiglist, RestWrapper.OK);
-            LOGGER.info("Size of distinct config group:"+generalConfiglist.size());
+            LOGGER.info("Size of distinct config group:"+generalConfiglist.size()+" by User:"+principal.getName());
         } catch (MetadataException e) {
             LOGGER.error(e);
             restWrapper = new RestWrapper(e.getMessage(), RestWrapper.ERROR);
