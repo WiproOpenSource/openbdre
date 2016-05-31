@@ -505,10 +505,55 @@ CREATE TABLE app_deployment_queue_status (
 
 CREATE TABLE app_deployment_queue (
   app_deployment_queue_id bigserial not null,
-  process_id int not null REFERENCES process(process_id) ON DELETE NO ACTION ON UPDATE NO ACTION,,
+  process_id int not null REFERENCES process(process_id) ON DELETE NO ACTION ON UPDATE NO ACTION,
   username varchar(45)  not null  REFERENCES users(username) ON DELETE NO ACTION ON UPDATE NO ACTION,
   app_domain varchar(45) not null,
   app_name varchar(45) not null,
   app_deployment_status_id smallint not null REFERENCES app_deployment_queue_status(app_deployment_status_id) ON DELETE NO ACTION ON UPDATE NO ACTION,
   PRIMARY KEY (app_deployment_queue_id),
 );
+
+CREATE TABLE INSTALLED_PLUGINS (
+  PLUGIN_UNIQUE_ID VARCHAR(128) NOT NULL,
+  PLUGIN_ID VARCHAR(8) NOT NULL,
+  NAME VARCHAR(128),
+  DESCRIPTION VARCHAR(128),
+  VERSION INT(11) NOT NULL DEFAULT 1,
+  AUTHOR VARCHAR(128),
+  ADD_TS TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  PLUGIN VARCHAR(128),
+  UNINSTALLABLE BOOLEAN DEFAULT true,
+  PRIMARY KEY (PLUGIN_UNIQUE_ID)
+);
+
+
+CREATE TABLE PLUGIN_DEPENDENCY (
+  DEPENDENCY_ID INT(11) NOT NULL serial,
+  PLUGIN_UNIQUE_ID VARCHAR(128) NOT NULL REFERENCES INSTALLED_PLUGINS (PLUGIN_UNIQUE_ID) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  DEPENDENT_PLUGIN_UNIQUE_ID VARCHAR(128)REFERENCES INSTALLED_PLUGINS (PLUGIN_UNIQUE_ID) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  PRIMARY KEY (DEPENDENCY_ID),
+) ;
+
+CREATE TABLE PLUGIN_CONFIG (
+  PLUGIN_UNIQUE_ID VARCHAR(128) NOT NULL REFERENCES INSTALLED_PLUGINS (PLUGIN_UNIQUE_ID) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  CONFIG_GROUP VARCHAR(128),
+  PLUGIN_KEY INT(11),
+  PLUGIN_VALUE VARCHAR(128),
+  PRIMARY KEY (PLUGIN_KEY,PLUGIN_UNIQUE_ID),
+) ;
+
+CREATE TABLE analytics_apps (
+  analytic_apps_id bigserial not null,
+  process_id int not null REFERENCES process(process_id) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  industry_name varchar(45) not null,
+  category_name varchar(45) not null,
+  app_description varchar(45) not null,
+  app_name varchar(45) not null,
+  questions_json varchar(45) not null,
+  dashboard_url varchar(45) not null,
+  ddp_url varchar(45) not null,
+  app_image varchar(45) not null,
+  PRIMARY KEY (ANALYTIC_APPS_ID),
+ );
+
+

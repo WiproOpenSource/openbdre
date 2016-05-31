@@ -23,12 +23,12 @@
            	<script src="../js/jquery.min.js"></script>
             <script src="../js/bootstrap.js"></script>
             <script src="../js/angular.min.js"></script>
-            
+
             <style>
 				body {
 					overflow: visible;
 				}
-				
+
 				#footer {
 					background: #f5f5f5;
 					border-top: 1px solid #EDE4BF;
@@ -37,7 +37,7 @@
 					position: fixed;
 					right: 0;
 				}
-				
+
 				.activs, .activs:hover {
 					border-left: 3px solid #f91;
 					font-weight: bold;
@@ -45,7 +45,7 @@
 					color: black;
 					margin-left: 0;
 				}
-				
+
 				.activ, .activ:hover {
 					/* border-left: 3px solid #f91; */
 					font-weight: bold;
@@ -53,30 +53,30 @@
 					color: black;
 					margin-left: 0;
 				}
-				
+
 				#foot {
 					background: #f5f5f5;
 				}
-				
+
 				.navbar-default .navbar-nav>.open>a, .navbar-default .navbar-nav>.open>a:hover,
 					.navbar-default .navbar-nav>.open>a:focus {
 					background-color: #FAFAFA;
 					font-weight: bold;
 				}
-				
+
 				.level1, .level2, .level3 {
 					font-style: normal;
 				}
-				
+
 				.B1, .B2 {
 					font-weight: bold;
 					border-left: 3px solid #f91;
 				}
-				
+
 				.sideheight {
 					height: 63%;
 				}
-				
+
 				.sideimg {
 					width: 11px;
 					left: 23px;
@@ -84,39 +84,39 @@
 					height: 30px;
 					padding: 0;
 				}
-				
+
 				.left {
 					height: 97%;
 				}
-				
+
 				.headerbor {
 					border-bottom: 1px solid #EDEDED;
 				}
-				
+
 				::-webkit-scrollbar {
 					width: 8px;
 				}
-				
+
 				::-webkit-scrollbar-track {
 					-webkit-border-radius: 5px;
 					border-radius: 5px;
 					background: rgba(0, 0, 0, 0.02);
 				}
-				
+
 				::-webkit-scrollbar-thumb {
 					-webkit-border-radius: 5px;
 					border-radius: 5px;
 					background: rgba(0, 0, 0, 0.02);
 				}
-				
+
 				::-webkit-scrollbar-thumb:hover {
 					background: rgba(0, 0, 0, 0.4);
 				}
-				
+
 				::-webkit-scrollbar-thumb:window-inactive {
 					background: rgba(0, 0, 0, 0.0);
 				}
-				
+
 				.col-bdre-collapsed {
 					width: 2px;
 					position: relative;
@@ -125,16 +125,16 @@
 					padding-left: 15px;
 					float: left;
 				}
-				
+
 				.bdre-full-body {
 					width: 100% !important;
 				}
-				
+
 				/* HEADER and NAV-BAR*/
 				.input-sm {
 					width: 250px !important;
 				}
-				
+
 				.usericon {
 					display: block;
 					width: 30px;
@@ -144,7 +144,7 @@
 					background-image: url("../css/images/user_icon.png");
 					background-size: 65% 65%;
 				}
-				
+
 				.bdretextlogo {
 					color: #1ca7f7;
 					position: relative;
@@ -152,7 +152,7 @@
 					top: 11px;
 					right: 10px;
 				}
-				
+
 				.dropdown-toggle {
 					padding-top: 9px !important;
 				}
@@ -196,7 +196,7 @@
                                 </ul>
                             </li>
                         </ul>
-                        
+
                         <ul class="nav navbar-nav navbar-right" >
                             <li class="dropdown user-icon-style"><a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false"><span class="usericon"></span></a>
                                 <ul class="dropdown-menu" role="menu">
@@ -448,13 +448,24 @@
                                             collapse: "1",
                                             url: "flumepropertieswizard.page",
                                             children: []
-					},{
-                                                                  label: "Hive Table Migration",
-                                                                  collapse: "1",
-                                                                  url: "hivetablemigration.page",
-                                                                  children: []
-                      					}, ]
-                                    },
+	                }, {
+                                             label: "Analytics App",
+                                             collapse: "1",
+                                             url: "analyticsui.page",
+                                             children: []
+                    },{
+                                               label: "Analytics UI",
+                                               collapse: "1",
+                                               url: "/aui/pages/menu.page",
+                                               children: []
+                      },{
+                                              label: "Hive Table Migration",
+                                              collapse: "1",
+                                              url: "hivetablemigration.page",
+                                              children: []
+                     },]
+                                },
+
                                     <security:authorize access = "hasRole('ROLE_ADMIN')"> {
                                         label: "Administration",
                                         collapse: "1",

@@ -9,5 +9,6 @@ java -jar md-rest-api/target/dependency/jetty-runner.jar  --port 28850 \
  --classes md-rest-api/target/classes \
            auth-rest-api/context.xml \
            md-ui/context.xml \
+           analytic-ui/context.xml \
            md-rest-api/context.xml \
            appstore-context.xml
