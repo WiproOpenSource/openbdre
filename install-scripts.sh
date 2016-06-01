@@ -14,6 +14,7 @@ mkdir -p $BDRE_HOME/bdre-scripts
 mkdir -p $BDRE_HOME/lib
 mkdir -p $BDRE_APPS_HOME
 mkdir -p $BDRE_HOME-wfd
+mkdir -p $BDRE_HOME-plugins
 
 BDRE_CODE=`pwd`
 
