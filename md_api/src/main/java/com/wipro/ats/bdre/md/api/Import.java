@@ -17,19 +17,18 @@ public class Import
         LOGGER.info("UUID is "+idOne);
 
         Import unZip = new Import();
-        String jsonfile=unZip.unZipIt("/home/cloudera/bdre-wfd/export-38/38-de03d1e1-6f6a-42a5-8ad9-a2abcaa6c4a5.zip",OUTPUT_FOLDER+"/"+idOne);
 
-        LOGGER.info("returned jsonfile is "+jsonfile);
+
     }
 
     /**
      * Unzip it
      * @param zipFile input zip file
      */
-    public String unZipIt(String zipFile, String outputFolder){
+    public void unZipIt(String zipFile, String outputFolder){
 
         byte[] buffer = new byte[1024];
-        String jsonfile="";
+
         try{
 
             //create output directory is not exists
@@ -73,19 +72,9 @@ public class Import
 
             LOGGER.info("Done");
 
-            String temp;
-            BufferedReader br = null;
-            br = new BufferedReader(new FileReader(outputFolder+"/process.json"));
-            while ((temp=br.readLine()) != null) {
-                jsonfile=jsonfile+temp;
-                LOGGER.info(jsonfile);
-            }
-          LOGGER.info("final string is"+jsonfile);
-
         }catch(IOException ex){
             LOGGER.info(ex);
         }
 
-       return jsonfile;
     }
 }

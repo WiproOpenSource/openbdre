@@ -39,10 +39,8 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
+import java.io.*;
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.OutputStream;
 import java.lang.reflect.Field;
 import java.security.Principal;
 import java.util.*;
@@ -573,8 +571,18 @@ public class ProcessAPI extends MetadataAPIBase {
                 zippedFileLocation = homeDir + "/bdre-wfd/zip/" + uploadedFileName;
             }
             String outputDir = homeDir + "/bdre-wfd/intermediateDir";
-            String fileString = pimport.unZipIt(zippedFileLocation, outputDir);
-            ProcessExport processExport = mapper.readValue(fileString, ProcessExport.class);
+            pimport.unZipIt(zippedFileLocation, outputDir);
+
+            String jsonfile = "";
+            String jsonTemp;
+            BufferedReader br = null;
+            br = new BufferedReader(new FileReader(outputDir+"/process.json"));
+            while ((jsonTemp=br.readLine()) != null) {
+                jsonfile=jsonfile+jsonTemp;
+                LOGGER.info(jsonfile);
+            }
+            LOGGER.info("final string is"+jsonfile);
+            ProcessExport processExport = mapper.readValue(jsonfile, ProcessExport.class);
             for (Process process : processExport.getProcessList()) {
                 process.setProcessTemplateId(0);
             }
