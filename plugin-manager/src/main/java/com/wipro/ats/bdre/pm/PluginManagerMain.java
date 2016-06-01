@@ -11,13 +11,19 @@ public class PluginManagerMain {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(PluginManagerMain.class);
     public static void main(String[] args) throws Exception {
+        String pluginDescriptorJSON = "";
         if(args.length==0){
             LOGGER.info("Zip Path is not provided. Aborting...");
         } else {
-
+            // unzipping the zip
             PluginExploder pluginExploder = new PluginExploder();
-            pluginExploder.explode(args);
+            pluginDescriptorJSON = pluginExploder.explode(args) + "/plugin.json";
+            PluginDescriptorReader pluginDescriptorReader = new PluginDescriptorReader();
+            pluginDescriptorReader.jsonReader(pluginDescriptorJSON);
+
         }
+
+
     }
 }
 

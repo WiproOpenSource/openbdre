@@ -17,7 +17,7 @@ public class PluginExploder extends BaseStructure {
             {"p", "zip-path", "Path for plugin zip"}
     };
 
-    protected void explode (String[] params){
+    protected String explode (String[] params){
         // getting path of zipped file containing plugin files
         CommandLine commandLine = getCommandLine(params, PARAMS_STRUCTURE);
         String path = commandLine.getOptionValue("zip-path");
@@ -28,5 +28,7 @@ public class PluginExploder extends BaseStructure {
         // unzipping zip file
         Import pimport = new Import();
         pimport.unZipIt(path, outputDir);
+        return outputDir;
+
     }
 }
