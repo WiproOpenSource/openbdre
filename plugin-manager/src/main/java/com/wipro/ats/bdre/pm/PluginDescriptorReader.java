@@ -5,5 +5,5 @@ package com.wipro.ats.bdre.pm;
  */
 public class PluginDescriptorReader {
 
-    protected
+
 }
