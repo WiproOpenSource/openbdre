@@ -1,6 +1,7 @@
 package com.wipro.ats.bdre.pm;
 
 import com.wipro.ats.bdre.BaseStructure;
+import com.wipro.ats.bdre.pm.beans.Plugin;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -19,7 +20,7 @@ public class PluginManagerMain {
             PluginExploder pluginExploder = new PluginExploder();
             pluginDescriptorJSON = pluginExploder.explode(args) + "/plugin.json";
             PluginDescriptorReader pluginDescriptorReader = new PluginDescriptorReader();
-            pluginDescriptorReader.jsonReader(pluginDescriptorJSON);
+            Plugin plugin = pluginDescriptorReader.jsonReader(pluginDescriptorJSON);
 
         }
 

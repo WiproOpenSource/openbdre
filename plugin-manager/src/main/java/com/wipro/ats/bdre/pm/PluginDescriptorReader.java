@@ -20,7 +20,8 @@ public class PluginDescriptorReader{
 
     private static final Logger LOGGER = LoggerFactory.getLogger(PluginDescriptorReader.class);
 
-    public void jsonReader(String jsonFilePath) throws IOException {
+    public Plugin jsonReader(String jsonFilePath) throws IOException {
+        Plugin plugin = new Plugin();
         try {
             ObjectMapper mapper = new ObjectMapper();
             mapper.configure(DeserializationConfig.Feature.FAIL_ON_UNKNOWN_PROPERTIES, false);
@@ -33,10 +34,11 @@ public class PluginDescriptorReader{
                 LOGGER.info(jsonfile);
             }
             LOGGER.info("final string is" + jsonfile);
-            Plugin plugin = mapper.readValue(jsonfile, Plugin.class);
+             plugin = mapper.readValue(jsonfile, Plugin.class);
         }
         catch (IOException ioException){
 
         }
+        return plugin;
     }
 }
