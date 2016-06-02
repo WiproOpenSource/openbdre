@@ -1,13 +1,11 @@
-package com.wipro.ats.bdre.pm.beans;
+package com.wipro.ats.bdre.md.pm.beans;
 
-import java.util.Arrays;
 import java.util.List;
-import java.util.Objects;
 
 /**
- * Created by cloudera on 6/1/16.
+ * Created by cloudera on 6/2/16.
  */
-public class Insert {
+public class Delete {
     private String tableName;
 
     public List<Data> getData() {

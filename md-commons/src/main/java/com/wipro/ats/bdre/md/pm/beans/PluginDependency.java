@@ -1,4 +1,4 @@
-package com.wipro.ats.bdre.pm.beans;
+package com.wipro.ats.bdre.md.pm.beans;
 
 import java.util.List;
 
@@ -6,15 +6,15 @@ import java.util.List;
  * Created by cloudera on 6/1/16.
  */
 public class PluginDependency {
-    private Integer pluginId;
+    private String pluginId;
     private String version;
     private String versionLevel;
 
-    public Integer getPluginId() {
+    public String getPluginId() {
         return pluginId;
     }
 
-    public void setPluginId(Integer pluginId) {
+    public void setPluginId(String pluginId) {
         this.pluginId = pluginId;
     }
 

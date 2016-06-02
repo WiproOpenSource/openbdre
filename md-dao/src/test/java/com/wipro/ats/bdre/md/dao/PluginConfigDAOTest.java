@@ -58,6 +58,7 @@ public class PluginConfigDAOTest {
         installedPlugins.setUninstallable(true);
         String installedPluginId = installedPluginsDAO.insert(installedPlugins);
         LOGGER.info("InstalledPlugin is added with Id:" + installedPluginId);
+
         PluginConfig pluginConfig = new PluginConfig();
         PluginConfigId pluginConfigId=new PluginConfigId();
         pluginConfigId.setPluginKey(1);
@@ -68,8 +69,10 @@ public class PluginConfigDAOTest {
         pluginConfig.setPluginValue("TestPluginValue");
         PluginConfigId pluginConfigIden = pluginConfigDAO.insert(pluginConfig);
         LOGGER.info("PluginConfig is added with Id:" + pluginConfigIden);
+
         pluginConfig.setConfigGroup("Config");
         pluginConfigDAO.update(pluginConfig);
+
         pluginConfig = pluginConfigDAO.get(pluginConfigIden);
         assertEquals("Config",pluginConfig.getConfigGroup());
         assertNotNull(pluginConfigDAO.list(0, 10));

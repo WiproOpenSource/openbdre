@@ -1,24 +1,21 @@
-package com.wipro.ats.bdre.pm.beans;
-
-import java.util.ArrayList;
-import java.util.List;
+package com.wipro.ats.bdre.md.pm.beans;
 
 /**
  * Created by cloudera on 6/1/16.
  */
 public class FS {
-    private String aaction;
+    private String action;
     private String sourceLocation;
     private String destinationLocation;
     private String permission;
     private boolean copy;
 
-    public String getAaction() {
-        return aaction;
+    public String getAction() {
+        return action;
     }
 
-    public void setAaction(String aaction) {
-        this.aaction = aaction;
+    public void setAction(String action) {
+        this.action = action;
     }
 
     public String getSourceLocation() {

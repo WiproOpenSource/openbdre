@@ -1,4 +1,4 @@
-package com.wipro.ats.bdre.pm.beans;
+package com.wipro.ats.bdre.md.pm.beans;
 
 import java.util.List;
 

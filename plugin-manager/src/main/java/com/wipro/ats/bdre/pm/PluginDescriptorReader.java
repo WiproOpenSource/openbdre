@@ -2,14 +2,13 @@ package com.wipro.ats.bdre.pm;
 
 
 
-import com.wipro.ats.bdre.pm.beans.Plugin;
+import com.wipro.ats.bdre.md.pm.beans.Plugin;
 import org.codehaus.jackson.map.DeserializationConfig;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.BufferedReader;
-import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 
