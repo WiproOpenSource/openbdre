@@ -26,7 +26,7 @@ public class PluginConfigDAO {
     private static final Logger LOGGER = Logger.getLogger(PluginConfigDAO.class);
     @Autowired
     SessionFactory sessionFactory;
-    public List<Integer> list(Integer pageNum, Integer numResults) {
+    public List<String> list(Integer pageNum, Integer numResults) {
         Session session = sessionFactory.openSession();
         session.beginTransaction();
         Criteria criteria = session.createCriteria(PluginConfig.class);
@@ -35,13 +35,13 @@ public class PluginConfigDAO {
         criteria.setProjection(Projections.distinct(Projections.property("id.pluginUniqueId")));
         criteria.setFirstResult(pageNum);
         criteria.setMaxResults(numResults);
-        List<Integer> listOfProcessIDs = criteria.list();
+        List<String> listOfProcessIDs = criteria.list();
         session.getTransaction().commit();
         session.close();
         return listOfProcessIDs;
     }
 
-    public List<PluginConfig> getConfigForPlugin(Integer pluginUniqueId,Integer pageNum, Integer numResults) {
+    public List<PluginConfig> getConfigForPlugin(String pluginUniqueId,Integer pageNum, Integer numResults) {
         Session session = sessionFactory.openSession();
         session.beginTransaction();
         Criteria criteria = session.createCriteria(PluginConfig.class).add(Restrictions.eq("id.pluginUniqueId",pluginUniqueId));
@@ -53,10 +53,10 @@ public class PluginConfigDAO {
         return pluginConfig;
     }
 
-    public Long totalRecordCount() {
+    public Integer totalRecordCount() {
         Session session = sessionFactory.openSession();
         session.beginTransaction();
-        long size = session.createCriteria(PluginConfig.class).list().size();
+        Integer size = session.createCriteria(PluginConfig.class).list().size();
         session.getTransaction().commit();
         session.close();
         return size;
@@ -116,6 +116,24 @@ public class PluginConfigDAO {
         }
     }
 
+
+    public void deleteByPluginId(String pluginUniqueId) {
+        Session session = sessionFactory.openSession();
+        try {
+            session.beginTransaction();
+            Criteria propertiesByProcessId = session.createCriteria(PluginConfig.class).add(Restrictions.eq("id.pluginUniqueId", pluginUniqueId));
+            List<PluginConfig> pluginConfigList = propertiesByProcessId.list();
+            for (PluginConfig pluginConfig : pluginConfigList) {
+                session.delete(pluginConfig);
+            }
+            session.getTransaction().commit();
+        } catch (MetadataException e) {
+            session.getTransaction().rollback();
+            LOGGER.error(e);
+        } finally {
+            session.close();
+        }
+    }
 
 
 

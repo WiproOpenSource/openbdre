@@ -11,13 +11,17 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package com.wipro.ats.bdre.md.rest;
 
+import com.wipro.ats.bdre.exception.MetadataException;
 import com.wipro.ats.bdre.md.api.base.MetadataAPIBase;
-import com.wipro.ats.bdre.md.beans.table.PluginDependency;
+import com.wipro.ats.bdre.md.beans.table.PluginConfig;
 import com.wipro.ats.bdre.md.dao.InstalledPluginsDAO;
-import com.wipro.ats.bdre.md.dao.PluginDependencyDAO;
+import com.wipro.ats.bdre.md.dao.PluginConfigDAO;
 import com.wipro.ats.bdre.md.dao.jpa.InstalledPlugins;
+import com.wipro.ats.bdre.md.dao.jpa.PluginConfigId;
+import com.wipro.ats.bdre.md.dao.jpa.Process;
 import com.wipro.ats.bdre.md.rest.util.BindingResultError;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,180 +34,257 @@ import java.security.Principal;
 import java.util.ArrayList;
 import java.util.List;
 
-
 /**
- * Created by SU324335 on 3/8/2016.
+ * Created by arijit on 1/9/15.
  */
 @Controller
 @RequestMapping("/pluginconfig")
-public class PluginConfigAPI extends MetadataAPIBase {
 
-    private static final Logger LOGGER = Logger.getLogger(PluginConfigAPI.class);
-    private static final String RECORDWITHID = "Record with ID:";
+
+public class PluginConfigAPI extends MetadataAPIBase {
+    private static final Logger LOGGER = Logger.getLogger(PropertiesAPI.class);
+    private static final String WRITE="write";
+
     @Autowired
-    PluginDependencyDAO pluginDependencyDAO;
+    private PluginConfigDAO pluginConfigDAO;
     @Autowired
-    InstalledPluginsDAO installedPluginsDAO;
+    private InstalledPluginsDAO installedPluginsDAO;
+
 
     /**
-     * This method calls proc GetDeployStatus and fetches a record from DeployStatus table corresponding
-     * to deployStatusId passed.
+     * This method calls proc ListProperty and fetches a list of instances of Properties.
      *
      * @param
-     * @return restWrapper It contains an instance of pluginDependency corresponding to deployStatusId passed.
+     * @return restWrapper It contains a list of instances of Properties.
      */
-    @RequestMapping(value = "/{id}", method = RequestMethod.GET)
-    @ResponseBody public
-    RestWrapper get(
-            @PathVariable("id") int dependencyId, Principal principal
-    ) {
+    @RequestMapping(value = {"", "/"}, method = RequestMethod.GET)
+
+
+    @ResponseBody
+    public RestWrapper list(@RequestParam(value = "page", defaultValue = "0") int startPage,
+                            @RequestParam(value = "size", defaultValue = "10") int pageSize, Principal principal) {
 
         RestWrapper restWrapper = null;
         try {
-            com.wipro.ats.bdre.md.dao.jpa.PluginDependency jpaPluginDependency = pluginDependencyDAO.get(dependencyId);
-            PluginDependency pluginDependency = new PluginDependency();
-            if (jpaPluginDependency != null) {
-                pluginDependency.setDependencyId(jpaPluginDependency.getDependencyId());
-                pluginDependency.setDependentPluginUniqueId(jpaPluginDependency.getInstalledPluginsByDependentPluginUniqueId().getPluginUniqueId());
-                pluginDependency.setPluginUniqueId(jpaPluginDependency.getInstalledPluginsByPluginUniqueId().getPluginUniqueId());
+            Integer counter=pluginConfigDAO.totalRecordCount();
+            List<PluginConfig> getPluginConfigs = new ArrayList<PluginConfig>();
+            for (String pluginUniqueId : pluginConfigDAO.list(startPage, pageSize)) {
+                com.wipro.ats.bdre.md.beans.table.PluginConfig returnPluginConfig = new com.wipro.ats.bdre.md.beans.table.PluginConfig();
+                returnPluginConfig.setPluginUniqueId(pluginUniqueId);
+                returnPluginConfig.setCounter(counter);
+                getPluginConfigs.add(returnPluginConfig);
             }
-            restWrapper = new RestWrapper(pluginDependency, RestWrapper.OK);
-            LOGGER.info(RECORDWITHID + dependencyId + " selected from AppDeploymentQueueStatus by User:" + principal.getName());
-        }catch (Exception e) {
-            LOGGER.error( e);
-            return new RestWrapper(e.getMessage(), RestWrapper.ERROR);
+
+
+            restWrapper = new RestWrapper(getPluginConfigs, RestWrapper.OK);
+            LOGGER.info("All records listed from Properties by User:" + principal.getName());
+
+        } catch (MetadataException e) {
+            LOGGER.error(e);
+            restWrapper = new RestWrapper(e.getMessage(), RestWrapper.ERROR);
         }
         return restWrapper;
-
     }
 
     /**
-     * This method calls DeleteDeployStatus and fetches a record corresponding to the deployStatusId passed.
+     * This method calls proc ListProperties and fetches a list of records from properties table corresponding to
+     * processId passed.
      *
-     * @param dependencyId
+     * @param
+     * @return restWrapper It contains list of instances of properties corresponding to processId passed.
+     */
+    @RequestMapping(value = {"/{id}"}, method = RequestMethod.GET)
+
+
+    @ResponseBody
+    public RestWrapper list(@PathVariable("id") String pluginUniqueId, Principal principal) {
+
+        RestWrapper restWrapper = null;
+        try {
+            List<PluginConfig> getPluginConfigs = new ArrayList<PluginConfig>();
+
+            List<com.wipro.ats.bdre.md.dao.jpa.PluginConfig> pluginConfigList=new ArrayList<com.wipro.ats.bdre.md.dao.jpa.PluginConfig>();
+            pluginConfigList=pluginConfigDAO.getConfigForPlugin(pluginUniqueId,0,10);
+            Integer counter=pluginConfigList.size();
+            for (com.wipro.ats.bdre.md.dao.jpa.PluginConfig pluginConfig : pluginConfigList) {
+                com.wipro.ats.bdre.md.beans.table.PluginConfig returnPluginConfig = new com.wipro.ats.bdre.md.beans.table.PluginConfig();
+                returnPluginConfig.setPluginUniqueId(pluginConfig.getId().getPluginUniqueId());
+                returnPluginConfig.setConfigGroup(pluginConfig.getConfigGroup());
+                returnPluginConfig.setPluginKey(pluginConfig.getId().getPluginKey());
+                returnPluginConfig.setPluginValue(pluginConfig.getPluginValue());
+                returnPluginConfig.setCounter(counter);
+                getPluginConfigs.add(returnPluginConfig);
+            }
+
+            restWrapper = new RestWrapper(getPluginConfigs, RestWrapper.OK);
+            LOGGER.info("Record with ID:" + pluginUniqueId + "selected from Properties by User:" + principal.getName());
+
+        } catch (MetadataException e) {
+            LOGGER.error(e);
+            restWrapper = new RestWrapper(e.getMessage(), RestWrapper.ERROR);
+        }
+        catch (SecurityException e) {
+            LOGGER.error(e);
+            restWrapper = new RestWrapper(e.getMessage(), RestWrapper.ERROR);
+        }
+        return restWrapper;
+    }
+
+    /**
+     * This method calls proc DeleteProperties and deletes  records from Properties table
+     * corresponding to processId passed.
+     *
+     * @param pluginUniqueId
      * @return nothing.
      */
     @RequestMapping(value = "/{id}", method = RequestMethod.DELETE)
-    @ResponseBody public
-    RestWrapper delete(
-            @PathVariable("id") Integer dependencyId, Principal principal) {
+
+    @ResponseBody
+    public RestWrapper delete(@PathVariable("id") String pluginUniqueId, Principal principal) {
         RestWrapper restWrapper = null;
         try {
-            pluginDependencyDAO.delete(dependencyId);
+            com.wipro.ats.bdre.md.dao.jpa.Process process = new Process();
+            pluginConfigDAO.deleteByPluginId(pluginUniqueId);
             restWrapper = new RestWrapper(null, RestWrapper.OK);
-            LOGGER.info(RECORDWITHID + dependencyId + " deleted from AppDeploymentQueueStatus by User:" + principal.getName());
-        } catch (Exception e) {
-            LOGGER.error( e);
-            return new RestWrapper(e.getMessage(), RestWrapper.ERROR);
+            LOGGER.info("Record with ID:" + pluginUniqueId + " deleted from Properties by User:" + principal.getName());
+
+        } catch (MetadataException e) {
+            LOGGER.error(e);
+            restWrapper = new RestWrapper(e.getMessage(), RestWrapper.ERROR);
+        }catch (SecurityException e) {
+            LOGGER.error(e);
+            restWrapper = new RestWrapper(e.getMessage(), RestWrapper.ERROR);
         }
         return restWrapper;
     }
 
+
     /**
-     * This method calls proc ListStatusDeploy and fetches a list of DeployStatus records.
+     * This method calls proc DeleteProperty and deletes an entry corresponding to  particular processId and key passed.
      *
-     * @param
-     * @return restWrapper It contains list of instances of DeployStatus.
+     * @param pluginUniqueId
+     * @param key
+     * @return nothing.
      */
-    @RequestMapping(value = {"", "/"}, method = RequestMethod.GET)
-    @ResponseBody public
-    RestWrapper list(@RequestParam(value = "page", defaultValue = "0") int startPage,
-                     @RequestParam(value = "size", defaultValue = "10") int pageSize, Principal principal) {
+    @RequestMapping(value = "/{id}/{k}/", method = RequestMethod.DELETE)
+
+    @ResponseBody
+    public RestWrapper delete(
+            @PathVariable("id") String pluginUniqueId,
+            @PathVariable("k") Integer key, Principal principal) {
+
         RestWrapper restWrapper = null;
         try {
-            Integer counter=pluginDependencyDAO.totalRecordCount().intValue();
-            List<com.wipro.ats.bdre.md.dao.jpa.PluginDependency> jpaPluginDependencies = pluginDependencyDAO.list(startPage, pageSize);
-            List<PluginDependency> pluginDependencies = new ArrayList<PluginDependency>();
 
-            for (com.wipro.ats.bdre.md.dao.jpa.PluginDependency pluginDependency : jpaPluginDependencies) {
-                PluginDependency pluginDependency1 = new PluginDependency();
-                pluginDependency1.setDependencyId(pluginDependency.getDependencyId());
-                pluginDependency1.setDependentPluginUniqueId(pluginDependency.getInstalledPluginsByDependentPluginUniqueId().getPluginUniqueId());
-                pluginDependency1.setPluginUniqueId(pluginDependency.getInstalledPluginsByPluginUniqueId().getPluginUniqueId());
-                pluginDependency1.setCounter(counter);
-                pluginDependencies.add(pluginDependency1);
-            }
-            restWrapper = new RestWrapper(pluginDependencies, RestWrapper.OK);
-            LOGGER.info("All records listed from DeployStatus by User:" + principal.getName());
-        } catch (Exception e) {
-            LOGGER.error( e);
-            return new RestWrapper(e.getMessage(), RestWrapper.ERROR);
+            com.wipro.ats.bdre.md.dao.jpa.PluginConfigId pluginConfigId = new com.wipro.ats.bdre.md.dao.jpa.PluginConfigId();
+            pluginConfigId.setPluginKey(key);
+            pluginConfigId.setPluginUniqueId(pluginUniqueId);
+            pluginConfigDAO.delete(pluginConfigId);
+            restWrapper = new RestWrapper(null, RestWrapper.OK);
+            LOGGER.info("Record with ID:" + pluginUniqueId + "," + key + " deleted from Properties by User:" + principal.getName());
+
+        } catch (MetadataException e) {
+            LOGGER.error(e);
+            restWrapper = new RestWrapper(e.getMessage(), RestWrapper.ERROR);
+        }
+        catch (SecurityException e) {
+            LOGGER.error(e);
+            restWrapper = new RestWrapper(e.getMessage(), RestWrapper.ERROR);
         }
         return restWrapper;
     }
 
+
     /**
-     * This method calls UpdateDeployStatus and updates the record passed. It also validates
-     * the values of the record passed.
+     * This method calls proc UpdateProperties and updates the values passed. It also validates the values passed.
      *
-     * @param pluginDependency  Instance of DeployStatus.
+     * @param pluginConfig    Instance of Properties.
      * @param bindingResult
-     * @return restWrapper The updated instance of DeployStatus.
+     * @return restWrapper It contains updated instance of Properties.
      */
     @RequestMapping(value = {"/", ""}, method = RequestMethod.POST)
-    @ResponseBody public
-    RestWrapper update(@ModelAttribute("plugindependency")
-                       @Valid PluginDependency pluginDependency, BindingResult bindingResult, Principal principal) {
-        LOGGER.debug("Entering into update for adq_status table");
+
+    @ResponseBody
+    public RestWrapper update(@ModelAttribute("pluginconfig")
+                              @Valid PluginConfig pluginConfig, BindingResult bindingResult, Principal principal) {
+
         RestWrapper restWrapper = null;
         if (bindingResult.hasErrors()) {
             BindingResultError bindingResultError = new BindingResultError();
             return bindingResultError.errorMessage(bindingResult);
         }
         try {
-            com.wipro.ats.bdre.md.dao.jpa.PluginDependency jpaPluginDependency = new com.wipro.ats.bdre.md.dao.jpa.PluginDependency();
-            InstalledPlugins installedPluginsDependent=installedPluginsDAO.get(pluginDependency.getDependentPluginUniqueId());
-            jpaPluginDependency.setInstalledPluginsByDependentPluginUniqueId(installedPluginsDependent);
-            InstalledPlugins installedPlugins=installedPluginsDAO.get(pluginDependency.getPluginUniqueId());
-            jpaPluginDependency.setInstalledPluginsByPluginUniqueId(installedPlugins);
-            pluginDependencyDAO.update(jpaPluginDependency);
-            LOGGER.debug("Exiting from update for deploy_status table");
-            restWrapper = new RestWrapper(jpaPluginDependency, RestWrapper.OK);
-            LOGGER.info(RECORDWITHID + pluginDependency.getDependencyId() + " updated in AppDeploymentQueueStatus by User:" + principal.getName() );
-        } catch (Exception e) {
-            LOGGER.error( e);
-            return new RestWrapper(e.getMessage(), RestWrapper.ERROR);
+            com.wipro.ats.bdre.md.dao.jpa.PluginConfig updatePluginConfig = new com.wipro.ats.bdre.md.dao.jpa.PluginConfig();
+            PluginConfigId pluginConfigId = new PluginConfigId();
+            pluginConfigId.setPluginKey(pluginConfig.getPluginKey());
+            pluginConfigId.setPluginUniqueId(pluginConfig.getPluginUniqueId());
+            updatePluginConfig.setId(pluginConfigId);
+            updatePluginConfig.setPluginValue(pluginConfig.getPluginValue());
+            updatePluginConfig.setConfigGroup(pluginConfig.getConfigGroup());
+            InstalledPlugins installedPlugins=new InstalledPlugins();
+            installedPlugins.setPluginUniqueId(pluginConfig.getPluginUniqueId());
+            updatePluginConfig.setInstalledPlugins(installedPlugins);
+
+            pluginConfigDAO.update(updatePluginConfig);
+            restWrapper = new RestWrapper(pluginConfig, RestWrapper.OK);
+            LOGGER.info("Record with ID:" + pluginConfig.getPluginUniqueId() + " updated in Properties by User:" + principal.getName() + pluginConfig);
+
+        } catch (MetadataException e) {
+            LOGGER.error(e);
+            restWrapper = new RestWrapper(e.getMessage(), RestWrapper.ERROR);
+        }
+        catch (SecurityException e) {
+            LOGGER.error(e);
+            restWrapper = new RestWrapper(e.getMessage(), RestWrapper.ERROR);
         }
         return restWrapper;
     }
 
     /**
-     * This method calls proc InsertDeployStatus and adds a new record in the database. It also validates the
+     * This method calls proc InsertProperties and adds a record in properties table. It also validates the
      * values passed.
      *
-     * @param pluginDependency  Instance of DeployStatus.
+     * @param pluginConfig    Instance of properties.
      * @param bindingResult
-     * @return restWrapper Instance of DeployStatus passed.
+     * @return restWrapper It contains instance of Properties passed.
      */
     @RequestMapping(value = {"/", ""}, method = RequestMethod.PUT)
-    @ResponseBody public
-    RestWrapper insert(@ModelAttribute("plugindependency")
-                       @Valid PluginDependency pluginDependency, BindingResult bindingResult, Principal principal) {
-        LOGGER.debug("Entering into insert for adq_status table");
+
+    @ResponseBody
+    public RestWrapper insert(@ModelAttribute("pluginconfig")
+                              @Valid PluginConfig pluginConfig, BindingResult bindingResult, Principal principal) {
+
         RestWrapper restWrapper = null;
         if (bindingResult.hasErrors()) {
             BindingResultError bindingResultError = new BindingResultError();
             return bindingResultError.errorMessage(bindingResult);
         }
-
         try {
-            com.wipro.ats.bdre.md.dao.jpa.PluginDependency jpaPluginDependency = new com.wipro.ats.bdre.md.dao.jpa.PluginDependency();
-            InstalledPlugins installedPluginsDependent=installedPluginsDAO.get(pluginDependency.getDependentPluginUniqueId());
-            jpaPluginDependency.setInstalledPluginsByDependentPluginUniqueId(installedPluginsDependent);
-            InstalledPlugins installedPlugins=installedPluginsDAO.get(pluginDependency.getPluginUniqueId());
-            jpaPluginDependency.setInstalledPluginsByPluginUniqueId(installedPlugins);
-            LOGGER.debug("Exiting from insert for adq_status table");
-            restWrapper = new RestWrapper(pluginDependency, RestWrapper.OK);
-            LOGGER.info(RECORDWITHID + " inserted in AppDeploymentQueueStatus by User:" + principal.getName() );
-        } catch (Exception e) {
-            LOGGER.error( e);
-            return new RestWrapper(e.getMessage(), RestWrapper.ERROR);
+            com.wipro.ats.bdre.md.dao.jpa.PluginConfig insertPluginConfig = new com.wipro.ats.bdre.md.dao.jpa.PluginConfig();
+            PluginConfigId pluginConfigId = new PluginConfigId();
+            pluginConfigId.setPluginKey(pluginConfig.getPluginKey());
+            pluginConfigId.setPluginUniqueId(pluginConfig.getPluginUniqueId());
+            insertPluginConfig.setId(pluginConfigId);
+            insertPluginConfig.setPluginValue(pluginConfig.getPluginValue());
+            insertPluginConfig.setConfigGroup(pluginConfig.getConfigGroup());
+            pluginConfigDAO.insert(insertPluginConfig);
+            restWrapper = new RestWrapper(pluginConfig, RestWrapper.OK);
+            LOGGER.info("Record with ID:" + pluginConfig.getPluginUniqueId() + " inserted in Properties by User:" + principal.getName() + pluginConfig);
+
+        } catch (MetadataException e) {
+            LOGGER.error(e);
+            restWrapper = new RestWrapper(e.getMessage(), RestWrapper.ERROR);
+        }
+        catch (SecurityException e) {
+            LOGGER.error(e);
+            restWrapper = new RestWrapper(e.getMessage(), RestWrapper.ERROR);
         }
         return restWrapper;
     }
+
+
     @Override
     public Object execute(String[] params) {
         return null;
     }
-
 }

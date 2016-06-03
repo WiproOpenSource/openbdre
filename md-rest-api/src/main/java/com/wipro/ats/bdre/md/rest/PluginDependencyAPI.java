@@ -151,14 +151,14 @@ public class PluginDependencyAPI extends MetadataAPIBase {
             return bindingResultError.errorMessage(bindingResult);
         }
         try {
-            com.wipro.ats.bdre.md.dao.jpa.PluginDependency jpaPluginDependency = new com.wipro.ats.bdre.md.dao.jpa.PluginDependency();
+            com.wipro.ats.bdre.md.dao.jpa.PluginDependency jpaPluginDependency = pluginDependencyDAO.get(pluginDependency.getDependencyId());
             InstalledPlugins installedPluginsDependent=installedPluginsDAO.get(pluginDependency.getDependentPluginUniqueId());
             jpaPluginDependency.setInstalledPluginsByDependentPluginUniqueId(installedPluginsDependent);
             InstalledPlugins installedPlugins=installedPluginsDAO.get(pluginDependency.getPluginUniqueId());
             jpaPluginDependency.setInstalledPluginsByPluginUniqueId(installedPlugins);
             pluginDependencyDAO.update(jpaPluginDependency);
             LOGGER.debug("Exiting from update for deploy_status table");
-            restWrapper = new RestWrapper(jpaPluginDependency, RestWrapper.OK);
+            restWrapper = new RestWrapper(pluginDependency, RestWrapper.OK);
             LOGGER.info(RECORDWITHID + pluginDependency.getDependencyId() + " updated in AppDeploymentQueueStatus by User:" + principal.getName() );
         } catch (Exception e) {
             LOGGER.error( e);
@@ -192,7 +192,7 @@ public class PluginDependencyAPI extends MetadataAPIBase {
             jpaPluginDependency.setInstalledPluginsByDependentPluginUniqueId(installedPluginsDependent);
             InstalledPlugins installedPlugins=installedPluginsDAO.get(pluginDependency.getPluginUniqueId());
             jpaPluginDependency.setInstalledPluginsByPluginUniqueId(installedPlugins);
-            LOGGER.debug("Exiting from insert for adq_status table");
+            pluginDependencyDAO.insert(jpaPluginDependency);
             restWrapper = new RestWrapper(pluginDependency, RestWrapper.OK);
             LOGGER.info(RECORDWITHID + " inserted in AppDeploymentQueueStatus by User:" + principal.getName() );
         } catch (Exception e) {
