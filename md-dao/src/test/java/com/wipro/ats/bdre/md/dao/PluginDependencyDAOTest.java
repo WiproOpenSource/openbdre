@@ -63,21 +63,35 @@ public class PluginDependencyDAOTest {
         installedPlugins.setUninstallable(true);
         String installedPluginId = installedPluginsDAO.insert(installedPlugins);
         LOGGER.info("InstalledPlugin is added with Id:" + installedPluginId);
+
+        InstalledPlugins installedPluginsSecond = new InstalledPlugins();
+        installedPluginsSecond.setPluginUniqueId("Test-2");
+        installedPluginsSecond.setPluginId("Test");
+        installedPluginsSecond.setName("test name");
+        installedPluginsSecond.setDescription("Test Description");
+        installedPluginsSecond.setVersion(2);
+        installedPluginsSecond.setAuthor("Test Author");
+        installedPluginsSecond.setAddTs(new Date());
+        installedPluginsSecond.setPlugin("TestPlugin");
+        installedPluginsSecond.setUninstallable(true);
+        String installedPluginIdSecond = installedPluginsDAO.insert(installedPluginsSecond);
+        LOGGER.info("InstalledPlugin is added with Id:" + installedPluginIdSecond);
+
+
         PluginDependency pluginDependency = new PluginDependency();
-        pluginDependency.setDependencyId(1);
         pluginDependency.setInstalledPluginsByPluginUniqueId(installedPlugins);
-        pluginDependency.setInstalledPluginsByDependentPluginUniqueId(installedPlugins);
+        pluginDependency.setInstalledPluginsByDependentPluginUniqueId(installedPluginsSecond);
         Integer pluginDependencyId = pluginDependencyDAO.insert(pluginDependency);
         LOGGER.info("PluginDependency is added with Id:" + pluginDependencyId);
         pluginDependency = pluginDependencyDAO.get(pluginDependencyId);
-        Integer test=1;
-        assertEquals(test,pluginDependency.getDependencyId());
+        assertNotNull(pluginDependencyId);
         assertNotNull(pluginDependencyDAO.list(0, 10));
 
         pluginDependencyDAO.delete(pluginDependencyId);
         LOGGER.info("Deleted PluginDependency Entry with ID" + pluginDependencyId);
         LOGGER.info("Size of PluginDependency is:" + pluginDependencyDAO.totalRecordCount());
         installedPluginsDAO.delete(installedPluginId);
+        installedPluginsDAO.delete(installedPluginIdSecond);
         LOGGER.info("Deleted InstalledPlugin Entry with ID" + installedPluginId);
         LOGGER.info("Size of installedPlugins is:" + installedPluginsDAO.totalRecordCount());
 

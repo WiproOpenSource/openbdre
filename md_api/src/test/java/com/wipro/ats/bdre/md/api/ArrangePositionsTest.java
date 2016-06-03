@@ -18,6 +18,7 @@ import com.wipro.ats.bdre.md.beans.PositionsInfo;
 import com.wipro.ats.bdre.md.dao.*;
 import com.wipro.ats.bdre.md.dao.jpa.*;
 import com.wipro.ats.bdre.md.dao.jpa.Process;
+import com.wipro.ats.bdre.md.dao.jpa.ProcessType;
 import org.apache.log4j.Logger;
 import org.junit.Before;
 import org.junit.Ignore;
@@ -68,7 +69,7 @@ public class ArrangePositionsTest {
 
         try {
             BusDomain busDomain = busDomainDAO.get(1);
-            ProcessType parentProcessType = processTypeDAO.get(1);
+            com.wipro.ats.bdre.md.dao.jpa.ProcessType parentProcessType = processTypeDAO.get(1);
             ProcessType childProcessType = processTypeDAO.get(12);
             ArrangePositions arrangePositions = new ArrangePositions();
             WorkflowType parentWorkflowType = workflowTypeDAO.get(0);
