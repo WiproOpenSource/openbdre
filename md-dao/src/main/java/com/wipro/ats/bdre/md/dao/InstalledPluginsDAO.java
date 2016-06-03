@@ -75,7 +75,7 @@ public class InstalledPluginsDAO {
             session.beginTransaction();
             session.update(installedPlugins);
             session.getTransaction().commit();
-        } catch (MetadataException e) {
+        } catch (Exception e) {
             session.getTransaction().rollback();
             LOGGER.error(e);
         } finally {

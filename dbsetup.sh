@@ -245,7 +245,7 @@ case "$(uname -s)" in
      fi
      ;;
 
-   CYGWIN*|MINGW32*|MSYS*)
+   CYGWIN*|MINGW*|MSYS*)
      echo 'MS Windows'
      cp databases/h2/*.db ~
       if [ $? -eq 0 ]; then

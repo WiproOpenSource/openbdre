@@ -11,15 +11,45 @@ import java.util.Date;
 
 public class InstalledPlugins {
     @NotNull
-    @Pattern(regexp = "([0-z]+(-)[0-9]+")
     private String pluginUniqueId;
     private String pluginId;
     private String name;
     private String description;
-    @Min(value = 1)
-    @Digits(fraction = 0, integer = 11)
+    private String author;
+    private Date addTs;
+    private String plugin;
+    private Boolean unInstallable;
+    private Integer page;
+    private Integer counter;
+    private String tableAddTs;
     @NotNull
     private Integer version;
+
+    public String getTableAddTs() {
+        return tableAddTs;
+    }
+
+    public void setTableAddTs(String tableAddTs) {
+        this.tableAddTs = tableAddTs;
+    }
+
+    public Integer getPage() {
+        return page;
+    }
+
+    public void setPage(Integer page) {
+        this.page = page;
+    }
+
+    public Integer getCounter() {
+        return counter;
+    }
+
+    public void setCounter(Integer counter) {
+        this.counter = counter;
+    }
+
+
 
     public String getPluginUniqueId() {
         return pluginUniqueId;
@@ -93,11 +123,7 @@ public class InstalledPlugins {
         this.unInstallable = unInstallable;
     }
 
-    private String author;
-    @NotNull
-    private Date addTs;
-    private String plugin;
-    private Boolean unInstallable;
+
 
     @Override
     public String toString() {
