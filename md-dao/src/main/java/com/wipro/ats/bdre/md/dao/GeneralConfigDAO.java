@@ -22,6 +22,7 @@ import org.apache.log4j.Logger;
 import org.hibernate.Criteria;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
+import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Restrictions;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -55,10 +56,10 @@ public class GeneralConfigDAO {
         return generalConfigs;
     }
 
-    public Long totalRecordCount() {
+    public Integer totalRecordCount() {
         Session session = sessionFactory.openSession();
         session.beginTransaction();
-        long size = session.createCriteria(GeneralConfig.class).list().size();
+        int size = session.createCriteria(GeneralConfig.class).list().size();
         session.getTransaction().commit();
         session.close();
         return size;
@@ -120,6 +121,26 @@ public class GeneralConfigDAO {
         }
     }
 
+
+    public void deleteByConfigGroup(String generalConfig){
+        Session session = sessionFactory.openSession();
+        try {
+            session.beginTransaction();
+            Criteria propertiesByConfigGroup= session.createCriteria(GeneralConfig.class).add(Restrictions.eq("id.configGroup", generalConfig));
+            List<GeneralConfig> gcList = propertiesByConfigGroup.list();
+            for (GeneralConfig gc :gcList) {
+                session.delete(gc);
+            }
+            session.getTransaction().commit();
+        } catch (MetadataException e) {
+            session.getTransaction().rollback();
+            LOGGER.error(e);
+        } finally {
+            session.close();
+        }
+    }
+
+
     public List<com.wipro.ats.bdre.md.beans.table.GeneralConfig> getGeneralConfig(String configGroup, int required) {
         Session session = sessionFactory.openSession();
         List<com.wipro.ats.bdre.md.beans.table.GeneralConfig> generalConfigList = new ArrayList<com.wipro.ats.bdre.md.beans.table.GeneralConfig>();
@@ -171,6 +192,46 @@ public class GeneralConfigDAO {
                 }
 
             }
+            session.getTransaction().commit();
+        } catch (MetadataException e) {
+            session.getTransaction().rollback();
+            LOGGER.error(e);
+        } finally {
+            session.close();
+        }
+        return generalConfigList;
+    }
+
+    public List<com.wipro.ats.bdre.md.beans.table.GeneralConfig> listGeneralConfig(String configGroup) {
+        Session session = sessionFactory.openSession();
+        List<com.wipro.ats.bdre.md.beans.table.GeneralConfig> generalConfigList = new ArrayList<com.wipro.ats.bdre.md.beans.table.GeneralConfig>();
+
+        try {
+            session.beginTransaction();
+
+
+                Criteria getGeneralConfigCriteria = session.createCriteria(GeneralConfig.class).add(Restrictions.eq(CONFIG_GROUP, configGroup));
+                List<GeneralConfig> jpaGeneralConfigList = getGeneralConfigCriteria.list();
+                Integer counter =jpaGeneralConfigList.size();
+                for (GeneralConfig jpaGeneralConfig : jpaGeneralConfigList) {
+                    com.wipro.ats.bdre.md.beans.table.GeneralConfig generalConfig = new com.wipro.ats.bdre.md.beans.table.GeneralConfig();
+                    generalConfig.setCounter(counter);
+                    if (jpaGeneralConfig.getRequired())
+                        generalConfig.setRequired(1);
+                    else
+                        generalConfig.setRequired(0);
+                    generalConfig.setConfigGroup(jpaGeneralConfig.getId().getConfigGroup());
+                    generalConfig.setKey(jpaGeneralConfig.getId().getGcKey());
+                    generalConfig.setValue(jpaGeneralConfig.getGcValue());
+                    generalConfig.setDescription(jpaGeneralConfig.getDescription());
+                    generalConfig.setDefaultVal(jpaGeneralConfig.getDefaultVal());
+                    generalConfig.setEnabled(jpaGeneralConfig.getEnabled());
+                    generalConfig.setType(jpaGeneralConfig.getType());
+
+                    generalConfigList.add(generalConfig);
+                }
+
+
             session.getTransaction().commit();
         } catch (MetadataException e) {
             session.getTransaction().rollback();
@@ -336,20 +397,28 @@ public class GeneralConfigDAO {
 
     }
     
-    public List<com.wipro.ats.bdre.md.beans.table.GeneralConfig> getDistinctGenerelConfig(){
+    public List<com.wipro.ats.bdre.md.beans.table.GeneralConfig> getDistinctGenerelConfig(Integer pageNum, Integer numResults){
     	 Session session = sessionFactory.openSession();
-    	 List<com.wipro.ats.bdre.md.beans.table.GeneralConfig> generalConfiglist = new ArrayList<com.wipro.ats.bdre.md.beans.table.GeneralConfig>();
-         try {
+    	 List<String> cgList = new ArrayList<String>();
+         List<com.wipro.ats.bdre.md.beans.table.GeneralConfig> configGroupList=new ArrayList<com.wipro.ats.bdre.md.beans.table.GeneralConfig>();
+
+        try {
              session.beginTransaction();
              Criteria criteria = session.createCriteria(GeneralConfig.class);
              criteria.setProjection(Projections.distinct(Projections.property(CONFIG_GROUP)));
-             List<String> configGroupList= criteria.list();
-             for(String s:configGroupList) {
-                 com.wipro.ats.bdre.md.beans.table.GeneralConfig gc=new com.wipro.ats.bdre.md.beans.table.GeneralConfig();
-                 gc.setConfigGroup(s);
-                 gc.setCounter(configGroupList.size());
-                 generalConfiglist.add(gc);
+             criteria.addOrder(Order.asc(CONFIG_GROUP).ignoreCase());
+             Integer counter= criteria.list().size();
+             criteria.setFirstResult(pageNum);
+             criteria.setMaxResults(numResults);
+             cgList= criteria.list();
+
+             for(String gc:cgList){
+                 com.wipro.ats.bdre.md.beans.table.GeneralConfig generalConfig=new com.wipro.ats.bdre.md.beans.table.GeneralConfig();
+                 generalConfig.setConfigGroup(gc);
+                 generalConfig.setCounter(counter);
+                 configGroupList.add(generalConfig);
              }
+
              session.getTransaction().commit();
          } catch (MetadataException e) {
              session.getTransaction().rollback();
@@ -357,7 +426,7 @@ public class GeneralConfigDAO {
          } finally {
              session.close();
          }
-         return generalConfiglist;
+         return configGroupList;
     }
 
 }
