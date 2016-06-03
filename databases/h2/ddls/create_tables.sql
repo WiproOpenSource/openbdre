@@ -382,7 +382,7 @@ create table installed_plugins (
   author varchar(128),
   add_ts TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
   plugin varchar(128),
-  unistallable integer(1),
+  uninstallable boolean default true,
   primary key (plugin_unique_id)
 );
 
