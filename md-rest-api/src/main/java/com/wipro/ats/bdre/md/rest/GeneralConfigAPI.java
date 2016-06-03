@@ -29,6 +29,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.security.Principal;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -74,6 +75,28 @@ public class GeneralConfigAPI extends MetadataAPIBase {
 
     }
 
+
+    /**
+     * This method calls proc GetGeneralConfig and fetches a list of instances of GeneralConfig.
+     *
+     * @param configGroup
+     * @return restWrapper It contains a list of instances of GeneralConfig.
+     */
+
+
+    @RequestMapping(value = {"/list/{cg}", "/list/{cg}/"}, method = RequestMethod.GET)
+    @ResponseBody public
+    RestWrapper list(@PathVariable("cg") String configGroup, Principal principal) {
+
+        RestWrapper restWrapper = null;
+        GetGeneralConfig generalConfigs = new GetGeneralConfig();
+        List<GeneralConfig> generalConfigList = generalConfigs.listGeneralConfig(configGroup);
+        restWrapper = new RestWrapper(generalConfigList, RestWrapper.OK);
+        LOGGER.info("All records listed with config group :" + configGroup + "from General  Config by User:" + principal.getName());
+
+        return restWrapper;
+
+    }
     /**
      * This method calls proc GetGenConfigProperty and fetches a record from GeneralConfig table corresponding to
      * Config group and key passed.
@@ -163,20 +186,26 @@ public class GeneralConfigAPI extends MetadataAPIBase {
         try {
             if(generalConfig.getRequired()<=1) {
                 com.wipro.ats.bdre.md.dao.jpa.GeneralConfig jpaGeneralConfigUpdate = new com.wipro.ats.bdre.md.dao.jpa.GeneralConfig();
+
                 GeneralConfigId jpaGeneralConfigId = new GeneralConfigId();
                 jpaGeneralConfigId.setConfigGroup(generalConfig.getConfigGroup());
                 jpaGeneralConfigId.setGcKey(generalConfig.getKey());
+                jpaGeneralConfigUpdate.setId(jpaGeneralConfigId);
+
                 jpaGeneralConfigUpdate.setDefaultVal(generalConfig.getDefaultVal());
                 jpaGeneralConfigUpdate.setDescription(generalConfig.getDescription());
                 jpaGeneralConfigUpdate.setEnabled(generalConfig.isEnabled());
                 jpaGeneralConfigUpdate.setGcValue(generalConfig.getValue());
-                jpaGeneralConfigUpdate.setId(jpaGeneralConfigId);
                 if (generalConfig.getRequired() == 1)
                     jpaGeneralConfigUpdate.setRequired(true);
                 else
                     jpaGeneralConfigUpdate.setRequired(false);
                 jpaGeneralConfigUpdate.setType(generalConfig.getType());
+
+                LOGGER.info(generalConfig);
                 generalConfigDAO.update(jpaGeneralConfigUpdate);
+
+
                 restWrapper = new RestWrapper(generalConfig, RestWrapper.OK);
                 LOGGER.info(" Record with key:" + jpaGeneralConfigId.getGcKey() + " and config group:" + jpaGeneralConfigId.getConfigGroup() + " updated in general_config by User:" + principal.getName());
 
@@ -275,21 +304,52 @@ public class GeneralConfigAPI extends MetadataAPIBase {
         return restWrapper;
     }
 
+
     /**
      * This method fetches all distinct record in GeneralConfig table depending on Config group.
      *
      * @return restWrapper with the list of instance of GeneralConfig table.
      */
-
-    @RequestMapping( method = RequestMethod.GET)
-    @ResponseBody public
-    RestWrapper getDistinctGenerelConfig(Principal principal) {
+    @RequestMapping(value = {"", "/"}, method = RequestMethod.GET)
+    @ResponseBody
+    public RestWrapper getDistinctGeneralConfig(@RequestParam(value = "page", defaultValue = "0") int startPage,
+                                                @RequestParam(value = "size", defaultValue = "10") int pageSize,
+                                                Principal principal) {
         RestWrapper restWrapper = null;
         try {
-        	List<GeneralConfig> generalConfiglist=generalConfigDAO.getDistinctGenerelConfig();
-            restWrapper = new RestWrapper(generalConfiglist, RestWrapper.OK);
-            LOGGER.info("Size of distinct config group:"+generalConfiglist.size()+" by User:"+principal.getName());
+            List<com.wipro.ats.bdre.md.beans.table.GeneralConfig> configGroupList=new ArrayList<com.wipro.ats.bdre.md.beans.table.GeneralConfig>();
+            configGroupList= generalConfigDAO.getDistinctGenerelConfig(startPage, pageSize);
+
+            restWrapper = new RestWrapper(configGroupList, RestWrapper.OK);
+            LOGGER.info("Size of distinct config group:"+configGroupList.size()+" by User:"+principal.getName());
         } catch (MetadataException e) {
+            LOGGER.error(e);
+            restWrapper = new RestWrapper(e.getMessage(), RestWrapper.ERROR);
+        }
+        return restWrapper;
+    }
+
+    /**
+     * This method deletes the records from Properties table corresponding to the configGroup passed
+     * corresponding to processId passed.
+     *
+     * @param configGroup
+     * @return nothing.
+     */
+    @RequestMapping(value = "/{id}", method = RequestMethod.DELETE)
+
+    @ResponseBody
+    public RestWrapper delete(@PathVariable("id") String configGroup, Principal principal) {
+        RestWrapper restWrapper = null;
+        try {
+            generalConfigDAO.deleteByConfigGroup(configGroup);
+            restWrapper = new RestWrapper(null, RestWrapper.OK);
+            LOGGER.info("Record with configGroup:" + configGroup + " deleted from generalConfig by User:" + principal.getName());
+
+        } catch (MetadataException e) {
+            LOGGER.error(e);
+            restWrapper = new RestWrapper(e.getMessage(), RestWrapper.ERROR);
+        }catch (SecurityException e) {
             LOGGER.error(e);
             restWrapper = new RestWrapper(e.getMessage(), RestWrapper.ERROR);
         }
