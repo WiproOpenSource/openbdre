@@ -22,6 +22,7 @@ import org.apache.log4j.Logger;
 import org.hibernate.Criteria;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
+import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Restrictions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -333,6 +334,30 @@ public class GeneralConfigDAO {
             session.close();
         }
 
+    }
+    
+    public List<com.wipro.ats.bdre.md.beans.table.GeneralConfig> getDistinctGenerelConfig(){
+    	 Session session = sessionFactory.openSession();
+    	 List<com.wipro.ats.bdre.md.beans.table.GeneralConfig> generalConfiglist = new ArrayList<com.wipro.ats.bdre.md.beans.table.GeneralConfig>();
+         try {
+             session.beginTransaction();
+             Criteria criteria = session.createCriteria(GeneralConfig.class);
+             criteria.setProjection(Projections.distinct(Projections.property(CONFIG_GROUP)));
+             List<String> configGroupList= criteria.list();
+             for(String s:configGroupList) {
+                 com.wipro.ats.bdre.md.beans.table.GeneralConfig gc=new com.wipro.ats.bdre.md.beans.table.GeneralConfig();
+                 gc.setConfigGroup(s);
+                 gc.setCounter(configGroupList.size());
+                 generalConfiglist.add(gc);
+             }
+             session.getTransaction().commit();
+         } catch (MetadataException e) {
+             session.getTransaction().rollback();
+             LOGGER.error(e);
+         } finally {
+             session.close();
+         }
+         return generalConfiglist;
     }
 
 }
