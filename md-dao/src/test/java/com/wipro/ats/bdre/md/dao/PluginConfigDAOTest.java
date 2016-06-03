@@ -17,14 +17,16 @@ import com.wipro.ats.bdre.md.dao.jpa.PluginConfig;
 import com.wipro.ats.bdre.md.dao.jpa.PluginConfigId;
 import org.apache.log4j.Logger;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.AutowireCapableBeanFactory;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
-import static org.junit.Assert.*;
+
 import java.util.Date;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 /**
  * Created by cloudera on 5/27/16.
  */
