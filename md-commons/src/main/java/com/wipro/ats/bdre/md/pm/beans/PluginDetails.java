@@ -4,26 +4,26 @@ package com.wipro.ats.bdre.md.pm.beans;
  * Created by cloudera on 6/1/16.
  */
 public class PluginDetails {
-    private Integer pluginId;
+    private String pluginId;
     private String name;
-    private String descritpion;
+    private String description;
     private String author;
     private String pluginWebsite;
 
-    public Integer getPluginId() {
+    public String getPluginId() {
         return pluginId;
     }
 
-    public void setPluginId(Integer pluginId) {
+    public void setPluginId(String pluginId) {
         this.pluginId = pluginId;
     }
 
-    public String getDescritpion() {
-        return descritpion;
+    public String getDescription() {
+        return description;
     }
 
-    public void setDescritpion(String descritpion) {
-        this.descritpion = descritpion;
+    public void setDescription(String description) {
+        this.description = description;
     }
 
     public String getAuthor() {

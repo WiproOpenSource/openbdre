@@ -3,35 +3,43 @@ package com.wipro.ats.bdre.pm;
 import com.wipro.ats.bdre.md.pm.beans.FS;
 import com.wipro.ats.bdre.md.pm.beans.DataList;
 import com.wipro.ats.bdre.md.pm.beans.Plugin;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.log4j.Logger;
 
 /**
  * Created by cloudera on 6/2/16.
  */
 public class PluginInstaller {
-    private static final Logger LOGGER = LoggerFactory.getLogger(PluginInstaller.class);
-    public void install(Plugin plugin){
+    private static final Logger LOGGER = Logger.getLogger(PluginManagerMain.class);
+    public void install(Plugin plugin,String pluginDescriptorJSON){
 
         for(FS fs : plugin.getInstall().getFs()){
             if("FileCopy".equals(fs.getAction())){
                 FSOpenrations fsOperations = new FSOpenrations();
-                fsOperations.copyAction(fs);
+                fsOperations.copyAction(fs,pluginDescriptorJSON);
             }else if("FileDelete".equals(fs.getAction())){
                 FSOpenrations fsOperations = new FSOpenrations();
-                fsOperations.deleteAction(fs);
+                fsOperations.deleteAction(fs,pluginDescriptorJSON);
             }else if("FileMove".equals(fs.getAction())){
                 FSOpenrations fsOperations = new FSOpenrations();
-                fsOperations.moveAction(fs);
+                fsOperations.moveAction(fs,pluginDescriptorJSON);
             }else if("FilePermission".equals(fs.getAction())){
                 FSOpenrations fsOperations = new FSOpenrations();
-                fsOperations.chmodAction(fs);
+                fsOperations.chmodAction(fs,pluginDescriptorJSON);
             }
         }
 
-        for(DataList dataList : plugin.getInstall().getMetadata().getDataList()){
+        for(DataList dataList : plugin.getInstall().getMetadata().getInsert()){
             MetadataActions metadataActions = new MetadataActions();
             metadataActions.insertAction(dataList);
+        }
+
+        for(DataList dataList : plugin.getInstall().getMetadata().getUpdate()){
+            MetadataActions metadataActions = new MetadataActions();
+            metadataActions.updateAction(dataList);
+        }
+        for(DataList dataList : plugin.getInstall().getMetadata().getDelete()){
+            MetadataActions metadataActions = new MetadataActions();
+            metadataActions.deleteAction(dataList);
         }
 
 

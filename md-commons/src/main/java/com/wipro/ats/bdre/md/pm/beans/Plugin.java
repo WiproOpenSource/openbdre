@@ -9,6 +9,8 @@ public class Plugin {
     private PluginDetails pluginDetails;
     private List<PluginDependency> pluginDependency;
 
+    private Install install;
+
     public Install getInstall() {
         return install;
     }
@@ -33,6 +35,5 @@ public class Plugin {
         this.pluginDetails = pluginDetails;
     }
 
-    private Install install;
 
 }

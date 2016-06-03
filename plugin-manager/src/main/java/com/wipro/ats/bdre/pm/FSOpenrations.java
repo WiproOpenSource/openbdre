@@ -1,8 +1,7 @@
 package com.wipro.ats.bdre.pm;
 
 import com.wipro.ats.bdre.md.pm.beans.FS;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.log4j.Logger;
 
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -15,9 +14,9 @@ import java.nio.file.Path;
  * Created by cloudera on 6/2/16.
  */
 public class FSOpenrations {
-    private static final Logger LOGGER = LoggerFactory.getLogger(PluginInstaller.class);
-    public void copyAction(FS fs){
-        Path path = FileSystems.getDefault().getPath(fs.getDestinationLocation());
+    private static final Logger LOGGER = Logger.getLogger(PluginManagerMain.class);
+    public void copyAction(FS fs,String pluginDescriptorJSON){
+        Path path = FileSystems.getDefault().getPath(pluginDescriptorJSON + "/" + fs.getDestinationLocation());
         try{
             InputStream inputStram = new FileInputStream(fs.getSourceLocation());
             Files.copy(inputStram, path);
@@ -26,15 +25,15 @@ public class FSOpenrations {
         }
     }
 
-    public void deleteAction(FS fs){
+    public void deleteAction(FS fs,String pluginDescriptorJSON){
 
     }
 
-    public void moveAction(FS fs){
+    public void moveAction(FS fs,String pluginDescriptorJSON){
 
     }
 
-    public void chmodAction(FS fs){
+    public void chmodAction(FS fs,String pluginDescriptorJSON){
 
     }
 }

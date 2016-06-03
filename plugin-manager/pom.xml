@@ -36,7 +36,7 @@
                             </transformers>
                             <shadedArtifactAttached>true</shadedArtifactAttached>
                             <shadedClassifierName>executable</shadedClassifierName>
-                            <finalName>dot-gen-${project.version}</finalName>
+                            <finalName>plugin-manager-${project.version}</finalName>
                             <outputDirectory>${project.parent.build.directory}/lib/${project.artifactId}</outputDirectory>
 
                             <filters>

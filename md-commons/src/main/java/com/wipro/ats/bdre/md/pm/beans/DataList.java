@@ -1,5 +1,6 @@
 package com.wipro.ats.bdre.md.pm.beans;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -8,11 +9,11 @@ import java.util.List;
 public class DataList {
     private String tableName;
 
-    public List<Data> getData() {
+    public List<ArrayList<Object>> getData() {
         return data;
     }
 
-    public void setData(List<Data> data) {
+    public void setData(List<ArrayList<Object>> data) {
         this.data = data;
     }
 
@@ -24,5 +25,5 @@ public class DataList {
         this.tableName = tableName;
     }
 
-    private List<Data> data;
+    private List<ArrayList<Object>> data;
 }

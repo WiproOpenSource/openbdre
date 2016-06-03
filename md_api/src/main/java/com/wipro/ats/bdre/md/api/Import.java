@@ -11,15 +11,7 @@ public class Import
 {
     private static final Logger LOGGER = Logger.getLogger(Import.class);
     private static final String OUTPUT_FOLDER = "/home/cloudera/bdretest/";
-    public static void main( String[] args )
-    {
-        UUID idOne = UUID.randomUUID();
-        LOGGER.info("UUID is "+idOne);
 
-        Import unZip = new Import();
-
-
-    }
 
     /**
      * Unzip it
@@ -32,12 +24,13 @@ public class Import
         try{
 
             //create output directory is not exists
-            File folder = new File(OUTPUT_FOLDER);
+            File folder = new File(outputFolder);
             if(!folder.exists()){
                 folder.mkdir();
             }
 
             //get the zip file content
+            LOGGER.info("zip file name is " + zipFile);
             ZipInputStream zis = new ZipInputStream(new FileInputStream(zipFile));
             //get the zipped file list entry
             ZipEntry ze = zis.getNextEntry();
