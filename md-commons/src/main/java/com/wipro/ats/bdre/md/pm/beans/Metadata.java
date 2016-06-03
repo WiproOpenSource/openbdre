@@ -6,13 +6,13 @@ import java.util.List;
  * Created by cloudera on 6/1/16.
  */
 public class Metadata {
-    private List<Insert> insert;
+    private List<DataList> dataList;
 
-    public List<Insert> getInsert() {
-        return insert;
+    public List<DataList> getDataList() {
+        return dataList;
     }
 
-    public void setInsert(List<Insert> insert) {
-        this.insert = insert;
+    public void setDataList(List<DataList> dataList) {
+        this.dataList = dataList;
     }
 }

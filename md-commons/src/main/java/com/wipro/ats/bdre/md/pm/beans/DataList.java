@@ -3,9 +3,9 @@ package com.wipro.ats.bdre.md.pm.beans;
 import java.util.List;
 
 /**
- * Created by cloudera on 6/2/16.
+ * Created by cloudera on 6/1/16.
  */
-public class Delete {
+public class DataList {
     private String tableName;
 
     public List<Data> getData() {
