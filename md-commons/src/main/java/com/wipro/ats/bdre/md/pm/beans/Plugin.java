@@ -10,6 +10,7 @@ public class Plugin {
     private List<PluginDependency> pluginDependency;
 
     private Install install;
+    private PluginConfig pluginConfig;
 
     public Install getInstall() {
         return install;
