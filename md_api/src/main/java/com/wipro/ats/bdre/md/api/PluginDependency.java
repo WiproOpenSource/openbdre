@@ -22,6 +22,7 @@ public class PluginDependency extends MetadataAPIBase {
 
     @Autowired
     PluginDependencyDAO pluginDependencyDAO;
+    @Autowired
     InstalledPluginsDAO installedPluginsDAO;
 
     public PluginDependency() {
