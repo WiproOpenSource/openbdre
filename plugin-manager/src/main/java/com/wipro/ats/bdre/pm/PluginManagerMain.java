@@ -1,6 +1,9 @@
 package com.wipro.ats.bdre.pm;
 
+import com.wipro.ats.bdre.md.api.InstalledPlugins;
+import com.wipro.ats.bdre.md.api.PluginDependency;
 import com.wipro.ats.bdre.md.pm.beans.Plugin;
+import com.wipro.ats.bdre.md.pm.beans.PluginConfig;
 import org.apache.log4j.Logger;
 
 
@@ -28,6 +31,15 @@ public class PluginManagerMain {
                 LOGGER.error("plugin dependency not met can't install your plugin");
                 throw new Exception();
             }
+            //adding plugin into INSTALLED_PLUGINS table to make an entry
+            InstalledPlugins installedPlugins = new InstalledPlugins();
+            installedPlugins.insert(plugin.getPluginDetails());
+            // creating entries in PLUGIN_DEPENDENCY table related to installed plugin
+            PluginDependency pluginDependency = new PluginDependency();
+            pluginDependency.insert(plugin);
+            // adding configuaration for installed plugin in PLUGIN_CONFIG table
+            com.wipro.ats.bdre.md.api.PluginConfig pluginConfig = new com.wipro.ats.bdre.md.api.PluginConfig();
+            pluginConfig.insert(plugin.getPluginConfig());
         }
 
 

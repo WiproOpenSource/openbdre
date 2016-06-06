@@ -42,7 +42,7 @@ public class PluginDetails {
         this.pluginWebsite = pluginWebsite;
     }
 
-    private String version;
+    private int version;
 
     public boolean isUninstallable() {
         return uninstallable;
@@ -52,11 +52,11 @@ public class PluginDetails {
         this.uninstallable = uninstallable;
     }
 
-    public String getVersion() {
+    public int getVersion() {
         return version;
     }
 
-    public void setVersion(String version) {
+    public void setVersion(int version) {
         this.version = version;
     }
 

@@ -13,7 +13,8 @@ public class PluginDependencyResolver {
     public boolean dependencyCheck(Plugin plugin){
         for (PluginDependency pluginDependency : plugin.getPluginDependency()){
             InstalledPlugins installedPlugins = new InstalledPlugins();
-            if (installedPlugins.dependencyCheck(pluginDependency.getPluginId()) == false){
+            String uniquePluginId = pluginDependency.getPluginId() + "-" + pluginDependency.getVersion();
+            if (!installedPlugins.dependencyCheck(uniquePluginId)){
                 return false;
             }
         }
