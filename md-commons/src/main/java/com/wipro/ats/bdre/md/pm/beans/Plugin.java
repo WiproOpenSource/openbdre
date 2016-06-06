@@ -37,4 +37,11 @@ public class Plugin {
     }
 
 
+    public PluginConfig getPluginConfig() {
+        return pluginConfig;
+    }
+
+    public void setPluginConfig(PluginConfig pluginConfig) {
+        this.pluginConfig = pluginConfig;
+    }
 }
