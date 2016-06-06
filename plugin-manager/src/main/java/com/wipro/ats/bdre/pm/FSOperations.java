@@ -13,7 +13,7 @@ import java.nio.file.Path;
 /**
  * Created by cloudera on 6/2/16.
  */
-public class FSOpenrations {
+public class FSOperations {
     private static final Logger LOGGER = Logger.getLogger(PluginManagerMain.class);
     public void copyAction(FS fs,String pluginDescriptorJSON){
         Path path = FileSystems.getDefault().getPath(pluginDescriptorJSON + "/" + fs.getDestinationLocation());
