@@ -815,6 +815,13 @@ $scope.confirmDialog = function (message, callBackFunctionName){
             }
         };
 
+        $scope.hasPath = function(key){
+
+                           var patt = new RegExp("Path");
+                           var res = patt.test(key);
+                           return res;
+                };
+
         $scope.isFileId = function(key){
 
                    var patt = new RegExp("FileId-");
