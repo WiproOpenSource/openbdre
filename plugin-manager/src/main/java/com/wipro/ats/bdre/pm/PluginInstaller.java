@@ -14,16 +14,16 @@ public class PluginInstaller {
 
         for(FS fs : plugin.getInstall().getFs()){
             if("FILECOPY".equals(fs.getAction())){
-                FSOpenrations fsOperations = new FSOpenrations();
+                FSOperations fsOperations = new FSOperations();
                 fsOperations.copyAction(fs,pluginDescriptorJSON);
             }else if("FILEDELETE".equals(fs.getAction())){
-                FSOpenrations fsOperations = new FSOpenrations();
+                FSOperations fsOperations = new FSOperations();
                 fsOperations.deleteAction(fs,pluginDescriptorJSON);
             }else if("FILEMOVE".equals(fs.getAction())){
-                FSOpenrations fsOperations = new FSOpenrations();
+                FSOperations fsOperations = new FSOperations();
                 fsOperations.moveAction(fs,pluginDescriptorJSON);
             }else if("FILEPERMISSION".equals(fs.getAction())){
-                FSOpenrations fsOperations = new FSOpenrations();
+                FSOperations fsOperations = new FSOperations();
                 fsOperations.chmodAction(fs,pluginDescriptorJSON);
             }
         }
