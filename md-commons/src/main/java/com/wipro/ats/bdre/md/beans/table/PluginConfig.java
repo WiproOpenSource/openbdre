@@ -11,6 +11,25 @@ public class PluginConfig {
     private String configGroup;
     private Integer pluginKey;
     private String pluginValue;
+    private Integer page;
+    private Integer counter;
+
+    public Integer getCounter() {
+        return counter;
+    }
+
+    public void setCounter(Integer counter) {
+        this.counter = counter;
+    }
+
+    public Integer getPage() {
+        return page;
+    }
+
+    public void setPage(Integer page) {
+        this.page = page;
+    }
+
     @Override
     public String toString() {
     return " pluginUniqueId:" + pluginUniqueId + " configGroup:" + configGroup + " pluginKey:" + pluginKey + " pluginValue:" + pluginValue;

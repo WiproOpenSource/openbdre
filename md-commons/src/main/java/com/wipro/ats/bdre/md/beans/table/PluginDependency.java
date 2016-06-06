@@ -14,6 +14,25 @@ public class PluginDependency {
     @NotNull
     private String pluginUniqueId;
     private String dependentPluginUniqueId;
+    private Integer counter;
+    private Integer page;
+    public Integer getPage() {
+        return page;
+    }
+
+    public void setPage(Integer page) {
+        this.page = page;
+    }
+
+
+    public Integer getCounter() {
+        return counter;
+    }
+
+    public void setCounter(Integer counter) {
+        this.counter = counter;
+    }
+
 
     public Integer getDependencyId() {
         return dependencyId;
