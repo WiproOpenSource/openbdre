@@ -15,7 +15,7 @@ import java.nio.file.StandardCopyOption;
 /**
  * Created by cloudera on 6/2/16.
  */
-public class FSOpenrations {
+public class FSOperations {
     private static final Logger LOGGER = Logger.getLogger(PluginManagerMain.class);
     public void copyAction(FS fs,String pluginDescriptorJSON){
 
