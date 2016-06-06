@@ -188,9 +188,9 @@ public class ActionNode extends OozieNode {
 
         } else if (processInfo.getProcessTypeId() == IMPORT_ACTION) {
 
-        } /*else if (processInfo.getProcessTypeId() == DQ_PARENT_ACTION) {
+        } else if (processInfo.getProcessTypeId() == DQ_PARENT_ACTION) {
 
-        } */ else if (processInfo.getProcessTypeId() == HIVE_GEN_PARENT_ACTION) {
+        }  else if (processInfo.getProcessTypeId() == HIVE_GEN_PARENT_ACTION) {
 
         } else if (processInfo.getProcessTypeId() == HIVE_MIGRATION_ACTION) {
 
