@@ -15,14 +15,14 @@
 package com.wipro.ats.bdre.md.triggers;
 
 import com.wipro.ats.bdre.exception.MetadataException;
+import com.wipro.ats.bdre.md.dao.ProcessTypeDAO;
 import com.wipro.ats.bdre.md.dao.jpa.Process;
 import org.apache.log4j.Logger;
 import org.hibernate.event.spi.*;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
 
 /**
  * Created by SH324337 on 12/18/2015.
@@ -32,51 +32,20 @@ public class MetadataPersistenceTrigger implements PreUpdateEventListener, PreIn
 
     private static final Logger LOGGER = Logger.getLogger(MetadataPersistenceTrigger.class);
     private static Map<Integer,Integer> processTypeMap=new HashMap<>();
-    //TO DO:We have to populate this from DB
-    static {
-        processTypeMap.put(1,0);
-        processTypeMap.put(2,0);
-        processTypeMap.put(3,0);
-        processTypeMap.put(4,0);
-        processTypeMap.put(5,0);
-        processTypeMap.put(6,5);
-        processTypeMap.put(7,5);
-        processTypeMap.put(8,5);
-        processTypeMap.put(9,2);
-        processTypeMap.put(10,2);
-        processTypeMap.put(11,2);
-        processTypeMap.put(12,1);
-        processTypeMap.put(13,4);
-        processTypeMap.put(14,18);
-        processTypeMap.put(15,0);
-        processTypeMap.put(16,19);
-        processTypeMap.put(17,3);
-        processTypeMap.put(18,0);
-        processTypeMap.put(19,0);
-        processTypeMap.put(20,0);
-        processTypeMap.put(21,20);
-        processTypeMap.put(22,2);
-        processTypeMap.put(23,1);
-        processTypeMap.put(24,2);
-        processTypeMap.put(25,2);
-        processTypeMap.put(26,0);
-        processTypeMap.put(27,26);
-        processTypeMap.put(28,0);
-        processTypeMap.put(29,28);
-        processTypeMap.put(30,2);
-        processTypeMap.put(31,0);
-        processTypeMap.put(32,31);
-        processTypeMap.put(33,31);
-        processTypeMap.put(34,31);
-        processTypeMap.put(35,31);
-        processTypeMap.put(36,31);
-        processTypeMap.put(37,0);
-        processTypeMap.put(38,37);
-        processTypeMap.put(39,0);
-        processTypeMap.put(40,39);
+    @Autowired ProcessTypeDAO processTypeDAO;
 
+    private void populateProcessTypeMap(){
+        LOGGER.info("inserting into Map");
+        if(processTypeMap.size()==0) {
+            List<com.wipro.ats.bdre.md.dao.jpa.ProcessType> processTypeInfos = processTypeDAO.listFull(0, Integer.MAX_VALUE);
+            for (com.wipro.ats.bdre.md.dao.jpa.ProcessType processType : processTypeInfos) {
+                processTypeMap.put(processType.getProcessTypeId(), processType.getParentProcessTypeId() == null ? 0 : processType.getParentProcessTypeId());
+                LOGGER.info("map contains " + processType.getProcessTypeId() + ", " + processTypeMap.get(processType.getProcessTypeId()));
+            }
+        }
     }
     private void processTypeValidator(Object object) {
+        populateProcessTypeMap();
         Process process = (Process) object;
         LOGGER.info("Attempting to insert process " + process.getProcessName());
         Integer processTypeId = process.getProcessType().getProcessTypeId();
