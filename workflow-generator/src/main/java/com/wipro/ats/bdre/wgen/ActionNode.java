@@ -15,7 +15,9 @@
 package com.wipro.ats.bdre.wgen;
 
 import com.wipro.ats.bdre.exception.BDREException;
+import com.wipro.ats.bdre.md.api.PluginConfig;
 import com.wipro.ats.bdre.md.beans.ProcessInfo;
+import com.wipro.ats.bdre.md.dao.jpa.PluginConfigId;
 import org.apache.log4j.Logger;
 
 import java.io.File;
@@ -238,31 +240,55 @@ public class ActionNode extends OozieNode {
 
 
     public void setPluginProcessInfo(ProcessInfo processInfo) {
+        // fill plugin id list by iteration through plugin config and populate with each row's plugin id. Set puts only unique entries
+        // pluginIdList.add("td-action-1.0.0");
+        Set<String> pluginUniqueIdList = new HashSet((new PluginConfig().distinctPluginUniqueIdList()));
 
-        Set<String> pluginIdList = new HashSet();
-        //TODO: fill plugin id list by iteration through plugin config and populate with each row's plugin id. Set puts only unique entries
-        pluginIdList.add("td-action-1.0.0");
 
-        for (String pluginId : pluginIdList) {
-            if (processInfo.getParentProcessId() == null) {
-                processTypeSet.add(processInfo.getProcessTypeId());
-                return;
-            }
+            // for each plugin id check for a config group of "wf-gen" for same structure of plugin config for a  action node refer to:
+            for (String pluginUniqueId:pluginUniqueIdList)
+            {
+                if (processInfo.getParentProcessId() == null) {
+                    processTypeSet.add(processInfo.getProcessTypeId());
+                    return;
+                }
+                // Under each such "wf-gen" config group, read the value with key as 'parent-process-id' for a parent process id
+                PluginConfigId pluginConfigIdParent=new PluginConfigId();
+                pluginConfigIdParent.setPluginUniqueId(pluginUniqueId);
+                pluginConfigIdParent.setPluginKey("parent-process-id");
+                com.wipro.ats.bdre.md.dao.jpa.PluginConfig pluginConfigParent=new PluginConfig().get(pluginConfigIdParent);
+                Integer parentProcessId=Integer.parseInt(pluginConfigParent.getPluginValue());
 
-            //TODO: for each plugin id check for a config group of "wf-gen" for same structure of plugin config for a  action node refer to:
-            // TODO: Under each such "wf-gen" config group, read the value with key as 'parent-process-id' for a parent process id
+                // Read corresponding list of sub processes through key as parent-processid.sub-process-id and add to the set
+                PluginConfigId pluginConfigIdSubProcess=new PluginConfigId();
+                pluginConfigIdSubProcess.setPluginUniqueId(pluginUniqueId);
+                pluginConfigIdSubProcess.setPluginKey("sub-process-ids");
+                //com.wipro.ats.bdre.md.dao.jpa.PluginConfig pluginConfigSubProcess=new PluginConfig().get(pluginConfigIdSubProcess);
+                //String subProcesses=pluginConfigSubProcess.getPluginValue();
+                //String[] subProcessIds=subProcesses.split(",");
+                //Set<Integer> subProcessSet = new HashSet<>();
+                //subProcessSet.add(processInfo.getProcessTypeId());
+                // add logic to populate set with all sub processes and proceed any further only if processInfo.processId belongs to the set
 
-            //TODO:   Read corresponding list of sub processes through key as parent-processid.sub-process-id and add to the set
-            /*Set<Integer> subProcessSet = new HashSet<>();
-            subProcessSet.add(processInfo.getProcessTypeId());
-            TODO: add logic to populate set with all sub processes and proceed any further only if processInfo.processId belongs to the set*/
-            int subProcessId = processInfo.getProcessTypeId();
-            LOGGER.debug("Sub process id = " + subProcessId);
-            processTypeSet.add(subProcessId);
-            //TODO: iterate through plugin config with '${subProcessId}.wf-gen' as config group,get corresponding values which are jar paths and  adding all jars to classpath
-            //TODO: add logic to skip adding jars if classes are already loaded, classes can be taken from containing nodes
-            List<String> jarsToLoad = new ArrayList<>();
-            jarsToLoad.add("/home/cloudera/workspace/openbdre/workflow-generator/target/workflow-generator-1.1-SNAPSHOT.jar");
+                int subProcessId = processInfo.getProcessTypeId();
+                LOGGER.debug("Sub process id = " + subProcessId);
+                processTypeSet.add(subProcessId);
+
+                // iterate through plugin config with '${subProcessId}.wf-gen' as config group,get corresponding values which are jar paths and  adding all jars to classpath
+                List<String> jarsToLoad = new ArrayList<>();
+                //for(String returnedSubProcessId:subProcessIds)
+                //{
+                     jarsToLoad=new PluginConfig().getWithConfig(pluginUniqueId,subProcessId+".wf-gen");
+
+                //}
+
+                //add logic to skip adding jars if classes are already loaded, classes can be taken from containing nodes
+                  Set<String> removedDuplicated=new HashSet<>();
+                removedDuplicated.addAll(jarsToLoad);
+                jarsToLoad.clear();
+                jarsToLoad.addAll(removedDuplicated);
+
+            //jarsToLoad.add("/home/cloudera/workspace/openbdre/workflow-generator/target/workflow-generator-1.1-SNAPSHOT.jar");
             URL[] urls = new URL[10];
             for (String jar : jarsToLoad) {
                 int index = 0;
@@ -279,8 +305,15 @@ public class ActionNode extends OozieNode {
             }
             URLClassLoader pluginClassLoader = new URLClassLoader(urls, this.getClass().getClassLoader());
 
-            //TODO: iterate through plugin config for config group as "wf-cont-nodes", form list of nodes in correct order
-            List<String> listOfNodeClasses = new LinkedList<>();   //keys as a list
+            // iterate through plugin config for config group as "wf-cont-nodes", form list of nodes in correct order
+                List<String> listOfNodeClasses = new LinkedList<>();   //keys as a list
+               // for(String returnedSubProcessId:subProcessIds)
+               // {
+                     listOfNodeClasses=new PluginConfig().getWithConfig(pluginUniqueId,subProcessId+".wf-cont-nodes");
+                    //listOfNodeClasses.addAll(nodesList);
+
+               // }
+
             /*listOfNodeClasses.add("com.wipro.ats.bdre.wgen.LOFActionNode");
             listOfNodeClasses.add("com.wipro.ats.bdre.wgen.DataQualityActionNode");
             listOfNodeClasses.add("com.wipro.ats.bdre.wgen.FileRegistrationNode");*/

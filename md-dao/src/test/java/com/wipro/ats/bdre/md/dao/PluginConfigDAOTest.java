@@ -12,6 +12,7 @@
  * limitations under the License.
  */
 package com.wipro.ats.bdre.md.dao;
+
 import com.wipro.ats.bdre.md.dao.jpa.InstalledPlugins;
 import com.wipro.ats.bdre.md.dao.jpa.PluginConfig;
 import com.wipro.ats.bdre.md.dao.jpa.PluginConfigId;
@@ -24,6 +25,7 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
 import java.util.Date;
+import java.util.List;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
@@ -63,7 +65,7 @@ public class PluginConfigDAOTest {
 
         PluginConfig pluginConfig = new PluginConfig();
         PluginConfigId pluginConfigId=new PluginConfigId();
-        pluginConfigId.setPluginKey(1);
+        pluginConfigId.setPluginKey("1");
         pluginConfigId.setPluginUniqueId("Test-1");
         pluginConfig.setId(pluginConfigId);
         pluginConfig.setInstalledPlugins(installedPlugins);
@@ -89,6 +91,13 @@ public class PluginConfigDAOTest {
 
 
 
+    }
+
+    @Test
+    public void testDistinctPluginUniqueId() throws Exception {
+        List<String> pluginConfigList=pluginConfigDAO.distinctPluginConfig();
+        LOGGER.info(pluginConfigList.size());
+        pluginConfigDAO.getWithConfig("ssd","assd");
     }
 
 }
