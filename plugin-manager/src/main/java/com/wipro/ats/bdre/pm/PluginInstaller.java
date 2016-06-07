@@ -13,16 +13,18 @@ public class PluginInstaller {
     public void install(Plugin plugin,String pluginDescriptorJSON){
 
         for(FS fs : plugin.getInstall().getFs()){
-            if("FileCopy".equals(fs.getAction())){
+
+            if("FILECOPY".equals(fs.getAction())){
                 FSOperations fsOperations = new FSOperations();
                 fsOperations.copyAction(fs,pluginDescriptorJSON);
-            }else if("FileDelete".equals(fs.getAction())){
+            }else if("FILEDELETE".equals(fs.getAction())){
                 FSOperations fsOperations = new FSOperations();
                 fsOperations.deleteAction(fs,pluginDescriptorJSON);
-            }else if("FileMove".equals(fs.getAction())){
+            }else if("FILEMOVE".equals(fs.getAction())){
                 FSOperations fsOperations = new FSOperations();
                 fsOperations.moveAction(fs,pluginDescriptorJSON);
-            }else if("FilePermission".equals(fs.getAction())){
+            }else if("FILEPERMISSION".equals(fs.getAction())){
+
                 FSOperations fsOperations = new FSOperations();
                 fsOperations.chmodAction(fs,pluginDescriptorJSON);
             }

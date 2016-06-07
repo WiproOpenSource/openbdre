@@ -10,6 +10,7 @@ public class Plugin {
     private List<PluginDependency> pluginDependency;
 
     private Install install;
+    private PluginConfig pluginConfig;
 
     public Install getInstall() {
         return install;
@@ -36,4 +37,11 @@ public class Plugin {
     }
 
 
+    public PluginConfig getPluginConfig() {
+        return pluginConfig;
+    }
+
+    public void setPluginConfig(PluginConfig pluginConfig) {
+        this.pluginConfig = pluginConfig;
+    }
 }
