@@ -171,7 +171,7 @@ public class PluginConfigAPI extends MetadataAPIBase {
     @ResponseBody
     public RestWrapper delete(
             @PathVariable("id") String pluginUniqueId,
-            @PathVariable("k") Integer key, Principal principal) {
+            @PathVariable("k") String key, Principal principal) {
 
         RestWrapper restWrapper = null;
         try {

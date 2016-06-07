@@ -132,7 +132,7 @@
 				    $img.click(function() {
 				    $('#Container').jtable('openChildTable',
 					    $img.closest('tr'), {
-				    title: ' Properties of ' + item.record.processId,
+				    title:  ' Details of ' + item.record.configGroup,
 					    paging: true,
 					    pageSize: 10,
 					    actions: {
