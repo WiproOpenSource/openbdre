@@ -67,6 +67,8 @@ public class ProcessAPI extends MetadataAPIBase {
     PermissionTypeDAO appPermissionDAO;
     @Autowired
     UserRolesDAO userRolesDAO;
+    @Autowired
+    PluginConfigDAO pluginConfigDAO;
 
     /**
      * This method calls proc GetProcess and fetches a record corresponding to processId passed.
@@ -911,9 +913,17 @@ public class ProcessAPI extends MetadataAPIBase {
         executionInfo.setProcessId(process.getProcessId());
         try {
             processDAO.securityCheck(process.getProcessId(),principal.getName(),"execute");
-            String[] command = {MDConfig.getProperty("execute.script-path") + "/job-executor.sh", process.getBusDomainId().toString(), process.getProcessTypeId().toString(), process.getProcessId().toString(), principal.getName()};
-            LOGGER.info("Running the command : -- " + command[0] + " " + command[1] + " " + command[2] + " " + command[3]);
-            ProcessBuilder processBuilder = new ProcessBuilder(command[0], command[1], command[2], command[3], command[4]);
+            List<String> pluginUniqueIdList = pluginConfigDAO.distinctPluginConfig();
+            String executeScriptName = "workflow.py";
+            for (String pluginUniqueId:pluginUniqueIdList)
+            {
+                for(String exceuteScript : pluginConfigDAO.getWithConfig(pluginUniqueId,"execute-script")){
+                    executeScriptName = exceuteScript;
+                }
+            }
+            String[] command = {MDConfig.getProperty("execute.script-path") + "/job-executor.sh", process.getBusDomainId().toString(), process.getProcessTypeId().toString(), process.getProcessId().toString(), principal.getName(),executeScriptName};
+            LOGGER.info("Running the command : -- " + command[0] + " " + command[1] + " " + command[2] + " " + command[3] + " " + command[4] + " " + command[5]);
+            ProcessBuilder processBuilder = new ProcessBuilder(command[0], command[1], command[2], command[3], command[4], command[5]);
             processBuilder.redirectOutput(new File(MDConfig.getProperty("execute.log-path") + process.getProcessId().toString()));
             LOGGER.info("The output is redirected to " + MDConfig.getProperty("execute.log-path") + process.getProcessId().toString());
             processBuilder.redirectErrorStream(true);

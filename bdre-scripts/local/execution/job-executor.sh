@@ -17,7 +17,7 @@
 BDRE_HOME=~/bdre
 BDRE_APPS_HOME=~/bdre_apps
 
-if [ -z "$1" ] || [ -z "$2" ] || [ -z "$3" ] || [ -z "$4" ] ; then
+if [ -z "$1" ] || [ -z "$2" ] || [ -z "$3" ] || [ -z "$4" ] || [ -z "$5" ]; then
         echo Insufficient parameters !
         exit 1
 fi
@@ -26,28 +26,11 @@ busDomainId=$1
 processTypeId=$2
 processId=$3
 userName=$4
-echo "busDomainId=$1 , processTypeId=$2 , processId=$3 userName=$4"
-if [ $processTypeId -eq 1 ]; then
-    sh $(dirname $0)/flume.sh $busDomainId $processTypeId $processId
-elif [ $processTypeId -eq 2 ]; then
-    python $(dirname $0)/Workflow.py $busDomainId $processTypeId $processId
-elif [ $processTypeId -eq 4 ]; then
-    python $(dirname $0)/Workflow.py $busDomainId $processTypeId $processId
-elif [ $processTypeId -eq 5 ]; then
-    python $(dirname $0)/Workflow.py $busDomainId $processTypeId $processId
-elif [ $processTypeId -eq 18 ]; then
-    python $(dirname $0)/Workflow.py $busDomainId $processTypeId $processId
-elif [ $processTypeId -eq 19 ]; then
-    python $(dirname $0)/Workflow.py $busDomainId $processTypeId $processId
-elif [ $processTypeId -eq 28 ]; then
-    python $(dirname $0)/Workflow.py $busDomainId $processTypeId $processId
-elif [ $processTypeId -eq 31 ]; then
-        python $(dirname $0)/Workflow.py $busDomainId $processTypeId $processId
-elif [ $processTypeId -eq 26 ]; then
-    sh $(dirname $0)/filemonitor.sh $processId $userName
-elif [ $processTypeId -eq 39 ]; then
+scriptName=$5
+echo "busDomainId=$1 , processTypeId=$2 , processId=$3 userName=$4 scriptName=$5"
+if [ $scriptName -eq Workflow.py ]; then
     python $(dirname $0)/Workflow.py $busDomainId $processTypeId $processId
 else
-    echo "Don't know how to execute busDomainId=$1 , processTypeId=$2 , processId=$3 by userName=$4"
+    sh $(dirname $0)/$scriptName $busDomainId $processTypeId $processId $userName
 fi
 
