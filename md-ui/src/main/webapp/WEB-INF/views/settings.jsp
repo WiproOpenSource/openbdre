@@ -31,7 +31,7 @@
 	<script type="text/javascript">
 		    $(document).ready(function () {
 	    $('#Container').jtable({
-	    title: 'General configuration List',
+	    title: '<spring:message code="settings.page.title.outer_table"/>',
 		    paging: true,
 		    pageSize: 10,
 		    sorting: true,
@@ -119,7 +119,7 @@
 		    fields: {
 
 		    Properties: {
-		    title: 'Click to expand',
+		    title: '<spring:message code="settings.page.title.expandable_colomn"/>',
 			    width: '5%',
 			    sorting: false,
 			    edit: false,
@@ -127,12 +127,12 @@
 			    listClass: 'bdre-jtable-button',
 			    display: function(item) {                         //Create an image that will be used to open child table
 
-			    var $img = $('<img src="../css/images/three-bar.png" title="Properties info" />'); //Open child table when user clicks the image
+			    var $img = $('<img src="../css/images/three-bar.png" title=<spring:message code="settings.page.title.clickable_image"/> />'); //Open child table when user clicks the image
 
 				    $img.click(function() {
 				    $('#Container').jtable('openChildTable',
 					    $img.closest('tr'), {
-				    title:  ' Details of ' + item.record.configGroup,
+				    title:  ' <spring:message code="settings.page.title.details"/> ' + item.record.configGroup,
 					    paging: true,
 					    pageSize: 10,
 					    actions: {
@@ -221,14 +221,14 @@
 					    },
 					    fields: {
                                 configGroup: {
-                                                    title :'Config Group',
+                                                    title :'<spring:message code="settings.page.title.config_group"/>',
                                                     key : true,
                                                     list: false,
                                                     create:false,
                                                     edit: false,
                                                 },
                                     key: {
-                                        title: 'Key',
+                                        title: '<spring:message code="settings.page.title.key"/>',
                                         key : true,
                                         list: true,
                                         create:true,
@@ -236,27 +236,27 @@
                                         defaultValue: item.record.key,
                                     },
                                     defaultVal: {
-                                        title: 'Default Value',
+                                        title: '<spring:message code="settings.page.title.default_val"/>',
                                         edit: true,
                                     },
                                     value: {
-                                       title: 'Value',
+                                       title: '<spring:message code="settings.page.title.value"/>',
                                        edit: true,
                                     },
                                     description: {
-                                       title: 'Description',
+                                       title: '<spring:message code="settings.page.title.description"/>',
                                        edit: true,
                                     },
                                     type: {
-                                        title: 'Type',
+                                        title: '<spring:message code="settings.page.title.type"/>',
                                         edit: true,
                                     },
                                     enabled: {
-                                       title: 'IsEnabled?',
+                                       title: '<spring:message code="settings.page.title.enabled"/>',
                                        edit: true,
                                   },
                                   required: {
-                                     title: 'Required?',
+                                     title: '<spring:message code="settings.page.title.required"/>',
                                      edit: true,
                                   },
 					    }
@@ -274,28 +274,28 @@
 			    key: {
 			        key : true,
 			        list: false,
-                    title: 'Key',
+                    title: '<spring:message code="settings.page.title.key"/>',
                     edit: true,
                    create:true
                 },
                 defaultVal: {
                     key : true,
                     list: false,
-                    title: 'Default Value',
+                    title: '<spring:message code="settings.page.title.default_val"/>',
                     edit: true,
                     create:true
                 },
                 value: {
                    key : true,
                    list: false,
-                   title: 'Value',
+                   title: '<spring:message code="settings.page.title.value"/>',
                    edit: true,
                    create:true
                 },
                 description: {
                    key : true,
                    list: false,
-                   title: 'Description',
+                   title: '<spring:message code="settings.page.title.description"/>',
                    edit: true,
                     create:true
 
@@ -303,7 +303,7 @@
                 type: {
                     key : true,
                     list: false,
-                    title: 'Type',
+                    title: '<spring:message code="settings.page.title.type"/>',
                     edit: true,
                     create:true
 
@@ -311,20 +311,20 @@
                 enabled: {
                    key : true,
                    list: false,
-                   title: 'IsEnabled?',
+                   title: '<spring:message code="settings.page.title.enabled"/>',
                    create:true,
                    edit: true
                },
                required: {
                      key : true,
                     list: false,
-                    title: 'Required?',
+                    title: '<spring:message code="settings.page.title.required"/>',
                     edit: true,
                     create:true
 
                },
                configGroup: {
-                    title :'Config Group',
+                    title :'<spring:message code="settings.page.title.config_group"/>',
                     key : true,
                     list: true,
                     create:true,
