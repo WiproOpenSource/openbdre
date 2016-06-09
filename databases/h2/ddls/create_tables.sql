@@ -399,7 +399,7 @@ create table plugin_dependency (
 create table plugin_config (
   plugin_unique_id varchar(128) not null,
   config_group varchar(128),
-  plugin_key integer(11),
+  plugin_key varchar(128),
   plugin_value varchar(128),
   primary key (plugin_key,plugin_unique_id),
   constraint plugin_config_id foreign key (plugin_unique_id) references installed_plugins (plugin_unique_id) on delete no action on update no action

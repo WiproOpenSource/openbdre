@@ -71,7 +71,7 @@ public class UserRolesDAOTest {
         LOGGER.info("UserRoles(1) role:" + userRolesDAO.get(2).getRole());
     }
 
-
+    @Ignore
     @Test
     public void testInsertUpdateAndDelete() throws Exception {
         UserRoles userRoles = new UserRoles();

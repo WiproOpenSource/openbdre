@@ -13,6 +13,7 @@ public class PluginInstaller {
     public void install(Plugin plugin,String pluginDescriptorJSON){
 
         for(FS fs : plugin.getInstall().getFs()){
+
             if("FILECOPY".equals(fs.getAction())){
                 FSOperations fsOperations = new FSOperations();
                 fsOperations.copyAction(fs,pluginDescriptorJSON);
@@ -23,6 +24,7 @@ public class PluginInstaller {
                 FSOperations fsOperations = new FSOperations();
                 fsOperations.moveAction(fs,pluginDescriptorJSON);
             }else if("FILEPERMISSION".equals(fs.getAction())){
+
                 FSOperations fsOperations = new FSOperations();
                 fsOperations.chmodAction(fs,pluginDescriptorJSON);
             }

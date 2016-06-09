@@ -12,6 +12,7 @@ package com.wipro.ats.bdre.md.dao;
         import org.hibernate.Criteria;
         import org.hibernate.Session;
         import org.hibernate.SessionFactory;
+        import org.hibernate.criterion.Order;
         import org.hibernate.criterion.Projections;
         import org.hibernate.criterion.Restrictions;
         import org.springframework.beans.factory.annotation.Autowired;
@@ -135,7 +136,27 @@ public class PluginConfigDAO {
         }
     }
 
+public List<String> distinctPluginConfig()
+{
+    Session session = sessionFactory.openSession();
+    session.beginTransaction();
+    Criteria criteria = session.createCriteria(PluginConfig.class).setProjection(Projections.distinct(Projections.property("id.pluginUniqueId"))).add(Restrictions.eq("configGroup","wf-gen"));
+    List<String> pluginUniqueIdList = criteria.list();
+    session.getTransaction().commit();
+    session.close();
+    return pluginUniqueIdList;
+}
 
-
+public List<String> getWithConfig(String pluginUniqueId,String configGroup)
+{
+    Session session = sessionFactory.openSession();
+    session.beginTransaction();
+    Criteria criteria = session.createCriteria(PluginConfig.class).add(Restrictions.eq("configGroup",configGroup)).
+            add(Restrictions.eq("id.pluginUniqueId",pluginUniqueId)).setProjection(Projections.property("pluginValue")).addOrder(Order.asc("pluginValue"));
+    List<String> pluginValuesList = criteria.list();
+    session.getTransaction().commit();
+    session.close();
+    return pluginValuesList;
+}
 
 }

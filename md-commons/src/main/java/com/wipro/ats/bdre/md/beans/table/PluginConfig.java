@@ -9,7 +9,7 @@ public class PluginConfig {
     private
     String pluginUniqueId;
     private String configGroup;
-    private Integer pluginKey;
+    private String pluginKey;
     private String pluginValue;
     private Integer page;
     private Integer counter;
@@ -43,11 +43,11 @@ public class PluginConfig {
         this.configGroup = configGroup;
     }
 
-    public Integer getPluginKey() {
+    public String getPluginKey() {
         return pluginKey;
     }
 
-    public void setPluginKey(Integer pluginKey) {
+    public void setPluginKey(String pluginKey) {
         this.pluginKey = pluginKey;
     }
 
