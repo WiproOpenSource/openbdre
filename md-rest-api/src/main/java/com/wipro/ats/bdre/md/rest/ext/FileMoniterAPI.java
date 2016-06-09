@@ -89,7 +89,7 @@ public class FileMoniterAPI {
             process.setTableAddTS(DateConverter.dateToString(process.getAddTS()));
             process.setTableEditTS(DateConverter.dateToString(process.getEditTS()));
         }
-        restWrapper = new RestWrapper(processList, RestWrapper.OK);
+        restWrapper = new RestWrapper(tableProcessList, RestWrapper.OK);
         LOGGER.info("Process and properties inserted for File Monitor Process by " + principal.getName());
         return restWrapper;
     }
