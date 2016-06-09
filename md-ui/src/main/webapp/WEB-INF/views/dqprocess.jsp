@@ -162,7 +162,7 @@
                             confirmDialog = function (message) {
                                 $('<div></div>').appendTo('body')
                                     .attr('title', 'Message')
-                                    .html('<div><h6>' + message + '</h6></div>')
+                                    .html('<div><p><span class=\"jtable-confirm-message\">' + message + '</span></p></div>')
                                     .dialog({
                                         buttons: {
                                             Ok: function () {

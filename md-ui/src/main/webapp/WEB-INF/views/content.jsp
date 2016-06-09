@@ -18,177 +18,149 @@
 
             <meta name="viewport" content="width=device-width, initial-scale=1">
             <link rel="stylesheet" href="../css/css/bootstrap.min.css" />
+            <link rel="stylesheet" href="../css/bootstrap.custom.css" />
             <link rel="stylesheet" href="../css/submenu.css" />
            	<script src="../js/jquery.min.js"></script>
             <script src="../js/bootstrap.js"></script>
             <script src="../js/angular.min.js"></script>
             
             <style>
-                body {
-                    overflow: visible;
-                }
-                
-                #footer {
-                    background: #f5f5f5;
-                    border-top: 1px solid #EDE4BF;
-                    bottom: 0;
-                    left: 0;
-                    position: fixed;
-                    right: 0;
-                }
-                
-                .activs,
-                .activs:hover {
-                    border-left: 3px solid #f91;
-                    font-weight: bold;
-                    padding-left: 17px;
-                    color: black;
-                    margin-left: 0;
-                }
-                
-                .activ,
-                .activ:hover {
-                    /* border-left: 3px solid #f91; */
-                    font-weight: bold;
-                    padding-left: 17px;
-                    color: black;
-                    margin-left: 0;
-                }
-                
-                #foot {
-                    background: #f5f5f5;
-                }
-                
-                .navbar-default .navbar-nav>.open>a,
-                .navbar-default .navbar-nav>.open>a:hover,
-                .navbar-default .navbar-nav>.open>a:focus {
-                    background-color: #FAFAFA;
-                    font-weight: bold;
-                }
-                
-                .level1,
-                .level2,
-                .level3 {
-                    font-style: normal;
-                }
-                
-                .B1,
-                .B2 {
-                    font-weight: bold;
-                    border-left: 3px solid #f91;
-                }
-                
-                .sideheight {
-                    height: 63%;
-                }
-                
-                .sideimg {
-                    width: 11px;
-                    left: 23px;
-                    top: 40%;
-                    height: 30px;
-                    padding: 0;
-                }
-                
-                .left {
-                    height: 97%;
-                }
-                
-                .headerbor {
-                    border-bottom: 1px solid #EDEDED;
-                }
-                
-                ::-webkit-scrollbar {
-                    width: 8px;
-                }
-                
-                ::-webkit-scrollbar-track {
-                    -webkit-border-radius: 5px;
-                    border-radius: 5px;
-                    background: rgba(0, 0, 0, 0.02);
-                }
-                
-                ::-webkit-scrollbar-thumb {
-                    -webkit-border-radius: 5px;
-                    border-radius: 5px;
-                    background: rgba(0, 0, 0, 0.02);
-                }
-                
-                ::-webkit-scrollbar-thumb:hover {
-                    background: rgba(0, 0, 0, 0.4);
-                }
-                
-                ::-webkit-scrollbar-thumb:window-inactive {
-                    background: rgba(0, 0, 0, 0.0);
-                }
-                
-                .col-bdre-collapsed {
-                    width: 2px;
-                    position: relative;
-                    min-height: 1px;
-                    padding-right: 15px;
-                    padding-left: 15px;
-                    float: left;
-                }
-                
-                .bdre-full-body {
-                    width: 100% !important;
-                }
-   
-                /* HEADER and NAV-BAR*/
-               	.navbar-height{
-               	min-height: 110px;
-                }
-                .navbar-inverse .navbar-nav>li>a:hover{
-         		color: rgb(9,147,219);
-         		}
-                .nav-center > li{float:none;display:inline-block;font-size: 18px}
-				.nav-center {    
-				width: 100%;
-			   	text-align: center;
-			    position: absolute;
-			    top: 53%;
-			    left: 0px;}
-			    .input-sm-search{
-			    width: 250px !important;
-			    }
-			    .glyphicon-arrow-position{
-			    font-size: 12px;
-			    }
-			    .navbar{
-			    margin-bottom: 0px;
-			    border-radius: 0px;
-			    }
-			    .navbar-inverse{
-			    border: none;
-			    background-color: rgb(51,51,51);
-			    }
-			    .usericon{display:block;width: 30px;height: 30px;border-radius: 80px;background: #1ca7f7 no-repeat center;background-image:  url("../css/images/user_icon.png");background-size: 65% 65%;}
-				.dropdown-toggle-usericon{
-			    padding-top: 9px !important;
-			    }
-			    .bdretextlogo{
-			    color: #1ca7f7;
-			   	position: relative;
-			    font-size: 3em;
-			    top: 11px;
-			    right: 10px;
-			    }
-			    .dropdown-menu{
-			    background-color: #353535;
-			    }
-			    .dropdown-menu>li>a{
-			     color: #fff;
-			    }
-			    .dropdown-menu>li>a:focus, .dropdown-menu>li>a:hover{
-			     background-color: #1D1D1D;
-			     color: #fff;
-			    }
-        </style>
+				body {
+					overflow: visible;
+				}
+				
+				#footer {
+					background: #f5f5f5;
+					border-top: 1px solid #EDE4BF;
+					bottom: 0;
+					left: 0;
+					position: fixed;
+					right: 0;
+				}
+				
+				.activs, .activs:hover {
+					border-left: 3px solid #f91;
+					font-weight: bold;
+					padding-left: 17px;
+					color: black;
+					margin-left: 0;
+				}
+				
+				.activ, .activ:hover {
+					/* border-left: 3px solid #f91; */
+					font-weight: bold;
+					padding-left: 17px;
+					color: black;
+					margin-left: 0;
+				}
+				
+				#foot {
+					background: #f5f5f5;
+				}
+				
+				.navbar-default .navbar-nav>.open>a, .navbar-default .navbar-nav>.open>a:hover,
+					.navbar-default .navbar-nav>.open>a:focus {
+					background-color: #FAFAFA;
+					font-weight: bold;
+				}
+				
+				.level1, .level2, .level3 {
+					font-style: normal;
+				}
+				
+				.B1, .B2 {
+					font-weight: bold;
+					border-left: 3px solid #f91;
+				}
+				
+				.sideheight {
+					height: 63%;
+				}
+				
+				.sideimg {
+					width: 11px;
+					left: 23px;
+					top: 40%;
+					height: 30px;
+					padding: 0;
+				}
+				
+				.left {
+					height: 97%;
+				}
+				
+				.headerbor {
+					border-bottom: 1px solid #EDEDED;
+				}
+				
+				::-webkit-scrollbar {
+					width: 8px;
+				}
+				
+				::-webkit-scrollbar-track {
+					-webkit-border-radius: 5px;
+					border-radius: 5px;
+					background: rgba(0, 0, 0, 0.02);
+				}
+				
+				::-webkit-scrollbar-thumb {
+					-webkit-border-radius: 5px;
+					border-radius: 5px;
+					background: rgba(0, 0, 0, 0.02);
+				}
+				
+				::-webkit-scrollbar-thumb:hover {
+					background: rgba(0, 0, 0, 0.4);
+				}
+				
+				::-webkit-scrollbar-thumb:window-inactive {
+					background: rgba(0, 0, 0, 0.0);
+				}
+				
+				.col-bdre-collapsed {
+					width: 2px;
+					position: relative;
+					min-height: 1px;
+					padding-right: 15px;
+					padding-left: 15px;
+					float: left;
+				}
+				
+				.bdre-full-body {
+					width: 100% !important;
+				}
+				
+				/* HEADER and NAV-BAR*/
+				.input-sm {
+					width: 250px !important;
+				}
+				
+				.usericon {
+					display: block;
+					width: 30px;
+					height: 30px;
+					border-radius: 80px;
+					background: #1ca7f7 no-repeat center;
+					background-image: url("../css/images/user_icon.png");
+					background-size: 65% 65%;
+				}
+				
+				.bdretextlogo {
+					color: #1ca7f7;
+					position: relative;
+					font-size: 3em;
+					top: 11px;
+					right: 10px;
+				}
+				
+				.dropdown-toggle {
+					padding-top: 9px !important;
+				}
+			</style>
 		</head>
 
         <body class="container-fluid" ng-app="myApp" ng-controller="myCtrl">
-            <nav class="navbar navbar-inverse navbar-height">
+            <nav class="navbar navbar-inverse">
                 <div class="container-fluid">
                     <!-- Brand and toggle get grouped for better mobile display -->
                     <div class="navbar-header">
@@ -207,9 +179,9 @@
 
                     <!-- Collect the nav links, forms, and other content for toggling -->
                     <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
-                        <ul class="nav navbar-nav navbar-nav-position nav-center">
+                        <ul class="nav navbar-nav navbar-nav-position">
                             <li ng-repeat="item in menu" ng-class="{dropdown:item.children.length!=0,activ:item.active}">
-                                <a href="#" ng-hide="item.children.length==0" class="dropdown-toggle text-muted " data-toggle="dropdown" role="button" aria-expanded="false">{{item.label}} <span class="glyphicon glyphicon-chevron-down glyphicon-arrow-position"></span></a>
+                                <a href="#" ng-hide="item.children.length==0" class="dropdown-toggle text-muted " data-toggle="dropdown" role="button" aria-expanded="false">{{item.label}} <span class="glyphicon glyphicon-chevron-down"></span></a>
                                 <a href="#" ng-show="item.children.length==0" class="text-muted level1" ng-click="openlink($event,item.url)">{{item.label}}</a>
                                 <ul class="dropdown-menu" ng-hide="item.children.length==0" role="menu">
                                     <li ng-repeat="x in item.children" ng-class="{'dropdown-submenu':x.children.length!=0,'node':x.children.length==0}" ng-click="reset($event.currentTarget,this.item)">
@@ -226,7 +198,7 @@
                         </ul>
                         
                         <ul class="nav navbar-nav navbar-right" >
-                            <li class="dropdown user-icon-style"><a href="#" class="dropdown-toggle dropdown-toggle-usericon" data-toggle="dropdown" role="button" aria-expanded="false"><span class="usericon"></span></a>
+                            <li class="dropdown user-icon-style"><a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false"><span class="usericon"></span></a>
                                 <ul class="dropdown-menu" role="menu">
                                     <li><a href="/auth/bdre/security/logout">Logout <security:authentication property="principal.username"/></a></li>
                                 </ul>
@@ -250,7 +222,7 @@
             </nav>
 
             <div>
-                <iframe id="dframe" src="welcome.page" scrolling="no" style="overflow-y:visible;width:100%; height: 800px; border: none;"></iframe>
+                <iframe id="dframe" src="welcome.page" scrolling="yes" style="overflow-y:visible;width:100%; height: 800px; border: none;"></iframe>
             </div>
 
             <!--
@@ -476,13 +448,24 @@
                                             collapse: "1",
                                             url: "flumepropertieswizard.page",
                                             children: []
-					},{
-                                                                  label: "Hive Table Migration",
-                                                                  collapse: "1",
-                                                                  url: "hivetablemigration.page",
-                                                                  children: []
-                      					}, ]
-                                    },
+	                }, {
+                                             label: "Analytics App",
+                                             collapse: "1",
+                                             url: "analyticsui.page",
+                                             children: []
+                    },{
+                                               label: "Analytics UI",
+                                               collapse: "1",
+                                               url: "/aui/pages/menu.page",
+                                               children: []
+                      },{
+                                              label: "Hive Table Migration",
+                                              collapse: "1",
+                                              url: "hivetablemigration.page",
+                                              children: []
+                     },]
+                                },
+
                                     <security:authorize access = "hasRole('ROLE_ADMIN')"> {
                                         label: "Administration",
                                         collapse: "1",

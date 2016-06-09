@@ -1,0 +1,78 @@
+<!--
+  ~ Licensed under the Apache License, Version 2.0 (the "License");
+  ~ you may not use this file except in compliance with the License.
+  ~ You may obtain a copy of the License at
+  ~
+  ~ http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~ Unless required by applicable law or agreed to in writing, software
+  ~ distributed under the License is distributed on an "AS IS" BASIS,
+  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~ See the License for the specific language governing permissions and
+  ~ limitations under the License.
+  -->
+
+<beans:beans xmlns:security="http://www.springframework.org/schema/security"
+             xmlns:beans="http://www.springframework.org/schema/beans"
+             xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+             xsi:schemaLocation="http://www.springframework.org/schema/beans
+	http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+	http://www.springframework.org/schema/security
+	http://www.springframework.org/schema/security/spring-security-3.1.xsd">
+
+    <!-- enable use-expressions -->
+    <security:http auto-config="true" use-expressions="true" authentication-manager-ref="authenticationManager">
+        <security:intercept-url pattern="/pages/users.page" access="hasAnyRole('ROLE_ADMIN')"/>
+        <security:intercept-url pattern="/pages/settings.page" access="hasAnyRole('ROLE_ADMIN')"/>
+        <security:intercept-url pattern="/pages/*.page" access="hasAnyRole('ROLE_ADMIN','ROLE_USER','ROLE_READONLY')"/>
+        <!-- access denied page -->
+        <security:access-denied-handler error-page="/pages/auth/403.page"/>
+        <security:form-login always-use-default-target="true"
+                             login-page="/../auth/bdre/security/bdrelogin"
+                             default-target-url="/pages/content.page"
+                             authentication-failure-url="/../auth/bdre/security/bdrelogin?error"
+                             password-parameter="password"
+                             username-parameter="username"
+                />
+
+        <security:logout logout-success-url="/bdre/security/bdrelogin" delete-cookies="JSESSIONID"
+                         logout-url="/bdre/security/logout"/>
+        <security:form-login/>
+
+        <!-- Additional http configuration omitted -->
+        <security:custom-filter position="PRE_AUTH_FILTER" ref="ssoFilter"/>
+        <security:custom-filter position="FIRST" ref="sessionCheckFilter"/>
+
+    </security:http>
+
+    <security:authentication-manager alias="authenticationManager">
+        <security:authentication-provider ref="preauthAuthProvider"/>
+    </security:authentication-manager>
+
+    <beans:bean id="sessionCheckFilter" class=
+            "com.wipro.ats.bdre.security.SessionCheckPerRequestFilter">
+        <beans:property name="userServiceURL" value="/auth/bdre/security/validatetoken/"/>
+    </beans:bean>
+
+
+    <beans:bean id="ssoFilter" class=
+            "com.wipro.ats.bdre.security.AuthenticationFilter">
+        <beans:property name="authenticationManager" ref="authenticationManager"/>
+        <!-- Provide relative URL-->
+        <beans:property name="userServiceURL" value="/auth/bdre/security/validatetoken/"/>
+    </beans:bean>
+
+    <beans:bean id="preauthAuthProvider"
+                class="org.springframework.security.web.authentication.preauth.PreAuthenticatedAuthenticationProvider">
+        <beans:property name="preAuthenticatedUserDetailsService">
+            <beans:bean id="userDetailsServiceWrapper"
+                        class="org.springframework.security.core.userdetails.UserDetailsByNameServiceWrapper">
+                <beans:property name="userDetailsService" ref="userDetailsService"/>
+            </beans:bean>
+        </beans:property>
+    </beans:bean>
+    <beans:bean id="userDetailsService" class="com.wipro.ats.bdre.security.UserRoleDetailsService">
+
+    </beans:bean>
+
+</beans:beans>

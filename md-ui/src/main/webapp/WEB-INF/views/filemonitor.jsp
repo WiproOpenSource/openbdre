@@ -60,7 +60,7 @@
 
                                     <%-- <div class="panel-heading"><spring:message code="filemonitor.page.panel_heading_file_monitoring_creation"/></div> --%>
                                     <div class="panel-body">
-                                        <form role="form" id="propertiesFieldsForm">
+                                        <form role="form" id="propertiesFieldsForm" novalidate="novalidate">
                                             <div class="form-group">
                                                 <label><spring:message code="filemonitor.page.property_form_field_dir_name"/></label>
                                                 <input type="text" class="form-control" name="monitoredDirName" placeholder=<spring:message code="filemonitor.page.property_form_field_dir_name_placeholder"/> value=<%=System.getProperty("user.home")+"/mondir"%> required>
@@ -158,12 +158,11 @@
                                                                         "Ok": function() {
                                                                         $("#divEncloseHeading").hide();
                                                                         $("#successHeader").show();
-                                                                         createJobResult = data;
-                                                                         displayProcess(createJobResult);
+                                                                          window.location.replace('/mdui/pages/process.page');
                                                                          $(this).dialog("close");
                                                                         }
                                                                     }
-                                                                }).text("Jobs successfully created.");
+                                                                }).html("<p><span class=\"jtable-confirm-message\">Jobs successfully created.</span></p>");
 
                                                             }
                                                             else{
@@ -178,7 +177,7 @@
                                                                             $(this).dialog("close");
                                                                         }
                                                                     }
-                                                                }).html(data.Message);
+                                                                }).html("<p><span class=\"jtable-confirm-message\">" + data.Message + "</span></p>");
                                                             }
                                                             console.log(createJobResult);
                                                         }

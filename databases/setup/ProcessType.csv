@@ -34,7 +34,7 @@
 34,'Source to Dest Stage Copy',31
 35,'Destination Table Load',31
 36,'Register Partition',31
-
-
-39,'Supar Workflow',null
-40,'Sub Workflow',39
+37,'Analytics UI',null
+38,'Analytics UI Action ',37
+39,'SuperWorkflow',null
+40,'SubWorkflow',39
