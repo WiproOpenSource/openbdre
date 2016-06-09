@@ -140,25 +140,14 @@
 					    return $.Deferred(function($dfd) {
 					    console.log(item);
 						    $.ajax({
-						    url: '/mdrest/pluginconfig/' + item.record.pluginUniqueId,
+						    url: '/mdrest/pluginconfig/' + item.record.pluginUniqueId+'/',
 							    type: 'GET',
-							    data: item,
 							    dataType: 'json',
 							    success: function(data) {
                                             if(data.Result == "OK") {
                                                 $dfd.resolve(data);
                                             }
-                                            else
-                                            {
-                                             if(data.Message == "ACCESS DENIED")
-                                             {
-                                             alert(data.Message);
-                                             data.Result="OK";
-                                             $dfd.resolve(data);
-                                             }
-                                             else
-                                             $dfd.resolve(data);
-                                            }
+
                                         },
 							    error: function() {
 							    $dfd.reject();
@@ -234,7 +223,7 @@
 							    defaultValue: item.record.configGroup,
 						    },
 						    pluginKey: {
-						      key : ture,
+						      key : true,
 						       title: 'Key',
 							    list: true,
 							    create:true,

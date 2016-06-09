@@ -9,8 +9,18 @@ public class Plugin {
     private PluginDetails pluginDetails;
     private List<PluginDependency> pluginDependency;
 
+    private List<PluginConfig> pluginConfig;
+
+    public List<PluginConfig> getPluginConfig() {
+        return pluginConfig;
+    }
+
+    public void setPluginConfig(List<PluginConfig> pluginConfig) {
+        this.pluginConfig = pluginConfig;
+    }
+
     private Install install;
-    private PluginConfig pluginConfig;
+
 
     public Install getInstall() {
         return install;
@@ -37,11 +47,4 @@ public class Plugin {
     }
 
 
-    public PluginConfig getPluginConfig() {
-        return pluginConfig;
-    }
-
-    public void setPluginConfig(PluginConfig pluginConfig) {
-        this.pluginConfig = pluginConfig;
-    }
 }

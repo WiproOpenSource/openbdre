@@ -378,7 +378,7 @@ create table installed_plugins (
   plugin_id varchar(8) not null,
   name varchar(128),
   description varchar(128),
-  version integer(11) not null default 1,
+  version varchar(128) not null default "1",
   author varchar(128),
   add_ts TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
   plugin varchar(128),
@@ -399,7 +399,7 @@ create table plugin_dependency (
 create table plugin_config (
   plugin_unique_id varchar(128) not null,
   config_group varchar(128),
-  plugin_key varchar(11),
+  plugin_key varchar(128),
   plugin_value varchar(128),
   primary key (plugin_key,plugin_unique_id),
   constraint plugin_config_id foreign key (plugin_unique_id) references installed_plugins (plugin_unique_id) on delete no action on update no action

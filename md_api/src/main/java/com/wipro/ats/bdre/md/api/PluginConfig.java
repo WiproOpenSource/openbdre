@@ -27,14 +27,24 @@ public class PluginConfig extends MetadataAPIBase {
         return null;
     }
 
-    public void insert(com.wipro.ats.bdre.md.pm.beans.PluginConfig pluginConfig){
+    public void insert(List<com.wipro.ats.bdre.md.pm.beans.PluginConfig> pluginConfigs,String pluginUniqueId){
+        for (com.wipro.ats.bdre.md.pm.beans.PluginConfig pluginConfig : pluginConfigs){
+            com.wipro.ats.bdre.md.dao.jpa.PluginConfig pluginConfigJPA = new com.wipro.ats.bdre.md.dao.jpa.PluginConfig();
+            pluginConfigJPA.setConfigGroup(pluginConfig.getConfigGroup());
+            pluginConfigJPA.setPluginValue(pluginConfig.getValue());
+            PluginConfigId pluginConfigId = new PluginConfigId();
+            pluginConfigId.setPluginUniqueId(pluginUniqueId);
+            pluginConfigId.setPluginKey(pluginConfig.getKey());
+            pluginConfigJPA.setId(pluginConfigId);
+            pluginConfigDAO.insert(pluginConfigJPA);
 
+        }
     }
 
 
-    public List<String> distinctPluginUniqueIdList()
+    public List<String> distinctPluginUniqueIdList(String configGroup)
     {
-        return pluginConfigDAO.distinctPluginConfig();
+        return pluginConfigDAO.distinctPluginConfig(configGroup);
     }
     public com.wipro.ats.bdre.md.dao.jpa.PluginConfig get(PluginConfigId pluginConfigId)
     {
