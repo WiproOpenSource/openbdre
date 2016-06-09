@@ -129,7 +129,7 @@ public class ActionNode extends OozieNode {
 
         } else if (processInfo.getProcessTypeId() == DATA_IMPORT_ACTION) {
             ImportActionNode importActionNode = new ImportActionNode(this);
-           // FileRegistrationNode fileRegistrationNode = new FileRegistrationNode(this);
+            FileRegistrationNode fileRegistrationNode = new FileRegistrationNode(this);
             importActionNode.setToNode(fileRegistrationNode);
             containingNodes.add(importActionNode);
             containingNodes.add(fileRegistrationNode);
