@@ -72,7 +72,7 @@ public class PluginConfigDAOTest {
         PluginConfigId pluginConfigIden = pluginConfigDAO.insert(pluginConfig);
         LOGGER.info("PluginConfig is added with Id:" + pluginConfigIden);
 
-        pluginConfig.setConfigGroup("Config");
+       /* pluginConfig.setConfigGroup("Config");
         pluginConfigDAO.update(pluginConfig);
 
         pluginConfig = pluginConfigDAO.get(pluginConfigIden);
@@ -86,7 +86,7 @@ public class PluginConfigDAOTest {
         LOGGER.info("Deleted InstalledPlugin Entry with ID" + installedPluginId);
         LOGGER.info("Size of installedPlugins is:" + installedPluginsDAO.totalRecordCount());
 
-
+*/
 
 
     }

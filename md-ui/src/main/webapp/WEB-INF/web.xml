@@ -41,9 +41,7 @@
     </servlet-mapping>
     <context-param>
         <param-name>contextConfigLocation</param-name>
-        <param-value>/WEB-INF/mvc-dispatcher-servlet.xml,
-            /WEB-INF/spring-security.xml
-        </param-value>
+        <param-value>/WEB-INF/mvc-dispatcher-servlet.xml,/WEB-INF/spring-security.xml, classpath:spring-dao.xml</param-value>
     </context-param>
     <listener>
         <listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
