@@ -4,31 +4,31 @@ package com.wipro.ats.bdre.md.pm.beans;
  * Created by cloudera on 6/5/16.
  */
 public class PluginConfig {
-    private String wfdJspFrag;
-    private String deployScript;
-    private String execScript;
+    private String configGroup;
+    private String key;
+    private String value;
 
-    public String getWfdJspFrag() {
-        return wfdJspFrag;
+    public String getConfigGroup() {
+        return configGroup;
     }
 
-    public void setWfdJspFrag(String wfdJspFrag) {
-        this.wfdJspFrag = wfdJspFrag;
+    public void setConfigGroup(String configGroup) {
+        this.configGroup = configGroup;
     }
 
-    public String getDeployScript() {
-        return deployScript;
+    public String getKey() {
+        return key;
     }
 
-    public void setDeployScript(String deployScript) {
-        this.deployScript = deployScript;
+    public void setKey(String key) {
+        this.key = key;
     }
 
-    public String getExecScript() {
-        return execScript;
+    public String getValue() {
+        return value;
     }
 
-    public void setExecScript(String execScript) {
-        this.execScript = execScript;
+    public void setValue(String value) {
+        this.value = value;
     }
 }

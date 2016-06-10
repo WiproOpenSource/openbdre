@@ -23,7 +23,7 @@ public class InstalledPlugins {
     private Integer counter;
     private String tableAddTs;
     @NotNull
-    private Integer version;
+    private String version;
 
     public String getTableAddTs() {
         return tableAddTs;
@@ -83,11 +83,11 @@ public class InstalledPlugins {
         this.description = description;
     }
 
-    public Integer getVersion() {
+    public String getVersion() {
         return version;
     }
 
-    public void setVersion(Integer version) {
+    public void setVersion(String version) {
         this.version = version;
     }
 

@@ -93,7 +93,7 @@ public class PluginConfigAPI extends MetadataAPIBase {
      * @param
      * @return restWrapper It contains list of instances of properties corresponding to processId passed.
      */
-    @RequestMapping(value = {"/{id}"}, method = RequestMethod.GET)
+    @RequestMapping(value = {"/{id}/"}, method = RequestMethod.GET)
 
 
     @ResponseBody
@@ -104,7 +104,9 @@ public class PluginConfigAPI extends MetadataAPIBase {
             List<PluginConfig> getPluginConfigs = new ArrayList<PluginConfig>();
 
             List<com.wipro.ats.bdre.md.dao.jpa.PluginConfig> pluginConfigList=new ArrayList<com.wipro.ats.bdre.md.dao.jpa.PluginConfig>();
+            LOGGER.info(pluginUniqueId);
             pluginConfigList=pluginConfigDAO.getConfigForPlugin(pluginUniqueId,0,10);
+            LOGGER.info("size of returned object is "+pluginConfigList.size());
             Integer counter=pluginConfigList.size();
             for (com.wipro.ats.bdre.md.dao.jpa.PluginConfig pluginConfig : pluginConfigList) {
                 com.wipro.ats.bdre.md.beans.table.PluginConfig returnPluginConfig = new com.wipro.ats.bdre.md.beans.table.PluginConfig();
@@ -117,7 +119,7 @@ public class PluginConfigAPI extends MetadataAPIBase {
             }
 
             restWrapper = new RestWrapper(getPluginConfigs, RestWrapper.OK);
-            LOGGER.info("Record with ID:" + pluginUniqueId + "selected from Properties by User:" + principal.getName());
+            LOGGER.info("Record with ID:" + pluginUniqueId + "selected from Plugin Config by User:" + principal.getName());
 
         } catch (MetadataException e) {
             LOGGER.error(e);

@@ -18,14 +18,15 @@ import com.wipro.ats.bdre.md.dao.jpa.InstalledPlugins;
 import com.wipro.ats.bdre.md.dao.jpa.PluginDependency;
 import org.apache.log4j.Logger;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.AutowireCapableBeanFactory;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
-import static org.junit.Assert.*;
+
 import java.util.Date;
+
+import static org.junit.Assert.assertNotNull;
 
 
 
@@ -56,7 +57,7 @@ public class PluginDependencyDAOTest {
         installedPlugins.setPluginId("Test");
         installedPlugins.setName("test name");
         installedPlugins.setDescription("Test Description");
-        installedPlugins.setVersion(1);
+        installedPlugins.setPluginVersion("1");
         installedPlugins.setAuthor("Test Author");
         installedPlugins.setAddTs(new Date());
         installedPlugins.setPlugin("TestPlugin");
@@ -69,7 +70,7 @@ public class PluginDependencyDAOTest {
         installedPluginsSecond.setPluginId("Test");
         installedPluginsSecond.setName("test name");
         installedPluginsSecond.setDescription("Test Description");
-        installedPluginsSecond.setVersion(2);
+        installedPluginsSecond.setPluginVersion("2");
         installedPluginsSecond.setAuthor("Test Author");
         installedPluginsSecond.setAddTs(new Date());
         installedPluginsSecond.setPlugin("TestPlugin");

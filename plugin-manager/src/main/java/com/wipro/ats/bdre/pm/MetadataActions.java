@@ -17,7 +17,13 @@ public class MetadataActions {
                 com.wipro.ats.bdre.md.beans.table.ProcessType processType = new com.wipro.ats.bdre.md.beans.table.ProcessType();
                 processType.setProcessTypeId((Integer) data.get(0));
                 processType.setProcessTypeName((String) data.get(1));
-                processType.setParentProcessTypeId((Integer) data.get(2));
+                try {
+                   Integer temp = Integer.parseInt( data.get(2).toString());
+                    processType.setParentProcessTypeId(temp);
+                } catch (Exception e) {
+                    LOGGER.info("parent process");
+                    processType.setParentProcessTypeId(null);
+                }
                 ProcessType processType1 = new ProcessType();
                 processType1.insert(processType);
             }

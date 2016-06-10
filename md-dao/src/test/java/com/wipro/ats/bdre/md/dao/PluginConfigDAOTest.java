@@ -55,7 +55,7 @@ public class PluginConfigDAOTest {
         installedPlugins.setPluginId("Test");
         installedPlugins.setName("test name");
         installedPlugins.setDescription("Test Description");
-        installedPlugins.setVersion(1);
+        installedPlugins.setPluginVersion("1");
         installedPlugins.setAuthor("Test Author");
         installedPlugins.setAddTs(new Date());
         installedPlugins.setPlugin("TestPlugin");
@@ -95,9 +95,13 @@ public class PluginConfigDAOTest {
 
     @Test
     public void testDistinctPluginUniqueId() throws Exception {
-        List<String> pluginConfigList=pluginConfigDAO.distinctPluginConfig();
+        List<String> pluginConfigList=pluginConfigDAO.distinctPluginConfig("wf-cont-nodes");
         LOGGER.info(pluginConfigList.size());
-        pluginConfigDAO.getWithConfig("ssd","assd");
+        //pluginConfigDAO.getWithConfig("ssd","assd");
+        //LOGGER.info(pluginConfigDAO.getConfigForPlugin("DQ-plugin-1.0.0",0,10).size());
+        //LOGGER.info("size of jars to add "+pluginConfigDAO.getWithConfig("DQ-plugin-1.0.0","2"+".wf-gen").size());
+        //LOGGER.info("size of jars to add "+pluginConfigDAO.getWithConfig("DQ-plugin-1.0.0","2"+".wf-cont-nodes").size());
+
     }
 
 }

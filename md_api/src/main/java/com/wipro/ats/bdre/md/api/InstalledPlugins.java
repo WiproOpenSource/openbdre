@@ -1,11 +1,7 @@
 package com.wipro.ats.bdre.md.api;
 
 import com.wipro.ats.bdre.md.api.base.MetadataAPIBase;
-import com.wipro.ats.bdre.md.beans.ProcessInfo;
-import com.wipro.ats.bdre.md.beans.table.PluginDependency;
 import com.wipro.ats.bdre.md.dao.InstalledPluginsDAO;
-import com.wipro.ats.bdre.md.dao.ProcessDAO;
-import com.wipro.ats.bdre.md.pm.beans.Plugin;
 import com.wipro.ats.bdre.md.pm.beans.PluginDetails;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -49,17 +45,17 @@ public class InstalledPlugins extends MetadataAPIBase {
         return pluginDependencies;
     }
 
-    public void insert(PluginDetails pluginDetails){
+    public String insert(PluginDetails pluginDetails){
         com.wipro.ats.bdre.md.dao.jpa.InstalledPlugins installedPlugins = new com.wipro.ats.bdre.md.dao.jpa.InstalledPlugins();
         installedPlugins.setPluginUniqueId(pluginDetails.getPluginId() + "-" + pluginDetails.getVersion());
         installedPlugins.setPluginId(pluginDetails.getPluginId());
         installedPlugins.setName(pluginDetails.getName());
         installedPlugins.setDescription(pluginDetails.getDescription());
-        installedPlugins.setVersion(pluginDetails.getVersion());
+        installedPlugins.setPluginVersion(pluginDetails.getVersion());
         installedPlugins.setAuthor(pluginDetails.getAuthor());
         //TODO: don't knwo what does plugin column means in INSTALLED_PLUGIN table so add it accordingly
         installedPlugins.setUninstallable(pluginDetails.isUninstallable());
-        installedPluginsDAO.insert(installedPlugins);
+        return installedPluginsDAO.insert(installedPlugins);
 
     }
 

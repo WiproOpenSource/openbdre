@@ -94,7 +94,7 @@
 			    console.log(item);
 				    return $.Deferred(function ($dfd) {
 				    $.ajax({
-				    url: '/mdrest/installedplugins/' + item.pluginUniqueId,
+				    url: '/mdrest/installedplugins/' + item.pluginUniqueId+"/",
 					    type: 'DELETE',
 					    data: item,
 					    dataType: 'json',

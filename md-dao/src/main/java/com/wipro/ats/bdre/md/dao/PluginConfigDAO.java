@@ -136,11 +136,11 @@ public class PluginConfigDAO {
         }
     }
 
-public List<String> distinctPluginConfig()
+public List<String> distinctPluginConfig(String configGroup)
 {
     Session session = sessionFactory.openSession();
     session.beginTransaction();
-    Criteria criteria = session.createCriteria(PluginConfig.class).setProjection(Projections.distinct(Projections.property("id.pluginUniqueId"))).add(Restrictions.eq("configGroup","wf-gen"));
+    Criteria criteria = session.createCriteria(PluginConfig.class).setProjection(Projections.distinct(Projections.property("id.pluginUniqueId"))).add(Restrictions.like("configGroup","%"+configGroup));
     List<String> pluginUniqueIdList = criteria.list();
     session.getTransaction().commit();
     session.close();
@@ -152,7 +152,7 @@ public List<String> getWithConfig(String pluginUniqueId,String configGroup)
     Session session = sessionFactory.openSession();
     session.beginTransaction();
     Criteria criteria = session.createCriteria(PluginConfig.class).add(Restrictions.eq("configGroup",configGroup)).
-            add(Restrictions.eq("id.pluginUniqueId",pluginUniqueId)).setProjection(Projections.property("pluginValue")).addOrder(Order.asc("pluginValue"));
+            add(Restrictions.eq("id.pluginUniqueId",pluginUniqueId)).setProjection(Projections.property("pluginValue")).addOrder(Order.asc("id.pluginKey"));
     List<String> pluginValuesList = criteria.list();
     session.getTransaction().commit();
     session.close();
