@@ -375,10 +375,10 @@ create table app_deployment_queue (
 
 create table installed_plugins (
   plugin_unique_id varchar(128) not null,
-  plugin_id varchar(8) not null,
+  plugin_id varchar(128) not null,
   name varchar(128),
   description varchar(128),
-  version integer(11) not null default 1,
+  plugin_version varchar(128) not null default '1.0.0',
   author varchar(128),
   add_ts TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
   plugin varchar(128),

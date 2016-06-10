@@ -54,7 +54,7 @@ public class InstalledPluginsDAOTest {
         installedPlugins.setPluginId("Test");
         installedPlugins.setName("test name");
         installedPlugins.setDescription("Test Description");
-        installedPlugins.setVersion(1);
+        installedPlugins.setPluginVersion("1");
         installedPlugins.setAuthor("Test Author");
         installedPlugins.setAddTs(new Date());
         installedPlugins.setPlugin("TestPlugin");

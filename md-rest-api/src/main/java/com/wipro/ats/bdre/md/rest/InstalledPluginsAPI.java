@@ -85,7 +85,7 @@ public class InstalledPluginsAPI extends MetadataAPIBase {
      * @param pluginUniqueId
      * @return nothing.
      */
-    @RequestMapping(value = "/{id}", method = RequestMethod.DELETE)
+    @RequestMapping(value = "/{id}/", method = RequestMethod.DELETE)
     @ResponseBody public
     RestWrapper delete(
             @PathVariable("id") String pluginUniqueId, Principal principal) {
@@ -126,7 +126,7 @@ public class InstalledPluginsAPI extends MetadataAPIBase {
                 installedPlugins2.setTableAddTs(DateConverter.dateToString(installedPlugins1.getAddTs()));
                 installedPlugins2.setPluginUniqueId(installedPlugins1.getPluginUniqueId());
                 installedPlugins2.setPluginId(installedPlugins1.getPluginId());
-                installedPlugins2.setVersion(installedPlugins1.getVersion());
+                installedPlugins2.setVersion(installedPlugins1.getPluginVersion());
                 installedPlugins2.setCounter(counter);
                 installedPluginsList.add(installedPlugins2);
             }
@@ -164,7 +164,7 @@ public class InstalledPluginsAPI extends MetadataAPIBase {
               jpaInstalledPlugins.setAuthor(installedPlugins.getAuthor());
               jpaInstalledPlugins.setName(installedPlugins.getName());
               jpaInstalledPlugins.setDescription(installedPlugins.getDescription());
-              jpaInstalledPlugins.setVersion(installedPlugins.getVersion());
+              jpaInstalledPlugins.setPluginVersion(installedPlugins.getVersion());
               jpaInstalledPlugins.setPlugin(installedPlugins.getPlugin());
             installedPluginsDAO.update(jpaInstalledPlugins);
             restWrapper = new RestWrapper(installedPlugins, RestWrapper.OK);
@@ -204,7 +204,7 @@ public class InstalledPluginsAPI extends MetadataAPIBase {
             jpaInstalledPlugins.setAddTs(new Date());
             jpaInstalledPlugins.setPluginId(installedPlugins.getPluginId());
             jpaInstalledPlugins.setPluginUniqueId(installedPlugins.getPluginUniqueId());
-            jpaInstalledPlugins.setVersion(installedPlugins.getVersion());
+            jpaInstalledPlugins.setPluginVersion(installedPlugins.getVersion());
             installedPluginsDAO.insert(jpaInstalledPlugins);
             restWrapper = new RestWrapper(installedPlugins, RestWrapper.OK);
             LOGGER.info(RECORDWITHID + " inserted in AppDeploymentQueueStatus by User:" + principal.getName() );

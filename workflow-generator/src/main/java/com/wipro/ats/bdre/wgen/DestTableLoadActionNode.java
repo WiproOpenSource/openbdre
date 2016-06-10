@@ -27,7 +27,20 @@ public class DestTableLoadActionNode extends GenericActionNode {
 
     private ProcessInfo processInfo = new ProcessInfo();
     private ActionNode actionNode = null;
-
+    private OozieNode toNode;
+    public OozieNode getToNode() {
+        return toNode;
+    }
+    public void setToNode(OozieNode toNode) {
+        this.toNode = toNode;
+    }
+    private OozieNode termNode;
+    public OozieNode getTermNode() {
+        return termNode;
+    }
+    public void setTermNode(OozieNode termNode) {
+        this.termNode = termNode;
+    }
     /**
      * This constructor is used to set node id and process information.
      *
