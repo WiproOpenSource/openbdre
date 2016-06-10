@@ -39,7 +39,7 @@ public class PluginNavigatorTag extends SimpleTagSupport {
     public String getJobManagementJSON(){
         String jmJson="";
         PluginConfigId pluginConfigId = new PluginConfigId();
-        pluginConfigId.setPluginKey(0);
+        pluginConfigId.setPluginKey("Job Management");
         pluginConfigId.setPluginUniqueId("Test-1");
         PluginConfig pluginConfig=pluginConfigDAO.get(pluginConfigId);
         jmJson=pluginConfig.getPluginValue();
