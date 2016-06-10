@@ -2,6 +2,7 @@
     <%@ taglib prefix="security"
 	   uri="http://www.springframework.org/security/tags" %>
 	   <%@taglib uri="http://www.springframework.org/tags" prefix="spring"%>
+	   <%@ taglib prefix="nav" uri="../custom-navigation.tld"%>
         <html id="ng-app">
 
         <head>
@@ -160,6 +161,8 @@
 		</head>
 
         <body class="container-fluid" ng-app="myApp" ng-controller="myCtrl">
+        <nav:navigation/>
+
             <nav class="navbar navbar-inverse">
                 <div class="container-fluid">
                     <!-- Brand and toggle get grouped for better mobile display -->
@@ -233,6 +236,7 @@
 	    </div>
 	</div>
 	 -->
+	 <jsp:useBean id="navigator" class="com.wipro.ats.bdre.md.ui.custom.tags.PluginNavigatorTag"/>
             <script>
                 var app = angular.module("myApp", []);
                 app.controller("myCtrl", function ($scope) {
@@ -258,282 +262,311 @@
                                     }
                                 }
                             }
-                            $scope.menu = [{
-                                    label: "About",
-                                    collapse: "1",
-                                    active: "1",
-                                    url: "welcome.page",
-                                    children: []
-				}, {
-                                    label: "Metadata Management",
-                                    collapse: "1",
-                                    children: [{
-                                            label: "Master",
-                                            collapse: "1",
-                                            children: [{
-                                                label: "Batch Status",
-                                                collapse: "1",
-                                                url: "batchstatus.page",
-                                                children: []
-							}, {
-                                                label: "App Type",
-                                                collapse: "1",
-                                                url: "processtype.page",
-                                                children: []
-							}, {
-                                                label: "Execution Status",
-                                                collapse: "1",
-                                                url: "execstatus.page",
-                                                children: []
-							}, {
-                                                label: "Deployment Status",
-                                                collapse: "1",
-                                                url: "deploystatus.page",
-                                                children: []
-							},
-							{
-                                                label: "App Deployment Status",
-                                                collapse: "1",
-                                                url: "adqstatus.page",
-                                                children: []
-                            },{
-                                                label: "Workflow Type",
-                                                collapse: "1",
-                                                url: "workflowtype.page",
-                                                children: []
-							}]
-						}, {
-                                            label: "Job Definitions",
-                                            collapse: "1",
-                                            children: [{
-                                                    label: "Processes",
-                                                    collapse: "1",
-                                                    url: "process.page",
-                                                    children: []
-								},
-                                                {
-                                                    label: "Workflow Creator",
-                                                    collapse: "1",
-                                                    url: "wfdesigner.page",
-                                                    children: []
-								}, {
-                                                    label: "Process Domains",
-                                                    collapse: "1",
-                                                    url: "busdomain.page",
-                                                    children: []
-								}, {
-                                                    label: "Servers",
-                                                    collapse: "1",
-                                                    url: "servers.page",
-                                                    children: []
-								}, {
-                                                    label: "Process Logs",
-                                                    collapse: "1",
-                                                    url: "processlog.page",
-                                                    children: []
-								}, {
-                                                    label: "Properties",
-                                                    collapse: "1",
-                                                    url: "properties.page",
-                                                    children: []
-								}
-							]
-						},
-                                        {
-                                            label: "Run Control",
 
-                                            collapse: "1",
-                                            children: [{
-                                                    label: "Batches",
-                                                    collapse: "1",
-                                                    url: "batch.page",
-                                                    children: []
-								}, {
-                                                    label: "Files Batches",
-                                                    collapse: "1",
-                                                    url: "file.page",
-                                                    children: []
-								}, {
-                                                    label: "Queued Batches",
-                                                    collapse: "1",
-                                                    url: "bcq.page",
-                                                    children: []
-								}, {
-                                                    label: "Instance Execution",
-                                                    collapse: "1",
-                                                    url: "instanceexec.page",
-                                                    children: []
-								}, {
-                                                    label: "Processed Batches",
-                                                    collapse: "1",
-                                                    url: "acq.page",
-                                                    children: []
-								}
-							]
-						}
-					]
-				}, {
-                                    label: "Job Management",
-                                    collapse: "1",
-                                    children: [
-                                        {
-                                            label: "Process Deployment",
-                                            collapse: "1",
-                                            url: "pdq.page",
-                                            children: []
-						}, {
-                                       label: "Table Column Lineage",
-                                       collapse: "1",
-                                       url: "tablecolumnlineage.page",
-                                       children: []
-                        },
-                                                                              {
-                                            label: "App Deployment",
-                                            collapse: "1",
-                                            url: "adq.page",
-                                            children: []
-                                                                            },{
-                                            label: "Job Import Wizard",
-                                            collapse: "1",
-                                            url: "processimportwizard.page",
-                                            children: []
-                                                         					}, {
-                                            label: "Process Template",
-                                            collapse: "1",
-                                            url: "processtemplate.page",
-                                            children: []
-                                                         					},{
-                                              label: "App Store",
-                                              collapse: "1",
-                                              url: "appstore.page",
-                                              children: []
-                                                                            }
-					]
-				}, {
-                                    label: "Data Ingestion",
-                                    collapse: "1",
-                                    children: [{
-                                            label: "Load File in Hive",
-                                            collapse: "1",
-                                            url: "dataload.page",
-                                            children: []
-					}, {
-                                            label: "Import from RDBMS",
-                                            collapse: "1",
-                                            url: "dataimportwizard.page",
-                                            children: []
-					},
-                                        {
-                                            label: "Web Crawl and Ingest",
-                                            collapse: "1",
-                                            url: "crawler.page",
-                                            children: []
-					}, {
-                                               label: "Monitor Directory & Ingest",
-                                               collapse: "1",
-                                               url: "filemonitor.page",
-                                               children: []
-                    },  {
-                                            label: "Generate Bulk Data",
-                                            collapse: "1",
-                                            url: "datagen.page",
-                                            children: []
-					}, {
-                                            label: "New DQ Job",
-                                            collapse: "1",
-                                            url: "dqprocess.page",
-                                            children: []
-					}, {
-                                            label: "Ingest from Streams",
-                                            collapse: "1",
-                                            url: "flumepropertieswizard.page",
-                                            children: []
-	                }, {
-                                             label: "Analytics App",
-                                             collapse: "1",
-                                             url: "analyticsui.page",
-                                             children: []
-                    },{
-                                               label: "Analytics UI",
-                                               collapse: "1",
-                                               url: "/aui/pages/menu.page",
-                                               children: []
-                      },{
-                                              label: "Hive Table Migration",
-                                              collapse: "1",
-                                              url: "hivetablemigration.page",
-                                              children: []
-                     },]
-                                },
 
-                                    <security:authorize access = "hasRole('ROLE_ADMIN')"> {
-                                        label: "Administration",
-                                        collapse: "1",
-                                        children: [{
-                                                label: "Security",
-                                                collapse: "1",
-                                                url: "users.page",
-                                                children: []
-					}, {
-                                                label: "Sessions",
-                                                collapse: "1",
-                                                url: "sessions.page",
-                                                children: []
-					}, {
-                                                label: "Settings",
-                                                collapse: "1",
-                                                url: "settings.page",
-                                                children: []
-					}
-					]
-                                    },
-                                    </security:authorize>
-                                    ];
-            $scope.createLinearMenu($scope.menu); //For creating linear menu
-			$scope.openlink = function (event, url) {
-                                    $(".activ").removeClass("activ");
-                                    $(".B1").removeClass("B1");
-                                    $(".B2").removeClass("B2");
-                                    console.log($(event.target).parent().parent().parent(), $(event.target).hasClass("level1"));
-                                    if ($(event.target).hasClass("level1")) {
-                                        console.log("level1");
-                                        $(event.target).addClass("activ");
-                                    } else if ($(event.target).hasClass("level2")) {
-                                        console.log("level2");
-                                        $(event.target).parent().parent().parent().addClass("activ");
-                                        $(event.target).addClass("B1");
-                                        console.log($(event.target));
-                                    } else if ($(event.target).hasClass("level3")) {
-                                        console.log("level3");
-                                        $(event.target).addClass("B2");
-                                        var elem = $(event.target).parent().parent().parent();
-                                        elem.addClass("B1");
-                                        elem.parent().parent().addClass("activ");
-                                    }
-                                    if (url != "") {
-                                        $("#dframe").attr('src', url);
-                                        console.log(url, url != "");
-                                    } else
-                                        alert("TBD")
-			};
-			$scope.reset = function (target, index) {
-                                    //console.log(target,index);
-                                    if (index.children.length == 0) {
-                                        $(".activ").removeClass("activ");
-                                        $(target).addClass("activ");
-                                        if (index.url != "") {
-                                            var n = index.url.indexOf("/");
-                                            if (n == 0) {
-                                                document.location = index.url;
-                                            } else {
-                                                $("#dframe").attr('src', index.url);
-                                                console.log(index.url, index.url != "");
-                                            }
-                                        } else
-                                            alert("TBD")
-                                    }
-			};
+
+
+                                var about =  {
+                                       		"label": "About",
+                                       		"collapse": "1",
+                                       		"active": "1",
+                                       		"url": "welcome.page",
+                                       		"children": []
+                                       };
+                                var metadataManagement =  {
+                                                    "label": "Metadata Management",
+                                                    "collapse": "1",
+                                                    "children": []
+                                                };
+
+                                                 var master = {
+                                                    "label": "Master",
+                                                    "collapse": "1",
+                                                    "children": [{
+                                                        "label": "Batch Status",
+                                                        "collapse": "1",
+                                                        "url": "batchstatus.page",
+                                                        "children": []
+                                                    }, {
+                                                        "label": "App Type",
+                                                        "collapse": "1",
+                                                        "url": "processtype.page",
+                                                        "children": []
+                                                    }, {
+                                                        "label": "Execution Status",
+                                                        "collapse": "1",
+                                                        "url": "execstatus.page",
+                                                        "children": []
+                                                    }, {
+                                                        "label": "Deployment Status",
+                                                        "collapse": "1",
+                                                        "url": "deploystatus.page",
+                                                        "children": []
+                                                    }, {
+                                                        "label": "App Deployment Status",
+                                                        "collapse": "1",
+                                                        "url": "adqstatus.page",
+                                                        "children": []
+                                                    }, {
+                                                        "label": "Workflow Type",
+                                                        "collapse": "1",
+                                                        "url": "workflowtype.page",
+                                                        "children": []
+                                                    }]};
+                                        var jobDefinitions = {
+                                                    "label": "Job Definitions",
+                                                    "collapse": "1",
+                                                    "children": [{
+                                                        "label": "Processes",
+                                                        "collapse": "1",
+                                                        "url": "process.page",
+                                                        "children": []
+                                                    }, {
+                                                        "label": "Workflow Creator",
+                                                        "collapse": "1",
+                                                        "url": "wfdesigner.page",
+                                                        "children": []
+                                                    }, {
+                                                        "label": "Process Domains",
+                                                        "collapse": "1",
+                                                        "url": "busdomain.page",
+                                                        "children": []
+                                                    }, {
+                                                        "label": "Servers",
+                                                        "collapse": "1",
+                                                        "url": "servers.page",
+                                                        "children": []
+                                                    }, {
+                                                        "label": "Process Logs",
+                                                        "collapse": "1",
+                                                        "url": "processlog.page",
+                                                        "children": []
+                                                    }, {
+                                                        "label": "Properties",
+                                                        "collapse": "1",
+                                                        "url": "properties.page",
+                                                        "children": []
+                                                    }]}   ;
+
+                                    var runControl = {
+                                                     "label": "Run Control",
+                                                     "collapse": "1",
+                                                     "children": [{
+                                                         "label": "Batches",
+                                                         "collapse": "1",
+                                                         "url": "batch.page",
+                                                         "children": []
+                                                     }, {
+                                                         "label": "Files Batches",
+                                                         "collapse": "1",
+                                                         "url": "file.page",
+                                                         "children": []
+                                                     }, {
+                                                         "label": "Queued Batches",
+                                                         "collapse": "1",
+                                                         "url": "bcq.page",
+                                                         "children": []
+                                                     }, {
+                                                         "label": "Instance Execution",
+                                                         "collapse": "1",
+                                                         "url": "instanceexec.page",
+                                                         "children": []
+                                                     }, {
+                                                         "label": "Processed Batches",
+                                                         "collapse": "1",
+                                                         "url": "acq.page",
+                                                         "children": []
+                                                     }]};
+                                    var jobManagement =  {
+                                               		"label": "Job Management",
+                                               		"collapse": "1",
+                                               		"children": [{
+                                               			"label": "Process Deployment",
+                                               			"collapse": "1",
+                                               			"url": "pdq.page",
+                                               			"children": []
+                                               		}, {
+                                               			"label": "Table Column Lineage",
+                                               			"collapse": "1",
+                                               			"url": "tablecolumnlineage.page",
+                                               			"children": []
+                                               		}, {
+                                               			"label": "App Deployment",
+                                               			"collapse": "1",
+                                               			"url": "adq.page",
+                                               			"children": []
+                                               		}, {
+                                               			"label": "Job Import Wizard",
+                                               			"collapse": "1",
+                                               			"url": "processimportwizard.page",
+                                               			"children": []
+                                               		}, {
+                                               			"label": "Process Template",
+                                               			"collapse": "1",
+                                               			"url": "processtemplate.page",
+                                               			"children": []
+                                               		}, {
+                                               			"label": "App Store",
+                                               			"collapse": "1",
+                                               			"url": "appstore.page",
+                                               			"children": []
+                                               		}]
+                                               	};
+
+
+                                    var dataIngestion =  {
+                                               		"label": "Data Ingestion",
+                                               		"collapse": "1",
+                                               		"children": [{
+                                               			"label": "Load File in Hive",
+                                               			"collapse": "1",
+                                               			"url": "dataload.page",
+                                               			"children": []
+                                               		}, {
+                                               			"label": "Import from RDBMS",
+                                               			"collapse": "1",
+                                               			"url": "dataimportwizard.page",
+                                               			"children": []
+                                               		}, {
+                                               			"label": "Web Crawl and Ingest",
+                                               			"collapse": "1",
+                                               			"url": "crawler.page",
+                                               			"children": []
+                                               		}, {
+                                               			"label": "Monitor Directory & Ingest",
+                                               			"collapse": "1",
+                                               			"url": "filemonitor.page",
+                                               			"children": []
+                                               		}, {
+                                               			"label": "Generate Bulk Data",
+                                               			"collapse": "1",
+                                               			"url": "datagen.page",
+                                               			"children": []
+                                               		}, {
+                                               			"label": "New DQ Job",
+                                               			"collapse": "1",
+                                               			"url": "dqprocess.page",
+                                               			"children": []
+                                               		}, {
+                                               			"label": "Ingest from Streams",
+                                               			"collapse": "1",
+                                               			"url": "flumepropertieswizard.page",
+                                               			"children": []
+                                               		}, {
+                                               			"label": "Analytics App",
+                                               			"collapse": "1",
+                                               			"url": "analyticsui.page",
+                                               			"children": []
+                                               		}, {
+                                               			"label": "Analytics UI",
+                                               			"collapse": "1",
+                                               			"url": "/aui/pages/menu.page",
+                                               			"children": []
+                                               		}, {
+                                               			"label": "Hive Table Migration",
+                                               			"collapse": "1",
+                                               			"url": "hivetablemigration.page",
+                                               			"children": []
+                                               		} ]
+                                               	};
+
+                                    var administration  = {
+                                              		"label": "Administration",
+                                              		"collapse": "1",
+                                              		"children": [{
+                                              			"label": "Security",
+                                              			"collapse": "1",
+                                              			"url": "users.page",
+                                              			"children": []
+                                              		}, {
+                                              			"label": "Sessions",
+                                              			"collapse": "1",
+                                              			"url": "sessions.page",
+                                              			"children": []
+                                              		}, {
+                                              			"label": "Settings",
+                                              			"collapse": "1",
+                                              			"url": "settings.page",
+                                              			"children": []
+                                              		}]
+                                              	};
+
+
+
+                                              	var jm= ${navigator.jobManagementJSON};
+                                                   //jobManagement.children.concat(jm);
+                                                   Array.prototype.push.apply(jobManagement.children, jm);
+                                                  // console.log(jobManagement);
+
+                         Array.prototype.push.apply(metadataManagement.children,metadataManagement.children.concat(master,jobDefinitions,runControl));
+                         console.log(metadataManagement);
+                         $scope.menu   = JSON.parse('['+JSON.stringify(about)+','+JSON.stringify(metadataManagement)+','+JSON.stringify(jobManagement)+','+JSON.stringify(dataIngestion)<security:authorize access = "hasRole('ROLE_ADMIN')">+','+JSON.stringify(administration)</security:authorize>+']');
+                                                                                                        $scope.createLinearMenu($scope.menu); //For creating linear menu
+                                                                                            			$scope.openlink = function (event, url) {
+                                                                                                                                $(".activ").removeClass("activ");
+                                                                                                                                $(".B1").removeClass("B1");
+                                                                                                                                $(".B2").removeClass("B2");
+                                                                                                                                console.log($(event.target).parent().parent().parent(), $(event.target).hasClass("level1"));
+                                                                                                                                if ($(event.target).hasClass("level1")) {
+                                                                                                                                    console.log("level1");
+                                                                                                                                    $(event.target).addClass("activ");
+                                                                                                                                } else if ($(event.target).hasClass("level2")) {
+                                                                                                                                    console.log("level2");
+                                                                                                                                    $(event.target).parent().parent().parent().addClass("activ");
+                                                                                                                                    $(event.target).addClass("B1");
+                                                                                                                                    console.log($(event.target));
+                                                                                                                                } else if ($(event.target).hasClass("level3")) {
+                                                                                                                                    console.log("level3");
+                                                                                                                                    $(event.target).addClass("B2");
+                                                                                                                                    var elem = $(event.target).parent().parent().parent();
+                                                                                                                                    elem.addClass("B1");
+                                                                                                                                    elem.parent().parent().addClass("activ");
+                                                                                                                                }
+                                                                                                                                if (url != "") {
+                                                                                                                                    $("#dframe").attr('src', url);
+                                                                                                                                    console.log(url, url != "");
+                                                                                                                                } else
+                                                                                                                                    alert("TBD")
+                                                                                            			};
+                                                                                            			$scope.reset = function (target, index) {
+                                                                                                                                //console.log(target,index);
+                                                                                                                                if (index.children.length == 0) {
+                                                                                                                                    $(".activ").removeClass("activ");
+                                                                                                                                    $(target).addClass("activ");
+                                                                                                                                    if (index.url != "") {
+                                                                                                                                        var n = index.url.indexOf("/");
+                                                                                                                                        if (n == 0) {
+                                                                                                                                            document.location = index.url;
+                                                                                                                                        } else {
+                                                                                                                                            $("#dframe").attr('src', index.url);
+                                                                                                                                            console.log(index.url, index.url != "");
+                                                                                                                                        }
+                                                                                                                                    } else
+                                                                                                                                        alert("TBD")
+                                                                                                                                }
+                                                                                            			};
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
                             });
+                            var cleanJSON = function(str) {
+
+                                return str.replace(/"([^"]+(?="))"/g, '$1').replace(/\\/g,'\\').replace(/"/g,'\"');
+                            };
             </script>
 
         </body>

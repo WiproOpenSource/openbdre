@@ -183,6 +183,11 @@
                 </exclusion>
             </exclusions>
         </dependency>
+        <!-- http://mvnrepository.com/artifact/javax.servlet.jsp/jsp-api -->
+        <dependency>
+            <groupId>javax.servlet.jsp</groupId>
+            <artifactId>jsp-api</artifactId>
+        </dependency>
     </dependencies>
     <build>
         <finalName>md-ui-${project.version}</finalName>
