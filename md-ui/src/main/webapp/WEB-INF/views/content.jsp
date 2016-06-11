@@ -494,11 +494,22 @@
 
 
                                               	var jm= ${navigator.jobManagementJSON};
+                                              	console.log("jobManagementJSON "+jm);
                                                    //jobManagement.children.concat(jm);
                                                    Array.prototype.push.apply(jobManagement.children, jm);
+                                                   console.log("jobmagement children "+jobManagement.children);
                                                   // console.log(jobManagement);
-
-                         Array.prototype.push.apply(metadataManagement.children,metadataManagement.children.concat(master,jobDefinitions,runControl));
+                                                  var mm=${navigator.metadataManagementJSON};
+                                                  //Array.prototype.push.apply(metadataManagement.children, mm);
+                                                  var mstr=${navigator.masterJSON};
+                                                  Array.prototype.push.apply(master.children, mstr);
+                                                  var rc=${navigator.runControlJSON};
+                                                Array.prototype.push.apply(runControl.children, rc);
+                                                var jd=${navigator.jobDefinitionsJSON};
+                                                Array.prototype.push.apply(jobDefinitions.children, jd);
+                                                var di=${navigator.dataIngestionJSON};
+                                                Array.prototype.push.apply(dataIngestion.children, di);
+                         Array.prototype.push.apply(metadataManagement.children,metadataManagement.children.concat(mm,master,jobDefinitions,runControl));
                          console.log(metadataManagement);
                          $scope.menu   = JSON.parse('['+JSON.stringify(about)+','+JSON.stringify(metadataManagement)+','+JSON.stringify(jobManagement)+','+JSON.stringify(dataIngestion)<security:authorize access = "hasRole('ROLE_ADMIN')">+','+JSON.stringify(administration)</security:authorize>+']');
                                                                                                         $scope.createLinearMenu($scope.menu); //For creating linear menu

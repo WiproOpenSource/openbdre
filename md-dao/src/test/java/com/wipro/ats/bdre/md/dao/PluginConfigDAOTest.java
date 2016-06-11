@@ -18,6 +18,7 @@ import com.wipro.ats.bdre.md.dao.jpa.PluginConfig;
 import com.wipro.ats.bdre.md.dao.jpa.PluginConfigId;
 import org.apache.log4j.Logger;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.AutowireCapableBeanFactory;
@@ -25,10 +26,6 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
 import java.util.Date;
-import java.util.List;
-
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
 /**
  * Created by cloudera on 5/27/16.
  */
@@ -47,7 +44,7 @@ public class PluginConfigDAOTest {
     InstalledPluginsDAO installedPluginsDAO;
     @Autowired
     PluginConfigDAO pluginConfigDAO;
-
+    @Ignore
     @Test
     public void testInsertUpdateAndDelete() throws Exception {
         InstalledPlugins installedPlugins = new InstalledPlugins();
@@ -95,8 +92,12 @@ public class PluginConfigDAOTest {
 
     @Test
     public void testDistinctPluginUniqueId() throws Exception {
-        List<String> pluginConfigList=pluginConfigDAO.distinctPluginConfig("wf-cont-nodes");
-        LOGGER.info(pluginConfigList.size());
+        PluginConfigId pluginConfigId = new PluginConfigId();
+        pluginConfigId.setPluginKey("Job Management");
+        pluginConfigId.setPluginUniqueId("Test-1");
+        PluginConfig pluginConfig=pluginConfigDAO.get(pluginConfigId);
+       // List<String> pluginConfigList=pluginConfigDAO.distinctPluginConfig("wf-cont-nodes");
+        LOGGER.info(pluginConfig);
         //pluginConfigDAO.getWithConfig("ssd","assd");
         //LOGGER.info(pluginConfigDAO.getConfigForPlugin("DQ-plugin-1.0.0",0,10).size());
         //LOGGER.info("size of jars to add "+pluginConfigDAO.getWithConfig("DQ-plugin-1.0.0","2"+".wf-gen").size());

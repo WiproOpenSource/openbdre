@@ -18,6 +18,7 @@ import com.wipro.ats.bdre.md.dao.jpa.InstalledPlugins;
 import com.wipro.ats.bdre.md.dao.jpa.PluginDependency;
 import org.apache.log4j.Logger;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.AutowireCapableBeanFactory;
@@ -51,6 +52,7 @@ public class PluginDependencyDAOTest {
     @Autowired
     PluginDependencyDAO pluginDependencyDAO;
     @Test
+    @Ignore
     public void testInsertUpdateAndDelete() throws Exception {
         InstalledPlugins installedPlugins = new InstalledPlugins();
         installedPlugins.setPluginUniqueId("Test-1");
