@@ -169,10 +169,10 @@
 			    padding-top: 9px !important;
 			    }
 			    .bdretextlogo{
-			    color: #1ca7f7;
+			    color: #56bbf0;
 			   	position: relative;
 			    font-size: 2em;
-			    top: 7px;
+			    top: 26px;
 			    right: 1px;
 			    }
 			    .dropdown-menu{
