@@ -50,7 +50,7 @@ public class InstalledPluginsDAOTest {
     @Test
     public void testInsertUpdateAndDelete() throws Exception {
         InstalledPlugins installedPlugins = new InstalledPlugins();
-        installedPlugins.setPluginUniqueId("Test-1");
+        installedPlugins.setPluginUniqueId("Test-plugin");
         installedPlugins.setPluginId("Test");
         installedPlugins.setName("test name");
         installedPlugins.setDescription("Test Description");

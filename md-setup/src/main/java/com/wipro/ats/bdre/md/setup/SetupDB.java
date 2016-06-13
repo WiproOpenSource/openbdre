@@ -78,7 +78,7 @@ public class SetupDB {
             setupDB.populateUsers(projectRoot + "databases/setup/Users.csv");
             setupDB.populateUserRoles(projectRoot + "databases/setup/UserRoles.csv");
             setupDB.populateADQStatus(projectRoot + "databases/setup/ADQStatus.csv");
-
+            setupDB.populateInstalledPlugins(projectRoot + "databases/setup/InstalledPlugins.csv");
 
             setupDB.halt();
         } catch (MetadataException e) {
@@ -796,6 +796,47 @@ public class SetupDB {
                 Object existing = session.get(adqStatus.getClass(), adqStatus.getAppDeploymentStatusId());
                 if (existing == null) {
                     session.save(adqStatus);
+                }
+            }
+        } catch (MetadataException e) {
+            LOGGER.error(inFile + dataFile + badLine + line);
+            LOGGER.error(e.getMessage());
+            throw new MetadataException(e);
+        }
+        catch (IOException e) {
+            LOGGER.error(inFile + dataFile + badLine + line);
+            LOGGER.error(e.getMessage());
+            throw new IOException(e);
+        }
+    }
+
+
+
+    private void populateInstalledPlugins(String dataFile) throws MetadataException, IOException {
+        String line = null;
+        int lineNum = 0;
+
+        try {
+            BufferedReader br = new BufferedReader(new FileReader(dataFile));
+            while ((line = br.readLine()) != null) {
+                lineNum++;
+                LOGGER.debug(lineNumber + lineNum + ": " + line);
+                String[] cols = getColumns(line);
+                if (cols == null)
+                    continue;
+                InstalledPlugins installedPlugins=new InstalledPlugins();
+                installedPlugins.setPluginUniqueId(cols[0]);
+                installedPlugins.setPluginId(cols[1]);
+                installedPlugins.setName(cols[2]);
+                installedPlugins.setDescription(cols[3]);
+                installedPlugins.setAuthor(cols[4]);
+                installedPlugins.setPluginVersion(cols[5]);
+                installedPlugins.setAddTs(new Date());
+                installedPlugins.setPlugin(cols[6]);
+                installedPlugins.setUninstallable(Boolean.parseBoolean(cols[7]));
+                Object existing = session.get(installedPlugins.getClass(), installedPlugins.getPluginUniqueId());
+                if (existing == null) {
+                    session.save(installedPlugins);
                 }
             }
         } catch (MetadataException e) {

@@ -25,10 +25,10 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
 import java.util.Date;
-import java.util.List;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
+
 /**
  * Created by cloudera on 5/27/16.
  */
@@ -51,7 +51,7 @@ public class PluginConfigDAOTest {
     @Test
     public void testInsertUpdateAndDelete() throws Exception {
         InstalledPlugins installedPlugins = new InstalledPlugins();
-        installedPlugins.setPluginUniqueId("Test-1");
+        installedPlugins.setPluginUniqueId("Test-plugin");
         installedPlugins.setPluginId("Test");
         installedPlugins.setName("test name");
         installedPlugins.setDescription("Test Description");
@@ -66,7 +66,7 @@ public class PluginConfigDAOTest {
         PluginConfig pluginConfig = new PluginConfig();
         PluginConfigId pluginConfigId=new PluginConfigId();
         pluginConfigId.setPluginKey("1");
-        pluginConfigId.setPluginUniqueId("Test-1");
+        pluginConfigId.setPluginUniqueId("Test-plugin");
         pluginConfig.setId(pluginConfigId);
         pluginConfig.setInstalledPlugins(installedPlugins);
         pluginConfig.setConfigGroup("Test-config");
@@ -90,13 +90,16 @@ public class PluginConfigDAOTest {
 
 
 
-
     }
 
     @Test
     public void testDistinctPluginUniqueId() throws Exception {
-        List<String> pluginConfigList=pluginConfigDAO.distinctPluginConfig("wf-cont-nodes");
-        LOGGER.info(pluginConfigList.size());
+        PluginConfigId pluginConfigId = new PluginConfigId();
+        pluginConfigId.setPluginKey("Job Management");
+        pluginConfigId.setPluginUniqueId("Test-1");
+        PluginConfig pluginConfig=pluginConfigDAO.get(pluginConfigId);
+       // List<String> pluginConfigList=pluginConfigDAO.distinctPluginConfig("wf-cont-nodes");
+        LOGGER.info(pluginConfig);
         //pluginConfigDAO.getWithConfig("ssd","assd");
         //LOGGER.info(pluginConfigDAO.getConfigForPlugin("DQ-plugin-1.0.0",0,10).size());
         //LOGGER.info("size of jars to add "+pluginConfigDAO.getWithConfig("DQ-plugin-1.0.0","2"+".wf-gen").size());
