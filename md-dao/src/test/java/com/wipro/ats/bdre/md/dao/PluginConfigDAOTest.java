@@ -18,7 +18,6 @@ import com.wipro.ats.bdre.md.dao.jpa.PluginConfig;
 import com.wipro.ats.bdre.md.dao.jpa.PluginConfigId;
 import org.apache.log4j.Logger;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.AutowireCapableBeanFactory;
@@ -26,6 +25,10 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
 import java.util.Date;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+
 /**
  * Created by cloudera on 5/27/16.
  */
@@ -44,11 +47,11 @@ public class PluginConfigDAOTest {
     InstalledPluginsDAO installedPluginsDAO;
     @Autowired
     PluginConfigDAO pluginConfigDAO;
-    @Ignore
+
     @Test
     public void testInsertUpdateAndDelete() throws Exception {
         InstalledPlugins installedPlugins = new InstalledPlugins();
-        installedPlugins.setPluginUniqueId("Test-1");
+        installedPlugins.setPluginUniqueId("Test-plugin");
         installedPlugins.setPluginId("Test");
         installedPlugins.setName("test name");
         installedPlugins.setDescription("Test Description");
@@ -63,7 +66,7 @@ public class PluginConfigDAOTest {
         PluginConfig pluginConfig = new PluginConfig();
         PluginConfigId pluginConfigId=new PluginConfigId();
         pluginConfigId.setPluginKey("1");
-        pluginConfigId.setPluginUniqueId("Test-1");
+        pluginConfigId.setPluginUniqueId("Test-plugin");
         pluginConfig.setId(pluginConfigId);
         pluginConfig.setInstalledPlugins(installedPlugins);
         pluginConfig.setConfigGroup("Test-config");
@@ -71,7 +74,7 @@ public class PluginConfigDAOTest {
         PluginConfigId pluginConfigIden = pluginConfigDAO.insert(pluginConfig);
         LOGGER.info("PluginConfig is added with Id:" + pluginConfigIden);
 
-       /* pluginConfig.setConfigGroup("Config");
+        pluginConfig.setConfigGroup("Config");
         pluginConfigDAO.update(pluginConfig);
 
         pluginConfig = pluginConfigDAO.get(pluginConfigIden);
@@ -85,7 +88,6 @@ public class PluginConfigDAOTest {
         LOGGER.info("Deleted InstalledPlugin Entry with ID" + installedPluginId);
         LOGGER.info("Size of installedPlugins is:" + installedPluginsDAO.totalRecordCount());
 
-*/
 
 
     }

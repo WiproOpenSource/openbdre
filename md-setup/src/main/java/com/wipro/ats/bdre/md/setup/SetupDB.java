@@ -832,8 +832,8 @@ public class SetupDB {
                 installedPlugins.setAuthor(cols[4]);
                 installedPlugins.setPluginVersion(cols[5]);
                 installedPlugins.setAddTs(new Date());
-                installedPlugins.setPlugin("bdre-min");
-                installedPlugins.setUninstallable(false);
+                installedPlugins.setPlugin(cols[6]);
+                installedPlugins.setUninstallable(Boolean.parseBoolean(cols[7]));
                 Object existing = session.get(installedPlugins.getClass(), installedPlugins.getPluginUniqueId());
                 if (existing == null) {
                     session.save(installedPlugins);
