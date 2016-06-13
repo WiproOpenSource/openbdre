@@ -159,4 +159,16 @@ public List<String> getWithConfig(String pluginUniqueId,String configGroup)
     return pluginValuesList;
 }
 
+    public List<String> getWithKeyAndConfigGroup(String configGroup,String key)
+    {
+        Session session = sessionFactory.openSession();
+        session.beginTransaction();
+        Criteria criteria = session.createCriteria(PluginConfig.class).add(Restrictions.eq("configGroup",configGroup)).
+                                                                       add(Restrictions.eq("id.pluginKey",key))
+                                                                       .setProjection(Projections.property("pluginValue"));
+        List<String> pluginValuesList = criteria.list();
+        session.getTransaction().commit();
+        session.close();
+        return pluginValuesList;
+    }
 }
