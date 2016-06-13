@@ -181,9 +181,9 @@
                             </div>
                         </div>
                         <div class="form-group">
-                            <label class="control-label col-sm-2" for="proxyUsername"><spring:message code="crawler.page.proxy_user_name"/></label>
+                            <label class="control-label col-sm-2" for="proxyUserName"><spring:message code="crawler.page.proxy_user_name"/></label>
                             <div class="col-sm-10">
-                                <input type="text" class="form-control" name="proxyUsername" placeholder=<spring:message code="crawler.page.proxy_user_name_placeholder"/>>
+                                <input type="text" class="form-control" name="proxyUserName" placeholder=<spring:message code="crawler.page.proxy_user_name_placeholder"/>>
                             </div>
                         </div>
                         <div class="form-group">

@@ -119,7 +119,7 @@ var legendCounter = 0;
       .attr("y", 6)
       .attr("dy", ".71em")
       .style("text-anchor", "end")
-      .text("Time in Seconds -->");
+      .text('<spring:message code="sla.page.y_axis_name"/>');
 
   var processId = svg.selectAll(".processId")
       .data(data)
@@ -232,11 +232,11 @@ function SLAMonitoring(pid)
                                  alert(data.Message);
                             },
                              error: function() {
-                             alert('Error in SLAMonitoring');
+                             alert('<spring:message code="sla.page.error_message"/>');
                          }
                           });
                      }
 </script>
 </div>
 <hr  style="width:80%">
-<center><b><spring:message code="sla.page.subprocess_ids"/> </b></center>
+<center><b><spring:message code="sla.page.x_axis_name"/> </b></center>
