@@ -36,10 +36,16 @@
 	    margin-bottom: 0 !important;
 	    padding-bottom: 8% !important;
     	padding-top: 7% !important;
+	    letter-spacing: 1.5px;
 	    }
 	    .jumbotron p{
 	     font-size: 18px;
+	     font-family: Roboto;
 	    }
+	    .jumbotron div{
+	  		font-size: 54px;
+	  		font-family: Eurostile;
+	  	}
 	    .nopadding{
 	     padding: 0 !important;
    		 margin: 0 !important;
@@ -126,8 +132,8 @@
     <body>
 	<div class="container-fluid nopadding" ng-app="myApp" ng-controller="myCtrl">
 	<div class="jumbotron">
-        <h1><spring:message code="common.page.title_bdre_1"/></h1>
-        <p class="col-md-6 col-xs-6 col-sm-6 col-lg-6 nopadding"><spring:message code="welcome.page.bdre_description"/></p>
+        <div><spring:message code="common.page.title_bdre_1"/></div>
+        <p class="col-md-5 col-xs-5 col-sm-5 col-lg-5 nopadding"><spring:message code="welcome.page.bdre_description"/></p>
       </div>
 
 	    <div class="row-container">
