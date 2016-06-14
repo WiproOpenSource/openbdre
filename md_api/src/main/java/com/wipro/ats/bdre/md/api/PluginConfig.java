@@ -55,4 +55,9 @@ public class PluginConfig extends MetadataAPIBase {
     {
         return pluginConfigDAO.getWithConfig(pluginUniQueId,configGroup);
     }
+
+    public List<String> listPluginKeys(String pluginUniqueId,String configGroup)
+    {
+        return pluginConfigDAO.listPluginKeys(pluginUniqueId,configGroup);
+    }
 }
