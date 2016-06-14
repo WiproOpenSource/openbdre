@@ -4,7 +4,6 @@ import com.wipro.ats.bdre.md.api.Import;
 import com.wipro.ats.bdre.md.pm.beans.FS;
 import com.wipro.ats.bdre.md.pm.beans.DataList;
 import com.wipro.ats.bdre.md.pm.beans.Plugin;
-import com.wipro.ats.bdre.md.pm.beans.UIWAR;
 import org.apache.log4j.Logger;
 
 import java.io.File;

@@ -5,7 +5,7 @@ import java.util.List;
 /**
  * Created by cloudera on 6/13/16.
  */
-public class UIWAR {
+public class UiWar {
 
 
     public String getLocation() {

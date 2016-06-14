@@ -8,7 +8,7 @@ import java.util.List;
 public class Install {
     private List<FS> fs;
     private Metadata metadata;
-    private UIWAR uiWar;
+    private UiWar uiWar;
     private RestWar restWar;
 
     public List<FS> getFs() {
@@ -28,11 +28,11 @@ public class Install {
     }
 
 
-    public UIWAR getUiWar() {
+    public UiWar getUiWar() {
         return uiWar;
     }
 
-    public void setUiWar(UIWAR uiWar) {
+    public void setUiWar(UiWar uiWar) {
         this.uiWar = uiWar;
     }
 
