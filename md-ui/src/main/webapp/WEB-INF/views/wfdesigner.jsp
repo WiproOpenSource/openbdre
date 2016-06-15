@@ -66,41 +66,42 @@
                     }
                     
                     .alert {
+                        height: 34px !important;
                         padding: 5px;
                     }
-                    
+
                     .fixed-height {
                         max-height: 750px;
                     }
-                    
+
                     .level2 {
                         opacity: .6;
                         -moz-opacity: 0.6;
                         z-index: 2;
                     }
-                    
+
                     .level2:hover {
                         opacity: 1;
                         -moz-opacity: .99;
                     }
-                    
+
                     .foldablearrow:after {
                         font-family: "Glyphicons Halflings";
                         content: "\e114";
                         float: right;
                         margin-left: 15px;
                     }
-                    
+
                     .foldablearrow.collapsed:after {
                         content: "\e080";
                     }
-                    
+
                     #makescrollable {
                         max-height: 250px;
                         overflow: auto;
                         overflow-x: hidden;
                     }
-                    
+
                     #modalCover {
                         left: 0;
                         top: 0;
@@ -113,29 +114,11 @@
                         filter: alpha(opacity=40);
                         /* For IE8 and earlier */
                     }
-                    .panel-body, .panel-primary>.panel-heading {
-					    background-color: transparent;
-					}
-					.label-info{
-						background-color: #FABD1A;
-					    padding: 7px 14px;
-					    color: #000;
-					}
-					.label-default{
-						background-color: #FABD1A;
-					    padding: 7px 14px;
-					    color: #000;
-					}
-					.form-group-file{
-						width: 100% !important;
-					}
-					.panel-body{
-						padding: 15px;
-					}
-			</style>
+
+                </style>
 
             </head>
-            <div class="page-header"><spring:message code="wfdesigner.page.create_new_workflow"/></div>
+            <div class="page-heading"><spring:message code="wfdesigner.page.create_new_workflow"/></div>
             <c:choose>
                 <c:when test="${not empty param.processId}">
 
@@ -144,7 +127,7 @@
                         <div class="row">
                             <div class="col-md-3">&nbsp;</div>
                         </div>
-                        <div class="row" style="background-color: #F8F9FB;padding-top: 2%;border-radius:5px;">
+                        <div class="row">
                             <div class="col-md-3 sidebar-nav">
                                 <div class="panel panel-default" ng-if="chartViewModel.selectedProcess.processName == null" class="animate-if">
                                     <div class="panel-heading" data-toggle="collapse" data-parent="#accordion"><spring:message code="wfdesigner.page.panel_heading"/></div>
@@ -152,7 +135,7 @@
                                 </div>
                                 <div class="panel-group" id="accordion" ng-if="chartViewModel.selectedProcess.processName != null" class="animate-if">
                                     <div class="panel panel-default">
-                                        <div class="panel-heading foldablearrow " data-toggle="collapse" data-parent="#accordion" data-target="#processdetails">
+                                        <div class="panel-heading foldablearrow panel-heading-wfd" data-toggle="collapse" data-parent="#accordion" data-target="#processdetails">
                                             <spring:message code="wfdesigner.page.process_details"/>
                                         </div>
                                         <div id="processdetails" class="panel-collapse collapse in">
@@ -183,7 +166,6 @@
                                                             <input name="description" id="process.description" class="form-control input-sm" type="text" ng-model="chartViewModel.selectedProcess.description">
                                                         </div>
                                                     </div>
-                                                    <div class="clearfix"></div>
                                                     <input type="hidden" name="processId" value="{{ chartViewModel.selectedProcess.processId }}">
                                                     <input type="hidden" name="batchPattern" value="{{ chartViewModel.selectedProcess.batchPattern }}">
                                                     <input type="hidden" name="parentProcessId" value="{{ chartViewModel.selectedProcess.parentProcessId }}">
@@ -200,7 +182,7 @@
                                         </div>
                                     </div>
                                     <div class="panel panel-default" ng-if="chartViewModel.selectedProcess.parentProcessId == null">
-                                        <div class="panel-heading foldablearrow " data-toggle="collapse" data-parent="#accordion" data-target="#jarupload" ng-click="getJarList()">
+                                        <div class="panel-heading foldablearrow panel-heading-wfd" data-toggle="collapse" data-parent="#accordion" data-target="#jarupload" ng-click="getJarList()">
                                             <spring:message code="wfdesigner.page.jar_configuration"/>
                                         </div>
                                         <div id="jarupload" class="panel-collapse collapse">
@@ -218,13 +200,14 @@
                                                 </div>
                                                 <hr/>
                                                 <form role="form" class="form-horizontal">
-                                                    <div class="form-group form-group-file">
+                                                    <div class="form-group">
                                                         <label class="control-label col-sm-3"><spring:message code="wfdesigner.page.select_file"/></label>
+                                                    </div>
+                                                    <div class="form-group">
                                                         <div class="col-sm-10">
                                                             <input type="file" name="file" class="form-control" id="jar-id" required>
                                                         </div>
                                                     </div>
-                                                    <div class="clearfix"></div>
                                                     <button type="button" class="btn btn-sm btn-primary pull-right" ng-click="uploadJar(chartViewModel.selectedProcess.processId,'lib','jar-id')"><spring:message code="wfdesigner.page.upload_jar"/></button>
                                                 </form>
                                             </div>
@@ -232,7 +215,7 @@
                                     </div>
 
                                     <div class="panel panel-default" ng-repeat="genConfig in chartViewModel.selectedProcessGenConfigProp">
-                                        <div class="panel-heading foldablearrow" data-toggle="collapse" data-parent="#accordion" data-target="#-{{genConfig.key}}" ng-click="chartViewModel.getKeyValueFunction(genConfig)">
+                                        <div class="panel-heading foldablearrow panel-heading-wfd" data-toggle="collapse" data-parent="#accordion" data-target="#-{{genConfig.key}}" ng-click="chartViewModel.getKeyValueFunction(genConfig)">
                                             {{genConfig.value}}
                                         </div>
                                         <div id="-{{genConfig.key}}" class="panel-collapse collapse">
@@ -243,9 +226,7 @@
 
                                             <div class="panel-body">
                                                 <div id="makescrollable">
-        <!-- contains logic for listing down all existing properties-->
-        <!-- this part lists all properties from properties table which do not belong to file or script type. If for  a new plugin developer needs to deal with a file,make sure the key in the corresponding property entry contains the string Path  -->
-                                                    <div class="row" ng-repeat="gen in chartViewModel.selectedProcessConfigKeyValue | filter:searchText" ng-if="!hasPath(gen.key) && !isFileId(gen.key)">
+                                                    <div class="row" ng-repeat="gen in chartViewModel.selectedProcessConfigKeyValue | filter:searchText" ng-if="gen.key != 'scriptPath' && gen.key != 'mapper'  && gen.key != 'reducer' &&  !isFileId(gen.key)">
                                                         <div class="col-md-3">
                                                             <label class="control-label" ng-if="gen.key.length > 7" id="{{genConfig.key}}-{{gen.key}}" for="{{genConfig.key}}-{{gen.value}}" title="{{ gen.key }}">{{ gen.key | limitTo : 7 : 0}}...:</label>
                                                             <label class="control-label" ng-if="gen.key.length <= 7" id="{{genConfig.key}}-{{gen.key}}" for="{{genConfig.key}}-{{gen.value}}">{{ gen.key }}:</label>
@@ -258,8 +239,33 @@
                                                             <a href="#" class="glyphicon glyphicon-trash" ng-click="deleteProp(genConfig,gen)"></a>
                                                         </div>
                                                     </div>
-        <!--for a new plugin, any property under process which deals with a file has to have the key containing 'Path' like scriptPath, mapperPath or reducerPath -->
-                                                    <div class="row" ng-repeat="gen in chartViewModel.selectedProcessConfigKeyValue" ng-if="hasPath(gen.key) || isFileId(gen.key)">
+                                                    <div class="row" ng-repeat="gen in chartViewModel.selectedProcessConfigKeyValue" ng-if="gen.key == 'scriptPath'">
+                                                        <div class="col-md-3">
+                                                            <label class="control-label" ng-if="gen.key.length > 7" id="{{genConfig.key}}-{{gen.key}}" for="{{genConfig.key}}-{{gen.value}}" title="{{ gen.key }}">{{ gen.key | limitTo : 7 : 0}}...:</label>
+                                                            <label class="control-label" ng-if="gen.key.length <= 7" id="{{genConfig.key}}-{{gen.key}}" for="{{genConfig.key}}-{{gen.value}}">{{ gen.key }}:</label>
+                                                        </div>
+                                                        <div class="col-md-6">
+                                                            <p class="form-control-static" ng-if="gen.value.length > 20" id="{{genConfig.key}}-{{gen.value}}" for="{{genConfig.key}}-{{gen.value}}" title="{{ gen.value }}">{{ gen.value | limitTo : 20 : 0}}...</p>
+                                                            <p class="form-control-static" ng-if="gen.value.length <= 20" id="{{genConfig.key}}-{{gen.value}}" for="{{genConfig.key}}-{{gen.value}}">{{ gen.value }}</p>
+                                                        </div>
+                                                        <div class="col-md-3">
+                                                            <a href="#" class="glyphicon glyphicon-trash" ng-click="deleteFile(chartViewModel.selectedProcess.parentProcessId,genConfig, gen)"></a>
+                                                        </div>
+                                                    </div>
+                                                     <div class="row" ng-repeat="gen in chartViewModel.selectedProcessConfigKeyValue" ng-if="gen.key == 'mapper' || gen.key == 'reducer'">
+                                                            <div class="col-md-3">
+                                                                <label class="control-label" ng-if="gen.key.length > 7" id="{{genConfig.key}}-{{gen.key}}" for="{{genConfig.key}}-{{gen.value}}" title="{{ gen.key }}">{{ gen.key | limitTo : 7 : 0}}...:</label>
+                                                                <label class="control-label" ng-if="gen.key.length <= 7" id="{{genConfig.key}}-{{gen.key}}" for="{{genConfig.key}}-{{gen.value}}">{{ gen.key }}:</label>
+                                                            </div>
+                                                            <div class="col-md-6">
+                                                                <p class="form-control-static" ng-if="gen.value.length > 20" id="{{genConfig.key}}-{{gen.value}}" for="{{genConfig.key}}-{{gen.value}}" title="{{ gen.value }}">{{ gen.value | limitTo : 20 : 0}}...</p>
+                                                                <p class="form-control-static" ng-if="gen.value.length <= 20" id="{{genConfig.key}}-{{gen.value}}" for="{{genConfig.key}}-{{gen.value}}">{{ gen.value }}</p>
+                                                            </div>
+                                                            <div class="col-md-3">
+                                                                <a href="#" class="glyphicon glyphicon-trash" ng-click="deleteFile(chartViewModel.selectedProcess.parentProcessId,genConfig, gen)"></a>
+                                                            </div>
+                                                        </div>
+                                                    <div class="row" ng-repeat="gen in chartViewModel.selectedProcessConfigKeyValue" ng-if="isFileId(gen.key)">
                                                         <div class="col-md-3">
                                                             <label class="control-label" ng-if="gen.key.length > 7" id="{{genConfig.key}}-{{gen.key}}" for="{{genConfig.key}}-{{gen.value}}" title="{{ gen.key }}">{{ gen.key | limitTo : 7 : 0}}...:</label>
                                                             <label class="control-label" ng-if="gen.key.length <= 7" id="{{genConfig.key}}-{{gen.key}}" for="{{genConfig.key}}-{{gen.value}}">{{ gen.key }}:</label>
@@ -274,9 +280,7 @@
                                                     </div>
                                                 </div>
                                                 <hr/>
-
-                                                <!-- from here on contains logic for adding a new entry-->
-                                                <form class="form-horizontal" role="form" ng-if="genConfig.key == 'param'">
+                                                <form class="form-horizontal" role="form" ng-if="genConfig.type != 'hql'  && genConfig.type != 'hadoopstream' && genConfig.type != 'r'  && genConfig.type != 'spark' && genConfig.type != 'pig' && genConfig.type != 'shell' && genConfig.type != 'addFiles'">
                                                     <div class="form-group">
                                                         <label class="control-label col-sm-2" for="{{genConfig.key}}-propkey"><spring:message code="wfdesigner.page.propkey_name"/></label>
                                                         <div class="col-sm-10">
@@ -289,21 +293,99 @@
                                                             <input type="text" class="form-control" id="{{genConfig.key}}-propval" placeholder=<spring:message code="wfdesigner.page.propval_value_placeholder"/> required>
                                                         </div>
                                                     </div>
-                                                    <div class="clearfix"></div>
                                                     <button type="submit" ng-click="insertProp(genConfig)" class="btn btn-primary  pull-right">Add {{genConfig.value}}</button>
                                                 </form>
-        <!-- if genconfig.key is not equal to text, it belongs to file upload type -->
-                                                <form class="form-horizontal" role="form" ng-if="genConfig.type != 'text'">
-                                                    <div class="form-group form-group-file">
-                                                        <label class="control-label col-sm-3" for="{{genConfig.key}}-propkey"> Select {{genConfig.key}} file </label>
-                                                    	<div class="col-sm-10">
+                                                <form class="form-horizontal" role="form" ng-if="genConfig.type == 'hql'">
+                                                    <div class="form-group">
+                                                        <label class="control-label col-sm-3" for="{{genConfig.key}}-propkey"><spring:message code="wfdesigner.page.select_hql_file"/></label>
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <div class="col-sm-10">
                                                             <input type="file" name="file" class="form-control" id="{{genConfig.key}}-propval" required>
                                                         </div>
                                                     </div>
                                                     <div class="form-group">
-                                                        <button type="upload" ng-click="uploadFile(chartViewModel.selectedProcess.processId,chartViewModel.selectedProcess.parentProcessId,genConfig.type,genConfig.key)" class="btn btn-primary  pull-right">Upload {{genConfig.key}}</button>
+                                                        <button type="upload" ng-click="uploadFile(chartViewModel.selectedProcess.processId,chartViewModel.selectedProcess.parentProcessId,'hql',genConfig.key)" class="btn btn-primary  pull-right">Upload {{genConfig.key}}</button>
                                                     </div>
-                                                    <div class="clearfix"></div>
+                                                </form>
+                                                 <form class="form-horizontal" role="form" ng-if="genConfig.type == 'r'">
+                                                    <div class="form-group">
+                                                        <label class="control-label col-sm-3" for="{{genConfig.key}}-propkey"><spring:message code="wfdesigner.page.select_r_file"/></label>
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <div class="col-sm-10">
+                                                            <input type="file" name="file" class="form-control" id="{{genConfig.key}}-propval" required>
+                                                        </div>
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <button type="upload" ng-click="uploadFile(chartViewModel.selectedProcess.processId,chartViewModel.selectedProcess.parentProcessId,'r',genConfig.key)" class="btn btn-primary  pull-right">Upload {{genConfig.key}}</button>
+                                                    </div>
+                                                </form>
+                                                 <form class="form-horizontal" role="form" ng-if="genConfig.type == 'hadoopstream'">
+                                                    <div class="form-group">
+                                                        <label class="control-label col-sm-3" for="{{genConfig.key}}-propkey">Select  {{genConfig.key}}:</label>
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <div class="col-sm-10">
+                                                            <input type="file" name="file" class="form-control" id="{{genConfig.key}}-propval" required>
+                                                        </div>
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <button type="upload" ng-click="uploadFile(chartViewModel.selectedProcess.processId,chartViewModel.selectedProcess.parentProcessId,'hadoopstream',genConfig.key)" class="btn btn-primary  pull-right">Upload {{genConfig.key}}</button>
+                                                    </div>
+                                                </form>
+
+                                                <form class="form-horizontal" role="form" ng-if="genConfig.type == 'shell'">
+                                                    <div class="form-group">
+                                                        <label class="control-label col-sm-3" for="{{genConfig.key}}-propkey"><spring:message code="wfdesigner.page.select_shell_script"/></label>
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <div class="col-sm-10">
+                                                            <input type="file" name="file" class="form-control" id="{{genConfig.key}}-propval" required>
+                                                        </div>
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <button type="upload" ng-click="uploadFile(chartViewModel.selectedProcess.processId,chartViewModel.selectedProcess.parentProcessId,'shell',genConfig.key)" class="btn btn-primary  pull-right">Upload {{genConfig.key}}</button>
+                                                    </div>
+                                                </form>
+                                                <form class="form-horizontal" role="form" ng-if="genConfig.type == 'addFiles'">
+                                                    <div class="form-group">
+                                                        <label class="control-label col-sm-3" for="{{genConfig.key}}-propkey"><spring:message code="wfdesigner.page.add_files"/></label>
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <div class="col-sm-10">
+                                                            <input type="file" name="file" class="form-control" id="{{genConfig.key}}-propval" required>
+                                                        </div>
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <button type="upload" ng-click="uploadFile(chartViewModel.selectedProcess.processId,chartViewModel.selectedProcess.parentProcessId,'additional',genConfig.key)" class="btn btn-primary  pull-right">Upload {{genConfig.key}}</button>
+                                                    </div>
+                                                </form>
+                                                <form class="form-horizontal" role="form" ng-if="genConfig.type == 'pig'">
+                                                    <div class="form-group">
+                                                        <label class="control-label col-sm-3" for="{{genConfig.key}}-propkey"><spring:message code="wfdesigner.page.select_pig_script"/></label>
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <div class="col-sm-10">
+                                                            <input type="file" name="file" class="form-control" id="{{genConfig.key}}-propval" required>
+                                                        </div>
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <button type="upload" ng-click="uploadFile(chartViewModel.selectedProcess.processId,chartViewModel.selectedProcess.parentProcessId,'pig',genConfig.key)" class="btn btn-primary  pull-right">Upload {{genConfig.key}}</button>
+                                                    </div>
+                                                </form>
+                                                <form class="form-horizontal" role="form" ng-if="genConfig.type == 'spark'">
+                                                    <div class="form-group">
+                                                        <label class="control-label col-sm-3" for="{{genConfig.key}}-propkey"><spring:message code="wfdesigner.page.select_spark_jar"/></label>
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <div class="col-sm-10">
+                                                            <input type="file" name="file" class="form-control" id="{{genConfig.key}}-propval" required>
+                                                        </div>
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <button type="upload" ng-click="uploadFile(chartViewModel.selectedProcess.processId,chartViewModel.selectedProcess.parentProcessId,'spark',genConfig.key)" class="btn btn-primary  pull-right">Upload {{genConfig.key}}</button>
+                                                    </div>
                                                 </form>
                                             </div>
                                         </div>
@@ -312,7 +394,7 @@
                             </div>
                             <div class="col-md-9">
                                 <div class="row">
-                                    <div class="panel">
+                                    <div class="panel panel-default">
                                         <div class="panel-body">
                                             <div class="col-md-4">
                                                 <!-- Split button -->
@@ -383,12 +465,12 @@
 
                     <body ng-app="app" data-ng-init="intialiseNewProcessPage()" ng-controller="AppCtrl">
                         <div class="row">&nbsp;</div>
-                        <div class="row">
+                        <div class="row bdre-process-creation-form">
                             <div class="col-md-2"> </div>
                             <div class="col-md-8 ">
                                 <div class="panel panel-primary">
 									<%-- <div class="panel-heading"><spring:message code="wfdesigner.page.create_new_workflow"/></div> --%>
-									<div class="panel-body" style="padding: 0;">
+									<div class="panel-body">
                                         <form role="form">
                                             <div class="form-group">
                                                 <label for="processName"><spring:message code="wfdesigner.page.process_name"/></label>
@@ -404,7 +486,6 @@
                                                     <option ng-repeat="busdomain in newPageBusDomain" id="{{$index}}" value="{{ busdomain.Value }}">{{ busdomain.DisplayText }}</option>
                                                 </select>
                                             </div>
-
                                             <div class="form-group">
                                                 <label for="type"><spring:message code="wfdesigner.page.type"/></label>
                                                 <select class="form-control" id="type">
@@ -428,4 +509,5 @@
                     </body>
                 </c:otherwise>
             </c:choose>
-           </html>
+
+            </html>

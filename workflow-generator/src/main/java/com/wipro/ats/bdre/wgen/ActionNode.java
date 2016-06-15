@@ -123,11 +123,11 @@ public class ActionNode extends OozieNode {
             RawLoadActionNode rawLoadActionNode = new RawLoadActionNode(this);
             containingNodes.add(rawLoadActionNode);
 
-        } else if (processInfo.getProcessTypeId() == HIVE_ACTION) {
+        }/* else if (processInfo.getProcessTypeId() == HIVE_ACTION) {
             HiveActionNode hiveActionNode = new HiveActionNode(this);
             containingNodes.add(hiveActionNode);
 
-        } else if (processInfo.getProcessTypeId() == DATA_IMPORT_ACTION) {
+        } */else if (processInfo.getProcessTypeId() == DATA_IMPORT_ACTION) {
             ImportActionNode importActionNode = new ImportActionNode(this);
             FileRegistrationNode fileRegistrationNode = new FileRegistrationNode(this);
             importActionNode.setToNode(fileRegistrationNode);
@@ -244,76 +244,86 @@ public class ActionNode extends OozieNode {
         LOGGER.info("inside setPluginProcessInfo");
         // fill plugin id list by iteration through plugin config and populate with each row's plugin id. Set puts only unique entries
         Set<String> pluginUniqueIdList = new HashSet((new PluginConfig().distinctPluginUniqueIdList("wf-cont-nodes")));
-            // for each plugin id check for a config group of "wf-gen" for same structure of plugin config for a  action node refer to:
-            for (String pluginUniqueId:pluginUniqueIdList)
-            {
-                LOGGER.info("ppid= "+processInfo.getParentProcessId());
-                if (processInfo.getParentProcessId() == null) {
-                    processTypeSet.add(processInfo.getProcessTypeId());
-                    return;
-                }
-                // Under each such "wf-gen" config group, read the value with key as 'parent-process-id' for a parent process id
-                PluginConfigId pluginConfigIdParent=new PluginConfigId();
-                pluginConfigIdParent.setPluginUniqueId(pluginUniqueId);
-                pluginConfigIdParent.setPluginKey("parent-process-id");
-                com.wipro.ats.bdre.md.dao.jpa.PluginConfig pluginConfigParent=new PluginConfig().get(pluginConfigIdParent);
-                Integer parentProcessId=Integer.parseInt(pluginConfigParent.getPluginValue());
-                // Read corresponding list of sub processes through key as parent-processid.sub-process-id and add to the set
-                PluginConfigId pluginConfigIdSubProcess=new PluginConfigId();
-                pluginConfigIdSubProcess.setPluginUniqueId(pluginUniqueId);
-                pluginConfigIdSubProcess.setPluginKey("sub-process-ids");
-                //com.wipro.ats.bdre.md.dao.jpa.PluginConfig pluginConfigSubProcess=new PluginConfig().get(pluginConfigIdSubProcess);
-                //String subProcesses=pluginConfigSubProcess.getPluginValue();
-                //String[] subProcessIds=subProcesses.split(",");
-                //Set<Integer> subProcessSet = new HashSet<>();
-                //subProcessSet.add(processInfo.getProcessTypeId());
-                // add logic to populate set with all sub processes and proceed any further only if processInfo.processId belongs to the set
+        // for each plugin id check for a config group of "wf-gen" for same structure of plugin config for a  action node refer to:
+        for (String pluginUniqueId:pluginUniqueIdList)
+        {
+            LOGGER.info("ppid= "+processInfo.getParentProcessId());
+            if (processInfo.getParentProcessId() == null) {
+                processTypeSet.add(processInfo.getProcessTypeId());
+                return;
+            }
+            // Under each such "wf-gen" config group, read the value with key as 'parent-process-id' for a parent process id
+            // PluginConfigId pluginConfigIdParent=new PluginConfigId();
+            //pluginConfigIdParent.setPluginUniqueId(pluginUniqueId);
+            // pluginConfigIdParent.setPluginKey("parent-process-id");
+            // com.wipro.ats.bdre.md.dao.jpa.PluginConfig pluginConfigParent=new PluginConfig().get(pluginConfigIdParent);
+            // Integer parentProcessId=Integer.parseInt(pluginConfigParent.getPluginValue());
+            // Read corresponding list of sub processes through key as parent-processid.sub-process-id and add to the set
+            PluginConfigId pluginConfigIdSubProcess=new PluginConfigId();
+            pluginConfigIdSubProcess.setPluginUniqueId(pluginUniqueId);
+            pluginConfigIdSubProcess.setPluginKey("sub-process-ids");
+            //com.wipro.ats.bdre.md.dao.jpa.PluginConfig pluginConfigSubProcess=new PluginConfig().get(pluginConfigIdSubProcess);
+            //String subProcesses=pluginConfigSubProcess.getPluginValue();
+            //String[] subProcessIds=subProcesses.split(",");
+            //Set<Integer> subProcessSet = new HashSet<>();
+            //subProcessSet.add(processInfo.getProcessTypeId());
+            // add logic to populate set with all sub processes and proceed any further only if processInfo.processId belongs to the set
 
-                int subProcessId = processInfo.getProcessTypeId();
-                LOGGER.debug("Sub process id = " + subProcessId);
-                processTypeSet.add(subProcessId);
+            int subProcessId = processInfo.getProcessTypeId();
+            LOGGER.info("Sub process id = " + subProcessId);
+            processTypeSet.add(subProcessId);
 
-                // iterate through plugin config with '${subProcessId}.wf-gen' as config group,get corresponding values which are jar paths and  adding all jars to classpath
-                List<String> jarsToLoad = new ArrayList<>();
-                     jarsToLoad=new PluginConfig().getWithConfig(pluginUniqueId,subProcessId+".wf-gen");
+            // iterate through plugin config with '${subProcessId}.wf-gen' as config group,get corresponding values which are jar paths and  adding all jars to classpath
+            List<String> jarsToLoad = new ArrayList<>();
+            jarsToLoad=new PluginConfig().getWithConfig(pluginUniqueId,subProcessId+".wf-gen");
 
-                //}
-                LOGGER.info(pluginUniqueId);
-                LOGGER.info(subProcessId);
-                LOGGER.info("size of jarstoLoad before remove duplication "+jarsToLoad.size());
-                //add logic to skip adding jars if classes are already loaded, classes can be taken from containing nodes
-                  Set<String> removedDuplicated=new HashSet<>();
-                removedDuplicated.addAll(jarsToLoad);
-                jarsToLoad.clear();
-                jarsToLoad.addAll(removedDuplicated);
-                LOGGER.info("size of jarstoLoad"+jarsToLoad.size());
+            //}
+            LOGGER.info(pluginUniqueId);
+            LOGGER.info(subProcessId);
+            LOGGER.info("size of jarstoLoad before remove duplication "+jarsToLoad.size());
+            //add logic to skip adding jars if classes are already loaded, classes can be taken from containing nodes
+            Set<String> removedDuplicated=new HashSet<>();
+            removedDuplicated.addAll(jarsToLoad);
+            jarsToLoad.clear();
+            jarsToLoad.addAll(removedDuplicated);
+            LOGGER.info("size of jarstoLoad"+jarsToLoad.size());
             URL[] urls = new URL[10];
             for (String jar : jarsToLoad) {
                 int index = 0;
                 LOGGER.info("adding " + jar + " in classpath");
+                String currentUsersHomeDir = System.getProperty("user.home");
+                LOGGER.info(currentUsersHomeDir);
                 try {
-                    File file = new File(jar);
-                    URL url = file.toURL();
-                    urls[index] = url;
+                    LOGGER.info("checking if jar exists");
+                    File file = new File(currentUsersHomeDir+"/"+jar);
+                    if(file.exists()){
+                        URL url = file.toURL();
+                        urls[index] = url;
+                    }
+                    else{
+                        throw new BDREException("Jar can not be found at the location "+currentUsersHomeDir+"/"+jar);
+                    }
                     index++;
                 } catch (Exception ex) {
+                    LOGGER.info("jar does not exists");
                     ex.printStackTrace();
                     throw new BDREException(ex);
                 }
             }
+
             URLClassLoader pluginClassLoader = new URLClassLoader(urls, this.getClass().getClassLoader());
 
             // iterate through plugin config for config group as "wf-cont-nodes", form list of nodes in correct order
-                List<String> listOfNodeClasses = new LinkedList<>();   //keys as a list
-                     listOfNodeClasses=new PluginConfig().getWithConfig(pluginUniqueId,subProcessId+".wf-cont-nodes");
-                LOGGER.info("size of listOfNodeClasses "+listOfNodeClasses.size());
-                for(String s:listOfNodeClasses)
-                {
-                    LOGGER.info("node class is "+s);
-                }
-                    //listOfNodeClasses.addAll(nodesList);
+            List<String> listOfNodeClasses = new LinkedList<>();   //keys as a list
+            listOfNodeClasses=new PluginConfig().getWithConfig(pluginUniqueId,subProcessId+".wf-cont-nodes");
+            LOGGER.info("size of listOfNodeClasses "+listOfNodeClasses.size());
+            for(String s:listOfNodeClasses)
+            {
+                LOGGER.info("node class is "+s);
+            }
+            //listOfNodeClasses.addAll(nodesList);
 
-               // }
+            // }
 
             /*listOfNodeClasses.add("com.wipro.ats.bdre.wgen.LOFActionNode");
             listOfNodeClasses.add("com.wipro.ats.bdre.wgen.DataQualityActionNode");
