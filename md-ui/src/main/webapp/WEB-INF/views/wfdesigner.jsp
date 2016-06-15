@@ -311,7 +311,7 @@
                                                         </div>
                                                     </div>
                                                     <div class="clearfix"></div>
-                                                    <button type="submit" ng-click="insertProp(genConfig)" class="btn btn-primary  pull-right">Add {{genConfig.value}}</button>
+                                                    <button type="submit" ng-click="insertProp(genConfig)" class="btn btn-primary  pull-right"><spring:message code="wfdesigner.page.button_add"/> {{genConfig.value}}</button>
                                                 </form>
                                                 <form class="form-horizontal" role="form" ng-if="genConfig.type == 'hql'">
                                                     
@@ -340,7 +340,7 @@
                                                 </form>
                                                  <form class="form-horizontal" role="form" ng-if="genConfig.type == 'hadoopstream'">
                                                     <div class="form-group form-group-file">
-                                                        <label class="control-label col-sm-3" for="{{genConfig.key}}-propkey">Select  {{genConfig.key}}:</label>
+                                                        <label class="control-label col-sm-3" for="{{genConfig.key}}-propkey"><spring:message code="wfdesigner.page.label_select"/>  {{genConfig.key}}:</label>
                                                     	<div class="col-sm-10">
                                                             <input type="file" name="file" class="form-control" id="{{genConfig.key}}-propval" required>
                                                         </div>
@@ -411,9 +411,9 @@
                                             <div class="col-md-4">
                                                 <!-- Split button -->
                                                 <div class="btn-group">
-                                                    <button type="button" class="btn btn-default">Add Node</button>
+                                                    <button type="button" class="btn btn-default"><spring:message code="wfdesigner.page.button_note"/></button>
                                                     <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                                        <span class="sr-only">Toggle Dropdown</span>&nbsp;
+                                                        <span class="sr-only"><spring:message code="wfdesigner.page.button_dropdown"/></span>&nbsp;
                                                         <span class="caret"></span>
                                                     </button>
                                                     <ul class="dropdown-menu">
@@ -424,16 +424,16 @@
                                                 </div>
                                                 <!-- Split button -->
                                                 <div class="btn-group">
-                                                    <button type="button" class="btn btn-default">Actions</button>
+                                                    <button type="button" class="btn btn-default"><spring:message code="wfdesigner.page.button_action"/></button>
                                                     <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                                        <span class="sr-only">Toggle Dropdown</span>&nbsp;
+                                                        <span class="sr-only"><spring:message code="wfdesigner.page.button_dropdown"/></span>&nbsp;
                                                         <span class="caret"></span>
                                                     </button>
                                                     <ul class="dropdown-menu">
-                                                        <li><a ng-click="confirmDialog('Do you really want to delete the selected element?', 'deleteSelected')">Delete Selected</a></li>
-                                                        <li><a ng-click="duplicateSelected()">Duplicate Selected</a></li>
-                                                        <li><a onclick="goToPage('process-page')">Go To Process Page</a></li>
-                                                        <li><a onclick="goToPage('wfdesigner-page')">Create New Workflow</a></li>
+                                                        <li><a ng-click='confirmDialog(<spring:message code="wfdesigner.page.dropdown_confirm_msg"/>, "deleteSelected")'><spring:message code="wfdesigner.page.dropdown_delete"/></a></li>
+                                                        <li><a ng-click="duplicateSelected()"><spring:message code="wfdesigner.page.dropdown_duplicate"/></a></li>
+                                                        <li><a onclick="goToPage('process-page')"><spring:message code="wfdesigner.page.dropdown_process"/></a></li>
+                                                        <li><a onclick="goToPage('wfdesigner-page')"><spring:message code="wfdesigner.page.dropdown_wfdesigner"/></a></li>
                                                     </ul>
                                                 </div>
 
