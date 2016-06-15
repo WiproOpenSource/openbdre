@@ -33,7 +33,7 @@
 	<script type="text/javascript">
 		    $(document).ready(function () {
 	    $('#Container').jtable({
-	    title: 'Workflow Type List',
+	    title: '<spring:message code="workflowtype.page.title_wf_type_list"/>',
 		    paging: true,
 		    pageSize: 10,
 		    sorting: true,
@@ -114,10 +114,10 @@
 			    list: true,
 			    create:true,
 			    edit: false,
-			    title: "Id"
+			    title: '<spring:message code="workflowtype.page.title_key"/>'
 		    },
 			    workflowTypeName: {
-			    title: 'Name'
+			    title: '<spring:message code="workflowtype.page.title_wf_type_name"/>'
 			    }
 		    }
 	    });
