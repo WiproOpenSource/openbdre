@@ -24,7 +24,7 @@ public class WarOperations {
                 listOfFiles(file1,parent);
             }else{
                 String relativePath = file1.getAbsolutePath().replace(parent.getAbsolutePath() ,"");
-                String webappPath = System.getProperty("user.home") + "/bdre/lib/webapps/md-ui-1.1-SNAPSHOT" + relativePath;
+                String webappPath = System.getProperty("user.home") + "/bdre/lib/webapps/mdui" + relativePath;
                 if (new File(webappPath).exists() && ! Files.isSymbolicLink(new File(webappPath).toPath())){
                        continue;
                 }else {
