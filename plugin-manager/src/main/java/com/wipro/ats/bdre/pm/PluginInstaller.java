@@ -1,16 +1,20 @@
 package com.wipro.ats.bdre.pm;
 
+import com.wipro.ats.bdre.md.api.Import;
 import com.wipro.ats.bdre.md.pm.beans.FS;
 import com.wipro.ats.bdre.md.pm.beans.DataList;
 import com.wipro.ats.bdre.md.pm.beans.Plugin;
 import org.apache.log4j.Logger;
+
+import java.io.File;
+import java.io.IOException;
 
 /**
  * Created by cloudera on 6/2/16.
  */
 public class PluginInstaller {
     private static final Logger LOGGER = Logger.getLogger(PluginManagerMain.class);
-    public void install(Plugin plugin,String pluginDescriptorJSON){
+    public void install(Plugin plugin,String pluginDescriptorJSON) throws IOException{
 
         for(FS fs : plugin.getInstall().getFs()){
 
@@ -44,6 +48,25 @@ public class PluginInstaller {
             metadataActions.deleteAction(dataList);
         }
 
+        String warLocation = pluginDescriptorJSON + "/" + plugin.getInstall().getUiWar().getLocation();
+        Import impotObject = new Import();
+        File folder = new File(warLocation.substring(0, warLocation.lastIndexOf(".")));
+        if(!folder.exists()){
+            folder.mkdir();
+        }
+        impotObject.unZipIt(warLocation, warLocation.substring(0, warLocation.lastIndexOf(".")));
+        WarOperations warOperations = new WarOperations();
+        warOperations.listOfFiles(folder,folder);
+
+
+
+        String restWarLocation = pluginDescriptorJSON + "/" + plugin.getInstall().getUiWar().getLocation();
+        folder = new File(restWarLocation.substring(0, restWarLocation.lastIndexOf(".")));
+        if(!folder.exists()){
+            folder.mkdir();
+        }
+        impotObject.unZipIt(restWarLocation, restWarLocation.substring(0, restWarLocation.lastIndexOf(".")));
+        warOperations.listOfFiles(folder,folder);
 
     }
 }
