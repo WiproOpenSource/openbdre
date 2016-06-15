@@ -28,7 +28,7 @@ processId=$3
 userName=$4
 scriptName=$5
 echo "busDomainId=$1 , processTypeId=$2 , processId=$3 userName=$4 scriptName=$5"
-if [ $scriptName -eq Workflow.py ]; then
+if [ "$scriptName" == "Workflow.py" ]; then
     python $(dirname $0)/Workflow.py $busDomainId $processTypeId $processId
 else
     sh $(dirname $0)/$scriptName $busDomainId $processTypeId $processId $userName
