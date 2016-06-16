@@ -17,6 +17,7 @@ package com.wipro.ats.bdre.md.api;
 import com.wipro.ats.bdre.md.api.base.MetadataAPIBase;
 import com.wipro.ats.bdre.md.beans.table.GeneralConfig;
 import com.wipro.ats.bdre.md.dao.GeneralConfigDAO;
+import com.wipro.ats.bdre.md.dao.jpa.GeneralConfigId;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.AutowireCapableBeanFactory;
@@ -113,6 +114,25 @@ public class GetGeneralConfig extends MetadataAPIBase {
 
         }
         return generalConfig;
+    }
+
+    public void insert(GeneralConfig generalConfig){
+        com.wipro.ats.bdre.md.dao.jpa.GeneralConfig generalConfigJPA = new com.wipro.ats.bdre.md.dao.jpa.GeneralConfig();
+        GeneralConfigId generalConfigId = new GeneralConfigId();
+        generalConfigId.setConfigGroup(generalConfig.getConfigGroup());
+        generalConfigId.setGcKey(generalConfig.getKey());
+        generalConfigJPA.setId(generalConfigId);
+        generalConfigJPA.setGcValue(generalConfig.getValue());
+        generalConfigJPA.setDefaultVal(generalConfig.getDefaultVal());
+        generalConfigJPA.setEnabled(generalConfig.isEnabled());
+        generalConfigJPA.setDescription(generalConfig.getDescription());
+        generalConfigJPA.setType(generalConfig.getType());
+        if(generalConfig.getRequired() == 1){
+            generalConfigJPA.setRequired(true);
+        }else {
+            generalConfigJPA.setRequired(false);
+        }
+        generalConfigId = generalConfigDAO.insert(generalConfigJPA);
     }
 
     @Override
