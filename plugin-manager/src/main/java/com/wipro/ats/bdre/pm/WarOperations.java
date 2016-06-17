@@ -33,7 +33,12 @@ public class WarOperations {
                 }
             }else{
                 String relativePath = file1.getAbsolutePath().replace(parent.getAbsolutePath() ,"");
-                String webappPath = System.getProperty("user.home") + "/bdre/lib/webapps/mdui" + relativePath;
+                String webappPath = "";
+                if ("mdui".equals(md)) {
+                    webappPath = System.getProperty("user.home") + "/bdre/lib/webapps/mdui" + relativePath;
+                }else{
+                    webappPath = System.getProperty("user.home") + "/bdre/lib/webapps/mdrest" + relativePath;
+                }
                 if (new File(webappPath).exists() && ! Files.isSymbolicLink(new File(webappPath).toPath())){
                        continue;
                 }else {

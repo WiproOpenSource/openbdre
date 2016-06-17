@@ -27,7 +27,7 @@ public class PluginManagerMain {
             // checking whether plugin is installed or not
             InstalledPlugins installedPlugins = new InstalledPlugins();
             com.wipro.ats.bdre.md.dao.jpa.InstalledPlugins installedPlugins1 = installedPlugins.get(plugin.getPluginDetails().getPluginId() + "-" + plugin.getPluginDetails().getVersion());
-            if(installedPlugins1.getName() != null){
+            if(installedPlugins1 != null){
                 throw new BDREException("plugin already installed");
             }
             if(pluginDependencyResolver.dependencyCheck(plugin)){
