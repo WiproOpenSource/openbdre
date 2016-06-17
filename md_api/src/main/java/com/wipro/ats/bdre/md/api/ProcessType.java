@@ -1,7 +1,6 @@
 package com.wipro.ats.bdre.md.api;
 
 import com.wipro.ats.bdre.md.api.base.MetadataAPIBase;
-import com.wipro.ats.bdre.md.dao.ProcessLogDAO;
 import com.wipro.ats.bdre.md.dao.ProcessTypeDAO;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -41,6 +40,10 @@ public class ProcessType  extends MetadataAPIBase {
 
     public void delete(com.wipro.ats.bdre.md.beans.table.ProcessType processType){
         processTypeDAO.delete(processType.getProcessTypeId());
+    }
+
+    public com.wipro.ats.bdre.md.dao.jpa.ProcessType get(Integer processTypeId){
+        return processTypeDAO.get(processTypeId);
     }
 
     public Object execute(String[] args){

@@ -47,26 +47,27 @@ public class PluginInstaller {
             MetadataActions metadataActions = new MetadataActions();
             metadataActions.deleteAction(dataList);
         }
+            Import impotObject = new Import();
+            WarOperations warOperations = new WarOperations();
+         if (!plugin.getInstall().getUiWar().getLocation().isEmpty()) {
+             String warLocation = pluginDescriptorJSON + "/" + plugin.getInstall().getUiWar().getLocation();
 
-        String warLocation = pluginDescriptorJSON + "/" + plugin.getInstall().getUiWar().getLocation();
-        Import impotObject = new Import();
-        File folder = new File(warLocation.substring(0, warLocation.lastIndexOf(".")));
-        if(!folder.exists()){
-            folder.mkdir();
-        }
-        impotObject.unZipIt(warLocation, warLocation.substring(0, warLocation.lastIndexOf(".")));
-        WarOperations warOperations = new WarOperations();
-        warOperations.listOfFiles(folder,folder);
+             File folder = new File(warLocation.substring(0, warLocation.lastIndexOf(".")));
+             if (!folder.exists()) {
+                 folder.mkdir();
+             }
+             impotObject.unZipIt(warLocation, warLocation.substring(0, warLocation.lastIndexOf(".")));
 
-
-
-        String restWarLocation = pluginDescriptorJSON + "/" + plugin.getInstall().getUiWar().getLocation();
-        folder = new File(restWarLocation.substring(0, restWarLocation.lastIndexOf(".")));
+             warOperations.listOfFiles(folder, folder);
+         }
+         if ( !plugin.getInstall().getRestWar().getLocation().isEmpty()){
+        String restWarLocation = pluginDescriptorJSON + "/" + plugin.getInstall().getRestWar().getLocation();
+        File folder = new File(restWarLocation.substring(0, restWarLocation.lastIndexOf(".")));
         if(!folder.exists()){
             folder.mkdir();
         }
         impotObject.unZipIt(restWarLocation, restWarLocation.substring(0, restWarLocation.lastIndexOf(".")));
         warOperations.listOfFiles(folder,folder);
 
-    }
+    }}
 }
