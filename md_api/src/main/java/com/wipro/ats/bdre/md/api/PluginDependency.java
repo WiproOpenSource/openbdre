@@ -2,15 +2,13 @@ package com.wipro.ats.bdre.md.api;
 
 import com.wipro.ats.bdre.md.api.base.MetadataAPIBase;
 import com.wipro.ats.bdre.md.dao.InstalledPluginsDAO;
-import com.wipro.ats.bdre.md.dao.PluginConfigDAO;
 import com.wipro.ats.bdre.md.dao.PluginDependencyDAO;
-import com.wipro.ats.bdre.md.dao.jpa.*;
-import com.wipro.ats.bdre.md.dao.jpa.InstalledPlugins;
 import com.wipro.ats.bdre.md.pm.beans.Plugin;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.AutowireCapableBeanFactory;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -44,5 +42,10 @@ public class PluginDependency extends MetadataAPIBase {
             int pluginDependencyId = pluginDependencyDAO.insert(pluginDependencyJPA);
             pluginDependencyJPA.setDependencyId(pluginDependencyId);
         }
+    }
+
+    public List<com.wipro.ats.bdre.md.pm.beans.PluginDependency> getDependencies(String pluginUniqueId){
+        List<com.wipro.ats.bdre.md.pm.beans.PluginDependency> pluginDependencies = new ArrayList<com.wipro.ats.bdre.md.pm.beans.PluginDependency>();
+        return pluginDependencies;
     }
 }

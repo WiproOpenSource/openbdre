@@ -1,5 +1,6 @@
 package com.wipro.ats.bdre.pm;
 
+import com.wipro.ats.bdre.exception.BDREException;
 import com.wipro.ats.bdre.md.api.InstalledPlugins;
 import com.wipro.ats.bdre.md.api.PluginDependency;
 import com.wipro.ats.bdre.md.pm.beans.Plugin;
@@ -23,6 +24,12 @@ public class PluginManagerMain {
             PluginDescriptorReader pluginDescriptorReader = new PluginDescriptorReader();
             Plugin plugin = pluginDescriptorReader.jsonReader(pluginDescriptorJSON + "/plugin.json");
             PluginDependencyResolver pluginDependencyResolver = new PluginDependencyResolver();
+            // checking whether plugin is installed or not
+            InstalledPlugins installedPlugins = new InstalledPlugins();
+            com.wipro.ats.bdre.md.dao.jpa.InstalledPlugins installedPlugins1 = installedPlugins.get(plugin.getPluginDetails().getPluginId() + "-" + plugin.getPluginDetails().getVersion());
+            if(installedPlugins1.getName() != null){
+                throw new BDREException("plugin already installed");
+            }
             if(pluginDependencyResolver.dependencyCheck(plugin)){
                 PluginInstaller pluginInstaller = new PluginInstaller();
                 pluginInstaller.install(plugin,pluginDescriptorJSON);
@@ -31,7 +38,6 @@ public class PluginManagerMain {
                 throw new Exception();
             }
             //adding plugin into INSTALLED_PLUGINS table to make an entry
-            InstalledPlugins installedPlugins = new InstalledPlugins();
             String pluginUniqueId = installedPlugins.insert(plugin.getPluginDetails());
             // creating entries in PLUGIN_DEPENDENCY table related to installed plugin
             PluginDependency pluginDependency = new PluginDependency();
