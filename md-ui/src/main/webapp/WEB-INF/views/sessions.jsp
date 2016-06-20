@@ -32,7 +32,7 @@
 	<script type="text/javascript">
 		    $(document).ready(function () {
 	    $('#Container').jtable({
-	    title: 'Sessions List',
+	    title: '<spring:message code="sessions.page.title_list"/>',
 		    paging: true,
 		    pageSize: 10,
 		    sorting: true,
@@ -75,27 +75,27 @@
 		    },
             fields: {
             username: {
-            title: 'Username',
+            title: '<spring:message code="sessions.page.title_username"/>',
             display:function(data){
             return data.record.user.username;
             }
             },
 			startTime: {
-			title: 'Start time',
+			title: '<spring:message code="sessions.page.title_start_time"/>',
 			display:function(data){
 			console.log(data);
 			return (new Date(data.record.startTime).toLocaleString());
 			}
 			},
 			expiration: {
-			title: 'Expiration time',
+			title: '<spring:message code="sessions.page.title_exp_time"/>',
 			display:function(data){
 			return (new Date(data.record.expiration).toLocaleString());
 			}
 			},
             authToken: {
             key: true,
-            title: 'Session ID',
+            title: '<spring:message code="sessions.page.title_id"/>',
             }
             }
             });
