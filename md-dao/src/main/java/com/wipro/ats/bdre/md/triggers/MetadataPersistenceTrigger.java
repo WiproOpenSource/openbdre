@@ -36,7 +36,7 @@ public class MetadataPersistenceTrigger implements PreUpdateEventListener, PreIn
 
     private void populateProcessTypeMap(){
         LOGGER.info("inserting into Map");
-        if(processTypeMap.size()==0) {
+        if(processTypeMap.size()<processTypeDAO.totalRows()) {
             List<com.wipro.ats.bdre.md.dao.jpa.ProcessType> processTypeInfos = processTypeDAO.listFull(0, Integer.MAX_VALUE);
             for (com.wipro.ats.bdre.md.dao.jpa.ProcessType processType : processTypeInfos) {
                 processTypeMap.put(processType.getProcessTypeId(), processType.getParentProcessTypeId() == null ? 0 : processType.getParentProcessTypeId());

@@ -821,8 +821,10 @@ public String securityCheck(Integer processId,String username,String action){
     }
     session.getTransaction().commit();
     session.close();
-    if (userRolesNameList.contains("ROLE_ADMIN"))
+    if (userRolesNameList.contains("ROLE_ADMIN")) {
+        LOGGER.info("user has admin access so no check is required");
         return "NOT REQUIRED";
+    }
     List<Integer> readList=new ArrayList<>();
     readList.add(4);
     readList.add(6);
