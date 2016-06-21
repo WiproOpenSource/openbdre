@@ -7,9 +7,6 @@ import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.AutowireCapableBeanFactory;
 
-import java.util.ArrayList;
-import java.util.List;
-
 /**
  * Created by cloudera on 6/2/16.
  */
@@ -40,10 +37,7 @@ public class InstalledPlugins extends MetadataAPIBase {
         return dependencyMet;
     }
 
-    public List<com.wipro.ats.bdre.md.pm.beans.PluginDependency> getDependencies(String pluginUniqueId){
-        List<com.wipro.ats.bdre.md.pm.beans.PluginDependency> pluginDependencies = new ArrayList<com.wipro.ats.bdre.md.pm.beans.PluginDependency>();
-        return pluginDependencies;
-    }
+
 
     public String insert(PluginDetails pluginDetails){
         com.wipro.ats.bdre.md.dao.jpa.InstalledPlugins installedPlugins = new com.wipro.ats.bdre.md.dao.jpa.InstalledPlugins();
@@ -57,6 +51,10 @@ public class InstalledPlugins extends MetadataAPIBase {
         installedPlugins.setUninstallable(pluginDetails.isUninstallable());
         return installedPluginsDAO.insert(installedPlugins);
 
+    }
+
+    public com.wipro.ats.bdre.md.dao.jpa.InstalledPlugins get(String pluginUniqueId){
+                return installedPluginsDAO.get(pluginUniqueId);
     }
 
 }

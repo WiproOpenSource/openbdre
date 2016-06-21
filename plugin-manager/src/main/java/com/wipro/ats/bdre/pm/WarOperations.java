@@ -12,19 +12,33 @@ import java.nio.file.Path;
  */
 public class WarOperations {
     private static final Logger LOGGER = Logger.getLogger(PluginManagerMain.class);
-    public void listOfFiles(File file,File parent) throws IOException{
+    public void listOfFiles(File file,File parent,String md) throws IOException{
         LOGGER.info("entering directory name : " + file.getName() + " The absolute location of dir is : " + file.getAbsolutePath());
         for(File file1 : file.listFiles()){
             if(file1.isDirectory()){
                 String relativePath = file1.getAbsolutePath().replace(parent.getAbsolutePath() ,"");
-                String webappPath = System.getProperty("user.home") + "/bdre/lib/webapps/md-ui-1.1-SNAPSHOT" + relativePath;
+                String webappPath = "";
+                if ("mdui".equals(md)) {
+                    webappPath = System.getProperty("user.home") + "/bdre/lib/webapps/mdui" + relativePath;
+                }else{
+                    webappPath = System.getProperty("user.home") + "/bdre/lib/webapps/mdrest" + relativePath;
+                }
                 if (!new File(webappPath).exists()){
                     new File(webappPath).mkdir();
                 }
-                listOfFiles(file1,parent);
+                if ("mdui".equals(md)) {
+                    listOfFiles(file1, parent,"mdui");
+                }else{
+                    listOfFiles(file1, parent,"mdrest");
+                }
             }else{
                 String relativePath = file1.getAbsolutePath().replace(parent.getAbsolutePath() ,"");
-                String webappPath = System.getProperty("user.home") + "/bdre/lib/webapps/mdui" + relativePath;
+                String webappPath = "";
+                if ("mdui".equals(md)) {
+                    webappPath = System.getProperty("user.home") + "/bdre/lib/webapps/mdui" + relativePath;
+                }else{
+                    webappPath = System.getProperty("user.home") + "/bdre/lib/webapps/mdrest" + relativePath;
+                }
                 if (new File(webappPath).exists() && ! Files.isSymbolicLink(new File(webappPath).toPath())){
                        continue;
                 }else {

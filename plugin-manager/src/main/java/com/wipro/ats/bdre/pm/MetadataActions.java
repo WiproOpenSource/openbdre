@@ -19,15 +19,15 @@ public class MetadataActions {
             for(ArrayList data : dataList.getData()){
                 ProcessType processType1 = new ProcessType();
                 com.wipro.ats.bdre.md.beans.table.ProcessType processType = new com.wipro.ats.bdre.md.beans.table.ProcessType();
-                processType.setProcessTypeId((Integer) data.get(0));
+                processType.setProcessTypeId(Integer.parseInt((String) data.get(0)));
                 processType.setProcessTypeName((String) data.get(1));
                 try {
-                   Integer temp = Integer.parseInt( data.get(2).toString());
+                    Integer temp = Integer.parseInt( data.get(2).toString());
                     processType.setParentProcessTypeId(temp);
                     processType1.insert(processType);
                 } catch (NumberFormatException e) {
                     LOGGER.info("parent process");
-                    if(processType1.get((Integer) data.get(0)) ==  null) {
+                    if(processType1.get(Integer.parseInt((String) data.get(0))) ==  null) {
                         processType.setParentProcessTypeId(null);
                         processType1.insert(processType);
                     }
@@ -35,7 +35,6 @@ public class MetadataActions {
                 }catch (ConstraintViolationException e) {
                     throw new BDREException("Sub process type already exists");
                 }
-
             }
 
         }else if("GENERAL_CONFIG".equals(dataList.getTableName())){
