@@ -2,7 +2,7 @@
 
 <html>
 <head>
-    <title>Sample Upload Form</title>
+    <title><spring:message code="uploadertest.page.title"/></title>
      <head>
     	<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
     	<title><spring:message code="common.page.title_bdre_1"/></title>
@@ -43,7 +43,7 @@
             }).done(function( data ) {
 
                 console.log( data );
-                alert('Success - See console.log. After file load add following to properties table: '+subDir + '/'+fileName + ' against scriptPath key.');
+                alert('<spring:message code="uploadertest.page.alert_part_1"/>'+' '+subDir + '/'+fileName + ' '+'<spring:message code="uploadertest.page.alert_part_2"/>');
             });
             return false;
         }
