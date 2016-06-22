@@ -48,7 +48,7 @@ public class WarOperations {
                     }
                     Path targetPath = new File(file1.getAbsolutePath()).toPath();
                     try {
-                        Files.createSymbolicLink(linkPath, targetPath);
+                        Files.copy(targetPath,linkPath);
                     } catch (IOException io) {
                         LOGGER.error(io + " : " + io.getMessage());
                         throw io;
