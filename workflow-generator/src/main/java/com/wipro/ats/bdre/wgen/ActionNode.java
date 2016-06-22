@@ -117,12 +117,12 @@ public class ActionNode extends OozieNode {
     public void setProcessInfo(ProcessInfo processInfo) {
         this.processInfo = processInfo;
         LOGGER.info("inside setProcessInfo"+processInfo);
-        setPluginProcessInfo(this.processInfo);
+       // setPluginProcessInfo(this.processInfo);
         if (processInfo.getProcessTypeId() == RAW_LOAD_ACTION) {
             RawLoadActionNode rawLoadActionNode = new RawLoadActionNode(this);
             containingNodes.add(rawLoadActionNode);
 
-        }/* else if (processInfo.getProcessTypeId() == HIVE_ACTION) {
+        } else if (processInfo.getProcessTypeId() == HIVE_ACTION) {
             HiveActionNode hiveActionNode = new HiveActionNode(this);
             containingNodes.add(hiveActionNode);
 
@@ -133,7 +133,7 @@ public class ActionNode extends OozieNode {
             containingNodes.add(importActionNode);
             containingNodes.add(fileRegistrationNode);
 
-        } */ else if (processInfo.getProcessTypeId() == DATA_EXPORT_ACTION) {
+        }  else if (processInfo.getProcessTypeId() == DATA_EXPORT_ACTION) {
             ExportActionNode exportActionNode = new ExportActionNode(this);
             containingNodes.add(exportActionNode);
 
@@ -146,26 +146,26 @@ public class ActionNode extends OozieNode {
             containingNodes.add(baseLoadActionNode);
         } else if (processInfo.getProcessTypeId() == ETL_ACTION) {
 
-        } /*else if (processInfo.getProcessTypeId() == PIG_ACTION) {
+        } else if (processInfo.getProcessTypeId() == PIG_ACTION) {
             PigActionNode pigActionNode = new PigActionNode(this);
             containingNodes.add(pigActionNode);
 
-        }*//* else if (processInfo.getProcessTypeId() == HADOOP_STREAMING_ACTION) {
+        } else if (processInfo.getProcessTypeId() == HADOOP_STREAMING_ACTION) {
             HadoopStreamingActionNode hadoopStreamingActionNode = new HadoopStreamingActionNode(this);
             containingNodes.add(hadoopStreamingActionNode);
 
-        } *//*else if (processInfo.getProcessTypeId() == MAPREDUCE_ACTION) {
+        } else if (processInfo.getProcessTypeId() == MAPREDUCE_ACTION) {
             MRActionNode mrActionNode = new MRActionNode(this);
             containingNodes.add(mrActionNode);
-        }*/ /*else if (processInfo.getProcessTypeId() == FILE_REG_ACTION) {
+        } else if (processInfo.getProcessTypeId() == FILE_REG_ACTION) {
             FileRegistrationNode frActionNode = new FileRegistrationNode(this);
             containingNodes.add(frActionNode);
 
-        }*/else if (processInfo.getProcessTypeId() == SUB_WF_ACTION) {
+        }else if (processInfo.getProcessTypeId() == SUB_WF_ACTION) {
             SubWorkflowActionNode subWorkflowActionNode = new SubWorkflowActionNode(this);
             containingNodes.add(subWorkflowActionNode);
 
-        } /* else if (processInfo.getProcessTypeId() == HIVE_GEN_ACTION) {
+        }  else if (processInfo.getProcessTypeId() == HIVE_GEN_ACTION) {
             DataGenerationNode dataGenerationNode = new DataGenerationNode(this);
             FileRegistrationNode fileRegistrationNode = new FileRegistrationNode(this);
             dataGenerationNode.setToNode(fileRegistrationNode);
@@ -182,7 +182,7 @@ public class ActionNode extends OozieNode {
             containingNodes.add(lofActionNode);
             containingNodes.add(dataQualityActionNode);
             containingNodes.add(fileRegistrationNode);
-        } */ else if (processInfo.getProcessTypeId() == SEMANTIC_ACTION) {
+        }  else if (processInfo.getProcessTypeId() == SEMANTIC_ACTION) {
 
         } else if (processInfo.getProcessTypeId() == INGESTION) {
 
@@ -203,16 +203,16 @@ public class ActionNode extends OozieNode {
             SFTPNonOozieActionNode sftpNonOozieActionNode = new SFTPNonOozieActionNode(this);
             containingNodes.add(sftpNonOozieActionNode);
 
-        } /*else if (processInfo.getProcessTypeId() == SHELL_ACTION) {
+        } else if (processInfo.getProcessTypeId() == SHELL_ACTION) {
             ShellActionNode shellActionNode = new ShellActionNode(this);
             containingNodes.add(shellActionNode);
-        } *//*else if (processInfo.getProcessTypeId() == R_ACTION) {
+        } else if (processInfo.getProcessTypeId() == R_ACTION) {
             RActionNode rActionNode = new RActionNode(this);
             containingNodes.add(rActionNode);
-        }*/ /*else if (processInfo.getProcessTypeId() == SPARK_ACTION) {
+        } else if (processInfo.getProcessTypeId() == SPARK_ACTION) {
             SparkActionNode sparkActionNode = new SparkActionNode(this);
             containingNodes.add(sparkActionNode);
-        }*/ else if (processInfo.getProcessTypeId() == CRAWLER_PARENT_ACTION) {
+        } else if (processInfo.getProcessTypeId() == CRAWLER_PARENT_ACTION) {
 
         } else if (processInfo.getProcessTypeId() == CRAWLER_CHILD_ACTION) {
             CrawlerActionNode crawlerActionNode = new CrawlerActionNode(this);
