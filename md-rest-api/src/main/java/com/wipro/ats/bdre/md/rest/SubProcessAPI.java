@@ -130,16 +130,16 @@ public class SubProcessAPI extends MetadataAPIBase {
     public RestWrapper delete(
             @PathVariable("id") Integer processId, Principal principal) {
         RestWrapper restWrapper = null;
-        try {
-            com.wipro.ats.bdre.md.dao.jpa.Process parentProcess=processDAO.get(processId);
-            processDAO.securityCheck(parentProcess.getProcessId(),principal.getName(),WRITE);
+       try {
+            com.wipro.ats.bdre.md.dao.jpa.Process process=processDAO.get(processId);
+            processDAO.securityCheck(process.getProcess().getProcessId(),principal.getName(),WRITE);
             processDAO.delete(processId);
             restWrapper = new RestWrapper(null, RestWrapper.OK);
             LOGGER.info("Record  with ID:" + processId + " deleted from Process by User:" + principal.getName());
 
-        } catch (Exception e) {
-            LOGGER.error(e);
-            restWrapper = new RestWrapper(e.getMessage(), RestWrapper.ERROR);
+      } catch (Exception e) {
+          LOGGER.error(e);
+           restWrapper = new RestWrapper(e.getMessage(), RestWrapper.ERROR);
         }
         return restWrapper;
     }
