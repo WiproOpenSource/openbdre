@@ -18,12 +18,11 @@
 	  ga('send', 'pageview');
 	</script>
 	<style>
-	.form-control {
+					.form-control {
 						background-color: #e4e5e6 !important;
 						height: 35px !important;
 						border-radius: 1px !important;
 					}
-					
 					.glyphicon-arrow-right {
 						color: #606161 !important;
 					}

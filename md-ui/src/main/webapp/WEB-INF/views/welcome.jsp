@@ -20,7 +20,6 @@
 	<script type="text/javascript" src="../js/jquery.min.js"></script>
 	<script src="../js/angular.min.js"></script>
 	<script type="text/javascript" src="../js/slick.js"></script>
-				
 	<style>
 	    body{
 		background-color: #fdf6ed !important;
