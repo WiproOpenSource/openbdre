@@ -32,7 +32,7 @@
 	<script type="text/javascript">
 		    $(document).ready(function () {
 	    $('#Container').jtable({
-	    title: 'Process Type List',
+	    title: '<spring:message code="processtype.page.title_list"/>',
 		    paging: true,
 		    pageSize: 10,
 		    sorting: true,
@@ -113,10 +113,10 @@
 			    list: true,
 			    create:true,
 			    edit: false,
-			    title: "Id"
+			    title: '<spring:message code="processtype.page.title_id"/>'
 		    },
 			    processTypeName: {
-			    title: 'Name'
+			    title: '<spring:message code="processtype.page.title_name"/>'
 			    }
 		    }
 	    });
