@@ -31,7 +31,7 @@
 	<script type="text/javascript">
 		    $(document).ready(function () {
 	    $('#Container').jtable({
-	    title: 'Property Template List',
+	    title: '<spring:message code="propertiestemplate.page.title_list"/>',
 		    paging: true,
 		    pageSize: 10,
 		    sorting: true,
@@ -93,7 +93,7 @@
 		    fields: {
 
 		    PropertiesTemplate: {
-		    title: 'Click to expand',
+		    title: '<spring:message code="propertiestemplate.page.title_click"/>',
 			    width: '5%',
 			    sorting: false,
 			    edit: false,
@@ -101,12 +101,12 @@
 			    listClass: 'bdre-jtable-button',
 			    display: function(item) {                         //Create an image that will be used to open child table
 
-			    var $img = $('<img src="../css/images/three-bar.png" title="Properties Template info" />'); //Open child table when user clicks the image
+			    var $img = $('<img src="../css/images/three-bar.png" title=<spring:message code="propertiestemplate.page.title_image"/> />'); //Open child table when user clicks the image
 
 				    $img.click(function() {
 				    $('#Container').jtable('openChildTable',
 					    $img.closest('tr'), {
-				    title: ' Properties of ' + item.record.processTemplateId,
+				    title: '<spring:message code="propertiestemplate.page.title_properties_msg"/>'+' ' + item.record.processTemplateId,
 					    paging: true,
 					    pageSize: 10,
 					    actions: {
@@ -187,15 +187,15 @@
 						    list: false,
 						    create:false,
 						    edit: true,
-						    title: 'Process',
+						    title: '<spring:message code="propertiestemplate.page.title_process"/>',
 						    defaultValue: item.record.processTemplateId,
 					    },
 						    configGroup: {
-						    title: 'Config Group',
+						    title: '<spring:message code="propertiestemplate.page.title_cg"/>',
 							    defaultValue: item.record.configGroup,
 						    },
 						    key: {
-						    title: 'Key',
+						    title: '<spring:message code="propertiestemplate.page.title_key"/>',
 							    key : true,
 							    list: true,
 							    create:true,
@@ -203,11 +203,11 @@
 							    defaultValue: item.record.key,
 						    },
 						    value: {
-						    title: 'Value',
+						    title: '<spring:message code="propertiestemplate.page.title_value"/>',
 							    defaultValue: item.record.value,
 						    },
 						    description: {
-						    title: 'Description',
+						    title: '<spring:message code="propertiestemplate.page.title_description"/>',
 							    defaultValue: item.record.description,
 						    },
 					    }
@@ -222,43 +222,43 @@
 			    }
 		    },
 			    configGroup: {
-			    title :'Config Group',
+			    title :'<spring:message code="propertiestemplate.page.title_cg"/>',
 				    key : true,
 				    list: false,
 				    create:true,
 				    edit: false,
-				    defaultValue:"NewConfig"
+				    defaultValue:'<spring:message code="propertiestemplate.page.default_value_cg"/>'
 			    }, key: {
-		    title: 'Key',
+		    title: '<spring:message code="propertiestemplate.page.title_key"/>',
 			    key : true,
 			    list: false,
 			    create:true,
 			    edit: false,
-			    defaultValue:"NewKey"
+			    defaultValue:'<spring:message code="propertiestemplate.page.default_value_key"/>'
 
 		    }, value: {
-		    title: 'Value',
+		    title: '<spring:message code="propertiestemplate.page.title_value"/>',
 			    key : true,
 			    list : false,
 			    create : true,
 			    edit : false,
-			    defaultValue: "NewValue"
+			    defaultValue: '<spring:message code="propertiestemplate.page.default_value_value"/>'
 
 		    },
 			    description: {
-			    title: 'Description',
+			    title: '<spring:message code="propertiestemplate.page.title_description"/>',
 				    list : false,
 				    create : true,
 				    edit : false,
 				    key : true,
-				    defaultValue:"NewDescription"
+				    defaultValue:'<spring:message code="propertiestemplate.page.default_value_description"/>'
 			    },
 			    processTemplateId: {
 			    key : true,
 				    list: true,
 				    create:true,
 				    edit: false,
-				    title: 'ProcessTemplate'
+				    title: '<spring:message code="propertiestemplate.page.title_id"/>'
 
 			    }
 		    }

@@ -32,7 +32,7 @@
 	<script type="text/javascript">
 		    $(document).ready(function () {
 	    $('#Container').jtable({
-	    title: 'Servers List',
+	    title: '<spring:message code="servers.page.title_list"/>',
 		    paging: true,
 		    pageSize: 10,
 		    sorting: true,
@@ -113,31 +113,31 @@
 			    list: true,
 			    create: false,
 			    edit: false,
-			    title: 'Id'
+			    title: '<spring:message code="servers.page.title_id"/>'
 		    },
 			    serverType: {
-			    title: 'Type'
+			    title: '<spring:message code="servers.page.title_type"/>'
 			    },
 			    serverName: {
-			    title: 'Name'
+			    title: '<spring:message code="servers.page.title_name"/>'
 
 			    },
 			    serverMetaInfo: {
-			    title: 'Meta Info'
+			    title: '<spring:message code="servers.page.title_info"/>'
 
 			    },
 			    loginUser: {
-			    title: 'User',
+			    title: '<spring:message code="servers.page.title_user"/>',
 			    },
 			    loginPassword: {
-			    title: 'Password'
+			    title: '<spring:message code="servers.page.title_password"/>'
 			    },
 			    sshPrivateKey: {
-			    title: 'SSH Key'
+			    title: '<spring:message code="servers.page.title_key"/>'
 
 			    },
 			    serverIp: {
-			    title: 'IP'
+			    title: '<spring:message code="servers.page.title_ip"/>'
 			    }
 		    }
 	    });

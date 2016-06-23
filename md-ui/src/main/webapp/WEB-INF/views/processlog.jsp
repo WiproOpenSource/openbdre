@@ -32,7 +32,7 @@
 	<script type="text/javascript">
 		    $(document).ready(function () {
 	    $('#Container').jtable({
-	    title: 'Process Log List',
+	    title: '<spring:message code="processlog.page.title_list"/>',
 		    paging: true,
 		    pageSize: 10,
 		    sorting: true,
@@ -63,7 +63,7 @@
 		    fields: {
 
 		    SubProcess: {
-		    title: 'Click to get list of Sub Processes of Process',
+		    title: '<spring:message code="processlog.page.title_click_to_list"/>',
 			    width: '5%',
 			    sorting: false,
 			    edit: false,
@@ -71,12 +71,12 @@
 			    listClass: 'bdre-jtable-button',
 			    display: function(item) {                         //Create an image that will be used to open child table
 
-			    var $img = $('<span class="label label-primary">Sub Process</span>'); //Open child table when user clicks the image
+			    var $img = $('<span class="label label-primary"><spring:message code="processlog.page.img_subprocess"/></span>'); //Open child table when user clicks the image
 
 				    $img.click(function() {
 				    $('#Container').jtable('openChildTable',
 					    $img.closest('tr'), {
-				    title: ' SubProcess of ' + item.record.parentProcessId + ' having logs ',
+				    title: '<spring:message code="processlog.page.title_subprocess_desc"/>'+' ' + item.record.parentProcessId + ' having logs ',
 					    paging: true,
 					    pageSize: 10,
 					    actions: {
@@ -118,7 +118,7 @@
 					    },
 					    fields: {
 					    Log: {
-					    title: 'Click to get logs related sub process',
+					    title: '<spring:message code="processlog.page.title_click_to_log"/>',
 						    width: '5%',
 						    sorting: false,
 						    edit: false,
@@ -126,12 +126,12 @@
 						    listClass: 'bdre-jtable-button',
 						    display: function(item) {                         //Create an image that will be used to open child table
 
-						    var $img = $('<span class="label label-primary">Logs</span>'); //Open child table when user clicks the image
+						    var $img = $('<span class="label label-primary"><spring:message code="processlog.page.img_log"/></span>'); //Open child table when user clicks the image
 
 							    $img.click(function() {
 							    $('#Container').jtable('openChildTable',
 								    $img.closest('tr'), {
-							    title: ' Logs of process id ' + item.record.processId,
+							    title: ' <spring:message code="processlog.page.title_log_pid"/>'+' ' + item.record.processId,
 								    paging: true,
 								    pageSize: 10,
 								    actions: {
@@ -159,26 +159,26 @@
 									    list: false,
 									    create:false,
 									    edit: true,
-									    title: 'Process Id',
+									    title: '<spring:message code="processlog.page.title_pid"/>',
 									    defaultValue: item.record.processId,
 								    },
 									    tableAddTs: {
-									    title: 'add ts'
+									    title: '<spring:message code="processlog.page.title_add_ts"/>'
 									    },
 									    logCategory: {
-									    title: 'log category'
+									    title: '<spring:message code="processlog.page.title_log_cat"/>'
 
 									    },
 									    message: {
-									    title: 'message'
+									    title: '<spring:message code="processlog.page.title_msg"/>'
 
 									    },
 									    messageId: {
-									    title: 'message id',
+									    title: '<spring:message code="processlog.page.msg_id"/>',
 									    },
 									    instanceRef: {
 
-									    title: 'instance ref',
+									    title: '<spring:message code="processlog.page.title_instance_ref"/>',
 										    create:true,
 										    edit :true
 									    }
@@ -200,7 +200,7 @@
 							    list: true,
 							    create:true,
 							    edit: false,
-							    title: 'Process'
+							    title: '<spring:message code="processlog.page.title_process"/>'
 
 						    }
 					    }
@@ -220,7 +220,7 @@
 				    list: true,
 				    create:true,
 				    edit: false,
-				    title: 'Process'
+				    title: '<spring:message code="processlog.page.title_process"/>'
 
 			    },
 			    processId: {
@@ -228,7 +228,7 @@
 				    list: false,
 				    create:true,
 				    edit: false,
-				    title: 'Process'
+				    title: '<spring:message code="processlog.page.title_process"/>'
 
 			    }
 		    }
