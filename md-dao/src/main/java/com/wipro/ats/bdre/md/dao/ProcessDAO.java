@@ -825,18 +825,12 @@ public String securityCheck(Integer processId,String username,String action){
         return "NOT REQUIRED";
     List<Integer> readList=new ArrayList<>();
     readList.add(4);
-    readList.add(5);
     readList.add(6);
     readList.add(7);
     List<Integer> writeList=new ArrayList<>();
-    writeList.add(2);
-    writeList.add(3);
     writeList.add(6);
     writeList.add(7);
     List<Integer> executeList=new ArrayList<>();
-    executeList.add(1);
-    executeList.add(3);
-    executeList.add(5);
     executeList.add(7);
     if (process.getUsers().getUsername().equals(username))
     {
