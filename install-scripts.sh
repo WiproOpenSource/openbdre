@@ -6,6 +6,15 @@ if [ $# -ne 1 ]
     exit 1
 fi
 
+if [ "$1" != "local" ]
+    then
+    if [ "$1" != "remote" ]
+    then
+        echo "usage $0 <local|remote>"
+        exit;
+    fi
+fi
+
 BDRE_HOME=~/bdre
 BDRE_APPS_HOME=~/bdre_apps
 
