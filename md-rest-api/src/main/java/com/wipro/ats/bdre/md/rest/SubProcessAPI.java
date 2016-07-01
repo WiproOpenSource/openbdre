@@ -19,6 +19,7 @@ import com.wipro.ats.bdre.md.api.base.MetadataAPIBase;
 import com.wipro.ats.bdre.md.beans.table.Process;
 import com.wipro.ats.bdre.md.dao.ProcessDAO;
 import com.wipro.ats.bdre.md.dao.ProcessTypeDAO;
+import com.wipro.ats.bdre.md.dao.PropertiesDAO;
 import com.wipro.ats.bdre.md.dao.jpa.BusDomain;
 import com.wipro.ats.bdre.md.dao.jpa.ProcessTemplate;
 import com.wipro.ats.bdre.md.dao.jpa.WorkflowType;
@@ -28,7 +29,6 @@ import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
-
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -51,6 +51,8 @@ public class SubProcessAPI extends MetadataAPIBase {
     private ProcessDAO processDAO;
     @Autowired
     ProcessTypeDAO processTypeDAO;
+    @Autowired
+    PropertiesDAO propertiesDAO;
 
     /**
      * This method calls proc GetSubProcesses and returns a record corresponding to the processid passed.
@@ -127,8 +129,8 @@ public class SubProcessAPI extends MetadataAPIBase {
             @PathVariable("id") Integer processId, Principal principal) {
         RestWrapper restWrapper = null;
         try {
-            com.wipro.ats.bdre.md.dao.jpa.Process parentProcess=processDAO.get(processId);
-            processDAO.securityCheck(parentProcess.getProcessId(),principal.getName(),WRITE);
+            com.wipro.ats.bdre.md.dao.jpa.Process process=processDAO.get(processId);
+            processDAO.securityCheck(process.getProcess().getProcessId(),principal.getName(),WRITE);
             processDAO.delete(processId);
             restWrapper = new RestWrapper(null, RestWrapper.OK);
             LOGGER.info("Record  with ID:" + processId + " deleted from Process by User:" + principal.getName());
@@ -285,7 +287,6 @@ public class SubProcessAPI extends MetadataAPIBase {
             process.setProcessId(processId);
             process.setTableAddTS(DateConverter.dateToString(insertDaoProcess.getAddTs()));
             process.setTableEditTS(DateConverter.dateToString(insertDaoProcess.getEditTs()));
-
             restWrapper = new RestWrapper(process, RestWrapper.OK);
             LOGGER.info("Record with ID:" + process.getProcessId() + " inserted in Process by User:" + principal.getName() + process);
 

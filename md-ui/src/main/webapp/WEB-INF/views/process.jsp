@@ -24,7 +24,7 @@
 						height: 36px !important;
 						border-radius: 1px !important;
 					}
-					
+
 					.glyphicon-arrow-right {
 						color: #606161 !important;
 					}
@@ -35,7 +35,7 @@
 						padding-bottom: 7.5px !important;
 						border-radius: 1px !important;
 					}
-					
+
 					.input-box-button-filter {
 						background: #4A4B4B;
 						background: -webkit-linear-gradient(#4A4B4B 50%, #3A3B3B 50%);
@@ -50,7 +50,7 @@
 						padding: 5px;
 						cursor: pointer
 					}
-					
+
 					.filter-icon {
 						background-image: url('../css/images/filter_icon.png');
 						background-size: 100%;
@@ -61,7 +61,7 @@
 						width: 16px;
 						height: 16px;
 					}
-					
+
 					.filter-text {
 						display: inline-block;
 						margin: 2px;
@@ -71,7 +71,7 @@
 							Helvetica, sans-serif;
 						font-weight: 300;
 					}
-					
+
 					.input-box-button {
 						display: none;
 						position: absolute;
@@ -79,13 +79,13 @@
 						right: 133px;
 						width: 129px;
 					}
-					
+
 					.subprocess-arrow-down {
 						-ms-transform: rotate(90deg); /* IE 9 */
 						-webkit-transform: rotate(90deg); /* Chrome, Safari, Opera */
 						transform: rotate(90deg);
 					}
-					
+
 					.label-icons {
 						margin: 0 auto;
 						width: 45px;
@@ -98,48 +98,48 @@
 					.label-properties {
 						background: url('../css/images/properties.png') no-repeat center;
 					}
-					
+
 					.label-pipeline {
 						background: url('../css/images/pipeline.png');
 					}
-					
+
 					.label-execution {
 						background: url('../css/images/execution.png');
 					}
-					
+
 					.label-editgraphically {
 						background: url('../css/images/editgraphically.png');
 					}
-					
+
 					.label-export {
 						background: url('../css/images/export.png');
 					}
-					
+
 					.label-execute {
 						background: url('../css/images/execute.png');
 					}
-					
+
 					.slamonitor {
 						background: url('../css/images/slamonitor.png');
 					}
-					
+
 					.label-initial {
 						background: url('../css/images/label-initial.png');
 					}
-					
+
 					.label-icons.label-warning {
 						background: url('../css/images/label-warning.png');
 					}
-					
+
 					.label-icons.label-success {
 						background: url('../css/images/label-success.png');
 					}
-					
+
 					.label-icons.label-danger {
 						background: url('../css/images/label-danger.png');
 					}
 					</style>
-               
+
 	<script>
 	  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
 	  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
@@ -156,7 +156,7 @@
                 <link href="../css/jtables-bdre.css" rel="stylesheet" type="text/css" />
                 <link href="../css/jquery-ui-1.10.3.custom.css" rel="stylesheet" type="text/css" />
                 <link href="../css/bootstrap.custom.css" rel="stylesheet" />
-                
+
 
                 <!-- Include jTable script file. -->
                 <script src="../js/jquery.min.js" type="text/javascript"></script>
@@ -803,7 +803,7 @@
                                     edit: false,
                                     title: '<spring:message code="process.page.title_job_id"/>'
                                 },
-                                
+
                                 processName: {
                                     title: '<spring:message code="process.page.title_name"/>'
                                 },
@@ -1180,11 +1180,11 @@
                                 								error: function() {
                                 									$dfd.reject();
                                 								}
-                                
+
                                 							});
                                 						});
                                 					}
-                                					
+
                                 				}
                                 			});
                                 		});
@@ -1399,7 +1399,7 @@
                                     });
 
                                 }
-                                
+
                             }
                         });
                     }
@@ -1526,7 +1526,7 @@
                 </div>
 				<div id="dialog-confirm" style="display: none;">
 					<p>
-						<span class="ui-icon-alert"></span> 
+						<span class="ui-icon-alert"></span>
 						<span class="dialog-title-custom"><spring:message code="process.page.span_sure"/></span>
 						<span class="jtable-confirm-message"><spring:message code="process.page.span_build_workflow_confirm_msg"/>
 						</span>
@@ -1534,7 +1534,7 @@
 				</div>
 				<div id="execute-dialog-confirm" style="display: none;">
 					<p>
-						<span class="ui-icon-alert"></span> 
+						<span class="ui-icon-alert"></span>
 						<span class="dialog-title-custom"><spring:message code="process.page.span_sure"/></span>
 						<span class="jtable-confirm-message"><spring:message code="process.page.span_start_execution_confirm_msg"/>
 						</span>
@@ -1542,7 +1542,7 @@
 				</div>
 				<div id="dialog-form" style="display: none;">
 					<p>
-						<span class="ui-icon-alert"></span> 
+						<span class="ui-icon-alert"></span>
 						<span class="dialog-title-custom"><spring:message code="process.page.span_sure"/></span>
 						<span class="jtable-confirm-message"><spring:message code="process.page.span_export_execution_confirm_msg"/>
 						</span>
@@ -1550,19 +1550,19 @@
 				</div>
 				<div id="execute-result" style="display: none;">
 					<p>
-						<span class="ui-icon ui-icon-alert"></span> 
+						<span class="ui-icon ui-icon-alert"></span>
 						<span class="jtable-confirm-message"><spring:message code="process.page.span_process_start"/></span>
 					</p>
 				</div>
 				<div id="execute-fail" style="display: none;">
 					<p>
-						<span class="ui-icon ui-icon-alert"></span> 
+						<span class="ui-icon ui-icon-alert"></span>
 						<span class="jtable-confirm-message"><spring:message code="process.page.span_process_init_failed"/></span>
 					</p>
 				</div>
 				<div id="process-not-found" style="display: none;">
 					<p>
-						<span class="ui-icon ui-icon-alert"></span> 
+						<span class="ui-icon ui-icon-alert"></span>
 						<span class="jtable-confirm-message"><spring:message code="process.page.span_process_not_found"/></span>
 					</p>
 				</div>
