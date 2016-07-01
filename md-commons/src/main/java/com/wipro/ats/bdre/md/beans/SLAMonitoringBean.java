@@ -8,6 +8,43 @@ public class SLAMonitoringBean {
     private long currentExecutionTime;
     private long averageExecutionTime;
     private long sLATime;
+    private boolean processRunning;
+    private int stateOfProcess;
+    private int running;
+    private int failed;
+
+    public int getRunning() {
+        return running;
+    }
+
+    public void setRunning(int running) {
+        this.running = running;
+    }
+
+    public int getFailed() {
+        return failed;
+    }
+
+    public void setFailed(int failed) {
+        this.failed = failed;
+    }
+
+    public int getStateOfProcess() {
+        return stateOfProcess;
+    }
+
+    public void setStateOfProcess(int stateOfProcess) {
+        this.stateOfProcess = stateOfProcess;
+    }
+
+    public boolean isProcessRunning() {
+        return processRunning;
+    }
+
+    public void setProcessRunning(boolean processRunning) {
+        this.processRunning = processRunning;
+    }
+
     public Integer getProcessId() {
         return processId;
     }

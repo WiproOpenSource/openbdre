@@ -93,7 +93,15 @@ public class Dao2TableUtil {
         daoProcess.setEnqueuingProcessId(0);
         daoProcess.setAddTs(new Date());
         daoProcess.setEditTs(new Date());
-
+        PermissionType permissionType=new PermissionType();
+        permissionType.setPermissionTypeId(7);
+        daoProcess.setPermissionTypeByUserAccessId(permissionType);
+        PermissionType permissionType1=new PermissionType();
+        permissionType1.setPermissionTypeId(4);
+        daoProcess.setPermissionTypeByGroupAccessId(permissionType1);
+        PermissionType permissionType2=new PermissionType();
+        permissionType2.setPermissionTypeId(0);
+        daoProcess.setPermissionTypeByOthersAccessId(permissionType2);
         return daoProcess;
     }
 

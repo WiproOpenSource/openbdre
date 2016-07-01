@@ -1,11 +1,12 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1"
 	 pageEncoding="ISO-8859-1"%>
+<%@taglib uri="http://www.springframework.org/tags" prefix="spring"%>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
     <head>
 	<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
-	<title>Bigdata Ready Enterprise</title>
+	<title><spring:message code="common.page.title_bdre_1"/></title>
 	<script>
 	  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
 	  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
@@ -19,6 +20,7 @@
 	<link href="../css/pages.css" rel="stylesheet" type="text/css" />
 	<link href="../css/highlight.css" rel="stylesheet" type="text/css" />
 	<link href="../css/css/bootstrap.min.css" rel="stylesheet" type="text/css">
+	<link href="../css/bootstrap.custom.css" rel="stylesheet" type="text/css" />
 
 	<!-- Include one of jTable styles. -->
 
@@ -124,19 +126,20 @@
 		opacity:0.5;
 		filter:alpha(opacity=50);
 	    }
+        body{
+        background:#fff !important ;
+        }
 
 	    #modal {
 		position:absolute;
 		background:url(tint20.png) 0 0 repeat;
 		background:rgba(0,0,0,0.2);
 		border-radius:8px;
-
-	    }
-
-	    #content {
+		overflow: hidden !important;
+		}
+		#content {
 		border-radius:8px;
 		background:#fff;
-
 	    }
 
 	    #close {
@@ -152,11 +155,10 @@
 	    #input-box-button {
 		width: 370px;
 		padding: 5px;
-		/* margin-top: 20px; */
 		border: 1px solid #e4e4e4;
-		/* border-bottom: 1px solid #e4e4e4; */
 		border-radius: 10px;
 	    }
+	    
 	</style>
 
 	<script>
@@ -232,14 +234,22 @@
 
 	    function popModal(pid) {
 		$.get('workflow/' + pid + '.page', function (data) {
+		    console.log("data is"+data);
+		    if(data=="not allowed")
+		     alert("ACCESS DENIED");
+		     else{
 		    modal.open({content: "<b>Loading</b>"});
 		    UpdateGraphviz(data);
 		    modal.center();
+		    }
 		});
 	    }
 
 	    function popModalXml(pid) {
 		$.get('workflowxml/' + pid + '.page', function (data) {
+		 if(data=="not allowed")
+        		     alert("ACCESS DENIED");
+        		     else{
 		    modal.open({content: "<b>Loading</b>"});
 		    showXML(data);
 		    $('#content').each(function (i, block) {
@@ -247,6 +257,7 @@
 			console.log(block);
 		    });
 		    modal.center();
+		    }
 		});
 	    }
 	    function GotoProcess(pid) {
@@ -269,7 +280,7 @@
 	    <div id="input-box-button" >
 		<form>
 		    <div class="input-group">
-			<input class="form-control" type="number" name="pid" id="pid" value ="" placeholder="Enter a Parent ProcessId"/>
+			<input class="form-control" type="number" name="pid" id="pid" value ="" placeholder=<spring:message code="lineage.page.parent_process_id_placeholder"/>/>
 			<!-- <button  class="btn btn-default btn-lg btn-primary"><span id="sizing-addon2"><span class="glyphicon glyphicon-arrow-right" aria-hidden="true"></span> Show Lineage </button> -->
 			<span class="input-group-btn">
 			    <button class="btn btn-default  btn-primary" type="button" onClick="resetGraph();

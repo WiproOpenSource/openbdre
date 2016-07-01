@@ -22,6 +22,7 @@ import com.wipro.ats.bdre.exception.MetadataException;
 import com.wipro.ats.bdre.md.api.base.MetadataAPIBase;
 import com.wipro.ats.bdre.md.beans.table.InstanceExec;
 import com.wipro.ats.bdre.md.dao.InstanceExecDAO;
+import com.wipro.ats.bdre.md.dao.ProcessDAO;
 import com.wipro.ats.bdre.md.rest.util.DateConverter;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -42,7 +43,8 @@ public class InstanceExecAPI extends MetadataAPIBase {
     private static final Logger LOGGER = Logger.getLogger(InstanceExecAPI.class);
     @Autowired
     InstanceExecDAO instanceExecDAO;
-
+    @Autowired
+    ProcessDAO processDAO;
     /**
      * This method calls proc GetInstanceExec and fetches a record corresponding to instanceExecId passed.
      *
@@ -101,6 +103,8 @@ public class InstanceExecAPI extends MetadataAPIBase {
             if (pid == 0) {
                 processId = null;
             }
+            if (processId!=null)
+                processDAO.securityCheck(processId,principal.getName(),"read");
             List<InstanceExec> instanceExecs = instanceExecDAO.list(processId, startPage, pageSize);
             for (InstanceExec ie : instanceExecs) {
                 ie.setTableStartTs(DateConverter.dateToString(ie.getStartTs()));
@@ -110,6 +114,10 @@ public class InstanceExecAPI extends MetadataAPIBase {
             restWrapper = new RestWrapper(instanceExecs, RestWrapper.OK);
             LOGGER.info("All records listed from InstanceExec by User:" + principal.getName());
         } catch (MetadataException e) {
+            LOGGER.error(e);
+            restWrapper = new RestWrapper(e.getMessage(), RestWrapper.ERROR);
+        }
+        catch (SecurityException e) {
             LOGGER.error(e);
             restWrapper = new RestWrapper(e.getMessage(), RestWrapper.ERROR);
         }

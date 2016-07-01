@@ -53,12 +53,36 @@ CREATE TABLE workflow_type (
     workflow_type_name VARCHAR(45) NOT NULL,
     PRIMARY KEY (workflow_id)
 );
+/* permission_type.sql */
+
+CREATE TABLE permission_type (
+  permission_type_id number(11) NOT NULL,
+  permission_type_name varchar(45) NOT NULL,
+  PRIMARY KEY (permission_type_id)
+);
+/*etlmd_user.sql*/
+
+
+
+
+CREATE  TABLE users (
+  username VARCHAR(45) NOT NULL ,
+  password VARCHAR(45) NOT NULL ,
+  enabled boolean DEFAULT true ,
+  PRIMARY KEY (username));
+
+
+CREATE TABLE user_roles (
+  user_role_id SERIAL NOT NULL,
+  username VARCHAR(45) NOT NULL REFERENCES users(username),
+  ROLE VARCHAR(45) NOT NULL,
+  PRIMARY KEY (user_role_id),
+  CONSTRAINT uni_username_role UNIQUE(ROLE,username));
+
+
+
 
 /* etlmd_servers.sql */
-
-
-
-
 
 CREATE TABLE servers (
   server_id SERIAL NOT NULL,
@@ -128,21 +152,26 @@ CREATE TABLE process (
   add_ts timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   process_name varchar(45) NOT NULL,
   process_code VARCHAR(256),
-  bus_domain_id int NOT NULL references bus_domain(bus_domain_id) ON DELETE NO ACTION ON
-UPDATE NO ACTION,
-  process_type_id int NOT NULL references process_type(process_type_id) ON DELETE NO ACTION
-ON UPDATE NO ACTION,
-  parent_process_id int DEFAULT NULL references process(process_id) ON DELETE NO ACTION ON
-UPDATE NO ACTION,
+   user_name VARCHAR(45),
+      owner_role_id int(11),
+      user_access_id int(1)  DEFAULT '7',
+      group_access_id int(1)  DEFAULT '4',
+      others_access_id int(1)  DEFAULT '0',
+  bus_domain_id int NOT NULL references bus_domain(bus_domain_id) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  process_type_id int NOT NULL references process_type(process_type_id) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  parent_process_id int DEFAULT NULL references process(process_id) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  user_access_id REFERENCES permission_type (permission_type_id) ON DELETE NO ACTION ON UPDATE NO ACTION,
+     group_access_id REFERENCES permission_type (permission_type_id) ON DELETE NO ACTION ON UPDATE NO ACTION,
+     others_access_id REFERENCES permission_type (permission_type_id) ON DELETE NO ACTION ON UPDATE NO ACTION,
+     owner_role_id REFERENCES user_roles (user_role_id) ON DELETE NO ACTION ON UPDATE NO ACTION,
+      user_name REFERENCES users (username) ON DELETE NO ACTION ON UPDATE NO ACTION,
   can_recover boolean  DEFAULT 'true',
   enqueuing_process_id int NOT NULL DEFAULT '0',
   batch_cut_pattern varchar(45) DEFAULT NULL,
   next_process_id varchar(256) NOT NULL DEFAULT '',
   delete_flag boolean  DEFAULT 'false',
-  workflow_id int DEFAULT '1' references workflow_type(workflow_id) ON DELETE NO ACTION ON
-UPDATE NO ACTION,
-  process_template_id int DEFAULT '0' references process_template(process_template_id) ON
-DELETE NO ACTION ON UPDATE NO ACTION,
+  workflow_id int DEFAULT '1' references workflow_type(workflow_id) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  process_template_id int DEFAULT '0' references process_template(process_template_id) ON DELETE NO ACTION ON UPDATE NO ACTION,
   edit_ts timestamp DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (process_id)
 
@@ -255,25 +284,6 @@ UPDATE NO ACTION,
 ACTION,
   PRIMARY KEY (queue_id)
  );
-
-/*etlmd_user.sql*/
-
-
-
-
-CREATE  TABLE users (
-  username VARCHAR(45) NOT NULL ,
-  password VARCHAR(45) NOT NULL ,
-  enabled boolean DEFAULT true ,
-  PRIMARY KEY (username));
-
-
-CREATE TABLE user_roles (
-  user_role_id SERIAL NOT NULL,
-  username VARCHAR(45) NOT NULL REFERENCES users(username),
-  ROLE VARCHAR(45) NOT NULL,
-  PRIMARY KEY (user_role_id),
-  CONSTRAINT uni_username_role UNIQUE(ROLE,username));
 
 
 
@@ -495,10 +505,25 @@ CREATE TABLE app_deployment_queue_status (
 
 CREATE TABLE app_deployment_queue (
   app_deployment_queue_id bigserial not null,
-  process_id int not null REFERENCES process(process_id) ON DELETE NO ACTION ON UPDATE NO ACTION,,
+  process_id int not null REFERENCES process(process_id) ON DELETE NO ACTION ON UPDATE NO ACTION,
   username varchar(45)  not null  REFERENCES users(username) ON DELETE NO ACTION ON UPDATE NO ACTION,
   app_domain varchar(45) not null,
   app_name varchar(45) not null,
   app_deployment_status_id smallint not null REFERENCES app_deployment_queue_status(app_deployment_status_id) ON DELETE NO ACTION ON UPDATE NO ACTION,
   PRIMARY KEY (app_deployment_queue_id),
 );
+
+CREATE TABLE analytics_apps (
+  analytic_apps_id bigserial not null,
+  process_id int not null REFERENCES process(process_id) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  industry_name varchar(45) not null,
+  category_name varchar(45) not null,
+  app_description varchar(45) not null,
+  app_name varchar(45) not null,
+  questions_json varchar(45) not null,
+  dashboard_url varchar(45) not null,
+  ddp_url varchar(45) not null,
+  app_image varchar(45) not null,
+  PRIMARY KEY (ANALYTIC_APPS_ID),
+ );
+
