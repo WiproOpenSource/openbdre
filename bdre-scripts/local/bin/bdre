@@ -12,7 +12,7 @@
 # Get function from functions library
 . /lib/lsb/init-functions
 # Start the service BDRE
-USER=openbdre
+USER=%USER%
 BDRE_HOME=~$USER/bdre
 BDRE_APPS_HOME=~$USER/bdre_apps
 
