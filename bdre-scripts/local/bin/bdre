@@ -12,7 +12,7 @@
 # Get function from functions library
 . /lib/lsb/init-functions
 # Start the service BDRE
-USER=%USER%
+USER=openbdre
 BDRE_HOME=~$USER/bdre
 BDRE_APPS_HOME=~$USER/bdre_apps
 
@@ -23,9 +23,11 @@ PIDFILE=/var/run/BDRE/bdre.pid
 DAEMON_OPTS="$LOGDIR/service.log $PIDFILE"
 BDRE_SHUTDOWN_TIMEOUT=15
 
+RETVAL="0";
 
 start() {
-        echo -n "Starting bdre: "
+	echo
+        echo -n "Starting bdre...."
         echo
         pid_dir=$(dirname $PIDFILE)
         mkdir -p $pid_dir
@@ -36,11 +38,14 @@ start() {
             pid=`cat $PIDFILE`
             returnPid=`ps -o pid= -p $pid`
             if [ -n $returnPid ];then
-                log_failure_msg "BDRE already running with pid $returnPid"
+		echo
+                log_failure_msg "BDRE is already running with PID -> $pid"
+		echo
                 return 1
             fi
         fi
         rm -f $PIDFILE
+	echo
         echo "Attempting to start BDRE web application as $USER ."
         su -s /bin/bash $USER -c "$DAEMON $DAEMON_OPTS > $LOGDIR/daemon.log 2>&1"
 	ret=$?
@@ -59,9 +64,9 @@ start() {
                     exit 1
                 fi
             done
+            log_success_msg "BDRE UI has been initiated with PID -> $new_pid."
             echo
-            log_success_msg "BDRE UI initiated with PID $new_pid."
-            return 0
+	    return 0
 
         fi
         log_failure_msg "Failed to start BDRE daemon."
@@ -71,12 +76,14 @@ start() {
 # Restart the service bdre
 stop() {
 	 if [ ! -f $PIDFILE ]; then
-            log_success_msg "BDRE is not running"
+	echo
+            log_success_msg "BDRE is not running. Please start it first!!!"
+	echo
             return 0
-        fi
-
-        echo -n "Shutting down BDRE UI:"
-
+	fi
+	echo
+        echo  "Shutting down BDRE UI..."
+	echo
         bdre_pid=`cat $PIDFILE`
         if [ -n "$bdre_pid" ]; then
           kill -TERM ${bdre_pid} &>/dev/null
@@ -94,6 +101,50 @@ stop() {
 restart() {
   stop
   start
+}
+
+status() {
+if [ -f "$PIDFILE" ]; then
+        RUNNING_PID=$(cat $PIDFILE);
+        IS_RUNNING=$(ps -ef|grep "$RUNNING_PID"|wc -l);
+        if [ "$IS_RUNNING" -gt 0 ]; then
+                echo
+		echo "BDRE with PID -> "$RUNNING_PID" is running...";
+		echo
+        else
+            echo "ERROR: BDRE has died but pid "$RUNNING_PID" exists. Try running:";
+            echo " sudo rm -f "$PIDFILE"";
+            RETVAL=1;
+            exit 1;
+        fi
+    else
+        IS_RUNNING=$(ps -ef|grep -v grep|wc -l);
+        if [ "$IS_RUNNING" -gt 1 ]; then
+            echo
+	    echo "BDRE is not running!!!";
+            echo
+	    RETVAL=1;
+            exit 1;
+        else
+            if [ "$1" == "start" ]; then
+                echo "ERROR: BDRE has failed to "$1"";
+                RETVAL=1;
+                exit 1;
+            fi
+            if [ "$1" == "restart" ]; then
+                echo "ERROR: BDRE has failed to "$1"";
+                RETVAL=1;
+                exit 1;
+            fi
+            if [ "$1" == "stop" ]; then
+                echo "BDRE is stopped";
+                RETVAL=999;
+            else
+                echo "BDRE is stopped";
+                RETVAL=999;
+            fi
+        fi
+    fi
 }
 
 ### main logic ###
