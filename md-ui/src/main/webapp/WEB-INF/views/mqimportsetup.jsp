@@ -34,7 +34,7 @@
 	<script type="text/javascript">
 		    $(document).ready(function () {
 	    $('#Container').jtable({
-	    title: 'Setup MQ Import Job',
+	    title: '<spring:message code="mqimportsetup.page.title_jtable"/>',
 		    paging: true,
 		    pageSize: 10,
 		    sorting: true,
@@ -114,33 +114,33 @@
 		    },
 		    fields: {
 			    brokerUrlValue: {
-			    title: 'Broker URL'
+			    title: '<spring:message code="mqimportsetup.page.title_url"/>'
 			    },
 			    queueNameValue: {
-			    title: 'Queue Name'
+			    title: '<spring:message code="mqimportsetup.page.title_name"/>'
 			    },
 			    numSpoutsValue: {
-				title: 'No.of Spouts'
+				title: '<spring:message code="mqimportsetup.page.title_spouts"/>'
 				},
 				numBoltsValue: {
-				title: 'No.of bolts'
+				title: '<spring:message code="mqimportsetup.page.title_bolts"/>'
 				},
 			    configGroup: {
-			    title :'Config Group',
+			    title :'<spring:message code="mqimportsetup.page.title_cg"/>',
 				    key : false,
 				    list: true,
 				    create:false,
 				    edit: false,
 			    },
 			    busDomainId: {
-			    title :'Application',
+			    title :'<spring:message code="mqimportsetup.page.title_app"/>',
 				    key : false,
 				    list: false,
 				    create:true,
 				    edit: false,
 			    },
 			    canRecover: {
-			    title :'can recover',
+			    title :'<spring:message code="mqimportsetup.page.title_recover"/>',
 				    key : false,
 				    list: false,
 				    create:true,
@@ -151,20 +151,20 @@
 				    list: true,
 				    create:false,
 				    edit: false,
-				    title: 'MQ Import Job ID'
+				    title: '<spring:message code="mqimportsetup.page.title_job_id"/>'
 			    },
 			    subProcessId: {
 			    key : true,
 				    list: true,
 				    create:false,
 				    edit: false,
-				    title: 'MQ Import Step ID'
+				    title: '<spring:message code="mqimportsetup.page.title_setup_id"/>'
 			    },
 
 			    ProcessPageButton: {
 			    sorting: false,
 				    width: '12%',
-				    title: 'Process page',
+				    title: '<spring:message code="mqimportsetup.page.title_page"/>',
 				    create: false,
 				    edit: false,
 				    listClass: 'bdre-jtable-button',
