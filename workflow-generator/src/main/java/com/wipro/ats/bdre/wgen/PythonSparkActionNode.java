@@ -82,13 +82,20 @@ public class PythonSparkActionNode extends GenericActionNode {
         catch (IOException e){
             System.out.println("e = " + e);
         }
-        return "\ndef f_"+ getName().replace('-','_')+"():\n" +
+        return "\ndef "+ getName().replace('-','_')+"_pc():\n" +
+                "\tcommand='java -cp /home/cloudera/bdre/lib/spark-core/spark-core-1.1-SNAPSHOT.jar:/home/cloudera/bdre/lib/*/* org.apache.spark.deploy.SparkSubmit  " +" "+getJarName(getId(), "spark-jar")+getAppArgs(getId(), "app-args")+"',\n" +
+                "\tbash_output = os.system(command)\n" +
+                "\tif(bash_output == 0):\n" +
+                "\t\treturn '"+getToNode().getName().replace('-', '_') +"'\n" +
+                "\telse:\n" +
+                "\t\treturn '"+getTermNode().getName().replace('-', '_') +"'\n" +
+
+                "\ndef f_"+ getName().replace('-','_')+"():\n" +
                 "\t"+ getName().replace('-', '_')+".set_downstream("+ getToNode().getName().replace('-', '_')+")\n" +
                 "\t"+ getName().replace('-','_')+".set_downstream("+ getTermNode().getName().replace('-', '_')+")\n" +
-                getName().replace('-','_') +"= BashOperator(\n" +
-                "    task_id='"+ getName().replace('-','_')+"',\n"+
-                "    bash_command='java -cp /home/cloudera/bdre/lib/spark-core/spark-core-1.1-SNAPSHOT.jar:/home/cloudera/bdre/lib/*/* org.apache.spark.deploy.SparkSubmit  " +" "+getJarName(getId(), "spark-jar")+getAppArgs(getId(), "app-args")+"',\n"
-                +"    dag=dag)\n";
+
+                getName().replace('-', '_')+" = BranchPythonOperator(task_id='" + getName().replace('-', '_')+"', python_callable="+getName().replace('-','_')+"_pc, dag=dag)\n";
+
     }
 
     /**
