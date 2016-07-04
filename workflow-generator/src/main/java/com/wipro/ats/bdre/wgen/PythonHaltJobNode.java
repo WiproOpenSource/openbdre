@@ -14,8 +14,8 @@ public class PythonHaltJobNode extends OozieNode {
 
     @Override
     public String getXML() {
-        return getName() +"= BashOperator(\n"+
-                "    task_id=' "+getName()+" ',\n"+
+        return getName().replace('-', '_') +"= BashOperator(\n"+
+                "    task_id='"+getName().replace('-','_')+"',\n"+
                 "    bash_command='java -cp /home/cloudera/bdre/lib/md_api/md_api-1.1-SNAPSHOT-executable.jar:/home/cloudera/bdre/lib/*/*  com.wipro.ats.bdre.md.api.oozie.OozieHaltJob --process-id "+ getId().toString()+" -bmax 1' ,\n"+
                 "    dag=dag)\n";
 

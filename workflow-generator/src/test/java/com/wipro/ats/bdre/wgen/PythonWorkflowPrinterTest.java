@@ -38,10 +38,12 @@ public class PythonWorkflowPrinterTest {
     private static List<ProcessInfo> getProcessBeans2() {
         //Unit test with test data
         List<ProcessInfo> processInfos = new ArrayList<ProcessInfo>();
-        ProcessInfo parent = new ProcessInfo(1, "sample parent", "ETL Process", 1, 2, 0, false, 0, "2");
-        ProcessInfo sub1 = new ProcessInfo(2, "sample sub", "RAW_LOAD_ACTION Process", 1, 25, 1, false, 0, "3,4");
-        ProcessInfo sub2 = new ProcessInfo(3, "sample sub", "STAGE_LOAD_ACTION Process", 1, 25, 1, false, 0, "1");
-        ProcessInfo sub3 = new ProcessInfo(4, "sample sub", "BASE_LOAD_ACTION Process", 1, 25, 1, false, 0, "1");
+        ProcessInfo parent = new ProcessInfo(9, "sample parent", "ETL Process", 1, 2, 0, false, 0, "10");
+        ProcessInfo sub1 = new ProcessInfo(10, "sample sub", "RAW_LOAD_ACTION Process", 1, 25, 9, false, 0, "11");
+        ProcessInfo sub2 = new ProcessInfo(11, "sample sub", "STAGE_LOAD_ACTION Process", 1, 25, 9, false, 0, "12,13");
+        ProcessInfo sub3 = new ProcessInfo(12, "sample sub", "BASE_LOAD_ACTION Process", 1, 25, 9, false, 0, "9");
+        ProcessInfo sub4 = new ProcessInfo(13, "sample sub", "BASE_LOAD_ACTION Process2", 1, 25, 9, false, 0, "9");
+
         //ProcessInfo sub4 = new ProcessInfo(5, "sample sub", "Semantic Process", 1, 1, 1, false, 0, "6");
         // ProcessInfo sub5 = new ProcessInfo(6, "sample sub", "Semantic Process", 1, 1, 1, false, 0, "7");
         //ProcessInfo sub6 = new ProcessInfo(7, "sample sub", "Semantic Process", 1, 1, 1, false, 0, "1");
@@ -49,7 +51,7 @@ public class PythonWorkflowPrinterTest {
         processInfos.add(sub1);
         processInfos.add(sub2);
         processInfos.add(sub3);
-        //processInfos.add(sub4);
+        processInfos.add(sub4);
         //processInfos.add(sub5);
         //processInfos.add(sub6);
         return processInfos;

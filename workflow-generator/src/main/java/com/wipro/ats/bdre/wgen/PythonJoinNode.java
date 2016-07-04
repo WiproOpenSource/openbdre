@@ -2,6 +2,8 @@ package com.wipro.ats.bdre.wgen;
 
 import com.wipro.ats.bdre.exception.BDREException;
 
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -78,7 +80,17 @@ public class PythonJoinNode extends OozieNode {
 
     @Override
     public String getXML() {
-        return "\n"+getName()+" = DummyOperator(task_id=' "+getName() +" ', dag=dag)";
+        try {
+            FileWriter fw = new FileWriter("/home/cloudera/defFile.txt", true);
+            fw.write("\nf_"+getName().replace('-', '_')+"()");
+            fw.close();
+        }
+        catch (IOException e){
+            System.out.println("e = " + e);
+        }
+        return "\ndef f_"+ getName().replace('-','_')+"():\n" +
+                "\t"+ getName().replace('-', '_')+".set_downstream("+ getToNode().getName().replace('-', '_')+")\n" +
+                "\n"+ getName().replace('-','_')+" = DummyOperator(task_id='"+getName().replace('-','_') +"', dag=dag)";
     }
 
 

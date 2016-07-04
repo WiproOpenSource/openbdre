@@ -15,6 +15,7 @@ package com.wipro.ats.bdre.md.ui;
 
 import com.wipro.ats.bdre.md.api.GetProcess;
 import com.wipro.ats.bdre.md.beans.ProcessInfo;
+import com.wipro.ats.bdre.wgen.PythonWorkflowPrinter;
 import com.wipro.ats.bdre.wgen.Workflow;
 import com.wipro.ats.bdre.wgen.WorkflowPrinter;
 import org.apache.log4j.Logger;
@@ -81,6 +82,20 @@ public class PageController {
          workflow = new WorkflowPrinter().execute(processInfos, WORKFLOWCON + pid);
         } catch (SecurityException e) {
            LOGGER.info(e);
+            workflow.setXml(new StringBuilder("not allowed"));
+        }
+        return workflow.getXml().toString();
+    }
+
+    @RequestMapping(value = "/workflowdag/{pid}.page", method = RequestMethod.GET)
+    @ResponseBody
+    public String getWorkflowDag(@PathVariable("pid") String pid,java.security.Principal principal) {
+        Workflow workflow=new Workflow();
+        try{
+            List<ProcessInfo> processInfos = new GetProcess().execute(new String[]{PARENTPROCESSID, pid,"--username",principal.getName()});
+            workflow = new PythonWorkflowPrinter().execute(processInfos, WORKFLOWCON + pid);
+        } catch (SecurityException e) {
+            LOGGER.info(e);
             workflow.setXml(new StringBuilder("not allowed"));
         }
         return workflow.getXml().toString();

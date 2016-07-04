@@ -5,6 +5,8 @@ import com.wipro.ats.bdre.md.api.GetProperties;
 import com.wipro.ats.bdre.md.beans.ProcessInfo;
 import org.apache.log4j.Logger;
 
+import java.io.*;
+import java.nio.charset.Charset;
 import java.util.*;
 
 /**
@@ -34,7 +36,13 @@ public class PythonWorkflowPrinter {
             LOGGER.error(EMPTYERROR);
             throw new MetadataException(EMPTYERROR);
         }
-        final String prefixXml = "\nfrom airflow.operators import BashOperator,BranchPythonOperator,DummyOperator\nfrom datetime import datetime, timedelta\nimport os\n";
+        final String prefixXml = "\nfrom airflow.operators import BashOperator,BranchPythonOperator,DummyOperator\n"+
+                "from datetime import datetime, timedelta\n"+
+                "from airflow import DAG\n"+
+                "import os\n" +
+                "args = {'owner': 'airflow','start_date': datetime(2015, 10, 1, 5, 40, 0), 'depends_on_past': False}\n" +
+                "\n" +
+                "dag = DAG(dag_id='sparkeg1',  default_args=args)";
         String pid = processInfos.get(0).getProcessId().toString();
         StringBuilder credentials = new StringBuilder();
         credentials.append(isSecurityEnabled(pid, "security"));
@@ -124,7 +132,28 @@ public class PythonWorkflowPrinter {
         workflowXML.append(nc.getTermJobNode().getXML());
         //workflowXML.append(nc.getKill().getXML());
         //workflowXML.append(nc.getHalt().getXML());
-        //workflowXML.append(postfixXml);
+        String postfixXml ="";
+        try {
+            InputStream fis = new FileInputStream("/home/cloudera/defFile.txt");
+            InputStreamReader isr = new InputStreamReader(fis, Charset.forName("UTF-8"));
+            BufferedReader br = new BufferedReader(isr);
+            String line;
+            Boolean flag = true;
+            line = br.readLine();
+            while ( (line = br.readLine()) != null) {
+                if(flag && line.contains("python_halt_step_"))
+                    continue;
+                else
+                    flag = false;
+                postfixXml = postfixXml + line+"\n";
+            }
+            File file = new File("/home/cloudera/defFile.txt");
+            file.delete();
+        }catch (IOException e){
+            System.out.println("e = " + e);
+        }
+
+        workflowXML.append(postfixXml);
         LOGGER.info("Complete !");
         Workflow workflow = new Workflow();
         workflow.setXml(workflowXML);
@@ -180,11 +209,15 @@ public class PythonWorkflowPrinter {
             LOGGER.error(EMPTYERROR);
             throw new MetadataException(EMPTYERROR);
         }
-        final String prefixXml = "<workflow-app name=\"" + workflowName + "\" xmlns=\"uri:oozie:workflow:0.4\">\n";
+        final String prefixXml = "\nfrom airflow.operators import BashOperator,BranchPythonOperator,DummyOperator\n"+
+                "from datetime import datetime, timedelta\n"+
+                "import os\n" +
+                "args = {'owner': 'airflow','start_date': datetime(2015, 10, 1, 5, 40, 0), 'depends_on_past': False}\n" +
+                "\n" +
+                "dag = airflow.DAG(dag_id='sparkeg1',  default_args=args)";
         String pid = processInfos.get(0).getProcessId().toString();
         StringBuilder credentials = new StringBuilder();
         credentials.append(isSecurityEnabled(pid, "security"));
-        final String postfixXml = "\n</workflow-app>";
 
         StringBuilder workflowXML = new StringBuilder();
         StringBuilder stepXML = new StringBuilder();
@@ -270,6 +303,19 @@ public class PythonWorkflowPrinter {
         workflowXML.append(nc.getTermJobNode().getXML());
         //workflowXML.append(nc.getKill().getXML());
         //workflowXML.append(nc.getHalt().getXML());
+        String postfixXml ="";
+        try {
+            InputStream fis = new FileInputStream("/home/cloudera/defFile.txt");
+            InputStreamReader isr = new InputStreamReader(fis, Charset.forName("UTF-8"));
+            BufferedReader br = new BufferedReader(isr);
+            String line;
+            while ( (line = br.readLine()) != null) {
+                postfixXml = postfixXml + line+"\n";
+            }
+        }catch (IOException e){
+            System.out.println("e = " + e);
+        }
+
         workflowXML.append(postfixXml);
         LOGGER.info("Complete !");
         Workflow workflow = new Workflow();

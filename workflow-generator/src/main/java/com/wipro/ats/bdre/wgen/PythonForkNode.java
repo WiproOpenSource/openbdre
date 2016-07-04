@@ -2,6 +2,8 @@ package com.wipro.ats.bdre.wgen;
 
 import com.wipro.ats.bdre.exception.BDREException;
 
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.*;
 
 /**
@@ -90,11 +92,18 @@ public class PythonForkNode extends OozieNode{
 
     @Override
     public String getXML() {
-        StringBuilder ret = new StringBuilder("\n"+getName()+" = DummyOperator(task_id=' "+getName() +" ', dag=dag)");
-/*        for (OozieNode toNode : toNodes) {
-            ret.append("\n\t<path start='" + toNode.getName() + "' />");
+        try {
+            FileWriter fw = new FileWriter("/home/cloudera/defFile.txt", true);
+            fw.write("\nf_"+getName().replace('-', '_')+"()");
+            fw.close();
         }
-        ret.append("\n</fork>");*/
+        catch (IOException e){
+            System.out.println("e = " + e);
+        }
+        StringBuilder ret = new StringBuilder("\n"+ getName().replace('-','_')+" = DummyOperator(task_id='"+getName().replace('-','_') +"', dag=dag)\ndef f_"+getName().replace('-','_')+"():");
+        for (OozieNode toNode : toNodes) {
+            ret.append("\n\t"+getName().replace('-','_')+".set_downstream("+toNode.getName().replace('-','_')+")");
+        }
         return ret.toString();
     }
 

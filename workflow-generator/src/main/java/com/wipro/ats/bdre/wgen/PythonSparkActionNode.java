@@ -4,6 +4,8 @@ import com.wipro.ats.bdre.md.api.GetProperties;
 import com.wipro.ats.bdre.md.beans.ProcessInfo;
 import org.apache.log4j.Logger;
 
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.Enumeration;
 
 /**
@@ -72,10 +74,20 @@ public class PythonSparkActionNode extends GenericActionNode {
                 "    </action>");
 
         //return ret.toString();
-
-        return getName() +"= BashOperator(\n" +
-                "    task_id=' "+getName()+" ',\n"+
-                "    bash_command='java -cp /home/cloudera/bdre/lib/spark-core/spark-core-1.1-SNAPSHOT.jar:/home/cloudera/bdre/lib/*/* org.apache.spark.deploy.SparkSubmit --class "+ getAppMainClass(getId(), "spark-main") +" " +getConf(getId(), "spark-conf")+" "+getJarName(getId(), "spark-jar")+getAppArgs(getId(), "app-args")+"',\n"
+        try {
+            FileWriter fw = new FileWriter("/home/cloudera/defFile.txt", true);
+            fw.write("\nf_"+getName().replace('-', '_')+"()");
+            fw.close();
+        }
+        catch (IOException e){
+            System.out.println("e = " + e);
+        }
+        return "\ndef f_"+ getName().replace('-','_')+"():\n" +
+                "\t"+ getName().replace('-', '_')+".set_downstream("+ getToNode().getName().replace('-', '_')+")\n" +
+                "\t"+ getName().replace('-','_')+".set_downstream("+ getTermNode().getName().replace('-', '_')+")\n" +
+                getName().replace('-','_') +"= BashOperator(\n" +
+                "    task_id='"+ getName().replace('-','_')+"',\n"+
+                "    bash_command='java -cp /home/cloudera/bdre/lib/spark-core/spark-core-1.1-SNAPSHOT.jar:/home/cloudera/bdre/lib/*/* org.apache.spark.deploy.SparkSubmit  " +" "+getJarName(getId(), "spark-jar")+getAppArgs(getId(), "app-args")+"',\n"
                 +"    dag=dag)\n";
     }
 
