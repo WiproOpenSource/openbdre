@@ -106,6 +106,7 @@ public class ProcessDependencyAPI extends MetadataAPIBase {
                         "<TR>" +
                         "<TD COLOR=\"blue\"  href=\"javascript:popModal(" + processDependencyInfo.getProcessId() + ")\"><FONT COLOR=\"blue\" POINT-SIZE=\"8\">Diagram </FONT></TD>" +
                         "<TD COLOR=\"blue\"  href=\"javascript:popModalXml(" + processDependencyInfo.getProcessId() + ")\"><FONT COLOR=\"blue\" POINT-SIZE=\"8\"> XML </FONT></TD>" +
+                        "<TD COLOR=\"blue\"  href=\"javascript:popModalDag(" + processDependencyInfo.getProcessId() + ")\"><FONT COLOR=\"blue\" POINT-SIZE=\"8\"> Dag </FONT></TD>" +
                         "<TD COLOR=\"blue\"  href=\"javascript:GotoProcess(" + processDependencyInfo.getProcessId() + ")\"><FONT COLOR=\"blue\" POINT-SIZE=\"8\"> Details</FONT></TD></TR></TABLE>>";
 
 

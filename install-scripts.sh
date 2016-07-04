@@ -6,6 +6,12 @@ if [ $# -ne 1 ]
     exit 1
 fi
 
+if [ "$1" != "local" ] && [ "$1" != "remote" ]
+    then
+        echo "usage $0 <local|remote>"
+        exit;
+fi
+
 BDRE_HOME=~/bdre
 BDRE_APPS_HOME=~/bdre_apps
 
@@ -22,8 +28,31 @@ BDRE_CODE=`pwd`
 sudo service bdre stop
 cp -f -r bdre-scripts/$1/* $BDRE_HOME/bdre-scripts
 cp -f -r appstore-context.xml $BDRE_HOME/bdre-scripts
+cp -f -r bdre-scripts/hql $BDRE_HOME/bdre-scripts
+
+codeDir=`pwd`
+echo $codeDir
 
 cp -r -f target/lib/* $BDRE_HOME/lib
+cd $BDRE_HOME/lib/webapps
+mkdir analyticui
+cd analyticui
+jar -xvf ../analytic-ui-1.1-SNAPSHOT.war
+cd ..
+mkdir auth
+cd auth
+jar -xvf ../auth-rest-api-1.1-SNAPSHOT.war
+cd ..
+mkdir mdrest
+cd mdrest
+jar -xvf ../md-rest-api-1.1-SNAPSHOT.war
+cd ..
+mkdir mdui
+cd mdui
+jar -xvf ../md-ui-1.1-SNAPSHOT.war
+
+cd $codeDir
+
 java -cp "target/lib/genconf-dump/*" com.wipro.ats.bdre.md.util.DumpConfigMain -cg scripts_config -f $BDRE_HOME/bdre-scripts/env.properties
 . $BDRE_HOME/bdre-scripts/env.properties
 

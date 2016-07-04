@@ -27,7 +27,34 @@ public class CommonNodeMaintainer {
     private Set<String> printedNodeNames = new HashSet<String>();
     private Map<Integer, ForkNode> forkNodeMap = new HashMap<Integer, ForkNode>();
     private Map<Integer, JoinNode> joinNodeMap = new HashMap<Integer, JoinNode>();
+        private PythonNodeCollection pnc = new PythonNodeCollection();
+    private Map<Integer, PythonForkNode> pythonForkNodeMap = new HashMap<Integer, PythonForkNode>();
+    private Map<Integer, PythonJoinNode> pythonJoinNodeMap = new HashMap<Integer, PythonJoinNode>();
     private Set<OozieNode> restartNodes = new HashSet<OozieNode>();
+
+    public PythonNodeCollection getPnc() {
+        return pnc;
+    }
+
+    public void setPnc(PythonNodeCollection pnc) {
+        this.pnc = pnc;
+    }
+
+    public Map<Integer, PythonForkNode> getPythonForkNodeMap() {
+        return pythonForkNodeMap;
+    }
+
+    public void setPythonForkNodeMap(Map<Integer, PythonForkNode> pythonForkNodeMap) {
+        this.pythonForkNodeMap = pythonForkNodeMap;
+    }
+
+    public Map<Integer, PythonJoinNode> getPythonJoinNodeMap() {
+        return pythonJoinNodeMap;
+    }
+
+    public void setPythonJoinNodeMap(Map<Integer, PythonJoinNode> pythonJoinNodeMap) {
+        this.pythonJoinNodeMap = pythonJoinNodeMap;
+    }
 
     public Set<OozieNode> getRestartNodes() {
         return restartNodes;

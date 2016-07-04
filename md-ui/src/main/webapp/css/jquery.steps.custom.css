@@ -1,0 +1,69 @@
+.wizard>.steps .disabled a, .wizard>.steps .disabled a:hover, .wizard>.steps .disabled .number-circular
+{
+	background-color: #3D525F !important;
+}
+.wizard>.steps li a:hover, .wizard>.steps li a {
+	padding: 4px !important;
+}
+.wizard>.steps .current a, .wizard>.steps .current a:hover, .wizard>.steps .current a:active{
+	background-color: #F2B30B !important;
+	color: #000 !important;
+	
+}
+.wizard>.steps .disabled a, .wizard>.steps .disabled a:hover, .wizard>.steps .disabled a:active,.wizard>.steps .done a, .wizard>.steps .done a:hover, .wizard>.steps .done a:active{
+	background-color: #3D525F !important;
+	color: #fff !important;
+}
+.wizard>.actions a, .wizard>.actions a:hover, .wizard>.actions a:active
+	{
+	background-color: #23C9A4 !important;
+	color: #404040 !important;
+	padding: 0.25em 1.1em !important;
+	border-radius: 4px !important;
+	border-color: transparent;
+}
+.wizard>.actions .disabled a, .wizard>.actions .disabled a:hover,
+	.wizard>.actions .disabled a:active {
+	background-color: #D9D9D9 !important;
+	color: #B8B7B7 !important;
+}
+.actions {
+	width: 100% !important;
+	margin: 0 !important;
+	padding: 15px;
+	background-color: #4B505C !important;
+	border-radius: 0 0 5px 5px !important;
+}
+.number {
+	display: none;
+}
+.number-circular {
+	height: 30px;
+	width: 30px;
+	border: 3px solid white;
+	border-radius: 47px;
+	padding-top: 3px;
+	text-align: center;
+	display: inline-block;
+	margin-right: 10px;
+	color: #fff;
+	background-color: #00A5FA;
+}
+body {
+	padding: 64px !important;
+	background-color: #DFDDDD !important;
+}
+.wizard > .content {
+	background-color: #F8F9FB;
+	min-height: 38em;
+}
+.wizard > .content{
+	margin: 0;
+	border-radius: 5px 5px 0 0;	
+}
+
+.wizard.vertical {
+	background-color: #F8F9FB;
+	padding-top: 2%;
+} 
+     

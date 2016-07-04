@@ -1,3 +1,4 @@
+<%@taglib uri="http://www.springframework.org/tags" prefix="spring"%>
 <!DOCTYPE html>
 <meta charset="utf-8">
 <style>
@@ -48,19 +49,21 @@ body {
 <body>
 <script>
 var jsSLAMonitoringObjectList=[];
+var processrunning = [];
+var stateOfProcess = [];
 </script>
 <%
 String processId=request.getParameter("processId");
 %>
 <div style="text-align: center;">
-<h2>Execution Time graph of sub processes of process <%=processId %><h2>
+<h2><spring:message code="sla.page.sub_process_execution_time_graph"/> <%=processId %><h2>
 </div>
 <div>
 <script src="../js/d3.min.js"></script>
 <script>
 var margin = {top: 20, right: 40, bottom: 30, left: 200},
-    width = 1800 - margin.left - margin.right,
-    height = 900 - margin.top - margin.bottom;
+    width = 1150 - margin.left - margin.right,
+    height = 600 - margin.top - margin.bottom;
 
 var x0 = d3.scale.ordinal()
     .rangeRoundBands([0, width], .1);
@@ -71,7 +74,7 @@ var y = d3.scale.linear()
     .range([height, 0]);
 
 var color = d3.scale.ordinal()
-    .range(["#98abc5", "#8a89a6", "#d0743c"]);
+    .range(["#98abc5", "#008000", "#d0743c"]);
 
 var xAxis = d3.svg.axis()
     .scale(x0)
@@ -90,6 +93,8 @@ var svg = d3.select("body").append("svg")
 
 </script>
 <script>
+var counter = 0;
+var legendCounter = 0;
  function draw(data) {
   var ageNames = d3.keys(data[0]).filter(function(key) { return key !== "processId"; });
 
@@ -114,7 +119,7 @@ var svg = d3.select("body").append("svg")
       .attr("y", 6)
       .attr("dy", ".71em")
       .style("text-anchor", "end")
-      .text("Time in Seconds -->");
+      .text('<spring:message code="sla.page.y_axis_name"/>');
 
   var processId = svg.selectAll(".processId")
       .data(data)
@@ -126,10 +131,34 @@ var svg = d3.select("body").append("svg")
       .data(function(d) { return d.ages; })
     .enter().append("rect")
       .attr("width", x1.rangeBand())
-      .attr("x", function(d) { return x1(d.name); })
-      .attr("y", function(d) { return y(d.value); })
+      .attr("x", function(d) {return x1(d.name); })
+      .attr("y", function(d) {return y(d.value); })
       .attr("height", function(d) { return height - y(d.value); })
-      .style("fill", function(d) { return color(d.name); });
+      .style("fill", function(d) {
+          if(d.name=="Current" && processrunning[counter]==true)
+          {
+            counter++;
+            return "#FFFF00";
+          }
+          else if (d.name=="Current")
+          {
+
+            if(stateOfProcess[counter]==6) {
+
+                counter++;
+                return "#FF0000";
+            }
+            counter++;
+            return "#d0743c";
+          }
+          else
+          {
+            if(d.name=="Average")
+                return "#98abc5";
+            else (d.name=="SLA")
+                return "#008000";
+          }
+       });
 
   var legend = svg.selectAll(".legend")
       .data(ageNames.slice().reverse())
@@ -141,7 +170,18 @@ var svg = d3.select("body").append("svg")
       .attr("x", width - 18)
       .attr("width", 18)
       .attr("height", 18)
-      .style("fill", color);
+      .style("fill", function(d){
+        if (d=="SLA")
+            return "#008000";
+        else if (d=="Average")
+            return "#98abc5";
+        else if (d=="Current")
+            return "#d0743c";
+        else if (d=="Running")
+            return "#FFFF00";
+        else if (d=="Failed")
+            return "#FF0000";
+      });
 
   legend.append("text")
       .attr("x", width - 24)
@@ -157,9 +197,10 @@ var svg = d3.select("body").append("svg")
   for(var i=0;i<data.Record.length;i++)
   {
   var obj=data.Record[i];
-  var slaBean=new jsSLAMonitoringObject(obj.processId,obj.currentExecutionTime,obj.averageExecutionTime,obj.sLATime);
+  var slaBean=new jsSLAMonitoringObject(obj.processId,obj.currentExecutionTime,obj.averageExecutionTime,obj.sLATime,obj.running,obj.failed);
             jsSLAMonitoringObjectList.push(slaBean);
-
+            processrunning.push(obj.processRunning);
+            stateOfProcess.push(obj.stateOfProcess)
   }
   draw(jsSLAMonitoringObjectList);
   }
@@ -167,11 +208,13 @@ var svg = d3.select("body").append("svg")
 <script>
 SLAMonitoring("<%=processId %>");
 
-function jsSLAMonitoringObject(processId, currentExecutionTime, averageExecutionTime, sLATime) {
+function jsSLAMonitoringObject(processId, currentExecutionTime, averageExecutionTime, sLATime, running, failed) {
                      this.processId = processId;
                      this.Current = currentExecutionTime;
                      this.Average = averageExecutionTime;
                      this.SLA = sLATime;
+                     this.Running = running;
+                     this.Failed = failed;
                  }
 
 function SLAMonitoring(pid)
@@ -189,11 +232,11 @@ function SLAMonitoring(pid)
                                  alert(data.Message);
                             },
                              error: function() {
-                             alert('Error in SLAMonitoring');
+                             alert('<spring:message code="sla.page.error_message"/>');
                          }
                           });
                      }
 </script>
 </div>
 <hr  style="width:80%">
-<center><b>SubprocessIDs --> </b></center>
+<center><b><spring:message code="sla.page.x_axis_name"/> </b></center>
