@@ -274,7 +274,7 @@
     </head>
     <body>
 	<br/>
-		<button type='button' class='btn btn-primary' aria-label='Left Align' onClick='saveSVG("pipeline",0)'><span class='glyphicon glyphicon-save' aria-hidden='true'></span>Save</button>
+		<button type='button' class='btn btn-primary' aria-label='Left Align' onClick='saveSVG("pipeline",0)'><span class='glyphicon glyphicon-save' aria-hidden='true'></span><spring:message code="lineage.page.button_save"/></button>
 	<c:if test="${empty param.pid}">
 
 	    <div id="input-box-button" >

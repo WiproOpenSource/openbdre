@@ -33,7 +33,7 @@
 	<script type="text/javascript">
 		    $(document).ready(function () {
 	    $('#Container').jtable({
-	    title: 'File List',
+	    title: '<spring:message code="file.page.title_jtable"/>',
 		    paging: true,
 		    pageSize: 10,
 		    sorting: true,
@@ -97,25 +97,25 @@
 			    list: true,
 			    create:true,
 			    edit: false,
-			    title: "ID"
+			    title: '<spring:message code="file.page.title_id"/>'
 		    },
 			    serverId: {
-			    title: 'Server ID'
+			    title: '<spring:message code="file.page.title_sid"/>'
 			    },
 			    path: {
-			    title: 'Path'
+			    title: '<spring:message code="file.page.title_path"/>'
 
 			    },
 			    fileSize: {
-			    title: 'Size'
+			    title: '<spring:message code="file.page.title_size"/>'
 
 			    },
 			    fileHash: {
-			    title: 'Hash',
+			    title: '<spring:message code="file.page.title_hash"/>',
 			    },
 			    tableCreationTS: {
 
-			    title: 'Creation TS',
+			    title: '<spring:message code="file.page.title_creation_ts"/>',
 				    create:true,
 				    edit :true
 			    }
