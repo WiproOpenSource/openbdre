@@ -185,6 +185,13 @@
 			     background-color: #1D1D1D;
 			     color: #fff;
 			    }
+			    .workspacetext{
+			    color: #fff;
+			   	position: relative;
+			    font-size: 1em;
+			    top: 26px;
+			    right: 1px;
+			    }
         </style>
 		</head>
 
@@ -204,12 +211,16 @@
 							<img alt="<spring:message code="common.page.title_bdre_1"/>" class="img-responsive logo" src="../css/images/Wipro-logo.png" style="width:55px;">
                         </a>
 						<span class="bdretextlogo"><spring:message code="content.page.app_abbrevation"/></span>
+
+						<!-- Workspace name -->
+						<span class="workspacetext">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Workspace: <spring:message code="content.page.workspace"/></span>
+
                     </div>
 
                     <!-- Collect the nav links, forms, and other content for toggling -->
                     <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
                         <ul class="nav navbar-nav navbar-nav-position nav-center">
-                            <li ng-repeat="item in menu" ng-class="{dropdown:item.children.length!=0,activ:item.active}">
+                        <li ng-repeat="item in menu" ng-class="{dropdown:item.children.length!=0,activ:item.active}">
                                 <a href="#" ng-hide="item.children.length==0" class="dropdown-toggle text-muted " data-toggle="dropdown" role="button" aria-expanded="false">{{item.label}} <span class="glyphicon glyphicon-chevron-down glyphicon-arrow-position"></span></a>
                                 <a href="#" ng-show="item.children.length==0" class="text-muted level1" ng-click="openlink($event,item.url)">{{item.label}}</a>
                                 <ul class="dropdown-menu" ng-hide="item.children.length==0" role="menu">

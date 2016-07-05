@@ -53,6 +53,7 @@
         <module>genconf-dump</module>
         <module>dot-gen</module>
         <module>cluster-migration</module>
+		<module>workspace-selector</module>
     </modules>
 
     <dependencies>
