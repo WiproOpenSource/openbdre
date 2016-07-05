@@ -15,8 +15,9 @@ package com.wipro.ats.bdre.md.ui;
 
 import com.wipro.ats.bdre.md.api.GetProcess;
 import com.wipro.ats.bdre.md.beans.ProcessInfo;
-import com.wipro.ats.bdre.wgen.PythonWorkflowPrinter;
+import com.wipro.ats.bdre.wgen.dag.DAGPrinter;
 import com.wipro.ats.bdre.wgen.Workflow;
+import com.wipro.ats.bdre.wgen.dag.DAG;
 import com.wipro.ats.bdre.wgen.WorkflowPrinter;
 import org.apache.log4j.Logger;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
@@ -87,18 +88,18 @@ public class PageController {
         return workflow.getXml().toString();
     }
 
-    @RequestMapping(value = "/workflowdag/{pid}.page", method = RequestMethod.GET)
+    @RequestMapping(value = "/airflowdag/{pid}.page", method = RequestMethod.GET)
     @ResponseBody
-    public String getWorkflowDag(@PathVariable("pid") String pid,java.security.Principal principal) {
-        Workflow workflow=new Workflow();
+    public String getAirflowDag(@PathVariable("pid") String pid,java.security.Principal principal) {
+        DAG dag=new DAG();
         try{
             List<ProcessInfo> processInfos = new GetProcess().execute(new String[]{PARENTPROCESSID, pid,"--username",principal.getName()});
-            workflow = new PythonWorkflowPrinter().execute(processInfos, WORKFLOWCON + pid);
+            dag = new DAGPrinter().execute(processInfos, WORKFLOWCON + pid);
         } catch (SecurityException e) {
             LOGGER.info(e);
-            workflow.setXml(new StringBuilder("not allowed"));
+            dag.setDAG(new StringBuilder("not allowed"));
         }
-        return workflow.getXml().toString();
+        return dag.getDAG().toString();
     }
 
     @RequestMapping(value = "/auth/login.page", method = RequestMethod.GET)

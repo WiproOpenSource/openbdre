@@ -1,4 +1,4 @@
-package com.wipro.ats.bdre.wgen;
+package com.wipro.ats.bdre.wgen.dag;
 
 import java.io.FileWriter;
 import java.io.IOException;
@@ -6,17 +6,17 @@ import java.io.IOException;
 /**
  * Created by SU324335 on 7/1/16.
  */
-public class PythonInitJobNode extends OozieNode {
-    public PythonInitJobNode() {
+public class DAGInitJobNode extends DAGNode {
+    public DAGInitJobNode() {
 
     }
 
     public String getName() {
-        return "python-init-job";
+        return "dag-init-job";
     }
 
     @Override
-    public String getXML() {
+    public String getDAG() {
         try {
             FileWriter fw = new FileWriter("/home/cloudera/defFile.txt", true);
             fw.write("\nf_"+getName().replace('-', '_')+"()");

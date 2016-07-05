@@ -1,8 +1,9 @@
-package com.wipro.ats.bdre.wgen;
+package com.wipro.ats.bdre.wgen.dag;
 
 import com.wipro.ats.bdre.exception.BDREException;
 import com.wipro.ats.bdre.md.api.GetProperties;
 import com.wipro.ats.bdre.md.beans.ProcessInfo;
+import com.wipro.ats.bdre.wgen.GenericActionNode;
 
 import java.io.FileWriter;
 import java.io.IOException;
@@ -11,22 +12,22 @@ import java.util.Enumeration;
 /**
  * Created by cloudera on 7/3/16.
  */
-public class PythonShellActionNode extends GenericActionNode {
+public class DAGShellTaskNode extends GenericActionNode {
 
 
     private ProcessInfo processInfo = new ProcessInfo();
     private static final String SCRIPT = "script";
-    private PythonActionNode actionNode = null;
+    private DAGTaskNode dagTaskNode = null;
 
     /**
      * This constructor is used to set node id and process information.
      *
      * @param actionNode An instance of ActionNode class which a workflow triggers the execution of a task.
      */
-    public PythonShellActionNode(PythonActionNode actionNode) {
+    public DAGShellTaskNode(DAGTaskNode actionNode) {
         setId(actionNode.getId());
         processInfo = actionNode.getProcessInfo();
-        this.actionNode = actionNode;
+        this.dagTaskNode = actionNode;
     }
 
     public ProcessInfo getProcessInfo() {

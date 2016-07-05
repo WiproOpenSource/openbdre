@@ -14,6 +14,10 @@
 
 package com.wipro.ats.bdre.wgen;
 
+import com.wipro.ats.bdre.wgen.dag.DAGForkNode;
+import com.wipro.ats.bdre.wgen.dag.DAGJoinNode;
+import com.wipro.ats.bdre.wgen.dag.DAGNodeCollection;
+
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
@@ -27,32 +31,32 @@ public class CommonNodeMaintainer {
     private Set<String> printedNodeNames = new HashSet<String>();
     private Map<Integer, ForkNode> forkNodeMap = new HashMap<Integer, ForkNode>();
     private Map<Integer, JoinNode> joinNodeMap = new HashMap<Integer, JoinNode>();
-        private PythonNodeCollection pnc = new PythonNodeCollection();
-    private Map<Integer, PythonForkNode> pythonForkNodeMap = new HashMap<Integer, PythonForkNode>();
-    private Map<Integer, PythonJoinNode> pythonJoinNodeMap = new HashMap<Integer, PythonJoinNode>();
+        private DAGNodeCollection pnc = new DAGNodeCollection();
+    private Map<Integer, DAGForkNode> pythonForkNodeMap = new HashMap<Integer, DAGForkNode>();
+    private Map<Integer, DAGJoinNode> pythonJoinNodeMap = new HashMap<Integer, DAGJoinNode>();
     private Set<OozieNode> restartNodes = new HashSet<OozieNode>();
 
-    public PythonNodeCollection getPnc() {
+    public DAGNodeCollection getPnc() {
         return pnc;
     }
 
-    public void setPnc(PythonNodeCollection pnc) {
+    public void setPnc(DAGNodeCollection pnc) {
         this.pnc = pnc;
     }
 
-    public Map<Integer, PythonForkNode> getPythonForkNodeMap() {
+    public Map<Integer, DAGForkNode> getPythonForkNodeMap() {
         return pythonForkNodeMap;
     }
 
-    public void setPythonForkNodeMap(Map<Integer, PythonForkNode> pythonForkNodeMap) {
+    public void setPythonForkNodeMap(Map<Integer, DAGForkNode> pythonForkNodeMap) {
         this.pythonForkNodeMap = pythonForkNodeMap;
     }
 
-    public Map<Integer, PythonJoinNode> getPythonJoinNodeMap() {
+    public Map<Integer, DAGJoinNode> getPythonJoinNodeMap() {
         return pythonJoinNodeMap;
     }
 
-    public void setPythonJoinNodeMap(Map<Integer, PythonJoinNode> pythonJoinNodeMap) {
+    public void setPythonJoinNodeMap(Map<Integer, DAGJoinNode> pythonJoinNodeMap) {
         this.pythonJoinNodeMap = pythonJoinNodeMap;
     }
 

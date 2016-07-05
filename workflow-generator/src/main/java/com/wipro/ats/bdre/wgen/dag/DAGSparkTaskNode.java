@@ -1,7 +1,10 @@
-package com.wipro.ats.bdre.wgen;
+package com.wipro.ats.bdre.wgen.dag;
 
 import com.wipro.ats.bdre.md.api.GetProperties;
 import com.wipro.ats.bdre.md.beans.ProcessInfo;
+import com.wipro.ats.bdre.wgen.dag.GenericActionNode;
+import com.wipro.ats.bdre.wgen.dag.LOFActionNode;
+import com.wipro.ats.bdre.wgen.dag.DAGNode;
 import org.apache.log4j.Logger;
 
 import java.io.FileWriter;
@@ -11,20 +14,20 @@ import java.util.Enumeration;
 /**
  * Created by SU324335 on 7/1/16.
  */
-public class PythonSparkActionNode extends GenericActionNode {
-    private static final Logger LOGGER = Logger.getLogger(PythonSparkActionNode.class);
+public class DAGSparkTaskNode extends GenericActionNode {
+    private static final Logger LOGGER = Logger.getLogger(DAGSparkTaskNode.class);
     private ProcessInfo processInfo = new ProcessInfo();
-    private PythonActionNode actionNode = null;
+    private DAGTaskNode dagTaskNode = null;
 
     /**
      * This constructor is used to set node id and process information.
      *
-     * @param actionNode An instance of ActionNode class which a workflow triggers the execution of a task.
+     * @param dagTaskNode An instance of ActionNode class which a workflow triggers the execution of a task.
      */
-    public PythonSparkActionNode(PythonActionNode actionNode) {
-        setId(actionNode.getId());
-        processInfo = actionNode.getProcessInfo();
-        this.actionNode = actionNode;
+    public DAGSparkTaskNode(DAGTaskNode dagTaskNode) {
+        setId(dagTaskNode.getId());
+        processInfo = dagTaskNode.getProcessInfo();
+        this.dagTaskNode = dagTaskNode;
     }
 
     public ProcessInfo getProcessInfo() {
@@ -40,15 +43,15 @@ public class PythonSparkActionNode extends GenericActionNode {
     }
 
     @Override
-    public String getXML() {
+    public String getDAG() {
         LOGGER.info("Inside python Spark");
         if (this.getProcessInfo().getParentProcessId() == 0) {
             return "";
         }
-        OozieNode fileListNode = null;
-        for (OozieNode oozieNode : actionNode.getContainingNodes()) {
-          if (oozieNode instanceof LOFActionNode) {
-                fileListNode = oozieNode;   //TODO
+        DAGNode fileListNode = null;
+        for (DAGNode dagNode : dagTaskNode.getContainingNodes()) {
+          if (dagNode instanceof LOFActionNode) {
+                fileListNode = dagNode;   //TODO
             }
         }
         StringBuilder ret = new StringBuilder();

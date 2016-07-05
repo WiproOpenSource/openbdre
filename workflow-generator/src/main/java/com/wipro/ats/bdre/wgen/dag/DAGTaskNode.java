@@ -1,7 +1,9 @@
-package com.wipro.ats.bdre.wgen;
+package com.wipro.ats.bdre.wgen.dag;
 
 import com.wipro.ats.bdre.exception.BDREException;
 import com.wipro.ats.bdre.md.beans.ProcessInfo;
+import com.wipro.ats.bdre.wgen.dag.GenericActionNode;
+import com.wipro.ats.bdre.wgen.dag.DAGNode;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -9,7 +11,7 @@ import java.util.List;
 /**
  * Created by SU324335 on 7/1/16.
  */
-public class PythonActionNode extends OozieNode {
+public class DAGTaskNode extends DAGNode {
     public static final int INGESTION = 1;
     public static final int SEMANTIC_ACTION = 2;
     public static final int EXPORT_ACTION = 3;
@@ -63,7 +65,7 @@ public class PythonActionNode extends OozieNode {
      *
      * @param id node-id to set for Action Node.
      */
-    public PythonActionNode(Integer id) {
+    public DAGTaskNode(Integer id) {
         setId(id);
 
     }
@@ -84,7 +86,7 @@ public class PythonActionNode extends OozieNode {
     public void setProcessInfo(ProcessInfo processInfo) {
         this.processInfo = processInfo;
         if (processInfo.getProcessTypeId() == SPARK_ACTION) {
-            PythonSparkActionNode sparkActionNode = new PythonSparkActionNode(this);
+            DAGSparkTaskNode sparkActionNode = new DAGSparkTaskNode(this);
             containingNodes.add(sparkActionNode);
         }
         else if (processInfo.getProcessTypeId() == SEMANTIC_ACTION) {
@@ -215,10 +217,10 @@ public class PythonActionNode extends OozieNode {
     }
 
     @Override
-    public void setTermNode(OozieNode termNode) {
+    public void setTermNode(DAGNode termNode) {
         if (this.getProcessInfo().getParentProcessId() != 0) {
             /**all containing node failures should go to same termNode*/
-            for (OozieNode containingNode : containingNodes) {
+            for (DAGNode containingNode : containingNodes) {
                 containingNode.setTermNode(termNode);
             }
         }
@@ -226,7 +228,7 @@ public class PythonActionNode extends OozieNode {
     }
 
     @Override
-    public void setToNode(OozieNode toNode) {
+    public void setToNode(DAGNode toNode) {
         if (this.getProcessInfo().getParentProcessId() != 0) {
             containingNodes.get(containingNodes.size() - 1).setToNode(toNode);
         }
@@ -242,7 +244,7 @@ public class PythonActionNode extends OozieNode {
     }
 
     @Override
-    public String getXML() {
+    public String getDAG() {
         StringBuilder ret = new StringBuilder();
         ret.append("\n");
         ret.append("<!-- ");

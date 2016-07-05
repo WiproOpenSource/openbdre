@@ -1,15 +1,17 @@
-package com.wipro.ats.bdre.wgen;
+package com.wipro.ats.bdre.wgen.dag;
 
 import com.wipro.ats.bdre.md.beans.ProcessInfo;
+import com.wipro.ats.bdre.wgen.dag.CommonNodeMaintainer;
+import com.wipro.ats.bdre.wgen.dag.DAGNode;
 
 import java.util.*;
 
 /**
  * Created by SU324335 on 7/1/16.
  */
-public class PythonNodeCollection {
+public class DAGNodeCollection {
     /**
-     * Creating objects of the node types InitJobNode, HaltJobNode, TermJobNode, KillNode, StartNode
+     * Creating objects of the node types InitJobNode, HaltJobNode, TermJobNode
      * and HaltNode. They are common to the entire workflow and are referred by all the nodes.
      * <p/>
      * Next, we are setting the ToNode(next node on success) and TermNode(next node on failure)for initJobNode,haltJobNode,
@@ -18,30 +20,30 @@ public class PythonNodeCollection {
      */
 
 
-    private PythonInitJobNode initJobNode = new PythonInitJobNode();
-    private PythonHaltJobNode haltJobNode = new PythonHaltJobNode();
-    private PythonTermJobNode termJobNode = new PythonTermJobNode();
+    private DAGInitJobNode initJobNode = new DAGInitJobNode();
+    private DAGHaltJobNode haltJobNode = new DAGHaltJobNode();
+    private DAGTermJobNode termJobNode = new DAGTermJobNode();
 
 
     /**
-     * Objects of node types InitStepNode, ActionNode, HaltStepNode, TermStepNode, JoinNode, ForkNode are created.
+     * Objects of node types InitStepNode, TaskNode, HaltStepNode, TermStepNode, JoinNode, ForkNode are created.
      * There would be one initStepNode , one actionNode, one haltStepNode, one termStepNode associated for each step(sub-process) in the workflow.
      * <p/>
      * Join and Fork nodes are not created initially as they would be applicable only in relevant situations.
      * List containing NodeCollection object is created for parents and children.
      */
-    private PythonInitStepNode initStepNode;
-    private PythonActionNode actionNode;
-    private PythonHaltStepNode haltStepNode;
-    private PythonTermStepNode termStepNode;
+    private DAGInitStepNode initStepNode;
+    private DAGTaskNode taskNode;
+    private DAGHaltStepNode haltStepNode;
+    private DAGTermStepNode termStepNode;
     //private JoinNode joinNode;
-    private PythonHaltStepNode haltStepNode1;
+    private DAGHaltStepNode haltStepNode1;
     //private ForkNode forkNode;
-    private PythonForkNode pythonForkNode;
-    private PythonJoinNode pythonJoinNode;
+    private DAGForkNode dagForkNode;
+    private DAGJoinNode dagJoinNode;
     private Integer id;
-    private List<PythonNodeCollection> parents = new ArrayList<PythonNodeCollection>();
-    private List<PythonNodeCollection> children = new ArrayList<PythonNodeCollection>();
+    private List<DAGNodeCollection> parents = new ArrayList<DAGNodeCollection>();
+    private List<DAGNodeCollection> children = new ArrayList<DAGNodeCollection>();
 
 
     /**
@@ -56,27 +58,28 @@ public class PythonNodeCollection {
      * @param processInfo This variable contains information regarding process like id, description, busDomain Id etc.
      */
 
-    public PythonNodeCollection(ProcessInfo processInfo) {
+    public DAGNodeCollection(ProcessInfo processInfo) {
         this.id = processInfo.getProcessId();
-        initStepNode = new PythonInitStepNode(id);
-        actionNode = new PythonActionNode(id);
-        actionNode.setProcessInfo(processInfo);
-        termStepNode = new PythonTermStepNode(id);
-        initStepNode.setToNode(actionNode);
-        initStepNode.setTermNode(termJobNode);
-        haltStepNode = new PythonHaltStepNode(id.toString());
-        actionNode.setToNode(haltStepNode);
+        initStepNode = new DAGInitStepNode(id);
+        taskNode = new DAGTaskNode(id);
+        taskNode.setProcessInfo(processInfo);
+        termStepNode = new DAGTermStepNode(id);
+        initStepNode.setToNode(taskNode);
+        initStepNode.setTermNode(termStepNode);
+        haltStepNode = new DAGHaltStepNode(id.toString());
+        taskNode.setToNode(haltStepNode);
+        haltStepNode.setToNode(haltJobNode);
         haltStepNode.setTermNode(termStepNode);
-        actionNode.setTermNode(termStepNode);
+        taskNode.setTermNode(termStepNode);
         termStepNode.setToNode(termJobNode);
         termStepNode.setTermNode(termJobNode);
     }
 
-    public PythonNodeCollection() {
+    public DAGNodeCollection() {
         /**
-         * termJobNode on success --> killNode   ;  termJobNode on failure --> killNode
-         * haltJobNode on success --> haltStepNode     ;  haltJobNode on failure --> killNode
-         * StartNode on success --> initJobNode;  initJobNode on failure --> killNode
+         * haltJobNode on failure --> termJobNode
+         * initJobNode on success---> initStepNode     
+         * initJobNode on failure --> termJobNode
          */
 
 
@@ -98,31 +101,31 @@ public class PythonNodeCollection {
 
     // Getter-setter methods for the node types
 
-    public PythonJoinNode getPythonJoinNode() {
-        return pythonJoinNode;
+    public DAGJoinNode getDAGJoinNode() {
+        return dagJoinNode;
     }
 
-    public void setPythonJoinNode(PythonJoinNode pythonJoinNode) {
-        this.pythonJoinNode = pythonJoinNode;
+    public void setDAGJoinNode(DAGJoinNode dagJoinNode) {
+        this.dagJoinNode = dagJoinNode;
     }
 
-    public PythonForkNode getPythonForkNode() {
-        return pythonForkNode;
+    public DAGForkNode getDAGForkNode() {
+        return dagForkNode;
     }
 
-    public void setPythonForkNode(PythonForkNode pythonForkNode) {
-        this.pythonForkNode = pythonForkNode;
+    public void setDAGForkNode(DAGForkNode dagForkNode) {
+        this.dagForkNode = dagForkNode;
     }
 
-    public PythonInitJobNode getInitJobNode() {
+    public DAGInitJobNode getInitJobNode() {
         return initJobNode;
     }
 
-    public PythonHaltJobNode getHaltJobNode() {
+    public DAGHaltJobNode getHaltJobNode() {
         return haltJobNode;
     }
 
-    public PythonTermJobNode getTermJobNode() {
+    public DAGTermJobNode getTermJobNode() {
         return termJobNode;
     }
 
@@ -143,15 +146,15 @@ public class PythonNodeCollection {
      * @param parentCollection An instance of NodeCollection having values about parents.
      */
 
-    public void addParent(PythonNodeCollection parentCollection, CommonNodeMaintainer nodeMaintainer) {
+    public void addParent(DAGNodeCollection parentCollection, CommonNodeMaintainer nodeMaintainer) {
         if (parents.isEmpty()) {
             parents.add(parentCollection);
             parentCollection.getHaltStepNode().setToNode(initStepNode);
             nodeMaintainer.getRestartNodes().add(parentCollection.getHaltStepNode());
         } else {
             parents.add(parentCollection);
-            if (pythonJoinNode == null) {
-                pythonJoinNode = PythonJoinNode.getJoinNode(id, parents, nodeMaintainer);
+            if (dagJoinNode == null) {
+                dagJoinNode = DAGJoinNode.getJoinNode(id, parents, nodeMaintainer);
             }
             StringBuilder sid = new StringBuilder("");
             for (int i = 0; i < parents.size(); i++) {
@@ -162,20 +165,20 @@ public class PythonNodeCollection {
                 }
             }
             if (haltStepNode1 == null) {
-                haltStepNode1 = new PythonHaltStepNode(sid.toString());
+                haltStepNode1 = new DAGHaltStepNode(sid.toString());
                 haltStepNode1.setTermNode(parents.get(0).getTermStepNode());
             } else {
                 haltStepNode1.setSid(sid.toString());
             }
 
             for (int i = 0; i < parents.size(); i++) {      /*Traversing parents of current node*/
-                PythonNodeCollection parent = parents.get(i);     //Choosing parents
-                parent.getActionNode().setToNode(pythonJoinNode);
+                DAGNodeCollection parent = parents.get(i);     //Choosing parents
+                parent.getDAGTaskNode().setToNode(dagJoinNode);
 
 
                 if (i == 0) {
 
-                    pythonJoinNode.setToNode(haltStepNode1);
+                    dagJoinNode.setToNode(haltStepNode1);
                     parent.setHaltStepNode(haltStepNode1);
                     nodeMaintainer.getRestartNodes().add(haltStepNode1);
                     nodeMaintainer.getRestartNodes().remove(parent.getHaltStepNode());
@@ -198,7 +201,7 @@ public class PythonNodeCollection {
                     parent.setHaltStepNode(haltStepNode1);
                     parent.getHaltStepNode().setToNode(initStepNode);
                     parent.getTermStepNode().setToNode(termJobNode);
-                    parent.getActionNode().setTermNode(parents.get(0).getTermStepNode());
+                    parent.getDAGTaskNode().setTermNode(parents.get(0).getTermStepNode());
                 } else {
 
                     /**
@@ -229,7 +232,7 @@ public class PythonNodeCollection {
 
                     parent.getHaltStepNode().setToNode(haltStepNode1);
                     parent.getTermStepNode().setToNode(parents.get(i + 1).getTermStepNode());
-                    parent.getActionNode().setTermNode(parents.get(0).getTermStepNode());
+                    parent.getDAGTaskNode().setTermNode(parents.get(0).getTermStepNode());
 
                 }
             }
@@ -247,7 +250,7 @@ public class PythonNodeCollection {
      */
 
 
-    public void addChild(PythonNodeCollection childCollection, CommonNodeMaintainer nodeMaintainer) {
+    public void addChild(DAGNodeCollection childCollection, CommonNodeMaintainer nodeMaintainer) {
         if (children.isEmpty()) {
             children.add(childCollection);
             haltStepNode.setToNode(childCollection.getInitStepNode());
@@ -262,15 +265,15 @@ public class PythonNodeCollection {
              *      2. haltStepNode of current parent process --> forkNode
              */
 
-            if (pythonForkNode == null) {
-                pythonForkNode = PythonForkNode.getForkNode(id, children, nodeMaintainer);
-                for (PythonNodeCollection child : children) {
-                    pythonForkNode.addToNode(child.getInitStepNode());
+            if (dagForkNode == null) {
+                dagForkNode = DAGForkNode.getForkNode(id, children, nodeMaintainer);
+                for (DAGNodeCollection child : children) {
+                    dagForkNode.addToNode(child.getInitStepNode());
                 }
             } else {
-                pythonForkNode.addToNode(childCollection.getInitStepNode());
+                dagForkNode.addToNode(childCollection.getInitStepNode());
             }
-            haltStepNode.setToNode(pythonForkNode);
+            haltStepNode.setToNode(dagForkNode);
         }
 
     }
@@ -279,35 +282,35 @@ public class PythonNodeCollection {
      * Getter and setter methods for initStepNode, actionNode, haltStepNode,
      * termStepNode, joinNode, forkNode
      */
-    public PythonInitStepNode getInitStepNode() {
+    public DAGInitStepNode getInitStepNode() {
         return initStepNode;
     }
 
-    public void setInitStepNode(PythonInitStepNode initStepNode) {
+    public void setInitStepNode(DAGInitStepNode initStepNode) {
         this.initStepNode = initStepNode;
     }
 
-    public PythonActionNode getActionNode() {
-        return actionNode;
+    public DAGTaskNode getDAGTaskNode() {
+        return taskNode;
     }
 
-    public void setActionNode(PythonActionNode actionNode) {
-        this.actionNode = actionNode;
+    public void setDAGTaskNode(DAGTaskNode actionNode) {
+        this.taskNode = actionNode;
     }
 
-    public PythonHaltStepNode getHaltStepNode() {
+    public DAGHaltStepNode getHaltStepNode() {
         return haltStepNode;
     }
 
-    public void setHaltStepNode(PythonHaltStepNode haltStepNode) {
+    public void setHaltStepNode(DAGHaltStepNode haltStepNode) {
         this.haltStepNode = haltStepNode;
     }
 
-    public PythonTermStepNode getTermStepNode() {
+    public DAGTermStepNode getTermStepNode() {
         return termStepNode;
     }
 
-    public void setTermStepNode(PythonTermStepNode termStepNode) {
+    public void setTermStepNode(DAGTermStepNode termStepNode) {
         this.termStepNode = termStepNode;
     }
 
@@ -339,19 +342,19 @@ public class PythonNodeCollection {
 
     // Getter- Setter methods.
 
-    public List<PythonNodeCollection> getParents() {
+    public List<DAGNodeCollection> getParents() {
         return parents;
     }
 
-    public void setParents(List<PythonNodeCollection> parents) {
+    public void setParents(List<DAGNodeCollection> parents) {
         this.parents = parents;
     }
 
-    public List<PythonNodeCollection> getChildren() {
+    public List<DAGNodeCollection> getChildren() {
         return children;
     }
 
-    public void setChildren(List<PythonNodeCollection> children) {
+    public void setChildren(List<DAGNodeCollection> children) {
         this.children = children;
     }
 
@@ -365,11 +368,11 @@ public class PythonNodeCollection {
     @Override
     public String toString() {
         StringBuilder stringBuilder = new StringBuilder("Parents: [");
-        for (PythonNodeCollection parent : parents) {
+        for (DAGNodeCollection parent : parents) {
             stringBuilder.append(parent.getId() + " ");
         }
         stringBuilder.append("];Children: [");
-        for (PythonNodeCollection child : children) {
+        for (DAGNodeCollection child : children) {
             stringBuilder.append(child.getId() + " ");
 
         }
@@ -382,22 +385,22 @@ public class PythonNodeCollection {
      *
      * @return Returns hash-map containing nodes.
      */
-    public Map<String, OozieNode> getOozieNodes() {
-        Map<String, OozieNode> oozieNodeMap = new HashMap<String, OozieNode>();
+    public Map<String, DAGNode> getDAGNodes() {
+        Map<String, DAGNode> oozieNodeMap = new HashMap<String, DAGNode>();
 
-        if (pythonForkNode != null) {
-            oozieNodeMap.put(pythonForkNode.getName(), pythonForkNode);
+        if (dagForkNode != null) {
+            oozieNodeMap.put(dagForkNode.getName(), dagForkNode);
         }
         if (initStepNode != null) {
             oozieNodeMap.put(initStepNode.getName(), initStepNode);
         }
-        if (actionNode != null) {
-            for (OozieNode containingNode : actionNode.getContainingNodes()) {
+        if (taskNode != null) {
+            for (DAGNode containingNode : taskNode.getContainingNodes()) {
                 oozieNodeMap.put(containingNode.getName(), containingNode);
             }
         }
-        if (pythonJoinNode != null) {
-            oozieNodeMap.put(pythonJoinNode.getName(), pythonJoinNode);
+        if (dagJoinNode != null) {
+            oozieNodeMap.put(dagJoinNode.getName(), dagJoinNode);
         }
         if (haltStepNode != null) {
             oozieNodeMap.put(haltStepNode.getName(), haltStepNode);
@@ -422,17 +425,17 @@ public class PythonNodeCollection {
 
     public String toXML(Set<String> printedNodeNames) {
         StringBuilder stringBuilder = new StringBuilder();
-        if (pythonForkNode != null && !printedNodeNames.contains(pythonForkNode.getName())) {
-            stringBuilder.append(pythonForkNode);
-            printedNodeNames.add(pythonForkNode.getName());
+        if (dagForkNode != null && !printedNodeNames.contains(dagForkNode.getName())) {
+            stringBuilder.append(dagForkNode);
+            printedNodeNames.add(dagForkNode.getName());
         }
         if (initStepNode != null && !printedNodeNames.contains(initStepNode.getName())) {
             stringBuilder.append(initStepNode);
             printedNodeNames.add(initStepNode.getName());
         }
-        if (actionNode != null) {
+        if (taskNode != null) {
 
-            for (OozieNode containingNode : actionNode.getContainingNodes()) {
+            for (DAGNode containingNode : taskNode.getContainingNodes()) {
                 if (!printedNodeNames.contains(containingNode.getName())) {
                     stringBuilder.append(containingNode);
                     printedNodeNames.add(containingNode.getName());
@@ -440,9 +443,9 @@ public class PythonNodeCollection {
 
             }
         }
-        if (pythonJoinNode != null && !printedNodeNames.contains(pythonJoinNode.getName())) {
-            stringBuilder.append(pythonJoinNode);
-            printedNodeNames.add(pythonJoinNode.getName());
+        if (dagJoinNode != null && !printedNodeNames.contains(dagJoinNode.getName())) {
+            stringBuilder.append(dagJoinNode);
+            printedNodeNames.add(dagJoinNode.getName());
         }
         if (haltStepNode != null && !printedNodeNames.contains(haltStepNode.getName())) {
             stringBuilder.append(haltStepNode);

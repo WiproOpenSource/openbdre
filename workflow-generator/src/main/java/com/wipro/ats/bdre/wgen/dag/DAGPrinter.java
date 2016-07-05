@@ -1,8 +1,11 @@
-package com.wipro.ats.bdre.wgen;
+package com.wipro.ats.bdre.wgen.dag;
 
 import com.wipro.ats.bdre.exception.MetadataException;
 import com.wipro.ats.bdre.md.api.GetProperties;
 import com.wipro.ats.bdre.md.beans.ProcessInfo;
+import com.wipro.ats.bdre.wgen.dag.CommonNodeMaintainer;
+import com.wipro.ats.bdre.wgen.dag.DAGNode;
+import com.wipro.ats.bdre.wgen.dag.DAG;
 import org.apache.log4j.Logger;
 
 import java.io.*;
@@ -12,31 +15,31 @@ import java.util.*;
 /**
  * Created by SU324335 on 6/30/16.
  */
-public class PythonWorkflowPrinter {
-    private static final Logger LOGGER = Logger.getLogger(PythonWorkflowPrinter.class);
-    private static final String EMPTYERROR = "Empty Workflow name";
+public class DAGPrinter {
+    private static final Logger LOGGER = Logger.getLogger(DAGPrinter.class);
+    private static final String EMPTYERROR = "Empty DAG name";
     //Add this map for future step chain(to determine the next step of a subprocess)
-    private Map<Integer, PythonNodeCollection> uniqNodeCollectionTreeMap = new LinkedHashMap<Integer, PythonNodeCollection>();
+    private Map<Integer, DAGNodeCollection> uniqNodeCollectionTreeMap = new LinkedHashMap<Integer, DAGNodeCollection>();
 
     /**
-     * pThis method uses process information and generates a workflow as a String.
+     * pThis method uses process information and generates a dag as a String.
      *
      * @param processInfos This variable contains list of ProcessInfo containing information regarding process.
-     * @param workflowName name of workflow
-     * @return This method returns an instance of Class Workflow containing whole workflow as a String and dot String to print workflow
+     * @param dagName name of dag
+     * @return This method returns an instance of Class Workflow containing whole dag as a String and dot String to print dag
      * as a schematic diagram.
      */
-    public Workflow execute(List<ProcessInfo> processInfos, String workflowName) {
+    public DAG execute(List<ProcessInfo> processInfos, String dagName) {
         CommonNodeMaintainer nodeMaintainer = new CommonNodeMaintainer();
         //storing the nodes that are already printed
         //this will prevent same node to be printed multiple times
-        PythonNodeCollection nc = nodeMaintainer.getPnc();
+        DAGNodeCollection nc = nodeMaintainer.getPnc();
         Set<String> printedNodeNames = new HashSet<String>();
-        if (workflowName == null || workflowName.trim().isEmpty()) {
+        if (dagName == null || dagName.trim().isEmpty()) {
             LOGGER.error(EMPTYERROR);
             throw new MetadataException(EMPTYERROR);
         }
-        final String prefixXml = "\nfrom airflow.operators import BashOperator,BranchPythonOperator,DummyOperator\n"+
+        final String prefixDAG = "\nfrom airflow.operators import BashOperator,BranchPythonOperator,DummyOperator\n"+
                 "from datetime import datetime, timedelta\n"+
                 "from airflow import DAG\n"+
                 "import os\n" +
@@ -46,11 +49,11 @@ public class PythonWorkflowPrinter {
         String pid = processInfos.get(0).getProcessId().toString();
         StringBuilder credentials = new StringBuilder();
         credentials.append(isSecurityEnabled(pid, "security"));
-        //final String postfixXml = "\n</workflow-app>";
+        //final String postfixXml = "\n</dag-app>";
 
-        StringBuilder workflowXML = new StringBuilder();
-        StringBuilder stepXML = new StringBuilder();
-        LOGGER.info("Starting workflow generation for " + workflowName);
+        StringBuilder airflowDAG = new StringBuilder();
+        StringBuilder stepDAG = new StringBuilder();
+        LOGGER.info("Starting dag generation for " + dagName);
         //Populate the map
         Map<Integer, ProcessInfo> tempProcessInfos = new HashMap<Integer, ProcessInfo>();
         for (ProcessInfo processInfo : processInfos) {
@@ -59,17 +62,17 @@ public class PythonWorkflowPrinter {
         //Populate the tree
         for (ProcessInfo processInfo : processInfos) {
             LOGGER.info("processing " + processInfo);
-            PythonNodeCollection nodeCollection = uniqNodeCollectionTreeMap.get(processInfo.getProcessId());
+            DAGNodeCollection nodeCollection = uniqNodeCollectionTreeMap.get(processInfo.getProcessId());
             if (nodeCollection == null) {
-                nodeCollection = new PythonNodeCollection(processInfo);
+                nodeCollection = new DAGNodeCollection(processInfo);
             }
             String[] children = processInfo.getNextProcessIds().split(",");
             for (String child : children) {
                 LOGGER.debug("Analyzing child: " + child);
                 Integer childKey = new Integer(child);
-                PythonNodeCollection childNodeCollection = uniqNodeCollectionTreeMap.get(childKey);
+                DAGNodeCollection childNodeCollection = uniqNodeCollectionTreeMap.get(childKey);
                 if (childNodeCollection == null) {
-                    childNodeCollection = new PythonNodeCollection(tempProcessInfos.get(childKey));
+                    childNodeCollection = new DAGNodeCollection(tempProcessInfos.get(childKey));
                 }
                 childNodeCollection.addParent(nodeCollection, nodeMaintainer);
                 nodeCollection.addChild(childNodeCollection, nodeMaintainer);
@@ -80,10 +83,10 @@ public class PythonWorkflowPrinter {
                 nodeCollection.getHaltStepNode().setToNode(nc.getHaltJobNode());
             }
             if (tempProcessInfos.get(nodeCollection.getId()).getParentProcessId() == 0) {
-                OozieNode firstNode = null;
-                if (nodeCollection.getPythonForkNode() != null) {
-                    LOGGER.info("First node in the workflow is a fork");
-                    firstNode = nodeCollection.getPythonForkNode();
+                DAGNode firstNode = null;
+                if (nodeCollection.getDAGForkNode() != null) {
+                    LOGGER.info("First node in the dag is a fork");
+                    firstNode = nodeCollection.getDAGForkNode();
                 } else {
 
                     firstNode = nodeCollection.getChildren().get(0).getInitStepNode();
@@ -95,9 +98,9 @@ public class PythonWorkflowPrinter {
             uniqNodeCollectionTreeMap.put(processInfo.getProcessId(), nodeCollection);
         }
         LOGGER.info("uniqNodeCollectionTreeMap=" + uniqNodeCollectionTreeMap);
-        Map<String, OozieNode> oozieNodeMap = new HashMap<String, OozieNode>();
+        Map<String,DAGNode> dagNodeMap = new HashMap<String, DAGNode>();
         //oozieNodeMap.put(nc.getStart().getName(), nc.getStart());
-        oozieNodeMap.put(nc.getInitJobNode().getName(), nc.getInitJobNode());
+        dagNodeMap.put(nc.getInitJobNode().getName(), nc.getInitJobNode());
         LOGGER.info("nodeMaintainer.restartNodes=" + nodeMaintainer.getRestartNodes());
         //add case to nodes
         //nc.getRecoveryDecisionNode().setPreviousHaltNodes(nodeMaintainer.getRestartNodes());
@@ -105,7 +108,7 @@ public class PythonWorkflowPrinter {
 
         for (Integer id : uniqNodeCollectionTreeMap.keySet()) {
             if (tempProcessInfos.get(id).getParentProcessId() == 0) {
-                uniqNodeCollectionTreeMap.get(id).setActionNode(null);
+                uniqNodeCollectionTreeMap.get(id).setDAGTaskNode(null);
                 uniqNodeCollectionTreeMap.get(id).setTermStepNode(null);
                 uniqNodeCollectionTreeMap.get(id).setHaltStepNode(null);
                 uniqNodeCollectionTreeMap.get(id).setInitStepNode(null);
@@ -113,25 +116,23 @@ public class PythonWorkflowPrinter {
                 nc.setIdForProcessNodes(id);
             }
             LOGGER.info("Adding collection for: " + id);
-            oozieNodeMap.putAll(uniqNodeCollectionTreeMap.get(id).getOozieNodes());
-            stepXML.append(uniqNodeCollectionTreeMap.get(id).toXML(printedNodeNames));
+            dagNodeMap.putAll(uniqNodeCollectionTreeMap.get(id).getDAGNodes());
+            stepDAG.append(uniqNodeCollectionTreeMap.get(id).toXML(printedNodeNames));
         }
 
-        oozieNodeMap.put(nc.getHaltJobNode().getName(), nc.getHaltJobNode());
-        oozieNodeMap.put(nc.getTermJobNode().getName(), nc.getTermJobNode());
-        //oozieNodeMap.put(nc.getHalt().getName(), nc.getHalt());
-        //oozieNodeMap.put(nc.getKill().getName(), nc.getKill());
-        LOGGER.info("oozieNodeMap size=" + oozieNodeMap.size());
-        workflowXML.append(prefixXml);
-        workflowXML.append(credentials.toString());
-        //workflowXML.append(nc.getStart().getXML());
-        workflowXML.append(nc.getInitJobNode().getXML());
-        //workflowXML.append(nc.getRecoveryDecisionNode().getXML());
-        workflowXML.append(stepXML);
-        workflowXML.append(nc.getHaltJobNode().getXML());
-        workflowXML.append(nc.getTermJobNode().getXML());
-        //workflowXML.append(nc.getKill().getXML());
-        //workflowXML.append(nc.getHalt().getXML());
+        dagNodeMap.put(nc.getHaltJobNode().getName(), nc.getHaltJobNode());
+        dagNodeMap.put(nc.getTermJobNode().getName(), nc.getTermJobNode());
+
+        LOGGER.info("oozieNodeMap size=" + dagNodeMap.size());
+        airflowDAG.append(prefixDAG);
+        airflowDAG.append(credentials.toString());
+        airflowDAG.append(nc.getInitJobNode().getDAG());
+        //airflowDAG.append(nc.getRecoveryDecisionNode().getDAG());
+        airflowDAG.append(stepDAG);
+        airflowDAG.append(nc.getHaltJobNode().getDAG());
+        airflowDAG.append(nc.getTermJobNode().getDAG());
+        //airflowDAG.append(nc.getKill().getDAG());
+        //airflowDAG.append(nc.getHalt().getDAG());
         String postfixXml ="";
         try {
             InputStream fis = new FileInputStream("/home/cloudera/defFile.txt");
@@ -153,12 +154,12 @@ public class PythonWorkflowPrinter {
             System.out.println("e = " + e);
         }
 
-        workflowXML.append(postfixXml);
+        airflowDAG.append(postfixXml);
         LOGGER.info("Complete !");
-        Workflow workflow = new Workflow();
-        workflow.setXml(workflowXML);
-//        workflow.setDot(DotUtil.getDot(oozieNodeMap.values()));
-        return workflow;
+        DAG dag = new DAG();
+        dag.setDAG(airflowDAG);
+//        dag.setDot(DotUtil.getDot(oozieNodeMap.values()));
+        return dag;
     }
 
     public String isSecurityEnabled(String pid, String configGroup) {
@@ -199,17 +200,17 @@ public class PythonWorkflowPrinter {
         return addProperties.toString();
     }
 
-    public Workflow execInfo(List<ProcessInfo> processInfos, String workflowName) {
+    public DAG execInfo(List<ProcessInfo> processInfos, String dagName) {
         CommonNodeMaintainer nodeMaintainer = new CommonNodeMaintainer();
         //storing the nodes that are already printed
         //this will prevent same node to be printed multiple times
-        PythonNodeCollection nc = nodeMaintainer.getPnc();
+        DAGNodeCollection nc = nodeMaintainer.getPnc();
         Set<String> printedNodeNames = new HashSet<String>();
-        if (workflowName == null || workflowName.trim().isEmpty()) {
+        if (dagName == null || dagName.trim().isEmpty()) {
             LOGGER.error(EMPTYERROR);
             throw new MetadataException(EMPTYERROR);
         }
-        final String prefixXml = "\nfrom airflow.operators import BashOperator,BranchPythonOperator,DummyOperator\n"+
+        final String prefixDAG = "\nfrom airflow.operators import BashOperator,BranchPythonOperator,DummyOperator\n"+
                 "from datetime import datetime, timedelta\n"+
                 "import os\n" +
                 "args = {'owner': 'airflow','start_date': datetime(2015, 10, 1, 5, 40, 0), 'depends_on_past': False}\n" +
@@ -219,9 +220,9 @@ public class PythonWorkflowPrinter {
         StringBuilder credentials = new StringBuilder();
         credentials.append(isSecurityEnabled(pid, "security"));
 
-        StringBuilder workflowXML = new StringBuilder();
-        StringBuilder stepXML = new StringBuilder();
-        LOGGER.info("Starting workflow generation for " + workflowName);
+        StringBuilder airflowDAG = new StringBuilder();
+        StringBuilder stepDAG = new StringBuilder();
+        LOGGER.info("Starting dag generation for " + dagName);
         //Populate the map
         Map<Integer, ProcessInfo> tempProcessInfos = new HashMap<Integer, ProcessInfo>();
         for (ProcessInfo processInfo : processInfos) {
@@ -230,17 +231,17 @@ public class PythonWorkflowPrinter {
         //Populate the tree
         for (ProcessInfo processInfo : processInfos) {
             LOGGER.info("processing " + processInfo);
-            PythonNodeCollection nodeCollection = uniqNodeCollectionTreeMap.get(processInfo.getProcessId());
+            DAGNodeCollection nodeCollection = uniqNodeCollectionTreeMap.get(processInfo.getProcessId());
             if (nodeCollection == null) {
-                nodeCollection = new PythonNodeCollection(processInfo);
+                nodeCollection = new DAGNodeCollection(processInfo);
             }
             String[] children = processInfo.getNextProcessIds().split(",");
             for (String child : children) {
                 LOGGER.info("Analyzing child: " + child);
                 Integer childKey = new Integer(child);
-                PythonNodeCollection childNodeCollection = uniqNodeCollectionTreeMap.get(childKey);
+                DAGNodeCollection childNodeCollection = uniqNodeCollectionTreeMap.get(childKey);
                 if (childNodeCollection == null) {
-                    childNodeCollection = new PythonNodeCollection(tempProcessInfos.get(childKey));
+                    childNodeCollection = new DAGNodeCollection(tempProcessInfos.get(childKey));
                 }
                 childNodeCollection.addParent(nodeCollection, nodeMaintainer);
                 nodeCollection.addChild(childNodeCollection, nodeMaintainer);
@@ -251,10 +252,10 @@ public class PythonWorkflowPrinter {
                 nodeCollection.getHaltStepNode().setToNode(nc.getHaltJobNode());
             }
             if (tempProcessInfos.get(nodeCollection.getId()).getParentProcessId() == 0) {
-                OozieNode firstNode = null;
-                if (nodeCollection.getPythonForkNode() != null) {
-                    LOGGER.info("First node in the workflow is a fork");
-                    firstNode = nodeCollection.getPythonForkNode();
+                DAGNode firstNode = null;
+                if (nodeCollection.getDAGForkNode() != null) {
+                    LOGGER.info("First node in the dag is a fork");
+                    firstNode = nodeCollection.getDAGForkNode();
                 } else {
 
                     firstNode = nodeCollection.getChildren().get(0).getInitStepNode();
@@ -266,9 +267,8 @@ public class PythonWorkflowPrinter {
             uniqNodeCollectionTreeMap.put(processInfo.getProcessId(), nodeCollection);
         }
         LOGGER.info("uniqNodeCollectionTreeMap=" + uniqNodeCollectionTreeMap);
-        Map<String, OozieNode> oozieNodeMap = new HashMap<String, OozieNode>();
-        //oozieNodeMap.put(nc.getStart().getName(), nc.getStart());
-        oozieNodeMap.put(nc.getInitJobNode().getName(), nc.getInitJobNode());
+        Map<String,DAGNode> dagNodeMap = new HashMap<String, DAGNode>();
+        dagNodeMap.put(nc.getInitJobNode().getName(), nc.getInitJobNode());
         LOGGER.info("nodeMaintainer.restartNodes=" + nodeMaintainer.getRestartNodes());
         //add case to nodes
         //nc.getRecoveryDecisionNode().setPreviousHaltNodes(nodeMaintainer.getRestartNodes());
@@ -276,7 +276,7 @@ public class PythonWorkflowPrinter {
 
         for (Integer id : uniqNodeCollectionTreeMap.keySet()) {
             if (tempProcessInfos.get(id).getParentProcessId() == 0) {
-                uniqNodeCollectionTreeMap.get(id).setActionNode(null);
+                uniqNodeCollectionTreeMap.get(id).setDAGTaskNode(null);
                 uniqNodeCollectionTreeMap.get(id).setTermStepNode(null);
                 uniqNodeCollectionTreeMap.get(id).setHaltStepNode(null);
                 uniqNodeCollectionTreeMap.get(id).setInitStepNode(null);
@@ -284,44 +284,43 @@ public class PythonWorkflowPrinter {
                 nc.setIdForProcessNodes(id);
             }
             LOGGER.info("Adding collection for: " + id);
-            oozieNodeMap.putAll(uniqNodeCollectionTreeMap.get(id).getOozieNodes());
-            stepXML.append(uniqNodeCollectionTreeMap.get(id).toXML(printedNodeNames));
+            dagNodeMap.putAll(uniqNodeCollectionTreeMap.get(id).getDAGNodes());
+            stepDAG.append(uniqNodeCollectionTreeMap.get(id).toXML(printedNodeNames));
         }
 
-        oozieNodeMap.put(nc.getHaltJobNode().getName(), nc.getHaltJobNode());
-        oozieNodeMap.put(nc.getTermJobNode().getName(), nc.getTermJobNode());
-        //oozieNodeMap.put(nc.getHalt().getName(), nc.getHalt());
-        //oozieNodeMap.put(nc.getKill().getName(), nc.getKill());
-        LOGGER.info("oozieNodeMap size=" + oozieNodeMap.size());
-        workflowXML.append(prefixXml);
-        workflowXML.append(credentials.toString());
-        //workflowXML.append(nc.getStart().getXML());
-        workflowXML.append(nc.getInitJobNode().getXML());
-        //workflowXML.append(nc.getRecoveryDecisionNode().getXML());
-        workflowXML.append(stepXML);
-        workflowXML.append(nc.getHaltJobNode().getXML());
-        workflowXML.append(nc.getTermJobNode().getXML());
-        //workflowXML.append(nc.getKill().getXML());
-        //workflowXML.append(nc.getHalt().getXML());
-        String postfixXml ="";
+        dagNodeMap.put(nc.getHaltJobNode().getName(), nc.getHaltJobNode());
+        dagNodeMap.put(nc.getTermJobNode().getName(), nc.getTermJobNode());
+
+        LOGGER.info("dagNodeMap size=" + dagNodeMap.size());
+        airflowDAG.append(prefixDAG);
+        airflowDAG.append(credentials.toString());
+        //airflowDAG.append(nc.getStart().getDAG());
+        airflowDAG.append(nc.getInitJobNode().getDAG());
+        //airflowDAG.append(nc.getRecoveryDecisionNode().getDAG());
+        airflowDAG.append(stepDAG);
+        airflowDAG.append(nc.getHaltJobNode().getDAG());
+        airflowDAG.append(nc.getTermJobNode().getDAG());
+        //airflowDAG.append(nc.getKill().getDAG());
+        //airflowDAG.append(nc.getHalt().getDAG());
+        String postfixDAG ="";
         try {
             InputStream fis = new FileInputStream("/home/cloudera/defFile.txt");
             InputStreamReader isr = new InputStreamReader(fis, Charset.forName("UTF-8"));
             BufferedReader br = new BufferedReader(isr);
             String line;
             while ( (line = br.readLine()) != null) {
-                postfixXml = postfixXml + line+"\n";
+                postfixDAG = postfixDAG + line+"\n";
             }
         }catch (IOException e){
             System.out.println("e = " + e);
         }
 
-        workflowXML.append(postfixXml);
+        airflowDAG.append(postfixDAG);
         LOGGER.info("Complete !");
-        Workflow workflow = new Workflow();
-        workflow.setXml(workflowXML);
-        workflow.setDot(DotUtil.getDashboardDot(oozieNodeMap.values(), processInfos));
-        return workflow;
+        DAG dag = new DAG();
+        dag.setDAG(airflowDAG);
+       // dag.setDot(DotUtil.getDashboardDot(dagNodeMap.values(), processInfos));
+        return dag;
     }
 }
 

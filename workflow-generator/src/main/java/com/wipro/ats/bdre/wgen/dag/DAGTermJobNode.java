@@ -1,11 +1,13 @@
-package com.wipro.ats.bdre.wgen;
+package com.wipro.ats.bdre.wgen.dag;
+
+import com.wipro.ats.bdre.wgen.OozieNode;
 
 /**
  * Created by SU324335 on 7/1/16.
  */
-public class PythonTermJobNode extends OozieNode{
+public class DAGTermJobNode extends DAGNode {
 
-    public PythonTermJobNode(){
+    public DAGTermJobNode(){
 
     }
 
@@ -14,7 +16,7 @@ public class PythonTermJobNode extends OozieNode{
     }
 
     @Override
-    public String getXML(){
+    public String getDAG(){
         return getName().replace('-', '_') +"= BashOperator(\n"+
                 "    task_id='"+getName().replace('-','_')+"',\n"+
                 "    bash_command='java -cp /home/cloudera/bdre/lib/md_api/md_api-1.1-SNAPSHOT-executable.jar:/home/cloudera/bdre/lib/*/*  com.wipro.ats.bdre.md.api.oozie.OozieTermJob --process-id "+ getId().toString()+"',\n"+

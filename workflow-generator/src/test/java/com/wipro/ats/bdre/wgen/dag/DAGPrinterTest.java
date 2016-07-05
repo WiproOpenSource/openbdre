@@ -1,6 +1,7 @@
-package com.wipro.ats.bdre.wgen;
+package com.wipro.ats.bdre.wgen.dag;
 
 import com.wipro.ats.bdre.md.beans.ProcessInfo;
+import com.wipro.ats.bdre.wgen.dag.DAGPrinter;
 import org.apache.log4j.Logger;
 import org.apache.oozie.cli.OozieCLI;
 import org.junit.Ignore;
@@ -13,8 +14,8 @@ import java.util.List;
 /**
  * Created by cloudera on 7/1/16.
  */
-public class PythonWorkflowPrinterTest {
-    private static final Logger LOGGER = Logger.getLogger(PythonWorkflowPrinterTest.class);
+public class DAGPrinterTest {
+    private static final Logger LOGGER = Logger.getLogger(DAGPrinterTest.class);
     private static List<ProcessInfo> getProcessBeans1() {
         //Unit test with test data
         List<ProcessInfo> processInfos = new ArrayList<ProcessInfo>();
@@ -72,7 +73,7 @@ public class PythonWorkflowPrinterTest {
     @Test
     public void testExecute1() throws Exception {
         List<ProcessInfo> processInfos = getProcessBeans2();
-        String workflowXML = new PythonWorkflowPrinter().execute(processInfos, "test-workflow").getXml().toString();
+        String workflowXML = new DAGPrinter().execute(processInfos, "test-workflow").getDAG().toString();
         LOGGER.info("workflowxml is "+workflowXML);
         /*PrintWriter out = new PrintWriter("unitTest1.workflow.xml");
         out.println(workflowXML);
@@ -85,11 +86,11 @@ public class PythonWorkflowPrinterTest {
     @Ignore
     public void testExecute2() throws Exception {
         List<ProcessInfo> processInfos = getProcessBeans2();
-        String workflowXML = new WorkflowPrinter().execute(processInfos, "test-workflow").getXml().toString();
-        PrintWriter out = new PrintWriter("unitTest2.workflow.xml");
-        out.println(workflowXML);
+        String airflowDAG = new DAGPrinter().execute(processInfos, "test-dag").getDAG().toString();
+        PrintWriter out = new PrintWriter("unitTest2.dag.py");
+        out.println(airflowDAG);
         out.close();
-        OozieCLI oozieCLI = new OozieCLI();
-        oozieCLI.run(new String[]{"validate", "unitTest2.workflow.xml"});
+        //OozieCLI oozieCLI = new OozieCLI();
+       // oozieCLI.run(new String[]{"validate", "unitTest2.dag.py"});
     }
 }

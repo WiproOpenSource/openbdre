@@ -1,4 +1,6 @@
-package com.wipro.ats.bdre.wgen;
+package com.wipro.ats.bdre.wgen.dag;
+
+import com.wipro.ats.bdre.wgen.dag.DAGNode;
 
 import java.io.FileWriter;
 import java.io.IOException;
@@ -6,13 +8,13 @@ import java.io.IOException;
 /**
  * Created by SU324335 on 7/1/16.
  */
-public class PythonInitStepNode extends OozieNode {
+public class DAGInitStepNode extends DAGNode {
     /**
      * This constructor is used to set id for Init Step Node
      *
      * @param id id to be set for Init Step Node
      */
-    public PythonInitStepNode(Integer id) {
+    public DAGInitStepNode(Integer id) {
         setId(id);
     }
 
@@ -22,7 +24,7 @@ public class PythonInitStepNode extends OozieNode {
     }
 
     @Override
-    public String getXML() {
+    public String getDAG() {
         try {
             FileWriter fw = new FileWriter("/home/cloudera/defFile.txt", true);
             fw.write("\nf_"+getName().replace('-', '_')+"()");

@@ -1,6 +1,8 @@
-package com.wipro.ats.bdre.wgen;
+package com.wipro.ats.bdre.wgen.dag;
 
 import com.wipro.ats.bdre.exception.BDREException;
+import com.wipro.ats.bdre.wgen.dag.CommonNodeMaintainer;
+import com.wipro.ats.bdre.wgen.dag.DAGNode;
 
 import java.io.FileWriter;
 import java.io.IOException;
@@ -12,10 +14,10 @@ import java.util.Set;
 /**
  * Created by SU324335 on 7/1/16.
  */
-public class PythonJoinNode extends OozieNode {
+public class DAGJoinNode extends DAGNode {
     private Set<Integer> idSet = new HashSet<Integer>();
 
-    private PythonJoinNode(Integer id) {
+    private DAGJoinNode(Integer id) {
         setId(id);
     }
 
@@ -26,18 +28,18 @@ public class PythonJoinNode extends OozieNode {
      * @param parents List of parents of node having node-id as id.
      * @return This method returns a JoinNode
      */
-    public static PythonJoinNode getJoinNode(Integer id, List<PythonNodeCollection> parents, CommonNodeMaintainer nodeMaintainer) {
-        Map<Integer, PythonJoinNode> pythonjoinNodeMap = nodeMaintainer.getPythonJoinNodeMap();
-        PythonJoinNode pythonjoinNode = pythonjoinNodeMap.get(id);
+    public static DAGJoinNode getJoinNode(Integer id, List<DAGNodeCollection> parents, CommonNodeMaintainer nodeMaintainer) {
+        Map<Integer, DAGJoinNode> pythonjoinNodeMap = nodeMaintainer.getPythonJoinNodeMap();
+        DAGJoinNode pythonjoinNode = pythonjoinNodeMap.get(id);
         if (pythonjoinNode == null) {
-            pythonjoinNode = new PythonJoinNode(id);
+            pythonjoinNode = new DAGJoinNode(id);
             pythonjoinNodeMap.put(id, pythonjoinNode);
         }
         Set<Integer> childIdSet = new HashSet<Integer>();
         for (int i = 0; i < parents.size(); i++) {
-            PythonNodeCollection parent = parents.get(i);
-            List<PythonNodeCollection> children = parent.getChildren();
-            for (PythonNodeCollection child : children) {
+            DAGNodeCollection parent = parents.get(i);
+            List<DAGNodeCollection> children = parent.getChildren();
+            for (DAGNodeCollection child : children) {
                 childIdSet.add(child.getId());
             }
         }
@@ -54,12 +56,12 @@ public class PythonJoinNode extends OozieNode {
     }
 
     @Override
-    public OozieNode getTermNode() {
+    public DAGNode getTermNode() {
         throw new BDREException("Setting getTermStepNode is not supported");
     }
 
     @Override
-    public void setTermNode(OozieNode node) {
+    public void setTermNode(DAGNode node) {
         throw new BDREException("Setting setTermStepNode is not supported");
     }
 
@@ -79,7 +81,7 @@ public class PythonJoinNode extends OozieNode {
     }
 
     @Override
-    public String getXML() {
+    public String getDAG() {
         try {
             FileWriter fw = new FileWriter("/home/cloudera/defFile.txt", true);
             fw.write("\nf_"+getName().replace('-', '_')+"()");
