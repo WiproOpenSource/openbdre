@@ -32,7 +32,7 @@
 	<script type="text/javascript">
 		    $(document).ready(function () {
 	    $('#Container').jtable({
-	    title: 'BusDomain List',
+	    title: '<spring:message code="busdomain.page.title_jtable"/>',
 		    paging: true,
 		    pageSize: 10,
 		    sorting: true,
@@ -114,17 +114,17 @@
 			    list: true,
 			    create:false,
 			    edit: false,
-			    title: 'Id'
+			    title: '<spring:message code="busdomain.page.title_id"/>'
 		    },
 			    description: {
-			    title: 'Description'
+			    title: '<spring:message code="busdomain.page.title_desc"/>'
 			    },
 			    busDomainName: {
-			    title: 'Name'
+			    title: '<spring:message code="busdomain.page.title_name"/>'
 
 			    },
 			    busDomainOwner: {
-			    title: 'Owner'
+			    title: '<spring:message code="busdomain.page.title_owner"/>'
 
 			    }
 		    }

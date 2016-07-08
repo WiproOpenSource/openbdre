@@ -197,7 +197,7 @@
                                     dataType: 'json',
                                     success: function (data) {
                                         if (data.Result == 'OK') {
-                                            confirmDialog('New DQ Job Added');
+                                            confirmDialog('<spring:message code="dqprocess.page.confirm_dialog"/>');
                                         }
                                     },
                                     error: function () {

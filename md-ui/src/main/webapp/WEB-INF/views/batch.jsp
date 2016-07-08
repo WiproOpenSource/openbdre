@@ -32,7 +32,7 @@
 	<script type="text/javascript">
 		    $(document).ready(function () {
 	    $('#Container').jtable({
-	    title: 'Batch List',
+	    title: '<spring:message code="batch.page.title_jtable"/>',
 		    paging: true,
 		    pageSize: 10,
 		    sorting: true,
@@ -114,13 +114,13 @@
 			    list: true,
 			    create: false,
 			    edit: false,
-			    title: 'Id'
+			    title: '<spring:message code="batch.page.title_id"/>'
 		    },
 			    sourceInstanceExecId: {
-			    title: 'Src Exec ID'
+			    title: '<spring:message code="batch.page.title_src_id"/>'
 			    },
 			    batchType: {
-			    title: 'Type'
+			    title: '<spring:message code="batch.page.title_type"/>'
 
 			    }
 		    }
