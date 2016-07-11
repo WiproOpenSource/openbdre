@@ -18,7 +18,6 @@ package com.wipro.ats.bdre.md.setup;
 import com.wipro.ats.bdre.exception.MetadataException;
 import com.wipro.ats.bdre.md.setup.beans.*;
 import com.wipro.ats.bdre.md.setup.beans.Process;
-import com.wipro.ats.bdre.md.setup.beans.Properties;
 import org.apache.log4j.Logger;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
@@ -27,8 +26,11 @@ import org.springframework.beans.factory.config.AutowireCapableBeanFactory;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
-import java.io.*;
-import java.util.*;
+import java.io.BufferedReader;
+import java.io.FileInputStream;
+import java.io.FileReader;
+import java.io.IOException;
+import java.util.Date;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -62,6 +64,7 @@ public class SetupDB {
             setupDB.populateBatchStatus(projectRoot + "databases/setup/BatchStatus.csv");
             setupDB.populateDeployStatus(projectRoot + "databases/setup/DeployStatus.csv");
             setupDB.populateProcessType(projectRoot + "databases/setup/ProcessType.csv");
+            setupDB.populatePermissionType(projectRoot + "databases/setup/PermissionType.csv");
             setupDB.populateWorkflowType(projectRoot + "databases/setup/WorkflowType.csv");
             setupDB.populateBusDomain(projectRoot + "databases/setup/BusDomain.csv");
             setupDB.populateBatch(projectRoot + "databases/setup/Batch.csv");
@@ -85,6 +88,8 @@ public class SetupDB {
         }
 
     }
+
+
 
 
     public void init() {
@@ -390,6 +395,39 @@ public class SetupDB {
                 if (!("null".equals(cols[2])))
                     pType.setParentProcessTypeId(new Integer(cols[2]));
                 Object existing = session.get(pType.getClass(), pType.getProcessTypeId());
+                if (existing == null) {
+                    session.save(pType);
+                }
+            }
+        }catch (MetadataException e) {
+            LOGGER.error(inFile + dataFile + badLine + line);
+            LOGGER.error(e.getMessage());
+            throw new MetadataException(e);
+        }
+        catch (IOException e) {
+            LOGGER.error(inFile + dataFile + badLine + line);
+            LOGGER.error(e.getMessage());
+            throw new IOException(e);
+        }
+    }
+
+
+   private void populatePermissionType(String dataFile) throws MetadataException, IOException {
+        String line = null;
+        int lineNum = 0;
+
+        try {
+            BufferedReader br = new BufferedReader(new FileReader(dataFile));
+            while ((line = br.readLine()) != null) {
+                lineNum++;
+                LOGGER.debug(lineNumber + lineNum + ": " + line);
+                String[] cols = getColumns(line);
+                if (cols == null)
+                    continue;
+                PermissionType pType=new PermissionType();
+                pType.setPermissionTypeId(new Integer(cols[0]));
+                pType.setPermissionTypeName(cols[1]);
+                Object existing = session.get(pType.getClass(), pType.getPermissionTypeId());
                 if (existing == null) {
                     session.save(pType);
                 }

@@ -1,12 +1,13 @@
 <%@ taglib prefix="security"
 	   uri="http://www.springframework.org/security/tags" %>
+<%@taglib uri="http://www.springframework.org/tags" prefix="spring"%>
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1"
 	 pageEncoding="ISO-8859-1"%>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
     <head>
 	<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
-	<title>Bigdata Ready Enterprise</title>
+	<title><spring:message code="common.page.title_bdre_1"/></title>
 	<!-- Include one of jTable styles. -->
 	<script>
 	  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
@@ -30,7 +31,7 @@
 	<script type="text/javascript">
 		    $(document).ready(function () {
 	    $('#Container').jtable({
-	    title: 'Process Ancestor Details',
+	    title: '<spring:message code="ancestors.page.title_jtable"/>',
 		    paging: true,
 		    edit: false,
 		    create: false,
@@ -60,27 +61,27 @@
 
             processId: {
             key: true,
-			title: 'Process ID',
+			title: '<spring:message code="ancestors.page.title_pid"/>',
 			},
 		    deployId: {
 		    key: true,
-		    title: 'Deploy Id',
+		    title: '<spring:message code="ancestors.page.title_did"/>',
 		    },
 		    tableDeployInsertTs: {
 		     key: true,
-		    title: 'Insert Time',
+		    title: '<spring:message code="ancestors.page.title_insert_time"/>',
 		    },
 		    tableDeploySuccessTs: {
 		     key: true,
-		    title: 'Last Successful deploy',
+		    title: '<spring:message code="ancestors.page.title_success_deploy"/>',
 		    },
 		    tableDeployFailTs: {
 			 key: true,
-			title: 'Last Failed deploy',
+			title: '<spring:message code="ancestors.page.title_failed_deploy"/>',
 			},
 		    tableEditTs: {
 		     key: true,
-		    title: 'Edit Time',
+		    title: '<spring:message code="ancestors.page.title_edit_time"/>',
 		    }
 	    }
 	    });

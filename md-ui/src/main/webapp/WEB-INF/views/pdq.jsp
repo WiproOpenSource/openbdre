@@ -1,12 +1,13 @@
 <%@ taglib prefix="security"
 	   uri="http://www.springframework.org/security/tags" %>
+<%@taglib uri="http://www.springframework.org/tags" prefix="spring"%>
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1"
 	 pageEncoding="ISO-8859-1"%>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
     <head>
 	<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
-	<title>Bigdata Ready Enterprise</title>
+	<title><spring:message code="common.page.title_bdre_1"/></title>
 	<script>
 	  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
 	  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
@@ -31,7 +32,7 @@
 	<script type="text/javascript">
 		    $(document).ready(function () {
 	    $('#Container').jtable({
-	    title: 'Process Deployment Queue List',
+	    title: '<spring:message code="pdq.page.jtable_title"/>',
 		    paging: true,
 		    edit: false,
 		    create: false,
@@ -95,52 +96,52 @@
 		    fields:
 	    {
             deploymentId: {
-            title: 'Deploy ID',
+            title: '<spring:message code="pdq.page.title_deploy_id"/>',
             key: true,
                 list: true,
                 edit:false
             },
             processId: {
-			title: 'Process ID',
+			title: '<spring:message code="pdq.page.title_process_id"/>',
 			edit:false,
 
 			},
 		    deployStatusId: {
-		    title: 'Deploy Status',
+		    title: '<spring:message code="pdq.page.title_deploy_status"/>',
 		    edit:false,
 		    type: 'combobox',
 		    options: '/mdrest/deploystatus/options'
 
 		    },
 		    tableInsertTs: {
-		    title: 'Insert Time',
+		    title: '<spring:message code="pdq.page.title_insert_time"/>',
 		    edit:false
 		    },
 		    tableStartTs: {
-		    title: 'Start Time',
+		    title: '<spring:message code="pdq.page.title_start_time"/>',
 		    edit:false
 
 		    },
 		    tableEndTs: {
-		    title: 'End Time',
+		    title: '<spring:message code="pdq.page.title_end_time"/>',
 		    edit:false
 		    },
 		    deployScriptLocation: {
-            title: 'Script Location',
+            title: '<spring:message code="pdq.page.title_location"/>',
             edit:false
             },
             userName: {
-           title: 'User Name',
+           title: '<spring:message code="pdq.page.title_username"/>',
            edit:false
            },
             processTypeId: {
-		   title: 'Process Type',
+		   title: '<spring:message code="pdq.page.title_process_type"/>',
 		   edit:false,
 		   type: 'combobox',
            options: '/mdrest/processtype/optionslist/'
 		   },
 		   busDomainId: {
-		   title: 'App',
+		   title: '<spring:message code="pdq.page.title_app"/>',
 		   type: 'combobox',
            options: '/mdrest/busdomain/options/',
 		   edit:false

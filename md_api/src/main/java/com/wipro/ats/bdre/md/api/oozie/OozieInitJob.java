@@ -21,6 +21,7 @@ import com.wipro.ats.bdre.md.beans.InitJobRowInfo;
 import com.wipro.ats.bdre.util.OozieUtil;
 import org.apache.log4j.Logger;
 
+import java.io.*;
 import java.util.List;
 
 
@@ -51,6 +52,20 @@ public class OozieInitJob {
         OozieUtil oozieUtil = new OozieUtil();
         try {
             oozieUtil.persistBeanData(initJobInfo, false);
+            try
+            {
+                FileWriter fw = new FileWriter("/home/cloudera/jobinfo.txt", true);
+                BufferedWriter bw = new BufferedWriter(fw);
+
+                bw.write("initJobInfo.getTargetBatchMarkingSet():"+initJobInfo.getTargetBatchMarkingSet().toString()+"\n");
+                bw.write("initJobInfo.getInstanceExecId():"+initJobInfo.getInstanceExecId().toString()+"\n");
+
+                bw.close();
+
+            }catch(IOException i)
+            {
+                i.printStackTrace();
+            }
         } catch (Exception e) {
             LOGGER.error(e);
             throw new MetadataException(e);

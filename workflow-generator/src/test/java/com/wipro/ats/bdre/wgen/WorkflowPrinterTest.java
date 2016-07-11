@@ -15,6 +15,7 @@
 package com.wipro.ats.bdre.wgen;
 
 import com.wipro.ats.bdre.md.beans.ProcessInfo;
+import org.apache.log4j.Logger;
 import org.apache.oozie.cli.OozieCLI;
 import org.junit.Ignore;
 import org.junit.Test;
@@ -24,6 +25,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class WorkflowPrinterTest {
+    private static final Logger LOGGER = Logger.getLogger(WorkflowPrinterTest.class);
     private static List<ProcessInfo> getProcessBeans1() {
         //Unit test with test data
         List<ProcessInfo> processInfos = new ArrayList<ProcessInfo>();
@@ -65,10 +67,10 @@ public class WorkflowPrinterTest {
     }
 
     @Test
-    @Ignore
     public void testExecute1() throws Exception {
         List<ProcessInfo> processInfos = getProcessBeans1();
         String workflowXML = new WorkflowPrinter().execute(processInfos, "test-workflow").getXml().toString();
+        LOGGER.info("workflowxml is "+workflowXML);
         PrintWriter out = new PrintWriter("unitTest1.workflow.xml");
         out.println(workflowXML);
         out.close();
