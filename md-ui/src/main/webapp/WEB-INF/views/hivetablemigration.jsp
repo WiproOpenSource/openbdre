@@ -88,7 +88,7 @@
    <script>
    function displayProcess(records) {
    	$('#Process').jtable({
-   		title: 'Cluster to Cluster Hive Table Migration Processes',
+   		title: '<spring:message code="hivetablemigration.page.title_jtable"/>',
    		paging: false,
    		sorting: false,
    		create: false,
@@ -133,12 +133,12 @@
    				listClass: 'bdre-jtable-button',
    				display: function(item) { //Create an image that will be used to open child table
 
-   					var $img = $('<span class="label label-primary">Show</span>'); //Open child table when user clicks the image
+   					var $img = $('<span class="label label-primary"><spring:message code="hivetablemigration.page.img_show"/></span>'); //Open child table when user clicks the image
 
    					$img.click(function() {
    						$('#Process').jtable('openChildTable',
    							$img.closest('tr'), {
-   								title: ' Properties of ' + item.record.processId,
+   								title: '<spring:message code="hivetablemigration.page.img_title"/>'+' ' + item.record.processId,
    								paging: true,
    								pageSize: 10,
    								actions: {
@@ -219,15 +219,15 @@
    										list: false,
    										create: false,
    										edit: true,
-   										title: 'Process',
+   										title: '<spring:message code="hivetablemigration.page.title_process"/>',
    										defaultValue: item.record.processId,
    									},
    									configGroup: {
-   										title: 'Config Group',
+   										title: '<spring:message code="hivetablemigration.page.title_cg"/>',
    										defaultValue: item.record.configGroup,
    									},
    									key: {
-   										title: 'Key',
+   										title: '<spring:message code="hivetablemigration.page.title_key"/>',
    										key: true,
    										list: true,
    										create: true,
@@ -235,11 +235,11 @@
    										defaultValue: item.record.key,
    									},
    									value: {
-   										title: 'Value',
+   										title: '<spring:message code="hivetablemigration.page.title_value"/>',
    										defaultValue: item.record.value,
    									},
    									description: {
-   										title: 'Description',
+   										title: '<spring:message code="hivetablemigration.page.title_description"/>',
    										defaultValue: item.record.description,
    									},
    								}
@@ -254,20 +254,20 @@
    				}
    			},
    			processName: {
-   				title: 'Name'
+   				title: '<spring:message code="hivetablemigration.page.title_name"/>'
    			},
    			tableAddTS: {
-   				title: 'Add TS',
+   				title: '<spring:message code="hivetablemigration.page.title_add_ts"/>',
    				create: false,
    				edit: true,
    				list: false,
    				type: 'hidden'
    			},
    			description: {
-   				title: 'Description',
+   				title: '<spring:message code="hivetablemigration.page.title_description"/>',
    			},
    			batchPattern: {
-   				title: 'Batch Mark',
+   				title: '<spring:message code="hivetablemigration.page.title_batch"/>',
    				list: false,
    				create: false,
    				edit: true,
@@ -275,54 +275,54 @@
 
    			},
    			parentProcessId: {
-   				title: 'Parent',
+   				title: '<spring:message code="hivetablemigration.page.title_parent"/>',
    				edit: true,
    				create: false,
    				list: false,
    				type: 'hidden'
    			},
    			canRecover: {
-   				title: 'Restorable',
+   				title: '<spring:message code="hivetablemigration.page.title_restorable"/>',
    				type: 'hidden',
    				list: false,
    				edit: true,
    			},
    			nextProcessIds: {
-   				title: 'Next',
+   				title: '<spring:message code="hivetablemigration.page.title_next"/>',
    				list: false,
    				edit: true,
    				type: 'hidden'
 
    			},
    			enqProcessId: {
-   				title: 'Enqueuer',
+   				title: '<spring:message code="hivetablemigration.page.title_enque"/>',
    				list: false,
    				edit: true,
    				type: 'hidden',
    			},
    			busDomainId: {
-   				title: 'Application',
+   				title: '<spring:message code="hivetablemigration.page.title_app"/>',
    				list: false,
    				edit: true,
    				type: 'combobox',
    				options: '/mdrest/busdomain/options/',
    			},
    			processTypeId: {
-   				title: 'Type',
+   				title: '<spring:message code="hivetablemigration.page.title_type"/>',
    				edit: true,
    				type: 'hidden',
    				options: '/mdrest/processtype/optionslist'
 
    			},
    			ProcessPipelineButton: {
-   				title: 'Pipeline',
+   				title: '<spring:message code="hivetablemigration.page.title_pipeline"/>',
    				sorting: false,
    				width: '2%',
    				listClass: 'bdre-jtable-button',
    				create: false,
    				edit: false,
    				display: function(data) {
-   					return '<span class="label label-primary" onclick="fetchPipelineInfo(' + data.record.processId + ')">Display</span> ';
+   					return '<span class="label label-primary" onclick="fetchPipelineInfo(' + data.record.processId + ')"><spring:message code="hivetablemigration.page.title_display"/></span> ';
    				},
    			}
    		}
@@ -411,7 +411,7 @@ var destjobTrackerIp;
             							$(this).dialog("close");
             						}
             					}
-            				}).html("<p><span class=\"jtable-confirm-message\">Please Enter Process Name and Description</span></p>");
+            				}).html('<p><span class=\"jtable-confirm-message\"><spring:message code="hivetablemigration.page.warning_msg"/></span></p>');
             				return false;
             			}
   			return true;
@@ -593,7 +593,7 @@ var destjobTrackerIp;
                                                 $(this).dialog("close");
                                             }
                                         }
-                                    }).html("<p><span class=\"jtable-confirm-message\">Jobs successfully created.</span></p>");
+                                    }).html('<p><span class=\"jtable-confirm-message\"><spring:message code="hivetablemigration.page.success_msg"/></span></p>');
                                     createJobResult = data;
                                     displayProcess(createJobResult);
                                 }
@@ -620,7 +620,7 @@ var destjobTrackerIp;
   							$(this).dialog("close");
   						}
   					}
-  				}).html("<p><span class=\"jtable-confirm-message\">Jobs have not been created.</span></p>");
+  				}).html('<p><span class=\"jtable-confirm-message\"><spring:message code="hivetablemigration.page.fail_msg"/></span></p>');
   			}
   		},
   		onCanceled: function(event) {
@@ -692,13 +692,13 @@ var destjobTrackerIp;
                                             <div class="form-group">
                                                             <label class="control-label col-sm-2" for="processName"><spring:message code="hivetablemigration.page.form_procname"/></label>
                                                             <div class="col-sm-10">
-                                                                <input type="text" class="form-control"  id="processName" name="processName" placeholder="Enter Process Name" value="" required>
+                                                                <input type="text" class="form-control"  id="processName" name="processName" placeholder='<spring:message code="hivetablemigration.page.placeholder_process_name"/>' value="" required>
                                                             </div>
                                                         </div>
 																<div class="form-group">
                                                                     <label class="control-label col-sm-2" for="processDesc"><spring:message code="hivetablemigration.page.form_procdesc"/></label>
                                                                     <div class="col-sm-10">
-                                                                        <input type="text" class="form-control"  id="processDesc" name="processDesc" placeholder="Enter Process Description" value="" required>
+                                                                        <input type="text" class="form-control"  id="processDesc" name="processDesc" placeholder='<spring:message code="hivetablemigration.page.placeholder_process_desc"/>' value="" required>
                                                                     </div>
 
                                                                </div>

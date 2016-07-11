@@ -30,7 +30,7 @@
 	<script type="text/javascript">
 	    $(document).ready(function () {
 		$('#Container').jtable({
-		    title: 'Instance Exec List',
+		    title: '<spring:message code="instanceexec.page.title_jtable"/>',
 		    paging: true,
 		    pageSize: 10,
 		    sorting: true,
@@ -59,19 +59,19 @@
 			    list: true,
 			    create: false,
 			    edit: false,
-			    title: 'Id'
+			    title: '<spring:message code="instanceexec.page.title_id"/>'
 			},
 			processId: {
-			    title: 'Process ID'
+			    title: '<spring:message code="instanceexec.page.title_pid"/>'
 			},
 			tableStartTs: {
-			    title: 'Start Time',
+			    title: '<spring:message code="instanceexec.page.title_start_time"/>',
 			},
 			tableEndTs: {
-			    title: 'End Time',
+			    title: '<spring:message code="instanceexec.page.title_end_time"/>',
 			},
 			execState: {
-			    title: 'State'
+			    title: '<spring:message code="instanceexec.page.title_state"/>'
 			}
 		    }
 		});

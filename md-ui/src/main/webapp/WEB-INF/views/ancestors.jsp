@@ -31,7 +31,7 @@
 	<script type="text/javascript">
 		    $(document).ready(function () {
 	    $('#Container').jtable({
-	    title: 'Process Ancestor Details',
+	    title: '<spring:message code="ancestors.page.title_jtable"/>',
 		    paging: true,
 		    edit: false,
 		    create: false,
@@ -61,27 +61,27 @@
 
             processId: {
             key: true,
-			title: 'Process ID',
+			title: '<spring:message code="ancestors.page.title_pid"/>',
 			},
 		    deployId: {
 		    key: true,
-		    title: 'Deploy Id',
+		    title: '<spring:message code="ancestors.page.title_did"/>',
 		    },
 		    tableDeployInsertTs: {
 		     key: true,
-		    title: 'Insert Time',
+		    title: '<spring:message code="ancestors.page.title_insert_time"/>',
 		    },
 		    tableDeploySuccessTs: {
 		     key: true,
-		    title: 'Last Successful deploy',
+		    title: '<spring:message code="ancestors.page.title_success_deploy"/>',
 		    },
 		    tableDeployFailTs: {
 			 key: true,
-			title: 'Last Failed deploy',
+			title: '<spring:message code="ancestors.page.title_failed_deploy"/>',
 			},
 		    tableEditTs: {
 		     key: true,
-		    title: 'Edit Time',
+		    title: '<spring:message code="ancestors.page.title_edit_time"/>',
 		    }
 	    }
 	    });
