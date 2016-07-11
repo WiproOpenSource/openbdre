@@ -85,7 +85,7 @@ function addDataToJson(properties) {
 		<script>
 function displayProcess(records) {
 	$('#Process').jtable({
-		title: 'Data Load Processes',
+		title: '<spring:message code="dataload.page.title_jtable"/>',
 		paging: false,
 		sorting: false,
 		create: false,
@@ -119,10 +119,10 @@ function displayProcess(records) {
 				list: true,
 				create: false,
 				edit: false,
-				title: 'Id'
+				title: '<spring:message code="dataload.page.title_id"/>'
 			},
 			Properties: {
-				title: 'Properties',
+				title: '<spring:message code="dataload.page.title_properties"/>',
 				width: '5%',
 				sorting: false,
 				edit: false,
@@ -130,12 +130,12 @@ function displayProcess(records) {
 				listClass: 'bdre-jtable-button',
 				display: function(item) { //Create an image that will be used to open child table
 
-					var $img = $('<span class="label label-primary">Show</span>'); //Open child table when user clicks the image
+					var $img = $('<span class="label label-primary"><spring:message code="dataload.page.img_show"/></span>'); //Open child table when user clicks the image
 
 					$img.click(function() {
 						$('#Process').jtable('openChildTable',
 							$img.closest('tr'), {
-								title: ' Properties of ' + item.record.processId,
+								title: '<spring:message code="dataload.page.img_title"/>'+' ' + item.record.processId,
 								paging: true,
 								pageSize: 10,
 								actions: {
@@ -216,15 +216,15 @@ function displayProcess(records) {
 										list: false,
 										create: false,
 										edit: true,
-										title: 'Process',
+										title: '<spring:message code="dataload.page.title_process"/>',
 										defaultValue: item.record.processId,
 									},
 									configGroup: {
-										title: 'Config Group',
+										title: '<spring:message code="dataload.page.title_cg"/>',
 										defaultValue: item.record.configGroup,
 									},
 									key: {
-										title: 'Key',
+										title: '<spring:message code="dataload.page.title_key"/>',
 										key: true,
 										list: true,
 										create: true,
@@ -232,11 +232,11 @@ function displayProcess(records) {
 										defaultValue: item.record.key,
 									},
 									value: {
-										title: 'Value',
+										title: '<spring:message code="dataload.page.title_value"/>',
 										defaultValue: item.record.value,
 									},
 									description: {
-										title: 'Description',
+										title: '<spring:message code="dataload.page.title_desc"/>',
 										defaultValue: item.record.description,
 									},
 								}
@@ -251,20 +251,20 @@ function displayProcess(records) {
 				}
 			},
 			processName: {
-				title: 'Name'
+				title: '<spring:message code="dataload.page.title_name"/>'
 			},
 			tableAddTS: {
-				title: 'Add TS',
+				title: '<spring:message code="dataload.page.title_add_ts"/>',
 				create: false,
 				edit: true,
 				list: false,
 				type: 'hidden'
 			},
 			description: {
-				title: 'Description',
+				title: '<spring:message code="dataload.page.title_desc"/>',
 			},
 			batchPattern: {
-				title: 'Batch Mark',
+				title: '<spring:message code="dataload.page.title_batch_mark"/>',
 				list: false,
 				create: false,
 				edit: true,
@@ -272,54 +272,54 @@ function displayProcess(records) {
 
 			},
 			parentProcessId: {
-				title: 'Parent',
+				title: '<spring:message code="dataload.page.title_parent"/>',
 				edit: true,
 				create: false,
 				list: false,
 				type: 'hidden'
 			},
 			canRecover: {
-				title: 'Restorable',
+				title: '<spring:message code="dataload.page.title_restorable"/>',
 				type: 'hidden',
 				list: false,
 				edit: true,
 			},
 			nextProcessIds: {
-				title: 'Next',
+				title: '<spring:message code="dataload.page.title_next"/>',
 				list: false,
 				edit: true,
 				type: 'hidden'
 
 			},
 			enqProcessId: {
-				title: 'Enqueuer',
+				title: '<spring:message code="dataload.page.title_enque"/>',
 				list: false,
 				edit: true,
 				type: 'hidden',
 			},
 			busDomainId: {
-				title: 'Application',
+				title: '<spring:message code="dataload.page.title_app"/>',
 				list: false,
 				edit: true,
 				type: 'combobox',
 				options: '/mdrest/busdomain/options/',
 			},
 			processTypeId: {
-				title: 'Type',
+				title: '<spring:message code="dataload.page.title_type"/>',
 				edit: true,
 				type: 'hidden',
 				options: '/mdrest/processtype/optionslist'
 
 			},
 			ProcessPipelineButton: {
-				title: 'Pipeline',
+				title: '<spring:message code="dataload.page.title_pipeline"/>',
 				sorting: false,
 				width: '2%',
 				listClass: 'bdre-jtable-button',
 				create: false,
 				edit: false,
 				display: function(data) {
-					return '<span class="label label-primary" onclick="fetchPipelineInfo(' + data.record.processId + ')">Display</span> ';
+					return '<span class="label label-primary" onclick="fetchPipelineInfo(' + data.record.processId + ')"><spring:message code="dataload.page.display"/></span> ';
 				},
 			}
 		}
@@ -353,7 +353,7 @@ wizard = $(document).ready(function() {
 							$(this).dialog("close");
 						}
 					}
-				}).html("<p><span class=\"jtable-confirm-message\">Please Enter Process Name and Description</span></p>");
+				}).html('<p><span class="jtable-confirm-message"><spring:message code="dataload.page.process_dialog"/></span></p>');
 				return false;
 			}
 			if(currentIndex == 3 && newIndex == 4 ) {
@@ -370,7 +370,7 @@ wizard = $(document).ready(function() {
                 								$(this).dialog("close");
                 							}
                 						}
-                					}).html("<p><span class=\"jtable-confirm-message\">Please Provide Value For Required Fields</span></p>");
+                					}).html('<p><span class="jtable-confirm-message"><spring:message code="dataload.page.field_dialog"/></span></p>');
                 					return false;
                 				}
 			}
@@ -387,7 +387,7 @@ wizard = $(document).ready(function() {
             								$(this).dialog("close");
             							}
             						}
-            					}).html("<p><span class=\"jtable-confirm-message\">Please Provide Value For Required Fields</span></p>");
+            					}).html('<p><span class="jtable-confirm-message"><spring:message code="dataload.page.field_dialog"/></span></p>');
             					return false;
             				}
 			}
@@ -430,7 +430,7 @@ wizard = $(document).ready(function() {
 												$(this).dialog("close");
 											}
 										}
-									}).html("<p><span class=\"jtable-confirm-message\">Jobs successfully created.</span></p>");
+									}).html('<p><span class="jtable-confirm-message"><spring:message code="dataload.page.success_msg"/></span></p>');
 									createJobResult = data;
 									displayProcess(createJobResult);
 								}
@@ -458,7 +458,7 @@ wizard = $(document).ready(function() {
 							$(this).dialog("close");
 						}
 					}
-				}).html("<p><span class=\"jtable-confirm-message\">Jobs have not been created.</span></p>");
+				}).html('<p><span class="jtable-confirm-message"><spring:message code="dataload.page.failed_msg"/></span></p>');
 			}
 		},
 		onCanceled: function(event) {
@@ -849,7 +849,7 @@ wizard = $(document).ready(function() {
 		<script type="text/javascript">
 	$(document).ready(function () {
 	$('#rawTableColumnDetails').jtable({
-		title: 'Raw Table Column ',
+		title: '<spring:message code="dataload.page.title_raw_table"/>',
 		paging: false,
 		sorting: false,
 		create: false,
@@ -921,7 +921,7 @@ wizard = $(document).ready(function() {
 		    },
 
 			columnName: {
-				title: 'Column Name',
+				title: '<spring:message code="dataload.page.title_col_name"/>',
 				width: '50%',
 				edit: true,
 				create:true
@@ -983,7 +983,7 @@ wizard = $(document).ready(function() {
 
 	 $(document).ready(function () {
         	    $('#baseTableColumnDetails').jtable({
-        	    title: 'Base Table Column',
+        	    title: '<spring:message code="dataload.page.title_base_table"/>',
         		    paging: false,
                     sorting: false,
                     create: false,
@@ -1082,12 +1082,12 @@ wizard = $(document).ready(function() {
                             list: true,
                             create:true,
                             edit: true,
-                            title: 'Column Name'
+                            title: '<spring:message code="dataload.page.title_col_name"/>'
                         },
                         dataType: {
 
                             create: true,
-                            title: 'Data Type',
+                            title: '<spring:message code="dataload.page.title_data_type"/>',
                             edit: true,
                             options:{ 'BigInt':'BigInt',
 									  'SmallInt':'SmallInt',
@@ -1100,12 +1100,12 @@ wizard = $(document).ready(function() {
 
                         },
                          transformations: {
-                            title: 'Source',
+                            title: '<spring:message code="dataload.page.title_source"/>',
                             create: true,
                             edit: true
                         },
                         partition: {
-                                                    title: 'Partition Column',
+                                                    title: '<spring:message code="dataload.page.title_partition"/>',
                                                     create: true,
                                                     edit: true
                                                 }
@@ -1130,7 +1130,7 @@ function buildForm(fileformat) {
 			var root = 'Records';
 			var div = document.getElementById('fileFormatDetails');
 			var formHTML = '';
-			formHTML = formHTML + '<div class="alert alert-info" role="alert">Application requires serde class and input/output format details to be entered</div>';
+			formHTML = formHTML + '<div class="alert alert-info" role="alert"><spring:message code="dataload.page.form_alert_msg"/></div>';
 			formHTML = formHTML + '<div id="Serde, OutPut and Input Format">';
 			formHTML = formHTML + '<form class="form-horizontal" role="form" id = "formatFields">';
 			

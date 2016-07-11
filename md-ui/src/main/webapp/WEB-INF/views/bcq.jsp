@@ -32,7 +32,7 @@
 	<script type="text/javascript">
 		    $(document).ready(function () {
 	    $('#Container').jtable({
-	    title: 'Batch Consump Queue List',
+	    title: '<spring:message code="bcq.page.title_jtable"/>',
 		    paging: true,
 		    pageSize: 10,
 		    sorting: true,
@@ -118,45 +118,45 @@
 		    edit: false
 	    },
 		    sourceBatchId: {
-		    title: 'Source Batch ID'
+		    title: '<spring:message code="bcq.page.title_src_batch_id"/>'
 		    },
 		    targetBatchId: {
-		    title: 'Target Batch ID'
+		    title: '<spring:message code="bcq.page.title_target_batch_id"/>'
 
 		    },
 		    tableInsertTS: {
-		    title: 'Insert Time',
+		    title: '<spring:message code="bcq.page.title_insert_time"/>',
 			    create: false,
 			    edit: true
 
 
 		    },
 		    sourceProcessId: {
-		    title: ' Source Process ID',
+		    title: '<spring:message code="bcq.page.title_src_id"/>',
 		    },
 		    tableStartTS: {
-		    title: 'Start Time',
+		    title: '<spring:message code="bcq.page.title_start_time"/>',
 			    create: true,
 			    edit: true
 
 		    },
 		    tableEndTS: {
-		    title: 'End Time',
+		    title: '<spring:message code="bcq.page.title_end_time"/>',
 			    create: true,
 			    edit: true
 		    },
 		    batchState: {
-		    title: 'Batch State',
+		    title: '<spring:message code="bcq.page.title_batch_state"/>',
 			    edit: true,
 			    type: 'combobox',
 			    options: '/mdrest/batchstatus/options',
 			    defaultValue: "0"
 		    },
 		    batchMarking: {
-		    title: 'Batch Marking'
+		    title: '<spring:message code="bcq.page.title_batch_marking"/>'
 		    },
 		    processId: {
-		    title: 'Process ID '
+		    title: '<spring:message code="bcq.page.title_pid"/> '
 		    }
 	    }
 	    });

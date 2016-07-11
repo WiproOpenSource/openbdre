@@ -202,7 +202,7 @@
 		$overlay = $('<div id="overlay"></div>');
 		$modal = $('<div id="modal"></div>');
 		$content = $('<div id="content"></div>');
-		$close = $('<a id="close" href="#">close</a>');
+		$close = $('<a id="close" href="#"><spring:message code="batchlineage.page.close"/></a>');
 
 		$modal.hide();
 		$overlay.hide();
@@ -224,7 +224,7 @@
 
 	    function popModal(pid) {
 		$.get('workflow/' + pid + '.page', function (data) {
-		    modal.open({content: "<b>Loading</b>"});
+		    modal.open({content: '<b><spring:message code="batchlineage.page.loading"/></b>'});
 		    UpdateGraphviz(data);
 		    modal.center();
 		});
@@ -239,7 +239,7 @@
 	    <form>
 		<div class="input-group">
 		    <input class="form-control" type="number" name="bid" id="bid" value ="" placeholder=<spring:message code="batchlineage.page.placeholder"/> />
-		    <!-- <button  class="btn btn-default btn-lg btn-primary"><span id="sizing-addon2"><span class="glyphicon glyphicon-arrow-right" aria-hidden="true"></span> Show Lineage </button> -->
+		    <!-- <button  class="btn btn-default btn-lg btn-primary"><span id="sizing-addon2"><span class="glyphicon glyphicon-arrow-right" aria-hidden="true"></span><spring:message code="batchlineage.page.button_show"/></button> -->
 		    <span class="input-group-btn">
 			<button class="btn btn-default  btn-primary" type="button" onClick="resetGraph();
 				getBid(jQuery('#bid').val())"><span id="sizing-addon2"><span class="glyphicon glyphicon-arrow-right" aria-hidden="true"></span>&nbsp;</button>
