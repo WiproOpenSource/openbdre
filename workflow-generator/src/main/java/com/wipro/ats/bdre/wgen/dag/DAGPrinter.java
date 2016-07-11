@@ -39,14 +39,17 @@ public class DAGPrinter {
             LOGGER.error(EMPTYERROR);
             throw new MetadataException(EMPTYERROR);
         }
+        String pid = processInfos.get(0).getProcessId().toString();
+
         final String prefixDAG = "\nfrom airflow.operators import BashOperator,BranchPythonOperator,DummyOperator\n"+
                 "from datetime import datetime, timedelta\n"+
                 "from airflow import DAG\n"+
                 "import os\n" +
                 "args = {'owner': 'airflow','start_date': datetime(2015, 10, 1, 5, 40, 0), 'depends_on_past': False}\n" +
                 "\n" +
-                "dag = DAG(dag_id='sparkeg1',  default_args=args)";
-        String pid = processInfos.get(0).getProcessId().toString();
+                "dag = DAG(dag_id='dag_"+ processInfos.get(0).getBusDomainId().toString()+"_"+  processInfos.get(0).getProcessTypeId().toString() + "_" + pid+"',  default_args=args)"+"\n"+
+                "dict = {}\n";
+
         StringBuilder credentials = new StringBuilder();
         credentials.append(isSecurityEnabled(pid, "security"));
         //final String postfixXml = "\n</dag-app>";
@@ -142,7 +145,7 @@ public class DAGPrinter {
             Boolean flag = true;
             line = br.readLine();
             while ( (line = br.readLine()) != null) {
-                if(flag && line.contains("python_halt_step_"))
+                if(flag && line.contains("dag_halt_step_"))
                     continue;
                 else
                     flag = false;

@@ -29,7 +29,7 @@ public class DAG {
         return dag;
     }
 
-    public void setDAG(StringBuilder xml) {
+    public void setDAG(StringBuilder dag) {
         this.dag = dag;
     }
 

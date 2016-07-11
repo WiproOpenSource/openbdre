@@ -13,7 +13,7 @@ public class DAGTermStepNode extends DAGNode {
     }
 
     public String getName() {
-        String termStepNodeName = "python-term-step-" + getId();
+        String termStepNodeName = "dag-term-step-" + getId();
         return termStepNodeName.substring(0, Math.min(termStepNodeName.length(), 45));
 
     }

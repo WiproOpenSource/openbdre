@@ -21,9 +21,7 @@ import com.wipro.ats.bdre.md.beans.InitJobRowInfo;
 import com.wipro.ats.bdre.util.OozieUtil;
 import org.apache.log4j.Logger;
 
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.ObjectOutputStream;
+import java.io.*;
 import java.util.List;
 
 
@@ -56,12 +54,14 @@ public class OozieInitJob {
             oozieUtil.persistBeanData(initJobInfo, false);
             try
             {
-                FileOutputStream fileOut = new FileOutputStream("/home/cloudera/bdre/initjobInfo.ser");
-                ObjectOutputStream out = new ObjectOutputStream(fileOut);
-                out.writeObject(initJobInfo);
-                out.close();
-                fileOut.close();
-                System.out.printf("Serialized data is saved in /home/cloudera/bdre/initjobInfo.ser");
+                FileWriter fw = new FileWriter("/home/cloudera/jobinfo.txt", true);
+                BufferedWriter bw = new BufferedWriter(fw);
+
+                bw.write("initJobInfo.getTargetBatchMarkingSet():"+initJobInfo.getTargetBatchMarkingSet().toString()+"\n");
+                bw.write("initJobInfo.getInstanceExecId():"+initJobInfo.getInstanceExecId().toString()+"\n");
+
+                bw.close();
+
             }catch(IOException i)
             {
                 i.printStackTrace();

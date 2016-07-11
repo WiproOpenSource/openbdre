@@ -14,7 +14,7 @@ public class DAGHaltStepNode extends DAGNode {
     }
 
     public String getName() {
-        String haltStepNodeName = "python-halt-step-" + getSid().replaceAll(",", "_");
+        String haltStepNodeName = "dag-halt-step-" + getSid().replaceAll(",", "_");
         return haltStepNodeName.substring(0, Math.min(haltStepNodeName.length(), 45));
     }
 

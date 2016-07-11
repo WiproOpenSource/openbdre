@@ -19,7 +19,7 @@ public class DAGInitStepNode extends DAGNode {
     }
 
     public String getName() {
-        String initStepNodeName = "python-init-step-" + getId();
+        String initStepNodeName = "dag-init-step-" + getId();
         return initStepNodeName.substring(0, Math.min(initStepNodeName.length(), 45));
     }
 

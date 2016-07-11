@@ -59,25 +59,25 @@ public class DAGGenerator extends MetadataAPIBase {
         if (processInfos.get(0).getWorkflowId() == 1) {
 
             String airflowDAG = dag.getDAG().toString();
-            String airflowdot = dag.getDot().toString();
+            //String airflowdot = dag.getDot().toString();
 
             PrintWriter dagOut = new PrintWriter(outputFile);
-            PrintWriter dotOut = new PrintWriter(outputFile + ".dot");
+          //  PrintWriter dotOut = new PrintWriter(outputFile + ".dot");
             dagOut.println(airflowDAG);
-            dotOut.println(airflowdot);
+           // dotOut.println(airflowdot);
             dagOut.close();
-            dotOut.close();
+           // dotOut.close();
           //  OozieCLI oozieCLI = new OozieCLI();
            // oozieCLI.run(new String[]{"validate", outputFile});
             LOGGER.info("DAG is written to " + outputFile);
-            LOGGER.info("DOT is written to " + outputFile + ".dot");
+          //  LOGGER.info("DOT is written to " + outputFile + ".dot");
         } else {
             LOGGER.debug("This is not a Oozie process, hence no xml representation needed");
-            String airflowdot = dag.getDot().toString();
-            PrintWriter dotOut = new PrintWriter(outputFile + ".dot");
-            dotOut.println(airflowdot);
-            dotOut.close();
-            LOGGER.info("DOT is written to " + outputFile + ".dot");
+           // String airflowdot = dag.getDot().toString();
+           // PrintWriter dotOut = new PrintWriter(outputFile + ".dot");
+           // dotOut.println(airflowdot);
+           // dotOut.close();
+          //  LOGGER.info("DOT is written to " + outputFile + ".dot");
         }
     }
 

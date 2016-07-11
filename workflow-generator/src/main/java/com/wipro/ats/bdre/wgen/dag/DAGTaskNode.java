@@ -89,64 +89,51 @@ public class DAGTaskNode extends DAGNode {
             DAGSparkTaskNode sparkActionNode = new DAGSparkTaskNode(this);
             containingNodes.add(sparkActionNode);
         }
-        else if (processInfo.getProcessTypeId() == SEMANTIC_ACTION) {
-
+        else if (processInfo.getProcessTypeId() == SHELL_ACTION) {
+            DAGShellTaskNode shellActionNode = new DAGShellTaskNode (this);
+            containingNodes.add(shellActionNode);
         }
+
        /* if (processInfo.getProcessTypeId() == RAW_LOAD_ACTION) {
             RawLoadActionNode rawLoadActionNode = new RawLoadActionNode(this);
             containingNodes.add(rawLoadActionNode);
-
         } else if (processInfo.getProcessTypeId() == HIVE_ACTION) {
             HiveActionNode hiveActionNode = new HiveActionNode(this);
             containingNodes.add(hiveActionNode);
-
         } else if (processInfo.getProcessTypeId() == DATA_IMPORT_ACTION) {
             ImportActionNode importActionNode = new ImportActionNode(this);
             FileRegistrationNode fileRegistrationNode = new FileRegistrationNode(this);
             importActionNode.setToNode(fileRegistrationNode);
             containingNodes.add(importActionNode);
             containingNodes.add(fileRegistrationNode);
-
         } else if (processInfo.getProcessTypeId() == DATA_EXPORT_ACTION) {
             ExportActionNode exportActionNode = new ExportActionNode(this);
             containingNodes.add(exportActionNode);
-
         } else if (processInfo.getProcessTypeId() == STAGE_LOAD_ACTION) {
             StageLoadActionNode stageLoadActionNode = new StageLoadActionNode(this);
             containingNodes.add(stageLoadActionNode);
-
         } else if (processInfo.getProcessTypeId() == BASE_LOAD_ACTION) {
             BaseLoadActionNode baseLoadActionNode = new BaseLoadActionNode(this);
             containingNodes.add(baseLoadActionNode);
         } else if (processInfo.getProcessTypeId() == ETL_ACTION) {
-
-        } else if (processInfo.getProcessTypeId() == PIG_ACTION) {
-            PigActionNode pigActionNode = new PigActionNode(this);
-            containingNodes.add(pigActionNode);
-
-        } else if (processInfo.getProcessTypeId() == HADOOP_STREAMING_ACTION) {
+        }  else if (processInfo.getProcessTypeId() == HADOOP_STREAMING_ACTION) {
             HadoopStreamingActionNode hadoopStreamingActionNode= new HadoopStreamingActionNode(this);
             containingNodes.add( hadoopStreamingActionNode);
-
         }else if (processInfo.getProcessTypeId() == MAPREDUCE_ACTION) {
             MRActionNode mrActionNode = new MRActionNode(this);
             containingNodes.add(mrActionNode);
         } else if (processInfo.getProcessTypeId() == FILE_REG_ACTION) {
             FileRegistrationNode frActionNode = new FileRegistrationNode(this);
             containingNodes.add(frActionNode);
-
         }else if (processInfo.getProcessTypeId() == SUB_WF_ACTION) {
             SubWorkflowActionNode subWorkflowActionNode = new SubWorkflowActionNode(this);
             containingNodes.add(subWorkflowActionNode);
-
         }  else if (processInfo.getProcessTypeId() == HIVE_GEN_ACTION) {
             DataGenerationNode dataGenerationNode = new DataGenerationNode(this);
             FileRegistrationNode fileRegistrationNode = new FileRegistrationNode(this);
             dataGenerationNode.setToNode(fileRegistrationNode);
             containingNodes.add(dataGenerationNode);
             containingNodes.add(fileRegistrationNode);
-
-
         } else if (processInfo.getProcessTypeId() == DQ_ACTION) {
             LOFActionNode lofActionNode = new LOFActionNode(this);
             DataQualityActionNode dataQualityActionNode = new DataQualityActionNode(this);
@@ -156,38 +143,23 @@ public class DAGTaskNode extends DAGNode {
             containingNodes.add(lofActionNode);
             containingNodes.add(dataQualityActionNode);
             containingNodes.add(fileRegistrationNode);
-        } else if (processInfo.getProcessTypeId() == SEMANTIC_ACTION) {
-
-        } else if (processInfo.getProcessTypeId() == INGESTION) {
-
+            */
+        else if (processInfo.getProcessTypeId() == SEMANTIC_ACTION) {
+        }
+        /*else if (processInfo.getProcessTypeId() == INGESTION) {
         } else if (processInfo.getProcessTypeId() == EXPORT_ACTION) {
-
         } else if (processInfo.getProcessTypeId() == IMPORT_ACTION) {
-
         } else if (processInfo.getProcessTypeId() == DQ_PARENT_ACTION) {
-
         } else if (processInfo.getProcessTypeId() == HIVE_GEN_PARENT_ACTION) {
-
         } else if (processInfo.getProcessTypeId() == HIVE_MIGRATION_ACTION) {
-
         } else if (processInfo.getProcessTypeId() == SUPER_WF_ACTION) {
-
         }else if (processInfo.getProcessTypeId() == SFTP) {
-
             SFTPNonOozieActionNode sftpNonOozieActionNode = new SFTPNonOozieActionNode(this);
             containingNodes.add(sftpNonOozieActionNode);
-
-        } else if (processInfo.getProcessTypeId() == SHELL_ACTION) {
-            ShellActionNode shellActionNode = new ShellActionNode(this);
-            containingNodes.add(shellActionNode);
-        } else if (processInfo.getProcessTypeId() == R_ACTION) {
-            RActionNode rActionNode = new RActionNode(this);
-            containingNodes.add(rActionNode);
-        } else if (processInfo.getProcessTypeId() == SPARK_ACTION) {
+        }  else if (processInfo.getProcessTypeId() == SPARK_ACTION) {
             SparkActionNode sparkActionNode = new SparkActionNode(this);
             containingNodes.add(sparkActionNode);
         } else if (processInfo.getProcessTypeId() == CRAWLER_PARENT_ACTION) {
-
         } else if (processInfo.getProcessTypeId() == CRAWLER_CHILD_ACTION) {
             CrawlerActionNode crawlerActionNode = new CrawlerActionNode(this);
             containingNodes.add(crawlerActionNode);
@@ -207,7 +179,6 @@ public class DAGTaskNode extends DAGNode {
             RegisterPartitionsActionNode registerPartitionsActionNode = new RegisterPartitionsActionNode(this);
             containingNodes.add(registerPartitionsActionNode);
         }
-
          */
         else {
             throw new BDREException("Don't know how to handle processInfo.getProcessTypeId()=" + processInfo.getProcessTypeId());

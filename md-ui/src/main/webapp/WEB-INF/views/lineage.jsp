@@ -262,7 +262,7 @@
 	    }
 
 	     function popModalDag(pid) {
-        		$.get('workflowdag/' + pid + '.page', function (data) {
+        		$.get('airflowdag/' + pid + '.page', function (data) {
         		 if(data=="not allowed")
                 		     alert("ACCESS DENIED");
                 		     else{

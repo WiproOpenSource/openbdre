@@ -12,7 +12,7 @@ public class DAGTermJobNode extends DAGNode {
     }
 
     public String getName() {
-        return "python-term-job";
+        return "dag-term-job";
     }
 
     @Override
@@ -20,6 +20,6 @@ public class DAGTermJobNode extends DAGNode {
         return getName().replace('-', '_') +"= BashOperator(\n"+
                 "    task_id='"+getName().replace('-','_')+"',\n"+
                 "    bash_command='java -cp /home/cloudera/bdre/lib/md_api/md_api-1.1-SNAPSHOT-executable.jar:/home/cloudera/bdre/lib/*/*  com.wipro.ats.bdre.md.api.oozie.OozieTermJob --process-id "+ getId().toString()+"',\n"+
-                "    dag=dag)\n";
+                "    dag=dag,trigger_rule='one_success')\n";
     }
 }

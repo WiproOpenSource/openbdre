@@ -37,14 +37,14 @@ public class DAGSparkTaskNode extends GenericActionNode {
 
     public String getName() {
 
-        String nodeName = "python-spark-" + getId() + "-" + processInfo.getProcessName().replace(' ', '_');
+        String nodeName = "dag-spark-" + getId() + "-" + processInfo.getProcessName().replace(' ', '_');
         return nodeName.substring(0, Math.min(nodeName.length(), 45));
 
     }
 
     @Override
     public String getDAG() {
-        LOGGER.info("Inside python Spark");
+        LOGGER.info("Inside dag Spark");
         if (this.getProcessInfo().getParentProcessId() == 0) {
             return "";
         }

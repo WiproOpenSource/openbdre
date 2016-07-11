@@ -1,5 +1,6 @@
 package com.wipro.ats.bdre.wgen.dag;
 
+import com.wipro.ats.bdre.MDConfig;
 import com.wipro.ats.bdre.exception.BDREException;
 import com.wipro.ats.bdre.md.api.GetProperties;
 import com.wipro.ats.bdre.md.beans.ProcessInfo;
@@ -12,22 +13,23 @@ import java.util.Enumeration;
 /**
  * Created by cloudera on 7/3/16.
  */
-public class DAGShellTaskNode extends GenericActionNode {
+public class DAGShellTaskNode extends com.wipro.ats.bdre.wgen.dag.GenericActionNode {
 
 
     private ProcessInfo processInfo = new ProcessInfo();
     private static final String SCRIPT = "script";
-    private DAGTaskNode dagTaskNode = null;
+    private static final String UPLOADBASEDIRECTORY = "upload.base-directory";
+    private DAGTaskNode taskNode = null;
 
     /**
      * This constructor is used to set node id and process information.
      *
-     * @param actionNode An instance of ActionNode class which a workflow triggers the execution of a task.
+     * @param taskNode An instance of ActionNode class which a workflow triggers the execution of a task.
      */
-    public DAGShellTaskNode(DAGTaskNode actionNode) {
-        setId(actionNode.getId());
-        processInfo = actionNode.getProcessInfo();
-        this.dagTaskNode = actionNode;
+    public DAGShellTaskNode(DAGTaskNode taskNode) {
+        setId(taskNode.getId());
+        processInfo = taskNode.getProcessInfo();
+        this.taskNode = taskNode;
     }
 
     public ProcessInfo getProcessInfo() {
@@ -43,7 +45,7 @@ public class DAGShellTaskNode extends GenericActionNode {
     }
 
     @Override
-    public String getXML() {
+    public String getDAG() {
         if (this.getProcessInfo().getParentProcessId() == 0) {
             return "";
         }
@@ -69,13 +71,19 @@ public class DAGShellTaskNode extends GenericActionNode {
         catch (IOException e){
             System.out.println("e = " + e);
         }
-        return "\ndef "+ getName().replace('-','_')+"_pc():\n" +
-                "\tcommand='sh  "+ getScriptPath(getId(), SCRIPT).replace("shell/","") +" " + getParams(getId(), "param")  +",\n" +
-                "\tbash_output = os.system(command)\n" +
-                "\tif(bash_output == 0):\n" +
-                "\t\treturn '"+getToNode().getName().replace('-', '_') +"'\n" +
-                "\telse:\n" +
+
+
+        return "import subprocess\n"+
+                "\ndef "+ getName().replace('-','_')+"_pc():\n" +
+                "\tcommand='sh "+ MDConfig.getProperty(UPLOADBASEDIRECTORY) + "/" + processInfo.getParentProcessId().toString() + "/" + getScriptPath(getId(), SCRIPT) +" " + getParams(getId(), "param")  +"',\n" +
+                "\tbash_output = subprocess.Popen(command,shell=True, stdin=subprocess.PIPE, stdout=subprocess.PIPE )\n" +
+                "\tout,err = bash_output.communicate()\n"+
+                "\tprint(\"out is \",out)\n"+
+                "\tprint(\"err is \",err)\n"+
+                "\tif(bash_output.returncode > 0):\n" +
                 "\t\treturn '"+getTermNode().getName().replace('-', '_') +"'\n" +
+                "\telse:\n" +
+                "\t\treturn '"+getToNode().getName().replace('-', '_') +"'\n" +
 
                 "\ndef f_"+ getName().replace('-','_')+"():\n" +
                 "\t"+ getName().replace('-', '_')+".set_downstream("+ getToNode().getName().replace('-', '_')+")\n" +
@@ -126,7 +134,7 @@ public class DAGShellTaskNode extends GenericActionNode {
         if (!listForParams.isEmpty()) {
             while (e.hasMoreElements()) {
                 String key = (String) e.nextElement();
-                addParams.append(" <argument>" + listForParams.getProperty(key) + "</argument>\n");
+                addParams.append(" " + listForParams.getProperty(key) );
 
             }
         }

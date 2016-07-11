@@ -99,6 +99,9 @@ public class PageController {
             LOGGER.info(e);
             dag.setDAG(new StringBuilder("not allowed"));
         }
+
+        LOGGER.info(dag);
+        LOGGER.info(dag.getDAG());
         return dag.getDAG().toString();
     }
 

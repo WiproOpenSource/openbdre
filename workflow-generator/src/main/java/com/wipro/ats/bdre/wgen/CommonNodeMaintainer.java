@@ -31,34 +31,8 @@ public class CommonNodeMaintainer {
     private Set<String> printedNodeNames = new HashSet<String>();
     private Map<Integer, ForkNode> forkNodeMap = new HashMap<Integer, ForkNode>();
     private Map<Integer, JoinNode> joinNodeMap = new HashMap<Integer, JoinNode>();
-        private DAGNodeCollection pnc = new DAGNodeCollection();
-    private Map<Integer, DAGForkNode> pythonForkNodeMap = new HashMap<Integer, DAGForkNode>();
-    private Map<Integer, DAGJoinNode> pythonJoinNodeMap = new HashMap<Integer, DAGJoinNode>();
+
     private Set<OozieNode> restartNodes = new HashSet<OozieNode>();
-
-    public DAGNodeCollection getPnc() {
-        return pnc;
-    }
-
-    public void setPnc(DAGNodeCollection pnc) {
-        this.pnc = pnc;
-    }
-
-    public Map<Integer, DAGForkNode> getPythonForkNodeMap() {
-        return pythonForkNodeMap;
-    }
-
-    public void setPythonForkNodeMap(Map<Integer, DAGForkNode> pythonForkNodeMap) {
-        this.pythonForkNodeMap = pythonForkNodeMap;
-    }
-
-    public Map<Integer, DAGJoinNode> getPythonJoinNodeMap() {
-        return pythonJoinNodeMap;
-    }
-
-    public void setPythonJoinNodeMap(Map<Integer, DAGJoinNode> pythonJoinNodeMap) {
-        this.pythonJoinNodeMap = pythonJoinNodeMap;
-    }
 
     public Set<OozieNode> getRestartNodes() {
         return restartNodes;

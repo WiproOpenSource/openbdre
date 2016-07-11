@@ -46,7 +46,7 @@ public class CommonNodeMaintainer {
         this.dagForkNodeMap = dagForkNodeMap;
     }
 
-    public Map<Integer, DAGJoinNode> getPythonJoinNodeMap() {
+    public Map<Integer, DAGJoinNode> getDAGJoinNodeMap() {
         return dagJoinNodeMap;
     }
 

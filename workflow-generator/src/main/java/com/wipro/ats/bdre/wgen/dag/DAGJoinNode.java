@@ -29,11 +29,11 @@ public class DAGJoinNode extends DAGNode {
      * @return This method returns a JoinNode
      */
     public static DAGJoinNode getJoinNode(Integer id, List<DAGNodeCollection> parents, CommonNodeMaintainer nodeMaintainer) {
-        Map<Integer, DAGJoinNode> pythonjoinNodeMap = nodeMaintainer.getPythonJoinNodeMap();
-        DAGJoinNode pythonjoinNode = pythonjoinNodeMap.get(id);
-        if (pythonjoinNode == null) {
-            pythonjoinNode = new DAGJoinNode(id);
-            pythonjoinNodeMap.put(id, pythonjoinNode);
+        Map<Integer, DAGJoinNode> dagJoinNodeMap = nodeMaintainer.getDAGJoinNodeMap();
+        DAGJoinNode dagJoinNode = dagJoinNodeMap.get(id);
+        if (dagJoinNode == null) {
+            dagJoinNode = new DAGJoinNode(id);
+           dagJoinNodeMap.put(id, dagJoinNode);
         }
         Set<Integer> childIdSet = new HashSet<Integer>();
         for (int i = 0; i < parents.size(); i++) {
@@ -43,8 +43,8 @@ public class DAGJoinNode extends DAGNode {
                 childIdSet.add(child.getId());
             }
         }
-        pythonjoinNode.getIdSet().addAll(childIdSet);
-        return pythonjoinNodeMap.get(id);
+        dagJoinNode.getIdSet().addAll(childIdSet);
+        return dagJoinNodeMap.get(id);
     }
 
     public Set<Integer> getIdSet() {
@@ -76,7 +76,7 @@ public class DAGJoinNode extends DAGNode {
             }
 
         }
-        String joinNodeName = "python-join-" + stringBuilder;
+        String joinNodeName = "dag-join-" + stringBuilder;
         return joinNodeName.substring(0, Math.min(joinNodeName.length(), 45));
     }
 
