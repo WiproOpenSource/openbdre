@@ -1,7 +1,5 @@
 package com.wipro.ats.bdre.wgen.dag;
 
-import com.wipro.ats.bdre.wgen.dag.DAGNode;
-
 import java.io.FileWriter;
 import java.io.IOException;
 
@@ -36,15 +34,21 @@ public class DAGInitStepNode extends DAGNode {
 
         return "\ndef "+getName().replace('-', '_')+"_pc():\n" +
                 "\tcommand='java -cp /home/cloudera/bdre/lib/md_api/md_api-1.1-SNAPSHOT-executable.jar:/home/cloudera/bdre/lib/*/*  com.wipro.ats.bdre.md.api.oozie.OozieInitStep -p "+ getId().toString()+"'\n" +
-                "\tbash_output = os.system(command)\n" +
-                "\tif(bash_output == 0):\n" +
-                "\t\treturn '"+getToNode().getName().replace('-', '_') +"'\n" +
+                "\tbash_output = subprocess.Popen(command,shell=True, stdin=subprocess.PIPE, stdout=subprocess.PIPE )\n" +
+                "\tout,err = bash_output.communicate()\n"+
+                "\tprint(\"out is \",out)\n"+
+                "\tprint(\"err is \",err)\n"+
+                "\tif(bash_output.returncode > 0):\n" +
+                "\t\treturn 'dummy_"+getName().replace('-', '_') +"'\n" +
                 "\telse:\n" +
-                "\t\treturn '"+getTermNode().getName().replace('-', '_') +"'\n" +
+                "\t\treturn '"+getToNode().getName().replace('-', '_') +"'\n" +
+
                 "\ndef f_"+ getName().replace('-','_')+"():\n" +
                 "\t"+ getName().replace('-', '_')+".set_downstream("+ getToNode().getName().replace('-', '_')+")\n" +
-                "\t"+ getName().replace('-', '_')+".set_downstream("+ getTermNode().getName().replace('-', '_')+")\n" +
-                getName().replace('-','_')+" = BranchPythonOperator(task_id='"+getName().replace('-', '_')+"', python_callable="+getName().replace('-','_')+"_pc, dag=dag)\n";
+                "\t"+ getName().replace('-', '_')+".set_downstream(dummy_"+ getName().replace('-', '_')+")\n" +
+                "\t"+ "dummy_"+ getName().replace('-', '_')+".set_downstream("+getTermNode().getName().replace('-', '_') +")\n"+
+                getName().replace('-','_')+" = BranchPythonOperator(task_id='"+getName().replace('-', '_')+"', python_callable="+getName().replace('-','_')+"_pc, dag=dag)\n"+
+                "dummy_"+ getName().replace('-', '_')+" = DummyOperator(task_id ='"+"dummy_"+ getName().replace('-', '_')+"',dag=dag)\n";
 
     }
 

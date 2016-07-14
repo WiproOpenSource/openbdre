@@ -660,7 +660,7 @@ public class JobDAO {
                 Criteria runningSubProcessCriteria = session.createCriteria(InstanceExec.class).add(Restrictions.in(PROCESS, listOfSubProcesses))
                         .add(Restrictions.eq(EXECSTATUS, runningExecStatus));
                 if (!runningSubProcessCriteria.list().isEmpty()) {
-                    LOGGER.error(" sub process in running state");
+                    LOGGER.error(" sub process in running state: "+runningSubProcessCriteria.list());
                     throw new MetadataException("sub process in running state");
                 }
             }

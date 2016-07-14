@@ -3,9 +3,6 @@ package com.wipro.ats.bdre.wgen.dag;
 import com.wipro.ats.bdre.exception.MetadataException;
 import com.wipro.ats.bdre.md.api.GetProperties;
 import com.wipro.ats.bdre.md.beans.ProcessInfo;
-import com.wipro.ats.bdre.wgen.dag.CommonNodeMaintainer;
-import com.wipro.ats.bdre.wgen.dag.DAGNode;
-import com.wipro.ats.bdre.wgen.dag.DAG;
 import org.apache.log4j.Logger;
 
 import java.io.*;
@@ -42,6 +39,7 @@ public class DAGPrinter {
         String pid = processInfos.get(0).getProcessId().toString();
 
         final String prefixDAG = "\nfrom airflow.operators import BashOperator,BranchPythonOperator,DummyOperator\n"+
+                "import subprocess\n"+
                 "from datetime import datetime, timedelta\n"+
                 "from airflow import DAG\n"+
                 "import os\n" +
