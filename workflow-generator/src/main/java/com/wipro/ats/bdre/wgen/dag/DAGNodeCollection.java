@@ -1,8 +1,6 @@
 package com.wipro.ats.bdre.wgen.dag;
 
 import com.wipro.ats.bdre.md.beans.ProcessInfo;
-import com.wipro.ats.bdre.wgen.dag.CommonNodeMaintainer;
-import com.wipro.ats.bdre.wgen.dag.DAGNode;
 
 import java.util.*;
 
@@ -65,7 +63,7 @@ public class DAGNodeCollection {
         taskNode.setProcessInfo(processInfo);
         termStepNode = new DAGTermStepNode(id);
         initStepNode.setToNode(taskNode);
-        initStepNode.setTermNode(termStepNode);
+        initStepNode.setTermNode(termJobNode);
         haltStepNode = new DAGHaltStepNode(id.toString());
         taskNode.setToNode(haltStepNode);
         haltStepNode.setToNode(haltJobNode);

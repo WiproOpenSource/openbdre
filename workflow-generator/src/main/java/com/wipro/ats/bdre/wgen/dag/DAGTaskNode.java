@@ -2,8 +2,6 @@ package com.wipro.ats.bdre.wgen.dag;
 
 import com.wipro.ats.bdre.exception.BDREException;
 import com.wipro.ats.bdre.md.beans.ProcessInfo;
-import com.wipro.ats.bdre.wgen.dag.GenericActionNode;
-import com.wipro.ats.bdre.wgen.dag.DAGNode;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -93,6 +91,19 @@ public class DAGTaskNode extends DAGNode {
             DAGShellTaskNode shellActionNode = new DAGShellTaskNode (this);
             containingNodes.add(shellActionNode);
         }
+        /*else if (processInfo.getProcessTypeId() == HIVE_ACTION) {
+            DAGHiveTaskNode hiveActionNode = new DagHiveTaskNode(this);
+            containingNodes.add(hiveActionNode);
+        }*/
+        else if (processInfo.getProcessTypeId() == R_ACTION) {
+            DAGRTaskNode rActionNode = new DAGRTaskNode(this);
+            containingNodes.add(rActionNode);
+        }
+        /*else if (processInfo.getProcessTypeId() == PIG_ACTION) {
+            DagPigTaskNode pigActionNode = new DagPigTaskNode(this);
+            containingNodes.add(pigActionNode);
+
+        }*/
 
        /* if (processInfo.getProcessTypeId() == RAW_LOAD_ACTION) {
             RawLoadActionNode rawLoadActionNode = new RawLoadActionNode(this);

@@ -4,7 +4,6 @@ import com.wipro.ats.bdre.MDConfig;
 import com.wipro.ats.bdre.exception.BDREException;
 import com.wipro.ats.bdre.md.api.GetProperties;
 import com.wipro.ats.bdre.md.beans.ProcessInfo;
-import com.wipro.ats.bdre.wgen.GenericActionNode;
 
 import java.io.FileWriter;
 import java.io.IOException;
@@ -73,23 +72,23 @@ public class DAGShellTaskNode extends com.wipro.ats.bdre.wgen.dag.GenericActionN
         }
 
 
-        return "import subprocess\n"+
-                "\ndef "+ getName().replace('-','_')+"_pc():\n" +
+        return  "\ndef "+ getName().replace('-','_')+"_pc():\n" +
                 "\tcommand='sh "+ MDConfig.getProperty(UPLOADBASEDIRECTORY) + "/" + processInfo.getParentProcessId().toString() + "/" + getScriptPath(getId(), SCRIPT) +" " + getParams(getId(), "param")  +"',\n" +
                 "\tbash_output = subprocess.Popen(command,shell=True, stdin=subprocess.PIPE, stdout=subprocess.PIPE )\n" +
                 "\tout,err = bash_output.communicate()\n"+
                 "\tprint(\"out is \",out)\n"+
                 "\tprint(\"err is \",err)\n"+
                 "\tif(bash_output.returncode > 0):\n" +
-                "\t\treturn '"+getTermNode().getName().replace('-', '_') +"'\n" +
+                "\t\treturn 'dummy_"+getName().replace('-', '_') +"'\n" +
                 "\telse:\n" +
                 "\t\treturn '"+getToNode().getName().replace('-', '_') +"'\n" +
 
                 "\ndef f_"+ getName().replace('-','_')+"():\n" +
                 "\t"+ getName().replace('-', '_')+".set_downstream("+ getToNode().getName().replace('-', '_')+")\n" +
-                "\t"+ getName().replace('-','_')+".set_downstream("+ getTermNode().getName().replace('-', '_')+")\n" +
-
-                getName().replace('-', '_')+" = BranchPythonOperator(task_id='" + getName().replace('-', '_')+"', python_callable="+getName().replace('-','_')+"_pc, dag=dag)\n";
+                "\t"+ getName().replace('-', '_')+".set_downstream(dummy_"+ getName().replace('-', '_')+")\n" +
+                "\t"+ "dummy_"+ getName().replace('-', '_')+".set_downstream("+getTermNode().getName().replace('-', '_') +")\n"+
+                getName().replace('-','_')+" = BranchPythonOperator(task_id='"+getName().replace('-', '_')+"', python_callable="+getName().replace('-','_')+"_pc, dag=dag)\n"+
+                "dummy_"+ getName().replace('-', '_')+" = DummyOperator(task_id ='"+"dummy_"+ getName().replace('-', '_')+"',dag=dag)\n";
 
     }
 
