@@ -91,6 +91,10 @@ public class DAGTaskNode extends DAGNode {
             DAGShellTaskNode shellActionNode = new DAGShellTaskNode (this);
             containingNodes.add(shellActionNode);
         }
+        else if (processInfo.getProcessTypeId() == HADOOP_STREAMING_ACTION) {
+            DAGHadoopStreamingTaskNode hadoopStreamingTaskNode = new DAGHadoopStreamingTaskNode(this);
+            containingNodes.add(hadoopStreamingTaskNode);
+        }
         /*else if (processInfo.getProcessTypeId() == HIVE_ACTION) {
             DAGHiveTaskNode hiveActionNode = new DagHiveTaskNode(this);
             containingNodes.add(hiveActionNode);
