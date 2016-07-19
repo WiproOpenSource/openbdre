@@ -83,6 +83,7 @@ public class DAGNodeCollection {
 
 //TODO        initJobNode.setToNode(recoveryDecisionNode);
         initJobNode.setTermNode(termJobNode);
+        haltJobNode.setTermNode(termJobNode);
     }
 
     /**
