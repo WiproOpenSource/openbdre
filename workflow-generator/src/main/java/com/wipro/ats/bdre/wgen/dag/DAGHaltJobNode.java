@@ -20,13 +20,15 @@ public class DAGHaltJobNode extends  DAGNode {
 
     @Override
     public String getDAG() {
-        return "with open('/home/cloudera/jobinfo.txt','a+') as propeties_file:\n"+
+        String homeDir = System.getProperty("user.home");
+        String jobInfoFile = homeDir+"/jobInfo.txt";
+        return "with open('"+jobInfoFile+",'a+') as propeties_file:\n"+
                 "\tfor line in propeties_file:\n"+
                 "\t\tinfo = line.split(':',2)\n"+
                 "\t\tdict[info[0]] = info[1].replace('\\n','')\n"+
                 getName().replace('-', '_') +"= BashOperator(\n"+
                 "    task_id='"+getName().replace('-','_')+"',\n"+
-                "    bash_command='java -cp /home/cloudera/bdre/lib/md_api/md_api-1.1-SNAPSHOT-executable.jar:/home/cloudera/bdre/lib/*/*  com.wipro.ats.bdre.md.api.oozie.OozieHaltJob --process-id "+ getId().toString()+" -batchmarking dict[\"initJobInfo.getTargetBatchMarkingSet()\"] ' ,\n"+
+                "    bash_command='java -cp "+homeDir+"/bdre/lib/md_api/md_api-1.1-SNAPSHOT-executable.jar:"+homeDir+"/bdre/lib/*/*  com.wipro.ats.bdre.md.api.oozie.OozieHaltJob --process-id "+ getId().toString()+" -batchmarking dict[\"initJobInfo.getTargetBatchMarkingSet()\"] ' ,\n"+
                 "    dag=dag)\n";
 
 }

@@ -49,31 +49,8 @@ public class DAGRTaskNode extends GenericActionNode {
             return "";
         }
         StringBuilder ret = new StringBuilder();
-        ret.append("\n<action name=\"" + getName() + "\">\n" +
-                "        <shell xmlns=\"uri:oozie:shell-action:0.1\">\n" +
-                "            <job-tracker>${jobTracker}</job-tracker>\n" +
-                "            <name-node>${nameNode}</name-node>\n");
-        ret.append("            <exec>Rhadoop.sh</exec>\n");
-        ret.append("            <argument>"+getRFile(getId(), "r-file").replace("r/","")+"</argument>\n");
-        ret.append(getArguments("param"));
-        ret.append("            <file>Rhadoop.sh</file>\n");
-        ret.append("            <file>" +getRFile(getId(), "r-file")+"</file>\n");
-        ret.append("        </shell>\n" +
-                "        <ok to=\"" + getToNode().getName() + "\"/>\n" +
-                "        <error to=\"" + getTermNode().getName() + "\"/>\n" +
-                "    </action>");
 
-        try {
-            FileWriter fw = new FileWriter("/home/cloudera/defFile.txt", true);
-            fw.write("\nf_"+getName().replace('-', '_')+"()");
-            fw.close();
-        }
-        catch (IOException e){
-            System.out.println("e = " + e);
-        }
-
-
-        return "\ndef "+ getName().replace('-','_')+"_pc():\n" +
+        ret.append("\ndef "+ getName().replace('-','_')+"_pc():\n" +
                 "\tcommand='sh "+ MDConfig.getProperty(UPLOADBASEDIRECTORY).replace("/bdre-wfd","")+"/bdre/bdre-scripts/deployment/Rhadoop.sh "+MDConfig.getProperty(UPLOADBASEDIRECTORY) + "/" + processInfo.getParentProcessId().toString() + "/" + getRFile(getId(), "r-file")+"',\n" +
                 "\tbash_output = subprocess.Popen(command,shell=True, stdin=subprocess.PIPE, stdout=subprocess.PIPE )\n" +
                 "\tout,err = bash_output.communicate()\n"+
@@ -88,8 +65,21 @@ public class DAGRTaskNode extends GenericActionNode {
                 "\t"+ getName().replace('-', '_')+".set_downstream("+ getToNode().getName().replace('-', '_')+")\n" +
                 "\t"+ getName().replace('-','_')+".set_downstream("+ getTermNode().getName().replace('-', '_')+")\n" +
 
-                getName().replace('-', '_')+" = BranchPythonOperator(task_id='" + getName().replace('-', '_')+"', python_callable="+getName().replace('-','_')+"_pc, dag=dag)\n";
+                getName().replace('-', '_')+" = BranchPythonOperator(task_id='" + getName().replace('-', '_')+"', python_callable="+getName().replace('-','_')+"_pc, dag=dag)\n"
+        );
 
+        try {
+            String homeDir = System.getProperty("user.home");
+            FileWriter fw = new FileWriter(homeDir+"/defFile.txt", true);
+            fw.write("\nf_"+getName().replace('-', '_')+"()");
+            fw.close();
+        }
+        catch (IOException e){
+            System.out.println("e = " + e);
+        }
+
+
+        return ret.toString();
     }
 
     /**

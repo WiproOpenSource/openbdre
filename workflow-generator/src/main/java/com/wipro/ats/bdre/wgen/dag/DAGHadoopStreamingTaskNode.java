@@ -75,7 +75,8 @@ public class DAGHadoopStreamingTaskNode extends  GenericActionNode {
         StringBuilder ret = new StringBuilder();
 
         try {
-            FileWriter fw = new FileWriter("/home/cloudera/defFile.txt", true);
+            String homeDir = System.getProperty("user.home");
+            FileWriter fw = new FileWriter(homeDir+"/defFile.txt", true);
             fw.write("\nf_"+getName().replace('-', '_')+"()");
             fw.close();
         }

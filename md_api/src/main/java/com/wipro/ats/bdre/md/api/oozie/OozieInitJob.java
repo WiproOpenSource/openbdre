@@ -54,7 +54,8 @@ public class OozieInitJob {
             oozieUtil.persistBeanData(initJobInfo, false);
             try
             {
-                FileWriter fw = new FileWriter("/home/cloudera/jobinfo.txt", true);
+                String homeDir = System.getProperty("user.home");
+                FileWriter fw = new FileWriter(homeDir+"/jobinfo.txt", true);
                 BufferedWriter bw = new BufferedWriter(fw);
 
                 bw.write("initJobInfo.getTargetBatchMarkingSet():"+initJobInfo.getTargetBatchMarkingSet().toString()+"\n");

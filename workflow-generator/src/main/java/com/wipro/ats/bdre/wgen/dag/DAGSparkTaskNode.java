@@ -54,39 +54,8 @@ public class DAGSparkTaskNode extends GenericActionNode {
             }
         }
         StringBuilder ret = new StringBuilder();
-        ret.append("\n<action name=\"" + getName());
-        if (isSecurityEnabled(this.getProcessInfo().getParentProcessId(), "security") != 0) {
-            ret.append(" cred='spark_credentials'");
-        }
 
-        ret.append("\">\n" +
-                "   <java>\n" +
-                "        <job-tracker>${jobTracker}</job-tracker>\n" +
-                "        <name-node>${nameNode}</name-node>\n" +
-                "        <main-class>org.apache.spark.deploy.SparkSubmit</main-class>\n" +
-                "        <arg>--class</arg>\n");
-        ret.append(getAppMainClass(getId(), "spark-main"));
-        ret.append(getConf(getId(), "spark-conf"));
-        ret.append("        <arg>" + getJarName(getId(), "spark-jar") + "</arg>\n");
-        ret.append(getAppArgs(getId(), "app-args"));
-        ret.append("        <file>" + getJarName(getId(), "spark-jar") + "</file>\n");
-        ret.append("     </java>\n" +
-                "        <ok to=\"" + getToNode().getName() + "\"/>\n" +
-                "        <error to=\"" + getTermNode().getName() + "\"/>\n" +
-                "    </action>");
-
-        //return ret.toString();
-        try {
-            FileWriter fw = new FileWriter("/home/cloudera/defFile.txt", true);
-            fw.write("\nf_"+getName().replace('-', '_')+"()");
-            fw.close();
-        }
-        catch (IOException e){
-            System.out.println("e = " + e);
-        }
-
-
-       return  "\ndef "+ getName().replace('-','_')+"_pc():\n" +
+        ret.append("\ndef "+ getName().replace('-','_')+"_pc():\n" +
                 "\tcommand='java -cp "+ MDConfig.getProperty(UPLOADBASEDIRECTORY).replace("/bdre-wfd","")  +"/bdre/lib/spark-core/spark-core-1.1-SNAPSHOT.jar:"+MDConfig.getProperty(UPLOADBASEDIRECTORY).replace("/bdre-wfd","")+"/bdre/lib/*/* org.apache.spark.deploy.SparkSubmit  " +MDConfig.getProperty(UPLOADBASEDIRECTORY) + "/" + processInfo.getParentProcessId().toString() + "/" +getJarName(getId(), "spark-jar")+" "+getAppArgs(getId(), "app-args")+"',\n" +
                 "\tbash_output = subprocess.Popen(command,shell=True, stdin=subprocess.PIPE, stdout=subprocess.PIPE )\n" +
                 "\tout,err = bash_output.communicate()\n"+
@@ -97,13 +66,27 @@ public class DAGSparkTaskNode extends GenericActionNode {
                 "\telse:\n" +
                 "\t\treturn '"+getToNode().getName().replace('-', '_') +"'\n" +
 
-               "\ndef f_"+ getName().replace('-','_')+"():\n" +
-               "\t"+ getName().replace('-', '_')+".set_downstream("+ getToNode().getName().replace('-', '_')+")\n" +
-               "\t"+ getName().replace('-', '_')+".set_downstream(dummy_"+ getName().replace('-', '_')+")\n" +
-               "\t"+ "dummy_"+ getName().replace('-', '_')+".set_downstream("+getTermNode().getName().replace('-', '_') +")\n"+
-               getName().replace('-','_')+" = BranchPythonOperator(task_id='"+getName().replace('-', '_')+"', python_callable="+getName().replace('-','_')+"_pc, dag=dag)\n"+
-               "dummy_"+ getName().replace('-', '_')+" = DummyOperator(task_id ='"+"dummy_"+ getName().replace('-', '_')+"',dag=dag)\n";
+                "\ndef f_"+ getName().replace('-','_')+"():\n" +
+                "\t"+ getName().replace('-', '_')+".set_downstream("+ getToNode().getName().replace('-', '_')+")\n" +
+                "\t"+ getName().replace('-', '_')+".set_downstream(dummy_"+ getName().replace('-', '_')+")\n" +
+                "\t"+ "dummy_"+ getName().replace('-', '_')+".set_downstream("+getTermNode().getName().replace('-', '_') +")\n"+
+                getName().replace('-','_')+" = BranchPythonOperator(task_id='"+getName().replace('-', '_')+"', python_callable="+getName().replace('-','_')+"_pc, dag=dag)\n"+
+                "dummy_"+ getName().replace('-', '_')+" = DummyOperator(task_id ='"+"dummy_"+ getName().replace('-', '_')+"',dag=dag)\n"
+        );
 
+
+        try {
+            String homeDir = System.getProperty("user.home");
+            FileWriter fw = new FileWriter(homeDir+"/defFile.txt", true);
+            fw.write("\nf_"+getName().replace('-', '_')+"()");
+            fw.close();
+        }
+        catch (IOException e){
+            System.out.println("e = " + e);
+        }
+
+
+       return  ret.toString();
     }
 
     /**

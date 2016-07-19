@@ -135,8 +135,10 @@ public class DAGPrinter {
         //airflowDAG.append(nc.getKill().getDAG());
         //airflowDAG.append(nc.getHalt().getDAG());
         String postfixXml ="";
+        String homeDir = System.getProperty("user.home");
         try {
-            InputStream fis = new FileInputStream("/home/cloudera/defFile.txt");
+
+            InputStream fis = new FileInputStream(homeDir+"/defFile.txt");
             InputStreamReader isr = new InputStreamReader(fis, Charset.forName("UTF-8"));
             BufferedReader br = new BufferedReader(isr);
             String line;
@@ -149,7 +151,7 @@ public class DAGPrinter {
                     flag = false;
                 postfixXml = postfixXml + line+"\n";
             }
-            File file = new File("/home/cloudera/defFile.txt");
+            File file = new File(homeDir+"/defFile.txt");
             file.delete();
         }catch (IOException e){
             System.out.println("e = " + e);
@@ -304,8 +306,9 @@ public class DAGPrinter {
         //airflowDAG.append(nc.getKill().getDAG());
         //airflowDAG.append(nc.getHalt().getDAG());
         String postfixDAG ="";
+        String homeDir = System.getProperty("user.home");
         try {
-            InputStream fis = new FileInputStream("/home/cloudera/defFile.txt");
+            InputStream fis = new FileInputStream(homeDir+"/defFile.txt");
             InputStreamReader isr = new InputStreamReader(fis, Charset.forName("UTF-8"));
             BufferedReader br = new BufferedReader(isr);
             String line;
