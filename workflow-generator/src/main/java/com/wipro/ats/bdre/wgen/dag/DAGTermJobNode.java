@@ -15,10 +15,13 @@ public class DAGTermJobNode extends DAGNode {
 
     @Override
     public String getDAG(){
-        return getName().replace('-', '_') +"= BashOperator(\n"+
+        String homeDir = System.getProperty("user.home");
+        StringBuilder ret = new StringBuilder();
+        ret.append(getName().replace('-', '_') +"= BashOperator(\n"+
                 "    task_id='"+getName().replace('-','_')+"',\n"+
-                "    bash_command='java -cp /home/cloudera/bdre/lib/md_api/md_api-1.1-SNAPSHOT-executable.jar:/home/cloudera/bdre/lib/*/*  com.wipro.ats.bdre.md.api.oozie.OozieTermJob --process-id "+ getId().toString()+"',\n"+
+                "    bash_command='java -cp "+homeDir+"/bdre/lib/md_api/md_api-1.1-SNAPSHOT-executable.jar:"+homeDir+"/home/cloudera/bdre/lib/*/*  com.wipro.ats.bdre.md.api.oozie.OozieTermJob --process-id "+ getId().toString()+"',\n"+
                 "    dag=dag,\n" +
-                "    trigger_rule='one_success')\n";
+                "    trigger_rule='one_success')\n");
+        return ret.toString();
     }
 }

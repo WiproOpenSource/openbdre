@@ -49,30 +49,7 @@ public class DAGShellTaskNode extends com.wipro.ats.bdre.wgen.dag.GenericActionN
             return "";
         }
         StringBuilder ret = new StringBuilder();
-        ret.append("\n<action name=\"" + getName() + "\">\n" +
-                "        <shell xmlns=\"uri:oozie:shell-action:0.1\">\n" +
-                "            <job-tracker>${jobTracker}</job-tracker>\n" +
-                "            <name-node>${nameNode}</name-node>\n");
-        ret.append("            <exec>"+getScriptPath(getId(), SCRIPT).replace("shell/","")+"</exec>\n");
-        ret.append(getParams(getId(), "param"));
-        ret.append("            <file>"+getScriptPath(getId(), SCRIPT)+"</file>\n");
-        ret.append(getSupplementaryFiles(getId(),"extraFiles"));
-        ret.append("        </shell>\n" +
-                "        <ok to=\"" + getToNode().getName() + "\"/>\n" +
-                "        <error to=\"" + getTermNode().getName() + "\"/>\n" +
-                "    </action>");
-
-        try {
-            FileWriter fw = new FileWriter("/home/cloudera/defFile.txt", true);
-            fw.write("\nf_"+getName().replace('-', '_')+"()");
-            fw.close();
-        }
-        catch (IOException e){
-            System.out.println("e = " + e);
-        }
-
-
-        return  "\ndef "+ getName().replace('-','_')+"_pc():\n" +
+        ret.append("\ndef "+ getName().replace('-','_')+"_pc():\n" +
                 "\tcommand='sh "+ MDConfig.getProperty(UPLOADBASEDIRECTORY) + "/" + processInfo.getParentProcessId().toString() + "/" + getScriptPath(getId(), SCRIPT) +" " + getParams(getId(), "param")  +"',\n" +
                 "\tbash_output = subprocess.Popen(command,shell=True, stdin=subprocess.PIPE, stdout=subprocess.PIPE )\n" +
                 "\tout,err = bash_output.communicate()\n"+
@@ -88,8 +65,21 @@ public class DAGShellTaskNode extends com.wipro.ats.bdre.wgen.dag.GenericActionN
                 "\t"+ getName().replace('-', '_')+".set_downstream(dummy_"+ getName().replace('-', '_')+")\n" +
                 "\t"+ "dummy_"+ getName().replace('-', '_')+".set_downstream("+getTermNode().getName().replace('-', '_') +")\n"+
                 getName().replace('-','_')+" = BranchPythonOperator(task_id='"+getName().replace('-', '_')+"', python_callable="+getName().replace('-','_')+"_pc, dag=dag)\n"+
-                "dummy_"+ getName().replace('-', '_')+" = DummyOperator(task_id ='"+"dummy_"+ getName().replace('-', '_')+"',dag=dag)\n";
+                "dummy_"+ getName().replace('-', '_')+" = DummyOperator(task_id ='"+"dummy_"+ getName().replace('-', '_')+"',dag=dag)\n"
+        );
 
+        try {
+            String homeDir = System.getProperty("user.home");
+            FileWriter fw = new FileWriter(homeDir+"/defFile.txt", true);
+            fw.write("\nf_"+getName().replace('-', '_')+"()");
+            fw.close();
+        }
+        catch (IOException e){
+            System.out.println("e = " + e);
+        }
+
+
+        return  ret.toString();
     }
 
     /**
@@ -121,7 +111,7 @@ public class DAGShellTaskNode extends com.wipro.ats.bdre.wgen.dag.GenericActionN
     /**
      * This method gets all the extra arguments required for Pig Script
      *
-     * @param pid         process-id of Pig Script
+     * @param pid         process-id of shell Script
      * @param configGroup config_group entry in properties table "param" for arguments
      * @return String containing arguments to be appended to workflow string.
      */
