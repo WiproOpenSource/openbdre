@@ -105,10 +105,10 @@ public class DAGTaskNode extends DAGNode {
         }
         else if (processInfo.getProcessTypeId() == DATA_IMPORT_ACTION) {
             DAGImportTaskNode importTaskNode = new DAGImportTaskNode(this);
-           // FileRegistrationNode fileRegistrationNode = new FileRegistrationNode(this);
-          //  importTaskNode.setToNode(fileRegistrationNode);
-            containingNodes.add(importTaskNode);
-           // containingNodes.add(fileRegistrationNode);
+            DAGFileRegistrationTaskNode fileRegistrationTaskNode = new DAGFileRegistrationTaskNode(this);
+             importTaskNode.setToNode(fileRegistrationTaskNode);
+             containingNodes.add(importTaskNode);
+             containingNodes.add(fileRegistrationTaskNode);
         }
         /*else if (processInfo.getProcessTypeId() == PIG_ACTION) {
             DagPigTaskNode pigActionNode = new DagPigTaskNode(this);
