@@ -19,7 +19,6 @@ import com.wipro.ats.bdre.md.api.InitJob;
 import com.wipro.ats.bdre.md.beans.InitJobInfo;
 import com.wipro.ats.bdre.md.beans.InitJobRowInfo;
 import com.wipro.ats.bdre.util.AirflowUtil;
-import com.wipro.ats.bdre.util.OozieUtil;
 import org.apache.log4j.Logger;
 
 import java.io.BufferedWriter;
@@ -60,8 +59,20 @@ public class AirflowInitJob {
                 FileWriter fw = new FileWriter("/home/cloudera/jobinfo.txt", true);
                 BufferedWriter bw = new BufferedWriter(fw);
 
-                bw.write("initJobInfo.getTargetBatchMarkingSet():"+initJobInfo.getTargetBatchMarkingSet().toString()+"\n");
+
                 bw.write("initJobInfo.getInstanceExecId():"+initJobInfo.getInstanceExecId().toString()+"\n");
+                bw.write("initJobInfo.getLastRecoverableSpId():"+initJobInfo.getLastRecoverableSpId().toString()+"\n");
+                bw.write("initJobInfo.getTargetBatchId():"+initJobInfo.getTargetBatchId().toString()+"\n");
+                bw.write("initJobInfo.getMinBatchIdMap():"+initJobInfo.getMinBatchIdMap().toString()+"\n");
+                bw.write("initJobInfo.getMaxBatchIdMap():"+initJobInfo.getMaxBatchIdMap().toString()+"\n");
+                bw.write("initJobInfo.getMinBatchMarkingMap():"+initJobInfo.getMinBatchMarkingMap().toString()+"\n");
+                bw.write("initJobInfo.getMaxBatchMarkingMap():"+initJobInfo.getMaxBatchMarkingMap().toString()+"\n");
+                bw.write("initJobInfo.getTargetBatchMarkingSet():"+initJobInfo.getTargetBatchMarkingSet().toString()+"\n");
+                bw.write("initJobInfo.getMinSourceInstanceExecIdMap():"+initJobInfo.getMinSourceInstanceExecIdMap().toString()+"\n");
+                bw.write("initJobInfo.getMaxSourceInstanceExecIdMap():"+initJobInfo.getMaxSourceInstanceExecIdMap().toString()+"\n");
+                bw.write("initJobInfo.getFileListMap():"+initJobInfo.getFileListMap().toString()+"\n");
+                bw.write("initJobInfo.getBatchListMap():"+initJobInfo.getBatchListMap().toString()+"\n");
+
 
                 bw.close();
 
