@@ -71,7 +71,7 @@
             <activation><activeByDefault>false</activeByDefault></activation>
             <properties>
                 <hadoop.version>2.6.0</hadoop.version>
-                <hive.version>0.14.0</hive.version>
+                <hive.version>0.13.0</hive.version>
                 <sqoop.version>1.4.1-incubating</sqoop.version>
                 <oozie.version>4.1.0</oozie.version>
                 <storm.version>0.9.3</storm.version>
