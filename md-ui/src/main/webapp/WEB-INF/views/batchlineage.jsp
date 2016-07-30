@@ -1,10 +1,11 @@
+<%@taglib uri="http://www.springframework.org/tags" prefix="spring"%>
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1"
 	 pageEncoding="ISO-8859-1"%>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
     <head>
 	<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
-	<title>Bigdata Ready Enterprise</title>
+	<title><spring:message code="common.page.title_bdre_1"/></title>
 	<script>
 	  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
 	  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
@@ -201,7 +202,7 @@
 		$overlay = $('<div id="overlay"></div>');
 		$modal = $('<div id="modal"></div>');
 		$content = $('<div id="content"></div>');
-		$close = $('<a id="close" href="#">close</a>');
+		$close = $('<a id="close" href="#"><spring:message code="batchlineage.page.close"/></a>');
 
 		$modal.hide();
 		$overlay.hide();
@@ -223,7 +224,7 @@
 
 	    function popModal(pid) {
 		$.get('workflow/' + pid + '.page', function (data) {
-		    modal.open({content: "<b>Loading</b>"});
+		    modal.open({content: '<b><spring:message code="batchlineage.page.loading"/></b>'});
 		    UpdateGraphviz(data);
 		    modal.center();
 		});
@@ -237,8 +238,8 @@
 	<div id="input-box-button" >
 	    <form>
 		<div class="input-group">
-		    <input class="form-control" type="number" name="bid" id="bid" value ="" placeholder="Enter a batchid"/>
-		    <!-- <button  class="btn btn-default btn-lg btn-primary"><span id="sizing-addon2"><span class="glyphicon glyphicon-arrow-right" aria-hidden="true"></span> Show Lineage </button> -->
+		    <input class="form-control" type="number" name="bid" id="bid" value ="" placeholder=<spring:message code="batchlineage.page.placeholder"/> />
+		    <!-- <button  class="btn btn-default btn-lg btn-primary"><span id="sizing-addon2"><span class="glyphicon glyphicon-arrow-right" aria-hidden="true"></span><spring:message code="batchlineage.page.button_show"/></button> -->
 		    <span class="input-group-btn">
 			<button class="btn btn-default  btn-primary" type="button" onClick="resetGraph();
 				getBid(jQuery('#bid').val())"><span id="sizing-addon2"><span class="glyphicon glyphicon-arrow-right" aria-hidden="true"></span>&nbsp;</button>

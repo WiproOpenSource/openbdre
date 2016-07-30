@@ -1,10 +1,12 @@
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1"
 	 pageEncoding="ISO-8859-1"%>
+
+<%@taglib uri="http://www.springframework.org/tags" prefix="spring"%>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
     <head>
 	<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
-	<title>Bigdata Ready Enterprise</title>
+	<title><spring:message code="common.page.title_bdre_1"/></title>
 	<script>
 	  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
 	  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
@@ -16,6 +18,9 @@
 	</script>
 
 	<link href="../css/pages.css" rel="stylesheet" type="text/css" />
+
+
+
 
 	<!-- Include one of jTable styles. -->
 
@@ -35,7 +40,7 @@
 
 	    $(document).ready(function () {
 		$('#Failure').jtable({
-		    title: 'Failures(last week)',
+		    title: '<spring:message code="analytics.page.title_failures"/>',
 		    paging: false,
 		    pageSize: 10,
 		    actions: {
@@ -63,10 +68,10 @@
 			    list: true,
 			    create: true,
 			    edit: false,
-			    title: "Process Id"
+			    title: '<spring:message code="analytics.page.title_p_id"/>'
 			},
 			instanceExecId: {
-			    title: 'Instance Id'
+			    title: '<spring:message code="analytics.page.title_inst_id/>'
 			}
 		    }
 		});
@@ -75,7 +80,7 @@
 
 	    $(document).ready(function () {
 		$('#Running').jtable({
-		    title: 'Currently Running',
+		    title: '<spring:message code="analytics.page.title_running"/>',
 		    paging: false,
 		    pageSize: 10,
 		    actions: {
@@ -104,21 +109,21 @@
 			    list: true,
 			    create: true,
 			    edit: false,
-			    title: "Process Id",
+			    title: '<spring:message code="analytics.page.title_p_id"/>',
 			    width: '30%'
 			},
 			iexecId: {
-			    title: 'Instance Id',
+			    title: '<spring:message code="analytics.page.title_inst_id"/>',
 			    list: true,
 			    width: '30%'
 			},
 			pname: {
-			    title: 'Process Name',
+			    title: '<spring:message code="analytics.page.title_p_name"/>',
 			    list: true,
 			    width: '30%'
 			},
 			duration: {
-			    title: 'Duration(hrs)',
+			    title: '<spring:message code="analytics.page.title_duration"/>',
 			    width: '30%'
 			}
 		    }
@@ -140,14 +145,14 @@
 				value: countS,
 				color: "#EDE4BF",
 				highlight: "#EDE4CF",
-				label: "Successful"
+				label: '<spring:message code="analytics.page.succes"/>'
 
 			    },
 			    {
 				value: countF,
 				color: "#61380a",
 				highlight: "#71380a",
-				label: "Failed"
+				label: '<spring:message code="analytics.page.fail"/>'
 			    }
 
 			];
@@ -171,11 +176,11 @@
 
 	<table width="98%"  >
 	    <tr>
-		<td align="center" colspan="2"><h1>Job Status</h1></td>
+		<td align="center" colspan="2"><h1><spring:message code="analytics.page.job_status"/></h1></td>
 	    </tr>
 	    <tr>
-		<td align="center"><h2>Last 24 hrs</h2></td>
-		<td align="center"><h2>Last week</h2></td>
+		<td align="center"><h2><spring:message code="analytics.page.status_hrs"/></h2></td>
+		<td align="center"><h2><spring:message code="analytics.page.status_week"/></h2></td>
 	    </tr>
 
 	    <tr>
@@ -184,7 +189,7 @@
 </tr>
 <tr>
     <td colspan="2" align="center" background-color="orange">
-	Legends: <font color ="brown">Failed</font>,<font color = "#EDE4BF"> Successful</font>
+	<spring:message code="analytics.page.legends"/><font color ="brown"><spring:message code="analytics.page.fail"/></font>,<font color = "#EDE4BF"> <spring:message code="analytics.page.succes"/></font>
     </td>
 </tr>
 </table>

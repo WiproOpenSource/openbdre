@@ -1,6 +1,7 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ taglib prefix="security"
 	   uri="http://www.springframework.org/security/tags" %>
+<%@taglib uri="http://www.springframework.org/tags" prefix="spring"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
@@ -16,13 +17,14 @@
 	  ga('create', 'UA-72345517-1', 'auto');
 	  ga('send', 'pageview');
 	</script>
-
 		<script src="../js/jquery.min.js"></script>
 		<link href="../css/jquery-ui-1.10.3.custom.css" rel="stylesheet">
 		<link href="../css/css/bootstrap.min.css" rel="stylesheet" />
 		<script src="../js/jquery-ui-1.10.3.custom.js"></script>
 		<script src="../js/jquery.steps.min.js"></script>
 		<link rel="stylesheet" href="../css/jquery.steps.css" />
+		<link rel="stylesheet" href="../css/jquery.steps.custom.css" />
+		<link href="../css/bootstrap.custom.css" rel="stylesheet" type="text/css" />
 		<script src="../js/angular.min.js" type="text/javascript"></script>
 		<script src="../js/bootstrap.js" type="text/javascript"></script>
 		<script src="../js/jquery.jtable.js" type="text/javascript"></script>
@@ -60,7 +62,7 @@ function addDataToJson(properties) {
 		<script>
 function displayProcess(records) {
 	$('#Process').jtable({
-		title: 'Data Ingestion Processes',
+		title: '<spring:message code="flumepropertieswizard.page.title_jtable_1"/>',
 		paging: false,
 		sorting: false,
 		create: false,
@@ -94,10 +96,10 @@ function displayProcess(records) {
 				list: true,
 				create: false,
 				edit: false,
-				title: 'Id'
+				title: '<spring:message code="flumepropertieswizard.page.title_id"/>'
 			},
 			Properties: {
-				title: 'Properties',
+				title: '<spring:message code="flumepropertieswizard.page.title_properties"/>',
 				width: '5%',
 				sorting: false,
 				edit: false,
@@ -105,12 +107,12 @@ function displayProcess(records) {
 				listClass: 'bdre-jtable-button',
 				display: function(item) { //Create an image that will be used to open child table
 
-					var $img = $('<span class="label label-primary">Show</span>'); //Open child table when user clicks the image
+					var $img = $('<span class="label label-primary"><spring:message code="flumepropertieswizard.page.img_show"/></span>'); //Open child table when user clicks the image
 
 					$img.click(function() {
 						$('#Process').jtable('openChildTable',
 							$img.closest('tr'), {
-								title: ' Properties of ' + item.record.processId,
+								title: '<spring:message code="flumepropertieswizard.page.img_title"/>' +' '+ item.record.processId,
 								paging: true,
 								pageSize: 10,
 								actions: {
@@ -191,15 +193,15 @@ function displayProcess(records) {
 										list: false,
 										create: false,
 										edit: true,
-										title: 'Process',
+										title: '<spring:message code="flumepropertieswizard.page.title_process"/>',
 										defaultValue: item.record.processId,
 									},
 									configGroup: {
-										title: 'Config Group',
+										title: '<spring:message code="flumepropertieswizard.page.title_cg"/>',
 										defaultValue: item.record.configGroup,
 									},
 									key: {
-										title: 'Key',
+										title: '<spring:message code="flumepropertieswizard.page.title_key"/>',
 										key: true,
 										list: true,
 										create: true,
@@ -207,11 +209,11 @@ function displayProcess(records) {
 										defaultValue: item.record.key,
 									},
 									value: {
-										title: 'Value',
+										title: '<spring:message code="flumepropertieswizard.page.title_value"/>',
 										defaultValue: item.record.value,
 									},
 									description: {
-										title: 'Description',
+										title: '<spring:message code="flumepropertieswizard.page.title_desc"/>',
 										defaultValue: item.record.description,
 									},
 								}
@@ -226,20 +228,20 @@ function displayProcess(records) {
 				}
 			},
 			processName: {
-				title: 'Name'
+				title: '<spring:message code="flumepropertieswizard.page.title_name"/>'
 			},
 			tableAddTS: {
-				title: 'Add TS',
+				title: '<spring:message code="flumepropertieswizard.page.title_add_ts"/>',
 				create: false,
 				edit: true,
 				list: false,
 				type: 'hidden'
 			},
 			description: {
-				title: 'Description',
+				title: '<spring:message code="flumepropertieswizard.page.title_desc"/>',
 			},
 			batchPattern: {
-				title: 'Batch Mark',
+				title: '<spring:message code="flumepropertieswizard.page.title_batch_mark"/>',
 				list: false,
 				create: false,
 				edit: true,
@@ -247,54 +249,54 @@ function displayProcess(records) {
 
 			},
 			parentProcessId: {
-				title: 'Parent',
+				title: '<spring:message code="flumepropertieswizard.page.title_parent"/>',
 				edit: true,
 				create: false,
 				list: false,
 				type: 'hidden'
 			},
 			canRecover: {
-				title: 'Restorable',
+				title: '<spring:message code="flumepropertieswizard.page.title_restorable"/>',
 				type: 'hidden',
 				list: false,
 				edit: true,
 			},
 			nextProcessIds: {
-				title: 'Next',
+				title: '<spring:message code="flumepropertieswizard.page.title_next"/>',
 				list: false,
 				edit: true,
 				type: 'hidden'
 
 			},
 			enqProcessId: {
-				title: 'Enqueuer',
+				title: '<spring:message code="flumepropertieswizard.page.title_enque"/>',
 				list: false,
 				edit: true,
 				type: 'hidden',
 			},
 			busDomainId: {
-				title: 'Application',
+				title: '<spring:message code="flumepropertieswizard.page.title_app"/>',
 				list: false,
 				edit: true,
 				type: 'combobox',
 				options: '/mdrest/busdomain/options/',
 			},
 			processTypeId: {
-				title: 'Type',
+				title: '<spring:message code="flumepropertieswizard.page.title_type"/>',
 				edit: true,
 				type: 'hidden',
 				options: '/mdrest/processtype/optionslist'
 
 			},
 			ProcessPipelineButton: {
-				title: 'Pipeline',
+				title: '<spring:message code="flumepropertieswizard.page.title_pipeline"/>',
 				sorting: false,
 				width: '2%',
 				listClass: 'bdre-jtable-button',
 				create: false,
 				edit: false,
 				display: function(data) {
-					return '<span class="label label-primary" onclick="fetchPipelineInfo(' + data.record.processId + ')">Display</span> ';
+					return '<span class="label label-primary" onclick="fetchPipelineInfo(' + data.record.processId + ')"><spring:message code="flumepropertieswizard.page.span_display"/></span> ';
 				},
 			}
 		}
@@ -305,6 +307,7 @@ function displayProcess(records) {
 
 		</script>
 		<script>
+
 var wizard = null;
 var finalJson;
 wizard = $(document).ready(function() {
@@ -327,7 +330,7 @@ wizard = $(document).ready(function() {
 							$(this).dialog("close");
 						}
 					}
-				}).text("Please Select Some Value");
+				}).html('<p><span class=\"jtable-confirm-message\"><spring:message code="flumepropertieswizard.page.select_value"/></span></p>');
 				return false;
 			}
 			if(currentIndex == 3 && newIndex == 4 && selectedChannelType == "") {
@@ -341,7 +344,7 @@ wizard = $(document).ready(function() {
 							$(this).dialog("close");
 						}
 					}
-				}).text("Please Select Some Value");
+				}).html('<p><span class=\"jtable-confirm-message\"><spring:message code="flumepropertieswizard.page.select_value"/></span></p>');
 				return false;
 			}
 			if(currentIndex == 6 && newIndex == 7 && selectedSinkType == "") {
@@ -355,7 +358,7 @@ wizard = $(document).ready(function() {
 							$(this).dialog("close");
 						}
 					}
-				}).text("Please Select Some Value");
+				}).html('<p><span class=\"jtable-confirm-message\"><spring:message code="flumepropertieswizard.page.select_value"/></span></p>');
 				return false;
 			}
 			if(currentIndex == 1 && newIndex == 2) {
@@ -372,7 +375,7 @@ wizard = $(document).ready(function() {
 								$(this).dialog("close");
 							}
 						}
-					}).text("Please Provide Value For Required Fields");
+					}).html('<p><span class=\"jtable-confirm-message\"><spring:message code="flumepropertieswizard.page.provide_value"/></span></p>');
 					return false;
 				}
 			}
@@ -390,7 +393,7 @@ wizard = $(document).ready(function() {
 								$(this).dialog("close");
 							}
 						}
-					}).text("Please Provide Value For Required Fields");
+					}).html('<p><span class=\"jtable-confirm-message\"><spring:message code="flumepropertieswizard.page.provide_value"/></span></p>');
 					return false;
 				}
 			}
@@ -409,7 +412,7 @@ wizard = $(document).ready(function() {
 								$(this).dialog("close");
 							}
 						}
-					}).text("Please Provide Value For Required Fields");
+					}).html('<p><span class=\"jtable-confirm-message\"><spring:message code="flumepropertieswizard.page.provide_value"/></span></p>');
 					return false;
 				}
 			}
@@ -456,7 +459,7 @@ wizard = $(document).ready(function() {
 												$(this).dialog("close");
 											}
 										}
-									}).text("Jobs successfully created.");
+									}).html('<p><span class=\"jtable-confirm-message\"><spring:message code="flumepropertieswizard.page.success_msg"/></span></p>');
 									createJobResult = data;
 									displayProcess(createJobResult);
 								}
@@ -484,7 +487,7 @@ wizard = $(document).ready(function() {
 							$(this).dialog("close");
 						}
 					}
-				}).text("Jobs have not been created.");
+				}).html('<p><span class=\"jtable-confirm-message\"><spring:message code="flumepropertieswizard.page.fail_msg"/></span></p>');
 			}
 		},
 		onCanceled: function(event) {
@@ -498,16 +501,16 @@ wizard = $(document).ready(function() {
 
 	</head>
 
-	<body ng-app="myApp" ng-controller="myCtrl">
-
-		<div id="bdre-flume-ingestion" ng-controller="myCtrl">
-			<h3>Select Source Type</h3>
+	<body ng-app="myApp" ng-controller="myCtrl" >
+	<div class="page-header"><spring:message code="flumepropertieswizrd.page.panel_heading"/></div>
+				<div class="alert alert-info" role="alert">
+				     <spring:message code="flumepropertieswizard.page.source_type_alert"/>
+				</div>
+			<div id="bdre-flume-ingestion" ng-controller="myCtrl">
+			<h3><div class="number-circular">1</div><spring:message code="flumepropertieswizard.page.source_type"/></h3>
 			<section>
 
 				<div id="dropdownSource">
-					<div class="alert alert-info" role="alert">
-						Application requires source type which depends on how you are getting your data
-					</div>
 					<!-- btn-group -->
 					<div class="btn-group">
 						<button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="false" aria-expanded="true" id="srcDropdown">
@@ -522,30 +525,30 @@ wizard = $(document).ready(function() {
 					<!-- /btn-group -->
 				</div>
 			</section>
-			<h3>Required Source Properties</h3>
+			<h3><div class="number-circular">2</div><spring:message code="flumepropertieswizard.page.required_source_properties"/></h3>
 			<section>
 				<div class="alert alert-info" role="alert">
-					Form contains required configuration properties related with your selected source type.
+					<spring:message code="flumepropertieswizard.page.source_type_configuration_properties_alert"/>
 				</div>
 				<div id="sourceRequiredFields"></div>
 			</section>
 
-			<h3>Advanced Source Properties</h3>
+			<h3><div class="number-circular">3</div><spring:message code="flumepropertieswizard.page.advanced_source_properties"/></h3>
 			<section>
 				<div class="alert alert-info" role="alert">
-					Table contains advanced configuration properties related with your selected source type. Use edit and delete button to change or delete properties.
+					<spring:message code="flumepropertieswizard.page.source_type_advanced_configuration_properties_alert"/>
 				</div>
 				<div id='sourceAdvancedFields'></div>
 
 			</section>
 
 
-			<h3>Select Channel Type</h3>
+			<h3><div class="number-circular">4</div><spring:message code="flumepropertieswizard.page.select_channel_type"/></h3>
 			<section>
 
 				<div id="dropdownChannel">
 					<div class="alert alert-info" role="alert">
-						Application requires channel type which depends on how you want to transfer your data from source to sink
+						<spring:message code="flumepropertieswizard.page.channel_type_alert"/>
 					</div>
 					<!-- btn-group -->
 					<div class="btn-group">
@@ -560,30 +563,30 @@ wizard = $(document).ready(function() {
 				</div>
 			</section>
 
-			<h3>Required Channel Properties</h3>
+			<h3><div class="number-circular">5</div><spring:message code="flumepropertieswizard.page.required_channel_properties"/></h3>
 			<section>
 				<div class="alert alert-info" role="alert">
-					Form contains required configuration properties related with your selected channel type.
+					<spring:message code="flumepropertieswizard.page.channel_type_configuration_properies_alert"/>
 				</div>
 				<div id='channelRequiredFields'></div>
 
 			</section>
 
-			<h3>Advanced Channel Properties</h3>
+			<h3><div class="number-circular">6</div><spring:message code="flumepropertieswizard.page.advanced_channel_properties"/></h3>
 			<section>
 				<div class="alert alert-info" role="alert">
-					Table contains advanced configuration properties related with your selected channel type. Use edit and delete button to change or delete properties.
+					<spring:message code="flumepropertieswizard.page.advanced_channel_type_configuration_properities_alert"/>
 				</div>
 				<div id='channelAdvancedFields'></div>
 
 			</section>
 
-			<h3>Select Sink Type</h3>
+			<h3><div class="number-circular">7</div><spring:message code="flumepropertieswizard.page.select_sink_type"/></h3>
 			<section>
 
 				<div id="dropdownSink">
 					<div class="alert alert-info" role="alert">
-						Application requires sink type which depends on where you want to dump your data
+						<spring:message code="flumepropertieswizard.page.sink_type_alert"/>
 					</div>
 					<!-- btn-group -->
 					<div class="btn-group">
@@ -599,47 +602,47 @@ wizard = $(document).ready(function() {
 
 			</section>
 
-			<h3>Required Sink Properties</h3>
+			<h3><div class="number-circular">8</div><spring:message code="flumepropertieswizard.page.required_sink_properties"/></h3>
 			<section>
 				<div class="alert alert-info" role="alert">
-					Form contains required configuration properties related with your selected sink type.
+						<spring:message code="flumepropertieswizard.page.sink_type_configuration_properies_alert"/>
 				</div>
 				<div id='sinkRequiredFields'></div>
 
 			</section>
 
-			<h3>Advanced Sink Properties</h3>
+			<h3><div class="number-circular">9</div><spring:message code="flumepropertieswizard.page.advanced_sink_properties"/></h3>
 			<section>
 				<div class="alert alert-info" role="alert">
-					Table contains advanced configuration properties related with your selected sink type. Use edit and delete button to change or delete properties.
+					<spring:message code="flumepropertieswizard.page.sink_type_advanced_configuration_properies_alert"/>
 				</div>
 				<div id='sinkAdvancedFields'></div>
 
 			</section>
- 						<h3>Process Details</h3>
+ 						<h3><div class="number-circular">10</div><spring:message code="flumepropertieswizard.page.process_details"/></h3>
                              <section>
                                  <form class="form-horizontal" role="form" id="processFieldsForm">
                                      <div id="processDetails">
                                          <div class="alert alert-info" role="alert">
-                                             Application requires process details to create process entries in metadata
+                                             <spring:message code="flumepropertieswizard.page.process_details_alert"/>
                                          </div>
                                          <!-- btn-group -->
                                          <div id="processFields">
 
                                              <div class="form-group">
-                                                 <label class="control-label col-sm-2" for="processName">Process Name:</label>
+                                                 <label class="control-label col-sm-2" for="processName"><spring:message code="flumepropertieswizard.page.process_name"/></label>
                                                  <div class="col-sm-10">
-                                                     <input type="text" class="form-control"  id="processName" name="processName" placeholder="Enter Process Name" required>
+                                                     <input type="text" class="form-control"  id="processName" name="processName" placeholder=<spring:message code="flumepropertieswizard.page.process_name_placeholder"/> required>
                                                  </div>
                                              </div>
                                              <div class="form-group">
-                                                 <label class="control-label col-sm-2" for="processDescription">Process Description:</label>
+                                                 <label class="control-label col-sm-2" for="processDescription"><spring:message code="flumepropertieswizard.page.process_description"/></label>
                                                  <div class="col-sm-10">
-                                                     <input type="text" class="form-control" id="processDescription" name="processDescription" placeholder="Enter Process Description"  required>
+                                                     <input type="text" class="form-control" id="processDescription" name="processDescription" placeholder=<spring:message code="flumepropertieswizard.page.process_description_palceholder"/>  required>
                                                  </div>
                                              </div>
                                              <div class="form-group">
-                                                 <label class="control-label col-sm-2" for="busDomainId">Bus Domain Id:</label>
+                                                 <label class="control-label col-sm-2" for="busDomainId"><spring:message code="flumepropertieswizard.page.bus_domain_id"/></label>
                                                  <div class="col-sm-10">
                                                      <select class="form-control" id="busDomainId" name="busDomainId">
                                                          <option ng-repeat="busDomain in busDomains.Options" value="{{busDomain.Value}}" name="busDomainId">{{busDomain.DisplayText}} </option>
@@ -654,10 +657,10 @@ wizard = $(document).ready(function() {
                                      </section>
 
 
-			<h3>Confirm</h3>
+			<h3><div class="number-circular">11</div><spring:message code="flumepropertieswizard.page.confirm"/></h3>
 			<section>
 				<div id="Process">
-					<button id="createjobs" type="button" class="btn btn-primary btn-lg">Create Jobs</button>
+					<button id="createjobs" type="button" class="btn btn-primary btn-lg"><spring:message code="flumepropertieswizard.page.button_create_job"/></button>
 				</div>
 			</section>
 		</div>
@@ -801,7 +804,7 @@ function loadJTable(typeValue, typeOf, typeDiv) {
 	var div = '';
 	div = document.getElementById(typeDiv);
 	$(div).jtable({
-		title: 'Additional Configurations For ' + typeValue,
+		title: '<spring:message code="flumepropertieswizard.page.title_jtable_2"/>'+' ' + typeValue,
 		paging: false,
 		sorting: false,
 		create: false,
@@ -859,23 +862,23 @@ function loadJTable(typeValue, typeOf, typeDiv) {
 		fields: {
 
 			description: {
-				title: 'Description',
+				title: '<spring:message code="flumepropertieswizard.page.title_desc"/>',
 				width: '50%',
 				edit: false
 			},
 			key: {
 				key: true,
 				create: true,
-				title: 'Configuration'
+				title: '<spring:message code="flumepropertieswizard.page.title_config"/>'
 			},
 			defaultVal: {
-				title: 'Value'
+				title: '<spring:message code="flumepropertieswizard.page.title_value"/>'
 			},
 			configGroup: {
 				type: 'hidden',
 				create: true,
 				edit: false,
-				title: 'Config Group'
+				title: '<spring:message code="flumepropertieswizard.page.title_cg"/>'
 			},
 			required: {
 				type: 'hidden',

@@ -160,7 +160,7 @@ public class DQSetupAPI extends MetadataAPIBase {
         }
         try {
             LOGGER.debug("Listing DQ properties on page " + dqSetupInfo.getPage());
-            List<Properties> propertiesList = dataQualityDAO.insertDQSetup(dqSetupInfo);
+            List<Properties> propertiesList = dataQualityDAO.insertDQSetup(dqSetupInfo,principal.getName());
             LOGGER.debug("properties contain" + propertiesList.size() + "objects");
             DQSetupInfo dqSetup = new DQSetupInfo();
             List<DQSetupInfo> dqSetups = new ArrayList<DQSetupInfo>();

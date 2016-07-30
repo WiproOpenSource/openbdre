@@ -53,7 +53,7 @@ public class TableColumnLineageAPI extends MetadataAPIBase {
         String tableName = lineageTabColInfo.getTableName();
 
         if (bindingResult.hasErrors()) {
-            StringBuilder errorMessages = new StringBuilder("<p>Please fix following errors and try again<p><ul>");
+            StringBuilder errorMessages = new StringBuilder("<p>Please fix following errors and try again</p><ul>");
             List<FieldError> errors = bindingResult.getFieldErrors();
             for (FieldError error : errors) {
                 errorMessages.append("<li>");

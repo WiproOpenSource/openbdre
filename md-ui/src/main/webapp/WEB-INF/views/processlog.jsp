@@ -1,12 +1,13 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ taglib prefix="security"
 	   uri="http://www.springframework.org/security/tags" %>
+<%@taglib uri="http://www.springframework.org/tags" prefix="spring"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
     <head>
 	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-	<title>Bigdata Ready Enterprise</title>
+	<title><spring:message code="common.page.title_bdre_1"/></title>
 	<script>
 	  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
 	  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
@@ -31,7 +32,7 @@
 	<script type="text/javascript">
 		    $(document).ready(function () {
 	    $('#Container').jtable({
-	    title: 'Process Log List',
+	    title: '<spring:message code="processlog.page.title_list"/>',
 		    paging: true,
 		    pageSize: 10,
 		    sorting: true,
@@ -62,7 +63,7 @@
 		    fields: {
 
 		    SubProcess: {
-		    title: 'Click to get list of Sub Processes of Process',
+		    title: '<spring:message code="processlog.page.title_click_to_list"/>',
 			    width: '5%',
 			    sorting: false,
 			    edit: false,
@@ -70,12 +71,12 @@
 			    listClass: 'bdre-jtable-button',
 			    display: function(item) {                         //Create an image that will be used to open child table
 
-			    var $img = $('<span class="label label-primary">Sub Process</span>'); //Open child table when user clicks the image
+			    var $img = $('<span class="label label-primary"><spring:message code="processlog.page.img_subprocess"/></span>'); //Open child table when user clicks the image
 
 				    $img.click(function() {
 				    $('#Container').jtable('openChildTable',
 					    $img.closest('tr'), {
-				    title: ' SubProcess of ' + item.record.parentProcessId + ' having logs ',
+				    title: '<spring:message code="processlog.page.title_subprocess_desc"/>'+' ' + item.record.parentProcessId + ' having logs ',
 					    paging: true,
 					    pageSize: 10,
 					    actions: {
@@ -90,8 +91,24 @@
 							    data: item,
 							    dataType: 'json',
 							    success: function(data) {
-							    $dfd.resolve(data);
-							    },
+                                        if(data.Result == "OK") {
+
+                                            $dfd.resolve(data);
+
+                                        }
+                                        else
+                                        {
+                                         if(data.Message == "ACCESS DENIED")
+                                         {
+                                         data.Result="OK";
+                                         $dfd.resolve(data);
+                                         alert(data.Message);
+                                         $('#Container').jtable('load');
+                                         }
+                                         else
+                                         $dfd.resolve(data);
+                                        }
+                                    },
 							    error: function() {
 							    $dfd.reject();
 							    }
@@ -101,7 +118,7 @@
 					    },
 					    fields: {
 					    Log: {
-					    title: 'Click to get logs related sub process',
+					    title: '<spring:message code="processlog.page.title_click_to_log"/>',
 						    width: '5%',
 						    sorting: false,
 						    edit: false,
@@ -109,12 +126,12 @@
 						    listClass: 'bdre-jtable-button',
 						    display: function(item) {                         //Create an image that will be used to open child table
 
-						    var $img = $('<span class="label label-primary">Logs</span>'); //Open child table when user clicks the image
+						    var $img = $('<span class="label label-primary"><spring:message code="processlog.page.img_log"/></span>'); //Open child table when user clicks the image
 
 							    $img.click(function() {
 							    $('#Container').jtable('openChildTable',
 								    $img.closest('tr'), {
-							    title: ' Logs of process id ' + item.record.processId,
+							    title: ' <spring:message code="processlog.page.title_log_pid"/>'+' ' + item.record.processId,
 								    paging: true,
 								    pageSize: 10,
 								    actions: {
@@ -142,26 +159,26 @@
 									    list: false,
 									    create:false,
 									    edit: true,
-									    title: 'Process Id',
+									    title: '<spring:message code="processlog.page.title_pid"/>',
 									    defaultValue: item.record.processId,
 								    },
 									    tableAddTs: {
-									    title: 'add ts'
+									    title: '<spring:message code="processlog.page.title_add_ts"/>'
 									    },
 									    logCategory: {
-									    title: 'log category'
+									    title: '<spring:message code="processlog.page.title_log_cat"/>'
 
 									    },
 									    message: {
-									    title: 'message'
+									    title: '<spring:message code="processlog.page.title_msg"/>'
 
 									    },
 									    messageId: {
-									    title: 'message id',
+									    title: '<spring:message code="processlog.page.msg_id"/>',
 									    },
 									    instanceRef: {
 
-									    title: 'instance ref',
+									    title: '<spring:message code="processlog.page.title_instance_ref"/>',
 										    create:true,
 										    edit :true
 									    }
@@ -183,7 +200,7 @@
 							    list: true,
 							    create:true,
 							    edit: false,
-							    title: 'Process'
+							    title: '<spring:message code="processlog.page.title_process"/>'
 
 						    }
 					    }
@@ -203,7 +220,7 @@
 				    list: true,
 				    create:true,
 				    edit: false,
-				    title: 'Process'
+				    title: '<spring:message code="processlog.page.title_process"/>'
 
 			    },
 			    processId: {
@@ -211,7 +228,7 @@
 				    list: false,
 				    create:true,
 				    edit: false,
-				    title: 'Process'
+				    title: '<spring:message code="processlog.page.title_process"/>'
 
 			    }
 		    }
@@ -235,7 +252,7 @@
     <div id="input-box-button" >
 	<form onsubmit="showProcessPage(jQuery('#pid').val()); return false;">
 	    <div class="input-group">
-		<input class="form-control" type="number" name="pid" id="pid" value ="" placeholder="Filter by processid"/>
+		<input class="form-control" type="number" name="pid" id="pid" value ="" placeholder=<spring:message code="processlog.page.filter_by_processid_placeholder"/>/>
 		<!-- <button  class="btn btn-default btn-lg btn-primary"><span id="sizing-addon2"><span class="glyphicon glyphicon-arrow-right" aria-hidden="true"></span> Show Lineage </button> -->
 		<span class="input-group-btn">
 		    <button class="btn btn-default  btn-primary" type="submit" onClick="showProcessPage(jQuery('#pid').val())"><span id="sizing-addon2"><span class="glyphicon glyphicon-arrow-right" aria-hidden="true"></span>&nbsp;</button>
