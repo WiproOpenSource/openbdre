@@ -105,7 +105,7 @@ public class ProcessAPI extends MetadataAPIBase {
                 }
                 process.setEnqProcessId(daoProcess.getEnqueuingProcessId());
                 process.setNextProcessIds(daoProcess.getNextProcessId());
-                if (daoProcess.getBatchCutPattern() != null) {
+                if (daoProcess.getBatchCutPattern() != null && !daoProcess.getBatchCutPattern().isEmpty()) {
                     process.setBatchPattern(daoProcess.getBatchCutPattern());
                 }
                 process.setTableAddTS(DateConverter.dateToString(daoProcess.getAddTs()));
@@ -279,7 +279,7 @@ public class ProcessAPI extends MetadataAPIBase {
             else
                 updateDaoProcess.setCanRecover(process.getCanRecover());
             updateDaoProcess.setEnqueuingProcessId(process.getEnqProcessId());
-            if (process.getBatchPattern() != null) {
+            if (process.getBatchPattern() != null && !process.getBatchPattern().isEmpty()) {
                 updateDaoProcess.setBatchCutPattern(process.getBatchPattern());
             }
             updateDaoProcess.setNextProcessId(process.getNextProcessIds());
@@ -359,7 +359,7 @@ public class ProcessAPI extends MetadataAPIBase {
             else
                 insertDaoProcess.setCanRecover(process.getCanRecover());
             insertDaoProcess.setEnqueuingProcessId(process.getEnqProcessId());
-            if (process.getBatchPattern() != null) {
+            if (process.getBatchPattern() != null && !process.getBatchPattern().isEmpty()) {
                 insertDaoProcess.setBatchCutPattern(process.getBatchPattern());
             }
             insertDaoProcess.setNextProcessId(process.getNextProcessIds());
