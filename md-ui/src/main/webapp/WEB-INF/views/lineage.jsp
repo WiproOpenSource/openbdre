@@ -126,6 +126,9 @@
 		opacity:0.5;
 		filter:alpha(opacity=50);
 	    }
+        body{
+        background:#fff !important ;
+        }
 
 	    #modal {
 		position:absolute;
@@ -137,9 +140,8 @@
 		#content {
 		border-radius:8px;
 		background:#fff;
-		overflow-y: scroll;
-   		height: 45em;
 	    }
+
 	    #close {
 		position:absolute;
 		background:url('../css/metro/close.png') 14 14 no-repeat;
@@ -153,9 +155,7 @@
 	    #input-box-button {
 		width: 370px;
 		padding: 5px;
-		/* margin-top: 20px; */
 		border: 1px solid #e4e4e4;
-		/* border-bottom: 1px solid #e4e4e4; */
 		border-radius: 10px;
 	    }
 	    
@@ -274,7 +274,7 @@
     </head>
     <body>
 	<br/>
-		<button type='button' class='btn btn-primary' aria-label='Left Align' onClick='saveSVG("pipeline",0)'><span class='glyphicon glyphicon-save' aria-hidden='true'></span>Save</button>
+		<button type='button' class='btn btn-primary' aria-label='Left Align' onClick='saveSVG("pipeline",0)'><span class='glyphicon glyphicon-save' aria-hidden='true'></span><spring:message code="lineage.page.button_save"/></button>
 	<c:if test="${empty param.pid}">
 
 	    <div id="input-box-button" >

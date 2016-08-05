@@ -65,7 +65,7 @@
 		function displayProcess (records){
                                 $('#Container').jtable(
                                 {
-                                    title: 'Data Import Processes',
+                                    title: '<spring:message code="dataimportwizard.page.title_jtable"/>',
                                     paging: false,
                                     sorting: false,
                                     create: false,
@@ -102,7 +102,7 @@
                                                      title: 'Id'
                                                  },
                                                  Properties: {
-                                                                 		    title: 'Properties',
+                                                                 		    title: '<spring:message code="dataimportwizard.page.title_properties"/>',
                                                                  			    width: '5%',
                                                                  			    sorting: false,
                                                                  			    edit: false,
@@ -110,12 +110,12 @@
                                                                  			    listClass: 'bdre-jtable-button',
                                                                  			    display: function(item) {                         //Create an image that will be used to open child table
 
-                                                                 			    var $img = $('<span class="label label-primary">Show</span>'); //Open child table when user clicks the image
+                                                                 			    var $img = $('<span class="label label-primary"><spring:message code="dataimportwizard.page.img_show"/></span>'); //Open child table when user clicks the image
 
                                                                  				    $img.click(function() {
                                                                  				    $('#Container').jtable('openChildTable',
                                                                  					    $img.closest('tr'), {
-                                                                 				    title: ' Properties of ' + item.record.processId,
+                                                                 				    title: '<spring:message code="dataimportwizard.page.img_title"/>'+' ' + item.record.processId,
                                                                  					    paging: true,
                                                                  					    pageSize: 10,
                                                                  					    actions: {
@@ -196,15 +196,15 @@
                                                                  						    list: false,
                                                                  						    create:false,
                                                                  						    edit: true,
-                                                                 						    title: 'Process',
+                                                                 						    title: '<spring:message code="dataimportwizard.page.title_process"/>',
                                                                  						    defaultValue: item.record.processId,
                                                                  					    },
                                                                  						    configGroup: {
-                                                                 						    title: 'Config Group',
+                                                                 						    title: '<spring:message code="dataimportwizard.page.title_cg"/>',
                                                                  							    defaultValue: item.record.configGroup,
                                                                  						    },
                                                                  						    key: {
-                                                                 						    title: 'Key',
+                                                                 						    title: '<spring:message code="dataimportwizard.page.title_key"/>',
                                                                  							    key : true,
                                                                  							    list: true,
                                                                  							    create:true,
@@ -212,11 +212,11 @@
                                                                  							    defaultValue: item.record.key,
                                                                  						    },
                                                                  						    value: {
-                                                                 						    title: 'Value',
+                                                                 						    title: '<spring:message code="dataimportwizard.page.title_value"/>',
                                                                  							    defaultValue: item.record.value,
                                                                  						    },
                                                                  						    description: {
-                                                                 						    title: 'Description',
+                                                                 						    title: '<spring:message code="dataimportwizard.page.title_desc"/>',
                                                                  							    defaultValue: item.record.description,
                                                                  						    },
                                                                  					    }
@@ -231,20 +231,20 @@
                                                                  			    }
                                                                  		    },
                                                  processName: {
-                                                     title: 'Name'
+                                                     title: '<spring:message code="dataimportwizard.page.title_name"/>'
                                                  },
                                                  tableAddTS: {
-                                                     title: 'Add TS',
+                                                     title: '<spring:message code="dataimportwizard.page.title_add_ts"/>',
                                                      create: false,
                                                      edit: true,
                                                      list: false,
                                                      type:'hidden'
                                                  },
                                                  description: {
-                                                     title: 'Description',
+                                                     title: '<spring:message code="dataimportwizard.page.title_desc"/>',
                                                  },
                                                  batchPattern: {
-                                                     title: 'Batch Mark',
+                                                     title: '<spring:message code="dataimportwizard.page.title_batch_mark"/>',
                                                      list: false,
                                                      create: false,
                                                      edit: true,
@@ -252,54 +252,54 @@
 
                                                  },
                                                  parentProcessId: {
-                                                     title: 'Parent',
+                                                     title: '<spring:message code="dataimportwizard.page.title_parent"/>',
                                                      edit: true,
                                                      create: false,
                                                      list: false,
                                                      type:'hidden'
                                                  },
                                                  canRecover: {
-                                                     title: 'Restorable',
+                                                     title: '<spring:message code="dataimportwizard.page.title_restorable"/>',
                                                      type: 'hidden',
                                                      list: false,
                                                      edit: true,
                                                  },
                                                  nextProcessIds: {
-                                                     title: 'Next',
+                                                     title: '<spring:message code="dataimportwizard.page.title_next"/>',
                                                        list: false,
                                                         edit: true,
                                                         type:'hidden'
 
                                                  },
                                                  enqProcessId: {
-                                                     title: 'Enqueuer',
+                                                     title: '<spring:message code="dataimportwizard.page.title_enque"/>',
                                                      list: false,
                                                      edit:true,
                                                      type: 'hidden',
                                                  },
                                                  busDomainId: {
-                                                     title: 'Application',
+                                                     title: '<spring:message code="dataimportwizard.page.title_app"/>',
                                                      list: false,
                                                      edit:true,
                                                      type: 'combobox',
                                                      options: '/mdrest/busdomain/options/',
                                                  },
                                                  processTypeId: {
-                                                     title: 'Type',
+                                                     title: '<spring:message code="dataimportwizard.page.title_type"/>',
                                                      edit: true,
                                                      type: 'hidden',
                                                      options: '/mdrest/processtype/optionslist'
 
                                                  },
                                                  ProcessPipelineButton: {
-                                                                                                                      title: 'Pipeline',
+                                                                                                                      title: '<spring:message code="dataimportwizard.page.title_pipeline"/>',
                                                                                                                       sorting: false,
                                                                                                                       width: '2%',
                                                                                                                       listClass: 'bdre-jtable-button',
                                                                                                                       create: false,
                                                                                                                       edit: false,
                                                                                                                       display: function(data) {
-                                                                                                                           return '<span class="label label-primary" onclick="fetchPipelineInfo(' + data.record.processId + ')">Display</span> ';
+                                                                                                                           return '<span class="label label-primary" onclick="fetchPipelineInfo(' + data.record.processId + ')"><spring:message code="dataimportwizard.page.display"/></span> ';
                                                                                                                       },
                                                                                  }
                                         }
@@ -331,7 +331,7 @@
                                             $(this).dialog("close");
                                         }
                                     }
-                    }).html("<p><span class=\"jtable-confirm-message\">Please 'Test Connection' first to continue</span></p>");
+                    }).html('<p><span class="jtable-confirm-message"><spring:message code="dataimportwizard.page.connection_msg"/></span></p>');
 		            return false;
 		        }
 		        return true;
@@ -358,7 +358,7 @@
                                                                         $(this).dialog("close");
                                                                     }
                                                                 }
-                                                            }).html("<p><span class=\"jtable-confirm-message\">Jobs have not been created.</span></p>");
+                                                            }).html('<p><span class="jtable-confirm-message"><spring:message code="dataimportwizard.page.failed_msg"/></span></p>');
                                                         }
                                         }
 			});
@@ -484,7 +484,7 @@
                                 $(this).dialog("close");
                             }
                         }
-                    }).html("<p><span class=\"jtable-confirm-message\">Jobs successfully created.</span></p>");
+                    }).html('<p><span class="jtable-confirm-message"><spring:message code="dataimportwizard.page.success_msg"/></span></p>');
                     createJobResult=data;
                     displayProcess(createJobResult);
             }
@@ -634,7 +634,7 @@ isInit=true;
                                             $(this).dialog("close");
                                         }
                                     }
-                                }).html("<p><span class=\"jtable-confirm-message\">Test Connection Successful !</span></p>");
+                                }).html('<p><span class="jtable-confirm-message"><spring:message code="dataimportwizard.page.connection_success_msg"/></span></p>');
 
                             }
                           }

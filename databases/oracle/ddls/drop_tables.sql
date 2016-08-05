@@ -18,6 +18,7 @@ DROP TABLE lineage_node;
 DROP TABLE lineage_node_type;
 DROP TABLE lineage_query;
 DROP TABLE lineage_query_type;
+DROP TABLE analytics_apps;
 DROP TABLE process;
 DROP TABLE user_roles;
 DROP TABLE users;

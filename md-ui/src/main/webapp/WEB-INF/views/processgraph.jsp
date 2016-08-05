@@ -50,7 +50,7 @@
 			    labels: xlabel,
 			    datasets: [
 				{
-				    label: 'Performance graph for ' + pid,
+				    label: '<spring:message code="processgraph.page.label_graph"/>'+' ' + pid,
 				    fillColor: "rgba(31, 160, 228,0.3)",
 				    strokeColor: "rgba(31, 160, 228,1)",
 				    pointColor: "rgba(31, 160, 228,1)",

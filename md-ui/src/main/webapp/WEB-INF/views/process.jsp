@@ -24,7 +24,7 @@
 						height: 36px !important;
 						border-radius: 1px !important;
 					}
-					
+
 					.glyphicon-arrow-right {
 						color: #606161 !important;
 					}
@@ -35,7 +35,7 @@
 						padding-bottom: 7.5px !important;
 						border-radius: 1px !important;
 					}
-					
+
 					.input-box-button-filter {
 						background: #4A4B4B;
 						background: -webkit-linear-gradient(#4A4B4B 50%, #3A3B3B 50%);
@@ -50,7 +50,7 @@
 						padding: 5px;
 						cursor: pointer
 					}
-					
+
 					.filter-icon {
 						background-image: url('../css/images/filter_icon.png');
 						background-size: 100%;
@@ -61,7 +61,7 @@
 						width: 16px;
 						height: 16px;
 					}
-					
+
 					.filter-text {
 						display: inline-block;
 						margin: 2px;
@@ -71,7 +71,7 @@
 							Helvetica, sans-serif;
 						font-weight: 300;
 					}
-					
+
 					.input-box-button {
 						display: none;
 						position: absolute;
@@ -79,13 +79,13 @@
 						right: 133px;
 						width: 129px;
 					}
-					
+
 					.subprocess-arrow-down {
 						-ms-transform: rotate(90deg); /* IE 9 */
 						-webkit-transform: rotate(90deg); /* Chrome, Safari, Opera */
 						transform: rotate(90deg);
 					}
-					
+
 					.label-icons {
 						margin: 0 auto;
 						width: 45px;
@@ -98,48 +98,48 @@
 					.label-properties {
 						background: url('../css/images/properties.png') no-repeat center;
 					}
-					
+
 					.label-pipeline {
 						background: url('../css/images/pipeline.png');
 					}
-					
+
 					.label-execution {
 						background: url('../css/images/execution.png');
 					}
-					
+
 					.label-editgraphically {
 						background: url('../css/images/editgraphically.png');
 					}
-					
+
 					.label-export {
 						background: url('../css/images/export.png');
 					}
-					
+
 					.label-execute {
 						background: url('../css/images/execute.png');
 					}
-					
+
 					.slamonitor {
 						background: url('../css/images/slamonitor.png');
 					}
-					
+
 					.label-initial {
 						background: url('../css/images/label-initial.png');
 					}
-					
+
 					.label-icons.label-warning {
 						background: url('../css/images/label-warning.png');
 					}
-					
+
 					.label-icons.label-success {
 						background: url('../css/images/label-success.png');
 					}
-					
+
 					.label-icons.label-danger {
 						background: url('../css/images/label-danger.png');
 					}
 					</style>
-               
+
 	<script>
 	  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
 	  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
@@ -156,7 +156,7 @@
                 <link href="../css/jtables-bdre.css" rel="stylesheet" type="text/css" />
                 <link href="../css/jquery-ui-1.10.3.custom.css" rel="stylesheet" type="text/css" />
                 <link href="../css/bootstrap.custom.css" rel="stylesheet" />
-                
+
 
                 <!-- Include jTable script file. -->
                 <script src="../js/jquery.min.js" type="text/javascript"></script>
@@ -166,7 +166,7 @@
                 <script type="text/javascript">
                     $(document).ready(function() {
                     	$('#Container').jtable({
-                            title: 'Process List',
+                            title: '<spring:message code="process.page.title_list"/>',
                             paging: true,
                             pageSize: 10,
                             sorting: false,
@@ -230,17 +230,17 @@
                      params = obj.Record.processId;
                      console.log("params = "+params+" deploy = "+deploy);
                      if (deploy === 2) {
-                         $jqueryObj.html('<span title="Process is not deployed." class="label-icons label-initial" onclick=fetchDeployPage(' + params + ')  ></span>');
+                         $jqueryObj.html('<span title=<spring:message code="process.page.process_not_deployed_msg"/> class="label-icons label-initial" onclick=fetchDeployPage(' + params + ')  ></span>');
                      } else if (deploy === 1) {
-                         $jqueryObj.html('<span title="Process is updated.Please redeploy." class="label label-warning" onclick=fetchDeployPage(' + params + ')  >Redeploy</span>');
+                         $jqueryObj.html('<span title=<spring:message code="process.page.process_redeploy_msg"/> class="label label-warning" onclick=fetchDeployPage(' + params + ')  >Redeploy</span>');
                      }else if (deploy === 3) {
-                         $jqueryObj.html('<span title="Process is in deployment queue." class="label-icons label-warning" onclick=fetchDeployPage(' + params + ')  ></span>');
+                         $jqueryObj.html('<span title=<spring:message code="process.page.process_queue_msg"/> class="label-icons label-warning" onclick=fetchDeployPage(' + params + ')  ></span>');
                      }
                      else if (deploy === 4) {
-                         $jqueryObj.html('<span title="Process is failed.Please redeploy." class="label-icons label-danger" onclick=fetchDeployPage(' + params + ')  ></span>');
+                         $jqueryObj.html('<span title=<spring:message code="process.page.process_failed_redeploy_msg"/> class="label-icons label-danger" onclick=fetchDeployPage(' + params + ')  ></span>');
                      }
                      else {
-                         $jqueryObj.html('<span title="No changes in process after last deployment." class="label-icons label-success"  onclick=fetchDeployPage(' + params + ') ></span>');
+                         $jqueryObj.html('<span title=<spring:message code="process.page.process_no_change_msg"/> class="label-icons label-success"  onclick=fetchDeployPage(' + params + ') ></span>');
                      }
                  });
 
@@ -264,7 +264,7 @@
                                              location.href = location.href = '<c:url value="/pages/process.page"/>';
                                         }
                                     }
-                                }).html("<p><span class=\"jtable-confirm-message\">No Process exist for mentioned ID.</span></p>");
+                                }).html('<p><span class="jtable-confirm-message"><spring:message code="process.page.title_no_process_exist_msg"/></span></p>');
                 				}
 
 			}
@@ -377,14 +377,14 @@
                                     listClass: 'bdre-jtable-button',
                                         display: function(item) {                         //Create an image that will be used to open child table
                                                                 
-                                        var $img = $('<img class="subprocess-arrow" src="../css/images/subprocess-rarrow.png" title="Sub processes info" />');                         //Open child table when user clicks the image
+                                        var $img = $('<img class="subprocess-arrow" src="../css/images/subprocess-rarrow.png" title=<spring:message code="process.page.img_sub_process_info"/> />');                         //Open child table when user clicks the image
                                                                 
                                         $img.click(function() {
                                         	$('.subprocess-arrow').removeClass('subprocess-arrow-down');
                                         	$(this).addClass('subprocess-arrow-down');
                                         	$('#Container').jtable('openChildTable',                                     
                                                 $img.closest('tr'),                                      {                                        
-                                                    title: ' Sub processes of ' + item.record.processId,
+                                                    title: ' <spring:message code="process.page.title_sub_process_of"/>'+' ' + item.record.processId,
                                                         actions: {                                        
                                                         listAction: function(postData) {
                                                             return $.Deferred(function($dfd) {
@@ -543,7 +543,7 @@
                                                                 $img.click(function() {
                                                                     $('#Container').jtable('openChildTable',
                                                                         $img.closest('tr'), {
-                                                                            title: ' Properties of ' + item.record.processId,
+                                                                            title: ' <spring:message code="process.page.title_properties_of"/>'+' ' + item.record.processId,
                                                                             paging: true,
                                                                             pageSize: 10,
                                                                             actions: {
@@ -688,15 +688,15 @@
                                                                                     list: false,
                                                                                     create: false,
                                                                                     edit: true,
-                                                                                    title: 'Process',
+                                                                                    title: '<spring:message code="process.page.title_process"/>',
                                                                                     defaultValue: item.record.processId,
                                                                                 },
                                                                                 configGroup: {
-                                                                                    title: 'Config Group',
+                                                                                    title: '<spring:message code="process.page.title_cg"/>',
                                                                                     defaultValue: item.record.configGroup,
                                                                                 },
                                                                                 key: {
-                                                                                    title: 'Key',
+                                                                                    title: '<spring:message code="process.page.title_key"/>',
                                                                                     key: true,
                                                                                     list: true,
                                                                                     create: true,
@@ -704,11 +704,11 @@
                                                                                     defaultValue: item.record.key,
                                                                                 },
                                                                                 value: {
-                                                                                    title: 'Value',
+                                                                                    title: '<spring:message code="process.page.title_value"/>',
                                                                                     defaultValue: item.record.value,
                                                                                 },
                                                                                 description: {
-                                                                                    title: 'Description',
+                                                                                    title: '<spring:message code="process.page.title_desc"/>',
                                                                                     defaultValue: item.record.description,
                                                                                 },
                                                                             }
@@ -723,28 +723,28 @@
                                                             }
                                                         },
                                                         processName: {
-                                                            title: 'Name',
+                                                            title: '<spring:message code="process.page.title_name"/>',
                                                             defaultValue: 'Child of ' + item.record.processId,
                                                         },
                                                         description: {
-                                                            title: 'Description',
+                                                            title: '<spring:message code="process.page.title_desc"/>',
                                                             defaultValue: 'A Child of ' + item.record.processId
 
                                                         },
                                                         tableAddTS: {
-                                                            title: 'Add TS',
+                                                            title: '<spring:message code="process.page.title_add_ts"/>',
                                                             list: true,
                                                             create: false,
                                                             edit: true
                                                         },
                                                         tableEditTS: {
-                                                            title: 'Edit TS',
+                                                            title: '<spring:message code="process.page.title_edit_ts"/>',
                                                             list: false,
                                                             create: false,
                                                             edit: false
                                                         },
                                                         batchPattern: {
-                                                            title: 'Batch Mark'
+                                                            title: '<spring:message code="process.page.title_batch_mark"/>'
 
                                                         },
                                                         parentProcessId: {
@@ -752,18 +752,18 @@
                                                             defaultValue: item.record.processId,
                                                         },
                                                         canRecover: {
-                                                            title: 'Restorability',
+                                                            title: '<spring:message code="process.page.title_restorability"/>',
                                                             edit: true,
                                                             type: 'combobox',
 							                                options: { '1': 'Restorable', '0': 'Non-Restorable'},
                                                             defaultValue: "1"
                                                         },
                                                         nextProcessIds: {
-                                                            title: 'Next'
+                                                            title: '<spring:message code="process.page.title_next"/>'
 
                                                         },
                                                         enqProcessId: {
-                                                            title: 'Enqueued by',
+                                                            title: '<spring:message code="process.page.title_enqueued_by"/>',
                                                             defaultValue: '0',
                                                             edit: true
                                                         },
@@ -772,7 +772,7 @@
                                                             defaultValue: item.record.busDomainId,
                                                         },
                                                         processTypeId: {
-                                                            title: 'Type',
+                                                            title: '<spring:message code="process.page.title_type"/>',
                                                             type: 'combobox',
                                                             options: '/mdrest/processtype/options/' + item.record.processTypeId,
                                                         },
@@ -801,96 +801,96 @@
                                     list: true,
                                     create: false,
                                     edit: false,
-                                    title: 'Job Id'
+                                    title: '<spring:message code="process.page.title_job_id"/>'
                                 },
-                                
+
                                 processName: {
-                                    title: 'Name'
+                                    title: '<spring:message code="process.page.title_name"/>'
                                 },
                                 tableAddTS: {
-                                    title: 'Add TS',
+                                    title: '<spring:message code="process.page.title_add_ts"/>',
                                     create: false,
                                     edit: true,
                                     list: true
                                 },
                                 tableEditTS: {
-                                    title: 'Edit TS',
+                                    title: '<spring:message code="process.page.title_edit_ts"/>',
                                     list: false,
                                     create: false,
                                     edit: false
                                 },
                                 description: {
-                                    title: 'Description',
+                                    title: '<spring:message code="process.page.title_desc"/>',
                                 },
                                 batchPattern: {
-                                    title: 'Batch Mark',
+                                    title: '<spring:message code="process.page.title_batch_mark"/>',
                                     list: false,
                                     create: false,
                                     edit: false
 
                                 },
                                 parentProcessId: {
-                                    title: 'Parent',
+                                    title: '<spring:message code="process.page.title_parent"/>',
                                     edit: false,
                                     create: false,
                                     list: false
                                 },
                                 canRecover: {
-                                    title: 'Restorable',
+                                    title: '<spring:message code="process.page.title_restorable"/>',
                                     type: 'hidden',
                                     list: false,
                                     defaultValue: "0"
                                 },
                                 nextProcessIds: {
-                                    title: 'Next'
+                                    title: '<spring:message code="process.page.title_next"/>'
 
                                 },
                                 enqProcessId: {
-                                    title: 'Enqueuer',
+                                    title: '<spring:message code="process.page.title_enqueu"/>',
                                     list: false,
                                     type: 'hidden',
                                     defaultValue: "0"
 
                                 },
                                 busDomainId: {
-                                    title: 'Application',
+                                    title: '<spring:message code="process.page.title_app"/>',
                                     type: 'combobox',
                                     options: '/mdrest/busdomain/options/',
                                     defaultValue: "1"
                                 },
                                 permissionTypeByUserAccessId: {
-                                    title: 'User Access',
+                                    title: '<spring:message code="process.page.title_user_access"/>',
                                     type: 'combobox',
                                     list: false,
                                     options: '/mdrest/process/options/',
                                     defaultValue: "7"
                                 },
                                 permissionTypeByGroupAccessId: {
-                                  title: 'Group Access',
+                                  title: '<spring:message code="process.page.title_group_access"/>',
                                   type: 'combobox',
                                   list: true,
                                   options: '/mdrest/process/options/',
                                   defaultValue: "6"
                                },
                                permissionTypeByOthersAccessId: {
-                                  title: 'Other Access',
+                                  title: '<spring:message code="process.page.title_other_Access"/>',
                                   type: 'combobox',
                                   list: false,
                                   options: '/mdrest/process/options/',
                                   defaultValue: "0"
                                },
                                ownerRoleId: {
-                                 title: 'Owner Group',
+                                 title: '<spring:message code="process.page.title_owner_group"/>',
                                  type: 'combobox',
                                  list:true,
                                  options: '/mdrest/userroles/options/',
                               },
                               userName: {
-                                       title: 'Username',
+                                       title: '<spring:message code="process.page.title_username"/>',
 
                                     },
                                 processTypeId: {
-                                    title: 'Type',
+                                    title: '<spring:message code="process.page.title_type"/>',
                                     type: 'combobox',
                                     options: '/mdrest/processtype/optionslist',
                                     defaultValue: "1",
@@ -900,13 +900,13 @@
                                     defaultValue: null,
                                 },
                                 workflowId: {
-                                    title: 'Workflow Type',
+                                    title: '<spring:message code="process.page.title_wf_type"/>',
                                     type: 'combobox',
                                     options: '/mdrest/workflowtype/optionslist',
                                     defaultValue: "1"
                                 },
                                 Properties: {
-                                    title: 'Properties',
+                                    title: '<spring:message code="process.page.title_properties"/>',
                                     width: '5%',
                                     sorting: false,
                                     edit: false,
@@ -919,7 +919,7 @@
                                         $img.click(function() {
                                             $('#Container').jtable('openChildTable',
                                                 $img.closest('tr'), {
-                                                    title: ' Properties of ' + item.record.processId,
+                                                    title: '<spring:message code="process.page.title_properties_of"/>'+' ' + item.record.processId,
                                                     paging: true,
                                                     pageSize: 10,
                                                     actions: {
@@ -1065,15 +1065,15 @@
                                                             list: false,
                                                             create: false,
                                                             edit: true,
-                                                            title: 'Process',
+                                                            title: '<spring:message code="process.page.title_process"/>',
                                                             defaultValue: item.record.processId,
                                                         },
                                                         configGroup: {
-                                                            title: 'Config Group',
+                                                            title: '<spring:message code="process.page.title_cg"/>',
                                                             defaultValue: item.record.configGroup,
                                                         },
                                                         key: {
-                                                            title: 'Key',
+                                                            title: '<spring:message code="process.page.title_key"/>',
                                                             key: true,
                                                             list: true,
                                                             create: true,
@@ -1081,11 +1081,11 @@
                                                             defaultValue: item.record.key,
                                                         },
                                                         value: {
-                                                            title: 'Value',
+                                                            title: '<spring:message code="process.page.title_value"/>',
                                                             defaultValue: item.record.value,
                                                         },
                                                         description: {
-                                                            title: 'Description',
+                                                            title: '<spring:message code="process.page.title_desc"/>',
                                                             defaultValue: item.record.description,
                                                         },
                                                     }
@@ -1100,7 +1100,7 @@
                                     }
                                 },
                                 ProcessPipelineButton: {
-                                    title: 'Pipeline',
+                                    title: '<spring:message code="process.page.title_pipeline"/>',
                                     sorting: false,
                                     width: '2%',
                                     listClass: 'bdre-jtable-button',
@@ -1115,7 +1115,7 @@
                                     sorting: false,
                                     edit: false,
                                     create: false,
-                                    title: "Deploy Job",
+                                    title: '<spring:message code="process.page.title_deploy_job"/>',
 
                                 },
                                   
@@ -1124,9 +1124,9 @@
                                 	sorting: false,
                                 	edit: false,
                                 	create: false,
-                                	title: "Run Job",
+                                	title: '<spring:message code="process.page.title_run_job"/>',
                                 	display: function(data) {
-                                		var $img2 = $('<span title="Execute the process." class="label-icons label-execute" ></span>');
+                                		var $img2 = $('<span title=<spring:message code="process.page.img_execute_process"/> class="label-icons label-execute" ></span>');
                                 		$img2.click(function() {
                                 			console.log(data);
                                 			$("#execute-dialog-confirm").dialog({
@@ -1137,7 +1137,7 @@
                                 					Cancel: function() {
                                 						$(this).dialog("close");
                                 					},
-                                					"Yes Execute": function() {
+                                					'<spring:message code="process.page.fun_execute"/>': function() {
                                 						$(this).dialog("close");
                                 						return $.Deferred(function($dfd) {
                                 							var processData = jQuery.param(data.record);
@@ -1159,7 +1159,7 @@
                                 													$(this).dialog("close");
                                 												}
                                 											}
-                                										}).html("<p><span class=\"jtable-confirm-message\">Process <b>" +data.Record.processId +"</b> successfully launched from Edge node with OS process id: <b>" + data.Record.osprocessId + "</b></span></p>");
+                                										}).html('<p><span class="jtable-confirm-message"><spring:message code="process.page.title_process"/>'+' <b>' +data.Record.processId +'</b> '+'<spring:message code="process.page.success_msg"/>'+' <b>' + data.Record.osprocessId + '</b></span></p>');
                                 									} else {
                                 									       if(data.Message == "ACCESS DENIED")
                                 									        {alert(data.Message);}
@@ -1174,17 +1174,17 @@
                                 													$(this).dialog("close");
                                 												}
                                 											}
-                                										}).html("<p><span class=\"jtable-confirm-message\">Process failed to launch.</span></p>");;
+                                										}).html('<p><span class="jtable-confirm-message"><spring:message code="process.page.process_failed"/></span></p>');
                                 									}}
                                 								},
                                 								error: function() {
                                 									$dfd.reject();
                                 								}
-                                
+
                                 							});
                                 						});
                                 					}
-                                					
+
                                 				}
                                 			});
                                 		});
@@ -1207,7 +1207,7 @@
                                         $img.click(function() {                            
                                             $('#Container').jtable('openChildTable',                                     
                                                 $img.closest('tr'),                                      {                                        
-                                                    title: ' Executions of ' + item.record.processName,
+                                                    title: '<spring:message code="process.page.title_execution_of"/>'+' '+ item.record.processName,
                                                        actions: {
                                                         listAction: function(postData, jtParams) {
                                                             console.log(postData);
@@ -1246,35 +1246,35 @@
                                                             list: true,
                                                             create: false,
                                                             edit: false,
-                                                            title: 'Id'
+                                                            title: '<spring:message code="process.page.title_id"/>'
                                                         },
 
                                                         processId: {
-                                                            title: 'Process ID'
+                                                            title: '<spring:message code="process.page.title_pid"/>'
                                                         },
                                                         LineageButton: {
                                                             sorting: false,
                                                             width: '5%',
-                                                            title: 'Batch Lineage',
+                                                            title: '<spring:message code="process.page.title_batch_lineage"/>',
                                                             create: false,
                                                             edit: false,
                                                             display: function(data) {
                                                                 if (data.record.execState === 2) {
-                                                                    return '<span class="label label-warning" onclick="fetchLineageInfo(' + data.record.instanceExecId + ')">Display</span> ';
+                                                                    return '<span class="label label-warning" onclick="fetchLineageInfo(' + data.record.instanceExecId + ')"><spring:message code="process.page.title_display"/></span> ';
                                                                 } else if (data.record.execState === 3) {
-                                                                    return '<span class="label label-success" onclick="fetchLineageInfo(' + data.record.instanceExecId + ')">Display</span> ';;
+                                                                    return '<span class="label label-success" onclick="fetchLineageInfo(' + data.record.instanceExecId + ')"><spring:message code="process.page.title_display"/></span> ';;
                                                                 } else if (data.record.execState === 6) {
-                                                                    return '<span class="label label-danger" onclick="fetchLineageInfo(' + data.record.instanceExecId + ')">Display</span> ';;
+                                                                    return '<span class="label label-danger" onclick="fetchLineageInfo(' + data.record.instanceExecId + ')"><spring:message code="process.page.title_display"/></span> ';;
                                                                 } else {
-                                                                    return '<span class="label label-info">Failed</span> ';
+                                                                    return '<span class="label label-info"><spring:message code="process.page.title_failed"/></span> ';
                                                                 }
                                                             },
                                                         },
                                                         tableStartTs: {
-                                                            title: 'Start Time',
+                                                            title: '<spring:message code="process.page.title_start_time"/>',
                                                         },
                                                         tableEndTs: {
-                                                            title: 'End Time',
+                                                            title: '<spring:message code="process.page.title_end_time"/>',
                                                         },
                                                     }
                                                 },
@@ -1288,7 +1288,7 @@
                                     }                
                                 },
                                 Export: {
-                                    title: 'Export',
+                                    title: '<spring:message code="process.page.title_export"/>',
                                     width: '10%',
                                     sorting: false,
                                     create: false,
@@ -1302,7 +1302,7 @@
 
 
                                 SLAMonitoring: {
-                                    title: 'SLA Monitoring',
+                                    title: '<spring:message code="process.page.title_sla_monitoring"/>',
                                     width: '10%',
                                     sorting: false,
                                     create: false,
@@ -1314,7 +1314,7 @@
 
                                 },
                                 EditGraphically: {
-                                    title: 'Edit Graphically',
+                                    title: '<spring:message code="process.page.title_edit_graphically"/>',
                                     sorting: false,
                                     width: '2%',
                                     listClass: 'bdre-jtable-button',
@@ -1360,7 +1360,7 @@
                             	Cancel: function() {
                                     $(this).dialog("close");
                                 },
-                                "Yes Deploy": function() {
+                                '<spring:message code="process.page.fun_deploy"/>': function() {
                                     $(this).dialog("close");
                                     console.log(processId);
                                     return $.Deferred(function($dfd) {
@@ -1399,7 +1399,7 @@
                                     });
 
                                 }
-                                
+
                             }
                         });
                     }
@@ -1511,7 +1511,7 @@
                     <div id="Container"></div>
                 </section>
                 <div id="input-box-button-filter" class="input-box-button-filter">
-                	<span class="filter-icon"></span><span class="filter-text">Filter By Process</span>
+                	<span class="filter-icon"></span><span class="filter-text"><spring:message code="process.page.span_filter"/></span>
                 </div>
                 <div id="input-box-button" class="input-box-button">
                     <form onsubmit="showProcessPage(jQuery('#pid').val()); return false;">
@@ -1526,44 +1526,44 @@
                 </div>
 				<div id="dialog-confirm" style="display: none;">
 					<p>
-						<span class="ui-icon-alert"></span> 
-						<span class="dialog-title-custom">Are you sure?</span>
-						<span class="jtable-confirm-message">This will build the workflow for this process and deploy necessary codes in cluster. Existing workflow may be replaced.
+						<span class="ui-icon-alert"></span>
+						<span class="dialog-title-custom"><spring:message code="process.page.span_sure"/></span>
+						<span class="jtable-confirm-message"><spring:message code="process.page.span_build_workflow_confirm_msg"/>
 						</span>
 					</p>
 				</div>
 				<div id="execute-dialog-confirm" style="display: none;">
 					<p>
-						<span class="ui-icon-alert"></span> 
-						<span class="dialog-title-custom">Are you sure?</span>
-						<span class="jtable-confirm-message">This will start the execution of process in cluster.
+						<span class="ui-icon-alert"></span>
+						<span class="dialog-title-custom"><spring:message code="process.page.span_sure"/></span>
+						<span class="jtable-confirm-message"><spring:message code="process.page.span_start_execution_confirm_msg"/>
 						</span>
 					</p>
 				</div>
 				<div id="dialog-form" style="display: none;">
 					<p>
-						<span class="ui-icon-alert"></span> 
-						<span class="dialog-title-custom">Are you sure?</span>
-						<span class="jtable-confirm-message">This will export process and related properties.
+						<span class="ui-icon-alert"></span>
+						<span class="dialog-title-custom"><spring:message code="process.page.span_sure"/></span>
+						<span class="jtable-confirm-message"><spring:message code="process.page.span_export_execution_confirm_msg"/>
 						</span>
 					</p>
 				</div>
 				<div id="execute-result" style="display: none;">
 					<p>
-						<span class="ui-icon ui-icon-alert"></span> 
-						<span class="jtable-confirm-message">Process Started.</span>
+						<span class="ui-icon ui-icon-alert"></span>
+						<span class="jtable-confirm-message"><spring:message code="process.page.span_process_start"/></span>
 					</p>
 				</div>
 				<div id="execute-fail" style="display: none;">
 					<p>
-						<span class="ui-icon ui-icon-alert"></span> 
-						<span class="jtable-confirm-message">Process Initiation Failed.</span>
+						<span class="ui-icon ui-icon-alert"></span>
+						<span class="jtable-confirm-message"><spring:message code="process.page.span_process_init_failed"/></span>
 					</p>
 				</div>
 				<div id="process-not-found" style="display: none;">
 					<p>
-						<span class="ui-icon ui-icon-alert"></span> 
-						<span class="jtable-confirm-message">Process Not Found.</span>
+						<span class="ui-icon ui-icon-alert"></span>
+						<span class="jtable-confirm-message"><spring:message code="process.page.span_process_not_found"/></span>
 					</p>
 				</div>
 			</body>

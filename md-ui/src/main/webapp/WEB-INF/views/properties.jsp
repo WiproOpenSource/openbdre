@@ -31,7 +31,7 @@
 	<script type="text/javascript">
 		    $(document).ready(function () {
 	    $('#Container').jtable({
-	    title: 'Properties List',
+	    title: '<spring:message code="properties.page.title_list"/>',
 		    paging: true,
 		    pageSize: 10,
 		    sorting: true,
@@ -119,7 +119,7 @@
 		    fields: {
 
 		    Properties: {
-		    title: 'Click to expand',
+		    title: '<spring:message code="properties.page.title_img_click"/>',
 			    width: '5%',
 			    sorting: false,
 			    edit: false,
@@ -127,12 +127,12 @@
 			    listClass: 'bdre-jtable-button',
 			    display: function(item) {                         //Create an image that will be used to open child table
 
-			    var $img = $('<img src="../css/images/three-bar.png" title="Properties info" />'); //Open child table when user clicks the image
+			    var $img = $('<img src="../css/images/three-bar.png" title=<spring:message code="properties.page.title_img"/> />'); //Open child table when user clicks the image
 
 				    $img.click(function() {
 				    $('#Container').jtable('openChildTable',
 					    $img.closest('tr'), {
-				    title: ' Properties of ' + item.record.processId,
+				    title:  '<spring:message code="properties.page.title_details"/>'+' ' + item.record.configGroup,
 					    paging: true,
 					    pageSize: 10,
 					    actions: {
@@ -226,15 +226,15 @@
 						    list: false,
 						    create:false,
 						    edit: true,
-						    title: 'Process',
+						    title: '<spring:message code="properties.page.title_process"/>',
 						    defaultValue: item.record.processId,
 					    },
 						    configGroup: {
-						    title: 'Config Group',
+						    title: '<spring:message code="properties.page.title_cg"/>',
 							    defaultValue: item.record.configGroup,
 						    },
 						    key: {
-						    title: 'Key',
+						    title: '<spring:message code="properties.page.title_key"/>',
 							    key : true,
 							    list: true,
 							    create:true,
@@ -242,11 +242,11 @@
 							    defaultValue: item.record.key,
 						    },
 						    value: {
-						    title: 'Value',
+						    title: '<spring:message code="properties.page.title_value"/>',
 							    defaultValue: item.record.value,
 						    },
 						    description: {
-						    title: 'Description',
+						    title: '<spring:message code="properties.page.title_desc"/>',
 							    defaultValue: item.record.description,
 						    },
 					    }
@@ -261,43 +261,43 @@
 			    }
 		    },
 			    configGroup: {
-			    title :'Config Group',
+			    title :'<spring:message code="properties.page.title_cg"/>',
 				    key : true,
 				    list: false,
 				    create:true,
 				    edit: false,
-				    defaultValue:"NewConfig"
+				    defaultValue:'<spring:message code="properties.page.devault_val_cg"/>'
 			    }, key: {
-		    title: 'Key',
+		    title: '<spring:message code="properties.page.title_key"/>',
 			    key : true,
 			    list: false,
 			    create:true,
 			    edit: false,
-			    defaultValue:"NewKey"
+			    defaultValue:'<spring:message code="properties.page.devault_val_key"/>'
 
 		    }, value: {
-		    title: 'Value',
+		    title: '<spring:message code="properties.page.title_value"/>',
 			    key : true,
 			    list : false,
 			    create : true,
 			    edit : false,
-			    defaultValue: "NewValue"
+			    defaultValue: '<spring:message code="properties.page.devault_val_value"/>'
 
 		    },
 			    description: {
-			    title: 'Description',
+			    title: '<spring:message code="properties.page.title_desc"/>',
 				    list : false,
 				    create : true,
 				    edit : false,
 				    key : true,
-				    defaultValue:"NewDescription"
+				    defaultValue:'<spring:message code="properties.page.devault_val_desc"/>'
 			    },
 			    processId: {
 			    key : true,
 				    list: true,
 				    create:true,
 				    edit: false,
-				    title: 'Process'
+				    title: '<spring:message code="properties.page.title_process"/>'
 
 			    }
 		    }

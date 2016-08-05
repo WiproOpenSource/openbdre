@@ -78,7 +78,15 @@ public abstract class ETLBase extends BaseStructure{
             String hiveConnection = IMConfig.getProperty("etl.hive-connection");
             String hiveUser = IMConfig.getProperty("etl.hive-jdbcuser");
             String hivePassword = IMConfig.getProperty("etl.hive-jdbcpassword");
-            Connection con = DriverManager.getConnection(hiveConnection + "/" + dbName, hiveUser, hivePassword);
+            Connection con = null;
+            if (hiveConnection.contains(";")){
+                String hiveConnectionSecure = hiveConnection.split(";")[0] + dbName;
+                hiveConnection = hiveConnection.replaceAll(hiveConnection.split(";")[0],hiveConnectionSecure);
+                LOGGER.debug("hive connection string is " + hiveConnection);
+                con = DriverManager.getConnection(hiveConnection , hiveUser, hivePassword);
+            }else {
+                con = DriverManager.getConnection(hiveConnection + "/" + dbName, hiveUser, hivePassword);
+            }
             con.createStatement().execute("set hive.exec.dynamic.partition.mode=nonstrict");
             con.createStatement().execute("set hive.exec.dynamic.partition=true");
             con.createStatement().execute("set hive.exec.max.dynamic.partitions.pernode=1000");

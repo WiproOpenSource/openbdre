@@ -181,9 +181,9 @@
                             </div>
                         </div>
                         <div class="form-group">
-                            <label class="control-label col-sm-2" for="proxyUsername"><spring:message code="crawler.page.proxy_user_name"/></label>
+                            <label class="control-label col-sm-2" for="proxyUserName"><spring:message code="crawler.page.proxy_user_name"/></label>
                             <div class="col-sm-10">
-                                <input type="text" class="form-control" name="proxyUsername" placeholder=<spring:message code="crawler.page.proxy_user_name_placeholder"/>>
+                                <input type="text" class="form-control" name="proxyUserName" placeholder=<spring:message code="crawler.page.proxy_user_name_placeholder"/>>
                             </div>
                         </div>
                         <div class="form-group">
@@ -290,7 +290,7 @@
                                                             $(this).dialog("close");
                                                         }
                                                     }
-                                                }).html("<p><span class=\"jtable-confirm-message\">Jobs successfully created.</span></p>");
+                                                }).html('<p><span class="jtable-confirm-message"><spring:message code="crawler.page.success_msg"/></span></p>');
                                                 createJobResult = data;
                                                 displayProcess(createJobResult);
                                                 $('#createProcess').hide();
@@ -337,7 +337,7 @@
             							$(this).dialog("close");
             						}
             					}
-            				}).html("<p><span class=\"jtable-confirm-message\">Please Enter Process Name and Description</span></p>");
+            				}).html('<p><span class="jtable-confirm-message"><spring:message code="crawler.page.enter_details"/></span></p>');
             				return false;
             			}
             			return true;
@@ -356,7 +356,7 @@
                                                 $(this).dialog("close");
                                             }
                                         }
-                                    }).html("<p><span class=\"jtable-confirm-message\">Jobs have not been created.</span></p>");
+                                    }).html('<p><span class="jtable-confirm-message"><spring:message code="crawler.page.failed_msg"/></span></p>');
                                 }
                 },
             onCanceled: function(event) {
@@ -369,7 +369,7 @@
 <script>
 function displayProcess(records) {
     $('#Process').jtable({
-        title: 'Data Ingestion Processes',
+        title: '<spring:message code="crawler.page.title_jtable"/>',
         paging: false,
         sorting: false,
         create: false,
@@ -403,10 +403,10 @@ function displayProcess(records) {
                 list: true,
                 create: false,
                 edit: false,
-                title: 'Id'
+                title: '<spring:message code="crawler.page.title_id"/>'
             },
             Properties: {
-                title: 'Properties',
+                title: '<spring:message code="crawler.page.title_properties"/>',
                 width: '5%',
                 sorting: false,
                 edit: false,
@@ -414,12 +414,12 @@ function displayProcess(records) {
                 listClass: 'bdre-jtable-button',
                 display: function(item) { //Create an image that will be used to open child table
 
-                    var $img = $('<span class="label label-primary">Show</span>'); //Open child table when user clicks the image
+                    var $img = $('<span class="label label-primary"><spring:message code="crawler.page.img_show"/></span>'); //Open child table when user clicks the image
 
                     $img.click(function() {
                         $('#Process').jtable('openChildTable',
                             $img.closest('tr'), {
-                                title: ' Properties of ' + item.record.processId,
+                                title: '<spring:message code="crawler.page.img_title"/>'+' ' + item.record.processId,
                                 paging: false,
                                 actions: {
                                     listAction: function(postData) {
@@ -467,15 +467,15 @@ function displayProcess(records) {
                                         list: false,
                                         create: false,
                                         edit: true,
-                                        title: 'Process',
+                                        title: '<spring:message code="crawler.page.title_process"/>',
                                         defaultValue: item.record.processId,
                                     },
                                     configGroup: {
-                                        title: 'Config Group',
+                                        title: '<spring:message code="crawler.page.title_cg"/>',
                                         defaultValue: item.record.configGroup,
                                     },
                                     key: {
-                                        title: 'Key',
+                                        title: '<spring:message code="crawler.page.title_key"/>',
                                         key: true,
                                         list: true,
                                         create: true,
@@ -483,11 +483,11 @@ function displayProcess(records) {
                                         defaultValue: item.record.key,
                                     },
                                     value: {
-                                        title: 'Value',
+                                        title: '<spring:message code="crawler.page.title_value"/>',
                                         defaultValue: item.record.value,
                                     },
                                     description: {
-                                        title: 'Description',
+                                        title: '<spring:message code="crawler.page.title_desc"/>',
                                         defaultValue: item.record.description,
                                     },
                                 }
@@ -502,20 +502,20 @@ function displayProcess(records) {
                 }
             },
             processName: {
-                title: 'Name'
+                title: '<spring:message code="crawler.page.title_name"/>'
             },
             tableAddTS: {
-                title: 'Add TS',
+                title: '<spring:message code="crawler.page.title_add_ts"/>',
                 create: false,
                 edit: true,
                 list: false,
                 type: 'hidden'
             },
             description: {
-                title: 'Description',
+                title: '<spring:message code="crawler.page.title_desc"/>',
             },
             batchPattern: {
-                title: 'Batch Mark',
+                title: '<spring:message code="crawler.page.title_batch_mark"/>',
                 list: false,
                 create: false,
                 edit: true,
@@ -523,47 +523,47 @@ function displayProcess(records) {
 
             },
             parentProcessId: {
-                title: 'Parent',
+                title: '<spring:message code="crawler.page.title_parent"/>',
                 edit: true,
                 create: false,
                 list: false,
                 type: 'hidden'
             },
             canRecover: {
-                title: 'Restorable',
+                title: '<spring:message code="crawler.page.title_restorable"/>',
                 type: 'hidden',
                 list: false,
                 edit: true,
             },
             nextProcessIds: {
-                title: 'Next',
+                title: '<spring:message code="crawler.page.title_next"/>',
                 list: false,
                 edit: true,
                 type: 'hidden'
 
             },
             enqProcessId: {
-                title: 'Enqueuer',
+                title: '<spring:message code="crawler.page.title_enque"/>',
                 list: false,
                 edit: true,
                 type: 'hidden',
             },
             busDomainId: {
-                title: 'Application',
+                title: '<spring:message code="crawler.page.title_app"/>',
                 list: false,
                 edit: true,
                 type: 'combobox',
                 options: '/mdrest/busdomain/options/',
             },
             processTypeId: {
-                title: 'Type',
+                title: '<spring:message code="crawler.page.title_type"/>',
                 edit: true,
                 type: 'hidden',
                 options: '/mdrest/processtype/optionslist'
 
             },
             ProcessPipelineButton: {
-                title: 'Pipeline',
+                title: '<spring:message code="crawler.page.title_pipeline"/>',
                 sorting: false,
                 width: '2%',
                 listClass: 'bdre-jtable-button',

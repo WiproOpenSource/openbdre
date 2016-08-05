@@ -141,7 +141,7 @@ body {
 					});
 </script>
 <div ng-app="myApp" ng-controller="myCtrl">
-<div class="page-header">App Store</div>
+<div class="page-header"><spring:message code="appstore.page.app_store"/></div>
 <ul class="nav nav-tabs" ng-if="rows">
   <li ng-repeat="row in rows" ng-class="addClass($first,'active')"><a data-toggle="tab" class='bdretab{{ row.id }}'>{{ row.name }}</a></li>
 </ul>
@@ -153,7 +153,7 @@ body {
 		<div class="alert alert-info thumbnail">
 			<div class="text-center"><strong>{{column.name}}</strong></div>
 			<img src="../../store/{{ column.icon }}"   ng-click="createApp(column.location)" alt="App image" width="150" height="118">
-			<button class="btn btn-info ng-binding center-block" ng-click="createApp(column.location)">Install</button>
+			<button class="btn btn-info ng-binding center-block" ng-click="createApp(column.location)"><spring:message code="appstore.page.install"/></button>
 		</div>
 	</div>
   </div>
@@ -170,8 +170,8 @@ body {
           <p><spring:message code="appstore.page.p_confirmation"/></p>
         </div>
         <div class="modal-footer">
-			<button type="button" data-dismiss="modal" class="btn btn-primary" id="yes">Yes</button>
-    		<button type="button" data-dismiss="modal" class="btn">No</button>
+			<button type="button" data-dismiss="modal" class="btn btn-primary" id="yes"><spring:message code="appstore.page.yes"/></button>
+    		<button type="button" data-dismiss="modal" class="btn"><spring:message code="appstore.page.no"/></button>
         </div>
       </div>
     </div>
@@ -198,7 +198,7 @@ body {
             <p><spring:message code="appstore.page.install_complete"/></p>
           </div>
           <div class="modal-footer">
-  			<button type="button" data-dismiss="modal" class="btn btn-primary" id="ok">OK</button>
+  			<button type="button" data-dismiss="modal" class="btn btn-primary" id="ok"><spring:message code="appstore.page.ok"/></button>
           </div>
         </div>
       </div>
@@ -213,7 +213,7 @@ body {
                 <p><spring:message code="appstore.page.installtall_error"/></p>
               </div>
               <div class="modal-footer">
-      			<button type="button" data-dismiss="modal" class="btn btn-primary" id="ok">OK</button>
+      			<button type="button" data-dismiss="modal" class="btn btn-primary" id="ok"><spring:message code="appstore.page.ok"/></button>
               </div>
             </div>
           </div>

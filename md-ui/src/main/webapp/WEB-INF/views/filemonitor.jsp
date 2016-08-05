@@ -60,7 +60,7 @@
 
                                     <%-- <div class="panel-heading"><spring:message code="filemonitor.page.panel_heading_file_monitoring_creation"/></div> --%>
                                     <div class="panel-body">
-                                        <form role="form" id="propertiesFieldsForm">
+                                        <form role="form" id="propertiesFieldsForm" novalidate="novalidate">
                                             <div class="form-group">
                                                 <label><spring:message code="filemonitor.page.property_form_field_dir_name"/></label>
                                                 <input type="text" class="form-control" name="monitoredDirName" placeholder=<spring:message code="filemonitor.page.property_form_field_dir_name_placeholder"/> value=<%=System.getProperty("user.home")+"/mondir"%> required>
@@ -158,12 +158,11 @@
                                                                         "Ok": function() {
                                                                         $("#divEncloseHeading").hide();
                                                                         $("#successHeader").show();
-                                                                         createJobResult = data;
-                                                                         displayProcess(createJobResult);
+                                                                          window.location.replace('/mdui/pages/process.page');
                                                                          $(this).dialog("close");
                                                                         }
                                                                     }
-                                                                }).html("<p><span class=\"jtable-confirm-message\">Jobs successfully created.</span></p>");
+                                                                }).html('<p><span class=\"jtable-confirm-message\"><spring:message code="filemonitor.page.success_msg"/></span></p>');
 
                                                             }
                                                             else{
@@ -193,7 +192,7 @@
                    <script>
                    function displayProcess(records) {
                        $('#Process').jtable({
-                           title: 'File Monitor Processes',
+                           title: '<spring:message code="filemonitor.page.title_jtable"/>',
                            paging: false,
                            sorting: false,
                            create: false,
@@ -227,10 +226,10 @@
                                    list: true,
                                    create: false,
                                    edit: false,
-                                   title: 'Id'
+                                   title: '<spring:message code="filemonitor.page.title_id"/>'
                                },
                                Properties: {
-                                   title: 'Properties',
+                                   title: '<spring:message code="filemonitor.page.title_properties"/>',
                                    width: '5%',
                                    sorting: false,
                                    edit: false,
@@ -238,12 +237,12 @@
                                    listClass: 'bdre-jtable-button',
                                    display: function(item) { //Create an image that will be used to open child table
 
-                                       var $img = $('<span class="label label-primary">Show</span>'); //Open child table when user clicks the image
+                                       var $img = $('<span class="label label-primary"><spring:message code="filemonitor.page.img_msg"/></span>'); //Open child table when user clicks the image
 
                                        $img.click(function() {
                                            $('#Process').jtable('openChildTable',
                                                $img.closest('tr'), {
-                                                   title: ' Properties of ' + item.record.processId,
+                                                   title: '<spring:message code="filemonitor.page.title_img"/>'+' ' + item.record.processId,
                                                    paging: false,
                                                    actions: {
                                                        listAction: function(postData) {
@@ -291,15 +290,15 @@
                                                            list: false,
                                                            create: false,
                                                            edit: true,
-                                                           title: 'Process',
+                                                           title: '<spring:message code="filemonitor.page.title_process"/>',
                                                            defaultValue: item.record.processId,
                                                        },
                                                        configGroup: {
-                                                           title: 'Config Group',
+                                                           title: '<spring:message code="filemonitor.page.title_cg"/>',
                                                            defaultValue: item.record.configGroup,
                                                        },
                                                        key: {
-                                                           title: 'Key',
+                                                           title: '<spring:message code="filemonitor.page.title_key"/>',
                                                            key: true,
                                                            list: true,
                                                            create: true,
@@ -307,11 +306,11 @@
                                                            defaultValue: item.record.key,
                                                        },
                                                        value: {
-                                                           title: 'Value',
+                                                           title: '<spring:message code="filemonitor.page.title_value"/>',
                                                            defaultValue: item.record.value,
                                                        },
                                                        description: {
-                                                           title: 'Description',
+                                                           title: '<spring:message code="filemonitor.page.title_desc"/>',
                                                            defaultValue: item.record.description,
                                                        },
                                                    }
@@ -326,20 +325,20 @@
                                    }
                                },
                                processName: {
-                                   title: 'Name'
+                                   title: '<spring:message code="filemonitor.page.title_name"/>'
                                },
                                tableAddTS: {
-                                   title: 'Add TS',
+                                   title: '<spring:message code="filemonitor.page.title_add_ts"/>',
                                    create: false,
                                    edit: true,
                                    list: false,
                                    type: 'hidden'
                                },
                                description: {
-                                   title: 'Description',
+                                   title: '<spring:message code="filemonitor.page.title_desc"/>',
                                },
                                batchPattern: {
-                                   title: 'Batch Mark',
+                                   title: '<spring:message code="filemonitor.page.title_batch_mark"/>',
                                    list: false,
                                    create: false,
                                    edit: true,
@@ -347,47 +346,47 @@
 
                                },
                                parentProcessId: {
-                                   title: 'Parent',
+                                   title: '<spring:message code="filemonitor.page.title_parent"/>',
                                    edit: true,
                                    create: false,
                                    list: false,
                                    type: 'hidden'
                                },
                                canRecover: {
-                                   title: 'Restorable',
+                                   title: '<spring:message code="filemonitor.page.title_restorable"/>',
                                    type: 'hidden',
                                    list: false,
                                    edit: true,
                                },
                                nextProcessIds: {
-                                   title: 'Next',
+                                   title: '<spring:message code="filemonitor.page.title_next"/>',
                                    list: false,
                                    edit: true,
                                    type: 'hidden'
 
                                },
                                enqProcessId: {
-                                   title: 'Enqueuer',
+                                   title: '<spring:message code="filemonitor.page.title_enque"/>',
                                    list: false,
                                    edit: true,
                                    type: 'hidden',
                                },
                                busDomainId: {
-                                   title: 'Application',
+                                   title: '<spring:message code="filemonitor.page.title_app"/>',
                                    list: false,
                                    edit: true,
                                    type: 'combobox',
                                    options: '/mdrest/busdomain/options/',
                                },
                                processTypeId: {
-                                   title: 'Type',
+                                   title: '<spring:message code="filemonitor.page.title_type"/>',
                                    edit: true,
                                    type: 'hidden',
                                    options: '/mdrest/processtype/optionslist'
 
                                },
                                ProcessPipelineButton: {
-                                   title: 'Pipeline',
+                                   title: '<spring:message code="filemonitor.page.title_pipeline"/>',
                                    sorting: false,
                                    width: '2%',
                                    listClass: 'bdre-jtable-button',

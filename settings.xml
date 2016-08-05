@@ -66,6 +66,23 @@
                 <selected.profile>bluemix27</selected.profile>
             </properties>
         </profile>
+<profile>
+            <id>apache26</id>
+            <activation><activeByDefault>false</activeByDefault></activation>
+            <properties>
+                <hadoop.version>2.6.0</hadoop.version>
+                <hive.version>0.13.0</hive.version>
+                <sqoop.version>1.4.1-incubating</sqoop.version>
+                <oozie.version>4.1.0</oozie.version>
+                <storm.version>0.9.3</storm.version>
+                <kafka.version>0.8.1.1</kafka.version>
+                <pig.version>0.15.0</pig.version>
+                <flume.version>1.6.0</flume.version>
+                <spark.core.version>1.5.2</spark.core.version>
+                <selected.profile>apache26</selected.profile>
+            </properties>
+        </profile>
+
         <profile>
             <id>spring</id>
             <properties>
@@ -235,5 +252,6 @@
         <activeProfile>databases</activeProfile>
         <activeProfile>repositories</activeProfile>
     </activeProfiles>
+	
 
 </settings>

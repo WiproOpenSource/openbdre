@@ -116,7 +116,7 @@
 
                                     $("#div-dialog-warning").dialog({
 
-                                        title: "Error",
+                                        title: '<spring:message code="tablecolumnlineage.page.warning_error" />',
 
                                         resizable: false,
 
@@ -128,7 +128,7 @@
 
                                             "Ok": function() {
 
-                                                $(this).dialog("close");
+                                                $(this).dialog('<spring:message code="tablecolumnlineage.page.close" />');
 
                                             }
 
@@ -155,13 +155,13 @@
 
                                         "Ok": function() {
 
-                                            $(this).dialog("close");
+                                            $(this).dialog(<spring:message code="tablecolumnlineage.page.close" />);
 
                                         }
 
                                     }
 
-                                }).html("<span class=\"ui-icon-alert-custom\"></span><p>You have entered or selected wrong Table Name or Column Name</p>");
+                                }).html('<span class=\'ui-icon-alert-custom\'></span><p><spring:message code="tablecolumnlineage.page.error_message" /></p>');
 
 
 
@@ -293,10 +293,7 @@
                         border-radius: 14px;
                         padding: 8px;
                     }
-                    .modal {
-                        overflow-y: scroll !important;
-                        overflow-x: scroll !important;
-                    }
+
                     #content {
                         border-radius: 8px;
                         background: #fff;
@@ -420,11 +417,11 @@
 
                         $overlay = $('<div id="overlay"></div>');
 
-                        $modal = $('<div class="modal" id="modal"><button type="button" class="btn btn-primary btn-xs" aria-label="Left Align" onClick="saveSVG(\'lineage\',1)"><span class="glyphicon glyphicon-save" aria-hidden="true"></span>Save</button></br></div>');
+                        $modal = $('<div class="modal" id="modal"><button type="button" class="btn btn-primary btn-xs" aria-label="Left Align" onClick="saveSVG(\'lineage\',1)"><span class="glyphicon glyphicon-save" aria-hidden="true"></span><spring:message code="tablecolumnlineage.page.button_save" /></button></br></div>');
 
                         $content = $('<div id="content"></div>');
 
-                        $close = $('<a id="close" href="#">close</a>');
+                        $close = $('<a id="close" href="#"><spring:message code="tablecolumnlineage.page.close" /></a>');
 
 
 

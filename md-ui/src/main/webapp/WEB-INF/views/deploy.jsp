@@ -80,7 +80,7 @@
 			$.each(data.actions[0].parameters, function (index, value) {
 			    if (value.name == 'processId')
 			    {
-				$("#parameters").html("<h4 class='glyphicon glyphicon-cloud-upload'>  Currently Deploying Process# : <span class='label label-info'>" + value.value + "</span></h4>");
+				$("#parameters").html('<h4 class="glyphicon glyphicon-cloud-upload"><spring:message code="deploy.page.process_list"/><span class="label label-info">'+' ' + value.value + "</span></h4>");
 				$("#parameters").addClass('alert alert-info');
 			    }
 
@@ -104,22 +104,22 @@
 			else {
 			    console.log("not building");
 			    progressbar.progressbar("value", false);
-			    progressLabel.text("Looking for new deploy jobs...");
+			    progressLabel.text('<spring:message code="deploy.page.new_job"/>');
 			    if (data.result == 'STABLE') {
 				console.log('STABLE');
 				$("#progressbar-2").progressbar().children().addClass('ui-widget-header-stable');
-				$('#buildResult').html('<div class="alert alert-success" role="alert">Last deployment was successfully complete.</div>');
+				$('#buildResult').html('<div class="alert alert-success" role="alert"><spring:message code="deploy.page.success_msg"/></div>');
 
 			    }
 			    else if (data.result == 'UNSTABLE') {
 				console.log('UNSTABLE');
 				$("#progressbar-2").progressbar().children().addClass('ui-widget-header-unstable');
-				$('#buildResult').html('<div class="alert alert-warning" role="alert">Last deployment was completed with warnings. Please check the log for details.</div>');
+				$('#buildResult').html('<div class="alert alert-warning" role="alert"><spring:message code="deploy.page.warning_msg"/></div>');
 			    }
 			    else if (data.result == 'FAILURE') {
 				console.log('FAILURE');
 				$("#progressbar-2").progressbar().children().addClass('ui-widget-header-failure');
-				$('#buildResult').html('<div class="alert alert-error" role="alert">Last deployment was failed. Please check the log for details.</div>');
+				$('#buildResult').html('<div class="alert alert-error" role="alert"><spring:message code="deploy.page.failed_msg"/></div>');
 
 			    }
 			    setTimeout(progress, 5000);

@@ -222,7 +222,7 @@
             </nav>
 
             <div>
-                <iframe id="dframe" src="welcome.page" scrolling="no" style="overflow-y:visible;width:100%; height: 800px; border: none;"></iframe>
+                <iframe id="dframe" src="welcome.page" scrolling="yes" style="overflow-y:visible;width:100%; height: 800px; border: none;"></iframe>
             </div>
 
             <!--
@@ -448,13 +448,24 @@
                                             collapse: "1",
                                             url: "flumepropertieswizard.page",
                                             children: []
-					},{
-                                                                  label: "Hive Table Migration",
-                                                                  collapse: "1",
-                                                                  url: "hivetablemigration.page",
-                                                                  children: []
-                      					}, ]
-                                    },
+	                }, {
+                                             label: "Analytics App",
+                                             collapse: "1",
+                                             url: "analyticsui.page",
+                                             children: []
+                    },{
+                                               label: "Analytics UI",
+                                               collapse: "1",
+                                               url: "/aui/pages/menu.page",
+                                               children: []
+                      },{
+                                              label: "Hive Table Migration",
+                                              collapse: "1",
+                                              url: "hivetablemigration.page",
+                                              children: []
+                     },]
+                                },
+
                                     <security:authorize access = "hasRole('ROLE_ADMIN')"> {
                                         label: "Administration",
                                         collapse: "1",
