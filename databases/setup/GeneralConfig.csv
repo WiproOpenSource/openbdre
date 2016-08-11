@@ -46,6 +46,7 @@
 'default_val.13','file.layout','imp-common','properties for data import',1,'TextFile','text', 1
 'default_val.13','import','imp-common','properties for data import',1,'1','text', 1
 'default_val.13','incr.mode','imp-common','properties for data import',1,'None','text', 1
+'default_val.13','incr.column','imp-common','properties for data import',1,'None','text', 1
 'default_val.13','mappers','imp-common','properties for data import',1,'1','text', 1
 'default_val.13','password','imp-common','properties for data import',1,'db_password','text', 1
 'default_val.13','table','imp-common','properties for data import',1,'default_table','text', 1
