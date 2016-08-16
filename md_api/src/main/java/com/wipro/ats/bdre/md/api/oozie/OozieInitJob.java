@@ -58,9 +58,19 @@ public class OozieInitJob {
                 FileWriter fw = new FileWriter(homeDir+"/jobinfo.txt", true);
                 BufferedWriter bw = new BufferedWriter(fw);
 
-                bw.write("initJobInfo.getTargetBatchMarkingSet():"+initJobInfo.getTargetBatchMarkingSet().toString()+"\n");
                 bw.write("initJobInfo.getInstanceExecId():"+initJobInfo.getInstanceExecId().toString()+"\n");
+                bw.write("initJobInfo.getLastRecoverableSpId():"+initJobInfo.getLastRecoverableSpId().toString()+"\n");
                 bw.write("initJobInfo.getTargetBatchId():"+initJobInfo.getTargetBatchId().toString()+"\n");
+                bw.write("initJobInfo.getMinBatchIdMap():"+initJobInfo.getMinBatchIdMap().toString().replace("=", ":")+"\n");
+                bw.write("initJobInfo.getMaxBatchIdMap():"+initJobInfo.getMaxBatchIdMap().toString().replace("=",":")+"\n");
+                bw.write("initJobInfo.getMinBatchMarkingMap():"+initJobInfo.getMinBatchMarkingMap().toString().replace("=", ":")+"\n");
+                bw.write("initJobInfo.getMaxBatchMarkingMap():"+initJobInfo.getMaxBatchMarkingMap().toString().replace("=", ":")+"\n");
+                bw.write("initJobInfo.getTargetBatchMarkingSet():"+initJobInfo.getTargetBatchMarkingSet().toString()+"\n");
+                bw.write("initJobInfo.getMinSourceInstanceExecIdMap():"+initJobInfo.getMinSourceInstanceExecIdMap().toString().replace("=", ":")+"\n");
+                bw.write("initJobInfo.getMaxSourceInstanceExecIdMap():"+initJobInfo.getMaxSourceInstanceExecIdMap().toString().replace("=", ":")+"\n");
+                bw.write("initJobInfo.getFileListMap():"+initJobInfo.getFileListMap().toString().replace("=", ":")+"\n");
+                bw.write("initJobInfo.getBatchListMap():"+initJobInfo.getBatchListMap().toString().replace("=",":")+"\n");
+
                 bw.close();
 
             }catch(IOException i)
