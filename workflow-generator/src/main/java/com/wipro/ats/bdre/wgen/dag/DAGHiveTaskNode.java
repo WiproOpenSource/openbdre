@@ -1,8 +1,8 @@
 package com.wipro.ats.bdre.wgen.dag;
 
+import com.wipro.ats.bdre.GetParentProcessType;
 import com.wipro.ats.bdre.md.api.GetProperties;
 import com.wipro.ats.bdre.md.beans.ProcessInfo;
-import com.wipro.ats.bdre.md.dao.ProcessDAO;
 import org.apache.log4j.Logger;
 
 import java.io.FileWriter;
@@ -16,6 +16,7 @@ public class DAGHiveTaskNode extends GenericActionNode {
     private static final Logger LOGGER = Logger.getLogger(DAGHiveTaskNode.class);
     private ProcessInfo processInfo = new ProcessInfo();
     private DAGTaskNode dagTaskNode = null;
+
 
     /**
      * This constructor is used to set node id and process information.
@@ -43,6 +44,8 @@ public class DAGHiveTaskNode extends GenericActionNode {
     public String getDAG() {
         LOGGER.info("Inside HiveAction");
 
+        LOGGER.info("processInfo "+this.getProcessInfo().getProcessId());
+
         if (this.getProcessInfo().getParentProcessId() == 0) {
             return "";
         }
@@ -51,10 +54,11 @@ public class DAGHiveTaskNode extends GenericActionNode {
             ret.append(" cred='hive_credentials'");
         }
         String homeDir = System.getProperty("user.home");
-        ProcessDAO processDAO = new ProcessDAO();
+        //ProcessDAO processDAO = new ProcessDAO();
+        GetParentProcessType getParentProcessType = new GetParentProcessType();
         String jobInfoFile = homeDir+"/jobInfo.txt";
 
-
+        LOGGER.info("processInfo "+processInfo.getProcessId());
         ret.append(
                 "with open('"+jobInfoFile+"','a+') as propeties_file:\n"+
                         "\tfor line in propeties_file:\n"+
@@ -62,7 +66,7 @@ public class DAGHiveTaskNode extends GenericActionNode {
                         "\t\tdict[info[0]] = info[1].replace('\\n','')\n"+
 //TODO: send jdbc url as arg.. use ? for conf and # for var
                         "\ndef "+ getName().replace('-','_')+"_pc():\n" +
-                        "\tcommand='java -cp "+ homeDir +"/bdre/lib/semantic-core/semantic-core-1.1-SNAPSHOT.jar:"+homeDir+"/bdre/lib/*/* com.wipro.ats.bdre.semcore.HiveTask "+homeDir + "/bdre_apps/" + processInfo.getBusDomainId().toString()+"/" + processDAO.getParentProcessTypeId(processInfo.getProcessId())+"/"+ processInfo.getParentProcessId().toString() + "/" + getQueryPath(getId(), "query")+" "+getJdbcUrl(getId(),"param") +"',\n" +
+                        "\tcommand='java -cp "+ homeDir +"/bdre/lib/semantic-core/semantic-core-1.1-SNAPSHOT.jar:"+homeDir+"/bdre/lib/*/* com.wipro.ats.bdre.semcore.HiveTask "+homeDir + "/bdre_apps/" + this.getProcessInfo().getBusDomainId().toString()+"/" + getParentProcessType.getParentProcessTypeId(processInfo.getParentProcessId())+"/"+ this.getProcessInfo().getParentProcessId().toString() + "/" + getQueryPath(getId(), "query")+" "+getJdbcUrl(getId(),"param") +"',\n" +
                         "\tbash_output = subprocess.Popen(command,shell=True, stdin=subprocess.PIPE, stdout=subprocess.PIPE )\n" +
                         "\tout,err = bash_output.communicate()\n"+
                         "\tprint(\"out is \",out)\n"+

@@ -1,8 +1,8 @@
 package com.wipro.ats.bdre.wgen.dag;
 
+import com.wipro.ats.bdre.GetParentProcessType;
 import com.wipro.ats.bdre.md.api.GetProperties;
 import com.wipro.ats.bdre.md.beans.ProcessInfo;
-import com.wipro.ats.bdre.md.dao.ProcessDAO;
 import org.apache.log4j.Logger;
 
 import java.io.FileWriter;
@@ -46,8 +46,9 @@ public class DAGPigTaskNode extends GenericActionNode{
             return "";
         }
         String homeDir = System.getProperty("user.home");
-        ProcessDAO processDAO = new ProcessDAO();
+       // ProcessDAO processDAO = new ProcessDAO();
         String jobInfoFile = homeDir+"/jobInfo.txt";
+        GetParentProcessType getParentProcessType = new GetParentProcessType();
 
         StringBuilder ret = new StringBuilder();
         ret.append(
@@ -57,7 +58,7 @@ public class DAGPigTaskNode extends GenericActionNode{
                 "\t\tdict[info[0]] = info[1].replace('\\n','')\n"+
 
                 "\ndef "+ getName().replace('-','_')+"_pc():\n" +
-                "\tcommand='java -cp "+ homeDir +"/bdre/lib/semantic-core/semantic-core-1.1-SNAPSHOT.jar:"+homeDir+"/bdre/lib/*/* com.wipro.ats.bdre.semcore.PigScriptRunner "+homeDir + "/bdre_apps/" + processInfo.getBusDomainId().toString()+"/" + processDAO.getParentProcessTypeId(processInfo.getProcessId())+"/"+ processInfo.getParentProcessId().toString() + "/" + getScriptPath(getId(), "script")+" "+getParams(getId(),"param") +"',\n" +
+                "\tcommand='java -cp "+ homeDir +"/bdre/lib/semantic-core/semantic-core-1.1-SNAPSHOT.jar:"+homeDir+"/bdre/lib/*/* com.wipro.ats.bdre.semcore.PigScriptRunner "+homeDir + "/bdre_apps/" + processInfo.getBusDomainId().toString()+"/" + getParentProcessType.getParentProcessTypeId(processInfo.getProcessId())+"/"+ processInfo.getParentProcessId().toString() + "/" + getScriptPath(getId(), "script")+" "+getParams(getId(),"param") +"',\n" +
                 "\tbash_output = subprocess.Popen(command,shell=True, stdin=subprocess.PIPE, stdout=subprocess.PIPE )\n" +
                 "\tout,err = bash_output.communicate()\n"+
                 "\tprint(\"out is \",out)\n"+
