@@ -21,7 +21,11 @@ import com.wipro.ats.bdre.md.beans.InitJobRowInfo;
 import com.wipro.ats.bdre.util.OozieUtil;
 import org.apache.log4j.Logger;
 
-import java.io.*;
+import java.io.BufferedWriter;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.List;
 
 
@@ -52,29 +56,43 @@ public class OozieInitJob {
         OozieUtil oozieUtil = new OozieUtil();
         try {
             oozieUtil.persistBeanData(initJobInfo, false);
+            LOGGER.info("initjobInfo "+initJobInfo);
             try
             {
                 String homeDir = System.getProperty("user.home");
-                FileWriter fw = new FileWriter(homeDir+"/jobinfo.txt", true);
+                LOGGER.info("home Directory is "+homeDir);
+                Files.deleteIfExists(Paths.get(homeDir+"/jobInfo.txt"));
+                FileWriter fw = new FileWriter(homeDir+"/jobInfo.txt", true);
                 BufferedWriter bw = new BufferedWriter(fw);
 
-                bw.write("initJobInfo.getInstanceExecId():"+initJobInfo.getInstanceExecId().toString()+"\n");
-                bw.write("initJobInfo.getLastRecoverableSpId():"+initJobInfo.getLastRecoverableSpId().toString()+"\n");
-                bw.write("initJobInfo.getTargetBatchId():"+initJobInfo.getTargetBatchId().toString()+"\n");
-                bw.write("initJobInfo.getMinBatchIdMap():"+initJobInfo.getMinBatchIdMap().toString().replace("=", ":")+"\n");
-                bw.write("initJobInfo.getMaxBatchIdMap():"+initJobInfo.getMaxBatchIdMap().toString().replace("=",":")+"\n");
-                bw.write("initJobInfo.getMinBatchMarkingMap():"+initJobInfo.getMinBatchMarkingMap().toString().replace("=", ":")+"\n");
-                bw.write("initJobInfo.getMaxBatchMarkingMap():"+initJobInfo.getMaxBatchMarkingMap().toString().replace("=", ":")+"\n");
                 bw.write("initJobInfo.getTargetBatchMarkingSet():"+initJobInfo.getTargetBatchMarkingSet().toString()+"\n");
-                bw.write("initJobInfo.getMinSourceInstanceExecIdMap():"+initJobInfo.getMinSourceInstanceExecIdMap().toString().replace("=", ":")+"\n");
-                bw.write("initJobInfo.getMaxSourceInstanceExecIdMap():"+initJobInfo.getMaxSourceInstanceExecIdMap().toString().replace("=", ":")+"\n");
-                bw.write("initJobInfo.getFileListMap():"+initJobInfo.getFileListMap().toString().replace("=", ":")+"\n");
-                bw.write("initJobInfo.getBatchListMap():"+initJobInfo.getBatchListMap().toString().replace("=",":")+"\n");
+
+                if(initJobInfo.getInstanceExecId() != null)
+                    bw.write("initJobInfo.getInstanceExecId():"+initJobInfo.getInstanceExecId().toString()+"\n");
+                else
+                    bw.write("initJobInfo.getInstanceExecId():null");
+
+                if(initJobInfo.getLastRecoverableSpId() != null)
+                    bw.write("initJobInfo.getLastRecoverableSpId():"+initJobInfo.getLastRecoverableSpId().toString()+"\n");
+                else
+                    bw.write("initJobInfo.getLastRecoverableSpId():null\n");
+
+                if(initJobInfo.getTargetBatchId() != null)
+                    bw.write("initJobInfo.getTargetBatchId():"+initJobInfo.getTargetBatchId().toString()+"\n");
+                else
+                    bw.write("initJobInfo.getTargetBatchId():null");
+                bw.write("initJobInfo.getMinBatchIdMap():"+initJobInfo.getMinBatchIdMap().toString()+"\n");
+                bw.write("initJobInfo.getMaxBatchIdMap():"+initJobInfo.getMaxBatchIdMap().toString()+"\n");
+                bw.write("initJobInfo.getMinBatchMarkingMap():"+initJobInfo.getMinBatchMarkingMap().toString()+"\n");
+                bw.write("initJobInfo.getMaxBatchMarkingMap():"+initJobInfo.getMaxBatchMarkingMap().toString()+"\n");
+                bw.write("initJobInfo.getMinSourceInstanceExecIdMap():"+initJobInfo.getMinSourceInstanceExecIdMap().toString()+"\n");
+                bw.write("initJobInfo.getMaxSourceInstanceExecIdMap():"+initJobInfo.getMaxSourceInstanceExecIdMap().toString()+"\n");
+                bw.write("initJobInfo.getFileListMap():"+initJobInfo.getFileListMap().toString()+"\n");
+                bw.write("initJobInfo.getBatchListMap():"+initJobInfo.getBatchListMap().toString()+"\n");
 
                 bw.close();
 
-            }catch(IOException i)
-            {
+            }catch(IOException i) {
                 i.printStackTrace();
             }
         } catch (Exception e) {

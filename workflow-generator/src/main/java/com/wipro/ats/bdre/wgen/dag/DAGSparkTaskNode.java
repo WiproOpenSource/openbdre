@@ -56,9 +56,9 @@ public class DAGSparkTaskNode extends GenericActionNode {
         StringBuilder ret = new StringBuilder();
         //ProcessDAO processDAO = new ProcessDAO();
         GetParentProcessType getParentProcessType = new GetParentProcessType();
-
+        //--class "+getAppMainClass(getId(), "spark-main")+"
         ret.append("\ndef "+ getName().replace('-','_')+"_pc():\n" +
-                "\tcommand='java -cp "+ homeDir +"/bdre/lib/semantic-core/semantic-core-1.1-SNAPSHOT.jar:"+homeDir+"/bdre/lib/*/* org.apache.spark.deploy.SparkSubmit  --class "+getAppMainClass(getId(), "spark-main")+" "+ getConf(getId(),"spark-conf")+" "+homeDir + "/bdre_apps/" + processInfo.getBusDomainId().toString()+"/" + getParentProcessType.getParentProcessTypeId(processInfo.getProcessId())+"/"+ processInfo.getParentProcessId().toString() + "/" +getJarName(getId(), "spark-jar")+" "+getAppArgs(getId(), "app-args")+"',\n" +
+                "\tcommand='java -cp "+ homeDir +"/bdre/lib/semantic-core/semantic-core-1.1-SNAPSHOT.jar:"+homeDir+"/bdre/lib/*/* org.apache.spark.deploy.SparkSubmit  "+ getConf(getId(),"spark-conf")+" "+homeDir + "/bdre_apps/" + processInfo.getBusDomainId().toString()+"/" + getParentProcessType.getParentProcessTypeId(processInfo.getParentProcessId())+"/"+ processInfo.getParentProcessId().toString() + "/" +getJarName(getId(), "spark-jar")+" "+getAppArgs(getId(), "app-args")+"',\n" +
                 "\tbash_output = subprocess.Popen(command,shell=True, stdin=subprocess.PIPE, stdout=subprocess.PIPE )\n" +
                 "\tout,err = bash_output.communicate()\n"+
                 "\tprint(\"out is \",out)\n"+
