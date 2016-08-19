@@ -19,7 +19,6 @@ import com.wipro.ats.bdre.exception.MetadataException;
 import com.wipro.ats.bdre.md.api.RegisterFile;
 import com.wipro.ats.bdre.md.beans.RegisterFileInfo;
 import com.wipro.ats.bdre.util.AirflowUtil;
-import com.wipro.ats.bdre.util.OozieUtil;
 import org.apache.log4j.Logger;
 
 import java.io.BufferedWriter;
@@ -48,7 +47,8 @@ public class AirflowRegisterFile {
             airflowUtil.persistBeanData(fileInfo, false);
             try
             {
-                FileWriter fw = new FileWriter("/home/cloudera/registerFileInfo.txt", true);
+                String homeDir = System.getProperty("user.home");
+                FileWriter fw = new FileWriter(homeDir+"/jobInfo.txt", true);
                 BufferedWriter bw = new BufferedWriter(fw);
 
 
@@ -56,8 +56,14 @@ public class AirflowRegisterFile {
                 bw.write("fileInfo.getServerId():"+fileInfo.getServerId().toString()+"\n");
                 bw.write("fileInfo.getPath():"+fileInfo.getPath()+"\n");
                 bw.write("fileInfo.getFileSize():"+fileInfo.getFileSize().toString()+"\n");
-                bw.write("fileInfo.getFileHash():"+fileInfo.getFileHash().toString()+"\n");
-                bw.write("fileInfo.getCreationTs():"+fileInfo.getCreationTs().toString()+"\n");
+                if(fileInfo.getFileHash() != null)
+                    bw.write("fileInfo.getFileHash():"+fileInfo.getFileHash().toString()+"\n");
+                else
+                    bw.write("fileInfo.getFileHash():null\n");
+                if(fileInfo.getCreationTs() != null)
+                    bw.write("fileInfo.getCreationTs():"+fileInfo.getCreationTs().toString()+"\n");
+                else
+                    bw.write("fileInfo.getCreationTs():null\n");
                 bw.write("fileInfo.getBatchId():"+fileInfo.getBatchId().toString()+"\n");
                 bw.write("fileInfo.getParentProcessId():"+fileInfo.getParentProcessId().toString()+"\n");
                 bw.write("fileInfo.getBatchMarking():"+fileInfo.getBatchMarking()+"\n");

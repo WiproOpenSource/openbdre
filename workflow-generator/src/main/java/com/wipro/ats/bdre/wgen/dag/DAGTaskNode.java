@@ -108,6 +108,15 @@ public class DAGTaskNode extends DAGNode {
             containingNodes.add(pigActionNode);
 
         }
+        else if (processInfo.getProcessTypeId() == DATA_IMPORT_ACTION) {
+            DAGImportTaskNode importActionNode = new DAGImportTaskNode(this);
+            DAGFileRegistrationTaskNode fileRegistrationNode = new DAGFileRegistrationTaskNode(this);
+            importActionNode.setToNode(fileRegistrationNode);
+            containingNodes.add(importActionNode);
+            containingNodes.add(fileRegistrationNode);
+        }
+        else if (processInfo.getProcessTypeId() == IMPORT_ACTION) {
+        }
 
        /* if (processInfo.getProcessTypeId() == RAW_LOAD_ACTION) {
             RawLoadActionNode rawLoadActionNode = new RawLoadActionNode(this);
@@ -115,12 +124,6 @@ public class DAGTaskNode extends DAGNode {
         } else if (processInfo.getProcessTypeId() == HIVE_ACTION) {
             HiveActionNode hiveActionNode = new HiveActionNode(this);
             containingNodes.add(hiveActionNode);
-        } else if (processInfo.getProcessTypeId() == DATA_IMPORT_ACTION) {
-            ImportActionNode importActionNode = new ImportActionNode(this);
-            FileRegistrationNode fileRegistrationNode = new FileRegistrationNode(this);
-            importActionNode.setToNode(fileRegistrationNode);
-            containingNodes.add(importActionNode);
-            containingNodes.add(fileRegistrationNode);
         } else if (processInfo.getProcessTypeId() == DATA_EXPORT_ACTION) {
             ExportActionNode exportActionNode = new ExportActionNode(this);
             containingNodes.add(exportActionNode);
@@ -163,8 +166,7 @@ public class DAGTaskNode extends DAGNode {
         }
         /*else if (processInfo.getProcessTypeId() == INGESTION) {
         } else if (processInfo.getProcessTypeId() == EXPORT_ACTION) {
-        } else if (processInfo.getProcessTypeId() == IMPORT_ACTION) {
-        } else if (processInfo.getProcessTypeId() == DQ_PARENT_ACTION) {
+        }  else if (processInfo.getProcessTypeId() == DQ_PARENT_ACTION) {
         } else if (processInfo.getProcessTypeId() == HIVE_GEN_PARENT_ACTION) {
         } else if (processInfo.getProcessTypeId() == HIVE_MIGRATION_ACTION) {
         } else if (processInfo.getProcessTypeId() == SUPER_WF_ACTION) {
