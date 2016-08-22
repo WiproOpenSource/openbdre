@@ -234,7 +234,7 @@ function formIntoMap(typeProp, typeOf) {
             <h3><div class="number-circular">4</div><spring:message code="datagen.page.confirm"/></h3>
             <section>
             <div id="createProcess">
-                <button ng-click="createJob()" id="createjobs" type="button" class="btn btn-primary btn-lg">Create Job</button>
+                <button ng-click="createJob()" id="createjobs" type="button" class="btn btn-primary btn-lg"><spring:message code="datagen.page.button_job"/></button>
             </div>
             <div id="Process"></div>
             </section>
@@ -364,7 +364,7 @@ function getGenTypes(){
                                                             $(this).dialog("close");
                                                         }
                                                     }
-                                                }).html("<p><span class=\"jtable-confirm-message\">Jobs successfully created.</span></p>");
+                                                }).html('<p><span class="jtable-confirm-message"><spring:message code="datagen.page.success_msg"/></span></p>');
                                                 createJobResult = data;
                                                 displayProcess(createJobResult);
                                                 $('#createProcess').hide();
@@ -413,7 +413,7 @@ function getGenTypes(){
                                     $(this).dialog("close");
                                 }
                             }
-                        }).html("<p><span class=\"jtable-confirm-message\">Jobs have not been created.</span></p>");
+                        }).html('<p><span class="jtable-confirm-message"><spring:message code="datagen.page.failed_msg"/></span></p>');
                     }
                 },
             onCanceled: function(event) {
@@ -426,7 +426,7 @@ function getGenTypes(){
 <script>
 function displayProcess(records) {
     $('#Process').jtable({
-        title: 'Data Ingestion Processes',
+        title: '<spring:message code="datagen.page.title_jtable"/>',
         paging: false,
         sorting: false,
         create: false,
@@ -460,10 +460,10 @@ function displayProcess(records) {
                 list: true,
                 create: false,
                 edit: false,
-                title: 'Id'
+                title: '<spring:message code="datagen.page.title_id"/>'
             },
             Properties: {
-                title: 'Properties',
+                title: '<spring:message code="datagen.page.title_properties"/>',
                 width: '5%',
                 sorting: false,
                 edit: false,
@@ -471,12 +471,12 @@ function displayProcess(records) {
                 listClass: 'bdre-jtable-button',
                 display: function(item) { //Create an image that will be used to open child table
 
-                    var $img = $('<span class="label label-primary">Show</span>'); //Open child table when user clicks the image
+                    var $img = $('<span class="label label-primary"><spring:message code="datagen.page.img_show"/></span>'); //Open child table when user clicks the image
 
                     $img.click(function() {
                         $('#Process').jtable('openChildTable',
                             $img.closest('tr'), {
-                                title: ' Properties of ' + item.record.processId,
+                                title: ' <spring:message code="datagen.page.img_title"/>'+' ' + item.record.processId,
                                 paging: false,
                                 actions: {
                                     listAction: function(postData) {
@@ -524,15 +524,15 @@ function displayProcess(records) {
                                         list: false,
                                         create: false,
                                         edit: true,
-                                        title: 'Process',
+                                        title: '<spring:message code="datagen.page.title_process"/>',
                                         defaultValue: item.record.processId,
                                     },
                                     configGroup: {
-                                        title: 'Config Group',
+                                        title: '<spring:message code="datagen.page.title_cg"/>',
                                         defaultValue: item.record.configGroup,
                                     },
                                     key: {
-                                        title: 'Key',
+                                        title: '<spring:message code="datagen.page.title_key"/>',
                                         key: true,
                                         list: true,
                                         create: true,
@@ -540,11 +540,11 @@ function displayProcess(records) {
                                         defaultValue: item.record.key,
                                     },
                                     value: {
-                                        title: 'Value',
+                                        title: '<spring:message code="datagen.page.title_value"/>',
                                         defaultValue: item.record.value,
                                     },
                                     description: {
-                                        title: 'Description',
+                                        title: '<spring:message code="datagen.page.title_desc"/>',
                                         defaultValue: item.record.description,
                                     },
                                 }
@@ -559,20 +559,20 @@ function displayProcess(records) {
                 }
             },
             processName: {
-                title: 'Name'
+                title: '<spring:message code="datagen.page.title_name"/>'
             },
             tableAddTS: {
-                title: 'Add TS',
+                title: '<spring:message code="datagen.page.title_add_ts"/>',
                 create: false,
                 edit: true,
                 list: false,
                 type: 'hidden'
             },
             description: {
-                title: 'Description',
+                title: '<spring:message code="datagen.page.title_desc"/>',
             },
             batchPattern: {
-                title: 'Batch Mark',
+                title: '<spring:message code="datagen.page.title_batch"/>',
                 list: false,
                 create: false,
                 edit: true,
@@ -580,54 +580,54 @@ function displayProcess(records) {
 
             },
             parentProcessId: {
-                title: 'Parent',
+                title: '<spring:message code="datagen.page.title_parent"/>',
                 edit: true,
                 create: false,
                 list: false,
                 type: 'hidden'
             },
             canRecover: {
-                title: 'Restorable',
+                title: '<spring:message code="datagen.page.title_restorable"/>',
                 type: 'hidden',
                 list: false,
                 edit: true,
             },
             nextProcessIds: {
-                title: 'Next',
+                title: '<spring:message code="datagen.page.title_next"/>',
                 list: false,
                 edit: true,
                 type: 'hidden'
 
             },
             enqProcessId: {
-                title: 'Enqueuer',
+                title: '<spring:message code="datagen.page.title_enque"/>',
                 list: false,
                 edit: true,
                 type: 'hidden',
             },
             busDomainId: {
-                title: 'Application',
+                title: '<spring:message code="datagen.page.title_app"/>',
                 list: false,
                 edit: true,
                 type: 'combobox',
                 options: '/mdrest/busdomain/options/',
             },
             processTypeId: {
-                title: 'Type',
+                title: '<spring:message code="datagen.page.title_type"/>',
                 edit: true,
                 type: 'hidden',
                 options: '/mdrest/processtype/optionslist'
 
             },
             ProcessPipelineButton: {
-                title: 'Pipeline',
+                title: '<spring:message code="datagen.page.title_pipeline"/>',
                 sorting: false,
                 width: '2%',
                 listClass: 'bdre-jtable-button',
                 create: false,
                 edit: false,
                 display: function(data) {
-                    return '<span class="label label-primary" onclick="fetchPipelineInfo(' + data.record.processId + ')">Display</span> ';
+                    return '<span class="label label-primary" onclick="fetchPipelineInfo(' + data.record.processId + ')"><spring:message code="datagen.page.display"/></span> ';
                 },
             }
         }

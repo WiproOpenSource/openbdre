@@ -32,7 +32,7 @@
 	<script type="text/javascript">
 		    $(document).ready(function () {
 	    $('#Container').jtable({
-	    title: 'Process Deployment Queue List',
+	    title: '<spring:message code="pdq.page.jtable_title"/>',
 		    paging: true,
 		    edit: false,
 		    create: false,
@@ -96,52 +96,52 @@
 		    fields:
 	    {
             deploymentId: {
-            title: 'Deploy ID',
+            title: '<spring:message code="pdq.page.title_deploy_id"/>',
             key: true,
                 list: true,
                 edit:false
             },
             processId: {
-			title: 'Process ID',
+			title: '<spring:message code="pdq.page.title_process_id"/>',
 			edit:false,
 
 			},
 		    deployStatusId: {
-		    title: 'Deploy Status',
+		    title: '<spring:message code="pdq.page.title_deploy_status"/>',
 		    edit:false,
 		    type: 'combobox',
 		    options: '/mdrest/deploystatus/options'
 
 		    },
 		    tableInsertTs: {
-		    title: 'Insert Time',
+		    title: '<spring:message code="pdq.page.title_insert_time"/>',
 		    edit:false
 		    },
 		    tableStartTs: {
-		    title: 'Start Time',
+		    title: '<spring:message code="pdq.page.title_start_time"/>',
 		    edit:false
 
 		    },
 		    tableEndTs: {
-		    title: 'End Time',
+		    title: '<spring:message code="pdq.page.title_end_time"/>',
 		    edit:false
 		    },
 		    deployScriptLocation: {
-            title: 'Script Location',
+            title: '<spring:message code="pdq.page.title_location"/>',
             edit:false
             },
             userName: {
-           title: 'User Name',
+           title: '<spring:message code="pdq.page.title_username"/>',
            edit:false
            },
             processTypeId: {
-		   title: 'Process Type',
+		   title: '<spring:message code="pdq.page.title_process_type"/>',
 		   edit:false,
 		   type: 'combobox',
            options: '/mdrest/processtype/optionslist/'
 		   },
 		   busDomainId: {
-		   title: 'App',
+		   title: '<spring:message code="pdq.page.title_app"/>',
 		   type: 'combobox',
            options: '/mdrest/busdomain/options/',
 		   edit:false

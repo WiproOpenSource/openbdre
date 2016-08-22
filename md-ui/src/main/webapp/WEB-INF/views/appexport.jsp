@@ -141,7 +141,7 @@
                                     alert(data.Message);
                                },
                                 error: function() {
-                                alert('Error in zip download');
+                                alert('<spring:message code="appexport.page.alert_error_zip"/>');
                             }
                         });
 
@@ -159,11 +159,11 @@
                                        if (data.Result == "OK") {
                                        console.log(data);
                                        if(imgstatus == "uploaded"){
-                                            alert('data successfully submitted');
+                                            alert('<spring:message code="appexport.page.alert_success"/>');
                                              $("#export").hide();
                                              }
                                         if(imgstatus == "failed")
-                                            alert('image upload failed');
+                                            alert('<spring:message code="appexport.page.alert_image_error"/>');
 
                                     }
                                          if (data.Result == "ERROR")
@@ -171,7 +171,7 @@
                                       },
                                        error: function() {
                                        console.log(imgstatus);
-                                       alert('Error in app export to appstore');
+                                       alert('<spring:message code="appexport.page.alert_error"/>');
                                    }
                                });
 

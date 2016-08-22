@@ -211,9 +211,9 @@
 
 		// Generate the HTML and add it to the document
 		$overlay = $('<div id="overlay"></div>');
-		$modal = $('<div id="modal"><button type="button" class="btn btn-primary btn-xs" aria-label="Left Align" onClick="saveSVG(\'execution-details\',1)"><span class="glyphicon glyphicon-save" aria-hidden="true"></span>Save</button></br></div>');
+		$modal = $('<div id="modal"><button type="button" class="btn btn-primary btn-xs" aria-label="Left Align" onClick="saveSVG(\'execution-details\',1)"><span class="glyphicon glyphicon-save" aria-hidden="true"></span><spring:message code="batchlineagebyinstanceexec.page.button_save"/></button></br></div>');
 		$content = $('<div id="content"></div>');
-		$close = $('<a id="close" href="#">close</a>');
+		$close = $('<a id="close" href="#"><spring:message code="batchlineagebyinstanceexec.page.close"/></a>');
 
 		$modal.hide();
 		$overlay.hide();
@@ -235,14 +235,14 @@
 
 	    function popModal(pid) {
 		$.get('workflow/' + pid + '.page', function (data) {
-		    modal.open({content: "<b>Loading</b>"});
+		    modal.open({content: '<b><spring:message code="batchlineagebyinstanceexec.page.loading"/></b>'});
 		    UpdateGraphviz(data);
 		    modal.center();
 		});
 	    }
 	    function popDetails(pid,ieid) {
                         		$.get('details/' + pid + '/'+ieid+'.page', function (data) {
-                        		    modal.open({content: "<b>Loading</b>"});
+                        		    modal.open({content: '<b><spring:message code="batchlineagebyinstanceexec.page.loading"/></b>'});
                         		    UpdateGraphviz(data);
                         		    modal.center();
                         		});
@@ -259,7 +259,7 @@
 	     var auto = setInterval(    function ()
                                  {      if(globalIeid != undefined && globalPid != undefined){
                                       $.get('details/' + globalPid + '/'+globalIeid+'.page', function (data) {
-                                                              		    modal.open({content: "<b>Loading</b>"});
+                                                              		    modal.open({content: '<b><spring:message code="batchlineagebyinstanceexec.page.loading"/></b>'});
                                                               		    UpdateGraphviz(data);
                                                               		    modal.center();
                                                               		});}
@@ -275,7 +275,7 @@
 	<section>
 	    <spring:message code="batchlineagebyinstanceexec.page.instance_exec_id"/><input type="number" name="ied" id="ied" value =""/>
 	    <button onClick="resetGraph();
-		    getIed(jQuery('#ied').val())" href="#">Show Lineage</button>
+	    	getIed(jQuery('#ied').val())" href="#"><spring:message code="batchlineagebyinstanceexec.page.button_show"/></button>
 	</section>
     </c:if>
     <div id="graphviz_svg_div" style="width:100%;text-align:left;">

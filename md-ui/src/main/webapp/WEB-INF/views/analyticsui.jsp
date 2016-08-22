@@ -97,7 +97,7 @@
   </head>
 
   <body ng-app="myApp" ng-controller="myCtrl">
-                        <div class="page-header"><spring:message code="analytics.ui.page.panel_heading"/></div>
+                        <div class="page-header"><spring:message code="analyticsui.page.panel_heading"/></div>
                         <div class="row">&nbsp;</div>
                         <div class="row bdre-process-creation-form">
                             <div class="col-md-3"> </div>
@@ -106,57 +106,57 @@
                                     <div class="panel-body">
                                         <form role="form" id="propertiesFieldsForm">
                                             <div class="form-group">
-                                                <label ><spring:message code="analytics.ui.page.industry.name"/></label>
+                                                <label ><spring:message code="analyticsui.page.industry.name"/></label>
                                                     <select class="form-control" id="industry" name="industry" >
                                                         <option ng-repeat="industry in industries" value="{{industry.defaultVal}}" name="industry">{{industry.value}}</option>
                                                     </select>
                                               </div>
 
                                             <div class="form-group">
-                                                <label ><spring:message code="analytics.ui.page.category"/> </label>
+                                                <label ><spring:message code="analyticsui.page.category"/> </label>
                                                 <input type="text" class="form-control" name="category" id="category" placeholder="category" required>
                                              </div>
 
                                             <div class="form-group">
-                                                <label ><spring:message code="analytics.ui.page.app.name"/></label>
+                                                <label ><spring:message code="analyticsui.page.app.name"/></label>
                                                 <input type="text" class="form-control" name="appname" id="appname" placeholder="App Name" required>
                                             </div>
 
                                              <div class="form-group">
-                                                <label ><spring:message code="analytics.ui.page.app.description"/></label>
+                                                <label ><spring:message code="analyticsui.page.app.description"/></label>
                                                 <input type="text" class="form-control" name="appdesc" id="appdesc" placeholder="App Description" required>
                                             </div>
 
                                               <div class="form-group">
-                                                 <label ><spring:message code="analytics.ui.page.questions.json"/></label>
+                                                 <label ><spring:message code="analyticsui.page.questions.json"/></label>
                                                  <input type="text" class="form-control" name="questionsjson" id="questionsjson" placeholder="Questions Json" required>
                                              </div>
 
                                               <div class="form-group">
-                                                 <label ><spring:message code="analytics.ui.page.dashboard.url"/></label>
+                                                 <label ><spring:message code="analyticsui.page.dashboard.url"/></label>
                                                  <input type="text" class="form-control" name="dashboardurl" id="dashboardurl" placeholder="Dashboard URL" required>
                                              </div>
 
                                              <div class="form-group">
-                                                  <label ><spring:message code="analytics.ui.page.ddp.url"/></label>
+                                                  <label ><spring:message code="analyticsui.page.ddp.url"/></label>
                                                   <input type="text" class="form-control" name="ddpurl" id="ddpurl" placeholder="DDP URL" required>
                                               </div>
 
                                              <div class="form-group">
-                                                <label ><spring:message code="analytics.ui.page.app.image"/></label>
+                                                <label ><spring:message code="analyticsui.page.app.image"/></label>
                                                 <input type="file" class="form-control" name="appimage" id="appimage"  required>
                                             </div>
 
                                               <div class="form-group">
-                                                 <label><spring:message code="analytics.ui.page.process.name"/></label>
+                                                 <label><spring:message code="analyticsui.page.process.name"/></label>
                                                  <input type="text" class="form-control"  id="processName" name="processName" placeholder="Enter Process Name" required>
                                              </div>
                                              <div class="form-group">
-                                                 <label><spring:message code="analytics.ui.page.process.description"/></label>
+                                                 <label><spring:message code="analyticsui.page.process.description"/></label>
                                                   <input type="text" class="form-control" id="processDescription" name="processDescription" placeholder="Enter Process Description" required>
                                              </div>
                                              <div class="form-group">
-                                                  <label><spring:message code="analytics.ui.page.bus.domain.id"/></label>
+                                                  <label><spring:message code="analyticsui.page.bus.domain.id"/></label>
                                                    <select class="form-control" id="busDomainId" name="busDomainId">
                                                     <option ng-repeat="busDomain in busDomains.Options" value="{{busDomain.Value}}" name="busDomainId">{{busDomain.DisplayText}}</option>
                                                     </select>
@@ -177,7 +177,7 @@
                         <div class="col-md-3"> </div>
                         <div class="col-md-6 ">
                         <div class="panel panel-success">
-                            <div class="panel-heading" name="successHeader" id="successHeader">Job Created Successfully</div>
+                            <div class="panel-heading" name="successHeader" id="successHeader"><spring:message code="analyticsui.page.create_success"/></div>
                             <div id="Process"></div>
                         </div>
                         </div>
@@ -238,10 +238,10 @@
                                                                           console.log(createJobResult.Records[0].processId);
                                                                           uploadImg(createJobResult.Records[0].processId,"appimage");
                                                                           displayProcess(createJobResult);
-                                                                          $(this).dialog("close");
+                                                                          $(this).dialog('<spring:message code="analyticsui.page.close"/>');
                                                                          }
                                                                      }
-                                                                 }).text("Jobs successfully created.");
+                                                                 }).text('<spring:message code="analyticsui.page.create_success"/>');
 
                                                              }
                                                              else{
@@ -253,7 +253,7 @@
                                                                      modal: true,
                                                                      buttons: {
                                                                          "Ok": function() {
-                                                                             $(this).dialog("close");
+                                                                             $(this).dialog('<spring:message code="analyticsui.page.close"/>');
                                                                          }
                                                                      }
                                                                  }).html(data.Message);
@@ -307,7 +307,7 @@
                 <script>
                 function displayProcess(records) {
                 	$('#Process').jtable({
-                		title: 'Analytics App Processes',
+                		title: '<spring:message code="analyticsui.page.title_jtable"/>',
                 		paging: false,
                 		sorting: false,
                 		create: false,
@@ -341,10 +341,10 @@
                 				list: true,
                 				create: false,
                 				edit: false,
-                				title: 'Id'
+                				title: '<spring:message code="analyticsui.page.title_id"/>'
                 			},
                 			Properties: {
-                				title: 'Properties',
+                				title: '<spring:message code="analyticsui.page.title_properties"/>',
                 				width: '5%',
                 				sorting: false,
                 				edit: false,
@@ -352,12 +352,12 @@
                 				listClass: 'bdre-jtable-button',
                 				display: function(item) { //Create an image that will be used to open child table
 
-                					var $img = $('<span class="label label-primary">Show</span>'); //Open child table when user clicks the image
+                					var $img = $('<span class="label label-primary"><spring:message code="analyticsui.page.img_show"/></span>'); //Open child table when user clicks the image
 
                 					$img.click(function() {
                 						$('#Process').jtable('openChildTable',
                 							$img.closest('tr'), {
-                								title: ' Properties of ' + item.record.processId,
+                								title: '<spring:message code="analyticsui.page.img_properties"/>'+' ' + item.record.processId,
                 								paging: true,
                 								pageSize: 10,
                 								actions: {
@@ -438,15 +438,15 @@
                 										list: false,
                 										create: false,
                 										edit: true,
-                										title: 'Process',
+                										title: '<spring:message code="analyticsui.page.title_process"/>',
                 										defaultValue: item.record.processId,
                 									},
                 									configGroup: {
-                										title: 'Config Group',
+                										title: '<spring:message code="analyticsui.page.title_cg"/>',
                 										defaultValue: item.record.configGroup,
                 									},
                 									key: {
-                										title: 'Key',
+                										title: '<spring:message code="analyticsui.page.title_key"/>',
                 										key: true,
                 										list: true,
                 										create: true,
@@ -454,11 +454,11 @@
                 										defaultValue: item.record.key,
                 									},
                 									value: {
-                										title: 'Value',
+                										title: '<spring:message code="analyticsui.page.title_value"/>',
                 										defaultValue: item.record.value,
                 									},
                 									description: {
-                										title: 'Description',
+                										title: '<spring:message code="analyticsui.page.title_desc"/>',
                 										defaultValue: item.record.description,
                 									},
                 								}
@@ -473,20 +473,20 @@
                 				}
                 			},
                 			processName: {
-                				title: 'Name'
+                				title: '<spring:message code="analyticsui.page.title_name"/>'
                 			},
                 			tableAddTS: {
-                				title: 'Add TS',
+                				title: '<spring:message code="analyticsui.page.title_add_ts"/>',
                 				create: false,
                 				edit: true,
                 				list: false,
                 				type: 'hidden'
                 			},
                 			description: {
-                				title: 'Description',
+                				title: '<spring:message code="analyticsui.page.title_desc"/>',
                 			},
                 			batchPattern: {
-                				title: 'Batch Mark',
+                				title: '<spring:message code="analyticsui.page.title_batch_mark"/>',
                 				list: false,
                 				create: false,
                 				edit: true,
@@ -494,54 +494,54 @@
 
                 			},
                 			parentProcessId: {
-                				title: 'Parent',
+                				title: '<spring:message code="analyticsui.page.title_parent"/>',
                 				edit: true,
                 				create: false,
                 				list: false,
                 				type: 'hidden'
                 			},
                 			canRecover: {
-                				title: 'Restorable',
+                				title: '<spring:message code="analyticsui.page.title_restorable"/>',
                 				type: 'hidden',
                 				list: false,
                 				edit: true,
                 			},
                 			nextProcessIds: {
-                				title: 'Next',
+                				title: '<spring:message code="analyticsui.page.title_next"/>',
                 				list: false,
                 				edit: true,
                 				type: 'hidden'
 
                 			},
                 			enqProcessId: {
-                				title: 'Enqueuer',
+                				title: '<spring:message code="analyticsui.page.title_enque"/>',
                 				list: false,
                 				edit: true,
                 				type: 'hidden',
                 			},
                 			busDomainId: {
-                				title: 'Application',
+                				title: '<spring:message code="analyticsui.page.title_app"/>',
                 				list: false,
                 				edit: true,
                 				type: 'combobox',
                 				options: '/mdrest/busdomain/options/',
                 			},
                 			processTypeId: {
-                				title: 'Type',
+                				title: '<spring:message code="analyticsui.page.title_type"/>',
                 				edit: true,
                 				type: 'hidden',
                 				options: '/mdrest/processtype/optionslist'
 
                 			},
                 			ProcessPipelineButton: {
-                				title: 'Pipeline',
+                				title: '<spring:message code="analyticsui.page.title_pipeline"/>',
                 				sorting: false,
                 				width: '2%',
                 				listClass: 'bdre-jtable-button',
                 				create: false,
                 				edit: false,
                 				display: function(data) {
-                					return '<span class="label label-primary" onclick="fetchPipelineInfo(' + data.record.processId + ')">Display</span> ';
+                					return '<span class="label label-primary" onclick="fetchPipelineInfo(' + data.record.processId + ')"><spring:message code="analyticsui.page.display"/></span> ';
                 				},
                 			}
                 		}

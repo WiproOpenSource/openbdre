@@ -206,7 +206,7 @@
 		$overlay = $('<div id="overlay"></div>');
 		$modal = $('<div id="modal"></div>');
 		$content = $('<div id="content"></div>');
-		$close = $('<a id="close" href="#">close</a>');
+		$close = $('<a id="close" href="#"><spring:message code="columnlineage.page.close"/></a>');
 
 		$modal.hide();
 		$overlay.hide();
@@ -228,7 +228,7 @@
 
 	    function popModal(pid) {
 		$.get('workflow/' + pid + '.page', function (data) {
-		    modal.open({content: "<b>Loading</b>"});
+		    modal.open({content: '<b><spring:message code="columnlineage.page.loading"/></b>'});
 		    UpdateGraphviz(data);
 		    modal.center();
 		});
@@ -244,13 +244,13 @@
     </head>
     <body>
 	<br/>
-			<button type='button' class='btn btn-primary' aria-label='Left Align' onClick='saveSVG("lineage",0)'><span class='glyphicon glyphicon-save' aria-hidden='true'></span>Save</button>
+			<button type='button' class='btn btn-primary' aria-label='Left Align' onClick='saveSVG("lineage",0)'><span class='glyphicon glyphicon-save' aria-hidden='true'></span><spring:message code="columnlineage.page.button_save"/></button>
 	<c:if test="${empty param.pid}">
     <div id="input-box-button" >
     	    <form>
     		<div class="input-group">
     		    <input class="form-control" type="number" name="pid" id="pid" value ="" placeholder=<spring:message code="columnlineage.page.placeholder"/>/>
-    		    <!-- <button  class="btn btn-default btn-lg btn-primary"><span id="sizing-addon2"><span class="glyphicon glyphicon-arrow-right" aria-hidden="true"></span> Show Lineage </button> -->
+    		    <!-- <button  class="btn btn-default btn-lg btn-primary"><span id="sizing-addon2"><span class="glyphicon glyphicon-arrow-right" aria-hidden="true"></span> <spring:message code="columnlineage.page.button_show"/></button> -->
     		    <span class="input-group-btn">
     			<button class="btn btn-default  btn-primary" type="button" onClick="resetGraph();
     				getPid(jQuery('#pid').val())"><span id="sizing-addon2"><span class="glyphicon glyphicon-arrow-right" aria-hidden="true"></span>&nbsp;</button>
