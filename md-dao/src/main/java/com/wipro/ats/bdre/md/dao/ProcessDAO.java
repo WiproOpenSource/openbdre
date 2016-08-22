@@ -253,6 +253,12 @@ public class ProcessDAO {
         return subProcesses;
     }
 
+    public String getParentProcessTypeId(Integer pid){
+        Process parentProcess = get(pid);
+        return parentProcess.getProcessType().getProcessTypeId().toString();
+
+    }
+
     //fetching parent process along with its sub processes
     public List<Process> selectProcessList(Integer processId) {
         Session session = sessionFactory.openSession();
