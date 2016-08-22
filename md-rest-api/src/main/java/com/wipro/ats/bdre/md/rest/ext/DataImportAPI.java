@@ -33,6 +33,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import java.security.Principal;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
@@ -64,7 +65,7 @@ public class DataImportAPI extends MetadataAPIBase {
 
     @RequestMapping(value = "/createjobs", method = {RequestMethod.POST})
     @ResponseBody public
-    RestWrapper createJobs(HttpServletRequest request) {
+    RestWrapper createJobs(HttpServletRequest request, Principal principal) {
         String rawDBName = request.getParameter("common_rawDBHive");
         String baseDBName = request.getParameter("common_baseDBHive");
         String dbURL = request.getParameter("common_dbURL");
@@ -121,7 +122,7 @@ public class DataImportAPI extends MetadataAPIBase {
             intermediateInfo.setUuid(uuid);
             LOGGER.info("uuid is = " + uuid);
             //Calling proc HistoryDataImport which creates the data import job and data load job
-            List<Process> process = historyDataImportDAO.historyDataImport(intermediateInfo);
+            List<Process> process = historyDataImportDAO.historyDataImport(intermediateInfo,principal.getName());
             LOGGER.debug("process ids are :" + process.size());
             restWrapper = new RestWrapper(process, RestWrapper.OK);
 

@@ -1,13 +1,14 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ taglib prefix="security"
 	   uri="http://www.springframework.org/security/tags" %>
+<%@taglib uri="http://www.springframework.org/tags" prefix="spring"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-        <title>Bigdata Ready Enterprise</title>
+        <title><spring:message code="common.page.title_bdre_1"/></title>
 	<script>
 	  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
 	  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
@@ -17,14 +18,22 @@
 	  ga('create', 'UA-72345517-1', 'auto');
 	  ga('send', 'pageview');
 	</script>
-
+	<style>
+		.form-control{background-color: #e4e5e6 !important;height: 36px !important;border-radius: 1px !important;}
+		.glyphicon-arrow-right{color: #606161 !important;}
+		.btn-primary-process{background-color: #ADAFAF !important;border: 1px solid #828283 !important;padding-top:7.5px !important;padding-bottom: 7.5px !important;border-radius: 1px !important;}
+        .input-box-button-filter{background: #4A4B4B;background: -webkit-linear-gradient(#4A4B4B 50%, #3A3B3B 50%);background: -o-linear-gradient(#4A4B4B 50%, #3A3B3B 50%);background: -moz-linear-gradient(#4A4B4B 50%, #3A3B3B 50%);background: -ms-linear-gradient(#4A4B4B 50%, #3A3B3B 50%);background: linear-gradient(#4A4B4B 50%, #3A3B3B 50%);position: absolute;top: 0;right: 134px;color:white;padding:5px;cursor:pointer}
+		.filter-icon{background-image: url('../css/images/filter_icon.png');background-size: 100%;background-repeat: no-repeat;  display: inline-block;margin: 2px;vertical-align: middle;width: 16px;height: 16px;}
+		.filter-text{display: inline-block;margin: 2px;vertical-align: middle;font-size: 0.9em;font-family: 'Segoe UI Semilight', 'Open Sans', Verdana, Arial, Helvetica, sans-serif;font-weight: 300;}
+        .input-box-button{display:none;position: absolute;top: 34px;right: 133px; width: 129px;}
+	</style>
+        
         <!-- Include one of jTable styles. -->
 
         <link href="../css/css/bootstrap.min.css" rel="stylesheet" type="text/css" />
         <link href="../css/jtables-bdre.css" rel="stylesheet" type="text/css" />
         <link href="../css/jquery-ui-1.10.3.custom.css" rel="stylesheet" type="text/css" />
-
-        <!-- Include jTable script file. -->
+		<!-- Include jTable script file. -->
         <script src="../js/jquery.min.js" type="text/javascript"></script>
         <script src="../js/jquery-ui-1.10.3.custom.js" type="text/javascript"></script>
         <script src="../js/jquery.jtable.js" type="text/javascript"></script>
@@ -32,7 +41,7 @@
         <script type="text/javascript">
 		    $(document).ready(function() {
 	    $('#Container').jtable({
-	    title: 'Process Template List',
+	    title: '<spring:message code="processtemplate.page.title_list"/>',
 		    paging: true,
 		    pageSize: 10,
 		    sorting: false,
@@ -124,12 +133,12 @@ SubProcesses: {                    
 			    listClass: 'bdre-jtable-button',
 			        display: function(item) {                         //Create an image that will be used to open child table
                                                         
-			    var $img = $('<img src="../css/images/three-bar.png" title="Sub processes info" />');                         //Open child table when user clicks the image
+			    var $img = $('<img src="../css/images/three-bar.png" title=<spring:message code="processtemplate.page.img_desc"/> />');                         //Open child table when user clicks the image
                                                         
 				    $img.click(function() {                            
 				    $('#Container').jtable('openChildTable',                                     
 					    $img.closest('tr'),                                      {                                        
-				    title: ' Sub process Templates of ' + item.record.processTemplateId,
+				    title: '<spring:message code="processtemplate.page.title_sub_process"/>'+' ' + item.record.processTemplateId,
 					        actions: {                                        
 					    listAction: function(postData) {
 					    return $.Deferred(function($dfd) {
@@ -212,22 +221,22 @@ SubProcesses: {                    
 						    title: 'Id'
 					    },
 						    processName: {
-						    title: 'Name',
-							    defaultValue: 'Child of ' + item.record.processTemplateId,
+						    title: '<spring:message code="processtemplate.page.title_name"/>',
+							    defaultValue: '<spring:message code="processtemplate.page.default_val_child"/>'+' ' + item.record.processTemplateId,
 						    },
 						    description: {
-						    title: 'Description',
-							    defaultValue: 'A Child of ' + item.record.processTemplateId
+						    title: '<spring:message code="processtemplate.page.title_desc"/>Description',
+							    defaultValue: '<spring:message code="processtemplate.page.default_val_a_child"/>'+' ' + item.record.processTemplateId
 
 						    },
 						    tableAddTS:  {
-						    title: 'Add TS',
+						    title: '<spring:message code="processtemplate.page.title_add_ts"/>',
 							    list:true,
 							    create: false,
 							    edit: true
 						    },
 						    batchPattern: {
-						    title: 'Batch Mark'
+						    title: '<spring:message code="processtemplate.page.title_batch"/>'
 
 						    },
 						    parentProcessId: {
@@ -235,14 +244,14 @@ SubProcesses: {                    
 							    defaultValue: item.record.processTemplateId,
 						    },
 						    canRecover: {
-						    title: 'Restorability',
+						    title: '<spring:message code="processtemplate.page.title_restorability"/>',
 							    edit: true,
 							    type: 'combobox',
 							    options: { '1': 'Restorable', '0': 'Non-Restorable'},
 							    defaultValue: "1"
 						    },
 						    nextProcessTemplateId: {
-								title: 'Next'
+								title: '<spring:message code="processtemplate.page.title_next"/>'
 
 								},
 						    busDomainId: {
@@ -250,7 +259,7 @@ SubProcesses: {                    
 							    defaultValue: item.record.busDomainId,
 						    },
 						    processTypeId: {
-						    title: 'Type',
+						    title: '<spring:message code="processtemplate.page.title_type"/>',
 							    type: 'combobox',
 							    options: '/mdrest/processtype/options/' + item.record.processTypeId,
 						    },
@@ -277,10 +286,10 @@ SubProcesses: {                    
 				    list: true,
 				    create: false,
 				    edit: false,
-				    title: 'Id'
+				    title: '<spring:message code="processtemplate.page.title_id"/>'
 			    },
 				Properties: {
-				title: 'Properties Template',
+				title: '<spring:message code="processtemplate.page.title_properties_template"/>',
 				width: '5%',
 				sorting: false,
 				edit: false,
@@ -288,12 +297,12 @@ SubProcesses: {                    
 				listClass: 'bdre-jtable-button',
 				display: function(item) {                         //Create an image that will be used to open child table
 
-				var $img = $('<span class="label label-primary">Show</span>'); //Open child table when user clicks the image
+				var $img = $('<span class="label label-primary"><spring:message code="processtemplate.page.img_show"/></span>'); //Open child table when user clicks the image
 
 				$img.click(function() {
 				$('#Container').jtable('openChildTable',
 				$img.closest('tr'), {
-				title: ' Properties of ' + item.record.processTemplateId,
+				title: ' <spring:message code="processtemplate.page.title_properties"/>'+' ' + item.record.processTemplateId,
 				paging: true,
 				pageSize: 10,
 				actions: {
@@ -374,15 +383,15 @@ SubProcesses: {                    
 				list: false,
 				create:false,
 				edit: true,
-				title: 'Process Template',
+				title: '<spring:message code="processtemplate.page.title_process_template"/>',
 				defaultValue: item.record.processTemplateId,
 				},
 				configGroup: {
-				title: 'Config Group',
+				title: '<spring:message code="processtemplate.page.title_cg"/>',
 				defaultValue: item.record.configGroup,
 				},
 				key: {
-				title: 'Key',
+				title: '<spring:message code="processtemplate.page.title_key"/>',
 				key : true,
 				list: true,
 				create:true,
@@ -390,11 +399,11 @@ SubProcesses: {                    
 				defaultValue: item.record.key,
 				},
 				value: {
-				title: 'Value',
+				title: '<spring:message code="processtemplate.page.title_value"/>',
 				defaultValue: item.record.value,
 				},
 				description: {
-				title: 'Description',
+				title: '<spring:message code="processtemplate.page.title_desc"/>',
 				defaultValue: item.record.description,
 				},
 				}
@@ -409,54 +418,54 @@ SubProcesses: {                    
 				}
 				},
 			    processName: {
-			    title: 'Name'
+			    title: '<spring:message code="processtemplate.page.title_name"/>'
 			    },
 			    tableAddTS: {
-			    title: 'Add TS',
+			    title: '<spring:message code="processtemplate.page.title_add_ts"/>',
 				    create: false,
 				    edit: true,
 				    list: true
 			    },
 			    description: {
-			    title: 'Description',
+			    title: '<spring:message code="processtemplate.page.title_desc"/>',
 			    },
 			    batchPattern: {
-			    title: 'Batch Mark',
+			    title: '<spring:message code="processtemplate.page.title_batch"/>',
 				    list: false,
 				    create: false,
 				    edit: false
 
 			    },
 			    parentProcessId: {
-			    title: 'Parent',
+			    title: '<spring:message code="processtemplate.page.title_parent"/>',
 				    edit: false,
 				    create: false,
 				    list: false
 			    },
 			    canRecover: {
-			    title: 'Restorable',
+			    title: '<spring:message code="processtemplate.page.title_restorable"/>',
 				    type: 'hidden',
 				    list: false,
 				    defaultValue: "0"
 			    },
 			    nextProcessTemplateId: {
-					title: 'Next'
+					title: '<spring:message code="processtemplate.page.title_next"/>'
 
 					},
 			    busDomainId: {
-			    title: 'Application',
+			    title: '<spring:message code="processtemplate.page.title_application"/>',
 				    type: 'combobox',
 				    options: '/mdrest/busdomain/options/',
 				    defaultValue: "1"
 			    },
 			    processTypeId: {
-			    title: 'Type',
+			    title: '<spring:message code="processtemplate.page.title_type"/>',
 				    type: 'combobox',
 				    options: '/mdrest/processtype/optionslist',
 				    defaultValue: "1",
 			    },
 			    workflowId: {
-			    title: 'Workflow Type',
+			    title: '<spring:message code="processtemplate.page.title_wf_type"/>',
 				    type: 'combobox',
 				    options: '/mdrest/workflowtype/optionslist',
 				    defaultValue: "1",
@@ -468,14 +477,14 @@ SubProcesses: {                    
                 				    create: false,
                 				    edit: false,
                 				    display: function (item) {      //Create an image that will be used to open child table
-                				    var $img1 = $('<span class="label label-primary">Create</span>');                         //Open child table when user clicks the image
+                				    var $img1 = $('<span class="label label-primary"><spring:message code="processtemplate.page.img_create"/></span>');                         //Open child table when user clicks the image
                 					    $img1.click(function () {
                 					    $("#dialog-form").dialog({
                 					    resizable: false,
                 						    height:'auto',
                 						    modal: true,
                 						    buttons: {
-                						    "Create from template": function() {
+                						    '<spring:message code="processtemplate.page.button_create"/>': function() {
                 						    processName = document.getElementsByName("processName")[0].value;
                                             description = document.getElementsByName("description")[0].value;
                                             console.log(processName);
@@ -489,16 +498,16 @@ SubProcesses: {                    
                 							    success: function (data) {
                 							    console.log(data);
                 							    console.log(item);
-                							    alert('Created successfully!');
+                							    alert('<spring:message code="processtemplate.page.alert_created"/>');
                 							    },
                 							    error: function () {
-                							    alert('Error posting');
+                							    alert('<spring:message code="processtemplate.page.alert_error"/>');
                 							    }
                 						    });
-                							    $(this).dialog("close");
+                							    $(this).dialog('<spring:message code="processtemplate.page.dialog_close"/>');
                 						    },
                 							    Cancel: function() {
-                							    $(this).dialog("close");
+                							    $(this).dialog('<spring:message code="processtemplate.page.dialog_close"/>');
                 							    }
                 						    }
                 					    });
@@ -507,38 +516,38 @@ SubProcesses: {                    
                 				    }
                 			    },
 			Apply: {
-				title: 'Apply',
+				title: '<spring:message code="processtemplate.page.title_apply"/>',
 					width: '10%',
 					sorting: false,
 					create: false,
 					edit: false,
 					display: function (item) {      //Create an image that will be used to open child table
-					var $img1 = $('<span class="label label-primary">Apply</span>');                         //Open child table when user clicks the image
+					var $img1 = $('<span class="label label-primary"><spring:message code="processtemplate.page.title_apply"/></span>');                         //Open child table when user clicks the image
 						$img1.click(function () {
 						$("#dialog-confirm2").dialog({
 						resizable: false,
 							height:'auto',
 							modal: true,
 							buttons: {
-							"Apply changes": function() {
+							'<spring:message code="processtemplate.page.button_apply"/>': function() {
 							$.ajax({
 							url: '/mdrest/processtemplate/apply/',
 								type: 'POST',
 								data: item+'&busDomainId='+item.record.busDomainId+ '&processTypeId='+item.record.processTypeId+'&processName='+item.record.processName+'&canRecover='+item.record.canRecover+'&description='+item.record.description+'&processTemplateId='+item.record.processTemplateId,
 								dataType: 'json',
 								success: function (data) {
-								alert('Changes applied successfully!');
+								alert('<spring:message code="processtemplate.page.alert_changes"/>');
 								console.log(data);
 								console.log(item);
 								},
 								error: function () {
-								alert('Error in apply');
+								alert('<spring:message code="processtemplate.page.alert_error_apply"/>');
 								}
 							});
-								$(this).dialog("close");
+								$(this).dialog('<spring:message code="processtemplate.page.dialog_close"/>');
 							},
 								Cancel: function() {
-								$(this).dialog("close");
+								$(this).dialog('<spring:message code="processtemplate.page.dialog_close"/>');
 								}
 							}
 						});
@@ -557,6 +566,9 @@ SubProcesses: {                    
 		    }
 	    });
 		    $('#Container').jtable('load');
+		    $('#input-box-button-filter').click(function () {
+            	$('#input-box-button').toggle();
+			});
 	    });</script>
 
 	<script>
@@ -575,29 +587,32 @@ SubProcesses: {                    
     <section style="width:100%;text-align:center;">
 	<div id="Container"></div>
     </section>
-    <div id="input-box-button" >
+    <div id="input-box-button-filter" class="input-box-button-filter">
+    	<span class="filter-icon"></span><span class="filter-text">Filter By Process</span>
+    </div>
+    <div id="input-box-button" class="input-box-button" >
 	<form onsubmit="showProcessTemplatePage(jQuery('#pid').val()); return false;">
 	    <div class="input-group">
-		<input class="form-control" type="number" name="pid" id="pid" value ="" placeholder="Filter by processtemplateid"/>
+		<input class="form-control" type="number" name="pid" id="pid" value ="" placeholder=<spring:message code="processtemplate.page.filter_by_processtemplateid_placeholder"/>/>
 		<span class="input-group-btn">
-		    <button class="btn btn-default  btn-primary" type="submit" onClick="showProcessTemplatePage(jQuery('#pid').val())"><span id="sizing-addon2"><span class="glyphicon glyphicon-arrow-right" aria-hidden="true"></span>&nbsp;</button>
+		    <button class="btn btn-default btn-primary-process" type="submit" onClick="showProcessTemplatePage(jQuery('#pid').val())"><span id="sizing-addon2"><span class="glyphicon glyphicon-arrow-right" aria-hidden="true"></span>&nbsp;</button>
 		</span>
 	    </div>
 	</form>
     </div>
     <div id="dialog-confirm1" title="Are you sure?" style="display:none;">
-    <p><span class="ui-icon ui-icon-alert" style="float:left; margin:0 7px 20px 0;"></span>This will create a new process in the process table with the same configuration as this. Do you want to proceed?</p>
+    <p><span class="ui-icon ui-icon-alert" style="float:left; margin:0 7px 20px 0;"></span><spring:message code="processtemplate.page.filter_by_new_process_placeholder"/></p>
     </div>
     <div id="dialog-confirm2" title="Are you sure?" style="display:none;">
-	<p><span class="ui-icon ui-icon-alert" style="float:left; margin:0 7px 20px 0;"></span>This will edit all the relevant process entries in the process table as per this configuration. Do you want to proceed?</p>
+	<p><span class="ui-icon ui-icon-alert" style="float:left; margin:0 7px 20px 0;"></span><spring:message code="processtemplate.page.filter_by_edit_process_placeholder"/></p>
 	</div>
 	  <div id="dialog-form" style="display:none;">
     	<form>
-    	<div class="jtable-input-label">Process Name</div>
+    	<div class="jtable-input-label"><spring:message code="processtemplate.page.process_name"/></div>
 		<div class="jtable-input jtable-text-input"><input class="" id="Edit-processName" type="text" name="processName" value=""/>
 		</div>
 
-		<div class="jtable-input-label">Process Description</div>
+		<div class="jtable-input-label"><spring:message code="processtemplate.page.process_description"/></div>
 		<div class="jtable-input jtable-text-input"><input class="" id="Edit-processDescription" type="text" name="description" value=""/>
 		</div>
     </form>

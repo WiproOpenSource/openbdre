@@ -1,9 +1,11 @@
+<%@taglib uri="http://www.springframework.org/tags" prefix="spring"%>
+
 <html>
 <head>
-    <title>Sample Upload Form</title>
+    <title><spring:message code="uploadertest.page.title"/></title>
      <head>
     	<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
-    	<title>Bigdata Ready Enterprise</title>
+    	<title><spring:message code="common.page.title_bdre_1"/></title>
 	<script>
 	  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
 	  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
@@ -41,7 +43,7 @@
             }).done(function( data ) {
 
                 console.log( data );
-                alert('Success - See console.log. After file load add following to properties table: '+subDir + '/'+fileName + ' against scriptPath key.');
+                alert('<spring:message code="uploadertest.page.alert_part_1"/>'+' '+subDir + '/'+fileName + ' '+'<spring:message code="uploadertest.page.alert_part_2"/>');
             });
             return false;
         }
@@ -49,11 +51,11 @@
 </head>
 
 <body>
-<p class="alert alert-danger">Please delete this JSP file when the feature is implemented in WFD. This is just a sample.</p>
+<p class="alert alert-danger"><spring:message code="uploadertest.page.file_alert"/></p>
 
     <form method="post" id="fileinfo" name="fileinfo" onsubmit="return submitForm();">
     <div class="form-group">
-        <label>Select a file:</label><br>
+        <label><spring:message code="uploadertest.page.select_file"/></label><br>
         <input type="file" id="file" name="file" required class="form-control"/>
      </div>
         <input type="button" onClick="uoloadFile(100,'hql');" value="Upload" class="btn btn-primary"/>

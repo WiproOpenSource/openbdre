@@ -17,13 +17,16 @@ package com.wipro.ats.bdre.md.rest;
 import com.wipro.ats.bdre.exception.MetadataException;
 import com.wipro.ats.bdre.md.api.base.MetadataAPIBase;
 import com.wipro.ats.bdre.md.beans.ProcessLogInfo;
+import com.wipro.ats.bdre.md.dao.ProcessDAO;
 import com.wipro.ats.bdre.md.dao.ProcessLogDAO;
+import com.wipro.ats.bdre.md.dao.jpa.Process;
 import com.wipro.ats.bdre.md.rest.util.DateConverter;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import java.security.Principal;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -45,10 +48,11 @@ public class ProcessLogAPI extends MetadataAPIBase {
      */
     @Autowired
     ProcessLogDAO processLogDAO;
-
+    @Autowired
+    ProcessDAO processDAO;
     @RequestMapping(value = {"", "/"}, method = RequestMethod.GET)
-    @ResponseBody public
-    RestWrapper list(@RequestParam(value = "page", defaultValue = "0") int startPage, @RequestParam(value = "size", defaultValue = "10") int pageSize, @RequestParam(value = "pid", defaultValue = "0") Integer pid, Principal principal) {
+    @ResponseBody
+    public RestWrapper list(@RequestParam(value = "page", defaultValue = "0") int startPage, @RequestParam(value = "size", defaultValue = "10") int pageSize, @RequestParam(value = "pid", defaultValue = "0") Integer pid, Principal principal) {
         RestWrapper restWrapper = null;
         Integer processId = pid;
         try {
@@ -56,13 +60,25 @@ public class ProcessLogAPI extends MetadataAPIBase {
             if (pid == 0) {
                 processId = null;
             }
+
             processLogInfo.setProcessId(processId);
             processLogInfo.setPage(startPage);
             processLogInfo.setPageSize(pageSize);
-            List<ProcessLogInfo> listLog = processLogDAO.listLog(processLogInfo);
+            List<ProcessLogInfo> listLog = new ArrayList<>();
+            List<ProcessLogInfo> logList=processLogDAO.listLog(processLogInfo);
+            for(ProcessLogInfo log: logList){
+
+                   if("ACCESSGRANTED".equals( processDAO.securityCheck(log.getParentProcessId(), principal.getName(), "read")))
+                       listLog.add(log);
+
+            }
+
             restWrapper = new RestWrapper(listLog, RestWrapper.OK);
             LOGGER.info("All records listed from ProcessLog by User:" + principal.getName());
         }catch (MetadataException e) {
+            LOGGER.error(e);
+            restWrapper = new RestWrapper(e.getMessage(), RestWrapper.ERROR);
+        }catch (SecurityException e) {
             LOGGER.error(e);
             restWrapper = new RestWrapper(e.getMessage(), RestWrapper.ERROR);
         }
@@ -80,6 +96,11 @@ public class ProcessLogAPI extends MetadataAPIBase {
     RestWrapper list(@PathVariable("id") Integer processId, Principal principal) {
         RestWrapper restWrapper = null;
         try {
+            Process parentProcess=processDAO.get(processId);
+            if (parentProcess.getProcess()!=null)
+                processDAO.securityCheck(parentProcess.getProcess().getProcessId(),principal.getName(),"read");
+            else
+                processDAO.securityCheck(processId,principal.getName(),"read");
             ProcessLogInfo processLogInfo = new ProcessLogInfo();
             processLogInfo.setProcessId(processId);
             List<ProcessLogInfo> processLogList = processLogDAO.getProcessLog(processLogInfo);
@@ -90,6 +111,9 @@ public class ProcessLogAPI extends MetadataAPIBase {
             LOGGER.info("Record with ID:" + processId + " selected from ProcessLog by User:" + principal.getName());
 
         }catch (MetadataException e) {
+            LOGGER.error(e);
+            restWrapper = new RestWrapper(e.getMessage(), RestWrapper.ERROR);
+        }catch (SecurityException e) {
             LOGGER.error(e);
             restWrapper = new RestWrapper(e.getMessage(), RestWrapper.ERROR);
         }
