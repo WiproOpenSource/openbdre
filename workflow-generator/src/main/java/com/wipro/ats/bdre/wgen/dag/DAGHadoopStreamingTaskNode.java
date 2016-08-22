@@ -61,7 +61,7 @@ public class DAGHadoopStreamingTaskNode extends  GenericActionNode {
 
     public String getName() {
 
-        String nodeName = "hadoopStream-" + getId() + "-" + processInfo.getProcessName().replace(' ', '_');
+        String nodeName = "hadoopStream_" + getId() + "_" + processInfo.getProcessName().replace(' ', '_');
         return nodeName.substring(0, Math.min(nodeName.length(), 45));
 
     }
@@ -77,7 +77,7 @@ public class DAGHadoopStreamingTaskNode extends  GenericActionNode {
         try {
             String homeDir = System.getProperty("user.home");
             FileWriter fw = new FileWriter(homeDir+"/defFile.txt", true);
-            fw.write("\nf_"+getName().replace('-', '_')+"()");
+            fw.write("\nf_"+getName()+"()");
             fw.close();
         }
         catch (IOException e){
@@ -104,15 +104,15 @@ public class DAGHadoopStreamingTaskNode extends  GenericActionNode {
                 "\tprint(\"out is \",out)\n"+
                 "\tprint(\"err is \",err)\n"+
                 "\tif(bash_output.returncode == 0):\n" +
-                "\t\treturn '"+getToNode().getName().replace('-', '_') +"'\n" +
+                "\t\treturn '"+getToNode().getName() +"'\n" +
                 "\telse:\n" +
-                "\t\treturn 'dummy_"+getName().replace('-', '_') +"'\n" );
+                "\t\treturn 'dummy_"+getName() +"'\n" );
 
         ret.append("\ndef f_"+ getName().replace('-','_')+"():\n" +
-                "\t"+ getName().replace('-', '_')+".set_downstream("+ getToNode().getName().replace('-', '_')+")\n" +
-                "\t"+ getName().replace('-','_')+".set_downstream(dummy_"+getName().replace('-', '_')+")\n" +
-                "\tdummy_"+ getName().replace('-','_')+".set_downstream("+getTermNode().getName().replace('-', '_')+")\n"+
-                getName().replace('-', '_')+" = BranchPythonOperator(task_id='" + getName().replace('-', '_')+"', python_callable="+getName().replace('-','_')+"_pc, dag=dag)\n");
+                "\t"+ getName()+".set_downstream("+ getToNode().getName()+")\n" +
+                "\t"+ getName().replace('-','_')+".set_downstream(dummy_"+getName()+")\n" +
+                "\tdummy_"+ getName().replace('-','_')+".set_downstream("+getTermNode().getName()+")\n"+
+                getName()+" = BranchPythonOperator(task_id='" + getName()+"', python_callable="+getName().replace('-','_')+"_pc, dag=dag)\n");
 
 
         return  ret.toString();

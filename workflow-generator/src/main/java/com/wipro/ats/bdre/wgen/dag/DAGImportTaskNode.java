@@ -48,7 +48,7 @@ public class DAGImportTaskNode extends GenericActionNode {
 
     public String getName() {
 
-        String nodeName = "import-" + getId() + "-" + processInfo.getProcessName().replace(' ', '_');
+        String nodeName = "import_" + getId() + "_" + processInfo.getProcessName().replace(' ', '_');
         return nodeName.substring(0, Math.min(nodeName.length(), 45));
 
     }
@@ -61,7 +61,7 @@ public class DAGImportTaskNode extends GenericActionNode {
         }
         String homeDir = System.getProperty("user.home");
         StringBuilder ret = new StringBuilder();
-        ret.append("\ndef "+ getName().replace('-','_')+"_pc():\n" +
+        ret.append("\ndef "+ getName()+"_pc():\n" +
                 "\tcommand='java -cp "+homeDir+"/bdre/lib/md_api/md_api-1.1-SNAPSHOT-executable.jar:"+homeDir+"/bdre/lib/*/*  com.wipro.ats.bdre.dataimport.DataImportMain --process-id "+ getId().toString()+"  --batch-id  dict[\"initJobInfo.getTargetBatchId()\"]"+ "  --config-group imp-common  --instance-exec-id dict[\"initJobInfo.getInstanceExecId()\"] ' \n"+
                 "\tbash_output = subprocess.Popen(command,shell=True, stdin=subprocess.PIPE, stdout=subprocess.PIPE )\n" +
                 "\tout,err = bash_output.communicate()\n"+
@@ -72,11 +72,11 @@ public class DAGImportTaskNode extends GenericActionNode {
                 "\telse:\n" +
                 "\t\treturn '"+getToNode().getName().replace('-', '_') +"'\n" +
 
-                "\ndef f_"+ getName().replace('-','_')+"():\n" +
+                "\ndef f_"+ getName()+"():\n" +
                 "\t"+ getName().replace('-', '_')+".set_downstream("+ getToNode().getName().replace('-', '_')+")\n" +
                 "\t"+ getName().replace('-', '_')+".set_downstream(dummy_"+ getName().replace('-', '_')+")\n" +
                 "\t"+ "dummy_"+ getName().replace('-', '_')+".set_downstream("+getTermNode().getName().replace('-', '_') +")\n"+
-                getName().replace('-','_')+" = BranchPythonOperator(task_id='"+getName().replace('-', '_')+"', python_callable="+getName().replace('-','_')+"_pc, dag=dag)\n"+
+                getName()+" = BranchPythonOperator(task_id='"+getName().replace('-', '_')+"', python_callable="+getName()+"_pc, dag=dag)\n"+
                 "dummy_"+ getName().replace('-', '_')+" = DummyOperator(task_id ='"+"dummy_"+ getName().replace('-', '_')+"',dag=dag)\n"
         );
 
