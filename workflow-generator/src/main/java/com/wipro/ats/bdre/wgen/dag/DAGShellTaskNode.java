@@ -1,6 +1,6 @@
 package com.wipro.ats.bdre.wgen.dag;
 
-import com.wipro.ats.bdre.MDConfig;
+import com.wipro.ats.bdre.GetParentProcessType;
 import com.wipro.ats.bdre.exception.BDREException;
 import com.wipro.ats.bdre.md.api.GetProperties;
 import com.wipro.ats.bdre.md.beans.ProcessInfo;
@@ -45,12 +45,17 @@ public class DAGShellTaskNode extends com.wipro.ats.bdre.wgen.dag.GenericActionN
 
     @Override
     public String getDAG() {
+        String homeDir = System.getProperty("user.home");
+        //ProcessDAO processDAO = new ProcessDAO();
+        GetParentProcessType getParentProcessType = new GetParentProcessType();
+
         if (this.getProcessInfo().getParentProcessId() == 0) {
             return "";
         }
         StringBuilder ret = new StringBuilder();
-        ret.append("\ndef "+ getName()+"_pc():\n" +
-                "\tcommand='sh "+ MDConfig.getProperty(UPLOADBASEDIRECTORY) + "/" + processInfo.getParentProcessId().toString() + "/" + getScriptPath(getId(), SCRIPT) +" " + getParams(getId(), "param")  +"',\n" +
+        ret.append("\ndef "+ getName().replace('-','_')+"_pc():\n" +
+                "\tcommand='sh "+ homeDir + "/bdre_apps/" + processInfo.getBusDomainId().toString()+"/" + getParentProcessType.getParentProcessTypeId(processInfo.getParentProcessId())+"/"+ processInfo.getParentProcessId().toString()  + "/" + getScriptPath(getId(), SCRIPT) +" " + getParams(getId(), "param")  +"',\n" +
+
                 "\tbash_output = subprocess.Popen(command,shell=True, stdin=subprocess.PIPE, stdout=subprocess.PIPE )\n" +
                 "\tout,err = bash_output.communicate()\n"+
                 "\tprint(\"out is \",out)\n"+
@@ -69,7 +74,6 @@ public class DAGShellTaskNode extends com.wipro.ats.bdre.wgen.dag.GenericActionN
         );
 
         try {
-            String homeDir = System.getProperty("user.home");
             FileWriter fw = new FileWriter(homeDir+"/defFile.txt", true);
             fw.write("\nf_"+getName()+"()");
             fw.close();
