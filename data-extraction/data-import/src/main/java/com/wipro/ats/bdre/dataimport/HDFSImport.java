@@ -214,7 +214,8 @@ public class HDFSImport extends Configured implements Tool {
                     try
                     {
                         String homeDir = System.getProperty("user.home");
-                        FileWriter fw = new FileWriter(homeDir+"/jobInfo.txt", true);
+                       // String parentProcessId = String.valueOf(Integer.valueOf(processId) - 1);
+                        FileWriter fw = new FileWriter(homeDir+"/bdre/airflow/"+processId+"_jobInfo.txt", true);
                         BufferedWriter bw = new BufferedWriter(fw);
 
                         if(registerFileInfo.getSubProcessId() != null)

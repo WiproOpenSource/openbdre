@@ -59,10 +59,11 @@ public class OozieInitJob {
             LOGGER.info("initjobInfo "+initJobInfo);
             try
             {
+                String processId = args[1];
                 String homeDir = System.getProperty("user.home");
                 LOGGER.info("home Directory is "+homeDir);
-                Files.deleteIfExists(Paths.get(homeDir+"/jobInfo.txt"));
-                FileWriter fw = new FileWriter(homeDir+"/jobInfo.txt", true);
+                Files.deleteIfExists(Paths.get(homeDir+"/bdre/airflow/"+processId+"_jobInfo.txt"));
+                FileWriter fw = new FileWriter(homeDir+"/bdre/airflow/"+processId+"_jobInfo.txt", true);
                 BufferedWriter bw = new BufferedWriter(fw);
 
                 bw.write("initJobInfo.getTargetBatchMarkingSet():"+initJobInfo.getTargetBatchMarkingSet().toString()+"\n");

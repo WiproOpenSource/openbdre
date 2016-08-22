@@ -59,7 +59,7 @@ public class DAGImportTaskNode extends GenericActionNode {
             return "";
         }
         String homeDir = System.getProperty("user.home");
-        String jobInfoFile = homeDir+"/jobInfo.txt";
+        String jobInfoFile = homeDir+"/bdre/airflow/"+processInfo.getParentProcessId().toString()+"_jobInfo.txt";
         StringBuilder ret = new StringBuilder();
 
         ret.append( "with open('"+jobInfoFile+"','a+') as propeties_register_file:\n"+

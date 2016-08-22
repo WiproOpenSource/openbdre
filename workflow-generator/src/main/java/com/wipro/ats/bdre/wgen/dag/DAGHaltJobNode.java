@@ -18,7 +18,7 @@ public class DAGHaltJobNode extends  DAGNode {
     @Override
     public String getDAG() {
         String homeDir = System.getProperty("user.home");
-        String jobInfoFile = homeDir+"/jobInfo.txt";
+        String jobInfoFile = homeDir+"/bdre/airflow/"+getId().toString()+"_jobInfo.txt";
         try {
 
             FileWriter fw = new FileWriter(homeDir + "/defFile.txt", true);

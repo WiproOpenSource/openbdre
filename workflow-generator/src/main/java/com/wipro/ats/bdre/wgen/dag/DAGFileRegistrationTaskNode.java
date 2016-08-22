@@ -61,7 +61,7 @@ public class DAGFileRegistrationTaskNode extends GenericActionNode {
             }
         }
         String homeDir = System.getProperty("user.home");
-        String jobInfoFile = homeDir+"/jobInfo.txt";
+        String jobInfoFile = homeDir+"/bdre/airflow/"+processInfo.getProcessId().toString()+"_jobInfo.txt";
 
         StringBuilder ret = new StringBuilder();
         ret.append(

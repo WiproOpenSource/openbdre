@@ -56,7 +56,7 @@ public class DAGHiveTaskNode extends GenericActionNode {
         String homeDir = System.getProperty("user.home");
         //ProcessDAO processDAO = new ProcessDAO();
         GetParentProcessType getParentProcessType = new GetParentProcessType();
-        String jobInfoFile = homeDir + "/jobInfo.txt";
+        String jobInfoFile = homeDir+"/bdre/airflow/"+processInfo.getParentProcessId().toString()+"_jobInfo.txt";
 
         LOGGER.info("processInfo " + processInfo.getProcessId());
         ret.append(
@@ -66,9 +66,13 @@ public class DAGHiveTaskNode extends GenericActionNode {
                         "\t\tdict[info[0]] = info[1].replace('\\n','')\n" +
 
                  "\ndef getQuery():\n" +
-                        "\twith open('"+ homeDir + "/bdre_apps/" + processInfo.getBusDomainId().toString()+"/" + getParentProcessType.getParentProcessTypeId(processInfo.getParentProcessId())+"/"+ processInfo.getParentProcessId().toString() + "/" + getQueryPath(getId(), "query") +"','r+') as queryFile:\n"+
-                        "\t\tqueryString=str("+getParams(getId(), "param")+")+queryFile.read()\n" +
-                        "\treturn queryString\n"+
+                        "\tif os.path.exists('"+ jobInfoFile +"') and os.path.getsize('"+ jobInfoFile +"') > 0:"+
+                        "\t\twith open('"+ homeDir + "/bdre_apps/" + processInfo.getBusDomainId().toString()+"/" + getParentProcessType.getParentProcessTypeId(processInfo.getParentProcessId())+"/"+ processInfo.getParentProcessId().toString() + "/" + getQueryPath(getId(), "query") +"','r+') as queryFile:\n"+
+                        "\t\t\tqueryString=str("+getParams(getId(), "param")+")+queryFile.read()\n" +
+                        "\t\treturn queryString\n"+
+                        "\telse:"+
+                        "\t\treturn ' ' "+
+
                 "\ndef success_" + getName().replace('-', '_') + "(body,**context):\n" +
                         "\t"+getName().replace('-','_')+".xcom_push(body,'key',body['task_instance'].state)" +
 
@@ -132,20 +136,20 @@ public class DAGHiveTaskNode extends GenericActionNode {
      */
     public String getParams(Integer pid, String configGroup) {
         StringBuilder addParams = new StringBuilder();
-        String url = "\"set run_id="+"ast.literal_eval(str(\"+dict['initJobInfo.getMinBatchIdMap()']).replace('=',':'))["+getId()+ "];+\""
+        String url =
              //   +"set hive.exec.post.hooks=com.wipro.ats.bdre.hiveplugin.hook.LineageHook;"
              //   +"set bdre.lineage.processId="+getId()
             //    +";set bdre.lineage.instanceExecId=\"+dict['initJobInfo.getInstanceExecId()'];"
-
-                +"set exec-id=\"+dict['initJobInfo.getInstanceExecId()'];"
-                +"set target-batch-id=\"+dict['initJobInfo.getTargetBatchId()'];"
-                +"set target-batch-marking=\"+dict['initJobInfo.getTargetBatchMarkingSet()'];"
-                +"set min-batch-id="+"ast.literal_eval(str(\"+dict['initJobInfo.getMinBatchIdMap()']).replace('=',':'))["+getId()+ "];+\""
-                +"set max-batch-id="+"ast.literal_eval(str(\"+dict['initJobInfo.getMaxBatchIdMap()']).replace('=',':'))["+getId()+ "];+\""
-                +"set min-pri="+"ast.literal_eval(str(\"+dict['initJobInfo.getMinSourceInstanceExecIdMap()']).replace('=',':'))["+getId()+ "];+\""
-                +"set max-pri="+"ast.literal_eval(str(\"+dict['initJobInfo.getMaxSourceInstanceExecIdMap()']).replace('=',':'))["+getId()+ "];+\""
-                +"set min-batch-marking="+"ast.literal_eval(str(\"+dict['initJobInfo.getMinBatchMarkingMap()']).replace('=',':'))["+getId()+ "];+\""
-                +"set min-batch-marking="+"ast.literal_eval(str(\"+dict['initJobInfo.getMinBatchMarkingMap()']).replace('=',':'))["+getId()+ "];";
+                 "\"set run_id="+"\"+str(ast.literal_eval(str(dict['initJobInfo.getMinBatchIdMap()']).replace('=',':'))["+getId()+ "])+\""
+                +";set exec-id=\"+str(dict['initJobInfo.getInstanceExecId()'])+\""
+                +";set target-batch-id=\"+str(dict['initJobInfo.getTargetBatchId()'])+\""
+                +";set target-batch-marking=\"+str(dict['initJobInfo.getTargetBatchMarkingSet()'])+\""
+                +";set min-batch-id="+"\"+str(ast.literal_eval(str(dict['initJobInfo.getMinBatchIdMap()']).replace('=',':'))["+getId()+ "])+\""
+                +";set max-batch-id="+"\"+str(ast.literal_eval(str(dict['initJobInfo.getMaxBatchIdMap()']).replace('=',':'))["+getId()+ "])+\""
+                +";set min-pri="+"\"+str(ast.literal_eval(str(dict['initJobInfo.getMinSourceInstanceExecIdMap()']).replace('=',':'))["+getId()+ "])+\""
+                +";set max-pri="+"\"+str(ast.literal_eval(str(dict['initJobInfo.getMaxSourceInstanceExecIdMap()']).replace('=',':'))["+getId()+ "])+\""
+                +";set min-batch-marking="+"\"+str(ast.literal_eval(str(dict['initJobInfo.getMinBatchMarkingMap()']).replace('=',':'))["+getId()+ "])+\""
+                +";set min-batch-marking="+"\"+str(ast.literal_eval(str(dict['initJobInfo.getMinBatchMarkingMap()']).replace('=',':'))["+getId()+ "])+\";\" ";
 
         addParams.append(url);
         GetProperties getProperties = new GetProperties();
