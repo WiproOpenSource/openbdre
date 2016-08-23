@@ -1,6 +1,6 @@
 package com.wipro.ats.bdre.wgen.dag;
 
-import com.wipro.ats.bdre.MDConfig;
+import com.wipro.ats.bdre.GetParentProcessType;
 import com.wipro.ats.bdre.md.api.GetProperties;
 import com.wipro.ats.bdre.md.beans.ProcessInfo;
 import org.apache.log4j.Logger;
@@ -16,7 +16,6 @@ public class DAGSparkTaskNode extends GenericActionNode {
     private static final Logger LOGGER = Logger.getLogger(DAGSparkTaskNode.class);
     private ProcessInfo processInfo = new ProcessInfo();
     private DAGTaskNode dagTaskNode = null;
-    private static final String UPLOADBASEDIRECTORY = "upload.base-directory";
 
     /**
      * This constructor is used to set node id and process information.
@@ -43,6 +42,7 @@ public class DAGSparkTaskNode extends GenericActionNode {
 
     @Override
     public String getDAG() {
+        String homeDir = System.getProperty("user.home");
         LOGGER.info("Inside dag Spark");
         if (this.getProcessInfo().getParentProcessId() == 0) {
             return "";
@@ -54,9 +54,11 @@ public class DAGSparkTaskNode extends GenericActionNode {
             }
         }
         StringBuilder ret = new StringBuilder();
-
+        //ProcessDAO processDAO = new ProcessDAO();
+        GetParentProcessType getParentProcessType = new GetParentProcessType();
+        //--class "+getAppMainClass(getId(), "spark-main")+"
         ret.append("\ndef "+ getName().replace('-','_')+"_pc():\n" +
-                "\tcommand='java -cp "+ MDConfig.getProperty(UPLOADBASEDIRECTORY).replace("/bdre-wfd","")  +"/bdre/lib/spark-core/spark-core-1.1-SNAPSHOT.jar:"+MDConfig.getProperty(UPLOADBASEDIRECTORY).replace("/bdre-wfd","")+"/bdre/lib/*/* org.apache.spark.deploy.SparkSubmit  " +MDConfig.getProperty(UPLOADBASEDIRECTORY) + "/" + processInfo.getParentProcessId().toString() + "/" +getJarName(getId(), "spark-jar")+" "+getAppArgs(getId(), "app-args")+"',\n" +
+                "\tcommand='java -cp "+ homeDir +"/bdre/lib/semantic-core/semantic-core-1.1-SNAPSHOT.jar:"+homeDir+"/bdre/lib/*/* org.apache.spark.deploy.SparkSubmit  "+ getConf(getId(),"spark-conf")+" "+homeDir + "/bdre_apps/" + processInfo.getBusDomainId().toString()+"/" + getParentProcessType.getParentProcessTypeId(processInfo.getParentProcessId())+"/"+ processInfo.getParentProcessId().toString() + "/" +getJarName(getId(), "spark-jar")+" "+getAppArgs(getId(), "app-args")+"',\n" +
                 "\tbash_output = subprocess.Popen(command,shell=True, stdin=subprocess.PIPE, stdout=subprocess.PIPE )\n" +
                 "\tout,err = bash_output.communicate()\n"+
                 "\tprint(\"out is \",out)\n"+
@@ -71,12 +73,11 @@ public class DAGSparkTaskNode extends GenericActionNode {
                 "\t"+ getName().replace('-', '_')+".set_downstream(dummy_"+ getName().replace('-', '_')+")\n" +
                 "\t"+ "dummy_"+ getName().replace('-', '_')+".set_downstream("+getTermNode().getName().replace('-', '_') +")\n"+
                 getName().replace('-','_')+" = BranchPythonOperator(task_id='"+getName().replace('-', '_')+"', python_callable="+getName().replace('-','_')+"_pc, dag=dag)\n"+
-                "dummy_"+ getName().replace('-', '_')+" = DummyOperator(task_id ='"+"dummy_"+ getName().replace('-', '_')+"',dag=dag)\n"
-        );
+                "dummy_"+ getName().replace('-', '_')+" = DummyOperator(task_id ='"+"dummy_"+ getName().replace('-', '_')+"',dag=dag)\n");
 
 
         try {
-            String homeDir = System.getProperty("user.home");
+
             FileWriter fw = new FileWriter(homeDir+"/defFile.txt", true);
             fw.write("\nf_"+getName().replace('-', '_')+"()");
             fw.close();

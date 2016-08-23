@@ -61,17 +61,17 @@ public class DAGFileRegistrationTaskNode extends GenericActionNode {
             }
         }
         String homeDir = System.getProperty("user.home");
-        String registerFileInfo = homeDir+"/registerFileInfo.txt";
+        String jobInfoFile = homeDir+"/bdre/airflow/"+processInfo.getProcessId().toString()+"_jobInfo.txt";
 
         StringBuilder ret = new StringBuilder();
         ret.append(
-                "with open('"+registerFileInfo+"','a+') as propeties_register_file:\n"+
+                "with open('"+jobInfoFile+"','a+') as propeties_register_file:\n"+
                 "\tfor line in propeties_register_file:\n"+
                 "\t\tfile_info = line.split(':',2)\n"+
                 "\t\tdict[file_info[0]] = file_info[1].replace('\\n','')\n"+
 
                 "\ndef "+ getName().replace('-','_')+"_pc():\n" +
-                "\tcommand='java -cp "+homeDir+"/bdre/lib/md_api/md_api-1.1-SNAPSHOT-executable.jar:"+homeDir+"/bdre/lib/*/*  com.wipro.ats.bdre.md.api.oozie.OozieRegisterFile  --sub-process-id dict[\"fileInfo.getSubProcessId()\"] --path dict[\"fileInfo.getPath()\"] --file-size dict[\"fileInfo.getFileSize()\"] --file-hash dict[\"fileInfo.getFileHash()\"] --batch-id  dict[\"initJobInfo.getTargetBatchId()\"] --server-id 123461 --creation-timestamp dict[\"fileInfo.getCreationTs()\"] ' \n"+
+                "\tcommand='java -cp "+homeDir+"/bdre/lib/md_api/md_api-1.1-SNAPSHOT-executable.jar:"+homeDir+"/bdre/lib/*/*  com.wipro.ats.bdre.md.api.oozie.OozieRegisterFile  --sub-process-id \'+dict[\"fileInfo.getSubProcessId()\"]+\' --path \'+dict[\"fileInfo.getPath()\"]+\' --file-size \'+dict[\"fileInfo.getFileSize()\"]+\' --file-hash \'+dict[\"fileInfo.getFileHash()\"]+\' --batch-id  \'+dict[\"initJobInfo.getTargetBatchId()\"]+\' --server-id 123461 --creation-timestamp \'+dict[\"fileInfo.getCreationTs()\"]  \n"+
                 "\tbash_output = subprocess.Popen(command,shell=True, stdin=subprocess.PIPE, stdout=subprocess.PIPE )\n" +
                 "\tout,err = bash_output.communicate()\n"+
                 "\tprint(\"out is \",out)\n"+

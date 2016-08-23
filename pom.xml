@@ -55,6 +55,7 @@
         <module>dot-gen</module>
         <module>cluster-migration</module>
         <module>analytic-ui-generator</module>
+        <module>semantic-core</module>
     </modules>
 
     <dependencies>

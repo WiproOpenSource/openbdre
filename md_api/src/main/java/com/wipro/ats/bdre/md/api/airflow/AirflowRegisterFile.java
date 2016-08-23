@@ -19,12 +19,7 @@ import com.wipro.ats.bdre.exception.MetadataException;
 import com.wipro.ats.bdre.md.api.RegisterFile;
 import com.wipro.ats.bdre.md.beans.RegisterFileInfo;
 import com.wipro.ats.bdre.util.AirflowUtil;
-import com.wipro.ats.bdre.util.OozieUtil;
 import org.apache.log4j.Logger;
-
-import java.io.BufferedWriter;
-import java.io.FileWriter;
-import java.io.IOException;
 
 /**
  * Created by pushpak on 18/07/2016
@@ -46,28 +41,7 @@ public class AirflowRegisterFile {
         AirflowUtil airflowUtil = new AirflowUtil();
         try {
             airflowUtil.persistBeanData(fileInfo, false);
-            try
-            {
-                FileWriter fw = new FileWriter("/home/cloudera/registerFileInfo.txt", true);
-                BufferedWriter bw = new BufferedWriter(fw);
 
-
-                bw.write("fileInfo.getSubProcessId():"+fileInfo.getSubProcessId().toString()+"\n");
-                bw.write("fileInfo.getServerId():"+fileInfo.getServerId().toString()+"\n");
-                bw.write("fileInfo.getPath():"+fileInfo.getPath()+"\n");
-                bw.write("fileInfo.getFileSize():"+fileInfo.getFileSize().toString()+"\n");
-                bw.write("fileInfo.getFileHash():"+fileInfo.getFileHash().toString()+"\n");
-                bw.write("fileInfo.getCreationTs():"+fileInfo.getCreationTs().toString()+"\n");
-                bw.write("fileInfo.getBatchId():"+fileInfo.getBatchId().toString()+"\n");
-                bw.write("fileInfo.getParentProcessId():"+fileInfo.getParentProcessId().toString()+"\n");
-                bw.write("fileInfo.getBatchMarking():"+fileInfo.getBatchMarking()+"\n");
-
-                bw.close();
-
-            }catch(IOException i)
-            {
-                i.printStackTrace();
-            }
         } catch (Exception e) {
             LOGGER.error(e);
             throw new MetadataException(e);

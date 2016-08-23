@@ -95,26 +95,28 @@ public class DAGTaskNode extends DAGNode {
             DAGHadoopStreamingTaskNode hadoopStreamingTaskNode = new DAGHadoopStreamingTaskNode(this);
             containingNodes.add(hadoopStreamingTaskNode);
         }
-        /*else if (processInfo.getProcessTypeId() == HIVE_ACTION) {
-            DAGHiveTaskNode hiveActionNode = new DagHiveTaskNode(this);
+        else if (processInfo.getProcessTypeId() == HIVE_ACTION) {
+            DAGHiveTaskNode hiveActionNode = new DAGHiveTaskNode(this);
             containingNodes.add(hiveActionNode);
-        }*/
+        }
         else if (processInfo.getProcessTypeId() == R_ACTION) {
             DAGRTaskNode rActionNode = new DAGRTaskNode(this);
             containingNodes.add(rActionNode);
         }
-        else if (processInfo.getProcessTypeId() == DATA_IMPORT_ACTION) {
-            DAGImportTaskNode importTaskNode = new DAGImportTaskNode(this);
-            DAGFileRegistrationTaskNode fileRegistrationTaskNode = new DAGFileRegistrationTaskNode(this);
-             importTaskNode.setToNode(fileRegistrationTaskNode);
-             containingNodes.add(importTaskNode);
-             containingNodes.add(fileRegistrationTaskNode);
-        }
-        /*else if (processInfo.getProcessTypeId() == PIG_ACTION) {
-            DagPigTaskNode pigActionNode = new DagPigTaskNode(this);
+        else if (processInfo.getProcessTypeId() == PIG_ACTION) {
+            DAGPigTaskNode pigActionNode = new DAGPigTaskNode(this);
             containingNodes.add(pigActionNode);
 
-        }*/
+        }
+        else if (processInfo.getProcessTypeId() == DATA_IMPORT_ACTION) {
+            DAGImportTaskNode importActionNode = new DAGImportTaskNode(this);
+            DAGFileRegistrationTaskNode fileRegistrationNode = new DAGFileRegistrationTaskNode(this);
+            importActionNode.setToNode(fileRegistrationNode);
+            containingNodes.add(importActionNode);
+            containingNodes.add(fileRegistrationNode);
+        }
+        else if (processInfo.getProcessTypeId() == IMPORT_ACTION) {
+        }
 
        /* if (processInfo.getProcessTypeId() == RAW_LOAD_ACTION) {
             RawLoadActionNode rawLoadActionNode = new RawLoadActionNode(this);
@@ -162,10 +164,9 @@ public class DAGTaskNode extends DAGNode {
             */
         else if (processInfo.getProcessTypeId() == SEMANTIC_ACTION) {
         }
-        else if (processInfo.getProcessTypeId() == INGESTION) {
+        /*else if (processInfo.getProcessTypeId() == INGESTION) {
         } else if (processInfo.getProcessTypeId() == EXPORT_ACTION) {
-        } else if (processInfo.getProcessTypeId() == IMPORT_ACTION) {
-        }  /*else if (processInfo.getProcessTypeId() == DQ_PARENT_ACTION) {
+        }  else if (processInfo.getProcessTypeId() == DQ_PARENT_ACTION) {
         } else if (processInfo.getProcessTypeId() == HIVE_GEN_PARENT_ACTION) {
         } else if (processInfo.getProcessTypeId() == HIVE_MIGRATION_ACTION) {
         } else if (processInfo.getProcessTypeId() == SUPER_WF_ACTION) {

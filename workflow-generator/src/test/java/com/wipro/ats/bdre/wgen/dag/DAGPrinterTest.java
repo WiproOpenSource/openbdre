@@ -37,10 +37,10 @@ public class DAGPrinterTest {
     private static List<ProcessInfo> getProcessBeans2() {
         //Unit test with test data
         List<ProcessInfo> processInfos = new ArrayList<ProcessInfo>();
-        ProcessInfo parent = new ProcessInfo(9, "sample parent", "ETL Process", 1, 2, 0, false, 0, "10");
-        ProcessInfo sub1 = new ProcessInfo(10, "sample sub", "RAW_LOAD_ACTION Process", 1, 25, 9, false, 0, "11");
-        ProcessInfo sub2 = new ProcessInfo(11, "sample sub", "STAGE_LOAD_ACTION Process", 1, 25, 9, false, 0, "12");
-        ProcessInfo sub3 = new ProcessInfo(12, "sample sub", "BASE_LOAD_ACTION Process", 1, 25, 9, false, 0, "9");
+        ProcessInfo parent = new ProcessInfo(7, "sample parent", "ETL Process", 1, 2, 0, false, 0, "8");
+        ProcessInfo sub1 = new ProcessInfo(8, "sample sub", "RAW_LOAD_ACTION Process", 1, 9, 7, false, 0, "7");
+        //ProcessInfo sub2 = new ProcessInfo(11, "sample sub", "STAGE_LOAD_ACTION Process", 1, 25, 9, false, 0, "12");
+        //ProcessInfo sub3 = new ProcessInfo(12, "sample sub", "BASE_LOAD_ACTION Process", 1, 25, 9, false, 0, "9");
         //ProcessInfo sub4 = new ProcessInfo(13, "sample sub", "BASE_LOAD_ACTION Process2", 1, 25, 9, false, 0, "9");
 
         //ProcessInfo sub4 = new ProcessInfo(5, "sample sub", "Semantic Process", 1, 1, 1, false, 0, "6");
@@ -48,8 +48,8 @@ public class DAGPrinterTest {
         //ProcessInfo sub6 = new ProcessInfo(7, "sample sub", "Semantic Process", 1, 1, 1, false, 0, "1");
         processInfos.add(parent);
         processInfos.add(sub1);
-        processInfos.add(sub2);
-        processInfos.add(sub3);
+        //processInfos.add(sub2);
+        //processInfos.add(sub3);
         //processInfos.add(sub4);
         //processInfos.add(sub5);
         //processInfos.add(sub6);
@@ -69,6 +69,7 @@ public class DAGPrinterTest {
     }
 
     @Test
+    @Ignore
     public void testExecute1() throws Exception {
         List<ProcessInfo> processInfos = getProcessBeans2();
         String workflowXML = new DAGPrinter().execute(processInfos, "test-workflow").getDAG().toString();
