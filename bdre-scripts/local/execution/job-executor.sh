@@ -37,7 +37,8 @@ elif [ $processTypeId -eq 4 ]; then
     #python $(dirname $0)/Workflow.py $busDomainId $processTypeId $processId
     airflow backfill $dag -s `date +%Y-%m-%dT%T`
 elif [ $processTypeId -eq 5 ]; then
-    python $(dirname $0)/Workflow.py $busDomainId $processTypeId $processId
+    #python $(dirname $0)/Workflow.py $busDomainId $processTypeId $processId
+    airflow backfill $dag -s `date +%Y-%m-%dT%T`
 elif [ $processTypeId -eq 18 ]; then
     python $(dirname $0)/Workflow.py $busDomainId $processTypeId $processId
 elif [ $processTypeId -eq 19 ]; then
