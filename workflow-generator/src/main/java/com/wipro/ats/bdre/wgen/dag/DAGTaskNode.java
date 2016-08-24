@@ -126,6 +126,8 @@ public class DAGTaskNode extends DAGNode {
             containingNodes.add(dataGenerationNode);
             containingNodes.add(fileRegistrationNode);
         }
+        else if (processInfo.getProcessTypeId() == ETL_ACTION) {
+        }
         else if (processInfo.getProcessTypeId() == BASE_LOAD_ACTION) {
             DAGBaseLoadTaskNode baseLoadActionNode = new DAGBaseLoadTaskNode(this);
             containingNodes.add(baseLoadActionNode);

@@ -216,9 +216,10 @@ public class HDFSImport extends Configured implements Tool {
                     try
                     {
                         String homeDir = System.getProperty("user.home");
-                       // String parentProcessId = String.valueOf(Integer.valueOf(processId) - 1);
-                        Files.deleteIfExists(Paths.get(homeDir + "/bdre/airflow/" + processId + "_fileInfo.txt"));
-                        FileWriter fw = new FileWriter(homeDir+"/bdre/airflow/"+processId+"_fileInfo.txt", true);
+                       String path = homeDir + "/bdre/airflow/" + processId + "_fileInfo.txt";
+                        Files.deleteIfExists(Paths.get(path));
+                        FileWriter fw = new FileWriter(path);
+                        LOGGER.info("file name is : "+ path);
                         BufferedWriter bw = new BufferedWriter(fw);
 
                         if(registerFileInfo.getSubProcessId() != null)
