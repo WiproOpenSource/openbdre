@@ -117,6 +117,12 @@ public class DAGTaskNode extends DAGNode {
         }
         else if (processInfo.getProcessTypeId() == IMPORT_ACTION) {
         }
+        else if (processInfo.getProcessTypeId() == CRAWLER_PARENT_ACTION) {
+        }
+        else if (processInfo.getProcessTypeId() == CRAWLER_CHILD_ACTION) {
+            DAGCrawlerTaskNode crawlerActionNode = new DAGCrawlerTaskNode(this);
+            containingNodes.add(crawlerActionNode);
+        }
 
        /* if (processInfo.getProcessTypeId() == RAW_LOAD_ACTION) {
             RawLoadActionNode rawLoadActionNode = new RawLoadActionNode(this);
