@@ -35,6 +35,8 @@ import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.sql.Timestamp;
 import java.util.Date;
 import java.util.Properties;
@@ -215,7 +217,8 @@ public class HDFSImport extends Configured implements Tool {
                     {
                         String homeDir = System.getProperty("user.home");
                        // String parentProcessId = String.valueOf(Integer.valueOf(processId) - 1);
-                        FileWriter fw = new FileWriter(homeDir+"/bdre/airflow/"+processId+"_jobInfo.txt", true);
+                        Files.deleteIfExists(Paths.get(homeDir + "/bdre/airflow/" + processId + "_fileInfo.txt"));
+                        FileWriter fw = new FileWriter(homeDir+"/bdre/airflow/"+processId+"_fileInfo.txt", true);
                         BufferedWriter bw = new BufferedWriter(fw);
 
                         if(registerFileInfo.getSubProcessId() != null)
