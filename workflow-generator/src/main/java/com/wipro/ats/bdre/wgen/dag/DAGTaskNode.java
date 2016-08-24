@@ -117,6 +117,13 @@ public class DAGTaskNode extends DAGNode {
         }
         else if (processInfo.getProcessTypeId() == IMPORT_ACTION) {
         }
+        else if (processInfo.getProcessTypeId() == HIVE_GEN_ACTION) {
+            DAGDataGenerationTaskNode dataGenerationNode = new DAGDataGenerationTaskNode(this);
+            DAGFileRegistrationTaskNode fileRegistrationNode = new DAGFileRegistrationTaskNode(this);
+            dataGenerationNode.setToNode(fileRegistrationNode);
+            containingNodes.add(dataGenerationNode);
+            containingNodes.add(fileRegistrationNode);
+        }
 
        /* if (processInfo.getProcessTypeId() == RAW_LOAD_ACTION) {
             RawLoadActionNode rawLoadActionNode = new RawLoadActionNode(this);
@@ -163,6 +170,8 @@ public class DAGTaskNode extends DAGNode {
             containingNodes.add(fileRegistrationNode);
             */
         else if (processInfo.getProcessTypeId() == SEMANTIC_ACTION) {
+        }
+        else if (processInfo.getProcessTypeId() == HIVE_GEN_PARENT_ACTION) {
         }
         /*else if (processInfo.getProcessTypeId() == INGESTION) {
         } else if (processInfo.getProcessTypeId() == EXPORT_ACTION) {
