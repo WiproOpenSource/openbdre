@@ -14,6 +14,10 @@
 
 package com.wipro.ats.bdre.wgen;
 
+import com.wipro.ats.bdre.wgen.dag.DAGForkNode;
+import com.wipro.ats.bdre.wgen.dag.DAGJoinNode;
+import com.wipro.ats.bdre.wgen.dag.DAGNodeCollection;
+
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
@@ -27,6 +31,7 @@ public class CommonNodeMaintainer {
     private Set<String> printedNodeNames = new HashSet<String>();
     private Map<Integer, ForkNode> forkNodeMap = new HashMap<Integer, ForkNode>();
     private Map<Integer, JoinNode> joinNodeMap = new HashMap<Integer, JoinNode>();
+
     private Set<OozieNode> restartNodes = new HashSet<OozieNode>();
 
     public Set<OozieNode> getRestartNodes() {

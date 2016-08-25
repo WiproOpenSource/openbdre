@@ -130,4 +130,13 @@ public class ProcessDAOTest {
         }
     }
 
+    @Test
+    @Ignore
+
+    public void testgetParentProcessTypeId() throws Exception {
+       String parentProcessTypeId = processDAO.getParentProcessTypeId(new Integer(8));
+       LOGGER.info(parentProcessTypeId);
+        }
+
+
 }

@@ -26,17 +26,22 @@ busDomainId=$1
 processTypeId=$2
 processId=$3
 userName=$4
+dag="dag_"${busDomainId}_${processTypeId}_${processId}
 echo "busDomainId=$1 , processTypeId=$2 , processId=$3 userName=$4"
 if [ $processTypeId -eq 1 ]; then
     sh $(dirname $0)/flume.sh $busDomainId $processTypeId $processId
 elif [ $processTypeId -eq 2 ]; then
-    python $(dirname $0)/Workflow.py $busDomainId $processTypeId $processId
+ #python $(dirname $0)/Workflow.py $busDomainId $processTypeId $processId
+    airflow backfill $dag -s `date +%Y-%m-%dT%T`
 elif [ $processTypeId -eq 4 ]; then
-    python $(dirname $0)/Workflow.py $busDomainId $processTypeId $processId
+    #python $(dirname $0)/Workflow.py $busDomainId $processTypeId $processId
+    airflow backfill $dag -s `date +%Y-%m-%dT%T`
 elif [ $processTypeId -eq 5 ]; then
-    python $(dirname $0)/Workflow.py $busDomainId $processTypeId $processId
+    #python $(dirname $0)/Workflow.py $busDomainId $processTypeId $processId
+    airflow backfill $dag -s `date +%Y-%m-%dT%T`
 elif [ $processTypeId -eq 18 ]; then
-    python $(dirname $0)/Workflow.py $busDomainId $processTypeId $processId
+    #python $(dirname $0)/Workflow.py $busDomainId $processTypeId $processId
+    airflow backfill $dag -s `date +%Y-%m-%dT%T`
 elif [ $processTypeId -eq 19 ]; then
     python $(dirname $0)/Workflow.py $busDomainId $processTypeId $processId
 elif [ $processTypeId -eq 28 ]; then
