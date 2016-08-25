@@ -53,7 +53,7 @@ public class DAGShellTaskNode extends com.wipro.ats.bdre.wgen.dag.GenericActionN
             return "";
         }
         StringBuilder ret = new StringBuilder();
-        ret.append("\ndef "+ getName().replace('-','_')+"_pc():\n" +
+        ret.append("\ndef "+ getName()+"_pc():\n" +
                 "\tcommand='sh "+ homeDir + "/bdre_apps/" + processInfo.getBusDomainId().toString()+"/" + getParentProcessType.getParentProcessTypeId(processInfo.getParentProcessId())+"/"+ processInfo.getParentProcessId().toString()  + "/" + getScriptPath(getId(), SCRIPT) +" " + getParams(getId(), "param")  +"',\n" +
 
                 "\tbash_output = subprocess.Popen(command,shell=True, stdin=subprocess.PIPE, stdout=subprocess.PIPE )\n" +

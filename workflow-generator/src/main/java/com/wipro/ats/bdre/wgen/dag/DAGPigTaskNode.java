@@ -57,29 +57,29 @@ public class DAGPigTaskNode extends GenericActionNode{
                 "\t\tinfo = line.split(':',2)\n"+
                 "\t\tdict[info[0]] = info[1].replace('\\n','')\n"+
 
-                "\ndef "+ getName().replace('-','_')+"_pc():\n" +
+                "\ndef "+ getName()+"_pc():\n" +
                 "\tcommand='java -cp "+ homeDir +"/bdre/lib/semantic-core/semantic-core-1.1-SNAPSHOT.jar:"+homeDir+"/bdre/lib/*/* com.wipro.ats.bdre.semcore.PigScriptRunner "+homeDir + "/bdre_apps/" + processInfo.getBusDomainId().toString()+"/" + getParentProcessType.getParentProcessTypeId(processInfo.getParentProcessId())+"/"+ processInfo.getParentProcessId().toString() + "/" + getScriptPath(getId(), "script")+" "+getParams(getId(),"param") +"',\n" +
                 "\tbash_output = subprocess.Popen(command,shell=True, stdin=subprocess.PIPE, stdout=subprocess.PIPE )\n" +
                 "\tout,err = bash_output.communicate()\n"+
                 "\tprint(\"out is \",out)\n"+
                 "\tprint(\"err is \",err)\n"+
                 "\tif(bash_output.returncode > 0):\n" +
-                "\t\treturn 'dummy_"+getName().replace('-', '_') +"'\n" +
+                "\t\treturn 'dummy_"+getName() +"'\n" +
                 "\telse:\n" +
-                "\t\treturn '"+getToNode().getName().replace('-', '_') +"'\n" +
+                "\t\treturn '"+getToNode().getName() +"'\n" +
 
-                "\ndef f_"+ getName().replace('-','_')+"():\n" +
-                "\t"+ getName().replace('-', '_')+".set_downstream("+ getToNode().getName().replace('-', '_')+")\n" +
-                "\t"+ getName().replace('-', '_')+".set_downstream(dummy_"+ getName().replace('-', '_')+")\n" +
-                "\t"+ "dummy_"+ getName().replace('-', '_')+".set_downstream("+getTermNode().getName().replace('-', '_') +")\n"+
-                getName().replace('-','_')+" = BranchPythonOperator(task_id='"+getName().replace('-', '_')+"', python_callable="+getName().replace('-','_')+"_pc, dag=dag)\n"+
-                "dummy_"+ getName().replace('-', '_')+" = DummyOperator(task_id ='"+"dummy_"+ getName().replace('-', '_')+"',dag=dag)\n");
+                "\ndef f_"+ getName()+"():\n" +
+                "\t"+ getName()+".set_downstream("+ getToNode().getName()+")\n" +
+                "\t"+ getName()+".set_downstream(dummy_"+ getName()+")\n" +
+                "\t"+ "dummy_"+ getName()+".set_downstream("+getTermNode().getName() +")\n"+
+                getName()+" = BranchPythonOperator(task_id='"+getName()+"', python_callable="+getName()+"_pc, dag=dag)\n"+
+                "dummy_"+ getName()+" = DummyOperator(task_id ='"+"dummy_"+ getName()+"',dag=dag)\n");
 
 
         try {
 
             FileWriter fw = new FileWriter(homeDir+"/defFile.txt", true);
-            fw.write("\nf_"+getName().replace('-', '_')+"()");
+            fw.write("\nf_"+getName()+"()");
             fw.close();
         }
         catch (IOException e){

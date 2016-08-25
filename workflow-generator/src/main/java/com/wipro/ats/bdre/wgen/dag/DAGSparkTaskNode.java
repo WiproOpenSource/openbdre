@@ -58,7 +58,7 @@ public class DAGSparkTaskNode extends GenericActionNode {
         //ProcessDAO processDAO = new ProcessDAO();
         GetParentProcessType getParentProcessType = new GetParentProcessType();
         //--class "+getAppMainClass(getId(), "spark-main")+"
-        ret.append("\ndef "+ getName().replace('-','_')+"_pc():\n" +
+        ret.append("\ndef "+ getName()+"_pc():\n" +
                 "\tcommand='java -cp "+ homeDir +"/bdre/lib/semantic-core/semantic-core-1.1-SNAPSHOT.jar:"+homeDir+"/bdre/lib/*/* org.apache.spark.deploy.SparkSubmit  "+ getConf(getId(),"spark-conf")+" "+homeDir + "/bdre_apps/" + processInfo.getBusDomainId().toString()+"/" + getParentProcessType.getParentProcessTypeId(processInfo.getParentProcessId())+"/"+ processInfo.getParentProcessId().toString() + "/" +getJarName(getId(), "spark-jar")+" "+getAppArgs(getId(), "app-args")+"',\n" +
                 "\tbash_output = subprocess.Popen(command,shell=True, stdin=subprocess.PIPE, stdout=subprocess.PIPE )\n" +
                 "\tout,err = bash_output.communicate()\n"+
@@ -68,14 +68,14 @@ public class DAGSparkTaskNode extends GenericActionNode {
                 "\t\treturn 'dummy_"+getName() +"'\n" +
                 "\telse:\n" +
 
-                "\t\treturn '"+getToNode().getName().replace('-', '_') +"'\n" +
+                "\t\treturn '"+getToNode().getName() +"'\n" +
 
-                "\ndef f_"+ getName().replace('-','_')+"():\n" +
-                "\t"+ getName().replace('-', '_')+".set_downstream("+ getToNode().getName().replace('-', '_')+")\n" +
-                "\t"+ getName().replace('-', '_')+".set_downstream(dummy_"+ getName().replace('-', '_')+")\n" +
-                "\t"+ "dummy_"+ getName().replace('-', '_')+".set_downstream("+getTermNode().getName().replace('-', '_') +")\n"+
-                getName().replace('-','_')+" = BranchPythonOperator(task_id='"+getName().replace('-', '_')+"', python_callable="+getName().replace('-','_')+"_pc, dag=dag)\n"+
-                "dummy_"+ getName().replace('-', '_')+" = DummyOperator(task_id ='"+"dummy_"+ getName().replace('-', '_')+"',dag=dag)\n");
+                "\ndef f_"+ getName()+"():\n" +
+                "\t"+ getName()+".set_downstream("+ getToNode().getName()+")\n" +
+                "\t"+ getName()+".set_downstream(dummy_"+ getName()+")\n" +
+                "\t"+ "dummy_"+ getName()+".set_downstream("+getTermNode().getName() +")\n"+
+                getName()+" = BranchPythonOperator(task_id='"+getName()+"', python_callable="+getName()+"_pc, dag=dag)\n"+
+                "dummy_"+ getName()+" = DummyOperator(task_id ='"+"dummy_"+ getName()+"',dag=dag)\n");
 
 
         try {

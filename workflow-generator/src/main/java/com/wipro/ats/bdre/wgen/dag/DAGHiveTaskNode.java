@@ -36,7 +36,7 @@ public class DAGHiveTaskNode extends GenericActionNode {
 
     public String getName() {
 
-        String nodeName = "dag-hive-" + getId() + "-" + processInfo.getProcessName().replace(' ', '_');
+        String nodeName = "dag_hive_" + getId() + "_" + processInfo.getProcessName().replace(' ', '_');
         return nodeName.substring(0, Math.min(nodeName.length(), 45));
 
     }
@@ -73,33 +73,33 @@ public class DAGHiveTaskNode extends GenericActionNode {
                         "\telse:"+
                         "\t\treturn ' ' "+
 
-                "\ndef success_" + getName().replace('-', '_') + "(body,**context):\n" +
-                        "\t"+getName().replace('-','_')+".xcom_push(body,'key',body['task_instance'].state)" +
+                "\ndef success_" + getName() + "(body,**context):\n" +
+                        "\t"+getName()+".xcom_push(body,'key',body['task_instance'].state)" +
 
-                "\ndef failure_" + getName().replace('-', '_') + "(body,**context):\n" +
-                        "\t"+getName().replace('-','_')+".xcom_push(body,'key',body['task_instance'].state)" +
+                "\ndef failure_" + getName() + "(body,**context):\n" +
+                        "\t"+getName()+".xcom_push(body,'key',body['task_instance'].state)" +
 
-                 "\ndef branching_" + getName().replace('-', '_') + "_pc(**context):\n" +
-                        "\tvalue = context['task_instance'].xcom_pull(task_ids='" + getName().replace('-', '_') + "',key=None)\n" +
+                 "\ndef branching_" + getName() + "_pc(**context):\n" +
+                        "\tvalue = context['task_instance'].xcom_pull(task_ids='" + getName() + "',key=None)\n" +
                         "\tif(value == 'success'):\n" +
-                        "\t\treturn '" + getToNode().getName().replace('-', '_') + "'\n" +
+                        "\t\treturn '" + getToNode().getName() + "'\n" +
                         "\telse:\n" +
-                        "\t\treturn 'dummy_" + getName().replace('-', '_') + "'\n" +
+                        "\t\treturn 'dummy_" + getName() + "'\n" +
 
-                  "\ndef f_" + getName().replace('-', '_') + "():\n" +
-                        "\t" + getName().replace('-', '_') + ".set_downstream(branching_" + getName().replace('-', '_') + ")\n" +
-                        "\t" + "branching_" + getName().replace('-', '_') + ".set_downstream(" + getToNode().getName().replace('-', '_') + ")\n" +
-                        "\t" + "branching_" + getName().replace('-', '_') + ".set_downstream(dummy_" + getName().replace('-', '_') + ")\n" +
-                        "\t" + "dummy_" + getName().replace('-', '_') + ".set_downstream(" + getTermNode().getName().replace('-', '_') + ")\n" +
+                  "\ndef f_" + getName() + "():\n" +
+                        "\t" + getName() + ".set_downstream(branching_" + getName() + ")\n" +
+                        "\t" + "branching_" + getName() + ".set_downstream(" + getToNode().getName() + ")\n" +
+                        "\t" + "branching_" + getName() + ".set_downstream(dummy_" + getName() + ")\n" +
+                        "\t" + "dummy_" + getName() + ".set_downstream(" + getTermNode().getName() + ")\n" +
 
-                    getName().replace('-', '_') + " = HiveOperator(task_id='" + getName().replace('-', '_') + "',hql=str(getQuery()), on_success_callback=success_" + getName().replace('-', '_') + ", on_failure_callback=failure_" + getName().replace('-', '_') + " , provide_context=True, dag=dag)\n" +
-                    "branching_" + getName().replace('-', '_') + " = BranchPythonOperator(task_id ='branching_" + getName().replace('-', '_') + "',python_callable=branching_" + getName().replace('-', '_') + "_pc, trigger_rule='all_done',provide_context=True, dag=dag)\n" +
-                    "dummy_" + getName().replace('-', '_') + " = DummyOperator(task_id ='dummy_" + getName().replace('-', '_') + "',dag=dag)\n");
+                    getName() + " = HiveOperator(task_id='" + getName() + "',hql=str(getQuery()), on_success_callback=success_" + getName() + ", on_failure_callback=failure_" + getName() + " , provide_context=True, dag=dag)\n" +
+                    "branching_" + getName() + " = BranchPythonOperator(task_id ='branching_" + getName() + "',python_callable=branching_" + getName() + "_pc, trigger_rule='all_done',provide_context=True, dag=dag)\n" +
+                    "dummy_" + getName() + " = DummyOperator(task_id ='dummy_" + getName() + "',dag=dag)\n");
 
         try {
 
             FileWriter fw = new FileWriter(homeDir + "/defFile.txt", true);
-            fw.write("\nf_" + getName().replace('-', '_') + "()");
+            fw.write("\nf_" + getName() + "()");
             fw.close();
         } catch (IOException e) {
             System.out.println("e = " + e);

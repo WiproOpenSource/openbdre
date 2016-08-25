@@ -33,7 +33,7 @@ public class DAGHaltJobNode extends  DAGNode {
                 "\t\tinfo = line.split(':',2)\n"+
                 "\t\tdict[info[0]] = info[1].replace('\\n','')\n"+
 
-                "\ndef "+getName().replace('-','_')+"_pc():\n" +
+                "\ndef "+getName()+"_pc():\n" +
                 "\tcommand='java -cp "+homeDir+"/bdre/lib/md_api/md_api-1.1-SNAPSHOT-executable.jar:"+homeDir+"/bdre/lib/*/*  com.wipro.ats.bdre.md.api.airflow.AirflowHaltJob --process-id "+ getId().toString()+" -batchmarking dict[\"initJobInfo.getTargetBatchMarkingSet()\"] ' \n"+
                 "\tbash_output = subprocess.Popen(command,shell=True, stdin=subprocess.PIPE, stdout=subprocess.PIPE )\n" +
                 "\tout,err = bash_output.communicate()\n"+
@@ -43,9 +43,9 @@ public class DAGHaltJobNode extends  DAGNode {
                 "\t\treturn '"+getTermNode().getName() +"'\n" +
                 "\telse:\n" +
                 "\t\treturn 'success'\n" +
-                "\ndef f_"+ getName().replace('-','_')+"():\n" +
+                "\ndef f_"+ getName()+"():\n" +
                 "\t"+ getName()+".set_downstream("+ getTermNode().getName()+")\n" +
-                getName()+" = BranchPythonOperator(task_id='"+getName()+"', python_callable="+getName().replace('-','_')+"_pc, dag=dag)\n";
+                getName()+" = BranchPythonOperator(task_id='"+getName()+"', python_callable="+getName()+"_pc, dag=dag)\n";
 
 
 }

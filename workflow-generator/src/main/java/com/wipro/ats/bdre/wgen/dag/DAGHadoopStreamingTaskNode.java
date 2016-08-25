@@ -84,8 +84,8 @@ public class DAGHadoopStreamingTaskNode extends  GenericActionNode {
             System.out.println("e = " + e);
         }
 
-        ret.append("\ndummy_"+ getName().replace('-','_')+" = DummyOperator(task_id='dummy_"+getName().replace('-','_')+"', dag=dag)\n"+
-                   "\ndef "+ getName().replace('-','_')+"_pc():\n" );
+        ret.append("\ndummy_"+ getName()+" = DummyOperator(task_id='dummy_"+getName()+"', dag=dag)\n"+
+                   "\ndef "+ getName()+"_pc():\n" );
 
         ret.append( "\tcommand='hadoop jar "+getParamValue(getId(),"param","hadoop.streaming.jar") +
                 "\t-input "+getParamValue(getId(),"param","mapred.input.dir")+
@@ -108,11 +108,11 @@ public class DAGHadoopStreamingTaskNode extends  GenericActionNode {
                 "\telse:\n" +
                 "\t\treturn 'dummy_"+getName() +"'\n" );
 
-        ret.append("\ndef f_"+ getName().replace('-','_')+"():\n" +
+        ret.append("\ndef f_"+ getName()+"():\n" +
                 "\t"+ getName()+".set_downstream("+ getToNode().getName()+")\n" +
-                "\t"+ getName().replace('-','_')+".set_downstream(dummy_"+getName()+")\n" +
-                "\tdummy_"+ getName().replace('-','_')+".set_downstream("+getTermNode().getName()+")\n"+
-                getName()+" = BranchPythonOperator(task_id='" + getName()+"', python_callable="+getName().replace('-','_')+"_pc, dag=dag)\n");
+                "\t"+ getName()+".set_downstream(dummy_"+getName()+")\n" +
+                "\tdummy_"+ getName()+".set_downstream("+getTermNode().getName()+")\n"+
+                getName()+" = BranchPythonOperator(task_id='" + getName()+"', python_callable="+getName()+"_pc, dag=dag)\n");
 
 
         return  ret.toString();

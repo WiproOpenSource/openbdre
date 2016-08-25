@@ -27,7 +27,7 @@ public class DAGInitJobNode extends DAGNode {
         catch (IOException e){
             System.out.println("e = " + e);
         }
-        return "\ndef "+ getName().replace('-','_')+"_pc():\n" +
+        return "\ndef "+ getName()+"_pc():\n" +
                 "\tcommand='java -cp "+homeDir+"/bdre/lib/md_api/md_api-1.1-SNAPSHOT-executable.jar:"+homeDir+"/bdre/lib/*/*  com.wipro.ats.bdre.md.api.airflow.AirflowInitJob -p "+ getId().toString() +" -bmax 1'\n" +
                 "\tbash_output = subprocess.Popen(command,shell=True, stdin=subprocess.PIPE, stdout=subprocess.PIPE )\n" +
                 "\tout,err = bash_output.communicate()\n"+
@@ -38,11 +38,11 @@ public class DAGInitJobNode extends DAGNode {
                 "\telse:\n" +
                 "\t\treturn '"+getToNode().getName() +"'\n" +
 
-                "\ndef f_"+ getName().replace('-','_')+"():\n" +
+                "\ndef f_"+ getName()+"():\n" +
                 "\t"+ getName()+".set_downstream("+ getToNode().getName()+")\n" +
                 "\t"+ getName()+".set_downstream(dag_kill_task)\n" +
                 
-                getName()+" = BranchPythonOperator(task_id='"+getName()+"', python_callable="+getName().replace('-','_')+"_pc, dag=dag)\n" +
+                getName()+" = BranchPythonOperator(task_id='"+getName()+"', python_callable="+getName()+"_pc, dag=dag)\n" +
                 "dag_kill_task = DummyOperator(task_id=\'dag_kill_task\',dag=dag)";
                 
                 
