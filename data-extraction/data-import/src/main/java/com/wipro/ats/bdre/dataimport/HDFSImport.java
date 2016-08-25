@@ -232,8 +232,10 @@ public class HDFSImport extends Configured implements Tool {
                         else
                             bw.write("fileInfo.getServerId()::null\n");
 
-                        if(registerFileInfo.getPath() != null)
-                            bw.write("fileInfo.getPath()::"+registerFileInfo.getPath()+"\n");
+                        if(registerFileInfo.getPath() != null) {
+                            bw.write("fileInfo.getPath()::" + registerFileInfo.getPath() + "\n");
+                            LOGGER.info("\nfileInfo.getPath()::" + registerFileInfo.getPath() + "\n");
+                        }
                         else
                             bw.write("fileInfo.getPath()::null\n");
 
