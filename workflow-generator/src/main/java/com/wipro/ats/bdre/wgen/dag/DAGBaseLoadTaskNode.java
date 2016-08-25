@@ -49,7 +49,7 @@ public class DAGBaseLoadTaskNode extends GenericActionNode {
 
         ret.append( "with open('"+jobInfoFile+"','a+') as propeties_register_file:\n"+
                         "\tfor line in propeties_register_file:\n"+
-                        "\t\tfile_info = line.split(':',2)\n"+
+                        "\t\tfile_info = line.split('::',2)\n"+
                         "\t\tdict[file_info[0]] = file_info[1].replace('\\n','')\n"+
 
                         "\ndef "+ getName().replace('-','_')+"_pc():\n" +

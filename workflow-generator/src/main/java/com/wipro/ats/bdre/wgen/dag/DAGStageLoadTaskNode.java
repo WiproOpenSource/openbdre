@@ -48,11 +48,11 @@ public class DAGStageLoadTaskNode extends GenericActionNode{
 
         ret.append( "with open('"+jobInfoFile+"','a+') as propeties_register_file:\n"+
                         "\tfor line in propeties_register_file:\n"+
-                        "\t\tfile_info = line.split(':',2)\n"+
+                        "\t\tfile_info = line.split('::',2)\n"+
                         "\t\tdict[file_info[0]] = file_info[1].replace('\\n','')\n"+
 
                         "\ndef "+ getName().replace('-','_')+"_pc():\n" +
-                        "\tcommand='java -cp "+homeDir+"/bdre/lib/etl-driver/*:"+homeDir+"/bdre/lib/*/*  com.wipro.ats.bdre.im.etl.api.oozie.OozieRawLoad --process-id "+ getId().toString()+"  --instance-exec-id \'+dict[\"initJobInfo.getInstanceExecId()\"]+\'  --min-batch-id   \'+str(ast.literal_eval(str(dict[\"initJobInfo.getMinBatchIdMap()\"]).replace('=',':'))["+getId()+ "]) +\'  --max-batch-id  '+str(ast.literal_eval(str(dict[\"initJobInfo.getMaxBatchIdMap()\"]).replace('=',':'))["+getId()+ "]) \n"+
+                        "\tcommand='java -cp "+homeDir+"/bdre/lib/etl-driver/*:"+homeDir+"/bdre/lib/*/*  com.wipro.ats.bdre.im.etl.api.oozie.OozieStageLoad --process-id "+ getId().toString()+"  --instance-exec-id \'+dict[\"initJobInfo.getInstanceExecId()\"]+\'  --min-batch-id   \'+str(ast.literal_eval(str(dict[\"initJobInfo.getMinBatchIdMap()\"]).replace('=',':'))["+getId()+ "]) +\'  --max-batch-id  '+str(ast.literal_eval(str(dict[\"initJobInfo.getMaxBatchIdMap()\"]).replace('=',':'))["+getId()+ "]) \n"+
                         "\tbash_output = subprocess.Popen(command,shell=True, stdin=subprocess.PIPE, stdout=subprocess.PIPE )\n" +
                         "\tout,err = bash_output.communicate()\n"+
                         "\tprint(\"out is \",out)\n"+
