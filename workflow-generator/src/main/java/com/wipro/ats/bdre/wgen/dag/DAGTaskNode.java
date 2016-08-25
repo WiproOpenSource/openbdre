@@ -140,6 +140,18 @@ public class DAGTaskNode extends DAGNode {
             DAGStageLoadTaskNode stageLoadActionNode = new DAGStageLoadTaskNode(this);
             containingNodes.add(stageLoadActionNode);
         }
+        else if (processInfo.getProcessTypeId() == DQ_PARENT_ACTION) {
+        }
+        else if (processInfo.getProcessTypeId() == DQ_ACTION) {
+            DAGLOFTaskNode lofActionNode = new DAGLOFTaskNode(this);
+            DAGDataQualityTaskNode dataQualityActionNode = new DAGDataQualityTaskNode(this);
+            DAGFileRegistrationTaskNode fileRegistrationNode = new DAGFileRegistrationTaskNode(this);
+            lofActionNode.setToNode(dataQualityActionNode);
+            dataQualityActionNode.setToNode(fileRegistrationNode);
+            containingNodes.add(lofActionNode);
+            containingNodes.add(dataQualityActionNode);
+            containingNodes.add(fileRegistrationNode);
+        }
 
        /*else if (processInfo.getProcessTypeId() == HIVE_ACTION) {
             HiveActionNode hiveActionNode = new HiveActionNode(this);
@@ -165,15 +177,7 @@ public class DAGTaskNode extends DAGNode {
             dataGenerationNode.setToNode(fileRegistrationNode);
             containingNodes.add(dataGenerationNode);
             containingNodes.add(fileRegistrationNode);
-        } else if (processInfo.getProcessTypeId() == DQ_ACTION) {
-            LOFActionNode lofActionNode = new LOFActionNode(this);
-            DataQualityActionNode dataQualityActionNode = new DataQualityActionNode(this);
-            FileRegistrationNode fileRegistrationNode = new FileRegistrationNode(this);
-            lofActionNode.setToNode(dataQualityActionNode);
-            dataQualityActionNode.setToNode(fileRegistrationNode);
-            containingNodes.add(lofActionNode);
-            containingNodes.add(dataQualityActionNode);
-            containingNodes.add(fileRegistrationNode);
+        }
             */
         else if (processInfo.getProcessTypeId() == SEMANTIC_ACTION) {
         }
