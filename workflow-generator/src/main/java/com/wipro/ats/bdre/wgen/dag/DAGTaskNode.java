@@ -123,23 +123,36 @@ public class DAGTaskNode extends DAGNode {
             DAGCrawlerTaskNode crawlerActionNode = new DAGCrawlerTaskNode(this);
             containingNodes.add(crawlerActionNode);
         }
-
-       /* if (processInfo.getProcessTypeId() == RAW_LOAD_ACTION) {
-            RawLoadActionNode rawLoadActionNode = new RawLoadActionNode(this);
+        else if (processInfo.getProcessTypeId() == HIVE_GEN_PARENT_ACTION) {
+        }
+        else if (processInfo.getProcessTypeId() == HIVE_GEN_ACTION) {
+            DAGDataGenerationTaskNode dataGenerationNode = new DAGDataGenerationTaskNode(this);
+            DAGFileRegistrationTaskNode fileRegistrationNode = new DAGFileRegistrationTaskNode(this);
+            dataGenerationNode.setToNode(fileRegistrationNode);
+            containingNodes.add(dataGenerationNode);
+            containingNodes.add(fileRegistrationNode);
+        }
+        else if (processInfo.getProcessTypeId() == ETL_ACTION) {
+        }
+        else if (processInfo.getProcessTypeId() == BASE_LOAD_ACTION) {
+            DAGBaseLoadTaskNode baseLoadActionNode = new DAGBaseLoadTaskNode(this);
+            containingNodes.add(baseLoadActionNode);
+        }
+        else if (processInfo.getProcessTypeId() == RAW_LOAD_ACTION) {
+            DAGRawLoadTaskNode rawLoadActionNode = new DAGRawLoadTaskNode(this);
             containingNodes.add(rawLoadActionNode);
-        } else if (processInfo.getProcessTypeId() == HIVE_ACTION) {
+        }
+        else if (processInfo.getProcessTypeId() == STAGE_LOAD_ACTION) {
+            DAGStageLoadTaskNode stageLoadActionNode = new DAGStageLoadTaskNode(this);
+            containingNodes.add(stageLoadActionNode);
+        }
+
+       /*else if (processInfo.getProcessTypeId() == HIVE_ACTION) {
             HiveActionNode hiveActionNode = new HiveActionNode(this);
             containingNodes.add(hiveActionNode);
         } else if (processInfo.getProcessTypeId() == DATA_EXPORT_ACTION) {
             ExportActionNode exportActionNode = new ExportActionNode(this);
             containingNodes.add(exportActionNode);
-        } else if (processInfo.getProcessTypeId() == STAGE_LOAD_ACTION) {
-            StageLoadActionNode stageLoadActionNode = new StageLoadActionNode(this);
-            containingNodes.add(stageLoadActionNode);
-        } else if (processInfo.getProcessTypeId() == BASE_LOAD_ACTION) {
-            BaseLoadActionNode baseLoadActionNode = new BaseLoadActionNode(this);
-            containingNodes.add(baseLoadActionNode);
-        } else if (processInfo.getProcessTypeId() == ETL_ACTION) {
         }  else if (processInfo.getProcessTypeId() == HADOOP_STREAMING_ACTION) {
             HadoopStreamingActionNode hadoopStreamingActionNode= new HadoopStreamingActionNode(this);
             containingNodes.add( hadoopStreamingActionNode);
@@ -173,8 +186,7 @@ public class DAGTaskNode extends DAGNode {
         /*else if (processInfo.getProcessTypeId() == INGESTION) {
         } else if (processInfo.getProcessTypeId() == EXPORT_ACTION) {
         }  else if (processInfo.getProcessTypeId() == DQ_PARENT_ACTION) {
-        } else if (processInfo.getProcessTypeId() == HIVE_GEN_PARENT_ACTION) {
-        } else if (processInfo.getProcessTypeId() == HIVE_MIGRATION_ACTION) {
+        }else if (processInfo.getProcessTypeId() == HIVE_MIGRATION_ACTION) {
         } else if (processInfo.getProcessTypeId() == SUPER_WF_ACTION) {
         }else if (processInfo.getProcessTypeId() == SFTP) {
             SFTPNonOozieActionNode sftpNonOozieActionNode = new SFTPNonOozieActionNode(this);
