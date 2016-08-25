@@ -17,7 +17,7 @@ EDGE_NODE_URL=$edgeNodeUserName@$edgeNodeHostName
 #26,'Filemon Parent',null
 
 
-if [ -z "$1" ] || [ -z "$2" ] || [ -z "$3" ] ; then
+if [ -z "$1" ] || [ -z "$2" ] || [ -z "$3" ] || [ -z "$4" ]; then
         echo Insufficient parameters !
         exit 1
 fi
@@ -25,6 +25,7 @@ fi
 busDomainId=$1
 processTypeId=$2
 processId=$3
+userName=$4
 
 if [ $processTypeId -eq 2 ]; then
     current_dir=`pwd`
@@ -36,4 +37,4 @@ if [ $processTypeId -eq 2 ]; then
     cd $current_dir
 fi
 
-ssh $EDGE_NODE_URL sh $BDRE_REMOTE_HOME/bdre-scripts/deployment/process-type-$processTypeId.sh $busDomainId $processTypeId $processId
+ssh $EDGE_NODE_URL sh $BDRE_REMOTE_HOME/bdre-scripts/deployment/process-type-$processTypeId.sh $busDomainId $processTypeId $processId $userName

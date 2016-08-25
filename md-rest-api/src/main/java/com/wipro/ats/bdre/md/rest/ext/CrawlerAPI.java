@@ -18,6 +18,8 @@ import com.wipro.ats.bdre.md.api.base.MetadataAPIBase;
 import com.wipro.ats.bdre.md.beans.CrawlerInfo;
 import com.wipro.ats.bdre.md.beans.table.Process;
 import com.wipro.ats.bdre.md.dao.ProcessDAO;
+import com.wipro.ats.bdre.md.dao.UserRolesDAO;
+import com.wipro.ats.bdre.md.dao.jpa.Users;
 import com.wipro.ats.bdre.md.rest.RestWrapper;
 import com.wipro.ats.bdre.md.rest.util.BindingResultError;
 import com.wipro.ats.bdre.md.rest.util.Dao2TableUtil;
@@ -27,7 +29,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
-
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -50,7 +51,8 @@ public class CrawlerAPI extends MetadataAPIBase {
 
     @Autowired
     private ProcessDAO processDAO;
-
+    @Autowired
+    UserRolesDAO userRolesDAO;
     @RequestMapping(value = {"/", ""}, method = RequestMethod.POST)
 
     @ResponseBody
@@ -67,6 +69,10 @@ public class CrawlerAPI extends MetadataAPIBase {
 
         //making process
         com.wipro.ats.bdre.md.dao.jpa.Process parentProcess = Dao2TableUtil.buildJPAProcess(28, crawlerInfo.getProcessName(), crawlerInfo.getProcessDescription(), 1,crawlerInfo.getBusDomainId());
+        Users users=new Users();
+        users.setUsername(principal.getName());
+        parentProcess.setUsers(users);
+        parentProcess.setUserRoles(userRolesDAO.minUserRoleId(principal.getName()));
         com.wipro.ats.bdre.md.dao.jpa.Process childProcess = Dao2TableUtil.buildJPAProcess(29, "child of " + crawlerInfo.getProcessName(), "SubProcess of " + crawlerInfo.getProcessDescription(), 0,crawlerInfo.getBusDomainId());
         List<com.wipro.ats.bdre.md.dao.jpa.Properties> childProps=new ArrayList<>();
 

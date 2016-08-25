@@ -63,7 +63,7 @@ public class DataQualityDAOTest {
         dqSetupInfo.setMinPassThresholdPercent("100");
         dqSetupInfo.setRulesPassword("password");
         dqSetupInfo.setRulesPackage("bank");
-        List<Properties> tableProperties = dataQualityDAO.insertDQSetup(dqSetupInfo);
+        List<Properties> tableProperties = dataQualityDAO.insertDQSetup(dqSetupInfo,"admin");
         LOGGER.info("sub process id is " + tableProperties.get(0).getSubProcessId());
         dqSetupInfo.setSubProcessId(tableProperties.get(0).getSubProcessId());
         Integer parentProcessId=tableProperties.get(0).getParentProcessId();

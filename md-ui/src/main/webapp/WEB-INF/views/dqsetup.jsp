@@ -3,13 +3,13 @@
 
 <%@ taglib prefix="security"
 	   uri="http://www.springframework.org/security/tags" %>
-
+<%@taglib uri="http://www.springframework.org/tags" prefix="spring"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
     <head>
 	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-	<title>Bigdata Ready Enterprise</title>
+	<title><spring:message code="common.page.title_bdre_1"/></title>
 	<script>
 	  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
 	  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
@@ -34,7 +34,7 @@
 	<script type="text/javascript">
 		    $(document).ready(function () {
 	    $('#Container').jtable({
-	    title: 'Setup DQ Job',
+	    title: '<spring:message code="dqsetup.page.title_jtable"/>',
 		    paging: true,
 		    pageSize: 10,
 		    sorting: true,
@@ -119,48 +119,48 @@
 			    list: false,
 			    create:true,
 			    edit: true,
-			    title: 'Rules Username'
+			    title: '<spring:message code="dqsetup.page.title_rule_user"/>'
 		    },
 			    rulesPasswordValue: {
-			    title: 'Rules Password'
+			    title: '<spring:message code="dqsetup.page.title_rule_password"/>'
 			    },
 			    rulesPackageValue: {
-			    title: 'Rules Package',
+			    title: '<spring:message code="dqsetup.page.title_rule_package"/>',
 				    key : false,
 				    list: true,
 				    create:true,
 				    edit:true
 			    },
 			    fileDelimiterRegexValue: {
-			    title: 'File Delimiter'
+			    title: '<spring:message code="dqsetup.page.title_file"/>'
 			    },
 			    minPassThresholdPercentValue: {
-			    title: 'Min pass threshold %',
+			    title: '<spring:message code="dqsetup.page.title_threshold"/>',
 				    width: '15%'
 			    },
 			    configGroup: {
-			    title :'Config Group',
+			    title :'<spring:message code="dqsetup.page.title_cg"/>',
 				    key : false,
 				    list: true,
 				    create:false,
 				    edit: false,
 			    },
 			    busDomainId: {
-			    title :'Application',
+			    title :'<spring:message code="dqsetup.page.title_app"/>',
 				    key : false,
 				    list: false,
 				    create:true,
 				    edit: false,
 			    },
 			    canRecover: {
-			    title :'can recover',
+			    title :'<spring:message code="dqsetup.page.title_recover"/>',
 				    key : false,
 				    list: false,
 				    create:true,
 				    edit: false,
 			    },
 			    enqId: {
-			    title :'enq id',
+			    title :'<spring:message code="dqsetup.page.title_enq_id"/>',
 				    key : false,
 				    list: false,
 				    create:true,
@@ -171,7 +171,7 @@
 				    list: true,
 				    create:false,
 				    edit: false,
-				    title: 'DQ Job ID'
+				    title: '<spring:message code="dqsetup.page.title_dq_id"/>'
 
 			    },
 			    subProcessId: {
@@ -179,7 +179,7 @@
 				    list: true,
 				    create:false,
 				    edit: false,
-				    title: 'DQ Step'
+				    title: '<spring:message code="dqsetup.page.title_dq_step"/>'
 
 			    },
 			    description: {
@@ -187,13 +187,13 @@
 				    list: true,
 				    create:true,
 				    edit: true,
-				    title: 'Description'
+				    title: '<spring:message code="dqsetup.page.title_desc"/>'
 
 			    },
 			    ProcessPageButton: {
 			    sorting: false,
 				    width: '12%',
-				    title: 'Process page',
+				    title: '<spring:message code="dqsetup.page.title_process_page"/>',
 				    create: false,
 				    edit: false,
 				    listClass: 'bdre-jtable-button',
