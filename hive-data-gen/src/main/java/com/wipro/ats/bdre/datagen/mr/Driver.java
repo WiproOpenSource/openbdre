@@ -34,7 +34,11 @@ import org.apache.hadoop.mapreduce.lib.output.TextOutputFormat;
 import org.apache.hadoop.util.Tool;
 import org.apache.log4j.Logger;
 
+import java.io.BufferedWriter;
+import java.io.FileWriter;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.sql.Timestamp;
 import java.util.Date;
 import java.util.Properties;
@@ -101,6 +105,68 @@ public class Driver extends Configured implements Tool {
         registerFileInfo.setSubProcessId(Integer.parseInt(processId));
         OozieUtil oozieUtil= new OozieUtil();
         oozieUtil.persistBeanData(registerFileInfo,false);
+
+        try
+        {
+            String homeDir = System.getProperty("user.home");
+            // String parentProcessId = String.valueOf(Integer.valueOf(processId) - 1);
+            Files.deleteIfExists(Paths.get(homeDir + "/bdre/airflow/" + processId + "_fileInfo.txt"));
+            FileWriter fw = new FileWriter(homeDir+"/bdre/airflow/"+processId+"_fileInfo.txt", true);
+            BufferedWriter bw = new BufferedWriter(fw);
+
+            if(registerFileInfo.getSubProcessId() != null)
+                bw.write("fileInfo.getSubProcessId()::"+registerFileInfo.getSubProcessId().toString()+"\n");
+            else
+                bw.write("fileInfo.getSubProcessId()::null\n");
+
+            if(registerFileInfo.getServerId() != null)
+                bw.write("fileInfo.getServerId()::"+registerFileInfo.getServerId().toString()+"\n");
+            else
+                bw.write("fileInfo.getServerId()::null\n");
+
+            if(registerFileInfo.getPath() != null)
+                bw.write("fileInfo.getPath()::"+registerFileInfo.getPath()+"\n");
+            else
+                bw.write("fileInfo.getPath()::null\n");
+
+            if(registerFileInfo.getFileSize() != null)
+                bw.write("fileInfo.getFileSize()::"+registerFileInfo.getFileSize().toString()+"\n");
+            else
+                bw.write("fileInfo.getFileSize()::null\n");
+
+            if(registerFileInfo.getFileHash() != null)
+                bw.write("fileInfo.getFileHash()::"+registerFileInfo.getFileHash().toString()+"\n");
+            else
+                bw.write("fileInfo.getFileHash()::null\n");
+
+            if(registerFileInfo.getCreationTs() != null) {
+                String creationTs = registerFileInfo.getCreationTs().toString().replace(" ", "__");//Recovered back in RegisterFile.java.... CreationTs has space(which splits parameter) and ::(creates great problem while creating python dictionaries)
+                LOGGER.info("Creation Ts modified is "+creationTs);
+                bw.write("fileInfo.getCreationTs()::" + creationTs + "\n");
+            }else
+                bw.write("fileInfo.getCreationTs()::null\n");
+
+            if(registerFileInfo.getBatchId() != null)
+                bw.write("fileInfo.getBatchId()::"+registerFileInfo.getBatchId().toString()+"\n");
+            else
+                bw.write("fileInfo.getBatchId()::null\n");
+
+            if(registerFileInfo.getParentProcessId() != null)
+                bw.write("fileInfo.getParentProcessId()::"+registerFileInfo.getParentProcessId().toString()+"\n");
+            else
+                bw.write("fileInfo.getParentProcessId()::null\n");
+
+            if(registerFileInfo.getBatchMarking() != null)
+                bw.write("fileInfo.getBatchMarking()::"+registerFileInfo.getBatchMarking()+"\n");
+            else
+                bw.write("fileInfo.getBatchMarking()::null\n");
+
+            bw.close();
+
+        }catch(IOException i)
+        {
+            i.printStackTrace();
+        }
         return 0;
     }
 

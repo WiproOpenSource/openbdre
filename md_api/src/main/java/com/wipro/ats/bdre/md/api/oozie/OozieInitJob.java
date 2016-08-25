@@ -66,30 +66,65 @@ public class OozieInitJob {
                 FileWriter fw = new FileWriter(homeDir+"/bdre/airflow/"+processId+"_jobInfo.txt", true);
                 BufferedWriter bw = new BufferedWriter(fw);
 
-                bw.write("initJobInfo.getTargetBatchMarkingSet():"+initJobInfo.getTargetBatchMarkingSet().toString()+"\n");
+                if(initJobInfo.getTargetBatchMarkingSet() != null)
+                    bw.write("initJobInfo.getTargetBatchMarkingSet()::"+initJobInfo.getTargetBatchMarkingSet().toString()+"\n");
+                else
+                    bw.write("initJobInfo.getTargetBatchMarkingSet()::null\n");
 
                 if(initJobInfo.getInstanceExecId() != null)
-                    bw.write("initJobInfo.getInstanceExecId():"+initJobInfo.getInstanceExecId().toString()+"\n");
+                    bw.write("initJobInfo.getInstanceExecId()::"+initJobInfo.getInstanceExecId().toString()+"\n");
                 else
-                    bw.write("initJobInfo.getInstanceExecId():null");
+                    bw.write("initJobInfo.getInstanceExecId()::null\n");
 
                 if(initJobInfo.getLastRecoverableSpId() != null)
-                    bw.write("initJobInfo.getLastRecoverableSpId():"+initJobInfo.getLastRecoverableSpId().toString()+"\n");
+                    bw.write("initJobInfo.getLastRecoverableSpId()::"+initJobInfo.getLastRecoverableSpId().toString()+"\n");
                 else
-                    bw.write("initJobInfo.getLastRecoverableSpId():null\n");
+                    bw.write("initJobInfo.getLastRecoverableSpId()::null\n");
 
                 if(initJobInfo.getTargetBatchId() != null)
-                    bw.write("initJobInfo.getTargetBatchId():"+initJobInfo.getTargetBatchId().toString()+"\n");
+                    bw.write("initJobInfo.getTargetBatchId()::"+initJobInfo.getTargetBatchId().toString()+"\n");
                 else
-                    bw.write("initJobInfo.getTargetBatchId():null");
-                bw.write("initJobInfo.getMinBatchIdMap():"+initJobInfo.getMinBatchIdMap().toString()+"\n");
-                bw.write("initJobInfo.getMaxBatchIdMap():"+initJobInfo.getMaxBatchIdMap().toString()+"\n");
-                bw.write("initJobInfo.getMinBatchMarkingMap():"+initJobInfo.getMinBatchMarkingMap().toString()+"\n");
-                bw.write("initJobInfo.getMaxBatchMarkingMap():"+initJobInfo.getMaxBatchMarkingMap().toString()+"\n");
-                bw.write("initJobInfo.getMinSourceInstanceExecIdMap():"+initJobInfo.getMinSourceInstanceExecIdMap().toString()+"\n");
-                bw.write("initJobInfo.getMaxSourceInstanceExecIdMap():"+initJobInfo.getMaxSourceInstanceExecIdMap().toString()+"\n");
-                bw.write("initJobInfo.getFileListMap():"+initJobInfo.getFileListMap().toString()+"\n");
-                bw.write("initJobInfo.getBatchListMap():"+initJobInfo.getBatchListMap().toString()+"\n");
+                    bw.write("initJobInfo.getTargetBatchId()::null\n");
+
+                if(initJobInfo.getMinBatchIdMap() != null)
+                    bw.write("initJobInfo.getMinBatchIdMap()::"+initJobInfo.getMinBatchIdMap().toString()+"\n");
+                else
+                    bw.write("initJobInfo.getMinBatchIdMap()::null\n");
+
+                if(initJobInfo.getMaxBatchIdMap() != null)
+                    bw.write("initJobInfo.getMaxBatchIdMap()::"+initJobInfo.getMaxBatchIdMap().toString()+"\n");
+                else
+                    bw.write("initJobInfo.getMaxBatchIdMap()::null\n");
+
+                if(initJobInfo.getMinBatchMarkingMap() != null)
+                    bw.write("initJobInfo.getMinBatchMarkingMap()::"+initJobInfo.getMinBatchMarkingMap().toString()+"\n");
+                else
+                    bw.write("initJobInfo.getMinBatchIdMap()::null\n");
+
+                if(initJobInfo.getMaxBatchMarkingMap() != null)
+                    bw.write("initJobInfo.getMaxBatchMarkingMap()::"+initJobInfo.getMaxBatchMarkingMap().toString()+"\n");
+                else
+                    bw.write("initJobInfo.getMaxBatchMarkingMap()::null\n");
+
+                if(initJobInfo.getMinSourceInstanceExecIdMap() != null)
+                     bw.write("initJobInfo.getMinSourceInstanceExecIdMap()::"+initJobInfo.getMinSourceInstanceExecIdMap().toString()+"\n");
+                else
+                    bw.write("initJobInfo.getMinSourceInstanceExecIdMap()::null\n");
+
+                if(initJobInfo.getMaxSourceInstanceExecIdMap() != null)
+                    bw.write("initJobInfo.getMaxSourceInstanceExecIdMap()::"+initJobInfo.getMaxSourceInstanceExecIdMap().toString()+"\n");
+                else
+                    bw.write("initJobInfo.getMaxSourceInstanceExecIdMap()::null\n");
+
+                if(initJobInfo.getFileListMap() != null)
+                    bw.write("initJobInfo.getFileListMap()::"+initJobInfo.getFileListMap().toString()+"\n");
+                else
+                    bw.write("initJobInfo.getFileListMap()::null\n");
+
+                if(initJobInfo.getBatchListMap() != null)
+                    bw.write("initJobInfo.getBatchListMap()::"+initJobInfo.getBatchListMap().toString()+"\n");
+                else
+                    bw.write("initJobInfo.getBatchListMap()::null\n");
 
                 bw.close();
 

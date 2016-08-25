@@ -61,13 +61,13 @@ public class DAGFileRegistrationTaskNode extends GenericActionNode {
             }
         }
         String homeDir = System.getProperty("user.home");
-        String jobInfoFile = homeDir+"/bdre/airflow/"+processInfo.getProcessId().toString()+"_jobInfo.txt";
+        String jobInfoFile = homeDir+"/bdre/airflow/"+processInfo.getProcessId().toString()+"_fileInfo.txt";
 
         StringBuilder ret = new StringBuilder();
         ret.append(
                 "with open('"+jobInfoFile+"','a+') as propeties_register_file:\n"+
                 "\tfor line in propeties_register_file:\n"+
-                "\t\tfile_info = line.split(':',2)\n"+
+                "\t\tfile_info = line.split('::',2)\n"+
                 "\t\tdict[file_info[0]] = file_info[1].replace('\\n','')\n"+
 
                 "\ndef "+ getName()+"_pc():\n" +

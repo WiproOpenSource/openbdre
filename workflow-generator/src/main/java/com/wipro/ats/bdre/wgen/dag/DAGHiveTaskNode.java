@@ -62,7 +62,7 @@ public class DAGHiveTaskNode extends GenericActionNode {
         ret.append(
                 "with open('" + jobInfoFile + "','a+') as propeties_file:\n" +
                         "\tfor line in propeties_file:\n" +
-                        "\t\tinfo = line.split(':',2)\n" +
+                        "\t\tinfo = line.split('::',2)\n" +
                         "\t\tdict[info[0]] = info[1].replace('\\n','')\n" +
 
                  "\ndef getQuery():\n" +

@@ -74,7 +74,7 @@ public class RegisterFile extends MetadataAPIBase {
             String fHash = commandLine.getOptionValue("file-hash");
             LOGGER.debug("file-hash " + fHash);
             LOGGER.debug("creation _ts modified "+commandLine.getOptionValue("creation-timestamp"));
-            String creationTs = commandLine.getOptionValue("creation-timestamp").replace("__"," ").replace("zzzz",":");
+            String creationTs = commandLine.getOptionValue("creation-timestamp").replace("__"," ");
             LOGGER.debug("creation Ts " + creationTs);
             String batchId = commandLine.getOptionValue("batch-id");
             LOGGER.debug("batchId " + batchId);
