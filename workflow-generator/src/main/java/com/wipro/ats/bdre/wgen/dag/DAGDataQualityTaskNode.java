@@ -59,8 +59,14 @@ public class DAGDataQualityTaskNode extends GenericActionNode {
                         "\t\tfile_info = line.split('::',2)\n"+
                         "\t\tdict[file_info[0]] = file_info[1].replace('\\n','')\n"+
 
+
+                        "with open('"+homeDir + "/bdre/airflow/etldriverInfo.txt"+"','a+') as etl_driver_file:\n"+
+                        "\tfor line in etl_driver_file:\n"+
+                        "\t\tfile_info = line.split('::',2)\n"+
+                        "\t\tdict[file_info[0]] = file_info[1].replace('\\n','')\n"+
+
                         "\ndef "+ getName().replace('-','_')+"_pc():\n" +
-                        "\tcommand='java -cp "+homeDir+"/bdre/lib/dq/*:"+homeDir+"/bdre/lib/*/*  com.wipro.ats.bdre.dq.DQMain --process-id "+ getId().toString()+"  --source-file-path  \'+dict[\"initJobInfo.getTargetBatchId()\"]+\'  --destination-directory /raw/\'+dict[\"initJobInfo.getInstanceExecId()\"]  \n"+
+                        "\tcommand='java -cp "+homeDir+"/bdre/lib/dq/*:"+homeDir+"/bdre/lib/*/*  com.wipro.ats.bdre.dq.DQMain --process-id "+ getId().toString()+"  --source-file-path  \'+dict[\"getETLDriverInfo.getFileList()\"]+\'  --destination-directory /raw/\'+dict[\"initJobInfo.getInstanceExecId()\"]  \n"+
                         "\tbash_output = subprocess.Popen(command,shell=True, stdin=subprocess.PIPE, stdout=subprocess.PIPE )\n" +
                         "\tout,err = bash_output.communicate()\n"+
                         "\tprint(\"out is \",out)\n"+
