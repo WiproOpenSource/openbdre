@@ -66,11 +66,11 @@ public class DAGHiveTaskNode extends GenericActionNode {
                         "\t\tdict[info[0]] = info[1].replace('\\n','')\n" +
 
                  "\ndef getQuery():\n" +
-                        "\tif os.path.exists('"+ jobInfoFile +"') and os.path.getsize('"+ jobInfoFile +"') > 0:"+
+                        "\tif os.path.exists('"+ jobInfoFile +"') and os.path.getsize('"+ jobInfoFile +"') > 0:\n"+
                         "\t\twith open('"+ homeDir + "/bdre_apps/" + processInfo.getBusDomainId().toString()+"/" + getParentProcessType.getParentProcessTypeId(processInfo.getParentProcessId())+"/"+ processInfo.getParentProcessId().toString() + "/" + getQueryPath(getId(), "query") +"','r+') as queryFile:\n"+
                         "\t\t\tqueryString=str("+getParams(getId(), "param")+")+queryFile.read()\n" +
                         "\t\treturn queryString\n"+
-                        "\telse:"+
+                        "\telse:\n"+
                         "\t\treturn ' ' "+
 
                 "\ndef success_" + getName().replace('-', '_') + "(body,**context):\n" +
@@ -136,20 +136,21 @@ public class DAGHiveTaskNode extends GenericActionNode {
      */
     public String getParams(Integer pid, String configGroup) {
         StringBuilder addParams = new StringBuilder();
-        String url =
-             //   +"set hive.exec.post.hooks=com.wipro.ats.bdre.hiveplugin.hook.LineageHook;"
-             //   +"set bdre.lineage.processId="+getId()
-            //    +";set bdre.lineage.instanceExecId=\"+dict['initJobInfo.getInstanceExecId()'];"
-                 "\"set run_id="+"\"+str(ast.literal_eval(str(dict['initJobInfo.getMinBatchIdMap()']).replace('=',':'))["+getId()+ "])+\""
+        String url = "\"set run_id="+"\"+str(ast.literal_eval(str(dict['initJobInfo.getMinBatchIdMap()']).replace('=',':'))["+getId()+ "])+\""
+
+                //TODO; make this class available to hive
+                //   +";set hive.exec.post.hooks=com.wipro.ats.bdre.hiveplugin.hook.LineageHook"
+                   +";set bdre.lineage.processId="+getId()
+                  +";set bdre.lineage.instanceExecId=\"+str(dict['initJobInfo.getInstanceExecId()'])+\""
                 +";set exec-id=\"+str(dict['initJobInfo.getInstanceExecId()'])+\""
                 +";set target-batch-id=\"+str(dict['initJobInfo.getTargetBatchId()'])+\""
                 +";set target-batch-marking=\"+str(dict['initJobInfo.getTargetBatchMarkingSet()'])+\""
                 +";set min-batch-id="+"\"+str(ast.literal_eval(str(dict['initJobInfo.getMinBatchIdMap()']).replace('=',':'))["+getId()+ "])+\""
                 +";set max-batch-id="+"\"+str(ast.literal_eval(str(dict['initJobInfo.getMaxBatchIdMap()']).replace('=',':'))["+getId()+ "])+\""
-                +";set min-pri="+"\"+str(ast.literal_eval(str(dict['initJobInfo.getMinSourceInstanceExecIdMap()']).replace('=',':'))["+getId()+ "])+\""
-                +";set max-pri="+"\"+str(ast.literal_eval(str(dict['initJobInfo.getMaxSourceInstanceExecIdMap()']).replace('=',':'))["+getId()+ "])+\""
-                +";set min-batch-marking="+"\"+str(ast.literal_eval(str(dict['initJobInfo.getMinBatchMarkingMap()']).replace('=',':'))["+getId()+ "])+\""
-                +";set min-batch-marking="+"\"+str(ast.literal_eval(str(dict['initJobInfo.getMinBatchMarkingMap()']).replace('=',':'))["+getId()+ "])+\";\" ";
+                +";set min-pri="+"\"+str(ast.literal_eval(str(dict['initJobInfo.getMinSourceInstanceExecIdMap()']).replace('=',':')).get("+getId()+ "))+\""
+                +";set max-pri="+"\"+str(ast.literal_eval(str(dict['initJobInfo.getMaxSourceInstanceExecIdMap()']).replace('=',':')).get("+getId()+ "))+\""
+                +";set min-batch-marking="+"\"+str(ast.literal_eval(str(dict['initJobInfo.getMinBatchMarkingMap()']).replace('=',':').replace('}','0}')).get("+getId()+ "))+\""
+                +";set max-batch-marking="+"\"+str(ast.literal_eval(str(dict['initJobInfo.getMaxBatchMarkingMap()']).replace('=',':').replace('}','0}')).get("+getId()+ "))+\";\" ";
 
         addParams.append(url);
         GetProperties getProperties = new GetProperties();
