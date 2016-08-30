@@ -34,7 +34,7 @@ public class DAGHaltJobNode extends  DAGNode {
                 "\t\tdict[info[0]] = info[1].replace('\\n','')\n"+
 
                 "\ndef "+getName()+"_pc():\n" +
-                "\tcommand='java -cp "+homeDir+"/bdre/lib/md_api/md_api-1.1-SNAPSHOT-executable.jar:"+homeDir+"/bdre/lib/*/*  com.wipro.ats.bdre.md.api.airflow.AirflowHaltJob --process-id "+ getId().toString()+" -batchmarking dict[\"initJobInfo.getTargetBatchMarkingSet()\"] ' \n"+
+                "\tcommand='java -cp "+homeDir+"/bdre/lib/md_api/md_api-1.1-SNAPSHOT-executable.jar:"+homeDir+"/bdre/lib/*/*  com.wipro.ats.bdre.md.api.airflow.AirflowHaltJob --process-id "+ getId().toString()+" -batchmarking \'+dict[\"initJobInfo.getTargetBatchMarkingSet()\"] \n"+
                 "\tbash_output = subprocess.Popen(command,shell=True, stdin=subprocess.PIPE, stdout=subprocess.PIPE )\n" +
                 "\tout,err = bash_output.communicate()\n"+
                 "\tprint(\"out is \",out)\n"+
