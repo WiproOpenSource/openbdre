@@ -54,7 +54,7 @@ public class LOFActionNode extends GenericActionNode {
 
     public String getName() {
 
-        String nodeName = "lof-" + getId() + "-" + processInfo.getProcessName().replace(' ', '_');
+        String nodeName = "lof_" + getId() + "_" + processInfo.getProcessName().replace(' ', '_');
         return nodeName.substring(0, Math.min(nodeName.length(), 45));
 
     }
@@ -69,7 +69,7 @@ public class LOFActionNode extends GenericActionNode {
                 "        <java>\n" +
                 "            <job-tracker>${jobTracker}</job-tracker>\n" +
                 "            <name-node>${nameNode}</name-node>\n" +
-                "            <main-class>com.wipro.ats.bdre.md.api.oozie.OozieGetETLDriver</main-class>\n" +
+                "            <main-class>com.wipro.ats.bdre.md.api.airflow.AirflowGetETLDriver</main-class>\n" +
                 "            <arg>--min-batch-id</arg>\n" +
                 "            <arg>${wf:actionData(\"init-job\")[\"min-batch-id-map." + getId() + "\"]}</arg>\n" +
                 "            <arg>--max-batch-id</arg>\n" +
