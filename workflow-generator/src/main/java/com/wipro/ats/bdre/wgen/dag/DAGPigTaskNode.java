@@ -130,7 +130,7 @@ public class DAGPigTaskNode extends GenericActionNode{
             while (e.hasMoreElements()) {
                 String key = (String) e.nextElement();
                 if ("run_id".equals(key)) {
-                    addParams.append(" -param ");
+
                     addParams.append(" " + key + "=" + "dict[\"initJobInfo.getMinBatchIdMap()\"][" +getId()+ "] " );
                 } else {
                     addParams.append(" " + key + "=" + listForParams.getProperty(key));
