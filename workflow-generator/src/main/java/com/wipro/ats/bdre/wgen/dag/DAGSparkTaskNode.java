@@ -47,12 +47,7 @@ public class DAGSparkTaskNode extends GenericActionNode {
         if (this.getProcessInfo().getParentProcessId() == 0) {
             return "";
         }
-        DAGNode fileListNode = null;
-        for (DAGNode dagNode : dagTaskNode.getContainingNodes()) {
-          if (dagNode instanceof LOFActionNode) {
-                fileListNode = dagNode;   //TODO
-            }
-        }
+
         StringBuilder ret = new StringBuilder();
         //ProcessDAO processDAO = new ProcessDAO();
         GetParentProcessType getParentProcessType = new GetParentProcessType();

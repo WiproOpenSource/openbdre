@@ -19,9 +19,13 @@ processId=$3
 userName=$4
 
 
+filename="dag_"${busDomainId}_${processTypeId}_${processId}
 #Generating workflow
 
 java -cp "$BDRE_HOME/lib/workflow-generator/*" com.wipro.ats.bdre.wgen.WorkflowGenerator --parent-process-id $processId --file-name workflow-$processId.xml --username $userName
+java -cp "$BDRE_HOME/lib/workflow-generator/*" com.wipro.ats.bdre.wgen.dag.DAGGenerator --parent-process-id $processId --file-name $filename.py --username $userName
+
+cp $filename.py ~/airflow/dags
 if [ $? -ne 0 ]
 then exit 1
 fi
