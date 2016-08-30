@@ -380,43 +380,43 @@ public class DAGNodeCollection {
     }
 
     /**
-     * This method creates map for nodes present in oozie workflow
+     * This method creates map for nodes present in airflow workflow
      *
      * @return Returns hash-map containing nodes.
      */
     public Map<String, DAGNode> getDAGNodes() {
-        Map<String, DAGNode> oozieNodeMap = new HashMap<String, DAGNode>();
+        Map<String, DAGNode> airflowNodeMap = new HashMap<String, DAGNode>();
 
         if (dagForkNode != null) {
-            oozieNodeMap.put(dagForkNode.getName(), dagForkNode);
+            airflowNodeMap.put(dagForkNode.getName(), dagForkNode);
         }
         if (initStepNode != null) {
-            oozieNodeMap.put(initStepNode.getName(), initStepNode);
+            airflowNodeMap.put(initStepNode.getName(), initStepNode);
         }
         if (taskNode != null) {
             for (DAGNode containingNode : taskNode.getContainingNodes()) {
-                oozieNodeMap.put(containingNode.getName(), containingNode);
+                airflowNodeMap.put(containingNode.getName(), containingNode);
             }
         }
         if (dagJoinNode != null) {
-            oozieNodeMap.put(dagJoinNode.getName(), dagJoinNode);
+            airflowNodeMap.put(dagJoinNode.getName(), dagJoinNode);
         }
         if (haltStepNode != null) {
-            oozieNodeMap.put(haltStepNode.getName(), haltStepNode);
+            airflowNodeMap.put(haltStepNode.getName(), haltStepNode);
         }
         if (termStepNode != null) {
-            oozieNodeMap.put(termStepNode.getName(), termStepNode);
+            airflowNodeMap.put(termStepNode.getName(), termStepNode);
         }
         if (termStepNode != null) {
-            oozieNodeMap.put(termStepNode.getName(), termStepNode);
+            airflowNodeMap.put(termStepNode.getName(), termStepNode);
         }
-        return oozieNodeMap;
+        return airflowNodeMap;
     }
 
     /**
      * Method toXML()
      * Here , we append the various node types to the stringBuffer, which  calls the toString method
-     * of the parent class OozieNode. That internally calls getXML() and it finally returns the string
+     * of the parent class airflowNode. That internally calls getXML() and it finally returns the string
      * in XML format
      *
      * @return
