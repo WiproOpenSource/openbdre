@@ -135,11 +135,14 @@ public class DAGHiveTaskNode extends GenericActionNode {
      * @return String containing arguments to be appended to workflow string.
      */
     public String getParams(Integer pid, String configGroup) {
+        String homeDir = System.getProperty("user.home");
+        GetParentProcessType getParentProcessType = new GetParentProcessType();
         StringBuilder addParams = new StringBuilder();
         String url = "\"set run_id="+"\"+str(ast.literal_eval(str(dict['initJobInfo.getMinBatchIdMap()']).replace('=',':'))["+getId()+ "])+\""
 
                 //TODO; make this class available to hive
-                //   +";set hive.exec.post.hooks=com.wipro.ats.bdre.hiveplugin.hook.LineageHook"
+                +"add jar "+homeDir + "/bdre_apps/" + processInfo.getBusDomainId().toString()+"/" + getParentProcessType.getParentProcessTypeId(processInfo.getParentProcessId())+"/"+ processInfo.getParentProcessId().toString() +"/lib/hive-plugin-1.1-SNAPSHOT-executable.jar;"
+                   +";set hive.exec.post.hooks=com.wipro.ats.bdre.hiveplugin.hook.LineageHook"
                    +";set bdre.lineage.processId="+getId()
                   +";set bdre.lineage.instanceExecId=\"+str(dict['initJobInfo.getInstanceExecId()'])+\""
                 +";set exec-id=\"+str(dict['initJobInfo.getInstanceExecId()'])+\""
