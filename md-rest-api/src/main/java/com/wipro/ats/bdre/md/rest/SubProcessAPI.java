@@ -274,7 +274,9 @@ public class SubProcessAPI extends MetadataAPIBase {
                 if (process.getBatchPattern().isEmpty()) {
                     insertDaoProcess.setBatchCutPattern(null);
                 }
-                insertDaoProcess.setBatchCutPattern(process.getBatchPattern());
+                else {
+                    insertDaoProcess.setBatchCutPattern(process.getBatchPattern());
+                }
             }
             insertDaoProcess.setNextProcessId(process.getNextProcessIds());
             if (process.getDeleteFlag() == null)
