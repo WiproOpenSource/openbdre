@@ -423,7 +423,7 @@ public class HistoryDataImportDAO {
                     file2Raw.setDescription(processDescription+"_'File2Raw'");
                     file2Raw.setAddTs(new Date());
                     file2Raw.setEditTs(new Date());
-                    file2Raw.setProcessName(processName+"_Data Load-F2R");
+                    file2Raw.setProcessName(processName+"_Data Load_F2R");
                     file2Raw.setBusDomain(busDomain);
                     file2Raw.setProcessType(file2RawType);
                     file2Raw.setNextProcessId("0");
@@ -441,7 +441,7 @@ public class HistoryDataImportDAO {
                     raw2Stage.setDescription(processDescription+"_''Raw2Stage''");
                     raw2Stage.setAddTs(new Date());
                     raw2Stage.setEditTs(new Date());
-                    raw2Stage.setProcessName(processName+"_Data Load-R2S");
+                    raw2Stage.setProcessName(processName+"_Data Load_R2S");
                     raw2Stage.setBusDomain(busDomain);
                     raw2Stage.setProcessType(raw2StageType);
                     raw2Stage.setProcess(dataLoadParent);
@@ -459,7 +459,7 @@ public class HistoryDataImportDAO {
                     stage2Base.setDescription(processDescription+"_'''Stage2Base'''");
                     stage2Base.setAddTs(new Date());
                     stage2Base.setEditTs(new Date());
-                    stage2Base.setProcessName(processName+"_Data Load-S2B");
+                    stage2Base.setProcessName(processName+"_Data Load_S2B");
                     stage2Base.setBusDomain(busDomain);
                     stage2Base.setProcessType(stage2BaseType);
                     stage2Base.setProcess(dataLoadParent);
