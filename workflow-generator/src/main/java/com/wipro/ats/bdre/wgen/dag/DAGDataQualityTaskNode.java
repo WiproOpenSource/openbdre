@@ -7,10 +7,10 @@ import java.io.FileWriter;
 import java.io.IOException;
 
 /**
- * Created by su324335 on 8/22/16.
+ * Created by su324335 on 8/25/16.
  */
-public class DAGRawLoadTaskNode extends GenericActionNode {
-    private static final Logger LOGGER = Logger.getLogger(DAGRawLoadTaskNode.class);
+public class DAGDataQualityTaskNode extends GenericActionNode {
+    private static final Logger LOGGER = Logger.getLogger(DAGImportTaskNode.class);
 
     private ProcessInfo processInfo = new ProcessInfo();
     private DAGTaskNode taskNode = null;
@@ -20,7 +20,7 @@ public class DAGRawLoadTaskNode extends GenericActionNode {
      *
      * @param taskNode An instance of ActionNode class which a workflow triggers the execution of a task.
      */
-    public DAGRawLoadTaskNode(DAGTaskNode taskNode) {
+    public DAGDataQualityTaskNode(DAGTaskNode taskNode) {
         setId(taskNode.getId());
         processInfo = taskNode.getProcessInfo();
         this.taskNode = taskNode;
@@ -33,32 +33,45 @@ public class DAGRawLoadTaskNode extends GenericActionNode {
 
     public String getName() {
 
-        String nodeName = "rawLoad_" + getId() + "_" + processInfo.getProcessName().replace(' ','_');
+        String nodeName = "data_quality" + getId() + "_" + processInfo.getProcessName().replace('-', '_').replace(' ', '_');
         return nodeName.substring(0, Math.min(nodeName.length(), 45));
 
     }
+
+
     @Override
     public String getDAG() {
         if (this.getProcessInfo().getParentProcessId() == 0) {
             return "";
         }
-
-        StringBuilder ret = new StringBuilder();
+        DAGNode fileListNode = null;
+        for (DAGNode dagNode : taskNode.getContainingNodes()) {
+            if (dagNode instanceof DAGLOFTaskNode) {
+                fileListNode = dagNode;
+            }
+        }
         String homeDir = System.getProperty("user.home");
         String jobInfoFile = homeDir+"/bdre/airflow/"+processInfo.getParentProcessId().toString()+"_jobInfo.txt";
+        StringBuilder ret = new StringBuilder();
 
         ret.append( "with open('"+jobInfoFile+"','a+') as propeties_register_file:\n"+
                         "\tfor line in propeties_register_file:\n"+
                         "\t\tfile_info = line.split('::',2)\n"+
                         "\t\tdict[file_info[0]] = file_info[1].replace('\\n','')\n"+
 
+
+                        "with open('"+homeDir + "/bdre/airflow/etldriverInfo.txt"+"','a+') as etl_driver_file:\n"+
+                        "\tfor line in etl_driver_file:\n"+
+                        "\t\tfile_info = line.split('::',2)\n"+
+                        "\t\tdict[file_info[0]] = file_info[1].replace('\\n','')\n"+
+
                         "\ndef "+ getName()+"_pc():\n" +
-                        "\tcommand='java -cp "+homeDir+"/bdre/lib/etl-driver/*:"+homeDir+"/bdre/lib/*/*  com.wipro.ats.bdre.im.etl.api.oozie.OozieRawLoad --process-id "+ getId().toString()+"  --instance-exec-id \'+dict[\"initJobInfo.getInstanceExecId()\"] +\' --list-of-files  \'+str(ast.literal_eval(str(dict[\"initJobInfo.getFileListMap()\"]).replace('=',':\\'').replace(',','\\',').replace('}','\\'}').replace('FileList.',''))["+getId()+ "]) +\'   --list-of-file-batchIds  \'+str(ast.literal_eval(str(dict[\"initJobInfo.getBatchListMap()\"]).replace('=',':').replace('FileBatchList.',''))["+getId()+ "])  \n"+
+                        "\tcommand='java -cp "+homeDir+"/bdre/lib/dq/*:"+homeDir+"/bdre/lib/*/*  com.wipro.ats.bdre.dq.DQMain --process-id "+ getId().toString()+"  --source-file-path  \'+dict[\"getETLDriverInfo.getFileList()\"]+\'  --destination-directory /raw/\'+dict[\"initJobInfo.getInstanceExecId()\"]  \n"+
                         "\tbash_output = subprocess.Popen(command,shell=True, stdin=subprocess.PIPE, stdout=subprocess.PIPE )\n" +
                         "\tout,err = bash_output.communicate()\n"+
                         "\tprint(\"out is \",out)\n"+
                         "\tprint(\"err is \",err)\n"+
-                        "\tif(bash_output.returncode != 0):\n" +
+                        "\tif(bash_output.returncode > 0):\n" +
                         "\t\treturn 'dummy_"+getName() +"'\n" +
                         "\telse:\n" +
                         "\t\treturn '"+getToNode().getName() +"'\n" +
@@ -83,6 +96,10 @@ public class DAGRawLoadTaskNode extends GenericActionNode {
         }
 
 
-        return ret.toString();
+        return  ret.toString();
+
     }
+
+
+
 }

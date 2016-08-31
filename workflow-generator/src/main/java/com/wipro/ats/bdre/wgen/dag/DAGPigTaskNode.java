@@ -46,8 +46,8 @@ public class DAGPigTaskNode extends GenericActionNode{
             return "";
         }
         String homeDir = System.getProperty("user.home");
-       // ProcessDAO processDAO = new ProcessDAO();
-        String jobInfoFile = homeDir+"/jobInfo.txt";
+        String jobInfoFile = homeDir+"/bdre/airflow/"+processInfo.getParentProcessId().toString()+"_jobInfo.txt";
+
         GetParentProcessType getParentProcessType = new GetParentProcessType();
 
         StringBuilder ret = new StringBuilder();
@@ -109,7 +109,7 @@ public class DAGPigTaskNode extends GenericActionNode{
 
             }
         } else {
-            addScriptPath.append(" pig/script" + getId() + ".pig ");
+            addScriptPath.append("pig/script" + getId() + ".pig ");
         }
         return addScriptPath.toString();
     }
@@ -130,7 +130,7 @@ public class DAGPigTaskNode extends GenericActionNode{
             while (e.hasMoreElements()) {
                 String key = (String) e.nextElement();
                 if ("run_id".equals(key)) {
-                    addParams.append(" -param ");
+
                     addParams.append(" " + key + "=" + "dict[\"initJobInfo.getMinBatchIdMap()\"][" +getId()+ "] " );
                 } else {
                     addParams.append(" " + key + "=" + listForParams.getProperty(key));
