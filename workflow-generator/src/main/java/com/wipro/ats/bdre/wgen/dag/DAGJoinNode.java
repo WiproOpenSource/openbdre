@@ -72,11 +72,11 @@ public class DAGJoinNode extends DAGNode {
         for (Integer joinId : getIdSet()) {
             stringBuilder.append(joinId);
             if (++i < getIdSet().size()) {
-                stringBuilder.append("-");
+                stringBuilder.append("_");
             }
 
         }
-        String joinNodeName = "dag-join-" + stringBuilder;
+        String joinNodeName = "dag_join_" + stringBuilder;
         return joinNodeName.substring(0, Math.min(joinNodeName.length(), 45));
     }
 
@@ -85,15 +85,15 @@ public class DAGJoinNode extends DAGNode {
         try {
             String homeDir = System.getProperty("user.home");
             FileWriter fw = new FileWriter(homeDir+"/defFile.txt", true);
-            fw.write("\nf_"+getName().replace('-', '_')+"()");
+            fw.write("\nf_"+getName()+"()");
             fw.close();
         }
         catch (IOException e){
             System.out.println("e = " + e);
         }
-        return "\ndef f_"+ getName().replace('-','_')+"():\n" +
-                "\t"+ getName().replace('-', '_')+".set_downstream("+ getToNode().getName().replace('-', '_')+")\n" +
-                "\n"+ getName().replace('-','_')+" = DummyOperator(task_id='"+getName().replace('-','_') +"', dag=dag)";
+        return "\ndef f_"+ getName()+"():\n" +
+                "\t"+ getName()+".set_downstream("+ getToNode().getName()+")\n" +
+                "\n"+ getName()+" = DummyOperator(task_id='"+getName() +"', dag=dag)";
     }
 
 
