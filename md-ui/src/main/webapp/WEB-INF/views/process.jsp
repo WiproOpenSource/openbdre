@@ -887,7 +887,8 @@
                               },
                               userName: {
                                        title: '<spring:message code="process.page.title_username"/>',
-
+                                        create:false,
+                                        edit:false
                                     },
                                 processTypeId: {
                                     title: '<spring:message code="process.page.title_type"/>',
