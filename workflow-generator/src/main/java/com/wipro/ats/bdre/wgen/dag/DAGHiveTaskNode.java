@@ -141,19 +141,19 @@ public class DAGHiveTaskNode extends GenericActionNode {
         String url = "\"set run_id="+"\"+str(ast.literal_eval(str(dict['initJobInfo.getMinBatchIdMap()']).replace('=',':'))["+getId()+ "])+\""
 
                 //TODO; make this class available to hive
-                +"add jar "+homeDir + "/bdre_apps/" + processInfo.getBusDomainId().toString()+"/" + getParentProcessType.getParentProcessTypeId(processInfo.getParentProcessId())+"/"+ processInfo.getParentProcessId().toString() +"/lib/hive-plugin-1.1-SNAPSHOT-executable.jar;"
+                +";add jar "+homeDir + "/bdre_apps/" + processInfo.getBusDomainId().toString()+"/" + getParentProcessType.getParentProcessTypeId(processInfo.getParentProcessId())+"/"+ processInfo.getParentProcessId().toString() +"/lib/hive-plugin-1.1-SNAPSHOT-executable.jar"
                    +";set hive.exec.post.hooks=com.wipro.ats.bdre.hiveplugin.hook.LineageHook"
                    +";set bdre.lineage.processId="+getId()
                   +";set bdre.lineage.instanceExecId=\"+str(dict['initJobInfo.getInstanceExecId()'])+\""
                 +";set exec-id=\"+str(dict['initJobInfo.getInstanceExecId()'])+\""
                 +";set target-batch-id=\"+str(dict['initJobInfo.getTargetBatchId()'])+\""
                 +";set target-batch-marking=\"+str(dict['initJobInfo.getTargetBatchMarkingSet()'])+\""
-                +";set min-batch-id="+"\"+str(ast.literal_eval(str(dict['initJobInfo.getMinBatchIdMap()']).replace('=',':'))["+getId()+ "])+\""
+                +";set min-batch-id="+"\"+str(ast.literal_eval(str(dict['initJobaInfo.getMinBatchIdMap()']).replace('=',':'))["+getId()+ "])+\""
                 +";set max-batch-id="+"\"+str(ast.literal_eval(str(dict['initJobInfo.getMaxBatchIdMap()']).replace('=',':'))["+getId()+ "])+\""
                 +";set min-pri="+"\"+str(ast.literal_eval(str(dict['initJobInfo.getMinSourceInstanceExecIdMap()']).replace('=',':')).get("+getId()+ "))+\""
                 +";set max-pri="+"\"+str(ast.literal_eval(str(dict['initJobInfo.getMaxSourceInstanceExecIdMap()']).replace('=',':')).get("+getId()+ "))+\""
-                +";set min-batch-marking="+"\"+str(ast.literal_eval(str(dict['initJobInfo.getMinBatchMarkingMap()']).replace('=',':').replace('}','0}')).get("+getId()+ "))+\""
-                +";set max-batch-marking="+"\"+str(ast.literal_eval(str(dict['initJobInfo.getMaxBatchMarkingMap()']).replace('=',':').replace('}','0}')).get("+getId()+ "))+\";\" ";
+                +";set min-batch-marking="+"\"+str(ast.literal_eval(str(dict['initJobInfo.getMinBatchMarkingMap()']).replace('=',':0')).get("+getId()+ "))+\""
+                +";set max-batch-marking="+"\"+str(ast.literal_eval(str(dict['initJobInfo.getMaxBatchMarkingMap()']).replace('=',':0')).get("+getId()+ "))+\";\" ";
 
         addParams.append(url);
         GetProperties getProperties = new GetProperties();

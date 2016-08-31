@@ -49,7 +49,7 @@ public final class AirflowUtil {
                 LOGGER.info("Saved properties " + propertiesToBeSaved);
             } else {
                 LOGGER.warn(AIRFLOW_ACTION_OUTPUT_PROPERTIES
-                        + " System property not defined. Probably not running from Airflow");
+                        + " System property not defined.");
 
             }
         } catch (IOException e) {
