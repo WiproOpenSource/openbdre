@@ -35,7 +35,7 @@ public class DAGPigTaskNode extends GenericActionNode{
 
     public String getName() {
 
-        String nodeName = "dag-pig-" + getId() + "-" + processInfo.getProcessName().replace(' ', '_');
+        String nodeName = "dag_pig_" + getId() + "_" + processInfo.getProcessName().replace(' ', '_');
         return nodeName.substring(0, Math.min(nodeName.length(), 45));
 
     }
@@ -58,7 +58,7 @@ public class DAGPigTaskNode extends GenericActionNode{
                 "\t\tdict[info[0]] = info[1].replace('\\n','')\n"+
 
                 "\ndef "+ getName()+"_pc():\n" +
-                "\tcommand='java -cp "+ homeDir +"/bdre/lib/semantic-core/semantic-core-1.1-SNAPSHOT.jar:"+homeDir+"/bdre/lib/*/* com.wipro.ats.bdre.semcore.PigScriptRunner "+homeDir + "/bdre_apps/" + processInfo.getBusDomainId().toString()+"/" + getParentProcessType.getParentProcessTypeId(processInfo.getParentProcessId())+"/"+ processInfo.getParentProcessId().toString() + "/" + getScriptPath(getId(), "script")+" "+getParams(getId(),"param") +"',\n" +
+                "\tcommand='java -cp "+ homeDir +"/bdre/lib/semantic-core/semantic-core-1.1-SNAPSHOT-executable.jar:"+homeDir+"/bdre/lib/*/* com.wipro.ats.bdre.semcore.PigScriptRunner "+homeDir + "/bdre_apps/" + processInfo.getBusDomainId().toString()+"/" + getParentProcessType.getParentProcessTypeId(processInfo.getParentProcessId())+"/"+ processInfo.getParentProcessId().toString() + "/" + getScriptPath(getId(), "script")+getParams(getId(),"param") +"',\n" +
                 "\tbash_output = subprocess.Popen(command,shell=True, stdin=subprocess.PIPE, stdout=subprocess.PIPE )\n" +
                 "\tout,err = bash_output.communicate()\n"+
                 "\tprint(\"out is \",out)\n"+
