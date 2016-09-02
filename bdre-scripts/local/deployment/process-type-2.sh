@@ -17,19 +17,29 @@ busDomainId=$1
 processTypeId=$2
 processId=$3
 userName=$4
+workflowTypeId=$5
+
+#Generating Airflow Dag
 
 filename="dag_"${busDomainId}_${processTypeId}_${processId}
-#Generating workflow
-
-java -cp "$BDRE_HOME/lib/workflow-generator/*" com.wipro.ats.bdre.wgen.WorkflowGenerator --parent-process-id $processId --file-name workflow-$processId.xml --username $userName
+if [ workflowTypeId==3 ]; then
 java -cp "$BDRE_HOME/lib/workflow-generator/*" com.wipro.ats.bdre.wgen.dag.DAGGenerator --parent-process-id $processId --file-name $filename.py --username $userName
-
+if [ $? -ne 0 ]
+then exit 1
+fi
 cp $filename.py ~/airflow/dags
-
 if [ $? -ne 0 ]
 then exit 1
 fi
 
+else
+#Generating workflow
+
+java -cp "$BDRE_HOME/lib/workflow-generator/*" com.wipro.ats.bdre.wgen.WorkflowGenerator --parent-process-id $processId --file-name workflow-$processId.xml --username $userName
+if [ $? -ne 0 ]
+then exit 1
+fi
+fi
 #clean edgenode process directory, if exists
  rm -r -f $BDRE_APPS_HOME/$busDomainId/$processTypeId/$processId
 if [ $? -ne 0 ]
