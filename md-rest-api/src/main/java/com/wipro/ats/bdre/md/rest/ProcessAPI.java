@@ -903,8 +903,17 @@ public class ProcessAPI extends MetadataAPIBase {
         executionInfo.setProcessId(process.getProcessId());
         try {
             processDAO.securityCheck(process.getProcessId(),principal.getName(),"execute");
-            String[] command = {MDConfig.getProperty("execute.script-path") + "/job-executor.sh", process.getBusDomainId().toString(), process.getProcessTypeId().toString(), process.getProcessId().toString(), principal.getName()};
-            LOGGER.info("Running the command : -- " + command[0] + " " + command[1] + " " + command[2] + " " + command[3]);
+            String[] command=new String[5];
+            LOGGER.info("workflow typeid  is "+process.getWorkflowId());
+            if (process.getWorkflowId()==3)
+            command[0]=MDConfig.getProperty("execute.script-path") + "/job-executor-airflow.sh";
+            else
+                command[0]=MDConfig.getProperty("execute.script-path") + "/job-executor.sh";
+            command[1]=process.getBusDomainId().toString();
+            command[2]=process.getProcessTypeId().toString();
+            command[3]=process.getProcessId().toString();
+            command[4]=principal.getName();
+            LOGGER.info("Running the command : -- " + command[0] + " " + command[1] + " " + command[2] + " " + command[3]+" "+command[4]);
             ProcessBuilder processBuilder = new ProcessBuilder(command[0], command[1], command[2], command[3], command[4]);
             processBuilder.redirectOutput(new File(MDConfig.getProperty("execute.log-path") + process.getProcessId().toString()));
             LOGGER.info("The output is redirected to " + MDConfig.getProperty("execute.log-path") + process.getProcessId().toString());

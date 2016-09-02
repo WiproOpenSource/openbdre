@@ -18,7 +18,9 @@ import com.wipro.ats.bdre.exception.MetadataException;
 import com.wipro.ats.bdre.md.api.GetProcessDependency;
 import com.wipro.ats.bdre.md.api.base.MetadataAPIBase;
 import com.wipro.ats.bdre.md.beans.ProcessDependencyInfo;
+import com.wipro.ats.bdre.md.dao.ProcessDAO;
 import org.apache.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -38,7 +40,8 @@ import java.util.List;
 public class ProcessDependencyAPI extends MetadataAPIBase {
     private static final Logger LOGGER = Logger.getLogger(ProcessDependencyAPI.class);
 
-
+    @Autowired
+    private ProcessDAO processDAO;
     /**
      * This method is used to show the dependency of Processes. It is used to graphically show the upstream and downstream
      * processes of a given processId using dot string.
@@ -59,6 +62,9 @@ public class ProcessDependencyAPI extends MetadataAPIBase {
             List<ProcessDependencyInfo> processDependencyInfoList = bs.execute(args);
             LineageInfo lineageInfo = new LineageInfo();
             String borderColor = "black";
+            int workflowId=processDAO.get(Integer.parseInt(processId)).getWorkflowType().getWorkflowId();
+            LOGGER.info("process id is "+processId);
+            LOGGER.info("workflowId is "+workflowId);
         /*
         1	sftp
         2	Semantic
@@ -101,14 +107,32 @@ public class ProcessDependencyAPI extends MetadataAPIBase {
                         break;
                 }
                 tooltip = "Description: " + processDependencyInfo.getDescription() + " Added on:" + processDependencyInfo.getAddTS();
-                String label = "<<TABLE CELLSPACING=\"4\" CELLPADDING=\"0\" BORDER=\"0\" WIDTH=\"100%\"><TR><TD COLSPAN=\"3\">" + processDependencyInfo.getProcessName().replace("&", "&amp;") +
+                String label="";
+                    if (workflowId==1)
+                   label = "<<TABLE CELLSPACING=\"4\" CELLPADDING=\"0\" BORDER=\"0\" WIDTH=\"100%\"><TR><TD COLSPAN=\"3\">" + processDependencyInfo.getProcessName().replace("&", "&amp;") +
                         "</TD></TR><TR><TD COLSPAN=\"3\">" + processDependencyInfo.getProcessId() + "</TD></TR>" +
                         "<TR>" +
-                        "<TD COLOR=\"blue\"  href=\"javascript:popModal(" + processDependencyInfo.getProcessId() + ")\"><FONT COLOR=\"blue\" POINT-SIZE=\"8\">Diagram </FONT></TD>" +
+                        "<TD COLOR=\"blue\"  href=\"javascript:popModal(" + processDependencyInfo.getProcessId() + ")\"><FONT COLOR=\"blue\" POINT-SIZE=\"8\">Diagram &nbsp; </FONT></TD>" +
                         "<TD COLOR=\"blue\"  href=\"javascript:popModalXml(" + processDependencyInfo.getProcessId() + ")\"><FONT COLOR=\"blue\" POINT-SIZE=\"8\"> XML </FONT></TD>" +
-                        "<TD COLOR=\"blue\"  href=\"javascript:popModalDag(" + processDependencyInfo.getProcessId() + ")\"><FONT COLOR=\"blue\" POINT-SIZE=\"8\"> Dag </FONT></TD>" +
+                        //"<TD COLOR=\"blue\"  href=\"javascript:popModalDag(" + processDependencyInfo.getProcessId() + ")\"><FONT COLOR=\"blue\" POINT-SIZE=\"8\"> Dag </FONT></TD>" +
                         "<TD COLOR=\"blue\"  href=\"javascript:GotoProcess(" + processDependencyInfo.getProcessId() + ")\"><FONT COLOR=\"blue\" POINT-SIZE=\"8\"> Details</FONT></TD></TR></TABLE>>";
 
+                    else  if (workflowId==3)
+                  label = "<<TABLE CELLSPACING=\"4\" CELLPADDING=\"0\" BORDER=\"0\" WIDTH=\"100%\"><TR><TD COLSPAN=\"3\">" + processDependencyInfo.getProcessName().replace("&", "&amp;") +
+                        "</TD></TR><TR><TD COLSPAN=\"3\">" + processDependencyInfo.getProcessId() + "</TD></TR>" +
+                        "<TR>" +
+                        "<TD COLOR=\"blue\"  href=\"javascript:popModal(" + processDependencyInfo.getProcessId() + ")\"><FONT COLOR=\"blue\" POINT-SIZE=\"8\">Diagram &nbsp; </FONT></TD>" +
+                        //"<TD COLOR=\"blue\"  href=\"javascript:popModalXml(" + processDependencyInfo.getProcessId() + ")\"><FONT COLOR=\"blue\" POINT-SIZE=\"8\"> XML </FONT></TD>" +
+                        "<TD COLOR=\"blue\"  href=\"javascript:popModalDag(" + processDependencyInfo.getProcessId() + ")\"><FONT COLOR=\"blue\" POINT-SIZE=\"8\"> AirflowDag </FONT></TD>" +
+                        "<TD COLOR=\"blue\"  href=\"javascript:GotoProcess(" + processDependencyInfo.getProcessId() + ")\"><FONT COLOR=\"blue\" POINT-SIZE=\"8\"> Details</FONT></TD></TR></TABLE>>";
+                   else
+                        label = "<<TABLE CELLSPACING=\"4\" CELLPADDING=\"0\" BORDER=\"0\" WIDTH=\"100%\"><TR><TD COLSPAN=\"3\">" + processDependencyInfo.getProcessName().replace("&", "&amp;") +
+                                "</TD></TR><TR><TD COLSPAN=\"3\">" + processDependencyInfo.getProcessId() + "</TD></TR>" +
+                                "<TR>" +
+                                //"<TD COLOR=\"blue\"  href=\"javascript:popModal(" + processDependencyInfo.getProcessId() + ")\"><FONT COLOR=\"blue\" POINT-SIZE=\"8\">Diagram </FONT></TD>" +
+                                //"<TD COLOR=\"blue\"  href=\"javascript:popModalXml(" + processDependencyInfo.getProcessId() + ")\"><FONT COLOR=\"blue\" POINT-SIZE=\"8\"> XML </FONT></TD>" +
+                               // "<TD COLOR=\"blue\"  href=\"javascript:popModalDag(" + processDependencyInfo.getProcessId() + ")\"><FONT COLOR=\"blue\" POINT-SIZE=\"8\"> Dag </FONT></TD>" +
+                                "<TD COLOR=\"blue\"  href=\"javascript:GotoProcess(" + processDependencyInfo.getProcessId() + ")\"><FONT COLOR=\"blue\" POINT-SIZE=\"8\"> Details</FONT></TD></TR></TABLE>>";
 
                 dot.append(processDependencyInfo.getProcessId() + " [label=" + label + " tooltip=\"" + tooltip + "\"shape=rectangle,style=filled,fontcolor=black,color=" + borderColor + ",style=\"rounded\",penwidth=2,fontsize=10,URL=\"javascript:getPid(" + processDependencyInfo.getProcessId() + ")\"];\n");
                 //Checking if the process is an upstream or downstream
