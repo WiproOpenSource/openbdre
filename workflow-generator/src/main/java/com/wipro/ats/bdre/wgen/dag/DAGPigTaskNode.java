@@ -58,7 +58,7 @@ public class DAGPigTaskNode extends GenericActionNode{
                 "\t\tdict[info[0]] = info[1].replace('\\n','')\n"+
 
                 "\ndef "+ getName()+"_pc():\n" +
-                "\tcommand='java -cp "+ homeDir +"/bdre/lib/semantic-core/semantic-core-1.1-SNAPSHOT-executable.jar:"+homeDir+"/bdre/lib/*/* com.wipro.ats.bdre.semcore.PigScriptRunner "+homeDir + "/bdre_apps/" + processInfo.getBusDomainId().toString()+"/" + getParentProcessType.getParentProcessTypeId(processInfo.getParentProcessId())+"/"+ processInfo.getParentProcessId().toString() + "/" + getScriptPath(getId(), "script")+getParams(getId(),"param") +"',\n" +
+                "\tcommand='java -cp "+ homeDir +"/bdre/lib/semantic-core/semantic-core-1.1-SNAPSHOT-executable.jar:"+homeDir+"/bdre/lib/*/* com.wipro.ats.bdre.semcore.PigScriptRunner "+homeDir + "/bdre_apps/" + processInfo.getBusDomainId().toString()+"/" + getParentProcessType.getParentProcessTypeId(processInfo.getParentProcessId())+"/"+ processInfo.getParentProcessId().toString() + "/" +(getScriptPath(getId(), "script")+getParams(getId(), "param")).trim()  +"',\n" +
                 "\tbash_output = subprocess.Popen(command,shell=True, stdin=subprocess.PIPE, stdout=subprocess.PIPE )\n" +
                 "\tout,err = bash_output.communicate()\n"+
                 "\tprint(\"out is \",out)\n"+
@@ -81,6 +81,7 @@ public class DAGPigTaskNode extends GenericActionNode{
             FileWriter fw = new FileWriter(homeDir+"/defFile.txt", true);
             fw.write("\nf_"+getName()+"()");
             fw.close();
+            System.out.println("script path is"+getScriptPath(getId(), "script")+getParams(getId(), "param")  +"',\n" );
         }
         catch (IOException e){
             System.out.println("e = " + e);
