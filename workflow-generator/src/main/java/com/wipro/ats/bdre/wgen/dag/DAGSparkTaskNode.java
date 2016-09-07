@@ -59,10 +59,9 @@ public class DAGSparkTaskNode extends GenericActionNode {
                 "\tout,err = bash_output.communicate()\n"+
                 "\tprint(\"out is \",out)\n"+
                 "\tprint(\"err is \",err)\n"+
-                "\tif(bash_output.returncode > 0):\n" +
+                "\tif(bash_output.returncode != 0):\n" +
                 "\t\treturn 'dummy_"+getName() +"'\n" +
                 "\telse:\n" +
-
                 "\t\treturn '"+getToNode().getName() +"'\n" +
 
                 "\ndef f_"+ getName()+"():\n" +

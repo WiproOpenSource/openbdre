@@ -214,12 +214,13 @@ public class DAGPrinter {
             LOGGER.error(EMPTYERROR);
             throw new MetadataException(EMPTYERROR);
         }
-        final String prefixDAG = "\nfrom airflow.operators import BashOperator,BranchPythonOperator,DummyOperator\n"+
+        String owner =System.getProperty("user.name");
+        final String prefixDAG = "\nfrom airflow.operators import BashOperator,BranchPythonOperator,DummyOperator,PythonOperator,HiveOperator\n"+
                 "from datetime import datetime, timedelta\n"+
                 "import os\n" +
-                "args = {'owner': 'airflow','start_date': datetime(2015, 10, 1, 5, 40, 0), 'depends_on_past': False}\n" +
+                "args = {'owner': '"+ owner+"','start_date': datetime(2015, 10, 1, 5, 40, 0), 'depends_on_past': False}\n" +
                 "\n" +
-                "dag = airflow.DAG(dag_id='sparkeg1',  default_args=args)";
+                "dag = airflow.DAG(dag_id='BDRE',  default_args=args)";
         String pid = processInfos.get(0).getProcessId().toString();
         StringBuilder credentials = new StringBuilder();
         credentials.append(isSecurityEnabled(pid, "security"));

@@ -52,18 +52,19 @@ public class DAGPigTaskNode extends GenericActionNode{
 
         StringBuilder ret = new StringBuilder();
         ret.append(
-                "with open('"+jobInfoFile+"','a+') as propeties_file:\n"+
+                "\nwith open('"+jobInfoFile+"','a+') as propeties_file:\n"+
                 "\tfor line in propeties_file:\n"+
                 "\t\tinfo = line.split('::',2)\n"+
                 "\t\tdict[info[0]] = info[1].replace('\\n','')\n"+
 
                 "\ndef "+ getName()+"_pc():\n" +
-                "\tcommand='java -cp "+ homeDir +"/bdre/lib/semantic-core/semantic-core-1.1-SNAPSHOT-executable.jar:"+homeDir+"/bdre/lib/*/* com.wipro.ats.bdre.semcore.PigScriptRunner "+homeDir + "/bdre_apps/" + processInfo.getBusDomainId().toString()+"/" + getParentProcessType.getParentProcessTypeId(processInfo.getParentProcessId())+"/"+ processInfo.getParentProcessId().toString() + "/" +(getScriptPath(getId(), "script")+getParams(getId(), "param")).trim()  +"',\n" +
+                "\tjobInfoDict = kwargs['task_instance'].xcom_pull(task_ids='init_job',key='initjobInfo')\n"+
+                "\tcommand='java -cp "+ homeDir +"/bdre/lib/semantic-core/semantic-core-1.1-SNAPSHOT-executable.jar:"+homeDir+"/bdre/lib/*/* com.wipro.ats.bdre.semcore.PigScriptRunner "+homeDir + "/bdre_apps/" + processInfo.getBusDomainId().toString()+"/" + getParentProcessType.getParentProcessTypeId(processInfo.getParentProcessId())+"/"+ processInfo.getParentProcessId().toString() + "/" +getScriptPath(getId(), "script")+ " "+getParams(getId(), "param")  +"',\n" +
                 "\tbash_output = subprocess.Popen(command,shell=True, stdin=subprocess.PIPE, stdout=subprocess.PIPE )\n" +
                 "\tout,err = bash_output.communicate()\n"+
                 "\tprint(\"out is \",out)\n"+
                 "\tprint(\"err is \",err)\n"+
-                "\tif(bash_output.returncode > 0):\n" +
+                "\tif(bash_output.returncode != 0):\n" +
                 "\t\treturn 'dummy_"+getName() +"'\n" +
                 "\telse:\n" +
                 "\t\treturn '"+getToNode().getName() +"'\n" +
@@ -131,8 +132,7 @@ public class DAGPigTaskNode extends GenericActionNode{
             while (e.hasMoreElements()) {
                 String key = (String) e.nextElement();
                 if ("run_id".equals(key)) {
-
-                    addParams.append(" " + key + "=" + "dict[\"initJobInfo.getMinBatchIdMap()\"][" +getId()+ "] " );
+                    addParams.append(" " + key + "=" + "str(ast.literal_eval(str(jobInfoDict['initJobInfo.getMinBatchIdMap()']).replace('=',':'))["+getId()+ "]) " );
                 } else {
                     addParams.append(" " + key + "=" + listForParams.getProperty(key));
                 }
