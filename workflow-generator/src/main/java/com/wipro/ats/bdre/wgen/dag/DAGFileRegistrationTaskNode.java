@@ -65,7 +65,7 @@ public class DAGFileRegistrationTaskNode extends GenericActionNode {
 
         StringBuilder ret = new StringBuilder();
         ret.append(
-                "with open('"+jobInfoFile+"','a+') as propeties_register_file:\n"+
+                "\nwith open('"+jobInfoFile+"','a+') as propeties_register_file:\n"+
                 "\tfor line in propeties_register_file:\n"+
                 "\t\tfile_info = line.split('::',2)\n"+
                 "\t\tdict[file_info[0]] = file_info[1].replace('\\n','')\n"+
@@ -76,7 +76,7 @@ public class DAGFileRegistrationTaskNode extends GenericActionNode {
                 "\tout,err = bash_output.communicate()\n"+
                 "\tprint(\"out is \",out)\n"+
                 "\tprint(\"err is \",err)\n"+
-                "\tif(bash_output.returncode > 0):\n" +
+                "\tif(bash_output.returncode != 0):\n" +
                 "\t\treturn 'dummy_"+getName() +"'\n" +
                 "\telse:\n" +
                 "\t\treturn '"+getToNode().getName() +"'\n" +

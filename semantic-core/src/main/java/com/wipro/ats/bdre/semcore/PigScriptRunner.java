@@ -1,6 +1,5 @@
 package com.wipro.ats.bdre.semcore;
 
-import com.wipro.ats.bdre.IMConfig;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.FileSystem;
 import org.apache.hadoop.fs.Path;
@@ -21,7 +20,7 @@ public class PigScriptRunner {
         Configuration config = new Configuration();
         config.addResource(new Path("/etc/hadoop/conf/hdfs-site.xml"));
         config.addResource(new Path("/etc/hadoop/conf/core-site.xml"));
-        config.set("fs.defaultFS", IMConfig.getProperty("common.default-fs-name"));
+        config.set("fs.defaultFS", "hdfs://quickstart.cloudera:8020");
         config.set("pig.use.overriden.hadoop.configs","true");
         config.set("fs.default.name","hdfs://quickstart.cloudera:8020");
         config.set("mapred.job.tracker","quickstart.cloudera:8032");
