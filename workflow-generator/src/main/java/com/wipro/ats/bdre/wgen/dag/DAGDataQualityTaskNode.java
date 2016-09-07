@@ -69,8 +69,8 @@ public class DAGDataQualityTaskNode extends GenericActionNode {
                         "\tcommand='java -cp "+homeDir+"/bdre/lib/dq/*:"+homeDir+"/bdre/lib/*/*  com.wipro.ats.bdre.dq.DQMain --process-id "+ getId().toString()+"  --source-file-path  \'+dict[\"getETLDriverInfo.getFileList()\"]+\'  --destination-directory /raw/\'+dict[\"initJobInfo.getInstanceExecId()\"]  \n"+
                         "\tbash_output = subprocess.Popen(command,shell=True, stdin=subprocess.PIPE, stdout=subprocess.PIPE )\n" +
                         "\tout,err = bash_output.communicate()\n"+
-                        "\tprint(\"out is \",out)\n"+
-                        "\tprint(\"err is \",err)\n"+
+                        "\tlogger.info(\"out is \",out)\n"+
+                        "\tlogger.info(\"err is \",err)\n"+
                         "\tif(bash_output.returncode > 0):\n" +
                         "\t\treturn 'dummy_"+getName() +"'\n" +
                         "\telse:\n" +

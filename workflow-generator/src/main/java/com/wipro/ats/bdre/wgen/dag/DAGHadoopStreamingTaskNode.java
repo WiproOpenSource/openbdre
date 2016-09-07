@@ -14,6 +14,7 @@
 
 package com.wipro.ats.bdre.wgen.dag;
 
+import com.wipro.ats.bdre.GetParentProcessType;
 import com.wipro.ats.bdre.MDConfig;
 import org.apache.log4j.Logger;
 import com.wipro.ats.bdre.md.api.GetProperties;
@@ -94,15 +95,18 @@ public class DAGHadoopStreamingTaskNode extends  GenericActionNode {
         if(!getParamValue(getId(),"param","mapred.reduce.tasks").isEmpty())
             ret.append("\t-numReduceTasks "+getParamValue(getId(),"param","mapred.reduce.tasks"));
 
-        ret.append("\t-mapper "+MDConfig.getProperty(UPLOADBASEDIRECTORY) + "/" + processInfo.getParentProcessId().toString() + "/" + getScriptPath(getId(), "mapper")+
-                "\t-reducer "+MDConfig.getProperty(UPLOADBASEDIRECTORY) + "/" + processInfo.getParentProcessId().toString() + "/" + getScriptPath(getId(), "reducer")+
-                "\t-file "+MDConfig.getProperty(UPLOADBASEDIRECTORY) + "/" + processInfo.getParentProcessId().toString() + "/" + getScriptPath(getId(), "mapper")+
-                "\t-file "+MDConfig.getProperty(UPLOADBASEDIRECTORY) + "/" + processInfo.getParentProcessId().toString() + "/" + getScriptPath(getId(), "reducer")+
+        String homeDir = System.getProperty("user.home");
+        GetParentProcessType getParentProcessType = new GetParentProcessType();
+
+        ret.append("\t-mapper "+homeDir + "/bdre_apps/" + processInfo.getBusDomainId().toString()+"/" + getParentProcessType.getParentProcessTypeId(processInfo.getParentProcessId())+"/"+ processInfo.getParentProcessId().toString()  + "/" +  getScriptPath(getId(), "mapper")+
+                "\t-reducer "+homeDir + "/bdre_apps/" + processInfo.getBusDomainId().toString()+"/" + getParentProcessType.getParentProcessTypeId(processInfo.getParentProcessId())+"/"+ processInfo.getParentProcessId().toString()  + "/" +  getScriptPath(getId(), "reducer")+
+                "\t-file "+homeDir + "/bdre_apps/" + processInfo.getBusDomainId().toString()+"/" + getParentProcessType.getParentProcessTypeId(processInfo.getParentProcessId())+"/"+ processInfo.getParentProcessId().toString()  + "/" +  getScriptPath(getId(), "mapper")+
+                "\t-file "+homeDir + "/bdre_apps/" + processInfo.getBusDomainId().toString()+"/" + getParentProcessType.getParentProcessTypeId(processInfo.getParentProcessId())+"/"+ processInfo.getParentProcessId().toString()  + "/" +  getScriptPath(getId(), "reducer")+
                 getSupplementaryFiles(getId(),"extraFiles"));
         ret.append( "\n\tbash_output = subprocess.Popen(command,shell=True, stdin=subprocess.PIPE, stdout=subprocess.PIPE )\n" +
                 "\tout,err = bash_output.communicate()\n"+
-                "\tprint(\"out is \",out)\n"+
-                "\tprint(\"err is \",err)\n"+
+                "\tlogger.info(\"out is \",out)\n"+
+                "\tlogger.info(\"err is \",err)\n"+
                 "\tif(bash_output.returncode == 0):\n" +
                 "\t\treturn '"+getToNode().getName() +"'\n" +
                 "\telse:\n" +

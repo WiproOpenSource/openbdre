@@ -23,7 +23,8 @@
 	<link href="../css/bootstrap.custom.css" rel="stylesheet" type="text/css" />
 
 	<!-- Include one of jTable styles. -->
-
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.6.0/styles/default.min.css">
+    <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.6.0/highlight.min.js"></script>
 	<script src="../js/svgutil.js" type="text/javascript"></script>
 	<script src="../js/jquery.min.js" type="text/javascript"></script>
 	<script language="javascript" type="text/javascript" src="../js/graph/viz.js"></script>
