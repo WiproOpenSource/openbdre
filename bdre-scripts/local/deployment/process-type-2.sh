@@ -17,17 +17,28 @@ busDomainId=$1
 processTypeId=$2
 processId=$3
 userName=$4
+workflowTypeId=$5
 
 filename="dag_"${busDomainId}_${processTypeId}_${processId}
-#Generating workflow
+if [ "$workflowTypeId" == "1" ]; then
+echo 'Generating workflow'
 
 java -cp "$BDRE_HOME/lib/workflow-generator/*" com.wipro.ats.bdre.wgen.WorkflowGenerator --parent-process-id $processId --file-name workflow-$processId.xml --username $userName
-java -cp "$BDRE_HOME/lib/workflow-generator/*" com.wipro.ats.bdre.wgen.dag.DAGGenerator --parent-process-id $processId --file-name $filename.py --username $userName
-
-cp $filename.py ~/airflow/dags
-
 if [ $? -ne 0 ]
 then exit 1
+fi
+fi
+
+if [ "$workflowTypeId" == "3" ]; then
+echo 'Generating airflow dag'
+java -cp "$BDRE_HOME/lib/workflow-generator/*" com.wipro.ats.bdre.wgen.dag.DAGGenerator --parent-process-id $processId --file-name $filename.py --username $userName
+if [ $? -ne 0 ]
+then exit 1
+fi
+cp $filename.py ~/airflow/dags
+if [ $? -ne 0 ]
+then exit 1
+fi
 fi
 
 #clean edgenode process directory, if exists
@@ -55,7 +66,8 @@ mkdir -p $BDRE_APPS_HOME/$busDomainId/$processTypeId/$processId/spark
 if [ $? -ne 0 ]
 then exit 1
 fi
-
+if [ "$workflowTypeId" == "1" ]; then
+echo 'generated workflow to edge node process dir'
 #move generated workflow to edge node process dir
 mv  workflow-$processId.xml $BDRE_APPS_HOME/$busDomainId/$processTypeId/$processId
 if [ $? -ne 0 ]
@@ -66,7 +78,7 @@ mv  workflow-$processId.xml.dot $BDRE_APPS_HOME/$busDomainId/$processTypeId/$pro
 if [ $? -ne 0 ]
 then exit 1
 fi
-
+fi
 #copying data-lineage jar
 cp $BDRE_HOME/lib/hive-plugin/hive-plugin-$bdreVersion-executable.jar $BDRE_APPS_HOME/$busDomainId/$processTypeId/$processId/lib
 if [ $? -ne 0 ]

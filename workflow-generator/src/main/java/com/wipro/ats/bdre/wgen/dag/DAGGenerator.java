@@ -56,7 +56,7 @@ public class DAGGenerator extends MetadataAPIBase {
         List<ProcessInfo> processInfos = new GetProcess().execute(new String[]{"--parent-process-id", pid , "--username",username});
         LOGGER.info("Workflow Type Id is " + processInfos.get(0).getWorkflowId() + " for pid=" + processInfos.get(0).getProcessId());
         DAG dag = new DAGPrinter().execute(processInfos, "workflow-" + pid);
-        if (processInfos.get(0).getWorkflowId() == 1) {
+        if (processInfos.get(0).getWorkflowId() == 3) {
 
             String airflowDAG = dag.getDAG().toString();
             //String airflowdot = dag.getDot().toString();
