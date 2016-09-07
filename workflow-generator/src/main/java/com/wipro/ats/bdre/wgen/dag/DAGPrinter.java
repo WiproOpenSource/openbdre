@@ -42,12 +42,14 @@ public class DAGPrinter {
                 "import subprocess\n"+
                 "from datetime import datetime, timedelta\n"+
                 "from airflow import DAG\n"+
+                "import logging\n" +
                 "import os\n" +
                 "import ast\n" +
                 "args = {'owner': 'airflow','start_date': datetime(2015, 10, 1, 5, 40, 0), 'depends_on_past': False}\n" +
                 "\n" +
                 "dag = DAG(dag_id='dag_"+ processInfos.get(0).getBusDomainId().toString()+"_"+  processInfos.get(0).getProcessTypeId().toString() + "_" + pid+"',  default_args=args)"+"\n"+
-                "dict = {}\n";
+                "dict = {}\n" +
+                "logger = logging.getLogger(__name__)\n";
 
         StringBuilder credentials = new StringBuilder();
         credentials.append(isSecurityEnabled(pid, "security"));

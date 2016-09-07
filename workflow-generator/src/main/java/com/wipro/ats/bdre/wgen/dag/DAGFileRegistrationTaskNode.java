@@ -74,8 +74,8 @@ public class DAGFileRegistrationTaskNode extends GenericActionNode {
                         "\tcommand='java -cp "+homeDir+"/bdre/lib/md_api/md_api-1.1-SNAPSHOT-executable.jar:"+homeDir+"/bdre/lib/*/*  com.wipro.ats.bdre.md.api.airflow.AirflowRegisterFile  --sub-process-id \'+dict[\"fileInfo.getSubProcessId()\"]+\' --path \'+dict[\"fileInfo.getPath()\"]+\' --file-size \'+dict[\"fileInfo.getFileSize()\"]+\' --file-hash \'+dict[\"fileInfo.getFileHash()\"]+\' --batch-id  \'+dict[\"initJobInfo.getTargetBatchId()\"]+\' --server-id 123461 --creation-timestamp \'+dict[\"fileInfo.getCreationTs()\"]  \n"+
                 "\tbash_output = subprocess.Popen(command,shell=True, stdin=subprocess.PIPE, stdout=subprocess.PIPE )\n" +
                 "\tout,err = bash_output.communicate()\n"+
-                "\tprint(\"out is \",out)\n"+
-                "\tprint(\"err is \",err)\n"+
+                "\tlogger.info(\"out is \",out)\n"+
+                "\tlogger.info(\"err is \",err)\n"+
                 "\tif(bash_output.returncode != 0):\n" +
                 "\t\treturn 'dummy_"+getName() +"'\n" +
                 "\telse:\n" +
