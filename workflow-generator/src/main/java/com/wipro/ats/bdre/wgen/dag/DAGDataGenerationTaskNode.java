@@ -54,7 +54,7 @@ public class DAGDataGenerationTaskNode  extends GenericActionNode {
                         "\tout,err = bash_output.communicate()\n"+
                         "\tlogger.info(\"out is \",out)\n"+
                         "\tlogger.info(\"err is \",err)\n"+
-                        "\tif(bash_output.returncode > 0):\n" +
+                        "\tif(bash_output.returncode != 0):\n" +
                         "\t\treturn 'dummy_"+getName() +"'\n" +
                         "\telse:\n" +
                         "\t\treturn '"+getToNode().getName() +"'\n" +

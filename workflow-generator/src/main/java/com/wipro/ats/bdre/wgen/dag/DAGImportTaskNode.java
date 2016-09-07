@@ -62,7 +62,7 @@ public class DAGImportTaskNode extends GenericActionNode {
         String jobInfoFile = homeDir+"/bdre/airflow/"+processInfo.getParentProcessId().toString()+"_jobInfo.txt";
         StringBuilder ret = new StringBuilder();
 
-        ret.append( "with open('"+jobInfoFile+"','a+') as propeties_register_file:\n"+
+        ret.append( "\nwith open('"+jobInfoFile+"','a+') as propeties_register_file:\n"+
                 "\tfor line in propeties_register_file:\n"+
                 "\t\tfile_info = line.split('::',2)\n"+
                 "\t\tdict[file_info[0]] = file_info[1].replace('\\n','')\n"+
@@ -73,7 +73,7 @@ public class DAGImportTaskNode extends GenericActionNode {
                 "\tout,err = bash_output.communicate()\n"+
                 "\tlogger.info(\"out is \",out)\n"+
                 "\tlogger.info(\"err is \",err)\n"+
-                "\tif(bash_output.returncode > 0):\n" +
+                "\tif(bash_output.returncode != 0):\n" +
                 "\t\treturn 'dummy_"+getName() +"'\n" +
                 "\telse:\n" +
                 "\t\treturn '"+getToNode().getName() +"'\n" +

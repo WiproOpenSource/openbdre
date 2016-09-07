@@ -59,8 +59,8 @@ public class DAGPrinterTest {
     private static List<ProcessInfo> getProcessBeans3() {
         //Unit test with test data
         List<ProcessInfo> processInfos = new ArrayList<ProcessInfo>();
-        ProcessInfo parent = new ProcessInfo(1, "sample parent", "Parent Process", 1, 2, 0, false, 0, "2");
-        ProcessInfo sub1 = new ProcessInfo(2, "sample sub", "sub Process", 1, 25, 1, false, 0, "1");
+        ProcessInfo parent = new ProcessInfo(226, "sample parent", "Parent Process", 1, 2, 0, false, 0, "227");
+        ProcessInfo sub1 = new ProcessInfo(227, "sample sub", "sub Process", 1, 9, 226, false, 0, "226");
 
         processInfos.add(parent);
         processInfos.add(sub1);
@@ -71,7 +71,7 @@ public class DAGPrinterTest {
     @Test
     @Ignore
     public void testExecute1() throws Exception {
-        List<ProcessInfo> processInfos = getProcessBeans2();
+        List<ProcessInfo> processInfos = getProcessBeans3();
         String workflowXML = new DAGPrinter().execute(processInfos, "test-workflow").getDAG().toString();
         LOGGER.info("workflowxml is "+workflowXML);
         /*PrintWriter out = new PrintWriter("unitTest1.workflow.xml");
