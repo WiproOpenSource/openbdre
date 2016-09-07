@@ -79,10 +79,10 @@ public class DAGHiveTaskNode extends GenericActionNode {
                         "\t"+getName()+".xcom_push(body,'key',body['task_instance'].state)" +
 
                  "\ndef branching_" + getName() + "_pc(**kwargs):\n" +
-                        "\tvalue = kwargs['task_instance'].xcom_pull(task_ids='" + getName() + "',key=None)\n" +
+                        "\tvalue = kwargs['task_instance'].xcom_pull(task_ids='query_" + getName() + "',key=None)\n" +
                         "\tif(value == 'success'):\n" +
                         "\t\treturn '" + getToNode().getName() + "'\n" +
-                        "\telif(value == 'failure'):\n" +
+                        "\telif(value == 'failed'):\n" +
                         "\t\treturn 'dummy_" + getName() + "'\n" +
                         "\telse:\n" +
                         "\t\treturn 'branching_" + getName() + "'\n" +
