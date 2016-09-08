@@ -59,8 +59,8 @@ public class DAGRTaskNode extends GenericActionNode {
                 "\tcommand='sh "+ homeDir+"/bdre/bdre-scripts/deployment/Rhadoop.sh "+homeDir + "/bdre_apps/" + processInfo.getBusDomainId().toString()+"/" + getParentProcessType.getParentProcessTypeId(processInfo.getParentProcessId())+"/"+ processInfo.getParentProcessId().toString() + "/" + getRFile(getId(), "r-file")+ " "+getArguments("param")+"',\n" +
                 "\tbash_output = subprocess.Popen(command,shell=True, stdin=subprocess.PIPE, stdout=subprocess.PIPE )\n" +
                 "\tout,err = bash_output.communicate()\n"+
-                "\tlogger.info(\"out is \",out)\n"+
-                "\tlogger.info(\"err is \",err)\n"+
+                "\tlogger.info(\"out is \"+str(out))\n"+
+                "\tlogger.info(\"err is \"+str(err))\n"+
                 "\tif(bash_output.returncode != 0):\n" +
                 "\t\treturn '"+getTermNode().getName() +"'\n" +
                 "\telse:\n" +
