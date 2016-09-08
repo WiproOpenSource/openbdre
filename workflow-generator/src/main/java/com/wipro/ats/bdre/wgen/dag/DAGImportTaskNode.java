@@ -71,8 +71,8 @@ public class DAGImportTaskNode extends GenericActionNode {
                 "\tcommand='java -cp "+homeDir+"/bdre/lib/data-import/*:"+homeDir+"/bdre/lib/*/*  com.wipro.ats.bdre.dataimport.DataImportMain --process-id "+ getId().toString()+"  --batch-id  \'+dict[\"initJobInfo.getTargetBatchId()\"]+\'  --config-group imp-common  --instance-exec-id \'+dict[\"initJobInfo.getInstanceExecId()\"]  \n"+
                 "\tbash_output = subprocess.Popen(command,shell=True, stdin=subprocess.PIPE, stdout=subprocess.PIPE )\n" +
                 "\tout,err = bash_output.communicate()\n"+
-                "\tlogger.info(\"out is \",out)\n"+
-                "\tlogger.info(\"err is \",err)\n"+
+                "\tlogger.info(\"out is \"+str(out))\n"+
+                "\tlogger.info(\"err is \"+str(err))\n"+
                 "\tif(bash_output.returncode != 0):\n" +
                 "\t\treturn 'dummy_"+getName() +"'\n" +
                 "\telse:\n" +

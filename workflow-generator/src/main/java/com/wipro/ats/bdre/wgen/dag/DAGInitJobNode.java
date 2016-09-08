@@ -32,8 +32,8 @@ public class DAGInitJobNode extends DAGNode {
                 "\tcommand='java -cp "+homeDir+"/bdre/lib/md_api/md_api-1.1-SNAPSHOT-executable.jar:"+homeDir+"/bdre/lib/*/*  com.wipro.ats.bdre.md.api.airflow.AirflowInitJob -p "+ getId().toString() +" -bmax 1'\n" +
                 "\tbash_output = subprocess.Popen(command,shell=True, stdin=subprocess.PIPE, stdout=subprocess.PIPE )\n" +
                 "\tout,err = bash_output.communicate()\n"+
-                "\tlogger.info(\"out is \",out)\n"+
-                "\tlogger.info(\"err is \",err)\n"+
+                "\tlogger.info(\"out is \"+str(out))\n"+
+                "\tlogger.info(\"err is \"+str(err))\n"+
                 "\twith open('"+jobInfoFile+"','a+') as propeties_file:\n"+
                 "\t\tfor line in propeties_file:\n"+
                 "\t\t\tinfo = line.split('::',2)\n"+

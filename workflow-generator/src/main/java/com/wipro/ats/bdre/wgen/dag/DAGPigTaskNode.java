@@ -62,8 +62,8 @@ public class DAGPigTaskNode extends GenericActionNode{
                 "\tcommand='java -cp "+ homeDir +"/bdre/lib/semantic-core/semantic-core-1.1-SNAPSHOT-executable.jar:"+homeDir+"/bdre/lib/*/* com.wipro.ats.bdre.semcore.PigScriptRunner "+homeDir + "/bdre_apps/" + processInfo.getBusDomainId().toString()+"/" + getParentProcessType.getParentProcessTypeId(processInfo.getParentProcessId())+"/"+ processInfo.getParentProcessId().toString() + "/" +getScriptPath(getId(), "script")+ " "+getParams(getId(), "param")  +"',\n" +
                 "\tbash_output = subprocess.Popen(command,shell=True, stdin=subprocess.PIPE, stdout=subprocess.PIPE )\n" +
                 "\tout,err = bash_output.communicate()\n"+
-                "\tlogger.info(\"out is \",out)\n"+
-                "\tlogger.info(\"err is \",err)\n"+
+                        "\tlogger.info(\"out is \"+str(out))\n"+
+                        "\tlogger.info(\"err is \"+str(err))\n"+
                 "\tif(bash_output.returncode != 0):\n" +
                 "\t\treturn 'dummy_"+getName() +"'\n" +
                 "\telse:\n" +

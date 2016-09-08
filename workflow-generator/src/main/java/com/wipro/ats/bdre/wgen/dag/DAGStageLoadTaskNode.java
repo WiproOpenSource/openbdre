@@ -55,8 +55,8 @@ public class DAGStageLoadTaskNode extends GenericActionNode{
                         "\tcommand='java -cp "+homeDir+"/bdre/lib/etl-driver/*:"+homeDir+"/bdre/lib/*/*  com.wipro.ats.bdre.im.etl.api.oozie.OozieStageLoad --process-id "+ getId().toString()+"  --instance-exec-id \'+dict[\"initJobInfo.getInstanceExecId()\"]+\'  --min-batch-id   \'+str(ast.literal_eval(str(dict[\"initJobInfo.getMinBatchIdMap()\"]).replace('=',':'))["+getId()+ "]) +\'  --max-batch-id  \'+str(ast.literal_eval(str(dict[\"initJobInfo.getMaxBatchIdMap()\"]).replace('=',':'))["+getId()+ "]) \n"+
                         "\tbash_output = subprocess.Popen(command,shell=True, stdin=subprocess.PIPE, stdout=subprocess.PIPE )\n" +
                         "\tout,err = bash_output.communicate()\n"+
-                        "\tlogger.info(\"out is \",out)\n"+
-                        "\tlogger.info(\"err is \",err)\n"+
+                "\tlogger.info(\"out is \"+str(out))\n"+
+                "\tlogger.info(\"err is \"+str(err))\n"+
                         "\tif(bash_output.returncode != 0):\n" +
                         "\t\treturn 'dummy_"+getName() +"'\n" +
                         "\telse:\n" +
