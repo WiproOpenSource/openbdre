@@ -105,8 +105,8 @@ public class DAGHadoopStreamingTaskNode extends  GenericActionNode {
                 getSupplementaryFiles(getId(),"extraFiles"));
         ret.append( "\n\tbash_output = subprocess.Popen(command,shell=True, stdin=subprocess.PIPE, stdout=subprocess.PIPE )\n" +
                 "\tout,err = bash_output.communicate()\n"+
-                "\tlogger.info(\"out is \",out)\n"+
-                "\tlogger.info(\"err is \",err)\n"+
+                "\tlogger.info(\"out is \"+str(out))\n"+
+                "\tlogger.info(\"err is \"+str(err))\n"+
                 "\tif(bash_output.returncode == 0):\n" +
                 "\t\treturn '"+getToNode().getName() +"'\n" +
                 "\telse:\n" +

@@ -32,8 +32,8 @@ public class DAGHaltJobNode extends  DAGNode {
                 "\tcommand='java -cp "+homeDir+"/bdre/lib/md_api/md_api-1.1-SNAPSHOT-executable.jar:"+homeDir+"/bdre/lib/*/*  com.wipro.ats.bdre.md.api.airflow.AirflowHaltJob --process-id "+ getId().toString()+" -batchmarking \'+kwargs['task_instance'].xcom_pull(task_ids='init_job',key='initjobInfo').get(\"initJobInfo.getTargetBatchMarkingSet()\") \n"+
                 "\tbash_output = subprocess.Popen(command,shell=True, stdin=subprocess.PIPE, stdout=subprocess.PIPE )\n" +
                 "\tout,err = bash_output.communicate()\n"+
-                "\tlogger.info(\"out is \",out)\n"+
-                "\tlogger.info(\"err is \",err)\n"+
+                "\tlogger.info(\"out is \"+str(out))\n"+
+                "\tlogger.info(\"err is \"+str(err))\n"+
                 "\tif(bash_output.returncode != 0):\n" +
                 "\t\treturn '"+getTermNode().getName() +"'\n" +
                 "\telse:\n" +
