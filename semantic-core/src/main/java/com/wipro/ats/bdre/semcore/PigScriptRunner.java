@@ -1,8 +1,9 @@
 package com.wipro.ats.bdre.semcore;
 
+import com.wipro.ats.bdre.IMConfig;
+import com.wipro.ats.bdre.md.api.GetGeneralConfig;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.FileSystem;
-import org.apache.hadoop.fs.Path;
 import org.apache.pig.ExecType;
 import org.apache.pig.PigServer;
 
@@ -18,17 +19,21 @@ public class PigScriptRunner {
         String script = args[0];
         System.out.println("script = " + script);
         Configuration config = new Configuration();
-        config.addResource(new Path("/etc/hadoop/conf/hdfs-site.xml"));
-        config.addResource(new Path("/etc/hadoop/conf/core-site.xml"));
-        config.set("fs.defaultFS", "hdfs://quickstart.cloudera:8020");
+        //config.addResource(new Path("/etc/hadoop/conf/hdfs-site.xml"));
+        //config.addResource(new Path("/etc/hadoop/conf/core-site.xml"));
+        GetGeneralConfig getGeneralConfig = new GetGeneralConfig();
+        String jtHostName = getGeneralConfig.byConigGroupAndKey("scripts_config", "jobTrackerHostName").getDefaultVal();
+        String jtPort = getGeneralConfig.byConigGroupAndKey("scripts_config", "jobTrackerPort").getDefaultVal();
+
+        config.set("fs.defaultFS", IMConfig.getProperty("common.default-fs-name"));
         config.set("pig.use.overriden.hadoop.configs","true");
-        config.set("fs.default.name","hdfs://quickstart.cloudera:8020");
-        config.set("mapred.job.tracker","quickstart.cloudera:8032");
+        config.set("fs.default.name",IMConfig.getProperty("common.default-fs-name"));
+        config.set("mapred.job.tracker",jtHostName+":"+jtPort);
 
         FileSystem fs = FileSystem.get(config);
 
         PigServer pigServer = new PigServer(ExecType.MAPREDUCE,config);
-        Integer noOfParams = args.length-1;
+        Integer noOfParams = args.length;
         Map<String,String> paramMap = new HashMap<String,String>();
 
         for(int i=1; i<noOfParams;i++)
