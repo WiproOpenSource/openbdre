@@ -37,6 +37,7 @@ public class DAGPrinter {
             throw new MetadataException(EMPTYERROR);
         }
         String pid = processInfos.get(0).getProcessId().toString();
+        String owner =System.getProperty("user.name");
 
         final String prefixDAG = "\nfrom airflow.operators import BashOperator,BranchPythonOperator,DummyOperator,HiveOperator\n"+
                 "import subprocess\n"+
@@ -45,7 +46,7 @@ public class DAGPrinter {
                 "import logging\n" +
                 "import os\n" +
                 "import ast\n" +
-                "args = {'owner': 'airflow','start_date': datetime(2015, 10, 1, 5, 40, 0), 'depends_on_past': False}\n" +
+                "args = {'owner': '"+ owner+"','start_date': datetime(2015, 10, 1, 5, 40, 0), 'depends_on_past': False}\n" +
                 "\n" +
                 "dag = DAG(dag_id='dag_"+ processInfos.get(0).getBusDomainId().toString()+"_"+  processInfos.get(0).getProcessTypeId().toString() + "_" + pid+"',  default_args=args)"+"\n"+
                 "dict = {}\n" +

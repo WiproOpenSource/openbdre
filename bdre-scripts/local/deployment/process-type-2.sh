@@ -6,7 +6,8 @@ hdfsPath=/user/$bdreLinuxUserName
 nameNode=hdfs://$nameNodeHostName:$nameNodePort
 jobTracker=$jobTrackerHostName:$jobTrackerPort
 hadoopConfDir=/etc/hive/$hiveConfDir
-AIRFLOW_HOME=$airflowHome
+AIRFLOW_DAG_PATH=$airflowDagPath
+mkdir -p $AIRFLOW_DAG_PATH
 cd $BDRE_APPS_HOME
 
 if [ -z "$1" ] || [ -z "$2" ] || [ -z "$3" ] || [ -z "$4" ]; then
@@ -23,7 +24,6 @@ workflowTypeId=$5
 filename="dag_"${busDomainId}_${processTypeId}_${processId}
 if [ "$workflowTypeId" == "1" ]; then
 echo 'Generating workflow'
-
 java -cp "$BDRE_HOME/lib/workflow-generator/*" com.wipro.ats.bdre.wgen.WorkflowGenerator --parent-process-id $processId --file-name workflow-$processId.xml --username $userName
 if [ $? -ne 0 ]
 then exit 1
@@ -36,7 +36,7 @@ java -cp "$BDRE_HOME/lib/workflow-generator/*" com.wipro.ats.bdre.wgen.dag.DAGGe
 if [ $? -ne 0 ]
 then exit 1
 fi
-cp $filename.py $AIRFLOW_HOME
+cp $filename.py $AIRFLOW_DAG_PATH
 if [ $? -ne 0 ]
 then exit 1
 fi
