@@ -68,7 +68,7 @@ public class DAGHiveTaskNode extends GenericActionNode {
                         "\t\twith open('"+ homeDir + "/bdre_apps/" + processInfo.getBusDomainId().toString()+"/" + getParentProcessType.getParentProcessTypeId(processInfo.getParentProcessId())+"/"+ processInfo.getParentProcessId().toString() + "/" + getQueryPath(getId(), "query") +"','r+') as queryFile:\n"+
                         "\t\t\tqueryString=str("+getParams(getId(), "param")+")+queryFile.read()\n" +
                         "\t\tkwargs['task_instance'].xcom_push(key='query',value=queryString)\n"+
-                        "\t\treturn 'query_"+getName() +"'\n" +
+                        "\t\treturn 'query_runner_"+getName() +"'\n" +
                         "\telse:\n"+
                         "\t\treturn 'dummy2_"+getName() +"'\n" +
 
@@ -79,7 +79,7 @@ public class DAGHiveTaskNode extends GenericActionNode {
                         "\t"+getName()+".xcom_push(body,'key',body['task_instance'].state)" +
 
                  "\ndef branching_" + getName() + "_pc(**kwargs):\n" +
-                        "\tvalue = kwargs['task_instance'].xcom_pull(task_ids='query_" + getName() + "',key=None)\n" +
+                        "\tvalue = kwargs['task_instance'].xcom_pull(task_ids='query_runner_" + getName() + "',key=None)\n" +
                         "\tif(value == 'success'):\n" +
                         "\t\treturn '" + getToNode().getName() + "'\n" +
                         "\telif(value == 'failed'):\n" +
@@ -88,16 +88,16 @@ public class DAGHiveTaskNode extends GenericActionNode {
                         "\t\treturn 'branching_" + getName() + "'\n" +
 
                   "\ndef f_" + getName() + "():\n" +
-                        "\t" + getName() + ".set_downstream(query_" + getName() + ")\n" +
+                        "\t" + getName() + ".set_downstream(query_runner_" + getName() + ")\n" +
                         "\t" + getName() + ".set_downstream(dummy2_" + getName()+ ")\n" +
-                        "\t" +"query_" + getName() + ".set_downstream(branching_" + getName() + ")\n" +
+                        "\t" +"query_runner_" + getName() + ".set_downstream(branching_" + getName() + ")\n" +
                         "\t" + "branching_" + getName() + ".set_downstream(" + getToNode().getName() + ")\n" +
                         "\t" + "branching_" + getName() + ".set_downstream(dummy_" + getName() + ")\n" +
                         "\t" + "dummy_" + getName() + ".set_downstream(" + getTermNode().getName() + ")\n" +
                         "\t" + "dummy2_" + getName() + ".set_downstream(" + getTermNode().getName() + ")\n" +
 
                     getName() + " = BranchPythonOperator(task_id ='" + getName() + "',python_callable=" + getName() + "_pc ,provide_context=True, dag=dag)\n" +
-                    "query_" + getName() + " = HiveOperator(task_id='query_" + getName() + "',hql=\"{{ task_instance.xcom_pull(task_ids ='" + getName() + "',key='query') }}\", on_success_callback=success_" + getName() + ", on_failure_callback=failure_" + getName() + " , provide_context=True, dag=dag)\n" +
+                    "query_runner_" + getName() + " = HiveOperator(task_id='query_runner_" + getName() + "',hql=\"{{ task_instance.xcom_pull(task_ids ='" + getName() + "',key='query') }}\", on_success_callback=success_" + getName() + ", on_failure_callback=failure_" + getName() + " , provide_context=True, dag=dag)\n" +
                     "branching_" + getName() + " = BranchPythonOperator(task_id ='branching_" + getName() + "',python_callable=branching_" + getName() + "_pc, trigger_rule='all_done',provide_context=True, dag=dag)\n" +
                     "dummy2_" + getName() + " = DummyOperator(task_id ='dummy2_" + getName() + "',dag=dag)\n"+
                     "dummy_" + getName() + " = DummyOperator(task_id ='dummy_" + getName() + "',dag=dag)\n");
