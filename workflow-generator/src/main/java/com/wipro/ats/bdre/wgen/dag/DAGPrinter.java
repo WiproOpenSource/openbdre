@@ -37,17 +37,20 @@ public class DAGPrinter {
             throw new MetadataException(EMPTYERROR);
         }
         String pid = processInfos.get(0).getProcessId().toString();
+        String owner =System.getProperty("user.name");
 
         final String prefixDAG = "\nfrom airflow.operators import BashOperator,BranchPythonOperator,DummyOperator,HiveOperator\n"+
                 "import subprocess\n"+
                 "from datetime import datetime, timedelta\n"+
                 "from airflow import DAG\n"+
+                "import logging\n" +
                 "import os\n" +
                 "import ast\n" +
-                "args = {'owner': 'airflow','start_date': datetime(2015, 10, 1, 5, 40, 0), 'depends_on_past': False}\n" +
+                "args = {'owner': '"+ owner+"','start_date': datetime(2015, 10, 1, 5, 40, 0), 'depends_on_past': False}\n" +
                 "\n" +
                 "dag = DAG(dag_id='dag_"+ processInfos.get(0).getBusDomainId().toString()+"_"+  processInfos.get(0).getProcessTypeId().toString() + "_" + pid+"',  default_args=args)"+"\n"+
-                "dict = {}\n";
+                "dict = {}\n" +
+                "logger = logging.getLogger(__name__)\n";
 
         StringBuilder credentials = new StringBuilder();
         credentials.append(isSecurityEnabled(pid, "security"));
@@ -214,12 +217,13 @@ public class DAGPrinter {
             LOGGER.error(EMPTYERROR);
             throw new MetadataException(EMPTYERROR);
         }
-        final String prefixDAG = "\nfrom airflow.operators import BashOperator,BranchPythonOperator,DummyOperator\n"+
+        String owner =System.getProperty("user.name");
+        final String prefixDAG = "\nfrom airflow.operators import BashOperator,BranchPythonOperator,DummyOperator,PythonOperator,HiveOperator\n"+
                 "from datetime import datetime, timedelta\n"+
                 "import os\n" +
-                "args = {'owner': 'airflow','start_date': datetime(2015, 10, 1, 5, 40, 0), 'depends_on_past': False}\n" +
+                "args = {'owner': '"+ owner+"','start_date': datetime(2015, 10, 1, 5, 40, 0), 'depends_on_past': False}\n" +
                 "\n" +
-                "dag = airflow.DAG(dag_id='sparkeg1',  default_args=args)";
+                "dag = airflow.DAG(dag_id='BDRE',  default_args=args)";
         String pid = processInfos.get(0).getProcessId().toString();
         StringBuilder credentials = new StringBuilder();
         credentials.append(isSecurityEnabled(pid, "security"));

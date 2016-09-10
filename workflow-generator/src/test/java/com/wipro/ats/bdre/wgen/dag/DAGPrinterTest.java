@@ -37,8 +37,8 @@ public class DAGPrinterTest {
     private static List<ProcessInfo> getProcessBeans2() {
         //Unit test with test data
         List<ProcessInfo> processInfos = new ArrayList<ProcessInfo>();
-        ProcessInfo parent = new ProcessInfo(7, "sample parent", "ETL Process", 1, 2, 0, false, 0, "8");
-        ProcessInfo sub1 = new ProcessInfo(8, "sample sub", "RAW_LOAD_ACTION Process", 1, 9, 7, false, 0, "7");
+        ProcessInfo parent = new ProcessInfo(104, "sample parent", "ETL Process", 1, 2, 0, false, 0, "105");
+        ProcessInfo sub1 = new ProcessInfo(105, "sample sub", "RAW_LOAD_ACTION Process", 1, 9, 104, false, 0, "104");
         //ProcessInfo sub2 = new ProcessInfo(11, "sample sub", "STAGE_LOAD_ACTION Process", 1, 25, 9, false, 0, "12");
         //ProcessInfo sub3 = new ProcessInfo(12, "sample sub", "BASE_LOAD_ACTION Process", 1, 25, 9, false, 0, "9");
         //ProcessInfo sub4 = new ProcessInfo(13, "sample sub", "BASE_LOAD_ACTION Process2", 1, 25, 9, false, 0, "9");
@@ -59,8 +59,8 @@ public class DAGPrinterTest {
     private static List<ProcessInfo> getProcessBeans3() {
         //Unit test with test data
         List<ProcessInfo> processInfos = new ArrayList<ProcessInfo>();
-        ProcessInfo parent = new ProcessInfo(1, "sample parent", "Parent Process", 1, 2, 0, false, 0, "2");
-        ProcessInfo sub1 = new ProcessInfo(2, "sample sub", "sub Process", 1, 25, 1, false, 0, "1");
+        ProcessInfo parent = new ProcessInfo(226, "sample parent", "Parent Process", 1, 2, 0, false, 0, "227");
+        ProcessInfo sub1 = new ProcessInfo(227, "sample sub", "sub Process", 1, 9, 226, false, 0, "226");
 
         processInfos.add(parent);
         processInfos.add(sub1);
@@ -71,7 +71,7 @@ public class DAGPrinterTest {
     @Test
     @Ignore
     public void testExecute1() throws Exception {
-        List<ProcessInfo> processInfos = getProcessBeans2();
+        List<ProcessInfo> processInfos = getProcessBeans3();
         String workflowXML = new DAGPrinter().execute(processInfos, "test-workflow").getDAG().toString();
         LOGGER.info("workflowxml is "+workflowXML);
         /*PrintWriter out = new PrintWriter("unitTest1.workflow.xml");

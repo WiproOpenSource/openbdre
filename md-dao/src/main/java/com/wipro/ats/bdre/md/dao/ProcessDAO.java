@@ -255,7 +255,7 @@ public class ProcessDAO {
 
     public String getParentProcessTypeId(Integer pid){
         Process parentProcess = get(pid);
-        return parentProcess.getProcessType().getProcessTypeId().toString();
+        return Integer.toString(parentProcess.getProcessType().getProcessTypeId());
 
     }
 

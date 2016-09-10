@@ -38,7 +38,7 @@ public class DAGRTaskNode extends GenericActionNode {
 
     public String getName() {
 
-        String nodeName = "R-" + getId() + "-" + processInfo.getProcessName().replace(' ', '_');
+        String nodeName = "R_" + getId() + "_" + processInfo.getProcessName().replace(' ', '_');
         return nodeName.substring(0, Math.min(nodeName.length(), 45));
 
     }
@@ -54,27 +54,28 @@ public class DAGRTaskNode extends GenericActionNode {
         }
         StringBuilder ret = new StringBuilder();
 
-        ret.append("\ndef "+ getName().replace('-','_')+"_pc():\n" +
+
+        ret.append("\ndef "+ getName()+"_pc():\n" +
                 "\tcommand='sh "+ homeDir+"/bdre/bdre-scripts/deployment/Rhadoop.sh "+homeDir + "/bdre_apps/" + processInfo.getBusDomainId().toString()+"/" + getParentProcessType.getParentProcessTypeId(processInfo.getParentProcessId())+"/"+ processInfo.getParentProcessId().toString() + "/" + getRFile(getId(), "r-file")+ " "+getArguments("param")+"',\n" +
                 "\tbash_output = subprocess.Popen(command,shell=True, stdin=subprocess.PIPE, stdout=subprocess.PIPE )\n" +
                 "\tout,err = bash_output.communicate()\n"+
-                "\tprint(\"out is \",out)\n"+
-                "\tprint(\"err is \",err)\n"+
-                "\tif(bash_output.returncode > 0):\n" +
-                "\t\treturn '"+getTermNode().getName().replace('-', '_') +"'\n" +
+                "\tlogger.info(\"out is \"+str(out))\n"+
+                "\tlogger.info(\"err is \"+str(err))\n"+
+                "\tif(bash_output.returncode != 0):\n" +
+                "\t\treturn '"+getTermNode().getName() +"'\n" +
                 "\telse:\n" +
-                "\t\treturn '"+getToNode().getName().replace('-', '_') +"'\n" +
+                "\t\treturn '"+getToNode().getName() +"'\n" +
 
-                "\ndef f_"+ getName().replace('-','_')+"():\n" +
-                "\t"+ getName().replace('-', '_')+".set_downstream("+ getToNode().getName().replace('-', '_')+")\n" +
-                "\t"+ getName().replace('-','_')+".set_downstream("+ getTermNode().getName().replace('-', '_')+")\n" +
+                "\ndef f_"+ getName()+"():\n" +
+                "\t"+ getName()+".set_downstream("+ getToNode().getName()+")\n" +
+                "\t"+ getName()+".set_downstream("+ getTermNode().getName()+")\n" +
 
-                getName().replace('-', '_')+" = BranchPythonOperator(task_id='" + getName().replace('-', '_')+"', python_callable="+getName().replace('-','_')+"_pc, dag=dag)\n"
+                getName()+" = BranchPythonOperator(task_id='" + getName()+"', python_callable="+getName()+"_pc, dag=dag)\n"
         );
 
         try {
             FileWriter fw = new FileWriter(homeDir+"/defFile.txt", true);
-            fw.write("\nf_"+getName().replace('-', '_')+"()");
+            fw.write("\nf_"+getName()+"()");
             fw.close();
         }
         catch (IOException e){

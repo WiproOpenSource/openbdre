@@ -36,7 +36,7 @@ public class DAGHiveTaskNode extends GenericActionNode {
 
     public String getName() {
 
-        String nodeName = "dag-hive-" + getId() + "-" + processInfo.getProcessName().replace(' ', '_');
+        String nodeName = "dag_hive_" + getId() + "_" + processInfo.getProcessName().replace(' ', '_');
         return nodeName.substring(0, Math.min(nodeName.length(), 45));
 
     }
@@ -56,46 +56,57 @@ public class DAGHiveTaskNode extends GenericActionNode {
         String homeDir = System.getProperty("user.home");
         //ProcessDAO processDAO = new ProcessDAO();
         GetParentProcessType getParentProcessType = new GetParentProcessType();
-        String jobInfoFile = homeDir + "/jobInfo.txt";
+        String jobInfoFile = homeDir+"/bdre/airflow/"+processInfo.getParentProcessId().toString()+"_jobInfo.txt";
 
         LOGGER.info("processInfo " + processInfo.getProcessId());
         ret.append(
-                "with open('" + jobInfoFile + "','a+') as propeties_file:\n" +
-                        "\tfor line in propeties_file:\n" +
-                        "\t\tinfo = line.split(':',2)\n" +
-                        "\t\tdict[info[0]] = info[1].replace('\\n','')\n" +
 
-                 "\ndef getQuery():\n" +
-                        "\twith open('"+ homeDir + "/bdre_apps/" + processInfo.getBusDomainId().toString()+"/" + getParentProcessType.getParentProcessTypeId(processInfo.getParentProcessId())+"/"+ processInfo.getParentProcessId().toString() + "/" + getQueryPath(getId(), "query") +"','r+') as queryFile:\n"+
-                        "\t\tqueryString=str("+getParams(getId(), "param")+")+queryFile.read()\n" +
-                        "\treturn queryString\n"+
-                "\ndef success_" + getName().replace('-', '_') + "(body,**context):\n" +
-                        "\t"+getName().replace('-','_')+".xcom_push(body,'key',body['task_instance'].state)" +
+                "\ndef " + getName() + "_pc(**kwargs):\n" +
+                        "\tif os.path.exists('"+ jobInfoFile +"') and os.path.getsize('"+ jobInfoFile +"') > 0:\n"+
+                        "\t\tjobInfoDict = kwargs['task_instance'].xcom_pull(task_ids='init_job',key='initjobInfo')\n"+
+                        "\t\tprint(jobInfoDict)\n"+
+                        "\t\twith open('"+ homeDir + "/bdre_apps/" + processInfo.getBusDomainId().toString()+"/" + getParentProcessType.getParentProcessTypeId(processInfo.getParentProcessId())+"/"+ processInfo.getParentProcessId().toString() + "/" + getQueryPath(getId(), "query") +"','r+') as queryFile:\n"+
+                        "\t\t\tqueryString=str("+getParams(getId(), "param")+")+queryFile.read()\n" +
+                        "\t\tkwargs['task_instance'].xcom_push(key='query',value=queryString)\n"+
+                        "\t\treturn 'query_runner_"+getName() +"'\n" +
+                        "\telse:\n"+
+                        "\t\treturn 'dummy2_"+getName() +"'\n" +
 
-                "\ndef failure_" + getName().replace('-', '_') + "(body,**context):\n" +
-                        "\t"+getName().replace('-','_')+".xcom_push(body,'key',body['task_instance'].state)" +
+                "\ndef success_" + getName() + "(body,**kwargs):\n" +
+                        "\t"+getName()+".xcom_push(body,'key',body['task_instance'].state)" +
 
-                 "\ndef branching_" + getName().replace('-', '_') + "_pc(**context):\n" +
-                        "\tvalue = context['task_instance'].xcom_pull(task_ids='" + getName().replace('-', '_') + "',key=None)\n" +
+                "\ndef failure_" + getName() + "(body,**kwargs):\n" +
+                        "\t"+getName()+".xcom_push(body,'key',body['task_instance'].state)" +
+
+                 "\ndef branching_" + getName() + "_pc(**kwargs):\n" +
+                        "\tvalue = kwargs['task_instance'].xcom_pull(task_ids='query_runner_" + getName() + "',key=None)\n" +
                         "\tif(value == 'success'):\n" +
-                        "\t\treturn '" + getToNode().getName().replace('-', '_') + "'\n" +
+                        "\t\treturn '" + getToNode().getName() + "'\n" +
+                        "\telif(value == 'failed'):\n" +
+                        "\t\treturn 'dummy_" + getName() + "'\n" +
                         "\telse:\n" +
-                        "\t\treturn 'dummy_" + getName().replace('-', '_') + "'\n" +
+                        "\t\treturn 'branching_" + getName() + "'\n" +
 
-                  "\ndef f_" + getName().replace('-', '_') + "():\n" +
-                        "\t" + getName().replace('-', '_') + ".set_downstream(branching_" + getName().replace('-', '_') + ")\n" +
-                        "\t" + "branching_" + getName().replace('-', '_') + ".set_downstream(" + getToNode().getName().replace('-', '_') + ")\n" +
-                        "\t" + "branching_" + getName().replace('-', '_') + ".set_downstream(dummy_" + getName().replace('-', '_') + ")\n" +
-                        "\t" + "dummy_" + getName().replace('-', '_') + ".set_downstream(" + getTermNode().getName().replace('-', '_') + ")\n" +
+                  "\ndef f_" + getName() + "():\n" +
+                        "\t" + getName() + ".set_downstream(query_runner_" + getName() + ")\n" +
+                        "\t" + getName() + ".set_downstream(dummy2_" + getName()+ ")\n" +
+                        "\t" +"query_runner_" + getName() + ".set_downstream(branching_" + getName() + ")\n" +
+                        "\t" + "branching_" + getName() + ".set_downstream(" + getToNode().getName() + ")\n" +
+                        "\t" + "branching_" + getName() + ".set_downstream(dummy_" + getName() + ")\n" +
+                        "\t" + "dummy_" + getName() + ".set_downstream(" + getTermNode().getName() + ")\n" +
+                        "\t" + "dummy2_" + getName() + ".set_downstream(" + getTermNode().getName() + ")\n" +
 
-                    getName().replace('-', '_') + " = HiveOperator(task_id='" + getName().replace('-', '_') + "',hql=str(getQuery()), on_success_callback=success_" + getName().replace('-', '_') + ", on_failure_callback=failure_" + getName().replace('-', '_') + " , provide_context=True, dag=dag)\n" +
-                    "branching_" + getName().replace('-', '_') + " = BranchPythonOperator(task_id ='branching_" + getName().replace('-', '_') + "',python_callable=branching_" + getName().replace('-', '_') + "_pc, trigger_rule='all_done',provide_context=True, dag=dag)\n" +
-                    "dummy_" + getName().replace('-', '_') + " = DummyOperator(task_id ='dummy_" + getName().replace('-', '_') + "',dag=dag)\n");
+                    getName() + " = BranchPythonOperator(task_id ='" + getName() + "',python_callable=" + getName() + "_pc ,provide_context=True, dag=dag)\n" +
+                    "query_runner_" + getName() + " = HiveOperator(task_id='query_runner_" + getName() + "',hql=\"{{ task_instance.xcom_pull(task_ids ='" + getName() + "',key='query') }}\", on_success_callback=success_" + getName() + ", on_failure_callback=failure_" + getName() + " , provide_context=True, dag=dag)\n" +
+                    "branching_" + getName() + " = BranchPythonOperator(task_id ='branching_" + getName() + "',python_callable=branching_" + getName() + "_pc, trigger_rule='all_done',provide_context=True, dag=dag)\n" +
+                    "dummy2_" + getName() + " = DummyOperator(task_id ='dummy2_" + getName() + "',dag=dag)\n"+
+                    "dummy_" + getName() + " = DummyOperator(task_id ='dummy_" + getName() + "',dag=dag)\n");
+
 
         try {
 
             FileWriter fw = new FileWriter(homeDir + "/defFile.txt", true);
-            fw.write("\nf_" + getName().replace('-', '_') + "()");
+            fw.write("\nf_" + getName() + "()");
             fw.close();
         } catch (IOException e) {
             System.out.println("e = " + e);
@@ -131,21 +142,31 @@ public class DAGHiveTaskNode extends GenericActionNode {
      * @return String containing arguments to be appended to workflow string.
      */
     public String getParams(Integer pid, String configGroup) {
+        String homeDir = System.getProperty("user.home");
+        GetParentProcessType getParentProcessType = new GetParentProcessType();
         StringBuilder addParams = new StringBuilder();
-        String url = "\"set run_id="+"ast.literal_eval(str(dict['initJobInfo.getMinBatchIdMap()']).replace('=',':'))["+getId()+ "];"
-             //   +"set hive.exec.post.hooks=com.wipro.ats.bdre.hiveplugin.hook.LineageHook;"
-             //   +"set bdre.lineage.processId="+getId()
-            //    +";set bdre.lineage.instanceExecId=dict['initJobInfo.getInstanceExecId()'];"
+        String url =
 
-                +"set exec-id=dict['initJobInfo.getInstanceExecId()'];"
-                +"set target-batch-id=dict['initJobInfo.getTargetBatchId()'];"
-                +"set target-batch-marking=dict['initJobInfo.getTargetBatchMarkingSet()'];"
-                +"set min-batch-id="+"ast.literal_eval(str(dict['initJobInfo.getMinBatchIdMap()']).replace('=',':'))["+getId()+ "];"
-                +"set max-batch-id="+"ast.literal_eval(str(dict['initJobInfo.getMaxBatchIdMap()']).replace('=',':'))["+getId()+ "];"
-                +"set min-pri="+"ast.literal_eval(str(dict['initJobInfo.getMinSourceInstanceExecIdMap()']).replace('=',':'))["+getId()+ "];"
-                +"set max-pri="+"ast.literal_eval(str(dict['initJobInfo.getMaxSourceInstanceExecIdMap()']).replace('=',':'))["+getId()+ "];"
-                +"set min-batch-marking="+"ast.literal_eval(str(dict['initJobInfo.getMinBatchMarkingMap()']).replace('=',':'))["+getId()+ "];"
-                +"set min-batch-marking="+"ast.literal_eval(str(dict['initJobInfo.getMinBatchMarkingMap()']).replace('=',':'))["+getId()+ "];\"";
+                "\"set run_id="+"\"+str(ast.literal_eval(str(jobInfoDict['initJobInfo.getMinBatchIdMap()']).replace('=',':'))["+getId()+ "])+\""
+
+                //TODO; make this class available to hive
+                +";add jar "+homeDir + "/bdre_apps/" + processInfo.getBusDomainId().toString()+"/" + getParentProcessType.getParentProcessTypeId(processInfo.getParentProcessId())+"/"+ processInfo.getParentProcessId().toString() +"/lib/hive-plugin-1.1-SNAPSHOT-executable.jar"
+                   +";set hive.exec.post.hooks=com.wipro.ats.bdre.hiveplugin.hook.LineageHook"
+                   +";set bdre.lineage.processId="+getId()
+                  +";set bdre.lineage.instanceExecId=\"+str(jobInfoDict['initJobInfo.getInstanceExecId()'])+\""
+
+             //   +";set exec-id={{task_instance.xcom_pull(task_ids='init_job',key='initjobInfo').get('initJobInfo.getInstanceExecId()')}}"
+
+                +";set exec-id=\"+str(jobInfoDict['initJobInfo.getInstanceExecId()'])+\""
+
+                +";set target-batch-id=\"+str(jobInfoDict['initJobInfo.getTargetBatchId()'])+\""
+                +";set target-batch-marking=\"+str(jobInfoDict['initJobInfo.getTargetBatchMarkingSet()'])+\""
+                +";set min-batch-id="+"\"+str(ast.literal_eval(str(jobInfoDict['initJobInfo.getMinBatchIdMap()']).replace('=',':'))["+getId()+ "])+\""
+                +";set max-batch-id="+"\"+str(ast.literal_eval(str(jobInfoDict['initJobInfo.getMaxBatchIdMap()']).replace('=',':'))["+getId()+ "])+\""
+                +";set min-pri="+"\"+str(ast.literal_eval(str(jobInfoDict['initJobInfo.getMinSourceInstanceExecIdMap()']).replace('=',':')).get("+getId()+ "))+\""
+                +";set max-pri="+"\"+str(ast.literal_eval(str(jobInfoDict['initJobInfo.getMaxSourceInstanceExecIdMap()']).replace('=',':')).get("+getId()+ "))+\""
+                +";set min-batch-marking="+"\"+str(ast.literal_eval(str(jobInfoDict['initJobInfo.getMinBatchMarkingMap()']).replace('=',':0')).get("+getId()+ "))+\""
+                +";set max-batch-marking="+"\"+str(ast.literal_eval(str(jobInfoDict['initJobInfo.getMaxBatchMarkingMap()']).replace('=',':0')).get("+getId()+ "))+\";\" ";
 
         addParams.append(url);
         GetProperties getProperties = new GetProperties();

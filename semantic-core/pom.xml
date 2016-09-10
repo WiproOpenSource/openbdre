@@ -19,29 +19,23 @@
         <dependency>
             <groupId>org.apache.pig</groupId>
             <artifactId>pig</artifactId>
-            <version>0.12.0-cdh5.2.0</version>
         </dependency>
 
-        <dependency>
-            <groupId>org.apache.hive</groupId>
-            <artifactId>hive-exec</artifactId>
-            <!-- <version>1.1.0-cdh5.4.0</version> -->
-        </dependency>
+
         <dependency>
             <groupId>org.apache.hadoop</groupId>
             <artifactId>hadoop-hdfs</artifactId>
-            <version>2.5.0</version>
         </dependency>
         <dependency>
             <groupId>com.wipro.ats.bdre</groupId>
             <artifactId>etl-driver</artifactId>
-            <version>1.1-SNAPSHOT</version>
+            <version>${project.version}</version>
         </dependency>
 
         <dependency>
             <groupId>com.wipro.ats.bdre</groupId>
             <artifactId>hive-plugin</artifactId>
-            <version>1.1-SNAPSHOT</version>
+            <version>${project.version}</version>
         </dependency>
 
     </dependencies>
@@ -58,20 +52,42 @@
                             <goal>shade</goal>
                         </goals>
                         <configuration>
+                            <transformers>
+                                <transformer implementation="org.apache.maven.plugins.shade.resource.AppendingTransformer">
+                                    <resource>META-INF/spring.handlers</resource>
+                                </transformer>
+                                <transformer implementation="org.apache.maven.plugins.shade.resource.AppendingTransformer">
+                                    <resource>META-INF/spring.schemas</resource>
+                                </transformer>
+                            </transformers>
+                            <shadedArtifactAttached>true</shadedArtifactAttached>
+                            <shadedClassifierName>executable</shadedClassifierName>
+                            <relocations>
+                                <relocation>
+                                    <pattern>org.apache.http</pattern>
+                                    <shadedPattern>com.wipro.ats.bdre.org.apache.http</shadedPattern>
+                                </relocation>
+                            </relocations>
+                            <outputDirectory>${project.parent.build.directory}/lib/${project.artifactId}</outputDirectory>
+                            <finalName>semantic-core-${project.version}</finalName>
+
                             <filters>
                                 <filter>
                                     <artifact>*:*</artifact>
                                     <excludes>
-                                        <exclude>META-INF/**</exclude>
+                                        <exclude>META-INF/*.SF</exclude>
+                                        <exclude>META-INF/*.DSA</exclude>
+                                        <exclude>META-INF/*.RSA</exclude>
                                     </excludes>
+                                    <includes>
+                                        <include>**</include>
+                                        <include>**/*.xml</include>
+                                        <include>**/*.jdo</include>
+                                        <include>**/*.orm</include>
+                                        <include>**/*.properties</include>
+                                    </includes>
                                 </filter>
                             </filters>
-                            <transformers>
-                                <transformer implementation="org.apache.maven.plugins.shade.resource.AppendingTransformer">
-                                    <resource>reference.conf</resource>
-                                </transformer>
-                            </transformers>
-                            <outputDirectory>${project.parent.build.directory}/lib/${project.artifactId}</outputDirectory>
                         </configuration>
                     </execution>
                 </executions>

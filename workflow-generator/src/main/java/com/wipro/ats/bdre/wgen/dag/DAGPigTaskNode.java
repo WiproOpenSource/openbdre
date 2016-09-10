@@ -35,7 +35,7 @@ public class DAGPigTaskNode extends GenericActionNode{
 
     public String getName() {
 
-        String nodeName = "dag-pig-" + getId() + "-" + processInfo.getProcessName().replace(' ', '_');
+        String nodeName = "dag_pig_" + getId() + "_" + processInfo.getProcessName().replace(' ', '_');
         return nodeName.substring(0, Math.min(nodeName.length(), 45));
 
     }
@@ -46,41 +46,43 @@ public class DAGPigTaskNode extends GenericActionNode{
             return "";
         }
         String homeDir = System.getProperty("user.home");
-       // ProcessDAO processDAO = new ProcessDAO();
-        String jobInfoFile = homeDir+"/jobInfo.txt";
+        String jobInfoFile = homeDir+"/bdre/airflow/"+processInfo.getParentProcessId().toString()+"_jobInfo.txt";
+
         GetParentProcessType getParentProcessType = new GetParentProcessType();
 
         StringBuilder ret = new StringBuilder();
         ret.append(
-                "with open('"+jobInfoFile+"','a+') as propeties_file:\n"+
+                "\nwith open('"+jobInfoFile+"','a+') as propeties_file:\n"+
                 "\tfor line in propeties_file:\n"+
-                "\t\tinfo = line.split(':',2)\n"+
+                "\t\tinfo = line.split('::',2)\n"+
                 "\t\tdict[info[0]] = info[1].replace('\\n','')\n"+
 
-                "\ndef "+ getName().replace('-','_')+"_pc():\n" +
-                "\tcommand='java -cp "+ homeDir +"/bdre/lib/semantic-core/semantic-core-1.1-SNAPSHOT.jar:"+homeDir+"/bdre/lib/*/* com.wipro.ats.bdre.semcore.PigScriptRunner "+homeDir + "/bdre_apps/" + processInfo.getBusDomainId().toString()+"/" + getParentProcessType.getParentProcessTypeId(processInfo.getParentProcessId())+"/"+ processInfo.getParentProcessId().toString() + "/" + getScriptPath(getId(), "script")+" "+getParams(getId(),"param") +"',\n" +
+                "\ndef "+ getName()+"_pc():\n" +
+                "\tjobInfoDict = kwargs['task_instance'].xcom_pull(task_ids='init_job',key='initjobInfo')\n"+
+                "\tcommand='java -cp "+ homeDir +"/bdre/lib/semantic-core/semantic-core-1.1-SNAPSHOT-executable.jar:"+homeDir+"/bdre/lib/*/* com.wipro.ats.bdre.semcore.PigScriptRunner "+homeDir + "/bdre_apps/" + processInfo.getBusDomainId().toString()+"/" + getParentProcessType.getParentProcessTypeId(processInfo.getParentProcessId())+"/"+ processInfo.getParentProcessId().toString() + "/" +getScriptPath(getId(), "script")+ " "+getParams(getId(), "param")  +"',\n" +
                 "\tbash_output = subprocess.Popen(command,shell=True, stdin=subprocess.PIPE, stdout=subprocess.PIPE )\n" +
                 "\tout,err = bash_output.communicate()\n"+
-                "\tprint(\"out is \",out)\n"+
-                "\tprint(\"err is \",err)\n"+
-                "\tif(bash_output.returncode > 0):\n" +
-                "\t\treturn 'dummy_"+getName().replace('-', '_') +"'\n" +
+                        "\tlogger.info(\"out is \"+str(out))\n"+
+                        "\tlogger.info(\"err is \"+str(err))\n"+
+                "\tif(bash_output.returncode != 0):\n" +
+                "\t\treturn 'dummy_"+getName() +"'\n" +
                 "\telse:\n" +
-                "\t\treturn '"+getToNode().getName().replace('-', '_') +"'\n" +
+                "\t\treturn '"+getToNode().getName() +"'\n" +
 
-                "\ndef f_"+ getName().replace('-','_')+"():\n" +
-                "\t"+ getName().replace('-', '_')+".set_downstream("+ getToNode().getName().replace('-', '_')+")\n" +
-                "\t"+ getName().replace('-', '_')+".set_downstream(dummy_"+ getName().replace('-', '_')+")\n" +
-                "\t"+ "dummy_"+ getName().replace('-', '_')+".set_downstream("+getTermNode().getName().replace('-', '_') +")\n"+
-                getName().replace('-','_')+" = BranchPythonOperator(task_id='"+getName().replace('-', '_')+"', python_callable="+getName().replace('-','_')+"_pc, dag=dag)\n"+
-                "dummy_"+ getName().replace('-', '_')+" = DummyOperator(task_id ='"+"dummy_"+ getName().replace('-', '_')+"',dag=dag)\n");
+                "\ndef f_"+ getName()+"():\n" +
+                "\t"+ getName()+".set_downstream("+ getToNode().getName()+")\n" +
+                "\t"+ getName()+".set_downstream(dummy_"+ getName()+")\n" +
+                "\t"+ "dummy_"+ getName()+".set_downstream("+getTermNode().getName() +")\n"+
+                getName()+" = BranchPythonOperator(task_id='"+getName()+"', python_callable="+getName()+"_pc, dag=dag)\n"+
+                "dummy_"+ getName()+" = DummyOperator(task_id ='"+"dummy_"+ getName()+"',dag=dag)\n");
 
 
         try {
 
             FileWriter fw = new FileWriter(homeDir+"/defFile.txt", true);
-            fw.write("\nf_"+getName().replace('-', '_')+"()");
+            fw.write("\nf_"+getName()+"()");
             fw.close();
+            System.out.println("script path is"+getScriptPath(getId(), "script")+getParams(getId(), "param")  +"',\n" );
         }
         catch (IOException e){
             System.out.println("e = " + e);
@@ -109,7 +111,7 @@ public class DAGPigTaskNode extends GenericActionNode{
 
             }
         } else {
-            addScriptPath.append(" pig/script" + getId() + ".pig ");
+            addScriptPath.append("pig/script" + getId() + ".pig ");
         }
         return addScriptPath.toString();
     }
@@ -130,8 +132,7 @@ public class DAGPigTaskNode extends GenericActionNode{
             while (e.hasMoreElements()) {
                 String key = (String) e.nextElement();
                 if ("run_id".equals(key)) {
-                    addParams.append(" -param ");
-                    addParams.append(" " + key + "=" + "dict[\"initJobInfo.getMinBatchIdMap()\"][" +getId()+ "] " );
+                    addParams.append(" " + key + "=" + "str(ast.literal_eval(str(jobInfoDict['initJobInfo.getMinBatchIdMap()']).replace('=',':'))["+getId()+ "]) " );
                 } else {
                     addParams.append(" " + key + "=" + listForParams.getProperty(key));
                 }

@@ -24,6 +24,8 @@ import org.apache.log4j.Logger;
 import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.List;
 
 
@@ -56,29 +58,76 @@ public class AirflowInitJob {
             airflowUtil.persistBeanData(initJobInfo, false);
             try
             {
-                FileWriter fw = new FileWriter("/home/cloudera/jobinfo.txt", true);
+                String processId = args[1];
+                String homeDir = System.getProperty("user.home");
+                LOGGER.info("home Directory is "+homeDir);
+                Files.deleteIfExists(Paths.get(homeDir+"/bdre/airflow/"+processId+"_jobInfo.txt"));
+                FileWriter fw = new FileWriter(homeDir+"/bdre/airflow/"+processId+"_jobInfo.txt", true);
                 BufferedWriter bw = new BufferedWriter(fw);
 
+                if(initJobInfo.getTargetBatchMarkingSet() != null)
+                    bw.write("initJobInfo.getTargetBatchMarkingSet()::"+initJobInfo.getTargetBatchMarkingSet().toString()+"\n");
+                else
+                    bw.write("initJobInfo.getTargetBatchMarkingSet()::null\n");
 
-                bw.write("initJobInfo.getInstanceExecId():"+initJobInfo.getInstanceExecId().toString()+"\n");
-                bw.write("initJobInfo.getLastRecoverableSpId():"+initJobInfo.getLastRecoverableSpId().toString()+"\n");
-                bw.write("initJobInfo.getTargetBatchId():"+initJobInfo.getTargetBatchId().toString()+"\n");
-                bw.write("initJobInfo.getMinBatchIdMap():"+initJobInfo.getMinBatchIdMap().toString().replace("=", ":")+"\n");
-                bw.write("initJobInfo.getMaxBatchIdMap():"+initJobInfo.getMaxBatchIdMap().toString().replace("=",":")+"\n");
-                bw.write("initJobInfo.getMinBatchMarkingMap():"+initJobInfo.getMinBatchMarkingMap().toString().replace("=", ":")+"\n");
-                bw.write("initJobInfo.getMaxBatchMarkingMap():"+initJobInfo.getMaxBatchMarkingMap().toString().replace("=", ":")+"\n");
-                bw.write("initJobInfo.getTargetBatchMarkingSet():"+initJobInfo.getTargetBatchMarkingSet().toString()+"\n");
-                bw.write("initJobInfo.getMinSourceInstanceExecIdMap():"+initJobInfo.getMinSourceInstanceExecIdMap().toString().replace("=", ":")+"\n");
-                bw.write("initJobInfo.getMaxSourceInstanceExecIdMap():"+initJobInfo.getMaxSourceInstanceExecIdMap().toString().replace("=", ":")+"\n");
-                bw.write("initJobInfo.getFileListMap():"+initJobInfo.getFileListMap().toString().replace("=", ":")+"\n");
-                bw.write("initJobInfo.getBatchListMap():"+initJobInfo.getBatchListMap().toString().replace("=",":")+"\n");
+                if(initJobInfo.getInstanceExecId() != null)
+                    bw.write("initJobInfo.getInstanceExecId()::"+initJobInfo.getInstanceExecId().toString()+"\n");
+                else
+                    bw.write("initJobInfo.getInstanceExecId()::null\n");
 
+                if(initJobInfo.getLastRecoverableSpId() != null)
+                    bw.write("initJobInfo.getLastRecoverableSpId()::"+initJobInfo.getLastRecoverableSpId().toString()+"\n");
+                else
+                    bw.write("initJobInfo.getLastRecoverableSpId()::null\n");
 
+                if(initJobInfo.getTargetBatchId() != null)
+                    bw.write("initJobInfo.getTargetBatchId()::"+initJobInfo.getTargetBatchId().toString()+"\n");
+                else
+                    bw.write("initJobInfo.getTargetBatchId()::null\n");
+
+                if(initJobInfo.getMinBatchIdMap() != null)
+                    bw.write("initJobInfo.getMinBatchIdMap()::"+initJobInfo.getMinBatchIdMap().toString()+"\n");
+                else
+                    bw.write("initJobInfo.getMinBatchIdMap()::null\n");
+
+                if(initJobInfo.getMaxBatchIdMap() != null)
+                    bw.write("initJobInfo.getMaxBatchIdMap()::"+initJobInfo.getMaxBatchIdMap().toString()+"\n");
+                else
+                    bw.write("initJobInfo.getMaxBatchIdMap()::null\n");
+
+                if(initJobInfo.getMinBatchMarkingMap() != null)
+                    bw.write("initJobInfo.getMinBatchMarkingMap()::"+initJobInfo.getMinBatchMarkingMap().toString()+"\n");
+                else
+                    bw.write("initJobInfo.getMinBatchIdMap()::null\n");
+
+                if(initJobInfo.getMaxBatchMarkingMap() != null)
+                    bw.write("initJobInfo.getMaxBatchMarkingMap()::"+initJobInfo.getMaxBatchMarkingMap().toString()+"\n");
+                else
+                    bw.write("initJobInfo.getMaxBatchMarkingMap()::null\n");
+
+                if(initJobInfo.getMinSourceInstanceExecIdMap() != null)
+                    bw.write("initJobInfo.getMinSourceInstanceExecIdMap()::"+initJobInfo.getMinSourceInstanceExecIdMap().toString()+"\n");
+                else
+                    bw.write("initJobInfo.getMinSourceInstanceExecIdMap()::null\n");
+
+                if(initJobInfo.getMaxSourceInstanceExecIdMap() != null)
+                    bw.write("initJobInfo.getMaxSourceInstanceExecIdMap()::"+initJobInfo.getMaxSourceInstanceExecIdMap().toString()+"\n");
+                else
+                    bw.write("initJobInfo.getMaxSourceInstanceExecIdMap()::null\n");
+
+                if(initJobInfo.getFileListMap() != null)
+                    bw.write("initJobInfo.getFileListMap()::"+initJobInfo.getFileListMap().toString()+"\n");
+                else
+                    bw.write("initJobInfo.getFileListMap()::null\n");
+
+                if(initJobInfo.getBatchListMap() != null)
+                    bw.write("initJobInfo.getBatchListMap()::"+initJobInfo.getBatchListMap().toString()+"\n");
+                else
+                    bw.write("initJobInfo.getBatchListMap()::null\n");
 
                 bw.close();
 
-            }catch(IOException i)
-            {
+            }catch(IOException i) {
                 i.printStackTrace();
             }
         } catch (Exception e) {

@@ -55,11 +55,11 @@ public class GetProcessDependency extends MetadataAPIBase {
         try {
             CommandLine commandLine = getCommandLine(params, PARAMS_STRUCTURE);
             String pid = commandLine.getOptionValue("process-id");
-            LOGGER.debug("process-id  is " + pid);
+            LOGGER.info("process-id  is " + pid);
 
             //calling proc ListUD
             udList = processDependencyDAO.listUD(Integer.parseInt(pid));
-            LOGGER.debug("Details of process is\n" + udList);
+            LOGGER.info("Details of process is\n" + udList);
             return udList;
         } catch (Exception e) {
             LOGGER.error("Error occurred", e);
