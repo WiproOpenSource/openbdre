@@ -10,10 +10,11 @@ AIRFLOW_DAG_PATH=$airflowDagPath
 mkdir -p $AIRFLOW_DAG_PATH
 cd $BDRE_APPS_HOME
 
-if [ -z "$1" ] || [ -z "$2" ] || [ -z "$3" ] || [ -z "$4" ]; then
+if [ -z "$1" ] || [ -z "$2" ] || [ -z "$3" ] || [ -z "$4" ] || [ -z "$5" ]; then
         echo Insufficient parameters !
         exit 1
 fi
+
 
 busDomainId=$1
 processTypeId=$2
