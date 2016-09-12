@@ -109,16 +109,21 @@ For testing/development purpose and to save time, use the fully loaded Hadoop VM
  - Run this shell script file.
 - Running Airflow
  - initialize the database
+
     ```shell
     airflow initdb
     ```
+
  - start the web server, default port is 8080
+
     ```shell
     airflow webserver -p 8080
+    ```
  - For starting the airflow UI use in the browser
+
     ```shell
     localhost:8080
-    ```    ```
+    ```
  - For more details about airflow read http://pythonhosted.org/airflow/
 
 - BDRE is shipped with an embedded database which is okay for running the UI and evaluating and testing jobs in a single node cluster.
