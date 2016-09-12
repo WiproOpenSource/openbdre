@@ -104,28 +104,6 @@ For testing/development purpose and to save time, use the fully loaded Hadoop VM
 - Git 1.9 and up
 - Maven 3 and up
 - Oracle JDK 7(and up)
-- Airflow
- - For Airflow installation use http://repo.continuum.io/archive/Anaconda2-4.1.1-Linux-x86_64.sh link to download anaconda 4.1.
- - Run this shell script file.
-- Running Airflow
- - initialize the database
-
-    ```shell
-    airflow initdb
-    ```
-
- - start the web server, default port is 8080
-
-    ```shell
-    airflow webserver -p 8080
-    ```
- - For starting the airflow UI use in the browser
-
-    ```shell
-    localhost:8080
-    ```
- - For more details about airflow read http://pythonhosted.org/airflow/
-
 - BDRE is shipped with an embedded database which is okay for running the UI and evaluating and testing jobs in a single node cluster.
 For production use BDRE currently supports following production scale databases.)
   - MySQL Server 5.1 and up
@@ -319,6 +297,32 @@ You should be able to do the same in Mac or Windows but note that setting up a H
 * Click the execution button to execute the *Import job*.
 * Check the process in Oozie console *http://VM_IP:11000/oozie*
 * When the import job is complete start the *data load job*.
+
+# Optional Requisite
+## Airflow
+* For Airflow installation.
+-  use http://repo.continuum.io/archive/Anaconda2-4.1.1-Linux-x86_64.sh link to download anaconda 4.1.
+- Run this shell script file.
+* Running Airflow
+- initialize the database
+
+    ```shell
+    airflow initdb
+    ```
+
+* start the web server, default port is 8080
+
+    ```shell
+    airflow webserver -p 8080
+    ```
+* For starting the airflow UI use in the browser
+
+    ```shell
+    localhost:8080
+    ```
+ * For more details about airflow read http://pythonhosted.org/airflow/
+
+
 
 # Operational Metadata Management System
 
