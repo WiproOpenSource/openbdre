@@ -19,6 +19,7 @@ busDomainId=$1
 processTypeId=$2
 processId=$3
 userName=$4
+workflowTypeId=$5
 
 
 filename="dag_"${busDomainId}_${processTypeId}_${processId}
