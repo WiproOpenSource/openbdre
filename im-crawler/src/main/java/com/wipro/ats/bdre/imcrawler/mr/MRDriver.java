@@ -15,7 +15,9 @@ import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.conf.Configured;
 import org.apache.hadoop.fs.FileSystem;
 import org.apache.hadoop.fs.Path;
-import org.apache.hadoop.io.*;
+import org.apache.hadoop.io.IntWritable;
+import org.apache.hadoop.io.NullWritable;
+import org.apache.hadoop.io.Text;
 import org.apache.hadoop.mapreduce.Job;
 import org.apache.hadoop.mapreduce.Mapper;
 import org.apache.hadoop.mapreduce.lib.output.FileOutputFormat;
@@ -54,6 +56,13 @@ public class MRDriver extends Configured implements Tool {
         GetGeneralConfig generalConfig = new GetGeneralConfig();
         GeneralConfig gc = generalConfig.byConigGroupAndKey("imconfig", "common.default-fs-name");
         conf.set("fs.defaultFS", gc.getDefaultVal());
+        conf.set("fs.default.name",gc.getDefaultVal());
+
+        String jtHostName = generalConfig.byConigGroupAndKey("scripts_config", "jobTrackerHostName").getDefaultVal();
+        String jtPort = generalConfig.byConigGroupAndKey("scripts_config", "jobTrackerPort").getDefaultVal();
+
+        conf.set("mapred.job.tracker",jtHostName+":"+jtPort);
+        System.out.println("mapred.job.tracker : "+jtHostName+":"+jtPort);
 
         System.out.println("fs.default.name : - " + conf.get("fs.defaultFS"));
         // It prints uri  as : hdfs://10.214.15.165:9000 or something...
