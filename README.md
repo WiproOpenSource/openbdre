@@ -320,7 +320,7 @@ You should be able to do the same in Mac or Windows but note that setting up a H
     ```shell
     localhost:8080
     ```
- * For more details about airflow read http://pythonhosted.org/airflow/
+* For more details about airflow read http://pythonhosted.org/airflow/
 
 
 
