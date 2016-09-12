@@ -61,7 +61,8 @@ public class MRDriver extends Configured implements Tool {
         String jtHostName = generalConfig.byConigGroupAndKey("scripts_config", "jobTrackerHostName").getDefaultVal();
         String jtPort = generalConfig.byConigGroupAndKey("scripts_config", "jobTrackerPort").getDefaultVal();
 
-        conf.set("mapred.job.tracker","quickstart.cloudera:8032");
+        conf.set("mapred.job.tracker",jtHostName+":"+jtPort);
+        System.out.println("mapred.job.tracker : "+jtHostName+":"+jtPort);
 
         System.out.println("fs.default.name : - " + conf.get("fs.defaultFS"));
         // It prints uri  as : hdfs://10.214.15.165:9000 or something...
