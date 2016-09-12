@@ -315,7 +315,7 @@ You should be able to do the same in Mac or Windows but note that setting up a H
     ```shell
     airflow webserver -p 8080
     ```
-*  For starting the airflow UI use in the browser
+ -  For starting the airflow UI use in the browser
 
     ```shell
     localhost:8080
