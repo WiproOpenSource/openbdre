@@ -67,6 +67,7 @@ public class WorkflowPrinterTest {
     }
 
     @Test
+    @Ignore
     public void testExecute1() throws Exception {
         List<ProcessInfo> processInfos = getProcessBeans1();
         String workflowXML = new WorkflowPrinter().execute(processInfos, "test-workflow").getXml().toString();

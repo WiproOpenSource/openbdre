@@ -16,11 +16,15 @@ package com.wipro.ats.bdre.md.api.airflow;
 
 import com.wipro.ats.bdre.exception.MetadataException;
 import com.wipro.ats.bdre.md.api.GetETLDriver;
-import com.wipro.ats.bdre.md.api.oozie.OozieInitJob;
 import com.wipro.ats.bdre.md.beans.GetETLDriverInfo;
 import com.wipro.ats.bdre.util.AirflowUtil;
-import com.wipro.ats.bdre.util.OozieUtil;
 import org.apache.log4j.Logger;
+
+import java.io.BufferedWriter;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 
 /**
  * Created by pushpak on 18/07/2016.
@@ -46,6 +50,35 @@ public class AirflowGetETLDriver {
         AirflowUtil airflowUtil = new AirflowUtil();
         try {
             airflowUtil.persistBeanData(getETLDriverInfo, false);
+            try
+            {
+                // String processId = args[1];
+                String homeDir = System.getProperty("user.home");
+                LOGGER.info("home Directory is "+homeDir);
+                Files.deleteIfExists(Paths.get(homeDir + "/bdre/airflow/etldriverInfo.txt"));
+                FileWriter fw = new FileWriter(homeDir+"/bdre/airflow/etldriverInfo.txt", true);
+                BufferedWriter bw = new BufferedWriter(fw);
+
+                if(getETLDriverInfo.getMinBatch() != null)
+                    bw.write("getETLDriverInfo.getMinBatch()::"+getETLDriverInfo.getMinBatch().toString()+"\n");
+                else
+                    bw.write("getETLDriverInfo.getMinBatch()::null\n");
+
+                if(getETLDriverInfo.getMaxBatch() != null)
+                    bw.write("getETLDriverInfo.getMaxBatch()::"+getETLDriverInfo.getMaxBatch().toString()+"\n");
+                else
+                    bw.write("getETLDriverInfo.getMaxBatch()::null\n");
+
+                if(getETLDriverInfo.getFileList() != null)
+                    bw.write("getETLDriverInfo.getFileList()::"+getETLDriverInfo.getFileList().toString()+"\n");
+                else
+                    bw.write("getETLDriverInfo.getFileList()::null\n");
+
+                bw.close();
+
+            }catch(IOException i) {
+                i.printStackTrace();
+            }
         } catch (Exception e) {
             LOGGER.error(e);
             throw new MetadataException(e);

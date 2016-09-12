@@ -52,7 +52,7 @@ public class DAGLOFTaskNode extends GenericActionNode {
                         "\t\tdict[file_info[0]] = file_info[1].replace('\\n','')\n"+
 
                         "\ndef "+ getName().replace('-','_')+"_pc():\n" +
-                        "\tcommand='java -cp "+homeDir+"/bdre/lib/md_api/*:"+homeDir+"/bdre/lib/*/*  com.wipro.ats.bdre.md.api.oozie.OozieGetETLDriver  --min-batch-id   \'+str(ast.literal_eval(str(dict[\"initJobInfo.getMinBatchIdMap()\"]).replace('=',':'))["+getId()+ "]) +\'  --max-batch-id  '+str(ast.literal_eval(str(dict[\"initJobInfo.getMaxBatchIdMap()\"]).replace('=',':'))["+getId()+ "]) \n"+
+                        "\tcommand='java -cp "+homeDir+"/bdre/lib/md_api/*:"+homeDir+"/bdre/lib/*/*  com.wipro.ats.bdre.md.api.airflow.AirflowGetETLDriver  --min-batch-id   \'+str(ast.literal_eval(str(dict[\"initJobInfo.getMinBatchIdMap()\"]).replace('=',':'))["+getId()+ "]) +\'  --max-batch-id  '+str(ast.literal_eval(str(dict[\"initJobInfo.getMaxBatchIdMap()\"]).replace('=',':'))["+getId()+ "]) \n"+
                         "\tbash_output = subprocess.Popen(command,shell=True, stdin=subprocess.PIPE, stdout=subprocess.PIPE )\n" +
                         "\tout,err = bash_output.communicate()\n"+
                 "\tlogger.info(\"out is \"+str(out))\n"+
