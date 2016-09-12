@@ -260,6 +260,25 @@
 		    }
 		});
 	    }
+
+	     function popModalDag(pid) {
+        		$.get('airflowdag/' + pid + '.page', function (data) {
+        		 if(data=="not allowed")
+                		     alert("ACCESS DENIED");
+                		     else{
+        		    modal.open({content: "<b>Loading</b>"});
+        		    showXML(data);
+        		    $('#content').each(function (i, block) {
+        			hljs.highlightBlock(block);
+        			console.log(block);
+        		    });
+        		    modal.center();
+        		    }
+        		});
+        	    }
+
+
+
 	    function GotoProcess(pid) {
 		location.href = '<c:url value="/pages/process.page?pid="/>' + pid;
 	    }

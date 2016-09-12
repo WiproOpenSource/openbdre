@@ -28,7 +28,7 @@
                 <oozie.version>4.1.0</oozie.version>
                 <storm.version>0.9.3</storm.version>
                 <kafka.version>0.8.1.1</kafka.version>
-                <pig.version>0.15.0</pig.version>
+                <pig.version>0.12.0-cdh5.2.0</pig.version>
                 <flume.version>1.6.0</flume.version>
                 <spark.core.version>1.5.2</spark.core.version>
                 <selected.profile>cdh52</selected.profile>
