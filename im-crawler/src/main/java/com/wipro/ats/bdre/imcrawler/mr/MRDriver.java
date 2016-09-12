@@ -54,6 +54,8 @@ public class MRDriver extends Configured implements Tool {
         GetGeneralConfig generalConfig = new GetGeneralConfig();
         GeneralConfig gc = generalConfig.byConigGroupAndKey("imconfig", "common.default-fs-name");
         conf.set("fs.defaultFS", gc.getDefaultVal());
+        conf.set("fs.default.name","hdfs://quickstart.cloudera:8020");
+        conf.set("mapred.job.tracker","quickstart.cloudera:8032");
 
         System.out.println("fs.default.name : - " + conf.get("fs.defaultFS"));
         // It prints uri  as : hdfs://10.214.15.165:9000 or something...
