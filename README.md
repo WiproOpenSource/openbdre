@@ -299,23 +299,23 @@ You should be able to do the same in Mac or Windows but note that setting up a H
 * When the import job is complete start the *data load job*.
 
 # Optional Requisite
-## Airflow
+## Airflow Integration
 * For Airflow installation.
  - use http://repo.continuum.io/archive/Anaconda2-4.1.1-Linux-x86_64.sh link to download anaconda 4.1.
  - Run this shell script file.
 * Running Airflow
- - initialize the database
+ - Initialize the database
 
     ```shell
     airflow initdb
     ```
 
- - start the web server, default port is 8080
+ - Start the web server, default port is 8080
 
     ```shell
     airflow webserver -p 8080
     ```
-* For starting the airflow UI use in the browser
+*  For starting the airflow UI use in the browser
 
     ```shell
     localhost:8080
