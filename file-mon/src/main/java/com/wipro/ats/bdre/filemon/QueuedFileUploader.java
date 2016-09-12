@@ -51,16 +51,18 @@ public class QueuedFileUploader {
         try {
             // Copying file from local to HDFS overriding, if file already exists
             config.set("fs.defaultFS", FileMonRunnableMain.getDefaultFSName());
-            File f = new File("/etc/hadoop/conf");
-            URL u = f.toURL();
-            URLClassLoader urlClassLoader = (URLClassLoader) ClassLoader.getSystemClassLoader();
-            Class urlClass = URLClassLoader.class;
-            Method method = urlClass.getDeclaredMethod("addURL", new Class[]{URL.class});
-            method.setAccessible(true);
-            method.invoke(urlClassLoader, new Object[]{u});
-            config.set("hadoop.security.authentication", "Kerberos");
-            UserGroupInformation.setConfiguration(config);
-            UserGroupInformation.loginUserFromKeytab("cloudera/quickstart.cloudera@CLOUDERA", "/home/cloudera/cloudera.keytab");
+            if("true".equals(FileMonRunnableMain.getKerberosEnabled() )) {
+                File f = new File(FileMonRunnableMain.getHadoopConfDir());
+                URL u = f.toURL();
+                URLClassLoader urlClassLoader = (URLClassLoader) ClassLoader.getSystemClassLoader();
+                Class urlClass = URLClassLoader.class;
+                Method method = urlClass.getDeclaredMethod("addURL", new Class[]{URL.class});
+                method.setAccessible(true);
+                method.invoke(urlClassLoader, new Object[]{u});
+                config.set("hadoop.security.authentication", "Kerberos");
+                UserGroupInformation.setConfiguration(config);
+                UserGroupInformation.loginUserFromKeytab(FileMonRunnableMain.getKerberosUserName(), FileMonRunnableMain.getKerberosKeytabFileLocation());
+            }
             FileSystem fs = FileSystem.get(config);
             String destDir = fileCopying.getDstLocation();
             Path destPath = new Path(ResolvePath.replaceVars(destDir));
