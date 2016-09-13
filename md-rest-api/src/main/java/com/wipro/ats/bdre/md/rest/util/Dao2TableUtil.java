@@ -77,12 +77,14 @@ public class Dao2TableUtil {
         LOGGER.info("workflow type id is "+workflowTypeId);
         WorkflowTypeDAO workflowTypeDAO=new WorkflowTypeDAO();
         if (workflowTypeId != null) {
-            com.wipro.ats.bdre.md.dao.jpa.WorkflowType daoWorkflowType = workflowTypeDAO.get(workflowTypeId);
+            com.wipro.ats.bdre.md.dao.jpa.WorkflowType daoWorkflowType =new WorkflowType();
+            daoWorkflowType.setWorkflowId(workflowTypeId);
             daoProcess.setWorkflowType(daoWorkflowType);
         }
         else
         {
-            com.wipro.ats.bdre.md.dao.jpa.WorkflowType daoWorkflowType = workflowTypeDAO.get(1);
+            com.wipro.ats.bdre.md.dao.jpa.WorkflowType daoWorkflowType =new WorkflowType();
+            daoWorkflowType.setWorkflowId(1);
             daoProcess.setWorkflowType(daoWorkflowType);
         }
         com.wipro.ats.bdre.md.dao.jpa.BusDomain daoBusDomain = new com.wipro.ats.bdre.md.dao.jpa.BusDomain();
