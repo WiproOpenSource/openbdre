@@ -75,7 +75,6 @@ public class Dao2TableUtil {
         daoProcessType.setProcessTypeId(processTypeId);
         daoProcess.setProcessType(daoProcessType);
         LOGGER.info("workflow type id is "+workflowTypeId);
-        WorkflowTypeDAO workflowTypeDAO=new WorkflowTypeDAO();
         if (workflowTypeId != null) {
             com.wipro.ats.bdre.md.dao.jpa.WorkflowType daoWorkflowType =new WorkflowType();
             daoWorkflowType.setWorkflowId(workflowTypeId);
