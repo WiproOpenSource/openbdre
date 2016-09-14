@@ -92,6 +92,15 @@ public class HistoryDataImportDAO {
             BusDomain busDomain = new BusDomain();
             busDomain.setBusDomainId(busDomainId);
 
+            IntermediateId getWorkflowType = new IntermediateId();
+            getWorkflowType.setInterKey("workflowTypeId");
+            getWorkflowType.setUuid(intermediateInfo.getUuid());
+            Criteria getworkflowTypeIdCriteria = session.createCriteria(Intermediate.class).add(Restrictions.eq("id", getWorkflowType));
+            Intermediate workflowTypeIdRow = (Intermediate) getworkflowTypeIdCriteria.list().get(0);
+            Integer workflowTypeId = Integer.parseInt(workflowTypeIdRow.getInterValue());
+            WorkflowType workflowType = new WorkflowType();
+            workflowType.setWorkflowId(workflowTypeId);
+
             IntermediateId getProcessName = new IntermediateId();
             getProcessName.setInterKey("processName");
             getProcessName.setUuid(intermediateInfo.getUuid());
@@ -150,6 +159,9 @@ public class HistoryDataImportDAO {
                 dataLoadParent.setEnqueuingProcessId(0);
                 dataLoadParent.setBatchCutPattern(null);
                 dataLoadParent.setDeleteFlag(false);
+                if (workflowType!=null)
+                dataLoadParent.setWorkflowType(workflowType);
+                else
                 dataLoadParent.setWorkflowType(oozieType);
                 PermissionType permissionType=new PermissionType();
                 permissionType.setPermissionTypeId(7);
@@ -183,6 +195,9 @@ public class HistoryDataImportDAO {
                 dataImportProcess.setCanRecover(false);
                 dataImportProcess.setEnqueuingProcessId(0);
                 dataImportProcess.setBatchCutPattern(null);
+                if (workflowType!=null)
+                dataImportProcess.setWorkflowType(workflowType);
+                else
                 dataImportProcess.setWorkflowType(oozieType);
                 dataImportProcess.setDeleteFlag(false);
                 PermissionType permissionType=new PermissionType();
