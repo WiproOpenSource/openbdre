@@ -24,6 +24,7 @@ import org.hibernate.Criteria;
 import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
+import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Restrictions;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -46,7 +47,7 @@ public class PropertiesDAO {
     public List<Integer> list(Integer pageNum, Integer numResults) {
         Session session = sessionFactory.openSession();
         session.beginTransaction();
-        Criteria criteria = session.createCriteria(Properties.class);
+        Criteria criteria = session.createCriteria(Properties.class).addOrder(Order.desc("id.processId"));
 
         LOGGER.info("number of entries in properties table" + criteria.list().size());
         criteria.setProjection(Projections.distinct(Projections.property("id.processId")));

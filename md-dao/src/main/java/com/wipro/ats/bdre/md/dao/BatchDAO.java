@@ -20,6 +20,7 @@ import org.apache.log4j.Logger;
 import org.hibernate.Criteria;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
+import org.hibernate.criterion.Order;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -40,7 +41,7 @@ public class BatchDAO {
     public List<Batch> list(Integer pageNum, Integer numResults) {
         Session session = sessionFactory.openSession();
         session.beginTransaction();
-        Criteria criteria = session.createCriteria(Batch.class);
+        Criteria criteria = session.createCriteria(Batch.class).addOrder(Order.desc("batchId"));
         criteria.setFirstResult(pageNum);
         criteria.setMaxResults(numResults);
         List<Batch> batches = criteria.list();

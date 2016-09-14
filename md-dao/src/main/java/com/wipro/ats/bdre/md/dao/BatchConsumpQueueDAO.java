@@ -19,6 +19,7 @@ import org.apache.log4j.Logger;
 import org.hibernate.Criteria;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
+import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -39,7 +40,7 @@ public class BatchConsumpQueueDAO {
     public List<BatchConsumpQueue> list(Integer pageNum, Integer numResults) {
         Session session = sessionFactory.openSession();
         session.beginTransaction();
-        Criteria criteria = session.createCriteria(BatchConsumpQueue.class);
+        Criteria criteria = session.createCriteria(BatchConsumpQueue.class).addOrder(Order.desc("queueId"));
         criteria.setFirstResult(pageNum);
         criteria.setMaxResults(numResults);
         List<BatchConsumpQueue> batchConsumpQueues = criteria.list();

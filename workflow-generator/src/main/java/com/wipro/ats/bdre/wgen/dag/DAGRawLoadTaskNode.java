@@ -47,7 +47,7 @@ public class DAGRawLoadTaskNode extends GenericActionNode {
         String homeDir = System.getProperty("user.home");
 
         ret.append(
-                        "\ndef "+ getName()+"_pc():\n" +
+                        "\ndef "+ getName()+"_pc(**kwargs):\n" +
                         "\tjobInfoDict = kwargs['task_instance'].xcom_pull(task_ids='init_job',key='initjobInfo')\n"+
                         "\tcommand='java -cp "+homeDir+"/bdre/lib/etl-driver/*:"+homeDir+"/bdre/lib/*/*  com.wipro.ats.bdre.im.etl.api.oozie.OozieRawLoad --process-id "+ getId().toString()+"  --instance-exec-id \'+jobInfoDict[\"initJobInfo.getInstanceExecId()\"] +\' --list-of-files  \'+str(ast.literal_eval(str(jobInfoDict[\"initJobInfo.getFileListMap()\"]).replace('=',':\\'').replace(',','\\',').replace('}','\\'}').replace('FileList.',''))["+getId()+ "]) +\'   --list-of-file-batchIds  \'+str(ast.literal_eval(str(jobInfoDict[\"initJobInfo.getBatchListMap()\"]).replace('=',':').replace('FileBatchList.',''))["+getId()+ "])  \n"+
                         "\tbash_output = subprocess.Popen(command,shell=True, stdin=subprocess.PIPE, stdout=subprocess.PIPE )\n" +
@@ -63,7 +63,7 @@ public class DAGRawLoadTaskNode extends GenericActionNode {
                         "\t"+ getName()+".set_downstream("+ getToNode().getName()+")\n" +
                         "\t"+ getName()+".set_downstream(dummy_"+ getName()+")\n" +
                         "\t"+ "dummy_"+ getName()+".set_downstream("+getTermNode().getName() +")\n"+
-                        getName()+" = BranchPythonOperator(task_id='"+getName()+"', python_callable="+getName()+"_pc, dag=dag)\n"+
+                        getName()+" = BranchPythonOperator(task_id='"+getName()+"', python_callable="+getName()+"_pc,provide_context=True, dag=dag)\n"+
                         "dummy_"+ getName()+" = DummyOperator(task_id ='"+"dummy_"+ getName()+"',dag=dag)\n"
         );
 

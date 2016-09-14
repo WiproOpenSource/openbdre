@@ -45,15 +45,22 @@ public class DAGDataGenerationTaskNode  extends GenericActionNode {
             return "";
         }
         String homeDir = System.getProperty("user.home");
+        String RegFileInfoFile = homeDir+"/bdre/airflow/"+processInfo.getParentProcessId().toString()+"_jobInfo.txt";
         String jobInfoFile = homeDir+"/bdre/airflow/"+processInfo.getParentProcessId().toString()+"_jobInfo.txt";
         StringBuilder ret = new StringBuilder();
 
-        ret.append(      "\ndef "+ getName()+"_pc():\n" +
+        ret.append(      "\ndef "+ getName()+"_pc(**kwargs):\n" +
                         "\tcommand='java -cp "+homeDir+"/bdre/lib/hive-data-gen/*:"+homeDir+"/bdre/lib/*/*  com.wipro.ats.bdre.datagen.GeneratorMain --sub-process-id "+ getId().toString() +" '\n"+
                         "\tbash_output = subprocess.Popen(command,shell=True, stdin=subprocess.PIPE, stdout=subprocess.PIPE )\n" +
                         "\tout,err = bash_output.communicate()\n"+
                         "\tlogger.info(\"out is \"+str(out))\n"+
                         "\tlogger.info(\"err is \"+str(err))\n"+
+                        "\twith open('"+RegFileInfoFile+"','a+') as reg_file_info_file:\n"+
+                        "\t\tfor line in reg_file_info_file:\n"+
+                        "\t\t\tinfo = line.split('::',2)\n"+
+                        "\t\t\tdict[info[0]] = info[1].replace('\\n','')\n"+
+                        "\tkwargs['task_instance'].xcom_push(key='RegFileInfoFile',value=dict)\n"+
+
                         "\tif(bash_output.returncode != 0):\n" +
                         "\t\treturn 'dummy_"+getName() +"'\n" +
                         "\telse:\n" +
@@ -63,7 +70,7 @@ public class DAGDataGenerationTaskNode  extends GenericActionNode {
                         "\t"+ getName()+".set_downstream("+ getToNode().getName()+")\n" +
                         "\t"+ getName()+".set_downstream(dummy_"+ getName()+")\n" +
                         "\t"+ "dummy_"+ getName()+".set_downstream("+getTermNode().getName() +")\n"+
-                        getName()+" = BranchPythonOperator(task_id='"+getName()+"', python_callable="+getName()+"_pc, dag=dag)\n"+
+                        getName()+" = BranchPythonOperator(task_id='"+getName()+"', python_callable="+getName()+"_pc,provide_context=True, dag=dag)\n"+
                         "dummy_"+ getName()+" = DummyOperator(task_id ='"+"dummy_"+ getName()+"',dag=dag)\n"
         );
 
