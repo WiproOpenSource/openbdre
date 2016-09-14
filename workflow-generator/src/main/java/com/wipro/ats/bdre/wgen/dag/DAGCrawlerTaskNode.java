@@ -46,13 +46,8 @@ public class DAGCrawlerTaskNode extends GenericActionNode {
         String jobInfoFile = homeDir+"/bdre/airflow/"+processInfo.getParentProcessId().toString()+"_jobInfo.txt";
         StringBuilder ret = new StringBuilder();
 
-        ret.append( "\nwith open('"+jobInfoFile+"','a+') as propeties_register_file:\n"+
-                        "\tfor line in propeties_register_file:\n"+
-                        "\t\tfile_info = line.split(':',2)\n"+
-                        "\t\tdict[file_info[0]] = file_info[1].replace('\\n','')\n"+
-
-                        "\ndef "+ getName()+"_pc():\n" +
-                        "\tcommand='java -cp "+homeDir+"/bdre/lib/im-crawler/*:"+homeDir+"/bdre/lib/*/*  com.wipro.ats.bdre.imcrawler.mr.MRMain --sub-process-id "+ getId().toString()+" --instance-exec-id \'+dict[\"initJobInfo.getInstanceExecId()\"]  \n"+
+        ret.append(     "\ndef "+ getName()+"_pc(**kwargs):\n" +
+                        "\tcommand='java -cp "+homeDir+"/bdre/lib/im-crawler/*:"+homeDir+"/bdre/lib/*/*  com.wipro.ats.bdre.imcrawler.mr.MRMain --sub-process-id "+ getId().toString()+" --instance-exec-id \'+kwargs['task_instance'].xcom_pull(task_ids='init_job',key='initjobInfo').get(\"initJobInfo.getInstanceExecId()\")  \n"+
                         "\tbash_output = subprocess.Popen(command,shell=True, stdin=subprocess.PIPE, stdout=subprocess.PIPE )\n" +
                         "\tout,err = bash_output.communicate()\n"+
                          "\tlogger.info(\"out is \"+str(out))\n"+
@@ -66,7 +61,7 @@ public class DAGCrawlerTaskNode extends GenericActionNode {
                         "\t"+ getName()+".set_downstream("+ getToNode().getName()+")\n" +
                         "\t"+ getName()+".set_downstream(dummy_"+ getName()+")\n" +
                         "\t"+ "dummy_"+ getName()+".set_downstream("+getTermNode().getName() +")\n"+
-                        getName()+" = BranchPythonOperator(task_id='"+getName()+"', python_callable="+getName()+"_pc, dag=dag)\n"+
+                        getName()+" = BranchPythonOperator(task_id='"+getName()+"', python_callable="+getName()+"_pc, provide_context=True, dag=dag)\n"+
                         "dummy_"+ getName()+" = DummyOperator(task_id ='"+"dummy_"+ getName()+"',dag=dag)\n"
         );
 
