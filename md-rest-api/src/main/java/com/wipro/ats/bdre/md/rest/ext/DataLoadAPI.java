@@ -105,6 +105,7 @@ public class DataLoadAPI extends MetadataAPIBase {
         String processName = null;
         String processDescription = null;
         Integer busDomainId = null;
+        Integer workflowTypeId=null;
         Integer enqId = null;
         Map<String,String> partitionCols = new TreeMap<String, String>();
         Map<String,String> partitionDataTypes = new TreeMap<String, String>();
@@ -202,17 +203,20 @@ public class DataLoadAPI extends MetadataAPIBase {
                 }
             }
             else if (string.startsWith("process_processName")) {
-                LOGGER.debug("process_processName" + map.get(string));
+                LOGGER.info("process_processName" + map.get(string));
                 processName = map.get(string);
             }else if (string.startsWith("process_processDescription")) {
-                LOGGER.debug("process_processDescription" + map.get(string));
+                LOGGER.info("process_processDescription" + map.get(string));
                 processDescription = map.get(string);
             }else if (string.startsWith(BUSDOMAIN)) {
-                LOGGER.debug(BUSDOMAIN + map.get(string));
+                LOGGER.info(BUSDOMAIN + map.get(string));
                 busDomainId = new Integer(map.get(string));
             }else if (string.startsWith("process_enqueueId")) {
-                LOGGER.debug(BUSDOMAIN + map.get(string));
+                LOGGER.info(BUSDOMAIN + map.get(string));
                 enqId = new Integer(map.get(string));
+            }else if (string.startsWith("process_workflowTypeId")) {
+                LOGGER.info("process_workflowTypeId" + map.get(string));
+                workflowTypeId = new Integer(map.get(string));
             }
 
         }
@@ -231,7 +235,7 @@ public class DataLoadAPI extends MetadataAPIBase {
             raw2StageProperties.add(jpaProperties);
         }
 
-        com.wipro.ats.bdre.md.dao.jpa.Process parentProcess = Dao2TableUtil.buildJPAProcess(5, processName, processDescription, 1,busDomainId);
+        com.wipro.ats.bdre.md.dao.jpa.Process parentProcess = Dao2TableUtil.buildJPAProcess(5, processName, processDescription, workflowTypeId,busDomainId);
         Users users=new Users();
         users.setUsername(principal.getName());
         parentProcess.setUsers(users);

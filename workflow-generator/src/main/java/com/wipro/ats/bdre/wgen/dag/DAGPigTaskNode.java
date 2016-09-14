@@ -52,12 +52,8 @@ public class DAGPigTaskNode extends GenericActionNode{
 
         StringBuilder ret = new StringBuilder();
         ret.append(
-                "\nwith open('"+jobInfoFile+"','a+') as propeties_file:\n"+
-                "\tfor line in propeties_file:\n"+
-                "\t\tinfo = line.split('::',2)\n"+
-                "\t\tdict[info[0]] = info[1].replace('\\n','')\n"+
 
-                "\ndef "+ getName()+"_pc():\n" +
+                "\ndef "+ getName()+"_pc(**kwargs):\n" +
                 "\tjobInfoDict = kwargs['task_instance'].xcom_pull(task_ids='init_job',key='initjobInfo')\n"+
                 "\tcommand='java -cp "+ homeDir +"/bdre/lib/semantic-core/semantic-core-1.1-SNAPSHOT-executable.jar:"+homeDir+"/bdre/lib/*/* com.wipro.ats.bdre.semcore.PigScriptRunner "+homeDir + "/bdre_apps/" + processInfo.getBusDomainId().toString()+"/" + getParentProcessType.getParentProcessTypeId(processInfo.getParentProcessId())+"/"+ processInfo.getParentProcessId().toString() + "/" +getScriptPath(getId(), "script")+ " "+getParams(getId(), "param")  +"',\n" +
                 "\tbash_output = subprocess.Popen(command,shell=True, stdin=subprocess.PIPE, stdout=subprocess.PIPE )\n" +
@@ -73,7 +69,7 @@ public class DAGPigTaskNode extends GenericActionNode{
                 "\t"+ getName()+".set_downstream("+ getToNode().getName()+")\n" +
                 "\t"+ getName()+".set_downstream(dummy_"+ getName()+")\n" +
                 "\t"+ "dummy_"+ getName()+".set_downstream("+getTermNode().getName() +")\n"+
-                getName()+" = BranchPythonOperator(task_id='"+getName()+"', python_callable="+getName()+"_pc, dag=dag)\n"+
+                getName()+" = BranchPythonOperator(task_id='"+getName()+"', python_callable="+getName()+"_pc,provide_context=True, dag=dag)\n"+
                 "dummy_"+ getName()+" = DummyOperator(task_id ='"+"dummy_"+ getName()+"',dag=dag)\n");
 
 
@@ -107,7 +103,7 @@ public class DAGPigTaskNode extends GenericActionNode{
         if (!scriptPath.isEmpty()) {
             while (e.hasMoreElements()) {
                 String key = (String) e.nextElement();
-                addScriptPath.append(" " + scriptPath.getProperty(key));
+                addScriptPath.append(scriptPath.getProperty(key)+" ");
 
             }
         } else {

@@ -1,5 +1,5 @@
 #!/bin/sh
-
+. $(dirname $0)/../env.properties
 #1,'ingestion',null
 #2, 'Semantic', null
 #3, 'Export',null
@@ -16,6 +16,7 @@
 
 BDRE_HOME=~/bdre
 BDRE_APPS_HOME=~/bdre_apps
+AIRFLOW_INSTALL_DIR=$airflowInstallDir
 
 if [ -z "$1" ] || [ -z "$2" ] || [ -z "$3" ] || [ -z "$4" ] ; then
         echo Insufficient parameters !
@@ -31,7 +32,7 @@ echo "busDomainId=$1 , processTypeId=$2 , processId=$3 userName=$4"
 if [ $processTypeId -eq 1 ]; then
     sh $(dirname $0)/flume.sh $busDomainId $processTypeId $processId
 elif [ $processTypeId -eq 2 ]; then
-    airflow backfill $dag -s `date +%Y-%m-%dT%T`
+    $AIRFLOW_INSTALL_DIR/airflow backfill $dag -s `date +%Y-%m-%dT%T`
 elif [ $processTypeId -eq 4 ]; then
     airflow backfill $dag -s `date +%Y-%m-%dT%T`
 elif [ $processTypeId -eq 5 ]; then
