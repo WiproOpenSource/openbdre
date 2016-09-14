@@ -82,7 +82,7 @@ public class DeployDAOTest {
         deployDAO.initDeploy(processDeploymentQueueId);
         LOGGER.info("The init deploy test executed ");
         processDeploymentQueueDAO.delete(processDeploymentQueueId);
-        processDAO.delete(id);
+        processDAO.testDelete(id);
     }
 
     @Test
@@ -113,7 +113,7 @@ public class DeployDAOTest {
         deployDAO.termDeploy(processDeploymentQueueId);
         LOGGER.info("The term deploy test executed ");
         processDeploymentQueueDAO.delete(processDeploymentQueueId);
-        processDAO.delete(id);
+        processDAO.testDelete(id);
     }
 
     @Test
@@ -144,6 +144,6 @@ public class DeployDAOTest {
         deployDAO.haltDeploy(processDeploymentQueueId);
         LOGGER.info("The halt deploy test executed ");
         processDeploymentQueueDAO.delete(processDeploymentQueueId);
-        processDAO.delete(id);
+        processDAO.testDelete(id);
     }
 }
