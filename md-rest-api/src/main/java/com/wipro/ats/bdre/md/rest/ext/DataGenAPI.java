@@ -65,6 +65,7 @@ public class DataGenAPI extends MetadataAPIBase {
         String processName = null;
         String processDescription = null;
         Integer busDomainId = null;
+        Integer workflowTypeId=null;
 
         StringBuilder tableSchema = new StringBuilder("");
         //to handle argument id's in sequence if rows are deleted and added in UI
@@ -148,15 +149,18 @@ public class DataGenAPI extends MetadataAPIBase {
             }else if (string.startsWith("process_busDomainId")) {
                 LOGGER.debug("process_busDomainId" + map.get(string));
                 busDomainId = new Integer(map.get(string));
+            }else if (string.startsWith("process_workflowTypeId")) {
+                LOGGER.info("process_workflowTypeId" + map.get(string));
+                workflowTypeId = new Integer(map.get(string));
             }
 
         }
-        parentProcess = Dao2TableUtil.buildJPAProcess(18,processName, processDescription, 1,busDomainId);
+        parentProcess = Dao2TableUtil.buildJPAProcess(18,processName, processDescription, workflowTypeId,busDomainId);
         Users users=new Users();
         users.setUsername(principal.getName());
         parentProcess.setUsers(users);
         parentProcess.setUserRoles(userRolesDAO.minUserRoleId(principal.getName()));
-        childProcess = Dao2TableUtil.buildJPAProcess(14, "SubProcess of "+processName, processDescription, 0,busDomainId);
+        childProcess = Dao2TableUtil.buildJPAProcess(14, "SubProcess of "+processName, processDescription, workflowTypeId,busDomainId);
 
 
         //remove last : in tableSchema String
