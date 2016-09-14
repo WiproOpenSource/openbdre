@@ -231,6 +231,9 @@ public class HistoryDataImportDAO {
                 childDataImportProcess.setProcessType(childDataImportProcessType);
                 childDataImportProcess.setEnqueuingProcessId(0);
                 childDataImportProcess.setNextProcessId(dataImportProcess.getProcessId().toString());
+                if (workflowType!=null)
+                    childDataImportProcess.setWorkflowType(workflowType);
+                else
                 childDataImportProcess.setWorkflowType(actionType);
                 childDataImportProcess.setDeleteFlag(false);
                 childDataImportProcess.setCanRecover(false);
@@ -447,6 +450,9 @@ public class HistoryDataImportDAO {
                     file2Raw.setEnqueuingProcessId(dataImportProcess.getProcessId());
                     file2Raw.setBatchCutPattern(null);
                     file2Raw.setDeleteFlag(false);
+                    if (workflowType!=null)
+                        file2Raw.setWorkflowType(workflowType);
+                    else
                     file2Raw.setWorkflowType(actionType);
                     session.save(file2Raw);
 
@@ -465,6 +471,9 @@ public class HistoryDataImportDAO {
                     raw2Stage.setEnqueuingProcessId(dataImportProcess.getProcessId());
                     raw2Stage.setBatchCutPattern(null);
                     raw2Stage.setDeleteFlag(false);
+                    if (workflowType!=null)
+                        raw2Stage.setWorkflowType(workflowType);
+                    else
                     raw2Stage.setWorkflowType(actionType);
                     session.save(raw2Stage);
 
@@ -483,6 +492,9 @@ public class HistoryDataImportDAO {
                     stage2Base.setBatchCutPattern(null);
                     stage2Base.setDeleteFlag(false);
                     stage2Base.setNextProcessId("0");
+                    if (workflowType!=null)
+                        stage2Base.setWorkflowType(workflowType);
+                    else
                     stage2Base.setWorkflowType(actionType);
                     stage2Base.setNextProcessId(dataLoadParent.getProcessId().toString());
                     session.save(stage2Base);

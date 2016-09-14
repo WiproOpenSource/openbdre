@@ -30,6 +30,10 @@ public class CrawlerInfo {
     @Max(value = Integer.MAX_VALUE)
     @NotNull
     private Integer busDomainId;
+    @Min(value = 1)
+    @Max(value = Integer.MAX_VALUE)
+    @NotNull
+    private Integer workflowTypeId;
     @Min(value = 0)
     @Max(value = 10000)
     @NotNull
@@ -222,5 +226,12 @@ public class CrawlerInfo {
 
     public void setProcessId(Integer processId) {
         this.processId = processId;
+    }
+    public Integer getWorkflowTypeId() {
+        return workflowTypeId;
+    }
+
+    public void setWorkflowTypeId(Integer workflowTypeId) {
+        this.workflowTypeId = workflowTypeId;
     }
 }

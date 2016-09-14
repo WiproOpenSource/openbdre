@@ -240,9 +240,9 @@ public class DataLoadAPI extends MetadataAPIBase {
         users.setUsername(principal.getName());
         parentProcess.setUsers(users);
         parentProcess.setUserRoles(userRolesDAO.minUserRoleId(principal.getName()));
-        com.wipro.ats.bdre.md.dao.jpa.Process file2Raw = Dao2TableUtil.buildJPAProcess(6, "File2Raw of "+processName , processDescription, 0,busDomainId);
-        com.wipro.ats.bdre.md.dao.jpa.Process raw2Stage = Dao2TableUtil.buildJPAProcess(7, "Raw2Stage of "+processName , processDescription, 0,busDomainId);
-        com.wipro.ats.bdre.md.dao.jpa.Process stage2Base = Dao2TableUtil.buildJPAProcess(8, "stage2Base of "+processName , processDescription, 0,busDomainId);
+        com.wipro.ats.bdre.md.dao.jpa.Process file2Raw = Dao2TableUtil.buildJPAProcess(6, "File2Raw of "+processName , processDescription, workflowTypeId,busDomainId);
+        com.wipro.ats.bdre.md.dao.jpa.Process raw2Stage = Dao2TableUtil.buildJPAProcess(7, "Raw2Stage of "+processName , processDescription, workflowTypeId,busDomainId);
+        com.wipro.ats.bdre.md.dao.jpa.Process stage2Base = Dao2TableUtil.buildJPAProcess(8, "stage2Base of "+processName , processDescription, workflowTypeId,busDomainId);
         file2Raw.setEnqueuingProcessId(enqId);
         raw2Stage.setEnqueuingProcessId(enqId);
         childProcesses.add(file2Raw);
