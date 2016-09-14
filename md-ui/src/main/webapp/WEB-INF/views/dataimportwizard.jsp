@@ -49,6 +49,12 @@
 			location.href = '<c:url value="/pages/lineage.page?pid="/>' + pid;
         }
 		</script >
+		<style type="text/css">
+            select {
+                width:300px;
+                height:34px;
+            }
+        </style>
 		<script >
 
     var datatypeMap = {
@@ -462,6 +468,10 @@
                     myObject.name=$("#processDescription")[0].name;
                     myObject.value=$("#processDescription")[0].value;
                     list.push(myObject);
+          var myObject = new Object();
+                  myObject.name=$("#workflowTypeId")[0].name;
+                  myObject.value=$("#workflowTypeId")[0].value;
+                  list.push(myObject);
 
 
 
@@ -744,7 +754,8 @@ isInit=true;
 
 				<section >
 					<table id = "tree0" class = "table-striped" width = "290px" >
-
+					        <thead>
+                            <tr>
                                 <th ><label for = "busDomainId" ><spring:message code="dataimportwizard.page.business_domain_id"/></label ></th >
                             </tr >
                             </thead >
@@ -755,6 +766,22 @@ isInit=true;
                                 </td >
                             </tr >
                             </tbody >
+
+
+                            <thead>
+                            <tr>
+                                <th ><label for = "workflowTypeId" ><spring:message code="process.page.title_wf_type"/></label ></th >
+                            </tr >
+                            </thead >
+                            <tbody >
+                            <tr >
+                                <td >
+                                    <select id="workflowTypeId" name = "common_workflowTypeId" width= "180"></select>
+                                </td >
+                            </tr >
+                            </tbody >
+
+
 
                              <th ><label for = "processName" ><spring:message code="dataimportwizard.page.process_name"/></label ></th >
                                                         </tr >
@@ -813,6 +840,38 @@ isInit=true;
 			<div />
 			</p>
 		</div >
+
+
+
+<script type = "text/javascript" >
+	                       workflowTypes = {};
+                            $.ajax({
+                            url: '/mdrest/workflowtype/optionslist',
+                                type: 'POST',
+                                dataType: 'json',
+                                async: false,
+                                success: function (data) {
+                                    console.log("data is "+data.Options);
+                                    workflowTypes = data.Options;
+                                },
+                                error: function () {
+                                    alert('danger');
+                                }
+                            });
+
+                            var output = [];
+                             var length = workflowTypes.length;
+                             for(var i=0; i < length; i++)
+                             {
+                                 var valu=workflowTypes[i].Value;
+                                 var txt=workflowTypes[i].DisplayText;
+                                output[i] = '<option value="' + valu + '">' + txt + '</option>';
+                             }
+                             console.log("output is "+output);
+                             document.getElementById('workflowTypeId').innerHTML=output.join('');
+
+		</script>
+
 
 	</body >
 </html >

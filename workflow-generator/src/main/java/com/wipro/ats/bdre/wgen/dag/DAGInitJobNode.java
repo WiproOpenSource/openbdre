@@ -34,8 +34,8 @@ public class DAGInitJobNode extends DAGNode {
                 "\tout,err = bash_output.communicate()\n"+
                 "\tlogger.info(\"out is \"+str(out))\n"+
                 "\tlogger.info(\"err is \"+str(err))\n"+
-                "\twith open('"+jobInfoFile+"','a+') as propeties_file:\n"+
-                "\t\tfor line in propeties_file:\n"+
+                "\twith open('"+jobInfoFile+"','a+') as job_info_file:\n"+
+                "\t\tfor line in job_info_file:\n"+
                 "\t\t\tinfo = line.split('::',2)\n"+
                 "\t\t\tdict[info[0]] = info[1].replace('\\n','')\n"+
                 "\tkwargs['task_instance'].xcom_push(key='initjobInfo',value=dict)\n"+

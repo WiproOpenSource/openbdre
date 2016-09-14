@@ -74,6 +74,7 @@ public class DataImportAPI extends MetadataAPIBase {
         String dbPassword = request.getParameter("common_dbPassword");
         String dbSchema = request.getParameter("common_dbSchema");
         String busDomainId = request.getParameter("common_busDomainId");
+        String workflowTypeId = request.getParameter("common_workflowTypeId");
         String processName = request.getParameter("common_processName");
         String processDescription = request.getParameter("common_processDescription");
 
@@ -89,6 +90,7 @@ public class DataImportAPI extends MetadataAPIBase {
         pushToIntermediate(uuid, "password", dbPassword);
         pushToIntermediate(uuid, "dbSchema", dbSchema);
         pushToIntermediate(uuid, "busdomainid", busDomainId);
+        pushToIntermediate(uuid, "workflowTypeId", workflowTypeId);
         pushToIntermediate(uuid, "processName",processName);
         pushToIntermediate(uuid, "processDescription",processDescription);
 

@@ -10,10 +10,11 @@ AIRFLOW_DAG_PATH=$airflowDagPath
 mkdir -p $AIRFLOW_DAG_PATH
 cd $BDRE_APPS_HOME
 
-if [ -z "$1" ] || [ -z "$2" ] || [ -z "$3" ] || [ -z "$4" ]; then
+if [ -z "$1" ] || [ -z "$2" ] || [ -z "$3" ] || [ -z "$4" ] || [ -z "$5" ]; then
         echo Insufficient parameters !
         exit 1
 fi
+
 
 busDomainId=$1
 processTypeId=$2
@@ -67,8 +68,9 @@ mkdir -p $BDRE_APPS_HOME/$busDomainId/$processTypeId/$processId/spark
 if [ $? -ne 0 ]
 then exit 1
 fi
+
 if [ "$workflowTypeId" == "1" ]; then
-echo 'generated workflow to edge node process dir'
+echo 'generated workflow xml to edge node process dir'
 #move generated workflow to edge node process dir
 mv  workflow-$processId.xml $BDRE_APPS_HOME/$busDomainId/$processTypeId/$processId
 if [ $? -ne 0 ]
@@ -80,6 +82,17 @@ if [ $? -ne 0 ]
 then exit 1
 fi
 fi
+
+if [ "$workflowTypeId" == "3" ]; then
+echo 'generated workflow dag to edge node process dir'
+#move generated workflow to edge node process dir
+mv  $filename.py $BDRE_APPS_HOME/$busDomainId/$processTypeId/$processId
+if [ $? -ne 0 ]
+then exit 1
+fi
+fi
+
+
 #copying data-lineage jar
 cp $BDRE_HOME/lib/hive-plugin/hive-plugin-$bdreVersion-executable.jar $BDRE_APPS_HOME/$busDomainId/$processTypeId/$processId/lib
 if [ $? -ne 0 ]

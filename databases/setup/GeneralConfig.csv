@@ -545,6 +545,7 @@
 'scripts_config', 'repoName', '-','-' , 1, 'origin', 'text' , 1
 'scripts_config', 'branchName', '-','-' , 1, 'develop', 'text' , 1
 'scripts_config', 'gitURL', '-','-' , 1, 'https://github.com/WiproOpenSourcePractice/bdreappstore.git', 'text' , 1
+'scripts_config', 'airflowInstallDir', '-','Airflow Installation directory upto bin folder' , 1, '${airflow_install_dir}', 'text' , 1
 'scripts_config', 'airflowDagPath', '-','-' , 1, '/home/${bdre_user_name}/airflow/dags', 'text' , 1
 
 'file_format', 'delimited', 'DELIMITED','delimited file' , 1, 'delimited', 'text' , 1

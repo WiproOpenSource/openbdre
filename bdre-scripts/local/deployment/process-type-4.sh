@@ -10,10 +10,11 @@ AIRFLOW_DAG_PATH=$airflowDagPath
 mkdir -p $AIRFLOW_DAG_PATH
 cd $BDRE_APPS_HOME
 
-if [ -z "$1" ] || [ -z "$2" ] || [ -z "$3" ] || [ -z "$4" ] ; then
+if [ -z "$1" ] || [ -z "$2" ] || [ -z "$3" ] || [ -z "$4" ] || [ -z "$5" ]; then
         echo Insufficient parameters !
         exit 1
 fi
+
 
 busDomainId=$1
 processTypeId=$2
@@ -22,9 +23,8 @@ userName=$4
 workflowTypeId=$5
 
 filename="dag_"${busDomainId}_${processTypeId}_${processId}
-#Generating workflow
 
-filename="dag_"${busDomainId}_${processTypeId}_${processId}
+#Generating workflow
 if [ "$workflowTypeId" == "1" ]; then
 echo 'Generating workflow'
 java -cp "$BDRE_HOME/lib/workflow-generator/*" com.wipro.ats.bdre.wgen.WorkflowGenerator --parent-process-id $processId --file-name workflow-$processId.xml --username $userName
@@ -62,6 +62,9 @@ if [ $? -ne 0 ]
 then exit 1
 fi
 
+
+if [ "$workflowTypeId" == "1" ]; then
+echo 'generated workflow xml to edge node process dir'
 #move generated workflow to edge node process dir
 mv  workflow-$processId.xml $BDRE_APPS_HOME/$busDomainId/$processTypeId/$processId
 if [ $? -ne 0 ]
@@ -71,6 +74,16 @@ fi
 mv  workflow-$processId.xml.dot $BDRE_APPS_HOME/$busDomainId/$processTypeId/$processId/
 if [ $? -ne 0 ]
 then exit 1
+fi
+fi
+
+if [ "$workflowTypeId" == "3" ]; then
+echo 'generated workflow dag to edge node process dir'
+#move generated workflow to edge node process dir
+mv  $filename.py $BDRE_APPS_HOME/$busDomainId/$processTypeId/$processId
+if [ $? -ne 0 ]
+then exit 1
+fi
 fi
 
 

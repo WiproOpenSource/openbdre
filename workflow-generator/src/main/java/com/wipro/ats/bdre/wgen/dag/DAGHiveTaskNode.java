@@ -64,7 +64,6 @@ public class DAGHiveTaskNode extends GenericActionNode {
                 "\ndef " + getName() + "_pc(**kwargs):\n" +
                         "\tif os.path.exists('"+ jobInfoFile +"') and os.path.getsize('"+ jobInfoFile +"') > 0:\n"+
                         "\t\tjobInfoDict = kwargs['task_instance'].xcom_pull(task_ids='init_job',key='initjobInfo')\n"+
-                        "\t\tprint(jobInfoDict)\n"+
                         "\t\twith open('"+ homeDir + "/bdre_apps/" + processInfo.getBusDomainId().toString()+"/" + getParentProcessType.getParentProcessTypeId(processInfo.getParentProcessId())+"/"+ processInfo.getParentProcessId().toString() + "/" + getQueryPath(getId(), "query") +"','r+') as queryFile:\n"+
                         "\t\t\tqueryString=str("+getParams(getId(), "param")+")+queryFile.read()\n" +
                         "\t\tkwargs['task_instance'].xcom_push(key='query',value=queryString)\n"+
