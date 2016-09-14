@@ -778,7 +778,7 @@
                                                         },
                                                         workflowId: {
                                                             type: 'hidden',
-                                                            defaultValue: '0'
+                                                            defaultValue: item.record.workflowId,
                                                         },
                                                         processTemplateId: {
                                                             type: 'hidden',
@@ -902,6 +902,7 @@
                                 },
                                 workflowId: {
                                     title: '<spring:message code="process.page.title_wf_type"/>',
+                                    edit: false,
                                     type: 'combobox',
                                     options: '/mdrest/workflowtype/optionslist',
                                     defaultValue: "1"
