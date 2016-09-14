@@ -34,15 +34,15 @@ if [ $processTypeId -eq 1 ]; then
 elif [ $processTypeId -eq 2 ]; then
     $AIRFLOW_INSTALL_DIR/airflow backfill $dag -s `date +%Y-%m-%dT%T`
 elif [ $processTypeId -eq 4 ]; then
-    airflow backfill $dag -s `date +%Y-%m-%dT%T`
+    $AIRFLOW_INSTALL_DIR/airflow backfill $dag -s `date +%Y-%m-%dT%T`
 elif [ $processTypeId -eq 5 ]; then
-    airflow backfill $dag -s `date +%Y-%m-%dT%T`
+    $AIRFLOW_INSTALL_DIR/airflow backfill $dag -s `date +%Y-%m-%dT%T`
 elif [ $processTypeId -eq 18 ]; then
-    airflow backfill $dag -s `date +%Y-%m-%dT%T`
+    $AIRFLOW_INSTALL_DIR/airflow backfill $dag -s `date +%Y-%m-%dT%T`
 elif [ $processTypeId -eq 19 ]; then
-    airflow backfill $dag -s `date +%Y-%m-%dT%T`
+    $AIRFLOW_INSTALL_DIR/airflow backfill $dag -s `date +%Y-%m-%dT%T`
 elif [ $processTypeId -eq 28 ]; then
-    airflow backfill $dag -s `date +%Y-%m-%dT%T`
+    $AIRFLOW_INSTALL_DIR/airflow backfill $dag -s `date +%Y-%m-%dT%T`
 elif [ $processTypeId -eq 31 ]; then
         python $(dirname $0)/Workflow.py $busDomainId $processTypeId $processId
 elif [ $processTypeId -eq 26 ]; then

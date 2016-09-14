@@ -46,17 +46,14 @@ public class DAGStageLoadTaskNode extends GenericActionNode{
         String homeDir = System.getProperty("user.home");
         String jobInfoFile = homeDir+"/bdre/airflow/"+processInfo.getParentProcessId().toString()+"_jobInfo.txt";
 
-        ret.append( "\nwith open('"+jobInfoFile+"','a+') as propeties_register_file:\n"+
-                        "\tfor line in propeties_register_file:\n"+
-                        "\t\tfile_info = line.split('::',2)\n"+
-                        "\t\tdict[file_info[0]] = file_info[1].replace('\\n','')\n"+
-
-                        "\ndef "+ getName()+"_pc():\n" +
-                        "\tcommand='java -cp "+homeDir+"/bdre/lib/etl-driver/*:"+homeDir+"/bdre/lib/*/*  com.wipro.ats.bdre.im.etl.api.oozie.OozieStageLoad --process-id "+ getId().toString()+"  --instance-exec-id \'+dict[\"initJobInfo.getInstanceExecId()\"]+\'  --min-batch-id   \'+str(ast.literal_eval(str(dict[\"initJobInfo.getMinBatchIdMap()\"]).replace('=',':'))["+getId()+ "]) +\'  --max-batch-id  \'+str(ast.literal_eval(str(dict[\"initJobInfo.getMaxBatchIdMap()\"]).replace('=',':'))["+getId()+ "]) \n"+
+        ret.append(
+                        "\ndef "+ getName()+"_pc(**kwargs):\n" +
+                        "\tjobInfoDict = kwargs['task_instance'].xcom_pull(task_ids='init_job',key='initjobInfo')\n"+
+                        "\tcommand='java -cp "+homeDir+"/bdre/lib/etl-driver/*:"+homeDir+"/bdre/lib/*/*  com.wipro.ats.bdre.im.etl.api.oozie.OozieStageLoad --process-id "+ getId().toString()+"  --instance-exec-id \'+jobInfoDict[\"initJobInfo.getInstanceExecId()\"]+\'  --min-batch-id   \'+str(ast.literal_eval(str(jobInfoDict[\"initJobInfo.getMinBatchIdMap()\"]).replace('=',':'))["+getId()+ "]) +\'  --max-batch-id  \'+str(ast.literal_eval(str(jobInfoDict[\"initJobInfo.getMaxBatchIdMap()\"]).replace('=',':'))["+getId()+ "]) \n"+
                         "\tbash_output = subprocess.Popen(command,shell=True, stdin=subprocess.PIPE, stdout=subprocess.PIPE )\n" +
                         "\tout,err = bash_output.communicate()\n"+
-                "\tlogger.info(\"out is \"+str(out))\n"+
-                "\tlogger.info(\"err is \"+str(err))\n"+
+                        "\tlogger.info(\"out is \"+str(out))\n"+
+                        "\tlogger.info(\"err is \"+str(err))\n"+
                         "\tif(bash_output.returncode != 0):\n" +
                         "\t\treturn 'dummy_"+getName() +"'\n" +
                         "\telse:\n" +
@@ -66,7 +63,7 @@ public class DAGStageLoadTaskNode extends GenericActionNode{
                         "\t"+ getName()+".set_downstream("+ getToNode().getName()+")\n" +
                         "\t"+ getName()+".set_downstream(dummy_"+ getName()+")\n" +
                         "\t"+ "dummy_"+ getName()+".set_downstream("+getTermNode().getName() +")\n"+
-                        getName()+" = BranchPythonOperator(task_id='"+getName()+"', python_callable="+getName()+"_pc, dag=dag)\n"+
+                        getName()+" = BranchPythonOperator(task_id='"+getName()+"', python_callable="+getName()+"_pc,provide_context=True, dag=dag)\n"+
                         "dummy_"+ getName()+" = DummyOperator(task_id ='"+"dummy_"+ getName()+"',dag=dag)\n"
         );
 
