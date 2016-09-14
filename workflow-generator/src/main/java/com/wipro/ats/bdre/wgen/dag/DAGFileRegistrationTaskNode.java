@@ -65,7 +65,7 @@ public class DAGFileRegistrationTaskNode extends GenericActionNode {
         StringBuilder ret = new StringBuilder();
         ret.append(
                 "\ndef "+ getName()+"_pc(**kwargs):\n" +
-                "\tRegFileInfoDict = kwargs['task_instance'].xcom_pull(task_ids='None',key='RegFileInfoFile')\n"+
+                "\tRegFileInfoDict = kwargs['task_instance'].xcom_pull(task_ids=None,key='RegFileInfoFile')\n"+
                 "\tcommand='java -cp "+homeDir+"/bdre/lib/md_api/md_api-1.1-SNAPSHOT-executable.jar:"+homeDir+"/bdre/lib/*/*  com.wipro.ats.bdre.md.api.airflow.AirflowRegisterFile  --sub-process-id \'+RegFileInfoDict[\"fileInfo.getSubProcessId()\"]+\' --path \'+RegFileInfoDict[\"fileInfo.getPath()\"]+\' --file-size \'+RegFileInfoDict[\"fileInfo.getFileSize()\"]+\' --file-hash \'+RegFileInfoDict[\"fileInfo.getFileHash()\"]+\' --batch-id  \'+RegFileInfoDict[\"initJobInfo.getTargetBatchId()\"]+\' --server-id 123461 --creation-timestamp \'+RegFileInfoDict[\"fileInfo.getCreationTs()\"]  \n"+
                 "\tbash_output = subprocess.Popen(command,shell=True, stdin=subprocess.PIPE, stdout=subprocess.PIPE )\n" +
                 "\tout,err = bash_output.communicate()\n"+
