@@ -16,6 +16,7 @@ package com.wipro.ats.bdre.md.dao;
 
 import org.apache.log4j.Logger;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.AutowireCapableBeanFactory;
@@ -34,19 +35,19 @@ public class DeployDAOTest {
 
     @Autowired
     DeployDAO deployDAO;
-
+    @Ignore
     @Test
     public void testInitDeploy() throws Exception {
         deployDAO.initDeploy(2l);
         LOGGER.info("The init deploy test executed ");
     }
-
+    @Ignore
     @Test
     public void testTermDeploy() throws Exception {
         deployDAO.termDeploy(1l);
         LOGGER.info("The term deploy test executed ");
     }
-
+    @Ignore
     @Test
     public void testHaltDeploy() throws Exception {
         deployDAO.haltDeploy(4L);

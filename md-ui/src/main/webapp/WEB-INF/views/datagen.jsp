@@ -216,6 +216,15 @@ function formIntoMap(typeProp, typeOf) {
                                                     <input type="text" class="form-control" id="outputPath" name="outputPath" placeholder=<spring:message code="datagen.page.hdfs_op_path_placeholder"/> required>
                                                 </div>
                                             </div>
+                                             <div class="form-group">
+                                                <label class="control-label col-sm-6" for="workflowTypeId"><spring:message code="process.page.title_wf_type"/></label>
+                                                <div class="col-sm-8">
+                                                    <select class="form-control" id="workflowTypeId" name="workflowTypeId">
+                                                        <option ng-repeat="workflowType in workflowTypes.Options" value="{{workflowType.Value}}" name="workflowTypeId">{{workflowType.DisplayText}}</option>
+
+                                                    </select>
+                                                </div>
+                                            </div>
                                             <div class="form-group">
                                                 <label class="control-label col-sm-2" for="busDomainId"><spring:message code="datagen.page.bus_domain_id"/></label>
                                                 <div class="col-sm-10">
@@ -338,6 +347,21 @@ function getGenTypes(){
                                 alert('danger');
                             }
                         });
+
+
+            $scope.workflowTypes = {};
+                                $.ajax({
+                                url: '/mdrest/workflowtype/optionslist',
+                                    type: 'POST',
+                                    dataType: 'json',
+                                    async: false,
+                                    success: function (data) {
+                                        $scope.workflowTypes = data;
+                                    },
+                                    error: function () {
+                                        alert('danger');
+                                    }
+                                });
 
             $scope.createJob =function (){
                 formIntoMap('type_','processFieldsForm1');
