@@ -508,6 +508,9 @@
 'imconfig', 'data-export.hadoop-home', 'Hadoop home directory for exporting','Hadoop home directory for exporting', 1, '/usr/lib/hadoop', 'text', 1
 'imconfig', 'data-export.jar-output-dir', 'Jar output directory for exporting','Jar output directory for exporting', 1, '/tmp/bdre/sqoop/jar-output', 'text', 1
 'imconfig', 'eventing.metadata-broker-list', 'Metadata Brokers URL','Metadata Brokers URL', 1, 'localhost://:9092', 'text', 1
+'imconfig', 'hadoop-conf-dir', 'Hadoop Configuration Directory','Hadoop Configuration Directory', 1, '/etc/hadoop/conf', 'text', 1
+'imconfig', 'kerberos-user-name', 'Kerberos UserName','Kerberos UserName', 1, '${kerberos_username}', 'text', 1
+'imconfig', 'kerberos-keytab-file-location', 'Kerberos keytab file location','Kerberos keytab file location', 1, '${kerberos_keytab_file_location}', 'text', 1
 'crawler','numberOfMappers','no of mappers','Number of Mappers',1,'2','text', 1
 'crawler','politenessDelay','Politeness Delay','Politeness Delay',1,'200','text', 1
 'crawler','maxDepthOfCrawling','max depth of crawling','Max Depth of Crawling',1,'10','text', 1
