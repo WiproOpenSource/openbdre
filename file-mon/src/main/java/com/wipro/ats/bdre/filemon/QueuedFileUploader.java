@@ -21,12 +21,16 @@ import org.apache.commons.io.FileUtils;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.FileSystem;
 import org.apache.hadoop.fs.Path;
+import org.apache.hadoop.security.UserGroupInformation;
 import org.apache.log4j.Logger;
 import org.apache.commons.io.FilenameUtils;
 
 
 import java.io.File;
 import java.io.IOException;
+import java.lang.reflect.Method;
+import java.net.URL;
+import java.net.URLClassLoader;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
@@ -47,6 +51,18 @@ public class QueuedFileUploader {
         try {
             // Copying file from local to HDFS overriding, if file already exists
             config.set("fs.defaultFS", FileMonRunnableMain.getDefaultFSName());
+            if("true".equals(FileMonRunnableMain.getKerberosEnabled() )) {
+                File f = new File(FileMonRunnableMain.getHadoopConfDir());
+                URL u = f.toURL();
+                URLClassLoader urlClassLoader = (URLClassLoader) ClassLoader.getSystemClassLoader();
+                Class urlClass = URLClassLoader.class;
+                Method method = urlClass.getDeclaredMethod("addURL", new Class[]{URL.class});
+                method.setAccessible(true);
+                method.invoke(urlClassLoader, new Object[]{u});
+                config.set("hadoop.security.authentication", "Kerberos");
+                UserGroupInformation.setConfiguration(config);
+                UserGroupInformation.loginUserFromKeytab(FileMonRunnableMain.getKerberosUserName(), FileMonRunnableMain.getKerberosKeytabFileLocation());
+            }
             FileSystem fs = FileSystem.get(config);
             String destDir = fileCopying.getDstLocation();
             Path destPath = new Path(ResolvePath.replaceVars(destDir));
