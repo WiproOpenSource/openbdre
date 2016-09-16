@@ -389,5 +389,5 @@ git push myrepo mybranch
  - Please join the community https://groups.google.com/forum/#!forum/bdre. If you have any questions/suggestions please email to bdre-queries@googlegroups.com .
  - If you want to report a bug, see/request a feature or work on something. Please sign up at https://openbdre.atlassian.net
 
-# [Contribute as plugin developer](https://github.com/BDREPlugins/BDREPluginStore/blob/master/README.md)
+### If you want to comtribute as plugin developler [Click Here](https://github.com/BDREPlugins/BDREPluginStore/blob/master/README.md)
 [![Analytics](https://ga-beacon.appspot.com/UA-72345517-2/openbdre/README.md)](http://wiproopensourcepractice.github.io/openbdre/bdreimages/badge.svg)
