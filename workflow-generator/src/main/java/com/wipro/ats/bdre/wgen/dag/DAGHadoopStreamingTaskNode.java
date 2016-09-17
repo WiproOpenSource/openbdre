@@ -186,8 +186,9 @@ public class DAGHadoopStreamingTaskNode extends  GenericActionNode {
                 addScriptPaths.append("\t-file  "+MDConfig.getProperty(UPLOADBASEDIRECTORY) + "/" + processInfo.getParentProcessId().toString() + "/" +addtionalScripts.getProperty(key)+"\\\n");
             }
         }
-        String extraFiles=addScriptPaths.toString().substring(0,addScriptPaths.length() - 2)+"'";
-
+        String extraFiles="";
+        if (addScriptPaths.length()>2)
+         extraFiles=addScriptPaths.toString().substring(0,addScriptPaths.length() - 2)+"'";
         return extraFiles;
     }
 
