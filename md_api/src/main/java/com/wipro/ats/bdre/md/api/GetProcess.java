@@ -196,7 +196,10 @@ public class GetProcess extends MetadataAPIBase {
         ProcessInfo processInfo = new ProcessInfo();
         try {
 
-            com.wipro.ats.bdre.md.dao.jpa.Process jpaProcess= processDAO.get(pid).getProcess();
+            com.wipro.ats.bdre.md.dao.jpa.Process jpaSubProcess= processDAO.get(pid);
+            Integer parentProcessId = jpaSubProcess.getProcess().getProcessId();
+
+            com.wipro.ats.bdre.md.dao.jpa.Process jpaProcess= processDAO.get(parentProcessId);
             if(jpaProcess!=null) {
                 processInfo.setProcessId(jpaProcess.getProcessId());
                 processInfo.setBusDomainId(jpaProcess.getBusDomain().getBusDomainId());
