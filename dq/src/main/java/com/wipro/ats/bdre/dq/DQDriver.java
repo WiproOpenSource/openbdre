@@ -13,6 +13,7 @@
  */
 package com.wipro.ats.bdre.dq;
 
+import com.wipro.ats.bdre.IMConfig;
 import com.wipro.ats.bdre.md.api.GetProcess;
 import com.wipro.ats.bdre.md.api.GetProperties;
 import com.wipro.ats.bdre.md.api.ProcessLog;
@@ -68,6 +69,7 @@ public class DQDriver extends Configured implements Tool {
         Configuration conf = getConf();
 
         conf.set("dq.process.id", processId);
+        conf.set("fs.defaultFS", IMConfig.getProperty("common.default-fs-name"));
         Job job = Job.getInstance(conf);
         job.setJobName("Data Quality " + processId);
         job.setJarByClass(DQDriver.class);
@@ -94,8 +96,8 @@ public class DQDriver extends Configured implements Tool {
 
 
         Path outputDir = new Path(destDir);
-        FileSystem srcFs = outputDir.getFileSystem(getConf());
-        FileSystem destFs = outputDir.getFileSystem(getConf());
+        FileSystem srcFs = outputDir.getFileSystem(conf);
+        FileSystem destFs = outputDir.getFileSystem(conf);
 
         //Valid Records
         Path goodFilesSrcDir = new Path(destDir + "/" + DQConstants.INTERMEDIATE_GOOD_RECORD_OUTPUT_DIR);

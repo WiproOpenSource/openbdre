@@ -65,10 +65,10 @@ public class AirflowInitJob {
                 FileWriter fw = new FileWriter(homeDir+"/bdre/airflow/"+processId+"_jobInfo.txt", true);
                 BufferedWriter bw = new BufferedWriter(fw);
 
-                if(initJobInfo.getTargetBatchMarkingSet() != null)
+                if(initJobInfo.getTargetBatchMarkingSet() != null && initJobInfo.getTargetBatchMarkingSet().size() > 0 && initJobInfo.getTargetBatchMarkingSet().contains("null"))
                     bw.write("initJobInfo.getTargetBatchMarkingSet()::"+initJobInfo.getTargetBatchMarkingSet().toString()+"\n");
                 else
-                    bw.write("initJobInfo.getTargetBatchMarkingSet()::null\n");
+                    bw.write("initJobInfo.getTargetBatchMarkingSet()::Null\n");
 
                 if(initJobInfo.getInstanceExecId() != null)
                     bw.write("initJobInfo.getInstanceExecId()::"+initJobInfo.getInstanceExecId().toString()+"\n");
