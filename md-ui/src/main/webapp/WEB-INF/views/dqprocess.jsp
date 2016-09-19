@@ -112,6 +112,15 @@
                                             <option ng-repeat="busdomainId in busDomainIds" id="{{$index}}" value="{{ busdomainId.Value }}">{{ busdomainId.DisplayText }}</option>
                                         </select>
                                      </div>
+
+                                     <div class="form-group">
+                                         <label  for="workflowTypeId"><spring:message code="process.page.title_wf_type"/></label>
+
+                                             <select class="form-control" id="workflowTypeId">
+                                                 <option ng-repeat="workflowType in workflowTypes.Options" value="{{workflowType.Value}}" name="workflowTypeId">{{workflowType.DisplayText}}</option>
+                                             </select>
+
+                                     </div>
                                      <div class="form-group">
                                             <label for="canRecover"><spring:message code="dqprocess.page.form_recoverability"/></label>
                                             <input type="text" class="form-control" id="canRecover">
@@ -157,6 +166,22 @@
                                             console.log("Error in retrieving busDomainIds");
                                         }
                                     });
+
+
+                                    $scope.workflowTypes = {};
+                                                                    $.ajax({
+                                                                    url: '/mdrest/workflowtype/optionslist',
+                                                                        type: 'POST',
+                                                                        dataType: 'json',
+                                                                        async: false,
+                                                                        success: function (data) {
+                                                                            $scope.workflowTypes = data;
+                                                                        },
+                                                                        error: function () {
+                                                                            alert('danger');
+                                                                        }
+                                                                    });
+
                                 }
                             });
                             confirmDialog = function (message) {
@@ -184,6 +209,7 @@
                                     fileDelimiterRegexValue: $("#fileDelimiterRegexValue").val(),
                                     minPassThresholdPercentValue: $("#minPassThresholdPercentValue").val(),
                                     busDomainId: $("#busDomainId").val(),
+                                     workflowTypeId: $("#workflowTypeId").val(),
                                     canRecover: $("#canRecover").val(),
                                     enqId: $("#enqId").val(),
                                     processName: $("#processName").val(),
