@@ -48,6 +48,16 @@ public class DQSetupInfo {
     @Size(min = 1, max = 45)
     private String processName;
     private Integer busDomainId;
+
+    public Integer getWorkflowTypeId() {
+        return workflowTypeId;
+    }
+
+    public void setWorkflowTypeId(Integer workflowTypeId) {
+        this.workflowTypeId = workflowTypeId;
+    }
+
+    private Integer workflowTypeId;
     private Boolean canRecover;
     private Boolean deleteFlag;
     private Integer enqId;
