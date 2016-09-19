@@ -46,8 +46,10 @@ public class HDFSExport extends Configured implements Tool {
         batchId = param[1];
         instanceExecId = param[2];
 
-        tableName = commonProperties.getProperty("table");
-        String driver = commonProperties.getProperty("driver");
+       // tableName = commonProperties.getProperty("table");
+       //  tableName="BATCH_STATUS";
+      //  String driver = commonProperties.getProperty("driver");
+         String driver = "com.mysql.jdbc.Driver";
         Class.forName(driver).newInstance();
         try {
             SqoopOptions options = new SqoopOptions();
@@ -55,26 +57,37 @@ public class HDFSExport extends Configured implements Tool {
 
             //reading properties from IMConfig file
             String jarOutputDir = IMConfig.getProperty("data-export.jar-output-dir") + "/" + processId + "/" + batchId;
+            LOGGER.info("jaroutputdir "+jarOutputDir);
             File jod=new File(jarOutputDir);
             //create if this directory does not exist
             if(!jod.exists())
             {
-                jod.mkdirs();
-                LOGGER.info("Jar output dir created "+jarOutputDir);
+               boolean created = jod.mkdirs();
+                LOGGER.info("Jar output dir created "+created);
             }
             String hadoopHome = IMConfig.getProperty("data-export.hadoop-home");
-
+            
             //setting the parameters of sqoopOption
             options.setHadoopHome(hadoopHome);
             options.setJarOutputDir(jarOutputDir);
-            options.setConnManagerClassName(commonProperties.getProperty("con.mgr.class"));
-            options.setConnectString(commonProperties.getProperty("db"));
-            options.setUsername(commonProperties.getProperty("username"));
-            options.setPassword(commonProperties.getProperty("password"));
-            options.setTableName(tableName);
-            String exportDir=commonProperties.getProperty("export.dir");
+            //options.setConnManagerClassName(commonProperties.getProperty("con.mgr.class"));
+            options.setConnManagerClassName("org.apache.sqoop.manager.GenericJdbcManager");
+
+            //options.setConnectString(commonProperties.getProperty("db"));
+            options.setConnectString("jdbc:mysql://localhost:3306/bdre");
+
+            //options.setUsername(commonProperties.getProperty("username"));
+            options.setUsername("root");
+
+            //options.setPassword(commonProperties.getProperty("password"));
+            options.setPassword("cloudera");
+
+            options.setTableName("BATCH_STATUS");
+
+            String exportDir="/home/cloudera/export/";
             options.setExportDir(exportDir);
-            int mappers = Integer.parseInt(commonProperties.getProperty("mappers"));
+
+            int mappers = Integer.parseInt("2");
             options.setNumMappers(mappers);
             options.setJobName("exportJob");
 

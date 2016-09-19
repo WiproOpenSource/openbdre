@@ -50,6 +50,7 @@
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-assembly-plugin</artifactId>
                 <configuration>
+
                     <!-- get all project dependencies -->
                     <descriptorRefs>
                         <descriptorRef>jar-with-dependencies</descriptorRef>
@@ -60,6 +61,7 @@
                             <mainClass>com.wipro.ats.bdre.dataexport.DataExportMain</mainClass>
                         </manifest>
                     </archive>
+
 
                 </configuration>
                 <executions>
@@ -82,7 +84,7 @@
                             <goal>copy-dependencies</goal>
                         </goals>
                         <configuration>
-                            <outputDirectory>${project.parent.build.directory}/lib/${project.artifactId}</outputDirectory>
+                            <outputDirectory>${project.parent.basedir}/../target/lib/${project.artifactId}</outputDirectory>
                         </configuration>
                     </execution>
                     <execution>
@@ -100,7 +102,8 @@
                                     <type>${project.packaging}</type>
                                 </artifactItem>
                             </artifactItems>
-                            <outputDirectory>${project.parent.build.directory}/lib/${project.artifactId}</outputDirectory>
+                            <outputDirectory>${project.parent.basedir}/../target/lib/${project.artifactId}</outputDirectory>
+
                         </configuration>
                     </execution>
                 </executions>
