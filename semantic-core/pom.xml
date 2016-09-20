@@ -16,10 +16,7 @@
             <groupId>org.apache.spark</groupId>
             <artifactId>spark-core_2.10</artifactId>
         </dependency>
-        <dependency>
-            <groupId>org.apache.pig</groupId>
-            <artifactId>pig</artifactId>
-        </dependency>
+
 
 
         <dependency>
@@ -131,6 +128,57 @@
             </plugin>
         </plugins>
     </build>
+
+
+
+
+    <profiles>
+        <profile>
+            <id>hdp22</id>
+            <dependencies>
+                <dependency>
+                    <groupId>org.apache.pig</groupId>
+                    <artifactId>pig</artifactId>
+                    <version>${pig.version}</version>
+                    <classifier>h2</classifier>
+                </dependency>
+            </dependencies>
+        </profile>
+
+        <profile>
+            <id>cdh52</id>
+            <dependencies>
+                <dependency>
+                    <groupId>org.apache.pig</groupId>
+                    <artifactId>pig</artifactId>
+                    <version>${pig.version}</version>
+                </dependency>
+            </dependencies>
+        </profile>
+
+        <profile>
+            <id>bluemix27</id>
+            <dependencies>
+                <dependency>
+                    <groupId>org.apache.pig</groupId>
+                    <artifactId>pig</artifactId>
+                    <version>${pig.version}</version>
+                </dependency>
+            </dependencies>
+        </profile>
+
+        <profile>
+            <id>apache26</id>
+            <dependencies>
+                <dependency>
+                    <groupId>org.apache.pig</groupId>
+                    <artifactId>pig</artifactId>
+                    <version>${pig.version}</version>
+                </dependency>
+            </dependencies>
+        </profile>
+
+    </profiles>
 
 
 </project>

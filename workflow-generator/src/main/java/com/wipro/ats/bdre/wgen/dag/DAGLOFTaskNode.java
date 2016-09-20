@@ -44,19 +44,21 @@ public class DAGLOFTaskNode extends GenericActionNode {
         }
         StringBuilder ret = new StringBuilder();
         String homeDir = System.getProperty("user.home");
-        String jobInfoFile = homeDir+"/bdre/airflow/"+processInfo.getParentProcessId().toString()+"_jobInfo.txt";
+        String etlFileInfoFile = homeDir+"/bdre/airflow/etldriverInfo.txt";
 
-        ret.append( "\nwith open('"+jobInfoFile+"','a+') as propeties_register_file:\n"+
-                        "\tfor line in propeties_register_file:\n"+
-                        "\t\tfile_info = line.split('::',2)\n"+
-                        "\t\tdict[file_info[0]] = file_info[1].replace('\\n','')\n"+
-
-                        "\ndef "+ getName().replace('-','_')+"_pc():\n" +
-                        "\tcommand='java -cp "+homeDir+"/bdre/lib/md_api/*:"+homeDir+"/bdre/lib/*/*  com.wipro.ats.bdre.md.api.airflow.AirflowGetETLDriver  --min-batch-id   \'+str(ast.literal_eval(str(dict[\"initJobInfo.getMinBatchIdMap()\"]).replace('=',':'))["+getId()+ "]) +\'  --max-batch-id  '+str(ast.literal_eval(str(dict[\"initJobInfo.getMaxBatchIdMap()\"]).replace('=',':'))["+getId()+ "]) \n"+
+        ret.append(      "\ndef "+ getName().replace('-','_')+"_pc(**kwargs):\n" +
+                        "\tjobInfoDict = kwargs['task_instance'].xcom_pull(task_ids='init_job',key='initjobInfo')\n"+
+                        "\tcommand='java -cp "+homeDir+"/bdre/lib/md_api/*:"+homeDir+"/bdre/lib/*/*  com.wipro.ats.bdre.md.api.airflow.AirflowGetETLDriver  --min-batch-id   \'+str(ast.literal_eval(str(jobInfoDict[\"initJobInfo.getMinBatchIdMap()\"]).replace('=',':'))["+getId()+ "]) +\'  --max-batch-id  '+str(ast.literal_eval(str(jobInfoDict[\"initJobInfo.getMaxBatchIdMap()\"]).replace('=',':'))["+getId()+ "]) \n"+
                         "\tbash_output = subprocess.Popen(command,shell=True, stdin=subprocess.PIPE, stdout=subprocess.PIPE )\n" +
                         "\tout,err = bash_output.communicate()\n"+
-                "\tlogger.info(\"out is \"+str(out))\n"+
-                "\tlogger.info(\"err is \"+str(err))\n"+
+                        "\tlogger.info(\"out is \"+str(out))\n"+
+                        "\tlogger.info(\"err is \"+str(err))\n"+
+
+                        "\twith open('"+etlFileInfoFile+"','a+') as etl_file_info_file:\n"+
+                        "\t\tfor line in etl_file_info_file:\n"+
+                        "\t\t\tinfo = line.split('::',2)\n"+
+                        "\t\t\tdict[info[0]] = info[1].replace('\\n','')\n"+
+                        "\tkwargs['task_instance'].xcom_push(key='etlFileInfo',value=dict)\n"+
                         "\tif(bash_output.returncode != 0):\n" +
                         "\t\treturn 'dummy_"+getName().replace('-', '_') +"'\n" +
                         "\telse:\n" +
@@ -66,7 +68,7 @@ public class DAGLOFTaskNode extends GenericActionNode {
                         "\t"+ getName().replace('-', '_')+".set_downstream("+ getToNode().getName().replace('-', '_')+")\n" +
                         "\t"+ getName().replace('-', '_')+".set_downstream(dummy_"+ getName().replace('-', '_')+")\n" +
                         "\t"+ "dummy_"+ getName().replace('-', '_')+".set_downstream("+getTermNode().getName().replace('-', '_') +")\n"+
-                        getName().replace('-','_')+" = BranchPythonOperator(task_id='"+getName().replace('-', '_')+"', python_callable="+getName().replace('-','_')+"_pc, dag=dag)\n"+
+                        getName().replace('-','_')+" = BranchPythonOperator(task_id='"+getName().replace('-', '_')+"', python_callable="+getName().replace('-','_')+"_pc, provide_context=True,dag=dag)\n"+
                         "dummy_"+ getName().replace('-', '_')+" = DummyOperator(task_id ='"+"dummy_"+ getName().replace('-', '_')+"',dag=dag)\n"
         );
 

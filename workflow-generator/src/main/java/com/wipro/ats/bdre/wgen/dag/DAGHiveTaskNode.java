@@ -175,7 +175,7 @@ public class DAGHiveTaskNode extends GenericActionNode {
         if (!listForParams.isEmpty()) {
             while (e.hasMoreElements()) {
                 String key = (String) e.nextElement();
-                addParams.append( "set "+key + "=" + listForParams.getProperty(key) +";");
+                addParams.append( "+\"set "+key + "=" + listForParams.getProperty(key) +";\" ");
             }
         }
         return addParams.toString();
