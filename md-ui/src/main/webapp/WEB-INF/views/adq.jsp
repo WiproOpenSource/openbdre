@@ -156,56 +156,68 @@
 	    mergeApp =function (appDeploymentQueueId){
                                                 console.log(appDeploymentQueueId);
                                         $("#dialog-confirm").dialog({
+                                    resizable: false,
+                                    height: 'auto',
+                                    modal: true,
+                                    buttons: {
+                                        '<spring:message code="adq.page.yes_merge"/>': function() {
+                                            $(this).dialog('<spring:message code="adq.page.close"/>');
+                                            $("#during-merge").dialog({
+                                                    resizable: false,
+                                                    height: 'auto',
+                                                    modal: true
+                                                    }).html('<h3><center><spring:message code="adq.page.merging"/></center></h3>');
+                                             console.log(appDeploymentQueueId);
+                                            return $.Deferred(function($dfd) {
+                                                $.ajax({
+                                                 url: '/mdrest/adq/merge/'+appDeploymentQueueId,
+                                                  type: 'POST',
+                                                  dataType: 'json',
+                                                   success: function(data) {
+                                                   if (data.Result == "OK") {
+                                                   $("#during-merge").dialog('<spring:message code="adq.page.close"/>');
+                                                   console.log(data);
+                                                  $("#execute-result").dialog({
                                                                     resizable: false,
                                                                     height: 'auto',
                                                                     modal: true,
                                                                     buttons: {
-                                                                    	'<spring:message code="adq.page.yes_merge"/>': function() {
+                                                                        '<spring:message code="adq.page.ok"/>': function() {
                                                                             $(this).dialog('<spring:message code="adq.page.close"/>');
-                                                                            $("#during-merge").dialog({
-                                                                                    resizable: false,
-                                                                                    height: 'auto',
-                                                                                    modal: true
-                                                                                    }).html('<spring:message code="adq.page.merging"/>');
-                                                                             console.log(appDeploymentQueueId);
-                                                                            return $.Deferred(function($dfd) {
-                                                                                $.ajax({
-                                                                                 url: '/mdrest/adq/merge/'+appDeploymentQueueId,
-                                                                                  type: 'POST',
-                                                                                  dataType: 'json',
-                                                                                   success: function(data) {
-                                                                                   if (data.Result == "OK") {
-                                                                                   $("#during-merge").dialog('<spring:message code="adq.page.close"/>');
-                                                                                   console.log(data);
-                                                                                  $("#execute-result").dialog({
-                                                                                                    resizable: false,
-                                                                                                    height: 'auto',
-                                                                                                    modal: true,
-                                                                                                    buttons: {
-                                                                                                    	'<spring:message code="adq.page.ok"/>': function() {
-                                                                                                            $(this).dialog('<spring:message code="adq.page.close"/>');
 
-                                                                                                        }
-                                                                                                    }
-                                                                                                }).html('<spring:message code="adq.page.app_having_adqid"/> <b> ' +appDeploymentQueueId +' </b> <spring:message code="adq.page.succes_merge"/>');
-
-
-                                                                                }
-                                                                                     if (data.Result == "ERROR")
-                                                                                       alert(data.Message);
-                                                                                  },
-                                                                                   error: function() {
-                                                                                   alert('<spring:message code="adq.page.error_app_merge"/>');
-                                                                               }
-                                                                           });
-                                                                        });
-
-                                                                        },
-                                                                        Cancel: function() {
-                                                                            $(this).dialog('<spring:message code="adq.page.close"/>');
                                                                         }
                                                                     }
-                                                                });
+                                                                }).html('<spring:message code="adq.page.app_having_adqid"/> <b> ' +appDeploymentQueueId +' </b> <spring:message code="adq.page.succes_merge"/>');
+
+
+                                                }
+                                                     if (data.Result == "ERROR"){
+                                                     $("#during-merge").dialog('<spring:message code="adq.page.close"/>');
+                                                     $("#execute-result").dialog({
+                                                                 resizable: false,
+                                                                 height: 'auto',
+                                                                 modal: true,
+                                                                 buttons: {
+                                                                    '<spring:message code="adq.page.ok"/>': function() {
+                                                                         $(this).dialog('<spring:message code="adq.page.close"/>');
+
+                                                                     }
+                                                                 }
+                                                             }).html('<spring:message code="adq.page.error_app_merge"/>');
+                                                       }
+                                                  },
+                                                   error: function() {
+                                                   alert('<spring:message code="adq.page.error_app_merge"/>');
+                                               }
+                                           });
+                                        });
+
+                                        },
+                                        Cancel: function() {
+                                            $(this).dialog('<spring:message code="adq.page.close"/>');
+                                        }
+                                    }
+                                });
 
 
                                         }
@@ -276,18 +288,35 @@
     <section style="width:100%;text-align:center;">
 	<div id="Container"></div>
     </section>
-<div id="dialog-confirm" title=<spring:message code="adq.page.confirm_msg"/> style="display:none;">
-              <p><span class="ui-icon ui-icon-alert" style="float:left; margin:0 7px 20px 0;"></span><spring:message code="adq.page.export_to_app_store"/></p>
-          </div>
-
-<div id="dialog-reject" title=<spring:message code="adq.page.confirm_msg"/> style="display:none;">
-              <p><span class="ui-icon ui-icon-alert" style="float:left; margin:0 7px 20px 0;"></span><spring:message code="adq.page.export_reject"/></p>
-          </div>
-  <div id="execute-result" title=<spring:message code="adq.page.process_started"/> style="display:none;">
-               <p><span class="ui-icon ui-icon-alert" style="float:left; margin:0 7px 20px 0;"><spring:message code="adq.page.process_initiation_status"/></span></p>
-              </div>
-  <div id="during-merge" title=<spring:message code="adq.page.process_started"/> style="display:none;">
-                 <p><span class="ui-icon ui-icon-alert" style="float:left; margin:0 7px 20px 0;"></span><spring:message code="adq.page.process_initiation_status"/></p>
+<div id="dialog-confirm" style="display: none;">
+					<p>
+						<span class="ui-icon-alert"></span>
+						<span class="dialog-title-custom"><spring:message code="process.page.span_sure"/></span>
+						<span class="jtable-confirm-message"><spring:message code="adq.page.export_to_app_store"/>
+						</span>
+					</p>
+				</div>
+          <div id="dialog-reject" style="display: none;">
+                    <p>
+                        <span class="ui-icon-alert"></span>
+                        <span class="dialog-title-custom"><spring:message code="process.page.span_sure"/></span>
+                        <span class="jtable-confirm-message"><spring:message code="adq.page.export_reject"/>
+                        </span>
+                    </p>
+                </div>
+               <div id="execute-result" style="display: none;">
+                    <p>
+                        <span class="dialog-title-custom"><spring:message code="adq.page.process_started"/></span>
+                        <span class="jtable-confirm-message"><spring:message code="adq.page.process_initiation_status"/>
+                        </span>
+                    </p>
+                </div>
+                <div id="during-merge" style="display: none;">
+                    <p>
+                        <span class="dialog-title-custom"><spring:message code="adq.page.process_started"/></span>
+                        <span class="jtable-confirm-message"><spring:message code="adq.page.process_initiation_status"/>
+                        </span>
+                    </p>
                 </div>
 </body>
 </html>

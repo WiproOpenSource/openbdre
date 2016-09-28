@@ -214,6 +214,7 @@ public class AppDeploymentQueueAPI {
               iExitValue=AppDeploymentQueueAPI.pushToAppstore(sCommandString);
               if (iExitValue!=0){
                   LOGGER.info("App could not be sent in appstore with exit code is "+iExitValue);
+                  restWrapper = new RestWrapper("error in export to appstore", RestWrapper.ERROR);
               }
             else
               {
@@ -222,9 +223,10 @@ public class AppDeploymentQueueAPI {
                   jpaAppDeploymentQueue.setAppDeploymentQueueStatus(appDeploymentQueueStatusDAO.get((short)1));
                   appDeploymentQueueDAO.update(jpaAppDeploymentQueue);
                   returnedAppDeploymentQueue.setAppDeploymentStatusId((short) 1);
+                  restWrapper = new RestWrapper(returnedAppDeploymentQueue, RestWrapper.OK);
               }
 
-            restWrapper = new RestWrapper(returnedAppDeploymentQueue, RestWrapper.OK);
+
         } catch (MetadataException e) {
             LOGGER.error(e);
             restWrapper = new RestWrapper(e.getMessage(), RestWrapper.ERROR);
