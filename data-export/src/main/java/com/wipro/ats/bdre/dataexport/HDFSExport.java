@@ -47,7 +47,7 @@ public class HDFSExport extends Configured implements Tool {
         instanceExecId = param[2];
 
        // tableName = commonProperties.getProperty("table");
-       //  tableName="BATCH_STATUS";
+         tableName="BATCH_STATUS";
       //  String driver = commonProperties.getProperty("driver");
          String driver = "com.mysql.jdbc.Driver";
         Class.forName(driver).newInstance();
@@ -70,6 +70,7 @@ public class HDFSExport extends Configured implements Tool {
             //setting the parameters of sqoopOption
             options.setHadoopHome(hadoopHome);
             options.setJarOutputDir(jarOutputDir);
+
             //options.setConnManagerClassName(commonProperties.getProperty("con.mgr.class"));
             options.setConnManagerClassName("org.apache.sqoop.manager.GenericJdbcManager");
 
@@ -84,10 +85,10 @@ public class HDFSExport extends Configured implements Tool {
 
             options.setTableName("BATCH_STATUS");
 
-            String exportDir="/home/cloudera/export/";
+            String exportDir="hdfs://quickstart.cloudera:8020/user/cloudera/export/";
             options.setExportDir(exportDir);
 
-            int mappers = Integer.parseInt("2");
+            int mappers = Integer.parseInt("1");
             options.setNumMappers(mappers);
             options.setJobName("exportJob");
 
