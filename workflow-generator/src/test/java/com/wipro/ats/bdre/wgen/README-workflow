@@ -1,0 +1,3 @@
+What is a workflow ?
+
+A workflow describes the sequential steps that comprise a work process in the business environment. In its most comprehensive form, workflow includes the procedures, people and tools involved in each step of a business process. Workflow may either be sequential, with each step contingent upon completion of the previous one, or parallel, with multiple steps occurring simultaneously.
