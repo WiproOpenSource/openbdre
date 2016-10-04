@@ -208,6 +208,18 @@ public class DataGenAPI extends MetadataAPIBase {
     }
 
 
+    @RequestMapping(value = {"/import", "/import/"}, method = RequestMethod.POST)
+    @ResponseBody
+    public RestWrapper importData(@ModelAttribute("fileString")
+                                  @Valid String uploadedFileName, BindingResult bindingResult, Principal principal) {
+        RestWrapper restWrapper = null;
+        if (bindingResult.hasErrors()) {
+            BindingResultError bindingResultError = new BindingResultError();
+            return bindingResultError.errorMessage(bindingResult);
+        }
+        return restWrapper;
+    }
+
     @Override
     public Object execute(String[] params) {
         return null;

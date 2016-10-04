@@ -27,6 +27,11 @@
     <packaging>war</packaging>
 
     <dependencies>
+        <dependency>
+            <groupId>org.apache.poi</groupId>
+            <artifactId>poi</artifactId>
+            <version>3.9</version>
+        </dependency>
         <!-- Jackson -->
         <dependency>
             <groupId>org.codehaus.jackson</groupId>
@@ -106,6 +111,11 @@
         <dependency>
             <groupId>commons-fileupload</groupId>
             <artifactId>commons-fileupload</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.poi</groupId>
+            <artifactId>poi-ooxml</artifactId>
+            <version>3.10-beta2</version>
         </dependency>
 
     </dependencies>

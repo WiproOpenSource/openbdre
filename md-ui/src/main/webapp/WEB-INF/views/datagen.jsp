@@ -84,6 +84,107 @@
 			location.href = '<c:url value="/pages/lineage.page?pid="/>' + pid;
         }
 </script >
+ <script>
+                var uploadedFileName ="";
+              function uploadZip (subDir,fileId){
+             var arg= [subDir,fileId];
+               var fd = new FormData();
+              		                var fileObj = $("#"+arg[1])[0].files[0];
+                                      var fileName=fileObj.name;
+                                      fd.append("file", fileObj);
+                                      fd.append("name", fileName);
+                                      $.ajax({
+                                        url: '/mdrest/filehandler/uploadzip/'+arg[0],
+                                        type: "POST",
+                                        data: fd,
+                                        async: false,
+                                        enctype: 'multipart/form-data',
+                                        processData: false,  // tell jQuery not to process the data
+                                        contentType: false,  // tell jQuery not to set contentType
+                                        success:function (data) {
+                                              uploadedFileName=data.Record.fileName;
+                                              console.log( data );
+                                              $("#div-dialog-warning").dialog({
+                                                              title: "",
+                                                              resizable: false,
+                                                              height: 'auto',
+                                                              modal: true,
+                                                              buttons: {
+                                                                  "Ok" : function () {
+                                                                      $(this).dialog("close");
+                                                                  }
+                                                              }
+                                              }).html('<p><span class="jtable-confirm-message"><spring:message code="processimportwizard.page.upload_success"/>'+' ' + uploadedFileName + '</span></p>');
+                                              return false;
+              							},
+              						  error: function () {
+              							    $("#div-dialog-warning").dialog({
+                                                          title: "",
+                                                          resizable: false,
+                                                          height: 'auto',
+                                                          modal: true,
+                                                          buttons: {
+                                                              "Ok" : function () {
+                                                                  $(this).dialog("close");
+                                                              }
+                                                          }
+                                          }).html('<p><span class="jtable-confirm-message"><spring:message code="processimportwizard.page.upload_error"/></span></p>');
+                                          return false;
+              							}
+              						 });
+
+              }
+
+
+
+              </script>
+
+               <script>
+                            function ImportFromExel(){
+                                //var jsonText=document.getElementById("jsonTextArea").value;
+                                      var fileString=uploadedFileName;
+
+                            				$.ajax({
+                                		    url: "/mdrest/datagenproperties/import",
+                                		    type: "POST",
+                                		    data: {'fileString': fileString},
+                                		    success: function (getData) {
+                                		        if( getData.Result =="OK" ){
+                                		            finalJson=getData;
+                                                  console.log(getData);
+                                                  $("#div-dialog-warning").dialog({
+                                                               title: "",
+                                                               resizable: false,
+                                                               height: 'auto',
+                                                               modal: true,
+                                                               buttons: {
+                                                                   "Ok" : function () {
+                                                                       $(this).dialog("close");
+                                                                   }
+                                                               }
+                                                  }).html('<p><span class="jtable-confirm-message"><spring:message code="processimportwizard.page.insert_success"/></span></p>');
+                                                  return false;
+                                              }
+                                		        if(getData.Result =="ERROR"){
+                                		            $("#div-dialog-warning").dialog({
+                                                           title: "",
+                                                           resizable: false,
+                                                           height: 'auto',
+                                                           modal: true,
+                                                           buttons: {
+                                                               "Ok" : function () {
+                                                                   $(this).dialog("close");
+                                                               }
+                                                           }
+                                                  }).html('<p><span class="jtable-confirm-message"><spring:message code="processimportwizard.page.import_error"/>'+' '+getData.Message + '</span></p>');
+                                                  return false;
+
+                                              }
+                                          }
+                                		});
+                            }
+                            </script>
+
 
 <script>
 function formIntoMap(typeProp, typeOf) {
@@ -137,14 +238,33 @@ function formIntoMap(typeProp, typeOf) {
                         
                     </div>
                     <!-- /btn-group -->
+                    <div class="form-group" id="formGroup16" >
                <div class="col-md-2" id="deletediv">
                             <button id="b1" class="btn add-more">
                                 <span class="glyphicon glyphicon-plus" style="font-size:large"></span>
                             </button>
                 </div>
-                
+                </div>
+                <div class="form-group" id="formGroup15" >
+              <div class="col-md-3">
+                  <h5><strong>You can also upload exel file of the data</strong></h5><br>
+                <input type="file" name="file" class="form-control" id="exel-id" required>
+                   <br>
+                  <button type="button" class="btn btn-sm btn-primary pull-left" onClick="uploadZip('exel','exel-id')">Upload Exel</button>
+                   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                   <button class = "btn btn-sm btn-primary" type = "button" onClick = "ImportFromExel()" href = "#" >
+                                                                          Submit
+                                                                      </button >
+                </div >
+                <div>
+
+                </div>
+                </div>
+
             </form>
-                
+
+
+
             </section>
 
             <h3><div class="number-circular">2</div><spring:message code="datagen.page.table_types"/></h3>
