@@ -58,10 +58,10 @@ public class CreateRawBaseTables extends ETLBase {
         java.util.Properties rawPropertiesOfColumns = getPropertiesOfRawColumns.getProperties(rawLoad, "raw-cols");
         Enumeration columns = rawPropertiesOfColumns.propertyNames();
         List<String> orderOfCloumns = Collections.list(columns);
-        Collections.sort(orderOfCloumns);
+        List<String> orderedColumns = sortList(orderOfCloumns);
         List<String> rawColumns = new ArrayList<String>();
         if (!rawPropertiesOfColumns.isEmpty()) {
-            for (String columnOrder : orderOfCloumns) {
+            for (String columnOrder : orderedColumns) {
                 String key = columnOrder;
                 rawColumns.add(rawPropertiesOfColumns.getProperty(key));
             }
@@ -72,10 +72,10 @@ public class CreateRawBaseTables extends ETLBase {
         java.util.Properties rawPropertiesOfDataTypes = getPropertiesOfRawDataTypes.getProperties(rawLoad, "raw-data-types");
         Enumeration dataTypes = rawPropertiesOfDataTypes.propertyNames();
         List<String> orderOfDataTypes = Collections.list(dataTypes);
-        Collections.sort(orderOfDataTypes);
+        List<String> orderedDataTypes = sortList(orderOfDataTypes);
         List<String> rawDataTypes = new ArrayList<String>();
         if (!rawPropertiesOfColumns.isEmpty()) {
-            for (String columnOrder : orderOfDataTypes) {
+            for (String columnOrder : orderedDataTypes) {
                 String key = columnOrder;
                 rawDataTypes.add(rawPropertiesOfDataTypes.getProperty(key));
             }
@@ -354,5 +354,21 @@ public class CreateRawBaseTables extends ETLBase {
             LOGGER.error("Error while creating base table" + e);
             throw new ETLException(e);
         }
+    }
+    
+    private List<String> sortList(List<String> list) {
+        List<Integer> integerList = new ArrayList<Integer>();
+        for(itemList : list) {
+            integerList.add(new Integer(itemList));
+        }
+        Collections.sort(integerList);
+
+        List<String> stringList = new ArrayList<String>();
+
+        for(integerValue : integerList) {
+            stringList.add(integerValue.toString());
+        }
+        
+        return stringList;
     }
 }
