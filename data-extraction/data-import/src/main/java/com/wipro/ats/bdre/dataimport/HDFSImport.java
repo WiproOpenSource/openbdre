@@ -94,12 +94,22 @@ public class HDFSImport extends Configured implements Tool {
         Class.forName(driver).newInstance();
 
         try {
+            GetProcess getProcess = new GetProcess();
+            ProcessInfo parentProcessInfo = getProcess.getParentProcess(Integer.valueOf(processId));
+            Integer workflowTypeId = parentProcessInfo.getWorkflowId();
+            Integer parentProcessId = parentProcessInfo.getProcessId();
+            LOGGER.info("workflowTypeId is "+ workflowTypeId);
+            LOGGER.info("paretProcessId is "+ parentProcessId);
+
             SqoopOptions options = new SqoopOptions();
             options.setDriverClassName(driver);
 
             //reading properties from IMConfig file
             String targetDir = IMConfig.getProperty("data-import.target-dir");
-            String jarOutputDir = IMConfig.getProperty("data-import.jar-output-dir") + "/" + processId + "/" + batchId;
+            String jarOutputDir = IMConfig.getProperty("data-import.jar-output-dir-oozie") + "/" + processId + "/" + batchId;
+            if(workflowTypeId == 3)
+                jarOutputDir= IMConfig.getProperty("data-import.jar-output-dir-airflow") + "/" + processId + "/" + batchId;
+
             String hadoopHome = IMConfig.getProperty("data-import.hadoop-home");
             File jod=new File(jarOutputDir);
             //create if this directory does not exist
@@ -215,12 +225,7 @@ public class HDFSImport extends Configured implements Tool {
                     oozieUtil.persistBeanData(registerFileInfo, false);
                     LOGGER.info("register file info "+registerFileInfo.toString());
 
-                    GetProcess getProcess = new GetProcess();
-                    ProcessInfo processInfo = getProcess.getProcess(Integer.valueOf(processId));
-                    Integer workflowTypeId = processInfo.getWorkflowId();
-                    Integer parentProcessId = processInfo.getParentProcessId();
-                    LOGGER.info("workflowTypeId is "+ workflowTypeId);
-                    LOGGER.info("paretProcessId is "+ parentProcessId);
+
 
                if(workflowTypeId == 3) {
                    try {

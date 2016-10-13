@@ -14,9 +14,13 @@
 #39, 'Super Worklfow', null
 
 
+
 BDRE_HOME=~/bdre
 BDRE_APPS_HOME=~/bdre_apps
 AIRFLOW_INSTALL_DIR=$airflowInstallDir
+
+sudo ln -s $AIRFLOW_INSTALL_DIR/airflow /usr/sbin/airflow
+
 
 if [ -z "$1" ] || [ -z "$2" ] || [ -z "$3" ] || [ -z "$4" ] ; then
         echo Insufficient parameters !
@@ -32,17 +36,17 @@ echo "busDomainId=$1 , processTypeId=$2 , processId=$3 userName=$4"
 if [ $processTypeId -eq 1 ]; then
     sh $(dirname $0)/flume.sh $busDomainId $processTypeId $processId
 elif [ $processTypeId -eq 2 ]; then
-    $AIRFLOW_INSTALL_DIR/airflow backfill $dag -s `date +%Y-%m-%dT%T`
+    airflow backfill $dag -s `date +%Y-%m-%dT%T`
 elif [ $processTypeId -eq 4 ]; then
-    $AIRFLOW_INSTALL_DIR/airflow backfill $dag -s `date +%Y-%m-%dT%T`
+    airflow backfill $dag -s `date +%Y-%m-%dT%T`
 elif [ $processTypeId -eq 5 ]; then
-    $AIRFLOW_INSTALL_DIR/airflow backfill $dag -s `date +%Y-%m-%dT%T`
+    airflow backfill $dag -s `date +%Y-%m-%dT%T`
 elif [ $processTypeId -eq 18 ]; then
-    $AIRFLOW_INSTALL_DIR/airflow backfill $dag -s `date +%Y-%m-%dT%T`
+    airflow backfill $dag -s `date +%Y-%m-%dT%T`
 elif [ $processTypeId -eq 19 ]; then
-    $AIRFLOW_INSTALL_DIR/airflow backfill $dag -s `date +%Y-%m-%dT%T`
+    airflow backfill $dag -s `date +%Y-%m-%dT%T`
 elif [ $processTypeId -eq 28 ]; then
-    $AIRFLOW_INSTALL_DIR/airflow backfill $dag -s `date +%Y-%m-%dT%T`
+    airflow backfill $dag -s `date +%Y-%m-%dT%T`
 elif [ $processTypeId -eq 31 ]; then
         python $(dirname $0)/Workflow.py $busDomainId $processTypeId $processId
 elif [ $processTypeId -eq 26 ]; then

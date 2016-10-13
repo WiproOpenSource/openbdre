@@ -81,7 +81,6 @@
 
                                 <div class="panel panel-primary" id="export">
 
-                                    <div class="panel-heading"><spring:message code="appexport.page.export_to_appstore"/></div>
                                     <div id="exportForm" class="panel-body">
 
                                         <form role="form" id="exportToAppStoreForm"  >
@@ -104,7 +103,8 @@
 
                                             <div class="form-group">
                                                   <label ><spring:message code="appexport.page.upload_app_img"/></label>
-                                                  <input type="file" name="appImage" class="form-control" placeholder=<spring:message code="appexport.page.upload_app_img_placeholder"/>id="img-id" required>
+                                                  <spring:message code="appexport.page.upload_app_img_placeholder" var="placeholder"/>
+                                                  <input type="file" name="appImage" class="form-control" placeholder='${placeholder}' id="img-id" required>
 
                                             </div>
                                             <div class="form-group">

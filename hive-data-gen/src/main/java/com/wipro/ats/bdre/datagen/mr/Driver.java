@@ -109,9 +109,9 @@ public class Driver extends Configured implements Tool {
         oozieUtil.persistBeanData(registerFileInfo,false);
 
         GetProcess getProcess = new GetProcess();
-        ProcessInfo processInfo = getProcess.getProcess(Integer.valueOf(processId));
-        Integer workflowTypeId = processInfo.getWorkflowId();
-        Integer parentProcessId = processInfo.getParentProcessId();
+        ProcessInfo parentProcessInfo = getProcess.getParentProcess(Integer.valueOf(processId));
+        Integer workflowTypeId = parentProcessInfo.getWorkflowId();
+        Integer parentProcessId = parentProcessInfo.getProcessId();
         LOGGER.info("workflowTypeId is "+ workflowTypeId);
         LOGGER.info("paretProcessId is "+ parentProcessId);
 

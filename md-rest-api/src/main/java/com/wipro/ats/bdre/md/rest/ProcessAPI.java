@@ -279,8 +279,10 @@ public class ProcessAPI extends MetadataAPIBase {
             else
                 updateDaoProcess.setCanRecover(process.getCanRecover());
             updateDaoProcess.setEnqueuingProcessId(process.getEnqProcessId());
-            if (process.getBatchPattern() != null && !process.getBatchPattern().isEmpty()) {
+            if (process.getBatchPattern() != null && !process.getBatchPattern().isEmpty() && !("").equals(process.getBatchPattern())) {
                 updateDaoProcess.setBatchCutPattern(process.getBatchPattern());
+            }else{
+                updateDaoProcess.setBatchCutPattern(null);
             }
             updateDaoProcess.setNextProcessId(process.getNextProcessIds());
             if (process.getDeleteFlag() == null)

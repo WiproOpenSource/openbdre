@@ -111,6 +111,30 @@
 	    }
 	</script>
 	<style>
+
+	    .hljs-string{
+	          color: green;
+              font-weight: bold;
+            }
+         .hljs-keyword{
+            color:blue;
+            font-weight: bold;
+            }
+           .hljs-title
+           {
+           color: black;
+           font-weight: bold;
+           }
+        .hljs-section,
+        .hljs-selector-class{
+              color: yellow;
+            }
+        .hljs-template-variable,
+        .hljs-deletion {
+          color: blue;
+        }
+
+
 	    * {
 		margin:0;
 		padding:0;
