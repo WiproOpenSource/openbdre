@@ -46,10 +46,13 @@ public class HDFSExport extends Configured implements Tool {
         batchId = param[1];
         instanceExecId = param[2];
 
-       // tableName = commonProperties.getProperty("table");
-         tableName="BATCH_STATUS";
-      //  String driver = commonProperties.getProperty("driver");
-         String driver = "com.mysql.jdbc.Driver";
+         LOGGER.info("table name is "+ commonProperties.getProperty("table"));
+        tableName = commonProperties.getProperty("table");
+       //  tableName="BATCH_STATUS";
+
+         LOGGER.info("drive  is "+ commonProperties.getProperty("driver"));
+         String driver = commonProperties.getProperty("driver");
+      //   String driver = "com.mysql.jdbc.Driver";
         Class.forName(driver).newInstance();
         try {
             SqoopOptions options = new SqoopOptions();
@@ -74,18 +77,23 @@ public class HDFSExport extends Configured implements Tool {
             //options.setConnManagerClassName(commonProperties.getProperty("con.mgr.class"));
             options.setConnManagerClassName("org.apache.sqoop.manager.GenericJdbcManager");
 
-            //options.setConnectString(commonProperties.getProperty("db"));
-            options.setConnectString("jdbc:mysql://localhost:3306/bdre");
+            LOGGER.info("connection string is "+ commonProperties.getProperty("db"));
+            options.setConnectString(commonProperties.getProperty("db"));
+            //options.setConnectString("jdbc:mysql://localhost:3306/bdre");
 
-            //options.setUsername(commonProperties.getProperty("username"));
-            options.setUsername("root");
+            LOGGER.info("username is "+ commonProperties.getProperty("username"));
+            options.setUsername(commonProperties.getProperty("username"));
+            //options.setUsername("root");
 
-            //options.setPassword(commonProperties.getProperty("password"));
-            options.setPassword("cloudera");
+            LOGGER.info("password is "+ commonProperties.getProperty("password"));
+            options.setPassword(commonProperties.getProperty("password"));
+            //options.setPassword("cloudera");
 
-            options.setTableName("BATCH_STATUS");
+            options.setTableName(tableName);
 
-            String exportDir="hdfs://quickstart.cloudera:8020/user/cloudera/export/";
+            //String exportDir="hdfs://quickstart.cloudera:8020/user/cloudera/export/";
+            LOGGER.info("exportdir is "+ commonProperties.getProperty("export.dir"));
+            String exportDir=commonProperties.getProperty("export.dir");
             options.setExportDir(exportDir);
 
             int mappers = Integer.parseInt("1");
