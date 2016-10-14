@@ -59,7 +59,7 @@
 'default_val.17','username','exp-common','properties for data export',1,'db_username','text', 1
 'default_val.18','password_enabled','credential','Credentials for authentication', 1,'true','text', 1
 'testDataGen','data-gen-id.1','data','Generating Date',1,'randomDate','text', 1
-'testDataGen','data-gen-id.2','data','Generating number',1,'randomNumber','text', 1
+'testDataGen','data-gen-id.2','data','Generating Number',1,'randomNumber','text', 1
 'testDataGen','data-gen-id.3','data','Generating String',1,'randomRegexPattern','text', 1
 'default_val.19','password_enabled','credential','Credentials for authentication', 1,'true','text', 1
 'default_val.16','file.delimiter.regex','dq','File delimiter',1,',','text', 1

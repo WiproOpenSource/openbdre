@@ -138,8 +138,76 @@
 
 
               </script>
+    <script type="text/javascript">
 
+        var next = 1;
+            function addrow(column,dataType,generator){
+            var addto = "#deletediv";
+            var addRemove = "#formGroup" + (next);
+            next = next + 1;
+            var removeBtn = '<button id="remove' + (next) + '" class="btn btn-danger remove-me" ><span class="glyphicon glyphicon-trash" ></span></button></div><div id="field">';
+            var newIn = '';
+            newIn = newIn +  '<div class="form-group" id="formGroup' + next + '">' ;
+            newIn = newIn +  '<div class="col-md-3">' ;
+            newIn = newIn +  '<input type="text" class="form-control input-sm" id="fieldName.' + next + '"  name="fieldName.' + next + '" value='+column+' />' ;
+            newIn = newIn +  '</div>' ;
+            newIn = newIn +  '<div class="col-md-3">' ;
+            newIn = newIn +  '<select class="form-control input-sm" id="generatedType.' + next + '" name="generatedType.' + next + '">' ;
+            newIn = newIn +  getGenType(dataType) ;
+            newIn = newIn +  '</select>' ;
+            newIn = newIn +  '</div>' ;
+            newIn = newIn +  '<div class="col-md-4">' ;
+            newIn = newIn +  '<input type="text" class="form-control input-sm" id="genArg.' + next + '"  name="genArg.' + next + '" value='+generator+' />' ;
+            newIn = newIn +  '</div>' ;
+            newIn = newIn + removeBtn;
+            newIn = newIn +  '</div>' ;
+
+            var newInput = $(newIn);
+            var removeButton = $(removeBtn);
+            $(addto).before(newInput);
+
+            $("#formGroup" + next).attr('data-source',$(addto).attr('data-source'));
+            $("#count").val(next);
+
+                $('.remove-me').click(function(e){
+                    e.preventDefault();
+                    var fieldNum = this.id.charAt(this.id.length-1);
+                    var fieldID = "#formGroup" + fieldNum;
+                    console.log($(this));
+                    //$(this).remove();
+                    $(fieldID).remove();
+                });
+        }
+
+
+
+
+
+    function getGenType(types){
+        var opt='';
+        $.ajax({
+                url: '/mdrest/genconfig/testDataGen/',
+                    type: 'GET',
+                    dataType: 'json',
+                    async: false,
+                    success: function (data) {
+                       $.each(data.Record,function(index,record){
+                           if(record.description == types)
+                           opt=opt+'<option value="'+record.defaultVal+'" name="generatedType" selected="selected" >'+record.description+'</option>' ;
+                           else
+                           opt=opt+'<option value="'+record.defaultVal+'" name="generatedType">'+record.description+'</option>' ;
+                       });
+                    },
+                    error: function () {
+                        alert('danger');
+                    }
+              });
+        return opt;
+    }
+        </script>
                <script>
+                            var finalJson=[];
+                            var noOfColumns=0;
                             function ImportFromExel(){
                                 //var jsonText=document.getElementById("jsonTextArea").value;
                                       var fileString=uploadedFileName;
@@ -150,8 +218,10 @@
                                 		    data: {'fileString': fileString},
                                 		    success: function (getData) {
                                 		        if( getData.Result =="OK" ){
-                                		            finalJson=getData;
-                                                  console.log(getData);
+                                		            finalJson=getData.Record;
+                                                  console.log(finalJson);
+                                                   noOfColumns=getData.Record.length;
+                                                  console.log(noOfColumns);
                                                   $("#div-dialog-warning").dialog({
                                                                title: "",
                                                                resizable: false,
@@ -160,6 +230,16 @@
                                                                buttons: {
                                                                    "Ok" : function () {
                                                                        $(this).dialog("close");
+                                                                       $("#formGroup1").remove();
+
+                                                                        for(i=0;i<noOfColumns;i++)
+                                                                       {
+                                                                       addrow(finalJson[i][0],finalJson[i][1],finalJson[i][2]);
+                                                                       }
+
+
+
+
                                                                    }
                                                                }
                                                   }).html('<p><span class="jtable-confirm-message"><spring:message code="processimportwizard.page.insert_success"/></span></p>');
@@ -237,6 +317,27 @@ function formIntoMap(typeProp, typeOf) {
                         
                         
                     </div>
+
+                    <!-- btn-group -->
+                                        <div class="form-group" id="formGroup2" ng-repeat="x in finalJson">
+                                            <div class="col-md-3">
+                                                <input type="text" class="form-control input-sm" id="fieldName.1" value="" name="fieldName" placeholder=<spring:message code="datagen.page.colname_type_placeholder"/> />
+                                            </div>
+                                            <div class="col-md-3">
+                                                <select class="form-control input-sm" id="generatedType.1" name="generatedType.1">
+                                                    <option ng-repeat="generatedTypes in generatedType.Record" value="{{generatedTypes.defaultVal}}" name="generatedType">{{generatedTypes.description}}</option>
+                                                </select>
+                                            </div>
+                                            <div class="col-md-4">
+                                                <input type="text" class="form-control input-sm" id="genArg.1" value="" name="genArg.1" placeholder=<spring:message code="datagen.page.generator_argument_placeholder"/> />
+                                            </div>
+                                            <button id="remove1" class="btn btn-danger remove-me"><span class="glyphicon glyphicon-trash"></span></button>
+
+
+                                        </div>
+
+                      <!-- /btn-group -->
+
                     <!-- /btn-group -->
                     <div class="form-group" id="formGroup16" >
                <div class="col-md-2" id="deletediv">
@@ -454,6 +555,11 @@ function getGenTypes(){
                                 alert('danger');
                             }
                         });
+
+             $scope.noOfColumns=noOfColumns;
+             console.log(noOfColumns);
+             $scope.finalJson=finalJson;
+             console.log(finalJson);
             $scope.busDomains={};
             $.ajax({
                         url: '/mdrest/busdomain/options/',
