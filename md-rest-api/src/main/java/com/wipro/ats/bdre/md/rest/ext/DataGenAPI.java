@@ -26,12 +26,20 @@ import com.wipro.ats.bdre.md.rest.util.BindingResultError;
 import com.wipro.ats.bdre.md.rest.util.Dao2TableUtil;
 import com.wipro.ats.bdre.md.rest.util.DateConverter;
 import org.apache.log4j.Logger;
+import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.xssf.usermodel.XSSFSheet;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.security.Principal;
 import java.text.DateFormat;
 import java.text.ParseException;
@@ -80,7 +88,6 @@ public class DataGenAPI extends MetadataAPIBase {
         Map<String,String> orderedMap = new TreeMap<>(map);
         //inserting in properties table
         for (String string : orderedMap.keySet()) {
-            LOGGER.debug("String is" + string);
             if (map.get(string) == null || ("").equals(map.get(string))) {
                 continue;
             }
@@ -95,10 +102,11 @@ public class DataGenAPI extends MetadataAPIBase {
                 dateContent = map.get(string).split(",");
                 DateFormat dF = new SimpleDateFormat(dateContent[2]);
                 try {
-                    date = dF.parse(dateContent[0]);
-                    date2 = dF.parse(dateContent[1]);
+                    date = dF.parse(dateContent[0].trim());
+                    date2 = dF.parse(dateContent[1].trim());
                 } catch (ParseException e) {
-                    LOGGER.debug("error in Date entry");
+                    LOGGER.info(e);
+                    LOGGER.info("error in Date entry");
                 }
                 unifiedDate.append(date.getTime() + "," + date2.getTime() + "," + dateContent[2]);
                 jpaProperties = Dao2TableUtil.buildJPAProperties("data", "args." + fieldArgCounter, unifiedDate.toString(), "Generated Argument");
@@ -207,6 +215,70 @@ public class DataGenAPI extends MetadataAPIBase {
         return restWrapper;
     }
 
+
+    @RequestMapping(value = {"/import", "/import/"}, method = RequestMethod.POST)
+    @ResponseBody
+    public RestWrapper importData(@ModelAttribute("fileString")
+                                  @Valid String uploadedFileName, BindingResult bindingResult, Principal principal) {
+        RestWrapper restWrapper = null;
+        if (bindingResult.hasErrors()) {
+            BindingResultError bindingResultError = new BindingResultError();
+            return bindingResultError.errorMessage(bindingResult);
+        }
+        LOGGER.info("uploaded exel file name is "+uploadedFileName);
+        String homeDir = System.getProperty("user.home");
+        LOGGER.info("home directory" + homeDir);
+        String excelFileLocation = homeDir + "/bdre-wfd/exel/" + uploadedFileName;
+        String FilePath = excelFileLocation;
+        FileInputStream fs = null;
+        try {
+            fs = new FileInputStream(FilePath);
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+            restWrapper = new RestWrapper(e.getMessage(), RestWrapper.ERROR);
+            return restWrapper;
+        }
+        try {
+            List<String[]> dataTypeList=new ArrayList<>();
+
+            XSSFWorkbook workbook = new XSSFWorkbook(fs);
+            XSSFSheet sheet = workbook.getSheetAt(0);
+
+            Iterator<Row> rowIterator = sheet.iterator();
+            while (rowIterator.hasNext())
+            {
+                String[] rowString=new String[3];
+                Row row = rowIterator.next();
+                //For each row, iterate through all the columns
+                Iterator<Cell> cellIterator = row.cellIterator();
+                int i=0;
+                while (cellIterator.hasNext())
+                {
+                    Cell cell = cellIterator.next();
+                    //Check the cell type and format accordingly
+
+                    switch (cell.getCellType())
+                    {
+                        case Cell.CELL_TYPE_NUMERIC:
+                            System.out.print(cell.getNumericCellValue() + " ");
+                            rowString[i++]= String.valueOf(cell.getNumericCellValue());
+                            break;
+                        case Cell.CELL_TYPE_STRING:
+                            System.out.print(cell.getStringCellValue() + " ");
+                            rowString[i++]=cell.getStringCellValue();
+                            break;
+                    }
+                }
+              dataTypeList.add(rowString);
+            }
+            fs.close();
+            restWrapper = new RestWrapper(dataTypeList, RestWrapper.OK);
+        } catch (IOException e) {
+            e.printStackTrace();
+            restWrapper = new RestWrapper(e.getMessage(), RestWrapper.ERROR);
+        }
+        return restWrapper;
+    }
 
     @Override
     public Object execute(String[] params) {
