@@ -46,13 +46,8 @@ public class HDFSExport extends Configured implements Tool {
         batchId = param[1];
         instanceExecId = param[2];
 
-         LOGGER.info("table name is "+ commonProperties.getProperty("table"));
         tableName = commonProperties.getProperty("table");
-       //  tableName="BATCH_STATUS";
-
-         LOGGER.info("drive  is "+ commonProperties.getProperty("driver"));
-         String driver = commonProperties.getProperty("driver");
-      //   String driver = "com.mysql.jdbc.Driver";
+        String driver = commonProperties.getProperty("driver");
         Class.forName(driver).newInstance();
         try {
             SqoopOptions options = new SqoopOptions();
@@ -74,29 +69,20 @@ public class HDFSExport extends Configured implements Tool {
             options.setHadoopHome(hadoopHome);
             options.setJarOutputDir(jarOutputDir);
 
-            //options.setConnManagerClassName(commonProperties.getProperty("con.mgr.class"));
             options.setConnManagerClassName("org.apache.sqoop.manager.GenericJdbcManager");
 
-            LOGGER.info("connection string is "+ commonProperties.getProperty("db"));
             options.setConnectString(commonProperties.getProperty("db"));
-            //options.setConnectString("jdbc:mysql://localhost:3306/bdre");
 
-            LOGGER.info("username is "+ commonProperties.getProperty("username"));
             options.setUsername(commonProperties.getProperty("username"));
-            //options.setUsername("root");
 
-            LOGGER.info("password is "+ commonProperties.getProperty("password"));
             options.setPassword(commonProperties.getProperty("password"));
-            //options.setPassword("cloudera");
 
             options.setTableName(tableName);
 
             //String exportDir="hdfs://quickstart.cloudera:8020/user/cloudera/export/";
-            LOGGER.info("exportdir is "+ commonProperties.getProperty("export.dir"));
             String exportDir=commonProperties.getProperty("export.dir");
             options.setExportDir(exportDir);
 
-            LOGGER.info("delimiter is "+commonProperties.getProperty("delimiter").charAt(0));
             options.setInputFieldsTerminatedBy(commonProperties.getProperty("delimiter").charAt(0));
 
             String mode=commonProperties.getProperty("mode");

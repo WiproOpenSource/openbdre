@@ -41,19 +41,19 @@ public class JobDAOTest {
     @Autowired
     StepDAO stepDAO;
 
-
+    @Ignore
     @Test
     public void testJobInitHalt() throws Exception {
-        List<InitJobRowInfo> initJobRowInfos = jobDAO.initJob(34, 1);
+        List<InitJobRowInfo> initJobRowInfos = jobDAO.initJob(1, 1);
         LOGGER.info("count is:" + initJobRowInfos.size());
 
-       // Long sub_instance_exec_id = stepDAO.initStep(2);
-       // stepDAO.haltStep(2);
+        Long sub_instance_exec_id = stepDAO.initStep(2);
+        stepDAO.haltStep(2);
 
-       // jobDAO.haltJob(2, "@a");
-       // LOGGER.info("The sub process halt step test executed");
+        jobDAO.haltJob(2, "@a");
+        LOGGER.info("The sub process halt step test executed");
 
-        //LOGGER.info("The sub process init step test executed with instance-exec-id :" + sub_instance_exec_id);
+        LOGGER.info("The sub process init step test executed with instance-exec-id :" + sub_instance_exec_id);
 
     }
 
