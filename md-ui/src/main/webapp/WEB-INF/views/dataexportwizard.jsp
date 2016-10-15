@@ -1,6 +1,7 @@
 <%@ taglib prefix="security"
        uri="http://www.springframework.org/security/tags" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 <%@taglib uri="http://www.springframework.org/tags" prefix="spring"%>
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1"
      pageEncoding="ISO-8859-1"%>
@@ -60,44 +61,143 @@
                 }
                }
         </script>
+
+        		<script type = "text/javascript" >
+        		  var treeData;
+
+                  function verifyConnection()
+                  {
+                          var verificationUrl="/mdrest/dataimport/tables?" +
+                          $("#dbUser")[0].name+"="+encodeURIComponent($("#dbUser")[0].value) +
+                          "&"+$("#dbURL")[0].name+"="+encodeURIComponent($("#dbURL")[0].value)  +
+                          "&"+$("#dbPassword")[0].name+"="+encodeURIComponent($("#dbPassword")[0].value)  +
+                          "&"+$("#dbDriver")[0].name+"="+encodeURIComponent($("#dbDriver")[0].value) +
+                           "&"+$("#dbSchema")[0].name+"="+encodeURIComponent($("#dbSchema")[0].value) ;
+
+                           $.ajax({
+                                  type: "GET",
+                                  url: verificationUrl,
+                                  dataType: 'json',
+                                  success: function(items)
+                                  {
+                                    console.log(items);
+                                    if(items.Result=="ERROR"){
+                                        $("#div-dialog-warning").dialog({
+                                            title: "Test Connection Failed",
+                                            resizable: false,
+                                            height: 'auto',
+                                            modal: true,
+                                            buttons: {
+                                                "Ok" : function () {
+                                                    $(this).dialog("close");
+                                                }
+                                            }
+                                        }).html("<p><span class=\"jtable-confirm-message\">" + items.Message + "</span></p>");
+                                        }
+                                    else if(items.Result=="OK"){
+                                    treeData=items.Record;
+                                        $("#div-dialog-warning").dialog({
+                                            title: "Success",
+                                            resizable: false,
+                                            height: 'auto',
+                                            modal: true,
+                                            buttons: {
+                                                "Ok" : function () {
+                                                    $(this).dialog("close");
+                                                }
+                                            }
+                                        }).html('<p><span class="jtable-confirm-message"><spring:message code="dataimportwizard.page.connection_success_msg"/></span></p>');
+
+                                    }
+                                  }
+                          });
+
+
+                  }
+
+        		</script >
+
 </head>
 <body ng-app="myApp" ng-controller="myCtrl">
 	<div class="page-header"><spring:message code="dataexportwizard.page.panel_heading"/></div>
 
-	<div class="alert alert-info" role="alert">
-	   <spring:message code="dataexportwizard.page.alert_info_outer"/>
-    </div>
-
-
     <div id="bdre-export"  >
-      <h3><div class="number-circular">1</div>Output Table Details:</h3>
+
+     <h3><div class="number-circular">1</div>Input Data Details:</h3>
+                <section>
+                <form class="form-horizontal" role="form" id="inputFieldsForm">
+                    <div id="InputDataDetails">
+
+                        <!-- btn-group -->
+                        <div id="InputDataDetails2">
+                            <div class="form-group">
+                                <label class="control-label col-sm-2" for="inputHDFSDir"><spring:message code="dataexportwizard.page.export_dir"/></label>
+                                <div class="col-sm-10">
+                                    <input type="text" class="form-control" name="inputHDFSDir"  placeholder="Enter HDFS location of Export Directory">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="control-label col-sm-2" for="inputDataDelimiter"><spring:message code="dataexportwizard.page.delimiter"/></label>
+                                <div class="col-sm-10">
+                                    <input type="text" class="form-control" name="inputDataDelimiter" placeholder="Enter Delimiter('\t' or ',' etc)">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="control-label col-sm-2" for="mode"><spring:message code="dataexportwizard.page.mode"/></label>
+                                <div class="col-sm-10">
+                                    <select class="form-control" name="mode" id="mode">
+                                      <option value="InsertOnly" selected>InsertOnly</option>
+                                      <option value="UpdateOnly">UpdateOnly</option>
+                                      <option value="AllowInsert">Insert and Update</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                        </div>
+                        <!-- /btn-group -->
+                    </div>
+                    </form>
+                    </section>
+
+      <h3><div class="number-circular">2</div>Output Table Details:</h3>
            <section >
               <form class="form-horizontal" role="form" id="DatabaseDetailsForm">
 
            					<div >
-
+           					<fmt:bundle basename="db">
+                                <div class="form-group">
+                                <label for = "dbDriver" ><spring:message code="dataexportwizard.page.db_driver"/></label >
+                                <input id = "dbDriver" name = "dbDriver" type = "text" class = "form-control" value = "<fmt:message key='hibernate.connection.driver_class' />" />
+                                </div>
            						<div class="form-group">
            						<label for = "dbURL" ><spring:message code="dataexportwizard.page.db_url"/></label >
-           						<input id = "dbURL"  name = "dbURL" type = "text" class = "form-control" />
+           						<input id = "dbURL"  name = "dbURL" type = "text" class = "form-control" value = "<fmt:message key='hibernate.connection.url' />" />
            						</div>
            						<div class="form-group">
            						<label for = "dbUser" ><spring:message code="dataexportwizard.page.db_user"/></label >
-           						<input id = "dbUser"  name = "dbUser" type = "text" class = "form-control"  />
+           						<input id = "dbUser"  name = "dbUser" type = "text" class = "form-control" value = "<fmt:message key='hibernate.connection.username' />" />
            						</div>
            						<div class="form-group">
            						<label for = "dbPassword" ><spring:message code="dataexportwizard.page.db_psswd"/></label >
-           						<input id = "dbPassword" name = "dbPassword" type = "password" class = "form-control"  />
+           						<input id = "dbPassword" name = "dbPassword" type = "password" class = "form-control" value = "<fmt:message key='hibernate.connection.password' />" />
            						</div>
+
            						<div class="form-group">
-           						<label for = "dbDriver" ><spring:message code="dataexportwizard.page.db_driver"/></label >
-           						<input id = "dbDriver" name = "dbDriver" type = "text" class = "form-control" />
-           						</div>
+                                <label for = "dbSchema" ><spring:message code="dataimportwizard.page.schema"/></label >
+                                <input id = "dbSchema" name = "dbSchema" type = "text" class = "form-control" value = "<fmt:message key='hibernate.default_schema' />" />
+                                </div>
+
            						<div class="form-group">
            						<label for = "table" ><spring:message code="dataexportwizard.page.db_table"/></label >
-                                   <input id = "table"  name = "table" type = "text" class = "form-control" />
+                                   <input id = "table"  name = "table" type = "text" class = "form-control" placeholder="Enter Table Name"/>
            						</div>
+           						<div class="form-group">
+                                <label for = "columns" ><spring:message code="dataexportwizard.page.db_columns"/></label >
+                                   <input id = "columns"  name = "columns" type = "text" class = "form-control" placeholder="Give a comma separated list of column names" disabled/>
+                                </div>
            						<div class="clearfix"></div>
 
+                                </fmt:bundle>
            					</div >
                 </form>
            	</section >
@@ -105,40 +205,12 @@
 
 
 
-            <h3><div class="number-circular">2</div>Input Data Details:</h3>
-            <section>
-            <form class="form-horizontal" role="form" id="inputFieldsForm">
-                <div id="InputDataDetails">
-                    <div class="alert alert-info" role="alert">
-						<spring:message code="dataexportwizard.page.alert_info_2"/>
-                    </div>
-                    <!-- btn-group -->
-                    <div id="InputDataDetails2">
-                        <div class="form-group">
-                            <label class="control-label col-sm-2" for="inputHDFSDir"><spring:message code="dataexportwizard.page.export_dir"/></label>
-                            <div class="col-sm-10">
-                                <input type="text" class="form-control" name="inputHDFSDir"  >
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <label class="control-label col-sm-2" for="inputDataDelimiter"><spring:message code="dataexportwizard.page.delimiter"/></label>
-                            <div class="col-sm-10">
-                                <input type="text" class="form-control" name="inputDataDelimiter">
-                            </div>
-                        </div>
 
-                    </div>
-                    <!-- /btn-group -->
-                </div>
-                </form>
-                </section>
                 <h3><div class="number-circular">3</div>Process Details</h3>
                 <section>
                     <form class="form-horizontal" role="form" id="processFieldsForm1">
                         <div id="processDetails">
-                            <div class="alert alert-info" role="alert">
-                                <spring:message code="dataexportwizard.page.alert_info_3"/>
-                            </div>
+
                             <!-- btn-group -->
                             <div id="processFields">
 
@@ -260,6 +332,7 @@
         });
     </script>
     <script type="text/javascript">
+    var mode = null;
     var wizard = null;
 
         $("#bdre-export").steps({
@@ -291,11 +364,25 @@
               			console.log(currentIndex + " " + priorIndex);
 
               			if(currentIndex == 1 && priorIndex == 0) {
-              			 formIntoMap('dbDetails_', 'DatabaseDetailsForm');
+              			  formIntoMap('inputData_', 'inputFieldsForm');
+              			   var x = document.getElementById("mode");
+              			   var modevalue = x.selectedOptions[0].innerHTML
+                           console.log("mode is "+modevalue);
+              			   if(modevalue == "UpdateOnly" || modevalue == "Insert and Update")
+                               {
+                                  console.log("updateonly or allowInsert");
+                                  document.getElementById("columns").disabled = false;
+                               }
+                               if(modevalue == "InsertOnly" )
+                              {
+                                 console.log("InsertOnly");
+                                 document.getElementById("columns").disabled = true;
+                              }
               			    }
 
               			if(currentIndex == 2 && priorIndex == 1) {
-                         formIntoMap('inputData_', 'inputFieldsForm');
+
+                         formIntoMap('dbDetails_', 'DatabaseDetailsForm');
                             }
 
                         if(currentIndex == 3 && priorIndex == 2) {

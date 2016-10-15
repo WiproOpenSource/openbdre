@@ -61,13 +61,32 @@ public class DataExportAPI {
             } else if (string.startsWith("inputData_inputHDFSDir")) {
                 jpaProperties = Dao2TableUtil.buildJPAProperties(EXPORTCONFIG, "export.dir", map.get(string), "Export Directory");
                 propertiesList.add(jpaProperties);
-            } else if (string.startsWith("dbDetails_dbURL")) {
+            }
+            else if (string.startsWith("inputData_mode")) {
+                jpaProperties = Dao2TableUtil.buildJPAProperties(EXPORTCONFIG, "mode", map.get(string), "Mode(Insert/Update)");
+                propertiesList.add(jpaProperties);
+            }
+            else if (string.startsWith("inputData_inputDataDelimiter")) {
+                jpaProperties = Dao2TableUtil.buildJPAProperties(EXPORTCONFIG, "delimiter", map.get(string), "Input Data Delimiter");
+                propertiesList.add(jpaProperties);
+            }
+            else if (string.startsWith("dbDetails_dbURL")) {
                 jpaProperties = Dao2TableUtil.buildJPAProperties(EXPORTCONFIG, "db", map.get(string), "Database URL");
                 propertiesList.add(jpaProperties);
-            } else if (string.startsWith("dbDetails_table")) {
+            }
+            else if (string.startsWith("dbDetails_dbSchema")) {
+                jpaProperties = Dao2TableUtil.buildJPAProperties(EXPORTCONFIG, "schema", map.get(string), "Database Schema");
+                propertiesList.add(jpaProperties);
+            }
+            else if (string.startsWith("dbDetails_table")) {
                 jpaProperties = Dao2TableUtil.buildJPAProperties(EXPORTCONFIG, "table", map.get(string), "Table Name");
                 propertiesList.add(jpaProperties);
-            } else if (string.startsWith("processFields_processName")) {
+            }
+            else if (string.startsWith("dbDetails_columns")) {
+                jpaProperties = Dao2TableUtil.buildJPAProperties(EXPORTCONFIG, "updateColumns", map.get(string), "Update Columns");
+                propertiesList.add(jpaProperties);
+            }
+            else if (string.startsWith("processFields_processName")) {
                 LOGGER.debug("srcEnv_processName" + map.get(string));
                 processName = map.get(string);
             } else if (string.startsWith("processFields_processDescription")) {

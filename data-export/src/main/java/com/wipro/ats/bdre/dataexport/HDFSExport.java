@@ -96,6 +96,20 @@ public class HDFSExport extends Configured implements Tool {
             String exportDir=commonProperties.getProperty("export.dir");
             options.setExportDir(exportDir);
 
+            LOGGER.info("delimiter is "+commonProperties.getProperty("delimiter").charAt(0));
+            options.setInputFieldsTerminatedBy(commonProperties.getProperty("delimiter").charAt(0));
+
+            String mode=commonProperties.getProperty("mode");
+            LOGGER.info("updatemode is "+ mode);
+            if(mode.equalsIgnoreCase("UpdateOnly"))
+                options.setUpdateMode(SqoopOptions.UpdateMode.UpdateOnly);
+            if(mode.equalsIgnoreCase("AllowInsert"))
+                options.setUpdateMode(SqoopOptions.UpdateMode.AllowInsert);
+
+            if(commonProperties.getProperty("updateColumns") != null){
+                String updateColumns = commonProperties.getProperty("updateColumns");
+                options.setUpdateKeyCol(updateColumns);
+            }
             int mappers = Integer.parseInt("1");
             options.setNumMappers(mappers);
             options.setJobName("exportJob");
