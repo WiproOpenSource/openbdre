@@ -31,6 +31,8 @@ if [ $processTypeId -eq 1 ]; then
     sh $(dirname $0)/flume.sh $busDomainId $processTypeId $processId
 elif [ $processTypeId -eq 2 ]; then
     python $(dirname $0)/Workflow.py $busDomainId $processTypeId $processId
+elif [ $processTypeId -eq 3 ]; then
+    python $(dirname $0)/Workflow.py $busDomainId $processTypeId $processId
 elif [ $processTypeId -eq 4 ]; then
     python $(dirname $0)/Workflow.py $busDomainId $processTypeId $processId
 elif [ $processTypeId -eq 5 ]; then
