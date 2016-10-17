@@ -55,26 +55,48 @@ public class HDFSExport extends Configured implements Tool {
 
             //reading properties from IMConfig file
             String jarOutputDir = IMConfig.getProperty("data-export.jar-output-dir") + "/" + processId + "/" + batchId;
+            LOGGER.info("jaroutputdir "+jarOutputDir);
             File jod=new File(jarOutputDir);
             //create if this directory does not exist
             if(!jod.exists())
             {
-                jod.mkdirs();
-                LOGGER.info("Jar output dir created "+jarOutputDir);
+               boolean created = jod.mkdirs();
+                LOGGER.info("Jar output dir created "+created);
             }
             String hadoopHome = IMConfig.getProperty("data-export.hadoop-home");
-
+            
             //setting the parameters of sqoopOption
             options.setHadoopHome(hadoopHome);
             options.setJarOutputDir(jarOutputDir);
-            options.setConnManagerClassName(commonProperties.getProperty("con.mgr.class"));
+
+            options.setConnManagerClassName("org.apache.sqoop.manager.GenericJdbcManager");
+
             options.setConnectString(commonProperties.getProperty("db"));
+
             options.setUsername(commonProperties.getProperty("username"));
+
             options.setPassword(commonProperties.getProperty("password"));
+
             options.setTableName(tableName);
+
+            //String exportDir="hdfs://quickstart.cloudera:8020/user/cloudera/export/";
             String exportDir=commonProperties.getProperty("export.dir");
             options.setExportDir(exportDir);
-            int mappers = Integer.parseInt(commonProperties.getProperty("mappers"));
+
+            options.setInputFieldsTerminatedBy(commonProperties.getProperty("delimiter").charAt(0));
+
+            String mode=commonProperties.getProperty("mode");
+            LOGGER.info("updatemode is "+ mode);
+            if(mode.equalsIgnoreCase("UpdateOnly"))
+                options.setUpdateMode(SqoopOptions.UpdateMode.UpdateOnly);
+            if(mode.equalsIgnoreCase("AllowInsert"))
+                options.setUpdateMode(SqoopOptions.UpdateMode.AllowInsert);
+
+            if(commonProperties.getProperty("updateColumns") != null){
+                String updateColumns = commonProperties.getProperty("updateColumns");
+                options.setUpdateKeyCol(updateColumns);
+            }
+            int mappers = Integer.parseInt("1");
             options.setNumMappers(mappers);
             options.setJobName("exportJob");
 
