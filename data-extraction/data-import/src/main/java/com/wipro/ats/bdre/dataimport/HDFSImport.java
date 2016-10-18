@@ -164,7 +164,7 @@ public class HDFSImport extends Configured implements Tool {
                         prevLastValue = lastValue;
                     }
                     options.setIncrementalMode(SqoopOptions.IncrementalMode.valueOf(incrementMode));
-                    options.setIncrementalTestColumn(commonProperties.getProperty("check.col"));
+                    options.setIncrementalTestColumn(commonProperties.getProperty("incr.column"));
                     options.setIncrementalLastValue(lastValue);
 
                 }
