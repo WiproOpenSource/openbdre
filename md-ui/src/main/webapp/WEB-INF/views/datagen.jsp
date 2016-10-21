@@ -339,13 +339,14 @@ function formIntoMap(typeProp, typeOf) {
                       <!-- /btn-group -->
 
                     <!-- /btn-group -->
-                    <div class="form-group" id="formGroup16" >
+                <!--    <div class="form-group" id="formGroup16" > -->
                <div class="col-md-2" id="deletediv">
                             <button id="b1" class="btn add-more">
                                 <span class="glyphicon glyphicon-plus" style="font-size:large"></span>
                             </button>
                 </div>
-                </div>
+
+              <!--   </div>
                 <div class="form-group" id="formGroup15" >
               <div class="col-md-3">
                   <h5><strong>You can also upload exel file of the data</strong></h5><br>
@@ -360,7 +361,7 @@ function formIntoMap(typeProp, typeOf) {
                 <div>
 
                 </div>
-                </div>
+                </div>    -->
 
             </form>
 
