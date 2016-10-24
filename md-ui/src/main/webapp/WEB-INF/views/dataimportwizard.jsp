@@ -578,7 +578,7 @@
 
                   $("<option />", {text: "None", value: "None"}).appendTo($incrementSelect);
                   $("<option />", {text: "Append Rows", value: "AppendRows"}).appendTo($incrementSelect);
-                  $("<option />", {text: "Last Moified", value: "DateLastModified "}).appendTo($incrementSelect);
+                  $("<option />", {text: "Last Moified", value: "DateLastModified"}).appendTo($incrementSelect);
                   $incrementSelect.addClass("form-control");
                   $tdList.eq(5).html($incrementSelect);
 
