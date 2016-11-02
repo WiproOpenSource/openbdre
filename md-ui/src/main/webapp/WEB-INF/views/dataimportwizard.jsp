@@ -60,14 +60,73 @@
 		var c
 
 	function columnsPopup(tableName){
-	    var incrType = $("#incrementType_"+tableName).val();
-	    console.log(incrType);
-	    if(incrType != "None"){
-	        $("#incrementColumn_"+tableName).prop('disabled', false);
-	    }
-	    else{
-	     $("#incrementColumn_"+tableName).prop('disabled', true);
-	    }
+
+             var incrType = $("#incrementType_"+tableName).val();
+             	    console.log(incrType);
+             	    console.log($("#incrementColumn_"+tableName).html());
+             	    if(incrType != "None"){
+             	        $("#incrementColumn_"+tableName).addClass('form-control');
+             	        $("#incrementColumn_"+tableName).prop('disabled', false);
+
+             	    }
+             	    else{
+             	     $("#incrementColumn_"+tableName).prop('disabled', true);
+             	    }
+
+
+	                 var filteredColumns= [];
+                     $.ajax({
+                          url: "/mdrest/dataimport/tables/"+tableName,
+                              type: 'GET',
+                              dataType: 'json',
+                              async: false,
+                              success: function (data) {
+                                filteredColumns = data;
+                              },
+                              error: function () {
+                                  alert('danger');
+                              }
+                          });
+
+
+         var size=filteredColumns.length;
+         var integralColumns=[];
+         if(incrType == "AppendRows")
+           {
+         for(i=0;i<size;i++){
+          if(filteredColumns[i].dtype == "INT" || filteredColumns[i].dtype == "BIGINT")
+          integralColumns.push(filteredColumns[i].title);
+          }
+           var len=integralColumns.length;
+          var temp="<select class="+'"form-control"' +" name='incrementColumn_" + tableName +"' id='incrementColumn_" + tableName +"'>";
+          for(j=0;j<len;j++)
+          {
+          temp=temp + "<option value="+integralColumns[j]+">"+integralColumns[j]+"</option>";
+          }
+          temp=temp + "</select>";
+          $("#incrementColumn_"+tableName).replaceWith(temp);
+          }
+
+          var timestampColumns=[];
+          if(incrType == "DateLastModified")
+          {
+           for(i=0;i<size;i++){
+           console.log(filteredColumns[i].dtype);
+            if(filteredColumns[i].dtype == "TIMESTAMP")
+            timestampColumns.push(filteredColumns[i].title);
+            }
+
+             var lent=timestampColumns.length;
+                     var temp="<select class="+'"form-control"' +" name='incrementColumn_" + tableName +"' id='incrementColumn_" + tableName +"'>";
+                      for(j=0;j<lent;j++)
+                      {
+                      temp=temp + "<option value="+timestampColumns[j]+">"+timestampColumns[j]+"</option>";
+                      }
+                      temp=temp + "</select>";
+                      $("#incrementColumn_"+tableName).replaceWith(temp);
+
+            }
+
 	 }
 
 	function submitfunction (){
@@ -581,7 +640,6 @@
                   $("<option />", {text: "Last Moified", value: "DateLastModified"}).appendTo($incrementSelect);
                   $incrementSelect.addClass("form-control");
                   $tdList.eq(5).html($incrementSelect);
-
                   var incrcolumns= [];
                             $.ajax({
                                  url: "/mdrest/dataimport/tables/"+data.node.key,
@@ -596,8 +654,6 @@
                                      }
                                  });
 
-                  console.log(incrcolumns);
-                  console.log("data table: "+data.node.key);
                   var str;
                   $incrementColumn.addClass("form-control");
                   $tdList.eq(6).html($incrementColumn);
