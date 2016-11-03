@@ -55,6 +55,7 @@ public class DataImportAPI extends MetadataAPIBase {
     private static final Logger LOGGER = Logger.getLogger(DataImportAPI.class);
     private static final String INGESTONLY = "ingestOnly_";
     private static final String INCREMENTTYPE = "incrementType_";
+    private static final String INCREMENTCOLUMN = "incrementColumn_";
     private static final String PRIMARYKEYCOLUMN = "primaryKeyColumn_";
     private static final String ESCAPESEQ = "\\..+";
     private Connection conn;
@@ -112,6 +113,7 @@ public class DataImportAPI extends MetadataAPIBase {
             LOGGER.info("value is " + table.getIngestOrNot());
             pushToIntermediate(uuid, INGESTONLY + count, table.getIngestOrNot());
             pushToIntermediate(uuid, INCREMENTTYPE + count, table.getIncrementType());
+            pushToIntermediate(uuid, INCREMENTCOLUMN + count, table.getIncrementColumn());
             pushToIntermediate(uuid, PRIMARYKEYCOLUMN + count, table.getPrimaryKeyColumn());
 
 
@@ -318,6 +320,10 @@ public class DataImportAPI extends MetadataAPIBase {
                 String srcTableName = key.replaceAll(INCREMENTTYPE, "");
                 Table table = tables.get(srcTableName);
                 table.setIncrementType(value);
+            } else if (key.startsWith(INCREMENTCOLUMN)) {
+                String srcTableName = key.replaceAll(INCREMENTCOLUMN, "");
+                Table table = tables.get(srcTableName);
+                table.setIncrementColumn(value);
             } else if (key.startsWith("destTableName_")) {
                 String srcTableName = key.replaceAll("destTableName_", "");
                 Table table = tables.get(srcTableName);

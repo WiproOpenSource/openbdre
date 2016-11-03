@@ -163,8 +163,8 @@ public class HDFSImport extends Configured implements Tool {
                         lastValue = processLogInfo.getMessage();
                         prevLastValue = lastValue;
                     }
-                    options.setIncrementalMode(SqoopOptions.IncrementalMode.valueOf(incrementMode));
-                    options.setIncrementalTestColumn(commonProperties.getProperty("check.col"));
+                    options.setIncrementalMode(SqoopOptions.IncrementalMode.valueOf(incrementMode.trim()));
+                    options.setIncrementalTestColumn(commonProperties.getProperty("incr.column"));
                     options.setIncrementalLastValue(lastValue);
 
                 }
@@ -177,8 +177,8 @@ public class HDFSImport extends Configured implements Tool {
             if (ret == 0) {
 
                 lastValue = options.getIncrementalLastValue();
-                LOGGER.debug(lastValue);
-                LOGGER.debug(prevLastValue);
+                LOGGER.info(lastValue);
+                LOGGER.info(prevLastValue);
 
                 //adding the process log
                 ProcessLog processLog = new ProcessLog();

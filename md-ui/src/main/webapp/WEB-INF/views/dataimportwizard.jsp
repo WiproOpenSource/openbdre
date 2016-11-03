@@ -38,6 +38,7 @@
 		<script src = "../js/jquery.fancytree.gridnav.js" type = "text/javascript" ></script >
 		<script src = "../js/jquery.fancytree.table.js" type = "text/javascript" ></script >
 		<script src = "../js/jquery.jtable.js" type = "text/javascript" ></script >
+		<script src="../js/angular.min.js" type="text/javascript"></script>
 		<link href = "../css/jtables-bdre.css" rel = "stylesheet" type = "text/css" />
 		<style>
 		.btn-success{
@@ -56,6 +57,79 @@
             }
         </style>
 		<script >
+	function columnsPopup(tableName){
+
+             var incrType = $("#incrementType_"+tableName).val();
+             	    console.log(incrType);
+             	    console.log($("#incrementColumn_"+tableName).html());
+             	    if(incrType != "None"){
+             	        $("#incrementColumn_"+tableName).addClass('form-control');
+             	        $("#incrementColumn_"+tableName).prop('disabled', false);
+
+             	    }
+             	    else{
+             	     $("#incrementColumn_"+tableName).prop('disabled', true);
+             	    }
+
+
+	                 var filteredColumns= [];
+                     $.ajax({
+                          url: "/mdrest/dataimport/tables/"+tableName,
+                              type: 'GET',
+                              dataType: 'json',
+                              async: false,
+                              success: function (data) {
+                                filteredColumns = data;
+                              },
+                              error: function () {
+                                  alert('danger');
+                              }
+                          });
+
+
+         var size=filteredColumns.length;
+         var integralColumns=[];
+         if(incrType == "AppendRows")
+           {
+         for(i=0;i<size;i++){
+          if(filteredColumns[i].dtype == "INT" || filteredColumns[i].dtype == "BIGINT")
+          integralColumns.push(filteredColumns[i].title);
+          }
+           var len=integralColumns.length;
+          var temp="<select class="+'"form-control"' +" name='incrementColumn_" + tableName +"' id='incrementColumn_" + tableName +"'>";
+          for(j=0;j<len;j++)
+          {
+          temp=temp + "<option value="+integralColumns[j]+">"+integralColumns[j]+"</option>";
+          }
+          temp=temp + "</select>";
+          $("#incrementColumn_"+tableName).replaceWith(temp);
+          }
+
+          var timestampColumns=[];
+          if(incrType == "DateLastModified")
+          {
+           for(i=0;i<size;i++){
+           console.log(filteredColumns[i].dtype);
+            if(filteredColumns[i].dtype == "TIMESTAMP")
+            timestampColumns.push(filteredColumns[i].title);
+            }
+
+             var lent=timestampColumns.length;
+                     var temp="<select class="+'"form-control"' +" name='incrementColumn_" + tableName +"' id='incrementColumn_" + tableName +"'>";
+                      for(j=0;j<lent;j++)
+                      {
+                      temp=temp + "<option value="+timestampColumns[j]+">"+timestampColumns[j]+"</option>";
+                      }
+                      temp=temp + "</select>";
+                      $("#incrementColumn_"+tableName).replaceWith(temp);
+
+            }
+
+	 }
+
+	function submitfunction (){
+        $("#incrementalform").hide();
+     }
 
     var datatypeMap = {
     INT: "Int",
@@ -319,6 +393,7 @@
 
 		var wizard=null;
 		wizard=$(document).ready(function() {
+
 			$("#bdre-dataload").steps({
 		    headerTag: "h3",
 		    bodyTag: "section",
@@ -460,9 +535,9 @@
             list.push(myObject);
 
           var myObject = new Object();
-                    myObject.name=$("#processName")[0].name;
-                    myObject.value=$("#processName")[0].value;
-                    list.push(myObject);
+            myObject.name=$("#processName")[0].name;
+            myObject.value=$("#processName")[0].value;
+            list.push(myObject);
 
           var myObject = new Object();
                     myObject.name=$("#processDescription")[0].name;
@@ -472,6 +547,7 @@
                   myObject.name=$("#workflowTypeId")[0].name;
                   myObject.value=$("#workflowTypeId")[0].value;
                   list.push(myObject);
+
 
 
 
@@ -533,8 +609,10 @@
     renderColumns: function(event, data) {
       var node = data.node,
         $select = $("<select name='hiveDataType_" + data.node.key +"'/>"),
-        $ingestSelect = $("<select name='ingestOnly_" + data.node.key +"'/>"),
-        $incrementSelect = $("<select name='incrementType_" + data.node.key +"'/>"),
+        $ingestSelect = $("<select name='ingestOnly_" + data.node.key +"' />"),
+        $incrementSelect = $("<select name='incrementType_" + data.node.key +"' id='incrementType_" + data.node.key +"' onchange='columnsPopup(&quot;"+ data.node.key +"&quot;)'/>"),
+        $incrementColumn = $("<select disabled name='incrementColumn_" + data.node.key +"' id='incrementColumn_" + data.node.key +"'/>"),
+
         $tdList = $(node.tr).find(">td");
       // (Index #0 is rendered by fancytree by adding the checkbox)
       //$tdList.eq(1).text(node.getIndexHier()).addClass("alignRight");
@@ -553,11 +631,39 @@
                   $ingestSelect.addClass("form-control");
                   $tdList.eq(4).html($ingestSelect);
 
+
+
                   $("<option />", {text: "None", value: "None"}).appendTo($incrementSelect);
                   $("<option />", {text: "Append Rows", value: "AppendRows"}).appendTo($incrementSelect);
-                  $("<option />", {text: "Last Moified", value: "DateLastModified "}).appendTo($incrementSelect);
+                  $("<option />", {text: "Last Moified", value: "DateLastModified"}).appendTo($incrementSelect);
                   $incrementSelect.addClass("form-control");
                   $tdList.eq(5).html($incrementSelect);
+                  var incrcolumns= [];
+                            $.ajax({
+                                 url: "/mdrest/dataimport/tables/"+data.node.key,
+                                     type: 'GET',
+                                     dataType: 'json',
+                                     async: false,
+                                     success: function (data) {
+                                       incrcolumns = data;
+                                     },
+                                     error: function () {
+                                         alert('danger');
+                                     }
+                                 });
+
+                  var str;
+                  $incrementColumn.addClass("form-control");
+                  $tdList.eq(6).html($incrementColumn);
+                  var x = document.getElementById('incrementColumn_'+data.node.key);
+                  var y = document.getElementById('incrementType_'+data.node.key);
+                   for( str in incrcolumns){
+                        var s= parseInt(str)
+                       var option = document.createElement("option");
+                       option.text = incrcolumns[s].title;
+                       option.value = incrcolumns[s].title;
+                       x.appendChild(option);
+                   }
 
       }else{
             $tdList.eq(2).html(data.node.data.dtype+
@@ -650,17 +756,20 @@ isInit=true;
                           }
                   });
 
-
+           $('[id~="increment"]').hide();
           }
 
 		</script >
 
 	</head >
-	<body >
+	<body>
 	
 		<form action = "#" method = "POST" id = "wizardform" >
 			<div class="page-header"><spring:message code="dataimportwizard.page.panel_heading"/></div>
-			<div id="bdre-dataload" ng-controller = "myCtrl" >
+			<div id="bdre-dataload" >
+
+
+
 				<h3 ><div class="number-circular">1</div><spring:message code="dataimportwizard.page.db"/></h3 >
 				<section >
 					<div >
@@ -694,6 +803,7 @@ isInit=true;
 				</section >
 				<h3 ><div class="number-circular">2</div><spring:message code="dataimportwizard.page.table_and_cols"/></h3 >
 				<section style = "display: block; overflow: scroll;" >
+
 					<table id = "tree0" class = "table-striped" width = "290px" >
 						<thead >
 						<tr >
@@ -741,6 +851,7 @@ isInit=true;
 							<th >Hive Datatype</th >
 							<th> Options</th>
 							<th> Increment Type</th>
+							<th> Increment Column</th>
 						</tr >
 						</thead >
 						<tbody >
