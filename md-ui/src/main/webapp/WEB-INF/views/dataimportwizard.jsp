@@ -57,8 +57,6 @@
             }
         </style>
 		<script >
-		var c
-
 	function columnsPopup(tableName){
 
              var incrType = $("#incrementType_"+tableName).val();
