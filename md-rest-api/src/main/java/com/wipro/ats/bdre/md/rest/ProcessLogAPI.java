@@ -66,13 +66,14 @@ public class ProcessLogAPI extends MetadataAPIBase {
             processLogInfo.setPageSize(pageSize);
             List<ProcessLogInfo> listLog = new ArrayList<>();
             List<ProcessLogInfo> logList=processLogDAO.listLog(processLogInfo);
+            LOGGER.info("process log contains before scecurity check "+listLog);
             for(ProcessLogInfo log: logList){
 
-                   if("ACCESSGRANTED".equals( processDAO.securityCheck(log.getParentProcessId(), principal.getName(), "read")))
+                   if("ACCESS GRANTED".equals( processDAO.securityCheck(log.getParentProcessId(), principal.getName(), "read")))
                        listLog.add(log);
 
             }
-
+            LOGGER.info("process log contains "+listLog);
             restWrapper = new RestWrapper(listLog, RestWrapper.OK);
             LOGGER.info("All records listed from ProcessLog by User:" + principal.getName());
         }catch (MetadataException e) {

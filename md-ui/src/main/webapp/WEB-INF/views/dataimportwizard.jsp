@@ -631,39 +631,15 @@
                   $ingestSelect.addClass("form-control");
                   $tdList.eq(4).html($ingestSelect);
 
-
-
                   $("<option />", {text: "None", value: "None"}).appendTo($incrementSelect);
                   $("<option />", {text: "Append Rows", value: "AppendRows"}).appendTo($incrementSelect);
                   $("<option />", {text: "Last Moified", value: "DateLastModified"}).appendTo($incrementSelect);
                   $incrementSelect.addClass("form-control");
                   $tdList.eq(5).html($incrementSelect);
-                  var incrcolumns= [];
-                            $.ajax({
-                                 url: "/mdrest/dataimport/tables/"+data.node.key,
-                                     type: 'GET',
-                                     dataType: 'json',
-                                     async: false,
-                                     success: function (data) {
-                                       incrcolumns = data;
-                                     },
-                                     error: function () {
-                                         alert('danger');
-                                     }
-                                 });
 
-                  var str;
+                  $("<option />", {text: "None", value: "None"}).appendTo($incrementColumn);
                   $incrementColumn.addClass("form-control");
-                  $tdList.eq(6).html($incrementColumn);
-                  var x = document.getElementById('incrementColumn_'+data.node.key);
-                  var y = document.getElementById('incrementType_'+data.node.key);
-                   for( str in incrcolumns){
-                        var s= parseInt(str)
-                       var option = document.createElement("option");
-                       option.text = incrcolumns[s].title;
-                       option.value = incrcolumns[s].title;
-                       x.appendChild(option);
-                   }
+                   $tdList.eq(6).html($incrementColumn);
 
       }else{
             $tdList.eq(2).html(data.node.data.dtype+
