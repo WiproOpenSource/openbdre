@@ -60,19 +60,36 @@ public class ProcessLogAPI extends MetadataAPIBase {
             if (pid == 0) {
                 processId = null;
             }
-
-            processLogInfo.setProcessId(processId);
+            LOGGER.info("parent processId is " + processId);
+            processLogInfo.setParentProcessId(processId);
             processLogInfo.setPage(startPage);
             processLogInfo.setPageSize(pageSize);
             List<ProcessLogInfo> listLog = new ArrayList<>();
-            List<ProcessLogInfo> logList=processLogDAO.listLog(processLogInfo);
-            LOGGER.info("process log contains before scecurity check "+listLog);
-            for(ProcessLogInfo log: logList){
-
-                   if("ACCESS GRANTED".equals( processDAO.securityCheck(log.getParentProcessId(), principal.getName(), "read")))
-                       listLog.add(log);
-
+            List<ProcessLogInfo> logList = processLogDAO.listLog(processLogInfo);
+            LOGGER.info("process log contains before scecurity check " + logList + " " + principal.getName());
+            if (processId != null) {
+                processDAO.securityCheck(processId, principal.getName(), "read");
+                for (ProcessLogInfo log : logList) {
+                    if (log.getParentProcessId().equals(processId))
+                        listLog.add(log);
+                }
             }
+            else{
+            for (ProcessLogInfo log : logList) {
+                String returnValue = "";
+                com.wipro.ats.bdre.md.dao.jpa.Process parentProcess = processDAO.get(log.getParentProcessId());
+                if (parentProcess.getProcess() != null)
+                    returnValue = processDAO.securityCheck(parentProcess.getProcess().getProcessId(), principal.getName(), "read");
+                else
+                    returnValue = processDAO.securityCheck(log.getParentProcessId(), principal.getName(), "read");
+                LOGGER.info(returnValue);
+                List<String> values = new ArrayList<>();
+                values.add("ACCESS GRANTED");
+                values.add("NOT REQUIRED");
+                if (values.contains(returnValue))
+                    listLog.add(log);
+
+            }}
             LOGGER.info("process log contains "+listLog);
             restWrapper = new RestWrapper(listLog, RestWrapper.OK);
             LOGGER.info("All records listed from ProcessLog by User:" + principal.getName());
