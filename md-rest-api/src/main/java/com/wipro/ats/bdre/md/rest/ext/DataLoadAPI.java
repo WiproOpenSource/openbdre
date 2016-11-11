@@ -14,7 +14,11 @@
 
 package com.wipro.ats.bdre.md.rest.ext;
 
+import com.wipro.ats.bdre.exception.MetadataException;
 import com.wipro.ats.bdre.md.api.base.MetadataAPIBase;
+import com.wipro.ats.bdre.md.beans.ColumnData;
+import com.wipro.ats.bdre.md.dao.BatchConsumpQueueDAO;
+import com.wipro.ats.bdre.md.dao.FileDAO;
 import com.wipro.ats.bdre.md.dao.ProcessDAO;
 import com.wipro.ats.bdre.md.dao.UserRolesDAO;
 import com.wipro.ats.bdre.md.dao.jpa.Process;
@@ -23,13 +27,18 @@ import com.wipro.ats.bdre.md.dao.jpa.Users;
 import com.wipro.ats.bdre.md.rest.RestWrapper;
 import com.wipro.ats.bdre.md.rest.util.Dao2TableUtil;
 import com.wipro.ats.bdre.md.rest.util.DateConverter;
+import org.apache.hadoop.fs.FSDataInputStream;
+import org.apache.hadoop.fs.Path;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
+
+import java.io.IOException;
 import java.security.Principal;
 import java.util.*;
-
+import org.apache.hadoop.conf.Configuration;
+import org.apache.hadoop.fs.FileSystem;
 /**
  * Created by cloudera on 1/8/16.
  */
@@ -56,7 +65,10 @@ public class DataLoadAPI extends MetadataAPIBase {
     private ProcessDAO processDAO;
     @Autowired
     UserRolesDAO userRolesDAO;
-
+    @Autowired
+    BatchConsumpQueueDAO batchConsumpQueueDAO;
+    @Autowired
+    FileDAO fileDAO;
     @RequestMapping(value = {"/", ""}, method = RequestMethod.PUT)
     @ResponseBody public
     RestWrapper insert(Principal principal) {
@@ -268,7 +280,53 @@ public class DataLoadAPI extends MetadataAPIBase {
     }
 
 
+    @RequestMapping(value = {"/", ""}, method = RequestMethod.POST)
+    @ResponseBody public
+    RestWrapper columnList(@RequestParam(value = "fileDelimiter") String fileDelimiter,
+                           @RequestParam(value = "enqId") int enqId,Principal principal) {
+       LOGGER.info("file delimiter is "+fileDelimiter +" and enq id is "+enqId);
+        RestWrapper restWrapper = null;
+        try {
+             Long batchId=batchConsumpQueueDAO.getBatchId(enqId);
+             String path=fileDAO.getPath(batchId);
+            LOGGER.info("batch id is "+batchId +" path is "+path);
 
+            Configuration conf = new Configuration();
+            conf.addResource(new Path("/etc/hadoop/conf/core-site.xml"));
+            conf.addResource(new Path("/etc/hadoop/conf/hdfs-site.xml"));
+            FileSystem fs = FileSystem.get(conf);
+            FSDataInputStream inputStream = fs.open(new Path(path));
+            String columnNames=inputStream.readLine();
+            LOGGER.info("column names are "+columnNames);
+            String[] cNames=columnNames.split(fileDelimiter);
+            for (int i=0;i<cNames.length;i++)
+            LOGGER.info(cNames[i]);
+            String dataValues=inputStream.readLine();
+            LOGGER.info("data values are "+dataValues);
+            String[] dValues=dataValues.split(fileDelimiter);
+            List<ColumnData> columnDataList=new ArrayList<>();
+
+            for (int i=0;i<dValues.length;i++) {
+                LOGGER.info(dValues[i]);
+                LOGGER.info("type is "+DataLoadAPI.isDouble(dValues[i]));
+                ColumnData columnData=new ColumnData();
+                columnData.setSerialNumber(1);
+                columnData.setColumnName(cNames[i]);
+                columnData.setDataType(DataLoadAPI.isDouble(dValues[i]));
+                columnData.setCounter(cNames.length);
+                columnDataList.add(columnData);
+            }
+
+
+            restWrapper = new RestWrapper(columnDataList, RestWrapper.OK);
+        }catch (MetadataException e) {
+            LOGGER.error(e);
+            restWrapper = new RestWrapper(e.getMessage(), RestWrapper.ERROR);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return restWrapper;
+    }
 
 
 
@@ -277,4 +335,16 @@ public class DataLoadAPI extends MetadataAPIBase {
         return null;
     }
 
+
+    static String  isDouble(String str) {
+        try {
+            Double d= Double.parseDouble(str);
+            if((d != Math.round(d)) || ((d == Math.round(d)) && str.contains(".")))
+                return "Double";
+            else
+                return "BigInt";
+        } catch (NumberFormatException e) {
+            return "String";
+        }
+    }
 }

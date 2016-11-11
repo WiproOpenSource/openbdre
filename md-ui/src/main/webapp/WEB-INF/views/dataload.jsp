@@ -657,6 +657,8 @@ wizard = $(document).ready(function() {
         </script>
 
 
+
+
 	</head>
 <body ng-app="myApp" ng-controller="myCtrl" >
 	<div class="page-header"><spring:message code="dataload.page.panel_heading"/></div>
@@ -737,6 +739,13 @@ wizard = $(document).ready(function() {
                                                 </select>
                                             </div>
                                         </div>
+
+                                        <div class="form-group" >
+                                            <label class="control-label col-sm-2" for="fileDelimiter"><spring:message code="dataload.page.file_delimiter"/></label>
+                                            <div class="col-sm-10">
+                                                <input type="text" class="form-control"  id="fileDelimiter" name="fileDelimiter" value="" required>
+                                            </div>
+                                        </div>
                                         <div class="clearfix"></div>
                                         </div>
                                         
@@ -747,6 +756,7 @@ wizard = $(document).ready(function() {
 			<h3><div class="number-circular">3</div><spring:message code="dataload.page.raw_table_props"/></h3>
 			<section>
 			    <div id="rawTableColumnDetails"></div>
+                 <input type="checkbox" id="columnBox" onchange="importColumns()"></input>Would u like to import column details from file itself.
 
             </section>
 
@@ -880,10 +890,32 @@ wizard = $(document).ready(function() {
 		edit: false,
 		actions: {
 			listAction: function(postData, jtParams) {
-				return jsonObj;
+			console.log("file delimiter is "+document.getElementById("fileDelimiter").value);
+           if(document.getElementById("columnBox").checked == true){
+           return $.Deferred(function ($dfd) {
+                    $.ajax({
+                    url: '/mdrest/dataload?fileDelimiter=' + document.getElementById("fileDelimiter").value+'&enqId='+document.getElementById("enqueueId").value,
+                        type: 'POST',
+                        dataType: 'json',
+                        success: function (data) {
+                        $dfd.resolve(data);
+                        },
+                        error: function () {
+                        $dfd.reject();
+                        }
+                    });
+                    });
+                        }
+                        else
+                        {
+                        console.log("list action in raw table unchecked "+postData);
+                           return $.Deferred(function($dfd) {
+                                                           $dfd.resolve(jsonObj);
+                                                       });
+                        }
 			},
 			createAction: function(postData) {
-                console.log(postData);
+                console.log("in raw table create "+postData);
                 var serialnumber = 1;
                 var rawSplitedPostData = postData.split("&");
                 var rawJSONedPostData = '{';
@@ -994,14 +1026,29 @@ wizard = $(document).ready(function() {
         }
 
 	});
-
-
-
-	$('#rawTableColumnDetails').jtable('load');
+$('#rawTableColumnDetails').jtable('load');
 
 });
 
 		</script>
+
+		<script>
+
+                function  importColumns()
+                {
+                if(document.getElementById("columnBox").checked == true){
+                console.log("checkbox checked");
+               	$('#rawTableColumnDetails').jtable('load');
+               	$('#baseTableColumnDetails').jtable('load');
+                 }
+                else{
+                console.log("checkbox unchecked");
+                $('#rawTableColumnDetails').jtable('load');
+                $('#baseTableColumnDetails').jtable('load');
+                }}
+
+                </script>
+
 <script type="text/javascript">
 
 
@@ -1014,11 +1061,33 @@ wizard = $(document).ready(function() {
                     edit: false,
         		    actions: {
                         listAction: function (postData, jtParams) {
-                            return jsonObj;
+                        console.log("file delimiter is "+document.getElementById("fileDelimiter").value);
+                           if(document.getElementById("columnBox").checked == true){
+                           return $.Deferred(function ($dfd) {
+                           		    $.ajax({
+                           		    url: '/mdrest/dataload?fileDelimiter=' + document.getElementById("fileDelimiter").value+'&enqId='+document.getElementById("enqueueId").value,
+                           			    type: 'POST',
+                           			    dataType: 'json',
+                           			    success: function (data) {
+                           			    $dfd.resolve(data);
+                           			    },
+                           			    error: function () {
+                           			    $dfd.reject();
+                           			    }
+                           		    });
+                           		    });
+                           				}
+                           				else
+                           				{
+                           				console.log("listaction in base table unchecked "+postData);
+                                          return $.Deferred(function($dfd) {
+                                                                          $dfd.resolve(jsonObj);
+                                                                      });
+                           				}
                         },
 
                         createAction:function (postData, jtParams) {
-                            console.log(postData);
+                            console.log("in create action of base addding one record "+postData);
                             var baseSplitedPostData = postData.split("&");
                             var baseJSONedPostData = '{';
                             for (i=0; i < baseSplitedPostData.length ; i++)
