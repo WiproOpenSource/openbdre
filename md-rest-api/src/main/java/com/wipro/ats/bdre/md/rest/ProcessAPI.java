@@ -1060,6 +1060,9 @@ public class ProcessAPI extends MetadataAPIBase {
         try {
             Process process=new Process();
          processDAO.securityCheck(processId,principal.getName(),"read");
+            com.wipro.ats.bdre.md.dao.jpa.Process jpaProcess=processDAO.get(processId);
+            process.setWorkflowId(jpaProcess.getWorkflowType().getWorkflowId());
+            LOGGER.info("workflowTypeId is "+process.getWorkflowId());
             restWrapper = new RestWrapper(process, RestWrapper.OK);
         } catch (MetadataException e) {
             LOGGER.error(e);
