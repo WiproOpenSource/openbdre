@@ -168,10 +168,13 @@ public class PropertiesAPI extends MetadataAPIBase {
 
 
     @ResponseBody
-    public RestWrapper list(@PathVariable("id") Integer processId, Principal principal) {
+    public RestWrapper list(@RequestParam(value = "page", defaultValue = "0") int startPage,
+                            @RequestParam(value = "size", defaultValue = "10") int pageSize,
+                            @PathVariable("id") Integer processId, Principal principal) {
 
         RestWrapper restWrapper = null;
         try {
+            LOGGER.info("startpage is "+startPage+" pagesize is "+pageSize);
             Process parentProcess=processDAO.get(processId);
             if (parentProcess.getProcess()!=null)
                 processDAO.securityCheck(parentProcess.getProcess().getProcessId(),principal.getName(),"read");
@@ -182,8 +185,8 @@ public class PropertiesAPI extends MetadataAPIBase {
             process.setProcessId(processId);
 
             List<com.wipro.ats.bdre.md.dao.jpa.Properties> propertiesList1=new ArrayList<com.wipro.ats.bdre.md.dao.jpa.Properties>();
-                    propertiesList1=propertiesDAO.getByProcessId(process);
-            Integer counter=propertiesList1.size();
+                    propertiesList1=propertiesDAO.getByProcessIdCopy(process,startPage,pageSize);
+            Integer counter=propertiesDAO.totalRecordCount(process);
             for (com.wipro.ats.bdre.md.dao.jpa.Properties properties : propertiesList1) {
                 com.wipro.ats.bdre.md.beans.table.Properties returnProperties = new com.wipro.ats.bdre.md.beans.table.Properties();
                 returnProperties.setProcessId(properties.getProcess().getProcessId());
