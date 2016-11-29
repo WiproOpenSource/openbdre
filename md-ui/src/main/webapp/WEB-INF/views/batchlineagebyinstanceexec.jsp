@@ -159,6 +159,10 @@
 	</style>
 
 	<script>
+
+	  function GotoProcesses() {
+                     		location.href = '<c:url value="/pages/process.page" />';
+                     	    }
 	    var globalPid;
 	    var globalIeid;
 	    var modal = (function () {
@@ -269,6 +273,7 @@
     </head>
     <body>
 	<br/>
+  <button style="margin-left:15px;" type='button' class='btn btn-primary' aria-label='Left Align' onClick='GotoProcesses()'><span aria-hidden='true'></span><spring:message code="lineage.page.button_gotoProcessPage"/></button>
 
 	<button type='button' class='btn btn-primary' aria-label='Left Align' onClick='saveSVG("execution",0)'><span class='glyphicon glyphicon-save' aria-hidden='true'></span>Save</button>
 	<c:if test="${empty param.ied}">
