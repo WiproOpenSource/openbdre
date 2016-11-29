@@ -301,11 +301,15 @@
         		});
         	    }
 
-
+         function GotoProcesses() {
+                		location.href = '<c:url value="/pages/process.page" />';
+                	    }
 
 	    function GotoProcess(pid) {
 		location.href = '<c:url value="/pages/process.page?pid="/>' + pid;
 	    }
+
+
 
 	    <c:if test="${not empty param.pid}">
 	    $(document).ready(function () {
@@ -317,8 +321,11 @@
     </head>
     <body>
 	<br/>
+	    <button style="margin-left:15px;" type='button' class='btn btn-primary' aria-label='Left Align' onClick='GotoProcesses()'><span aria-hidden='true'></span><spring:message code="lineage.page.button_gotoProcessPage"/></button>
+
 		<button type='button' class='btn btn-primary' aria-label='Left Align' onClick='saveSVG("pipeline",0)'><span class='glyphicon glyphicon-save' aria-hidden='true'></span><spring:message code="lineage.page.button_save"/></button>
-	<c:if test="${empty param.pid}">
+
+         	<c:if test="${empty param.pid}">
 
 	    <div id="input-box-button" >
 		<form>
