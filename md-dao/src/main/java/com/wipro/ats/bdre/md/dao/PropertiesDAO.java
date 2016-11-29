@@ -186,6 +186,38 @@ public class PropertiesDAO {
         return propertiesList;
     }
 
+    public List<Properties> getByProcessIdCopy(com.wipro.ats.bdre.md.dao.jpa.Process process, Integer pageNum, Integer numResults) {
+        Session session = sessionFactory.openSession();
+        session.beginTransaction();
+        Criteria propertiesByProcessId = session.createCriteria(Properties.class).add(Restrictions.eq("process", process));
+        propertiesByProcessId.setFirstResult(pageNum);
+        propertiesByProcessId.setMaxResults(numResults);
+        List<Properties> propertiesList = propertiesByProcessId.list();
+        session.getTransaction().commit();
+        session.close();
+        return propertiesList;
+    }
+
+    public Integer totalRecordCount(com.wipro.ats.bdre.md.dao.jpa.Process process) {
+        Session session = sessionFactory.openSession();
+        Integer size = 0;
+        try {
+            session.beginTransaction();
+            Criteria propertiesByProcessId = session.createCriteria(Properties.class).add(Restrictions.eq("process", process));
+            List<Properties> propertiesList = propertiesByProcessId.list();
+            size=propertiesList.size();
+            session.getTransaction().commit();
+        } catch (MetadataException e) {
+            session.getTransaction().rollback();
+            LOGGER.error(e);
+        } finally {
+            session.close();
+        }
+        return size;
+    }
+
+
+
     public void updateArrangePositions(Integer parentPid, List<PositionsInfo> positionsInfoList) {
         Session session = sessionFactory.openSession();
         try {

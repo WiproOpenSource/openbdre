@@ -547,11 +547,11 @@
                                                                             paging: true,
                                                                             pageSize: 10,
                                                                             actions: {
-                                                                                listAction: function(postData) {
+                                                                                listAction: function(postData,jtParams) {
                                                                                     return $.Deferred(function($dfd) {
                                                                                         console.log(item);
                                                                                         $.ajax({
-                                                                                            url: '/mdrest/properties/' + item.record.processId,
+                                                                                            url: '/mdrest/properties/' + item.record.processId+'?page=' + jtParams.jtStartIndex + '&size='+jtParams.jtPageSize,
                                                                                             type: 'GET',
                                                                                             data: item,
                                                                                             dataType: 'json',
