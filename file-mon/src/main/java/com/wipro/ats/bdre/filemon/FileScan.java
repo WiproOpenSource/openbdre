@@ -21,6 +21,7 @@ import org.apache.commons.io.filefilter.RegexFileFilter;
 import org.apache.log4j.Logger;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.util.Collection;
 
 /**
@@ -59,7 +60,9 @@ public class FileScan {
                 fileCopyInfo.setServerId(Integer.toString(123461));
                 fileCopyInfo.setSrcLocation(file.getAbsolutePath());
                 fileCopyInfo.setDstLocation(file.getParent().replace(FileMonRunnableMain.getMonitoredDirName(), FileMonRunnableMain.getHdfsUploadDir()));
-                fileCopyInfo.setFileHash(DigestUtils.md5Hex(FileUtils.readFileToByteArray(file)));
+                FileInputStream fis = new FileInputStream(file);
+                fileCopyInfo.setFileHash(DigestUtils.md5Hex(fis));
+                fis.close();
                 fileCopyInfo.setFileSize(file.length());
                 fileCopyInfo.setTimeStamp(file.lastModified());
                 FileMonitor.addToQueue(fileName, fileCopyInfo);
