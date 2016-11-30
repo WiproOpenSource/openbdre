@@ -388,10 +388,10 @@
 'spooldir_Source','selector.*','Selector.*','Depends on the selector.type value', 0,null,'text', 1
 'spooldir_Source','interceptors','Interceptors','Space-separated list of interceptors', 0,null,'text', 1
 'spooldir_Source','interceptors.*','Interceptors.*','Interceptors', 0,null,'text', 1
-'com.cloudera.flume.source.TwitterSource_Source','consumerKey','Consumerkey','OAuth consumer key', 1,'','text', 1
-'com.cloudera.flume.source.TwitterSource_Source','consumerSecret','Consumersecret','OAuth consumer secret', 1,'','text', 1
-'com.cloudera.flume.source.TwitterSource_Source','accessToken','Accesstoken','OAuth access token', 1,'','text', 1
-'com.cloudera.flume.source.TwitterSource_Source','accessTokenSecret','Accesstokensecret','OAuth toekn secret', 1,'','text', 1
+'com.cloudera.flume.source.TwitterSource_Source','consumerKey','Consumerkey','OAuth consumer key', 1,'','password', 1
+'com.cloudera.flume.source.TwitterSource_Source','consumerSecret','Consumersecret','OAuth consumer secret', 1,'','password', 1
+'com.cloudera.flume.source.TwitterSource_Source','accessToken','Accesstoken','OAuth access token', 1,'','password', 1
+'com.cloudera.flume.source.TwitterSource_Source','accessTokenSecret','Accesstokensecret','OAuth toekn secret', 1,'','password', 1
 'com.cloudera.flume.source.TwitterSource_Source','keywords','HASHTAGS','keywords based on which you want filter your tweets', 1,'#BigData','text', 1
 'com.cloudera.flume.source.TwitterSource_Source','maxBatchSize','Maxbatchsize','Maximum number of twitter messages to put in a single batch', 0,'1000','text', 1
 'com.cloudera.flume.source.TwitterSource_Source','maxBatchDurationMillis','Maxbatchdurationmillis','Maximum number of milliseconds to wait before closing a batch', 0,'1000','text', 1
