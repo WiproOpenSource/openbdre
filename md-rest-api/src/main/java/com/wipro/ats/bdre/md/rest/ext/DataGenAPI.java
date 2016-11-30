@@ -93,11 +93,11 @@ public class DataGenAPI extends MetadataAPIBase {
             }
             Integer splitIndex = string.lastIndexOf("_");
             String key = string.substring(splitIndex + 1, string.length());
-            LOGGER.debug("key is " + key);
+            LOGGER.info("key is " + key);
 
             if (string.startsWith("type_genArg") && map.get(string).split(",").length == 3) {
                 fieldTypeCounter = Integer.parseInt(string.substring(string.lastIndexOf(".") + 1, string.length()));
-                LOGGER.debug("genArg key Index" + fieldTypeCounter);
+                LOGGER.info("genArg key Index" + fieldTypeCounter);
 
                 dateContent = map.get(string).split(",");
                 DateFormat dF = new SimpleDateFormat(dateContent[2]);
