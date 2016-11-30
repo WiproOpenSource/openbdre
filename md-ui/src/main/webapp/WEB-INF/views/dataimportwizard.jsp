@@ -849,7 +849,7 @@ isInit=true;
                             <tbody >
                             <tr >
                                 <td >
-                                    <input id = "busDomainId" name = "common_busDomainId" type = "text" class = "form-control" size = "180" value = "1" />
+                                    <select id="busDomainId" name = "common_busDomainId" width= "180"></select>
                                 </td >
                             </tr >
                             </tbody >
@@ -958,6 +958,33 @@ isInit=true;
                              document.getElementById('workflowTypeId').innerHTML=output.join('');
 
 		</script>
+
+                   <script>
+                   busDomains = {};
+                                           $.ajax({
+                                                    url: '/mdrest/busdomain/options/',
+                                                        type: 'POST',
+                                                        dataType: 'json',
+                                                        async: false,
+                                                        success: function (data) {
+                                                            busDomains = data.Options;
+                                                        },
+                                                        error: function () {
+                                                            alert('danger');
+                                                        }
+                                                    });
+                            var output = [];
+                             var length = busDomains.length;
+                             for(var i=0; i < length; i++)
+                             {
+                                 var valu=busDomains[i].Value;
+                                 var txt=busDomains[i].DisplayText;
+                                output[i] = '<option value="' + valu + '">' + txt + '</option>';
+                             }
+                             console.log("output is "+output);
+                             document.getElementById('busDomainId').innerHTML=output.join('');
+
+                   </script>
 
 
 	</body >
