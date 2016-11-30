@@ -126,8 +126,15 @@ public class DataGenAPI extends MetadataAPIBase {
             }
 
             else if (string.startsWith("type_fieldName")) {
-                LOGGER.debug("type_fieldName" + tableSchema);
-                tableSchema.append(map.get(string) + ":" + fieldCounter++ + ",");
+                Map<String,String> temp=new HashMap();
+                temp.put("randomRegexPattern","string");
+                temp.put("randomNumber","int");
+                temp.put("randomDate","date");
+                String dtype=temp.get(map.get("type_generatedType."+fieldCounter));
+                tableSchema.append(map.get(string) + ":"+dtype+":" + fieldCounter + ",");
+                LOGGER.info("type_fieldName" + tableSchema);
+                LOGGER.info("data type is " +dtype );
+                fieldCounter++;
             } else if (string.startsWith("other_numRows")) {
                 LOGGER.debug("other_numRows" + map.get(string));
                 jpaProperties =Dao2TableUtil.buildJPAProperties("data", key, map.get(string), "number of rows");

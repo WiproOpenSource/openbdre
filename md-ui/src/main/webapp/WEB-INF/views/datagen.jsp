@@ -303,7 +303,7 @@ function formIntoMap(typeProp, typeOf) {
                 	<!-- btn-group -->
                     <div class="form-group" id="formGroup1" >
                         <div class="col-md-3">
-                            <input type="text" class="form-control input-sm" id="fieldName.1" value="" name="fieldName" placeholder=<spring:message code="datagen.page.colname_type_placeholder"/> />
+                            <input type="text" class="form-control input-sm" id="fieldName.1" value="" name="fieldName.1" placeholder=<spring:message code="datagen.page.colname_type_placeholder"/> />
                         </div>
                         <div class="col-md-3">
                             <select class="form-control input-sm" id="generatedType.1" name="generatedType.1">
@@ -321,7 +321,7 @@ function formIntoMap(typeProp, typeOf) {
                     <!-- btn-group -->
                                         <div class="form-group" id="formGroup2" ng-repeat="x in finalJson">
                                             <div class="col-md-3">
-                                                <input type="text" class="form-control input-sm" id="fieldName.1" value="" name="fieldName" placeholder=<spring:message code="datagen.page.colname_type_placeholder"/> />
+                                                <input type="text" class="form-control input-sm" id="fieldName.1" value="" name="fieldName.1" placeholder=<spring:message code="datagen.page.colname_type_placeholder"/> />
                                             </div>
                                             <div class="col-md-3">
                                                 <select class="form-control input-sm" id="generatedType.1" name="generatedType.1">
@@ -485,7 +485,7 @@ function formIntoMap(typeProp, typeOf) {
         var newIn = '';
         newIn = newIn +  '<div class="form-group" id="formGroup' + next + '">' ;
         newIn = newIn +  '<div class="col-md-3">' ;
-        newIn = newIn +  '<input type="text" class="form-control input-sm" id="fieldName.' + next + '" value="" name="fieldName.' + next + '" placeholder="Column Name : Column Type" />' ;
+        newIn = newIn +  '<input type="text" class="form-control input-sm" id="fieldName.' + next + '" value="" name="fieldName.' + next + '" placeholder="Column Name" />' ;
         newIn = newIn +  '</div>' ;
         newIn = newIn +  '<div class="col-md-3">' ;
         newIn = newIn +  '<select class="form-control input-sm" id="generatedType.' + next + '" name="generatedType.' + next + '">' ;
