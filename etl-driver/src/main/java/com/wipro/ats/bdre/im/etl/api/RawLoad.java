@@ -19,6 +19,7 @@ import com.wipro.ats.bdre.im.IMConstant;
 import com.wipro.ats.bdre.im.etl.api.base.ETLBase;
 import com.wipro.ats.bdre.im.etl.api.exception.ETLException;
 import org.apache.commons.cli.CommandLine;
+import org.apache.commons.cli.Option;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.FileSystem;
 import org.apache.hadoop.fs.FileUtil;
@@ -42,18 +43,42 @@ public class RawLoad extends ETLBase {
     };
 
     public void execute(String[] params) {
+
+        //Getting raw table information
+
         CommandLine commandLine = getCommandLine(params, PARAMS_STRUCTURE);
+        Option[] options = commandLine.getOptions();
+        for (Option opt: options) {
+            LOGGER.info("option value "+opt.getValue());
+            LOGGER.info("option is "+opt.getOpt());
+
+        }
         String processId = commandLine.getOptionValue("process-id");
         String instanceExecId = commandLine.getOptionValue("instance-exec-id");
-        String listOfFiles = commandLine.getOptionValue("list-of-files");
-        String listOfBatches = commandLine.getOptionValue("list-of-file-batchIds");
+
         loadRawHiveTableInfo(processId);
+        String rawTableName = rawTable;
+        String rawDbName = rawDb;
+        String filePathString = filePath;
+        LOGGER.info("filepath "+filePathString);
+        LOGGER.info("rawtable "+rawTableName);
+        String listOfFiles = "";
+        String listOfBatches = "";
+        if( "null".equals(filePathString) || filePathString == null) {
+             listOfFiles = commandLine.getOptionValue("list-of-files");
+            LOGGER.info("list of files "+listOfFiles);
+             listOfBatches = commandLine.getOptionValue("list-of-file-batchIds");
+            LOGGER.info("list of batches "+listOfBatches);
+        }
+        else {
+            listOfFiles = filePathString;
+            listOfBatches = "1";
+        }
+
         CreateRawBaseTables createRawBaseTables =new CreateRawBaseTables();
         String[] createTablesArgs={"-p",processId,"-instExecId",instanceExecId };
         createRawBaseTables.executeRawLoad(createTablesArgs);
-        //Getting raw table information
-        String rawTableName = rawTable;
-        String rawDbName = rawDb;
+
         //Now load file to table
         loadRawLoadTable(rawDbName, rawTableName, listOfFiles, listOfBatches);
 
@@ -62,7 +87,9 @@ public class RawLoad extends ETLBase {
     private void loadRawLoadTable(String dbName, String tableName, String listOfFiles, String listOfBatches) {
         try {
             LOGGER.debug("Reading Hive Connection details from Properties File");
+            LOGGER.info("list of files "+listOfFiles);
             String[] files = listOfFiles.split(IMConstant.FILE_FIELD_SEPERATOR);
+            LOGGER.info("files1 are "+ files.toString());
             String[] tempFiles = createTempCopies(files);
             String[] correspondingBatchIds = listOfBatches.split(IMConstant.FILE_FIELD_SEPERATOR);
             Connection con = getHiveJDBCConnection(dbName);
@@ -94,6 +121,7 @@ public class RawLoad extends ETLBase {
         conf.set("fs.defaultFS", IMConfig.getProperty("common.default-fs-name"));
         FileSystem fs = FileSystem.get(conf);
         for(int i=0;i<files.length;i++) {
+            LOGGER.info("files are "+files.toString());
             Path srcPath = new Path(files[i]);
             Path destPath = new Path(files[i]+"_tmp");
             FileUtil.copy(fs, srcPath, fs, destPath, false, conf);

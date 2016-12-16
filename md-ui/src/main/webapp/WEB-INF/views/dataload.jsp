@@ -333,6 +333,7 @@ function displayProcess(records) {
 var wizard = null;
 var finalJson;
 wizard = $(document).ready(function() {
+
 	$("#bdre-data-load").steps({
 		headerTag: "h3",
 		bodyTag: "section",
@@ -657,6 +658,9 @@ wizard = $(document).ready(function() {
         </script>
 
 
+
+
+
 	</head>
 <body ng-app="myApp" ng-controller="myCtrl" >
 	<div class="page-header"><spring:message code="dataload.page.panel_heading"/></div>
@@ -701,10 +705,17 @@ wizard = $(document).ready(function() {
                                         </div>
                                     </div>
                                  <div class="form-group">
-                                    <label class="control-label col-sm-6" for="enqueueId"><spring:message code="dataload.page.form_right_enqueing_id"/></label>
+                                    <label class="control-label col-sm-6" for="enqueueId" id="enqueueId1"><spring:message code="dataload.page.form_right_enqueing_id"/></label>
                                     <div class="col-sm-8">
                                         <input type="text" class="form-control" id="enqueueId" name="enqueueId" placeholder=<spring:message code="dataload.page.form_right_enqueing_id_placeholder"/> value="" required>
                                     </div>
+
+                                    <label class="control-label col-sm-6" for="filePath" id="filePath1">FilePath</label>
+                                    <div class="col-sm-8">
+                                        <input type="text" class="form-control" id="filePath" name="filePath" required>
+                                    </div>
+
+
                                 </div>
                                 <div class="clearfix"></div>
                             </div>
@@ -1276,6 +1287,34 @@ function formIntoMap(typeProp, typeOf) {
 
 		</script>
 
+        <script>
+        $(document).ready(function(){
+            $( "#enqueueId" ).click(function() {
+              console.log("enqueid is clicked");
+               $("#filePath").prop("disabled", true);
+                $("#enqueueId").prop("disabled", false);
+                $('#filePath').val("null");
+            });
+
+            $( "#enqueueId1" ).click(function() {
+                  console.log("enqueid1 is clicked");
+                    $("#enqueueId").prop("disabled", false);
+
+                });
+
+            $( "#filePath" ).click(function() {
+                console.log("filePath is clicked");
+               $("#enqueueId").prop("disabled", true);
+               $("#filePath").prop("disabled", false);
+               $('#enqueueId').val("null");
+            });
+
+            $( "#filePath1" ).click(function() {
+                console.log("filePath is clicked");
+               $("#filePath").prop("disabled", false);
+            });
+          });
+           </script>
 
 
 	</body>
