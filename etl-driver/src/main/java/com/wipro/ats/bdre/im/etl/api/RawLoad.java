@@ -18,6 +18,13 @@ import com.wipro.ats.bdre.IMConfig;
 import com.wipro.ats.bdre.im.IMConstant;
 import com.wipro.ats.bdre.im.etl.api.base.ETLBase;
 import com.wipro.ats.bdre.im.etl.api.exception.ETLException;
+import com.wipro.ats.bdre.md.dao.BatchDAO;
+import com.wipro.ats.bdre.md.dao.FileDAO;
+import com.wipro.ats.bdre.md.dao.ServersDAO;
+import com.wipro.ats.bdre.md.dao.jpa.Batch;
+import com.wipro.ats.bdre.md.dao.jpa.File;
+import com.wipro.ats.bdre.md.dao.jpa.FileId;
+import com.wipro.ats.bdre.md.dao.jpa.Servers;
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.Option;
 import org.apache.hadoop.conf.Configuration;
@@ -25,35 +32,76 @@ import org.apache.hadoop.fs.FileSystem;
 import org.apache.hadoop.fs.FileUtil;
 import org.apache.hadoop.fs.Path;
 import org.apache.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.config.AutowireCapableBeanFactory;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.support.ClassPathXmlApplicationContext;
 
 import java.sql.Connection;
 import java.sql.Statement;
+import java.util.Date;
 
 /**
  * Created by vishnu on 12/14/14.
  * Modified by Arijit
  */
 public class RawLoad extends ETLBase {
+
+    @Autowired
+    FileDAO fileDAO;
+    @Autowired
+    BatchDAO batchDAO;
+    @Autowired
+    ServersDAO serversDAO;
+
+    public RawLoad(){
+        ApplicationContext context = new ClassPathXmlApplicationContext("spring-dao.xml");
+        AutowireCapableBeanFactory acbFactory = context.getAutowireCapableBeanFactory();
+        acbFactory.autowireBean(this);
+    }
+
     private static final Logger LOGGER = Logger.getLogger(RawLoad.class);
     private static final String[][] PARAMS_STRUCTURE = {
             {"p", "process-id", " Process id of ETLDriver"},
-            {"ied", "instance-exec-id", " instance exec id"},
             {"lof", "list-of-files", " List of files"},
-            {"lob", "list-of-file-batchIds", "List of batch Ids corresponding to above files "}
+            {"lob", "list-of-file-batchIds", "List of batch Ids corresponding to above files "},
+            {"ied", "instance-exec-id", " instance exec id"},
     };
 
     public void execute(String[] params) {
+        int i=0;
+        int j=0;
+        String dupParams[]= new String[10];
+        int index=0;
+        for(String param:params){
+            dupParams[index]=param;
 
+            if(i==1) {
+                if(param==null) dupParams[index]="null batch";
+                i=0;
+            }
+            if(j==1) {
+                if(param==null) dupParams[index]="null file";
+                j=0;
+            }
+            if((param!=null) && (param.equals("-lob")||param.equals("--list-of-file-batchIds"))) i++;
+            if((param!=null) && (param.equals("--list-of-files")||param.equals("-lof"))) j++;
+            System.out.println("params[] = " + dupParams[index]);
+            index++;
+        }
         //Getting raw table information
 
-        CommandLine commandLine = getCommandLine(params, PARAMS_STRUCTURE);
+        CommandLine commandLine = getCommandLine(dupParams, PARAMS_STRUCTURE);
+
+
+        String processId = commandLine.getOptionValue("process-id");
+
         Option[] options = commandLine.getOptions();
         for (Option opt: options) {
             LOGGER.info("option value "+opt.getValue());
             LOGGER.info("option is "+opt.getOpt());
-
         }
-        String processId = commandLine.getOptionValue("process-id");
+        //String processId = commandLine.getOptionValue("process-id");
         String instanceExecId = commandLine.getOptionValue("instance-exec-id");
 
         loadRawHiveTableInfo(processId);
@@ -71,8 +119,35 @@ public class RawLoad extends ETLBase {
             LOGGER.info("list of batches "+listOfBatches);
         }
         else {
+
             listOfFiles = filePathString;
-            listOfBatches = "1";
+            LOGGER.info("list of files "+listOfFiles);
+            listOfBatches = "0";
+
+            Batch batch = batchDAO.get(0L);
+            Servers servers = serversDAO.get(123461);
+
+            String[] files = listOfFiles.split(IMConstant.FILE_FIELD_SEPERATOR);
+            for(String file1: files){
+                File file = new File();
+                FileId fileId = new FileId();
+                fileId.setBatchId(0L);
+                fileId.setCreationTs(new Date());
+                fileId.setFileSize(1L);
+                fileId.setServerId(123461);
+
+                file.setBatch(batch);
+                file.setServers(servers);
+                fileId.setPath(file1);
+                file.setId(fileId);
+                fileDAO.insert(file);
+                LOGGER.info("file "+file1+" inserted successfully");
+
+                listOfBatches = listOfBatches+",0";
+            }
+
+            LOGGER.info("list of batches "+listOfBatches);
+
         }
 
         CreateRawBaseTables createRawBaseTables =new CreateRawBaseTables();
