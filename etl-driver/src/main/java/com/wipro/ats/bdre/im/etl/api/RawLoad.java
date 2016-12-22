@@ -63,9 +63,10 @@ public class RawLoad extends ETLBase {
     private static final Logger LOGGER = Logger.getLogger(RawLoad.class);
     private static final String[][] PARAMS_STRUCTURE = {
             {"p", "process-id", " Process id of ETLDriver"},
-            {"lof", "list-of-files", " List of files"},
-            {"lob", "list-of-file-batchIds", "List of batch Ids corresponding to above files "},
             {"ied", "instance-exec-id", " instance exec id"},
+            {"lof", "list-of-files", " List of files"},
+            {"lob", "list-of-file-batchIds", "List of batch Ids corresponding to above files "}
+
     };
 
     public void execute(String[] params) {
@@ -90,19 +91,12 @@ public class RawLoad extends ETLBase {
             }
             if((param!=null) && (param.equals("-lob")||param.equals("--list-of-file-batchIds"))) i++;
             if((param!=null) && (param.equals("--list-of-files")||param.equals("-lof"))) j++;
-            System.out.println("params[] = " + dupParams[index]);
             index++;
         }
         //Getting raw table information
 
         CommandLine commandLine = getCommandLine(dupParams, PARAMS_STRUCTURE);
 
-
-        Option[] options = commandLine.getOptions();
-        for (Option opt: options) {
-            LOGGER.info("option value "+opt.getValue());
-            LOGGER.info("option is "+opt.getOpt());
-        }
         String processId = commandLine.getOptionValue("process-id");
         String instanceExecId = commandLine.getOptionValue("instance-exec-id");
 
@@ -110,23 +104,18 @@ public class RawLoad extends ETLBase {
         String rawTableName = rawTable;
         String rawDbName = rawDb;
         String filePathString = filePath;
-        LOGGER.info("filepath "+filePathString);
-        LOGGER.info("rawtable "+rawTableName);
         String listOfFiles = "";
         String listOfBatches = "";
 
         //If user selects enqueueId
         if( "null".equals(filePathString) || filePathString == null) {
             listOfFiles = commandLine.getOptionValue("list-of-files");
-            LOGGER.info("list of files "+listOfFiles);
             listOfBatches = commandLine.getOptionValue("list-of-file-batchIds");
-            LOGGER.info("list of batches "+listOfBatches);
         }
         //If user select filepath
         else {
 
             listOfFiles = filePathString;
-            LOGGER.info("list of files "+listOfFiles);
             listOfBatches = "0";
 
             Batch batch = batchDAO.get(0L);
@@ -152,8 +141,6 @@ public class RawLoad extends ETLBase {
                 listOfBatches = listOfBatches+",0";
             }
 
-            LOGGER.info("list of batches "+listOfBatches);
-
         }
 
         CreateRawBaseTables createRawBaseTables =new CreateRawBaseTables();
@@ -168,9 +155,7 @@ public class RawLoad extends ETLBase {
     private void loadRawLoadTable(String dbName, String tableName, String listOfFiles, String listOfBatches) {
         try {
             LOGGER.debug("Reading Hive Connection details from Properties File");
-            LOGGER.info("list of files "+listOfFiles);
             String[] files = listOfFiles.split(IMConstant.FILE_FIELD_SEPERATOR);
-            LOGGER.info("files1 are "+ files.toString());
             String[] tempFiles = createTempCopies(files);
             String[] correspondingBatchIds = listOfBatches.split(IMConstant.FILE_FIELD_SEPERATOR);
             Connection con = getHiveJDBCConnection(dbName);
@@ -202,7 +187,6 @@ public class RawLoad extends ETLBase {
             conf.set("fs.defaultFS", IMConfig.getProperty("common.default-fs-name"));
             FileSystem fs = FileSystem.get(conf);
             for(int i=0;i<files.length;i++) {
-                LOGGER.info("files are "+files.toString());
                 Path srcPath = new Path(files[i]);
                 Path destPath = new Path(files[i]+"_tmp");
                 FileUtil.copy(fs, srcPath, fs, destPath, false, conf);
