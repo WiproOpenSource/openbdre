@@ -38,7 +38,3 @@
 38,'Analytics UI Action ',37
 39,'SuperWorkflow',null
 40,'SubWorkflow',39
-41,'kafka Producer Parent',null
-42,'kafka Producer child', 41
-43,'kafka Consumer Parent', null
-44, 'Kafka Consumer Child',43

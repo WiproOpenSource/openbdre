@@ -69,6 +69,10 @@ public class RawLoad extends ETLBase {
     };
 
     public void execute(String[] params) {
+
+        //values of lof and lob parameters comes as null when filepath is choosen by user.
+        //Null parameters are not handled by CommandLine class
+        //So changing structure of params when there are null parameters
         int i=0;
         int j=0;
         String dupParams[]= new String[10];
@@ -94,14 +98,12 @@ public class RawLoad extends ETLBase {
         CommandLine commandLine = getCommandLine(dupParams, PARAMS_STRUCTURE);
 
 
-        String processId = commandLine.getOptionValue("process-id");
-
         Option[] options = commandLine.getOptions();
         for (Option opt: options) {
             LOGGER.info("option value "+opt.getValue());
             LOGGER.info("option is "+opt.getOpt());
         }
-        //String processId = commandLine.getOptionValue("process-id");
+        String processId = commandLine.getOptionValue("process-id");
         String instanceExecId = commandLine.getOptionValue("instance-exec-id");
 
         loadRawHiveTableInfo(processId);
@@ -112,12 +114,15 @@ public class RawLoad extends ETLBase {
         LOGGER.info("rawtable "+rawTableName);
         String listOfFiles = "";
         String listOfBatches = "";
+
+        //If user selects enqueueId
         if( "null".equals(filePathString) || filePathString == null) {
              listOfFiles = commandLine.getOptionValue("list-of-files");
             LOGGER.info("list of files "+listOfFiles);
              listOfBatches = commandLine.getOptionValue("list-of-file-batchIds");
             LOGGER.info("list of batches "+listOfBatches);
         }
+        //If user select filepath
         else {
 
             listOfFiles = filePathString;
@@ -128,20 +133,21 @@ public class RawLoad extends ETLBase {
             Servers servers = serversDAO.get(123461);
 
             String[] files = listOfFiles.split(IMConstant.FILE_FIELD_SEPERATOR);
-            for(String file1: files){
+            for(String fileString: files){
                 File file = new File();
                 FileId fileId = new FileId();
-                fileId.setBatchId(0L);
+                fileId.setBatchId(batch.getBatchId());
                 fileId.setCreationTs(new Date());
                 fileId.setFileSize(1L);
                 fileId.setServerId(123461);
+                fileId.setFileHash("null");
+                fileId.setPath(fileString);
 
+                file.setId(fileId);
                 file.setBatch(batch);
                 file.setServers(servers);
-                fileId.setPath(file1);
-                file.setId(fileId);
                 fileDAO.insert(file);
-                LOGGER.info("file "+file1+" inserted successfully");
+                LOGGER.info("file "+fileString+" inserted successfully");
 
                 listOfBatches = listOfBatches+",0";
             }
@@ -173,7 +179,7 @@ public class RawLoad extends ETLBase {
             LOGGER.debug("Inserting data into the table");
 
             for (int i=0; i<tempFiles.length; i++) {
-                String query = "LOAD DATA INPATH '" + tempFiles[i] + "' INTO TABLE " + tableName
+                String query = "LOAD DATA INPATH '" + tempFiles[i] + "'OVERWRITE INTO TABLE " + tableName
                 + " PARTITION (batchid='" + correspondingBatchIds[i] + "')";
                 LOGGER.info("Raw load query " + query);
                 stmt.executeUpdate(query);

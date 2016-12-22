@@ -853,7 +853,7 @@ wizard = $(document).ready(function() {
                                                     </div>
                                                 </div>
                                                 <div class="form-group">
-                                                    <label class="control-label col-sm-2" for="baseTableName"><spring:message code="dataload.page.base_db_name"/></label>
+                                                    <label class="control-label col-sm-2" for="baseTableName"><spring:message code="dataload.page.base_table_name_single"/></label>
                                                     <div class="col-sm-10">
                                                         <input type="text" class="form-control" id="baseTableName" name="baseTableName" placeholder=<spring:message code="dataload.page.enter_base_table_name_placeholder"/> required>
                                                     </div>
