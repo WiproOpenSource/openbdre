@@ -770,11 +770,16 @@ wizard = $(document).ready(function() {
 			<h3><div class="number-circular">5</div><spring:message code="dataload.page.provide_props"/></h3>
 			<section>
 			<div class="alert alert-info" role="alert">
-                                                <b style="font-size:24px;"><spring:message code="dataload.page.how_to"/></b>
-                                                <b><spring:message code="dataload.page.enter_props"/></b>
-                                                <br>
-											</div>
-                                    <form class="form-horizontal pull-none" role="form" id="serdeProperties">
+                <b style="font-size:24px;"><spring:message code="dataload.page.how_to"/></b>
+                <b><spring:message code="dataload.page.enter_props"/></b>
+                <br>
+            </div>
+            <div class = "list-group" >
+                <span href = "#" class = "list-group-item" >
+                    <span class = "glyphicon glyphicon-export" ></span >For csv delimiter file, key is &quot;field.delim&quot; and value is &quot;,&quot;
+                </span >
+             </div>
+    <form class="form-horizontal pull-none" role="form" id="serdeProperties">
 
 
 
