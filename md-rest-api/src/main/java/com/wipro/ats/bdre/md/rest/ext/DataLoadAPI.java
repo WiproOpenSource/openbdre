@@ -107,6 +107,7 @@ public class DataLoadAPI extends MetadataAPIBase {
         Integer busDomainId = null;
         Integer workflowTypeId=null;
         Integer enqId = null;
+        String filePath = null;
         Map<String,String> partitionCols = new TreeMap<String, String>();
         Map<String,String> partitionDataTypes = new TreeMap<String, String>();
 
@@ -212,14 +213,32 @@ public class DataLoadAPI extends MetadataAPIBase {
                 LOGGER.info(BUSDOMAIN + map.get(string));
                 busDomainId = new Integer(map.get(string));
             }else if (string.startsWith("process_enqueueId")) {
-                LOGGER.info(BUSDOMAIN + map.get(string));
-                enqId = new Integer(map.get(string));
-            }else if (string.startsWith("process_workflowTypeId")) {
+                LOGGER.info("EnqueueId " + map.get(string));
+                if(! map.get(string).equals("null")) {
+                    enqId = new Integer(map.get(string));
+                    LOGGER.info("enqId is "+ enqId);
+                }
+                else {
+                    enqId = 0;
+                    LOGGER.info("enqId is "+ enqId);
+                }
+            }
+            else if (string.startsWith("process_filePath")) {
+                LOGGER.info("filepath" + map.get(string));
+                filePath = map.get(string);
+
+                    jpaProperties = Dao2TableUtil.buildJPAProperties("raw-table", "filepath",filePath, "File Path");
+                    file2RawProperties.add(jpaProperties);
+
+            }
+            else if (string.startsWith("process_workflowTypeId")) {
                 LOGGER.info("process_workflowTypeId" + map.get(string));
                 workflowTypeId = new Integer(map.get(string));
             }
-
         }
+
+
+
         StringBuilder partitionColListBuilder = new StringBuilder();
         for (String order : partitionCols.keySet()){
             partitionColListBuilder.append(partitionCols.get(order));

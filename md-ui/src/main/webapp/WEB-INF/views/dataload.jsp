@@ -333,6 +333,7 @@ function displayProcess(records) {
 var wizard = null;
 var finalJson;
 wizard = $(document).ready(function() {
+
 	$("#bdre-data-load").steps({
 		headerTag: "h3",
 		bodyTag: "section",
@@ -657,6 +658,9 @@ wizard = $(document).ready(function() {
         </script>
 
 
+
+
+
 	</head>
 <body ng-app="myApp" ng-controller="myCtrl" >
 	<div class="page-header"><spring:message code="dataload.page.panel_heading"/></div>
@@ -664,7 +668,7 @@ wizard = $(document).ready(function() {
 		<spring:message code="dataload.page.alert_info_outer_heading" />
 	</div>
 	<div id="bdre-data-load" ng-controller="myCtrl">
-		
+
 			<h3><div class="number-circular">1</div><spring:message code="dataload.page.h3_div"/></h3>
 			<section>
 			<form class="form-horizontal" role="form" id="processFieldsForm1">
@@ -701,15 +705,22 @@ wizard = $(document).ready(function() {
                                         </div>
                                     </div>
                                  <div class="form-group">
-                                    <label class="control-label col-sm-6" for="enqueueId"><spring:message code="dataload.page.form_right_enqueing_id"/></label>
+                                    <label class="control-label col-sm-6" for="enqueueId" id="enqueueId1"><spring:message code="dataload.page.form_right_enqueing_id"/></label>
                                     <div class="col-sm-8">
                                         <input type="text" class="form-control" id="enqueueId" name="enqueueId" placeholder=<spring:message code="dataload.page.form_right_enqueing_id_placeholder"/> value="" required>
                                     </div>
+
+                                    <label class="control-label col-sm-6" for="filePath" id="filePath1">FilePath</label>
+                                    <div class="col-sm-8">
+                                        <input type="text" class="form-control" id="filePath" name="filePath" required>
+                                    </div>
+
+
                                 </div>
                                 <div class="clearfix"></div>
                             </div>
                             <!-- /btn-group -->
-                        
+
                         </form>
 			</section>
 			<h3><div class="number-circular">2</div><spring:message code="dataload.page.h3_div_2"/></h3>
@@ -718,8 +729,8 @@ wizard = $(document).ready(function() {
                                           <spring:message code="dataload.page.alert_info_form"/>
                                         </div>
             <form class="form-horizontal" role="form" id="fileFormat">
-                                    
-                                       
+
+
                                         <!-- btn-group -->
                                         <div id="rawTablDetailsDB">
                                         <div class="form-group" >
@@ -739,9 +750,9 @@ wizard = $(document).ready(function() {
                                         </div>
                                         <div class="clearfix"></div>
                                         </div>
-                                        
+
                                         <!-- /btn-group -->
-                                
+
                                     </form>
             			</section>
 			<h3><div class="number-circular">3</div><spring:message code="dataload.page.raw_table_props"/></h3>
@@ -759,13 +770,18 @@ wizard = $(document).ready(function() {
 			<h3><div class="number-circular">5</div><spring:message code="dataload.page.provide_props"/></h3>
 			<section>
 			<div class="alert alert-info" role="alert">
-                                                <b style="font-size:24px;"><spring:message code="dataload.page.how_to"/></b>
-                                                <b><spring:message code="dataload.page.enter_props"/></b>
-                                                <br>
-											</div>
-                                    <form class="form-horizontal pull-none" role="form" id="serdeProperties">
-                                        
-                                            
+                <b style="font-size:24px;"><spring:message code="dataload.page.how_to"/></b>
+                <b><spring:message code="dataload.page.enter_props"/></b>
+                <br>
+            </div>
+            <div class = "list-group" >
+                <span href = "#" class = "list-group-item" >
+                    <span class = "glyphicon glyphicon-export" ></span >For csv delimiter file, key is &quot;field.delim&quot; and value is &quot;,&quot;
+                </span >
+             </div>
+    <form class="form-horizontal pull-none" role="form" id="serdeProperties">
+
+
 
                                             <!-- btn-group -->
                                             <div class="form-group" id="formGroupSerde1">
@@ -781,7 +797,7 @@ wizard = $(document).ready(function() {
                                             </div>
                                             <div class="clearfix"></div>
                                             <!-- /btn-group -->
-                                       
+
                                         <div class="col-md-2" id="serdePropDiv">
                                                     <button id="serdeButton1" class="btn btn-primary add-more">
                                                         <span class="glyphicon glyphicon-plus" style="font-size:large"></span>
@@ -815,7 +831,7 @@ wizard = $(document).ready(function() {
                                                         </div>
                                                         <div class="clearfix"></div>
                                                         <!-- /btn-group -->
-                                                   
+
                                                     <div class="col-md-2" id="tablePropDiv">
                                                                 <button id="tableButton1" class="btn btn-primary add-more">
                                                                     <span class="glyphicon glyphicon-plus" style="font-size:large"></span>
@@ -842,7 +858,7 @@ wizard = $(document).ready(function() {
                                                     </div>
                                                 </div>
                                                 <div class="form-group">
-                                                    <label class="control-label col-sm-2" for="baseTableName"><spring:message code="dataload.page.base_db_name"/></label>
+                                                    <label class="control-label col-sm-2" for="baseTableName"><spring:message code="dataload.page.base_table_name_single"/></label>
                                                     <div class="col-sm-10">
                                                         <input type="text" class="form-control" id="baseTableName" name="baseTableName" placeholder=<spring:message code="dataload.page.enter_base_table_name_placeholder"/> required>
                                                     </div>
@@ -865,7 +881,7 @@ wizard = $(document).ready(function() {
 				</div>
 			</section>
 		</div>
-		
+
 		<div style="display:none" id="div-dialog-warning">
 			<p><span class="ui-icon ui-icon-alert" style="float:left;"></span></p>
 		</div>
@@ -1157,8 +1173,8 @@ function buildForm(fileformat) {
 			formHTML = formHTML + '<div class="alert alert-info" role="alert"><spring:message code="dataload.page.form_alert_msg"/></div>';
 			formHTML = formHTML + '<div id="Serde, OutPut and Input Format">';
 			formHTML = formHTML + '<form class="form-horizontal" role="form" id = "formatFields">';
-			
-			
+
+
 
 			console.log(data[root].length);
 			if (data[root].length == 0){
@@ -1276,6 +1292,34 @@ function formIntoMap(typeProp, typeOf) {
 
 		</script>
 
+        <script>
+        $(document).ready(function(){
+            $( "#enqueueId" ).click(function() {
+              console.log("enqueid is clicked");
+               $("#filePath").prop("disabled", true);
+                $("#enqueueId").prop("disabled", false);
+                $('#filePath').val("null");
+            });
+
+            $( "#enqueueId1" ).click(function() {
+                  console.log("enqueid1 is clicked");
+                    $("#enqueueId").prop("disabled", false);
+
+                });
+
+            $( "#filePath" ).click(function() {
+                console.log("filePath is clicked");
+               $("#enqueueId").prop("disabled", true);
+               $("#filePath").prop("disabled", false);
+               $('#enqueueId').val("null");
+            });
+
+            $( "#filePath1" ).click(function() {
+                console.log("filePath is clicked");
+               $("#filePath").prop("disabled", false);
+            });
+          });
+           </script>
 
 
 	</body>
