@@ -154,6 +154,10 @@ public class LineageAPI extends MetadataAPIBase {
             LOGGER.error(e);
             restWrapper = new RestWrapper(e.getMessage(), RestWrapper.ERROR);
         }
+        catch (NullPointerException e) {
+            LOGGER.error(e);
+            restWrapper = new RestWrapper(e.getMessage(), RestWrapper.ERROR);
+        }
         return restWrapper;
     }
 
