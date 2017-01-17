@@ -100,7 +100,7 @@ public class HiveActionNode extends GenericActionNode {
                 "                </property>\n" +
 
                 "                </configuration>"*/);
-        ret.append("<jdbc-url>jdbc:hive2//localhost:10000/default</jdbc-url> \n" );
+        ret.append("<jdbc-url>jdbc:hive2://localhost:10000/default</jdbc-url> \n" );
         ret.append(getQueryPath(getId(), "query"));
 
 

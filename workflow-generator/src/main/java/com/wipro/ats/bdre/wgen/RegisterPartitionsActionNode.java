@@ -71,7 +71,7 @@ public class RegisterPartitionsActionNode extends GenericActionNode {
                 "        <hive2 xmlns=\"uri:oozie:hive2-action:0.1\">\n" +
                 "            <job-tracker>${jobTracker}</job-tracker>\n" +
                 "            <name-node>${nameNode}</name-node>\n" );
-        ret.append("<jdbc-url>jdbc:hive2//localhost:10000/default</jdbc-url> \n" );
+        ret.append("<jdbc-url>jdbc:hive2://localhost:10000/default</jdbc-url> \n" );
         ret.append(getQueryPath());
 
         ret.append("            <param>dest-table=${wf:actionData(\"migration-preprocessor\")[\"dest-table\"]}</param>\n");
