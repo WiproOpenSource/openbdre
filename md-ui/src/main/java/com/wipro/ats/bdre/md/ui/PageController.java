@@ -67,9 +67,14 @@ public class PageController {
     @RequestMapping(value = "/details/{pid}/{ieid}.page", method = RequestMethod.GET)
     @ResponseBody
     public String getDashboardDot(@PathVariable("pid") String pid, @PathVariable("ieid") String ieid) {
-
-        List<ProcessInfo> processInfos = new GetProcess().execInfo(new String[]{PARENTPROCESSID, pid, "--instance-exec-id", ieid});
-        Workflow workflow = new WorkflowPrinter().execInfo(processInfos, WORKFLOWCON + pid);
+        Workflow workflow= new Workflow();
+        try {
+            List<ProcessInfo> processInfos = new GetProcess().execInfo(new String[]{PARENTPROCESSID, pid, "--instance-exec-id", ieid});
+            workflow = new WorkflowPrinter().execInfo(processInfos, WORKFLOWCON + pid);
+        } catch (NullPointerException e) {
+            LOGGER.info(e);
+            return null;
+        }
         return workflow.getDot().toString();
 
     }
