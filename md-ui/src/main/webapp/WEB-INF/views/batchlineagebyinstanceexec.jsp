@@ -50,15 +50,24 @@
 		    type: "GET",
 		    cache: false,
 		    success: function (getData) {
+		    if(getData.Result == "OK")
+         {
 			graphViz = graphViz + getData.Records.dot;
 			RefreshGraphviz(prefix + graphViz + postfix);
+			}
+            else
+            {
+            console.log("no batch to process getIed(ied)");
+            alert("no batch to process");
+            }
 		    }
 		});
 	    }
 	    function getBid(bid) {
 		//do not reload if the dependency graph for this bid is already rendered.
 		if (set.contains(bid)) {
-		    return false;
+		//preventDefault();
+		return false;
 		}
 		set.add(bid);
 		$.ajax({
@@ -66,9 +75,18 @@
 		    type: "GET",
 		    cache: false,
 		    success: function (getData) {
+		    if(getData.Result == "OK")
+            {
 			graphViz = graphViz + getData.Records.dot;
 			RefreshGraphviz(prefix + graphViz + postfix);
+			}
+            else
+            {
+            console.log("no batch to process getBid(bid)");
+            alert("no batch to process");
+            }
 		    }
+
 		});
 	    }
 	    function RefreshGraphviz(data) {
