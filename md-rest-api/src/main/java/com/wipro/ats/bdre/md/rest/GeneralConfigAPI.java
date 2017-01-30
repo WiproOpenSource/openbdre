@@ -97,6 +97,31 @@ public class GeneralConfigAPI extends MetadataAPIBase {
         return restWrapper;
 
     }
+
+
+    @RequestMapping(value = {"/OptionList/{cg}", "/OptionList/{cg}/"}, method = RequestMethod.POST)
+    @ResponseBody public
+    RestWrapperOptions listOptions(@PathVariable("cg") String configGroup, Principal principal) {
+
+        RestWrapperOptions restWrapperOptions = null;
+        try {
+            GetGeneralConfig generalConfigs = new GetGeneralConfig();
+            List<GeneralConfig> generalConfigList = generalConfigs.listGeneralConfig(configGroup);
+            List<RestWrapperOptions.Option> options = new ArrayList<RestWrapperOptions.Option>();
+            for(GeneralConfig generalConfig:generalConfigList)
+            {
+                RestWrapperOptions.Option option = new RestWrapperOptions.Option(generalConfig.getKey(),generalConfig.getValue());
+                options.add(option);
+            }
+            restWrapperOptions = new RestWrapperOptions(options, RestWrapper.OK);
+            LOGGER.info("All records listed with config group :" + configGroup + "from General  Config by User:" + principal.getName());
+        }catch (Exception e){
+            LOGGER.error(e);
+            restWrapperOptions = new RestWrapperOptions(e.getMessage(), RestWrapper.ERROR);
+        }
+        return restWrapperOptions;
+
+    }
     /**
      * This method calls proc GetGenConfigProperty and fetches a record from GeneralConfig table corresponding to
      * Config group and key passed.

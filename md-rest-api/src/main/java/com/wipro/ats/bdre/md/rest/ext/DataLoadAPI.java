@@ -183,6 +183,12 @@ public class DataLoadAPI extends MetadataAPIBase {
                     raw2StageProperties.add(jpaProperties);
                 }
             }else if (string.startsWith(TRANSFORM)) {
+                String column_name=string.replaceAll(TRANSFORM,"");
+                if(map.get(string).equals("no transformation"))
+                    map.put(string,column_name);
+                else
+                 map.put(string,map.get(string)+"("+column_name+")");
+                LOGGER.info("key is "+string +" updated value is "+map.get(string)+" column name is "+column_name);
                 if("".equals(map.get(string.replaceAll(TRANSFORM,PARTITION))) || map.get(string.replaceAll(TRANSFORM,PARTITION)) == null) {
                     jpaProperties = Dao2TableUtil.buildJPAProperties("base-columns", string, map.get(string), TRANSFORMCOMMENT);
                     raw2StageProperties.add(jpaProperties);

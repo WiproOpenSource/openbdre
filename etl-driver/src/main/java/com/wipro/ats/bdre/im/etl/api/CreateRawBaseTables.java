@@ -286,7 +286,7 @@ public class CreateRawBaseTables extends ETLBase {
         if (!basePropertiesOfColumns.isEmpty()) {
             while (baseColumnsList.hasMoreElements()) {
                 String key = (String) baseColumnsList.nextElement();
-                baseColumns.append(basePropertiesOfColumns.getProperty(key) + " " + basePropertiesOfDataTypes .getProperty(key.replaceAll("transform_","")) + ",");
+                baseColumns.append(key.replaceAll("transform_","") + " " + basePropertiesOfDataTypes .getProperty(key.replaceAll("transform_","")) + ",");
             }
         }
         //removing trailing comma

@@ -464,6 +464,7 @@ public class JobDAO {
                 Process subProcess = (Process) subProcessObject;
                 listOfDownStreamSubProcessesWithEnqID.add(subProcess);
             }
+            LOGGER.info("listOfDownStreamSubProcessesWithEnqID is "+listOfDownStreamSubProcessesWithEnqID.toString());
             ExecStatus runningExecStatus = new ExecStatus();
             runningExecStatus.setExecStateId(2);
             ExecStatus failedExecStatus = new ExecStatus();

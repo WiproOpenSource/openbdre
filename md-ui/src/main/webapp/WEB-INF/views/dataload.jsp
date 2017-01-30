@@ -1051,7 +1051,7 @@ wizard = $(document).ready(function() {
                                 console.log("json is" + baseJSONedPostData);
                             }
                             if (baseJSONedPostData.indexOf("transformations") == -1){
-                                baseJSONedPostData +=  '"transformations":"'+baseSplitedPostData[1].split("=")[1]+'"}';
+                                baseJSONedPostData +=  '"transformations":"'+'no transformation'+'"}';
                             }else{
                                 var baseLastIndex = baseJSONedPostData.lastIndexOf(",");
                                 baseJSONedPostData = baseJSONedPostData.substring(0,baseLastIndex);
@@ -1086,7 +1086,7 @@ wizard = $(document).ready(function() {
                                                                                     console.log("json is" + baseUpdateJSONedPostData);
                                                                                 }
                                                                                 if (baseUpdateJSONedPostData.indexOf("transformation") == -1){
-                                                                                    baseUpdateJSONedPostData +=  '"transformations":"'+baseUpdateSplitedPostData[1].split("=")[1]+'"}';
+                                                                                    baseUpdateJSONedPostData +=  '"transformations":"'+'no transformation'+'"}';
                                                                                 }else{
                                                                                     var baseUpdateLastIndex = baseUpdateJSONedPostData.lastIndexOf(",");
                                                                                     baseUpdateJSONedPostData = baseUpdateJSONedPostData.substring(0,baseUpdateLastIndex);
@@ -1142,7 +1142,14 @@ wizard = $(document).ready(function() {
                          transformations: {
                             title: '<spring:message code="dataload.page.title_source"/>',
                             create: true,
-                            edit: true
+                            edit: true,
+                            options:function(data) {
+                            console.log("data transformations is "+ data.record.transformations);
+
+                             var tmp='/mdrest/genconfig/OptionList/column_transformation';
+                             console.log(JSON.stringify(tmp));
+                             return tmp;
+                             }
                         },
                         partition: {
                                                     title: '<spring:message code="dataload.page.title_partition"/>',
