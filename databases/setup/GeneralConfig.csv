@@ -575,4 +575,11 @@
 'cluster.nn-address', 'Local cluster - Namenode Address', 'Namenode Address','Local cluster' , 1, 'hdfs://${name_node_hostname}:${name_node_port}', 'text' , 1
 'cluster.jt-address', 'Local cluster - Job Tracker Address', 'Job Tracker Address','Local cluster' , 1, '${job_tracker_hostname}:${job_tracker_port}', 'text' , 1
 'cluster.hive-address', 'Local cluster - Hive Server2 Address', 'Hive Server2 Address','Local cluster' , 1, '${hive_server_hostname}:10000', 'text' , 1
+'column_transformation','no transformation','no transformation','no column transformation',1,'no transformation','text',1
+'column_transformation','upper','upper','changing column data in uppercase',1,'upper','text',1
+'column_transformation','lower','lower','changing column data in lowercase',1,'lower','text',1
+'column_transformation','round','round','It returns the rounded BIGINT value of the double',1,'round','text',1
+'column_transformation','trim','trim','It returns the string resulting from trimming spaces from both ends',1,'trim','text',1
+'column_transformation','floor','floor','It returns the maximum BIGINT value that is equal or less than the double',1,'floor','text',1
+
 
