@@ -560,7 +560,7 @@ public class JobDAO {
                     insertBatchConsumpQueue.setBatchBySourceBatchId(targetBatchId);
                     insertBatchConsumpQueue.setInsertTs(new Date());
                     insertBatchConsumpQueue.setSourceProcessId(parentProcessId.getProcessId());
-                    insertBatchConsumpQueue.setBatchStatus(processedBatchStatus);
+                    insertBatchConsumpQueue.setBatchStatus(newBatchStatus);
                     insertBatchConsumpQueue.setBatchMarking(null);
                     insertBatchConsumpQueue.setProcess(subProcess);
                     session.save(insertBatchConsumpQueue);
@@ -569,7 +569,7 @@ public class JobDAO {
                     insertBatchConsumpQueue.setBatchBySourceBatchId(targetBatchId);
                     insertBatchConsumpQueue.setInsertTs(new Date());
                     insertBatchConsumpQueue.setSourceProcessId(parentProcessId.getProcessId());
-                    insertBatchConsumpQueue.setBatchStatus(processedBatchStatus);
+                    insertBatchConsumpQueue.setBatchStatus(newBatchStatus);
                     insertBatchConsumpQueue.setBatchMarking(batchMarking);
                     insertBatchConsumpQueue.setProcess(subProcess);
                     session.save(insertBatchConsumpQueue);

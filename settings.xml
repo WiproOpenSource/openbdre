@@ -212,6 +212,10 @@
                     <url>https://repository.cloudera.com/cloudera/repo/</url>
                 </repository>
                 <repository>
+                    <id>repository.jboss.org-public</id>
+                    <url>https://repository.jboss.org/nexus/content/groups/public</url>
+                </repository>
+                <repository>
                     <id>repo.hortonworks.com</id>
                     <name>Hortonworks HDP Maven Repository</name>
                     <url>http://repo.hortonworks.com/content/repositories/releases/</url>
@@ -233,6 +237,10 @@
                 <pluginRepository>
                     <id>cloudera</id>
                     <url>https://repository.cloudera.com/cloudera/repo/</url>
+                </pluginRepository>
+                <pluginRepository>
+                    <id>repository.jboss.org-public</id>
+                    <url>https://repository.jboss.org/nexus/content/groups/public</url>
                 </pluginRepository>
                 <pluginRepository>
                     <id>repo.hortonworks.com</id>
