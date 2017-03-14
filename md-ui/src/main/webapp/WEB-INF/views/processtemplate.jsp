@@ -464,6 +464,33 @@ SubProcesses: {                    
 				    options: '/mdrest/processtype/optionslist',
 				    defaultValue: "1",
 			    },
+			    permissionTypeByUserAccessId: {
+                    title: '<spring:message code="process.page.title_user_access"/>',
+                    type: 'combobox',
+                    list: false,
+                    options: '/mdrest/process/options/',
+                    defaultValue: "7"
+                },
+                permissionTypeByGroupAccessId:{
+                  title: '<spring:message code="process.page.title_group_access"/>',
+                  type: 'combobox',
+                  list: true,
+                  options: '/mdrest/process/options/',
+                  defaultValue: "6"
+               },
+               permissionTypeByOthersAccessId:{
+                  title: '<spring:message code="process.page.title_other_Access"/>',
+                  type: 'combobox',
+                  list: false,
+                  options: '/mdrest/process/options/',
+                  defaultValue: "0"
+               },
+               ownerRoleId: {
+                 title: '<spring:message code="process.page.title_owner_group"/>',
+                 type: 'combobox',
+                 list:true,
+                 options: '/mdrest/userroles/options/',
+              },
 			    workflowId: {
 			    title: '<spring:message code="processtemplate.page.title_wf_type"/>',
 				    type: 'combobox',
@@ -493,7 +520,7 @@ SubProcesses: {                    
                 						    $.ajax({
                 						    url: '/mdrest/processtemplate/create/',
                 							    type: 'PUT',
-                							    data: item+'&busDomainId='+item.record.busDomainId+ '&processTypeId='+item.record.processTypeId+'&processName='+processName+'&canRecover='+item.record.canRecover+'&description='+description+'&processTemplateId='+item.record.processTemplateId,
+                							    data: item+'&busDomainId='+item.record.busDomainId+ '&processTypeId='+item.record.processTypeId+'&processName='+processName+'&canRecover='+item.record.canRecover+'&description='+description+'&processTemplateId='+item.record.processTemplateId+'&ownerRoleId='+item.record.ownerRoleId,
                 							    dataType: 'json',
                 							    success: function (data) {
                 							    console.log(data);
