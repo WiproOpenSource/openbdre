@@ -318,7 +318,7 @@ public class QueueFetcher {
                 queueInfoList.clear();
                 getCapacitySchedulerQueue(schedulerInfo);
                 BufferedWriter writer = new BufferedWriter( new FileWriter(queuesFile,true));
-                System.out.println("queuinfo list size = " + queueInfoList.size());
+                //System.out.println("queuinfo list size = " + queueInfoList.size());
                 for(QueueInfo queueInfo: queueInfoList){
                     queueInfo.setTimestamp(new Timestamp(Calendar.getInstance().getTime().getTime()));
                     writer.write(queueInfo.toString()+lineSeparator);

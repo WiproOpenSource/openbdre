@@ -45,7 +45,8 @@ public class HiveConnection {
         try {
             Connection conn = getHiveJDBCConnection(DBNAME,HIVE_CONNECTION_URL);
             Statement stmt = conn.createStatement();
-            String query = "LOAD DATA LOCAL INPATH '" + dir + "' INTO TABLE " + tableName + "')";
+            String query = "LOAD DATA LOCAL INPATH '" + dir + "' INTO TABLE " + tableName;
+            //String query = "show databases";
             stmt.executeUpdate(query);
 
             stmt.close();
