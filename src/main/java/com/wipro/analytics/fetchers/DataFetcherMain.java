@@ -46,9 +46,9 @@ public class DataFetcherMain {
         finishedJobsAggregatedDir = "/home/openbdre/aggregatedfinished/";
         queuesFile = "/home/openbdre/queues";
         queuesAggregatedDir = "/home/openbdre/aggregatedqueues/";
-        resourceManagerHost="192.168.56.105";
+        resourceManagerHost="localhost";
         resourceManagerPort="8088";
-        jobHistoryServerHost="192.168.56.105";
+        jobHistoryServerHost="localhost";
         jobHistoryServerPort="19888";
         HIVE_DRIVER_NAME="org.apache.hive.jdbc.HiveDriver";
         HIVE_USER= "openbdre";
@@ -56,6 +56,6 @@ public class DataFetcherMain {
         FILE_LINE_SEPERATOR="\n";
         FILE_FIELD_SEPERATOR="\t";
         DBNAME="monitor";
-        HIVE_CONNECTION_URL="jdbc:hive2://192.168.56.105:10000";
+        HIVE_CONNECTION_URL="jdbc:hive2://localhost:10000";
     }
 }

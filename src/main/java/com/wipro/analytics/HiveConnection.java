@@ -6,7 +6,11 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.sql.Statement;
-
+import org.apache.hadoop.conf.Configuration;
+import org.apache.hadoop.fs.FileSystem;
+import org.apache.hadoop.fs.Path;
+import java.io.File;
+import java.io.IOException;
 /**
  * Created by cloudera on 3/19/17.
  */
@@ -45,7 +49,17 @@ public class HiveConnection {
         try {
             Connection conn = getHiveJDBCConnection(DBNAME,HIVE_CONNECTION_URL);
             Statement stmt = conn.createStatement();
-            String query = "LOAD DATA LOCAL INPATH '" + dir + "' INTO TABLE " + tableName;
+	    Configuration conf = new Configuration();
+            conf.set("fs.defaultFS","hdfs://sandbox.hortonworks.com:8020");
+            FileSystem fs = FileSystem.get(conf);
+		File sourcePath = new File(dir);
+            for(File file:sourcePath.listFiles()){
+                fs.copyFromLocalFile(new Path(file.getPath()),
+                        new Path("/tmp/"+tableName,file.getName()));
+            }
+            String hdfsDir="/tmp/"+tableName;
+            String query = "LOAD DATA INPATH '" + hdfsDir + "' INTO TABLE " + tableName;
+            System.out.println("query =" +query);
             //String query = "show databases";
             stmt.executeUpdate(query);
 
