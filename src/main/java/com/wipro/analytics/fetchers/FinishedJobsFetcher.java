@@ -1,5 +1,6 @@
 package com.wipro.analytics.fetchers;
 
+import com.wipro.analytics.HiveConnection;
 import com.wipro.analytics.beans.FinishedJobsInfo;
 import org.codehaus.jackson.JsonNode;
 import org.codehaus.jackson.map.ObjectMapper;
@@ -8,8 +9,10 @@ import java.io.*;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.nio.file.Files;
-import java.nio.file.Path;
 import java.nio.file.StandardCopyOption;
+import java.sql.Timestamp;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledFuture;
@@ -20,13 +23,18 @@ import java.util.concurrent.TimeUnit;
  */
 public class FinishedJobsFetcher {
     private final ObjectMapper objectMapper = new ObjectMapper();
-    private final String finishedJobsFile = "/home/cloudera/finishedjobs";
-    private final String finishedJobsAggregatedFile = "/home/cloudera/finishedjobsaggregated";
+    private final String finishedJobsFile = DataFetcherMain.finishedJobsFile;
+    private final String finishedJobsAggregatedDir = DataFetcherMain.finishedJobsAggregatedDir;
+    private final String jobHistoryServerHost = DataFetcherMain.jobHistoryServerHost;
+    private final String jobHistoryServerPort = DataFetcherMain.jobHistoryServerPort;
+    private static final long scheduleInterval = DataFetcherMain.scheduleInterval;
+    private static final long aggregationInterval = DataFetcherMain.aggregationInterval;
+    private static final String lineSeparator = DataFetcherMain.FILE_LINE_SEPERATOR;
+    private static final String finishedJobsTable = "FINISHED_JOBS";
     private static final ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
     static int counter = 0;
     static int aggregateCounter =0;
     static long finishedTimeBegin =0;
-    static long finishedTimeEnd;
 
 
     public JsonNode readJsonNode(URL url) throws IOException {
@@ -37,9 +45,9 @@ public class FinishedJobsFetcher {
     public void getHistoryAppsData(){
         try {
             long currentTime = System.currentTimeMillis();
-            System.out.println("currentTime = " + currentTime);
-            System.out.println("finishedTimeBegin = " + finishedTimeBegin);
-            URL historyAppsUrl = new URL("http://localhost:19888/ws/v1/history/mapreduce/jobs?finishedTimeBegin="+finishedTimeBegin+"&finishedTimeEnd="+currentTime);
+         //   System.out.println("currentTime = " + currentTime);
+         //   System.out.println("finishedTimeBegin = " + finishedTimeBegin);
+            URL historyAppsUrl = new URL("http://"+jobHistoryServerHost+":"+jobHistoryServerPort+"/ws/v1/history/mapreduce/jobs?finishedTimeBegin="+finishedTimeBegin+"&finishedTimeEnd="+currentTime);
             finishedTimeBegin = currentTime;
             JsonNode rootNode = readJsonNode(historyAppsUrl);
             JsonNode jobsArray = rootNode.path("jobs").path("job");
@@ -55,7 +63,7 @@ public class FinishedJobsFetcher {
             for(String jobId : jobIdsArray){
                 FinishedJobsInfo finishedJobsInfo = new FinishedJobsInfo();
 
-                URL jobURL = new URL("http://localhost:19888/ws/v1/history/mapreduce/jobs/"+jobId);
+                URL jobURL = new URL("http://"+jobHistoryServerHost+":"+jobHistoryServerPort+"/ws/v1/history/mapreduce/jobs/"+jobId);
                 JsonNode job = readJsonNode(jobURL).path("job");
                 String applicationName = job.get("name").asText();
                 String applicationState = job.get("state").asText();
@@ -82,7 +90,7 @@ public class FinishedJobsFetcher {
                 finishedJobsInfo.setAvgShuffleTime(avgShuffleTime);
                 finishedJobsInfo.setAvgMergeTime(avgMergeTime);
 
-                URL jobCountersURL = new URL("http://localhost:19888/ws/v1/history/mapreduce/jobs/"+jobId+"/counters");
+                URL jobCountersURL = new URL("http://"+jobHistoryServerHost+":"+jobHistoryServerPort+"/ws/v1/history/mapreduce/jobs/"+jobId+"/counters");
                 JsonNode counterGroups = readJsonNode(jobCountersURL).path("jobCounters").path("counterGroup");
                 for(JsonNode counterGroup: counterGroups){
                     if(counterGroup.get("counterGroupName").asText().equalsIgnoreCase("org.apache.hadoop.mapreduce.TaskCounter")){
@@ -112,19 +120,24 @@ public class FinishedJobsFetcher {
                 }
 
                 //write finishedjobInfo to file
-
-                writer.write(finishedJobsInfo.toString()+"\n");
+                finishedJobsInfo.setTimestamp(new Timestamp(Calendar.getInstance().getTime().getTime()));
+                writer.write(finishedJobsInfo.toString()+lineSeparator);
 
             }
 
             writer.close();
-            System.out.println("counter = " + counter);
-            if(counter == 5){
+            System.out.println("finished counter = " + counter);
+            if(counter == aggregationInterval/scheduleInterval){
                 counter = 0;
-                aggregateCounter++;
-                Files.copy(new File(finishedJobsFile).toPath(),new File(finishedJobsAggregatedFile+aggregateCounter).toPath(), StandardCopyOption.REPLACE_EXISTING);
-                PrintWriter pw = new PrintWriter(finishedJobsFile);
-                pw.close();
+                if(new File(finishedJobsFile).length() !=0) {
+                    aggregateCounter++;
+                    Files.copy(new File(finishedJobsFile).toPath(), new File(finishedJobsAggregatedDir +"finished-"+ System.currentTimeMillis()).toPath(), StandardCopyOption.REPLACE_EXISTING);
+                    PrintWriter pw = new PrintWriter(finishedJobsFile);
+                    pw.close();
+                    //TODO: change logic to monitor dir and load automatically
+                    HiveConnection hiveConnection = new HiveConnection();
+                    hiveConnection.loadIntoHive(finishedJobsAggregatedDir, finishedJobsTable);
+                }
             }
 
         } catch (Exception e) {
@@ -133,7 +146,7 @@ public class FinishedJobsFetcher {
         }
     }
 
-    public static void main(String[] args) {
+    public static void schedule(long startDelay, long scheduleInterval, TimeUnit timeUnitForSchedule) {
 
         final ScheduledFuture<?> taskHandle = scheduler.scheduleAtFixedRate(
                 new Runnable() {
@@ -145,7 +158,7 @@ public class FinishedJobsFetcher {
                             ex.printStackTrace(); //or loggger would be better
                         }
                     }
-                }, 0, 20, TimeUnit.SECONDS);
+                }, startDelay, scheduleInterval, timeUnitForSchedule);
     }
 
 

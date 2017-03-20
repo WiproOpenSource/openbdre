@@ -1,6 +1,9 @@
 package com.wipro.analytics.beans;
 
+import com.wipro.analytics.fetchers.DataFetcherMain;
+
 import java.io.Serializable;
+import java.sql.Timestamp;
 import java.util.List;
 
 /**
@@ -19,6 +22,7 @@ public class QueueInfo implements Serializable {
     private int numPendingApplications;
     private String queueType;
     private String users;
+    private Timestamp timestamp;
 
     public int getUsedMemory() {
         return usedMemory;
@@ -116,21 +120,32 @@ public class QueueInfo implements Serializable {
         this.users = users;
     }
 
+
+    public Timestamp getTimestamp() {
+        return timestamp;
+    }
+
+    public void setTimestamp(Timestamp timestamp) {
+        this.timestamp = timestamp;
+    }
+
     @Override
     public String toString(){
+        String fieldDelimiter= DataFetcherMain.FILE_FIELD_SEPERATOR;
         return
-                queueName+ '\t'
-                + maxCapacity+ '\t'
-                + usedMemory+ '\t'
-                + usedCores+ '\t'
-                + numContainers+ '\t'
-                + queueState+ '\t'
-                + maxApplications+ '\t'
-                + numApplications+ '\t'
-                + numActiveApplications+ '\t'
-                + numPendingApplications+ '\t'
-                + queueType+ '\t'
-                + users;
+                queueName+ fieldDelimiter
+                + maxCapacity+ fieldDelimiter
+                + usedMemory+ fieldDelimiter
+                + usedCores+ fieldDelimiter
+                + numContainers+ fieldDelimiter
+                + queueState+ fieldDelimiter
+                + maxApplications+ fieldDelimiter
+                + numApplications+ fieldDelimiter
+                + numActiveApplications+ fieldDelimiter
+                + numPendingApplications+ fieldDelimiter
+                + queueType+ fieldDelimiter
+                + users+ fieldDelimiter
+                + timestamp;
     }
 
 }

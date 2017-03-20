@@ -1,6 +1,9 @@
 package com.wipro.analytics.beans;
 
+import com.wipro.analytics.fetchers.DataFetcherMain;
+
 import java.io.Serializable;
+import java.sql.Timestamp;
 
 /**
  * Created by cloudera on 3/19/17.
@@ -24,6 +27,7 @@ public class FinishedJobsInfo implements Serializable {
     private long timeSpentMaps;
     private long timeSpentReducers;
     private long timeSpentTotal;
+    private Timestamp timestamp;
 
     public String getId() {
         return id;
@@ -160,24 +164,35 @@ public class FinishedJobsInfo implements Serializable {
         this.timeSpentTotal = timeSpentTotal;
     }
 
+
+    public Timestamp getTimestamp() {
+        return timestamp;
+    }
+
+    public void setTimestamp(Timestamp timestamp) {
+        this.timestamp = timestamp;
+    }
+
     @Override
     public String toString(){
-        return  id+ '\t'
-                +name+ '\t'
-                +queue+ '\t'
-                + user+ '\t'
-                +state+ '\t'
-                +submitTime+ '\t'
-                +startTime+ '\t'
-                +finishTime+ '\t'
-                +avgMapTime + '\t'
-                +avgReduceTime+ '\t'
-                +avgShuffleTime+ '\t'
-                +avgMergeTime+ '\t'
-                +gcTime+ '\t'
-                +usedMemory+ '\t'
-                +timeSpentMaps+ '\t'
-                +timeSpentReducers+ '\t'
-                +timeSpentTotal;
+        String fieldDelimiter= DataFetcherMain.FILE_FIELD_SEPERATOR;
+        return  id+ fieldDelimiter
+                +name+ fieldDelimiter
+                +queue+ fieldDelimiter
+                + user+ fieldDelimiter
+                +state+ fieldDelimiter
+                +submitTime+ fieldDelimiter
+                +startTime+ fieldDelimiter
+                +finishTime+ fieldDelimiter
+                +avgMapTime + fieldDelimiter
+                +avgReduceTime+ fieldDelimiter
+                +avgShuffleTime+ fieldDelimiter
+                +avgMergeTime+ fieldDelimiter
+                +gcTime+ fieldDelimiter
+                +usedMemory+ fieldDelimiter
+                +timeSpentMaps+ fieldDelimiter
+                +timeSpentReducers+ fieldDelimiter
+                +timeSpentTotal+ fieldDelimiter
+                + timestamp;
     }
 }

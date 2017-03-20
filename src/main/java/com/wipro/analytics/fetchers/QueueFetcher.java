@@ -1,13 +1,16 @@
 package com.wipro.analytics.fetchers;
 
+import com.wipro.analytics.HiveConnection;
 import com.wipro.analytics.beans.QueueInfo;
 import org.codehaus.jackson.JsonNode;
 import org.codehaus.jackson.map.ObjectMapper;
 
 import java.io.*;
+import java.net.HttpURLConnection;
 import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.StandardCopyOption;
+import java.sql.Timestamp;
 import java.util.*;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
@@ -19,17 +22,25 @@ import java.util.concurrent.TimeUnit;
  */
 public class QueueFetcher {
     private final ObjectMapper objectMapper = new ObjectMapper();
-    private final String queuesFile = "/home/cloudera/queues";
-    private final String queuesAggregatedFile = "/home/cloudera/queuesaggregated";
+    private final String queuesFile = DataFetcherMain.queuesFile;
+    private final String queuesAggregatedDir = DataFetcherMain.queuesAggregatedDir;
+    private final static String resourceManagerHost = DataFetcherMain.resourceManagerHost;
+    private final static String resourceManagerPort = DataFetcherMain.resourceManagerPort;
+    private static final long scheduleInterval = DataFetcherMain.scheduleInterval;
+    private static final long aggregationInterval = DataFetcherMain.aggregationInterval;
+    private static final String lineSeparator = DataFetcherMain.FILE_LINE_SEPERATOR;
+    private static final String queueTable = "QUEUES";
     private static final ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
+    private static List<QueueInfo> queueInfoList = new ArrayList<QueueInfo>();
+
     static int counter = 0;
     static int aggregateCounter =0;
 
 
     public JsonNode readJsonNode(URL url) throws IOException {
-        //HttpURLConnection conn = (HttpURLConnection) url.openConnection();
-        //return objectMapper.readTree(conn.getInputStream());
-        return objectMapper.readTree("{\n" +
+        HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+        return objectMapper.readTree(conn.getInputStream());
+     /*   return objectMapper.readTree("{\n" +
                 "    \"scheduler\": {\n" +
                 "        \"schedulerInfo\": {\n" +
                 "            \"capacity\": 100.0, \n" +
@@ -287,25 +298,46 @@ public class QueueFetcher {
                 "        }\n" +
                 "    }\n" +
                 "}");
-
+*/
 
     }
 
     public void getQueuesData(){
         try {
-            counter++;
-            URL schedulerUrl = new URL("http://localhost:8088/ws/v1/cluster/scheduler");
+            URL schedulerUrl = new URL("http://"+resourceManagerHost+":"+resourceManagerPort+"/ws/v1/cluster/scheduler");
             JsonNode rootNode = readJsonNode(schedulerUrl);
             JsonNode schedulerInfo = rootNode.path("scheduler").path("schedulerInfo");
             String schedulerType = schedulerInfo.get("type").asText();
-            System.out.println("schedulerType = " + schedulerType);
+         //   System.out.println("schedulerType = " + schedulerType);
 
             if(schedulerType.equalsIgnoreCase("fairScheduler")){
 
             }
 
             else if(schedulerType.equalsIgnoreCase("capacityScheduler")){
+                queueInfoList.clear();
                 getCapacitySchedulerQueue(schedulerInfo);
+                BufferedWriter writer = new BufferedWriter( new FileWriter(queuesFile,true));
+                System.out.println("queuinfo list size = " + queueInfoList.size());
+                for(QueueInfo queueInfo: queueInfoList){
+                    queueInfo.setTimestamp(new Timestamp(Calendar.getInstance().getTime().getTime()));
+                    writer.write(queueInfo.toString()+lineSeparator);
+                }
+                writer.close();
+                counter++;
+                System.out.println("queue counter =" + counter);
+                if(counter == aggregationInterval/scheduleInterval){
+                    counter = 0;
+                    if(new File(queuesFile).length() !=0) {
+                        aggregateCounter++;
+                        Files.copy(new File(queuesFile).toPath(), new File(queuesAggregatedDir + "queue-"+System.currentTimeMillis()).toPath(), StandardCopyOption.REPLACE_EXISTING);
+                        PrintWriter pw = new PrintWriter(queuesFile);
+                        pw.close();
+                        HiveConnection hiveConnection = new HiveConnection();
+                        hiveConnection.loadIntoHive(queuesAggregatedDir,queueTable);
+                    }
+                }
+
             }
 
         } catch (Exception e) {
@@ -325,15 +357,15 @@ public class QueueFetcher {
                 getCapacitySchedulerQueue(queue);
             }
             else {
-                BufferedWriter writer = new BufferedWriter( new FileWriter(queuesFile,true));
 
                 //queues fetched here are only leaf queues
                 String queueName = queue.get("queueName").asText();
                 double maxCapacity = queue.get("maxCapacity").getDoubleValue();
-                String usedResources = queue.get("usedResources").asText();
-                String[] usedResourcesArray = usedResources.split(",");
-                int usedMemory = Integer.parseInt(usedResourcesArray[0].split(":")[1]);
-                int usedCores = Integer.parseInt(usedResourcesArray[1].split(":")[1].replace(">",""));
+                //// TODO: 3/20/2017 know diff between resourcesUsed & usedResources both in same json
+                JsonNode resourcesUsed = queue.path("resourcesUsed");
+                int usedMemory = resourcesUsed.get("memory").getIntValue();
+                int usedCores = resourcesUsed.get("vCores").getIntValue();
+
                 int numContainers = queue.get("numContainers").getIntValue();
                 String queueState = queue.get("state").asText();
 
@@ -351,6 +383,9 @@ public class QueueFetcher {
                     for(JsonNode user: usersArray){
                         users = users + (user.get("username").asText())+",";
                     }
+                    if(users.charAt(users.length()-1)==',') {
+                        users = users.substring(0,users.length()-1);
+                    }
                 }
 
                 QueueInfo queueInfo = new QueueInfo();
@@ -365,25 +400,14 @@ public class QueueFetcher {
                 queueInfo.setNumPendingApplications(numPendingApplications);
                 queueInfo.setQueueType(queueType);
                 queueInfo.setUsers(users);
+                queueInfoList.add(queueInfo);
 
-                //write queueInfo to file
-                writer.write(queueInfo.toString()+"\n");
-                writer.close();
-                if(counter == 5){
-                    counter = 0;
-                    aggregateCounter++;
-                    Files.copy(new File(queuesFile).toPath(),new File(queuesAggregatedFile+aggregateCounter).toPath(), StandardCopyOption.REPLACE_EXISTING);
-                    PrintWriter pw = new PrintWriter(queuesFile);
-                    pw.close();
-                }
-
-                System.out.println("queuname is " + queueName);
             }
         }
     }
 
 
-    public static void main(String[] args) {
+    public static void schedule(long startDelay, long scheduleInterval, TimeUnit timeUnitForSchedule) {
 
         final ScheduledFuture<?> taskHandle = scheduler.scheduleAtFixedRate(
                 new Runnable() {
@@ -395,7 +419,7 @@ public class QueueFetcher {
                             ex.printStackTrace(); //or loggger would be better
                         }
                     }
-                }, 0, 20, TimeUnit.SECONDS);
+                }, startDelay, scheduleInterval, timeUnitForSchedule);
     }
 
 
