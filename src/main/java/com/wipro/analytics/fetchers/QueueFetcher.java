@@ -331,7 +331,7 @@ public class QueueFetcher {
                     if(new File(queuesFile).length() !=0) {
                         aggregateCounter++;
                         String fileName=queuesAggregatedDir +"queue-"+ System.currentTimeMillis();
-                        Files.copy(new File(queuesFile).toPath(), new File(queuesFile).toPath(), StandardCopyOption.REPLACE_EXISTING);
+                        Files.copy(new File(queuesFile).toPath(), new File(fileName).toPath(), StandardCopyOption.REPLACE_EXISTING);
                         PrintWriter pw = new PrintWriter(queuesFile);
                         pw.close();
                         HiveConnection hiveConnection = new HiveConnection();
