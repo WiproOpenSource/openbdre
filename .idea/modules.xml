@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/rumen.iml" filepath="$PROJECT_DIR$/rumen.iml" />
+      <module fileurl="file://$PROJECT_DIR$/hadoopmonitor.iml" filepath="$PROJECT_DIR$/hadoopmonitor.iml" />
     </modules>
   </component>
 </project>
