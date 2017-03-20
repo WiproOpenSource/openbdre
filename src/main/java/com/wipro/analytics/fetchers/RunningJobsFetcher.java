@@ -102,11 +102,12 @@ public class RunningJobsFetcher {
                 counter = 0;
                 if(new File(runningJobsFile).length() !=0) {
                     aggregateCounter++;
-                    Files.copy(new File(runningJobsFile).toPath(), new File(runningJobsAggregatedDir +"running-"+ System.currentTimeMillis()).toPath(), StandardCopyOption.REPLACE_EXISTING);
+                    String fileName=runningJobsAggregatedDir +"running-"+ System.currentTimeMillis();
+                    Files.copy(new File(runningJobsFile).toPath(), new File(fileName).toPath(), StandardCopyOption.REPLACE_EXISTING);
                     PrintWriter pw = new PrintWriter(runningJobsFile);
                     pw.close();
                     HiveConnection hiveConnection = new HiveConnection();
-                    hiveConnection.loadIntoHive(runningJobsAggregatedDir,runningJobsTable);
+                    hiveConnection.loadIntoHive(fileName,runningJobsTable);
                 }
             }
 

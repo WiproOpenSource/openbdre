@@ -45,24 +45,19 @@ public class HiveConnection {
     }
 
 
-    public void loadIntoHive(String dir, String tableName){
+    public void loadIntoHive(String filename, String tableName){
         try {
             Connection conn = getHiveJDBCConnection(DBNAME,HIVE_CONNECTION_URL);
             Statement stmt = conn.createStatement();
-	    Configuration conf = new Configuration();
+	        Configuration conf = new Configuration();
             conf.set("fs.defaultFS","hdfs://sandbox.hortonworks.com:8020");
             FileSystem fs = FileSystem.get(conf);
-		File sourcePath = new File(dir);
-            for(File file:sourcePath.listFiles()){
-                fs.copyFromLocalFile(new Path(file.getPath()),
-                        new Path("/tmp/"+tableName,file.getName()));
-            }
+		    File sourceFile = new File(filename);
+                fs.copyFromLocalFile(new Path(sourceFile.getPath()),new Path("/tmp/"+tableName,sourceFile.getName()));
             String hdfsDir="/tmp/"+tableName;
             String query = "LOAD DATA INPATH '" + hdfsDir + "' INTO TABLE " + tableName;
-            System.out.println("query =" +query);
-            //String query = "show databases";
             stmt.executeUpdate(query);
-
+            sourceFile.delete();
             stmt.close();
             conn.close();
 

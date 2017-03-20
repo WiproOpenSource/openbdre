@@ -330,11 +330,12 @@ public class QueueFetcher {
                     counter = 0;
                     if(new File(queuesFile).length() !=0) {
                         aggregateCounter++;
-                        Files.copy(new File(queuesFile).toPath(), new File(queuesAggregatedDir + "queue-"+System.currentTimeMillis()).toPath(), StandardCopyOption.REPLACE_EXISTING);
+                        String fileName=queuesAggregatedDir +"queue-"+ System.currentTimeMillis();
+                        Files.copy(new File(queuesFile).toPath(), new File(queuesFile).toPath(), StandardCopyOption.REPLACE_EXISTING);
                         PrintWriter pw = new PrintWriter(queuesFile);
                         pw.close();
                         HiveConnection hiveConnection = new HiveConnection();
-                        hiveConnection.loadIntoHive(queuesAggregatedDir,queueTable);
+                        hiveConnection.loadIntoHive(fileName,queueTable);
                     }
                 }
 

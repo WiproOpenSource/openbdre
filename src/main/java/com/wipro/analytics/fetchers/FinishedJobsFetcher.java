@@ -131,12 +131,13 @@ public class FinishedJobsFetcher {
                 counter = 0;
                 if(new File(finishedJobsFile).length() !=0) {
                     aggregateCounter++;
-                    Files.copy(new File(finishedJobsFile).toPath(), new File(finishedJobsAggregatedDir +"finished-"+ System.currentTimeMillis()).toPath(), StandardCopyOption.REPLACE_EXISTING);
+                    String fileName=finishedJobsAggregatedDir +"finished-"+ System.currentTimeMillis();
+                    Files.copy(new File(finishedJobsFile).toPath(), new File(fileName).toPath(), StandardCopyOption.REPLACE_EXISTING);
                     PrintWriter pw = new PrintWriter(finishedJobsFile);
                     pw.close();
                     //TODO: change logic to monitor dir and load automatically
                     HiveConnection hiveConnection = new HiveConnection();
-                    hiveConnection.loadIntoHive(finishedJobsAggregatedDir, finishedJobsTable);
+                    hiveConnection.loadIntoHive(fileName, finishedJobsTable);
                 }
             }
 
