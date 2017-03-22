@@ -27,6 +27,16 @@ public class FinishedJobsInfo implements Serializable {
     private long timeSpentMaps;
     private long timeSpentReducers;
     private long timeSpentTotal;
+    private long totalFileBytesRead;
+    private long totalFileBytesWritten;
+    private long totalFileReadOps;
+    private long totalFileLargeReadOps;
+    private long totalFileWriteOps;
+    private long totalHDFSBytesRead;
+    private long totalHDFSBytesWritten;
+    private long totalHDFSReadOps;
+    private long totalHDFSLargeReadOps;
+    private long totalHDFSWriteOps;
     private Timestamp timestamp;
 
     public String getId() {
@@ -164,6 +174,85 @@ public class FinishedJobsInfo implements Serializable {
         this.timeSpentTotal = timeSpentTotal;
     }
 
+    public long getTotalHDFSWriteOps() {
+        return totalHDFSWriteOps;
+    }
+
+    public void setTotalHDFSWriteOps(long totalHDFSWriteOps) {
+        this.totalHDFSWriteOps = totalHDFSWriteOps;
+    }
+
+    public long getTotalFileBytesRead() {
+        return totalFileBytesRead;
+    }
+
+    public void setTotalFileBytesRead(long totalFileBytesRead) {
+        this.totalFileBytesRead = totalFileBytesRead;
+    }
+
+    public long getTotalFileBytesWritten() {
+        return totalFileBytesWritten;
+    }
+
+    public void setTotalFileBytesWritten(long totalFileBytesWritten) {
+        this.totalFileBytesWritten = totalFileBytesWritten;
+    }
+
+    public long getTotalFileReadOps() {
+        return totalFileReadOps;
+    }
+
+    public void setTotalFileReadOps(long totalFileReadOps) {
+        this.totalFileReadOps = totalFileReadOps;
+    }
+
+    public long getTotalFileLargeReadOps() {
+        return totalFileLargeReadOps;
+    }
+
+    public void setTotalFileLargeReadOps(long totalFileLargeReadOps) {
+        this.totalFileLargeReadOps = totalFileLargeReadOps;
+    }
+
+    public long getTotalFileWriteOps() {
+        return totalFileWriteOps;
+    }
+
+    public void setTotalFileWriteOps(long totalFileWriteOps) {
+        this.totalFileWriteOps = totalFileWriteOps;
+    }
+
+    public long getTotalHDFSBytesRead() {
+        return totalHDFSBytesRead;
+    }
+
+    public void setTotalHDFSBytesRead(long totalHDFSBytesRead) {
+        this.totalHDFSBytesRead = totalHDFSBytesRead;
+    }
+
+    public long getTotalHDFSBytesWritten() {
+        return totalHDFSBytesWritten;
+    }
+
+    public void setTotalHDFSBytesWritten(long totalHDFSBytesWritten) {
+        this.totalHDFSBytesWritten = totalHDFSBytesWritten;
+    }
+
+    public long getTotalHDFSReadOps() {
+        return totalHDFSReadOps;
+    }
+
+    public void setTotalHDFSReadOps(long totalHDFSReadOps) {
+        this.totalHDFSReadOps = totalHDFSReadOps;
+    }
+
+    public long getTotalHDFSLargeReadOps() {
+        return totalHDFSLargeReadOps;
+    }
+
+    public void setTotalHDFSLargeReadOps(long totalHDFSLargeReadOps) {
+        this.totalHDFSLargeReadOps = totalHDFSLargeReadOps;
+    }
 
     public Timestamp getTimestamp() {
         return timestamp;
@@ -193,6 +282,16 @@ public class FinishedJobsInfo implements Serializable {
                 +timeSpentMaps+ fieldDelimiter
                 +timeSpentReducers+ fieldDelimiter
                 +timeSpentTotal+ fieldDelimiter
-                + timestamp;
+                +totalFileBytesRead+ fieldDelimiter
+                +totalFileBytesWritten+ fieldDelimiter
+                +totalFileReadOps+ fieldDelimiter
+                +totalFileLargeReadOps+ fieldDelimiter
+                +totalFileWriteOps+ fieldDelimiter
+                +totalHDFSBytesRead+ fieldDelimiter
+                +totalHDFSBytesWritten+ fieldDelimiter
+                +totalHDFSReadOps+ fieldDelimiter
+                +totalHDFSLargeReadOps+ fieldDelimiter
+                +totalHDFSWriteOps+ fieldDelimiter
+                +timestamp;
     }
 }

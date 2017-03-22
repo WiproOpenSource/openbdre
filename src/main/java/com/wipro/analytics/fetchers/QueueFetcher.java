@@ -361,11 +361,15 @@ public class QueueFetcher {
 
                 //queues fetched here are only leaf queues
                 String queueName = queue.get("queueName").asText();
-                double maxCapacity = queue.get("maxCapacity").getDoubleValue();
+                double absoluteAllocatedCapacity = queue.get("absoluteCapacity").getDoubleValue();
+                double absoluteUsedCapacity = queue.get("absoluteUsedCapacity").getDoubleValue();
+
                 //// TODO: 3/20/2017 know diff between resourcesUsed & usedResources both in same json
                 JsonNode resourcesUsed = queue.path("resourcesUsed");
                 int usedMemory = resourcesUsed.get("memory").getIntValue();
                 int usedCores = resourcesUsed.get("vCores").getIntValue();
+
+
 
                 int numContainers = queue.get("numContainers").getIntValue();
                 String queueState = queue.get("state").asText();
@@ -391,7 +395,8 @@ public class QueueFetcher {
 
                 QueueInfo queueInfo = new QueueInfo();
                 queueInfo.setQueueName(queueName);
-                queueInfo.setMaxCapacity(maxCapacity);
+                queueInfo.setAbsoluteUsedCapacity(absoluteUsedCapacity);
+                queueInfo.setAbsoluteAllocatedCapacity(absoluteAllocatedCapacity);
                 queueInfo.setUsedMemory(usedMemory);
                 queueInfo.setUsedCores(usedCores);
                 queueInfo.setNumContainers(numContainers);

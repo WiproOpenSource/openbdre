@@ -115,8 +115,54 @@ public class FinishedJobsFetcher {
                             }
                         }
 
-
                     }
+
+                    else if(counterGroup.get("counterGroupName").asText().equalsIgnoreCase("org.apache.hadoop.mapreduce.FileSystemCounter")){
+                        JsonNode counters = counterGroup.path("counter");
+                        for(JsonNode counter: counters) {
+                            if (counter.get("name").asText().equalsIgnoreCase("FILE_BYTES_READ")) {
+                                long totalFileBytesRead = counter.get("totalCounterValue").getLongValue();
+                                finishedJobsInfo.setTotalFileBytesRead(totalFileBytesRead);
+                            } else if (counter.get("name").asText().equalsIgnoreCase("FILE_BYTES_WRITTEN")) {
+                                long totalFileBytesWritten = counter.get("totalCounterValue").getLongValue();
+                                finishedJobsInfo.setTotalFileBytesWritten(totalFileBytesWritten);
+                            }
+                            else if (counter.get("name").asText().equalsIgnoreCase("FILE_READ_OPS")) {
+                                long totalFileReadOps = counter.get("totalCounterValue").getLongValue();
+                                finishedJobsInfo.setTotalFileReadOps(totalFileReadOps);
+                            }
+                            else if (counter.get("name").asText().equalsIgnoreCase("FILE_LARGE_READ_OPS")) {
+                                long totalFileLargeReadOps = counter.get("totalCounterValue").getLongValue();
+                                finishedJobsInfo.setTotalFileLargeReadOps(totalFileLargeReadOps);
+                            }
+                            else if (counter.get("name").asText().equalsIgnoreCase("FILE_WRITE_OPS")) {
+                                long totalFileWriteOps = counter.get("totalCounterValue").getLongValue();
+                                finishedJobsInfo.setTotalFileWriteOps(totalFileWriteOps);
+                            }
+                            else if (counter.get("name").asText().equalsIgnoreCase("HDFS_BYTES_READ")) {
+                                long totalHDFSBytesRead = counter.get("totalCounterValue").getLongValue();
+                                finishedJobsInfo.setTotalHDFSBytesRead(totalHDFSBytesRead);
+                            }
+                            else if (counter.get("name").asText().equalsIgnoreCase("HDFS_BYTES_WRITTEN")) {
+                                long totalHDFSBytesWritten = counter.get("totalCounterValue").getLongValue();
+                                finishedJobsInfo.setTotalHDFSBytesWritten(totalHDFSBytesWritten);
+                            }
+                            else if (counter.get("name").asText().equalsIgnoreCase("HDFS_READ_OPS")) {
+                                long totalHDFSReadOps = counter.get("totalCounterValue").getLongValue();
+                                finishedJobsInfo.setTotalHDFSReadOps(totalHDFSReadOps);
+                            }
+                            else if (counter.get("name").asText().equalsIgnoreCase("HDFS_LARGE_READ_OPS")) {
+                                long totalHDFSLargeReadOps = counter.get("totalCounterValue").getLongValue();
+                                finishedJobsInfo.setTotalHDFSLargeReadOps(totalHDFSLargeReadOps);
+                            }
+                            else if (counter.get("name").asText().equalsIgnoreCase("HDFS_WRITE_OPS")) {
+                                long totalHDFSWriteOps = counter.get("totalCounterValue").getLongValue();
+                                finishedJobsInfo.setTotalHDFSWriteOps(totalHDFSWriteOps);
+                            }
+
+                        }
+                    }
+
                 }
 
                 //write finishedjobInfo to file

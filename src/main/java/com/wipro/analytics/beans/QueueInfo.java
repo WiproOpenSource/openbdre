@@ -11,7 +11,8 @@ import java.util.List;
  */
 public class QueueInfo implements Serializable {
     private String queueName;
-    private double maxCapacity;
+    private double absoluteAllocatedCapacity;
+    private double absoluteUsedCapacity;
     private int usedMemory;
     private int usedCores;
     private int numContainers;
@@ -40,12 +41,21 @@ public class QueueInfo implements Serializable {
         this.queueName = queueName;
     }
 
-    public double getMaxCapacity() {
-        return maxCapacity;
+
+    public double getAbsoluteUsedCapacity() {
+        return absoluteUsedCapacity;
     }
 
-    public void setMaxCapacity(double maxCapacity) {
-        this.maxCapacity = maxCapacity;
+    public void setAbsoluteUsedCapacity(double absoluteUsedCapacity) {
+        this.absoluteUsedCapacity = absoluteUsedCapacity;
+    }
+
+    public double getAbsoluteAllocatedCapacity() {
+        return absoluteAllocatedCapacity;
+    }
+
+    public void setAbsoluteAllocatedCapacity(double absoluteAllocatedCapacity) {
+        this.absoluteAllocatedCapacity = absoluteAllocatedCapacity;
     }
 
     public int getUsedCores() {
@@ -134,7 +144,8 @@ public class QueueInfo implements Serializable {
         String fieldDelimiter= DataFetcherMain.FILE_FIELD_SEPERATOR;
         return
                 queueName+ fieldDelimiter
-                + maxCapacity+ fieldDelimiter
+                + absoluteAllocatedCapacity+ fieldDelimiter
+                + absoluteUsedCapacity+ fieldDelimiter
                 + usedMemory+ fieldDelimiter
                 + usedCores+ fieldDelimiter
                 + numContainers+ fieldDelimiter

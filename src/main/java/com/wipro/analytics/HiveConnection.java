@@ -34,9 +34,9 @@ public class HiveConnection {
             String hiveUser = HIVE_USER;
             String hivePassword = HIVE_PASSWORD;
             Connection connection = DriverManager.getConnection(hiveConnection + "/" + dbName, hiveUser, hivePassword);
-            /* con.createStatement().execute("set hive.exec.dynamic.partition.mode=nonstrict");
-            con.createStatement().execute("set hive.exec.dynamic.partition=true");
-            con.createStatement().execute("set hive.exec.max.dynamic.partitions.pernode=1000");*/
+            connection.createStatement().execute("set hive.exec.dynamic.partition.mode=nonstrict");
+            connection.createStatement().execute("set hive.exec.dynamic.partition=true");
+            connection.createStatement().execute("set hive.exec.max.dynamic.partitions.pernode=1000");
             return connection;
         } catch (ClassNotFoundException e) {
             e.printStackTrace();
@@ -60,15 +60,25 @@ public class HiveConnection {
             fs.copyFromLocalFile(new Path(sourceFile.getPath()),new Path("/tmp/"+tableName,sourceFile.getName()));
             String hdfsDir="/tmp/"+tableName;
 
-            Calendar calendar = Calendar.getInstance();
-            Date date = calendar.getTime();
-            DateFormat df = new SimpleDateFormat("yyyy-MM-dd");
-            String dateStr = df.format(date);
-            int hour = calendar.get(Calendar.HOUR_OF_DAY);
+            String stageLoadQuery = "LOAD DATA INPATH '" + hdfsDir + "' OVERWRITE INTO TABLE " + tableName +"_STG";
+            System.out.println("stageLoadQuery = " + stageLoadQuery);
+            stmt.executeUpdate(stageLoadQuery);
 
-            String query = "LOAD DATA INPATH '" + hdfsDir + "' INTO TABLE " + tableName +" PARTITION(date='"+dateStr+"' , hour="+hour+")";
-            System.out.println("query = " + query);
-            stmt.executeUpdate(query);
+            String insertDataQuery = "";
+            if(tableName.equalsIgnoreCase("FINISHED_JOBS")){
+                insertDataQuery = "INSERT   INTO TABLE "+ tableName+" PARTITION(date, hour) SELECT id ,name , queue , username , state , submitTime , startTime , finishTime ,avgMapTime , avgReduceTime , avgShuffleTime , avgMergeTime , gcTime , usedMemory , timeSpentMaps , timeSpentReducers , timeSpentTotal ,totalFileBytesRead    ,totalFileBytesWritten   ,totalFileReadOps   ,totalFileLargeReadOps   ,totalFileWriteOps   ,totalHDFSBytesRead   ,totalHDFSBytesWritten   ,totalHDFSReadOps   ,totalHDFSLargeReadOps   ,totalHDFSWriteOps , fetchTime ,to_date(fetchTime), hour(fetchTime) FROM "+tableName+"_STG";
+            }
+            else if(tableName.equalsIgnoreCase("RUNNING_JOBS")){
+                insertDataQuery = "INSERT INTO TABLE "+ tableName+" PARTITION(date, hour) SELECT applicationId ,applicationName , applicationState , applicationType , finalState , progress , username , queueName  , startTime , elapsedTime , finishTime , trackingUrl , numContainers , allocatedMB , allocatedVCores , memorySeconds , vcoreSeconds  , fetchTime ,to_date(fetchTime), hour(fetchTime) FROM "+tableName+"_STG";
+            }
+
+            else if(tableName.equalsIgnoreCase("QUEUES")){
+                insertDataQuery = "INSERT INTO TABLE "+ tableName+" PARTITION(date, hour) SELECT queueName , absoluteAllocatedCapacity , absoluteUsedCapacity , usedMemory , usedCores , numContainers , queueState , maxApplications , numApplications , numActiveApplications , numPendingApplications  , queueType , users , fetchTime ,to_date(fetchTime), hour(fetchTime) FROM "+tableName+"_STG";
+            }
+            System.out.println("insertDataQuery = " + insertDataQuery);
+            stmt.executeUpdate(insertDataQuery);
+            
+            
             sourceFile.delete();
             stmt.close();
             conn.close();
