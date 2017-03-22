@@ -21,6 +21,8 @@ public class DataFetcherMain {
     public static String resourceManagerPort;
     public static String jobHistoryServerHost;
     public static String jobHistoryServerPort;
+    public static String nameNodeHost;
+    public static String nameNodePort;
     public static String HIVE_DRIVER_NAME;
     public static String HIVE_USER;
     public static String HIVE_PASSWORD;
@@ -50,12 +52,14 @@ public class DataFetcherMain {
         resourceManagerPort="8088";
         jobHistoryServerHost="localhost";
         jobHistoryServerPort="19888";
+        nameNodeHost="localhost";
+        nameNodePort="8020";
         HIVE_DRIVER_NAME="org.apache.hive.jdbc.HiveDriver";
         HIVE_USER= "openbdre";
         HIVE_PASSWORD="openbdre";
         FILE_LINE_SEPERATOR="\n";
         FILE_FIELD_SEPERATOR="\t";
-        DBNAME="monitor";
+        DBNAME="default";
         HIVE_CONNECTION_URL="jdbc:hive2://localhost:10000";
     }
 }

@@ -2,15 +2,18 @@ package com.wipro.analytics;
 
 import com.wipro.analytics.fetchers.DataFetcherMain;
 
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.SQLException;
-import java.sql.Statement;
+import java.sql.*;
+
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.FileSystem;
 import org.apache.hadoop.fs.Path;
 import java.io.File;
 import java.io.IOException;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
+
 /**
  * Created by cloudera on 3/19/17.
  */
@@ -23,7 +26,8 @@ public class HiveConnection {
     private static final String FILE_FIELD_SEPERATOR = DataFetcherMain.FILE_FIELD_SEPERATOR;
     private static final String DBNAME = DataFetcherMain.DBNAME;
     private static final String HIVE_CONNECTION_URL = DataFetcherMain.HIVE_CONNECTION_URL;
-
+    private static final String NAME_NODE_HOST = DataFetcherMain.nameNodeHost;
+    private static final String NAME_NODE_PORT = DataFetcherMain.nameNodePort;
     public static Connection getHiveJDBCConnection(String dbName, String hiveConnection) throws SQLException {
         try {
             Class.forName(HIVE_DRIVER_NAME);
@@ -47,19 +51,27 @@ public class HiveConnection {
 
     public void loadIntoHive(String filename, String tableName){
         try {
-            Connection conn = getHiveJDBCConnection(DBNAME,HIVE_CONNECTION_URL);
-            Statement stmt = conn.createStatement();
+           // Connection conn = getHiveJDBCConnection(DBNAME,HIVE_CONNECTION_URL);
+           // Statement stmt = conn.createStatement();
 	        Configuration conf = new Configuration();
-            conf.set("fs.defaultFS","hdfs://sandbox.hortonworks.com:8020");
+            conf.set("fs.defaultFS","hdfs://"+NAME_NODE_HOST+":"+NAME_NODE_PORT);
             FileSystem fs = FileSystem.get(conf);
 		    File sourceFile = new File(filename);
-                fs.copyFromLocalFile(new Path(sourceFile.getPath()),new Path("/tmp/"+tableName,sourceFile.getName()));
+            fs.copyFromLocalFile(new Path(sourceFile.getPath()),new Path("/tmp/"+tableName,sourceFile.getName()));
             String hdfsDir="/tmp/"+tableName;
-            String query = "LOAD DATA INPATH '" + hdfsDir + "' INTO TABLE " + tableName;
-            stmt.executeUpdate(query);
+
+            Calendar calendar = Calendar.getInstance();
+            Date date = calendar.getTime();
+            DateFormat df = new SimpleDateFormat("yyyy-MM-dd");
+            String dateStr = df.format(date);
+            int hour = calendar.get(Calendar.HOUR_OF_DAY);
+
+            String query = "LOAD DATA INPATH '" + hdfsDir + "' INTO TABLE " + tableName +" PARTITION(date='"+dateStr+"' , hour="+hour+")";
+            System.out.println("query = " + query);
+          //  stmt.executeUpdate(query);
             sourceFile.delete();
-            stmt.close();
-            conn.close();
+           // stmt.close();
+          //  conn.close();
 
         }catch (Exception e){
             e.printStackTrace();
