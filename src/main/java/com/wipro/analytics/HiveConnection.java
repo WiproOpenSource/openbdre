@@ -51,8 +51,8 @@ public class HiveConnection {
 
     public void loadIntoHive(String filename, String tableName){
         try {
-           // Connection conn = getHiveJDBCConnection(DBNAME,HIVE_CONNECTION_URL);
-           // Statement stmt = conn.createStatement();
+            Connection conn = getHiveJDBCConnection(DBNAME,HIVE_CONNECTION_URL);
+            Statement stmt = conn.createStatement();
 	        Configuration conf = new Configuration();
             conf.set("fs.defaultFS","hdfs://"+NAME_NODE_HOST+":"+NAME_NODE_PORT);
             FileSystem fs = FileSystem.get(conf);
@@ -68,10 +68,10 @@ public class HiveConnection {
 
             String query = "LOAD DATA INPATH '" + hdfsDir + "' INTO TABLE " + tableName +" PARTITION(date='"+dateStr+"' , hour="+hour+")";
             System.out.println("query = " + query);
-          //  stmt.executeUpdate(query);
+            stmt.executeUpdate(query);
             sourceFile.delete();
-           // stmt.close();
-          //  conn.close();
+            stmt.close();
+            conn.close();
 
         }catch (Exception e){
             e.printStackTrace();

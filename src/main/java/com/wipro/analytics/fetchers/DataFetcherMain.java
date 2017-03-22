@@ -59,7 +59,7 @@ public class DataFetcherMain {
         HIVE_PASSWORD="openbdre";
         FILE_LINE_SEPERATOR="\n";
         FILE_FIELD_SEPERATOR="\t";
-        DBNAME="default";
+        DBNAME="monitor";
         HIVE_CONNECTION_URL="jdbc:hive2://localhost:10000";
     }
 }
