@@ -33,7 +33,7 @@ public class RunningJobsFetcher {
     private static final long scheduleInterval = DataFetcherMain.SCHEDULE_INTERVAL;
     private static final long aggregationInterval = DataFetcherMain.AGGREGATION_INTERVAL;
     private static final String lineSeparator = DataFetcherMain.FILE_LINE_SEPERATOR;
-    private static final String runningJobsTable = "RUNNING_JOBS";
+    private static final String runningJobsTable = DataFetcherMain.RUNNING_JOBS_TABLE;
     private static final ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
 
     static int counter = 0;

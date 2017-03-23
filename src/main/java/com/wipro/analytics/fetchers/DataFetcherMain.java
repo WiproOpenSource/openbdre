@@ -41,37 +41,44 @@ public class DataFetcherMain {
     public static String HIVE_CONNECTION_URL;
 
     public static void main(String args[]) {
-        init();
-        //checking if any aggregated data is present before restart
-        Configuration conf = new Configuration();
-        conf.set("fs.defaultFS", "hdfs://" + NAMENODE_HOST + ":" + NAMENODE_PORT);
-
         try {
-            FileSystem fs = FileSystem.get(conf);
+            init();
+            //checking if any aggregated data is present before restart
+            Configuration conf = new Configuration();
+            conf.set("fs.defaultFS", "hdfs://" + NAMENODE_HOST + ":" + NAMENODE_PORT);
 
-            File aggregateQueuesDir = new File(QUEUES_AGGREGATED_DIR);
-            for (File aggregateQueuesFile : aggregateQueuesDir.listFiles()) {
-                fs.copyFromLocalFile(new Path(aggregateQueuesFile.getPath()), new Path("/tmp/" + QUEUE_TABLE, aggregateQueuesFile.getName()));
+            try {
+                FileSystem fs = FileSystem.get(conf);
+
+                File aggregateQueuesDir = new File(QUEUES_AGGREGATED_DIR);
+                for (File aggregateQueuesFile : aggregateQueuesDir.listFiles()) {
+                    fs.copyFromLocalFile(new Path(aggregateQueuesFile.getPath()), new Path("/tmp/" + QUEUE_TABLE, aggregateQueuesFile.getName()));
+                }
+
+                File aggregaterunningJobsDir = new File(RUNNING_JOBS_AGGREGATED_DIR);
+                for (File aggregaterunningJobsFile : aggregaterunningJobsDir.listFiles()) {
+                    fs.copyFromLocalFile(new Path(aggregaterunningJobsFile.getPath()), new Path("/tmp/" + RUNNING_JOBS_TABLE, aggregaterunningJobsFile.getName()));
+                }
+
+                File aggregatefinishedJobsDir = new File(FINISHED_JOBS_AGGREGATED_DIR);
+                for (File aggregatefinishedJobsFile : aggregatefinishedJobsDir.listFiles()) {
+                    fs.copyFromLocalFile(new Path(aggregatefinishedJobsFile.getPath()), new Path("/tmp/" + FINISHED_JOBS_TABLE, aggregatefinishedJobsFile.getName()));
+                }
+
+            } catch (IOException e) {
+                e.printStackTrace();
             }
 
-            File aggregaterunningJobsDir = new File(RUNNING_JOBS_AGGREGATED_DIR);
-            for (File aggregaterunningJobsFile : aggregaterunningJobsDir.listFiles()) {
-                fs.copyFromLocalFile(new Path(aggregaterunningJobsFile.getPath()), new Path("/tmp/" + RUNNING_JOBS_TABLE, aggregaterunningJobsFile.getName()));
-            }
 
-            File aggregatefinishedJobsDir = new File(FINISHED_JOBS_AGGREGATED_DIR);
-            for (File aggregatefinishedJobsFile : aggregatefinishedJobsDir.listFiles()) {
-                fs.copyFromLocalFile(new Path(aggregatefinishedJobsFile.getPath()), new Path("/tmp/" + FINISHED_JOBS_TABLE, aggregatefinishedJobsFile.getName()));
-            }
-
-        } catch (Exception e) {
+            FinishedJobsFetcher.schedule(START_DELAY, SCHEDULE_INTERVAL, TIMEUNIT_FOR_SCHEDULE);
+            RunningJobsFetcher.schedule(START_DELAY, SCHEDULE_INTERVAL, TIMEUNIT_FOR_SCHEDULE);
+            QueueFetcher.schedule(START_DELAY, SCHEDULE_INTERVAL, TIMEUNIT_FOR_SCHEDULE);
+        }catch (Exception e){
             e.printStackTrace();
         }
+        finally {
 
-
-        FinishedJobsFetcher.schedule(START_DELAY, SCHEDULE_INTERVAL, TIMEUNIT_FOR_SCHEDULE);
-        RunningJobsFetcher.schedule(START_DELAY, SCHEDULE_INTERVAL, TIMEUNIT_FOR_SCHEDULE);
-        QueueFetcher.schedule(START_DELAY, SCHEDULE_INTERVAL, TIMEUNIT_FOR_SCHEDULE);
+        }
     }
 
     public static void init() {

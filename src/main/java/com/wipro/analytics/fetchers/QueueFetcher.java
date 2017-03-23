@@ -29,7 +29,7 @@ public class QueueFetcher {
     private static final long scheduleInterval = DataFetcherMain.SCHEDULE_INTERVAL;
     private static final long aggregationInterval = DataFetcherMain.AGGREGATION_INTERVAL;
     private static final String lineSeparator = DataFetcherMain.FILE_LINE_SEPERATOR;
-    private static final String queueTable = "QUEUES";
+    private static final String queueTable = DataFetcherMain.QUEUE_TABLE;
     private static final ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
     private static List<QueueInfo> queueInfoList = new ArrayList<QueueInfo>();
 

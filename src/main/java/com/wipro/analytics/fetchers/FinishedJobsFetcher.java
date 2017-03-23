@@ -29,11 +29,11 @@ public class FinishedJobsFetcher {
     private static final long scheduleInterval = DataFetcherMain.SCHEDULE_INTERVAL;
     private static final long aggregationInterval = DataFetcherMain.AGGREGATION_INTERVAL;
     private static final String lineSeparator = DataFetcherMain.FILE_LINE_SEPERATOR;
-    private static final String finishedJobsTable = "FINISHED_JOBS";
+    private static final String finishedJobsTable = DataFetcherMain.FINISHED_JOBS_TABLE;
     private static final ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
     static int counter = 0;
     static int aggregateCounter =0;
-    static long finishedTimeBegin =0;
+    static long finishedTimeBegin ;
 
 
     public JsonNode readJsonNode(URL url) throws IOException {
@@ -194,6 +194,7 @@ public class FinishedJobsFetcher {
     }
 
     public static void schedule(long startDelay, long scheduleInterval, TimeUnit timeUnitForSchedule) {
+
 
         final ScheduledFuture<?> taskHandle = scheduler.scheduleAtFixedRate(
                 new Runnable() {
