@@ -12,7 +12,6 @@ import java.nio.file.Files;
 import java.nio.file.StandardCopyOption;
 import java.sql.Timestamp;
 import java.util.Calendar;
-import java.util.Date;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledFuture;
@@ -23,12 +22,12 @@ import java.util.concurrent.TimeUnit;
  */
 public class FinishedJobsFetcher {
     private final ObjectMapper objectMapper = new ObjectMapper();
-    private final String finishedJobsFile = DataFetcherMain.finishedJobsFile;
-    private final String finishedJobsAggregatedDir = DataFetcherMain.finishedJobsAggregatedDir;
-    private final String jobHistoryServerHost = DataFetcherMain.jobHistoryServerHost;
-    private final String jobHistoryServerPort = DataFetcherMain.jobHistoryServerPort;
-    private static final long scheduleInterval = DataFetcherMain.scheduleInterval;
-    private static final long aggregationInterval = DataFetcherMain.aggregationInterval;
+    private final String finishedJobsFile = DataFetcherMain.FINISHED_JOBS_FILE;
+    private final String finishedJobsAggregatedDir = DataFetcherMain.FINISHED_JOBS_AGGREGATED_DIR;
+    private final String jobHistoryServerHost = DataFetcherMain.JOBHISTORY_SERVER_HOST;
+    private final String jobHistoryServerPort = DataFetcherMain.JOBHISTORY_SERVER_PORT;
+    private static final long scheduleInterval = DataFetcherMain.SCHEDULE_INTERVAL;
+    private static final long aggregationInterval = DataFetcherMain.AGGREGATION_INTERVAL;
     private static final String lineSeparator = DataFetcherMain.FILE_LINE_SEPERATOR;
     private static final String finishedJobsTable = "FINISHED_JOBS";
     private static final ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
@@ -190,6 +189,7 @@ public class FinishedJobsFetcher {
         } catch (Exception e) {
             System.out.println("e = " + e);
             e.printStackTrace();
+
         }
     }
 

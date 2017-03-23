@@ -1,5 +1,11 @@
 package com.wipro.analytics.fetchers;
 
+import org.apache.hadoop.conf.Configuration;
+import org.apache.hadoop.fs.FileSystem;
+import org.apache.hadoop.fs.Path;
+
+import java.io.*;
+import java.util.Properties;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -7,59 +13,115 @@ import java.util.concurrent.TimeUnit;
  */
 public class DataFetcherMain {
 
-    public static long startDelay;
-    public static long scheduleInterval;
-    public static long aggregationInterval;
-    public static TimeUnit timeUnitForSchedule;
-    public static String runningJobsFile;
-    public static String runningJobsAggregatedDir;
-    public static String finishedJobsFile;
-    public static String finishedJobsAggregatedDir;
-    public static String queuesFile;
-    public static String queuesAggregatedDir;
-    public static String resourceManagerHost;
-    public static String resourceManagerPort;
-    public static String jobHistoryServerHost;
-    public static String jobHistoryServerPort;
-    public static String nameNodeHost;
-    public static String nameNodePort;
+    public static long START_DELAY;
+    public static long SCHEDULE_INTERVAL;
+    public static long AGGREGATION_INTERVAL;
+    public static TimeUnit TIMEUNIT_FOR_SCHEDULE;
+    public static String RUNNING_JOBS_FILE;
+    public static String RUNNING_JOBS_AGGREGATED_DIR;
+    public static String FINISHED_JOBS_FILE;
+    public static String FINISHED_JOBS_AGGREGATED_DIR;
+    public static String QUEUES_FILE;
+    public static String QUEUES_AGGREGATED_DIR;
+    public static String RUNNING_JOBS_TABLE;
+    public static String FINISHED_JOBS_TABLE;
+    public static String QUEUE_TABLE;
+    public static String RESOURCE_MANAGER_HOST;
+    public static String RESOURCE_MANAGER_PORT;
+    public static String JOBHISTORY_SERVER_HOST;
+    public static String JOBHISTORY_SERVER_PORT;
+    public static String NAMENODE_HOST;
+    public static String NAMENODE_PORT;
     public static String HIVE_DRIVER_NAME;
     public static String HIVE_USER;
     public static String HIVE_PASSWORD;
     public static String FILE_LINE_SEPERATOR;
     public static String FILE_FIELD_SEPERATOR;
-    public static String DBNAME;
+    public static String DATABASE_NAME;
     public static String HIVE_CONNECTION_URL;
 
-    public static void main(String args[]){
+    public static void main(String args[]) {
         init();
-        FinishedJobsFetcher.schedule(startDelay,scheduleInterval,timeUnitForSchedule);
-        RunningJobsFetcher.schedule(startDelay,scheduleInterval,timeUnitForSchedule);
-        QueueFetcher.schedule(startDelay,scheduleInterval,timeUnitForSchedule);
+        //checking if any aggregated data is present before restart
+        Configuration conf = new Configuration();
+        conf.set("fs.defaultFS", "hdfs://" + NAMENODE_HOST + ":" + NAMENODE_PORT);
+
+        try {
+            FileSystem fs = FileSystem.get(conf);
+
+            File aggregateQueuesDir = new File(QUEUES_AGGREGATED_DIR);
+            for (File aggregateQueuesFile : aggregateQueuesDir.listFiles()) {
+                fs.copyFromLocalFile(new Path(aggregateQueuesFile.getPath()), new Path("/tmp/" + QUEUE_TABLE, aggregateQueuesFile.getName()));
+            }
+
+            File aggregaterunningJobsDir = new File(RUNNING_JOBS_AGGREGATED_DIR);
+            for (File aggregaterunningJobsFile : aggregaterunningJobsDir.listFiles()) {
+                fs.copyFromLocalFile(new Path(aggregaterunningJobsFile.getPath()), new Path("/tmp/" + RUNNING_JOBS_TABLE, aggregaterunningJobsFile.getName()));
+            }
+
+            File aggregatefinishedJobsDir = new File(FINISHED_JOBS_AGGREGATED_DIR);
+            for (File aggregatefinishedJobsFile : aggregatefinishedJobsDir.listFiles()) {
+                fs.copyFromLocalFile(new Path(aggregatefinishedJobsFile.getPath()), new Path("/tmp/" + FINISHED_JOBS_TABLE, aggregatefinishedJobsFile.getName()));
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+
+        FinishedJobsFetcher.schedule(START_DELAY, SCHEDULE_INTERVAL, TIMEUNIT_FOR_SCHEDULE);
+        RunningJobsFetcher.schedule(START_DELAY, SCHEDULE_INTERVAL, TIMEUNIT_FOR_SCHEDULE);
+        QueueFetcher.schedule(START_DELAY, SCHEDULE_INTERVAL, TIMEUNIT_FOR_SCHEDULE);
     }
-    public static void init(){
-        startDelay = 0;
-        scheduleInterval = 10;
-        aggregationInterval = 30;
-        timeUnitForSchedule = TimeUnit.SECONDS;
-        runningJobsFile = "/home/openbdre/runningjobs";
-        runningJobsAggregatedDir = "/home/openbdre/aggregatedrunning/";
-        finishedJobsFile = "/home/openbdre/finishedjobs";
-        finishedJobsAggregatedDir = "/home/openbdre/aggregatedfinished/";
-        queuesFile = "/home/openbdre/queues";
-        queuesAggregatedDir = "/home/openbdre/aggregatedqueues/";
-        resourceManagerHost="localhost";
-        resourceManagerPort="8088";
-        jobHistoryServerHost="localhost";
-        jobHistoryServerPort="19888";
-        nameNodeHost="localhost";
-        nameNodePort="8020";
-        HIVE_DRIVER_NAME="org.apache.hive.jdbc.HiveDriver";
-        HIVE_USER= "openbdre";
-        HIVE_PASSWORD="openbdre";
-        FILE_LINE_SEPERATOR="\n";
-        FILE_FIELD_SEPERATOR="\t";
-        DBNAME="monitor";
-        HIVE_CONNECTION_URL="jdbc:hive2://localhost:10000";
+
+    public static void init() {
+        Properties properties = new Properties();
+        InputStream input = null;
+
+        try {
+            input = new FileInputStream("config.properties");
+            properties.load(input);
+
+            // get the properties value
+            START_DELAY = Long.parseLong(properties.getProperty("START_DELAY"));
+            SCHEDULE_INTERVAL = Long.parseLong(properties.getProperty("SCHEDULE_INTERVAL"));
+            AGGREGATION_INTERVAL = Long.parseLong(properties.getProperty("AGGREGATION_INTERVAL"));
+            TIMEUNIT_FOR_SCHEDULE = TimeUnit.valueOf(properties.getProperty("TIMEUNIT_FOR_SCHEDULE"));
+            RUNNING_JOBS_FILE = properties.getProperty("RUNNING_JOBS_FILE");
+            RUNNING_JOBS_AGGREGATED_DIR = properties.getProperty("RUNNING_JOBS_AGGREGATED_DIR");
+            RUNNING_JOBS_TABLE = properties.getProperty("RUNNING_JOBS_TABLE");
+            FINISHED_JOBS_FILE = properties.getProperty("FINISHED_JOBS_FILE");
+            FINISHED_JOBS_AGGREGATED_DIR = properties.getProperty("FINISHED_JOBS_AGGREGATED_DIR");
+            FINISHED_JOBS_TABLE = properties.getProperty("FINISHED_JOBS_TABLE");
+            QUEUES_FILE = properties.getProperty("QUEUES_FILE");
+            QUEUES_AGGREGATED_DIR = properties.getProperty("QUEUES_AGGREGATED_DIR");
+            QUEUE_TABLE = properties.getProperty("QUEUE_TABLE");
+            RESOURCE_MANAGER_HOST= properties.getProperty("RESOURCE_MANAGER_HOST");
+            RESOURCE_MANAGER_PORT = properties.getProperty("RESOURCE_MANAGER_PORT");
+            JOBHISTORY_SERVER_HOST = properties.getProperty("JOBHISTORY_SERVER_HOST");
+            JOBHISTORY_SERVER_PORT = properties.getProperty("JOBHISTORY_SERVER_PORT");
+            NAMENODE_HOST =properties.getProperty("NAMENODE_HOST");
+            NAMENODE_PORT = properties.getProperty("NAMENODE_PORT");
+            HIVE_DRIVER_NAME= properties.getProperty("HIVE_DRIVER_NAME");
+            HIVE_USER= properties.getProperty("HIVE_USER");
+            HIVE_PASSWORD= properties.getProperty("HIVE_PASSWORD");
+            FILE_LINE_SEPERATOR= properties.getProperty("FILE_LINE_SEPERATOR");
+            FILE_FIELD_SEPERATOR= properties.getProperty("FILE_FIELD_SEPERATOR");
+            DATABASE_NAME = properties.getProperty("DATABASE_NAME");
+            HIVE_CONNECTION_URL= properties.getProperty("HIVE_CONNECTION_URL");
+
+
+        } catch (IOException io) {
+            io.printStackTrace();
+        } finally {
+            if (input != null) {
+                try {
+                    input.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+
+        }
     }
 }

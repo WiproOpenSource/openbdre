@@ -11,7 +11,6 @@ import java.nio.file.Files;
 import java.nio.file.StandardCopyOption;
 import java.sql.Timestamp;
 import java.util.Calendar;
-import java.util.Date;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledFuture;
@@ -27,12 +26,12 @@ import org.codehaus.jackson.map.ObjectMapper;
 public class RunningJobsFetcher {
 
     private final ObjectMapper objectMapper = new ObjectMapper();
-    private final static String runningJobsFile = DataFetcherMain.runningJobsFile;
-    private final static String runningJobsAggregatedDir = DataFetcherMain.runningJobsAggregatedDir;
-    private final static String resourceManagerHost = DataFetcherMain.resourceManagerHost;
-    private final static String resourceManagerPort = DataFetcherMain.resourceManagerPort;
-    private static final long scheduleInterval = DataFetcherMain.scheduleInterval;
-    private static final long aggregationInterval = DataFetcherMain.aggregationInterval;
+    private final static String runningJobsFile = DataFetcherMain.RUNNING_JOBS_FILE;
+    private final static String runningJobsAggregatedDir = DataFetcherMain.RUNNING_JOBS_AGGREGATED_DIR;
+    private final static String resourceManagerHost = DataFetcherMain.RESOURCE_MANAGER_HOST;
+    private final static String resourceManagerPort = DataFetcherMain.RESOURCE_MANAGER_PORT;
+    private static final long scheduleInterval = DataFetcherMain.SCHEDULE_INTERVAL;
+    private static final long aggregationInterval = DataFetcherMain.AGGREGATION_INTERVAL;
     private static final String lineSeparator = DataFetcherMain.FILE_LINE_SEPERATOR;
     private static final String runningJobsTable = "RUNNING_JOBS";
     private static final ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);

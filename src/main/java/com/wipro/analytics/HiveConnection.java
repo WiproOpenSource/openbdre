@@ -8,11 +8,6 @@ import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.FileSystem;
 import org.apache.hadoop.fs.Path;
 import java.io.File;
-import java.io.IOException;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import java.util.Date;
 
 /**
  * Created by cloudera on 3/19/17.
@@ -24,10 +19,10 @@ public class HiveConnection {
     private static final String HIVE_PASSWORD = DataFetcherMain.HIVE_PASSWORD;
     private static final String FILE_LINE_SEPERATOR = DataFetcherMain.FILE_LINE_SEPERATOR;
     private static final String FILE_FIELD_SEPERATOR = DataFetcherMain.FILE_FIELD_SEPERATOR;
-    private static final String DBNAME = DataFetcherMain.DBNAME;
+    private static final String DBNAME = DataFetcherMain.DATABASE_NAME;
     private static final String HIVE_CONNECTION_URL = DataFetcherMain.HIVE_CONNECTION_URL;
-    private static final String NAME_NODE_HOST = DataFetcherMain.nameNodeHost;
-    private static final String NAME_NODE_PORT = DataFetcherMain.nameNodePort;
+    private static final String NAME_NODE_HOST = DataFetcherMain.NAMENODE_HOST;
+    private static final String NAME_NODE_PORT = DataFetcherMain.NAMENODE_PORT;
     public static Connection getHiveJDBCConnection(String dbName, String hiveConnection) throws SQLException {
         try {
             Class.forName(HIVE_DRIVER_NAME);

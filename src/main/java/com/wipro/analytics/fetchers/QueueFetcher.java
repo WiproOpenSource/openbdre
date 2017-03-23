@@ -22,12 +22,12 @@ import java.util.concurrent.TimeUnit;
  */
 public class QueueFetcher {
     private final ObjectMapper objectMapper = new ObjectMapper();
-    private final String queuesFile = DataFetcherMain.queuesFile;
-    private final String queuesAggregatedDir = DataFetcherMain.queuesAggregatedDir;
-    private final static String resourceManagerHost = DataFetcherMain.resourceManagerHost;
-    private final static String resourceManagerPort = DataFetcherMain.resourceManagerPort;
-    private static final long scheduleInterval = DataFetcherMain.scheduleInterval;
-    private static final long aggregationInterval = DataFetcherMain.aggregationInterval;
+    private final String queuesFile = DataFetcherMain.QUEUES_FILE;
+    private final String queuesAggregatedDir = DataFetcherMain.QUEUES_AGGREGATED_DIR;
+    private final static String resourceManagerHost = DataFetcherMain.RESOURCE_MANAGER_HOST;
+    private final static String resourceManagerPort = DataFetcherMain.RESOURCE_MANAGER_PORT;
+    private static final long scheduleInterval = DataFetcherMain.SCHEDULE_INTERVAL;
+    private static final long aggregationInterval = DataFetcherMain.AGGREGATION_INTERVAL;
     private static final String lineSeparator = DataFetcherMain.FILE_LINE_SEPERATOR;
     private static final String queueTable = "QUEUES";
     private static final ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
@@ -414,6 +414,7 @@ public class QueueFetcher {
 
 
     public static void schedule(long startDelay, long scheduleInterval, TimeUnit timeUnitForSchedule) {
+
 
         final ScheduledFuture<?> taskHandle = scheduler.scheduleAtFixedRate(
                 new Runnable() {
