@@ -86,7 +86,7 @@ public class DataFetcherMain {
         InputStream input = null;
 
         try {
-            input = new FileInputStream("config.properties");
+            input = new FileInputStream("/home/cloudera/config.properties");
             properties.load(input);
 
             // get the properties value
