@@ -23,10 +23,16 @@ public class FinishedJobsInfo implements Serializable {
     private long avgShuffleTime;
     private long avgMergeTime;
     private long gcTime;
-    private long usedMemory;
-    private long timeSpentMaps;
-    private long timeSpentReducers;
-    private long timeSpentTotal;
+    private long usedPhysicalMemory;
+    private long cpuTimeSpentMaps;
+    private long cpuTimeSpentReducers;
+    private long cpuTimeSpentTotal;
+    private long vCoreSecondsMaps;
+    private long vCoreSecondsReducers;
+    private long memorySecondsMaps;
+    private long memorySecondsReducers;
+    private long slotsTimeMaps;
+    private long slotsTimeReducers;
     private long totalFileBytesRead;
     private long totalFileBytesWritten;
     private long totalFileReadOps;
@@ -37,6 +43,8 @@ public class FinishedJobsInfo implements Serializable {
     private long totalHDFSReadOps;
     private long totalHDFSLargeReadOps;
     private long totalHDFSWriteOps;
+    private String actionId;
+    private String workflowId;
     private Timestamp timestamp;
 
     public String getId() {
@@ -142,36 +150,84 @@ public class FinishedJobsInfo implements Serializable {
         this.gcTime = gcTime;
     }
 
-    public long getUsedMemory() {
-        return usedMemory;
+    public long getUsedPhysicalMemory() {
+        return usedPhysicalMemory;
     }
 
-    public void setUsedMemory(long used_memory) {
-        this.usedMemory = used_memory;
+    public void setUsedPhysicalMemory(long used_memory) {
+        this.usedPhysicalMemory = used_memory;
     }
 
-    public long getTimeSpentMaps() {
-        return timeSpentMaps;
+    public long getcpuTimeSpentMaps() {
+        return cpuTimeSpentMaps;
     }
 
-    public void setTimeSpentMaps(long timeSpentMaps) {
-        this.timeSpentMaps = timeSpentMaps;
+    public void setcpuTimeSpentMaps(long cpuTimeSpentMaps) {
+        this.cpuTimeSpentMaps = cpuTimeSpentMaps;
     }
 
-    public long getTimeSpentReducers() {
-        return timeSpentReducers;
+    public long getcpuTimeSpentReducers() {
+        return cpuTimeSpentReducers;
     }
 
-    public void setTimeSpentReducers(long timeSpentReducers) {
-        this.timeSpentReducers = timeSpentReducers;
+    public void setcpuTimeSpentReducers(long cpuTimeSpentReducers) {
+        this.cpuTimeSpentReducers = cpuTimeSpentReducers;
     }
 
-    public long getTimeSpentTotal() {
-        return timeSpentTotal;
+    public long getcpuTimeSpentTotal() {
+        return cpuTimeSpentTotal;
     }
 
-    public void setTimeSpentTotal(long timeSpentTotal) {
-        this.timeSpentTotal = timeSpentTotal;
+    public void setcpuTimeSpentTotal(long cpuTimeSpentTotal) {
+        this.cpuTimeSpentTotal = cpuTimeSpentTotal;
+    }
+
+    public long getvCoreSecondsMaps() {
+        return vCoreSecondsMaps;
+    }
+
+    public void setvCoreSecondsMaps(long vCoreSecondsMaps) {
+        this.vCoreSecondsMaps = vCoreSecondsMaps;
+    }
+
+    public long getvCoreSecondsReducers() {
+        return vCoreSecondsReducers;
+    }
+
+    public void setvCoreSecondsReducers(long vCoreSecondsReducers) {
+        this.vCoreSecondsReducers = vCoreSecondsReducers;
+    }
+
+    public long getMemorySecondsMaps() {
+        return memorySecondsMaps;
+    }
+
+    public void setMemorySecondsMaps(long memorySecondsMaps) {
+        this.memorySecondsMaps = memorySecondsMaps;
+    }
+
+    public long getMemorySecondsReducers() {
+        return memorySecondsReducers;
+    }
+
+    public void setMemorySecondsReducers(long memorySecondsReducers) {
+        this.memorySecondsReducers = memorySecondsReducers;
+    }
+
+    public long getSlotsTimeMaps() {
+        return slotsTimeMaps;
+    }
+
+    public void setSlotsTimeMaps(long slotsTimeMaps) {
+        this.slotsTimeMaps = slotsTimeMaps;
+    }
+
+    public long getSlotsTimeReducers() {
+        return slotsTimeReducers;
+    }
+
+    public void setSlotsTimeReducers(long slotsTimeReducers) {
+        this.slotsTimeReducers = slotsTimeReducers;
     }
 
     public long getTotalHDFSWriteOps() {
@@ -254,6 +310,23 @@ public class FinishedJobsInfo implements Serializable {
         this.totalHDFSLargeReadOps = totalHDFSLargeReadOps;
     }
 
+    public String getActionId() {
+        return actionId;
+    }
+
+    public void setActionId(String actionId) {
+        this.actionId = actionId;
+    }
+
+
+    public String getWorkflowId() {
+        return workflowId;
+    }
+
+    public void setWorkflowId(String workflowId) {
+        this.workflowId = workflowId;
+    }
+
     public Timestamp getTimestamp() {
         return timestamp;
     }
@@ -278,10 +351,16 @@ public class FinishedJobsInfo implements Serializable {
                 +avgShuffleTime+ fieldDelimiter
                 +avgMergeTime+ fieldDelimiter
                 +gcTime+ fieldDelimiter
-                +usedMemory+ fieldDelimiter
-                +timeSpentMaps+ fieldDelimiter
-                +timeSpentReducers+ fieldDelimiter
-                +timeSpentTotal+ fieldDelimiter
+                +usedPhysicalMemory+ fieldDelimiter
+                +cpuTimeSpentMaps+ fieldDelimiter
+                +cpuTimeSpentReducers+ fieldDelimiter
+                +cpuTimeSpentTotal+ fieldDelimiter
+                +vCoreSecondsMaps+ fieldDelimiter
+                +vCoreSecondsReducers+ fieldDelimiter
+                +memorySecondsMaps+ fieldDelimiter
+                +memorySecondsReducers+ fieldDelimiter
+                +slotsTimeMaps+ fieldDelimiter
+                +slotsTimeReducers+ fieldDelimiter
                 +totalFileBytesRead+ fieldDelimiter
                 +totalFileBytesWritten+ fieldDelimiter
                 +totalFileReadOps+ fieldDelimiter
@@ -292,6 +371,8 @@ public class FinishedJobsInfo implements Serializable {
                 +totalHDFSReadOps+ fieldDelimiter
                 +totalHDFSLargeReadOps+ fieldDelimiter
                 +totalHDFSWriteOps+ fieldDelimiter
+                +actionId+ fieldDelimiter
+                +workflowId+ fieldDelimiter
                 +timestamp;
     }
 }

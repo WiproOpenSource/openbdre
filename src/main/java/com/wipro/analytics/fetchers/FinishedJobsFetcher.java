@@ -101,16 +101,16 @@ public class FinishedJobsFetcher {
                             }
                             else if(counter.get("name").asText().equalsIgnoreCase("PHYSICAL_MEMORY_BYTES")){
                                 long usedMemory = counter.get("totalCounterValue").getLongValue();
-                                finishedJobsInfo.setUsedMemory(usedMemory);
+                                finishedJobsInfo.setUsedPhysicalMemory(usedMemory);
                             }
                             else if(counter.get("name").asText().equalsIgnoreCase("CPU_MILLISECONDS")){
-                                long timeSpentMaps  = counter.get("mapCounterValue").getLongValue();
-                                long timeSpentReducers   = counter.get("reduceCounterValue").getLongValue();
-                                long timeSpentTotal = counter.get("totalCounterValue").getLongValue();
+                                long cpuTimeSpentMaps  = counter.get("mapCounterValue").getLongValue();
+                                long cpuTimeSpentReducers   = counter.get("reduceCounterValue").getLongValue();
+                                long cpuTimeSpentTotal = counter.get("totalCounterValue").getLongValue();
 
-                                finishedJobsInfo.setTimeSpentMaps(timeSpentMaps);
-                                finishedJobsInfo.setTimeSpentReducers(timeSpentReducers);
-                                finishedJobsInfo.setTimeSpentTotal(timeSpentTotal);
+                                finishedJobsInfo.setcpuTimeSpentMaps(cpuTimeSpentMaps);
+                                finishedJobsInfo.setcpuTimeSpentReducers(cpuTimeSpentReducers);
+                                finishedJobsInfo.setcpuTimeSpentTotal(cpuTimeSpentTotal);
                             }
                         }
 
@@ -162,7 +162,52 @@ public class FinishedJobsFetcher {
                         }
                     }
 
+                    else if(counterGroup.get("counterGroupName").asText().equalsIgnoreCase("org.apache.hadoop.mapreduce.JobCounter")){
+                        JsonNode counters = counterGroup.path("counter");
+                        for(JsonNode counter: counters) {
+                            if (counter.get("name").asText().equalsIgnoreCase("SLOTS_MILLIS_MAPS")) {
+                                long slotsTimeMaps  = counter.get("totalCounterValue").getLongValue();
+                                finishedJobsInfo.setSlotsTimeMaps(slotsTimeMaps);
+                            }
+                            else if (counter.get("name").asText().equalsIgnoreCase("SLOTS_MILLIS_REDUCES")) {
+                                long slotsTimeReducers  = counter.get("totalCounterValue").getLongValue();
+                                finishedJobsInfo.setSlotsTimeReducers(slotsTimeReducers);
+                            }
+                            else if (counter.get("name").asText().equalsIgnoreCase("MB_MILLIS_MAPS")) {
+                                long memorySecondsMaps  = counter.get("totalCounterValue").getLongValue();
+                                finishedJobsInfo.setMemorySecondsMaps(memorySecondsMaps);
+                            }
+                            else if (counter.get("name").asText().equalsIgnoreCase("MB_MILLIS_REDUCES")) {
+                                long memorySecondsReducers  = counter.get("totalCounterValue").getLongValue();
+                                finishedJobsInfo.setMemorySecondsReducers(memorySecondsReducers);
+                            }
+                            else if (counter.get("name").asText().equalsIgnoreCase("VCORES_MILLIS_MAPS")) {
+                                long vCoreSecondsMaps  = counter.get("totalCounterValue").getLongValue();
+                                finishedJobsInfo.setvCoreSecondsMaps(vCoreSecondsMaps);
+                            }
+                            else if (counter.get("name").asText().equalsIgnoreCase("VCORES_MILLIS_REDUCES")) {
+                                long vCoreSecondsReducers  = counter.get("totalCounterValue").getLongValue();
+                                finishedJobsInfo.setvCoreSecondsReducers(vCoreSecondsReducers);
+                            }
+                        }
+                    }
+
                 }
+
+                URL jobConfURL = new URL("http://"+jobHistoryServerHost+":"+jobHistoryServerPort+"/ws/v1/history/mapreduce/jobs/"+jobId+"/conf");
+                JsonNode properties = readJsonNode(jobConfURL).path("conf").path("property");
+                for(JsonNode property : properties){
+                    if(property.get("name").asText().equalsIgnoreCase("oozie.action.id")){
+                        String actionId = property.get("value").asText();
+                        finishedJobsInfo.setActionId(actionId);
+                    }
+                    else  if(property.get("name").asText().equalsIgnoreCase("oozie.job.id")){
+                        String workflowId = property.get("value").asText();
+                        finishedJobsInfo.setWorkflowId(workflowId);
+                    }
+                }
+
+
 
                 //write finishedjobInfo to file
                 finishedJobsInfo.setTimestamp(new Timestamp(Calendar.getInstance().getTime().getTime()));

@@ -1,10 +1,25 @@
-CREATE TABLE IF NOT EXISTS FINISHED_JOBS_STG (id String,name String, queue String, username String, state String, submitTime bigint, startTime bigint, finishTime bigint,avgMapTime bigint, avgReduceTime bigint, avgShuffleTime bigint, avgMergeTime bigint, gcTime bigint, usedMemory bigint, timeSpentMaps bigint, timeSpentReducers bigint, timeSpentTotal bigint, totalFileBytesRead   bigint ,totalFileBytesWritten  bigint ,totalFileReadOps  bigint ,totalFileLargeReadOps  bigint ,totalFileWriteOps  bigint ,totalHDFSBytesRead  bigint ,totalHDFSBytesWritten  bigint ,totalHDFSReadOps  bigint ,totalHDFSLargeReadOps  bigint ,totalHDFSWriteOps bigint, fetchTime TIMESTAMP ,fetchdate string, fetchhour string)
+CREATE TABLE IF NOT EXISTS FINISHED_JOBS_STG (id String,name String, queue String, username String, state String, submitTime
+bigint, startTime bigint, finishTime bigint,avgMapTime bigint, avgReduceTime bigint, avgShuffleTime bigint, avgMergeTime bigint,
+gcTime bigint, usedPhysicalMemory bigint, cpuTimeSpentMaps bigint, cpuTimeSpentReducers bigint, cpuTimeSpentTotal bigint, vCoreSecondsMaps bigint,
+vCoreSecondsReducers bigint, memorySecondsMaps bigint, memorySecondsReducers bigint, slotsTimeMaps bigint, slotsTimeReducers bigint,
+totalFileBytesRead   bigint ,totalFileBytesWritten  bigint ,totalFileReadOps  bigint ,totalFileLargeReadOps  bigint
+,totalFileWriteOps  bigint ,totalHDFSBytesRead  bigint ,totalHDFSBytesWritten  bigint ,totalHDFSReadOps  bigint
+,totalHDFSLargeReadOps  bigint ,totalHDFSWriteOps bigint, actionId string, workflowId string, fetchTime TIMESTAMP)
 ROW FORMAT DELIMITED
 FIELDS TERMINATED BY '\t'
 LINES TERMINATED BY '\n'
 STORED AS TEXTFILE;
 
-CREATE TABLE IF NOT EXISTS FINISHED_JOBS (id String,name String, queue String, username String, state String, submitTime bigint, startTime bigint, finishTime bigint,avgMapTime bigint, avgReduceTime bigint, avgShuffleTime bigint, avgMergeTime bigint, gcTime bigint, usedMemory bigint, timeSpentMaps bigint, timeSpentReducers bigint, timeSpentTotal bigint,totalFileBytesRead   bigint ,totalFileBytesWritten  bigint ,totalFileReadOps  bigint ,totalFileLargeReadOps  bigint ,totalFileWriteOps  bigint ,totalHDFSBytesRead  bigint ,totalHDFSBytesWritten  bigint ,totalHDFSReadOps  bigint ,totalHDFSLargeReadOps  bigint ,totalHDFSWriteOps bigint, fetchTime TIMESTAMP )
+
+
+
+CREATE TABLE IF NOT EXISTS FINISHED_JOBS (id String,name String, queue String, username String, state String, submitTime
+bigint, startTime bigint, finishTime bigint,avgMapTime bigint, avgReduceTime bigint, avgShuffleTime bigint, avgMergeTime bigint,
+gcTime bigint, usedPhysicalMemory bigint, cpuTimeSpentMaps bigint, cpuTimeSpentReducers bigint, cpuTimeSpentTotal bigint, vCoreSecondsMaps bigint,
+vCoreSecondsReducers bigint, memorySecondsMaps bigint, memorySecondsReducers bigint, slotsTimeMaps bigint, slotsTimeReducers bigint,
+totalFileBytesRead   bigint ,totalFileBytesWritten  bigint ,totalFileReadOps  bigint ,totalFileLargeReadOps  bigint
+,totalFileWriteOps  bigint ,totalHDFSBytesRead  bigint ,totalHDFSBytesWritten  bigint ,totalHDFSReadOps  bigint
+,totalHDFSLargeReadOps  bigint ,totalHDFSWriteOps bigint, actionId string, workflowId string, fetchTime TIMESTAMP )
 PARTITIONED BY (fetchdate string, fetchhour string)
 ROW FORMAT DELIMITED
 FIELDS TERMINATED BY '\t'
