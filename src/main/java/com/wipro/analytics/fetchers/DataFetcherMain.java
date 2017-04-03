@@ -13,6 +13,7 @@ import java.util.concurrent.TimeUnit;
  */
 public class DataFetcherMain {
 
+    public static String FOLDERS_TO_MONITOR_FOR_HDFS_QUOTA;
     public static long START_DELAY;
     public static long SCHEDULE_INTERVAL;
     public static long AGGREGATION_INTERVAL;
@@ -21,10 +22,13 @@ public class DataFetcherMain {
     public static String RUNNING_JOBS_AGGREGATED_DIR;
     public static String FINISHED_JOBS_FILE;
     public static String FINISHED_JOBS_AGGREGATED_DIR;
+    public static String HDFS_QUOTA_FILE;
+    public static String HDFS_QUOTA_AGGREGATED_DIR;
     public static String QUEUES_FILE;
     public static String QUEUES_AGGREGATED_DIR;
     public static String RUNNING_JOBS_TABLE;
     public static String FINISHED_JOBS_TABLE;
+    public static String HDFS_QUOTA_TABLE;
     public static String QUEUE_TABLE;
     public static String RESOURCE_MANAGER_HOST;
     public static String RESOURCE_MANAGER_PORT;
@@ -65,6 +69,11 @@ public class DataFetcherMain {
                     fs.copyFromLocalFile(new Path(aggregatefinishedJobsFile.getPath()), new Path("/tmp/" + FINISHED_JOBS_TABLE, aggregatefinishedJobsFile.getName()));
                 }
 
+                File aggregatehdfsQuotaDir = new File(HDFS_QUOTA_AGGREGATED_DIR);
+                for (File aggregatehdfsQuotaFile : aggregatehdfsQuotaDir.listFiles()) {
+                    fs.copyFromLocalFile(new Path(aggregatehdfsQuotaFile.getPath()), new Path("/tmp/" + HDFS_QUOTA_TABLE, aggregatehdfsQuotaFile.getName()));
+                }
+
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -73,6 +82,7 @@ public class DataFetcherMain {
             FinishedJobsFetcher.schedule(START_DELAY, SCHEDULE_INTERVAL, TIMEUNIT_FOR_SCHEDULE);
             RunningJobsFetcher.schedule(START_DELAY, SCHEDULE_INTERVAL, TIMEUNIT_FOR_SCHEDULE);
             QueueFetcher.schedule(START_DELAY, SCHEDULE_INTERVAL, TIMEUNIT_FOR_SCHEDULE);
+            HDFSQuotaFetcher.schedule(START_DELAY, SCHEDULE_INTERVAL, TIMEUNIT_FOR_SCHEDULE);
         }catch (Exception e){
             e.printStackTrace();
         }
@@ -90,6 +100,7 @@ public class DataFetcherMain {
             properties.load(input);
 
             // get the properties value
+            FOLDERS_TO_MONITOR_FOR_HDFS_QUOTA = properties.getProperty("FOLDERS_TO_MONITOR_FOR_HDFS_QUOTA");
             START_DELAY = Long.parseLong(properties.getProperty("START_DELAY"));
             SCHEDULE_INTERVAL = Long.parseLong(properties.getProperty("SCHEDULE_INTERVAL"));
             AGGREGATION_INTERVAL = Long.parseLong(properties.getProperty("AGGREGATION_INTERVAL"));
@@ -97,6 +108,9 @@ public class DataFetcherMain {
             RUNNING_JOBS_FILE = properties.getProperty("RUNNING_JOBS_FILE");
             RUNNING_JOBS_AGGREGATED_DIR = properties.getProperty("RUNNING_JOBS_AGGREGATED_DIR");
             RUNNING_JOBS_TABLE = properties.getProperty("RUNNING_JOBS_TABLE");
+            HDFS_QUOTA_FILE = properties.getProperty("HDFS_QUOTA_FILE");
+            HDFS_QUOTA_AGGREGATED_DIR = properties.getProperty("HDFS_QUOTA_AGGREGATED_DIR");
+            HDFS_QUOTA_TABLE = properties.getProperty("HDFS_QUOTA_TABLE");
             FINISHED_JOBS_FILE = properties.getProperty("FINISHED_JOBS_FILE");
             FINISHED_JOBS_AGGREGATED_DIR = properties.getProperty("FINISHED_JOBS_AGGREGATED_DIR");
             FINISHED_JOBS_TABLE = properties.getProperty("FINISHED_JOBS_TABLE");

@@ -71,6 +71,9 @@ public class HiveConnection {
             else if(tableName.equalsIgnoreCase("QUEUES")){
                 insertDataQuery = "INSERT INTO TABLE "+ tableName+" PARTITION(fetchdate, fetchhour) SELECT queueName , absoluteAllocatedCapacity , absoluteUsedCapacity , usedMemory , usedCores , numContainers , queueState , maxApplications , numApplications , numActiveApplications , numPendingApplications  , queueType , users , fetchTime ,to_date(fetchTime), hour(fetchTime) FROM "+tableName+"_STG";
             }
+            else if(tableName.equalsIgnoreCase("HDFS_QUOTA")){
+                insertDataQuery = "INSERT INTO TABLE "+ tableName+" PARTITION(fetchdate, fetchhour) SELECT hdfspath , quota , numFiles , spaceQuota , spaceConsumed , fetchTime ,to_date(fetchTime), hour(fetchTime) FROM "+tableName+"_STG";
+            }
             System.out.println("insertDataQuery = " + insertDataQuery);
             stmt.executeUpdate(insertDataQuery);
             
