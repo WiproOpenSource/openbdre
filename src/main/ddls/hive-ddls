@@ -28,13 +28,13 @@ STORED AS TEXTFILE;
 
 
 
-CREATE TABLE IF NOT EXISTS RUNNING_JOBS_STG (applicationId String,applicationName String, applicationState String, applicationType String, finalState String, progress String, username String, queueName String , startTime bigint, elapsedTime bigint, finishTime bigint, trackingUrl String, numContainers int, allocatedMB int, allocatedVCores int, memorySeconds bigint, vcoreSeconds bigint , fetchTime TIMESTAMP)
+CREATE TABLE IF NOT EXISTS RUNNING_JOBS_STG (applicationId String,applicationName String, applicationState String, applicationType String, finalState String, progress String, username String, queueName String , startTime bigint, elapsedTime bigint, finishTime bigint, trackingUrl String, numContainers int, allocatedMB int, allocatedVCores int, memorySeconds bigint, vcoreSeconds bigint ,appMasterNodeId String, appMasterContainerId String, fetchTime TIMESTAMP)
 ROW FORMAT DELIMITED
 FIELDS TERMINATED BY '\t'
 LINES TERMINATED BY '\n'
 STORED AS TEXTFILE;
 
-CREATE TABLE IF NOT EXISTS RUNNING_JOBS (applicationId String,applicationName String, applicationState String, applicationType String, finalState String, progress String, username String, queueName String , startTime bigint, elapsedTime bigint, finishTime bigint, trackingUrl String, numContainers int, allocatedMB int, allocatedVCores int, memorySeconds bigint, vcoreSeconds bigint , fetchTime TIMESTAMP)
+CREATE TABLE IF NOT EXISTS RUNNING_JOBS (applicationId String,applicationName String, applicationState String, applicationType String, finalState String, progress String, username String, queueName String , startTime bigint, elapsedTime bigint, finishTime bigint, trackingUrl String, numContainers int, allocatedMB int, allocatedVCores int, memorySeconds bigint, vcoreSeconds bigint ,appMasterNodeId String, appMasterContainerId String, fetchTime TIMESTAMP)
 PARTITIONED BY (fetchdate string, fetchhour string)
 ROW FORMAT DELIMITED
 FIELDS TERMINATED BY '\t'
@@ -69,3 +69,20 @@ ROW FORMAT DELIMITED
 FIELDS TERMINATED BY '\t'
 LINES TERMINATED BY '\n'
 STORED AS TEXTFILE;
+
+
+
+CREATE TABLE IF NOT EXISTS MR_TASKS_STG (applicationId String,taskId String,taskProgress double,taskState String, taskType String, taskStartTime bigint,taskFinishTime bigint, taskElapsedTime bigint, runningTaskAttemptId String,  taskAttemptState String, assignedContainerId String, nodeHttpAddress String, nodeId String,containerState String, containerUsername String, containerTotalMemoryNeededMB bigint,containerTotalVCoresNeeded bigint  , fetchTime TIMESTAMP)
+ROW FORMAT DELIMITED
+FIELDS TERMINATED BY '\t'
+LINES TERMINATED BY '\n'
+STORED AS TEXTFILE;
+
+
+CREATE TABLE IF NOT EXISTS MR_TASKS (applicationId String,taskId String, taskProgress double,taskState String, taskType String, taskStartTime bigint,taskFinishTime bigint, taskElapsedTime bigint, runningTaskAttemptId String,  taskAttemptState String, assignedContainerId String, nodeHttpAddress String, nodeId String,containerState String, containerUsername String, containerTotalMemoryNeededMB bigint,containerTotalVCoresNeeded bigint  , fetchTime TIMESTAMP)
+PARTITIONED BY (fetchdate string, fetchhour string)
+ROW FORMAT DELIMITED
+FIELDS TERMINATED BY '\t'
+LINES TERMINATED BY '\n'
+STORED AS TEXTFILE;
+

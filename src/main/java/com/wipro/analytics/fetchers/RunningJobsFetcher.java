@@ -89,10 +89,16 @@ public class RunningJobsFetcher {
                 runningJobsInfo.setMemorySeconds(memorySeconds);
                 runningJobsInfo.setVcoreSeconds(vcoreSeconds);
 
-                //write this runningjobinfo to file
-
-                runningJobsInfo.setTimestamp(new Timestamp(Calendar.getInstance().getTime().getTime()));
-                writer.write(runningJobsInfo.toString()+lineSeparator);
+                URL appAttemptUrl = new URL("http://"+resourceManagerHost+":"+resourceManagerPort+"/ws/v1/cluster/apps/"+applicationId+"/appattempts");
+                JsonNode appAttemptsArray = readJsonNode(appAttemptUrl).path("appAttempts").path("appAttempt");
+                for(JsonNode appAttempt : appAttemptsArray){
+                    String nodeId = appAttempt.get("nodeId").asText();
+                    String containerId = appAttempt.get("containerId").asText();
+                    runningJobsInfo.setAppMasterNodeId(nodeId);
+                    runningJobsInfo.setAppMasterContainerId(containerId);
+                    runningJobsInfo.setTimestamp(new Timestamp(Calendar.getInstance().getTime().getTime()));
+                    writer.write(runningJobsInfo.toString()+lineSeparator);
+                }
 
             }
             writer.close();

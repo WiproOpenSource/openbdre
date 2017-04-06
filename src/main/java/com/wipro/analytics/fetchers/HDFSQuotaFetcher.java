@@ -63,7 +63,6 @@ public class HDFSQuotaFetcher {
                 hdfsQuotaInfo.setNumFiles(numFiles);
 
                 hdfsQuotaInfo.setTimestamp(new Timestamp(Calendar.getInstance().getTime().getTime()));
-                System.out.println("hdfsQuotaInfo = " + hdfsQuotaInfo.toString());
                 writer.write(hdfsQuotaInfo.toString() + lineSeparator);
 
             }

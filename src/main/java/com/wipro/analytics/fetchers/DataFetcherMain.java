@@ -18,6 +18,9 @@ public class DataFetcherMain {
     public static long SCHEDULE_INTERVAL;
     public static long AGGREGATION_INTERVAL;
     public static TimeUnit TIMEUNIT_FOR_SCHEDULE;
+    public static String MR_TASKS_FILE;
+    public static String MR_TASKS_AGGREGATED_DIR;
+    public static String MR_TASKS_TABLE;
     public static String RUNNING_JOBS_FILE;
     public static String RUNNING_JOBS_AGGREGATED_DIR;
     public static String FINISHED_JOBS_FILE;
@@ -74,15 +77,21 @@ public class DataFetcherMain {
                     fs.copyFromLocalFile(new Path(aggregatehdfsQuotaFile.getPath()), new Path("/tmp/" + HDFS_QUOTA_TABLE, aggregatehdfsQuotaFile.getName()));
                 }
 
+                File aggregateMRTasksDir = new File(MR_TASKS_AGGREGATED_DIR);
+                for (File aggregateMRTasksFile : aggregateMRTasksDir.listFiles()) {
+                    fs.copyFromLocalFile(new Path(aggregateMRTasksFile.getPath()), new Path("/tmp/" + MR_TASKS_TABLE, aggregateMRTasksFile.getName()));
+                }
+
             } catch (IOException e) {
                 e.printStackTrace();
             }
 
 
-            FinishedJobsFetcher.schedule(START_DELAY, SCHEDULE_INTERVAL, TIMEUNIT_FOR_SCHEDULE);
+           // FinishedJobsFetcher.schedule(START_DELAY, SCHEDULE_INTERVAL, TIMEUNIT_FOR_SCHEDULE);
             RunningJobsFetcher.schedule(START_DELAY, SCHEDULE_INTERVAL, TIMEUNIT_FOR_SCHEDULE);
             QueueFetcher.schedule(START_DELAY, SCHEDULE_INTERVAL, TIMEUNIT_FOR_SCHEDULE);
             HDFSQuotaFetcher.schedule(START_DELAY, SCHEDULE_INTERVAL, TIMEUNIT_FOR_SCHEDULE);
+            MRTasksFetcher.schedule(START_DELAY, SCHEDULE_INTERVAL, TIMEUNIT_FOR_SCHEDULE);
         }catch (Exception e){
             e.printStackTrace();
         }
@@ -108,6 +117,9 @@ public class DataFetcherMain {
             RUNNING_JOBS_FILE = properties.getProperty("RUNNING_JOBS_FILE");
             RUNNING_JOBS_AGGREGATED_DIR = properties.getProperty("RUNNING_JOBS_AGGREGATED_DIR");
             RUNNING_JOBS_TABLE = properties.getProperty("RUNNING_JOBS_TABLE");
+            MR_TASKS_FILE = properties.getProperty("MR_TASKS_FILE");
+            MR_TASKS_AGGREGATED_DIR = properties.getProperty("MR_TASKS_AGGREGATED_DIR");
+            MR_TASKS_TABLE = properties.getProperty("MR_TASKS_TABLE");
             HDFS_QUOTA_FILE = properties.getProperty("HDFS_QUOTA_FILE");
             HDFS_QUOTA_AGGREGATED_DIR = properties.getProperty("HDFS_QUOTA_AGGREGATED_DIR");
             HDFS_QUOTA_TABLE = properties.getProperty("HDFS_QUOTA_TABLE");

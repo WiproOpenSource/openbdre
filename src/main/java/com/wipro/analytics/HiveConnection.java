@@ -53,6 +53,7 @@ public class HiveConnection {
 		    File sourceFile = new File(filename);
             fs.copyFromLocalFile(new Path(sourceFile.getPath()),new Path("/tmp/"+tableName,sourceFile.getName()));
             String hdfsDir="/tmp/"+tableName;
+            sourceFile.delete();
 
             Connection conn = getHiveJDBCConnection(DBNAME,HIVE_CONNECTION_URL);
             Statement stmt = conn.createStatement();
@@ -65,7 +66,7 @@ public class HiveConnection {
                 insertDataQuery = "INSERT   INTO TABLE "+ tableName+" PARTITION(fetchdate, fetchhour) SELECT id ,name , queue , username , state , submitTime , startTime , finishTime ,avgMapTime , avgReduceTime , avgShuffleTime , avgMergeTime , gcTime , usedPhysicalMemory ,  cpuTimeSpentMaps , cpuTimeSpentReducers , cpuTimeSpentTotal ,vCoreSecondsMaps, vCoreSecondsReducers, memorySecondsMaps,memorySecondsReducers,  slotsTimeMaps,slotsTimeReducers, totalFileBytesRead    ,totalFileBytesWritten   ,totalFileReadOps   ,  totalFileLargeReadOps   ,totalFileWriteOps   ,totalHDFSBytesRead   ,totalHDFSBytesWritten   ,totalHDFSReadOps   ,  totalHDFSLargeReadOps   ,totalHDFSWriteOps ,actionId, workflowId, fetchTime ,to_date(fetchTime), hour(fetchTime) FROM "+tableName+"_STG";
             }
             else if(tableName.equalsIgnoreCase("RUNNING_JOBS")){
-                insertDataQuery = "INSERT INTO TABLE "+ tableName+" PARTITION(fetchdate, fetchhour) SELECT applicationId ,applicationName , applicationState , applicationType , finalState , progress , username , queueName  , startTime , elapsedTime , finishTime , trackingUrl , numContainers , allocatedMB , allocatedVCores , memorySeconds , vcoreSeconds  , fetchTime ,to_date(fetchTime), hour(fetchTime) FROM "+tableName+"_STG";
+                insertDataQuery = "INSERT INTO TABLE "+ tableName+" PARTITION(fetchdate, fetchhour) SELECT applicationId ,applicationName , applicationState , applicationType , finalState , progress , username , queueName  , startTime , elapsedTime , finishTime , trackingUrl , numContainers , allocatedMB , allocatedVCores , memorySeconds , vcoreSeconds  ,nodeId , containerId , fetchTime ,to_date(fetchTime), hour(fetchTime) FROM "+tableName+"_STG";
             }
 
             else if(tableName.equalsIgnoreCase("QUEUES")){
@@ -74,11 +75,12 @@ public class HiveConnection {
             else if(tableName.equalsIgnoreCase("HDFS_QUOTA")){
                 insertDataQuery = "INSERT INTO TABLE "+ tableName+" PARTITION(fetchdate, fetchhour) SELECT hdfspath , quota , numFiles , spaceQuota , spaceConsumed , fetchTime ,to_date(fetchTime), hour(fetchTime) FROM "+tableName+"_STG";
             }
+            else if(tableName.equalsIgnoreCase("MR_TASKS")){
+                insertDataQuery = "INSERT INTO TABLE "+ tableName+" PARTITION(fetchdate, fetchhour) SELECT applicationId ,taskId ,taskProgress ,taskState , taskType , taskStartTime ,taskFinishTime , taskElapsedTime , runningTaskAttemptId ,  taskAttemptState , assignedContainerId , nodeHttpAddress , nodeId ,containerState , containerUsername , containerTotalMemoryNeededMB ,containerTotalVCoresNeeded , fetchTime ,to_date(fetchTime), hour(fetchTime) FROM "+tableName+"_STG";
+            }
             System.out.println("insertDataQuery = " + insertDataQuery);
             stmt.executeUpdate(insertDataQuery);
-            
-            
-            sourceFile.delete();
+
             stmt.close();
             conn.close();
 

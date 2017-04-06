@@ -3,7 +3,6 @@ package com.wipro.analytics.beans;
 import com.wipro.analytics.fetchers.DataFetcherMain;
 
 import java.io.Serializable;
-import java.sql.Time;
 import java.sql.Timestamp;
 
 /**
@@ -27,6 +26,8 @@ public class RunningJobsInfo implements Serializable {
     private int allocatedVCores;
     private long memorySeconds;
     private long vcoreSeconds;
+    private String appMasterNodeId;
+    private String appMasterContainerId;
     private Timestamp timestamp;
 
 
@@ -166,6 +167,21 @@ public class RunningJobsInfo implements Serializable {
         this.memorySeconds = memorySeconds;
     }
 
+    public String getAppMasterNodeId() {
+        return appMasterNodeId;
+    }
+
+    public void setAppMasterNodeId(String appMasterNodeId) {
+        this.appMasterNodeId = appMasterNodeId;
+    }
+
+    public String getAppMasterContainerId() {
+        return appMasterContainerId;
+    }
+
+    public void setAppMasterContainerId(String appMasterContainerId) {
+        this.appMasterContainerId = appMasterContainerId;
+    }
 
     public Timestamp getTimestamp() {
         return timestamp;
@@ -196,6 +212,8 @@ public class RunningJobsInfo implements Serializable {
                 + allocatedVCores + fieldDelimiter
                 + memorySeconds + fieldDelimiter
                 + vcoreSeconds + fieldDelimiter
+                + appMasterNodeId + fieldDelimiter
+                + appMasterContainerId + fieldDelimiter
                 + timestamp;
 
     }
