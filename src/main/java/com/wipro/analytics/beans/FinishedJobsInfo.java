@@ -33,6 +33,14 @@ public class FinishedJobsInfo implements Serializable {
     private long memorySecondsReducers;
     private long slotsTimeMaps;
     private long slotsTimeReducers;
+    private long timeMaps;
+    private long timeReducers;
+    private int noOfMaps;
+    private int noOfReducers;
+    private double occupiedMemory;
+    private double allocatedMemory;
+    private double usedPerAllocatedMemory;
+    private double usedPerAllocatedCPU;
     private long totalFileBytesRead;
     private long totalFileBytesWritten;
     private long totalFileReadOps;
@@ -46,6 +54,71 @@ public class FinishedJobsInfo implements Serializable {
     private String actionId;
     private String workflowId;
     private Timestamp timestamp;
+
+
+    public double getUsedPerAllocatedCPU() {
+        return usedPerAllocatedCPU;
+    }
+
+    public void setUsedPerAllocatedCPU(double usedPerAllocatedCPU) {
+        this.usedPerAllocatedCPU = usedPerAllocatedCPU;
+    }
+
+    public double getOccupiedMemory() {
+        return occupiedMemory;
+    }
+
+    public void setOccupiedMemory(double occupiedMemory) {
+        this.occupiedMemory = occupiedMemory;
+    }
+
+    public double getAllocatedMemory() {
+        return allocatedMemory;
+    }
+
+    public void setAllocatedMemory(double allocatedMemory) {
+        this.allocatedMemory = allocatedMemory;
+    }
+
+    public double getUsedPerAllocatedMemory() {
+        return usedPerAllocatedMemory;
+    }
+
+    public void setUsedPerAllocatedMemory(double usedPerAllocatedMemory) {
+        this.usedPerAllocatedMemory = usedPerAllocatedMemory;
+    }
+
+    public int getNoOfReducers() {
+        return noOfReducers;
+    }
+
+    public void setNoOfReducers(int noOfReducers) {
+        this.noOfReducers = noOfReducers;
+    }
+
+    public long getTimeMaps() {
+        return timeMaps;
+    }
+
+    public void setTimeMaps(long timeMaps) {
+        this.timeMaps = timeMaps;
+    }
+
+    public long getTimeReducers() {
+        return timeReducers;
+    }
+
+    public void setTimeReducers(long timeReducers) {
+        this.timeReducers = timeReducers;
+    }
+
+    public int getNoOfMaps() {
+        return noOfMaps;
+    }
+
+    public void setNoOfMaps(int noOfMaps) {
+        this.noOfMaps = noOfMaps;
+    }
 
     public String getId() {
         return id;
@@ -361,6 +434,14 @@ public class FinishedJobsInfo implements Serializable {
                 +memorySecondsReducers+ fieldDelimiter
                 +slotsTimeMaps+ fieldDelimiter
                 +slotsTimeReducers+ fieldDelimiter
+                + timeMaps+ fieldDelimiter
+                + timeReducers+ fieldDelimiter
+                + noOfMaps+ fieldDelimiter
+                + noOfReducers+ fieldDelimiter
+                +occupiedMemory+ fieldDelimiter
+                +allocatedMemory+fieldDelimiter
+                + usedPerAllocatedMemory +fieldDelimiter
+                + usedPerAllocatedCPU +fieldDelimiter
                 +totalFileBytesRead+ fieldDelimiter
                 +totalFileBytesWritten+ fieldDelimiter
                 +totalFileReadOps+ fieldDelimiter

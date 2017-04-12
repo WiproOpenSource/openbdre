@@ -14,6 +14,8 @@ public class HDFSQuotaInfo {
     private long numFiles;
     private long spaceConsumed;
     private String hdfsPath;
+    private boolean isMonitorDirectory;
+    private String parentMonitorDirectory;
     private Timestamp timestamp;
 
     public Timestamp getTimestamp() {
@@ -24,6 +26,13 @@ public class HDFSQuotaInfo {
         this.timestamp = timestamp;
     }
 
+    public boolean isMonitorDirectory() {
+        return isMonitorDirectory;
+    }
+
+    public void setMonitorDirectory(boolean monitorDirectory) {
+        isMonitorDirectory = monitorDirectory;
+    }
 
     public String getHdfsPath() {
         return hdfsPath;
@@ -33,7 +42,13 @@ public class HDFSQuotaInfo {
         this.hdfsPath = hdfsPath;
     }
 
+    public String getParentMonitorDirectory() {
+        return parentMonitorDirectory;
+    }
 
+    public void setParentMonitorDirectory(String parentMonitorDirectory) {
+        this.parentMonitorDirectory = parentMonitorDirectory;
+    }
     public long getQuota() {
         return quota;
     }
@@ -75,6 +90,8 @@ public class HDFSQuotaInfo {
                 + numFiles + fieldDelimiter
                 + spaceQuota + fieldDelimiter
                 + spaceConsumed + fieldDelimiter
+                + isMonitorDirectory + fieldDelimiter
+                + parentMonitorDirectory+ fieldDelimiter
                 + timestamp;
 
     }

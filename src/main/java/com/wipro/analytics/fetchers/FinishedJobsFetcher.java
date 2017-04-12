@@ -46,7 +46,7 @@ public class FinishedJobsFetcher {
             long currentTime = System.currentTimeMillis();
          //   System.out.println("currentTime = " + currentTime);
          //   System.out.println("finishedTimeBegin = " + finishedTimeBegin);
-            URL historyAppsUrl = new URL("http://"+jobHistoryServerHost+":"+jobHistoryServerPort+"/ws/v1/history/mapreduce/jobs?finishedTimeBegin="+finishedTimeBegin+"&finishedTimeEnd="+currentTime);
+            URL historyAppsUrl = new URL("http://"+jobHistoryServerHost+":"+jobHistoryServerPort+"/ws/v1/history/mapreduce/jobs?finishedTimeBegin="+finishedTimeBegin+"&finishedTimeEnd="+currentTime+"&state=SUCCEEDED");
             finishedTimeBegin = currentTime;
             JsonNode rootNode = readJsonNode(historyAppsUrl);
             JsonNode jobsArray = rootNode.path("jobs").path("job");
@@ -189,6 +189,23 @@ public class FinishedJobsFetcher {
                                 long vCoreSecondsReducers  = counter.get("totalCounterValue").getLongValue();
                                 finishedJobsInfo.setvCoreSecondsReducers(vCoreSecondsReducers);
                             }
+                            else if (counter.get("name").asText().equalsIgnoreCase("MILLIS_MAPS")) {
+                                long timeMaps  = counter.get("totalCounterValue").getLongValue();
+                                finishedJobsInfo.setTimeMaps(timeMaps);
+                            }
+                            else if (counter.get("name").asText().equalsIgnoreCase("MILLIS_REDUCES")) {
+                                long timeReducers  = counter.get("totalCounterValue").getLongValue();
+                                finishedJobsInfo.setTimeReducers(timeReducers);
+                            }
+                            else if (counter.get("name").asText().equalsIgnoreCase("TOTAL_LAUNCHED_MAPS")) {
+                                int noOfMaps  = counter.get("totalCounterValue").getIntValue();
+                                finishedJobsInfo.setNoOfMaps(noOfMaps);
+                            }
+                            else if (counter.get("name").asText().equalsIgnoreCase("TOTAL_LAUNCHED_REDUCES")) {
+                                int noOfReducers  = counter.get("totalCounterValue").getIntValue();
+                                finishedJobsInfo.setNoOfReducers(noOfReducers);
+                            }
+
                         }
                     }
 
@@ -207,6 +224,18 @@ public class FinishedJobsFetcher {
                     }
                 }
 
+                long totalTasks = finishedJobsInfo.getNoOfMaps() + finishedJobsInfo.getNoOfReducers();
+
+                double averageTaskMemory = finishedJobsInfo.getUsedPhysicalMemory() / (totalTasks * 1024.0*1024.0);
+                double occupiedMemory = (finishedJobsInfo.getTimeMaps() + finishedJobsInfo.getTimeReducers()) * averageTaskMemory;
+                double allocatedMemory = (finishedJobsInfo.getMemorySecondsMaps() + finishedJobsInfo.getMemorySecondsReducers());
+                double usedPerAllocatedMemory = occupiedMemory/allocatedMemory;
+                finishedJobsInfo.setOccupiedMemory(occupiedMemory);
+                finishedJobsInfo.setAllocatedMemory(allocatedMemory);
+                finishedJobsInfo.setUsedPerAllocatedMemory(usedPerAllocatedMemory);
+                double allocatedCPU = finishedJobsInfo.getvCoreSecondsMaps()+finishedJobsInfo.getvCoreSecondsReducers();
+                double usedPerAllocatedCPU = finishedJobsInfo.getcpuTimeSpentTotal()/allocatedCPU;
+                finishedJobsInfo.setUsedPerAllocatedCPU(usedPerAllocatedCPU);
 
 
                 //write finishedjobInfo to file

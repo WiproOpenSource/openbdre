@@ -2,9 +2,10 @@
 CREATE TABLE IF NOT EXISTS FINISHED_JOBS_AGGREGATE_PER_WORKFLOW (avgMapTime bigint, avgReduceTime bigint, avgShuffleTime bigint, avgMergeTime bigint,
 gcTime bigint, usedPhysicalMemory bigint, cpuTimeSpentMaps bigint, cpuTimeSpentReducers bigint, cpuTimeSpentTotal bigint, vCoreSecondsMaps bigint,
 vCoreSecondsReducers bigint, memorySecondsMaps bigint, memorySecondsReducers bigint, slotsTimeMaps bigint, slotsTimeReducers bigint,
+timeMaps bigint, timeReducers bigint, noOfMaps int, noOfReducers int, occupiedMemory double, allocatedMemory double, usedPerAllocatedMemory double,usedPerAllocatedCPU double,
 totalFileBytesRead   bigint ,totalFileBytesWritten  bigint ,totalFileReadOps  bigint ,totalFileLargeReadOps  bigint
 ,totalFileWriteOps  bigint ,totalHDFSBytesRead  bigint ,totalHDFSBytesWritten  bigint ,totalHDFSReadOps  bigint
-,totalHDFSLargeReadOps  bigint ,totalHDFSWriteOps bigint, workflowId string)
+,totalHDFSLargeReadOps  bigint ,totalHDFSWriteOps bigint, workflowId string, noOfApplicationsInWorkflow int, finishdate date)
 ROW FORMAT DELIMITED
 FIELDS TERMINATED BY '\t'
 LINES TERMINATED BY '\n'
@@ -15,14 +16,15 @@ INSERT INTO FINISHED_JOBS_AGGREGATE_PER_WORKFLOW
 SELECT sum(avgMapTime) , sum(avgReduceTime), sum(avgShuffleTime), sum(avgMergeTime), sum(gcTime), sum(usedPhysicalMemory),
  sum(cpuTimeSpentMaps), sum(cpuTimeSpentReducers), sum(cpuTimeSpentTotal), sum(vCoreSecondsMaps),
 sum(vCoreSecondsReducers), sum(memorySecondsMaps), sum(memorySecondsReducers), sum(slotsTimeMaps), sum(slotsTimeReducers),
+sum(timeMaps), sum(timeReducers),sum(noOfMaps),sum(noOfReducers),sum(occupiedMemory),sum(allocatedMemory),sum(usedPerAllocatedMemory),sum(usedPerAllocatedCPU),
 sum(totalFileBytesRead) ,sum(totalFileBytesWritten),sum(totalFileReadOps),sum(totalFileLargeReadOps )
 ,sum(totalFileWriteOps),sum(totalHDFSBytesRead),sum(totalHDFSBytesWritten),sum(totalHDFSReadOps )
-,sum(totalHDFSLargeReadOps),sum(totalHDFSWriteOps), workflowId
+,sum(totalHDFSLargeReadOps),sum(totalHDFSWriteOps), workflowId, count(id), to_date(from_unixtime(max(floor(finishTime/1000))))
 FROM FINISHED_JOBS
 GROUP BY(workflowId)
 
 //mysql create table
-CREATE TABLE FINISHED_JOBS_AGGREGATE_PER_WORKFLOW (avgMapTime bigint, avgReduceTime bigint, avgShuffleTime bigint, avgMergeTime bigint, gcTime bigint, usedPhysicalMemory bigint, cpuTimeSpentMaps bigint, cpuTimeSpentReducers bigint, cpuTimeSpentTotal bigint, vCoreSecondsMaps bigint,vCoreSecondsReducers bigint, memorySecondsMaps bigint, memorySecondsReducers bigint, slotsTimeMaps bigint, slotsTimeReducers bigint, totalFileBytesRead   bigint ,totalFileBytesWritten  bigint ,totalFileReadOps  bigint ,totalFileLargeReadOps  bigint ,totalFileWriteOps  bigint ,totalHDFSBytesRead  bigint ,totalHDFSBytesWritten  bigint ,totalHDFSReadOps  bigint ,totalHDFSLargeReadOps  bigint ,totalHDFSWriteOps bigint, workflowId varchar(100))
+CREATE TABLE FINISHED_JOBS_AGGREGATE_PER_WORKFLOW (avgMapTime bigint, avgReduceTime bigint, avgShuffleTime bigint, avgMergeTime bigint, gcTime bigint, usedPhysicalMemory bigint, cpuTimeSpentMaps bigint, cpuTimeSpentReducers bigint, cpuTimeSpentTotal bigint, vCoreSecondsMaps bigint,vCoreSecondsReducers bigint, memorySecondsMaps bigint, memorySecondsReducers bigint, slotsTimeMaps bigint, slotsTimeReducers bigint, timeMaps bigint, timeReducers bigint, noOfMaps int, noOfReducers int, occupiedMemory double, allocatedMemory double, usedPerAllocatedMemory double,usedPerAllocatedCPU double,totalFileBytesRead   bigint ,totalFileBytesWritten  bigint ,totalFileReadOps  bigint ,totalFileLargeReadOps  bigint ,totalFileWriteOps  bigint ,totalHDFSBytesRead  bigint ,totalHDFSBytesWritten  bigint ,totalHDFSReadOps  bigint ,totalHDFSLargeReadOps  bigint ,totalHDFSWriteOps bigint, workflowId varchar(100), noOfApplicationsInWorkflow int, finishdate date)
 
 //sqoop export from hive table hdfs location to mysql
 sqoop-export --connect jdbc:mysql://localhost:3306/bdre --username root --password cloudera --table FINISHED_JOBS_AGGREGATE_PER_WORKFLOW  --input-fields-terminated-by '\t' --input-lines-terminated-by '\n' --export-dir '/user/hive/warehouse/monitor.db/finished_jobs_aggregate_per_workflow'

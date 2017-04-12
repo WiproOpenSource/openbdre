@@ -87,11 +87,11 @@ public class DataFetcherMain {
             }
 
 
-           // FinishedJobsFetcher.schedule(START_DELAY, SCHEDULE_INTERVAL, TIMEUNIT_FOR_SCHEDULE);
-            RunningJobsFetcher.schedule(START_DELAY, SCHEDULE_INTERVAL, TIMEUNIT_FOR_SCHEDULE);
-            QueueFetcher.schedule(START_DELAY, SCHEDULE_INTERVAL, TIMEUNIT_FOR_SCHEDULE);
-            HDFSQuotaFetcher.schedule(START_DELAY, SCHEDULE_INTERVAL, TIMEUNIT_FOR_SCHEDULE);
-            MRTasksFetcher.schedule(START_DELAY, SCHEDULE_INTERVAL, TIMEUNIT_FOR_SCHEDULE);
+            FinishedJobsFetcher.schedule(START_DELAY, SCHEDULE_INTERVAL, TIMEUNIT_FOR_SCHEDULE);
+           // RunningJobsFetcher.schedule(START_DELAY, SCHEDULE_INTERVAL, TIMEUNIT_FOR_SCHEDULE);
+           // QueueFetcher.schedule(START_DELAY, SCHEDULE_INTERVAL, TIMEUNIT_FOR_SCHEDULE);
+           // HDFSQuotaFetcher2.schedule(START_DELAY, SCHEDULE_INTERVAL, TIMEUNIT_FOR_SCHEDULE);
+           // MRTasksFetcher.schedule(START_DELAY, SCHEDULE_INTERVAL, TIMEUNIT_FOR_SCHEDULE);
         }catch (Exception e){
             e.printStackTrace();
         }
