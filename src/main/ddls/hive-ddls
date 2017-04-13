@@ -99,3 +99,15 @@ FIELDS TERMINATED BY '\t'
 LINES TERMINATED BY '\n'
 STORED AS TEXTFILE;
 
+CREATE TABLE IF NOT EXISTS GANGLIA_METRICS_STG(clusterName string, nodeHostName string, metric string, metricValue double, metricValueTime bigint,fetchTime TIMESTAMP )
+ROW FORMAT DELIMITED
+FIELDS TERMINATED BY '\t'
+LINES TERMINATED BY '\n'
+STORED AS TEXTFILE;
+
+CREATE TABLE IF NOT EXISTS GANGLIA_METRICS(clusterName string, nodeHostName string, metric string, metricValue double, metricValueTime bigint,fetchTime TIMESTAMP)
+PARTITIONED BY (fetchdate string, fetchhour string)
+ROW FORMAT DELIMITED
+FIELDS TERMINATED BY '\t'
+LINES TERMINATED BY '\n'
+STORED AS TEXTFILE;

@@ -79,6 +79,9 @@ public class HiveConnection {
             else if(tableName.equalsIgnoreCase("MR_TASKS")){
                 insertDataQuery = "INSERT INTO TABLE "+ tableName+" PARTITION(fetchdate, fetchhour) SELECT applicationId ,taskId ,taskProgress ,taskState , taskType , taskStartTime ,taskFinishTime , taskElapsedTime , runningTaskAttemptId ,  taskAttemptState , assignedContainerId , nodeHttpAddress , nodeId ,containerState , containerUsername , containerTotalMemoryNeededMB ,containerTotalVCoresNeeded , fetchTime ,to_date(fetchTime), hour(fetchTime) FROM "+tableName+"_STG";
             }
+            else if(tableName.equalsIgnoreCase("GANGLIA_METRICS")){
+                insertDataQuery = "INSERT INTO TABLE "+ tableName+" PARTITION(fetchdate, fetchhour) SELECT clusterName, nodeHostName, metric, metricValue, metricValueTime ,fetchTime ,to_date(fetchTime), hour(fetchTime) FROM "+tableName+"_STG";
+            }
             System.out.println("insertDataQuery = " + insertDataQuery);
             stmt.executeUpdate(insertDataQuery);
 
