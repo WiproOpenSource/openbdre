@@ -117,10 +117,8 @@ public class DataLoadAPI extends MetadataAPIBase {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        LOGGER.info(buffer);
         try {
             query = java.net.URLDecoder.decode(new String(buffer), "UTF-8");
-            LOGGER.info(query);
         } catch (UnsupportedEncodingException e) {
             e.printStackTrace();
         }
@@ -128,7 +126,6 @@ public class DataLoadAPI extends MetadataAPIBase {
         LinkedHashMap<String, String> map=new LinkedHashMap<>();
         for (int i=0;i<linkedList.length;i++)
         {
-            LOGGER.info(linkedList[i]);
             String[] tmp=linkedList[i].split("=");
             if (tmp.length==2)
                 map.put(tmp[0],tmp[1]);
