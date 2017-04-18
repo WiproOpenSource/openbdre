@@ -189,7 +189,7 @@ You should be able to do the same in Mac or Windows but note that setting up a H
     3) MySQL
     4) PostgreSQL
 
-    Select Database Type(Enter 1, 2, 3 , 4 or leave empty and press empty to select the default DB):3⏎
+    Select Database Type(Enter 1, 2, 3, 4 or leave empty and press empty to select the default DB):3⏎
 
     Enter DB username (Type username or leave it blank for default 'root'):⏎
     Enter DB password (Type password or leave it blank for default '<blank>'):⏎
