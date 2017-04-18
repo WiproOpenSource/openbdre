@@ -75,11 +75,11 @@ public class HiveActionNode extends GenericActionNode {
         }
 
         ret.append("\">\n" +
-                "        <hive2 xmlns=\"uri:oozie:hive2-action:0.1\">\n" +
+                "        <hive xmlns=\"uri:oozie:hive-action:0.2\">\n" +
                 "            <job-tracker>${jobTracker}</job-tracker>\n" +
                 "            <name-node>${nameNode}</name-node>\n" +
 
-                "            <job-xml>hive-site.xml</job-xml>\n"/* +
+                "            <job-xml>hive-site.xml</job-xml>\n" +
                 "            <configuration>\n" +
                 "            <property>\n" +
                 "                <name>run_id</name>\n" +
@@ -99,8 +99,7 @@ public class HiveActionNode extends GenericActionNode {
                 "                <value>${wf:actionData(\"init-job\")[\"instance-exec-id\"]}</value>\n" +
                 "                </property>\n" +
 
-                "                </configuration>"*/);
-        ret.append("<jdbc-url>jdbc:hive2://localhost:10000/default</jdbc-url> \n" );
+                "                </configuration>");
         ret.append(getQueryPath(getId(), "query"));
 
 
@@ -118,7 +117,7 @@ public class HiveActionNode extends GenericActionNode {
 
         ret.append(getParams(getId(), "param"));
 
-        ret.append("        </hive2>\n" +
+        ret.append("        </hive>\n" +
                 "        <ok to=\"" + getToNode().getName() + "\"/>\n" +
                 "        <error to=\"" + getTermNode().getName() + "\"/>\n" +
                 "    </action>");

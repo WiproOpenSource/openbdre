@@ -68,15 +68,13 @@ public class RegisterPartitionsActionNode extends GenericActionNode {
             ret.append(" cred='hive_credentials'");
         }
         ret.append("\">\n" +
-                "        <hive2 xmlns=\"uri:oozie:hive2-action:0.1\">\n" +
+                "        <hive xmlns=\"uri:oozie:hive-action:0.2\">\n" +
                 "            <job-tracker>${jobTracker}</job-tracker>\n" +
                 "            <name-node>${nameNode}</name-node>\n" );
-        ret.append("<jdbc-url>jdbc:hive2://localhost:10000/default</jdbc-url> \n" );
         ret.append(getQueryPath());
-
         ret.append("            <param>dest-table=${wf:actionData(\"migration-preprocessor\")[\"dest-table\"]}</param>\n");
         ret.append("            <param>dest-db=${wf:actionData(\"migration-preprocessor\")[\"dest-db\"]}</param>\n");
-        ret.append("        </hive2>\n" +
+        ret.append("        </hive>\n" +
                 "        <ok to=\"" + getToNode().getName() + "\"/>\n" +
                 "        <error to=\"" + getTermNode().getName() + "\"/>\n" +
                 "    </action>");

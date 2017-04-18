@@ -203,14 +203,16 @@ public class ProcessAPI extends MetadataAPIBase {
                 tableProcess.setTableEditTS(DateConverter.dateToString(daoProcess.getEditTs()));
                 tableProcess.setDeleteFlag(daoProcess.getDeleteFlag());
                    if (daoProcess.getUserRoles()!=null)
-                    tableProcess.setOwnerRoleId(daoProcess.getUserRoles().getUserRoleId());
+                   { tableProcess.setOwnerRoleId(daoProcess.getUserRoles().getUserRoleId());
                 LOGGER.info("user role id of processid "+daoProcess.getProcessId()+" is "+daoProcess.getUserRoles().getUserRoleId());
+                   }
                 if (daoProcess.getPermissionTypeByGroupAccessId()!=null)
                 tableProcess.setPermissionTypeByGroupAccessId(daoProcess.getPermissionTypeByGroupAccessId().getPermissionTypeId());
                 if(daoProcess.getPermissionTypeByUserAccessId()!=null)
                 tableProcess.setPermissionTypeByUserAccessId(daoProcess.getPermissionTypeByUserAccessId().getPermissionTypeId());
                 if(daoProcess.getPermissionTypeByOthersAccessId()!=null)
                 tableProcess.setPermissionTypeByOthersAccessId(daoProcess.getPermissionTypeByOthersAccessId().getPermissionTypeId());
+                if(daoProcess.getUsers()!=null)
                 tableProcess.setUserName(daoProcess.getUsers().getUsername());
                 tableProcess.setCounter(counter);
                 processes.add(tableProcess);

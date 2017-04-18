@@ -144,6 +144,27 @@ public class FileDAO {
     }
 
 
+    public String getPath(Long batchId) {
+        Session session = sessionFactory.openSession();
+        String path="";
+        try {
+            session.beginTransaction();
+            Criteria criteria = session.createCriteria(File.class).add(Restrictions.eq("batch.batchId", batchId));
+            List<File> jpaFileList = criteria.list();
+            File file=jpaFileList.get(0);
+            path=file.getId().getPath();
+
+            session.getTransaction().commit();
+        } catch (MetadataException e) {
+            session.getTransaction().rollback();
+            LOGGER.info("error occured " + e);
+
+        } finally {
+            session.close();
+        }
+        return path;
+    }
+
     public List<com.wipro.ats.bdre.md.beans.FileInfo> getFiles(long minBatchId, long maxBatchId) {
         Session session = sessionFactory.openSession();
         List<FileInfo> fileInfos = new ArrayList<FileInfo>();
