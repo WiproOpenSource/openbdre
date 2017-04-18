@@ -21,11 +21,10 @@ import java.lang.annotation.RetentionPolicy;
  * Created by arijit on 12/12/14.
  */
 
-
-@Retention(RetentionPolicy.RUNTIME)
 /**
  * This method is used to make variable persist till runtime.
  */
+@Retention(RetentionPolicy.RUNTIME)
 public @interface PersistableCollectionBean {
     String qualifierField();
 }

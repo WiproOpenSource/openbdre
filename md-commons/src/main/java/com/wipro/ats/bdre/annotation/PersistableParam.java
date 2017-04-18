@@ -20,12 +20,10 @@ import java.lang.annotation.RetentionPolicy;
 /**
  * Created by arijit on 12/11/14.
  */
-
-@Retention(RetentionPolicy.RUNTIME)
 /**
  * This method is used to make variable persist till runtime.
  */
+@Retention(RetentionPolicy.RUNTIME)
 public @interface PersistableParam {
     String keyName();
-
 }
