@@ -17,6 +17,67 @@
 	  ga('create', 'UA-72345517-1', 'auto');
 	  ga('send', 'pageview');
 	</script>
+	<style>
+					.form-control {
+						background-color: #e4e5e6 !important;
+						height: 35px !important;
+						border-radius: 1px !important;
+					}
+					.glyphicon-arrow-right {
+						color: #606161 !important;
+					}
+					.btn-primary {
+						background-color: #ADAFAF !important;
+						border: 1px solid #828283 !important;
+						padding-top: 7.5px !important;
+						padding-bottom: 7.5px !important;
+						border-radius: 1px !important;
+					}
+					
+					.input-box-button-filter {
+						background: #4A4B4B;
+						background: -webkit-linear-gradient(#4A4B4B 50%, #3A3B3B 50%);
+						background: -o-linear-gradient(#4A4B4B 50%, #3A3B3B 50%);
+						background: -moz-linear-gradient(#4A4B4B 50%, #3A3B3B 50%);
+						background: -ms-linear-gradient(#4A4B4B 50%, #3A3B3B 50%);
+						background: linear-gradient(#4A4B4B 50%, #3A3B3B 50%);
+						position: absolute;
+						top: 0;
+						right: 0;
+						color: white;
+						padding: 5px 10px;
+						cursor: pointer
+					}
+					
+					.filter-icon {
+						background-image: url('../css/images/filter_icon.png');
+						background-size: 100%;
+						background-repeat: no-repeat;
+						display: inline-block;
+						margin: 2px;
+						vertical-align: middle;
+						width: 16px;
+						height: 16px;
+					}
+					
+					.filter-text {
+						display: inline-block;
+						margin: 2px;
+						vertical-align: middle;
+						font-size: 0.9em;
+						font-family: 'Segoe UI Semilight', 'Open Sans', Verdana, Arial,
+							Helvetica, sans-serif;
+						font-weight: 300;
+					}
+					
+					.input-box-button {
+						display: none;
+						position: absolute;
+						top: 34px;
+						right: 0;
+						width: 129px;
+					}
+	</style>
 
 	<!-- Include one of jTable styles. -->
 
@@ -234,6 +295,9 @@
 		    }
 	    });
 		    $('#Container').jtable('load');
+		    $('#input-box-button-filter').click(function () {
+            	$('#input-box-button').toggle();
+			});
 	    });</script>
 	<script>
 
@@ -249,13 +313,16 @@
     <section style="width:100%;text-align:center;">
 	<div id="Container"></div>
     </section>
-    <div id="input-box-button" >
+     <div id="input-box-button-filter" class="input-box-button-filter">
+       	<span class="filter-icon"></span><span class="filter-text"><spring:message code="process.page.span_filter"/></span>
+       </div>
+    <div id="input-box-button" class="input-box-button" >
 	<form onsubmit="showProcessPage(jQuery('#pid').val()); return false;">
 	    <div class="input-group">
 		<input class="form-control" type="number" name="pid" id="pid" value ="" placeholder=<spring:message code="processlog.page.filter_by_processid_placeholder"/>/>
 		<!-- <button  class="btn btn-default btn-lg btn-primary"><span id="sizing-addon2"><span class="glyphicon glyphicon-arrow-right" aria-hidden="true"></span> Show Lineage </button> -->
 		<span class="input-group-btn">
-		    <button class="btn btn-default  btn-primary" type="submit" onClick="showProcessPage(jQuery('#pid').val())"><span id="sizing-addon2"><span class="glyphicon glyphicon-arrow-right" aria-hidden="true"></span>&nbsp;</button>
+		    <button class="btn btn-default" type="submit" onClick="showProcessPage(jQuery('#pid').val())"><span id="sizing-addon2"><span class="glyphicon glyphicon-arrow-right" aria-hidden="true"></span>&nbsp;</button>
 		</span>
 	    </div>
 	</form>

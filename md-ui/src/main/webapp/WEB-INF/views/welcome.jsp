@@ -15,13 +15,11 @@
 
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<link rel="stylesheet" href="../css/css/bootstrap.min.css" />
-	<link rel="stylesheet" type="text/css" href="//cdn.jsdelivr.net/jquery.slick/1.5.9/slick.css"/>
 	<link rel="stylesheet" type="text/css" href="../css/slick.css"/>
 	<link rel="stylesheet" type="text/css" href="../css/slick-theme.css"/>
 	<script type="text/javascript" src="../js/jquery.min.js"></script>
 	<script src="../js/angular.min.js"></script>
 	<script type="text/javascript" src="../js/slick.js"></script>
-				
 	<style>
 	    body{
 		background-color: #fdf6ed !important;
