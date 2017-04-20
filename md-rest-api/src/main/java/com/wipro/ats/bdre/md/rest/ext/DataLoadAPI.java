@@ -27,6 +27,11 @@ import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
+
+import javax.servlet.http.HttpServletRequest;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.security.Principal;
 import java.util.*;
 
@@ -98,7 +103,35 @@ public class DataLoadAPI extends MetadataAPIBase {
     @RequestMapping(value = {"/createjobs"}, method = RequestMethod.POST)
 
     @ResponseBody public
-    RestWrapper createJob(@RequestParam Map<String, String> map, Principal principal) {
+    RestWrapper createJob( HttpServletRequest request, Principal principal) {
+        // Read from request
+        String query="";
+        String tmp1="";
+        StringBuilder buffer = null;
+        try {
+             buffer = new StringBuilder();
+            BufferedReader reader = request.getReader();
+            while ((tmp1 = reader.readLine()) != null) {
+                buffer.append(tmp1);
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        try {
+            query = java.net.URLDecoder.decode(new String(buffer), "UTF-8");
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
+        String[] linkedList=query.split("&");
+        LinkedHashMap<String, String> map=new LinkedHashMap<>();
+        for (int i=0;i<linkedList.length;i++)
+        {
+            String[] tmp=linkedList[i].split("=");
+            if (tmp.length==2)
+                map.put(tmp[0],tmp[1]);
+            else
+                map.put(tmp[0],"");
+        }
         LOGGER.debug(" value of map is " + map.size());
         RestWrapper restWrapper = null;
 
@@ -184,7 +217,7 @@ public class DataLoadAPI extends MetadataAPIBase {
                 }
             }else if (string.startsWith(TRANSFORM)) {
                 String column_name=string.replaceAll(TRANSFORM,"");
-                if(map.get(string).equals("no transformation"))
+                if(map.get(string).equals("no transformation")||map.get(string).equals("no+transformation"))
                     map.put(string,column_name);
                 else
                  map.put(string,map.get(string)+"("+column_name+")");

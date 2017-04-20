@@ -273,7 +273,6 @@ public class DataImportAPI extends MetadataAPIBase {
         public void setDtype(String dtype) {
             this.dtype = dtype;
         }
-
         public void setParentEntityName(String parentEntityName) {
             this.parentEntityName = parentEntityName;
         }

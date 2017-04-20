@@ -390,6 +390,6 @@ git push myrepo mybranch
  - If you want to report a bug, see/request a feature or work on something. Please sign up at https://openbdre.atlassian.net
 
 ### If you want to contribute as plugin developler [Click Here](https://github.com/BDREPlugins/BDREPluginStore/blob/master/README.md)
-Developed using Intellij Idea <a href="https://www.jetbrains.com/idea/" target="_blank"><img src="http://wiproopensourcepractice.github.io/openbdre/bdreimages/logo_JetBrains_1.png" 
+Developed using Intellij Idea <a href="https://www.jetbrains.com/idea/" target="_blank"><img src="http://wiproopensourcepractice.github.io/openbdre/bdreimages/logo_JetBrains_1.png"
 alt="Built with Intellij Idea" width="250" height="250" border="0" /></a>
 [![Analytics](https://ga-beacon.appspot.com/UA-72345517-2/openbdre/README.md)](http://wiproopensourcepractice.github.io/openbdre/bdreimages/badge.svg)

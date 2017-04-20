@@ -58,7 +58,13 @@ public class CreateRawBaseTables extends ETLBase {
         java.util.Properties rawPropertiesOfColumns = getPropertiesOfRawColumns.getProperties(rawLoad, "raw-cols");
         Enumeration columns = rawPropertiesOfColumns.propertyNames();
         List<String> orderOfCloumns = Collections.list(columns);
-        Collections.sort(orderOfCloumns);
+         Collections.sort(orderOfCloumns, new Comparator<String>() {
+            public int compare(String o1, String o2) {
+                int n1=Integer.valueOf(o1.split("\\.")[1]);
+                int n2=Integer.valueOf(o2.split("\\.")[1]);
+                return (n1 - n2);
+            }
+        });
         List<String> rawColumns = new ArrayList<String>();
         if (!rawPropertiesOfColumns.isEmpty()) {
             for (String columnOrder : orderOfCloumns) {
@@ -72,7 +78,14 @@ public class CreateRawBaseTables extends ETLBase {
         java.util.Properties rawPropertiesOfDataTypes = getPropertiesOfRawDataTypes.getProperties(rawLoad, "raw-data-types");
         Enumeration dataTypes = rawPropertiesOfDataTypes.propertyNames();
         List<String> orderOfDataTypes = Collections.list(dataTypes);
-        Collections.sort(orderOfDataTypes);
+        Collections.sort(orderOfDataTypes, new Comparator<String>() {
+
+            public int compare(String o1, String o2) {
+                int n1=Integer.valueOf(o1.split("\\.")[1]);
+                int n2=Integer.valueOf(o2.split("\\.")[1]);
+                return (n1 - n2);
+            }
+        });
         List<String> rawDataTypes = new ArrayList<String>();
         if (!rawPropertiesOfColumns.isEmpty()) {
             for (String columnOrder : orderOfDataTypes) {
