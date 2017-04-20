@@ -123,7 +123,7 @@
 
     <div id="bdre-export"  >
 
-     <h3><div class="number-circular">1</div>Input Data Details:</h3>
+     <h3><div class="number-circular">1</div><spring:message code="dataexportwizard.page.title_section1"/></h3>
                 <section>
                 <form class="form-horizontal" role="form" id="inputFieldsForm">
                     <div id="InputDataDetails">
@@ -133,13 +133,13 @@
                             <div class="form-group">
                                 <label class="control-label col-sm-2" for="inputHDFSDir"><spring:message code="dataexportwizard.page.export_dir"/></label>
                                 <div class="col-sm-10">
-                                    <input type="text" class="form-control" name="inputHDFSDir"  placeholder="Enter HDFS location of Export Directory">
+                                    <input type="text" class="form-control" name="inputHDFSDir"  placeholder=<spring:message code="dataexportwizard.page.export_dir_placeholder"/> >
                                 </div>
                             </div>
                             <div class="form-group">
                                 <label class="control-label col-sm-2" for="inputDataDelimiter"><spring:message code="dataexportwizard.page.delimiter"/></label>
                                 <div class="col-sm-10">
-                                    <input type="text" class="form-control" name="inputDataDelimiter" placeholder="Enter Delimiter('\t' or ',' etc)">
+                                    <input type="text" class="form-control" name="inputDataDelimiter" placeholder=<spring:message code="dataexportwizard.page.delimiter_placeholder"/>  value=",">
                                 </div>
                             </div>
                             <div class="form-group">
@@ -159,7 +159,7 @@
                     </form>
                     </section>
 
-      <h3><div class="number-circular">2</div>Output Table Details:</h3>
+      <h3><div class="number-circular">2</div><spring:message code="dataexportwizard.page.title_section2"/></h3>
            <section >
               <form class="form-horizontal" role="form" id="DatabaseDetailsForm">
 
@@ -189,11 +189,11 @@
 
            						<div class="form-group">
            						<label for = "table" ><spring:message code="dataexportwizard.page.db_table"/></label >
-                                   <input id = "table"  name = "table" type = "text" class = "form-control" placeholder="Enter Table Name"/>
+                                   <input id = "table"  name = "table" type = "text" class = "form-control" placeholder=<spring:message code="dataexportwizard.page.table_placeholder"/> />
            						</div>
            						<div class="form-group">
                                 <label for = "columns" ><spring:message code="dataexportwizard.page.db_columns"/></label >
-                                   <input id = "columns"  name = "columns" type = "text" class = "form-control" placeholder="Give a comma separated list of column names" disabled/>
+                                   <input id = "columns"  name = "columns" type = "text" class = "form-control" placeholder=<spring:message code="dataexportwizard.page.columns_placeholder"/> disabled/>
                                 </div>
            						<div class="clearfix"></div>
 
@@ -206,7 +206,7 @@
 
 
 
-                <h3><div class="number-circular">3</div>Process Details</h3>
+                <h3><div class="number-circular">3</div><spring:message code="dataexportwizard.page.title_section3"/></h3>
                 <section>
                     <form class="form-horizontal" role="form" id="processFieldsForm1">
                         <div id="processDetails">
@@ -241,7 +241,7 @@
                         </div>
                         </form>
                         </section>
-                <h3><div class="number-circular">4</div>Create Job</h3>
+                <h3><div class="number-circular">4</div><spring:message code="dataexportwizard.page.title_section4"/></h3>
                 <section>
                 <div id="createProcess">
                     <button ng-click="createJob()" id="createjobs" type="button" class="btn btn-primary"><spring:message code="dataexportwizard.page.create_export_job"/>
