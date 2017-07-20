@@ -3,6 +3,7 @@ package com.wipro.analytics.fetchers;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.FileSystem;
 import org.apache.hadoop.fs.Path;
+import org.apache.hadoop.hdfs.util.LongBitFormat;
 
 import java.io.*;
 import java.util.Properties;
@@ -46,6 +47,14 @@ public class DataFetcherMain {
     public static String FILE_FIELD_SEPERATOR;
     public static String DATABASE_NAME;
     public static String HIVE_CONNECTION_URL;
+    public static String CLUSTER_NAME;
+    public static String HOST_NAMES_LIST;
+    public static String GANGLIA_WEBSERVER_HOSTNAME;
+    public static long STARTING_FETCH_INTERVAL_FROM_GANGLIA;
+    public static long SCHEDULE_INTERVAL_GANGLIA;
+    public static String GANGLIA_METRIC_FILE;
+    public static String GANGLIA_METRICS_TABLE;
+
 
     public static void main(String args[]) {
         try {
@@ -143,6 +152,14 @@ public class DataFetcherMain {
             FILE_FIELD_SEPERATOR= properties.getProperty("FILE_FIELD_SEPERATOR");
             DATABASE_NAME = properties.getProperty("DATABASE_NAME");
             HIVE_CONNECTION_URL= properties.getProperty("HIVE_CONNECTION_URL");
+            CLUSTER_NAME= properties.getProperty("CLUSTER_NAME");
+            HOST_NAMES_LIST= properties.getProperty("HOST_NAMES_LIST");
+            GANGLIA_WEBSERVER_HOSTNAME= properties.getProperty("GANGLIA_WEBSERVER_HOSTNAME");
+            STARTING_FETCH_INTERVAL_FROM_GANGLIA= Long.parseLong(properties.getProperty("STARTING_FETCH_INTERVAL_FROM_GANGLIA"));
+            SCHEDULE_INTERVAL_GANGLIA= Long.parseLong(properties.getProperty("SCHEDULE_INTERVAL_GANGLIA"));
+            GANGLIA_METRIC_FILE= properties.getProperty("GANGLIA_METRIC_FILE");
+            GANGLIA_METRICS_TABLE= properties.getProperty("GANGLIA_METRICS_TABLE");
+
 
 
         } catch (IOException io) {

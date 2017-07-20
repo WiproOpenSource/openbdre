@@ -1,5 +1,7 @@
 package com.wipro.analytics.beans;
 
+import com.wipro.analytics.fetchers.DataFetcherMain;
+
 import java.sql.Timestamp;
 
 /**
@@ -63,8 +65,7 @@ public class GangliaMetricInfo {
 
     @Override
     public String toString() {
-        //String fieldDelimiter = DataFetcherMain.FILE_FIELD_SEPERATOR;
-        String fieldDelimiter = "\t";
+        String fieldDelimiter = DataFetcherMain.FILE_FIELD_SEPERATOR;
         return clusterName + fieldDelimiter
                 + nodeHostName + fieldDelimiter
                 + metric + fieldDelimiter
