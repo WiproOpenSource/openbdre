@@ -50,15 +50,24 @@
 		    type: "GET",
 		    cache: false,
 		    success: function (getData) {
+		    if(getData.Result == "OK")
+         {
 			graphViz = graphViz + getData.Records.dot;
 			RefreshGraphviz(prefix + graphViz + postfix);
+			}
+            else
+            {
+            console.log("no batch to process getIed(ied)");
+            alert("no batch to process");
+            }
 		    }
 		});
 	    }
 	    function getBid(bid) {
 		//do not reload if the dependency graph for this bid is already rendered.
 		if (set.contains(bid)) {
-		    return false;
+		//preventDefault();
+		return false;
 		}
 		set.add(bid);
 		$.ajax({
@@ -66,9 +75,18 @@
 		    type: "GET",
 		    cache: false,
 		    success: function (getData) {
+		    if(getData.Result == "OK")
+            {
 			graphViz = graphViz + getData.Records.dot;
 			RefreshGraphviz(prefix + graphViz + postfix);
+			}
+            else
+            {
+            console.log("no batch to process getBid(bid)");
+            alert("no batch to process");
+            }
 		    }
+
 		});
 	    }
 	    function RefreshGraphviz(data) {
@@ -159,6 +177,10 @@
 	</style>
 
 	<script>
+
+	  function GotoProcesses() {
+                     		location.href = '<c:url value="/pages/process.page" />';
+                     	    }
 	    var globalPid;
 	    var globalIeid;
 	    var modal = (function () {
@@ -269,6 +291,7 @@
     </head>
     <body>
 	<br/>
+  <button style="margin-left:15px;" type='button' class='btn btn-primary' aria-label='Left Align' onClick='GotoProcesses()'><span aria-hidden='true'></span><spring:message code="lineage.page.button_gotoProcessPage"/></button>
 
 	<button type='button' class='btn btn-primary' aria-label='Left Align' onClick='saveSVG("execution",0)'><span class='glyphicon glyphicon-save' aria-hidden='true'></span>Save</button>
 	<c:if test="${empty param.ied}">

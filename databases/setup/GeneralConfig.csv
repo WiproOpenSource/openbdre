@@ -46,6 +46,7 @@
 'default_val.13','file.layout','imp-common','properties for data import',1,'TextFile','text', 1
 'default_val.13','import','imp-common','properties for data import',1,'1','text', 1
 'default_val.13','incr.mode','imp-common','properties for data import',1,'None','text', 1
+'default_val.13','incr.column','imp-common','properties for data import',1,'None','text', 1
 'default_val.13','mappers','imp-common','properties for data import',1,'1','text', 1
 'default_val.13','password','imp-common','properties for data import',1,'db_password','text', 1
 'default_val.13','table','imp-common','properties for data import',1,'default_table','text', 1
@@ -59,7 +60,7 @@
 'default_val.17','username','exp-common','properties for data export',1,'db_username','text', 1
 'default_val.18','password_enabled','credential','Credentials for authentication', 1,'true','text', 1
 'testDataGen','data-gen-id.1','data','Generating Date',1,'randomDate','text', 1
-'testDataGen','data-gen-id.2','data','Generating number',1,'randomNumber','text', 1
+'testDataGen','data-gen-id.2','data','Generating Number',1,'randomNumber','text', 1
 'testDataGen','data-gen-id.3','data','Generating String',1,'randomRegexPattern','text', 1
 'default_val.19','password_enabled','credential','Credentials for authentication', 1,'true','text', 1
 'default_val.16','file.delimiter.regex','dq','File delimiter',1,',','text', 1
@@ -387,10 +388,10 @@
 'spooldir_Source','selector.*','Selector.*','Depends on the selector.type value', 0,null,'text', 1
 'spooldir_Source','interceptors','Interceptors','Space-separated list of interceptors', 0,null,'text', 1
 'spooldir_Source','interceptors.*','Interceptors.*','Interceptors', 0,null,'text', 1
-'com.cloudera.flume.source.TwitterSource_Source','consumerKey','Consumerkey','OAuth consumer key', 1,'','text', 1
-'com.cloudera.flume.source.TwitterSource_Source','consumerSecret','Consumersecret','OAuth consumer secret', 1,'','text', 1
-'com.cloudera.flume.source.TwitterSource_Source','accessToken','Accesstoken','OAuth access token', 1,'','text', 1
-'com.cloudera.flume.source.TwitterSource_Source','accessTokenSecret','Accesstokensecret','OAuth toekn secret', 1,'','text', 1
+'com.cloudera.flume.source.TwitterSource_Source','consumerKey','Consumerkey','OAuth consumer key', 1,'','password', 1
+'com.cloudera.flume.source.TwitterSource_Source','consumerSecret','Consumersecret','OAuth consumer secret', 1,'','password', 1
+'com.cloudera.flume.source.TwitterSource_Source','accessToken','Accesstoken','OAuth access token', 1,'','password', 1
+'com.cloudera.flume.source.TwitterSource_Source','accessTokenSecret','Accesstokensecret','OAuth toekn secret', 1,'','password', 1
 'com.cloudera.flume.source.TwitterSource_Source','keywords','HASHTAGS','keywords based on which you want filter your tweets', 1,'#BigData','text', 1
 'com.cloudera.flume.source.TwitterSource_Source','maxBatchSize','Maxbatchsize','Maximum number of twitter messages to put in a single batch', 0,'1000','text', 1
 'com.cloudera.flume.source.TwitterSource_Source','maxBatchDurationMillis','Maxbatchdurationmillis','Maximum number of milliseconds to wait before closing a batch', 0,'1000','text', 1
@@ -500,13 +501,17 @@
 'imconfig', 'dq.drools-url-prefix', 'URL prefix for drools','URL prefix for drools', 1, 'http://${drools_hostname}:8080/guvnor56/rest/packages/', 'text', 1
 'imconfig', 'data-import.hadoop-home', 'Hadoop home directory for exporting','Hadoop home directory for exporting', 1, '/usr/lib/hadoop', 'text', 1
 'imconfig', 'data-import.target-dir', 'Target direcotry to store imported data','Target direcotry to store imported data', 1, 'hdfs://${name_node_hostname}:${name_node_port}/user/${edge_node_user_name}/import', 'text', 1
-'imconfig', 'data-import.jar-output-dir', 'Jar output directory for importing','Jar output directory for importing', 1, '/tmp/bdre/sqoop/jar-output', 'text', 1
+'imconfig', 'data-import.jar-output-dir-oozie', 'Jar output directory for importing - oozie','Jar output directory for importing', 1, '/tmp/bdre-oozie/sqoop/jar-output', 'text', 1
+'imconfig', 'data-import.jar-output-dir-airflow', 'Jar output directory for importing - airflow','Jar output directory for importing', 1, '/tmp/bdre-airflow/sqoop/jar-output', 'text', 1
 'imconfig', 'mq-import.file-size-units', 'File sizes unit','File sizes unit', 1, 'KB', 'text', 1
 'imconfig', 'mq-import.rotation-file-size', 'Rotation file size','Rotation file size', 1, '10', 'text', 1
 'imconfig', 'mq-import.target-directory', 'Directory to import MQ file','Directory to import MQ file', 1, 'hdfs://${name_node_hostname}:${name_node_port}/user/${edge_node_user_name}/mq-import', 'text', 1
 'imconfig', 'data-export.hadoop-home', 'Hadoop home directory for exporting','Hadoop home directory for exporting', 1, '/usr/lib/hadoop', 'text', 1
 'imconfig', 'data-export.jar-output-dir', 'Jar output directory for exporting','Jar output directory for exporting', 1, '/tmp/bdre/sqoop/jar-output', 'text', 1
 'imconfig', 'eventing.metadata-broker-list', 'Metadata Brokers URL','Metadata Brokers URL', 1, 'localhost://:9092', 'text', 1
+'imconfig', 'hadoop-conf-dir', 'Hadoop Configuration Directory','Hadoop Configuration Directory', 1, '/etc/hadoop/conf', 'text', 1
+'imconfig', 'kerberos-user-name', 'Kerberos UserName','Kerberos UserName', 1, '${kerberos_username}', 'text', 1
+'imconfig', 'kerberos-keytab-file-location', 'Kerberos keytab file location','Kerberos keytab file location', 1, '${kerberos_keytab_file_location}', 'text', 1
 'crawler','numberOfMappers','no of mappers','Number of Mappers',1,'2','text', 1
 'crawler','politenessDelay','Politeness Delay','Politeness Delay',1,'200','text', 1
 'crawler','maxDepthOfCrawling','max depth of crawling','Max Depth of Crawling',1,'10','text', 1
@@ -542,6 +547,8 @@
 'scripts_config', 'repoName', '-','-' , 1, 'origin', 'text' , 1
 'scripts_config', 'branchName', '-','-' , 1, 'develop', 'text' , 1
 'scripts_config', 'gitURL', '-','-' , 1, 'https://github.com/WiproOpenSourcePractice/bdreappstore.git', 'text' , 1
+'scripts_config', 'airflowInstallDir', '-','Airflow Installation directory upto bin folder' , 1, '${airflow_install_dir}', 'text' , 1
+'scripts_config', 'airflowDagPath', '-','-' , 1, '/home/${bdre_user_name}/airflow/dags', 'text' , 1
 
 'file_format', 'delimited', 'DELIMITED','delimited file' , 1, 'delimited', 'text' , 1
 'file_format', 'xml', 'XML','XML file' , 1, 'xml', 'text' , 1
@@ -568,4 +575,11 @@
 'cluster.nn-address', 'Local cluster - Namenode Address', 'Namenode Address','Local cluster' , 1, 'hdfs://${name_node_hostname}:${name_node_port}', 'text' , 1
 'cluster.jt-address', 'Local cluster - Job Tracker Address', 'Job Tracker Address','Local cluster' , 1, '${job_tracker_hostname}:${job_tracker_port}', 'text' , 1
 'cluster.hive-address', 'Local cluster - Hive Server2 Address', 'Hive Server2 Address','Local cluster' , 1, '${hive_server_hostname}:10000', 'text' , 1
+'column_transformation','no transformation','no transformation','no column transformation',1,'no transformation','text',1
+'column_transformation','upper','upper','changing column data in uppercase',1,'upper','text',1
+'column_transformation','lower','lower','changing column data in lowercase',1,'lower','text',1
+'column_transformation','round','round','It returns the rounded BIGINT value of the double',1,'round','text',1
+'column_transformation','trim','trim','It returns the string resulting from trimming spaces from both ends',1,'trim','text',1
+'column_transformation','floor','floor','It returns the maximum BIGINT value that is equal or less than the double',1,'floor','text',1
+
 

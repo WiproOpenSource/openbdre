@@ -81,6 +81,8 @@ public class FileMoniterAPI {
         childProps.add(jpaProperties);
         jpaProperties = Dao2TableUtil.buildJPAProperties(FILEMON, "sleepTime", Integer.toString(fileMonitorInfo.getSleepTime()), "sleeptime of thread");
         childProps.add(jpaProperties);
+        jpaProperties = Dao2TableUtil.buildJPAProperties(FILEMON, "kerberos", fileMonitorInfo.getKerberosEnabled(), "kerberos authenticatio enabled or not");
+        childProps.add(jpaProperties);
         List<Process> processList = processDAO.createOneChildJob(parentProcess,childProcess,null,childProps);
         List<com.wipro.ats.bdre.md.beans.table.Process>tableProcessList=Dao2TableUtil.jpaList2TableProcessList(processList);
         Integer counter=tableProcessList.size();

@@ -14,6 +14,7 @@
 
 package com.wipro.ats.bdre.md.rest.util;
 
+import com.wipro.ats.bdre.md.dao.WorkflowTypeDAO;
 import com.wipro.ats.bdre.md.dao.jpa.*;
 import com.wipro.ats.bdre.md.dao.jpa.Process;
 import org.apache.log4j.Logger;
@@ -73,9 +74,16 @@ public class Dao2TableUtil {
         ProcessType daoProcessType = new ProcessType();
         daoProcessType.setProcessTypeId(processTypeId);
         daoProcess.setProcessType(daoProcessType);
+        LOGGER.info("workflow type id is "+workflowTypeId);
         if (workflowTypeId != null) {
-            com.wipro.ats.bdre.md.dao.jpa.WorkflowType daoWorkflowType = new com.wipro.ats.bdre.md.dao.jpa.WorkflowType();
+            com.wipro.ats.bdre.md.dao.jpa.WorkflowType daoWorkflowType =new WorkflowType();
             daoWorkflowType.setWorkflowId(workflowTypeId);
+            daoProcess.setWorkflowType(daoWorkflowType);
+        }
+        else
+        {
+            com.wipro.ats.bdre.md.dao.jpa.WorkflowType daoWorkflowType =new WorkflowType();
+            daoWorkflowType.setWorkflowId(1);
             daoProcess.setWorkflowType(daoWorkflowType);
         }
         com.wipro.ats.bdre.md.dao.jpa.BusDomain daoBusDomain = new com.wipro.ats.bdre.md.dao.jpa.BusDomain();

@@ -55,6 +55,7 @@
         <module>dot-gen</module>
         <module>cluster-migration</module>
         <module>analytic-ui-generator</module>
+        <module>semantic-core</module>
     </modules>
 
     <dependencies>
@@ -593,6 +594,7 @@
                 <artifactId>spark-core_2.10</artifactId>
                 <version>${spark.core.version}</version>
             </dependency>
+
 
 
             <!-- databases -->

@@ -28,7 +28,7 @@
                 <oozie.version>4.1.0</oozie.version>
                 <storm.version>0.9.3</storm.version>
                 <kafka.version>0.8.1.1</kafka.version>
-                <pig.version>0.15.0</pig.version>
+                <pig.version>0.12.0-cdh5.2.0</pig.version>
                 <flume.version>1.6.0</flume.version>
                 <spark.core.version>1.5.2</spark.core.version>
                 <selected.profile>cdh52</selected.profile>
@@ -133,6 +133,7 @@
         <profile>
             <id>general</id>
             <properties>
+                <poi.version>3.10-FINAL</poi.version>
                 <junit.version>4.3.1</junit.version>
                 <org.codehaus.jackson.version>1.9.13</org.codehaus.jackson.version>
                 <commons-io.version>2.1</commons-io.version>
@@ -211,6 +212,10 @@
                     <url>https://repository.cloudera.com/cloudera/repo/</url>
                 </repository>
                 <repository>
+                    <id>repository.jboss.org-public</id>
+                    <url>https://repository.jboss.org/nexus/content/groups/public</url>
+                </repository>
+                <repository>
                     <id>repo.hortonworks.com</id>
                     <name>Hortonworks HDP Maven Repository</name>
                     <url>http://repo.hortonworks.com/content/repositories/releases/</url>
@@ -232,6 +237,10 @@
                 <pluginRepository>
                     <id>cloudera</id>
                     <url>https://repository.cloudera.com/cloudera/repo/</url>
+                </pluginRepository>
+                <pluginRepository>
+                    <id>repository.jboss.org-public</id>
+                    <url>https://repository.jboss.org/nexus/content/groups/public</url>
                 </pluginRepository>
                 <pluginRepository>
                     <id>repo.hortonworks.com</id>

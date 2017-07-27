@@ -105,7 +105,7 @@ public class ProcessAPI extends MetadataAPIBase {
                 }
                 process.setEnqProcessId(daoProcess.getEnqueuingProcessId());
                 process.setNextProcessIds(daoProcess.getNextProcessId());
-                if (daoProcess.getBatchCutPattern() != null) {
+                if (daoProcess.getBatchCutPattern() != null && !daoProcess.getBatchCutPattern().isEmpty()) {
                     process.setBatchPattern(daoProcess.getBatchCutPattern());
                 }
                 process.setTableAddTS(DateConverter.dateToString(daoProcess.getAddTs()));
@@ -203,14 +203,16 @@ public class ProcessAPI extends MetadataAPIBase {
                 tableProcess.setTableEditTS(DateConverter.dateToString(daoProcess.getEditTs()));
                 tableProcess.setDeleteFlag(daoProcess.getDeleteFlag());
                    if (daoProcess.getUserRoles()!=null)
-                    tableProcess.setOwnerRoleId(daoProcess.getUserRoles().getUserRoleId());
+                   { tableProcess.setOwnerRoleId(daoProcess.getUserRoles().getUserRoleId());
                 LOGGER.info("user role id of processid "+daoProcess.getProcessId()+" is "+daoProcess.getUserRoles().getUserRoleId());
+                   }
                 if (daoProcess.getPermissionTypeByGroupAccessId()!=null)
                 tableProcess.setPermissionTypeByGroupAccessId(daoProcess.getPermissionTypeByGroupAccessId().getPermissionTypeId());
                 if(daoProcess.getPermissionTypeByUserAccessId()!=null)
                 tableProcess.setPermissionTypeByUserAccessId(daoProcess.getPermissionTypeByUserAccessId().getPermissionTypeId());
                 if(daoProcess.getPermissionTypeByOthersAccessId()!=null)
                 tableProcess.setPermissionTypeByOthersAccessId(daoProcess.getPermissionTypeByOthersAccessId().getPermissionTypeId());
+                if(daoProcess.getUsers()!=null)
                 tableProcess.setUserName(daoProcess.getUsers().getUsername());
                 tableProcess.setCounter(counter);
                 processes.add(tableProcess);
@@ -279,8 +281,10 @@ public class ProcessAPI extends MetadataAPIBase {
             else
                 updateDaoProcess.setCanRecover(process.getCanRecover());
             updateDaoProcess.setEnqueuingProcessId(process.getEnqProcessId());
-            if (process.getBatchPattern() != null) {
+            if (process.getBatchPattern() != null && !process.getBatchPattern().isEmpty() && !("").equals(process.getBatchPattern())) {
                 updateDaoProcess.setBatchCutPattern(process.getBatchPattern());
+            }else{
+                updateDaoProcess.setBatchCutPattern(null);
             }
             updateDaoProcess.setNextProcessId(process.getNextProcessIds());
             if (process.getDeleteFlag() == null)
@@ -359,7 +363,7 @@ public class ProcessAPI extends MetadataAPIBase {
             else
                 insertDaoProcess.setCanRecover(process.getCanRecover());
             insertDaoProcess.setEnqueuingProcessId(process.getEnqProcessId());
-            if (process.getBatchPattern() != null) {
+            if (process.getBatchPattern() != null && !process.getBatchPattern().isEmpty()) {
                 insertDaoProcess.setBatchCutPattern(process.getBatchPattern());
             }
             insertDaoProcess.setNextProcessId(process.getNextProcessIds());
@@ -903,8 +907,17 @@ public class ProcessAPI extends MetadataAPIBase {
         executionInfo.setProcessId(process.getProcessId());
         try {
             processDAO.securityCheck(process.getProcessId(),principal.getName(),"execute");
-            String[] command = {MDConfig.getProperty("execute.script-path") + "/job-executor.sh", process.getBusDomainId().toString(), process.getProcessTypeId().toString(), process.getProcessId().toString(), principal.getName()};
-            LOGGER.info("Running the command : -- " + command[0] + " " + command[1] + " " + command[2] + " " + command[3]);
+            String[] command=new String[5];
+            LOGGER.info("workflow typeid  is "+process.getWorkflowId());
+            if (process.getWorkflowId()==3)
+            command[0]=MDConfig.getProperty("execute.script-path") + "/job-executor-airflow.sh";
+            else
+                command[0]=MDConfig.getProperty("execute.script-path") + "/job-executor.sh";
+            command[1]=process.getBusDomainId().toString();
+            command[2]=process.getProcessTypeId().toString();
+            command[3]=process.getProcessId().toString();
+            command[4]=principal.getName();
+            LOGGER.info("Running the command : -- " + command[0] + " " + command[1] + " " + command[2] + " " + command[3]+" "+command[4]);
             ProcessBuilder processBuilder = new ProcessBuilder(command[0], command[1], command[2], command[3], command[4]);
             processBuilder.redirectOutput(new File(MDConfig.getProperty("execute.log-path") + process.getProcessId().toString()));
             LOGGER.info("The output is redirected to " + MDConfig.getProperty("execute.log-path") + process.getProcessId().toString());
@@ -1049,6 +1062,9 @@ public class ProcessAPI extends MetadataAPIBase {
         try {
             Process process=new Process();
          processDAO.securityCheck(processId,principal.getName(),"read");
+            com.wipro.ats.bdre.md.dao.jpa.Process jpaProcess=processDAO.get(processId);
+            process.setWorkflowId(jpaProcess.getWorkflowType().getWorkflowId());
+            LOGGER.info("workflowTypeId is "+process.getWorkflowId());
             restWrapper = new RestWrapper(process, RestWrapper.OK);
         } catch (MetadataException e) {
             LOGGER.error(e);

@@ -58,7 +58,13 @@ public class CreateRawBaseTables extends ETLBase {
         java.util.Properties rawPropertiesOfColumns = getPropertiesOfRawColumns.getProperties(rawLoad, "raw-cols");
         Enumeration columns = rawPropertiesOfColumns.propertyNames();
         List<String> orderOfCloumns = Collections.list(columns);
-        Collections.sort(orderOfCloumns);
+         Collections.sort(orderOfCloumns, new Comparator<String>() {
+            public int compare(String o1, String o2) {
+                int n1=Integer.valueOf(o1.split("\\.")[1]);
+                int n2=Integer.valueOf(o2.split("\\.")[1]);
+                return (n1 - n2);
+            }
+        });
         List<String> rawColumns = new ArrayList<String>();
         if (!rawPropertiesOfColumns.isEmpty()) {
             for (String columnOrder : orderOfCloumns) {
@@ -72,7 +78,14 @@ public class CreateRawBaseTables extends ETLBase {
         java.util.Properties rawPropertiesOfDataTypes = getPropertiesOfRawDataTypes.getProperties(rawLoad, "raw-data-types");
         Enumeration dataTypes = rawPropertiesOfDataTypes.propertyNames();
         List<String> orderOfDataTypes = Collections.list(dataTypes);
-        Collections.sort(orderOfDataTypes);
+        Collections.sort(orderOfDataTypes, new Comparator<String>() {
+
+            public int compare(String o1, String o2) {
+                int n1=Integer.valueOf(o1.split("\\.")[1]);
+                int n2=Integer.valueOf(o2.split("\\.")[1]);
+                return (n1 - n2);
+            }
+        });
         List<String> rawDataTypes = new ArrayList<String>();
         if (!rawPropertiesOfColumns.isEmpty()) {
             for (String columnOrder : orderOfDataTypes) {
@@ -156,27 +169,62 @@ public class CreateRawBaseTables extends ETLBase {
 
         //generating raw table ddl for a delimited file
         if ("delimited".equalsIgnoreCase(fileType)) {
-            rawTableDdl += "CREATE TABLE IF NOT EXISTS " + rawTableDbName + "." + rawTableName + " ( " + rawColumnsWithDataTypes + " ) " +
-                    " partitioned by (batchid bigint) ROW FORMAT SERDE 'org.apache.hadoop.hive.serde2.lazy.LazySimpleSerDe'  WITH SERDEPROPERTIES (" + rawSerdeProperties + " ) STORED AS INPUTFORMAT 'org.apache.hadoop.mapred.TextInputFormat'" +
-                    " OUTPUTFORMAT 'org.apache.hadoop.hive.ql.io.HiveIgnoreKeyTextOutputFormat'";
+            if(!rawSerdeProperties.equals("")) {
+                rawTableDdl += "CREATE TABLE IF NOT EXISTS " + rawTableDbName + "." + rawTableName + " ( " + rawColumnsWithDataTypes + " ) " +
+                        " partitioned by (batchid bigint) ROW FORMAT SERDE 'org.apache.hadoop.hive.serde2.lazy.LazySimpleSerDe'  WITH SERDEPROPERTIES (" + rawSerdeProperties + " ) STORED AS INPUTFORMAT 'org.apache.hadoop.mapred.TextInputFormat'" +
+                        " OUTPUTFORMAT 'org.apache.hadoop.hive.ql.io.HiveIgnoreKeyTextOutputFormat'";
+            }
+            else{
+                rawTableDdl += "CREATE TABLE IF NOT EXISTS " + rawTableDbName + "." + rawTableName + " ( " + rawColumnsWithDataTypes + " ) " +
+                        " partitioned by (batchid bigint) ROW FORMAT SERDE 'org.apache.hadoop.hive.serde2.lazy.LazySimpleSerDe'   STORED AS INPUTFORMAT 'org.apache.hadoop.mapred.TextInputFormat'" +
+                        " OUTPUTFORMAT 'org.apache.hadoop.hive.ql.io.HiveIgnoreKeyTextOutputFormat'";
 
+            }
             LOGGER.debug("rawTableDdl= " + rawTableDdl);
         }
         //generating raw table ddl for a xml file
         else if ("xml".equalsIgnoreCase(fileType)) {
             rawTableProperties = tList.substring(0, tList.length() - 1);
             LOGGER.debug("rawTableProperties = " + rawTableProperties);
-            rawTableDdl += "CREATE TABLE IF NOT EXISTS " + rawTableDbName + "." + rawTableName + " ( " + rawColumnsWithDataTypes + " )" +
-                    " partitioned by (batchid bigint) ROW FORMAT SERDE 'com.ibm.spss.hive.serde2.xml.XmlSerDe' WITH SERDEPROPERTIES " +
-                    " ( " + rawSerdeProperties + " ) STORED AS INPUTFORMAT 'com.ibm.spss.hive.serde2.xml.XmlInputFormat' OUTPUTFORMAT 'org.apache.hadoop.hive.ql.io.IgnoreKeyTextOutputFormat' " +
-                    "TBLPROPERTIES ( " + rawTableProperties + " )";
+
+            if(rawSerdeProperties.equals("") && rawTableProperties.equals("")) {
+                rawTableDdl += "CREATE TABLE IF NOT EXISTS " + rawTableDbName + "." + rawTableName + " ( " + rawColumnsWithDataTypes + " )" +
+                        " partitioned by (batchid bigint) ROW FORMAT SERDE 'com.ibm.spss.hive.serde2.xml.XmlSerDe' " +
+                        "STORED AS INPUTFORMAT 'com.ibm.spss.hive.serde2.xml.XmlInputFormat' OUTPUTFORMAT 'org.apache.hadoop.hive.ql.io.IgnoreKeyTextOutputFormat' ";
+            }
+            else if(rawSerdeProperties.equals("") ){
+                rawTableDdl += "CREATE TABLE IF NOT EXISTS " + rawTableDbName + "." + rawTableName + " ( " + rawColumnsWithDataTypes + " )" +
+                        " partitioned by (batchid bigint) ROW FORMAT SERDE 'com.ibm.spss.hive.serde2.xml.XmlSerDe'" +
+                        " STORED AS INPUTFORMAT 'com.ibm.spss.hive.serde2.xml.XmlInputFormat' OUTPUTFORMAT 'org.apache.hadoop.hive.ql.io.IgnoreKeyTextOutputFormat' " +
+                        "TBLPROPERTIES ( " + rawTableProperties + " )";
+
+            }
+            else if(rawTableProperties.equals("")){
+                rawTableDdl +="CREATE TABLE IF NOT EXISTS " + rawTableDbName + "." + rawTableName + " ( " + rawColumnsWithDataTypes + " )" +
+                        " partitioned by (batchid bigint) ROW FORMAT SERDE 'com.ibm.spss.hive.serde2.xml.XmlSerDe' WITH SERDEPROPERTIES " +
+                        " ( " + rawSerdeProperties + " ) STORED AS INPUTFORMAT 'com.ibm.spss.hive.serde2.xml.XmlInputFormat' OUTPUTFORMAT 'org.apache.hadoop.hive.ql.io.IgnoreKeyTextOutputFormat' " ;
+            }
+            else{
+                rawTableDdl += "CREATE TABLE IF NOT EXISTS " + rawTableDbName + "." + rawTableName + " ( " + rawColumnsWithDataTypes + " )" +
+                        " partitioned by (batchid bigint) ROW FORMAT SERDE 'com.ibm.spss.hive.serde2.xml.XmlSerDe' WITH SERDEPROPERTIES " +
+                        " ( " + rawSerdeProperties + " ) STORED AS INPUTFORMAT 'com.ibm.spss.hive.serde2.xml.XmlInputFormat' OUTPUTFORMAT 'org.apache.hadoop.hive.ql.io.IgnoreKeyTextOutputFormat' " +
+                        "TBLPROPERTIES ( " + rawTableProperties + " )";
+            }
+
             LOGGER.debug("rawTableDdl= " + rawTableDdl);
         }
         if ("mainframe".equalsIgnoreCase(fileType)) {
-            rawTableDdl += "CREATE TABLE IF NOT EXISTS " + rawTableDbName + "." + rawTableName + " ( " + rawColumnsWithDataTypes + " ) " +
-                    " partitioned by (batchid bigint)  ROW FORMAT DELIMITED FIELDS TERMINATED BY '1'\n" +
-                    "STORED AS INPUTFORMAT 'com.cloudera.sa.copybook.mapred.CopybookInputFormat' OUTPUTFORMAT 'org.apache.hadoop.hive.ql.io.HiveIgnoreKeyTextOutputFormat' " +
-                    "TBLPROPERTIES (" + rawTableProperties + " )";
+            if(!rawTableProperties.equals("")) {
+                rawTableDdl += "CREATE TABLE IF NOT EXISTS " + rawTableDbName + "." + rawTableName + " ( " + rawColumnsWithDataTypes + " ) " +
+                        " partitioned by (batchid bigint)  ROW FORMAT DELIMITED FIELDS TERMINATED BY '1'\n" +
+                        "STORED AS INPUTFORMAT 'com.cloudera.sa.copybook.mapred.CopybookInputFormat' OUTPUTFORMAT 'org.apache.hadoop.hive.ql.io.HiveIgnoreKeyTextOutputFormat' " +
+                        "TBLPROPERTIES (" + rawTableProperties + " )";
+            }
+            else{
+                rawTableDdl += "CREATE TABLE IF NOT EXISTS " + rawTableDbName + "." + rawTableName + " ( " + rawColumnsWithDataTypes + " ) " +
+                        " partitioned by (batchid bigint)  ROW FORMAT DELIMITED FIELDS TERMINATED BY '1'\n" +
+                        "STORED AS INPUTFORMAT 'com.cloudera.sa.copybook.mapred.CopybookInputFormat' OUTPUTFORMAT 'org.apache.hadoop.hive.ql.io.HiveIgnoreKeyTextOutputFormat' " ;
+            }
             LOGGER.debug("rawTableDdl= " + rawTableDdl);
         }
         checkAndCreateRawTable(rawTableDbName, rawTableName, rawTableDdl);
@@ -251,7 +299,7 @@ public class CreateRawBaseTables extends ETLBase {
         if (!basePropertiesOfColumns.isEmpty()) {
             while (baseColumnsList.hasMoreElements()) {
                 String key = (String) baseColumnsList.nextElement();
-                baseColumns.append(basePropertiesOfColumns.getProperty(key) + " " + basePropertiesOfDataTypes .getProperty(key.replaceAll("transform_","")) + ",");
+                baseColumns.append(key.replaceAll("transform_","") + " " + basePropertiesOfDataTypes .getProperty(key.replaceAll("transform_","")) + ",");
             }
         }
         //removing trailing comma

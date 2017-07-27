@@ -190,10 +190,14 @@ public class SubProcessAPI extends MetadataAPIBase {
                 updateDaoProcess.setCanRecover(process.getCanRecover());
             updateDaoProcess.setEnqueuingProcessId(process.getEnqProcessId());
             if (process.getBatchPattern() != null) {
+                LOGGER.info("Batch cut pattern "+updateDaoProcess.getBatchCutPattern());
                 if (process.getBatchPattern().isEmpty()) {
                     updateDaoProcess.setBatchCutPattern(null);
+                    LOGGER.info("Batch cut pattern-- "+updateDaoProcess.getBatchCutPattern());
                 }
-                updateDaoProcess.setBatchCutPattern(process.getBatchPattern());
+                else {
+                    updateDaoProcess.setBatchCutPattern(process.getBatchPattern());
+                }
             }
             updateDaoProcess.setNextProcessId(process.getNextProcessIds());
             if (process.getDeleteFlag() == null)
@@ -274,7 +278,9 @@ public class SubProcessAPI extends MetadataAPIBase {
                 if (process.getBatchPattern().isEmpty()) {
                     insertDaoProcess.setBatchCutPattern(null);
                 }
-                insertDaoProcess.setBatchCutPattern(process.getBatchPattern());
+                else {
+                    insertDaoProcess.setBatchCutPattern(process.getBatchPattern());
+                }
             }
             insertDaoProcess.setNextProcessId(process.getNextProcessIds());
             if (process.getDeleteFlag() == null)
