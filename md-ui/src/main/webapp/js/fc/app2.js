@@ -48,7 +48,13 @@ angular.module('app', ['flowChart', ])
         var chartDataModel = {};
 
         $scope.processTypes={};
+        $scope.source_processTypes={};
+        $scope.operator_processTypes={};
+        $scope.emitter_processTypes={};
+        $scope.persistentStore_processTypes={};
         $scope.chartViewModel={};
+        $scope.newMessagesList = {};
+
         //
         // Event handler for key-down on the flowchart.
         //
@@ -114,8 +120,49 @@ angular.module('app', ['flowChart', ])
                 alertBox('danger', 'Error Initialising Process Page');
             }
 
-
+            jQuery.post('/mdrest/processtype/options_emitter/'+parentType,function(data){$scope.emitter_processTypes=data});
+            jQuery.post('/mdrest/processtype/options_persistentStore/'+parentType,function(data){$scope.persistentStore_processTypes=data});
             jQuery.post('/mdrest/processtype/options/'+parentType,function(data){$scope.processTypes=data});
+            jQuery.post('/mdrest/processtype/options_source/'+parentType,function(data){$scope.source_processTypes=data});
+            jQuery.post('/mdrest/processtype/options_operator/'+parentType,function(data){$scope.operator_processTypes=data});
+            var messagesOptionslist = workflowtypeOptionslistAC('/mdrest/message/optionslist',  'POST', '');
+                if (messagesOptionslist) {
+                    $scope.newMessagesList = messagesOptionslist;
+                    console.log('info -- no messages options listed');
+                }
+                else {
+                    console.log('messagesOptionslist not loaded');
+                }
+
+            //     var connectionsOptionslist = workflowtypeOptionslistAC('/mdrest/connections/optionslist',  'POST', '');
+            //     if (connectionsOptionslist) {
+            //         $scope.connectionsList = connectionsOptionslist;
+            //         console.log('info -- no connections options listed');
+            //     }
+            //     else {
+            //         console.log('connectionsOptionslist not loaded');
+             //    }
+
+                    var emitterconnections = workflowtypeOptionslistAC('/mdrest/connections/optionslist/emitter',  'POST', '');
+                      if (emitterconnections) {
+                          $scope.emitterConnectionsList = emitterconnections;
+                          console.log('info -- no connections options listed');
+                      }
+                      else {
+                         console.log('emitterconnectionslist not loaded');
+                      }
+
+                      var persistentStoreconnections = workflowtypeOptionslistAC('/mdrest/connections/optionslist/persistentStore',  'POST', '');
+                        if (persistentStoreconnections) {
+                            $scope.persistentStoreConnectionsList = persistentStoreconnections;
+                            console.log('info -- no connections options listed');
+                        }
+                        else {
+                           console.log('persistentStoreconnectionslist not loaded');
+                        }
+
+
+
 
             //
             // Setup the data-model for the chart.
@@ -136,7 +183,7 @@ angular.module('app', ['flowChart', ])
 
                 if (dataRecord) {
                     dataRecord.processName = "End";
-                    nodeMap[dataRecord.processId] = $scope.restoreNode(dataRecord);
+                   // nodeMap[dataRecord.processId] = $scope.restoreNode(dataRecord);
                 }
                 else {
                     alertBox('warning','Error occured');
@@ -152,7 +199,7 @@ angular.module('app', ['flowChart', ])
                         var srcConnector = srcNode.outputConnectors[0];
                         var destPids = val.nextProcessIds.split(',');
                         $.each(destPids, function(j, destPid) {
-                            if (destPid != 0) {
+                            if (destPid != parentPid) {
                                 var destNode = nodeMap[destPid];
                                 var destConnector = destNode.inputConnectors[0];
                                 $scope.chartViewModel.createNewConnection(srcConnector, destConnector);
@@ -168,16 +215,16 @@ angular.module('app', ['flowChart', ])
                 if (dataRecord1) {
                     dataRecord1.processId = -parentPid;
                     dataRecord1.processName = "Start";
-                    var startNode = $scope.restoreNode(dataRecord1);
+                  //  var startNode = $scope.restoreNode(dataRecord1);
                     //handle start node
-                    var startNodeConnector = startNode.outputConnectors[0];
+                  //  var startNodeConnector = startNode.outputConnectors[0];
                     var firstNodePids = dataRecord1.nextProcessIds.split(',');
                     jQuery.each(firstNodePids, function(j, firstNodePid) {
 
                         if (firstNodePid != 0) {
                             var firstNode = nodeMap[firstNodePid];
                             var firstNodeConnector = firstNode.inputConnectors[0];
-                            $scope.chartViewModel.createNewConnection(startNodeConnector, firstNodeConnector);
+                           // $scope.chartViewModel.createNewConnection(startNodeConnector, firstNodeConnector);
                         }
                     });
                 }
@@ -190,10 +237,18 @@ angular.module('app', ['flowChart', ])
             if (!process) {
                 return;
             }
+            var processType= processTypeAC('/mdrest/processtype/', process.processTypeId);
+
+            var processTypeName = processType.processTypeName;
+            var index = processTypeName.indexOf("_");
+            var nodeType = processTypeName.substr(0,index);
+            var nodename = processTypeName.substr(index+1, processTypeName.length);
+
             //Get x y position
             var xpos = 0;
             var ypos = 0;
             var pid = process.processId;
+
             if (process.processId <0) {
                 pid = - process.processId;
             }
@@ -243,6 +298,14 @@ angular.module('app', ['flowChart', ])
             } else if (process.processId == parentPid) {
                 delete newNodeDataModel["outputConnectors"];
             }
+
+             if(nodeType=="source"){
+              delete newNodeDataModel["inputConnectors"];
+              }
+
+            if(nodeType=="persistentStore"){
+              delete newNodeDataModel["outputConnectors"];
+              }
             var nodedm = $scope.chartViewModel.addNode(newNodeDataModel);
             return nodedm;
         };
@@ -253,28 +316,52 @@ angular.module('app', ['flowChart', ])
             if (!nodeTypeId) {
                 return;
             }
+            console.log("nodeTypeId "+nodeTypeId);
 
+            var processType= processTypeAC('/mdrest/processtype/', nodeTypeId);
+
+            var processTypeName = processType.processTypeName;
+            var index = processTypeName.indexOf("_");
+            var nodeType = processTypeName.substr(0,index);
+            var nodename = processTypeName.substr(index+1, processTypeName.length);
+
+            if(parentType==41)
+            {
+            //
+                        //create new process
+                        console.log("Inside parenttype 41");
+                        var postData = '&processName=' +
+                                nodename + '&description=A+Child+of+' +
+                                parentPid + '&batchPattern=&parentProcessId=' +
+                                parentPid + '&canRecover=1&nextProcessIds='+parentPid+'&enqProcessId=0&busDomainId=' +
+                                busDomainId + '&processTypeId=' +
+                                nodeTypeId + '&workflowId=0&processTemplateId=';
+            }
+           else
+           {
             //
             //create new process
             var postData = '&processName=Child+of+' +
                     parentPid + '&description=A+Child+of+' +
                     parentPid + '&batchPattern=&parentProcessId=' +
-                    parentPid + '&canRecover=1&nextProcessIds=0&enqProcessId=0&busDomainId=' +
+                    parentPid + '&canRecover=1&nextProcessIds='+parentPid+'&enqProcessId=0&busDomainId=' +
                     busDomainId + '&processTypeId=' +
                     nodeTypeId + '&workflowId=0&processTemplateId=';
-
+               }
             var subprocessRecord = subprocessAC('/mdrest/subprocess', 'PUT', postData);
 
 
             if (subprocessRecord) {
 
            // Template for a new node.
+
               var newNodeDataModel = {
                   name: subprocessRecord.processName,
                   id: subprocessRecord.processId,
                   x: 0,
                   y: 0,
                   type: nodeTypeId,
+                  operator: nodeType,
                   pid: subprocessRecord.processId,
                   busDomainId: busDomainId,
                   parent: parentPid,
@@ -288,7 +375,15 @@ angular.module('app', ['flowChart', ])
                       name: ""
                   }],
               };
+            if(nodeType=="source"){
+              delete newNodeDataModel["inputConnectors"];
+              }
+
+            if(nodeType=="persistentStore"){
+              delete newNodeDataModel["outputConnectors"];
+              }
               $scope.chartViewModel.addNode(newNodeDataModel);
+
               alertBox('info', 'New node with id '+ subprocessRecord.processId +' created');
 
 
@@ -357,6 +452,151 @@ $scope.updateProcessDetails = function() {
 //
 // On clicking Name Descirption update button
 //
+
+$scope.insertSourceProp=function(processId){
+var map=new Object();
+
+var value6=document.getElementById("messageName").value;
+map["messageName"]=value6;
+console.log("property6 is "+value6);
+
+
+                       $.ajax({
+							type: "POST",
+							url: "/mdrest/properties/"+processId,
+							data: jQuery.param(map),
+							success: function(data) {
+								if(data.Result == "OK") {
+								    var modal = document.getElementById('myModal');
+                                    modal.style.display = "none";
+									alertBox("info","kafka properties added");
+								}
+								else
+								alertBox("warning","Error occured");
+
+							}
+
+						});
+
+
+}
+
+$scope.insertFilterProp=function(processId){
+var value1=document.getElementById("column").value;
+var value2=document.getElementById("operator").value;
+var value3=document.getElementById("filtervalue").value;
+console.log("values are "+value1+" "+value2+" "+value3);
+console.log("processId is "+processId);
+var map=new Object();
+map["column"]=value1;
+map["operator"]=value2;
+map["filtervalue"]=value3;
+    $.ajax({
+            type: "POST",
+            url: "/mdrest/properties/"+processId,
+            data: jQuery.param(map),
+            success: function(data) {
+                if(data.Result == "OK") {
+                   var modal = document.getElementById('myModal');
+                    modal.style.display = "none";
+                    alertBox("info","filter properties added");
+                }
+                else
+                alertBox("warning","Error occured");
+
+            }
+
+        });
+}
+
+$scope.insertSortProp=function(processId){
+var value1=document.getElementById("sortcolumn").value;
+var value2=document.getElementById("sortorder").value;
+console.log("values are "+value1+" "+value2);
+console.log("processId is "+processId);
+var map=new Object();
+map["column"]=value1;
+map["order"]=value2;
+    $.ajax({
+            type: "POST",
+            url: "/mdrest/properties/"+processId,
+            data: jQuery.param(map),
+            success: function(data) {
+                if(data.Result == "OK") {
+                  var modal = document.getElementById('myModal');
+                  modal.style.display = "none";
+                    alertBox("info","sort properties added");
+                }
+                else
+                alertBox("warning","Error occured");
+
+            }
+
+        });
+}
+
+
+$scope.insertEmitterProp=function(processId){
+var value1=document.getElementById("emitterConnectionName").value;
+console.log("values are "+value1);
+console.log("processId is "+processId);
+var map=new Object();
+map["connectionName"]=value1;
+    $.ajax({
+            type: "POST",
+            url: "/mdrest/properties/"+processId,
+            data: jQuery.param(map),
+            success: function(data) {
+                if(data.Result == "OK") {
+                    var modal = document.getElementById('myModal');
+                    modal.style.display = "none";
+                    alertBox("info","Emitter properties added");
+                }
+                else
+                alertBox("warning","Error occured");
+
+            }
+
+        });
+}
+
+$scope.insertPersistentStoreProp=function(processId){
+var value1=document.getElementById("persistentStoreConnectionName").value;
+console.log("values are "+value1);
+console.log("processId is "+processId);
+var map=new Object();
+map["connectionName"]=value1;
+    $.ajax({
+            type: "POST",
+            url: "/mdrest/properties/"+processId,
+            data: jQuery.param(map),
+            success: function(data) {
+                if(data.Result == "OK") {
+                   var modal = document.getElementById('myModal');
+                    modal.style.display = "none";
+                    alertBox("info","PersistentStore properties added");
+                }
+                else
+                alertBox("warning","Error occured");
+
+            }
+
+        });
+}
+
+
+
+$scope.fetchMessageColumns=function(processId){
+
+     var dataRecord = messagesAC('/mdrest/sparkstreaming/getmessagecolumns/'+processId, 'POST', [$scope.chartViewModel.getSelectedNodes()[0].data.pid]);
+    if (dataRecord) {
+        $scope.messageColumnNames = dataRecord;
+    } else {
+        alertBox('danger', 'Error has occured');
+    }
+}
+
+
 
 $scope.insertProp = function(cfgDetails) {
     var cfg = cfgDetails.key,
@@ -647,6 +887,7 @@ $scope.newPageProcessType = {};
 $scope.newPagePermissionType={};
 $scope.newPageUserRoles={};
 $scope.newPageWorkflowType = {};
+$scope.operators = ["equals","not equals", "contains","doesnot contains","begins with","ends with","greater than","lesser than"];
 $scope.intialiseNewProcessPage =function() {
 
     var busdomainOptions = busdomainOptionsAC('/mdrest/busdomain/options/', 'POST', '');
@@ -696,7 +937,7 @@ $scope.intialiseNewProcessPage =function() {
 // Create first process function
 //
 $scope.createFirstProcess = function() {
-    
+
     var postData = {
         'processName': $('#processname').val(),
         'description': $('#description').val(),
@@ -708,18 +949,18 @@ $scope.createFirstProcess = function() {
          'permissionTypeByUserAccessId': $('#permissionTypeByUserAccessId').val(),
          'permissionTypeByGroupAccessId': $('#permissionTypeByGroupAccessId').val(),
          'permissionTypeByOthersAccessId': $('#permissionTypeByOthersAccessId').val(),
-        'processTypeId': $('#type').val(),
+        'processTypeId': '41',
         'processTemplateId': '',
-        'workflowId': $('#workflowtype').val()
+        'workflowId': '2'
     };
     postData = $.param(postData),
     dataRecord = processAC('/mdrest/process', 'PUT', postData);
     if (dataRecord) {
-         if(dataRecord.processTypeId==41)
-             location.href='/mdui/pages/wfdesigner2.page?processId='+ dataRecord.processId;
-         else
-             location.href='/mdui/pages/wfdesigner.page?processId='+ dataRecord.processId;
-                console.log('info', 'Parent process created');
+        if(dataRecord.processTypeId==41)
+        location.href='/mdui/pages/wfdesigner2.page?processId='+ dataRecord.processId;
+        else
+        location.href='/mdui/pages/wfdesigner.page?processId='+ dataRecord.processId;
+        console.log('info', 'Parent process created');
     }
     else {
         console.log('Parent process not created');
@@ -744,7 +985,7 @@ $scope.confirmDialog = function (message, callBackFunctionName){
             width: 'auto', resizable: false,
             buttons: {
                 Yes: function () {
-                    // $(obj).removeAttr('onclick');                                
+                    // $(obj).removeAttr('onclick');
                     // $(obj).parents('.Parent').remove();
                     $(this).dialog("close");
                     callBackFunction(true);
@@ -795,6 +1036,13 @@ $scope.confirmDialog = function (message, callBackFunctionName){
                                 nextIds.push(nextProcessId);
                             }
                         });
+                        console.log("parentPid "+parentPid);
+                        console.log("nextids "+nextIds);
+                        var index = nextIds.indexOf(parentPid);
+                        console.log("index "+index);
+                        nextIds.splice(index, 1);
+                        console.log("modified nextids "+nextIds);
+
                         //if empty place 0
                         if (nextIds.length == 0) nextIds.push(0);
                         dataRecord1.nextProcessIds = nextIds.join(',');
