@@ -308,11 +308,17 @@
                                                                         label: "Job Definitions",
                                                                         collapse: "1",
                                                                         children: [{
-                                                                                label: "Processes",
+                                                                                label: "Batch Jobs Registry",
                                                                                 collapse: "1",
                                                                                 url: "process.page",
                                                                                 children: []
                             								},
+                            								{
+                                                                            label: "Stream Jobs Registry",
+                                                                            collapse: "1",
+                                                                            url: "process2.page",
+                                                                            children: []
+                                                        },
                                                                             {
                                                                                 label: "Workflow Creator",
                                                                                 collapse: "1",
@@ -498,8 +504,16 @@
                                                                             collapse: "1",
                                                                             url: "streamingmessage.page",
                                                                             children: []
-                                                }
-                                                , {
+                                                },
+
+                                                {
+                                                                                label: "Stream Jobs Registry",
+                                                                                collapse: "1",
+                                                                                url: "process2.page",
+                                                                                children: []
+                                                            },
+
+                                                 {
                                                                          label: "Create Streaming Workflow",
                                                                          collapse: "1",
                                                                          url: "wfdesigner2.page",

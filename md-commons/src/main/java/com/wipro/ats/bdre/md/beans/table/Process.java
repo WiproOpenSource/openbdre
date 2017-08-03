@@ -40,6 +40,17 @@ public class Process {
     private Integer permissionTypeByGroupAccessId;
     private String userName;
     private Integer ownerRoleId;
+    private String latestExecStatus;
+
+    public String getLatestExecStatus() {
+        return latestExecStatus;
+    }
+
+    public void setLatestExecStatus(String latestExecStatus) {
+        this.latestExecStatus = latestExecStatus;
+    }
+
+
 
     @NotNull
     @Size(min = 1, max = 256)

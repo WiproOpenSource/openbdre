@@ -28,4 +28,9 @@ public class GetParentProcessType {
         LOGGER.info(processDAO.getParentProcessTypeId(pid));
         return processDAO.getParentProcessTypeId(pid);
     }
+
+    public String processTypeName(Integer pid){
+        LOGGER.info("pid is "+pid);
+        return processDAO.getProcessTypeName(pid);
+    }
 }
