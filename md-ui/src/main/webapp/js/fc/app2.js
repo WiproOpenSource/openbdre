@@ -499,7 +499,7 @@ map["filtervalue"]=value3;
                 if(data.Result == "OK") {
                    var modal = document.getElementById('myModal');
                     modal.style.display = "none";
-                    alertBox("info","filter properties added");
+                    alertBox("info","Filter properties added");
                 }
                 else
                 alertBox("warning","Error occured");
@@ -508,6 +508,87 @@ map["filtervalue"]=value3;
 
         });
 }
+$scope.insertHiveProp=function(processId){
+var value1 = $('#hiveColumn').val();
+console.log(value1);
+ var modal = document.getElementById('myModal');
+ modal.style.display = "none";
+}
+var aggregationFinal ="";
+function formIntoText(typeOf) {
+    var map = new Object();
+    var x = '';
+    x = document.getElementById(typeOf);
+    console.log(x);
+    var text = "";
+    var i;
+    for(i = 0; i < x.length-2; i=i+3) {
+          var column=x.elements[i].value;
+          var aggregation=x.elements[i+1].value;
+          text= text+column+":::"+aggregation+",";
+    }
+
+    console.log(text);
+    aggregationFinal=text;
+}
+$scope.insertAggProp=function(processId){
+var map=new Object();
+formIntoText('processFieldsForm1');
+console.log(aggregationFinal);
+map["column:aggType"]=aggregationFinal.substr(0, aggregationFinal.length-2);
+    $.ajax({
+            type: "POST",
+            url: "/mdrest/properties/"+processId,
+            data: jQuery.param(map),
+            success: function(data) {
+                if(data.Result == "OK") {
+                     var modal = document.getElementById('myModal');
+                     modal.style.display = "none";
+                    alertBox("info","Aggregation properties added");
+                }
+                else
+                alertBox("warning","Error occured");
+
+            }
+
+        });
+}
+
+
+
+
+
+
+
+
+
+$scope.insertJoinProperties=function(processId){
+var joinPrevProcessId=$('#joinTable').val();
+var columnName=$('#joinColumn').val();
+var outputColumns=$('#joinColumns').val().toString();
+console.log("join processId "+processId+"  "+joinPrevProcessId+" "+columnName+" "+outputColumns);
+var map=new Object();
+map["join-column"]=columnName;
+map["join-type"] =$('#join-type').val();
+map["outputColumns"]=outputColumns;
+ $.ajax({
+            type: "POST",
+            url: "/mdrest/properties/"+joinPrevProcessId,
+            data: jQuery.param(map),
+            success: function(data) {
+                if(data.Result == "OK") {
+                  var modal = document.getElementById('myModal');
+                  modal.style.display = "none";
+                    alertBox("info","Sort properties added");
+                }
+                else
+                alertBox("warning","Error occured");
+
+            }
+
+        });
+}
+
 
 $scope.insertSortProp=function(processId){
 var value1=document.getElementById("sortcolumn").value;
@@ -525,7 +606,7 @@ map["order"]=value2;
                 if(data.Result == "OK") {
                   var modal = document.getElementById('myModal');
                   modal.style.display = "none";
-                    alertBox("info","sort properties added");
+                    alertBox("info","Sort properties added");
                 }
                 else
                 alertBox("warning","Error occured");
@@ -534,6 +615,291 @@ map["order"]=value2;
 
         });
 }
+
+$scope.insertTakeProp=function(processId){
+var value1=document.getElementById("number").value;
+console.log("values are "+value1);
+console.log("processId is "+processId);
+var map=new Object();
+map["number-elements"]=value1;
+    $.ajax({
+            type: "POST",
+            url: "/mdrest/properties/"+processId,
+            data: jQuery.param(map),
+            success: function(data) {
+                if(data.Result == "OK") {
+                  var modal = document.getElementById('myModal');
+                  modal.style.display = "none";
+                    alertBox("info","Take properties added");
+                }
+                else
+                alertBox("warning","Error occured");
+
+            }
+
+        });
+}
+
+$scope.insertPersistProp=function(processId){
+var value1=document.getElementById("storageLevel").value;
+console.log("values are "+value1);
+console.log("processId is "+processId);
+var map=new Object();
+map["storage-level"]=value1;
+    $.ajax({
+            type: "POST",
+            url: "/mdrest/properties/"+processId,
+            data: jQuery.param(map),
+            success: function(data) {
+                if(data.Result == "OK") {
+                  var modal = document.getElementById('myModal');
+                  modal.style.display = "none";
+                    alertBox("info","Persist properties added");
+                }
+                else
+                alertBox("warning","Error occured");
+
+            }
+
+        });
+}
+
+$scope.insertRepartitionProp=function(processId){
+var value1=document.getElementById("numPartitions").value;
+console.log("values are "+value1);
+console.log("processId is "+processId);
+var map=new Object();
+map["num-partitions"]=value1;
+    $.ajax({
+            type: "POST",
+            url: "/mdrest/properties/"+processId,
+            data: jQuery.param(map),
+            success: function(data) {
+                if(data.Result == "OK") {
+                  var modal = document.getElementById('myModal');
+                  modal.style.display = "none";
+                    alertBox("info","Repartition properties added");
+                }
+                else
+                alertBox("warning","Error occured");
+
+            }
+
+        });
+}
+
+$scope.insertWindowProp=function(processId){
+var value1=document.getElementById("windowType").value;
+var value2=document.getElementById("windowDuration").value;
+var value3=document.getElementById("slideDuration").value;
+console.log("values are "+value1+" "+value2+" "+value3);
+console.log("processId is "+processId);
+var map=new Object();
+map["window-type"]=value1;
+map["window-duration"]=value2;
+map["slide-duration"]=value3;
+    $.ajax({
+            type: "POST",
+            url: "/mdrest/properties/"+processId,
+            data: jQuery.param(map),
+            success: function(data) {
+                if(data.Result == "OK") {
+                   var modal = document.getElementById('myModal');
+                    modal.style.display = "none";
+                    alertBox("info","Window properties added");
+                }
+                else
+                alertBox("warning","Error occured");
+
+            }
+
+        });
+}
+
+$scope.insertMapToPairProp=function(processId){
+console.log(document.getElementById("keyFields"));
+var value2=document.getElementById("keyFields").value;
+console.log("values are  "+value2);
+console.log("processId is "+processId);
+var map=new Object();
+map["keyFields"]=value2;
+    $.ajax({
+            type: "POST",
+            url: "/mdrest/properties/"+processId,
+            data: jQuery.param(map),
+            success: function(data) {
+                if(data.Result == "OK") {
+                   var modal = document.getElementById('myModal');
+                    modal.style.display = "none";
+                    alertBox("info","MapToPair properties added");
+                }
+                else
+                alertBox("warning","Error occured");
+
+            }
+
+        });
+}
+
+
+$scope.insertMapProp=function(parentProcessId,processId){
+var value1=document.getElementById("mapper").value;
+var value2=document.getElementById("executorPlugin").value;
+$scope.uploadJar(parentProcessId,processId,'mapJar');
+console.log("values are "+value1+" "+value2);
+console.log("processId is "+processId);
+var map=new Object();
+map["mapper"]=value1;
+map["executor-plugin"]=value2;
+$scope.uploadJar(processId,'lib','mapJar');
+
+    $.ajax({
+            type: "POST",
+            url: "/mdrest/properties/"+processId,
+            data: jQuery.param(map),
+            success: function(data) {
+                if(data.Result == "OK") {
+                   var modal = document.getElementById('myModal');
+                    modal.style.display = "none";
+                    alertBox("info","Map properties added");
+                }
+                else
+                alertBox("warning","Error occured");
+
+            }
+
+        });
+
+
+
+}
+
+$scope.insertFlatMapProp=function(parentProcessId,processId){
+var value1=document.getElementById("mapper").value;
+var value2=document.getElementById("executorPlugin").value;
+$scope.uploadJar(parentProcessId,processId,'flatmapJar');
+
+console.log("values are "+value1+" "+value2);
+console.log("processId is "+processId);
+var map=new Object();
+map["mapper"]=value1;
+map["executor-plugin"]=value2;
+    $.ajax({
+            type: "POST",
+            url: "/mdrest/properties/"+processId,
+            data: jQuery.param(map),
+            success: function(data) {
+                if(data.Result == "OK") {
+                   var modal = document.getElementById('myModal');
+                    modal.style.display = "none";
+                    alertBox("info","FlatMap properties added");
+                }
+                else
+                alertBox("warning","Error occured");
+
+            }
+
+        });
+}
+
+$scope.insertReduceProp=function(parentProcessId,processId){
+var value1=document.getElementById("operator").value;
+var value2=document.getElementById("executorPlugin").value;
+var value3=document.getElementById("windowDuration").value;
+var value4=document.getElementById("slideDuration").value;
+$scope.uploadJar(parentProcessId,processId,'reduceJar');
+
+
+console.log("values are "+value1+" "+value2);
+console.log("processId is "+processId);
+var map=new Object();
+map["operator"]=value1;
+map["executor-plugin"]=value2;
+map["window-duration"]=value3;
+map["slide-duration"]=value4;
+
+    $.ajax({
+            type: "POST",
+            url: "/mdrest/properties/"+processId,
+            data: jQuery.param(map),
+            success: function(data) {
+                if(data.Result == "OK") {
+                   var modal = document.getElementById('myModal');
+                    modal.style.display = "none";
+                    alertBox("info","Reduce properties added");
+                }
+                else
+                alertBox("warning","Error occured");
+
+            }
+
+        });
+}
+
+$scope.insertReduceByKeyProp=function(parentProcessId,processId){
+var value1=document.getElementById("operator").value;
+var value2=document.getElementById("executorPlugin").value;
+var value3=document.getElementById("windowDuration").value;
+var value4=document.getElementById("slideDuration").value;
+$scope.uploadJar(parentProcessId,processId,'reducebykeyJar');
+
+
+console.log("values are "+value1+" "+value2);
+console.log("processId is "+processId);
+var map=new Object();
+map["operator"]=value1;
+map["executor-plugin"]=value2;
+map["window-duration"]=value3;
+map["slide-duration"]=value4;
+
+    $.ajax({
+            type: "POST",
+            url: "/mdrest/properties/"+processId,
+            data: jQuery.param(map),
+            success: function(data) {
+                if(data.Result == "OK") {
+                   var modal = document.getElementById('myModal');
+                    modal.style.display = "none";
+                    alertBox("info","ReduceByKey properties added");
+                }
+                else
+                alertBox("warning","Error occured");
+
+            }
+
+        });
+}
+
+$scope.insertGroupByKeyProp=function(processId){
+var value1=document.getElementById("operator").value;
+var value3=document.getElementById("windowDuration").value;
+var value4=document.getElementById("slideDuration").value;
+
+console.log("values are "+value1+" "+value2);
+console.log("processId is "+processId);
+var map=new Object();
+map["operator"]=value1;
+map["window-duration"]=value3;
+map["slide-duration"]=value4;
+
+    $.ajax({
+            type: "POST",
+            url: "/mdrest/properties/"+processId,
+            data: jQuery.param(map),
+            success: function(data) {
+                if(data.Result == "OK") {
+                   var modal = document.getElementById('myModal');
+                    modal.style.display = "none";
+                    alertBox("info","GroupByKey properties added");
+                }
+                else
+                alertBox("warning","Error occured");
+
+            }
+
+        });
+}
+
 
 
 $scope.insertEmitterProp=function(processId){
@@ -700,6 +1066,7 @@ $scope.uploadFile = function(processId,parentProcessId,subDir,cg) {
 $scope.uploadJar = function(parentProcessId,subDir,fileId) {
 
     var args = [parentProcessId,subDir,fileId];
+    console.log(args);
     var dataRecord = fileHandlerAC('/mdrest/filehandler/upload/', 'POST', args);
 
     if (dataRecord ) {
@@ -746,6 +1113,18 @@ $scope.deleteFile = function(parentProcessId,cfgDetails,cfgKVP) {
         alertBox('warning', 'File delete failed');
     }
 }
+$scope.changeme=function(){
+
+var messageTypeOptionslist = messagesAC('/mdrest/sparkstreaming/getmessagecolumns/'+$('#joinTable').val(), 'POST', []);
+    if (messageTypeOptionslist) {
+        $scope.messageColumnListChart = messageTypeOptionslist;
+        console.log('info -- messageColumnListChart options listed');
+    }
+    else {
+        console.log('messageColumnListChart not loaded');
+    }
+}
+
 
 $scope.deleteJar = function(parentProcessId,subDir,fileName) {
 
@@ -887,7 +1266,9 @@ $scope.newPageProcessType = {};
 $scope.newPagePermissionType={};
 $scope.newPageUserRoles={};
 $scope.newPageWorkflowType = {};
+$scope.messageColumnListChart={};
 $scope.operators = ["equals","not equals", "contains","doesnot contains","begins with","ends with","greater than","lesser than"];
+$scope.aggregations = ["sum","max","min","count","mean"];
 $scope.intialiseNewProcessPage =function() {
 
     var busdomainOptions = busdomainOptionsAC('/mdrest/busdomain/options/', 'POST', '');
@@ -932,6 +1313,10 @@ $scope.intialiseNewProcessPage =function() {
         console.log('workflowtypeOptionlist not loaded');
     }
 }
+
+
+
+
 
 //
 // Create first process function

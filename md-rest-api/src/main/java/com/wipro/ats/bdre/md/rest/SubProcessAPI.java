@@ -234,73 +234,182 @@ public class SubProcessAPI extends MetadataAPIBase {
     @ResponseBody
     public RestWrapper insert(@ModelAttribute("process")
                        @Valid Process process, BindingResult bindingResult, Principal principal) {
+
+
+
+
+
+
         RestWrapper restWrapper = null;
         if (bindingResult.hasErrors()) {
             BindingResultError bindingResultError = new BindingResultError();
             return bindingResultError.errorMessage(bindingResult);
         }
         try {
-            processDAO.securityCheck(process.getParentProcessId(),principal.getName(),WRITE);
-            com.wipro.ats.bdre.md.dao.jpa.Process insertDaoProcess = new com.wipro.ats.bdre.md.dao.jpa.Process();
-            com.wipro.ats.bdre.md.dao.jpa.ProcessType daoProcessType =processTypeDAO.get(process.getProcessTypeId());
-            insertDaoProcess.setProcessType(daoProcessType);
+            com.wipro.ats.bdre.md.dao.jpa.ProcessType parentProcessType = processTypeDAO.get(process.getProcessTypeId());
+            LOGGER.info("parentProcessTypeId is "+parentProcessType.getParentProcessTypeId());
 
-            LOGGER.info("process type:"+daoProcessType.getParentProcessTypeId());
-            if (process.getWorkflowId() != null) {
-                WorkflowType daoWorkflowType = new WorkflowType();
-                daoWorkflowType.setWorkflowId(process.getWorkflowId());
-                insertDaoProcess.setWorkflowType(daoWorkflowType);
+            if(parentProcessType.getParentProcessTypeId()!=41) {
+                processDAO.securityCheck(process.getParentProcessId(), principal.getName(), WRITE);
+                com.wipro.ats.bdre.md.dao.jpa.Process insertDaoProcess = new com.wipro.ats.bdre.md.dao.jpa.Process();
+                com.wipro.ats.bdre.md.dao.jpa.ProcessType daoProcessType = processTypeDAO.get(process.getProcessTypeId());
+                insertDaoProcess.setProcessType(daoProcessType);
+
+                LOGGER.info("process type:" + daoProcessType.getParentProcessTypeId());
+                if (process.getWorkflowId() != null) {
+                    WorkflowType daoWorkflowType = new WorkflowType();
+                    daoWorkflowType.setWorkflowId(process.getWorkflowId());
+                    insertDaoProcess.setWorkflowType(daoWorkflowType);
+                }
+                BusDomain daoBusDomain = new BusDomain();
+                daoBusDomain.setBusDomainId(process.getBusDomainId());
+                insertDaoProcess.setBusDomain(daoBusDomain);
+                if (process.getProcessTemplateId() != null) {
+                    ProcessTemplate daoProcessTemplate = new ProcessTemplate();
+                    daoProcessTemplate.setProcessTemplateId(process.getProcessTemplateId());
+                    insertDaoProcess.setProcessTemplate(daoProcessTemplate);
+                }
+                if (process.getParentProcessId() != null) {
+                    com.wipro.ats.bdre.md.dao.jpa.Process parentProcess = processDAO.get(process.getParentProcessId());
+                    insertDaoProcess.setProcess(parentProcess);
+                    LOGGER.info("Parent process Id:" + parentProcess.getProcessId());
+
+                }
+                insertDaoProcess.setDescription(process.getDescription());
+                insertDaoProcess.setAddTs(DateConverter.stringToDate(process.getTableAddTS()));
+                insertDaoProcess.setProcessName(process.getProcessName());
+
+                if (process.getCanRecover() == null)
+                    insertDaoProcess.setCanRecover(true);
+                else
+                    insertDaoProcess.setCanRecover(process.getCanRecover());
+                insertDaoProcess.setEnqueuingProcessId(process.getEnqProcessId());
+                if (process.getBatchPattern() != null) {
+                    if (process.getBatchPattern().isEmpty()) {
+                        insertDaoProcess.setBatchCutPattern(null);
+                    } else {
+                        insertDaoProcess.setBatchCutPattern(process.getBatchPattern());
+                    }
+                }
+                insertDaoProcess.setNextProcessId(process.getNextProcessIds());
+                if (process.getDeleteFlag() == null)
+                    insertDaoProcess.setDeleteFlag(false);
+                else
+                    insertDaoProcess.setDeleteFlag(process.getDeleteFlag());
+                insertDaoProcess.setEditTs(DateConverter.stringToDate(process.getTableEditTS()));
+                LOGGER.info("inserting subprocess");
+                Integer processId = processDAO.insert(insertDaoProcess);
+                process.setProcessId(processId);
+                process.setTableAddTS(DateConverter.dateToString(insertDaoProcess.getAddTs()));
+                process.setTableEditTS(DateConverter.dateToString(insertDaoProcess.getEditTs()));
+                restWrapper = new RestWrapper(process, RestWrapper.OK);
+                LOGGER.info("Record with ID:" + process.getProcessId() + " inserted in Process by User:" + principal.getName() + process);
+
             }
-            BusDomain daoBusDomain = new BusDomain();
-            daoBusDomain.setBusDomainId(process.getBusDomainId());
-            insertDaoProcess.setBusDomain(daoBusDomain);
-            if (process.getProcessTemplateId() != null) {
-                ProcessTemplate daoProcessTemplate = new ProcessTemplate();
-                daoProcessTemplate.setProcessTemplateId(process.getProcessTemplateId());
-                insertDaoProcess.setProcessTemplate(daoProcessTemplate);
-            }
-            if (process.getParentProcessId() != null) {
-                com.wipro.ats.bdre.md.dao.jpa.Process parentProcess = processDAO.get(process.getParentProcessId());
+
+            else
+            {
+
+                processDAO.securityCheck(process.getParentProcessId(),principal.getName(),WRITE);
+                com.wipro.ats.bdre.md.dao.jpa.Process insertDaoProcess = new com.wipro.ats.bdre.md.dao.jpa.Process();
+                com.wipro.ats.bdre.md.dao.jpa.ProcessType daoProcessType =processTypeDAO.get(process.getProcessTypeId());
+                insertDaoProcess.setProcessType(daoProcessType);
+                LOGGER.info("process type:"+daoProcessType.getParentProcessTypeId());
+
+
+                if (process.getWorkflowId() != null) {
+                    WorkflowType daoWorkflowType = new WorkflowType();
+                    daoWorkflowType.setWorkflowId(process.getWorkflowId());
+                    insertDaoProcess.setWorkflowType(daoWorkflowType);
+                }
+                BusDomain daoBusDomain = new BusDomain();
+                daoBusDomain.setBusDomainId(process.getBusDomainId());
+                insertDaoProcess.setBusDomain(daoBusDomain);
+                if (process.getProcessTemplateId() != null) {
+                    ProcessTemplate daoProcessTemplate = new ProcessTemplate();
+                    daoProcessTemplate.setProcessTemplateId(process.getProcessTemplateId());
+                    insertDaoProcess.setProcessTemplate(daoProcessTemplate);
+                }
+                com.wipro.ats.bdre.md.dao.jpa.Process parentProcess = null;
+                if (process.getParentProcessId() != null) {
+                    parentProcess = processDAO.get(process.getParentProcessId());
+
+                    LOGGER.info("Parent process Id:"+parentProcess.getProcessId());
+                }
+
                 insertDaoProcess.setProcess(parentProcess);
-                LOGGER.info("Parent process Id:"+parentProcess.getProcessId());
+
+                insertDaoProcess.setDescription(process.getDescription());
+                insertDaoProcess.setAddTs(DateConverter.stringToDate(process.getTableAddTS()));
+                insertDaoProcess.setProcessName(process.getProcessName());
+
+                if (process.getCanRecover() == null)
+                    insertDaoProcess.setCanRecover(true);
+                else
+                    insertDaoProcess.setCanRecover(process.getCanRecover());
+                insertDaoProcess.setEnqueuingProcessId(process.getEnqProcessId());
+                if (process.getBatchPattern() != null) {
+                    if (process.getBatchPattern().isEmpty()) {
+                        insertDaoProcess.setBatchCutPattern(null);
+                    }
+                    else {
+                        insertDaoProcess.setBatchCutPattern(process.getBatchPattern());
+                    }
+                }
+
+                insertDaoProcess.setNextProcessId(process.getNextProcessIds());
+                if (process.getDeleteFlag() == null)
+                    insertDaoProcess.setDeleteFlag(false);
+                else
+                    insertDaoProcess.setDeleteFlag(process.getDeleteFlag());
+                insertDaoProcess.setEditTs(DateConverter.stringToDate(process.getTableEditTS()));
+                LOGGER.info("inserting subprocess");
+                Integer processId = processDAO.insert(insertDaoProcess);
+                process.setProcessId(processId);
+
+                String parentNextProcessId = parentProcess.getNextProcessId();
+                String processTypeName = daoProcessType.getProcessTypeName();
+                LOGGER.info("parentNextProcessId "+parentNextProcessId);
+                LOGGER.info("processTypeName.split(\"_\")[0] "+processTypeName.split("_")[0]);
+                if(processTypeName.split("_")[0].equalsIgnoreCase("source")) {
+                    LOGGER.info("source is selected");
+                    if (parentNextProcessId.equalsIgnoreCase("0")) {
+                        LOGGER.info("1st source");
+                        parentNextProcessId = process.getProcessId().toString();
+                    }
+                    else {
+                        LOGGER.info("After 1st source");
+                        parentNextProcessId = parentNextProcessId + "," + process.getProcessId().toString();
+                    }
+                    LOGGER.info("Latest parentNextProcessId "+parentNextProcessId);
+                    parentProcess.setNextProcessId(parentNextProcessId);
+                    processDAO.update(parentProcess);
+                }
+
+                LOGGER.info("parent process info "+parentProcess.toString());
+
+                process.setTableAddTS(DateConverter.dateToString(insertDaoProcess.getAddTs()));
+                process.setTableEditTS(DateConverter.dateToString(insertDaoProcess.getEditTs()));
+                restWrapper = new RestWrapper(process, RestWrapper.OK);
+                LOGGER.info("Record with ID:" + process.getProcessId() + " inserted in Process by User:" + principal.getName() + process);
+
+
 
             }
-            insertDaoProcess.setDescription(process.getDescription());
-            insertDaoProcess.setAddTs(DateConverter.stringToDate(process.getTableAddTS()));
-            insertDaoProcess.setProcessName(process.getProcessName());
 
-            if (process.getCanRecover() == null)
-                insertDaoProcess.setCanRecover(true);
-            else
-                insertDaoProcess.setCanRecover(process.getCanRecover());
-            insertDaoProcess.setEnqueuingProcessId(process.getEnqProcessId());
-            if (process.getBatchPattern() != null) {
-                if (process.getBatchPattern().isEmpty()) {
-                    insertDaoProcess.setBatchCutPattern(null);
-                }
-                else {
-                    insertDaoProcess.setBatchCutPattern(process.getBatchPattern());
-                }
-            }
-            insertDaoProcess.setNextProcessId(process.getNextProcessIds());
-            if (process.getDeleteFlag() == null)
-                insertDaoProcess.setDeleteFlag(false);
-            else
-                insertDaoProcess.setDeleteFlag(process.getDeleteFlag());
-            insertDaoProcess.setEditTs(DateConverter.stringToDate(process.getTableEditTS()));
-            LOGGER.info("inserting subprocess");
-            Integer processId = processDAO.insert(insertDaoProcess);
-            process.setProcessId(processId);
-            process.setTableAddTS(DateConverter.dateToString(insertDaoProcess.getAddTs()));
-            process.setTableEditTS(DateConverter.dateToString(insertDaoProcess.getEditTs()));
-            restWrapper = new RestWrapper(process, RestWrapper.OK);
-            LOGGER.info("Record with ID:" + process.getProcessId() + " inserted in Process by User:" + principal.getName() + process);
+
+
 
         } catch (Exception e) {
             LOGGER.error(e);
             restWrapper = new RestWrapper(e.getMessage(), RestWrapper.ERROR);
         }
         return restWrapper;
+
+
+
+
+
     }
 
     @Override

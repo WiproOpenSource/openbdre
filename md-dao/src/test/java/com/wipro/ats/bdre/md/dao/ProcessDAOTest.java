@@ -54,13 +54,13 @@ public class ProcessDAOTest {
     @Test
     @Ignore
     public void testList() throws Exception {
-        LOGGER.info("Size of Process list is atleast:" + processDAO.list(10802, 0, 10,"admin").size());
+        //LOGGER.info("Size of Process list is atleast:" + processDAO.list(10802, 0, 10,"admin").size());
     }
 
     @Test
     @Ignore
     public void testTotalRecordCount() throws Exception {
-        LOGGER.info("Total Process is:" + processDAO.totalRecordCount(10802));
+       // LOGGER.info("Total Process is:" + processDAO.totalRecordCount(10802));
     }
     @Ignore
     @Test

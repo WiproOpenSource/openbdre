@@ -10,7 +10,6 @@ import com.wipro.ats.bdre.md.dao.jpa.Properties;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.AutowireCapableBeanFactory;
 
-import javax.persistence.criteria.CriteriaBuilder;
 import java.util.*;
 
 /**
@@ -35,10 +34,12 @@ public class GetMessageColumns extends MetadataAPIBase {
     public static List<Integer> listOfTransformations = new ArrayList();
     public static List<Integer> listOfEmitters = new ArrayList();
     public static List<Integer> listOfSourcesForGivenPid = new ArrayList<Integer>();
+    public static List<Integer> listOfPidWithNonEmptySchema = new ArrayList<Integer>();
 
     public static void main(String[] args) {
-        Set<String> columnNames = new GetMessageColumns().getColumnNames(130);
-        System.out.println("final result = " + columnNames);
+        // Set<String> columnNames = new GetMessageColumns().getMessageColumnNames(45);
+        System.out.println("final result = " + new GetMessageColumns().getMessageColumnNames(44));
+        //System.out.println("final result = " + new GetMessageColumns().getMessageList(45));
     }
 
     public Set<String> getColumnNames(Integer pid) {
@@ -79,6 +80,12 @@ public class GetMessageColumns extends MetadataAPIBase {
 
         List<Integer> sourcesForGivenNode = new GetMessageColumns().recursivelyGetSources(pid);
         Set<String> columnNames = new HashSet<>();
+
+
+
+
+
+
         for(Integer sourcePid : sourcesForGivenNode){
             List<Properties> messageProperties =  propertiesDAO.getPropertiesForConfig(sourcePid, "message");
 
@@ -96,6 +103,211 @@ public class GetMessageColumns extends MetadataAPIBase {
         }
         return columnNames;
     }
+
+
+    public HashMap<Integer,String> getMessageList(Integer pid) {
+        Process selectedProcess = processDAO.get(pid);
+        Process parentProcess = selectedProcess.getProcess();
+        Integer parentProcessId = parentProcess.getProcessId();
+        String nextProcessOfParent = processDAO.get(parentProcessId).getNextProcessId();
+        listOfSourcesForGivenPid.clear();
+        prevMap.clear();
+        listOfSourcePids.clear();
+        listOfPidWithNonEmptySchema.clear();
+        for (String nextProcessId : nextProcessOfParent.split(",")) {
+            listOfSourcePids.add(Integer.valueOf(nextProcessId));
+        }
+
+
+
+        Map<Integer, String> nextPidMap = new HashMap<Integer, String>();
+        nextPidMap.put(parentProcessId, nextProcessOfParent);
+        List<com.wipro.ats.bdre.md.dao.jpa.Process> jpaProcessList = processDAO.subProcesslist(parentProcessId);
+        for (Process subProcess : jpaProcessList) {
+            nextPidMap.put(subProcess.getProcessId(), subProcess.getNextProcessId());
+        }
+
+        List<Integer> currentUpstreamList = new ArrayList();
+        currentUpstreamList.addAll(listOfSourcePids);
+        //populate prevMap with source pids,
+        for (Integer sourcePid : listOfSourcePids) {
+            prevMap.put(sourcePid, null);
+        }
+
+        while (!currentUpstreamList.isEmpty()) {
+            System.out.println("currentUpstreamList = " + currentUpstreamList);
+            GetMessageColumns getMessageColumns = new GetMessageColumns();
+            System.out.println(" calling identifyflows");
+            getMessageColumns.identifyFlows(currentUpstreamList, nextPidMap,parentProcessId);
+        }
+        System.out.println("prevMap = in message list " + prevMap);
+        HashMap<Integer,String> hashMap=new HashMap<>();
+        System.out.println("prevMap.get(pid) "+prevMap.get(pid));
+        if (prevMap.get(pid)!=null){
+            for(Integer prevId:prevMap.get(pid))
+            {
+                List<Properties> messageProperties1 =  propertiesDAO.getPropertiesForConfig(prevId, "message");
+                if (messageProperties1.size()!=0)
+                {
+                    Properties messageProperty = messageProperties1.get(0);
+                    String messageName = messageProperty.getPropValue();
+                    hashMap.put(prevId,messageName);
+                }
+                else
+                {
+                    Process process=processDAO.get(prevId);
+                    hashMap.put(prevId,process.getProcessName());
+                }
+
+
+            }
+        }
+        return hashMap;
+    }
+
+
+
+    public Set<String> getMessageColumnNames(Integer pid) {
+        Set<String> columnDetails = new HashSet<>();
+        Process selectedProcess = processDAO.get(pid);
+        Process parentProcess = selectedProcess.getProcess();
+        Integer parentProcessId = parentProcess.getProcessId();
+        String nextProcessOfParent = processDAO.get(parentProcessId).getNextProcessId();
+        System.out.println(nextProcessOfParent +" "+pid);
+
+        List<Properties> messageProperties1 =  propertiesDAO.getPropertiesForConfig(pid, "message");
+        System.out.println("messageProperties1 " +messageProperties1);
+
+
+        if(messageProperties1.size()!=0){
+            Properties messageProperty = messageProperties1.get(0);
+            if(nextProcessOfParent.contains(pid.toString())){
+                String messageName = messageProperty.getPropValue();
+                Messages message = messagesDAO.get(messageName);
+                String schema = message.getMessageSchema();
+                String[] columnAndDataTypes = schema.split(",");
+                columnDetails.addAll(Arrays.asList(columnAndDataTypes));
+            }
+            else
+            {
+                String schema = messageProperty.getPropValue();
+                String[] columnAndDataTypes = schema.split(",");
+                columnDetails.addAll(Arrays.asList(columnAndDataTypes));
+            }
+
+        }
+
+
+        if (columnDetails.size()!=0)
+            return columnDetails;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        listOfPidWithNonEmptySchema.clear();
+        listOfSourcesForGivenPid.clear();
+        prevMap.clear();
+        listOfSourcePids.clear();
+
+        for (String nextProcessId : nextProcessOfParent.split(",")) {
+            listOfSourcePids.add(Integer.valueOf(nextProcessId));
+        }
+
+
+
+        Map<Integer, String> nextPidMap = new HashMap<Integer, String>();
+        nextPidMap.put(parentProcessId, nextProcessOfParent);
+        List<com.wipro.ats.bdre.md.dao.jpa.Process> jpaProcessList = processDAO.subProcesslist(parentProcessId);
+        for (Process subProcess : jpaProcessList) {
+            nextPidMap.put(subProcess.getProcessId(), subProcess.getNextProcessId());
+        }
+
+        List<Integer> currentUpstreamList = new ArrayList();
+        currentUpstreamList.addAll(listOfSourcePids);
+        //populate prevMap with source pids,
+        for (Integer sourcePid : listOfSourcePids) {
+            prevMap.put(sourcePid, null);
+        }
+
+        while (!currentUpstreamList.isEmpty()) {
+            System.out.println("currentUpstreamList = " + currentUpstreamList);
+            GetMessageColumns getMessageColumns = new GetMessageColumns();
+            System.out.println(" calling identifyflows");
+            getMessageColumns.identifyFlows(currentUpstreamList, nextPidMap,parentProcessId);
+        }
+        System.out.println("prevMap = " + prevMap);
+
+        List<Integer> pidListWithNonEmptySchema = new GetMessageColumns().recursivelyGetNonEmptySchema(pid);
+        System.out.println("pidListWithNonEmptySchema = " + pidListWithNonEmptySchema);
+
+
+
+        for(Integer sourcePid : pidListWithNonEmptySchema){
+            List<Properties> messageProperties =  propertiesDAO.getPropertiesForConfig(sourcePid, "message");
+            System.out.println("messageProperties " +messageProperties);
+            if(messageProperties.size()!=0){
+                Properties messageProperty = messageProperties.get(0);
+                if(listOfSourcePids.contains(sourcePid)){
+                    String messageName = messageProperty.getPropValue();
+                    Messages message = messagesDAO.get(messageName);
+                    String schema = message.getMessageSchema();
+                    String[] columnAndDataTypes = schema.split(",");
+                    columnDetails.addAll(Arrays.asList(columnAndDataTypes));
+                }
+                else
+                {
+                    String schema = messageProperty.getPropValue();
+                    String[] columnAndDataTypes = schema.split(",");
+                    columnDetails.addAll(Arrays.asList(columnAndDataTypes));
+                }
+
+            }
+        }
+        return columnDetails;
+    }
+
+    public List<Integer> recursivelyGetNonEmptySchema(Integer pid){
+        Set<Integer> prevPIds = prevMap.get(pid);
+        System.out.println("prevPIds = " + prevPIds);
+        if(prevPIds == null){
+
+        }
+        else{
+            for(Integer prevPId: prevPIds){
+                List<Properties> messageProperties =  propertiesDAO.getPropertiesForConfig(prevPId, "message");
+                if (messageProperties.size()!=0)
+                    listOfPidWithNonEmptySchema.add(prevPId);
+                else
+                    recursivelyGetNonEmptySchema(prevPId);
+               /* if(listOfSourcePids.contains(prevPId) && !listOfSourcesForGivenPid.contains(prevPId)){
+                    listOfSourcesForGivenPid.add(prevPId);
+                    System.out.println("source pid = " + prevPId);
+                }*/
+
+            }
+        }
+        return listOfPidWithNonEmptySchema;
+    }
+
+
+
+
+
+
 
     public List<Integer> recursivelyGetSources(Integer pid){
         Set<Integer> prevPIds = prevMap.get(pid);

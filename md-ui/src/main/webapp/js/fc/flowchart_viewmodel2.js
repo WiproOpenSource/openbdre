@@ -384,6 +384,8 @@ var flowchart = {
     flowchart.ChartViewModel = function (chartDataModel) {
         this.selectedProcess = {};
         this.columnList={};
+        this.messageList={};
+        this.messageColumnList={};
         this.selectedProcessProps = {};
         this.selectedProcessGenConfigProp = {};
 
@@ -566,6 +568,8 @@ var flowchart = {
         this.deselectAll = function () {
             this.selectedProcess = {};
             this.columnList={};
+            this.messageList={};
+            this.messageColumnList={};
             this.selectedProcessProps = {};
             this.selectedProcessGenConfigProp = {};
             this.selectedProcessConfigKeyValue = {};
@@ -609,6 +613,8 @@ var flowchart = {
                 node.select();
                 var tempProcessData;
                 var tempColumnList;
+                var tempMessageList;
+                var tempMessageColumnList;
                 var tempPropertiesData;
                 var pid = node.data.pid;
                 if (pid < 0) pid = -node.data.pid;
@@ -628,7 +634,52 @@ var flowchart = {
                     }
                     this.columnList=tempColumnList;
 
+                    var genconfigRecord = genConfigAC('/mdrest/genconfig/', 'GET', node.data.type);
+                    if (genconfigRecord) {
+                        tempPropertiesData = genconfigRecord;
+                    } else {
+                        alertBox('danger', 'Error has occured')
+                    }
+                    this.selectedProcessGenConfigProp = tempPropertiesData;
 
+                    var inputHTML = '';
+                   var dataRecord = messagesAC('/mdrest/sparkstreaming/getMessageList/'+this.selectedProcess.processId, 'POST', [this.selectedProcess.processId]);
+                  if (dataRecord) {
+                  tempMessageList = dataRecord;
+                  /*console.log(dataRecord);
+                    inputHTML = ''
+                  dataRecord.forEach( function (arrayItem)
+                  {
+                      console.log(arrayItem.DisplayText);
+                      inputHTML=inputHTML+'<div class="form-group">';
+                      inputHTML=inputHTML+'<label class="control-label col-sm-2">Joining Table</label>'
+                      inputHTML=inputHTML+'<div class="col-sm-10"><input name="' + arrayItem.DisplayText +'"  value="' + arrayItem.DisplayText +'" type="' + "text" + '" class="form-control" id="' + arrayItem.DisplayText + '"></div>';
+                      inputHTML = inputHTML + '</div>';
+                      inputHTML=inputHTML+'<div class="form-group">';
+                      inputHTML=inputHTML+'<label class="control-label col-sm-2">Joining Column</label>';
+                      inputHTML=inputHTML+'<div class="col-sm-10">';
+                      inputHTML = inputHTML+'<select class="form-control" id="' +arrayItem.DisplayText+"column"+ '" >';
+                      for(var i in arrayItem.Value)
+                      inputHTML = inputHTML+'<option value="'+arrayItem.Value[i]+'">'+i + '</option>';
+                      inputHTML = inputHTML+'</select></div></div>';
+                  });
+                  console.log(inputHTML);
+                   console.log($("#joinabc"));
+                   $('#joinabc').append(inputHTML);*/
+                  } else {
+                      alertBox('danger', 'Error has occured');
+                  }
+                  this.messageList=tempMessageList;
+                 /* console.log( $("#joinTable"));
+                  var tableNameId=$('#joinTable').val();
+                   console.log("tableNameId is "+tableNameId);*/
+                  /* var dataRecord = messagesAC('/mdrest/sparkstreaming/getmessagecolumns/'+this.selectedProcess.processId, 'POST', [tableNameId]);
+                    if (dataRecord) {
+                        tempMessageColumnList = dataRecord;
+                    } else {
+                        alertBox('danger', 'Error has occured');
+                    }
+                    this.messageColumnList=tempMessageColumnList;*/
 
                 var dataRecord = propertiesAC('/mdrest/properties/', 'GET', node.data.pid);
                 if (dataRecord) {
@@ -637,13 +688,7 @@ var flowchart = {
                     alertBox('danger', 'Error has occured')
                 }
                 this.selectedProcessProps = tempPropertiesData;
-                var genconfigRecord = genConfigAC('/mdrest/genconfig/', 'GET', node.data.type);
-                if (genconfigRecord) {
-                    tempPropertiesData = genconfigRecord;
-                } else {
-                    alertBox('danger', 'Error has occured')
-                }
-                this.selectedProcessGenConfigProp = tempPropertiesData;
+
 
                 this.configKeyVal;
                 this.getKeyValueFunction = function (val) {
@@ -658,6 +703,11 @@ var flowchart = {
                 if (this.configKeyVal != null) {
                     this.getKeyValueFunction(this.configKeyVal);
                 }
+
+
+
+
+
             }
 
             // Move node to the end of the list so it is rendered after all the other.
