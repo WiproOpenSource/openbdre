@@ -22,7 +22,17 @@
             </script>
 
                 <!-- Include one of jTable styles. -->
-
+                <link href="../StreamAnalytix_files/materialdesignicons.min.css" media="all" rel="stylesheet" type="text/css">
+                <link href="../StreamAnalytix_files/bootstrap.min.css" rel="stylesheet">
+                <link href="../StreamAnalytix_files/bootstrap-material-design.min.css" rel="stylesheet">
+                <link href="../StreamAnalytix_files/ripples.min.css" rel="stylesheet">
+                <link href="../StreamAnalytix_files/sax-fonts.css" class="include" rel="stylesheet" type="text/css">
+                <link href="../StreamAnalytix_files/toastr.min.css" rel="stylesheet">
+                <link href="../StreamAnalytix_files/datatables.min.css" rel="stylesheet">
+                <link href="../StreamAnalytix_files/theme.css" rel="stylesheet" type="text/css">
+                <link href="../StreamAnalytix_files/style.css" rel="stylesheet" type="text/css">
+                <link href="../StreamAnalytix_files/select2.4.0.css" rel="stylesheet">
+                <link href="../StreamAnalytix_files/select2-bootstrap.css" rel="stylesheet">
                 <link href="../css/css/bootstrap.min.css" rel="stylesheet" type="text/css" />
                 <link href="../css/jtables-bdre.css" rel="stylesheet" type="text/css" />
                 <link rel="stylesheet" href="../css/jquery.steps.custom.css" />
@@ -678,8 +688,8 @@
                                                     <ul class="dropdown-menu">
                                                         <li><a ng-click='confirmDialog(<spring:message code="wfdesigner.page.dropdown_confirm_msg"/>, "deleteSelected")'><spring:message code="wfdesigner.page.dropdown_delete"/></a></li>
                                                         <li><a ng-click="duplicateSelected()"><spring:message code="wfdesigner.page.dropdown_duplicate"/></a></li>
-                                                        <li><a onclick="goToPage('process-page')">Go to Workflow Page</a></li>
-                                                        <li><a onclick="goToPage('wfdesigner-page')"><spring:message code="wfdesigner.page.dropdown_wfdesigner"/></a></li>
+                                                        <li><a onclick="goToPage('process-page2')">Go to Workflow Page</a></li>
+                                                        <li><a onclick="goToPage('wfdesigner-page2')"><spring:message code="wfdesigner.page.dropdown_wfdesigner"/></a></li>
                                                     </ul>
                                                 </div>
 

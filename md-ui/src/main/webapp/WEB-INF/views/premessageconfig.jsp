@@ -556,7 +556,6 @@ function addDataToJson(properties) {
 	var id = properties.id;
 	console.log(id);
 }
-
 		</script>
 			<script type="text/javascript">
         		function copyForm() {
@@ -574,9 +573,10 @@ function addDataToJson(properties) {
 
 		</script>
 		<script>
-var wizard = null;
-var finalJson;
-wizard = $(document).ready(function() {
+		var insert=1;
+     var wizard = null;
+     var finalJson;
+     wizard = $(document).ready(function() {
 
 	$("#bdre-data-load").steps({
 		headerTag: "h3",
@@ -587,56 +587,41 @@ wizard = $(document).ready(function() {
 			console.log(currentIndex + 'current ' + newIndex );
 			if(currentIndex == 0 && newIndex == 1) {
 			console.log(document.getElementById('fileFormat').elements[1].value);
+
+			console.log(document.getElementById('fileFormat'));
+           if((document.getElementById('fileformat').value=="Json" || document.getElementById('fileformat').value=="XML") && insert==1 && document.getElementById('isDefaultTemplate').value=="No"){
+           var content1="";
+           content1=content1+'<div class="form-group">';
+           content1=content1+'<label for = "fileUpload" >File Upload</label >';
+           content1=content1+'<input name = "regFile" id = "regFile" type = "file" class = "form-control" style="opacity: 100; position: inherit;" /></div>';
+           content1=content1+'<div class="form-group">';
+            content1=content1+'<div class="clearfix"></div>';
+            var format = document.getElementById('fileformat').value;
+           content1=content1+'<button class = "btn btn-default  btn-success" style="margin-top: 30px;background: lightsteelblue;" type = "button" onClick = "uploadFile(\''+format+'\')" href = "#" >Upload File</button >';
+           $('#bdre-data-load').steps('insert', 1, { title: "File Upload", content: content1 });
+           insert=insert+1;
+           }
+
+           if(insert==2 && document.getElementById('fileformat').value !="Json" && document.getElementById('fileformat').value !="XML" )
+           {
+           $('#bdre-data-load').steps('remove',1);
+           insert=insert-1;
+           }
 			}
 			return true;
 		},
 		onStepChanged: function(event, currentIndex, priorIndex) {
-			console.log(currentIndex + " " + priorIndex);
-			if(currentIndex == 1 && priorIndex == 0) {
-				{
+			        console.log(currentIndex + " " + priorIndex);
+			        if(insert==1 && priorIndex==0 && currentIndex==1)
                     $('#rawTableColumnDetails').jtable('load');
-                      console.log("$scope.connectionName is "+con_name);
-                      map["fileformat_connectionName"]=con_name;
-                      console.log(map);
-					$('#createjobs').on('click', function(e) {
-                         formIntoMap('fileformat_', 'fileFormat');
-                         jtableIntoMap('rawtablecolumn_', 'rawTableColumnDetails');
-                        console.log(map);
-						$.ajax({
-							type: "POST",
-							url: "/mdrest/message/createjobs",
-							data: jQuery.param(map),
-							success: function(data) {
-								if(data.Result == "OK") {
-									created = 1;
-									$("#div-dialog-warning").dialog({
-										title: "",
-										resizable: false,
-										height: 'auto',
-										modal: true,
-										buttons: {
-											"Ok": function() {
-											    $('#Container').jtable('load');
-												$(this).dialog("close");
-												location.href = '<c:url value="/pages/premessageconfig.page"/>';
-											}
-										}
-									}).html('<p><span class="jtable-confirm-message">Message successfully created </span></p>');
-								}
-							}
-
-						});
-                    return false;
-					});
-
-				}
-			}
+                    if(insert==2 && priorIndex==1 && currentIndex==2)
+                    $('#rawTableColumnDetails').jtable('load');
 		},
 		onFinished: function(event, currentIndex) {
-                                 title:"create message",
-
 		                         formIntoMap('fileformat_', 'fileFormat');
                                  jtableIntoMap('rawtablecolumn_', 'rawTableColumnDetails');
+                                 console.log("$scope.connectionName is "+con_name);
+                                 map["fileformat_connectionName"]=con_name;
                                  console.log(map);
         						$.ajax({
         							type: "POST",
@@ -761,6 +746,62 @@ wizard = $(document).ready(function() {
                             });
                     });
                 });
+                </script>
+
+                          <script>
+                          var restWrapper=new Object();
+                                   var uploadedFileName ="";
+                                    function uploadFile(msgformat){
+                                   var arg= ["regFile"];
+                                     var fd = new FormData();
+                                    var fileObj = $("#"+arg[0])[0].files[0];
+                                    var fileName=fileObj.name;
+                                    fd.append("file", fileObj);
+                                    fd.append("name", fileName);
+                                    console.log("message format : "+msgformat);
+                                    $.ajax({
+                                      url: '/mdrest/filehandler/uploadFile/'+msgformat,
+                                      type: "POST",
+                                      data: fd,
+                                      async: false,
+                                      enctype: 'multipart/form-data',
+                                      processData: false,  // tell jQuery not to process the data
+                                      contentType: false,  // tell jQuery not to set contentType
+                                      success:function (data) {
+                                            uploadedFileName=data.Record.fileName;
+                                            console.log( data );
+                                            restWrapper=data.Record.restWrapper;
+                                            console.log(restWrapper);
+                                            $("#div-dialog-warning").dialog({
+                                                            title: "",
+                                                            resizable: false,
+                                                            height: 'auto',
+                                                            modal: true,
+                                                            buttons: {
+                                                                "Ok" : function () {
+                                                                    $(this).dialog("close");
+                                                                }
+                                                            }
+                                            }).html('<p><span class="jtable-confirm-message"><spring:message code="processimportwizard.page.upload_success"/>'+' ' + uploadedFileName + '</span></p>');
+                                            return false;
+                                        },
+                                      error: function () {
+                                            $("#div-dialog-warning").dialog({
+                                                        title: "",
+                                                        resizable: false,
+                                                        height: 'auto',
+                                                        modal: true,
+                                                        buttons: {
+                                                            "Ok" : function () {
+                                                                $(this).dialog("close");
+                                                            }
+                                                        }
+                                        }).html('<p><span class="jtable-confirm-message"><spring:message code="processimportwizard.page.upload_error"/></span></p>');
+                                        return false;
+                                        }
+                                     });
+
+                                    }
                 </script>
         <script type="text/javascript">
                     $(document).ready(function(){
@@ -893,6 +934,19 @@ wizard = $(document).ready(function() {
        {
        document.getElementById('dilimiteddiv').style.display='none';
        }
+      }
+
+
+      function changeMessageformat()
+      {
+        var messageType = document.getElementById('messageType').value;
+      if(messageType=="ApacheLog")
+      {
+               document.getElementById('fileformat').value="Regex";
+               jQuery('#dilimiteddiv label').text("Regex Pattern");
+               document.getElementById('dilimiteddiv').style.display='block';
+               document.getElementById('delimiter').value=".*";
+      }
       }
      </script>
   <script type="text/javascript">
@@ -1095,14 +1149,7 @@ wizard = $(document).ready(function() {
                             <input type="text" class="form-control"  id="messageName" name="messageName" placeholder="message name" value="" required>
                         </div>
                     </div>
-                    <div class="form-group">
-                        <label class="control-label col-sm-2"  for="fileformat">Message Format</label>
-                        <div class="col-sm-10">
-                            <select class="form-control" id="fileformat" name="fileformat" onchange="changeme()" ng-model="fileformat1" ng-options = "file as val.value for (file, val) in fileformats" >
-                                <option  value="">Select the option</option>
-                            </select>
-                        </div>
-                    </div>
+
 
                     <div class="form-group">
                    <label class="control-label col-sm-2" for="isDefaultTemplate">Use Default Message</label>
@@ -1114,16 +1161,25 @@ wizard = $(document).ready(function() {
                       </div>
                     </div>
 
-                   
+
 
                   <div class="form-group" style="display:none;" id="defaultMessage">
                     <label class="control-label col-sm-2"  for="fileformat" >Message Template</label>
                     <div class="col-sm-10">
-                        <select class="form-control" id="messageType" name="messageType"  ng-model="messageType" ng-options = "file as val for (file, val) in messageTypes" >
+                        <select class="form-control" id="messageType" name="messageType" onchange="changeMessageformat()" ng-model="messageType" ng-options = "file as val for (file, val) in messageTypes" >
                             <option  value="">Select the option</option>
                         </select>
                     </div>
                 </div>
+
+                   <div class="form-group">
+                     <label class="control-label col-sm-2"  for="fileformat">Message Format</label>
+                     <div class="col-sm-10">
+                         <select class="form-control" id="fileformat" name="fileformat" onchange="changeme()" ng-model="fileformat1" ng-options = "file as val.value for (file, val) in fileformats" >
+                             <option  value="">Select the option</option>
+                         </select>
+                      </div>
+                  </div>
 
                   <div class="form-group" id="dilimiteddiv" style="display:none;" >
                     <label class="control-label col-sm-2" for="delimiter">Delimiter</label>
@@ -1159,9 +1215,10 @@ wizard = $(document).ready(function() {
                     <!-- /btn-group -->
 
                 </form>
-
-
             			</section>
+
+
+
 			<h3>Message Schema</h3>
 			<section>
 			    <div id="rawTableColumnDetails"></div>
@@ -1250,8 +1307,10 @@ function isDefault()
 console.log("value is  "+document.getElementById('isDefaultTemplate').value);
 if(document.getElementById('isDefaultTemplate').value == "Yes")
 document.getElementById('defaultMessage').style.display='block';
-else
+else{
 document.getElementById('defaultMessage').style.display='none';
+document.getElementById('messageType').value="";
+}
 }
 
 function showAdvanced()
@@ -1274,9 +1333,10 @@ document.getElementById('indexId').style.display='block';
 			listAction: function(postData, jtParams) {
 			var messageType = document.getElementById("messageType").value;
              console.log("message type is "+messageType);
-             if(messageType=="")
-                messageType="NOTHING";
+                if(messageType=="")
+                   messageType="NOTHING";
                 return $.Deferred(function ($dfd) {
+                if(document.getElementById('isDefaultTemplate').value=="Yes" || (document.getElementById('fileformat').value !="Json" && document.getElementById('fileformat').value !="XML")){
                 $.ajax({
                         type: "POST",
                         url: "/mdrest/genconfig/"+messageType+"/?required=2",
@@ -1298,6 +1358,18 @@ document.getElementById('indexId').style.display='block';
                         }
 
                     });
+                    }
+                    else
+                    {
+
+                    console.log(restWrapper);
+                    $dfd.resolve(restWrapper);
+
+                    }
+
+
+
+
                 });
 			},
 			createAction: function(postData) {
@@ -1374,11 +1446,18 @@ document.getElementById('indexId').style.display='block';
 				title: 'Data Type',
 				edit: true,
 				options:{ 'String':'String',
-                          'Number':'Number',
+                          'Integer':'Integer',
+                          'Long':'Long',
+                          'Short':'Short',
+                          'Byte':'Byte',
+                          'Float':'Float',
+                          'Double':'Double',
                           'Decimal':'Decimal',
                           'Boolean':'Boolean',
                           'Decimal':'Decimal',
-                          'Date':'Date'
+                          'Binary' : 'Binary',
+                          'Date':'Date',
+                          'TimeStamp':'TimeStamp'
                           }
 			}
 		}

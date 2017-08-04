@@ -17,7 +17,7 @@
          xmlns="http://maven.apache.org/POM/4.0.0"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <parent>
-        <artifactId>bdre-app</artifactId>
+        <artifactId>stream-grids</artifactId>
         <groupId>com.wipro.ats.bdre</groupId>
         <version>1.1-SNAPSHOT</version>
     </parent>
@@ -74,6 +74,16 @@
             <groupId>${project.groupId}</groupId>
             <artifactId>md-dao</artifactId>
             <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.jsonschema2pojo</groupId>
+            <artifactId>jsonschema2pojo-maven-plugin</artifactId>
+            <version>0.4.0</version>
+        </dependency>
+        <dependency>
+            <groupId>org.json</groupId>
+            <artifactId>json</artifactId>
+            <version>20160810</version>
         </dependency>
     </dependencies>
     <build>
