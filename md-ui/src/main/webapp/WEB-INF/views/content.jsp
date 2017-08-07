@@ -514,7 +514,7 @@
                                                             },
 
                                                  {
-                                                                         label: "Create Streaming Workflow",
+                                                                         label: "Create Workflow",
                                                                          collapse: "1",
                                                                          url: "wfdesigner2.page",
                                                                          children: []
