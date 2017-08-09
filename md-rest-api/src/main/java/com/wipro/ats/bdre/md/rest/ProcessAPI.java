@@ -980,9 +980,64 @@ public class ProcessAPI extends MetadataAPIBase {
         return restWrapper;
     }
 
+
     @RequestMapping(value = {"/execute", "/execute/"}, method = RequestMethod.POST)
     @ResponseBody public
-    RestWrapper executeProcess(@ModelAttribute("executionBean")
+    RestWrapper executeProcess(@ModelAttribute("process")
+                               @Valid Process process, BindingResult bindingResult, Principal principal) {
+        RestWrapper restWrapper = null;
+        ExecutionInfo executionInfo = new ExecutionInfo();
+        executionInfo.setProcessId(process.getProcessId());
+        try {
+            processDAO.securityCheck(process.getProcessId(),principal.getName(),"execute");
+            String[] command=new String[5];
+            LOGGER.info("workflow typeid  is "+process.getWorkflowId());
+            if (process.getWorkflowId()==3)
+            command[0]=MDConfig.getProperty("execute.script-path") + "/job-executor-airflow.sh";
+            else
+                command[0]=MDConfig.getProperty("execute.script-path") + "/job-executor.sh";
+            command[1]=process.getBusDomainId().toString();
+            command[2]=process.getProcessTypeId().toString();
+            command[3]=process.getProcessId().toString();
+            command[4]=principal.getName();
+            LOGGER.info("Running the command : -- " + command[0] + " " + command[1] + " " + command[2] + " " + command[3]+" "+command[4]);
+            ProcessBuilder processBuilder = new ProcessBuilder(command[0], command[1], command[2], command[3], command[4]);
+            processBuilder.redirectOutput(new File(MDConfig.getProperty("execute.log-path") + process.getProcessId().toString()));
+            LOGGER.info("The output is redirected to " + MDConfig.getProperty("execute.log-path") + process.getProcessId().toString());
+            processBuilder.redirectErrorStream(true);
+            java.lang.Process osProcess = processBuilder.start();
+            try {
+                Class<?> cProcessImpl = osProcess.getClass();
+                Field fPid = cProcessImpl.getDeclaredField("pid");
+                if (!fPid.isAccessible()) {
+                    fPid.setAccessible(true);
+                }
+                executionInfo.setOSProcessId(fPid.getInt(osProcess));
+                LOGGER.debug(" OS process Id : " + executionInfo.getOSProcessId() + "executed by " + principal.getName());
+            } catch (Exception e) {
+                executionInfo.setOSProcessId(-1);
+                LOGGER.error(e + " Setting OS Process ID failed " + executionInfo.getOSProcessId());
+            }
+            restWrapper = new RestWrapper(executionInfo, RestWrapper.OK);
+        } catch (MetadataException e) {
+            LOGGER.error(e + " Executing workflow failed " + e.getCause());
+            restWrapper = new RestWrapper(e.getMessage(), RestWrapper.ERROR);
+        }catch (SecurityException e) {
+            LOGGER.error(e + " security check failed " + e.getCause());
+            restWrapper = new RestWrapper(e.getMessage(), RestWrapper.ERROR);
+        }catch (IOException e) {
+            LOGGER.error(e + " Executing workflow failed " + e.getCause());
+            restWrapper = new RestWrapper(e.getMessage(), RestWrapper.ERROR);
+        }
+        return restWrapper;
+    }
+
+
+
+
+    @RequestMapping(value = {"/streamexecute", "/streamexecute/"}, method = RequestMethod.POST)
+    @ResponseBody public
+    RestWrapper executeStreamProcess(@ModelAttribute("executionBean")
                                @Valid ExecutionBean executionBean, BindingResult bindingResult, Principal principal) {
         RestWrapper restWrapper = null;
         ExecutionInfo executionInfo = new ExecutionInfo();
@@ -1043,6 +1098,9 @@ public class ProcessAPI extends MetadataAPIBase {
         }
         return restWrapper;
     }
+
+
+
 
     /**
      * This method calls proc CloneProcess and adds a clone of process id passed in process table .It also validates the values passed.

@@ -1215,7 +1215,7 @@
                                 							var processData = jQuery.param(data.record);
                                 							console.log(processData);
                                 							$.ajax({
-                                								url: '/mdrest/process/execute/',
+                                								url: '/mdrest/process/streamexecute/',
                                 								type: 'POST',
                                 								data: jQuery.param(map),
                                 								dataType: 'json',
