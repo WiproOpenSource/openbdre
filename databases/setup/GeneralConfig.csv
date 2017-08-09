@@ -583,9 +583,6 @@
 'column_transformation','floor','floor','It returns the maximum BIGINT value that is equal or less than the double',1,'floor','text',1
 
 
-'file_format', 'Delimited', 'DELIMITED','delimited file' , 1, 'Delimited', 'text' , 1
-'file_format', 'XML', 'XML','XML file' , 1, 'XML', 'text' , 1
-'file_format', 'Json', 'JSON','JSON file' , 1, 'Json', 'text' , 1
 'file_format', 'Regex', 'REGEX','REGEX file' , 1, 'Regex', 'text' , 1
 
 'ApacheLog', 'ipAddress', 'ipAddress','ipAddress' , 1, 'ipAddress', 'String' , 1
