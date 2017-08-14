@@ -110,6 +110,10 @@
                            margin-top: 0px;
 
                            }
+                           .remove-me-broadcast{
+                               margin-top: 0%;
+                               margin-bottom:1%;
+                           }
 
                            #deletediv{
                            padding-left: 0px;
@@ -1145,6 +1149,7 @@
                                                     <button class="btn btn-default btn-lg glyphicon glyphicon-align-justify level2" aria-hidden="true" href="#" ng-click="arrangePositions()"></button>
                                                 </div>
                                                 <div class="pull-right">
+                                                    <button class="btn btn-default" aria-hidden="true" href="#" onclick="$('#broadcast').show()">Broadcast</button>
                                                     <button class="btn btn-default btn-lg glyphicon glyphicon-zoom-in level2" aria-hidden="true" href="#" onclick="$('#canvas').css('zoom',$('#canvas').css('zoom')*1.1 )"></button>
                                                     <button class="btn btn-default btn-lg glyphicon glyphicon-zoom-out level2" aria-hidden="true" href="#" onclick="$('#canvas').css('zoom',$('#canvas').css('zoom')/1.1 )"></button>
                                                 </div>
@@ -1157,6 +1162,155 @@
                             </div>
 
                         </div>
+                         <div id="broadcast" class="modelwindow">
+
+                         <!-- Modal content -->
+                                 <div class="modal-content">
+                                   <span id="closeBroadcast" class="closemodal" onclick="closeBroadcast()">&times;</span>
+                           <div id="broadcastDetails">
+                           <form class="form-horizontal" role="form" >
+                           <div class="form-group" >
+                               <label for="BroadcastSource">Broadcast Source</label>
+                                    <select class="form-control" id="BroadcastSource" name="BroadcastSource">
+                                     <option  value="hbase" selected>HBase</option>
+                                     <option  value="file">File</option>
+                                     </select>
+
+                           </div>
+
+
+                            <div class="clearfix"></div>
+                            </form>
+
+
+
+                    <form class="form-horizontal" role="form" id="processFieldsForm2" style="margin-left: 2%;">
+                               <h3 style="margin-left: 2%;">Broadcast Data Details</h3>
+                                <div>
+                                <div class="col-md-2">Con Name</div>
+                                 <div class="col-md-3">Table Name</div>
+                                  <div class="col-md-3">Column Family</div>
+                                   <div class="col-md-4">Column Name</div>
+                                 </div>
+
+                                <div class="" id="broadCastFormGroup1" >
+                                <div class="col-md-2">
+                                  <select class="form-control" id="connectionName" name="connectionName.1">
+                                    <option ng-repeat="connection in persistentStoreConnectionsList" id="{{$index}}" value="{{ connection.Value }}">{{ connection.DisplayText }}</option>
+                                </select>
+                                </div>
+                                <div class="col-md-3 ">
+                                 <input class="form-control" id="tableName" name="tableName.1" placeholder="Table Name">
+                                </input>
+                                </div>
+                                <div class="col-md-3">
+                               <input class="form-control" id="columnFamily" name="columnFamily.1" placeholder="Column Family">
+                                </input>
+                                </div>
+                              <div class="col-md-3">
+                               <input class="form-control" id="columnName" name="columnName.1" placeholder="Column Name">
+                              </input>
+                              </div>
+
+
+                                <button id="remove1" class="btn btn-danger remove-me-broadcast"><span class="glyphicon glyphicon-trash"></span></button>
+
+
+                            </div>
+
+                            <div class="" id="deletedivBroadcast">
+
+                                    <div class="col-md-5">
+                                   <button id="b1" class="btn add-more" onclick="addMoreBroadcast()">
+                                       <span class="glyphicon glyphicon-plus" style="font-size:large"></span>
+                                   </button>
+                                   </div>
+                                   <div class="col-md-7">
+                                   <button type="submit" style="margin-right: 0px;" ng-click="insertBroadcastProp()" class="btn btn-primary  pull-right">Save</button>
+                                   </div>
+
+                                   </div>
+
+
+                                        </form>
+
+                              <div class="clearfix"></div>
+
+                           <div>
+                         <div class="clearfix"></div>
+                         </div>
+                         </div>
+                         <script>
+                      function connectionNames(){
+
+                       var connectionListArray=$('[ng-controller="AppCtrl"]').scope().persistentStoreConnectionsList;
+                       console.log(connectionListArray);
+                       var opt='';
+                       for(var i=0;i<connectionListArray.length;i++){
+                       console.log(connectionListArray[i].DisplayText);
+                       opt+='<option value="'+connectionListArray[i].Value+'">'+connectionListArray[i].DisplayText+'</option>';
+                       }
+                       return opt;
+                   }
+
+
+                          var nextBroadcast = 1;
+                            function addMoreBroadcast()
+                            {
+                            console.log("in add more function");
+                             var addto = "#deletedivBroadcast";
+                                    var addRemove = "#broadCastFormGroup" + (nextBroadcast);
+                                    nextBroadcast = nextBroadcast + 1;
+                                    var removeBtn = '<button id="remove' + (nextBroadcast) + '" class="btn btn-danger remove-me-broadcast" ><span class="glyphicon glyphicon-trash" ></span></button></div><div id="field">';
+                                    var newIn = '';
+                                    newIn = newIn +  '<div class="" id="broadCastFormGroup' + nextBroadcast + '">' ;
+                                    newIn = newIn +  '<div class="col-md-2">' ;
+                                    newIn = newIn +  '<select class="form-control" id="connectionName.' + nextBroadcast + '" name="connectionName.' + nextBroadcast + '">' ;
+                                     newIn = newIn +  connectionNames() ;
+                                    newIn = newIn +  '</select>' ;
+                                    newIn = newIn +  '</div>' ;
+                                    newIn = newIn +  '<div class="col-md-3">' ;
+                                    newIn = newIn +  '<input class="form-control" id="tableName.' + nextBroadcast + '"placeholder="Table Name" name="tableName.' + nextBroadcast + '">' ;
+                                    newIn = newIn +  '</input>' ;
+                                    newIn = newIn +  '</div>' ;
+                                    newIn = newIn +  '<div class="col-md-3">' ;
+                                    newIn = newIn +  '<input class="form-control" id="columnFamily.' + nextBroadcast + '"placeholder="Column Family" name="columnFamily.' + nextBroadcast + '">' ;
+                                    newIn = newIn +  '</input>' ;
+                                    newIn = newIn +  '</div>' ;
+
+                                    newIn = newIn +  '<div class="col-md-3">' ;
+                                    newIn = newIn +  '<input class="form-control" id="columnName.' + nextBroadcast + '"placeholder="Column Name" name="columnName.' + nextBroadcast + '">' ;
+                                    newIn = newIn +  '</input>' ;
+                                    newIn = newIn +  '</div>' ;
+                                    newIn = newIn + removeBtn;
+                                    newIn = newIn +  '</div>' ;
+
+                                    var newInput = $(newIn);
+                                    var removeButton = $(removeBtn);
+                                    $(addto).before(newInput);
+
+                                    $("#broadCastFormGroup" + nextBroadcast).attr('data-source',$(addto).attr('data-source'));
+                                    $("#count").val(nextBroadcast);
+
+                                        $('.remove-me-broadcast').click(function(e){
+                                            e.preventDefault();
+                                            var fieldNum = this.id.charAt(this.id.length-1);
+                                            var fieldID = "#broadCastFormGroup" + fieldNum;
+                                            console.log($(this));
+                                            //$(this).remove();
+                                            $(fieldID).remove();
+                                        });
+                         }
+
+
+
+
+
+                     </script>
+
+
+
+
                         <div id="modalCover"></div>
                         <script type="text/javascript" src="../js/fc/wf-utilities.js"></script>
                     </body>

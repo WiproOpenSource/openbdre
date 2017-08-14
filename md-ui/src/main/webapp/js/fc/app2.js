@@ -1,6 +1,12 @@
 //
 // Define the 'app' module.
 //
+
+ function closeBroadcast()
+ {
+ document.getElementById('broadcast').style.display = "none";
+ }
+
 angular.module('app', ['flowChart', ])
     //
     // Simple service to create a prompt.
@@ -514,6 +520,9 @@ console.log(value1);
  var modal = document.getElementById('myModal');
  modal.style.display = "none";
 }
+
+
+
 var aggregationFinal ="";
 function formIntoText(typeOf) {
     var map = new Object();
@@ -531,6 +540,40 @@ function formIntoText(typeOf) {
     console.log(text);
     aggregationFinal=text;
 }
+
+var broadcastFinal ="";
+function broadcastformIntoText(typeOf) {
+    var map = new Object();
+    var x = '';
+    x = document.getElementById(typeOf);
+    console.log(x);
+    var text = "";
+    var i;
+    for(i = 0; i < x.length-2; i=i+5) {
+          var connectionName=x.elements[i].value;
+          var tableName=x.elements[i+1].value;
+          var columnFamily=x.elements[i+2].value;
+          var columnName=x.elements[i+3].value;
+          text= text+connectionName+":::"+tableName+":::"+columnFamily+":::"+columnName+",";
+    }
+
+    console.log(text);
+    broadcastFinal=text;
+}
+
+
+$scope.insertBroadcastProp=function(){
+var url_string=window.location.href;
+console.log("url is "+url_string);
+var url = new URL(url_string);
+var c = url.searchParams.get("processId");
+console.log(c);
+var map2=new Object();
+broadcastformIntoText('processFieldsForm2');
+document.getElementById('broadcast').style.display = "none";
+}
+
+
 $scope.insertAggProp=function(processId){
 var map=new Object();
 formIntoText('processFieldsForm1');
