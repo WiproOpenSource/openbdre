@@ -1162,6 +1162,7 @@
                             </div>
 
                         </div>
+
                          <div id="broadcast" class="modelwindow">
 
                          <!-- Modal content -->
@@ -1188,30 +1189,34 @@
                                <h3 style="margin-left: 2%;">Broadcast Data Details</h3>
                                 <div>
                                 <div class="col-md-2">Con Name</div>
-                                 <div class="col-md-3">Table Name</div>
-                                  <div class="col-md-3">Column Family</div>
-                                   <div class="col-md-4">Column Name</div>
+                                 <div class="col-md-2">Table Name</div>
+                                  <div class="col-md-2">Column Family</div>
+                                   <div class="col-md-2">Column Name</div>
+                                   <div class="col-md-4">Broadcast Identifier</div>
                                  </div>
 
                                 <div class="" id="broadCastFormGroup1" >
                                 <div class="col-md-2">
-                                  <select class="form-control" id="connectionName" name="connectionName.1">
-                                    <option ng-repeat="connection in persistentStoreConnectionsList" id="{{$index}}" value="{{ connection.Value }}">{{ connection.DisplayText }}</option>
+                                  <select class="form-control" id="connectionName.1" name="connectionName.1">
+                                    <option ng-repeat="connection in hbaseConnectionsList" id="{{$index}}" value="{{ connection.Value }}">{{ connection.DisplayText }}</option>
                                 </select>
                                 </div>
-                                <div class="col-md-3 ">
-                                 <input class="form-control" id="tableName" name="tableName.1" placeholder="Table Name">
+                                <div class="col-md-2 ">
+                                 <input class="form-control" id="tableName.1" name="tableName.1" placeholder="Table Name">
                                 </input>
                                 </div>
-                                <div class="col-md-3">
-                               <input class="form-control" id="columnFamily" name="columnFamily.1" placeholder="Column Family">
+                                <div class="col-md-2">
+                               <input class="form-control" id="columnFamily.1" name="columnFamily.1" placeholder="Column Family">
                                 </input>
                                 </div>
-                              <div class="col-md-3">
-                               <input class="form-control" id="columnName" name="columnName.1" placeholder="Column Name">
+                              <div class="col-md-2">
+                               <input class="form-control" id="columnName.1" name="columnName.1" placeholder="Column Name">
                               </input>
                               </div>
-
+                               <div class="col-md-3">
+                                 <input class="form-control" id="broadcastIdentifier.1" name="broadcastIdentifier.1" onclick="changeBroadcast(this);" placeholder="Broadcast Identifier">
+                                </input>
+                                </div>
 
                                 <button id="remove1" class="btn btn-danger remove-me-broadcast"><span class="glyphicon glyphicon-trash"></span></button>
 
@@ -1241,9 +1246,23 @@
                          </div>
                          </div>
                          <script>
+
+                         function changeBroadcast(item) {
+                             var id= $(item).attr("id");
+                             var res = id.split(".");
+                             var num=res[res.length-1];
+                             console.log("id is "+id+"res is "+num);
+                             var connectionName=document.getElementById("connectionName."+num).value;
+                              var tableName=document.getElementById("tableName."+num).value;
+                              var columnFamily=document.getElementById("columnFamily."+num).value;
+                              var columnName=document.getElementById("columnName."+num).value;
+                              console.log(connectionName+" "+tableName+" "+columnFamily+" "+columnName);
+                              document.getElementById(id).value=connectionName+tableName+columnFamily+columnName;
+                            }
+
                       function connectionNames(){
 
-                       var connectionListArray=$('[ng-controller="AppCtrl"]').scope().persistentStoreConnectionsList;
+                       var connectionListArray=$('[ng-controller="AppCtrl"]').scope().hbaseConnectionsList;
                        console.log(connectionListArray);
                        var opt='';
                        for(var i=0;i<connectionListArray.length;i++){
@@ -1269,19 +1288,25 @@
                                      newIn = newIn +  connectionNames() ;
                                     newIn = newIn +  '</select>' ;
                                     newIn = newIn +  '</div>' ;
-                                    newIn = newIn +  '<div class="col-md-3">' ;
+                                    newIn = newIn +  '<div class="col-md-2">' ;
                                     newIn = newIn +  '<input class="form-control" id="tableName.' + nextBroadcast + '"placeholder="Table Name" name="tableName.' + nextBroadcast + '">' ;
                                     newIn = newIn +  '</input>' ;
                                     newIn = newIn +  '</div>' ;
-                                    newIn = newIn +  '<div class="col-md-3">' ;
+                                    newIn = newIn +  '<div class="col-md-2">' ;
                                     newIn = newIn +  '<input class="form-control" id="columnFamily.' + nextBroadcast + '"placeholder="Column Family" name="columnFamily.' + nextBroadcast + '">' ;
                                     newIn = newIn +  '</input>' ;
                                     newIn = newIn +  '</div>' ;
 
-                                    newIn = newIn +  '<div class="col-md-3">' ;
+                                    newIn = newIn +  '<div class="col-md-2">' ;
                                     newIn = newIn +  '<input class="form-control" id="columnName.' + nextBroadcast + '"placeholder="Column Name" name="columnName.' + nextBroadcast + '">' ;
                                     newIn = newIn +  '</input>' ;
                                     newIn = newIn +  '</div>' ;
+
+                                    newIn = newIn +  '<div class="col-md-3">' ;
+                                    newIn = newIn +  '<input class="form-control" id="broadcastIdentifier.' + nextBroadcast + '"placeholder="Broadcast Identifier" onclick="changeBroadcast(this);" name="broadcastIdentifier.' + nextBroadcast + '">' ;
+                                    newIn = newIn +  '</input>' ;
+                                    newIn = newIn +  '</div>' ;
+
                                     newIn = newIn + removeBtn;
                                     newIn = newIn +  '</div>' ;
 

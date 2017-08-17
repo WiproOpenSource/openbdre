@@ -168,6 +168,16 @@ angular.module('app', ['flowChart', ])
                         }
 
 
+                   var hbaseConnections = workflowtypeOptionslistAC('/mdrest/connections/optionslist/persistentStore_hbase',  'POST', '');
+                      if (hbaseConnections) {
+                          $scope.hbaseConnectionsList = hbaseConnections;
+                          console.log('info -- no connections options listed');
+                      }
+                      else {
+                         console.log('hbaseConnectionsList not loaded');
+                      }
+
+
 
 
             //
@@ -549,12 +559,15 @@ function broadcastformIntoText(typeOf) {
     console.log(x);
     var text = "";
     var i;
-    for(i = 0; i < x.length-2; i=i+5) {
+    for(i = 0; i < x.length-2; i=i+6) {
           var connectionName=x.elements[i].value;
           var tableName=x.elements[i+1].value;
           var columnFamily=x.elements[i+2].value;
           var columnName=x.elements[i+3].value;
-          text= text+connectionName+":::"+tableName+":::"+columnFamily+":::"+columnName+",";
+          var broadcastIdentifier=x.elements[i+4].value;
+          if(broadcastIdentifier=="")
+          broadcastIdentifier=connectionName+tableName+columnFamily+columnName;
+          text= text+connectionName+":::"+tableName+":::"+columnFamily+":::"+columnName+":::"+broadcastIdentifier+",";
     }
 
     console.log(text);
@@ -568,9 +581,28 @@ console.log("url is "+url_string);
 var url = new URL(url_string);
 var c = url.searchParams.get("processId");
 console.log(c);
-var map2=new Object();
+var map=new Object();
 broadcastformIntoText('processFieldsForm2');
-document.getElementById('broadcast').style.display = "none";
+console.log(broadcastFinal);
+map["connectionName:tableName:columnFamily:columnName:broadcastIdentifier"]=broadcastFinal.substr(0, broadcastFinal.length-2);
+
+$.ajax({
+            type: "POST",
+            url: "/mdrest/properties/addBroadcastProperties/"+c,
+            data: jQuery.param(map),
+            success: function(data) {
+                if(data.Result == "OK") {
+                     document.getElementById('broadcast').style.display = "none";
+                     alertBox("info","Broadcast properties added");
+                }
+                else
+                alertBox("warning","Error occured");
+
+            }
+
+        });
+
+
 }
 
 

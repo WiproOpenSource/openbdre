@@ -164,6 +164,120 @@ public class PropertiesAPI extends MetadataAPIBase {
         return restWrapper;
     }
 
+
+
+
+
+
+
+
+    @RequestMapping(value = "/addBroadcastProperties/{id}", method = RequestMethod.POST)
+    @ResponseBody
+    public RestWrapper addBroadcastProperties(@PathVariable("id") Integer processId, HttpServletRequest request, Principal principal) {
+        RestWrapper restWrapper = null;
+        try {
+            String broadcastString=request.getParameter("connectionName:tableName:columnFamily:columnName:broadcastIdentifier");
+            LOGGER.info("processId is "+processId);
+            LOGGER.info("broadcastString is "+broadcastString);
+            String[] broadcastArray=broadcastString.split(",");
+            LOGGER.info(broadcastArray.toString());
+            int count=1;
+            Process process=processDAO.get(processId);
+            LOGGER.info(process.toString());
+            for(int i=0;i<broadcastArray.length;i++)
+            {
+                String[] tmpArray=broadcastArray[i].split(":::");
+
+                com.wipro.ats.bdre.md.dao.jpa.Properties jpaProperties = new com.wipro.ats.bdre.md.dao.jpa.Properties();
+
+                PropertiesId jpaPropertiesId=new PropertiesId();
+                jpaPropertiesId.setProcessId(processId);
+                jpaPropertiesId.setPropKey("connectionName_"+count);
+
+                jpaProperties.setId(jpaPropertiesId);
+                jpaProperties.setConfigGroup("broadcast");
+                jpaProperties.setDescription("Connection Name");
+                jpaProperties.setProcess(process);
+                jpaProperties.setPropValue(tmpArray[0]);
+
+
+                com.wipro.ats.bdre.md.dao.jpa.Properties jpaProperties1 = new com.wipro.ats.bdre.md.dao.jpa.Properties();
+                PropertiesId jpaPropertiesId1=new PropertiesId();
+                jpaPropertiesId1.setProcessId(processId);
+                jpaPropertiesId1.setPropKey("tableName_"+count);
+
+                jpaProperties1.setId(jpaPropertiesId1);
+                jpaProperties1.setConfigGroup("broadcast");
+                jpaProperties1.setDescription("Table Name");
+                jpaProperties1.setProcess(process);
+                jpaProperties1.setPropValue(tmpArray[1]);
+
+
+
+                com.wipro.ats.bdre.md.dao.jpa.Properties jpaProperties2 = new com.wipro.ats.bdre.md.dao.jpa.Properties();
+                PropertiesId jpaPropertiesId2=new PropertiesId();
+                jpaPropertiesId2.setProcessId(processId);
+                jpaPropertiesId2.setPropKey("columnFamily_"+count);
+
+                jpaProperties2.setId(jpaPropertiesId2);
+                jpaProperties2.setConfigGroup("broadcast");
+                jpaProperties2.setDescription("Column Family");
+                jpaProperties2.setProcess(process);
+                jpaProperties2.setPropValue(tmpArray[2]);
+
+
+
+                com.wipro.ats.bdre.md.dao.jpa.Properties jpaProperties3= new com.wipro.ats.bdre.md.dao.jpa.Properties();
+                PropertiesId jpaPropertiesId3=new PropertiesId();
+                jpaPropertiesId3.setProcessId(processId);
+                jpaPropertiesId3.setPropKey("columnName_"+count);
+
+                jpaProperties3.setId(jpaPropertiesId3);
+                jpaProperties3.setProcess(process);
+                jpaProperties3.setConfigGroup("broadcast");
+                jpaProperties3.setDescription("Column Name");
+                jpaProperties3.setPropValue(tmpArray[3]);
+
+
+
+                com.wipro.ats.bdre.md.dao.jpa.Properties jpaProperties4 = new com.wipro.ats.bdre.md.dao.jpa.Properties();
+                PropertiesId jpaPropertiesId4=new PropertiesId();
+                jpaPropertiesId4.setProcessId(processId);
+                jpaPropertiesId4.setPropKey("broadcastIdentifier_"+count);
+
+                jpaProperties4.setId(jpaPropertiesId4);
+                jpaProperties4.setConfigGroup("broadcast");
+                jpaProperties4.setDescription("Broadcast Identifier");
+                jpaProperties4.setProcess(process);
+                jpaProperties4.setPropValue(tmpArray[4]);
+
+                propertiesDAO.insert(jpaProperties);
+                propertiesDAO.insert(jpaProperties1);
+                propertiesDAO.insert(jpaProperties2);
+                propertiesDAO.insert(jpaProperties3);
+                propertiesDAO.insert(jpaProperties4);
+                count++;
+            }
+
+            restWrapper = new RestWrapper(null, RestWrapper.OK);
+            LOGGER.info("Record with ID:" + processId + " deleted from Properties by User:" + principal.getName());
+
+        } catch (MetadataException e) {
+            LOGGER.error(e);
+            restWrapper = new RestWrapper(e.getMessage(), RestWrapper.ERROR);
+        }catch (SecurityException e) {
+            LOGGER.error(e);
+            restWrapper = new RestWrapper(e.getMessage(), RestWrapper.ERROR);
+        }
+        return restWrapper;
+    }
+
+
+
+
+
+
+
     /**
      * This method calls proc ListProperty and fetches a list of instances of Properties.
      *
