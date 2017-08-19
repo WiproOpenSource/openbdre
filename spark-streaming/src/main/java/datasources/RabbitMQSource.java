@@ -1,26 +1,24 @@
-package datasources;
+/*package datasources;
 
 import com.rabbitmq.client.QueueingConsumer;
+import org.apache.spark.api.java.function.Function;
 import org.apache.spark.streaming.api.java.JavaDStream;
+import org.apache.spark.streaming.api.java.JavaPairDStream;
 import org.apache.spark.streaming.api.java.JavaReceiverInputDStream;
 import org.apache.spark.streaming.api.java.JavaStreamingContext;
-import org.apache.spark.streaming.rabbitmq.*;
-import org.apache.spark.api.java.function.Function;
-import scala.Array;
+import org.apache.spark.streaming.rabbitmq.RabbitMQUtils;
+import scala.Tuple2;
 
 import java.util.HashMap;
 import java.util.Map;
 
-/**
- * Created by cloudera on 5/19/17.
- */
 public class RabbitMQSource implements Source{
 
 
 
 
     @Override
-    public JavaDStream execute(JavaStreamingContext ssc, Integer pid) throws Exception {
+    public JavaPairDStream<String, String> execute(JavaStreamingContext ssc, Integer pid) throws Exception {
         try {
             Map<String, String> rabbitMqConParams = new HashMap<String, String>();
             rabbitMqConParams.put("host", "localhost");
@@ -34,7 +32,7 @@ public class RabbitMQSource implements Source{
                 }
             });
             System.out.println("receiverStream.toString() = " + receiverStream.toString());
-            return receiverStream;
+            return receiverStream.mapToPair(s -> new Tuple2<String, String>(null,s));
         }catch (Exception e){
             e.printStackTrace();
             throw e;
@@ -43,4 +41,4 @@ public class RabbitMQSource implements Source{
 
     //createJavaDistributedStream[R](javaSparkStreamingContext, params, JFunction[Array[Byte], R]);
 
-}
+}*/

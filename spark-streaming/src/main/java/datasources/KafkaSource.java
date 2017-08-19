@@ -8,6 +8,7 @@ import com.wipro.ats.bdre.md.dao.jpa.Connections;
 import com.wipro.ats.bdre.md.dao.jpa.Messages;
 import kafka.serializer.StringDecoder;
 import org.apache.spark.streaming.api.java.JavaDStream;
+import org.apache.spark.streaming.api.java.JavaPairDStream;
 import org.apache.spark.streaming.api.java.JavaPairInputDStream;
 import org.apache.spark.streaming.api.java.JavaStreamingContext;
 import org.apache.spark.streaming.kafka.KafkaUtils;
@@ -66,7 +67,7 @@ public class KafkaSource implements Source{
     }
 
     @Override
-    public JavaDStream execute(JavaStreamingContext ssc,Integer pid) throws Exception {
+    public JavaPairDStream<String, String> execute(JavaStreamingContext ssc, Integer pid) throws Exception {
         try {
             System.out.println("pid = " + pid);
             Map<String, String> kafkaParams = getKafkaParams(pid);
@@ -76,7 +77,7 @@ public class KafkaSource implements Source{
             //Set<String> topics = Collections.singleton("test");
             System.out.println("topics = " + topics);
             JavaPairInputDStream<String, String> directKafkaStream = KafkaUtils.createDirectStream(ssc, String.class, String.class, StringDecoder.class, StringDecoder.class, kafkaParams, topics);
-            return directKafkaStream.map(Tuple2::_2);
+            return directKafkaStream;
         }catch (Exception e){
             e.printStackTrace();
             System.out.println("e = " + e);

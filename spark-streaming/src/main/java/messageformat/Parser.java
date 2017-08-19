@@ -4,12 +4,13 @@ import com.wipro.ats.bdre.md.api.GetProperties;
 import com.wipro.ats.bdre.md.api.StreamingMessagesAPI;
 import com.wipro.ats.bdre.md.dao.jpa.Messages;
 
+import java.io.Serializable;
 import java.util.Properties;
 
 /**
  * Created by cloudera on 6/8/17.
  */
-public class Parser {
+public class Parser implements Serializable{
     public static final String MESSAGEFORMATPACKAGE = "messageformat.";
     public static Object[] parseMessage(String record,Integer pid) throws Exception{
         try {

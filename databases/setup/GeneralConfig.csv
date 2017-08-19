@@ -550,10 +550,13 @@
 'scripts_config', 'airflowInstallDir', '-','Airflow Installation directory upto bin folder' , 1, '${airflow_install_dir}', 'text' , 1
 'scripts_config', 'airflowDagPath', '-','-' , 1, '/home/${bdre_user_name}/airflow/dags', 'text' , 1
 
-'file_format', 'delimited', 'DELIMITED','delimited file' , 1, 'delimited', 'text' , 1
-'file_format', 'xml', 'XML','XML file' , 1, 'xml', 'text' , 1
-'file_format', 'json', 'JSON','JSON file' , 1, 'json', 'text' , 1
+'file_format', 'Delimited', 'DELIMITED','delimited file' , 1, 'Delimited', 'text' , 1
+'file_format', 'XML', 'XML','XML file' , 1, 'XML', 'text' , 1
+'file_format', 'Json', 'JSON','JSON file' , 1, 'Json', 'text' , 1
+'file_format', 'Regex', 'REGEX','REGEX file' , 1, 'Regex', 'text' , 1
 'file_format', 'mainframe', 'MAINFRAME','MAINFRAME file' , 1, 'mainframe', 'text' , 1
+
+
 'delimited', 'serdeClass', 'Serde Class','serde class to be used' , 1, 'org.apache.hadoop.hive.serde2.lazy.LazySimpleSerDe', 'text' , 1
 'delimited', 'inputFormat', 'Input Format','input format to be used' , 1, 'org.apache.hadoop.mapred.TextInputFormat', 'text' , 1
 'delimited', 'outputFormat', 'Output Format','output format to be used' , 1, 'org.apache.hadoop.hive.ql.io.HiveIgnoreKeyTextOutputFormat', 'text' , 1
@@ -582,8 +585,6 @@
 'column_transformation','trim','trim','It returns the string resulting from trimming spaces from both ends',1,'trim','text',1
 'column_transformation','floor','floor','It returns the maximum BIGINT value that is equal or less than the double',1,'floor','text',1
 
-
-'file_format', 'Regex', 'REGEX','REGEX file' , 1, 'Regex', 'text' , 1
 
 'ApacheLog', 'ipAddress', 'ipAddress','ipAddress' , 1, 'ipAddress', 'String' , 1
 'ApacheLog', 'clientIdentd', 'clientIdentd','clientIdentd' , 1, 'clientIdentd', 'String' , 1
