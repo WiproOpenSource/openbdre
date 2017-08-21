@@ -276,6 +276,111 @@ public class PropertiesAPI extends MetadataAPIBase {
 
 
 
+    @RequestMapping(value = "/addFilterProperties/{id}", method = RequestMethod.POST)
+    @ResponseBody
+    public RestWrapper addFilterProperties(@PathVariable("id") Integer processId, HttpServletRequest request, Principal principal) {
+        RestWrapper restWrapper = null;
+        try {
+            String broadcastString=request.getParameter("filterData");
+            LOGGER.info("processId is "+processId);
+            LOGGER.info("broadcastString is "+broadcastString);
+            String[] filterArray=broadcastString.split(",");
+            LOGGER.info(filterArray.toString());
+            int count=1;
+            Process process=processDAO.get(processId);
+            LOGGER.info(process.toString());
+            for(int i=0;i<filterArray.length;i++)
+            {
+                String[] tmpArray=filterArray[i].split("::");
+
+                com.wipro.ats.bdre.md.dao.jpa.Properties jpaProperties = new com.wipro.ats.bdre.md.dao.jpa.Properties();
+
+                PropertiesId jpaPropertiesId=new PropertiesId();
+                jpaPropertiesId.setProcessId(processId);
+                jpaPropertiesId.setPropKey("logicalOperator_"+count);
+
+                jpaProperties.setId(jpaPropertiesId);
+                jpaProperties.setConfigGroup("filter");
+                jpaProperties.setDescription("Logical Operator");
+                jpaProperties.setProcess(process);
+                jpaProperties.setPropValue(tmpArray[0]);
+
+
+                com.wipro.ats.bdre.md.dao.jpa.Properties jpaProperties1 = new com.wipro.ats.bdre.md.dao.jpa.Properties();
+                PropertiesId jpaPropertiesId1=new PropertiesId();
+                jpaPropertiesId1.setProcessId(processId);
+                jpaPropertiesId1.setPropKey("column_"+count);
+
+                jpaProperties1.setId(jpaPropertiesId1);
+                jpaProperties1.setConfigGroup("filter");
+                jpaProperties1.setDescription("Column Name");
+                jpaProperties1.setProcess(process);
+                jpaProperties1.setPropValue(tmpArray[1]);
+
+
+
+                com.wipro.ats.bdre.md.dao.jpa.Properties jpaProperties2 = new com.wipro.ats.bdre.md.dao.jpa.Properties();
+                PropertiesId jpaPropertiesId2=new PropertiesId();
+                jpaPropertiesId2.setProcessId(processId);
+                jpaPropertiesId2.setPropKey("operator_"+count);
+
+                jpaProperties2.setId(jpaPropertiesId2);
+                jpaProperties2.setConfigGroup("filter");
+                jpaProperties2.setDescription("Operator");
+                jpaProperties2.setProcess(process);
+                jpaProperties2.setPropValue(tmpArray[2]);
+
+                propertiesDAO.insert(jpaProperties);
+                propertiesDAO.insert(jpaProperties1);
+                propertiesDAO.insert(jpaProperties2);
+
+
+                if (tmpArray.length>=4){
+                  LOGGER.info("tmpArray[3] is "+tmpArray[3]);
+                com.wipro.ats.bdre.md.dao.jpa.Properties jpaProperties3= new com.wipro.ats.bdre.md.dao.jpa.Properties();
+                PropertiesId jpaPropertiesId3=new PropertiesId();
+                jpaPropertiesId3.setProcessId(processId);
+                jpaPropertiesId3.setPropKey("filterValue_"+count);
+
+                jpaProperties3.setId(jpaPropertiesId3);
+                jpaProperties3.setProcess(process);
+                jpaProperties3.setConfigGroup("filter");
+                jpaProperties3.setDescription("Filter Value");
+                jpaProperties3.setPropValue(tmpArray[3]);
+                propertiesDAO.insert(jpaProperties3);
+                }
+
+                count++;
+            }
+
+            com.wipro.ats.bdre.md.dao.jpa.Properties jpaProperties4= new com.wipro.ats.bdre.md.dao.jpa.Properties();
+            PropertiesId jpaPropertiesId4=new PropertiesId();
+            jpaPropertiesId4.setProcessId(processId);
+            jpaPropertiesId4.setPropKey("count");
+
+            jpaProperties4.setId(jpaPropertiesId4);
+            jpaProperties4.setProcess(process);
+            jpaProperties4.setConfigGroup("filter");
+            jpaProperties4.setDescription("Count Value");
+            jpaProperties4.setPropValue(String.valueOf(count-1));
+            propertiesDAO.insert(jpaProperties4);
+
+
+            restWrapper = new RestWrapper(null, RestWrapper.OK);
+            LOGGER.info("Record with ID:" + processId + " deleted from Properties by User:" + principal.getName());
+
+        } catch (MetadataException e) {
+            LOGGER.error(e);
+            restWrapper = new RestWrapper(e.getMessage(), RestWrapper.ERROR);
+        }catch (SecurityException e) {
+            LOGGER.error(e);
+            restWrapper = new RestWrapper(e.getMessage(), RestWrapper.ERROR);
+        }
+        return restWrapper;
+    }
+
+
+
 
 
     /**

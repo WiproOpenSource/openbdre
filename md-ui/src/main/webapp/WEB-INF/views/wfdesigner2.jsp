@@ -115,6 +115,11 @@
                                margin-bottom:1%;
                            }
 
+                           .remove-me-filter{
+                                  margin-top: 0%;
+                                  margin-bottom:1%;
+                              }
+
                            #deletediv{
                            padding-left: 0px;
                            }
@@ -458,29 +463,173 @@
                                               	  </form>
 
 
-                                                <form class="form-horizontal" role="form" ng-if="genConfig.type == 'filter'">
+                                                <form class="form-horizontal" role="form" id="processFieldsForm3" ng-if="genConfig.type == 'filter'">
 
-                                                   <div class="form-group">
-                                                      <label class="control-label col-sm-2" for="{{genConfig.key}}-propkey">column</label>
-                                                      <select class="form-control" id="column" >
+
+                                                <h3 style="margin-left: 2%;">Filter Data Details</h3>
+                                                        <div>
+                                                        <div class="col-md-2">Logical Op.</div>
+
+                                                          <div class="col-md-3">Column </div>
+                                                           <div class="col-md-3">Operator</div>
+                                                           <div class="col-md-4">Filter Value</div>
+                                                         </div>
+
+
+
+
+                                                  <div class="" id="filterFormGroup1" >
+
+                                                  <div class="col-sm-2" >
+
+                                                  </div>
+
+
+                                                   <div class="col-sm-3">
+
+                                                      <select class="form-control" id="column.1" name="column.1">
                                                           <option ng-repeat="column in chartViewModel.columnList" id="{{$index}}" value="{{ column.Value }}">{{ column.DisplayText }}</option>
                                                       </select>
                                                   </div>
 
-                                                  <div class="form-group">
-                                                    <label class="control-label col-sm-2" for="{{genConfig.key}}-propkey">operation</label>
-                                                    <select class="form-control" id="operator">
-                                                        <option ng-repeat="operator in operators" id="{{$index}}" value="{{ operator }}">{{ operator }}</option>
+                                                  <div class="col-sm-3">
+
+                                                    <select class="form-control" id="operator.1" name="operator.1" onchange="changeFilter(this);">
+                                                        <option ng-repeat="operator in operators"  id="{{$index}}" value="{{ operator }}">{{ operator }}</option>
                                                     </select>
                                                 </div>
 
-                                                 <div class="form-group">
-                                                       <input type="text" class="form-control col-sm-10" id="filtervalue" required>
+                                                 <div class="col-sm-3">
+                                                       <input type="text" class="form-control" id="filtervalue.1" name="iltervalue.1" placeholder="Filter value">
                                                     </div>
 
-                                                    <div class="clearfix"></div>
-                                                     <button type="submit" ng-click="insertFilterProp(chartViewModel.selectedProcess.processId)" class="btn btn-primary  pull-right">Save</button>
+                                                   <button id="remove2" class="btn btn-danger remove-me-filter"><span class="glyphicon glyphicon-trash"></span></button>
+
+                                                    </div>
+                                                   <div class="" id="deletedivFilter">
+
+                                                     <div class="col-md-5">
+                                                    <button id="b1" class="btn add-more" onclick="addMoreFilter()">
+                                                        <span class="glyphicon glyphicon-plus" style="font-size:large"></span>
+                                                    </button>
+                                                    </div>
+                                                    <div class="col-md-7">
+                                                    <button type="submit" style="margin-right: 0px;" ng-click="insertFilterProp(chartViewModel.selectedProcess.processId)" class="btn btn-primary  pull-right">Save</button>
+                                                    </div>
+
+                                                    </div>
+                                               <div class="clearfix"></div>
                                                 </form>
+
+              <script>
+
+                   function changeFilter(item)
+                   {
+                    var id= $(item).attr("id");
+                    var res = id.split(".");
+                    var num=res[res.length-1];
+                    console.log("id is "+id+"res is "+num);
+                    var operatorValue=document.getElementById(id).value;
+                    console.log("operatorValue is "+operatorValue);
+                    if(operatorValue.includes('null'))
+                    {
+                    document.getElementById("filtervalue."+num).value="";
+                    document.getElementById("filtervalue."+num).disabled = true;
+                    }
+                    else
+                    document.getElementById("filtervalue."+num).disabled = false;
+                   }
+
+                   function columnNames()
+                   {
+                   var connectionListArray=$('[ng-controller="AppCtrl"]').scope().chartViewModel.columnList;
+                  console.log(connectionListArray);
+                  var opt='';
+                  for(var i=0;i<connectionListArray.length;i++){
+                  console.log(connectionListArray[i].DisplayText);
+                  opt+='<option value="'+connectionListArray[i].Value+'">'+connectionListArray[i].DisplayText+'</option>';
+                  }
+                  return opt;
+
+                   }
+
+                    function operators()
+                      {
+                      var connectionListArray=$('[ng-controller="AppCtrl"]').scope().operators;
+                     console.log(connectionListArray);
+                     var opt='';
+                     for(var i=0;i<connectionListArray.length;i++){
+                     console.log(connectionListArray[i]);
+                     opt+='<option value="'+connectionListArray[i]+'">'+connectionListArray[i]+'</option>';
+                     }
+                     return opt;
+
+                      }
+
+                          var nextFilter = 1;
+                            function addMoreFilter()
+                            {
+                            console.log("in add more function");
+                             var addto = "#deletedivFilter";
+                                    var addRemove = "#filterFormGroup" + (nextFilter);
+                                    nextFilter = nextFilter + 1;
+                                    var removeBtn = '<button id="remove' + (nextFilter) + '" class="btn btn-danger remove-me-filter" ><span class="glyphicon glyphicon-trash" ></span></button></div><div id="field">';
+                                    var newIn = '';
+                                    newIn = newIn +  '<div class="" id="filterFormGroup' + nextFilter + '">' ;
+                                    newIn = newIn +  '<div class="col-md-2">' ;
+                                    newIn = newIn +  '<select class="form-control" id="logicalOperator.' + nextFilter + '" name="logicalOperator.' + nextFilter + '">' ;
+                                     newIn = newIn +  '<option  value="AND" selected>AND</option>' ;
+                                     newIn = newIn +  '<option  value="OR">OR</option>';
+                                    newIn = newIn +  '</select>' ;
+                                    newIn = newIn +  '</div>' ;
+                                    newIn = newIn +  '<div class="col-md-3">' ;
+                                    newIn = newIn +  '<select class="form-control" id="column.' + nextFilter + '" name="column.' + nextFilter + '">' ;
+                                     newIn = newIn +  columnNames() ;
+                                    newIn = newIn +  '</select>' ;
+                                    newIn = newIn +  '</div>' ;
+                                    newIn = newIn +  '<div class="col-md-3">' ;
+                                    newIn = newIn +  '<select class="form-control" id="operator.' + nextFilter + '"onchange="changeFilter(this);"  name="operator.' + nextFilter + '">' ;
+                                     newIn = newIn +  operators() ;
+                                    newIn = newIn +  '</select>' ;
+                                    newIn = newIn +  '</div>' ;
+
+                                    newIn = newIn +  '<div class="col-md-3">' ;
+                                    newIn = newIn +  '<input class="form-control" id="filtervalue.' + nextFilter + '"placeholder="Filter value" name="filtervalue.' + nextFilter + '">' ;
+                                    newIn = newIn +  '</input>' ;
+                                    newIn = newIn +  '</div>' ;
+
+
+
+                                    newIn = newIn + removeBtn;
+                                    newIn = newIn +  '</div>' ;
+
+                                    var newInput = $(newIn);
+                                    var removeButton = $(removeBtn);
+                                    $(addto).before(newInput);
+
+                                    $("#filterFormGroup" + nextBroadcast).attr('data-source',$(addto).attr('data-source'));
+                                    $("#count").val(nextFilter);
+
+                                        $('.remove-me-filter').click(function(e){
+                                            e.preventDefault();
+                                            var fieldNum = this.id.charAt(this.id.length-1);
+                                            var fieldID = "#filterFormGroup" + fieldNum;
+                                            console.log($(this));
+                                            //$(this).remove();
+                                            $(fieldID).remove();
+                                        });
+                         }
+
+
+
+
+
+                     </script>
+
+
+
+
+
 
                                          <form class="form-horizontal" role="form" ng-if="genConfig.type == 'sort'">
 

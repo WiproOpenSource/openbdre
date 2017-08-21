@@ -497,20 +497,45 @@ console.log("property6 is "+value6);
 
 }
 
+var filterFinal ="";
+function filterFormIntoText(typeOf) {
+    var map = new Object();
+    var x = '';
+    x = document.getElementById(typeOf);
+    console.log(x);
+    var text = "";
+
+        var column=x.elements[0].value;
+        var operator=x.elements[1].value;
+        var filterValue=x.elements[2].value;
+        text= text+"NONE"+"::"+column+"::"+operator+"::"+filterValue+",";
+          var i;
+          for(i = 4; i < x.length-2; i=i+5) {
+          var logicalOp=x.elements[i].value;
+          var column=x.elements[i+1].value;
+          var operator=x.elements[i+2].value;
+          var filterValue=x.elements[i+3].value;
+         console.log(logicalOp+" "+column+" "+operator+" "+filterValue);
+         console.log(text);
+          text= text+logicalOp+"::"+column+"::"+operator+"::"+filterValue+",";
+    }
+
+    console.log(text);
+    filterFinal=text;
+}
+
+
 $scope.insertFilterProp=function(processId){
-var value1=document.getElementById("column").value;
-var value2=document.getElementById("operator").value;
-var value3=document.getElementById("filtervalue").value;
-console.log("values are "+value1+" "+value2+" "+value3);
 console.log("processId is "+processId);
-var map=new Object();
-map["column"]=value1;
-map["operator"]=value2;
-map["filtervalue"]=value3;
-    $.ajax({
+var mapFilter=new Object();
+filterFormIntoText('processFieldsForm3');
+console.log(filterFinal);
+mapFilter["filterData"]=filterFinal.substr(0, filterFinal.length-1);
+console.log(mapFilter);
+$.ajax({
             type: "POST",
-            url: "/mdrest/properties/"+processId,
-            data: jQuery.param(map),
+            url: "/mdrest/properties/addFilterProperties/"+processId,
+            data:jQuery.param(mapFilter),
             success: function(data) {
                 if(data.Result == "OK") {
                    var modal = document.getElementById('myModal');
@@ -523,6 +548,8 @@ map["filtervalue"]=value3;
             }
 
         });
+
+
 }
 $scope.insertHiveProp=function(processId){
 var value1 = $('#hiveColumn').val();
@@ -1342,7 +1369,7 @@ $scope.newPagePermissionType={};
 $scope.newPageUserRoles={};
 $scope.newPageWorkflowType = {};
 $scope.messageColumnListChart={};
-$scope.operators = ["equals","not equals", "contains","doesnot contains","begins with","ends with","greater than","lesser than"];
+$scope.operators = ["equals","is null","is not null","not equals", "contains","doesnot contains","begins with","ends with","greater than","lesser than"];
 $scope.aggregations = ["sum","max","min","count","mean"];
 $scope.intialiseNewProcessPage =function() {
 
