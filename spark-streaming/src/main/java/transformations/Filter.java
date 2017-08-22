@@ -4,6 +4,7 @@ import com.wipro.ats.bdre.md.api.GetProperties;
 import org.apache.spark.api.java.JavaRDD;
 import org.apache.spark.api.java.function.Function;
 import org.apache.spark.broadcast.Broadcast;
+import org.apache.spark.sql.Column;
 import org.apache.spark.sql.DataFrame;
 import org.apache.spark.sql.Row;
 import org.apache.spark.sql.SQLContext;
@@ -29,14 +30,16 @@ public class Filter implements Transformation {
         JavaPairDStream<String,WrapperMessage> prevDStream = prevDStreamMap.get(prevPid);
 
         GetProperties getProperties = new GetProperties();
-        Properties filterProperties = getProperties.getProperties(String.valueOf(pid), "default");
-        final String check = filterProperties.getProperty("operator");
+        Properties filterProperties = getProperties.getProperties(String.valueOf(pid), "filter");
+        /*final String check = filterProperties.getProperty("operator");
         final String filterValue = filterProperties.getProperty("filtervalue");
         final String colNameProperty = filterProperties.getProperty("column");
-        final String colName = colNameProperty.substring(0,colNameProperty.indexOf(":"));
-        System.out.println("operator = " + check);
+        final String colName = colNameProperty.substring(0,colNameProperty.indexOf(":"));*/
+        /*System.out.println("operator = " + check);
         System.out.println("filtervalue = " + filterValue);
-        System.out.println("colName = " + colName);
+        System.out.println("colName = " + colName);*/
+        int count = Integer.parseInt(filterProperties.getProperty("count"));
+
         JavaDStream<WrapperMessage> dStream = prevDStream.map(s -> s._2);
         dStream.print();
         JavaDStream<WrapperMessage> finalDStream = dStream.transform(new Function<JavaRDD<WrapperMessage>, JavaRDD<WrapperMessage>>() {
@@ -53,21 +56,93 @@ public class Filter implements Transformation {
                 dataFrame.show(100);
 
                 if (dataFrame != null ) {
-                    if (check.equals("equals")) {
-                        System.out.println("showing dataframe before filter ");
-                        dataFrame.show(100);
-                        System.out.println("colName = " + colName);
-                        System.out.println("schema = " + schema);
-                        filteredDF = dataFrame.filter(dataFrame.col(colName).equalTo(filterValue));
-                        filteredDF.show(100);
-                        System.out.println("showing dataframe after filter ");
-                    } else {
-                        System.out.println("showing dataframe before filter ");
-                        dataFrame.show(100);
-                        filteredDF = dataFrame.filter(dataFrame.col(colName).gt(filterValue));
-                        filteredDF.show(100);
-                        System.out.println("showing dataframe after filter ");
+                    System.out.println("showing dataframe before filter ");
+                    dataFrame.show(100);
+                    Column sqlDataFrame = null;
+                    for (int i=1;i<=count;i++)
+                    {
+                         String logicalOperator = filterProperties.getProperty("logicalOperator_"+i);
+                         String check = filterProperties.getProperty("operator_"+i);
+                         String colNameProperty = filterProperties.getProperty("column_"+i);
+                         String colName = colNameProperty.substring(0,colNameProperty.indexOf(":"));
+                         String filterValue = filterProperties.getProperty("filterValue_"+i);
+                         System.out.println("logicalOperator = " + logicalOperator);
+                         System.out.println("operator = " + check);
+                         System.out.println("filtervalue = " + filterValue);
+                         System.out.println("colName = " + colName);
+
+
+
+                        switch (logicalOperator)
+                        {
+                            case "NONE":
+                                switch (check)
+                                {
+                                    case "equals":
+                                        sqlDataFrame = dataFrame.col(colName).equalTo(filterValue);
+                                        break;
+                                    case "is null":
+                                        sqlDataFrame = dataFrame.col(colName).isNull();
+                                        break;
+                                    case "is not null":
+                                        sqlDataFrame = dataFrame.col(colName).isNotNull();
+                                        break;
+                                    case "greater than":
+                                        sqlDataFrame = dataFrame.col(colName).gt(filterValue);
+                                        break;
+                                }
+                                break;
+
+
+                            case "AND":
+                                switch (check)
+                                {
+                                    case "equals":
+                                        sqlDataFrame = sqlDataFrame.and(dataFrame.col(colName).equalTo(filterValue));
+                                        break;
+                                    case "is null":
+                                        sqlDataFrame = sqlDataFrame.and(dataFrame.col(colName).isNull());
+                                        break;
+                                    case "is not null":
+                                        sqlDataFrame = sqlDataFrame.and(dataFrame.col(colName).isNotNull());
+                                        break;
+                                    case "greater than":
+                                        sqlDataFrame = sqlDataFrame.and(dataFrame.col(colName).gt(filterValue));
+                                        break;
+                                }
+                                break;
+
+
+                            case "OR":
+                                switch (check)
+                                {
+                                    case "equals":
+                                        sqlDataFrame = sqlDataFrame.or(dataFrame.col(colName).equalTo(filterValue));
+                                        break;
+                                    case "is null":
+                                        sqlDataFrame = sqlDataFrame.or(dataFrame.col(colName).isNull());
+                                        break;
+                                    case "is not null":
+                                        sqlDataFrame = sqlDataFrame.or(dataFrame.col(colName).isNotNull());
+                                        break;
+                                    case "greater than":
+                                        sqlDataFrame = sqlDataFrame.or(dataFrame.col(colName).gt(filterValue));
+                                        break;
+                                }
+                                break;
+                        }
+
+
+
+
                     }
+
+                    filteredDF = dataFrame.filter(sqlDataFrame);
+                    filteredDF.show(100);
+                    System.out.println("showing dataframe after filter ");
+
+
+
                 }
                 JavaRDD<WrapperMessage> finalRDD = emptyRDD;
                 if (filteredDF != null)
