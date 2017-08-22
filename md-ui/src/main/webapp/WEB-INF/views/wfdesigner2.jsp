@@ -432,7 +432,7 @@
                                                     </div>
                                                 </div>
                                                 <hr/>
-                                                <form class="form-horizontal" role="form" ng-if="genConfig.type != 'hql'  && genConfig.type != 'hadoopstream' && genConfig.type != 'r'  && genConfig.type != 'spark' && genConfig.type != 'pig' && genConfig.type != 'shell' && genConfig.type != 'source' && genConfig.type != 'filter' && genConfig.type != 'sort' && genConfig.type != 'take' && genConfig.type != 'persist' && genConfig.type != 'repartition' && genConfig.type != 'hive' && genConfig.type!='join' && genConfig.type != 'MapToPair' && genConfig.type != 'Map' && genConfig.type != 'FlatMap' && genConfig.type != 'Reduce' && genConfig.type != 'ReduceByKey' && genConfig.type != 'window' && genConfig.type != 'GroupByKey' && genConfig.type != 'emitter' && genConfig.type != 'persistentStore' && genConfig.type != 'addFiles' && genConfig.type != 'aggregation'">
+                                                <form class="form-horizontal" role="form" ng-if="genConfig.type != 'hql'  && genConfig.type != 'hadoopstream' && genConfig.type != 'r'  && genConfig.type != 'spark' && genConfig.type != 'pig' && genConfig.type != 'shell' && genConfig.type != 'source' && genConfig.type != 'filter' && genConfig.type != 'sort' && genConfig.type != 'take' && genConfig.type != 'persist' && genConfig.type != 'repartition' && genConfig.type != 'hive' && genConfig.type!='join' && genConfig.type != 'MapToPair' && genConfig.type != 'Map' && genConfig.type != 'FlatMap' && genConfig.type != 'Reduce' && genConfig.type != 'ReduceByKey' && genConfig.type != 'window' && genConfig.type != 'GroupByKey' && genConfig.type != 'emitter' && genConfig.type != 'persistentStore' && genConfig.type != 'addFiles' && genConfig.type != 'aggregation'  && genConfig.type != 'deDuplication'">
                                                     <div class="form-group">
                                                         <label class="control-label col-sm-2" for="{{genConfig.key}}-propkey"><spring:message code="wfdesigner.page.propkey_name"/></label>
                                                         <div class="col-sm-10">
@@ -1096,7 +1096,88 @@
                                                                                 <div class="clearfix"></div>
                                                                                  <button type="submit" ng-click="insertHiveProp(chartViewModel.selectedProcess.processId)" class="btn btn-primary  pull-right">Save</button>
                                                                             </form>
+                                                 <form class="form-horizontal" role="form" ng-if="genConfig.type == 'deDuplication'">
 
+
+
+                                                       <div class="form-group" >
+                                                           <label for="deDuplicationType">Deduplication Type</label>
+                                                                <select class="form-control" onchange="changeDuplication()" id="deDuplicationType" name="deDuplicationType">
+                                                                 <option  value="WindowDeduplication" selected>WindowDeduplication</option>
+                                                                 <option  value="HbaseDeduplication">HbaseDeduplication</option>
+                                                                 </select>
+
+                                                       </div>
+                                                       <div class="clearfix"></div>
+
+
+                                                       <div  id="windowDeDuplication">
+                                                       <div class="form-group">
+                                                         <label class="control-label col-sm-2" for="{{genConfig.key}}-propkey">Column</label>
+                                                         <select class="form-control" id="windowDeDuplicationColumn" >
+                                                             <option ng-repeat="column in chartViewModel.columnList" id="{{$index}}" value="{{ column.Value }}">{{ column.DisplayText }}</option>
+                                                         </select>
+                                                     </div>
+                                                        <div class="form-group">
+                                                        <label class="control-label col-sm-2" for="{{genConfig.key}}-propkey">Window Duration</label>
+                                                        <input class="form-control" id="windowDuration" >
+
+                                                        </input>
+                                                    </div>
+                                                      <div class="clearfix"></div>
+                                                       </div>
+
+
+                                                       <div id="hbaseDeDuplication"style="display:none;">
+                                                          <div class="form-group">
+                                                            <label class="control-label col-sm-2" for="{{genConfig.key}}-propkey">Column</label>
+                                                            <select class="form-control" id="hbaseDeDuplicationColumn" >
+                                                                <option ng-repeat="column in chartViewModel.columnList" id="{{$index}}" value="{{ column.Value }}">{{ column.DisplayText }}</option>
+                                                            </select>
+                                                        </div>
+
+                                                        <div class="form-group">
+                                                        <label class="control-label col-sm-2" for="{{genConfig.key}}-propkey">Hbase Connection</label>
+
+                                                         <select class="form-control" id="hbaseConnectionName" name="connectionName">
+                                                         <option ng-repeat="connection in hbaseConnectionsList" id="{{$index}}" value="{{ connection.Value }}">{{ connection.DisplayText }}</option>
+                                                     </select>
+
+                                                    </div>
+
+                                                    <div class="form-group">
+                                                    <label class="control-label col-sm-2" for="{{genConfig.key}}-propkey">Table Name</label>
+                                                    <input class="form-control" id="hbaseTableName" >
+
+                                                    </input>
+                                                </div>
+
+                                                        <div class="clearfix"></div>
+                                                        </div>
+
+                                                        <div class="clearfix"></div>
+
+                             <div class="form-group">
+                                 <button type="Save" ng-click="saveDuplicationProperties(chartViewModel.selectedProcess.processId)" class="btn btn-primary  pull-right">Save</button>
+                             </div>
+
+                                                  </form>
+
+                                                <script>
+                                                function changeDuplication()
+                                                {
+                                                var duplicationType=document.getElementById("deDuplicationType").value;
+                                                if(duplicationType=="WindowDeduplication"){
+                                                 document.getElementById("windowDeDuplication").style.display='block';
+                                                 document.getElementById("hbaseDeDuplication").style.display='none';
+                                                }
+                                                else
+                                                {
+                                                document.getElementById("windowDeDuplication").style.display='none';
+                                                document.getElementById("hbaseDeDuplication").style.display='block';
+                                                }
+                                                }
+                                                </script>
 
                                                 <form class="form-horizontal" role="form" ng-if="genConfig.type == 'hql'">
 

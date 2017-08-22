@@ -558,6 +558,30 @@ console.log(value1);
  modal.style.display = "none";
 }
 
+$scope.saveDuplicationProperties=function(processId){
+var map=new Object();
+var duplicationType=document.getElementById("deDuplicationType").value;
+ if(duplicationType=="WindowDeduplication"){
+ var windowColumn=document.getElementById("windowDeDuplicationColumn").value;
+ var windowDuration=document.getElementById("windowDuration").value;
+ console.log(windowColumn+"  "+windowDuration);
+ map["windowDeDuplicationColumn"]=windowColumn;
+ map["windowDuration"]=windowDuration;
+ }
+
+ else
+ {
+ var hbaseColumn=document.getElementById("hbaseDeDuplicationColumn").value;
+ var hbaseConnection=document.getElementById("hbaseConnectionName").value;
+ var hbaseTableName=document.getElementById("hbaseTableName").value;
+ console.log(hbaseColumn+" "+hbaseConnection+" "+hbaseTableName);
+ map["hbaseDeDuplicationColumn"]=hbaseColumn;
+ map["hbaseConnectionName"]=hbaseConnection;
+ map["hbaseTableName"]=hbaseTableName;
+ }
+
+}
+
 
 
 var aggregationFinal ="";

@@ -603,6 +603,9 @@
 '65','join','Join','Join', 1,'true','join', 1
 '66','Sort','Sort','Sort', 1,'true','sort', 1
 '67','aggregation','Aggregation','Aggregation', 1,'true','aggregation', 1
+'80','default','DeDuplication','DeDuplication', 1,'true','deDuplication', 1
+
+
 
 '42','message','Kafka Properties','Kafka', 1,'true','source', 1
 '46','message','Twitter Properties','Twitter', 1,'true','source', 1
