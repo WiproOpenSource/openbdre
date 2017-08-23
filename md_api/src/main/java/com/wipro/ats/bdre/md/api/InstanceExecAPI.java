@@ -33,17 +33,20 @@ public class InstanceExecAPI extends MetadataAPIBase {
         InstanceExec instanceExec = new InstanceExec();
         Process process = processDAO.get(processId);
         instanceExec.setProcess(process);
-        ExecStatus execStatus = execStatusDAO.get(2);
-        instanceExec.setExecStatus(execStatus);
-        instanceExec.setApplicationId(applicationId);
+        ExecStatus execStatus = execStatusDAO.get(8);
+        if(instanceExec != null){
+            instanceExec.setExecStatus(execStatus);
+            instanceExec.setApplicationId(applicationId);
+        }
 
         instanceExecDAO.insert(instanceExec);
     }
 
-    public void updateInstanceExec(Integer processId){
+    public void updateInstanceExecToFailed(Integer processId){
         InstanceExec instanceExec = instanceExecDAO.getLatestExecofProcess(processId);
-        ExecStatus execStatus = execStatusDAO.get(8);
-        instanceExec.setExecStatus(execStatus);
+        ExecStatus execStatus = execStatusDAO.get(6);
+        if(instanceExec != null)
+            instanceExec.setExecStatus(execStatus);
         if(instanceExec.getExecStatus().getExecStateId() != 7) {
             instanceExecDAO.update(instanceExec);
         }
@@ -53,8 +56,10 @@ public class InstanceExecAPI extends MetadataAPIBase {
     public void  updateInstanceExecToRunning(Integer processId, String applicationId){
         InstanceExec instanceExec = instanceExecDAO.getLatestExecofProcess(processId);
         ExecStatus execStatus = execStatusDAO.get(2);
-        instanceExec.setExecStatus(execStatus);
-        instanceExec.setApplicationId(applicationId);
+        if(instanceExec != null){
+            instanceExec.setExecStatus(execStatus);
+            instanceExec.setApplicationId(applicationId);
+        }
         instanceExecDAO.update(instanceExec);
     }
 

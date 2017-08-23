@@ -204,7 +204,7 @@ public class StreamAnalyticsDriver implements Serializable {
             LOGGER.info("final exception = " + e);
             e.printStackTrace();
             InstanceExecAPI instanceExecAPI = new InstanceExecAPI();
-            instanceExecAPI.updateInstanceExec(parentProcessId);
+            instanceExecAPI.updateInstanceExecToFailed(parentProcessId);
             e.printStackTrace();
         }
     }
