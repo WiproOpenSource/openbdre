@@ -1,67 +1,65 @@
 package com.bts.customfunctions;
 
+import org.apache.spark.api.java.JavaRDD;
 import org.apache.spark.api.java.function.Function;
 import org.apache.spark.broadcast.Broadcast;
-import org.apache.spark.sql.Row;
-import org.apache.spark.sql.RowFactory;
+import org.apache.spark.rdd.RDD;
+import org.apache.spark.sql.*;
+import org.apache.spark.sql.catalyst.expressions.Expression;
+import org.apache.spark.sql.catalyst.expressions.Literal;
+import org.apache.spark.sql.types.StringType;
 import org.apache.spark.sql.types.StructType;
 import org.apache.spark.streaming.api.java.JavaPairDStream;
 import org.apache.spark.streaming.api.java.JavaStreamingContext;
+import org.h2.store.Data;
 import transformations.Custom;
+import transformations.Transformation;
 import util.WrapperMessage;
 
 import java.io.Serializable;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 /**
  * Created by cloudera on 8/6/17.
  */
-public class Enricher extends Custom implements Serializable {
+public class Enricher implements Transformation {
     @Override
-    public JavaPairDStream<String, WrapperMessage> convertJavaPairDstream(JavaPairDStream<String, WrapperMessage> inputDstream, Map<String, Broadcast<HashMap<String, String>>> broadcastMap, JavaStreamingContext ssc) {
-        JavaPairDStream<String,Row> inputRowStream = inputDstream.mapValues(s -> s.getRow());
+    public JavaPairDStream<String,WrapperMessage> transform(JavaRDD emptyRDD, Map<Integer, JavaPairDStream<String,WrapperMessage>> prevDStreamMap, Map<Integer, Set<Integer>> prevMap, Integer pid, StructType schema,Map<String,Broadcast<HashMap<String,String>>> broadcastMap,JavaStreamingContext jssc) {
+        //TODO: Fetch from DB props
+        String[] fieldsToBeEnriched = {"Status"};
+        //TODO: Fetch from DB props
         Broadcast<HashMap<String,String>> statusBroadCast = broadcastMap.get("enricher_message_status");
         System.out.println("statusBroadCast = " + statusBroadCast.value().toString());
-        inputDstream.print();
-        JavaPairDStream<String,Row> encrichedRowStream = inputRowStream.mapValues(new Function<Row, Row>() {
+
+        List<Integer> prevPidList = new ArrayList<>();
+        prevPidList.addAll(prevMap.get(pid));
+        Integer prevPid = prevPidList.get(0);
+        System.out.println("Inside filter prevPid = " + prevPid);
+        JavaPairDStream<String,WrapperMessage> prevDStream = prevDStreamMap.get(prevPid);
+        JavaPairDStream<String,Row> inputRowStream = prevDStream.mapValues(s -> s.getRow());
+
+        inputRowStream.print();
+        JavaPairDStream<String,Row> enrichedRowStream = inputRowStream.mapValues(new Function<Row, Row>() {
             @Override
             public Row call(Row row) throws Exception {
-                int indexOfStatus = row.fieldIndex("Status");
-                Long statusId = row.getLong(indexOfStatus);
-                System.out.println("statusId from input= " + statusId);
+                DataFrame partiallyEnrichedDataFrame = null;
+                for (String field : fieldsToBeEnriched) {
+                    List<Row> rowList = new ArrayList<>();
+                    rowList.add(row);
+                    JavaRDD<Row> rowRDD = jssc.sparkContext().parallelize(rowList);
+                    SQLContext sqlContext = SQLContext.getOrCreate(rowRDD.context());
 
-                String statusValue = statusBroadCast.value().get(statusId.toString());
-                System.out.println("statusValue from hbase= " + statusValue);
-                //scala.collection.Seq<Object> rowSeq = row.toSeq();
-
-                int noOfElements = row.size();
-                Object[] attributes = new Object[noOfElements];
-                for(int i=0; i<noOfElements; i++){
-                    attributes[i] = row.get(i);
-                    if(i == indexOfStatus){
-                        attributes[i] = statusValue;
-                    }
+                    if(partiallyEnrichedDataFrame==null)
+                        partiallyEnrichedDataFrame=sqlContext.createDataFrame(rowRDD, schema);
+                    String enrichedValue = statusBroadCast.value().get(partiallyEnrichedDataFrame.select(field).head());
+                     partiallyEnrichedDataFrame = partiallyEnrichedDataFrame.withColumn(field, functions.lit(enrichedValue));
                 }
-                Row outputRow = RowFactory.create(attributes);
-                return outputRow;
+                DataFrame completelyEnrichedDataFrame = partiallyEnrichedDataFrame;
+                return completelyEnrichedDataFrame.rdd().take(1)[0];
             }
         });
-        encrichedRowStream.print();
-        return encrichedRowStream.mapValues(s -> new WrapperMessage(s));
+        enrichedRowStream.print();
+        return enrichedRowStream.mapValues(s -> new WrapperMessage(s));
     }
 
-    @Override
-    public JavaPairDStream<String, WrapperMessage> convertMultiplePairDstream(Map<Integer, JavaPairDStream<String, WrapperMessage>> prevDStreamMap, Map<Integer, Set<Integer>> prevMap, Integer pid, StructType schema, Map<String, Broadcast<HashMap<String, String>>> broadcastMap, JavaStreamingContext jssc) {
-        return null;
-    }
 }
-
-/*class EncrichFromHBase implements Function {
-
-    @Override
-    public Object call(Object o) throws Exception {
-        return null;
-    }
-} */
