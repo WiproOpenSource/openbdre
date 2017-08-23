@@ -580,6 +580,25 @@ var duplicationType=document.getElementById("deDuplicationType").value;
  map["hbaseTableName"]=hbaseTableName;
  }
 
+$.ajax({
+            type: "POST",
+            url: "/mdrest/properties/addDeDuplicationProperties/"+processId,
+            data: jQuery.param(map),
+            success: function(data) {
+                if(data.Result == "OK") {
+                    var modal = document.getElementById('myModal');
+                     modal.style.display = "none";
+                     alertBox("info","DeDuplication properties added");
+                }
+                else
+                alertBox("warning","Error occured");
+
+            }
+
+        });
+
+
+
 }
 
 
