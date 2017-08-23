@@ -75,3 +75,4 @@
 78,'operator_GroupByKey',41
 79,'operator_SortByKey',41
 80,'operator_DeDuplication',41
+81,'operator_Custom',41

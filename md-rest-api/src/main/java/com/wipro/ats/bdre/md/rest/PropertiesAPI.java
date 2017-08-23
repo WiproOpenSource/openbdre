@@ -257,6 +257,17 @@ public class PropertiesAPI extends MetadataAPIBase {
                 count++;
             }
 
+            com.wipro.ats.bdre.md.dao.jpa.Properties countProperties = new com.wipro.ats.bdre.md.dao.jpa.Properties();
+            PropertiesId countPropertiesId=new PropertiesId();
+            countPropertiesId.setProcessId(processId);
+            countPropertiesId.setPropKey("broadcastCount");
+            countProperties.setId(countPropertiesId);
+            countProperties.setConfigGroup("broadcast");
+            countProperties.setDescription("Broadcast Count");
+            countProperties.setProcess(process);
+            countProperties.setPropValue(String.valueOf(count-1));
+            propertiesDAO.insert(countProperties);
+
             restWrapper = new RestWrapper(null, RestWrapper.OK);
             LOGGER.info("Record with ID:" + processId + " deleted from Properties by User:" + principal.getName());
 

@@ -1071,6 +1071,32 @@ map["connectionName"]=value1;
         });
 }
 
+$scope.insertCustomProp=function(parentProcessId,processId){
+var value=document.getElementById("executorPlugin").value;
+$scope.uploadJar(parentProcessId,processId,'customJar');
+
+console.log("values are "+value);
+console.log("processId is "+processId);
+var map=new Object();
+map["executor-plugin"]=value;
+    $.ajax({
+            type: "POST",
+            url: "/mdrest/properties/"+processId,
+            data: jQuery.param(map),
+            success: function(data) {
+                if(data.Result == "OK") {
+                   var modal = document.getElementById('myModal');
+                    modal.style.display = "none";
+                    alertBox("info","Custom properties added");
+                }
+                else
+                alertBox("warning","Error occured");
+
+            }
+
+        });
+}
+
 $scope.insertPersistentStoreProp=function(processId){
 var value1=document.getElementById("persistentStoreConnectionName").value;
 console.log("values are "+value1);

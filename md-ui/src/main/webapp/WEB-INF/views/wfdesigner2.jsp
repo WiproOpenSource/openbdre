@@ -432,7 +432,7 @@
                                                     </div>
                                                 </div>
                                                 <hr/>
-                                                <form class="form-horizontal" role="form" ng-if="genConfig.type != 'hql'  && genConfig.type != 'hadoopstream' && genConfig.type != 'r'  && genConfig.type != 'spark' && genConfig.type != 'pig' && genConfig.type != 'shell' && genConfig.type != 'source' && genConfig.type != 'filter' && genConfig.type != 'sort' && genConfig.type != 'take' && genConfig.type != 'persist' && genConfig.type != 'repartition' && genConfig.type != 'hive' && genConfig.type!='join' && genConfig.type != 'MapToPair' && genConfig.type != 'Map' && genConfig.type != 'FlatMap' && genConfig.type != 'Reduce' && genConfig.type != 'ReduceByKey' && genConfig.type != 'window' && genConfig.type != 'GroupByKey' && genConfig.type != 'emitter' && genConfig.type != 'persistentStore' && genConfig.type != 'addFiles' && genConfig.type != 'aggregation'  && genConfig.type != 'deDuplication'">
+                                                <form class="form-horizontal" role="form" ng-if="genConfig.type != 'hql'  && genConfig.type != 'hadoopstream' && genConfig.type != 'r'  && genConfig.type != 'spark' && genConfig.type != 'pig' && genConfig.type != 'shell' && genConfig.type != 'source' && genConfig.type != 'filter' && genConfig.type != 'sort' && genConfig.type != 'take' && genConfig.type != 'persist' && genConfig.type != 'repartition' && genConfig.type != 'hive' && genConfig.type!='join' && genConfig.type != 'MapToPair' && genConfig.type != 'Map' && genConfig.type != 'FlatMap' && genConfig.type != 'Reduce' && genConfig.type != 'ReduceByKey' && genConfig.type != 'window' && genConfig.type != 'GroupByKey' && genConfig.type != 'emitter' && genConfig.type != 'persistentStore' && genConfig.type != 'addFiles' && genConfig.type != 'aggregation'  && genConfig.type != 'deDuplication' && genConfig.type != 'Custom'">
                                                     <div class="form-group">
                                                         <label class="control-label col-sm-2" for="{{genConfig.key}}-propkey"><spring:message code="wfdesigner.page.propkey_name"/></label>
                                                         <div class="col-sm-10">
@@ -795,7 +795,30 @@
                                                  <div class="clearfix"></div>
                                                    <button type="submit" ng-click="insertFlatMapProp(chartViewModel.selectedProcess.parentProcessId,chartViewModel.selectedProcess.processId)" class="btn btn-primary  pull-right">Save</button>
                                               </form>
-
+                                                <form class="form-horizontal" role="form" ng-if="genConfig.type == 'Custom'">
+                                               <div class="form-group">
+                                                      <label class="control-label col-sm-2" for="executorPlugin">Executor Plugin</label>
+                                                      <input type="text" class="form-control col-sm-10" id="executorPlugin">
+                                               </div>
+                                                <div class="form-group">
+                                                   <label class="control-label col-sm-2" for="uploadJar">Upload Jar</label>
+                                                   <input type="file" class="form-control col-sm-10" style="opacity: 100; position: inherit;" id="customJar"></input>
+                                               </div>
+                                               <div class="clearfix"></div>
+                                                 <button type="submit" ng-click="insertCustomProp(chartViewModel.selectedProcess.parentProcessId,chartViewModel.selectedProcess.processId)" class="btn btn-primary  pull-right">Save</button>
+                                            </form>
+                                             <form class="form-horizontal" role="form" ng-if="genConfig.type == 'CustomFilter'">
+                                               <div class="form-group">
+                                                      <label class="control-label col-sm-2" for="executorPlugin">Executor Plugin</label>
+                                                      <input type="text" class="form-control col-sm-10" id="executorPlugin">
+                                               </div>
+                                                <div class="form-group">
+                                                   <label class="control-label col-sm-2" for="uploadJar">Upload Jar</label>
+                                                   <input type="file" class="form-control col-sm-10" style="opacity: 100; position: inherit;" id="customFilterJar"></input>
+                                               </div>
+                                               <div class="clearfix"></div>
+                                                 <button type="submit" ng-click="insertCustomFilterProp(chartViewModel.selectedProcess.parentProcessId,chartViewModel.selectedProcess.processId)" class="btn btn-primary  pull-right">Save</button>
+                                            </form>
 
                                                 <form class="form-horizontal" role="form" ng-if="genConfig.type == 'Reduce'">
                                                  <div class="form-group">

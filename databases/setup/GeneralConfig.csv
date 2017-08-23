@@ -626,6 +626,7 @@
 '76','default','Reduce','Reduce', 1,'true','Reduce', 1
 '77','default','ReduceByKey','ReduceByKey', 1,'true','ReduceByKey', 1
 '78','default','GroupByKey','GroupByKey', 1,'true','GroupByKey', 1
+'81','default','Custom','Custom', 1,'true','Custom', 1
 
 
 '52','connection','Kafka Properties','Kafka', 1,'true','emitter', 1

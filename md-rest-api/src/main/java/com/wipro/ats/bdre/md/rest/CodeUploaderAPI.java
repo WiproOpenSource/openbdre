@@ -20,11 +20,11 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.wipro.ats.bdre.MDConfig;
 import com.wipro.ats.bdre.md.api.base.MetadataAPIBase;
 import com.wipro.ats.bdre.md.beans.DefaultMessageSchema;
+import com.wipro.ats.bdre.md.rest.util.JSONObject;
+import com.wipro.ats.bdre.md.rest.util.XMLParser;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 import org.apache.log4j.Logger;
-import org.json.JSONObject;
-import org.json.XML;
 import org.jsonschema2pojo.SchemaGenerator;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
@@ -44,7 +44,6 @@ import java.util.*;
 @Controller
 @RequestMapping("/filehandler")
 public class CodeUploaderAPI extends MetadataAPIBase {
-
     private static final Logger LOGGER = Logger.getLogger(CodeUploaderAPI.class);
     private static final String UPLOADBASEDIRECTORY = "upload.base-directory";
 
@@ -229,8 +228,15 @@ public class CodeUploaderAPI extends MetadataAPIBase {
                 if(msgFormat.equalsIgnoreCase("XML")){
                     String xmlString = FileUtils.readFileToString(new File(uploadLocation + "/" + name));
                     System.out.println("original xmlString = " + xmlString);
-                    JSONObject xmlJSONObj = XML.toJSONObject(xmlString);
+                    JSONObject xmlJSONObj = XMLParser.toJSONObject(xmlString);
                     String xmlJsonString = xmlJSONObj.toString();
+                    /*String modifiedInputXML = "<Root> " + xmlString + " </Root>";
+                    XmlMapper xmlMapper = new XmlMapper();
+                    JsonNode node = xmlMapper.readTree(modifiedInputXML.getBytes());
+
+                    ObjectMapper jsonMapper = new ObjectMapper();
+                    String xmlJsonString = jsonMapper.writeValueAsString(node);
+*/
                     System.out.println("xml to JsonString = " + xmlJsonString);
                     FileUtils.writeStringToFile(new File(uploadLocation + "/" + name), xmlJsonString,false);
                 }
@@ -317,17 +323,12 @@ public class CodeUploaderAPI extends MetadataAPIBase {
             else {
                 columnsList.add(me.getKey());
                 String columnName = (key+"."+me.getKey()).substring(1);
-                columnsDataTypesMap.put(columnName, childJson.get("type").asText());
+                String datatype = childJson.get("type").asText();
+                columnsDataTypesMap.put(columnName, datatype);
             }
 
         }
     }
-
-
-
-
-
-
 
 
     @RequestMapping(value = "/upload/{parentProcessId}/{subDir}/{fileName:.+}", method = RequestMethod.GET)
