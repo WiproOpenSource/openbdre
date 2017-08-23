@@ -35,9 +35,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.security.Principal;
-import java.util.ArrayList;
-import java.util.LinkedHashMap;
-import java.util.List;
+import java.util.*;
 
 /**
  * Created by arijit on 1/9/15.
@@ -714,6 +712,42 @@ public class PropertiesAPI extends MetadataAPIBase {
         }
         return restWrapper;
     }
+
+    @RequestMapping(value = "/addDeDuplicationProperties/{id}", method = RequestMethod.POST)
+    @ResponseBody
+    public RestWrapper addDeDuplicationProperties(@PathVariable("id") Integer processId, @RequestParam Map<String,String> map,HttpServletRequest request, Principal principal) {
+        RestWrapper restWrapper = null;
+        try {
+            LOGGER.info("processId is "+processId);
+            LOGGER.info("map data is "+map);
+            Process process=processDAO.get(processId);
+            for (Map.Entry<String, String> entry : map.entrySet())
+            {
+
+                com.wipro.ats.bdre.md.dao.jpa.Properties jpaProperties= new com.wipro.ats.bdre.md.dao.jpa.Properties();
+                PropertiesId jpaPropertiesId=new PropertiesId();
+                jpaPropertiesId.setProcessId(processId);
+                jpaPropertiesId.setPropKey(entry.getKey());
+
+                jpaProperties.setId(jpaPropertiesId);
+                jpaProperties.setProcess(process);
+                jpaProperties.setConfigGroup("deduplication");
+                jpaProperties.setDescription("deduplication properties");
+                jpaProperties.setPropValue(entry.getValue());
+                propertiesDAO.insert(jpaProperties);
+            }
+            restWrapper = new RestWrapper(null, RestWrapper.OK);
+        } catch (MetadataException e) {
+            LOGGER.error(e);
+            restWrapper = new RestWrapper(e.getMessage(), RestWrapper.ERROR);
+        }
+        catch (SecurityException e) {
+            LOGGER.error(e);
+            restWrapper = new RestWrapper(e.getMessage(), RestWrapper.ERROR);
+        }
+        return restWrapper;
+    }
+
 
     @Override
     public Object execute(String[] params) {

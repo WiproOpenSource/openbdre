@@ -61,15 +61,15 @@ public class Filter implements Transformation {
                     Column sqlDataFrame = null;
                     for (int i=1;i<=count;i++)
                     {
-                         String logicalOperator = filterProperties.getProperty("logicalOperator_"+i);
-                         String check = filterProperties.getProperty("operator_"+i);
-                         String colNameProperty = filterProperties.getProperty("column_"+i);
-                         String colName = colNameProperty.substring(0,colNameProperty.indexOf(":"));
-                         String filterValue = filterProperties.getProperty("filterValue_"+i);
-                         System.out.println("logicalOperator = " + logicalOperator);
-                         System.out.println("operator = " + check);
-                         System.out.println("filtervalue = " + filterValue);
-                         System.out.println("colName = " + colName);
+                        String logicalOperator = filterProperties.getProperty("logicalOperator_"+i);
+                        String check = filterProperties.getProperty("operator_"+i);
+                        String colNameProperty = filterProperties.getProperty("column_"+i);
+                        String colName = colNameProperty.substring(0,colNameProperty.indexOf(":"));
+                        String filterValue = filterProperties.getProperty("filterValue_"+i);
+                        System.out.println("logicalOperator = " + logicalOperator);
+                        System.out.println("operator = " + check);
+                        System.out.println("filtervalue = " + filterValue);
+                        System.out.println("colName = " + colName);
 
 
 

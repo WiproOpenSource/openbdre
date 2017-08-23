@@ -45,7 +45,14 @@ public class JsonSchemaReader {
 
         for (Node each : node.getChildNodes()) {
             if(each.isLeaf()){
-                StructField structField = DataTypes.createStructField(each.getColumn(), dataTypesMap.get(each.getDataType()),true);
+                String dataType = each.getDataType();
+                StructField structField = null;
+                if(dataType.equalsIgnoreCase("Integer") ||dataType.equalsIgnoreCase("Long") || dataType.equalsIgnoreCase("Short") || dataType.equalsIgnoreCase("Byte") ) {
+                    structField = DataTypes.createStructField(each.getColumn(), dataTypesMap.get("Long"), true);
+                    System.out.println("Long datatype for "+each.getColumn());
+                }
+                else
+                    structField= DataTypes.createStructField(each.getColumn(), dataTypesMap.get(dataType),true);
                 structFieldList.add(structField);
             }
             else {

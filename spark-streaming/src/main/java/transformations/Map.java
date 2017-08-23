@@ -7,6 +7,7 @@ import org.apache.spark.broadcast.Broadcast;
 import org.apache.spark.sql.Row;
 import org.apache.spark.sql.types.StructType;
 import org.apache.spark.streaming.api.java.JavaPairDStream;
+import org.apache.spark.streaming.api.java.JavaStreamingContext;
 import util.WrapperMessage;
 
 import java.util.*;
@@ -16,7 +17,7 @@ import java.util.*;
  */
 public class Map implements Transformation {
     @Override
-    public JavaPairDStream<String, WrapperMessage> transform(JavaRDD emptyRDD, java.util.Map<Integer, JavaPairDStream<String, WrapperMessage>> prevDStreamMap, java.util.Map<Integer, Set<Integer>> prevMap, Integer pid, StructType schema, java.util.Map<String,Broadcast<HashMap<String,String>>> broadcastMap) {
+    public JavaPairDStream<String, WrapperMessage> transform(JavaRDD emptyRDD, java.util.Map<Integer, JavaPairDStream<String, WrapperMessage>> prevDStreamMap, java.util.Map<Integer, Set<Integer>> prevMap, Integer pid, StructType schema, java.util.Map<String,Broadcast<HashMap<String,String>>> broadcastMap,JavaStreamingContext jssc) {
         List<Integer> prevPidList = new ArrayList<>();
         prevPidList.addAll(prevMap.get(pid));
         Integer prevPid = prevPidList.get(0);

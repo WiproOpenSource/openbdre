@@ -1,6 +1,5 @@
 package driver;
 
-import com.databricks.spark.xml.XmlReader;
 import com.wipro.ats.bdre.GetParentProcessType;
 import com.wipro.ats.bdre.md.api.*;
 import com.wipro.ats.bdre.md.beans.ProcessInfo;
@@ -35,9 +34,12 @@ import scala.Tuple2;
 import transformations.Custom;
 import transformations.Transformation;
 import util.WrapperMessage;
+import xmlparsing.XML;
 
 import java.io.Serializable;
 import java.util.*;
+
+//import com.fasterxml.jackson.dataformat.xml.XmlMapper;
 
 
 /**
@@ -200,6 +202,7 @@ public class StreamAnalyticsDriver implements Serializable {
             ssc.awaitTermination();
         }catch (Exception e){
             LOGGER.info("final exception = " + e);
+            e.printStackTrace();
             InstanceExecAPI instanceExecAPI = new InstanceExecAPI();
             instanceExecAPI.updateInstanceExec(parentProcessId);
             e.printStackTrace();
@@ -289,10 +292,24 @@ public class StreamAnalyticsDriver implements Serializable {
         return new WrapperMessage(RowFactory.create(attributes));
     }
 
-    public static Row convertXMLStrintToRow(Tuple2<String, String> inputTuple ,SQLContext sqlContext){
-        String xmlString = inputTuple._2;
-        return sqlContext.read().format("com.databricks.spark.xml").load(xmlString).head();
-    }
+   public static String parseXMLString(Tuple2<String, String> inputTuple){
+       String xmlJsonString = null;
+       try {
+           String xmlString = inputTuple._2;
+           xmlJsonString = XML.toJSONObject(xmlString).toString();
+          // String modifiedInputXML = "<Root> " + xmlString + " </Root>";
+          /* XmlMapper xmlMapper = new XmlMapper();
+           JsonNode node = xmlMapper.readTree(modifiedInputXML.getBytes());
+
+           ObjectMapper jsonMapper = new ObjectMapper();
+           xmlJsonString = jsonMapper.writeValueAsString(node);*/
+       }
+       catch (Exception e){
+           e.printStackTrace();
+       }
+       return xmlJsonString;
+
+   }
 
 
 
@@ -334,20 +351,17 @@ public class StreamAnalyticsDriver implements Serializable {
                         @Override
                         public JavaPairRDD<String, WrapperMessage> call(JavaPairRDD<String, String> inputPairRDD) throws Exception {
                             JavaPairRDD<String, WrapperMessage> outputPairRdd = null;
-                            //JavaRDD<Row> rowJavaRDD = inputPairRDD.map(t -> convertXMLStrintToRow(t,sqlContext));
-                            JavaRDD<String> javaRDD = inputPairRDD.map(s -> s._2);
-                            JavaRDD<Row> rowJavaRDD = new XmlReader().xmlRdd(sqlContext, javaRDD.rdd()).javaRDD();
+                            JavaRDD<String> javaRDD = inputPairRDD.map(t -> parseXMLString(t));
+                            javaRDD.foreach(s -> System.out.println("rdd xmljson string "+s));
 
-                          // JavaRDD<String> javaRDD = inputPairRDD.map(s -> s._2);
 
-                           // List<Row> rowList = new ArrayList<Row>();
-                          /* javaRDD.foreach(new VoidFunction<String>() {
-                                @Override
-                                public void call(String singleXML) throws Exception {
-                                    rowList.add(sqlContext.read().format("com.databricks.spark.xml").load(singleXML).head());
-                                }
-                            });*/
-                           // JavaRDD<Row> rowJavaRDD = ssc.sparkContext().parallelize(rowList);
+                            JavaRDD<Row> rowJavaRDD = sqlContext.read().json(javaRDD).javaRDD();
+                            System.out.println(" Printing schema of kafka message" );
+                            System.out.println("rdd schema = " + sqlContext.read().json(javaRDD).schema());
+                            javaRDD.foreach(s -> System.out.println("rdd xmljson Row "+s));
+                            //new XmlReader().xmlRdd(sqlContext, javaRDD.rdd()).printSchema();
+                            //JavaRDD<Row> rowJavaRDD = new XmlReader().xmlRdd(sqlContext, javaRDD.rdd()).javaRDD();
+
                             rowJavaRDD.take(15);
                             outputPairRdd = rowJavaRDD.mapToPair(row -> new Tuple2<String, WrapperMessage>(null,new WrapperMessage(row)));
                             return outputPairRdd ;
@@ -424,7 +438,7 @@ public class StreamAnalyticsDriver implements Serializable {
                         else {
                             Class transformationClass = Class.forName(transformationClassName);
                             Transformation transformationObject = (Transformation) transformationClass.newInstance();
-                            JavaPairDStream<String, WrapperMessage> dStreamPostTransformation = transformationObject.transform(emptyRDD, transformedDStreamMap, prevMap, pid, schema,broadcastMap);
+                            JavaPairDStream<String, WrapperMessage> dStreamPostTransformation = transformationObject.transform(emptyRDD, transformedDStreamMap, prevMap, pid, schema,broadcastMap,ssc);
 
                             transformedDStreamMap.put(pid, dStreamPostTransformation);
                         }
