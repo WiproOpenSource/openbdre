@@ -1,4 +1,4 @@
-package com.bts.customfunctions;
+package transformations;
 
 import org.apache.spark.api.java.JavaRDD;
 import org.apache.spark.api.java.function.Function;
@@ -18,13 +18,14 @@ import util.WrapperMessage;
 
 import java.io.Serializable;
 import java.util.*;
+import java.util.Map;
 
 /**
  * Created by cloudera on 8/6/17.
  */
 public class Enricher implements Transformation {
     @Override
-    public JavaPairDStream<String,WrapperMessage> transform(JavaRDD emptyRDD, Map<Integer, JavaPairDStream<String,WrapperMessage>> prevDStreamMap, Map<Integer, Set<Integer>> prevMap, Integer pid, StructType schema,Map<String,Broadcast<HashMap<String,String>>> broadcastMap,JavaStreamingContext jssc) {
+    public JavaPairDStream<String,WrapperMessage> transform(JavaRDD emptyRDD, java.util.Map<Integer, JavaPairDStream<String,WrapperMessage>> prevDStreamMap, java.util.Map<Integer, Set<Integer>> prevMap, Integer pid, StructType schema, Map<String,Broadcast<HashMap<String,String>>> broadcastMap, JavaStreamingContext jssc) {
         //TODO: Fetch from DB props
         String[] fieldsToBeEnriched = {"Status"};
         //TODO: Fetch from DB props
@@ -55,7 +56,9 @@ public class Enricher implements Transformation {
                      partiallyEnrichedDataFrame = partiallyEnrichedDataFrame.withColumn(field, functions.lit(enrichedValue));
                 }
                 DataFrame completelyEnrichedDataFrame = partiallyEnrichedDataFrame;
-                return completelyEnrichedDataFrame.rdd().take(1)[0];
+                RDD<Row> rddToReturn = completelyEnrichedDataFrame.rdd();
+                Row[] rowToReturn = (Row[])rddToReturn.take(1);
+                return rowToReturn[0];
             }
         });
         enrichedRowStream.print();

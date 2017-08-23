@@ -24,7 +24,7 @@
     <version>1.1-SNAPSHOT</version>
     <modules>
         <module>md-setup</module>
-        <module>workflow-generator</module>
+        <!--<module>workflow-generator</module>-->
         <module>md-commons</module>
         <module>md-rest-api</module>
         <module>md-ui</module>
@@ -34,28 +34,28 @@
         <module>login-module</module>
         <module>auth-rest-api</module>
         <module>process-deploy</module>
-        <module>flume-conf-generator</module>
+        <!--<module>flume-conf-generator</module>-->
         <module>jaas-login</module>
         <module>md-ear</module>
-        <module>etl-driver</module>
+       <!-- <module>etl-driver</module>
         <module>data-extraction</module>
-        <module>data-export</module>
+        <module>data-export</module>-->
         <module>im-commons</module>
-        <module>file-mon</module>
+        <!--<module>file-mon</module>-->
         <!--<module>eventing-fwk</module>-->
         <module>hive-data-gen</module>
         <module>dq</module>
         <!-- <module>hive-io</module>-->
-        <module>data-lineage</module>
-        <module>hive-plugin</module>
+        <!--<module>data-lineage</module>
+        <module>hive-plugin</module>-->
         <module>im-crawler</module>
-        <module>flume-hdfs-sink</module>
-        <module>spark-core</module>
+        <!--<module>flume-hdfs-sink</module>-->
+        <!--<module>spark-core</module>-->
         <module>genconf-dump</module>
         <module>dot-gen</module>
-        <module>cluster-migration</module>
-        <module>analytic-ui-generator</module>
-        <module>semantic-core</module>
+        <!--<module>cluster-migration</module>-->
+        <!--<module>analytic-ui-generator</module>-->
+        <!--<module>semantic-core</module>-->
         <module>spark-streaming</module>
     </modules>
 

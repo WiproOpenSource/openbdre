@@ -59,8 +59,9 @@ public class InstanceExecAPI extends MetadataAPIBase {
         if(instanceExec != null){
             instanceExec.setExecStatus(execStatus);
             instanceExec.setApplicationId(applicationId);
+            instanceExecDAO.update(instanceExec);
         }
-        instanceExecDAO.update(instanceExec);
+
     }
 
     @Override
