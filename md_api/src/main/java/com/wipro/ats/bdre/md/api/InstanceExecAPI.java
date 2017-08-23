@@ -3,7 +3,6 @@ package com.wipro.ats.bdre.md.api;
 import com.wipro.ats.bdre.md.api.base.MetadataAPIBase;
 import com.wipro.ats.bdre.md.dao.ExecStatusDAO;
 import com.wipro.ats.bdre.md.dao.InstanceExecDAO;
-import com.wipro.ats.bdre.md.dao.MessagesDAO;
 import com.wipro.ats.bdre.md.dao.ProcessDAO;
 import com.wipro.ats.bdre.md.dao.jpa.ExecStatus;
 import com.wipro.ats.bdre.md.dao.jpa.InstanceExec;
@@ -34,10 +33,9 @@ public class InstanceExecAPI extends MetadataAPIBase {
         Process process = processDAO.get(processId);
         instanceExec.setProcess(process);
         ExecStatus execStatus = execStatusDAO.get(8);
-        if(instanceExec != null){
-            instanceExec.setExecStatus(execStatus);
-            instanceExec.setApplicationId(applicationId);
-        }
+
+        instanceExec.setExecStatus(execStatus);
+        instanceExec.setApplicationId(applicationId);
 
         instanceExecDAO.insert(instanceExec);
     }
