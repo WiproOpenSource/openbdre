@@ -561,6 +561,7 @@ console.log(value1);
 $scope.saveDuplicationProperties=function(processId){
 var map=new Object();
 var duplicationType=document.getElementById("deDuplicationType").value;
+ map["type"]=duplicationType;
  if(duplicationType=="WindowDeduplication"){
  var windowColumn=document.getElementById("windowDeDuplicationColumn").value;
  var windowDuration=document.getElementById("windowDuration").value;

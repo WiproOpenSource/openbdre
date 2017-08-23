@@ -109,6 +109,25 @@ public class CustomJoin extends Custom{
         return hbaseContext;
     }
 }
+class HbaseUtils {
+
+    /**
+     * This method is used to create and return HBase configuration
+     * @param zkIp zookeeper IP
+     * @param zkPort zookeeper port
+     * @param hbIp HBase master IP
+     * @param hbPort HBase master port
+     * @return
+     */
+    public static Configuration getConfiguration(String zkIp, String zkPort, String hbIp, String hbPort) {
+        //Create HBase configuration object
+        final Configuration hconf = HBaseConfiguration.create();
+        hconf.set("hbase.zookeeper.quorum", zkIp);
+        hconf.set("hbase.zookeeper.property.clientPort", zkPort);
+        hconf.set("hbase.master", hbIp + ":" + hbPort);
+        return hconf;
+    }
+}
 
 class RemoveResolvedFromUnResolvedTable implements Serializable,Function<JavaRDD<byte[]>, Void>{
 
@@ -210,6 +229,7 @@ class LinkResolverInMemory implements Function4<Time, String,com.google.common.b
 
     }
 }
+
 
 
 class BulkGetRowKeyByKey2 implements Serializable,Function2<JavaPairRDD<String, Tuple3<Row, Row, Row>>, Time, JavaPairRDD<String, Tuple3<String, String, String>>> {
