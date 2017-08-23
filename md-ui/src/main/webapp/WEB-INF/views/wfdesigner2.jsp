@@ -120,6 +120,11 @@
                                   margin-bottom:1%;
                               }
 
+                           .remove-me-enricher{
+                                    margin-bottom: 0%;
+                                    margin-top: 1.5%;
+                             }
+
                            #deletediv{
                            padding-left: 0px;
                            }
@@ -432,7 +437,7 @@
                                                     </div>
                                                 </div>
                                                 <hr/>
-                                                <form class="form-horizontal" role="form" ng-if="genConfig.type != 'hql'  && genConfig.type != 'hadoopstream' && genConfig.type != 'r'  && genConfig.type != 'spark' && genConfig.type != 'pig' && genConfig.type != 'shell' && genConfig.type != 'source' && genConfig.type != 'filter' && genConfig.type != 'sort' && genConfig.type != 'take' && genConfig.type != 'persist' && genConfig.type != 'repartition' && genConfig.type != 'hive' && genConfig.type!='join' && genConfig.type != 'MapToPair' && genConfig.type != 'Map' && genConfig.type != 'FlatMap' && genConfig.type != 'Reduce' && genConfig.type != 'ReduceByKey' && genConfig.type != 'window' && genConfig.type != 'GroupByKey' && genConfig.type != 'emitter' && genConfig.type != 'persistentStore' && genConfig.type != 'addFiles' && genConfig.type != 'aggregation'  && genConfig.type != 'deDuplication'">
+                                                <form class="form-horizontal" role="form" ng-if="genConfig.type != 'hql'  && genConfig.type != 'hadoopstream' && genConfig.type != 'r'  && genConfig.type != 'spark' && genConfig.type != 'pig' && genConfig.type != 'shell' && genConfig.type != 'source' && genConfig.type != 'filter' && genConfig.type != 'sort' && genConfig.type != 'take' && genConfig.type != 'persist' && genConfig.type != 'repartition' && genConfig.type != 'hive' && genConfig.type!='join' && genConfig.type != 'MapToPair' && genConfig.type != 'Map' && genConfig.type != 'FlatMap' && genConfig.type != 'Reduce' && genConfig.type != 'ReduceByKey' && genConfig.type != 'window' && genConfig.type != 'GroupByKey' && genConfig.type != 'emitter' && genConfig.type != 'persistentStore' && genConfig.type != 'addFiles' && genConfig.type != 'aggregation'  && genConfig.type != 'deDuplication' && genConfig.type != 'enricher'">
                                                     <div class="form-group">
                                                         <label class="control-label col-sm-2" for="{{genConfig.key}}-propkey"><spring:message code="wfdesigner.page.propkey_name"/></label>
                                                         <div class="col-sm-10">
@@ -1178,6 +1183,127 @@
                                                 }
                                                 }
                                                 </script>
+
+
+                             <form class="form-horizontal" role="form" id="processFieldsForm4" ng-if="genConfig.type == 'enricher'">
+
+
+                            <h3 style="margin-left: 2%;">Enricher Data Details</h3>
+                             <div>
+                                <div class="col-md-5">Column Name</div>
+                                <div class="col-md-6">Broadcast Identifier</div>
+                              </div>
+
+                             <div class="" id="enricherFormGroup1" >
+                             <div class="col-md-5">
+                               <select class="form-control" id="enricherColumn.1" name="enricherColumn.1">
+                           <option ng-repeat="column in chartViewModel.columnList" id="{{$index}}" value="{{ column.Value }}">{{ column.DisplayText }}</option>
+                             </select>
+                             </div>
+
+                             <div class="col-md-6">
+                            <select class="form-control" id="enricherBroadcastIdentifier.1" name="enricherBroadcastIdentifier.1">
+                              <option ng-repeat="broadcastIdentifier in chartViewModel.broadCastIdentifiers" id="{{$index}}" value="{{ broadcastIdentifier.Value }}">{{ broadcastIdentifier.DisplayText }}</option>
+                          </select>
+                          </div>
+
+                              <button id="remove4" class="btn btn-danger remove-me-enricher"><span class="glyphicon glyphicon-trash"></span></button>
+
+
+                             </div>
+
+                             <div class="" id="deletedivEnricher">
+
+                                     <div class="col-md-5">
+                                    <button id="b1" class="btn add-more" onclick="addMoreEnricher()">
+                                        <span class="glyphicon glyphicon-plus" style="font-size:large"></span>
+                                    </button>
+                                    </div>
+                                    <div class="col-md-7">
+                                    <button type="submit" style="margin-right: 0px;" ng-click="insertEnricherProp()" class="btn btn-primary  pull-right">Save</button>
+                                    </div>
+
+                                    </div>
+
+                             </form>
+
+                               <script>
+                         function identifiers()
+                        {
+                        var connectionListArray=$('[ng-controller="AppCtrl"]').scope().chartViewModel.broadCastIdentifiers;
+                       console.log(connectionListArray);
+                       var opt='';
+                       for(var i=0;i<connectionListArray.length;i++){
+                       console.log(connectionListArray[i].DisplayText);
+                       opt+='<option value="'+connectionListArray[i].Value+'">'+connectionListArray[i].DisplayText+'</option>';
+                       }
+                       return opt;
+
+                        }
+
+
+                                var nextEnricher = 1;
+                                  function addMoreEnricher()
+                                  {
+                                  console.log("in add more function");
+                                   var addto = "#deletedivEnricher";
+                                          var addRemove = "#enricherFormGroup" + (nextEnricher);
+                                          nextEnricher = nextEnricher + 1;
+                                          var removeBtn = '<button id="remove' + (nextEnricher) + '" class="btn btn-danger remove-me-enricher" ><span class="glyphicon glyphicon-trash" ></span></button></div><div id="field">';
+                                          var newIn = '';
+                                          newIn = newIn +  '<div class="" id="enricherFormGroup' + nextEnricher + '">' ;
+                                          newIn = newIn +  '<div class="col-md-5">' ;
+                                          newIn = newIn +  '<select class="form-control" id="enricherColumn.' + nextEnricher + '" name="enricherColumn.' + nextEnricher + '">' ;
+                                           newIn = newIn +  columnNames() ;
+                                          newIn = newIn +  '</select>' ;
+                                          newIn = newIn +  '</div>' ;
+
+                                        newIn = newIn +  '<div class="col-md-6">' ;
+                                        newIn = newIn +  '<select class="form-control" id="enricherBroadcastIdentifier.' + nextEnricher + '" name="enricherBroadcastIdentifier.' + nextEnricher + '">' ;
+                                         newIn = newIn +  identifiers() ;
+                                        newIn = newIn +  '</select>' ;
+                                        newIn = newIn +  '</div>' ;
+
+
+                                          newIn = newIn + removeBtn;
+                                          newIn = newIn +  '</div>' ;
+
+                                          var newInput = $(newIn);
+                                          var removeButton = $(removeBtn);
+                                          $(addto).before(newInput);
+
+                                          $("#enricherFormGroup" + nextEnricher).attr('data-source',$(addto).attr('data-source'));
+                                          $("#count").val(nextEnricher);
+
+                                              $('.remove-me-enricher').click(function(e){
+                                                  e.preventDefault();
+                                                  var fieldNum = this.id.charAt(this.id.length-1);
+                                                  var fieldID = "#enricherFormGroup" + fieldNum;
+                                                  console.log($(this));
+                                                  //$(this).remove();
+                                                  $(fieldID).remove();
+                                              });
+                               }
+
+
+
+
+
+                           </script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
                                                 <form class="form-horizontal" role="form" ng-if="genConfig.type == 'hql'">
 

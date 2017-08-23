@@ -752,6 +752,40 @@ public class PropertiesAPI extends MetadataAPIBase {
     }
 
 
+    @RequestMapping(value = "/getIdentifiers/{id}", method = RequestMethod.GET)
+
+    @ResponseBody
+    public RestWrapperOptions getIdentifiers(@PathVariable("id") Integer processId, Principal principal) {
+
+        RestWrapperOptions restWrapperOptions = null;
+
+        try {
+            LOGGER.info("process id is "+processId);
+            Process process=processDAO.get(processId);
+            List<com.wipro.ats.bdre.md.dao.jpa.Properties>jpaPropertiesList=new ArrayList<com.wipro.ats.bdre.md.dao.jpa.Properties>();
+            jpaPropertiesList=propertiesDAO.getPropertiesForBroadcast(process.getProcess().getProcessId());
+            List<RestWrapperOptions.Option> options = new ArrayList<RestWrapperOptions.Option>();
+            for (com.wipro.ats.bdre.md.dao.jpa.Properties properties:jpaPropertiesList)
+            {
+                RestWrapperOptions.Option option = new RestWrapperOptions.Option(properties.getPropValue(), properties.getPropValue());
+                options.add(option);
+                LOGGER.debug(option.getDisplayText());
+            }
+
+        restWrapperOptions = new RestWrapperOptions(options, RestWrapperOptions.OK);
+        } catch (MetadataException e) {
+            LOGGER.error(e);
+            restWrapperOptions = new RestWrapperOptions(e.getMessage(), RestWrapperOptions.ERROR);
+        }
+        catch (SecurityException e) {
+            LOGGER.error(e);
+            restWrapperOptions = new RestWrapperOptions(e.getMessage(), RestWrapperOptions.ERROR);
+        }
+        return restWrapperOptions;
+    }
+
+
+
     @Override
     public Object execute(String[] params) {
         return null;
