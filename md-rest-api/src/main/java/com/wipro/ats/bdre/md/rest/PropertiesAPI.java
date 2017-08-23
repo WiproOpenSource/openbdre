@@ -786,6 +786,80 @@ public class PropertiesAPI extends MetadataAPIBase {
 
 
 
+    @RequestMapping(value = "/addEnricherProperties/{id}", method = RequestMethod.POST)
+    @ResponseBody
+    public RestWrapper addEnricherProperties(@PathVariable("id") Integer processId, @RequestParam Map<String,String> map,HttpServletRequest request, Principal principal) {
+        RestWrapper restWrapper = null;
+        try {
+            LOGGER.info("processId is "+processId);
+            LOGGER.info("map data is "+map);
+            String enricherString=map.get("enricherData");
+            String[] enricherArray=enricherString.split(",");
+
+            LOGGER.info(enricherArray.toString());
+            int count=1;
+            Process process=processDAO.get(processId);
+            LOGGER.info(process.toString());
+            for(int i=0;i<enricherArray.length;i++)
+            {
+                String[] tmpArray=enricherArray[i].split("::");
+                com.wipro.ats.bdre.md.dao.jpa.Properties jpaProperties= new com.wipro.ats.bdre.md.dao.jpa.Properties();
+                PropertiesId jpaPropertiesId=new PropertiesId();
+                jpaPropertiesId.setProcessId(processId);
+                jpaPropertiesId.setPropKey("enricherColumn_"+count);
+
+                jpaProperties.setId(jpaPropertiesId);
+                jpaProperties.setProcess(process);
+                jpaProperties.setConfigGroup("enricher");
+                jpaProperties.setDescription("enricher properties");
+                jpaProperties.setPropValue(tmpArray[0]);
+                propertiesDAO.insert(jpaProperties);
+
+
+                com.wipro.ats.bdre.md.dao.jpa.Properties jpaProperties1= new com.wipro.ats.bdre.md.dao.jpa.Properties();
+                PropertiesId jpaPropertiesId1=new PropertiesId();
+                jpaPropertiesId1.setProcessId(processId);
+                jpaPropertiesId1.setPropKey("enricherBroadcastIdentifier_"+count);
+
+                jpaProperties1.setId(jpaPropertiesId1);
+                jpaProperties1.setProcess(process);
+                jpaProperties1.setConfigGroup("enricher");
+                jpaProperties1.setDescription("enricher properties");
+                jpaProperties1.setPropValue(tmpArray[1]);
+                propertiesDAO.insert(jpaProperties1);
+
+                count++;
+
+            }
+
+
+            com.wipro.ats.bdre.md.dao.jpa.Properties jpaProperties4= new com.wipro.ats.bdre.md.dao.jpa.Properties();
+            PropertiesId jpaPropertiesId4=new PropertiesId();
+            jpaPropertiesId4.setProcessId(processId);
+            jpaPropertiesId4.setPropKey("count");
+
+            jpaProperties4.setId(jpaPropertiesId4);
+            jpaProperties4.setProcess(process);
+            jpaProperties4.setConfigGroup("enricher");
+            jpaProperties4.setDescription("enricher properties");
+            jpaProperties4.setPropValue(String.valueOf(count-1));
+            propertiesDAO.insert(jpaProperties4);
+
+
+            restWrapper = new RestWrapper(null, RestWrapper.OK);
+        } catch (MetadataException e) {
+            LOGGER.error(e);
+            restWrapper = new RestWrapper(e.getMessage(), RestWrapper.ERROR);
+        }
+        catch (SecurityException e) {
+            LOGGER.error(e);
+            restWrapper = new RestWrapper(e.getMessage(), RestWrapper.ERROR);
+        }
+        return restWrapper;
+    }
+
+
+
     @Override
     public Object execute(String[] params) {
         return null;

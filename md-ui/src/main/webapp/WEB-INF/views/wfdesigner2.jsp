@@ -1220,7 +1220,7 @@
                                     </button>
                                     </div>
                                     <div class="col-md-7">
-                                    <button type="submit" style="margin-right: 0px;" ng-click="insertEnricherProp()" class="btn btn-primary  pull-right">Save</button>
+                                    <button type="submit" style="margin-right: 0px;" ng-click="insertEnricherProp(chartViewModel.selectedProcess.processId)" class="btn btn-primary  pull-right">Save</button>
                                     </div>
 
                                     </div>
