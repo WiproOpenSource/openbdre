@@ -76,3 +76,4 @@
 79,'operator_SortByKey',41
 80,'operator_DeDuplication',41
 81,'operator_Custom',41
+82,'operator_Enricher',41
