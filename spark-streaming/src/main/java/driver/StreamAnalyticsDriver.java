@@ -352,13 +352,9 @@ public class StreamAnalyticsDriver implements Serializable {
                         public JavaPairRDD<String, WrapperMessage> call(JavaPairRDD<String, String> inputPairRDD) throws Exception {
                             JavaPairRDD<String, WrapperMessage> outputPairRdd = null;
                             JavaRDD<String> javaRDD = inputPairRDD.map(t -> parseXMLString(t));
-                            javaRDD.foreach(s -> System.out.println("rdd xmljson string "+s));
-
 
                             JavaRDD<Row> rowJavaRDD = sqlContext.read().json(javaRDD).javaRDD();
-                            System.out.println(" Printing schema of kafka message" );
-                            System.out.println("rdd schema = " + sqlContext.read().json(javaRDD).schema());
-                            javaRDD.foreach(s -> System.out.println("rdd xmljson Row "+s));
+
                             //new XmlReader().xmlRdd(sqlContext, javaRDD.rdd()).printSchema();
                             //JavaRDD<Row> rowJavaRDD = new XmlReader().xmlRdd(sqlContext, javaRDD.rdd()).javaRDD();
 
@@ -374,7 +370,6 @@ public class StreamAnalyticsDriver implements Serializable {
                     wrapperDStream = convertToDStreamWrapperMessage(msgDataStream, dStreamPidMap.get(msgDataStream));
                 }
                 transformedDStreamMap.put(pid,wrapperDStream);
-                System.out.println("transformedDStreamMap = " + transformedDStreamMap);
                 SchemaReader schemaReader = new SchemaReader();
                 StructType schema = schemaReader.generateSchema(pid);
                 System.out.println("schema.toString() = " + schema.toString());

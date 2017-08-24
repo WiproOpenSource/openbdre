@@ -31,6 +31,7 @@ import scala.Tuple2;
 import scala.Tuple3;
 import scala.Tuple4;
 import transformations.Custom;
+import transformations.MapToPair;
 import util.WrapperMessage;
 
 import java.io.Serializable;
@@ -46,44 +47,53 @@ public class CustomJoin extends Custom{
         return null;
     }
 
+   /* public  static String printTuple2(Tuple2<String,Row> s, String type) {
+        System.out.println(type + " type = " + s.toString());
+        return s._2.toString();
+    }*/
+
     @Override
     public JavaPairDStream<String, WrapperMessage> convertMultiplePairDstream(Map<Integer, JavaPairDStream<String, WrapperMessage>> prevDStreamMap, Map<Integer, Set<Integer>> prevMap, Integer pid, StructType schema, Map<String, Broadcast<HashMap<String, String>>> broadcastMap, JavaStreamingContext jssc) {
         List<Integer> prevPidList = new ArrayList<>();
         prevPidList.addAll(prevMap.get(pid));
         System.out.println("prevPidList in custom join= " + prevPidList);
-        JavaPairDStream<String,Row> dealDStream = prevDStreamMap.get(prevPidList.get(0)).mapValues(s -> s.getRow());
 
-        JavaPairDStream<String,Row> transactionDStream = prevDStreamMap.get(prevPidList.get(1)).mapValues(s -> s.getRow());
+        MapToPair mapToPair = new MapToPair();
+        JavaPairDStream<String,Row> dealDStream = mapToPair.mapToPair(prevDStreamMap.get(prevPidList.get(0)).map(s -> s._2), "Deal.Header.BusinessKey:String").mapValues(s -> s.getRow());
+        //dealDStream.map(s -> printTuple2(s,"dealinput")).print();
 
-        JavaPairDStream<String,Row> trnxElementDStream = prevDStreamMap.get(prevPidList.get(2)).mapValues(s -> s.getRow());
+        JavaPairDStream<String,Row> transactionDStream = mapToPair.mapToPair(prevDStreamMap.get(prevPidList.get(1)).map(s -> s._2), "Transaction.Header.BusinessKey:String").mapValues(s -> s.getRow());
+        // transactionDStream.map(s -> printTuple2(s,"transactionDStreaminput")).print();
+
+        JavaPairDStream<String,Row> trnxElementDStream = mapToPair.mapToPair(prevDStreamMap.get(prevPidList.get(2)).map(s -> s._2), "TransactionElement.Header.BusinessKey:String").mapValues(s -> s.getRow());
+        // trnxElementDStream.map(s -> printTuple2(s,"trnxElementDStreamminput")).print();
 
         JavaPairDStream<String, Tuple2<Row,Row>> dealTransactionJoinDstream = dealDStream.fullOuterJoin(transactionDStream)
                                                                                                .mapValues(tpl -> new Tuple2<Row, Row>(tpl._1.orNull(),tpl._2.orNull()));
-      //  dealTransactionJoinDstream.print();
+        dealTransactionJoinDstream.print();
       //  trnxElementDStream.print();
         JavaPairDStream<String, Tuple3<Row, Row, Row>> threeStreamsJoinDstream = null;
         if(dealTransactionJoinDstream != null) {
-            //dealTransactionJoinDstream.fullOuterJoin(trnxElementDStream).print();
+            dealTransactionJoinDstream.fullOuterJoin(trnxElementDStream).print();
             threeStreamsJoinDstream  = dealTransactionJoinDstream.fullOuterJoin(trnxElementDStream)
                     .mapValues(tpl -> new Tuple3<Row, Row, Row>(((tpl._1.orNull() == null) ? null : tpl._1.orNull()._1), ((tpl._1.orNull() == null) ? null : tpl._1.orNull()._2), tpl._2.orNull()));
         }
         else {
             threeStreamsJoinDstream  = trnxElementDStream.mapValues(s -> new Tuple3<Row, Row, Row>(null, null, s));
         }
-      //  threeStreamsJoinDstream.print();
+        threeStreamsJoinDstream.print();
 
         JavaMapWithStateDStream<String,Tuple3<Row,Row,Row>,Tuple3<Row,Row,Row>,Tuple2<String,Tuple3<Row,Row,Row>>> mapWithStateDStream = threeStreamsJoinDstream.mapWithState(StateSpec.function(new LinkResolverInMemory()).timeout(new Duration(100)));
         JavaPairDStream<String, Tuple3<Row,Row,Row>> inMemoryDstream = mapWithStateDStream.mapToPair(tpl -> new Tuple2<String, Tuple3<Row, Row, Row>>(tpl._1(),tpl._2));
+        inMemoryDstream.print();
 
-        //inMemoryDstream.mapValues(new print());
         JavaPairDStream<String, Tuple3<Row,Row,Row>>  inMemoryResolvedDstream = inMemoryDstream.filter(tpl -> (tpl._2._1() != null && tpl._2._2()!= null && tpl._2._3()!= null));
         JavaPairDStream<String, Tuple3<Row,Row,Row>>  inMemoryUnResolvedDstream = inMemoryDstream.filter(tpl -> (tpl._2._1() == null || tpl._2._2()== null || tpl._2._3()== null));
 
-        System.out.println(" Printing unresolved " );
+        inMemoryResolvedDstream.print();
         inMemoryUnResolvedDstream.print();
         
         JavaPairDStream<String, Tuple3<String,String,String>> existingDataInHBase = inMemoryUnResolvedDstream.transformToPair(new  BulkGetRowKeyByKey2(getHBaseContext(jssc.sparkContext()), "Unresolved"));
-        System.out.println(" Printing hbase data" );
         existingDataInHBase.print();
 
         //JavaPairDStream<String, Tuple3<String,String,String>> joinWithHBase= inMemoryUnResolvedDstream.leftOuterJoin(existingDataInHBase).mapToPair(new HBaseLinkResolver());
@@ -92,12 +102,11 @@ public class CustomJoin extends Custom{
         JavaPairDStream<String, Tuple3<String,String,String>> fullyResolvedWithHBase = partiallyResolvedWithHBase.filter(s -> s._2._1()!= null &&  s._2._2()!= null &&  s._2._3()!= null );
         JavaPairDStream<String, Tuple3<String,String,String>> unResolvedWithHBase2 = partiallyResolvedWithHBase.filter(s -> s._2._1()== null ||  s._2._2()== null ||  s._2._3()== null );
 
-
         inMemoryResolvedDstream.map(s -> Bytes.toBytes(s._1())).foreachRDD(new RemoveResolvedFromUnResolvedTable(getHBaseContext(jssc.sparkContext())));
-
         fullyResolvedWithHBase.map(s -> Bytes.toBytes(s._1())).foreachRDD(new RemoveResolvedFromUnResolvedTable(getHBaseContext(jssc.sparkContext())));
-        inMemoryResolvedDstream.map(s -> new Tuple4(s._1, s._2._1().toString(), s._2._2().toString(),s._2._3().toString())).transform(new BulkPut(getHBaseContext(jssc.sparkContext()) , "resolved")).print();
-        fullyResolvedWithHBase.map(s-> new Tuple4(s._1,s._2._1(),s._2._2(),s._2._3())).transform(new BulkPut(getHBaseContext(jssc.sparkContext()) , "resolved")).print();
+
+        inMemoryResolvedDstream.map(s -> new Tuple4(s._1, s._2._1().toString(), s._2._2().toString(),s._2._3().toString())).transform(new BulkPut(getHBaseContext(jssc.sparkContext()) , "Resolved")).print();
+        fullyResolvedWithHBase.map(s-> new Tuple4(s._1,s._2._1(),s._2._2(),s._2._3())).transform(new BulkPut(getHBaseContext(jssc.sparkContext()) , "Resolved")).print();
         unResolvedWithHBase.map(s-> new Tuple4(s._1,s._2._1(),s._2._2(),s._2._3())).transform(new BulkPut(getHBaseContext(jssc.sparkContext()) , "Unresolved")).print();
         unResolvedWithHBase2.map(s-> new Tuple4(s._1,s._2._1(),s._2._2(),s._2._3())).transform(new BulkPut(getHBaseContext(jssc.sparkContext()) , "Unresolved")).print();
 
@@ -223,7 +232,7 @@ class LinkResolverInMemory implements Function4<Time, String,com.google.common.b
         if(!state.isTimingOut()){
             state.update(updatedValue);
         }
-
+        System.out.println("key = " + key);
         Tuple2<String,Tuple3<Row,Row,Row>> output = new Tuple2<>(key,updatedValue);
         return com.google.common.base.Optional.of(output);
 
@@ -256,11 +265,11 @@ class BulkGetRowKeyByKey2 implements Serializable,Function2<JavaPairRDD<String, 
         public Tuple4<String, String, String,String> call(Result result) throws Exception {
 
             String key = Bytes.toString(result.getRow());
-            String dealTuple = Bytes.toString(result.getValue("deals".getBytes(),"event".getBytes()));
+            String dealTuple = Bytes.toString(result.getValue("Deal".getBytes(),"event".getBytes()));
             //System.out.println("dealTuple = " + dealTuple);
-            String transTuple = Bytes.toString(result.getValue("transactions".getBytes(),"event".getBytes()));
+            String transTuple = Bytes.toString(result.getValue("Transaction".getBytes(),"event".getBytes()));
             //System.out.println("transTuple = " + transTuple);
-            String teTuple = Bytes.toString(result.getValue("transactionelements".getBytes(),"event".getBytes()));
+            String teTuple = Bytes.toString(result.getValue("TransactionElement".getBytes(),"event".getBytes()));
             //System.out.println("teTuple = " + teTuple);
 
             return new Tuple4<String, String, String,String>(key,dealTuple,transTuple,teTuple);
@@ -300,15 +309,15 @@ class BulkGetRowKeyByKey2 implements Serializable,Function2<JavaPairRDD<String, 
              Put put = new Put(Bytes.toBytes(tuple4._1().toString()));
              if(tuple4._2() != null) {
                  System.out.println(" Writing deal to " +tableName );
-                 put.addColumn(Bytes.toBytes("deals"), Bytes.toBytes("event"), Bytes.toBytes(tuple4._2().toString()));
+                 put.addColumn(Bytes.toBytes("Deal"), Bytes.toBytes("event"), Bytes.toBytes(tuple4._2().toString()));
              }
              if(tuple4._3() != null) {
                  System.out.println(" Writing trnx to " +tableName );
-                 put.addColumn(Bytes.toBytes("transactions"), Bytes.toBytes("event"), Bytes.toBytes(tuple4._3().toString()));
+                 put.addColumn(Bytes.toBytes("Transaction"), Bytes.toBytes("event"), Bytes.toBytes(tuple4._3().toString()));
              }
              if(tuple4._4() != null) {
                  System.out.println(" Writing te to " +tableName );
-                 put.addColumn(Bytes.toBytes("transactionelements"), Bytes.toBytes("event"), Bytes.toBytes(tuple4._4().toString()));
+                 put.addColumn(Bytes.toBytes("TransactionElement"), Bytes.toBytes("event"), Bytes.toBytes(tuple4._4().toString()));
              }
              return put;
          }

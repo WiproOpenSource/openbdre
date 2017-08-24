@@ -47,7 +47,7 @@ public class DeDuplication implements Transformation {
             MapToPair mapToPairClass = new MapToPair();
             JavaPairDStream<String,WrapperMessage> pairedDstream = mapToPairClass.mapToPair(dStream,colName);
             HBaseDeDuplication hBaseDeDuplication = new HBaseDeDuplication();
-            deDupPairDstream = hBaseDeDuplication.convertJavaPairDstream(pairedDstream,jssc,hbaseConnectionName,hbaseTableName);
+            deDupPairDstream = hBaseDeDuplication.convertJavaPairDstream(pairedDstream,jssc,hbaseConnectionName,hbaseTableName,schema);
         }
 
         deDupPairDstream.print();

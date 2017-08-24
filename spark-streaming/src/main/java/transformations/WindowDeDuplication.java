@@ -33,7 +33,6 @@ class DuplicateChecker implements Function4<Time, String,Optional<Row>,State<Str
     @Override
     public Optional<Row> call(Time time, String key, Optional<Row> value, State<String> state) throws Exception {
         String existingState = (state.exists() ? state.get() : new String()) ;
-        System.out.println("existingState = " + existingState);
         System.out.println("key = " + key);
         if(existingState.equals(key)){
             System.out.println(" Duplicate found" );
