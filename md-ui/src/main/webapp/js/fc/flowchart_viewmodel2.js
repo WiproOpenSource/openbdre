@@ -388,9 +388,8 @@ var flowchart = {
         this.messageColumnList={};
         this.selectedProcessProps = {};
         this.selectedProcessGenConfigProp = {};
-
         this.selectedProcessConfigKeyValue = {};
-
+        this.broadCastIdentifiers={};
         //
         // Find a specific node within the chart.
         //
@@ -573,6 +572,8 @@ var flowchart = {
             this.selectedProcessProps = {};
             this.selectedProcessGenConfigProp = {};
             this.selectedProcessConfigKeyValue = {};
+            this.broadCastIdentifiers={};
+
             var nodes = this.nodes;
             for (var i = 0; i < nodes.length; ++i) {
                 var node = nodes[i];
@@ -616,6 +617,7 @@ var flowchart = {
                 var tempMessageList;
                 var tempMessageColumnList;
                 var tempPropertiesData;
+                var tempBroadCastIdentifierList;
                 var pid = node.data.pid;
                 if (pid < 0) pid = -node.data.pid;
                 var dataRecord1 = processAC('/mdrest/process/', 'GET', pid);
@@ -633,6 +635,16 @@ var flowchart = {
                         alertBox('danger', 'Error has occured');
                     }
                     this.columnList=tempColumnList;
+
+
+                     var dataRecord = messagesAC('/mdrest/properties/getIdentifiers/'+this.selectedProcess.processId, 'GET', [this.selectedProcess.processId]);
+                     if (dataRecord) {
+                        tempBroadCastIdentifierList = dataRecord;
+                     } else {
+                        alertBox('danger', 'Error has occured');
+                     }
+                     this.broadCastIdentifiers=tempBroadCastIdentifierList;
+                     console.log("broadCastIdentifiers is "+this.broadCastIdentifiers);
 
                     var genconfigRecord = genConfigAC('/mdrest/genconfig/', 'GET', node.data.type);
                     if (genconfigRecord) {

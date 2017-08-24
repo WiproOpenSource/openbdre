@@ -604,7 +604,7 @@
 '66','Sort','Sort','Sort', 1,'true','sort', 1
 '67','aggregation','Aggregation','Aggregation', 1,'true','aggregation', 1
 '80','default','DeDuplication','DeDuplication', 1,'true','deDuplication', 1
-
+'82','default','Enricher','Enricher', 1,'true','enricher', 1
 
 
 '42','message','Kafka Properties','Kafka', 1,'true','source', 1
@@ -752,16 +752,9 @@
 'HDFS_PersistentStores_Connection','nameNodePort','Name Node Port','', 1,'','text', 1
 'HDFS_PersistentStores_Connection','hdfsPath','HDFS PATH','', 1,'','text', 1
 
-'Hive_PersistentStores_Connection','connectionUrl','Connection Url','', 1,'','text', 1
-'Hive_PersistentStores_Connection','dbName','Database Name','', 1,'','text', 1
-'Hive_PersistentStores_Connection','tableName','Table Name','', 1,'','text', 1
-'Hive_PersistentStores_Connection','username','Username','', 1,'','text', 1
-'Hive_PersistentStores_Connection','password','Password','', 1,'','text', 1
-
 'HBase_PersistentStores_Connection','zKHost','Zookeeper Host','Zookeeper host name for hbase cluster.', 1,'','text', 1
 'HBase_PersistentStores_Connection','zKPort','Zookeeper Port','Zookeeper port for hbase cluster.', 1,'','text', 1
 'HBase_PersistentStores_Connection','hbaseMasterAddress','HBase Master Address','HBase Master Address for hbase cluster.', 1,'','text', 1
-
 
 
 

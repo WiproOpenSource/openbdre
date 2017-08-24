@@ -557,6 +557,51 @@ console.log(value1);
  var modal = document.getElementById('myModal');
  modal.style.display = "none";
 }
+var enricherFinal="";
+function broadcastIdentifierFormIntoText(typeOf) {
+    var map = new Object();
+    var x = '';
+    x = document.getElementById(typeOf);
+    console.log(x);
+    var text = "";
+          var i;
+          for(i = 0; i < x.length-2; i=i+3) {
+          var enricherColumn=x.elements[i].value;
+          var enricherBroadcastIdentifier=x.elements[i+1].value;
+          text= text+enricherColumn+"::"+enricherBroadcastIdentifier+",";
+    }
+
+    console.log(text);
+    enricherFinal=text;
+}
+$scope.insertEnricherProp=function(processId){
+console.log("processId is "+processId);
+var map=new Object();
+broadcastIdentifierFormIntoText('processFieldsForm4');
+console.log(enricherFinal);
+map["enricherData"]=enricherFinal.substr(0, enricherFinal.length-1);
+console.log(map);
+$.ajax({
+            type: "POST",
+            url: "/mdrest/properties/addEnricherProperties/"+processId,
+            data:jQuery.param(map),
+            success: function(data) {
+                if(data.Result == "OK") {
+                   var modal = document.getElementById('myModal');
+                    modal.style.display = "none";
+                    alertBox("info","Enricher properties added");
+                }
+                else
+                alertBox("warning","Error occured");
+
+            }
+
+        });
+
+
+
+}
+
 
 $scope.saveDuplicationProperties=function(processId){
 var map=new Object();
@@ -655,7 +700,7 @@ console.log(c);
 var map=new Object();
 broadcastformIntoText('processFieldsForm2');
 console.log(broadcastFinal);
-map["connectionName:tableName:columnFamily:columnName:broadcastIdentifier"]=broadcastFinal.substr(0, broadcastFinal.length-2);
+map["connectionName:tableName:columnFamily:columnName:broadcastIdentifier"]=broadcastFinal.substr(0, broadcastFinal.length-1);
 
 $.ajax({
             type: "POST",
@@ -681,7 +726,7 @@ $scope.insertAggProp=function(processId){
 var map=new Object();
 formIntoText('processFieldsForm1');
 console.log(aggregationFinal);
-map["column:aggType"]=aggregationFinal.substr(0, aggregationFinal.length-2);
+map["column:aggType"]=aggregationFinal.substr(0, aggregationFinal.length-1);
     $.ajax({
             type: "POST",
             url: "/mdrest/properties/"+processId,

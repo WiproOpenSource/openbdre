@@ -158,6 +158,29 @@ public class PropertiesDAO {
         return propertiesList;
     }
 
+
+    public List<Properties> getPropertiesForBroadcast(int processId) {
+        List<Properties> propertiesList = new ArrayList<Properties>();
+        Session session = sessionFactory.openSession();
+        try {
+
+            session.beginTransaction();
+            Criteria cr = session.createCriteria(Properties.class).add(Restrictions.eq("process.processId", processId)).add(Restrictions.like("id.propKey","broadcastIdentifier%"));
+            propertiesList = cr.list();
+            session.getTransaction().commit();
+
+        } catch (Exception e) {
+            session.getTransaction().rollback();
+            LOGGER.info("Error " + e);
+            return propertiesList;
+        } finally {
+            session.close();
+        }
+        return propertiesList;
+    }
+
+
+
     public void deleteByProcessId(com.wipro.ats.bdre.md.dao.jpa.Process process) {
         Session session = sessionFactory.openSession();
         try {
