@@ -1637,7 +1637,7 @@
                               var columnFamily=document.getElementById("columnFamily."+num).value;
                               var columnName=document.getElementById("columnName."+num).value;
                               console.log(connectionName+" "+tableName+" "+columnFamily+" "+columnName);
-                              document.getElementById(id).value=tableName+"_"+columnFamily+""+columnName;
+                              document.getElementById(id).value=tableName+"_"+columnFamily+"_"+columnName;
                             }
 
                       function connectionNames(){

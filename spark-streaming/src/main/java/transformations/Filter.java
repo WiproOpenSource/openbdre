@@ -80,7 +80,7 @@ public class Filter implements Transformation {
                                         sqlDataFrame = dataFrame.col(colName).isNull();
                                         break;
                                     case "is not null":
-                                        sqlDataFrame = dataFrame.col(colName).isNotNull();
+                                        sqlDataFrame = dataFrame.col(colName).notEqual("");
                                         break;
                                     case "greater than":
                                         sqlDataFrame = dataFrame.col(colName).gt(filterValue);
