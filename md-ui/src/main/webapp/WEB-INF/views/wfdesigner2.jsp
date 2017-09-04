@@ -1148,8 +1148,8 @@
                                                          </select>
                                                      </div>
                                                         <div class="form-group">
-                                                        <label class="control-label col-sm-2" for="{{genConfig.key}}-propkey">Window Duration</label>
-                                                        <input class="form-control" id="windowDuration" >
+                                                        <label class="control-label col-sm-2" for="{{genConfig.key}}-propkey">Timeout Duration(in milliseconds)</label>
+                                                        <input class="form-control" id="windowDuration" value="30000">
 
                                                         </input>
                                                     </div>

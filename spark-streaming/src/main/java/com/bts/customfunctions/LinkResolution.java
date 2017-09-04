@@ -40,7 +40,7 @@ import java.util.*;
 /**
  * Created by cloudera on 8/8/17.
  */
-public class CustomJoin extends Custom{
+public class LinkResolution extends Custom{
 
     @Override
     public JavaPairDStream<String, WrapperMessage> convertJavaPairDstream(JavaPairDStream<String, WrapperMessage> inputDstream, Map<String, Broadcast<HashMap<String, String>>> broadcastMap, JavaStreamingContext ssc) {
@@ -60,13 +60,13 @@ public class CustomJoin extends Custom{
 
         MapToPair mapToPair = new MapToPair();
         JavaPairDStream<String,Row> dealDStream = mapToPair.mapToPair(prevDStreamMap.get(prevPidList.get(0)).map(s -> s._2), "Deal.Header.BusinessKey:String").mapValues(s -> s.getRow());
-        //dealDStream.map(s -> printTuple2(s,"dealinput")).print();
+        dealDStream.map(s -> new Tuple2<String,String>(s._1,s._2.toString())).transform(new BulkPutMessage(getHBaseContext(jssc.sparkContext()) , "Deal")).print();
 
         JavaPairDStream<String,Row> transactionDStream = mapToPair.mapToPair(prevDStreamMap.get(prevPidList.get(1)).map(s -> s._2), "Transaction.Header.BusinessKey:String").mapValues(s -> s.getRow());
-        // transactionDStream.map(s -> printTuple2(s,"transactionDStreaminput")).print();
+        transactionDStream.map(s -> new Tuple2<String,String>(s._1,s._2.toString())).transform(new BulkPutMessage(getHBaseContext(jssc.sparkContext()) , "Transaction")).print();
 
         JavaPairDStream<String,Row> trnxElementDStream = mapToPair.mapToPair(prevDStreamMap.get(prevPidList.get(2)).map(s -> s._2), "TransactionElement.Header.BusinessKey:String").mapValues(s -> s.getRow());
-        // trnxElementDStream.map(s -> printTuple2(s,"trnxElementDStreamminput")).print();
+        trnxElementDStream.map(s -> new Tuple2<String,String>(s._1,s._2.toString())).transform(new BulkPutMessage(getHBaseContext(jssc.sparkContext()) , "TransactionElement")).print();
 
         JavaPairDStream<String, Tuple2<Row,Row>> dealTransactionJoinDstream = dealDStream.fullOuterJoin(transactionDStream)
                                                                                                .mapValues(tpl -> new Tuple2<Row, Row>(tpl._1.orNull(),tpl._2.orNull()));
@@ -109,6 +109,7 @@ public class CustomJoin extends Custom{
         fullyResolvedWithHBase.map(s-> new Tuple4(s._1,s._2._1(),s._2._2(),s._2._3())).transform(new BulkPut(getHBaseContext(jssc.sparkContext()) , "Resolved")).print();
         unResolvedWithHBase.map(s-> new Tuple4(s._1,s._2._1(),s._2._2(),s._2._3())).transform(new BulkPut(getHBaseContext(jssc.sparkContext()) , "Unresolved")).print();
         unResolvedWithHBase2.map(s-> new Tuple4(s._1,s._2._1(),s._2._2(),s._2._3())).transform(new BulkPut(getHBaseContext(jssc.sparkContext()) , "Unresolved")).print();
+
 
         return dealDStream.mapValues(s -> new WrapperMessage(s));
     }
@@ -324,6 +325,35 @@ class BulkGetRowKeyByKey2 implements Serializable,Function2<JavaPairRDD<String, 
      }
  }
 
+class  BulkPutMessage implements Serializable,Function<JavaRDD<Tuple2<String,String>>, JavaRDD<Object>> {
+
+    private JavaHBaseContext hbaseContext;
+    private String tableName;
+
+    public BulkPutMessage(JavaHBaseContext hbaseContext, String tableName) {
+        this.hbaseContext = hbaseContext;
+        this.tableName = tableName;
+    }
+
+    public JavaRDD<Object> call(JavaRDD<Tuple2<String,String>> tuple2JavaRDD) throws Exception {
+        hbaseContext.bulkPut(tuple2JavaRDD, TableName.valueOf(tableName), new PutFun2());
+        return tuple2JavaRDD.map(s->s._1());
+    }
+
+
+    class PutFun2 implements Function<Tuple2<String,String>, Put>{
+
+        @Override
+        public Put call(Tuple2<String,String> tuple2) throws Exception {
+            Put put = new Put(Bytes.toBytes(tuple2._1().toString()));
+            if(tuple2._2() != null) {
+                System.out.println(" Writing deal to " +tableName );
+                put.addColumn(Bytes.toBytes("message"), Bytes.toBytes("event"), Bytes.toBytes(tuple2._2().toString()));
+            }
+            return put;
+        }
+    }
+}
 
 
 

@@ -2,20 +2,16 @@
 package driver;
 
 import com.databricks.spark.xml.XmlReader;
-import kafka.serializer.StringDecoder;
 import org.apache.spark.SparkConf;
 import org.apache.spark.api.java.JavaPairRDD;
 import org.apache.spark.api.java.JavaRDD;
+import org.apache.spark.api.java.JavaSparkContext;
 import org.apache.spark.api.java.function.Function;
 import org.apache.spark.sql.DataFrame;
 import org.apache.spark.sql.Row;
 import org.apache.spark.sql.SQLContext;
-import org.apache.spark.streaming.Durations;
-import org.apache.spark.streaming.api.java.JavaPairDStream;
-import org.apache.spark.streaming.api.java.JavaPairInputDStream;
-import org.apache.spark.streaming.api.java.JavaStreamingContext;
-import org.apache.spark.streaming.kafka.KafkaUtils;
 import scala.Tuple2;
+import scala.collection.JavaConversions;
 import util.WrapperMessage;
 
 import java.util.*;
@@ -47,13 +43,12 @@ public final class Test {
         // Create context with a 2 seconds batch interval
         SparkConf sparkConf = new SparkConf().setAppName("JavaDirectKafkaWordCount");
         sparkConf.setMaster("local[*]");
-        JavaStreamingContext jssc = new JavaStreamingContext(sparkConf, Durations.seconds(20));
+        /*JavaStreamingContext jssc = new JavaStreamingContext(sparkConf, Durations.seconds(20));
 
         Set<String> topicsSet = new HashSet<String>(Arrays.asList(topics.split(",")));
         Map<String, String> kafkaParams = new HashMap<String, String>();
         kafkaParams.put("metadata.broker.list", brokers);
 
-        // Create direct kafka stream with brokers and topics
         JavaPairInputDStream<String, String> msgDataStream = KafkaUtils.createDirectStream(
                 jssc,
                 String.class,
@@ -71,8 +66,58 @@ public final class Test {
 
         jssc.start();
         jssc.awaitTermination();
+        */
+
+        JavaSparkContext sc = new JavaSparkContext(sparkConf);
+
+        SQLContext sqlContext = new org.apache.spark.sql.SQLContext(sc);
+        DataFrame df1 = sqlContext.read().json("hdfs://localhost:8020/user/cloudera/json1.json");
+        df1.show();
+        DataFrame df2 = sqlContext.read().json("hdfs://localhost:8020/user/cloudera/json2.json");
+       // df2.show();
+
+
+        Set<String> df1ColSet =  new LinkedHashSet<String>(Arrays.asList(df1.columns()));
+        Set<String> df2ColSet =  new LinkedHashSet<String>(Arrays.asList(df2.columns()));
+        Set<String> allColumns = new LinkedHashSet<String>();
+        allColumns.addAll(df1ColSet);
+        allColumns.addAll(df2ColSet);
+
+
+        df1.selectExpr(expr(df1ColSet, allColumns)).show();
+        df2.selectExpr(expr(df2ColSet, allColumns)).show();
+
+        df1.selectExpr(expr(df1ColSet, allColumns)).unionAll(df2.selectExpr(expr(df2ColSet, allColumns))).show();
+
+    }
+
+    public static scala.collection.Seq<java.lang.String> expr(Set<String> mycols, Set<String> allcols){
+        List<String> finalList= new LinkedList<String>();
+        System.out.println("mycols = " + mycols);
+        System.out.println("allcols = " + allcols);
+        for(String s: allcols){
+            System.out.println("s = " + s);
+            if(mycols.contains(s)) {
+                finalList.add(s);
+                System.out.println("s is present= " + s);
+            }
+            else {
+                finalList.add(null +" as "+s);
+                System.out.println("s is absent= " + s);
+            }
+        }
+        return JavaConversions.asScalaBuffer(new LinkedList<String>(finalList)).toSeq();
     }
 }
+
+
+
+
+
+
+
+
+
 
 class transformToWrapper implements Function<JavaPairRDD<String, String>, JavaPairRDD<String, WrapperMessage>>{
     SQLContext sqlContext;

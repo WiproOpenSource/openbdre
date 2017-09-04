@@ -3,11 +3,15 @@ package persistentstores;
 import com.wipro.ats.bdre.md.api.GetProperties;
 import org.apache.spark.api.java.JavaRDD;
 import org.apache.spark.api.java.function.Function;
+import org.apache.spark.broadcast.Broadcast;
 import org.apache.spark.sql.types.StructType;
 import org.apache.spark.streaming.api.java.JavaDStream;
 import org.apache.spark.streaming.api.java.JavaPairDStream;
+import org.apache.spark.streaming.api.java.JavaStreamingContext;
 import util.WrapperMessage;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Properties;
 
 /**
@@ -16,12 +20,12 @@ import java.util.Properties;
 public class HDFSPersistentStore implements PersistentStore {
 
     @Override
-    public void persist(JavaRDD emptyRDD, JavaPairDStream<String,WrapperMessage> inputDStream, Integer pid, Integer prevPid, StructType schema) throws Exception {
+    public void persist(JavaRDD emptyRDD, JavaPairDStream<String,WrapperMessage> inputDStream, Integer pid, Integer prevPid, StructType schema, Map<String,Broadcast<HashMap<String,String>>> broadcastMap, JavaStreamingContext jssc) throws Exception {
         try {
             final String hdfsPath = "/user/cloudera/spark-streaming-data/";
             System.out.println("Inside emitter hdfs, persisting");
             GetProperties getProperties = new GetProperties();
-            Properties hdfsProperties = getProperties.getProperties(String.valueOf(pid), "kafka");
+            Properties hdfsProperties = getProperties.getProperties(String.valueOf(pid), "persistentStore");
             System.out.println(" Printing Pair dstream" );
             inputDStream.print();
             inputDStream.dstream().saveAsTextFiles(hdfsPath,"stream");

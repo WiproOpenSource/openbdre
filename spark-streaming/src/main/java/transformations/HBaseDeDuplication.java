@@ -40,15 +40,15 @@ public class HBaseDeDuplication {
         String colFamily = schema.fields()[0].name();
         String colName = "event";
 
-        JavaPairDStream<String, Integer> existingDataInUnResolvedHBase =
+       /* JavaPairDStream<String, Integer> existingDataInUnResolvedHBase =
                 buskeyStream.transform(
                         new BulkGetRowKeyFromUnresolved(getHBaseContext(jssc.sparkContext(),hbaseConnectionName), "Unresolved",colFamily,colName))
                         .mapToPair(feSpi -> new Tuple2<String, Integer>(feSpi,1));
 
         JavaPairDStream<String, Integer> existingDataInHBase2 = existingDataInHBase.union(existingDataInUnResolvedHBase);
+        */
 
-
-        JavaPairDStream<String, WrapperMessage> finalNonDuplicateInBatch = businesskeyvaluestream.leftOuterJoin(existingDataInHBase2)
+        JavaPairDStream<String, WrapperMessage> finalNonDuplicateInBatch = businesskeyvaluestream.leftOuterJoin(existingDataInHBase)
                 .filter(tpl -> !tpl._2._2.isPresent())
                 .mapToPair(tpl -> new Tuple2<String, WrapperMessage>(tpl._1, tpl._2._1));
 

@@ -599,7 +599,6 @@
 
 '41','param','Parameters','Additional parameters', 1,'true','text', 1
 '43','default','Filter','Filter', 1,'true','filter', 1
-'58','hive','Hive','Hive', 1,'true','hive', 1
 '65','join','Join','Join', 1,'true','join', 1
 '66','Sort','Sort','Sort', 1,'true','sort', 1
 '67','aggregation','Aggregation','Aggregation', 1,'true','aggregation', 1
@@ -637,9 +636,7 @@
 '57','connection','JDBC Properties','JDBC', 1,'true','emitter', 1
 
 '44','connection','HDFS Properties','hdfs',1,'true','persistentStore',1
-
 '58','connection','Hive Properties','Hive',1,'true','persistentStore',1
-
 '59','connection','HBase Properties','HBase',1,'true','persistentStore',1
 
 'column_transformation','no transformation','no transformation','no column transformation',1,'no transformation','text',1

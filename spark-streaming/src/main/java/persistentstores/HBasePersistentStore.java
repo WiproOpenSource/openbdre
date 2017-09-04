@@ -38,7 +38,7 @@ import java.util.Properties;
 
 public class HBasePersistentStore implements PersistentStore {
     @Override
-    public void persist(JavaRDD emptyRDD, JavaPairDStream<String, WrapperMessage> inputDStream, Integer pid, Integer prevPid, StructType schema) throws Exception {
+    public void persist(JavaRDD emptyRDD, JavaPairDStream<String, WrapperMessage> inputDStream, Integer pid, Integer prevPid, StructType schema, Map<String,Broadcast<HashMap<String,String>>> broadcastMap,JavaStreamingContext jssc) throws Exception {
         try {
 
             JavaDStream<WrapperMessage> dStream = inputDStream.map(s -> s._2);
