@@ -1,6 +1,7 @@
 package transformations;
 
 import com.wipro.ats.bdre.md.api.GetProperties;
+import org.apache.spark.api.java.JavaPairRDD;
 import org.apache.spark.api.java.JavaRDD;
 import org.apache.spark.api.java.function.Function;
 import org.apache.spark.broadcast.Broadcast;
@@ -9,7 +10,6 @@ import org.apache.spark.sql.DataFrame;
 import org.apache.spark.sql.Row;
 import org.apache.spark.sql.SQLContext;
 import org.apache.spark.sql.types.StructType;
-import org.apache.spark.streaming.api.java.JavaDStream;
 import org.apache.spark.streaming.api.java.JavaPairDStream;
 import org.apache.spark.streaming.api.java.JavaStreamingContext;
 import scala.Tuple2;
@@ -27,34 +27,22 @@ public class Filter implements Transformation {
         List<Integer> prevPidList = new ArrayList<>();
         prevPidList.addAll(prevMap.get(pid));
         Integer prevPid = prevPidList.get(0);
-        System.out.println("Inside filter prevPid = " + prevPid);
         JavaPairDStream<String,WrapperMessage> prevDStream = prevDStreamMap.get(prevPid);
 
         GetProperties getProperties = new GetProperties();
         Properties filterProperties = getProperties.getProperties(String.valueOf(pid), "filter");
-        /*final String check = filterProperties.getProperty("operator");
-        final String filterValue = filterProperties.getProperty("filtervalue");
-        final String colNameProperty = filterProperties.getProperty("column");
-        final String colName = colNameProperty.substring(0,colNameProperty.indexOf(":"));*/
-        /*System.out.println("operator = " + check);
-        System.out.println("filtervalue = " + filterValue);
-        System.out.println("colName = " + colName);*/
         int count = Integer.parseInt(filterProperties.getProperty("count"));
 
-        JavaDStream<WrapperMessage> dStream = prevDStream.map(s -> s._2);
-        dStream.print();
-        JavaDStream<WrapperMessage> finalDStream = dStream.transform(new Function<JavaRDD<WrapperMessage>, JavaRDD<WrapperMessage>>() {
+       // JavaDStream<WrapperMessage> dStream = prevDStream.map(s -> s._2);
+
+        JavaPairDStream<String,WrapperMessage> filteredDstream = prevDStream.transformToPair(new Function<JavaPairRDD<String, WrapperMessage>, JavaPairRDD<String, WrapperMessage>>() {
             @Override
-            public JavaRDD<WrapperMessage> call(JavaRDD<WrapperMessage> rddWrapperMessage) throws Exception {
-                JavaRDD<Row> rddRow = rddWrapperMessage.map(s -> s.getRow());
-                rddRow.foreach(s -> System.out.print(s));
-                SQLContext sqlContext = SQLContext.getOrCreate(rddWrapperMessage.context());
+            public JavaPairRDD<String, WrapperMessage> call(JavaPairRDD<String, WrapperMessage> rddPairWrapperMessage) throws Exception {
+                System.out.println("beginning of filter/validation = " + new Date() +"for pid = "+pid);
+                JavaRDD<Row> rddRow = rddPairWrapperMessage.map(s -> s._2.getRow());
+                SQLContext sqlContext = SQLContext.getOrCreate(rddRow.context());
                 DataFrame dataFrame = sqlContext.createDataFrame(rddRow, schema);
                 DataFrame filteredDF = null;
-
-                dataFrame.printSchema();
-                System.out.println("dataFrame = " + dataFrame);
-                dataFrame.show(100);
 
                 if (dataFrame != null ) {
                     System.out.println("showing dataframe before filter ");
@@ -82,11 +70,17 @@ public class Filter implements Transformation {
                                     case "equals":
                                         sqlDataFrame = dataFrame.col(colName).equalTo(filterValue);
                                         break;
+                                    case "begins with":
+                                        sqlDataFrame = sqlDataFrame.and(dataFrame.col(colName).startsWith(filterValue));
+                                        break;
+                                    case "ends with":
+                                        sqlDataFrame = sqlDataFrame.and(dataFrame.col(colName).endsWith(filterValue));
+                                        break;
                                     case "is null":
                                         sqlDataFrame = dataFrame.col(colName).isNull();
                                         break;
                                     case "is not null":
-                                        sqlDataFrame = dataFrame.col(colName).isNotNull();
+                                        sqlDataFrame = dataFrame.col(colName).notEqual("");
                                         break;
                                     case "greater than":
                                         sqlDataFrame = dataFrame.col(colName).gt(filterValue);
@@ -100,6 +94,12 @@ public class Filter implements Transformation {
                                 {
                                     case "equals":
                                         sqlDataFrame = sqlDataFrame.and(dataFrame.col(colName).equalTo(filterValue));
+                                        break;
+                                    case "begins with":
+                                        sqlDataFrame = sqlDataFrame.and(dataFrame.col(colName).startsWith(filterValue));
+                                        break;
+                                    case "ends with":
+                                        sqlDataFrame = sqlDataFrame.and(dataFrame.col(colName).endsWith(filterValue));
                                         break;
                                     case "is null":
                                         sqlDataFrame = sqlDataFrame.and(dataFrame.col(colName).isNull());
@@ -120,6 +120,12 @@ public class Filter implements Transformation {
                                     case "equals":
                                         sqlDataFrame = sqlDataFrame.or(dataFrame.col(colName).equalTo(filterValue));
                                         break;
+                                    case "begins with":
+                                        sqlDataFrame = sqlDataFrame.and(dataFrame.col(colName).startsWith(filterValue));
+                                        break;
+                                    case "ends with":
+                                        sqlDataFrame = sqlDataFrame.and(dataFrame.col(colName).endsWith(filterValue));
+                                        break;
                                     case "is null":
                                         sqlDataFrame = sqlDataFrame.or(dataFrame.col(colName).isNull());
                                         break;
@@ -139,20 +145,23 @@ public class Filter implements Transformation {
                     }
 
                     filteredDF = dataFrame.filter(sqlDataFrame);
-                    filteredDF.show(100);
                     System.out.println("showing dataframe after filter ");
+                    filteredDF.show(100);
 
 
 
                 }
-                JavaRDD<WrapperMessage> finalRDD = emptyRDD;
+                JavaPairRDD<String,WrapperMessage> finalRDD = null;
                 if (filteredDF != null)
-                    finalRDD = filteredDF.javaRDD().map(s -> WrapperMessage.convertToWrapperMessage(s));
+                    finalRDD = filteredDF.javaRDD().mapToPair(s -> new Tuple2<String,WrapperMessage>(null,new WrapperMessage(s)));
+                System.out.println("End of filter/validation = " + new Date() +"for pid = "+pid);
                 return finalRDD;
+
             }
         });
-        finalDStream.print();
-        return finalDStream.mapToPair(s -> new Tuple2<String, WrapperMessage>(null,s));
+
+        filteredDstream.print();
+        return filteredDstream;
 
     }
 

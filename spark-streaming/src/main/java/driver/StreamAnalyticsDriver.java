@@ -71,7 +71,7 @@ public class StreamAnalyticsDriver implements Serializable {
 
     public static void main(String[] args) {
 
-           Integer parentProcessId = Integer.parseInt(args[0]);
+        parentProcessId = Integer.parseInt(args[0]);
         try {
             String username = (args[1]);
             GetProcess getProcess = new GetProcess();
@@ -132,7 +132,7 @@ public class StreamAnalyticsDriver implements Serializable {
                 batchDuration = Long.valueOf(properties.getProperty("batchDuration"));
 
             JavaStreamingContext ssc = new JavaStreamingContext(sc, new Duration(batchDuration));
-            ssc.checkpoint("hdfs://localhost:8020/user/cloudera/checkpoint2");
+            ssc.checkpoint("/tmp/checkpoint/"+parentProcessId);
             Map<String,Broadcast<HashMap<String,String>>> broadcastMap = new HashMap<String,Broadcast<HashMap<String,String>>>();
 
                 Properties broadcastProperties = getProperties.getProperties(parentProcessId.toString(), "broadcast");
@@ -200,6 +200,8 @@ public class StreamAnalyticsDriver implements Serializable {
 
             ssc.start();
             ssc.awaitTermination();
+
+
         }catch (Exception e){
             LOGGER.info("final exception = " + e);
             e.printStackTrace();
@@ -352,13 +354,9 @@ public class StreamAnalyticsDriver implements Serializable {
                         public JavaPairRDD<String, WrapperMessage> call(JavaPairRDD<String, String> inputPairRDD) throws Exception {
                             JavaPairRDD<String, WrapperMessage> outputPairRdd = null;
                             JavaRDD<String> javaRDD = inputPairRDD.map(t -> parseXMLString(t));
-                            javaRDD.foreach(s -> System.out.println("rdd xmljson string "+s));
-
 
                             JavaRDD<Row> rowJavaRDD = sqlContext.read().json(javaRDD).javaRDD();
-                            System.out.println(" Printing schema of kafka message" );
-                            System.out.println("rdd schema = " + sqlContext.read().json(javaRDD).schema());
-                            javaRDD.foreach(s -> System.out.println("rdd xmljson Row "+s));
+
                             //new XmlReader().xmlRdd(sqlContext, javaRDD.rdd()).printSchema();
                             //JavaRDD<Row> rowJavaRDD = new XmlReader().xmlRdd(sqlContext, javaRDD.rdd()).javaRDD();
 
@@ -374,7 +372,6 @@ public class StreamAnalyticsDriver implements Serializable {
                     wrapperDStream = convertToDStreamWrapperMessage(msgDataStream, dStreamPidMap.get(msgDataStream));
                 }
                 transformedDStreamMap.put(pid,wrapperDStream);
-                System.out.println("transformedDStreamMap = " + transformedDStreamMap);
                 SchemaReader schemaReader = new SchemaReader();
                 StructType schema = schemaReader.generateSchema(pid);
                 System.out.println("schema.toString() = " + schema.toString());
@@ -411,7 +408,10 @@ public class StreamAnalyticsDriver implements Serializable {
                 }
                 for (int i = 0; i < nextPidInts.length; i++) {
                     for (Integer prevPid : prevMap.get(nextPidInts[i])) {
-                        if (transformedDStreamMap.get(prevPid) == null) {
+                        if(listOfPersistentStores.size()==0 && nextPidInts[i].toString().equalsIgnoreCase(parentProcessId.toString())){
+                            return;
+                        }
+                        else if (transformedDStreamMap.get(prevPid) == null) {
                             return;
                         }
                     }
@@ -475,7 +475,7 @@ public class StreamAnalyticsDriver implements Serializable {
 
                                 Class persistentStoreClass = Class.forName(persistentStoreClassName);
                                 PersistentStore persistentStoreObject = (PersistentStore) persistentStoreClass.newInstance();
-                                persistentStoreObject.persist(emptyRDD,prevDStream, pid, prevPid, schema);
+                                persistentStoreObject.persist(emptyRDD,prevDStream, pid, prevPid, schema,broadcastMap,ssc);
                         }
                     }
 

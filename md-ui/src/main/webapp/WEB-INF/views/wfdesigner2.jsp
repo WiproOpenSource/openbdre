@@ -1168,8 +1168,8 @@
                                                          </select>
                                                      </div>
                                                         <div class="form-group">
-                                                        <label class="control-label col-sm-2" for="{{genConfig.key}}-propkey">Window Duration</label>
-                                                        <input class="form-control" id="windowDuration" >
+                                                        <label class="control-label col-sm-2" for="{{genConfig.key}}-propkey">Timeout Duration(in milliseconds)</label>
+                                                        <input class="form-control" id="windowDuration" value="30000">
 
                                                         </input>
                                                     </div>
@@ -1657,7 +1657,7 @@
                               var columnFamily=document.getElementById("columnFamily."+num).value;
                               var columnName=document.getElementById("columnName."+num).value;
                               console.log(connectionName+" "+tableName+" "+columnFamily+" "+columnName);
-                              document.getElementById(id).value=connectionName+tableName+columnFamily+columnName;
+                              document.getElementById(id).value=tableName+"_"+columnFamily+"_"+columnName;
                             }
 
                       function connectionNames(){

@@ -313,12 +313,7 @@
                                                                                 url: "process.page",
                                                                                 children: []
                             								},
-                            								{
-                                                                            label: "Stream Jobs Registry",
-                                                                            collapse: "1",
-                                                                            url: "process2.page",
-                                                                            children: []
-                                                        },
+
                                                                             {
                                                                                 label: "Workflow Creator",
                                                                                 collapse: "1",

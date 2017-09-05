@@ -38,8 +38,8 @@ public class GetMessageColumns extends MetadataAPIBase {
 
     public static void main(String[] args) {
         // Set<String> columnNames = new GetMessageColumns().getMessageColumnNames(45);
-        System.out.println("final result = " + new GetMessageColumns().getMessageColumnNames(44));
-        //System.out.println("final result = " + new GetMessageColumns().getMessageList(45));
+        System.out.println("column names = " + new GetMessageColumns().getMessageColumnNames(106));
+        //System.out.println("final result = " + new GetMessageColumns().getMessageList(92));
     }
 
     public Set<String> getColumnNames(Integer pid) {
@@ -79,7 +79,7 @@ public class GetMessageColumns extends MetadataAPIBase {
         System.out.println("prevMap = " + prevMap);
 
         List<Integer> sourcesForGivenNode = new GetMessageColumns().recursivelyGetSources(pid);
-        Set<String> columnNames = new HashSet<>();
+        Set<String> columnNames = new LinkedHashSet<>();
 
 
 
@@ -168,7 +168,7 @@ public class GetMessageColumns extends MetadataAPIBase {
 
 
     public Set<String> getMessageColumnNames(Integer pid) {
-        Set<String> columnDetails = new HashSet<>();
+        Set<String> columnDetails = new LinkedHashSet<>();
         Process selectedProcess = processDAO.get(pid);
         Process parentProcess = selectedProcess.getProcess();
         Integer parentProcessId = parentProcess.getProcessId();
@@ -363,7 +363,7 @@ public class GetMessageColumns extends MetadataAPIBase {
     public void add(Integer key, Integer newValue, Map<Integer,Set<Integer>> prevMap) {
         Set<Integer> currentValue = prevMap.get(key);
         if (currentValue == null) {
-            currentValue = new HashSet<>();
+            currentValue = new LinkedHashSet<>();
             prevMap.put(key, currentValue);
         }
         currentValue.add(newValue);

@@ -1228,6 +1228,7 @@
                                 											modal: true,
                                 											buttons: {
                                 												"OK": function() {
+                                												    $('div#Container').jtable('load');
                                 													$(this).dialog("close");
                                 												}
                                 											}
@@ -1243,6 +1244,7 @@
                                 											modal: true,
                                 											buttons: {
                                 												"OK": function() {
+                                												    $('div#Container').jtable('load');
                                 													$(this).dialog("close");
                                 												}
                                 											}
@@ -1301,7 +1303,9 @@
                                                                                 height: 'auto',
                                                                                 modal: true,
                                                                                 buttons: {
+
                                                                                     "OK": function() {
+                                                                                        $('div#Container').jtable('load');
                                                                                         $(this).dialog("close");
                                                                                     }
                                                                                 }
@@ -1873,7 +1877,7 @@
                                                                       <div class="form-group" >
                                                                          <label class="control-label col-sm-2" for="executorCores">Executor Cores</label>
                                                                          <div class="col-sm-10">
-                                                                          <input type="text" class="form-control"  id="executorCores" name="executorCores" value="3" required>
+                                                                          <input type="text" class="form-control"  id="executorCores" name="executorCores" value="2" required>
                                                                          </div>
                                                                        </div>
 
@@ -1881,7 +1885,7 @@
                                                                         <div class="form-group" >
                                                                            <label class="control-label col-sm-2" for="executorMemory">Executor Memory</label>
                                                                            <div class="col-sm-10">
-                                                                            <input type="text" class="form-control"  id="executorMemory" name="executorMemory" value="1024" required>
+                                                                            <input type="text" class="form-control"  id="executorMemory" name="executorMemory" value="512" required>
                                                                            </div>
                                                                          </div>
                               <div class="form-group" >

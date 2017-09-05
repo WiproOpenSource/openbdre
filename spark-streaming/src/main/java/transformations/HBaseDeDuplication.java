@@ -1,5 +1,8 @@
-package com.bts.customfunctions;
+package transformations;
 
+import com.wipro.ats.bdre.md.api.GetConnectionProperties;
+import com.wipro.ats.bdre.md.api.GetConnections;
+import com.wipro.ats.bdre.md.dao.jpa.Connections;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.hbase.HBaseConfiguration;
 import org.apache.hadoop.hbase.TableName;
@@ -10,86 +13,60 @@ import org.apache.hadoop.hbase.util.Bytes;
 import org.apache.spark.api.java.JavaRDD;
 import org.apache.spark.api.java.JavaSparkContext;
 import org.apache.spark.api.java.function.Function;
-import org.apache.spark.api.java.function.PairFunction;
-import org.apache.spark.broadcast.Broadcast;
-import org.apache.spark.sql.Row;
 import org.apache.spark.sql.types.StructType;
 import org.apache.spark.streaming.api.java.JavaDStream;
 import org.apache.spark.streaming.api.java.JavaPairDStream;
 import org.apache.spark.streaming.api.java.JavaStreamingContext;
 import scala.Tuple2;
-import transformations.Custom;
 import util.WrapperMessage;
 
-import java.io.Serializable;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Set;
+import java.util.Properties;
 
 /**
  * Created by cloudera on 8/4/17.
  */
-public class HBaseDeDuplication extends Custom {
+public class HBaseDeDuplication {
 
-    @Override
-    public JavaPairDStream<String, WrapperMessage> convertJavaPairDstream(JavaPairDStream<String, WrapperMessage> inputDstream, Map<String, Broadcast<HashMap<String, String>>> broadcastMap,JavaStreamingContext jssc) {
-        JavaPairDStream<String,Row> idValueStream = inputDstream.mapValues(s -> s.getRow());
-        JavaPairDStream<String,WrapperMessage> businesskeyvaluestream =  idValueStream.mapToPair(new BusinessKeyAttribution2());
-        businesskeyvaluestream.print();
+    public JavaPairDStream<String, WrapperMessage> convertJavaPairDstream(JavaPairDStream<String, WrapperMessage> businesskeyvaluestream,JavaStreamingContext jssc, String hbaseConnectionName, String hbaseTableName, StructType schema) {
 
         JavaDStream<String> buskeyStream = businesskeyvaluestream.map(s -> s._1);
-        buskeyStream.print();
 
-        JavaPairDStream<String, Integer> existingDataInResolvedHBase =
+        JavaPairDStream<String, Integer> existingDataInHBase =
                 buskeyStream.transform(
-                        new BulkGetRowKeyByKey(getHBaseContext(jssc.sparkContext()), "resolved"))
+                        new BulkGetRowKeyByKey(getHBaseContext(jssc.sparkContext(),hbaseConnectionName), hbaseTableName))
                         .mapToPair(feSpi -> new Tuple2<String, Integer>(feSpi,1));
 
-        System.out.println(" HBASE data ");
-        existingDataInResolvedHBase.print();
 
-        JavaPairDStream<String, Integer> existingDataInUnResolvedHBase =
+        String colFamily = schema.fields()[0].name();
+        String colName = "event";
+
+       /* JavaPairDStream<String, Integer> existingDataInUnResolvedHBase =
                 buskeyStream.transform(
-                        new BulkGetRowKeyFromUnresolved(getHBaseContext(jssc.sparkContext()), "Unresolved"))
+                        new BulkGetRowKeyFromUnresolved(getHBaseContext(jssc.sparkContext(),hbaseConnectionName), "Unresolved",colFamily,colName))
                         .mapToPair(feSpi -> new Tuple2<String, Integer>(feSpi,1));
 
-        System.out.println(" HBASE data ");
-        existingDataInUnResolvedHBase.print();
-
-        JavaPairDStream<String, Integer> existingDataInHBase = existingDataInResolvedHBase.union(existingDataInUnResolvedHBase);
-
-        businesskeyvaluestream.leftOuterJoin(existingDataInHBase).print();
+        JavaPairDStream<String, Integer> existingDataInHBase2 = existingDataInHBase.union(existingDataInUnResolvedHBase);
+        */
 
         JavaPairDStream<String, WrapperMessage> finalNonDuplicateInBatch = businesskeyvaluestream.leftOuterJoin(existingDataInHBase)
                 .filter(tpl -> !tpl._2._2.isPresent())
                 .mapToPair(tpl -> new Tuple2<String, WrapperMessage>(tpl._1, tpl._2._1));
 
-        System.out.println(" Final Data ");
-        finalNonDuplicateInBatch.print();
         return finalNonDuplicateInBatch;
     }
 
+    public static JavaHBaseContext getHBaseContext(JavaSparkContext jsc, String connectionName) {
+        GetConnections getConnections = new GetConnections();
+        Connections conn = getConnections.getConnection(connectionName);
+        GetConnectionProperties getConnectionProperties = new GetConnectionProperties();
+        Properties hbaseProperties=  getConnectionProperties.getConnectionProperties(connectionName,"persistentStore");
 
+        String masterAddress = hbaseProperties.getProperty("hbaseMasterAddress");
+        String[] masterIpAndPort = masterAddress.split(":");
 
-    @Override
-    public JavaPairDStream<String, WrapperMessage> convertMultiplePairDstream(Map<Integer, JavaPairDStream<String, WrapperMessage>> prevDStreamMap, Map<Integer, Set<Integer>> prevMap, Integer pid, StructType schema, Map<String, Broadcast<HashMap<String, String>>> broadcastMap, JavaStreamingContext jssc) {
-        return null;
-    }
-
-    protected static JavaHBaseContext getHBaseContext(JavaSparkContext jsc) {
-        JavaHBaseContext hbaseContext = new JavaHBaseContext(jsc, HbaseUtils.getConfiguration("localhost", "2181", "localhost", "60000"));
+        JavaHBaseContext hbaseContext = new JavaHBaseContext(jsc, HbaseUtils.getConfiguration(hbaseProperties.getProperty("zKHost"), hbaseProperties.getProperty("zKPort"),masterIpAndPort[0], masterIpAndPort[1]));
         return hbaseContext;
     }
-}
-
-class BusinessKeyAttribution2 implements Serializable,PairFunction<Tuple2<String, Row>, String, WrapperMessage> {
-    @Override
-    public Tuple2<String, WrapperMessage> call(Tuple2<String, Row> input) throws Exception {
-            Row inputRow = input._2;
-            Row headerRow = inputRow.getStruct(inputRow.fieldIndex("Header"));
-            String businessKey = headerRow.getString(headerRow.fieldIndex("BusinessKey"));
-            return new Tuple2<String, WrapperMessage>(businessKey, new WrapperMessage(input._2));
-        }
 }
 
 class HbaseUtils {
@@ -131,24 +108,6 @@ class BulkGetRowKeyByKey implements Function<JavaRDD<String>, JavaRDD<String>> {
     }
 }
 
-class BulkGetRowKeyFromUnresolved implements Function<JavaRDD<String>, JavaRDD<String>> {
-
-
-    private JavaHBaseContext hbaseContext;
-    private String tableName;
-
-    public BulkGetRowKeyFromUnresolved(JavaHBaseContext hbaseContext, String tableName) {
-        this.hbaseContext = hbaseContext;
-        this.tableName = tableName;
-    }
-
-    @Override
-    public JavaRDD<String> call(JavaRDD<String> keys) throws Exception {
-        return hbaseContext.bulkGet(TableName.valueOf(tableName), 2, keys,
-                new RowKeyGetFunction(),
-                new RowKeyResultFunctionUnresolved()).filter(key -> (key != null));
-    }
-}
 
 class RowKeyGetFunction implements Function<String, Get> {
 
@@ -165,10 +124,40 @@ class RowKeyResultFunction implements Function<Result, String> {
     }
 }
 
+class BulkGetRowKeyFromUnresolved implements Function<JavaRDD<String>, JavaRDD<String>> {
+
+
+    private JavaHBaseContext hbaseContext;
+    private String tableName;
+    private String colFamily;
+    private String colName;
+
+    public BulkGetRowKeyFromUnresolved(JavaHBaseContext hbaseContext, String tableName, String colFamily, String colName) {
+        this.hbaseContext = hbaseContext;
+        this.tableName = tableName;
+        this.colFamily = colFamily;
+        this.colName = colName;
+    }
+
+    @Override
+    public JavaRDD<String> call(JavaRDD<String> keys) throws Exception {
+        return hbaseContext.bulkGet(TableName.valueOf(tableName), 2, keys,
+                new RowKeyGetFunction(),
+                new RowKeyResultFunctionUnresolved(colFamily,colName)).filter(key -> (key != null));
+    }
+}
+
 class RowKeyResultFunctionUnresolved implements Function<Result, String> {
 
+    private String colFamily;
+    private String colName;
+    
+    public RowKeyResultFunctionUnresolved(String colFamily, String colName){
+        this.colFamily = colFamily;
+        this.colName = colName;
+    }
     public String call(Result result) throws Exception {
-        String dealTuple = Bytes.toString(result.getValue("deals".getBytes(),"event".getBytes()));
+        String dealTuple = Bytes.toString(result.getValue(colFamily.getBytes(),colName.getBytes()));
         if(dealTuple != null){
             return Bytes.toString(result.getRow());
         }
