@@ -38,7 +38,7 @@ public class Filter implements Transformation {
         JavaPairDStream<String,WrapperMessage> filteredDstream = prevDStream.transformToPair(new Function<JavaPairRDD<String, WrapperMessage>, JavaPairRDD<String, WrapperMessage>>() {
             @Override
             public JavaPairRDD<String, WrapperMessage> call(JavaPairRDD<String, WrapperMessage> rddPairWrapperMessage) throws Exception {
-                System.out.println("beginning of filter/validation = " + new Date() +"for pid = "+pid);
+                System.out.println("beginning of filter/validation = " + new Date().getTime() +"for pid = "+pid);
                 JavaRDD<Row> rddRow = rddPairWrapperMessage.map(s -> s._2.getRow());
                 SQLContext sqlContext = SQLContext.getOrCreate(rddRow.context());
                 DataFrame dataFrame = sqlContext.createDataFrame(rddRow, schema);
@@ -154,7 +154,7 @@ public class Filter implements Transformation {
                 JavaPairRDD<String,WrapperMessage> finalRDD = null;
                 if (filteredDF != null)
                     finalRDD = filteredDF.javaRDD().mapToPair(s -> new Tuple2<String,WrapperMessage>(null,new WrapperMessage(s)));
-                System.out.println("End of filter/validation = " + new Date() +"for pid = "+pid);
+                System.out.println("End of filter/validation = " + new Date().getTime() +"for pid = "+pid);
                 return finalRDD;
 
             }

@@ -33,9 +33,9 @@ public class DeDuplication implements Transformation {
             @Override
             public Void call(JavaPairRDD<String, WrapperMessage> stringWrapperMessageJavaPairRDD, Time time) throws Exception {
                 if(type.equalsIgnoreCase("WindowDeduplication"))
-                    System.out.println("Beginning of Window deduplication = " + new Date() +"for pid = "+pid);
+                    System.out.println("Beginning of Window deduplication = " + new Date().getTime() +"for pid = "+pid);
                 else if(type.equalsIgnoreCase("HbaseDeduplication"))
-                    System.out.println("Beginning of Hbase deduplication = " + new Date() +"for pid = "+pid);
+                    System.out.println("Beginning of Hbase deduplication = " + new Date().getTime() +"for pid = "+pid);
                 return null;
             }
         });
@@ -63,13 +63,13 @@ public class DeDuplication implements Transformation {
             HBaseDeDuplication hBaseDeDuplication = new HBaseDeDuplication();
             deDupPairDstream = hBaseDeDuplication.convertJavaPairDstream(pairedDstream,jssc,hbaseConnectionName,hbaseTableName,schema);
         }
-        prevDStream.foreachRDD(new Function2<JavaPairRDD<String, WrapperMessage>, Time, Void>() {
+        deDupPairDstream.foreachRDD(new Function2<JavaPairRDD<String, WrapperMessage>, Time, Void>() {
             @Override
             public Void call(JavaPairRDD<String, WrapperMessage> stringWrapperMessageJavaPairRDD, Time time) throws Exception {
                 if(type.equalsIgnoreCase("WindowDeduplication"))
-                    System.out.println("End of Window deduplication = " + new Date() +"for pid = "+pid);
+                    System.out.println("End of Window deduplication = " + new Date().getTime() +"for pid = "+pid);
                 else if(type.equalsIgnoreCase("HbaseDeduplication"))
-                    System.out.println("End of Hbase deduplication = " + new Date() +"for pid = "+pid);
+                    System.out.println("End of Hbase deduplication = " + new Date().getTime() +"for pid = "+pid);
                 return null;
             }
         });
