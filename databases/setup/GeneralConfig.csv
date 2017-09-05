@@ -599,7 +599,6 @@
 
 '41','param','Parameters','Additional parameters', 1,'true','text', 1
 '43','default','Filter','Filter', 1,'true','filter', 1
-'58','hive','Hive','Hive', 1,'true','hive', 1
 '65','join','Join','Join', 1,'true','join', 1
 '66','Sort','Sort','Sort', 1,'true','sort', 1
 '67','aggregation','Aggregation','Aggregation', 1,'true','aggregation', 1
@@ -638,7 +637,7 @@
 
 '44','connection','HDFS Properties','hdfs',1,'true','persistentStore',1
 
-'58','connection','Hive Properties','Hive',1,'true','persistentStore',1
+'58','connection','Hive Properties','Hive',1,'true','hive',1
 
 '59','connection','HBase Properties','HBase',1,'true','persistentStore',1
 
@@ -752,11 +751,10 @@
 'HDFS_PersistentStores_Connection','nameNodePort','Name Node Port','', 1,'','text', 1
 'HDFS_PersistentStores_Connection','hdfsPath','HDFS PATH','', 1,'','text', 1
 
-'Hive_PersistentStores_Connection','connectionUrl','Connection Url','', 1,'','text', 1
-'Hive_PersistentStores_Connection','dbName','Database Name','', 1,'','text', 1
-'Hive_PersistentStores_Connection','tableName','Table Name','', 1,'','text', 1
-'Hive_PersistentStores_Connection','username','Username','', 1,'','text', 1
-'Hive_PersistentStores_Connection','password','Password','', 1,'','text', 1
+'Hive_PersistentStores_Connection','metastoreURI','MetastoreURI','', 1,'thrift://localhost:9083','text', 1
+'Hive_PersistentStores_Connection','dbName','Database Name','', 1,'default','text', 1
+'Hive_PersistentStores_Connection','metastoreWarehouseDir','Metastore WarehouseDir','', 1,'/user/hive/warehouse','text', 1
+
 
 'HBase_PersistentStores_Connection','zKHost','Zookeeper Host','Zookeeper host name for hbase cluster.', 1,'','text', 1
 'HBase_PersistentStores_Connection','zKPort','Zookeeper Port','Zookeeper port for hbase cluster.', 1,'','text', 1

@@ -762,6 +762,44 @@ public class PropertiesAPI extends MetadataAPIBase {
         return restWrapper;
     }
 
+
+    @RequestMapping(value = "/addHiveProperties/{id}", method = RequestMethod.POST)
+    @ResponseBody
+    public RestWrapper addHiveProperties(@PathVariable("id") Integer processId, @RequestParam Map<String,String> map, Principal principal) {
+        RestWrapper restWrapper = null;
+        try {
+            LOGGER.info("processId is "+processId);
+            LOGGER.info("map data is "+map);
+            Process process=processDAO.get(processId);
+            for (Map.Entry<String, String> entry : map.entrySet())
+            {
+
+                com.wipro.ats.bdre.md.dao.jpa.Properties jpaProperties= new com.wipro.ats.bdre.md.dao.jpa.Properties();
+                PropertiesId jpaPropertiesId=new PropertiesId();
+                jpaPropertiesId.setProcessId(processId);
+                jpaPropertiesId.setPropKey(entry.getKey());
+
+                jpaProperties.setId(jpaPropertiesId);
+                jpaProperties.setProcess(process);
+                jpaProperties.setConfigGroup("hive");
+                jpaProperties.setDescription("hive properties");
+                jpaProperties.setPropValue(entry.getValue());
+                propertiesDAO.insert(jpaProperties);
+            }
+            restWrapper = new RestWrapper(null, RestWrapper.OK);
+        } catch (MetadataException e) {
+            LOGGER.error(e);
+            restWrapper = new RestWrapper(e.getMessage(), RestWrapper.ERROR);
+        }
+        catch (SecurityException e) {
+            LOGGER.error(e);
+            restWrapper = new RestWrapper(e.getMessage(), RestWrapper.ERROR);
+        }
+        return restWrapper;
+    }
+
+
+
     @RequestMapping(value = "/getIdentifiers/{id}", method = RequestMethod.GET)
 
     @ResponseBody
