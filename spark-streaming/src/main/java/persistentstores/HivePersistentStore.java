@@ -1,5 +1,6 @@
 package persistentstores;
 
+import com.wipro.ats.bdre.md.api.GetConnectionProperties;
 import com.wipro.ats.bdre.md.api.GetMessageColumns;
 import com.wipro.ats.bdre.md.api.GetProperties;
 import messageschema.SGDataTypes;
@@ -43,12 +44,17 @@ public class HivePersistentStore implements PersistentStore {
         StructType schema1 = DataTypes.createStructType(fields);
 
         GetProperties getProperties = new GetProperties();
-        Properties hiveProperties = getProperties.getProperties(String.valueOf(pid), "persistentStore");
-        String metastoreURI = hiveProperties.getProperty("metastoreURI");
-        String metaStoreWareHouseDir = hiveProperties.getProperty("metastoreWarehouseDir");
-        String hiveDBName = hiveProperties.getProperty("hiveDBName");
-        String hiveTableName = hiveProperties.getProperty("hiveTableName");
+        Properties hiveProperties = getProperties.getProperties(String.valueOf(pid), "hive");
+
+        String hiveTableName = hiveProperties.getProperty("tableName");
         String format = hiveProperties.getProperty("format");
+        String connectionName = hiveProperties.getProperty("connectionName");
+        System.out.println("connectionName = " + connectionName);
+        GetConnectionProperties getConnectionProperties = new GetConnectionProperties();
+        Properties hiveConfProperties=  getConnectionProperties.getConnectionProperties(connectionName,"persistentStore");
+        String metastoreURI = hiveConfProperties.getProperty("metastoreURI");
+        String metaStoreWareHouseDir = hiveConfProperties.getProperty("metastoreWarehouseDir");
+        String hiveDBName = hiveConfProperties.getProperty("dbName");
 
         HiveContext hiveContext = new org.apache.spark.sql.hive.HiveContext(jssc.sparkContext().sc());
         hiveContext.setConf("hive.metastore.uris", metastoreURI);
