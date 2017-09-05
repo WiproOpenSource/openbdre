@@ -57,7 +57,13 @@ public class LinkResolution extends Custom{
         List<Integer> prevPidList = new ArrayList<>();
         prevPidList.addAll(prevMap.get(pid));
         System.out.println("prevPidList in custom join= " + prevPidList);
-
+        prevDStreamMap.get(prevPidList.get(0)).foreachRDD(new Function2<JavaPairRDD<String, WrapperMessage>, Time, Void>() {
+            @Override
+            public Void call(JavaPairRDD<String, WrapperMessage> stringWrapperMessageJavaPairRDD, Time time) throws Exception {
+                System.out.println("Beginning of Link Resolution = " + new Date());
+                return null;
+            }
+        });
         MapToPair mapToPair = new MapToPair();
         JavaPairDStream<String,Row> dealDStream = mapToPair.mapToPair(prevDStreamMap.get(prevPidList.get(0)).map(s -> s._2), "Deal.Header.BusinessKey:String").mapValues(s -> s.getRow());
         dealDStream.map(s -> new Tuple2<String,String>(s._1,s._2.toString())).transform(new BulkPutMessage(getHBaseContext(jssc.sparkContext()) , "Deal")).print();
@@ -70,7 +76,9 @@ public class LinkResolution extends Custom{
 
         JavaPairDStream<String, Tuple2<Row,Row>> dealTransactionJoinDstream = dealDStream.fullOuterJoin(transactionDStream)
                                                                                                .mapValues(tpl -> new Tuple2<Row, Row>(tpl._1.orNull(),tpl._2.orNull()));
+/*
         dealTransactionJoinDstream.print();
+*/
       //  trnxElementDStream.print();
         JavaPairDStream<String, Tuple3<Row, Row, Row>> threeStreamsJoinDstream = null;
         if(dealTransactionJoinDstream != null) {
@@ -81,20 +89,26 @@ public class LinkResolution extends Custom{
         else {
             threeStreamsJoinDstream  = trnxElementDStream.mapValues(s -> new Tuple3<Row, Row, Row>(null, null, s));
         }
+/*
         threeStreamsJoinDstream.print();
+*/
 
         JavaMapWithStateDStream<String,Tuple3<Row,Row,Row>,Tuple3<Row,Row,Row>,Tuple2<String,Tuple3<Row,Row,Row>>> mapWithStateDStream = threeStreamsJoinDstream.mapWithState(StateSpec.function(new LinkResolverInMemory()).timeout(new Duration(100)));
         JavaPairDStream<String, Tuple3<Row,Row,Row>> inMemoryDstream = mapWithStateDStream.mapToPair(tpl -> new Tuple2<String, Tuple3<Row, Row, Row>>(tpl._1(),tpl._2));
+/*
         inMemoryDstream.print();
+*/
 
         JavaPairDStream<String, Tuple3<Row,Row,Row>>  inMemoryResolvedDstream = inMemoryDstream.filter(tpl -> (tpl._2._1() != null && tpl._2._2()!= null && tpl._2._3()!= null));
         JavaPairDStream<String, Tuple3<Row,Row,Row>>  inMemoryUnResolvedDstream = inMemoryDstream.filter(tpl -> (tpl._2._1() == null || tpl._2._2()== null || tpl._2._3()== null));
 
-        inMemoryResolvedDstream.print();
-        inMemoryUnResolvedDstream.print();
+     /*   inMemoryResolvedDstream.print();
+        inMemoryUnResolvedDstream.print();*/
         
         JavaPairDStream<String, Tuple3<String,String,String>> existingDataInHBase = inMemoryUnResolvedDstream.transformToPair(new  BulkGetRowKeyByKey2(getHBaseContext(jssc.sparkContext()), "Unresolved"));
+/*
         existingDataInHBase.print();
+*/
 
         //JavaPairDStream<String, Tuple3<String,String,String>> joinWithHBase= inMemoryUnResolvedDstream.leftOuterJoin(existingDataInHBase).mapToPair(new HBaseLinkResolver());
         JavaPairDStream<String, Tuple3<String,String,String>> unResolvedWithHBase = inMemoryUnResolvedDstream.leftOuterJoin(existingDataInHBase).filter(s -> !s._2._2.isPresent()).mapToPair(s -> new Tuple2<String, Tuple3<String,String,String>>(s._1, new Tuple3<String,String,String>((s._2._1._1() != null ? s._2._1._1().toString() : null) , (s._2._1._2() != null ? s._2._1._2().toString() : null) ,(s._2._1._3() != null ? s._2._1._3().toString() : null))));
@@ -110,7 +124,13 @@ public class LinkResolution extends Custom{
         unResolvedWithHBase.map(s-> new Tuple4(s._1,s._2._1(),s._2._2(),s._2._3())).transform(new BulkPut(getHBaseContext(jssc.sparkContext()) , "Unresolved")).print();
         unResolvedWithHBase2.map(s-> new Tuple4(s._1,s._2._1(),s._2._2(),s._2._3())).transform(new BulkPut(getHBaseContext(jssc.sparkContext()) , "Unresolved")).print();
 
-
+        prevDStreamMap.get(prevPidList.get(0)).foreachRDD(new Function2<JavaPairRDD<String, WrapperMessage>, Time, Void>() {
+            @Override
+            public Void call(JavaPairRDD<String, WrapperMessage> stringWrapperMessageJavaPairRDD, Time time) throws Exception {
+                System.out.println("End of Link Resolution = " + new Date());
+                return null;
+            }
+        });
         return dealDStream.mapValues(s -> new WrapperMessage(s));
     }
 

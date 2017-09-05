@@ -1,9 +1,12 @@
 package transformations;
 
 import com.wipro.ats.bdre.md.api.GetProperties;
+import org.apache.spark.api.java.JavaPairRDD;
 import org.apache.spark.api.java.JavaRDD;
+import org.apache.spark.api.java.function.Function2;
 import org.apache.spark.broadcast.Broadcast;
 import org.apache.spark.sql.types.StructType;
+import org.apache.spark.streaming.Time;
 import org.apache.spark.streaming.api.java.JavaDStream;
 import org.apache.spark.streaming.api.java.JavaPairDStream;
 import org.apache.spark.streaming.api.java.JavaStreamingContext;
@@ -23,12 +26,23 @@ public class DeDuplication implements Transformation {
         Integer prevPid = prevPidList.get(0);
         System.out.println("Inside DeDuplication prevPid = " + prevPid);
         JavaPairDStream<String,WrapperMessage> prevDStream = prevDStreamMap.get(prevPid);
-        JavaDStream<WrapperMessage> dStream = prevDStream.map(s -> s._2);
-
-        JavaPairDStream<String, WrapperMessage> deDupPairDstream= null;
         GetProperties getProperties = new GetProperties();
         Properties dupProperties = getProperties.getProperties(String.valueOf(pid), "deduplication");
         String type = dupProperties.getProperty("type");
+        prevDStream.foreachRDD(new Function2<JavaPairRDD<String, WrapperMessage>, Time, Void>() {
+            @Override
+            public Void call(JavaPairRDD<String, WrapperMessage> stringWrapperMessageJavaPairRDD, Time time) throws Exception {
+                if(type.equalsIgnoreCase("WindowDeduplication"))
+                    System.out.println("Beginning of Window deduplication = " + new Date() +"for pid = "+pid);
+                else if(type.equalsIgnoreCase("HbaseDeduplication"))
+                    System.out.println("Beginning of Hbase deduplication = " + new Date() +"for pid = "+pid);
+                return null;
+            }
+        });
+        JavaDStream<WrapperMessage> dStream = prevDStream.map(s -> s._2);
+
+        JavaPairDStream<String, WrapperMessage> deDupPairDstream= null;
+
         if(type.equalsIgnoreCase("WindowDeduplication")){
             String colName = dupProperties.getProperty("windowDeDuplicationColumn");
             String windowDurationString = dupProperties.getProperty("windowDuration");
@@ -49,7 +63,16 @@ public class DeDuplication implements Transformation {
             HBaseDeDuplication hBaseDeDuplication = new HBaseDeDuplication();
             deDupPairDstream = hBaseDeDuplication.convertJavaPairDstream(pairedDstream,jssc,hbaseConnectionName,hbaseTableName,schema);
         }
-
+        prevDStream.foreachRDD(new Function2<JavaPairRDD<String, WrapperMessage>, Time, Void>() {
+            @Override
+            public Void call(JavaPairRDD<String, WrapperMessage> stringWrapperMessageJavaPairRDD, Time time) throws Exception {
+                if(type.equalsIgnoreCase("WindowDeduplication"))
+                    System.out.println("End of Window deduplication = " + new Date() +"for pid = "+pid);
+                else if(type.equalsIgnoreCase("HbaseDeduplication"))
+                    System.out.println("End of Hbase deduplication = " + new Date() +"for pid = "+pid);
+                return null;
+            }
+        });
         deDupPairDstream.print();
         return deDupPairDstream;
     }

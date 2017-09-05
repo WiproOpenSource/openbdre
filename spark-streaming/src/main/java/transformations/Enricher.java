@@ -1,6 +1,7 @@
 package transformations;
 
 import com.wipro.ats.bdre.md.api.GetProperties;
+import org.apache.spark.api.java.JavaPairRDD;
 import org.apache.spark.api.java.JavaRDD;
 import org.apache.spark.api.java.function.Function;
 import org.apache.spark.broadcast.Broadcast;
@@ -33,13 +34,19 @@ public class Enricher implements Transformation {
         prevPidList.addAll(prevMap.get(pid));
         Integer prevPid = prevPidList.get(0);
         JavaPairDStream<String, WrapperMessage> prevDStream = prevDStreamMap.get(prevPid);
+        prevDStream.foreachRDD(new Function<JavaPairRDD<String, WrapperMessage>, Void>() {
+            @Override
+            public Void call(JavaPairRDD<String, WrapperMessage> stringWrapperMessageJavaPairRDD) throws Exception {
+                System.out.println("Beginning of Enricher = " + new Date() +"for pid = "+pid);
+                return null;
+            }
+        });
         JavaPairDStream<String, Row> inputRowStream = prevDStream.mapValues(s -> s.getRow());
 
 
         JavaPairDStream<String, Row> encrichedRowStream = inputRowStream.mapValues(new Function<Row, Row>() {
             @Override
             public Row call(Row row) throws Exception {
-
                 int[] indicesOfFieldsToBeEnriched = new int[fieldsToBeEnriched.length];
                 String[] valuesAfterEnriching = new String[fieldsToBeEnriched.length];
                 HashMap<Integer, String> enrichMap = new HashMap<Integer, String>();
@@ -79,7 +86,13 @@ public class Enricher implements Transformation {
                 return finalRow;
             }
         });
-
+        prevDStream.foreachRDD(new Function<JavaPairRDD<String, WrapperMessage>, Void>() {
+            @Override
+            public Void call(JavaPairRDD<String, WrapperMessage> stringWrapperMessageJavaPairRDD) throws Exception {
+                System.out.println("End of Enricher = " + new Date() +"for pid = "+pid);
+                return null;
+            }
+        });
         encrichedRowStream.print();
         return encrichedRowStream.mapValues(s -> new WrapperMessage(s));
     }
