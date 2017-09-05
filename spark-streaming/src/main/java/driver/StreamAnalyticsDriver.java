@@ -132,7 +132,7 @@ public class StreamAnalyticsDriver implements Serializable {
                 batchDuration = Long.valueOf(properties.getProperty("batchDuration"));
 
             JavaStreamingContext ssc = new JavaStreamingContext(sc, new Duration(batchDuration));
-            ssc.checkpoint("/user/cloudera/checkpoint2/"+parentProcessId);
+            ssc.checkpoint("/tmp/checkpoint/"+parentProcessId);
             Map<String,Broadcast<HashMap<String,String>>> broadcastMap = new HashMap<String,Broadcast<HashMap<String,String>>>();
 
                 Properties broadcastProperties = getProperties.getProperties(parentProcessId.toString(), "broadcast");
