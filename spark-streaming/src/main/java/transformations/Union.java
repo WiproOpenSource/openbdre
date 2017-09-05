@@ -29,13 +29,10 @@ public class Union implements Transformation
         List<Integer> prevPidList = new ArrayList<>();
         prevPidList.addAll(prevMap.get(pid));
         Integer prevPid1 = prevPidList.get(0);
-        System.out.println("before entering for loop first prevPid1 = " + prevPid1);
         JavaPairDStream<String,WrapperMessage> unionedDStream = prevDStreamMap.get(prevPid1);
 
         Set<String> columnsDataTypesSet = new GetMessageColumns().getMessageColumnNames(pid);
         for(int i=1;i< prevPidList.size();i++){
-            System.out.println("union of dstream of pid = " + prevPidList.get(i));
-
             JavaPairDStream<String,WrapperMessage> dStream1 = prevDStreamMap.get(prevPidList.get(i));
             if(unionedDStream!=null && dStream1!=null){
                 unionedDStream = unionedDStream.transformWithToPair(dStream1, new Function3<JavaPairRDD<String, WrapperMessage>, JavaPairRDD<String, WrapperMessage>, Time, JavaPairRDD<String, WrapperMessage>>() {
@@ -92,17 +89,12 @@ public class Union implements Transformation
 
                     public scala.collection.Seq<java.lang.String> expr(Set<String> mycols, Set<String> allcols){
                         List<String> finalList= new LinkedList<String>();
-                        System.out.println("mycols = " + mycols);
-                        System.out.println("allcols = " + allcols);
                         for(String s: allcols){
-                            System.out.println("s = " + s);
                             if(mycols.contains(s)) {
                                 finalList.add(s);
-                                System.out.println("s is present= " + s);
                             }
                             else {
                                 finalList.add(null +" as "+s);
-                                System.out.println("s is absent= " + s);
                             }
                         }
                         return JavaConversions.asScalaBuffer(new LinkedList<String>(finalList)).toSeq();
