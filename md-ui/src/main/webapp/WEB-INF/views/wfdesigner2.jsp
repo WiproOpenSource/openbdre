@@ -1113,19 +1113,39 @@
                                                         <button type="submit" ng-click="insertPersistentStoreProp(chartViewModel.selectedProcess.processId)" class="btn btn-primary  pull-right">Save</button>
                                                     </form>
 
-                                                     <form class="form-horizontal" role="form" ng-if="genConfig.type == 'hive'">
+                       <form class="form-horizontal" role="form" ng-if="genConfig.type == 'hive'">
 
-                                                                               <div class="form-group">
-                                                                                  <label class="control-label col-sm-2" for="{{genConfig.key}}-propkey">column</label>
-                                                                                  <select class="form-control" id="hiveColumn"  multiple="" >
-                                                                                      <option ng-repeat="column in chartViewModel.columnList" value="{{ column.Value }}">{{ column.DisplayText }}</option>
-                                                                                  </select>
-                                                                              </div>
+                       <div class="form-group">
+                             <label for="persistentStoreConnectionName">Connection Name</label>
+                             <select class="form-control" id="hivePersistentStoreConnectionName">
+                                 <option ng-repeat="connection in persistentStoreConnectionsList" id="{{$index}}" value="{{ connection.Value }}">{{ connection.DisplayText }}</option>
+                             </select>
+                         </div>
 
-                                                                                <div class="clearfix"></div>
-                                                                                 <button type="submit" ng-click="insertHiveProp(chartViewModel.selectedProcess.processId)" class="btn btn-primary  pull-right">Save</button>
-                                                                            </form>
-                                                 <form class="form-horizontal" role="form" ng-if="genConfig.type == 'deDuplication'">
+                          <div class="form-group">
+                         <label  for="hiveTableName">Table Name</label>
+                         <input class="form-control" id="hiveTableName" >
+
+                         </input>
+                         </div>
+
+
+                   <div class="form-group">
+                     <label for="hiveFormat">Format</label>
+                     <select class="form-control" id="hiveFormat">
+                      <option  value="parquet" selected>parquet</option>
+                      <option  value="json">json</option>
+                     </select>
+                 </div>
+
+
+                               <div class="clearfix"></div>
+                                <button type="submit" ng-click="insertHiveProp(chartViewModel.selectedProcess.processId)" class="btn btn-primary  pull-right">Save</button>
+                           </form>
+
+
+
+                       <form class="form-horizontal" role="form" ng-if="genConfig.type == 'deDuplication'">
 
 
 

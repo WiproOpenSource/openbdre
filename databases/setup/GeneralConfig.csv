@@ -636,7 +636,9 @@
 '57','connection','JDBC Properties','JDBC', 1,'true','emitter', 1
 
 '44','connection','HDFS Properties','hdfs',1,'true','persistentStore',1
-'58','connection','Hive Properties','Hive',1,'true','persistentStore',1
+
+'58','connection','Hive Properties','Hive',1,'true','hive',1
+
 '59','connection','HBase Properties','HBase',1,'true','persistentStore',1
 
 'column_transformation','no transformation','no transformation','no column transformation',1,'no transformation','text',1
@@ -748,6 +750,11 @@
 'HDFS_PersistentStores_Connection','nameNodeHost','Name Node Host','', 1,'','text', 1
 'HDFS_PersistentStores_Connection','nameNodePort','Name Node Port','', 1,'','text', 1
 'HDFS_PersistentStores_Connection','hdfsPath','HDFS PATH','', 1,'','text', 1
+
+'Hive_PersistentStores_Connection','metastoreURI','MetastoreURI','', 1,'thrift://localhost:9083','text', 1
+'Hive_PersistentStores_Connection','dbName','Database Name','', 1,'default','text', 1
+'Hive_PersistentStores_Connection','metastoreWarehouseDir','Metastore WarehouseDir','', 1,'/user/hive/warehouse','text', 1
+
 
 'HBase_PersistentStores_Connection','zKHost','Zookeeper Host','Zookeeper host name for hbase cluster.', 1,'','text', 1
 'HBase_PersistentStores_Connection','zKPort','Zookeeper Port','Zookeeper port for hbase cluster.', 1,'','text', 1

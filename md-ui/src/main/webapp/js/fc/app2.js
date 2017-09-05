@@ -552,10 +552,30 @@ $.ajax({
 
 }
 $scope.insertHiveProp=function(processId){
-var value1 = $('#hiveColumn').val();
-console.log(value1);
- var modal = document.getElementById('myModal');
- modal.style.display = "none";
+var value1 = $('#hivePersistentStoreConnectionName').val();
+var value2 = $('#hiveTableName').val();
+var value3 = $('#hiveFormat').val();
+console.log(value1 +" "+value2+" "+value3);
+var map=new Object();
+map["connectionName"]=value1;
+map["tableName"]=value2;
+map["format"]=value3;
+ $.ajax({
+             type: "POST",
+             url: "/mdrest/properties/addHiveProperties/"+processId,
+             data: jQuery.param(map),
+             success: function(data) {
+                 if(data.Result == "OK") {
+                     var modal = document.getElementById('myModal');
+                      modal.style.display = "none";
+                      alertBox("info","Hive properties added");
+                 }
+                 else
+                 alertBox("warning","Error occured");
+
+             }
+
+         });
 }
 var enricherFinal="";
 function broadcastIdentifierFormIntoText(typeOf) {
