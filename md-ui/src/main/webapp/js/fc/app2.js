@@ -468,6 +468,63 @@ $scope.updateProcessDetails = function() {
 //
 // On clicking Name Descirption update button
 //
+             function insertFilterData(count,data)
+             {
+             console.log(data);
+             console.log("count is "+count);
+
+             for(var i=2;i<=count;i++)
+              addMoreFilter();
+
+              data.forEach( function (arrayItem)
+                 {
+
+                     if(arrayItem.key != "count" || arrayItem.key != "logicalOperator_1"){
+                     var key=arrayItem.key.replace("_",".");
+                     var value=arrayItem.value;
+                     console.log(key+"=="+value);
+                     if(document.getElementById(key) !=null)
+                    document.getElementById(key).value = value;
+                    }
+                 });
+
+             }
+
+
+
+             $scope.addFilterDataAlreadyPresent=function(processId,genConfig)
+                  {
+                  var tempFilterProperties;
+                  console.log(genConfig);
+                  var count;
+                  if(genConfig.value == "Filter"){
+
+                   $.ajax({
+                        type: "GET",
+                        url: "/mdrest/properties/"+processId+'/filter',
+                        success: function(data) {
+                            if(data.Result == "OK") {
+                               console.log(data);
+                               data.Record.forEach( function (arrayItem)
+                               {
+                                   if(arrayItem.key == "count")
+                                   count = arrayItem.value;
+                                   console.log(count);
+                               });
+                               if(count>0)
+                                insertFilterData(count,data.Record);
+                            }
+                            else
+                            alertBox("warning","Error occured");
+
+                        }
+                  });
+
+                  }
+
+                  }
+
+
 
 $scope.insertSourceProp=function(processId){
 var map=new Object();

@@ -372,7 +372,7 @@
 
 
                                     <div class="panel panel-default" ng-repeat="genConfig in chartViewModel.selectedProcessGenConfigProp">
-                                        <div class="panel-heading foldablearrow" data-toggle="collapse" data-parent="#accordion" data-target="#-{{genConfig.key}}" ng-click="chartViewModel.getKeyValueFunction(genConfig)">
+                                        <div class="panel-heading foldablearrow" data-toggle="collapse" data-parent="#accordion" data-target="#-{{genConfig.key}}" ng-click="addFilterDataAlreadyPresent(chartViewModel.selectedProcess.processId,genConfig);chartViewModel.getKeyValueFunction(genConfig);">
                                             {{genConfig.value}}
                                         </div>
                                         <div id="-{{genConfig.key}}" class="panel-collapse collapse">
@@ -506,7 +506,7 @@
                                                 </div>
 
                                                  <div class="col-sm-3">
-                                                       <input type="text" class="form-control" id="filtervalue.1" name="iltervalue.1" placeholder="Filter value">
+                                                       <input type="text" class="form-control" id="filterValue.1" name="filterValue.1" placeholder="Filter value">
                                                     </div>
 
                                                    <button id="remove2" class="btn btn-danger remove-me-filter"><span class="glyphicon glyphicon-trash"></span></button>
@@ -600,7 +600,7 @@
                                     newIn = newIn +  '</div>' ;
 
                                     newIn = newIn +  '<div class="col-md-3">' ;
-                                    newIn = newIn +  '<input class="form-control" id="filtervalue.' + nextFilter + '"placeholder="Filter value" name="filtervalue.' + nextFilter + '">' ;
+                                    newIn = newIn +  '<input class="form-control" id="filterValue.' + nextFilter + '"placeholder="Filter value" name="filterValue.' + nextFilter + '">' ;
                                     newIn = newIn +  '</input>' ;
                                     newIn = newIn +  '</div>' ;
 
