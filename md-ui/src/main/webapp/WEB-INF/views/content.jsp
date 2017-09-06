@@ -587,11 +587,14 @@
                                         elem.addClass("B1");
                                         elem.parent().parent().addClass("activ");
                                     }
-                                    if (url != "") {
+					if(url=="history-server.page"){
+					window.open('http://52.207.210.207:18088','_blank')
+}
+                                    if (url != "" && url!="history-server.page") {
                                         $("#dframe").attr('src', url);
                                         console.log(url, url != "");
                                     } else
-                                        alert("TBD")
+                                        console.log('Page not accessible');
 			};
 			$scope.reset = function (target, index) {
                                     //console.log(target,index);
