@@ -522,6 +522,14 @@ $scope.updateProcessDetails = function() {
 
                   }
 
+                  if(genConfig.value == "Join"){
+                  addMoreJoin("message1");
+                  addMoreJoin("kafka");
+
+                  }
+
+
+
                   }
 
 

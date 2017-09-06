@@ -613,7 +613,7 @@
                                     var removeButton = $(removeBtn);
                                     $(addto).before(newInput);
 
-                                    $("#filterFormGroup" + nextBroadcast).attr('data-source',$(addto).attr('data-source'));
+                                    $("#filterFormGroup" + nextFilter).attr('data-source',$(addto).attr('data-source'));
                                     $("#count").val(nextFilter);
 
                                         $('.remove-me-filter').click(function(e){
@@ -1037,51 +1037,71 @@
                                                      <button type="submit" ng-click="insertGroupByKeyProp(chartViewModel.selectedProcess.processId)" class="btn btn-primary  pull-right">Save</button>
                                                 </form>
 
-                                             <form class="form-horizontal" id="joinabc" role="form" ng-if="genConfig.type == 'join'" >
-                                                                   <div class="form-group">
-                                                                      <label class="control-label col-sm-2" for="{{genConfig.key}}-propkey">Joining Table</label>
-                                                                      <div class="col-sm-10">
-                                                                      <select class="form-control" id="joinTable" ng-change="changeme()" ng-model="joinme" >
-                                                                          <option ng-repeat="column in chartViewModel.messageList" value="{{ column.Value }}">{{ column.DisplayText }}</option>
-                                                                      </select>
-                                                                      </div>
-                                                                      </div>
-                                                                      <div class="form-group">
-                                                                      <label class="control-label col-sm-2" for="{{genConfig.key}}-propkey">Joining Column</label>
-                                                                      <div class="col-sm-10">
-                                                                       <select class="form-control" id="joinColumn" >
-                                                                          <option ng-repeat="column in messageColumnListChart" value="{{ column.Value }}">{{ column.DisplayText }}</option>
-                                                                       </select>
-                                                                       </div>
-                                                                  </div>
+                              <form class="form-horizontal" id="joinabc" role="form" ng-if="genConfig.type == 'join'" >
 
 
-                                                                  <div class="form-group">
-                                                                    <label class="control-label col-sm-2" for="{{genConfig.key}}-propkey">Output Columns</label>
-                                                                    <div class="col-sm-10">
-                                                                     <select class="form-control js-example-basic-multiple" id="joinColumns" multiple="multiple">
-                                                                        <option ng-repeat="column in messageColumnListChart" value="{{ column.Value }}" selected>{{ column.DisplayText }}</option>
-                                                                     </select>
-                                                                     </div>
-                                                                </div>
 
-                                                                <div class="form-group">
-                                                                    <label class="control-label col-sm-2" >Join Type</label>
-                                                                    <div class="col-sm-10">
-                                                                     <select class="form-control " id="join-type">
-                                                                        <option value="Inner Join">Inner Join</option>
-                                                                        <option value="Left Outer Join">Left Outer Join</option>
-                                                                        <option value="Right Outer Join">Right Outer Join</option>
-                                                                        <option value="Full Outer Join">Full Outer Join</option>
-                                                                        <option value="Cross Join">Cross Join</option>
-                                                                     </select>
-                                                                     </div>
-                                                                </div>
 
-                                                                    <div class="clearfix"></div>
-                                                                     <button type="submit" ng-click="insertJoinProperties(chartViewModel.selectedProcess.processId)" class="btn btn-primary  pull-right">Save</button>
-                                                                </form>
+                              <h3 style="margin-left: 2%;">Join Data Details</h3>
+                              <div>
+                              <div class="col-md-3">Join Table</div>
 
+                                <div class="col-md-3">Join Column</div>
+                                 <div class="col-md-3">Output column</div>
+                                 <div class="col-md-3">Join Type</div>
+                               </div>
+
+
+
+
+                                                <div class="clearfix"></div>
+
+
+
+                                            </form>
+      <script>
+                   var nextJoin=0;
+                   function addMoreJoin(message)
+                            {
+                               console.log("in add more function");
+                                    nextJoin = nextJoin + 1;
+                                    var newIn = '';
+                                    newIn = newIn +  '<div class="" id="joinFormGroup' + nextJoin + '">' ;
+                                    newIn = newIn +  '<div class="col-md-3">' ;
+                                    newIn = newIn +  '<input  class="form-control" id="joinTable.' + nextJoin + '" value="'+message+'" name="joinTable.' + nextJoin + '">' ;
+
+                                    newIn = newIn +  '</input>' ;
+                                    newIn = newIn +  '</div>' ;
+                                    newIn = newIn +  '<div class="col-md-3">' ;
+                                    newIn = newIn +  '<select class="form-control" id="joinColumn.' + nextJoin + '" name="joinColumn.' + nextJoin + '">' ;
+                                     newIn = newIn +  columnNames() ;
+                                    newIn = newIn +  '</select>' ;
+                                    newIn = newIn +  '</div>' ;
+                                    newIn = newIn +  '<div class="col-md-3">' ;
+                                    newIn = newIn +  '<select class="form-control" id="joinColumns.' + nextJoin + ' name="joinColumns.' + nextJoin + '">' ;
+                                     newIn = newIn +  operators() ;
+                                    newIn = newIn +  '</select>' ;
+                                    newIn = newIn +  '</div>' ;
+
+                                    newIn = newIn +  '<div class="col-md-3">' ;
+                                    newIn = newIn +  '<select class="form-control" id="join-type.' + nextJoin + '" multiple="multiple" name="join-type.' + nextJoin + '">' ;
+                                    newIn = newIn +  '<option value="Inner Join">Inner Join</option>';
+                                    newIn = newIn +  '<option value="Left Outer Join">Left Outer Join</option>';
+                                    newIn = newIn +  '<option value="Right Outer Join">Right Outer Join</option>';
+                                    newIn = newIn +  '<option value="Full Outer Join">Full Outer Join</option>';
+                                    newIn = newIn +  ' <option value="Cross Join">Cross Join</option>';
+
+                                    newIn = newIn +  '</select>' ;
+                                    newIn = newIn +  '</div>' ;
+                                    newIn = newIn;
+                                    newIn = newIn +  '</div>' ;
+                                    var newInput = $(newIn);
+									$("#joinabc").append(newInput);
+                                    $("#count").val(nextJoin);
+
+                         }
+
+</script>
 
 
 
