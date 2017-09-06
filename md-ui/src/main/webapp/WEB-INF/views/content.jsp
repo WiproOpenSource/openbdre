@@ -521,13 +521,13 @@
                                                                      {
                                                                               label: "History server",
                                                                               collapse: "1",
-									      url:"history-server.page",
+									                                          url:"history-server.page",
                                                                               children: []
                                                  },
                                             {
                                                             label: "Dr-Elephant",
                                                             collapse: "1",
-							    url:"dr-elephant.page",
+							                                url:"dr-elephant.page",
                                                             children: []
                                }
 
