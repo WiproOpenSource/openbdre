@@ -338,7 +338,7 @@ public class StreamAnalyticsDriver implements Serializable {
                         @Override
                         public JavaPairRDD<String, WrapperMessage> call(JavaPairRDD<String, String> inputPairRDD) throws Exception {
                             JavaPairRDD<String, WrapperMessage> outputPairRdd = null;
-                            JavaRDD<String> javaRDD = inputPairRDD.map(s -> s._2).flatMap(s -> Arrays.asList(s.split("\n")));
+                            JavaRDD<String> javaRDD = inputPairRDD.map(s -> s._2);
                             javaRDD.take(15);
                             JavaRDD<Row> rowJavaRDD = sqlContext.read().json(javaRDD).javaRDD();
                             rowJavaRDD.take(15);
