@@ -57,8 +57,8 @@ public class HivePersistentStore implements PersistentStore {
         String hiveDBName = hiveConfProperties.getProperty("dbName");
 
         HiveContext hiveContext = new org.apache.spark.sql.hive.HiveContext(jssc.sparkContext().sc());
-        /*hiveContext.setConf("hive.metastore.uris", metastoreURI);
-        hiveContext.setConf("hive.metastore.warehouse.dir",metaStoreWareHouseDir);*/
+        hiveContext.setConf("hive.metastore.uris", metastoreURI);
+        hiveContext.setConf("hive.metastore.warehouse.dir",metaStoreWareHouseDir);
         inputWrapperDStream.foreachRDD(new Function<JavaPairRDD<String, WrapperMessage>, Void>() {
             @Override
             public Void call(JavaPairRDD<String, WrapperMessage> pairRDD) throws Exception {
