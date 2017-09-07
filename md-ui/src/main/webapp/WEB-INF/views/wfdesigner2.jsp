@@ -1047,8 +1047,8 @@
                               <div class="col-md-3">Join Table</div>
 
                                 <div class="col-md-3">Join Column</div>
-                                 <div class="col-md-3">Output column</div>
                                  <div class="col-md-3">Join Type</div>
+                                 <div class="col-md-3">Output column</div>
                                </div>
 
 
@@ -1060,6 +1060,22 @@
 
                                             </form>
       <script>
+
+                    function messageColumnNames()
+                              {
+                              var connectionListArray=$('[ng-controller="AppCtrl"]').scope().messageColumnListChart;
+                             console.log(connectionListArray);
+                             var opt='';
+                             for(var i=0;i<connectionListArray.length;i++){
+
+                             opt+='<option value="'+connectionListArray[i].Value+'">'+connectionListArray[i].DisplayText+'</option>';
+                             }
+                             return opt;
+
+                              }
+
+
+
                    var nextJoin=0;
                    function addMoreJoin(message)
                             {
@@ -1074,17 +1090,13 @@
                                     newIn = newIn +  '</div>' ;
                                     newIn = newIn +  '<div class="col-md-3">' ;
                                     newIn = newIn +  '<select class="form-control" id="joinColumn.' + nextJoin + '" name="joinColumn.' + nextJoin + '">' ;
-                                     newIn = newIn +  columnNames() ;
-                                    newIn = newIn +  '</select>' ;
-                                    newIn = newIn +  '</div>' ;
-                                    newIn = newIn +  '<div class="col-md-3">' ;
-                                    newIn = newIn +  '<select class="form-control" id="joinColumns.' + nextJoin + ' name="joinColumns.' + nextJoin + '">' ;
-                                     newIn = newIn +  operators() ;
+                                     newIn = newIn +  messageColumnNames() ;
                                     newIn = newIn +  '</select>' ;
                                     newIn = newIn +  '</div>' ;
 
+
                                     newIn = newIn +  '<div class="col-md-3">' ;
-                                    newIn = newIn +  '<select class="form-control" id="join-type.' + nextJoin + '" multiple="multiple" name="join-type.' + nextJoin + '">' ;
+                                    newIn = newIn +  '<select class="form-control" id="join-type.' + nextJoin + '"  name="join-type.' + nextJoin + '">' ;
                                     newIn = newIn +  '<option value="Inner Join">Inner Join</option>';
                                     newIn = newIn +  '<option value="Left Outer Join">Left Outer Join</option>';
                                     newIn = newIn +  '<option value="Right Outer Join">Right Outer Join</option>';
@@ -1093,13 +1105,25 @@
 
                                     newIn = newIn +  '</select>' ;
                                     newIn = newIn +  '</div>' ;
-                                    newIn = newIn;
+
+                                    newIn = newIn +  '<div class="col-md-3">' ;
+                                    newIn = newIn +  '<select class="form-control" id="joinColumns.' + nextJoin + '" multiple="multiple" name="joinColumns.' + nextJoin + '">' ;
+                                     newIn = newIn +  messageColumnNames() ;
+                                    newIn = newIn +  '</select>' ;
+                                    newIn = newIn +  '</div>' ;
                                     newIn = newIn +  '</div>' ;
                                     var newInput = $(newIn);
 									$("#joinabc").append(newInput);
                                     $("#count").val(nextJoin);
 
                          }
+
+
+             function addSaveButton()
+                   {
+                    $("#joinabc").append('<button type="submit" ng-click="insertJoinProperties(chartViewModel.selectedProcess.processId)" class="btn btn-primary  pull-right">Save</button>');
+                   }
+
 
 </script>
 

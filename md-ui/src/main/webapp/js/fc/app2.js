@@ -523,8 +523,37 @@ $scope.updateProcessDetails = function() {
                   }
 
                   if(genConfig.value == "Join"){
-                  addMoreJoin("message1");
-                  addMoreJoin("kafka");
+
+                  var tempMessageList;
+                  var dataRecord = messagesAC('/mdrest/sparkstreaming/getMessageList/'+processId, 'POST', [processId]);
+                                    if (dataRecord) {
+                                    tempMessageList = dataRecord;
+
+                                console.log(tempMessageList);
+                    } else {
+                         alertBox('danger', 'Error has occured');
+                     }
+
+                     tempMessageList.forEach( function (arrayItem)
+                            {
+
+                                console.log(arrayItem.DisplayText);
+
+                                var messageTypeOptionslist = messagesAC('/mdrest/sparkstreaming/getmessagecolumns/'+arrayItem.Value, 'POST', []);
+                                    if (messageTypeOptionslist) {
+                                    $scope.messageColumnListChart=messageTypeOptionslist;
+                                       console.log($scope.messageColumnListChart);
+                                        console.log('info -- messageColumnListChart options listed');
+                                    }
+                                    else {
+                                        console.log('messageColumnListChart not loaded');
+                                    }
+
+                                addMoreJoin(arrayItem.DisplayText);
+
+                            });
+
+                        addSaveButton();
 
                   }
 
@@ -1415,17 +1444,7 @@ $scope.deleteFile = function(parentProcessId,cfgDetails,cfgKVP) {
         alertBox('warning', 'File delete failed');
     }
 }
-$scope.changeme=function(){
 
-var messageTypeOptionslist = messagesAC('/mdrest/sparkstreaming/getmessagecolumns/'+$('#joinTable').val(), 'POST', []);
-    if (messageTypeOptionslist) {
-        $scope.messageColumnListChart = messageTypeOptionslist;
-        console.log('info -- messageColumnListChart options listed');
-    }
-    else {
-        console.log('messageColumnListChart not loaded');
-    }
-}
 
 
 $scope.deleteJar = function(parentProcessId,subDir,fileName) {
