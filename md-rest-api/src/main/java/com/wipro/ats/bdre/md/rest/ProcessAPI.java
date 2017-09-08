@@ -148,8 +148,9 @@ public class ProcessAPI extends MetadataAPIBase {
                 processDAO.securityCheck(parentProcess.getProcess().getProcessId(), principal.getName(), WRITE);
             else
                 processDAO.securityCheck(processId, principal.getName(), WRITE);
-
-            Integer parentProcessId = parentProcess.getProcess().getProcessId();
+            Integer parentProcessId=processId;
+            if(parentProcess.getProcess()!=null)
+             parentProcessId = parentProcess.getProcess().getProcessId();
             String nextProcessOfParent = processDAO.get(parentProcessId).getNextProcessId();
             Map<Integer, String> nextPidMap = new HashMap<Integer, String>();
             nextPidMap.put(parentProcessId, nextProcessOfParent);

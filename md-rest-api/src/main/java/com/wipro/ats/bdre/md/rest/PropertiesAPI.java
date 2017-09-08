@@ -907,6 +907,42 @@ public class PropertiesAPI extends MetadataAPIBase {
     }
 
 
+
+    @RequestMapping(value = "/addJoinProperties/{id}", method = RequestMethod.POST)
+    @ResponseBody
+    public RestWrapper addJoinProperties(@PathVariable("id") Integer processId, @RequestParam Map<String,String> map) {
+        RestWrapper restWrapper = null;
+        try {
+            LOGGER.info("processId is "+processId);
+            LOGGER.info("map data is "+map);
+            Process process=processDAO.get(processId);
+            for (Map.Entry<String, String> entry : map.entrySet())
+            {
+
+                com.wipro.ats.bdre.md.dao.jpa.Properties jpaProperties= new com.wipro.ats.bdre.md.dao.jpa.Properties();
+                PropertiesId jpaPropertiesId=new PropertiesId();
+                jpaPropertiesId.setProcessId(processId);
+                jpaPropertiesId.setPropKey(entry.getKey());
+
+                jpaProperties.setId(jpaPropertiesId);
+                jpaProperties.setProcess(process);
+                jpaProperties.setConfigGroup("join");
+                jpaProperties.setDescription("join properties");
+                jpaProperties.setPropValue(entry.getValue());
+                propertiesDAO.insert(jpaProperties);
+            }
+            restWrapper = new RestWrapper(null, RestWrapper.OK);
+        } catch (MetadataException e) {
+            LOGGER.error(e);
+            restWrapper = new RestWrapper(e.getMessage(), RestWrapper.ERROR);
+        }
+        catch (SecurityException e) {
+            LOGGER.error(e);
+            restWrapper = new RestWrapper(e.getMessage(), RestWrapper.ERROR);
+        }
+        return restWrapper;
+    }
+
     @Override
     public Object execute(String[] params) {
         return null;

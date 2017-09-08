@@ -1044,17 +1044,16 @@
 
                               <h3 style="margin-left: 2%;">Join Data Details</h3>
                               <div>
+                              <div class="col-md-3">Join Type</div>
                               <div class="col-md-3">Join Table</div>
-
                                 <div class="col-md-3">Join Column</div>
-                                 <div class="col-md-3">Join Type</div>
                                  <div class="col-md-3">Output column</div>
                                </div>
 
 
 
 
-                                                <div class="clearfix"></div>
+
 
 
 
@@ -1083,6 +1082,26 @@
                                     nextJoin = nextJoin + 1;
                                     var newIn = '';
                                     newIn = newIn +  '<div class="" id="joinFormGroup' + nextJoin + '">' ;
+                                    if(nextJoin==1)
+                                    {
+                                    newIn = newIn +  '<div class="col-md-3">' ;
+                                     newIn = newIn +  '</div>' ;
+                                    }
+                                    else{
+
+                                     newIn = newIn +  '<div class="col-md-3">' ;
+                                     newIn = newIn +  '<select class="form-control" id="join-type.' + nextJoin + '"  name="join-type.' + nextJoin + '">' ;
+                                     newIn = newIn +  '<option value="Inner Join">Inner Join</option>';
+                                     newIn = newIn +  '<option value="Left Outer Join">Left Outer Join</option>';
+                                     newIn = newIn +  '<option value="Right Outer Join">Right Outer Join</option>';
+                                     newIn = newIn +  '<option value="Full Outer Join">Full Outer Join</option>';
+                                     newIn = newIn +  ' <option value="Cross Join">Cross Join</option>';
+
+                                     newIn = newIn +  '</select>' ;
+                                     newIn = newIn +  '</div>' ;
+                                    }
+
+
                                     newIn = newIn +  '<div class="col-md-3">' ;
                                     newIn = newIn +  '<input  class="form-control" id="joinTable.' + nextJoin + '" value="'+message+'" name="joinTable.' + nextJoin + '">' ;
 
@@ -1091,18 +1110,6 @@
                                     newIn = newIn +  '<div class="col-md-3">' ;
                                     newIn = newIn +  '<select class="form-control" id="joinColumn.' + nextJoin + '" name="joinColumn.' + nextJoin + '">' ;
                                      newIn = newIn +  messageColumnNames() ;
-                                    newIn = newIn +  '</select>' ;
-                                    newIn = newIn +  '</div>' ;
-
-
-                                    newIn = newIn +  '<div class="col-md-3">' ;
-                                    newIn = newIn +  '<select class="form-control" id="join-type.' + nextJoin + '"  name="join-type.' + nextJoin + '">' ;
-                                    newIn = newIn +  '<option value="Inner Join">Inner Join</option>';
-                                    newIn = newIn +  '<option value="Left Outer Join">Left Outer Join</option>';
-                                    newIn = newIn +  '<option value="Right Outer Join">Right Outer Join</option>';
-                                    newIn = newIn +  '<option value="Full Outer Join">Full Outer Join</option>';
-                                    newIn = newIn +  ' <option value="Cross Join">Cross Join</option>';
-
                                     newIn = newIn +  '</select>' ;
                                     newIn = newIn +  '</div>' ;
 
@@ -1121,9 +1128,19 @@
 
              function addSaveButton()
                    {
-                    $("#joinabc").append('<button type="submit" ng-click="insertJoinProperties(chartViewModel.selectedProcess.processId)" class="btn btn-primary  pull-right">Save</button>');
+                    $("#joinabc").append(' <div class="clearfix"></div><button type="submit" onclick="insertJoinProp()" class="btn btn-primary  pull-right">Save</button>');
                    }
 
+
+
+
+
+          function insertJoinProp()
+          {
+          var processId=$('[ng-controller="AppCtrl"]').scope().chartViewModel.selectedProcess.processId;
+          console.log("processid is "+processId);
+           angular.element(document.getElementById('joinabc')).scope().insertJoinProperties(processId);
+          }
 
 </script>
 

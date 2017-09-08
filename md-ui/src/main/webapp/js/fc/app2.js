@@ -491,7 +491,7 @@ $scope.updateProcessDetails = function() {
              }
 
 
-
+            var joinProcessArray=[];
              $scope.addFilterDataAlreadyPresent=function(processId,genConfig)
                   {
                   var tempFilterProperties;
@@ -533,7 +533,8 @@ $scope.updateProcessDetails = function() {
                     } else {
                          alertBox('danger', 'Error has occured');
                      }
-
+                     var tmp=0;
+                     joinProcessArray=[];
                      tempMessageList.forEach( function (arrayItem)
                             {
 
@@ -548,7 +549,8 @@ $scope.updateProcessDetails = function() {
                                     else {
                                         console.log('messageColumnListChart not loaded');
                                     }
-
+                                joinProcessArray[tmp]=arrayItem.Value;
+                                tmp++;
                                 addMoreJoin(arrayItem.DisplayText);
 
                             });
@@ -861,30 +863,74 @@ map["column:aggType"]=aggregationFinal.substr(0, aggregationFinal.length-1);
 
 
 
+var joinMap=new Object();
+function joinFormIntoText(typeOf) {
+    var map = new Object();
+    var x = '';
+    x = document.getElementById(typeOf);
+    console.log(x);
+    var text = "";
+    var i;
+    var index=0;
+    console.log(joinProcessArray);
+
+    var joinTable=x.elements[0].value;
+    var joinColumn=x.elements[1].value;
+     var joinColumns="";
+     var y=x.elements[2];
+    for(var j=0;j<y.length;j++){
 
 
+    if(y.options[j].selected){
+         joinColumns=joinColumns+y.options[j].value+",";
+      }
+      }
+    console.log(joinTable+" "+joinColumn+" "+joinColumns);
+    var z=joinProcessArray[index];
+    map["joinProcessOrder"]=joinProcessArray.toString();
+    map[z+".joinTable"]=joinTable;
+    map[z+".joinColumn"]=joinColumn;
+    map[z+".joinColumns"]=joinColumns.substring(0,joinColumns.length-1);
+    for(i = 3; i < x.length-1; i=i+4) {
+        var joinType=x.elements[i].value;
+        var joinTable=x.elements[i+1].value;
+         var joinColumn=x.elements[i+2].value;
+          var joinColumns="";
+           var y=x.elements[i+3];
+           for(var j=0;j<y.length;j++){
+              if(y.options[j].selected){
+                   joinColumns=joinColumns+y.options[j].value+",";
+                }
+                }
 
 
+       console.log(joinType+" "+joinTable+" "+joinColumn+" "+joinColumns);
+        index++;
+         var z=joinProcessArray[index];
+            map[z+".joinType"]=joinType;
+            map[z+".joinTable"]=joinTable;
+            map[z+".joinColumn"]=joinColumn;
+            map[z+".joinColumns"]=joinColumns.substring(0,joinColumns.length-1);
+    }
+
+   joinMap=map;
+
+}
 
 
 $scope.insertJoinProperties=function(processId){
-var joinPrevProcessId=$('#joinTable').val();
-var columnName=$('#joinColumn').val();
-var outputColumns=$('#joinColumns').val().toString();
-console.log("join processId "+processId+"  "+joinPrevProcessId+" "+columnName+" "+outputColumns);
-var map=new Object();
-map["join-column"]=columnName;
-map["join-type"] =$('#join-type').val();
-map["outputColumns"]=outputColumns;
+console.log("process id is "+processId);
+joinFormIntoText('joinabc');
+console.log(joinMap);
  $.ajax({
             type: "POST",
-            url: "/mdrest/properties/"+joinPrevProcessId,
-            data: jQuery.param(map),
+            url: "/mdrest/properties/addJoinProperties/"+processId,
+            data: jQuery.param(joinMap),
             success: function(data) {
                 if(data.Result == "OK") {
                   var modal = document.getElementById('myModal');
                   modal.style.display = "none";
-                    alertBox("info","Sort properties added");
+                    alertBox("info","Join properties added");
                 }
                 else
                 alertBox("warning","Error occured");
