@@ -1,6 +1,6 @@
 #!/bin/sh
-BDRE_HOME=/home/ec2-user/bdre
-BDRE_APPS_HOME=/home/ec2-user/bdre_app
+BDRE_HOME=~/bdre
+BDRE_APPS_HOME=~/bdre_app
 if [ -z "$1" ] || [ -z "$2" ] ; then
         echo Insufficient parameters !
         exit 1
@@ -8,7 +8,7 @@ fi
 processId=$3
 userName=$4
 echo $0
-uploadedJarsDir=/home/ec2-user/streamgrids/$processId/
+uploadedJarsDir=~/streamgrids/$processId/
 
 JARS=`find $uploadedJarsDir -name '*.jar'`
 OTHER_JARS=""

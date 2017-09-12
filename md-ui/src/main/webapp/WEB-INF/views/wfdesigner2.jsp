@@ -1091,12 +1091,15 @@
 
                                      newIn = newIn +  '<div class="col-md-3">' ;
                                      newIn = newIn +  '<select class="form-control" id="join-type.' + nextJoin + '"  name="join-type.' + nextJoin + '">' ;
-                                     newIn = newIn +  '<option value="Inner Join">Inner Join</option>';
-                                     newIn = newIn +  '<option value="Left Outer Join">Left Outer Join</option>';
-                                     newIn = newIn +  '<option value="Right Outer Join">Right Outer Join</option>';
-                                     newIn = newIn +  '<option value="Full Outer Join">Full Outer Join</option>';
-                                     newIn = newIn +  ' <option value="Cross Join">Cross Join</option>';
-
+                                     newIn = newIn +  '<option value="inner">Inner Join</option>';
+                                     newIn = newIn +  '<option value="leftouter">Left Outer Join</option>';
+                                     newIn = newIn +  '<option value="rightouter">Right Outer Join</option>';
+                                     newIn = newIn +  '<option value="fullouter">Full Outer Join</option>';
+                                     newIn = newIn +  ' <option value="left">Left Join</option>';
+                                     newIn = newIn +  ' <option value="right">Right Join</option>';
+                                     newIn = newIn +  ' <option value="outer">Outer Join</option>';
+                                     newIn = newIn +  ' <option value="full">Full Join</option>';
+                                     newIn = newIn +  ' <option value="leftsemi">Left Semi Join</option>';
                                      newIn = newIn +  '</select>' ;
                                      newIn = newIn +  '</div>' ;
                                     }
