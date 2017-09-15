@@ -489,7 +489,56 @@ $scope.updateProcessDetails = function() {
                  });
 
              }
+          function insertBroadcastData(count,data)
+          {
+                       console.log(data);
+                       console.log("count is "+count);
+                       for(var i=2;i<=count;i++)
+                        addMoreBroadcast();
+                data.forEach( function (arrayItem)
+                {
 
+                    if(arrayItem.key != "broadcastCount"){
+                    var key=arrayItem.key.replace("_",".");
+                    var value=arrayItem.value;
+                    console.log(key+"=="+value);
+                    if(document.getElementById(key) !=null)
+                   document.getElementById(key).value = value;
+                   }
+                });
+
+           $('#broadcast').show();
+          }
+
+       $scope.alreadyPresentBroadcastData=function()
+       {
+         var url_string=window.location.href;
+         console.log("url is "+url_string);
+         var url = new URL(url_string);
+         var c = url.searchParams.get("processId");
+         console.log(c);
+         var broadcastCount;
+         $.ajax({
+                 type: "GET",
+                 url: "/mdrest/properties/"+c+'/broadcast',
+                 success: function(data) {
+                     if(data.Result == "OK") {
+                        console.log(data);
+                        data.Record.forEach( function (arrayItem)
+                        {
+                            if(arrayItem.key == "broadcastCount")
+                            broadcastCount = arrayItem.value;
+                            console.log(broadcastCount);
+                        });
+                        if(broadcastCount>0)
+                         insertBroadcastData(broadcastCount,data.Record);
+                     }
+                     else
+                     alertBox("warning","Error occured");
+
+                 }
+           });
+       }
 
             var joinProcessArray=[];
              $scope.addFilterDataAlreadyPresent=function(processId,genConfig)

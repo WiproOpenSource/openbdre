@@ -1613,7 +1613,7 @@
                                                     <button class="btn btn-default btn-lg glyphicon glyphicon-align-justify level2" aria-hidden="true" href="#" ng-click="arrangePositions()"></button>
                                                 </div>
                                                 <div class="pull-right">
-                                                    <button class="btn btn-default" aria-hidden="true" href="#" onclick="$('#broadcast').show()">Broadcast</button>
+                                                    <button class="btn btn-default" aria-hidden="true" href="#" ng-click="alreadyPresentBroadcastData();">Broadcast</button>
                                                     <button class="btn btn-default btn-lg glyphicon glyphicon-zoom-in level2" aria-hidden="true" href="#" onclick="$('#canvas').css('zoom',$('#canvas').css('zoom')*1.1 )"></button>
                                                     <button class="btn btn-default btn-lg glyphicon glyphicon-zoom-out level2" aria-hidden="true" href="#" onclick="$('#canvas').css('zoom',$('#canvas').css('zoom')/1.1 )"></button>
                                                 </div>
@@ -1638,7 +1638,7 @@
                                <label for="BroadcastSource">Broadcast Source</label>
                                     <select class="form-control" id="BroadcastSource" name="BroadcastSource">
                                      <option  value="hbase" selected>HBase</option>
-                                     <option  value="file">File</option>
+                                    <!-- <option  value="file">File</option> -->
                                      </select>
 
                            </div>
