@@ -1,0 +1,462 @@
+<svg
+        class="draggable-container"
+        xmlns="http://www.w3.org/2000/svg"
+        ng-mousedown="mouseDown($event)"
+        ng-mousemove="mouseMove($event)"
+>
+    <defs>
+        <marker id="markerCircle" markerWidth="8" markerHeight="8" refX="5" refY="5">
+            <circle cx="5" cy="5" r="2" style="stroke: none; fill:#000000;"/>
+        </marker>
+
+        <marker id="markerArrow" markerWidth="13" markerHeight="13" refX="2" refY="6"
+                orient="auto">
+            <path d="M2,2 L2,11 L6,6 L2,2" style="fill: #000000;"/>
+        </marker>
+    </defs>
+
+    <defs>
+        <pattern id="typeImage9" x="0" y="0" patternUnits="objectBoundingBox" height="50" width="50">
+            <image height="40" width="40" x="0" y="0" xlink:href="../js/fc/hive-50.png"></image>
+        </pattern>
+        <pattern id="typeImage10" x="0" y="0" patternUnits="objectBoundingBox" height="50" width="50">
+            <!--     <svg viewBox = '0 0 50 50'>
+                  <use xlink:href="../js/fc/pig-75.svg#icon-1"></use>
+                </svg> -->
+            <image height="40" width="40" x="0" y="0" xlink:href="../js/fc/pig-50.png"></image>
+        </pattern>
+        <pattern id="typeImage11" x="0" y="0" patternUnits="objectBoundingBox" height="50" width="50">
+            <image height="40" width="40" x="0" y="0" xlink:href="../js/fc/java-50.png"></image>
+        </pattern>
+        <pattern id="typeImage22" x="0" y="0" patternUnits="objectBoundingBox" height="50" width="50">
+            <image height="20" width="20" x="10" y="10" xlink:href="../js/fc/bash-50.png"></image>
+        </pattern>
+        <pattern id="typeImage24" x="0" y="0" patternUnits="objectBoundingBox" height="50" width="50">
+            <image height="20" width="20" x="10" y="10" xlink:href="../js/fc/r-50.png"></image>
+        </pattern>
+        <pattern id="typeImage25" x="0" y="0" patternUnits="objectBoundingBox" height="50" width="50">
+            <image height="30" width="30" x="10" y="10" xlink:href="../js/fc/spark-50.png"></image>
+        </pattern>
+        <pattern id="typeImage40" x="0" y="0" patternUnits="objectBoundingBox" height="50" width="50">
+            <image height="30" width="30" x="0" y="0" xlink:href="../js/fc/subwf-50.png"></image>
+        </pattern>
+        <pattern id="typeImage30" x="0" y="0" patternUnits="objectBoundingBox" height="50" width="50">
+            <image height="40" width="40" x="0" y="0" xlink:href="../js/fc/hadoopstreaming-50.png"></image>
+        </pattern>
+        <pattern id="typeImage42" x="0" y="0" patternUnits="objectBoundingBox" height="50" width="50">
+            <image height="40" width="40" x="0" y="0" xlink:href="../js/fc/kafka-50.png"></image>
+        </pattern>
+        <pattern id="typeImage46" x="0" y="0" patternUnits="objectBoundingBox" height="50" width="50">
+            <image height="40" width="40" x="0" y="0" xlink:href="../js/fc/twitter-46.png"></image>
+        </pattern>
+        <pattern id="typeImage47" x="0" y="0" patternUnits="objectBoundingBox" height="50" width="50">
+            <image height="40" width="40" x="0" y="0" xlink:href="../js/fc/kinesis-47.png"></image>
+        </pattern>
+        <pattern id="typeImage48" x="0" y="0" patternUnits="objectBoundingBox" height="50" width="50">
+            <image height="40" width="40" x="0" y="0" xlink:href="../js/fc/mqtt-48.png"></image>
+        </pattern>
+        <pattern id="typeImage49" x="0" y="0" patternUnits="objectBoundingBox" height="50" width="50">
+            <image height="40" width="40" x="0" y="0" xlink:href="../js/fc/rabbitmq-49.png"></image>
+        </pattern>
+        <pattern id="typeImage50" x="0" y="0" patternUnits="objectBoundingBox" height="50" width="50">
+            <image height="40" width="40" x="0" y="0" xlink:href="../js/fc/socket-50.png"></image>
+        </pattern>
+        <pattern id="typeImage51" x="0" y="0" patternUnits="objectBoundingBox" height="50" width="50">
+            <image height="40" width="40" x="0" y="0" xlink:href="../js/fc/s3-51.png"></image>
+        </pattern>
+        <pattern id="typeImage43" x="0" y="0" patternUnits="objectBoundingBox" height="50" width="50">
+            <image height="40" width="40" x="0" y="0" xlink:href="../js/fc/filter-50.png"></image>
+        </pattern>
+        <pattern id="typeImage45" x="0" y="0" patternUnits="objectBoundingBox" height="50" width="50">
+            <image height="40" width="40" x="0" y="0" xlink:href="../js/fc/union-50.png"></image>
+        </pattern>
+        <pattern id="typeImage44" x="0" y="0" patternUnits="objectBoundingBox" height="50" width="50">
+            <image height="40" width="40" x="0" y="0" xlink:href="../js/fc/hdfs.png"></image>
+        </pattern>
+        <pattern id="typeImage58" x="0" y="0" patternUnits="objectBoundingBox" height="50" width="50">
+            <image height="40" width="40" x="0" y="0" xlink:href="../js/fc/hive-58.png"></image>
+        </pattern>
+        <pattern id="typeImage59" x="0" y="0" patternUnits="objectBoundingBox" height="50" width="50">
+            <image height="40" width="40" x="0" y="0" xlink:href="../js/fc/hbase-59.png"></image>
+        </pattern>
+
+        <pattern id="typeImage82" x="0" y="0" patternUnits="objectBoundingBox" height="50" width="50">
+            <image height="40" width="40" x="0" y="0" xlink:href="../js/fc/enrich-64.png"></image>
+        </pattern>
+
+        <pattern id="typeImage65" x="0" y="0" patternUnits="objectBoundingBox" height="50" width="50">
+            <image height="40" width="40" x="0" y="0" xlink:href="../js/fc/join-65.png"></image>
+        </pattern>
+
+        <pattern id="typeImage66" x="0" y="0" patternUnits="objectBoundingBox" height="50" width="50">
+            <image height="40" width="40" x="0" y="0" xlink:href="../js/fc/sort-66.png"></image>
+        </pattern>
+
+        <pattern id="typeImage67" x="0" y="0" patternUnits="objectBoundingBox" height="50" width="50">
+            <image height="40" width="40" x="0" y="0" xlink:href="../js/fc/aggregation-67.png"></image>
+        </pattern>
+
+        <pattern id="typeImage68" x="0" y="0" patternUnits="objectBoundingBox" height="50" width="50">
+            <image height="40" width="40" x="0" y="0" xlink:href="../js/fc/intersection-68.png"></image>
+        </pattern>
+
+        <pattern id="typeImage70" x="0" y="0" patternUnits="objectBoundingBox" height="50" width="50">
+            <image height="40" width="40" x="0" y="0" xlink:href="../js/fc/window-70.png"></image>
+        </pattern>
+
+        <pattern id="typeImage79" x="0" y="0" patternUnits="objectBoundingBox" height="50" width="50">
+            <image height="40" width="40" x="0" y="0" xlink:href="../js/fc/group-79.png"></image>
+        </pattern>
+
+
+        <pattern id="typeImage72" x="0" y="0" patternUnits="objectBoundingBox" height="50" width="50">
+            <image height="40" width="40" x="0" y="0" xlink:href="../js/fc/distinct-72.png"></image>
+        </pattern>
+
+    </defs>
+
+    <defs>
+        <linearGradient  id="nodeBackgroundColor42" spreadMethod="pad" y2="0" x2="0" y1="1" x1="0">
+            <stop offset="0" stop-opacity="0.99609" stop-color="#fff8dc"/>
+            <stop offset="0.63934" stop-opacity="0.99219" stop-color="#fff8dc"/>
+        </linearGradient>
+        <linearGradient  id="nodeBackgroundColor46" spreadMethod="pad" y2="0" x2="0" y1="1" x1="0">
+            <stop offset="0" stop-opacity="0.99609" stop-color="#fff8dc"/>
+            <stop offset="0.63934" stop-opacity="0.99219" stop-color="#fff8dc"/>
+        </linearGradient>
+        <linearGradient  id="nodeBackgroundColor47" spreadMethod="pad" y2="0" x2="0" y1="1" x1="0">
+            <stop offset="0" stop-opacity="0.99609" stop-color="#fff8dc"/>
+            <stop offset="0.63934" stop-opacity="0.99219" stop-color="#fff8dc"/>
+        </linearGradient>
+        <linearGradient  id="nodeBackgroundColor48" spreadMethod="pad" y2="0" x2="0" y1="1" x1="0">
+            <stop offset="0" stop-opacity="0.99609" stop-color="#fff8dc"/>
+            <stop offset="0.63934" stop-opacity="0.99219" stop-color="#fff8dc"/>
+        </linearGradient>
+        <linearGradient  id="nodeBackgroundColor49" spreadMethod="pad" y2="0" x2="0" y1="1" x1="0">
+            <stop offset="0" stop-opacity="0.99609" stop-color="#fff8dc"/>
+            <stop offset="0.63934" stop-opacity="0.99219" stop-color="#fff8dc"/>
+        </linearGradient>
+        <linearGradient  id="nodeBackgroundColor50" spreadMethod="pad" y2="0" x2="0" y1="1" x1="0">
+            <stop offset="0" stop-opacity="0.99609" stop-color="#fff8dc"/>
+            <stop offset="0.63934" stop-opacity="0.99219" stop-color="#fff8dc"/>
+        </linearGradient>
+        <linearGradient  id="nodeBackgroundColor51" spreadMethod="pad" y2="0" x2="0" y1="1" x1="0">
+            <stop offset="0" stop-opacity="0.99609" stop-color="#fff8dc"/>
+            <stop offset="0.63934" stop-opacity="0.99219" stop-color="#fff8dc"/>
+        </linearGradient>
+
+
+        <linearGradient  id="nodeBackgroundColor43" spreadMethod="pad" y2="0" x2="0" y1="1" x1="0">
+            <stop offset="0" stop-opacity="0.99609" stop-color="#d2b48c"/>
+            <stop offset="0.63934" stop-opacity="0.99219" stop-color="#d2b48c"/>
+        </linearGradient>
+        <linearGradient  id="nodeBackgroundColor45" spreadMethod="pad" y2="0" x2="0" y1="1" x1="0">
+            <stop offset="0" stop-opacity="0.99609" stop-color="#d2b48c"/>
+            <stop offset="0.63934" stop-opacity="0.99219" stop-color="#d2b48c"/>
+        </linearGradient>
+        <linearGradient  id="nodeBackgroundColor58" spreadMethod="pad" y2="0" x2="0" y1="1" x1="0">
+            <stop offset="0" stop-opacity="0.99609" stop-color="#d2b48c"/>
+            <stop offset="0.63934" stop-opacity="0.99219" stop-color="#d2b48c"/>
+        </linearGradient>
+        <linearGradient  id="nodeBackgroundColor59" spreadMethod="pad" y2="0" x2="0" y1="1" x1="0">
+            <stop offset="0" stop-opacity="0.99609" stop-color="#d2b48c"/>
+            <stop offset="0.63934" stop-opacity="0.99219" stop-color="#d2b48c"/>
+        </linearGradient>
+        <linearGradient  id="nodeBackgroundColor60" spreadMethod="pad" y2="0" x2="0" y1="1" x1="0">
+            <stop offset="0" stop-opacity="0.99609" stop-color="#d2b48c"/>
+            <stop offset="0.63934" stop-opacity="0.99219" stop-color="#d2b48c"/>
+        </linearGradient>
+        <linearGradient  id="nodeBackgroundColor61" spreadMethod="pad" y2="0" x2="0" y1="1" x1="0">
+            <stop offset="0" stop-opacity="0.99609" stop-color="#d2b48c"/>
+            <stop offset="0.63934" stop-opacity="0.99219" stop-color="#d2b48c"/>
+        </linearGradient>
+        <linearGradient  id="nodeBackgroundColor62" spreadMethod="pad" y2="0" x2="0" y1="1" x1="0">
+            <stop offset="0" stop-opacity="0.99609" stop-color="#d2b48c"/>
+            <stop offset="0.63934" stop-opacity="0.99219" stop-color="#d2b48c"/>
+        </linearGradient>
+        <linearGradient  id="nodeBackgroundColor63" spreadMethod="pad" y2="0" x2="0" y1="1" x1="0">
+            <stop offset="0" stop-opacity="0.99609" stop-color="#d2b48c"/>
+            <stop offset="0.63934" stop-opacity="0.99219" stop-color="#d2b48c"/>
+        </linearGradient>
+        <linearGradient  id="nodeBackgroundColor64" spreadMethod="pad" y2="0" x2="0" y1="1" x1="0">
+            <stop offset="0" stop-opacity="0.99609" stop-color="#d2b48c"/>
+            <stop offset="0.63934" stop-opacity="0.99219" stop-color="#d2b48c"/>
+        </linearGradient>
+        <linearGradient  id="nodeBackgroundColor65" spreadMethod="pad" y2="0" x2="0" y1="1" x1="0">
+            <stop offset="0" stop-opacity="0.99609" stop-color="#d2b48c"/>
+            <stop offset="0.63934" stop-opacity="0.99219" stop-color="#d2b48c"/>
+        </linearGradient>
+        <linearGradient  id="nodeBackgroundColor66" spreadMethod="pad" y2="0" x2="0" y1="1" x1="0">
+            <stop offset="0" stop-opacity="0.99609" stop-color="#d2b48c"/>
+            <stop offset="0.63934" stop-opacity="0.99219" stop-color="#d2b48c"/>
+        </linearGradient>
+        <linearGradient  id="nodeBackgroundColor67" spreadMethod="pad" y2="0" x2="0" y1="1" x1="0">
+            <stop offset="0" stop-opacity="0.99609" stop-color="#d2b48c"/>
+            <stop offset="0.63934" stop-opacity="0.99219" stop-color="#d2b48c"/>
+        </linearGradient>
+        <linearGradient  id="nodeBackgroundColor68" spreadMethod="pad" y2="0" x2="0" y1="1" x1="0">
+            <stop offset="0" stop-opacity="0.99609" stop-color="#d2b48c"/>
+            <stop offset="0.63934" stop-opacity="0.99219" stop-color="#d2b48c"/>
+        </linearGradient>
+        <linearGradient  id="nodeBackgroundColor69" spreadMethod="pad" y2="0" x2="0" y1="1" x1="0">
+            <stop offset="0" stop-opacity="0.99609" stop-color="#d2b48c"/>
+            <stop offset="0.63934" stop-opacity="0.99219" stop-color="#d2b48c"/>
+        </linearGradient>
+        <linearGradient  id="nodeBackgroundColor70" spreadMethod="pad" y2="0" x2="0" y1="1" x1="0">
+            <stop offset="0" stop-opacity="0.99609" stop-color="#d2b48c"/>
+            <stop offset="0.63934" stop-opacity="0.99219" stop-color="#d2b48c"/>
+        </linearGradient>
+        <linearGradient  id="nodeBackgroundColor71" spreadMethod="pad" y2="0" x2="0" y1="1" x1="0">
+            <stop offset="0" stop-opacity="0.99609" stop-color="#d2b48c"/>
+            <stop offset="0.63934" stop-opacity="0.99219" stop-color="#d2b48c"/>
+        </linearGradient>
+        <linearGradient  id="nodeBackgroundColor72" spreadMethod="pad" y2="0" x2="0" y1="1" x1="0">
+            <stop offset="0" stop-opacity="0.99609" stop-color="#d2b48c"/>
+            <stop offset="0.63934" stop-opacity="0.99219" stop-color="#d2b48c"/>
+        </linearGradient>
+        <linearGradient  id="nodeBackgroundColor73" spreadMethod="pad" y2="0" x2="0" y1="1" x1="0">
+            <stop offset="0" stop-opacity="0.99609" stop-color="#d2b48c"/>
+            <stop offset="0.63934" stop-opacity="0.99219" stop-color="#d2b48c"/>
+        </linearGradient>
+        <linearGradient  id="nodeBackgroundColor74" spreadMethod="pad" y2="0" x2="0" y1="1" x1="0">
+            <stop offset="0" stop-opacity="0.99609" stop-color="#d2b48c"/>
+            <stop offset="0.63934" stop-opacity="0.99219" stop-color="#d2b48c"/>
+        </linearGradient>
+        <linearGradient  id="nodeBackgroundColor75" spreadMethod="pad" y2="0" x2="0" y1="1" x1="0">
+            <stop offset="0" stop-opacity="0.99609" stop-color="#d2b48c"/>
+            <stop offset="0.63934" stop-opacity="0.99219" stop-color="#d2b48c"/>
+        </linearGradient>
+        <linearGradient  id="nodeBackgroundColor76" spreadMethod="pad" y2="0" x2="0" y1="1" x1="0">
+            <stop offset="0" stop-opacity="0.99609" stop-color="#d2b48c"/>
+            <stop offset="0.63934" stop-opacity="0.99219" stop-color="#d2b48c"/>
+        </linearGradient>
+        <linearGradient  id="nodeBackgroundColor77" spreadMethod="pad" y2="0" x2="0" y1="1" x1="0">
+            <stop offset="0" stop-opacity="0.99609" stop-color="#d2b48c"/>
+            <stop offset="0.63934" stop-opacity="0.99219" stop-color="#d2b48c"/>
+        </linearGradient>
+        <linearGradient  id="nodeBackgroundColor78" spreadMethod="pad" y2="0" x2="0" y1="1" x1="0">
+            <stop offset="0" stop-opacity="0.99609" stop-color="#d2b48c"/>
+            <stop offset="0.63934" stop-opacity="0.99219" stop-color="#d2b48c"/>
+        </linearGradient>
+        <linearGradient  id="nodeBackgroundColor79" spreadMethod="pad" y2="0" x2="0" y1="1" x1="0">
+            <stop offset="0" stop-opacity="0.99609" stop-color="#d2b48c"/>
+            <stop offset="0.63934" stop-opacity="0.99219" stop-color="#d2b48c"/>
+        </linearGradient>
+        <linearGradient  id="nodeBackgroundColor80" spreadMethod="pad" y2="0" x2="0" y1="1" x1="0">
+            <stop offset="0" stop-opacity="0.99609" stop-color="#d2b48c"/>
+            <stop offset="0.63934" stop-opacity="0.99219" stop-color="#d2b48c"/>
+        </linearGradient>
+        <linearGradient  id="nodeBackgroundColor81" spreadMethod="pad" y2="0" x2="0" y1="1" x1="0">
+            <stop offset="0" stop-opacity="0.99609" stop-color="#d2b48c"/>
+            <stop offset="0.63934" stop-opacity="0.99219" stop-color="#d2b48c"/>
+        </linearGradient>
+        <linearGradient  id="nodeBackgroundColor82" spreadMethod="pad" y2="0" x2="0" y1="1" x1="0">
+            <stop offset="0" stop-opacity="0.99609" stop-color="#d2b48c"/>
+            <stop offset="0.63934" stop-opacity="0.99219" stop-color="#d2b48c"/>
+        </linearGradient>
+        <linearGradient  id="nodeBackgroundColor83" spreadMethod="pad" y2="0" x2="0" y1="1" x1="0">
+            <stop offset="0" stop-opacity="0.99609" stop-color="#d2b48c"/>
+            <stop offset="0.63934" stop-opacity="0.99219" stop-color="#d2b48c"/>
+        </linearGradient>
+
+
+
+
+
+
+        <linearGradient  id="nodeBackgroundColor52" spreadMethod="pad" y2="0" x2="0" y1="1" x1="0">
+            <stop offset="0" stop-opacity="0.99609" stop-color="#ffe4c4"/>
+            <stop offset="0.63934" stop-opacity="0.99219" stop-color="#ffe4c4"/>
+        </linearGradient>
+        <linearGradient  id="nodeBackgroundColor53" spreadMethod="pad" y2="0" x2="0" y1="1" x1="0">
+            <stop offset="0" stop-opacity="0.99609" stop-color="#ffe4c4"/>
+            <stop offset="0.63934" stop-opacity="0.99219" stop-color="#ffe4c4"/>
+        </linearGradient>
+        <linearGradient  id="nodeBackgroundColor54" spreadMethod="pad" y2="0" x2="0" y1="1" x1="0">
+            <stop offset="0" stop-opacity="0.99609" stop-color="#ffe4c4"/>
+            <stop offset="0.63934" stop-opacity="0.99219" stop-color="#ffe4c4"/>
+        </linearGradient>
+        <linearGradient  id="nodeBackgroundColor55" spreadMethod="pad" y2="0" x2="0" y1="1" x1="0">
+            <stop offset="0" stop-opacity="0.99609" stop-color="#ffe4c4"/>
+            <stop offset="0.63934" stop-opacity="0.99219" stop-color="#ffe4c4"/>
+        </linearGradient>
+        <linearGradient  id="nodeBackgroundColor56" spreadMethod="pad" y2="0" x2="0" y1="1" x1="0">
+            <stop offset="0" stop-opacity="0.99609" stop-color="#ffe4c4"/>
+            <stop offset="0.63934" stop-opacity="0.99219" stop-color="#ffe4c4"/>
+        </linearGradient>
+        <linearGradient  id="nodeBackgroundColor57" spreadMethod="pad" y2="0" x2="0" y1="1" x1="0">
+            <stop offset="0" stop-opacity="0.99609" stop-color="#ffe4c4"/>
+            <stop offset="0.63934" stop-opacity="0.99219" stop-color="#ffe4c4"/>
+        </linearGradient>
+
+        <linearGradient  id="nodeBackgroundColor44" spreadMethod="pad" y2="0" x2="0" y1="1" x1="0">
+            <stop offset="0" stop-opacity="0.99609" stop-color="#f5deb3"/>
+            <stop offset="0.63934" stop-opacity="0.99219" stop-color="#f5deb3"/>
+        </linearGradient>
+        <linearGradient  id="nodeBackgroundColor58" spreadMethod="pad" y2="0" x2="0" y1="1" x1="0">
+            <stop offset="0" stop-opacity="0.99609" stop-color="#f5deb3"/>
+            <stop offset="0.63934" stop-opacity="0.99219" stop-color="#f5deb3"/>
+        </linearGradient>
+        <linearGradient  id="nodeBackgroundColor59" spreadMethod="pad" y2="0" x2="0" y1="1" x1="0">
+            <stop offset="0" stop-opacity="0.99609" stop-color="#f5deb3"/>
+            <stop offset="0.63934" stop-opacity="0.99219" stop-color="#f5deb3"/>
+        </linearGradient>
+
+    </defs>
+
+    <g
+            ng-repeat="node in chart.nodes"
+            ng-mousedown="nodeMouseDown($event, node)"
+            ng-dblclick="nodeDoubleClick($event, node)"
+            ng-attr-transform="translate({{node.x()}}, {{node.y()}})"
+    >
+
+        <rect
+                ng-attr-class="{{node.selected() && 'selected-node-rect' || (node == mouseOverNode && 'mouseover-node-rect' || 'node-rect')}}"
+                ry="10"
+                rx="10"
+                x="0"
+                y="0"
+                ng-attr-width="{{node.width()}}"
+                ng-attr-height="{{node.height()}}"
+                fill="url(#nodeBackgroundColor{{node.data.type}})"
+
+        >
+            <title>Process Id: {{node.data.pid}} Process Name: {{node.data.name}}</title>
+
+        </rect>
+        <circle
+                ng-attr-class=""
+                ng-attr-r="{{connectorSize*2}}"
+                fill="url(#typeImage{{node.data.type}})"
+                ng-attr-cx="{{node.width()/2}}" cy="50"
+        />
+        <text
+                ng-attr-x="{{node.width()/2}}"
+                y="25"
+                text-anchor="middle"
+                alignment-baseline="middle"
+                fill=""
+        >
+            {{node.name()}}
+        </text>
+
+        <g
+                ng-repeat="connector in node.inputConnectors"
+                ng-mousedown="connectorMouseDown($event, node, connector, $index, true)"
+                class="connector input-connector"
+        >
+            <text
+                    ng-attr-x="{{connector.x() + 20}}"
+                    ng-attr-y="{{connector.y()}}"
+                    text-anchor="left"
+                    alignment-baseline="middle"
+            >
+                {{connector.name()}}
+            </text>
+
+            <circle
+                    ng-attr-class="{{connector == mouseOverConnector && 'mouseover-connector-circle' || 'connector-circle'}}"
+                    ng-attr-r="{{connectorSize}}"
+                    ng-attr-cx="{{connector.x()}}"
+                    ng-attr-cy="{{connector.y()}}"
+            />
+        </g>
+
+        <g
+                ng-repeat="connector in node.outputConnectors"
+                ng-mousedown="connectorMouseDown($event, node, connector, $index, false)"
+                class="connector output-connector"
+        >
+            <text
+                    ng-attr-x="{{connector.x() - 20}}"
+                    ng-attr-y="{{connector.y()}}"
+                    text-anchor="end"
+                    alignment-baseline="middle"
+            >
+                {{connector.name()}}
+            </text>
+
+            <circle
+                    ng-attr-class="{{connector == mouseOverConnector && 'mouseover-connector-circle' || 'connector-circle'}}"
+                    ng-attr-r="{{connectorSize}}"
+                    ng-attr-cx="{{connector.x()}}"
+                    ng-attr-cy="{{connector.y()}}"
+            />
+        </g>
+    </g>
+
+    <g>
+        <g
+                ng-repeat="connection in chart.connections"
+                class="connection"
+                ng-mousedown="connectionMouseDown($event, connection)"
+        >
+            <path
+                    ng-attr-class="{{connection.selected() && 'selected-connection-line' || (connection == mouseOverConnection && 'mouseover-connection-line' || 'connection-line')}}"
+                    ng-attr-d="M {{connection.sourceCoordX()}}, {{connection.sourceCoordY()}}
+                     C {{connection.sourceTangentX()}}, {{connection.sourceTangentY()}}
+                       {{connection.destTangentX()}}, {{connection.destTangentY()}}
+                       {{connection.destCoordX()}}, {{connection.destCoordY()}}"
+                    style="marker-start: url(#markerCircle);marker-end: url(#markerArrow);"
+            >
+            </path>
+            <circle
+                    ng-attr-class="{{connection.selected() && 'selected-connection-endpoint' || (connection == mouseOverConnection && 'mouseover-connection-endpoint' || 'connection-endpoint')}}"
+                    r="2"
+                    ng-attr-cx="{{connection.sourceCoordX()}}"
+                    ng-attr-cy="{{connection.sourceCoordY()}}"
+            >
+            </circle>
+
+            <circle
+                    ng-attr-class="{{connection.selected() && 'selected-connection-endpoint' || (connection == mouseOverConnection && 'mouseover-connection-endpoint' || 'connection-endpoint')}}"
+                    r="2"
+                    ng-attr-cx="{{connection.destCoordX()}}"
+                    ng-attr-cy="{{connection.destCoordY()}}"
+            >
+            </circle>
+            <polygon path="{{connector.x()}}, {{connector.y()}} 60, 70 40, 50"/>
+        </g>
+    </g>
+
+    <g
+            ng-if="draggingConnection"
+    >
+        <path
+                class="dragging-connection dragging-connection-line"
+                ng-attr-d="M {{dragPoint1.x}}, {{dragPoint1.y}}
+                 C {{dragTangent1.x}}, {{dragTangent1.y}}
+                   {{dragTangent2.x}}, {{dragTangent2.y}}
+                   {{dragPoint2.x}}, {{dragPoint2.y}}"
+        >
+        </path>
+
+        <circle
+                class="dragging-connection dragging-connection-endpoint"
+                r="2"
+                ng-attr-cx="{{dragPoint1.x}}"
+                ng-attr-cy="{{dragPoint1.y}}"
+        >
+        </circle>
+
+        <circle
+                class="dragging-connection dragging-connection-endpoint"
+                r="2"
+                ng-attr-cx="{{dragPoint2.x}}"
+                ng-attr-cy="{{dragPoint2.y}}"
+        >
+        </circle>
+    </g>
+
+    <rect
+            ng-if="dragSelecting"
+            class="drag-selection-rect"
+            ng-attr-x="{{dragSelectionRect.x}}"
+            ng-attr-y="{{dragSelectionRect.y}}"
+            ng-attr-width="{{dragSelectionRect.width}}"
+            ng-attr-height="{{dragSelectionRect.height}}"
+    >
+    </rect>
+
+</svg>

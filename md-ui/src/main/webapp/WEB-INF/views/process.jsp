@@ -1322,7 +1322,7 @@
                                     create: false,
                                     edit: false,
                                     display: function(data) {
-                                        return '<span class="label-icons label-editgraphically" onclick="goToEditGraphically(' + data.record.processId + ')"></span> ';
+                                        return '<span class="label-icons label-editgraphically" onclick="goToEditGraphically(' + data.record.processId+','+data.record.processTypeId+')"></span> ';
                                     },
                                 },
                             },
@@ -1443,13 +1443,17 @@
                             }
                         });
                     }
-					function goToEditGraphically(pid) {
+					function goToEditGraphically(pid,pTypeId) {
                                       $.ajax({
                                                url: '/mdrest/process/permission/'+pid,
                                                type: 'PUT',
                                                dataType: 'json',
                                                 success: function(data) {
                                                    if(data.Result == "OK") {
+                                                   if(pTypeId==41)
+
+                                                location.href = '<c:url value="/pages/wfdesigner2.page?processId="/>' + pid;
+                                                else
                                                 location.href = '<c:url value="/pages/wfdesigner.page?processId="/>' + pid;
                                                    }
                                                    else

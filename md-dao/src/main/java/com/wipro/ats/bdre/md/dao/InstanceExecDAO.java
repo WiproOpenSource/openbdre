@@ -102,6 +102,25 @@ public class InstanceExecDAO {
         return instanceExecList;
     }
 
+    public InstanceExec getLatestExecofProcess(Integer processId){
+        Session session = sessionFactory.openSession();
+        session.beginTransaction();
+        InstanceExec instanceExec = new InstanceExec();
+
+        try {
+            Criteria criteria=  session.createCriteria(InstanceExec.class).add(Restrictions.eq("process.processId", processId));
+            criteria.addOrder(Order.desc("instanceExecId"));
+            criteria.setMaxResults(1);
+            instanceExec = (InstanceExec) criteria.uniqueResult();
+
+        }catch (Exception e){
+            LOGGER.error(e);
+        }finally {
+            session.close();
+        }
+        return instanceExec;
+    }
+
     public Long totalRecordCount() {
         Session session = sessionFactory.openSession();
         session.beginTransaction();
@@ -166,7 +185,7 @@ public class InstanceExecDAO {
     }
 
 
-   public List<SLAMonitoringBean> slaMonitoringData(List<Process> subProcessList)
+    public List<SLAMonitoringBean> slaMonitoringData(List<Process> subProcessList)
     {
         Session session = sessionFactory.openSession();
         List<SLAMonitoringBean> slaMonitoringBeanList=new ArrayList<>();
@@ -174,7 +193,7 @@ public class InstanceExecDAO {
             session.beginTransaction();
             for(Process process:subProcessList)
             {
-               Criteria instanceExecListCriteria= session.createCriteria(InstanceExec.class).add(Restrictions.eq("process",process)).addOrder(Order.asc("startTs")).setMaxResults(25);
+                Criteria instanceExecListCriteria= session.createCriteria(InstanceExec.class).add(Restrictions.eq("process",process)).addOrder(Order.asc("startTs")).setMaxResults(25);
                 List<InstanceExec> instanceExecList=instanceExecListCriteria.list();
                 long sumTime=0;
                 long currentTime=0;
@@ -186,8 +205,8 @@ public class InstanceExecDAO {
                 for (InstanceExec instanceExec:instanceExecList)
                 {
                     if(instanceExec.getEndTs()!=null){
-                    sumTime += (instanceExec.getEndTs().getTime() - instanceExec.getStartTs().getTime());
-                    currentTime=instanceExec.getEndTs().getTime() - instanceExec.getStartTs().getTime();
+                        sumTime += (instanceExec.getEndTs().getTime() - instanceExec.getStartTs().getTime());
+                        currentTime=instanceExec.getEndTs().getTime() - instanceExec.getStartTs().getTime();
                         stateOfProcess = instanceExec.getExecStatus().getExecStateId();
                     }
                     else
@@ -209,12 +228,12 @@ public class InstanceExecDAO {
                 slaMonitoringBean.setRunning(running);
                 slaMonitoringBean.setFailed(failed);
                 if(total!=0)
-                slaMonitoringBean.setAverageExecutionTime(sumTime/(total*1000));
+                    slaMonitoringBean.setAverageExecutionTime(sumTime/(total*1000));
                 slaMonitoringBean.setCurrentExecutionTime(currentTime/1000);
                 if(properties==null)
-                slaMonitoringBean.setsLATime(0);
+                    slaMonitoringBean.setsLATime(0);
                 else
-                slaMonitoringBean.setsLATime(Long.parseLong(properties.getPropValue())/1000);
+                    slaMonitoringBean.setsLATime(Long.parseLong(properties.getPropValue())/1000);
                 slaMonitoringBeanList.add(slaMonitoringBean);
             }
             LOGGER.info("total size of slaMonitotingBeanList "+slaMonitoringBeanList.size());
