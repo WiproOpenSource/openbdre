@@ -1199,6 +1199,8 @@
                      <select class="form-control" id="hiveFormat">
                       <option  value="parquet" selected>parquet</option>
                       <option  value="json">json</option>
+                      <option  value="orc">orc</option>
+                      <option  value="avro">avro</option>
                      </select>
                  </div>
 
