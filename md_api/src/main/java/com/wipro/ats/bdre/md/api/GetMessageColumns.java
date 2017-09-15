@@ -38,7 +38,7 @@ public class GetMessageColumns extends MetadataAPIBase {
 
     public static void main(String[] args) {
         // Set<String> columnNames = new GetMessageColumns().getMessageColumnNames(45);
-        System.out.println("column names = " + new GetMessageColumns().getMessageColumnNames(106));
+        System.out.println("column names = " + new GetMessageColumns().getMessageColumnNames(162));
         //System.out.println("final result = " + new GetMessageColumns().getMessageList(92));
     }
 
