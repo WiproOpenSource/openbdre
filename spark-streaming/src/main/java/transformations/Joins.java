@@ -37,7 +37,7 @@ public class Joins implements Transformation {
         //List<Integer> prevPidList = new ArrayList<>();
         //prevPidList.addAll(prevMap.get(pid));
         GetProperties getProperties = new GetProperties();
-        Properties filterProperties = getProperties.getProperties(String.valueOf(pid), "join");
+        Properties filterProperties = getProperties.getProperties(String.valueOf(pid), "join_prop");
         String[] joinProcessArray=filterProperties.getProperty("joinProcessOrder").split(",");
         System.out.println(joinProcessArray);
         final String joinMessage1 = filterProperties.getProperty(joinProcessArray[0]+".joinTable");

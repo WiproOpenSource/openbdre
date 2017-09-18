@@ -926,7 +926,7 @@ public class PropertiesAPI extends MetadataAPIBase {
 
                 jpaProperties.setId(jpaPropertiesId);
                 jpaProperties.setProcess(process);
-                jpaProperties.setConfigGroup("join");
+                jpaProperties.setConfigGroup("join_prop");
                 jpaProperties.setDescription("join properties");
                 jpaProperties.setPropValue(entry.getValue());
                 propertiesDAO.insert(jpaProperties);
