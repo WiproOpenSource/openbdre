@@ -136,12 +136,12 @@
                         <configuration>
                             <artifactItems>
                                 <artifactItem>
-                                    <groupId>org.mortbay.jetty</groupId>
+                                    <groupId>org.eclipse.jetty</groupId>
                                     <artifactId>jetty-runner</artifactId>
                                     <destFileName>jetty-runner.jar</destFileName>
                                 </artifactItem>
                                 <artifactItem>
- -                                    <groupId>org.mortbay.jetty</groupId>
+ -                                    <groupId>org.eclipse.jetty</groupId>
  -                                    <artifactId>jetty-runner</artifactId>
  -                                    <outputDirectory>${project.parent.build.directory}/lib/webapps</outputDirectory>
  -                                    <destFileName>jetty-runner.jar</destFileName>

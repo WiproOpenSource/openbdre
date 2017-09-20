@@ -514,7 +514,7 @@
                 <version>${jetty.servlet.version}</version>
             </dependency>
             <dependency>
-                <groupId>org.mortbay.jetty</groupId>
+                <groupId>org.eclipse.jetty</groupId>
                 <artifactId>jetty-runner</artifactId>
                 <version>${jetty.runner.version}</version>
             </dependency>
