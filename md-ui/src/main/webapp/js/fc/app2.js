@@ -532,6 +532,8 @@ $scope.updateProcessDetails = function() {
                         });
                         if(broadcastCount>0)
                          insertBroadcastData(broadcastCount,data.Record);
+                         else
+                         $('#broadcast').show();
                      }
                      else
                      alertBox("warning","Error occured");
@@ -607,6 +609,54 @@ $scope.updateProcessDetails = function() {
                         addSaveButton();
 
                   }
+
+
+                  var aggregationString;
+                  if(genConfig.value == "Aggregation")
+                  {
+
+                  $.ajax({
+                          type: "GET",
+                          url: "/mdrest/properties/"+processId+'/default',
+                          success: function(data) {
+                              if(data.Result == "OK") {
+                                 console.log(data);
+                                 data.Record.forEach( function (arrayItem)
+                                 {
+                                     if(arrayItem.key == "column:aggType")
+                                     aggregationString = arrayItem.value;
+                                     console.log(aggregationString);
+                                 });
+                                 if(aggregationString != null)
+                                  {
+                                  var ar=aggregationString.split(",");
+                                  var c=ar.length;
+                                   for(var i=2;i<=c;i++)
+                                          addMore();
+                                      var i=1;
+                                     console.log(ar);
+                                      for(var j=0;j<ar.length;j++){
+                                      var tmp=ar[j].split(":::");
+                                      var clo_val=tmp[0];
+                                      var aggregation_val=tmp[1];
+                                      console.log(clo_val+"=="+aggregation_val);
+                                      if(document.getElementById("column."+i) !=null)
+                                     document.getElementById("column."+i).value = clo_val;
+                                   if(document.getElementById("aggregation."+i) !=null)
+                                   document.getElementById("aggregation."+i).value = aggregation_val;
+                                   i++;
+                                  }
+                                  }
+                              }
+                              else
+                              alertBox("warning","Error occured");
+
+                          }
+                    });
+
+
+                  }
+
 
 
 

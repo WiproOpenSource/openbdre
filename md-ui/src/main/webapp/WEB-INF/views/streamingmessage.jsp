@@ -8,23 +8,7 @@
 
 	<head>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-		<!-- Jquery Core Js -->
-                <script src="../MaterialDesign_css/jquery.min.js"></script>
 
-                <script src="../js/bootstrap.js"></script>
-
-                <!-- Slimscroll Plugin Js -->
-                <script src="../MaterialDesign_css/jquery.slimscroll.js"></script>
-
-                <!-- Waves Effect Plugin Js -->
-                <script src="../MaterialDesign_css/waves.js"></script>
-
-                <!-- Jquery CountTo Plugin Js -->
-                <script src="../MaterialDesign_css/jquery.countTo.js"></script>
-
-                <!-- Morris Plugin Js -->
-                <script src="../MaterialDesign_css/raphael.min.js"></script>
-                <script src="../MaterialDesign_css/morris.js"></script>
                     <meta name="viewport" content="width=device-width, initial-scale=1">
                     <link rel="stylesheet" href="../css/css/bootstrap.min.css" />
                     <link rel="stylesheet" href="../css/bootstrap.custom.css" />
