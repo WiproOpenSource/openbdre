@@ -148,9 +148,9 @@ public class ProcessAPI extends MetadataAPIBase {
                 processDAO.securityCheck(parentProcess.getProcess().getProcessId(), principal.getName(), WRITE);
             else
                 processDAO.securityCheck(processId, principal.getName(), WRITE);
-            Integer parentProcessId=processId;
-            if(parentProcess.getProcess()!=null)
-             parentProcessId = parentProcess.getProcess().getProcessId();
+            Integer parentProcessId;
+            if (parentProcess.getProcess() != null){
+                parentProcessId = parentProcess.getProcess().getProcessId();
             String nextProcessOfParent = processDAO.get(parentProcessId).getNextProcessId();
             Map<Integer, String> nextPidMap = new HashMap<Integer, String>();
             nextPidMap.put(parentProcessId, nextProcessOfParent);
@@ -158,22 +158,25 @@ public class ProcessAPI extends MetadataAPIBase {
             for (com.wipro.ats.bdre.md.dao.jpa.Process subProcess : jpaProcessList) {
                 nextPidMap.put(subProcess.getProcessId(), subProcess.getNextProcessId());
             }
-            LOGGER.info("nextPidMap is  "+nextPidMap);
-            for (Map.Entry<Integer, String> entry : nextPidMap.entrySet())
-            {
+            LOGGER.info("nextPidMap is  " + nextPidMap);
+            for (Map.Entry<Integer, String> entry : nextPidMap.entrySet()) {
                 System.out.println(entry.getKey() + "/" + entry.getValue());
-                String tmp=entry.getValue();
-                HashSet<String> hashSet=new HashSet<>(Arrays.asList(tmp.split(",")));
+                String tmp = entry.getValue();
+                HashSet<String> hashSet = new HashSet<>(Arrays.asList(tmp.split(",")));
 
-                if (hashSet.contains(processId.toString())==true) {
-
+                if (hashSet.contains(processId.toString()) == true) {
+                    System.out.println("updating process Id is "+entry.getKey()+"next processid before updating "+entry.getValue());
                     hashSet.remove(processId.toString());
-                    com.wipro.ats.bdre.md.dao.jpa.Process process=processDAO.get(entry.getKey());
+                    com.wipro.ats.bdre.md.dao.jpa.Process process = processDAO.get(entry.getKey());
+                    if(StringUtils.join(hashSet, ',')!="")
                     process.setNextProcessId(StringUtils.join(hashSet, ','));
+                    else
+                        process.setNextProcessId("0");
+                    System.out.println("updating process Id is "+entry.getKey()+"next processid after updating "+StringUtils.join(hashSet, ','));
                     processDAO.update(process);
                 }
             }
-
+        }
             processDAO.delete(processId);
 
             restWrapper = new RestWrapper(null, RestWrapper.OK);
