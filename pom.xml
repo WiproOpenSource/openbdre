@@ -222,8 +222,8 @@
             <!-- jstl for jsp page -->
 
             <dependency>
-                <groupId>jstl</groupId>
-                <artifactId>jstl</artifactId>
+                <groupId>org.eclipse.jetty</groupId>
+                <artifactId>apache-jstl</artifactId>
                 <version>${jstl.version}</version>
             </dependency>
 

@@ -47,8 +47,9 @@
         </dependency>
         <!-- jstl for jsp page -->
         <dependency>
-            <groupId>jstl</groupId>
-            <artifactId>jstl</artifactId>
+            <groupId>org.eclipse.jetty</groupId>
+            <artifactId>apache-jstl</artifactId>
+            <version>9.2.2.v20140723</version>
         </dependency>
         <dependency>
             <groupId>org.springframework</groupId>
