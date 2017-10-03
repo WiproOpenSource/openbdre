@@ -9,10 +9,7 @@ import java.io.IOException;
 import java.io.StringWriter;
 import java.io.Writer;
 import java.math.BigDecimal;
-import java.util.Collection;
-import java.util.Map;
-import java.util.Set;
-import java.util.TreeMap;
+import java.util.*;
 
 
 public class JSONObject {
@@ -20,7 +17,7 @@ public class JSONObject {
     private final Map<String, Object> map;
 
     public JSONObject() {
-        this.map = new TreeMap<String, Object>();
+        this.map = new LinkedHashMap<String, Object>();
     }
 
     public Object opt(String key) {
