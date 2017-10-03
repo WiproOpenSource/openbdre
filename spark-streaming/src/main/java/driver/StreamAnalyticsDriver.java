@@ -332,6 +332,9 @@ public class StreamAnalyticsDriver implements Serializable {
                 Messages messages = streamingMessagesAPI.getMessage(messageName);
                 String format = messages.getFormat();
 
+                SchemaReader schemaReader = new SchemaReader();
+                StructType schema = schemaReader.generateSchema(pid);
+
                 if(format.equalsIgnoreCase("Json")) {
                     SQLContext sqlContext = new SQLContext(ssc.sparkContext());
                     wrapperDStream = msgDataStream.transformToPair(new Function<JavaPairRDD<String, String>, JavaPairRDD<String, WrapperMessage>>() {
@@ -340,7 +343,7 @@ public class StreamAnalyticsDriver implements Serializable {
                             JavaPairRDD<String, WrapperMessage> outputPairRdd = null;
                             JavaRDD<String> javaRDD = inputPairRDD.map(s -> s._2);
                             javaRDD.take(15);
-                            JavaRDD<Row> rowJavaRDD = sqlContext.read().json(javaRDD).javaRDD();
+                            JavaRDD<Row> rowJavaRDD = sqlContext.read().schema(schema).json(javaRDD).javaRDD();
                             rowJavaRDD.take(15);
                             outputPairRdd = rowJavaRDD.mapToPair(row -> new Tuple2<String, WrapperMessage>(null,new WrapperMessage(row)));
                             return outputPairRdd ;
@@ -355,7 +358,7 @@ public class StreamAnalyticsDriver implements Serializable {
                             JavaPairRDD<String, WrapperMessage> outputPairRdd = null;
                             JavaRDD<String> javaRDD = inputPairRDD.map(t -> parseXMLString(t));
 
-                            JavaRDD<Row> rowJavaRDD = sqlContext.read().json(javaRDD).javaRDD();
+                            JavaRDD<Row> rowJavaRDD = sqlContext.read().schema(schema).json(javaRDD).javaRDD();
 
                             //new XmlReader().xmlRdd(sqlContext, javaRDD.rdd()).printSchema();
                             //JavaRDD<Row> rowJavaRDD = new XmlReader().xmlRdd(sqlContext, javaRDD.rdd()).javaRDD();
@@ -372,9 +375,7 @@ public class StreamAnalyticsDriver implements Serializable {
                     wrapperDStream = convertToDStreamWrapperMessage(msgDataStream, dStreamPidMap.get(msgDataStream));
                 }
                 transformedDStreamMap.put(pid,wrapperDStream);
-                SchemaReader schemaReader = new SchemaReader();
-                StructType schema = schemaReader.generateSchema(pid);
-                System.out.println("schema.toString() = " + schema.toString());
+
                 transformAndEmit(emptyRDD,nextPidMap.get(pid), transformedDStreamMap,schema,broadcastMap,ssc);
             }
     }

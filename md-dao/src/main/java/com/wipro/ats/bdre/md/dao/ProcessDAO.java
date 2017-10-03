@@ -370,6 +370,8 @@ public class ProcessDAO {
 
         try {
             parentProcess = (Process) session.createCriteria(Process.class).add(Restrictions.eq(PROCESSCODE,processCode)).add(Restrictions.eq(USERNAME,username)).uniqueResult();
+            if (parentProcess==null)
+                parentProcess = (Process) session.createCriteria(Process.class).add(Restrictions.eq(PROCESSCODE,processCode)).uniqueResult();
             session.getTransaction().commit();
         } catch (MetadataException e) {
             session.getTransaction().rollback();
