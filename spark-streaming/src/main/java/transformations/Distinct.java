@@ -32,8 +32,6 @@ public class Distinct implements Transformation {
             @Override
             public JavaRDD<WrapperMessage> call(JavaRDD<WrapperMessage> rddWrapperMessage) throws Exception {
 
-
-
                 JavaRDD<Row> rddRow = rddWrapperMessage.map(new Function<WrapperMessage, Row>() {
                                                                 @Override
                                                                 public Row call(WrapperMessage wrapperMessage) throws Exception {

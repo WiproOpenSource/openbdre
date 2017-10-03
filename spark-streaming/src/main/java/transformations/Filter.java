@@ -42,12 +42,6 @@ public class Filter implements Transformation {
                 JavaRDD<Row> rddRow = rddPairWrapperMessage.map(s -> s._2.getRow());
                 SQLContext sqlContext = SQLContext.getOrCreate(rddRow.context());
                 DataFrame dataFrame = sqlContext.createDataFrame(rddRow, schema);
-
-                if(rddRow.count() > 0) {
-                    System.out.println("rddRow schema= " + rddRow.take(1).get(0).schema());
-                    System.out.println("schema = " + schema);
-                }
-                dataFrame.printSchema();
                 DataFrame filteredDF = null;
 
                 if (dataFrame != null ) {
