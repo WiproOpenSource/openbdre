@@ -77,3 +77,4 @@
 80,'operator_DeDuplication',41
 81,'operator_Custom',41
 82,'operator_Enricher',41
+83,'persistentStore_Impala',41
