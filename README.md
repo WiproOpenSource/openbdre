@@ -222,7 +222,7 @@ You should be able to do the same in Mac or Windows but note that setting up a H
     ```
  * *Note:* Selecting hdp22 will compile BDRE with HDP 2.2 libraries and automatically configure BDRE with properties from  databases/setup/profile.hdp22.properties . These properties can later be altered from the BDRE Settings page under Administration.
 
-    databases/setup/profile.hdp52.properties looks like this.
+    databases/setup/profile.cdh52.properties looks like this.
 
  ```properties
     bdre_user_name=openbdre
