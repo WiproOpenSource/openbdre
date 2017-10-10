@@ -64,8 +64,8 @@
 		        }
 		    },
 		    onFinished: function (event, currentIndex) {
-                console.log(finalJson.processList[0].processId);
-                location.href = '<c:url value="/pages/process.page?pid="/>' + finalJson.processList[0].processId;
+                console.log(finalJson.Record.processList[0].processId);
+                location.href = '<c:url value="/pages/process.page?pid="/>' + finalJson.Record.processList[0].processId;
                              }
 			});
 

@@ -83,7 +83,7 @@ public class Filter implements Transformation {
                                         sqlDataFrame = dataFrame.col(colName).notEqual("");
                                         break;
                                     case "greater than":
-                                        sqlDataFrame = dataFrame.col(colName).gt(filterValue);
+                                        sqlDataFrame = dataFrame.col(colName).gt(Long.valueOf(filterValue));
                                         break;
                                 }
                                 break;
