@@ -11,7 +11,8 @@ import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
-
+import javax.validation.Valid;
+import org.springframework.validation.BindingResult;
 import java.security.Principal;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -278,18 +279,39 @@ public class ConnectionsAPI {
 
     @RequestMapping(value = {"/update/{id}"}, method = RequestMethod.POST)
     @ResponseBody
-    public RestWrapper updateConnection(@PathVariable("id") String connectionName,
-                                        @RequestParam(value = "propKey") String key,
+    public RestWrapper updateConnectionProperties(@PathVariable("id") String connectionName,
+                                        @RequestParam(value="jtRecordKey") String k,
+                                        @RequestParam(value="propKey") String key,
                                         @RequestParam(value = "propValue") String value,
-                                        Principal principal) {
+                                        Principal principal)
+
+    {
 
         RestWrapper restWrapper = null;
         try {
             LOGGER.info("connectionName is "+connectionName);
             LOGGER.info("propKey is "+key);
             LOGGER.info("propValue is "+value);
-            restWrapper = new RestWrapper("success", RestWrapper.OK);
+           ConnectionPropertiesId id1=new ConnectionPropertiesId();
+           ConnectionPropertiesId id2=new ConnectionPropertiesId();
+           Connections connections=new Connections();
+           connections.setConnectionName(connectionName);
+           id1.setConnectionName(connectionName);
+           id1.setPropKey(k);
+           id2.setPropKey(key);
+           id2.setConnectionName(connectionName);
+           ConnectionProperties connectionProperties=connectionPropertiesDAO.getConnectionsById(id1);
+           ConnectionProperties updatedConnectionProperties=new ConnectionProperties();
+           updatedConnectionProperties.setId(id2);
+           updatedConnectionProperties.setDescription(connectionProperties.getDescription());
+           updatedConnectionProperties.setConfigGroup(connectionProperties.getConfigGroup());
+           updatedConnectionProperties.setPropValue(value);
+           updatedConnectionProperties.setConnections(connections);
+           connectionPropertiesDAO.delete(id1);
+           connectionPropertiesDAO.insert(updatedConnectionProperties);
+           restWrapper = new RestWrapper("success", RestWrapper.OK);
         }
+
         catch (Exception e) {
             LOGGER.error(e);
             restWrapper = new RestWrapper(e.getMessage(), RestWrapper.ERROR);
@@ -298,4 +320,78 @@ public class ConnectionsAPI {
     }
 
 
+
+
+    @RequestMapping(value = {"/{id}/{key}"}, method = RequestMethod.DELETE)
+    @ResponseBody
+    public RestWrapper deleteConnectionProperties(@PathVariable("id") String connectionName,
+                              @PathVariable("key") String key,
+                              Principal principal){
+        RestWrapper restWrapper = null;
+        try {
+
+            com.wipro.ats.bdre.md.dao.jpa.ConnectionPropertiesId connectionPropertiesId = new com.wipro.ats.bdre.md.dao.jpa.ConnectionPropertiesId();
+            connectionPropertiesId.setConnectionName(connectionName);
+            connectionPropertiesId.setPropKey(key);
+            connectionPropertiesDAO.delete(connectionPropertiesId);
+            restWrapper = new RestWrapper(null, RestWrapper.OK);
+            LOGGER.info("Record with ID:" + connectionName + "," + key + " deleted from Properties by User:" + principal.getName());
+
+        } catch (Exception e) {
+            LOGGER.error(e);
+            restWrapper = new RestWrapper(e.getMessage(), RestWrapper.ERROR);
+        }
+
+        return restWrapper;
+    }
+
+    @RequestMapping(value={"/insert/{id}/{type}"}, method=RequestMethod.PUT)
+    @ResponseBody
+    public RestWrapper insertConnectionProperties(@PathVariable("id") String connectionName,
+                              @PathVariable("type") String config,
+                              @RequestParam(value="propKey") String key,
+                              @RequestParam(value="propValue") String value,
+                              Principal principal){
+        RestWrapper restWrapper=null;
+        int flag=0;
+        try{
+            List<ConnectionProperties> listConnectionProperties=connectionPropertiesDAO.getAllConnectionProperties(connectionName);
+                    //listConnectionProperties=connectionPropertiesDAO.getAllConnectionProperties(connectionName);
+            for(ConnectionProperties c:listConnectionProperties){
+                if(c.getId().getPropKey().equals(key)){
+                    flag=1;
+                    break;
+                }
+            }
+            if(flag==1){
+                restWrapper=new RestWrapper("Duplicate key value is not allowed", RestWrapper.ERROR);
+            }
+            else {
+                ConnectionProperties newConnectionProperties = new ConnectionProperties();
+                ConnectionPropertiesId id = new ConnectionPropertiesId();
+                id.setConnectionName(connectionName);
+                id.setPropKey(key);
+                Connections connections = new Connections();
+                connections.setConnectionName(connectionName);
+                newConnectionProperties.setId(id);
+                newConnectionProperties.setPropValue(value);
+                newConnectionProperties.setConfigGroup(config);
+                newConnectionProperties.setDescription("Properties for " + config);
+                newConnectionProperties.setConnections(connections);
+                connectionPropertiesDAO.insert(newConnectionProperties);
+                restWrapper = new RestWrapper(newConnectionProperties, RestWrapper.OK);
+            }
+        }
+
+        catch (Exception e) {
+            LOGGER.error(e);
+            restWrapper = new RestWrapper(e.getMessage(), RestWrapper.ERROR);
+        }
+
+        return restWrapper;
+
+    }
 }
+
+
+
