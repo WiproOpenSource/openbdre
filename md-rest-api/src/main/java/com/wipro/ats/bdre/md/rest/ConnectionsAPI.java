@@ -276,12 +276,13 @@ public class ConnectionsAPI {
     }
 
 
+        // This method updates key and value of a particular property.
 
     @RequestMapping(value = {"/update/{id}"}, method = RequestMethod.POST)
     @ResponseBody
     public RestWrapper updateConnectionProperties(@PathVariable("id") String connectionName,
-                                        @RequestParam(value="jtRecordKey") String k,
-                                        @RequestParam(value="propKey") String key,
+                                        @RequestParam(value="jtRecordKey") String oldKey,
+                                        @RequestParam(value="propKey") String newKey,
                                         @RequestParam(value = "propValue") String value,
                                         Principal principal)
 
@@ -290,15 +291,15 @@ public class ConnectionsAPI {
         RestWrapper restWrapper = null;
         try {
             LOGGER.info("connectionName is "+connectionName);
-            LOGGER.info("propKey is "+key);
+            LOGGER.info("propKey is "+newKey);
             LOGGER.info("propValue is "+value);
            ConnectionPropertiesId id1=new ConnectionPropertiesId();
            ConnectionPropertiesId id2=new ConnectionPropertiesId();
            Connections connections=new Connections();
            connections.setConnectionName(connectionName);
            id1.setConnectionName(connectionName);
-           id1.setPropKey(k);
-           id2.setPropKey(key);
+           id1.setPropKey(oldKey);
+           id2.setPropKey(newKey);
            id2.setConnectionName(connectionName);
            ConnectionProperties connectionProperties=connectionPropertiesDAO.getConnectionsById(id1);
            ConnectionProperties updatedConnectionProperties=new ConnectionProperties();
@@ -321,6 +322,7 @@ public class ConnectionsAPI {
 
 
 
+    // This method deletes a particular property for a connection
 
     @RequestMapping(value = {"/{id}/{key}"}, method = RequestMethod.DELETE)
     @ResponseBody
@@ -345,6 +347,8 @@ public class ConnectionsAPI {
         return restWrapper;
     }
 
+    // This method adds a new connection property to the connection list
+
     @RequestMapping(value={"/insert/{id}/{type}"}, method=RequestMethod.PUT)
     @ResponseBody
     public RestWrapper insertConnectionProperties(@PathVariable("id") String connectionName,
@@ -356,7 +360,7 @@ public class ConnectionsAPI {
         int flag=0;
         try{
             List<ConnectionProperties> listConnectionProperties=connectionPropertiesDAO.getAllConnectionProperties(connectionName);
-                    //listConnectionProperties=connectionPropertiesDAO.getAllConnectionProperties(connectionName);
+
             for(ConnectionProperties c:listConnectionProperties){
                 if(c.getId().getPropKey().equals(key)){
                     flag=1;
