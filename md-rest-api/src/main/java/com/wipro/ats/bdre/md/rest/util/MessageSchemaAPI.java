@@ -16,9 +16,11 @@ import com.wipro.ats.bdre.md.rest.ext.DataLoadAPI;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.validation.Valid;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
@@ -227,15 +229,203 @@ public class MessageSchemaAPI extends MetadataAPIBase {
            List<MessageColumnSchema> messageColumnSchemaList=new ArrayList<>();
             int counter=columnAndDataTypes.length;
             for(String s : columnAndDataTypes){
-                String tmp[]=s.split(":");
-                MessageColumnSchema messageColumnSchema=new MessageColumnSchema();
-                messageColumnSchema.setColumnName(tmp[0]);
-                messageColumnSchema.setDataType(tmp[1]);
-                messageColumnSchema.setCounter(counter);
-                messageColumnSchemaList.add(messageColumnSchema);
+                if(s!=null || s!="") {
+                    String tmp[] = s.split(":");
+                    MessageColumnSchema messageColumnSchema = new MessageColumnSchema();
+                    messageColumnSchema.setColumnName(tmp[0]);
+                    messageColumnSchema.setDataType(tmp[1]);
+                    messageColumnSchema.setCounter(counter);
+                    messageColumnSchemaList.add(messageColumnSchema);
+                }
             }
             restWrapper = new RestWrapper(messageColumnSchemaList, RestWrapperOptions.OK);
         } catch (MetadataException e) {
+            LOGGER.error(e);
+            restWrapper = new RestWrapper(e.getMessage(), RestWrapper.ERROR);
+        }
+        return restWrapper;
+    }
+
+
+    @RequestMapping(value = {"/{id}/{k}"}, method = RequestMethod.DELETE)
+    @ResponseBody
+    public RestWrapper delete (@PathVariable("id") String messageId,
+                               @PathVariable("k") String column, Principal principal) {
+
+        RestWrapper restWrapper = null;
+        String messageSchema;
+        try{
+            int i,j;
+            Messages message = messagesDAO.get(messageId);
+            String schema = message.getMessageSchema();
+            String[] columnAndDataTypes = schema.split(",");
+            int count = columnAndDataTypes.length;
+            if(count==1){
+                messageSchema="";
+            }
+            else {
+                for (i = 0; i < (count-1); i++) {
+                    String[] tmp = columnAndDataTypes[i].split(":");
+                    if (tmp[0].equals(column)) {
+                        for (j = i; j < (count - 1); j++) {
+                            columnAndDataTypes[j] = columnAndDataTypes[j + 1];
+                        }
+                        break;
+                    }
+                }
+                StringBuilder builder = new StringBuilder(columnAndDataTypes[0]);
+                for (i = 1; i < (count-1); i++) {
+                    builder.append(",");
+                    builder.append(columnAndDataTypes[i]);
+                }
+
+                 messageSchema = builder.toString();
+            }
+            Messages updatedMessage = new Messages();
+            updatedMessage.setMessageName(message.getMessageName());
+            updatedMessage.setConnections(message.getConnections());
+            updatedMessage.setFormat(message.getFormat());
+            updatedMessage.setDelimiter(message.getDelimiter());
+            updatedMessage.setMessageSchema(messageSchema);
+
+            messagesDAO.update(updatedMessage);
+            restWrapper = new RestWrapper(null, RestWrapper.OK);
+            LOGGER.info("Record with ID:" + messageId + "," + column + " deleted from Message by User:" + principal.getName());
+
+        } catch (MetadataException e) {
+            LOGGER.error(e);
+            restWrapper = new RestWrapper(e.getMessage(), RestWrapper.ERROR);
+        }
+        catch (SecurityException e) {
+            LOGGER.error(e);
+            restWrapper = new RestWrapper(e.getMessage(), RestWrapper.ERROR);
+        }
+        return restWrapper;
+    }
+
+
+
+    @RequestMapping (value = {"/{id}"}, method = RequestMethod.DELETE)
+    @ResponseBody
+    public RestWrapper delete (@PathVariable("id") String messageId, Principal principal) {
+        RestWrapper restWrapper = null;
+        try{
+            messagesDAO.delete(messageId);
+            restWrapper = new RestWrapper(null, RestWrapper.OK);
+            LOGGER.info("Record  with ID:" + messageId + " deleted from Message by User:" + principal.getName());
+
+        } catch (MetadataException e) {
+            LOGGER.error(e);
+            restWrapper = new RestWrapper(e.getMessage(), RestWrapper.ERROR);
+        } catch (SecurityException e) {
+            LOGGER.error(e);
+            restWrapper = new RestWrapper(e.getMessage(), RestWrapper.ERROR);
+        }
+        return restWrapper;
+    }
+
+    @RequestMapping(value = {"/{id}/"}, method = RequestMethod.PUT)
+    @ResponseBody
+    public RestWrapper insert (@PathVariable("id") String messageId,
+                               @RequestParam(value = "columnName") String column,
+                               @RequestParam(value = "dataType") String type, Principal principal) {
+        RestWrapper restWrapper = null;
+        int flag=0;
+        String messageSchema = "";
+        try{
+            Messages message = messagesDAO.get(messageId);
+            String schema = message.getMessageSchema();
+            if(!schema.equals("")) {
+                String[] columnAndDataTypes = schema.split(",");
+                for (String s : columnAndDataTypes) {
+                    String[] tmp = s.split(":");
+                    if (tmp[0].equals(column)) {
+                        messageSchema = schema;
+                        flag = 1;
+                        break;
+                    }
+                }
+            }
+            if(flag==0){
+                StringBuilder builder = new StringBuilder(schema);
+                if(!schema.equals("")){ builder.append(",");}
+                builder.append(column);
+                builder.append(":");
+                builder.append(type);
+                messageSchema = builder.toString();
+            }
+
+            Messages updatedMessage = new Messages();
+            updatedMessage.setMessageName(message.getMessageName());
+            updatedMessage.setMessageSchema(messageSchema);
+            updatedMessage.setDelimiter(message.getDelimiter());
+            updatedMessage.setFormat(message.getFormat());
+            updatedMessage.setConnections(message.getConnections());
+            messagesDAO.update(updatedMessage);
+            restWrapper = new RestWrapper(messageSchema, RestWrapper.OK);
+            LOGGER.info("Record with ID:" + messageId + " inserted in Messages by User:" + principal.getName());
+
+    } catch (MetadataException e) {
+        LOGGER.error(e);
+        restWrapper = new RestWrapper(e.getMessage(), RestWrapper.ERROR);
+    }
+        catch (SecurityException e) {
+        LOGGER.error(e);
+        restWrapper = new RestWrapper(e.getMessage(), RestWrapper.ERROR);
+    }
+        return restWrapper;
+    }
+
+
+    @RequestMapping(value = {"/{id}"}, method = RequestMethod.POST)
+    @ResponseBody
+    public RestWrapper update (@PathVariable("id") String messageId,
+                               @RequestParam(value = "jtRecordKey") String columnName,
+                               @RequestParam(value = "columnName") String column,
+                               @RequestParam(value = "dataType") String type, Principal principal) {
+        RestWrapper restWrapper = null;
+        try{
+            int i;
+            Messages message = messagesDAO.get(messageId);
+            String schema = message.getMessageSchema();
+            String[] columnAndDataTypes = schema.split(",");
+            int count = columnAndDataTypes.length;
+            for(i=0;i<count;i++){
+                String[] tmp = columnAndDataTypes[i].split(":");
+                if(columnName.equals(tmp[0])){
+                    tmp[0] = column;
+                    tmp[1] = type;
+                    StringBuilder builder = new StringBuilder(tmp[0]);
+                    builder.append(":");
+                    builder.append(tmp[1]);
+                    columnAndDataTypes[i]=builder.toString();
+                    break;
+                }
+            }
+            StringBuilder builder = new StringBuilder(columnAndDataTypes[0]);
+
+            for (i = 1; i < count; i++) {
+                builder.append(",");
+                builder.append(columnAndDataTypes[i]);
+            }
+
+            String messageSchema = builder.toString();
+
+            Messages updatedMessage = new Messages();
+            updatedMessage.setFormat(message.getFormat());
+            updatedMessage.setMessageName(messageId);
+            updatedMessage.setConnections(message.getConnections());
+            updatedMessage.setDelimiter(message.getDelimiter());
+            updatedMessage.setMessageSchema(messageSchema);
+            messagesDAO.update(updatedMessage);
+            restWrapper = new RestWrapper("success", RestWrapper.OK);
+            LOGGER.info("Record with ID:" + messageId + " updated in Messages by User:" + principal.getName());
+
+        } catch (MetadataException e) {
+            LOGGER.error(e);
+            restWrapper = new RestWrapper(e.getMessage(), RestWrapper.ERROR);
+        }
+        catch (SecurityException e) {
             LOGGER.error(e);
             restWrapper = new RestWrapper(e.getMessage(), RestWrapper.ERROR);
         }
@@ -250,3 +440,4 @@ public class MessageSchemaAPI extends MetadataAPIBase {
     }
     // Read from request
 }
+

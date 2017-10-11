@@ -1,6 +1,7 @@
 package com.wipro.ats.bdre.md.dao;
 
 import com.wipro.ats.bdre.exception.MetadataException;
+import com.wipro.ats.bdre.md.dao.jpa.Connections;
 import com.wipro.ats.bdre.md.dao.jpa.Messages;
 import com.wipro.ats.bdre.md.dao.jpa.Process;
 import com.wipro.ats.bdre.md.dao.jpa.Users;
@@ -61,6 +62,39 @@ public class MessagesDAO {
         session.getTransaction().commit();
         session.close();
         return messages;
+    }
+
+    public void update(Messages message) {
+        Session session = sessionFactory.openSession();
+        try{
+            session.beginTransaction();
+
+            session.update(message);
+            //session.get(Connections.class, message.getConnections().getConnectionName());
+            session.getTransaction().commit();
+        } catch (MetadataException e) {
+            session.getTransaction().rollback();
+            LOGGER.error(e);
+        } finally {
+            session.close();
+        }
+
+    }
+
+    public void delete(String id) {
+        Session session = sessionFactory.openSession();
+        try{
+            session.beginTransaction();
+            Messages messages = (Messages) session.get(Messages.class, id);
+            session.delete(messages);
+            session.getTransaction().commit();
+        } catch (MetadataException e) {
+            session.getTransaction().rollback();
+            LOGGER.error(e);
+        } finally {
+            session.close();
+        }
+
     }
 
 }

@@ -58,6 +58,7 @@ angular.module('app', ['flowChart', ])
         $scope.operator_processTypes={};
         $scope.emitter_processTypes={};
         $scope.persistentStore_processTypes={};
+        $scope.analytics_processTypes={};
         $scope.chartViewModel={};
         $scope.newMessagesList = {};
 
@@ -128,6 +129,7 @@ angular.module('app', ['flowChart', ])
 
             jQuery.post('/mdrest/processtype/options_emitter/'+parentType,function(data){$scope.emitter_processTypes=data});
             jQuery.post('/mdrest/processtype/options_persistentStore/'+parentType,function(data){$scope.persistentStore_processTypes=data});
+            jQuery.post('/mdrest/processtype/options_analytics/'+parentType,function(data){$scope.analytics_processTypes=data});
             jQuery.post('/mdrest/processtype/options/'+parentType,function(data){$scope.processTypes=data});
             jQuery.post('/mdrest/processtype/options_source/'+parentType,function(data){$scope.source_processTypes=data});
             jQuery.post('/mdrest/processtype/options_operator/'+parentType,function(data){$scope.operator_processTypes=data});
