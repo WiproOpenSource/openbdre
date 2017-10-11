@@ -547,11 +547,11 @@
                                                                             paging: true,
                                                                             pageSize: 10,
                                                                             actions: {
-                                                                                listAction: function(postData) {
+                                                                                listAction: function(postData,jtParams) {
                                                                                     return $.Deferred(function($dfd) {
                                                                                         console.log(item);
                                                                                         $.ajax({
-                                                                                            url: '/mdrest/properties/' + item.record.processId,
+                                                                                            url: '/mdrest/properties/' + item.record.processId+'?page=' + jtParams.jtStartIndex + '&size='+jtParams.jtPageSize,
                                                                                             type: 'GET',
                                                                                             data: item,
                                                                                             dataType: 'json',
@@ -887,7 +887,8 @@
                               },
                               userName: {
                                        title: '<spring:message code="process.page.title_username"/>',
-
+                                        create:false,
+                                        edit:false
                                     },
                                 processTypeId: {
                                     title: '<spring:message code="process.page.title_type"/>',
@@ -1321,7 +1322,7 @@
                                     create: false,
                                     edit: false,
                                     display: function(data) {
-                                        return '<span class="label-icons label-editgraphically" onclick="goToEditGraphically(' + data.record.processId + ')"></span> ';
+                                        return '<span class="label-icons label-editgraphically" onclick="goToEditGraphically(' + data.record.processId+','+data.record.processTypeId+')"></span> ';
                                     },
                                 },
                             },
@@ -1414,7 +1415,23 @@
                             dataType: 'json',
                              success: function(data) {
                                 if(data.Result == "OK") {
+                                console.log(data.Record.workflowId);
+                                if(data.Record.workflowId == 2){
+                                  $("#alert-dialog").dialog({
+                                            resizable: false,
+                                            height: 'auto',
+                                            modal: true,
+                                            buttons: {
+                                                OK: function() {
+                                                    $(this).dialog("close");
+                                                }
+                                             }
+                                           });
+                                           }
+                                           else
+                                           {
                                   location.href = '<c:url value="/pages/lineage.page?pid="/>' + pid;
+                                }
                                 }
                                 else
                                 {
@@ -1426,13 +1443,17 @@
                             }
                         });
                     }
-					function goToEditGraphically(pid) {
+					function goToEditGraphically(pid,pTypeId) {
                                       $.ajax({
                                                url: '/mdrest/process/permission/'+pid,
                                                type: 'PUT',
                                                dataType: 'json',
                                                 success: function(data) {
                                                    if(data.Result == "OK") {
+                                                   if(pTypeId==41)
+
+                                                location.href = '<c:url value="/pages/wfdesigner2.page?processId="/>' + pid;
+                                                else
                                                 location.href = '<c:url value="/pages/wfdesigner.page?processId="/>' + pid;
                                                    }
                                                    else
@@ -1540,6 +1561,14 @@
 						</span>
 					</p>
 				</div>
+				<div id="alert-dialog" style="display: none;">
+                					<p>
+                						<span class="ui-icon-alert"></span>
+                						<span class="dialog-title-custom"><spring:message code="process.page.span_alert"/></span>
+                						<span class="jtable-confirm-message"><spring:message code="process.page.span_start_execution_alert_msg"/>
+                						</span>
+                					</p>
+                				</div>
 				<div id="dialog-form" style="display: none;">
 					<p>
 						<span class="ui-icon-alert"></span>

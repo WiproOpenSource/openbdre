@@ -141,10 +141,12 @@ public class AppDeploymentQueueAPI {
     @RequestMapping(value = "/merge/{id}", method = RequestMethod.POST)
     @ResponseBody
     public
-    RestWrapper merge(@PathVariable("id") Long queueId, Principal principal) {
+    RestWrapper merge(@PathVariable("id") Long queueId,@RequestParam(value = "gitUrl")  String gitUrl, Principal principal) {
         RestWrapper restWrapper = null;
         LOGGER.info("queue id is "+queueId);
         LOGGER.info("user name is "+principal.getName());
+
+        LOGGER.info("github url is "+gitUrl);
         AppDeploymentQueue returnedAppDeploymentQueue=new AppDeploymentQueue();
         try{
             String temp;
@@ -208,12 +210,13 @@ public class AppDeploymentQueueAPI {
 
                 int iExitValue;
             String sCommandString;
-            String[] command = {MDConfig.getProperty("deploy.script-path") + "/appstore-push.sh",appDeploymentQueue.getProcess().getProcessId().toString(),appDeploymentQueue.getAppDomain().toString(),appDeploymentQueue.getAppName().toLowerCase().replace(" ","_").toString()};
+            String[] command = {MDConfig.getProperty("deploy.script-path") + "/appstore-push.sh",appDeploymentQueue.getProcess().getProcessId().toString(),appDeploymentQueue.getAppDomain().toString(),appDeploymentQueue.getAppName().toLowerCase().replace(" ","_").toString(),gitUrl};
 
-            sCommandString = "sh "+command[0]+" "+command[1]+" "+command[2]+" "+command[3];
+            sCommandString = "sh "+command[0]+" "+command[1]+" "+command[2]+" "+command[3]+" "+command[4];
               iExitValue=AppDeploymentQueueAPI.pushToAppstore(sCommandString);
               if (iExitValue!=0){
                   LOGGER.info("App could not be sent in appstore with exit code is "+iExitValue);
+                  restWrapper = new RestWrapper("error in export to appstore", RestWrapper.ERROR);
               }
             else
               {
@@ -222,9 +225,10 @@ public class AppDeploymentQueueAPI {
                   jpaAppDeploymentQueue.setAppDeploymentQueueStatus(appDeploymentQueueStatusDAO.get((short)1));
                   appDeploymentQueueDAO.update(jpaAppDeploymentQueue);
                   returnedAppDeploymentQueue.setAppDeploymentStatusId((short) 1);
+                  restWrapper = new RestWrapper(returnedAppDeploymentQueue, RestWrapper.OK);
               }
 
-            restWrapper = new RestWrapper(returnedAppDeploymentQueue, RestWrapper.OK);
+
         } catch (MetadataException e) {
             LOGGER.error(e);
             restWrapper = new RestWrapper(e.getMessage(), RestWrapper.ERROR);

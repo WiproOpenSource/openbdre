@@ -15,7 +15,9 @@ package com.wipro.ats.bdre.md.ui;
 
 import com.wipro.ats.bdre.md.api.GetProcess;
 import com.wipro.ats.bdre.md.beans.ProcessInfo;
+import com.wipro.ats.bdre.wgen.dag.DAGPrinter;
 import com.wipro.ats.bdre.wgen.Workflow;
+import com.wipro.ats.bdre.wgen.dag.DAG;
 import com.wipro.ats.bdre.wgen.WorkflowPrinter;
 import org.apache.log4j.Logger;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
@@ -65,9 +67,14 @@ public class PageController {
     @RequestMapping(value = "/details/{pid}/{ieid}.page", method = RequestMethod.GET)
     @ResponseBody
     public String getDashboardDot(@PathVariable("pid") String pid, @PathVariable("ieid") String ieid) {
-
-        List<ProcessInfo> processInfos = new GetProcess().execInfo(new String[]{PARENTPROCESSID, pid, "--instance-exec-id", ieid});
-        Workflow workflow = new WorkflowPrinter().execInfo(processInfos, WORKFLOWCON + pid);
+        Workflow workflow= new Workflow();
+        try {
+            List<ProcessInfo> processInfos = new GetProcess().execInfo(new String[]{PARENTPROCESSID, pid, "--instance-exec-id", ieid});
+            workflow = new WorkflowPrinter().execInfo(processInfos, WORKFLOWCON + pid);
+        } catch (NullPointerException e) {
+            LOGGER.info(e);
+            return null;
+        }
         return workflow.getDot().toString();
 
     }
@@ -84,6 +91,21 @@ public class PageController {
             workflow.setXml(new StringBuilder("not allowed"));
         }
         return workflow.getXml().toString();
+    }
+
+    @RequestMapping(value = "/airflowdag/{pid}.page", method = RequestMethod.GET)
+    @ResponseBody
+    public String getAirflowDag(@PathVariable("pid") String pid,java.security.Principal principal) {
+        DAG dag=new DAG();
+        try{
+            List<ProcessInfo> processInfos = new GetProcess().execute(new String[]{PARENTPROCESSID, pid,"--username",principal.getName()});
+            dag = new DAGPrinter().execute(processInfos, WORKFLOWCON + pid);
+        } catch (SecurityException e) {
+            LOGGER.info(e);
+            dag.setDAG(new StringBuilder("not allowed"));
+        }
+
+        return dag.getDAG().toString();
     }
 
     @RequestMapping(value = "/auth/login.page", method = RequestMethod.GET)

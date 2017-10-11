@@ -236,6 +236,188 @@ public class ProcessTypeAPI extends MetadataAPIBase {
         return restWrapperOptions;
     }
 
+
+    @RequestMapping(value = {"/options_source/{ptid}"}, method = RequestMethod.POST)
+    @ResponseBody public
+    RestWrapperOptions options_source(@PathVariable("ptid") Integer processTypeId) {
+
+        RestWrapperOptions restWrapperOptions = null;
+        try {
+
+            List<com.wipro.ats.bdre.md.dao.jpa.ProcessType> jpaProcessTypes = processTypeDAO.list(processTypeId);
+            List<ProcessType> processTypes = new ArrayList<ProcessType>();
+            for (com.wipro.ats.bdre.md.dao.jpa.ProcessType processType : jpaProcessTypes) {
+                ProcessType returnProcessType = new ProcessType();
+                returnProcessType.setProcessTypeId(processType.getProcessTypeId());
+                returnProcessType.setParentProcessTypeId(processType.getParentProcessTypeId());
+                returnProcessType.setProcessTypeName(processType.getProcessTypeName());
+                returnProcessType.setCounter(jpaProcessTypes.size());
+                processTypes.add(returnProcessType);
+            }
+            LOGGER.debug(processTypes.get(0).getProcessTypeId());
+            List<RestWrapperOptions.Option> options = new ArrayList<RestWrapperOptions.Option>();
+
+            for (ProcessType type : processTypes) {
+                if (type.getProcessTypeName().startsWith("source")){
+                    RestWrapperOptions.Option option = new RestWrapperOptions.Option(type.getProcessTypeName().replace("source_",""), type.getProcessTypeId());
+                    options.add(option);
+                    LOGGER.debug(option.getDisplayText());
+                }
+            }
+            restWrapperOptions = new RestWrapperOptions(options, RestWrapperOptions.OK);
+
+        } catch (MetadataException e) {
+            LOGGER.error(e);
+            restWrapperOptions = new RestWrapperOptions(e.getMessage(), RestWrapperOptions.ERROR);
+        }
+        return restWrapperOptions;
+    }
+
+
+    @RequestMapping(value = {"/options_operator/{ptid}"}, method = RequestMethod.POST)
+    @ResponseBody public
+    RestWrapperOptions options_operator(@PathVariable("ptid") Integer processTypeId) {
+
+        RestWrapperOptions restWrapperOptions = null;
+        try {
+
+            List<com.wipro.ats.bdre.md.dao.jpa.ProcessType> jpaProcessTypes = processTypeDAO.list(processTypeId);
+            List<ProcessType> processTypes = new ArrayList<ProcessType>();
+            for (com.wipro.ats.bdre.md.dao.jpa.ProcessType processType : jpaProcessTypes) {
+                ProcessType returnProcessType = new ProcessType();
+                returnProcessType.setProcessTypeId(processType.getProcessTypeId());
+                returnProcessType.setParentProcessTypeId(processType.getParentProcessTypeId());
+                returnProcessType.setProcessTypeName(processType.getProcessTypeName());
+                returnProcessType.setCounter(jpaProcessTypes.size());
+                processTypes.add(returnProcessType);
+            }
+            LOGGER.debug(processTypes.get(0).getProcessTypeId());
+            List<RestWrapperOptions.Option> options = new ArrayList<RestWrapperOptions.Option>();
+
+            for (ProcessType type : processTypes) {
+                if (type.getProcessTypeName().startsWith("operator")){
+                    RestWrapperOptions.Option option = new RestWrapperOptions.Option(type.getProcessTypeName().replace("operator_",""), type.getProcessTypeId());
+                    options.add(option);
+                    LOGGER.debug(option.getDisplayText());
+                }
+            }
+            restWrapperOptions = new RestWrapperOptions(options, RestWrapperOptions.OK);
+
+        } catch (MetadataException e) {
+            LOGGER.error(e);
+            restWrapperOptions = new RestWrapperOptions(e.getMessage(), RestWrapperOptions.ERROR);
+        }
+        return restWrapperOptions;
+    }
+
+
+    @RequestMapping(value = {"/options_emitter/{ptid}"}, method = RequestMethod.POST)
+    @ResponseBody public
+    RestWrapperOptions options_destination(@PathVariable("ptid") Integer processTypeId) {
+
+        RestWrapperOptions restWrapperOptions = null;
+        try {
+
+            List<com.wipro.ats.bdre.md.dao.jpa.ProcessType> jpaProcessTypes = processTypeDAO.list(processTypeId);
+            List<ProcessType> processTypes = new ArrayList<ProcessType>();
+            for (com.wipro.ats.bdre.md.dao.jpa.ProcessType processType : jpaProcessTypes) {
+                ProcessType returnProcessType = new ProcessType();
+                returnProcessType.setProcessTypeId(processType.getProcessTypeId());
+                returnProcessType.setParentProcessTypeId(processType.getParentProcessTypeId());
+                returnProcessType.setProcessTypeName(processType.getProcessTypeName());
+                returnProcessType.setCounter(jpaProcessTypes.size());
+                processTypes.add(returnProcessType);
+            }
+            LOGGER.debug(processTypes.get(0).getProcessTypeId());
+            List<RestWrapperOptions.Option> options = new ArrayList<RestWrapperOptions.Option>();
+
+            for (ProcessType type : processTypes) {
+                if (type.getProcessTypeName().startsWith("emitter")){
+                    RestWrapperOptions.Option option = new RestWrapperOptions.Option(type.getProcessTypeName().replace("emitter_",""), type.getProcessTypeId());
+                    options.add(option);
+                    LOGGER.debug(option.getDisplayText());
+                }
+            }
+            restWrapperOptions = new RestWrapperOptions(options, RestWrapperOptions.OK);
+
+        } catch (MetadataException e) {
+            LOGGER.error(e);
+            restWrapperOptions = new RestWrapperOptions(e.getMessage(), RestWrapperOptions.ERROR);
+        }
+        return restWrapperOptions;
+    }
+
+    @RequestMapping(value = {"/options_persistentStore/{ptid}"}, method = RequestMethod.POST)
+    @ResponseBody public
+    RestWrapperOptions options_persistentStore(@PathVariable("ptid") Integer processTypeId) {
+
+        RestWrapperOptions restWrapperOptions = null;
+        try {
+
+            List<com.wipro.ats.bdre.md.dao.jpa.ProcessType> jpaProcessTypes = processTypeDAO.list(processTypeId);
+            List<ProcessType> processTypes = new ArrayList<ProcessType>();
+            for (com.wipro.ats.bdre.md.dao.jpa.ProcessType processType : jpaProcessTypes) {
+                ProcessType returnProcessType = new ProcessType();
+                returnProcessType.setProcessTypeId(processType.getProcessTypeId());
+                returnProcessType.setParentProcessTypeId(processType.getParentProcessTypeId());
+                returnProcessType.setProcessTypeName(processType.getProcessTypeName());
+                returnProcessType.setCounter(jpaProcessTypes.size());
+                processTypes.add(returnProcessType);
+            }
+            LOGGER.debug(processTypes.get(0).getProcessTypeId());
+            List<RestWrapperOptions.Option> options = new ArrayList<RestWrapperOptions.Option>();
+
+            for (ProcessType type : processTypes) {
+                if (type.getProcessTypeName().startsWith("persistentStore")){
+                    RestWrapperOptions.Option option = new RestWrapperOptions.Option(type.getProcessTypeName().replace("persistentStore_",""), type.getProcessTypeId());
+                    options.add(option);
+                    LOGGER.debug(option.getDisplayText());
+                }
+            }
+            restWrapperOptions = new RestWrapperOptions(options, RestWrapperOptions.OK);
+
+        } catch (MetadataException e) {
+            LOGGER.error(e);
+            restWrapperOptions = new RestWrapperOptions(e.getMessage(), RestWrapperOptions.ERROR);
+        }
+        return restWrapperOptions;
+    }
+
+    @RequestMapping(value = {"/options_analytics/{ptid}"}, method = RequestMethod.POST)
+    @ResponseBody public
+    RestWrapperOptions options_analytics(@PathVariable("ptid") Integer processTypeId) {
+
+        RestWrapperOptions restWrapperOptions = null;
+        try {
+
+            List<com.wipro.ats.bdre.md.dao.jpa.ProcessType> jpaProcessTypes = processTypeDAO.list(processTypeId);
+            List<ProcessType> processTypes = new ArrayList<ProcessType>();
+            for (com.wipro.ats.bdre.md.dao.jpa.ProcessType processType : jpaProcessTypes) {
+                ProcessType returnProcessType = new ProcessType();
+                returnProcessType.setProcessTypeId(processType.getProcessTypeId());
+                returnProcessType.setParentProcessTypeId(processType.getParentProcessTypeId());
+                returnProcessType.setProcessTypeName(processType.getProcessTypeName());
+                returnProcessType.setCounter(jpaProcessTypes.size());
+                processTypes.add(returnProcessType);
+            }
+            LOGGER.debug(processTypes.get(0).getProcessTypeId());
+            List<RestWrapperOptions.Option> options = new ArrayList<RestWrapperOptions.Option>();
+
+            for (ProcessType type : processTypes) {
+                if (type.getProcessTypeName().startsWith("analytics")){
+                    RestWrapperOptions.Option option = new RestWrapperOptions.Option(type.getProcessTypeName().replace("analytics_",""), type.getProcessTypeId());
+                    options.add(option);
+                    LOGGER.debug(option.getDisplayText());
+                }
+            }
+            restWrapperOptions = new RestWrapperOptions(options, RestWrapperOptions.OK);
+
+        } catch (MetadataException e) {
+            LOGGER.error(e);
+            restWrapperOptions = new RestWrapperOptions(e.getMessage(), RestWrapperOptions.ERROR);
+        }
+        return restWrapperOptions;
+    }
     /**
      * This method is used to list ProcessTypes for dropdown list.
      *

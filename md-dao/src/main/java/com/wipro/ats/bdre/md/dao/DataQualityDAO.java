@@ -140,8 +140,15 @@ public class DataQualityDAO {
             jpaProcess.setDeleteFlag(false);
             jpaProcess.setEnqueuingProcessId(dqSetupInfo.getEnqId());
             jpaProcess.setNextProcessId(" ");
-            WorkflowType workflowType = (WorkflowType) session.get(WorkflowType.class, 1);
+            if (dqSetupInfo.getWorkflowTypeId()!=null){
+            WorkflowType workflowType = (WorkflowType) session.get(WorkflowType.class, dqSetupInfo.getWorkflowTypeId());
             jpaProcess.setWorkflowType(workflowType);
+            }
+            else
+            {
+                WorkflowType workflowType = (WorkflowType) session.get(WorkflowType.class, 1);
+                jpaProcess.setWorkflowType(workflowType);
+            }
             PermissionType permissionType=new PermissionType();
             permissionType.setPermissionTypeId(7);
             jpaProcess.setPermissionTypeByUserAccessId(permissionType);

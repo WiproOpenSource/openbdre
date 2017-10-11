@@ -17,6 +17,7 @@ package com.wipro.ats.bdre.md.rest;
 import com.wipro.ats.bdre.exception.MetadataException;
 import com.wipro.ats.bdre.md.api.GetGeneralConfig;
 import com.wipro.ats.bdre.md.api.base.MetadataAPIBase;
+import com.wipro.ats.bdre.md.beans.DefaultMessageSchema;
 import com.wipro.ats.bdre.md.beans.table.GeneralConfig;
 import com.wipro.ats.bdre.md.dao.GeneralConfigDAO;
 import com.wipro.ats.bdre.md.dao.jpa.GeneralConfigId;
@@ -76,6 +77,44 @@ public class GeneralConfigAPI extends MetadataAPIBase {
     }
 
 
+    @RequestMapping(value = {"/{cg}", "/{cg}/"}, method = RequestMethod.POST)
+    @ResponseBody public
+    RestWrapper listUsingRequiredForMessage(@PathVariable("cg") String configGroup, @RequestParam(value = "required", defaultValue = "2") Integer required, Principal principal) {
+
+        RestWrapper restWrapper = null;
+        GetGeneralConfig generalConfigs = new GetGeneralConfig();
+        List<GeneralConfig> generalConfigList = generalConfigs.byConigGroupOnly(configGroup, required);
+        List<DefaultMessageSchema> defaultMessageSchemaList=new ArrayList<>();
+        if (!generalConfigList.isEmpty()) {
+            if (generalConfigList.get(0).getRequired() == 2) {
+                restWrapper = new RestWrapper("Listing of Records Failed", RestWrapper.ERROR);
+            } else {
+
+                int tmp=1;
+                int counter=generalConfigList.size();
+                for(GeneralConfig generalConfig:generalConfigList)
+                {
+                    DefaultMessageSchema defaultMessageSchema=new DefaultMessageSchema();
+                    defaultMessageSchema.setSerialNumber(tmp);
+                    defaultMessageSchema.setColumnName(generalConfig.getKey());
+                    defaultMessageSchema.setDataType(generalConfig.getType());
+                    defaultMessageSchema.setCounter(counter);
+                    defaultMessageSchemaList.add(defaultMessageSchema);
+                    tmp++;
+                }
+                restWrapper = new RestWrapper(defaultMessageSchemaList, RestWrapper.OK);
+                LOGGER.info("All records listed with config in if block group :" + configGroup + "from General  Config by User:" + principal.getName());
+            }
+        } else {
+            restWrapper = new RestWrapper(defaultMessageSchemaList, RestWrapper.OK);
+
+            LOGGER.info("All records listed with config group :" + configGroup + "from General  Config by User:" + principal.getName());
+        }
+        return restWrapper;
+
+    }
+
+
     /**
      * This method calls proc GetGeneralConfig and fetches a list of instances of GeneralConfig.
      *
@@ -95,6 +134,31 @@ public class GeneralConfigAPI extends MetadataAPIBase {
         LOGGER.info("All records listed with config group :" + configGroup + "from General  Config by User:" + principal.getName());
 
         return restWrapper;
+
+    }
+
+
+    @RequestMapping(value = {"/OptionList/{cg}", "/OptionList/{cg}/"}, method = RequestMethod.POST)
+    @ResponseBody public
+    RestWrapperOptions listOptions(@PathVariable("cg") String configGroup, Principal principal) {
+
+        RestWrapperOptions restWrapperOptions = null;
+        try {
+            GetGeneralConfig generalConfigs = new GetGeneralConfig();
+            List<GeneralConfig> generalConfigList = generalConfigs.listGeneralConfig(configGroup);
+            List<RestWrapperOptions.Option> options = new ArrayList<RestWrapperOptions.Option>();
+            for(GeneralConfig generalConfig:generalConfigList)
+            {
+                RestWrapperOptions.Option option = new RestWrapperOptions.Option(generalConfig.getKey(),generalConfig.getValue());
+                options.add(option);
+            }
+            restWrapperOptions = new RestWrapperOptions(options, RestWrapper.OK);
+            LOGGER.info("All records listed with config group :" + configGroup + "from General  Config by User:" + principal.getName());
+        }catch (Exception e){
+            LOGGER.error(e);
+            restWrapperOptions = new RestWrapperOptions(e.getMessage(), RestWrapper.ERROR);
+        }
+        return restWrapperOptions;
 
     }
     /**
@@ -177,7 +241,7 @@ public class GeneralConfigAPI extends MetadataAPIBase {
     @RequestMapping(value = {"/admin/update/", "/admin/update"}, method = RequestMethod.POST)
     @ResponseBody public
     RestWrapper updateOneRecord(@ModelAttribute("generalConfig")
-                                    @Valid GeneralConfig generalConfig, BindingResult bindingResult, Principal principal) {
+                                @Valid GeneralConfig generalConfig, BindingResult bindingResult, Principal principal) {
         RestWrapper restWrapper = null;
         if (bindingResult.hasErrors()) {
             BindingResultError bindingResultError = new BindingResultError();
@@ -231,7 +295,7 @@ public class GeneralConfigAPI extends MetadataAPIBase {
     @RequestMapping(value = {"/admin/add/", "/admin/add"}, method = RequestMethod.PUT)
     @ResponseBody public
     RestWrapper addOneRecord(@ModelAttribute("generalConfig")
-                                @Valid GeneralConfig generalConfig, BindingResult bindingResult, Principal principal) {
+                             @Valid GeneralConfig generalConfig, BindingResult bindingResult, Principal principal) {
         RestWrapper restWrapper = null;
         if (bindingResult.hasErrors()) {
             BindingResultError bindingResultError = new BindingResultError();

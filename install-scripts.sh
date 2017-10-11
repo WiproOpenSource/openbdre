@@ -18,6 +18,7 @@ BDRE_APPS_HOME=~/bdre_apps
 rm -f -r $BDRE_HOME
 mkdir -p $BDRE_HOME/bdre-scripts
 mkdir -p $BDRE_HOME/lib
+mkdir -p $BDRE_HOME/airflow
 mkdir -p $BDRE_APPS_HOME
 mkdir -p $BDRE_HOME-wfd
 

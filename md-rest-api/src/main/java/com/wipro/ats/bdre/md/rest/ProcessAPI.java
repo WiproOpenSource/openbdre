@@ -19,16 +19,20 @@ import com.wipro.ats.bdre.exception.MetadataException;
 import com.wipro.ats.bdre.md.api.Export;
 import com.wipro.ats.bdre.md.api.Import;
 import com.wipro.ats.bdre.md.api.base.MetadataAPIBase;
-import com.wipro.ats.bdre.md.beans.*;
+import com.wipro.ats.bdre.md.beans.ExecutionBean;
+import com.wipro.ats.bdre.md.beans.ExecutionInfo;
+import com.wipro.ats.bdre.md.beans.SLAMonitoringBean;
+import com.wipro.ats.bdre.md.beans.SameProcessCodeProcess;
 import com.wipro.ats.bdre.md.beans.table.Process;
 import com.wipro.ats.bdre.md.beans.table.Properties;
 import com.wipro.ats.bdre.md.dao.*;
 import com.wipro.ats.bdre.md.dao.jpa.*;
-import com.wipro.ats.bdre.md.dao.jpa.Users;
-import com.wipro.ats.bdre.md.dao.jpa.PermissionType;
 import com.wipro.ats.bdre.md.rest.beans.ProcessExport;
 import com.wipro.ats.bdre.md.rest.util.BindingResultError;
 import com.wipro.ats.bdre.md.rest.util.DateConverter;
+import org.apache.commons.exec.CommandLine;
+import org.apache.commons.exec.DefaultExecutor;
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.codehaus.jackson.map.DeserializationConfig;
 import org.codehaus.jackson.map.ObjectMapper;
@@ -46,6 +50,9 @@ import java.io.OutputStream;
 import java.lang.reflect.Field;
 import java.security.Principal;
 import java.util.*;
+
+import com.wipro.ats.bdre.md.beans.table.Process;
+import com.wipro.ats.bdre.md.beans.table.Properties;
 
 /**
  * Created by arijit on 1/9/15.
@@ -69,6 +76,8 @@ public class ProcessAPI extends MetadataAPIBase {
     PermissionTypeDAO appPermissionDAO;
     @Autowired
     UserRolesDAO userRolesDAO;
+    @Autowired
+    ExecStatusDAO execStatusDAO;
 
     /**
      * This method calls proc GetProcess and fetches a record corresponding to processId passed.
@@ -105,7 +114,7 @@ public class ProcessAPI extends MetadataAPIBase {
                 }
                 process.setEnqProcessId(daoProcess.getEnqueuingProcessId());
                 process.setNextProcessIds(daoProcess.getNextProcessId());
-                if (daoProcess.getBatchCutPattern() != null) {
+                if (daoProcess.getBatchCutPattern() != null && !daoProcess.getBatchCutPattern().isEmpty()) {
                     process.setBatchPattern(daoProcess.getBatchCutPattern());
                 }
                 process.setTableAddTS(DateConverter.dateToString(daoProcess.getAddTs()));
@@ -139,6 +148,35 @@ public class ProcessAPI extends MetadataAPIBase {
                 processDAO.securityCheck(parentProcess.getProcess().getProcessId(), principal.getName(), WRITE);
             else
                 processDAO.securityCheck(processId, principal.getName(), WRITE);
+            Integer parentProcessId;
+            if (parentProcess.getProcess() != null){
+                parentProcessId = parentProcess.getProcess().getProcessId();
+            String nextProcessOfParent = processDAO.get(parentProcessId).getNextProcessId();
+            Map<Integer, String> nextPidMap = new HashMap<Integer, String>();
+            nextPidMap.put(parentProcessId, nextProcessOfParent);
+            List<com.wipro.ats.bdre.md.dao.jpa.Process> jpaProcessList = processDAO.subProcesslist(parentProcessId);
+            for (com.wipro.ats.bdre.md.dao.jpa.Process subProcess : jpaProcessList) {
+                nextPidMap.put(subProcess.getProcessId(), subProcess.getNextProcessId());
+            }
+            LOGGER.info("nextPidMap is  " + nextPidMap);
+            for (Map.Entry<Integer, String> entry : nextPidMap.entrySet()) {
+                System.out.println(entry.getKey() + "/" + entry.getValue());
+                String tmp = entry.getValue();
+                HashSet<String> hashSet = new HashSet<>(Arrays.asList(tmp.split(",")));
+
+                if (hashSet.contains(processId.toString()) == true) {
+                    System.out.println("updating process Id is "+entry.getKey()+"next processid before updating "+entry.getValue());
+                    hashSet.remove(processId.toString());
+                    com.wipro.ats.bdre.md.dao.jpa.Process process = processDAO.get(entry.getKey());
+                    if(StringUtils.join(hashSet, ',')!="")
+                    process.setNextProcessId(StringUtils.join(hashSet, ','));
+                    else
+                        process.setNextProcessId("0");
+                    System.out.println("updating process Id is "+entry.getKey()+"next processid after updating "+StringUtils.join(hashSet, ','));
+                    processDAO.update(process);
+                }
+            }
+        }
             processDAO.delete(processId);
 
             restWrapper = new RestWrapper(null, RestWrapper.OK);
@@ -163,18 +201,24 @@ public class ProcessAPI extends MetadataAPIBase {
     @ResponseBody
     public RestWrapper list(@RequestParam(value = "page", defaultValue = "0") int startPage,
                             @RequestParam(value = "size", defaultValue = "10") int pageSize,
+                            @RequestParam(value = "pTypeId", defaultValue = "0") int pTypeId,
                             @RequestParam(value = "pid", defaultValue = "0") Integer pid, Principal principal) {
 
         RestWrapper restWrapper = null;
         Integer processId = pid;
+        Integer processTypeId=pTypeId;
         try {
             if (pid == 0) {
                 processId = null;
             }
+            if(pTypeId == 0) {
+                processTypeId = null;
+            }
+            LOGGER.info("ptypeid is "+processTypeId);
             if (pid!=0)
                 processDAO.securityCheck(pid,principal.getName(), "read");
-            List<com.wipro.ats.bdre.md.dao.jpa.Process> processList = processDAO.list(processId, startPage, pageSize,principal.getName());
-            Integer counter = processDAO.totalRecordCount(processId);
+            List<com.wipro.ats.bdre.md.dao.jpa.Process> processList = processDAO.list(processId,processTypeId, startPage, pageSize,principal.getName());
+            Integer counter = processDAO.totalRecordCount(processId,processTypeId);
             List<Process> processes = new ArrayList<Process>();
 
             for (com.wipro.ats.bdre.md.dao.jpa.Process daoProcess : processList) {
@@ -202,17 +246,28 @@ public class ProcessAPI extends MetadataAPIBase {
                 tableProcess.setTableAddTS(DateConverter.dateToString(daoProcess.getAddTs()));
                 tableProcess.setTableEditTS(DateConverter.dateToString(daoProcess.getEditTs()));
                 tableProcess.setDeleteFlag(daoProcess.getDeleteFlag());
-                   if (daoProcess.getUserRoles()!=null)
-                    tableProcess.setOwnerRoleId(daoProcess.getUserRoles().getUserRoleId());
-                LOGGER.info("user role id of processid "+daoProcess.getProcessId()+" is "+daoProcess.getUserRoles().getUserRoleId());
+                if (daoProcess.getUserRoles()!=null)
+                { tableProcess.setOwnerRoleId(daoProcess.getUserRoles().getUserRoleId());
+                    LOGGER.info("user role id of processid "+daoProcess.getProcessId()+" is "+daoProcess.getUserRoles().getUserRoleId());
+                }
                 if (daoProcess.getPermissionTypeByGroupAccessId()!=null)
-                tableProcess.setPermissionTypeByGroupAccessId(daoProcess.getPermissionTypeByGroupAccessId().getPermissionTypeId());
+                    tableProcess.setPermissionTypeByGroupAccessId(daoProcess.getPermissionTypeByGroupAccessId().getPermissionTypeId());
                 if(daoProcess.getPermissionTypeByUserAccessId()!=null)
-                tableProcess.setPermissionTypeByUserAccessId(daoProcess.getPermissionTypeByUserAccessId().getPermissionTypeId());
+                    tableProcess.setPermissionTypeByUserAccessId(daoProcess.getPermissionTypeByUserAccessId().getPermissionTypeId());
                 if(daoProcess.getPermissionTypeByOthersAccessId()!=null)
-                tableProcess.setPermissionTypeByOthersAccessId(daoProcess.getPermissionTypeByOthersAccessId().getPermissionTypeId());
-                tableProcess.setUserName(daoProcess.getUsers().getUsername());
+                    tableProcess.setPermissionTypeByOthersAccessId(daoProcess.getPermissionTypeByOthersAccessId().getPermissionTypeId());
+                if(daoProcess.getUsers()!=null)
+                    tableProcess.setUserName(daoProcess.getUsers().getUsername());
                 tableProcess.setCounter(counter);
+                InstanceExec instanceExec = instanceExecDAO.getLatestExecofProcess(daoProcess.getProcessId());
+                if(instanceExec==null){
+                    tableProcess.setLatestExecStatus("Not Started");
+                }
+                else {
+                    Integer execStatusId = instanceExec.getExecStatus().getExecStateId();
+                    String execStatusDesc = execStatusDAO.get(execStatusId).getDescription();
+                    tableProcess.setLatestExecStatus(execStatusDesc);
+                }
                 processes.add(tableProcess);
             }
             restWrapper = new RestWrapper(processes, RestWrapper.OK);
@@ -279,8 +334,10 @@ public class ProcessAPI extends MetadataAPIBase {
             else
                 updateDaoProcess.setCanRecover(process.getCanRecover());
             updateDaoProcess.setEnqueuingProcessId(process.getEnqProcessId());
-            if (process.getBatchPattern() != null) {
+            if (process.getBatchPattern() != null && !process.getBatchPattern().isEmpty() && !("").equals(process.getBatchPattern())) {
                 updateDaoProcess.setBatchCutPattern(process.getBatchPattern());
+            }else{
+                updateDaoProcess.setBatchCutPattern(null);
             }
             updateDaoProcess.setNextProcessId(process.getNextProcessIds());
             if (process.getDeleteFlag() == null)
@@ -359,7 +416,7 @@ public class ProcessAPI extends MetadataAPIBase {
             else
                 insertDaoProcess.setCanRecover(process.getCanRecover());
             insertDaoProcess.setEnqueuingProcessId(process.getEnqProcessId());
-            if (process.getBatchPattern() != null) {
+            if (process.getBatchPattern() != null && !process.getBatchPattern().isEmpty()) {
                 insertDaoProcess.setBatchCutPattern(process.getBatchPattern());
             }
             insertDaoProcess.setNextProcessId(process.getNextProcessIds());
@@ -386,9 +443,9 @@ public class ProcessAPI extends MetadataAPIBase {
             else
                 insertDaoProcess.setPermissionTypeByOthersAccessId(appPermissionDAO.get(0));
             insertDaoProcess.setEditTs(DateConverter.stringToDate(process.getTableEditTS()));
-              Users users=new Users();
-              users.setUsername(principal.getName());
-              insertDaoProcess.setUsers(users);
+            Users users=new Users();
+            users.setUsername(principal.getName());
+            insertDaoProcess.setUsers(users);
             Integer processId = processDAO.insert(insertDaoProcess);
             process.setProcessId(processId);
             process.setTableAddTS(DateConverter.dateToString(insertDaoProcess.getAddTs()));
@@ -591,7 +648,7 @@ public class ProcessAPI extends MetadataAPIBase {
             List<SameProcessCodeProcess> sameProcessCodeParentProcessList=new ArrayList<>();
             for (com.wipro.ats.bdre.md.dao.jpa.Process process:sameProcessCodeList)
             {
-               SameProcessCodeProcess sameProcessCodeProcess=new SameProcessCodeProcess();
+                SameProcessCodeProcess sameProcessCodeProcess=new SameProcessCodeProcess();
                 sameProcessCodeProcess.setProcessExport(processExport);
                 sameProcessCodeProcess.setParentProcessId(process.getProcessId());
                 sameProcessCodeProcess.setProcessCreaterName(process.getUsers().getUsername());
@@ -894,6 +951,40 @@ public class ProcessAPI extends MetadataAPIBase {
         return restWrapper;
     }
 
+    @RequestMapping(value = {"/kill", "/kill/"}, method = RequestMethod.POST)
+    @ResponseBody public
+    RestWrapper killProcess(@ModelAttribute("process")
+                            @Valid Process process, BindingResult bindingResult, Principal principal) {
+        RestWrapper restWrapper = null;
+        ExecutionInfo executionInfo = new ExecutionInfo();
+        executionInfo.setProcessId(process.getProcessId());
+        try {
+            InstanceExec instanceExec = instanceExecDAO.getLatestExecofProcess(process.getProcessId());
+            if(instanceExec.getExecStatus().getExecStateId() == 8 || instanceExec.getExecStatus().getExecStateId() == 7){
+                restWrapper = new RestWrapper("Already killed", RestWrapper.ERROR);
+            }else {
+                String command = "/usr/bin/yarn application -kill  " + instanceExec.getApplicationId();
+                CommandLine oCmdLine = CommandLine.parse(command);
+
+                DefaultExecutor oDefaultExecutor = new DefaultExecutor();
+                oDefaultExecutor.setExitValue(0);
+                int result = oDefaultExecutor.execute(oCmdLine);
+                System.out.println("result = " + result);
+                if (result == 0) {
+                    ExecStatus execStatus = execStatusDAO.get(7);
+                    instanceExec.setExecStatus(execStatus);
+                    instanceExecDAO.update(instanceExec);
+                }
+                restWrapper = new RestWrapper(executionInfo, RestWrapper.OK);
+            }
+        }catch (Exception e) {
+            LOGGER.error(e + " Executing workflow failed " + e.getCause());
+            restWrapper = new RestWrapper(e.getMessage(), RestWrapper.ERROR);
+        }
+        return restWrapper;
+    }
+
+
     @RequestMapping(value = {"/execute", "/execute/"}, method = RequestMethod.POST)
     @ResponseBody public
     RestWrapper executeProcess(@ModelAttribute("process")
@@ -903,8 +994,17 @@ public class ProcessAPI extends MetadataAPIBase {
         executionInfo.setProcessId(process.getProcessId());
         try {
             processDAO.securityCheck(process.getProcessId(),principal.getName(),"execute");
-            String[] command = {MDConfig.getProperty("execute.script-path") + "/job-executor.sh", process.getBusDomainId().toString(), process.getProcessTypeId().toString(), process.getProcessId().toString(), principal.getName()};
-            LOGGER.info("Running the command : -- " + command[0] + " " + command[1] + " " + command[2] + " " + command[3]);
+            String[] command=new String[5];
+            LOGGER.info("workflow typeid  is "+process.getWorkflowId());
+            if (process.getWorkflowId()==3)
+            command[0]=MDConfig.getProperty("execute.script-path") + "/job-executor-airflow.sh";
+            else
+                command[0]=MDConfig.getProperty("execute.script-path") + "/job-executor.sh";
+            command[1]=process.getBusDomainId().toString();
+            command[2]=process.getProcessTypeId().toString();
+            command[3]=process.getProcessId().toString();
+            command[4]=principal.getName();
+            LOGGER.info("Running the command : -- " + command[0] + " " + command[1] + " " + command[2] + " " + command[3]+" "+command[4]);
             ProcessBuilder processBuilder = new ProcessBuilder(command[0], command[1], command[2], command[3], command[4]);
             processBuilder.redirectOutput(new File(MDConfig.getProperty("execute.log-path") + process.getProcessId().toString()));
             LOGGER.info("The output is redirected to " + MDConfig.getProperty("execute.log-path") + process.getProcessId().toString());
@@ -935,6 +1035,76 @@ public class ProcessAPI extends MetadataAPIBase {
         }
         return restWrapper;
     }
+
+
+
+
+    @RequestMapping(value = {"/streamexecute", "/streamexecute/"}, method = RequestMethod.POST)
+    @ResponseBody public
+    RestWrapper executeStreamProcess(@ModelAttribute("executionBean")
+                               @Valid ExecutionBean executionBean, BindingResult bindingResult, Principal principal) {
+        RestWrapper restWrapper = null;
+        ExecutionInfo executionInfo = new ExecutionInfo();
+        executionInfo.setProcessId(executionBean.getProcessId());
+        try {
+            processDAO.securityCheck(executionBean.getProcessId(),principal.getName(),"execute");
+            com.wipro.ats.bdre.md.dao.jpa.Process process=processDAO.get(executionBean.getProcessId());
+            LOGGER.info("process id is"+executionBean.getProcessId());
+            LOGGER.info(executionBean.toString());
+            String[] command=new String[13];
+            command[0]=MDConfig.getProperty("execute.script-path") + "/job-executor.sh";
+            command[1]= String.valueOf(process.getBusDomain().getBusDomainId());
+            command[2]= String.valueOf(process.getProcessType().getProcessTypeId());
+            command[3]= String.valueOf(executionBean.getProcessId());
+            command[4]=principal.getName();
+            command[5]= String.valueOf(executionBean.getDriverCores());
+            command[6]= String.valueOf(executionBean.getDriverMemory());
+            command[7]=String.valueOf(executionBean.getExecutorCores());
+            command[8]=String.valueOf(executionBean.getExecutorMemory());
+            command[9]=String.valueOf(executionBean.getReceiverMaxRate());
+            command[10]=String.valueOf(executionBean.isEventLogging());
+            command[11]=String.valueOf(executionBean.getTaskMaxFailures());
+            command[12]=String.valueOf(executionBean.isDynamicAllocation());
+            LOGGER.info("Running the command : -- " + command[0] + " " + command[1] + " " + command[2] + " " + command[3]+" "+command[4]+
+                    " "+command[5]+" "+command[6]+" "+command[7]+" "+command[8]+" "+command[9]+" "+command[10]+" "+
+                    command[11]+" "+command[12]);
+            ProcessBuilder processBuilder = new ProcessBuilder(command[0], command[1], command[2], command[3], command[4]
+                    ,command[5],command[6], command[7], command[8], command[9], command[10],command[11],command[12]);
+            processBuilder.redirectOutput(new File(MDConfig.getProperty("execute.log-path") + executionBean.getProcessId()));
+            LOGGER.info("The output is redirected to " + MDConfig.getProperty("execute.log-path") + executionBean.getProcessId());
+            processBuilder.redirectErrorStream(true);
+            java.lang.Process osProcess = processBuilder.start();
+            try {
+                Class<?> cProcessImpl = osProcess.getClass();
+                Field fPid = cProcessImpl.getDeclaredField("pid");
+                if (!fPid.isAccessible()) {
+                    fPid.setAccessible(true);
+                }
+                executionInfo.setOSProcessId(fPid.getInt(osProcess));
+                LOGGER.debug(" OS process Id : " + executionInfo.getOSProcessId() + "executed by " + principal.getName());
+                com.wipro.ats.bdre.md.api.InstanceExecAPI instanceExecAPI = new com.wipro.ats.bdre.md.api.InstanceExecAPI();
+                instanceExecAPI.insertInstanceExec(executionBean.getProcessId(), null);
+
+            } catch (Exception e) {
+                executionInfo.setOSProcessId(-1);
+                LOGGER.error(e + " Setting OS Process ID failed " + executionInfo.getOSProcessId());
+            }
+            restWrapper = new RestWrapper(executionInfo, RestWrapper.OK);
+        } catch (MetadataException e) {
+            LOGGER.error(e + " Executing workflow failed " + e.getCause());
+            restWrapper = new RestWrapper(e.getMessage(), RestWrapper.ERROR);
+        }catch (SecurityException e) {
+            LOGGER.error(e + " security check failed " + e.getCause());
+            restWrapper = new RestWrapper(e.getMessage(), RestWrapper.ERROR);
+        }catch (Exception e) {
+            LOGGER.error(e + " Executing workflow failed " + e.getCause());
+            restWrapper = new RestWrapper(e.getMessage(), RestWrapper.ERROR);
+        }
+        return restWrapper;
+    }
+
+
+
 
     /**
      * This method calls proc CloneProcess and adds a clone of process id passed in process table .It also validates the values passed.
@@ -1048,7 +1218,10 @@ public class ProcessAPI extends MetadataAPIBase {
         RestWrapper restWrapper = null;
         try {
             Process process=new Process();
-         processDAO.securityCheck(processId,principal.getName(),"read");
+            processDAO.securityCheck(processId,principal.getName(),"read");
+            com.wipro.ats.bdre.md.dao.jpa.Process jpaProcess=processDAO.get(processId);
+            process.setWorkflowId(jpaProcess.getWorkflowType().getWorkflowId());
+            LOGGER.info("workflowTypeId is "+process.getWorkflowId());
             restWrapper = new RestWrapper(process, RestWrapper.OK);
         } catch (MetadataException e) {
             LOGGER.error(e);

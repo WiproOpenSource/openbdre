@@ -28,7 +28,7 @@ import java.util.Set;
 /**
  * This class contains all the setter and getter methods for InitJob variables.
  */
-public class InitJobInfo {
+public class InitJobInfo implements java.io.Serializable{
 
     @PersistableParam(keyName = "instance-exec-id")
     private Long instanceExecId;

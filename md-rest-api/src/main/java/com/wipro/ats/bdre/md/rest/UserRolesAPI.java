@@ -33,7 +33,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-
+import java.util.HashMap;
 /**
  * Created by leela on 26-02-2015.
  */
@@ -198,6 +198,13 @@ public class UserRolesAPI extends MetadataAPIBase {
         try {
             Map<Integer,String> objects=userRolesDAO.diffRoleList();
             Iterator it = objects.entrySet().iterator();
+
+           /* Map<String,Integer> uniqueObjects=new HashMap<>();
+            while (it.hasNext()) {
+                Map.Entry pair = (Map.Entry)it.next();
+                uniqueObjects.put((String) pair.getValue(),(Integer) pair.getKey());
+            }
+            Iterator it1 = uniqueObjects.entrySet().iterator();*/
             List<RestWrapperOptions.Option> options = new ArrayList<RestWrapperOptions.Option>();
             while (it.hasNext()) {
                 Map.Entry pair = (Map.Entry)it.next();

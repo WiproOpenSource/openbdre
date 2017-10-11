@@ -50,7 +50,7 @@ public class JobDAOTest {
         Long sub_instance_exec_id = stepDAO.initStep(2);
         stepDAO.haltStep(2);
 
-        jobDAO.haltJob(2, "@a");
+        jobDAO.haltJob(1, "@a");
         LOGGER.info("The sub process halt step test executed");
 
         LOGGER.info("The sub process init step test executed with instance-exec-id :" + sub_instance_exec_id);

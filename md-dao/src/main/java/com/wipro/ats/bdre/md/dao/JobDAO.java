@@ -464,6 +464,7 @@ public class JobDAO {
                 Process subProcess = (Process) subProcessObject;
                 listOfDownStreamSubProcessesWithEnqID.add(subProcess);
             }
+            LOGGER.info("listOfDownStreamSubProcessesWithEnqID is "+listOfDownStreamSubProcessesWithEnqID.toString());
             ExecStatus runningExecStatus = new ExecStatus();
             runningExecStatus.setExecStateId(2);
             ExecStatus failedExecStatus = new ExecStatus();
@@ -559,7 +560,7 @@ public class JobDAO {
                     insertBatchConsumpQueue.setBatchBySourceBatchId(targetBatchId);
                     insertBatchConsumpQueue.setInsertTs(new Date());
                     insertBatchConsumpQueue.setSourceProcessId(parentProcessId.getProcessId());
-                    insertBatchConsumpQueue.setBatchStatus(processedBatchStatus);
+                    insertBatchConsumpQueue.setBatchStatus(newBatchStatus);
                     insertBatchConsumpQueue.setBatchMarking(null);
                     insertBatchConsumpQueue.setProcess(subProcess);
                     session.save(insertBatchConsumpQueue);
@@ -568,7 +569,7 @@ public class JobDAO {
                     insertBatchConsumpQueue.setBatchBySourceBatchId(targetBatchId);
                     insertBatchConsumpQueue.setInsertTs(new Date());
                     insertBatchConsumpQueue.setSourceProcessId(parentProcessId.getProcessId());
-                    insertBatchConsumpQueue.setBatchStatus(processedBatchStatus);
+                    insertBatchConsumpQueue.setBatchStatus(newBatchStatus);
                     insertBatchConsumpQueue.setBatchMarking(batchMarking);
                     insertBatchConsumpQueue.setProcess(subProcess);
                     session.save(insertBatchConsumpQueue);
@@ -660,7 +661,7 @@ public class JobDAO {
                 Criteria runningSubProcessCriteria = session.createCriteria(InstanceExec.class).add(Restrictions.in(PROCESS, listOfSubProcesses))
                         .add(Restrictions.eq(EXECSTATUS, runningExecStatus));
                 if (!runningSubProcessCriteria.list().isEmpty()) {
-                    LOGGER.error(" sub process in running state");
+                    LOGGER.error(" sub process in running state: "+runningSubProcessCriteria.list());
                     throw new MetadataException("sub process in running state");
                 }
             }

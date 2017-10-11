@@ -78,6 +78,11 @@ public class ProcessTemplateDAO {
                     processTemplate.setProcessName(jpaProcessTemplate.getProcessName());
                     processTemplate.setBusDomainId(jpaProcessTemplate.getBusDomain().getBusDomainId());
                     processTemplate.setProcessTypeId(jpaProcessTemplate.getProcessType().getProcessTypeId());
+                    processTemplate.setWorkflowId(jpaProcessTemplate.getWorkflowType().getWorkflowId());
+                    processTemplate.setOwnerRoleId(jpaProcessTemplate.getUserRoles().getUserRoleId());
+                    processTemplate.setPermissionTypeByUserAccessId(jpaProcessTemplate.getPermissionTypeByUserAccessId().getPermissionTypeId());
+                    processTemplate.setPermissionTypeByGroupAccessId(jpaProcessTemplate.getPermissionTypeByGroupAccessId().getPermissionTypeId());
+                    processTemplate.setPermissionTypeByOthersAccessId(jpaProcessTemplate.getPermissionTypeByOthersAccessId().getPermissionTypeId());
                     if (jpaProcessTemplate.getProcessTemplate() != null)
                         processTemplate.setParentProcessId(jpaProcessTemplate.getProcessTemplate().getProcessTemplateId());
                     processTemplate.setCanRecover(jpaProcessTemplate.getCanRecover());
@@ -106,6 +111,11 @@ public class ProcessTemplateDAO {
                         processTemplate.setProcessName(jpaProcessTemplate.getProcessName());
                         processTemplate.setBusDomainId(jpaProcessTemplate.getBusDomain().getBusDomainId());
                         processTemplate.setProcessTypeId(jpaProcessTemplate.getProcessType().getProcessTypeId());
+                        processTemplate.setWorkflowId(jpaProcessTemplate.getWorkflowType().getWorkflowId());
+                        processTemplate.setOwnerRoleId(jpaProcessTemplate.getUserRoles().getUserRoleId());
+                        processTemplate.setPermissionTypeByUserAccessId(jpaProcessTemplate.getPermissionTypeByUserAccessId().getPermissionTypeId());
+                        processTemplate.setPermissionTypeByGroupAccessId(jpaProcessTemplate.getPermissionTypeByGroupAccessId().getPermissionTypeId());
+                        processTemplate.setPermissionTypeByOthersAccessId(jpaProcessTemplate.getPermissionTypeByOthersAccessId().getPermissionTypeId());
                         if (jpaProcessTemplate.getProcessTemplate() != null)
                             processTemplate.setParentProcessId(jpaProcessTemplate.getProcessTemplate().getProcessTemplateId());
                         processTemplate.setCanRecover(jpaProcessTemplate.getCanRecover());
@@ -133,6 +143,11 @@ public class ProcessTemplateDAO {
                     processTemplate.setProcessName(jpaProcessTemplate.getProcessName());
                     processTemplate.setBusDomainId(jpaProcessTemplate.getBusDomain().getBusDomainId());
                     processTemplate.setProcessTypeId(jpaProcessTemplate.getProcessType().getProcessTypeId());
+                    processTemplate.setWorkflowId(jpaProcessTemplate.getWorkflowType().getWorkflowId());
+                    processTemplate.setOwnerRoleId(jpaProcessTemplate.getUserRoles().getUserRoleId());
+                    processTemplate.setPermissionTypeByUserAccessId(jpaProcessTemplate.getPermissionTypeByUserAccessId().getPermissionTypeId());
+                    processTemplate.setPermissionTypeByGroupAccessId(jpaProcessTemplate.getPermissionTypeByGroupAccessId().getPermissionTypeId());
+                    processTemplate.setPermissionTypeByOthersAccessId(jpaProcessTemplate.getPermissionTypeByOthersAccessId().getPermissionTypeId());
                     if (jpaProcessTemplate.getProcessTemplate() != null)
                         processTemplate.setParentProcessId(jpaProcessTemplate.getProcessTemplate().getProcessTemplateId());
                     processTemplate.setCanRecover(jpaProcessTemplate.getCanRecover());
@@ -255,7 +270,16 @@ public class ProcessTemplateDAO {
                 tableProcessTemplate.setCanRecover(processTemplate.getCanRecover());
                 tableProcessTemplate.setBatchPattern(processTemplate.getBatchCutPattern());
                 tableProcessTemplate.setNextProcessTemplateId(processTemplate.getNextProcessTemplateId());
+                if (processTemplate.getWorkflowType()!=null)
                 tableProcessTemplate.setWorkflowId(processTemplate.getWorkflowType().getWorkflowId());
+                if(processTemplate.getUserRoles()!=null)
+                tableProcessTemplate.setOwnerRoleId(processTemplate.getUserRoles().getUserRoleId());
+                if(processTemplate.getPermissionTypeByUserAccessId()!=null)
+                tableProcessTemplate.setPermissionTypeByUserAccessId(processTemplate.getPermissionTypeByUserAccessId().getPermissionTypeId());
+                if(processTemplate.getPermissionTypeByUserAccessId()!=null)
+                tableProcessTemplate.setPermissionTypeByGroupAccessId(processTemplate.getPermissionTypeByUserAccessId().getPermissionTypeId());
+                if(processTemplate.getPermissionTypeByOthersAccessId()!=null)
+                tableProcessTemplate.setPermissionTypeByOthersAccessId(processTemplate.getPermissionTypeByOthersAccessId().getPermissionTypeId());
                 tableProcessTemplate.setCounter(completeProcessTemplatesList.size());
                 returningList.add(tableProcessTemplate);
             }
@@ -300,6 +324,10 @@ public class ProcessTemplateDAO {
                     tableProcess.setNextProcessIds(jpaProcess.getNextProcessId());
                     tableProcess.setProcessTemplateId(jpaProcess.getProcessTemplate().getProcessTemplateId());
                     tableProcess.setCounter(jpaProcessList.size());
+                    tableProcess.setOwnerRoleId(jpaProcess.getUserRoles().getUserRoleId());
+                    tableProcess.setPermissionTypeByUserAccessId(jpaProcess.getPermissionTypeByUserAccessId().getPermissionTypeId());
+                    tableProcess.setPermissionTypeByGroupAccessId(jpaProcess.getPermissionTypeByGroupAccessId().getPermissionTypeId());
+                    tableProcess.setPermissionTypeByOthersAccessId(jpaProcess.getPermissionTypeByOthersAccessId().getPermissionTypeId());
                     tableProcessList.add(tableProcess);
                 }
 
@@ -325,6 +353,10 @@ public class ProcessTemplateDAO {
                     tableProcess.setNextProcessIds(jpaProcess.getNextProcessId());
                     tableProcess.setProcessTemplateId(jpaProcess.getProcessTemplate().getProcessTemplateId());
                     tableProcess.setCounter(jpaProcessList.size());
+                    tableProcess.setOwnerRoleId(jpaProcess.getUserRoles().getUserRoleId());
+                    tableProcess.setPermissionTypeByUserAccessId(jpaProcess.getPermissionTypeByUserAccessId().getPermissionTypeId());
+                    tableProcess.setPermissionTypeByGroupAccessId(jpaProcess.getPermissionTypeByGroupAccessId().getPermissionTypeId());
+                    tableProcess.setPermissionTypeByOthersAccessId(jpaProcess.getPermissionTypeByOthersAccessId().getPermissionTypeId());
                     tableProcessList.add(tableProcess);
                 }
 
@@ -373,6 +405,10 @@ public class ProcessTemplateDAO {
                 tableProcess.setProcessName(jpaProcess.getProcessName());
                 tableProcess.setBusDomainId(jpaProcess.getBusDomain().getBusDomainId());
                 tableProcess.setWorkflowId(jpaProcess.getWorkflowType().getWorkflowId());
+                tableProcess.setOwnerRoleId(jpaProcess.getUserRoles().getUserRoleId());
+                tableProcess.setPermissionTypeByUserAccessId(jpaProcess.getPermissionTypeByUserAccessId().getPermissionTypeId());
+                tableProcess.setPermissionTypeByGroupAccessId(jpaProcess.getPermissionTypeByGroupAccessId().getPermissionTypeId());
+                tableProcess.setPermissionTypeByOthersAccessId(jpaProcess.getPermissionTypeByOthersAccessId().getPermissionTypeId());
                 tableProcess.setCanRecover(jpaProcess.getCanRecover());
                 tableProcess.setProcessTypeId(jpaProcess.getProcessType().getProcessTypeId());
                 if (jpaProcess.getProcess() != null)
@@ -456,6 +492,10 @@ public class ProcessTemplateDAO {
                 returnProcess.setBatchPattern(process.getBatchCutPattern());
                 returnProcess.setNextProcessIds(process.getNextProcessId());
                 returnProcess.setWorkflowId(process.getWorkflowType().getWorkflowId());
+                returnProcess.setOwnerRoleId(process.getUserRoles().getUserRoleId());
+                returnProcess.setPermissionTypeByUserAccessId(process.getPermissionTypeByUserAccessId().getPermissionTypeId());
+                returnProcess.setPermissionTypeByGroupAccessId(process.getPermissionTypeByUserAccessId().getPermissionTypeId());
+                returnProcess.setPermissionTypeByOthersAccessId(process.getPermissionTypeByOthersAccessId().getPermissionTypeId());
                 returnProcess.setDescription(process.getDescription());
                 returnProcess.setCounter(jpaProcessList.size());
             }
@@ -498,6 +538,11 @@ public class ProcessTemplateDAO {
                 tableProcessTemplate.setProcessTypeId(jpaProcess.getProcessType().getProcessTypeId());
                 tableProcessTemplate.setParentProcessId(jpaProcess.getProcess().getProcessId());
                 tableProcessTemplate.setCanRecover(jpaProcess.getCanRecover());
+                tableProcessTemplate.setWorkflowId(jpaProcess.getWorkflowType().getWorkflowId());
+                tableProcessTemplate.setOwnerRoleId(jpaProcess.getUserRoles().getUserRoleId());
+                tableProcessTemplate.setPermissionTypeByUserAccessId(jpaProcess.getPermissionTypeByUserAccessId().getPermissionTypeId());
+                tableProcessTemplate.setPermissionTypeByGroupAccessId(jpaProcess.getPermissionTypeByUserAccessId().getPermissionTypeId());
+                tableProcessTemplate.setPermissionTypeByOthersAccessId(jpaProcess.getPermissionTypeByOthersAccessId().getPermissionTypeId());
                 tableProcessTemplate.setEnqProcessId(jpaProcess.getEnqueuingProcessId());
                 tableProcessTemplate.setBatchPattern(jpaProcess.getBatchCutPattern());
                 tableProcessTemplate.setNextProcessIds(jpaProcess.getNextProcessId());
@@ -542,6 +587,10 @@ public class ProcessTemplateDAO {
                 processTemplate.setBatchPattern(jpaProcessTemplate.getBatchCutPattern());
                 processTemplate.setNextProcessIds(jpaProcessTemplate.getNextProcessTemplateId());
                 processTemplate.setWorkflowId(jpaProcessTemplate.getWorkflowType().getWorkflowId());
+                processTemplate.setOwnerRoleId(jpaProcessTemplate.getUserRoles().getUserRoleId());
+                processTemplate.setPermissionTypeByUserAccessId(jpaProcessTemplate.getPermissionTypeByUserAccessId().getPermissionTypeId());
+                processTemplate.setPermissionTypeByGroupAccessId(jpaProcessTemplate.getPermissionTypeByUserAccessId().getPermissionTypeId());
+                processTemplate.setPermissionTypeByOthersAccessId(jpaProcessTemplate.getPermissionTypeByOthersAccessId().getPermissionTypeId());
                 processTemplate.setCounter(jpaProcessTemplateList.size());
                 processTemplateList.add(processTemplate);
                 LOGGER.info("processTemplate is :" + processTemplate);
@@ -701,7 +750,6 @@ public class ProcessTemplateDAO {
 
         return returnPropertiesTemplateList;
     }
-
 
     // ListSubProcessTemplates
 }

@@ -18,42 +18,135 @@ import com.wipro.ats.bdre.IMConfig;
 import com.wipro.ats.bdre.im.IMConstant;
 import com.wipro.ats.bdre.im.etl.api.base.ETLBase;
 import com.wipro.ats.bdre.im.etl.api.exception.ETLException;
+import com.wipro.ats.bdre.md.dao.BatchDAO;
+import com.wipro.ats.bdre.md.dao.FileDAO;
+import com.wipro.ats.bdre.md.dao.ServersDAO;
+import com.wipro.ats.bdre.md.dao.jpa.Batch;
+import com.wipro.ats.bdre.md.dao.jpa.File;
+import com.wipro.ats.bdre.md.dao.jpa.FileId;
+import com.wipro.ats.bdre.md.dao.jpa.Servers;
 import org.apache.commons.cli.CommandLine;
+import org.apache.commons.cli.Option;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.FileSystem;
 import org.apache.hadoop.fs.FileUtil;
 import org.apache.hadoop.fs.Path;
 import org.apache.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.config.AutowireCapableBeanFactory;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.support.ClassPathXmlApplicationContext;
 
 import java.sql.Connection;
 import java.sql.Statement;
+import java.util.Date;
 
 /**
  * Created by vishnu on 12/14/14.
  * Modified by Arijit
  */
 public class RawLoad extends ETLBase {
+
+    @Autowired
+    FileDAO fileDAO;
+    @Autowired
+    BatchDAO batchDAO;
+    @Autowired
+    ServersDAO serversDAO;
+
+    public RawLoad(){
+        ApplicationContext context = new ClassPathXmlApplicationContext("spring-dao.xml");
+        AutowireCapableBeanFactory acbFactory = context.getAutowireCapableBeanFactory();
+        acbFactory.autowireBean(this);
+    }
+
     private static final Logger LOGGER = Logger.getLogger(RawLoad.class);
     private static final String[][] PARAMS_STRUCTURE = {
             {"p", "process-id", " Process id of ETLDriver"},
             {"ied", "instance-exec-id", " instance exec id"},
             {"lof", "list-of-files", " List of files"},
             {"lob", "list-of-file-batchIds", "List of batch Ids corresponding to above files "}
+
     };
 
     public void execute(String[] params) {
-        CommandLine commandLine = getCommandLine(params, PARAMS_STRUCTURE);
+
+        //values of lof and lob parameters comes as null when filepath is choosen by user.
+        //Null parameters are not handled by CommandLine class
+        //So changing structure of params when there are null parameters
+        int i=0;
+        int j=0;
+        String dupParams[]= new String[10];
+        int index=0;
+        for(String param:params){
+            dupParams[index]=param;
+
+            if(i==1) {
+                if(param==null) dupParams[index]="null batch";
+                i=0;
+            }
+            if(j==1) {
+                if(param==null) dupParams[index]="null file";
+                j=0;
+            }
+            if((param!=null) && (param.equals("-lob")||param.equals("--list-of-file-batchIds"))) i++;
+            if((param!=null) && (param.equals("--list-of-files")||param.equals("-lof"))) j++;
+            index++;
+        }
+        //Getting raw table information
+
+        CommandLine commandLine = getCommandLine(dupParams, PARAMS_STRUCTURE);
+
         String processId = commandLine.getOptionValue("process-id");
         String instanceExecId = commandLine.getOptionValue("instance-exec-id");
-        String listOfFiles = commandLine.getOptionValue("list-of-files");
-        String listOfBatches = commandLine.getOptionValue("list-of-file-batchIds");
+
         loadRawHiveTableInfo(processId);
+        String rawTableName = rawTable;
+        String rawDbName = rawDb;
+        String filePathString = filePath;
+        String listOfFiles = "";
+        String listOfBatches = "";
+
+        //If user selects enqueueId
+        if( "null".equals(filePathString) || filePathString == null) {
+            listOfFiles = commandLine.getOptionValue("list-of-files");
+            listOfBatches = commandLine.getOptionValue("list-of-file-batchIds");
+        }
+        //If user select filepath
+        else {
+
+            listOfFiles = filePathString;
+            listOfBatches = "0";
+
+            Batch batch = batchDAO.get(0L);
+            Servers servers = serversDAO.get(123461);
+
+            String[] files = listOfFiles.split(IMConstant.FILE_FIELD_SEPERATOR);
+            for(String fileString: files){
+                File file = new File();
+                FileId fileId = new FileId();
+                fileId.setBatchId(batch.getBatchId());
+                fileId.setCreationTs(new Date());
+                fileId.setFileSize(1L);
+                fileId.setServerId(123461);
+                fileId.setFileHash("null");
+                fileId.setPath(fileString);
+
+                file.setId(fileId);
+                file.setBatch(batch);
+                file.setServers(servers);
+                fileDAO.insert(file);
+                LOGGER.info("file "+fileString+" inserted successfully");
+
+                listOfBatches = listOfBatches+",0";
+            }
+
+        }
+
         CreateRawBaseTables createRawBaseTables =new CreateRawBaseTables();
         String[] createTablesArgs={"-p",processId,"-instExecId",instanceExecId };
         createRawBaseTables.executeRawLoad(createTablesArgs);
-        //Getting raw table information
-        String rawTableName = rawTable;
-        String rawDbName = rawDb;
+
         //Now load file to table
         loadRawLoadTable(rawDbName, rawTableName, listOfFiles, listOfBatches);
 
@@ -71,8 +164,8 @@ public class RawLoad extends ETLBase {
             LOGGER.debug("Inserting data into the table");
 
             for (int i=0; i<tempFiles.length; i++) {
-                String query = "LOAD DATA INPATH '" + tempFiles[i] + "' INTO TABLE " + tableName
-                + " PARTITION (batchid='" + correspondingBatchIds[i] + "')";
+                String query = "LOAD DATA INPATH '" + tempFiles[i] + "'OVERWRITE INTO TABLE " + tableName
+                        + " PARTITION (batchid='" + correspondingBatchIds[i] + "')";
                 LOGGER.info("Raw load query " + query);
                 stmt.executeUpdate(query);
             }
@@ -90,20 +183,20 @@ public class RawLoad extends ETLBase {
     private String[] createTempCopies(String[] files){
         String[] outputFileList= new String[files.length];
         try {
-        Configuration conf = new Configuration();
-        conf.set("fs.defaultFS", IMConfig.getProperty("common.default-fs-name"));
-        FileSystem fs = FileSystem.get(conf);
-        for(int i=0;i<files.length;i++) {
-            Path srcPath = new Path(files[i]);
-            Path destPath = new Path(files[i]+"_tmp");
-            FileUtil.copy(fs, srcPath, fs, destPath, false, conf);
-            outputFileList[i]=files[i]+"_tmp";
-        }
+            Configuration conf = new Configuration();
+            conf.set("fs.defaultFS", IMConfig.getProperty("common.default-fs-name"));
+            FileSystem fs = FileSystem.get(conf);
+            for(int i=0;i<files.length;i++) {
+                Path srcPath = new Path(files[i]);
+                Path destPath = new Path(files[i]+"_tmp");
+                FileUtil.copy(fs, srcPath, fs, destPath, false, conf);
+                outputFileList[i]=files[i]+"_tmp";
+            }
 
-    } catch(Exception e){
+        } catch(Exception e){
             LOGGER.error("error occured ="+ e);
             throw new ETLException(e);
         }
         return outputFileList;
-}
+    }
 }
