@@ -63,4 +63,36 @@ public class MessagesDAO {
         return messages;
     }
 
+    public void update(Messages message) {
+        Session session = sessionFactory.openSession();
+        try{
+            session.beginTransaction();
+
+            session.update(message);
+            session.getTransaction().commit();
+        } catch (MetadataException e) {
+            session.getTransaction().rollback();
+            LOGGER.error(e);
+        } finally {
+            session.close();
+        }
+
+    }
+
+    public void delete(String id) {
+        Session session = sessionFactory.openSession();
+        try{
+            session.beginTransaction();
+            Messages messages = (Messages) session.get(Messages.class, id);
+            session.delete(messages);
+            session.getTransaction().commit();
+        } catch (MetadataException e) {
+            session.getTransaction().rollback();
+            LOGGER.error(e);
+        } finally {
+            session.close();
+        }
+
+    }
+
 }
