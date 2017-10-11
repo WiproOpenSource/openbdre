@@ -936,7 +936,7 @@ function source()
                                         },
 
 
-                                         updateAction: function(postData) {
+                                         updateAction: function(postData,jtRecordKey) {
                                                         console.log(postData);
                                                        return $.Deferred(function($dfd) {
                                                         $.ajax({
@@ -957,10 +957,67 @@ function source()
                                                            }
                                                        });
                                                        });
-                                                    }
+                                                     },
 
 
-                                    },
+
+                                                          deleteAction: function(postData) {
+                                                           console.log(postData);
+                                                         return $.Deferred(function($dfd) {
+                                                               $.ajax({
+                                                                url: '/mdrest/connections/' + item.record.connectionName + '/' + postData.propKey + '/',
+                                                              type: 'DELETE',
+                                                                 data: item,
+                                                                 dataType: 'json',
+                                                                 success: function(data) {
+                                                                     if(data.Result == "OK") {
+
+                                                                         $dfd.resolve(data);
+
+                                                                     }
+                                                                   },
+                                                                      error: function() {
+                                                                          $dfd.reject();
+                                                                      }
+                                                                 });
+                                                              });
+
+                                              		    },
+
+                                               createAction: function(postData) {
+                                               var type;
+                                               console.log(window.location.href);
+                                                var str=window.location.href;
+                                                   if(str.includes("source")==true)
+                                                     type = "source";
+                                                  if(str.includes("emitter")==true)
+                                                        type = "emitter";
+                                                    if(str.includes("persistance")==true)
+                                                    type = "persistentStore";
+
+                                                         console.log(postData);
+                                                       return $.Deferred(function($dfd) {
+                                                              $.ajax({
+                                                          url: '/mdrest/connections/insert/' + item.record.connectionName + '/' + type + '/',
+                                                                type: 'PUT',
+                                                               data: postData,
+                                                                  dataType: 'json',
+                                                              success: function(data) {
+                                                                   if(data.Result == "OK") {
+
+                                                                   $dfd.resolve(data);
+
+                                                                    }
+
+
+                                                                },
+                                                           error: function() {
+                                                                $dfd.reject();
+                                                          }
+                                                       });
+                                                  });
+                                                }
+                                           },
                                     fields: {
 
                                         propKey: {
@@ -972,7 +1029,6 @@ function source()
                                             defaultValue: item.record.propKey,
                                         },
                                         propValue: {
-                                                key: true,
                                                 list: true,
                                                 create: true,
                                                 edit: true,
