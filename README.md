@@ -100,7 +100,7 @@ This section will help you build BDRE from source. Audience for this document ar
 For testing/development purpose and to save time, use the fully loaded Hadoop VMs from Cloudera or Hortonworks because all the required software are typically installed and configured.
 
 - A Hadoop Cluster
- - In this section we are using *Hortonworks Sandbox 2.2.0*
+ - In this section we are using *CDH 5.11 QuickStart VM Cloudera*
 - Git 1.9 and up
 - Maven 3 and up
 - Oracle JDK 7(and up)
@@ -116,16 +116,18 @@ You should be able to do the same in Mac or Windows but note that setting up a H
 ## Preparation
 
 * Download and install VirtualBox from https://www.virtualbox.org/
-* Download and install Hortonworks Sandbox 2.2 Virtual Box image from http://hortonworks.com/products/releases/hdp-2-2/#install
+* Download and install CDH 5.11 QuickStart VM Cloudera image from https://www.cloudera.com/downloads/cdh/5-11-0.html
 * Setup a 'Host-Only Adapter' for network to enable communication between Host and Guest OS.
-* Now ssh into the sandbox using *root@VM_IP* (password hadoop)
+* Now ssh into the cloudera vm using *root@VM_IP* (password hadoop)
     - The VM_IP is usually something between 192.168.56.101 - 192.168.56.109
 
 * Now create *openbdre* user account.
 
     ```shell
-    [root@sandbox ~]# adduser -m -s /bin/bash openbdre
-    [root@sandbox ~]# passwd openbdre
+    [cloudera@quickstart ~]$ sudo su
+    [root@quickstart cloudera]# cd ~
+    [root@quickstart ~]# adduser -m -s /bin/bash openbdre
+    [root@quickstart ~]# passwd openbdre
     Changing password for user openbdre.
     New password:
     Retype new password:
@@ -137,20 +139,20 @@ You should be able to do the same in Mac or Windows but note that setting up a H
     echo "openbdre ALL=(ALL) NOPASSWD:ALL" >> /etc/sudoers
     ```
 
-* Login to the HDP Sandbox with the newly created openbdre user. You can perform a **su openbdre** to switch to this account. Please make sure you are not root user beyond this point.
+* Login to the cdh Cloudera with the newly created openbdre user. You can perform a **su openbdre** to switch to this account. Please make sure you are not root user beyond this point.
 
     ```shell
-    [root@sandbox ~]# su openbdre
-    [openbdre@sandbox root]$ cd ~
-    [openbdre@sandbox ~]$
+    [root@quickstart ~]# su openbdre
+    [openbdre@quickstart root]$ cd ~
+    [openbdre@quickstart ~]$
     ```
 
 * Download Maven from a mirror, unpack and add to the PATH.
 
     ```shell
-    [openbdre@sandbox ~]# wget http://www.us.apache.org/dist/maven/maven-3/3.3.9/binaries/apache-maven-3.3.9-bin.zip
-    [openbdre@sandbox ~]# unzip apache-maven-3.3.9-bin.zip
-    [openbdre@sandbox ~]# export PATH=$PATH:/home/openbdre/apache-maven-3.3.9/bin
+    [openbdre@quickstart ~]$ wget http://www.us.apache.org/dist/maven/maven-3/3.3.9/binaries/apache-maven-3.3.9-bin.zip
+    [openbdre@quickstart ~]$ unzip apache-maven-3.3.9-bin.zip
+    [openbdre@quickstart ~]$ export PATH=$PATH:/home/openbdre/apache-maven-3.3.9/bin
     ```
 
 ## Building BDRE from source
@@ -159,30 +161,30 @@ You should be able to do the same in Mac or Windows but note that setting up a H
  * cd to the home directory of openbdre.
 
     ```shell
-    [openbdre@sandbox ~]# cd ~
+    [openbdre@quickstart ~]$ cd ~
     ```
 
  * Pull BDRE source from this git repository. To find out your repository link navigate to the repository in this website and copy the https repo URL.
 
     ```shell
-    [openbdre@sandbox ~]# git clone https://github.com/WiproOpenSourcePractice/openbdre.git
+    [openbdre@quickstart ~]$ git clone https://github.com/WiproOpenSourcePractice/openbdre.git
     ```
 
  * cd to the cloned source dir (so you can be in /home/openbdre/openbdre)
 
     ```shell
-    [openbdre@sandbox ~]# cd openbdre
+    [openbdre@quickstart ~]$ cd openbdre
     ```
 
 2. Database Setup
     * Execute the dbsetup.sh script without any parameters as shown below. In this example, we are going to use MySQL as BDRE backend as it's already available in the HDP Sandbox. If you would like to use another database please select it accordingly.
 
     ```shell
-    [openbdre@sandbox ~]# sh dbsetup.sh
+    [openbdre@quickstart openbdre]$ sh dbsetup.sh
     ```
 
     ```shell
-    [openbdre@sandbox openbdre]$ sh dbsetup.sh⏎
+    [openbdre@quickstart openbdre]$ sh dbsetup.sh⏎
     Supported DB
     1) Embedded (Default - Good for running BDRE user interface only. )
     2) Oracle
@@ -203,7 +205,7 @@ You should be able to do the same in Mac or Windows but note that setting up a H
     JDBC Driver Class: com.mysql.jdbc.Driver
     JDBC Connection URL: jdbc:mysql://localhost:3306/bdre
     Database Username: root
-    Database Password:
+    Database Password:cloudera
     Hibernate Dialect: org.hibernate.dialect.MySQLDialect
     Database Schema: bdre
     Are those correct? (type y or n - default y):y⏎
@@ -216,30 +218,37 @@ You should be able to do the same in Mac or Windows but note that setting up a H
  * Now build BDRE using (note BDRE may not compile if the **settings.xml** is not passed from the command line so be sure to use the *-s* option. When building for the first time, it might take a while as maven resolves and downloads the jar libraries from different repositories.
 
     ```shell
-    mvn -s settings.xml clean install -P hdp22
+    mvn -s settings.xml clean install -P cdh52
     ```
  * *Note:* Selecting hdp22 will compile BDRE with HDP 2.2 libraries and automatically configure BDRE with properties from  databases/setup/profile.hdp22.properties . These properties can later be altered from the BDRE Settings page under Administration.
 
-    databases/setup/profile.hdp22.properties looks like this.
+    databases/setup/profile.cdh52.properties looks like this.
 
  ```properties
     bdre_user_name=openbdre
-    name_node_hostname=sandbox.hortonworks.com
+    name_node_hostname=quickstart.cloudera
     name_node_port=8020
-    job_tracker_port=8050
-    flume_path=/usr/hdp/current/flume-server
-    oozie_host=sandbox.hortonworks.com
+    job_tracker_port=8032
+    flume_path=/usr/lib/flume-ng
+    oozie_host=quickstart.cloudera
     oozie_port=11000
-    thrift_hostname=sandbox.hortonworks.com
-    hive_server_hostname=sandbox.hortonworks.com
-    drools_hostname=sandbox.hortonworks.com
-    hive_jdbc_user=openbdre
-    hive_jdbc_password=openbdre
+    thrift_hostname=quickstart.cloudera
+    job_tracker_hostname=quickstart.cloudera
+    hive_server_hostname=quickstart.cloudera
+    drools_hostname=quickstart.cloudera
+    hive_jdbc_user=cloudera
+    hive_jdbc_password=cloudera
+    edge_node_host_name=quickstart.cloudera
+    edge_node_user_name=cloudera
+    edge_node_password=cloudera
+    oozie_url=http://quickstart.cloudera:11000/oozie
+    kerberos_username=cloudera/quickstart.cloudera@CLOUDERA
+    kerberos_keytab_file_location=/home/cloudera/cloudera.keytab
+    airflow_install_dir=/home/cloudera/anaconda2/bin
  ```
 
-| Building BDRE for Cloudera QuickStart VM |
+| Building BDRE|
 | ------------- |
-| Similarly one should be able to build this using *-P cdh52* which will configure BDRE for CDH 5.2 QuickStart VM. During building it'll pick up the environment specific configurations from <source root>/databases/setup/profile.*cdh52*.properties. BDRE virtually works with any Hadoop distribution including IBM's BigInsight platform in Bluemix|
 
 
     ```shell

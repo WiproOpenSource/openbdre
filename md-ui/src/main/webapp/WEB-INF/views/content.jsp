@@ -524,12 +524,19 @@
 									                                          url:"history-server.page",
                                                                               children: []
                                                  },
-                                            {
+                                                 {
                                                             label: "Dr-Elephant",
                                                             collapse: "1",
 							                                url:"dr-elephant.page",
                                                             children: []
                                }
+                               ,
+                                                            {
+                                                                       label: "Cloudera Manager",
+                                                                       collapse: "1",
+                                                                       url:"Cloudera-Manager.page",
+                                                                       children: []
+                                          }
 
 
 
@@ -590,7 +597,11 @@
 					if(url=="history-server.page"){
 					window.open('http://52.207.210.207:18088','_blank')
 }
-                                    if (url != "" && url!="history-server.page") {
+                       if(url=="Cloudera-Manager.page"){
+					  window.open('http://52.207.210.207:7180/cmf/login','_blank')
+					   }
+
+                                    if (url != "" && url!="history-server.page" && url!="Cloudera-Manager.page") {
                                         $("#dframe").attr('src', url);
                                         console.log(url, url != "");
                                     } else
