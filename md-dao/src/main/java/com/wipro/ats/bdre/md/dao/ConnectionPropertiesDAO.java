@@ -173,4 +173,15 @@ public class ConnectionPropertiesDAO {
     }
 
 
+
+
+public List<ConnectionProperties> getAllConnectionProperties(String connectionName){
+    Session session = sessionFactory.openSession();
+    session.beginTransaction();
+    Criteria propertiesByConnectionName = session.createCriteria(ConnectionProperties.class).add(Restrictions.eq("connections.connectionName", connectionName));
+    List<ConnectionProperties> propertiesList = propertiesByConnectionName.list();
+    session.getTransaction().commit();
+    session.close();
+    return propertiesList;
+}
 }
