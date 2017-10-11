@@ -143,29 +143,65 @@
      				    }
      			    });
      			    });
-     			    }
-     		    },
+     			    },
+
+
+     		    deleteAction: function(item) {
+                console.log(item);
+                    return $.Deferred(function($dfd) {
+                    $.ajax({
+                    url: '/mdrest/message/' + item.messagename,
+                         type: 'DELETE',
+                         data: item,
+                         dataType: 'json',
+                         success: function(data) {
+                            if(data.Result == "OK") {
+
+                                $dfd.resolve(data);
+
+                            }
+                            else
+                            {
+                                if(data.Message == "ACCESS DENIED")
+                                {
+                                    data.Result="OK";
+                                    $dfd.resolve(data);
+                                    alert(data.Message);
+
+                                }
+                                else
+                                    $dfd.resolve(data);
+                            }
+                            },
+                            error: function() {
+                                $dfd.reject();
+                            }
+                         });
+                    });
+                }
+            },
+
+
+
      		    fields: {
      		    messagename: {
      		        key : true,
      			    list: true,
-     			    create:true,
+     			    create:false,
      			    edit: false,
      			    title: 'Message Name'
      		    },
      		     format:{
-                     key : true,
                      list: true,
-                     create:true,
-                     edit: false,
+                     create:false,
+                     edit: true,
                      title: 'File Format'
                  },
 
                    connectionName: {
-                     key : true,
                      list: true,
-                     create:true,
-                     edit: false,
+                     create:false,
+                     edit: true,
                      title: 'Connection Name'
                  },
 
@@ -211,22 +247,128 @@
                                                      }
                                                  }); ;
                                              });
-                                         }
+                                         },
+
+
+                                     deleteAction: function(postData) {
+                                     console.log(postData.messagename);
+                                        return $.Deferred(function($dfd) {
+                                            $.ajax({
+                                                url: '/mdrest/message/' + item.record.messagename + '/' + postData.columnName + '/',
+                                                type: 'DELETE',
+                                                data: item,
+                                                dataType: 'json',
+                                                success: function(data) {
+                                                    if(data.Result == "OK") {
+
+                                                        $dfd.resolve(data);
+
+                                                    }
+                                                    else
+                                                    {
+                                                        if(data.Message == "ACCESS DENIED")
+                                                        {
+                                                        data.Result="OK";
+                                                        $dfd.resolve(data);
+                                                        alert(data.Message);
+
+                                                        }
+                                                        else
+                                                            $dfd.resolve(data);
+                                                        }
+                                                    },
+                                                    error: function() {
+                                                        $dfd.reject();
+                                                    }
+                                                });
+                                            });
+                                        },
+
+                                     updateAction: function(postData, jtRecordKey) {
+                                     console.log(postData);
+                                        return $.Deferred(function($dfd) {
+                                            $.ajax({
+                                                url: '/mdrest/message/'+item.record.messagename,
+                                                type: 'POST',
+                                                data: postData,
+                                                dataType: 'json',
+                                                success: function(data) {
+                                                    if(data.Result == "OK") {
+
+                                                        $dfd.resolve(data);
+
+                                                    }
+                                                    else
+                                                    {
+                                                        if(data.Message == "ACCESS DENIED")
+                                                        {
+                                                        alert(data.Message);
+                                                        data.Result="OK";
+                                                        $dfd.resolve(data);
+
+
+                                                        }
+                                                        else
+                                                        $dfd.resolve(data);
+                                                    }
+                                                },
+                                                error: function() {
+                                                    $dfd.reject();
+                                                }
+                                            });
+                                        });
                                      },
+
+                                     createAction: function(postData) {
+                                     console.log(postData);
+                                        return $.Deferred(function($dfd) {
+                                            $.ajax({
+                                                url: '/mdrest/message/'+ item.record.messagename+'/',
+                                                type: 'PUT',
+                                                data: postData,
+                                                dataType: 'json',
+                                                success: function(data) {
+                                                    if(data.Result == "OK") {
+
+                                                        $dfd.resolve(data);
+
+                                                    }
+                                                    else
+                                                    {
+                                                        if(data.Message == "ACCESS DENIED")
+                                                        {
+                                                        alert(data.Message);
+                                                        data.Result="OK";
+                                                        $dfd.resolve(data);
+
+
+                                                        }
+                                                        else
+                                                        $dfd.resolve(data);
+                                                    }
+                                                },
+                                                error: function() {
+                                                $dfd.reject();
+                                            }
+                                        });
+                                     });
+                                 }
+                             },
+
+
                                      fields: {
 
                                          columnName: {
                                              key: true,
                                              list: true,
-                                             create: false,
+                                             create: true,
                                              edit: true,
                                              title: 'Column',
                                              defaultValue: item.record.columnName,
                                          },
                                          dataType: {
-                                                 key: true,
                                                  list: true,
-                                                 create: false,
+                                                 create: true,
                                                  edit: true,
                                                  title: 'Type',
                                                  defaultValue: item.record.dataType,

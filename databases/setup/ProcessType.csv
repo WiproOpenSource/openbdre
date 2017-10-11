@@ -77,3 +77,6 @@
 80,'operator_DeDuplication',41
 81,'operator_Custom',41
 82,'operator_Enricher',41
+83,'analytics_LogisticRegression',41
+84,'analytics_LinearRegression',41
+85,'analytics_KMeansClustering',41
