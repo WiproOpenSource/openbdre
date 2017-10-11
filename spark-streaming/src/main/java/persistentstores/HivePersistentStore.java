@@ -66,7 +66,7 @@ public class HivePersistentStore implements PersistentStore {
                 JavaRDD<Row> inputRowRDD = pairRDD.map(s -> s._2.getRow());
                 if(inputRowRDD.count() != 0) {
                     System.out.println("schema1 = " + schema1);
-                    DataFrame df = hiveContext.createDataFrame(inputRowRDD, schema1);
+                    DataFrame df = hiveContext.createDataFrame(inputRowRDD, schema);
                     df.write().format(format).mode(SaveMode.Append).saveAsTable(hiveDBName+"."+hiveTableName);
                 }
                 return null;

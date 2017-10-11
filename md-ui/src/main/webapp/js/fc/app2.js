@@ -219,8 +219,10 @@ angular.module('app', ['flowChart', ])
                         $.each(destPids, function(j, destPid) {
                             if (destPid != parentPid) {
                                 var destNode = nodeMap[destPid];
+                                if(destNode!=null){
                                 var destConnector = destNode.inputConnectors[0];
                                 $scope.chartViewModel.createNewConnection(srcConnector, destConnector);
+                                }
                             }
                         });
                     });
@@ -1883,6 +1885,7 @@ $scope.confirmDialog = function (message, callBackFunctionName){
                     var nextIds = [];
                     var dataRecord1 = processAC('/mdrest/process/', 'GET', srcPid);
                     if (dataRecord1) {
+                       console.log("nextProcessIds before deletion "+dataRecord1.nextProcessIds);
                         var nextPidsArr = dataRecord1.nextProcessIds.split(',');
                         jQuery.each(nextPidsArr, function(i, nextProcessId) {
                             if (nextProcessId != destPid) {
@@ -1891,10 +1894,10 @@ $scope.confirmDialog = function (message, callBackFunctionName){
                         });
                         console.log("parentPid "+parentPid);
                         console.log("nextids "+nextIds);
-                        var index = nextIds.indexOf(parentPid);
+                        /*var index = nextIds.indexOf(parentPid);
                         console.log("index "+index);
-                        nextIds.splice(index, 1);
-                        console.log("modified nextids "+nextIds);
+                        nextIds.splice(index, 1);*/
+                        console.log("modified nextids after deletion "+nextIds);
 
                         //if empty place 0
                         if (nextIds.length == 0) nextIds.push(0);

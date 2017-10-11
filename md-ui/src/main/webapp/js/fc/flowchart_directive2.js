@@ -481,13 +481,14 @@ $scope.nodeDoubleClick = function (evt, node) {
                      if(sourcePid<0)sourcePid=-sourcePid;
                      var dataRecord = processAC('/mdrest/process/', 'GET', sourcePid);
                      if (dataRecord) {
-                     	if(dataRecord.nextProcessIds==dataRecord.parentProcessId || dataRecord.nextProcessIds=="0"){
+                        console.log("next process ids before adding "+dataRecord.nextProcessIds);
+                     	if(dataRecord.nextProcessIds==dataRecord.parentProcessId || dataRecord.nextProcessIds=="0" || dataRecord.nextProcessIds==""){
                      		dataRecord.nextProcessIds=destPid;
                      	}
                      	else{
                      		dataRecord.nextProcessIds = dataRecord.nextProcessIds + "," + destPid;
                      	}
-                     	console.log("nextprocessid is "+dataRecord.nextProcessIds);
+                     	console.log("nextprocessid after action is "+dataRecord.nextProcessIds);
                      	//TS fields cause exception due to time format
                      	delete dataRecord["addTS"];
                      	delete dataRecord["editTS"];
