@@ -1150,13 +1150,32 @@
 
 
                                             <form class="form-horizontal" role="form" ng-if="genConfig.type == 'emitter'">
+                                               <h3 style="margin-left: 2%;">Details</h3>
+                                               <div>
 
-                                                <div class="form-group">
+
+                                                     <div class="col-md-3">Column </div>
+
+                                                           </div>
+                                           <!--     <div class="form-group">
                                                     <label for="emitterConnectionName">Connection Name</label>
                                                     <select class="form-control" id="emitterConnectionName">
                                                         <option ng-repeat="connection in emitterConnectionsList" id="{{$index}}" value="{{ connection.Value }}">{{ connection.DisplayText }}</option>
                                                     </select>
-                                                </div>
+                                                </div>   -->
+                                                <div class="" id="FormGroup1" >
+
+
+
+
+                                                               <div class="col-sm-3">
+
+                                                                <select class="form-control" id="column.1" name="column.1">
+                                            <option ng-repeat="column in chartViewModel.columnList" id="{{$index}}" value="{{ column.Value }}">{{ column.DisplayText }}</option>
+                                                                    </select>
+                                                         </div>
+                                                         </div>
+
 
                                                     <div class="clearfix"></div>
                                                     <button type="submit" ng-click="insertEmitterProp(chartViewModel.selectedProcess.processId)" class="btn btn-primary  pull-right">Save</button>
