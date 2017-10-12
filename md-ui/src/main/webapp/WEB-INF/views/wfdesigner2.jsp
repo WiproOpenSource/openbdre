@@ -1551,6 +1551,21 @@
                                                 </ul>
                                             </div>
 
+                                                <!-- Split button -->
+                                                <div class="btn-group">
+                                                <button type="button" class="btn btn-default">Analytics</button>
+                                                <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                                    <span class="sr-only"><spring:message code="wfdesigner.page.button_dropdown"/></span>&nbsp;
+                                                    <span class="caret"></span>
+                                                </button>
+                                                <ul class="dropdown-menu">
+                                                     <li ng-repeat="pType in analytics_processTypes.Options">
+                                                         <a href="#" ng-click="addNewNode(pType.Value)">{{pType.DisplayText}}</a>
+                                                     </li>
+                                                </ul>
+                                            </div>
+
+
                                             <!-- Split button -->
                                                         <div class="btn-group">
                                                         <button type="button" class="btn btn-default">Emitter</button>
@@ -1580,19 +1595,6 @@
                                                     </ul>
                                                 </div>
 
-                                                <!-- Split button -->
-                                                     <div class="btn-group">
-                                                     <button type="button" class="btn btn-default">Analytics</button>
-                                                     <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                                         <span class="sr-only"><spring:message code="wfdesigner.page.button_dropdown"/></span>&nbsp;
-                                                         <span class="caret"></span>
-                                                     </button>
-                                                     <ul class="dropdown-menu">
-                                                         <li ng-repeat="pType in analytics_processTypes.Options">
-                                                              <a href="#" ng-click="addNewNode(pType.Value)">{{pType.DisplayText}}</a>
-                                                         </li>
-                                                     </ul>
-                                                </div>
 
                                             <!-- Split button -->
 
