@@ -437,7 +437,7 @@
                                                     </div>
                                                 </div>
                                                 <hr/>
-                                                <form class="form-horizontal" role="form" ng-if="genConfig.type != 'hql'  && genConfig.type != 'hadoopstream' && genConfig.type != 'r'  && genConfig.type != 'spark' && genConfig.type != 'pig' && genConfig.type != 'shell' && genConfig.type != 'source' && genConfig.type != 'filter' && genConfig.type != 'sort' && genConfig.type != 'take' && genConfig.type != 'persist' && genConfig.type != 'repartition' && genConfig.type != 'hive' && genConfig.type!='join' && genConfig.type != 'MapToPair' && genConfig.type != 'Map' && genConfig.type != 'FlatMap' && genConfig.type != 'Reduce' && genConfig.type != 'ReduceByKey' && genConfig.type != 'window' && genConfig.type != 'GroupByKey' && genConfig.type != 'emitter' && genConfig.type != 'persistentStore' && genConfig.type != 'addFiles' && genConfig.type != 'aggregation'  && genConfig.type != 'deDuplication' && genConfig.type != 'Custom' && genConfig.type != 'enricher'">
+                                                <form class="form-horizontal" role="form" ng-if="genConfig.type != 'hql'  && genConfig.type != 'hadoopstream' && genConfig.type != 'r'  && genConfig.type != 'spark' && genConfig.type != 'pig' && genConfig.type != 'shell' && genConfig.type != 'source' && genConfig.type != 'filter' && genConfig.type != 'sort' && genConfig.type != 'take' && genConfig.type != 'persist' && genConfig.type != 'repartition' && genConfig.type != 'hive' && genConfig.type!='join' && genConfig.type != 'MapToPair' && genConfig.type != 'Map' && genConfig.type != 'FlatMap' && genConfig.type != 'Reduce' && genConfig.type != 'ReduceByKey' && genConfig.type != 'window' && genConfig.type != 'GroupByKey' && genConfig.type != 'emitter' && genConfig.type != 'persistentStore' && genConfig.type != 'addFiles' && genConfig.type != 'aggregation'  && genConfig.type != 'deDuplication' && genConfig.type != 'Custom' && genConfig.type != 'enricher' && genConfig.type != 'linearRegression'">
 
                                                     <div class="form-group">
                                                         <label class="control-label col-sm-2" for="{{genConfig.key}}-propkey"><spring:message code="wfdesigner.page.propkey_name"/></label>
@@ -1195,6 +1195,81 @@
                                                         <div class="clearfix"></div>
                                                         <button type="submit" ng-click="insertPersistentStoreProp(chartViewModel.selectedProcess.processId)" class="btn btn-primary  pull-right">Save</button>
                                                     </form>
+
+
+                       <form class="form-horizontal" role="form" ng-if="genConfig.type == 'linearRegression'">
+
+                       <div class=form-group>
+                           <label class="control-label col-sm-3" for="column">Continuous Features</label>
+                        <select class="js-example-basic-multiple1" id="continuousColumn" name="continuousColumn" multiple="multiple">
+                            <option ng-repeat="column in chartViewModel.columnList" id="{{$index}}" value="{{ column.Value }}">{{ column.DisplayText }}</option>
+                        </select>
+                    </div>
+
+                    <script type="text/javascript">
+                     $(".js-example-basic-multiple1").select2();
+                     </script>
+
+
+                            <div class=form-group>
+                        <label class="control-label col-sm-3" for="column">Category Features</label>
+                     <select class="js-example-basic-multiple2" id="stringColumn" name="stringColumn" multiple="multiple">
+                         <option ng-repeat="column in chartViewModel.columnList" id="{{$index}}" value="{{ column.Value }}">{{ column.DisplayText }}</option>
+                     </select>
+                 </div>
+
+                 <script type="text/javascript">
+                                      $(".js-example-basic-multiple2").select2();
+                                      </script>
+
+
+                            <div class=form-group>
+                    <label class="control-label col-sm-3" for="labelColumn">Label</label>
+                 <select class="form-control" id="labelColumn" name="labelColumn">
+                     <option ng-repeat="column in chartViewModel.columnList" id="{{$index}}" value="{{ column.Value }}">{{ column.DisplayText }}</option>
+                 </select>
+             </div>
+
+                          <div class="form-group">
+                                <label class="control-label col-sm-10" for="maxIter">Maximum Iterations</label>
+                                 <input type="text" class="form-control col-sm-2" id="maxIter">
+                             </div>
+
+                          <div class="form-group">
+                             <label class="control-label col-sm-10" for="regParam">Regularization Parameter</label>
+                             <input type="text" class="form-control col-sm-2" id="regParam">
+                         </div>
+
+                         <div class="form-group">
+                          <label class="control-label col-sm-10" for="elasticNetParam">Elastic Net Parameter</label>
+                          <input type="text" class="form-control col-sm-2" id="elasticNetParam">
+                      </div>
+
+
+                      <div class="form-group">
+
+                          <input type="radio" id="trainingData"
+                           name="type-of-data" value="training" checked="checked">
+                          <label for="trainingData">Training</label>
+
+                          <input type="radio" id="testData"
+                           name="type-of-data" value="test">
+                          <label for="testData">Test</label>
+
+
+                        </div>
+
+                        <div class="form-group">
+                      <label class="control-label col-sm-10" for="modelName">Model Name</label>
+                      <input type="text" class="form-control col-sm-2" id="modelName">
+                  </div>
+
+
+
+                          <div class="clearfix"></div>
+                    <button type="submit" ng-click="insertRegressionProp(chartViewModel.selectedProcess.processId)" class="btn btn-primary  pull-right">Save</button>
+                       </form>
+
 
                        <form class="form-horizontal" role="form" ng-if="genConfig.type == 'hive'">
 
