@@ -38,13 +38,12 @@
                 <link rel="stylesheet" href="../css/jquery.steps.custom.css" />
                 <link href="../css/bootstrap.custom.css" rel="stylesheet" type="text/css" />
                 <link href="../css/jquery-ui-1.10.3.custom.css" rel="stylesheet" type="text/css" />
+                <link href="../css/select2.min.css" rel="stylesheet" />
 
                 <!-- Include jTable script file. -->
                 <script src="../js/jquery.min.js" type="text/javascript"></script>
                 <script src="../js/bootstrap.js" type="text/javascript"></script>
                 <script src="../js/jquery-ui-1.10.3.custom.js" type="text/javascript"></script>
-
-                <link href="../css/select2.min.css" rel="stylesheet" />
                 <script src="../js/select2.min.js"></script>
 
                 <script type="text/javascript">
@@ -732,12 +731,17 @@
 
                                                <form class="form-horizontal" role="form" ng-if="genConfig.type == 'MapToPair'">
 
-                                                  <div class="form-group">
-                                                         <label class="control-label col-sm-2" for="keyFields">Key Fields</label>
-                                                      <select id="keyFields" class="js-example-placeholder-multiple form-control">
-                                                          <option ng-repeat="column in chartViewModel.columnList" id="{{$index}}" value="{{ column.Value }}">{{ column.DisplayText }}</option>
-                                                      </select>
-                                                  </div>
+                                               <div class="form-group" style="width: 350px ! important;">
+                                                   <label class="col-md-4 control-label" for="keyFields">Key Fields</label>
+                                                       <select id="keyFields" class="js-example-basic-multiple form-control" multiple="multiple">
+                                                           <option ng-repeat="column in chartViewModel.columnList" id="{{$index}}" value="{{ column.Value }}">{{ column.DisplayText }}</option>
+                                                       </select>
+                                                   </div>
+
+
+                                               <script type="text/javascript">
+                                                       $(".js-example-basic-multiple").select2();
+                                                   </script>
 
                                                   <div class="clearfix"></div>
                                                     <button type="submit" ng-click="insertMapToPairProp(chartViewModel.selectedProcess.processId)" class="btn btn-primary  pull-right">Save</button>
