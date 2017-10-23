@@ -493,8 +493,14 @@
                                                                             collapse: "1",
                                                                             url: "premessageconfig.page",
                                                                             children: []
-                            					}
-                            					, {
+                            					}, {
+
+                                                                             label: "Create ML Model",
+                                                                             collapse: "1",
+                                                                             url: "createModel.page",
+                                                                             children: []
+                                                }, {
+
                                                                             label: "View Messages",
                                                                             collapse: "1",
                                                                             url: "streamingmessage.page",

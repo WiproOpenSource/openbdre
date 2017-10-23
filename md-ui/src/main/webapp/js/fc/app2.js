@@ -1381,6 +1381,8 @@ map["connectionName"]=value1;
         });
 }
 
+
+
 $scope.insertCustomProp=function(parentProcessId,processId){
 var value=document.getElementById("executorPlugin").value;
 $scope.uploadJar(parentProcessId,processId,'customJar');
@@ -1430,6 +1432,87 @@ map["connectionName"]=value1;
 
         });
 }
+
+$scope.filterContinuous=function(column){
+
+  var tmp=column.Value.split(":");
+  console.log("column is ",column);
+  if(tmp[1]=="Integer" || tmp[1]=="Long" || tmp[1]=="Short" || tmp[1]=="Byte" || tmp[1]=="Float" || tmp[1]=="Double" || tmp[1]=="Decimal"){
+    return column;
+  }
+
+
+}
+$scope.filterCategory=function(column){
+
+  var tmp=column.Value.split(":");
+  console.log("column is ",column);
+  if(tmp[1]==("String") || tmp[1]==("Boolean") || tmp[1]==("Date") || tmp[1]==("Timestamp")){
+    return column;
+  }
+
+
+}
+
+
+$scope.insertRegressionProp=function(processId){
+var value1=$(".js-example-basic-multiple1").select2("val");
+console.log("value1 ",value1);
+var continuousValue=value1[0];
+for(i=1;i<value1.length;i++)
+{
+     continuousValue=continuousValue.concat(",");
+     var s=value1[i];
+     continuousValue=continuousValue.concat(s);
+}
+var value2=$(".js-example-basic-multiple2").select2("val");
+var categoryValue=value2[0];
+for(i=1;i<value2.length;i++)
+{
+     categoryValue=categoryValue.concat(",");
+     var s=value2[i];
+     categoryValue=categoryValue.concat(s);
+}
+var value3=document.getElementById("labelColumn").value;
+var value4=document.getElementById("maxIter").value;
+var value5=document.getElementById("regParam").value;
+var value6=document.getElementById("elasticNetParam").value;
+var v1=document.getElementById("trainingData").value;
+var v2=document.getElementById("testData").value;
+if(document.getElementById("trainingData").checked)
+value7=v1;
+else
+value7=v2;
+var value8=document.getElementById("modelName").value;
+console.log("values are "+value1+" "+value2+" "+value3+""+value7);
+console.log("processId is "+processId);
+var map=new Object();
+map["continuous-columns"]=continuousValue;
+map["category-columns"]=categoryValue;
+map["label-column"]=value3;
+map["max-iterations"]=value4;
+map["reg-param"]=value5;
+map["elastic-net-param"]=value6;
+map["type-of-data"]=value7;
+map["model-name"]=value8;
+    $.ajax({
+            type: "POST",
+            url: "/mdrest/properties/"+processId,
+            data: jQuery.param(map),
+            success: function(data) {
+                if(data.Result == "OK") {
+                   var modal = document.getElementById('myModal');
+                    modal.style.display = "none";
+                    alertBox("info","Regression properties added");
+                }
+                else
+                alertBox("warning","Error occured");
+
+            }
+
+        });
+}
+
 
 
 
