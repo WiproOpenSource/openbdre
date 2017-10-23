@@ -1432,6 +1432,28 @@ map["connectionName"]=value1;
         });
 }
 
+$scope.filterContinuous=function(column){
+
+  var tmp=column.Value.split(":");
+  console.log("column is ",column);
+  if(tmp[1]=="Integer" || tmp[1]=="Long" || tmp[1]=="Short" || tmp[1]=="Byte" || tmp[1]=="Float" || tmp[1]=="Double" || tmp[1]=="Decimal"){
+    return column;
+  }
+
+
+}
+$scope.filterCategory=function(column){
+
+  var tmp=column.Value.split(":");
+  console.log("column is ",column);
+  if(tmp[1]==("String") || tmp[1]==("Boolean") || tmp[1]==("Date") || tmp[1]==("Timestamp")){
+    return column;
+  }
+
+
+}
+
+
 $scope.insertRegressionProp=function(processId){
 var value1=$(".js-example-basic-multiple1").select2("val");
 console.log("value1 ",value1);

@@ -1150,34 +1150,15 @@
 
 
                                             <form class="form-horizontal" role="form" ng-if="genConfig.type == 'emitter'">
-                                               <h3 style="margin-left: 2%;">Details</h3>
-                                               <div>
 
-
-                                                     <div class="col-md-3">Column </div>
-
-                                                           </div>
-                                           <!--     <div class="form-group">
+                                            <div class="form-group">
                                                     <label for="emitterConnectionName">Connection Name</label>
                                                     <select class="form-control" id="emitterConnectionName">
                                                         <option ng-repeat="connection in emitterConnectionsList" id="{{$index}}" value="{{ connection.Value }}">{{ connection.DisplayText }}</option>
                                                     </select>
-                                                </div>   -->
-                                                <div class="" id="FormGroup1" >
+                                                     </div>
 
-
-
-
-                                                               <div class="col-sm-3">
-
-                                                                <select class="form-control" id="column.1" name="column.1">
-                                            <option ng-repeat="column in chartViewModel.columnList" id="{{$index}}" value="{{ column.Value }}">{{ column.DisplayText }}</option>
-                                                                    </select>
-                                                         </div>
-                                                         </div>
-
-
-                                                    <div class="clearfix"></div>
+                                               <div class="clearfix"></div>
                                                     <button type="submit" ng-click="insertEmitterProp(chartViewModel.selectedProcess.processId)" class="btn btn-primary  pull-right">Save</button>
                                                 </form>
 
@@ -1199,10 +1180,10 @@
 
                        <form class="form-horizontal" role="form" ng-if="genConfig.type == 'linearRegression'">
 
-                       <div class=form-group>
-                           <label class="control-label col-sm-3" for="column">Continuous Features</label>
+                       <div  class=form-group>
+                           <label class="control-label col-sm-2" for="column">Continuous Features</label>
                         <select class="js-example-basic-multiple1" id="continuousColumn" name="continuousColumn" multiple="multiple">
-                            <option ng-repeat="column in chartViewModel.columnList" id="{{$index}}" value="{{ column.Value }}">{{ column.DisplayText }}</option>
+                            <option ng-repeat="column in chartViewModel.columnList | filter: filterContinuous " id="{{$index}}" value="{{ column.Value }}">{{ column.DisplayText }}</option>
                         </select>
                     </div>
 
@@ -1210,11 +1191,10 @@
                      $(".js-example-basic-multiple1").select2();
                      </script>
 
-
                             <div class=form-group>
-                        <label class="control-label col-sm-3" for="column">Category Features</label>
+                        <label class="control-label col-sm-2" for="column">Category Features</label>
                      <select class="js-example-basic-multiple2" id="stringColumn" name="stringColumn" multiple="multiple">
-                         <option ng-repeat="column in chartViewModel.columnList" id="{{$index}}" value="{{ column.Value }}">{{ column.DisplayText }}</option>
+                         <option ng-repeat="column in chartViewModel.columnList | filter: filterCategory " id="{{$index}}" value="{{ column.Value }}">{{ column.DisplayText }}</option>
                      </select>
                  </div>
 
@@ -1226,7 +1206,7 @@
                             <div class=form-group>
                     <label class="control-label col-sm-3" for="labelColumn">Label</label>
                  <select class="form-control" id="labelColumn" name="labelColumn">
-                     <option ng-repeat="column in chartViewModel.columnList" id="{{$index}}" value="{{ column.Value }}">{{ column.DisplayText }}</option>
+                     <option ng-repeat="column in chartViewModel.columnList " id="{{$index}}" value="{{ column.Value }}">{{ column.DisplayText }}</option>
                  </select>
              </div>
 
@@ -1249,12 +1229,14 @@
                       <div class="form-group">
 
                           <input type="radio" id="trainingData"
-                           name="type-of-data" value="training" checked="checked">
-                          <label for="trainingData">Training</label>
-
+                           name="type-of-data" value="training" checked="checked">Training
+                           &nbsp
+                           &nbsp
+                           &nbsp
+                           &nbsp
                           <input type="radio" id="testData"
-                           name="type-of-data" value="test">
-                          <label for="testData">Test</label>
+                           name="type-of-data" value="test">Test
+
 
 
                         </div>
