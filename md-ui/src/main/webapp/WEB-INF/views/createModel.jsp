@@ -147,15 +147,16 @@
                                                 <form class="form-horizontal" role="form" id="modelData">
 
 
-                                                        <!-- btn-group -->
-                                                        <div id="rawTablDetailsDB">
+        <!-- btn-group -->
+        <div id="rawTablDetailsDB">
 
-                                                        <div class="form-group" >
-                                                        <label class="control-label col-sm-2" for="regFile">Data File</label>
-                                                        <div class="col-sm-10">
-                                                            <input name = "regFile" id = "regFile" type = "file" class = "form-control" style="opacity: 100; position: inherit;" />
-                                                        </div>
-                                                    </div>
+        <div class="form-group" >
+        <label class="control-label col-sm-2" for="regFile">Data File</label>
+        <div class="col-sm-10">
+            <input name = "regFile" id = "regFile" type = "file" class = "form-control" style="opacity: 100; position: inherit;" />
+        </div>
+    </div>
+    <button class = "btn btn-default  btn-success" style="margin-top: 30px;background: lightsteelblue;" type = "button" onClick = "uploadFile(\''+format+'\')" href = "#" >Upload File</button >
 
 
 
