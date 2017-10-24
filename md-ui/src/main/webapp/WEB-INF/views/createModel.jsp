@@ -25,12 +25,15 @@
         <link href="../StreamAnalytix_files/style.css" rel="stylesheet" type="text/css">
         <link href="../StreamAnalytix_files/select2.4.0.css" rel="stylesheet">
         <link href="../StreamAnalytix_files/select2-bootstrap.css" rel="stylesheet">
-        <script src="../js/jquery.min.js"></script>
-        <script src="../js/jquery-ui-1.10.3.custom.js"></script>
-        <script src="../js/jquery.steps.min.js"></script>
+        <script src="../js/jquery.min.js" type="text/javascript"></script>
+        <script src="../js/jquery-ui-1.10.3.custom.js" type="text/javascript"></script>
+        <script src="../js/jquery.steps.min.js" type="text/javascript"></script>
         <script src="../js/jquery.jtable.js" type="text/javascript"></script>
         <script src="../js/bootstrap.js" type="text/javascript"></script>
         <script src="../js/angular.min.js" type="text/javascript"></script>
+         <link href="../css/select2.min.css" rel="stylesheet" />
+                        <script src="../js/select2.min.js"></script>
+
     </head>
 
     <script>
@@ -40,7 +43,7 @@
          wizard = $(document).ready(function() {
 
     	$("#bdre-data-load").steps({
-    		headerTag: "h3",
+    		headerTag: "h2",
     		bodyTag: "section",
     		transitionEffect: "slide",
     		enableCancelButton: true,
@@ -134,12 +137,41 @@
     		</script>
 
 
-  <div  id="preModelDetails">
+  <div  ng-app="app" id="preMessageDetails" ng-controller="myCtrl">
 
 
    <div >
   	<div id="bdre-data-load">
-  			<h3>Model Details</h3>
+  	<h2>File Upload</h2>
+                        			<section>
+                                                <form class="form-horizontal" role="form" id="modelData">
+
+
+                                                        <!-- btn-group -->
+                                                        <div id="rawTablDetailsDB">
+
+                                                        <div class="form-group" >
+                                                        <label class="control-label col-sm-2" for="regFile">Data File</label>
+                                                        <div class="col-sm-10">
+                                                            <input name = "regFile" id = "regFile" type = "file" class = "form-control" style="opacity: 100; position: inherit;" />
+                                                        </div>
+                                                    </div>
+
+
+
+
+
+
+
+
+                                                        <div class="clearfix"></div>
+                                                        </div>
+
+                                                        <!-- /btn-group -->
+
+                                                    </form>
+                                                			</section>
+  			<h2>Details</h2>
               			<section>
               <form class="form-horizontal" role="form" id="modelDetail">
 
@@ -150,7 +182,7 @@
                       <div class="form-group" >
                       <label class="control-label col-sm-2" for="modelType">Model Type</label>
                       <div class="col-sm-10">
-                          <select name="modelType">
+                          <select class="form-control" id="modelType" name="modelType">
                             <option value="linearRegression">Linear Regression</option>
                             <option value="logisticRegression">Logistic Regression</option>
 
@@ -159,28 +191,39 @@
                   </div>
 
 
-                      <div class="form-group" >
-                          <label class="control-label col-sm-2" for="messageName">Message Name</label>
-                          <div class="col-sm-10">
-                              <input type="text" class="form-control"  id="messageName" name="messageName" placeholder="message name" value="" required>
-                              <select>
+          <div class="form-group" >
+              <label class="control-label col-sm-2" for="messageName">Message Name</label>
+              <div class="col-sm-10">
+               <select class="form-control" id="messageName" name="messageName" onchange="messageChange()" ng-model="messageName" ng-options = "val.Value as val.Value for (file, val) in messageList track by val.Value"  >
+                           <option  value="">Select the option</option>
+                       </select>
+              </div>
+          </div>
 
-                              </select>
-                          </div>
-                      </div>
+             <div class="form-group" >
+                                       <label class="control-label col-sm-2" for="continuousFeatures">Continuous Features</label>
+                                       <div class="col-sm-10">
+                                           <select class="js-example-basic-multiple1" id="continuousFeatures" name="continuousFeatures" ng-model="columnName" ng-options = "val.Value as val.Value for val in continuousColumnList track by val.Value   " multiple="multiple" >
+                                                       <option  value="">Select the option</option>
+                                                   </select>
+                                       </div>
+                                   </div>
 
-                         <div class="form-group" >
-                                                   <label class="control-label col-sm-2" for="continuousFeatures">Continuous Features</label>
-                                                   <div class="col-sm-10">
-                                                       <input type="text" class="form-control"  id="continuousFeatures"  >
-                                                   </div>
-                                               </div>
+                                   <script type="text/javascript">
+                                    $(".js-example-basic-multiple1").select2();
+                                    </script>
                     <div class="form-group" >
                    <label class="control-label col-sm-2" for="categoryFeatures">Category Features</label>
                    <div class="col-sm-10">
-                       <input type="text" class="form-control"  id="categoryFeatures"  >
+                        <select class="js-example-basic-multiple2" id="categoryFeatures" name="categoryFeatures" ng-model="columnName" ng-options = "val.Value as val.Value for val in categoryColumnList track by val.Value" multiple="multiple">
+                                                                              <option  value="">Select the option</option>
+                        </select>
                    </div>
                </div>
+
+               <script type="text/javascript">
+                                                     $(".js-example-basic-multiple2").select2();
+                                                     </script>
 
 
 
@@ -196,7 +239,7 @@
 
 
 
-  			<h3>Model Parameters</h3>
+  			<h2>Parameters</h2>
   			<section>
                           <form class="form-horizontal" role="form" id="modelParameter">
 
@@ -244,98 +287,121 @@
                               </form>
                           			</section>
 
-
-                  <h3>Model Data</h3>
-                    			<section>
-                                            <form class="form-horizontal" role="form" id="modelData">
-
-
-                                                    <!-- btn-group -->
-                                                    <div id="rawTablDetailsDB">
-
-                                                    <div class="form-group" >
-                                                    <label class="control-label col-sm-2" for="dataFile">Data File</label>
-                                                    <div class="col-sm-10">
-                                                        <input type="text" class="form-control"  id="dataFile">
-                                                    </div>
-                                                </div>
+                          			<h2>Confirm</h2>
+                          			<section>
+                          			<form class="form-horizontal" role="form" id="modelParameter">
 
 
-                                                    <div class="form-group" >
-                                                        <label class="control-label col-sm-2" for="modelName">Model Name</label>
-                                                        <div class="col-sm-10">
-                                                            <input type="text" class="form-control"  id="modelName" >
-                                                        </div>
-                                                    </div>
+                                      <!-- btn-group -->
+                                      <div id="rawTablDetailsDB">
+                                      <div class="form-group" >
+                                      <label class="control-label col-sm-2" for="modelName">Model Name</label>
+                                      <div class="col-sm-10">
+                                          <input type="text" class="form-control"  id="modelName" >
+                                      </div>
+                                  </div>
+                                  </form>
+                          			</section>
 
 
 
-
-
-                                                    <div class="clearfix"></div>
-                                                    </div>
-
-                                                    <!-- /btn-group -->
-
-                                                </form>
-                                            			</section>
   		</div>
           </div>
 
   </div>
 
 <script>
-                var message_name="";
+var columnList={};
+function messageChange()
+                               {
+
+                               console.log("function messageChange is being called");
+                               var message=document.getElementById("messageName").value;
+
+                               console.log("value of messageName is "+message);
+
+
+                               $.ajax({
+                                  url: '/mdrest/sparkstreaming/getmessagecolumns/'+message,
+                                      type: 'GET',
+                                      dataType: 'json',
+                                      async: false,
+                                      success: function (data) {
+
+                                          columnList = data.Options;
+                                          console.log("column list is ", data.Options);
+                                      },
+                                      error: function () {
+                                          alert('danger');
+                                      }
+                                  });
+
+
+                               }
+</script>
+<script>
                 var app = angular.module('app', []);
-                   app.controller('myCtrl', function($scope) {
+                   app.controller('myCtrl',function($scope) {
 
                     $scope.messageList={};
 
+
                     $scope.columnList={};
+                    $scope.continuousColumnList=[];
+                    $scope.categoryColumnList=[];
+
                    $.ajax({
+
                        url: '/mdrest/message/optionslist',
                            type: 'POST',
                            dataType: 'json',
                            async: false,
                            success: function (data) {
+
                                $scope.messageList = data.Options;
+                               console.log($scope.messageList);
+
                            },
                            error: function () {
                                alert('danger');
                            }
                        });
 
-                    $scope.change=function()
-                    {
-                    console.log("function change is being called");
-                    console.log("value of messageName is "+$scope.messageName);
-                    message_name=$scope.messageName;
-                    console.log(message_name);
-                    /*$.ajax({
-                       url: '/mdrest/connections/'+$scope.connectionName+"/"+"topicName",
-                           type: 'GET',
-                           dataType: 'json',
-                           async: false,
-                           success: function (data) {
-                                console.log("topic list is "+data.Options);
-                                $scope.topicList = data.Options;
-                           },
-                           error: function () {
-                               alert('danger');
-                           }
-                       });
+                       $.ajax({
 
-                    $scope.IsVisible=true;*/
-                    }
+                             url: '/mdrest/sparkstreaming/getmessagecolumns/'+ "lr",
+                                 type: 'GET',
+                                 dataType: 'json',
+                                 async: false,
+                                 success: function (data) {
+
+                                     $scope.columnList = data.Options;
+                                     console.log("column list is ", data.Options);
+                                     for(i=0;i<$scope.columnList.length;i++){
+                                        var tmp=$scope.columnList[i].Value.split(":");
 
 
-                     $scope.showPopup=function()
-                        {
-                        console.log("value of topicName is "+$scope.topicName);
-                        $('#topicNameInForm').val($scope.topicName);
-                        $('#connectionNameInform').val($scope.connectionName);
-                        }
+                                        if(tmp[1]=="Integer" || tmp[1]=="Long" || tmp[1]=="Short" || tmp[1]=="Byte" || tmp[1]=="Float" || tmp[1]=="Double" || tmp[1]=="Decimal"){
+                                        console.log("yesssssssss");
+                                          $scope.continuousColumnList.push($scope.columnList[i]);
+
+                                          }
+                                          else{
+                                          $scope.categoryColumnList.push($scope.columnList[i]);
+                                          }
+
+                                     }
+                                 },
+                                 error: function () {
+                                     alert('danger');
+                                 }
+                             });
+
+
+
                 });
 
 
+
         </script>
+
