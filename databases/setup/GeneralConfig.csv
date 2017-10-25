@@ -88,7 +88,7 @@
 'Sink_Type','org.apache.flume.sink.elasticsearch.ElasticSearchSink','Elastic Search Sink','This sink writes data to an elasticsearch cluster. By default, events will be written so that the Kibana graphical interface can display them - just as if logstash wrote them', 0,'org.apache.flume.sink.elasticsearch.ElasticSearchSink','text', 1
 'Sink_Type','org.apache.flume.sink.kite.DatasetSink','Dataset Sink','Experimental sink that writes events to a Kite Dataset. This sink will deserialize the body of each incoming event and store the resulting record in a Kite Dataset. It determines target Dataset by loading a dataset by URI', 0,'org.apache.flume.sink.kite.DatasetSink','text', 1
 'Sink_Type','org.apache.flume.sink.kafka.KafkaSink','Kafka Sink','This is a Flume Sink implementation that can publish data to a Kafka topic', 0,'org.apache.flume.sink.kafka.KafkaSink','text', 1
-'Sink_Type','FQCN','FQCN','A custom sink is your own implementation of the Sink interface. A custom sink’s class and its dependencies must be included in the agent’s classpath when starting the Flume agent.', 0,'FQCN','text', 1
+'Sink_Type','FQCN','FQCN','A custom sink is your own implementation of the Sink interface. A custom sink?s class and its dependencies must be included in the agent?s classpath when starting the Flume agent.', 0,'FQCN','text', 1
 'com.wipro.ats.bdre.flume.sink.hdfs.BDREHDFSEventSink_Sink','hdfs.path','HDFS Path','Path is HDFS where you want to put files',1,'hdfs://${name_node_hostname}:${name_node_port}/user/${bdre_user_name}/mytable/datehour=%H','text', 1
 'com.wipro.ats.bdre.flume.sink.hdfs.BDREHDFSEventSink_Sink','hdfs.filePrefix','File Prefix','Name prefixed to files created by Flume in hdfs directory', 0,'IngestedData','text', 1
 'com.wipro.ats.bdre.flume.sink.hdfs.BDREHDFSEventSink_Sink','hdfs.fileSuffix','File Suffix','Name suffixed to files created by Flume in hdfs directory', 0,'.json','text', 1
@@ -100,10 +100,10 @@
 'com.wipro.ats.bdre.flume.sink.hdfs.BDREHDFSEventSink_Sink','hdfs.idleTimeout','Idle TimeOut','Timeout after which inactive files get closed (0 = disable automatic closing of idle files)', 0,'0','text', 1
 'com.wipro.ats.bdre.flume.sink.hdfs.BDREHDFSEventSink_Sink','hdfs.batchSize','Batch Size','number of events written to file before it is flushed to HDFS', 0,'100','text', 1
 'com.wipro.ats.bdre.flume.sink.hdfs.BDREHDFSEventSink_Sink','hdfs.codeC','Codec','Compression codec. one of following : gzip, bzip2, lzo, lzop, snappy', 0,null,'text', 1
-'com.wipro.ats.bdre.flume.sink.hdfs.BDREHDFSEventSink_Sink','hdfs.fileType','File Type','File format: currently SequenceFile, DataStream or CompressedStream (1)DataStream will not compress output file and please don’t set codeC (2)CompressedStream requires set hdfs.codeC with an available codeC', 0,'DataStream','text', 1
+'com.wipro.ats.bdre.flume.sink.hdfs.BDREHDFSEventSink_Sink','hdfs.fileType','File Type','File format: currently SequenceFile, DataStream or CompressedStream (1)DataStream will not compress output file and please don?t set codeC (2)CompressedStream requires set hdfs.codeC with an available codeC', 0,'DataStream','text', 1
 'com.wipro.ats.bdre.flume.sink.hdfs.BDREHDFSEventSink_Sink','hdfs.maxOpenFiles','Max Open Files','Allow only this number of open files. If this number is exceeded, the oldest file is closed.', 0,'5000','text', 1
 'com.wipro.ats.bdre.flume.sink.hdfs.BDREHDFSEventSink_Sink','hdfs.minBlockReplicas','Min Block Replicas','Specify minimum number of replicas per HDFS block. If not specified, it comes from the default Hadoop config in the classpath.', 0,null,'text', 1
-'com.wipro.ats.bdre.flume.sink.hdfs.BDREHDFSEventSink_Sink','hdfs.writeFormat','Write Format','Format for sequence file records. One of “Text” or “Writable” (the default).', 0,null,'text', 1
+'com.wipro.ats.bdre.flume.sink.hdfs.BDREHDFSEventSink_Sink','hdfs.writeFormat','Write Format','Format for sequence file records. One of ?Text? or ?Writable? (the default).', 0,null,'text', 1
 'com.wipro.ats.bdre.flume.sink.hdfs.BDREHDFSEventSink_Sink','hdfs.callTimeout','Call Timeout','Number of milliseconds allowed for HDFS operations, such as open, write, flush, close. This number should be increased if many HDFS timeout operations are occurring.', 0,'10000','text', 1
 'com.wipro.ats.bdre.flume.sink.hdfs.BDREHDFSEventSink_Sink','hdfs.threadsPoolSize','Threads Pool Size','Number of threads per HDFS sink for HDFS IO ops (open, write, etc.)', 0,'10','text', 1
 'com.wipro.ats.bdre.flume.sink.hdfs.BDREHDFSEventSink_Sink','hdfs.rollTimerPoolSize','Roll Timer Pool Size','Number of threads per HDFS sink for scheduling timed file rolling', 0,'1','text', 1
@@ -116,7 +116,7 @@
 'com.wipro.ats.bdre.flume.sink.hdfs.BDREHDFSEventSink_Sink','hdfs.timeZone','HDFS Time Zone','Name of the timezone that should be used for resolving the directory path', 0,'Local Time','text', 1
 'com.wipro.ats.bdre.flume.sink.hdfs.BDREHDFSEventSink_Sink','hdfs.useLocalTimeStamp','Local Time Stamp','Use the local time (instead of the timestamp from the event header) while replacing the escape sequences.', 0,'true','text', 1
 'com.wipro.ats.bdre.flume.sink.hdfs.BDREHDFSEventSink_Sink','hdfs.closeTries','Close Tries','Number of times the sink must try renaming a file, after initiating a close attempt. If set to 1, this sink will not re-try a failed rename (due to, for example, NameNode or DataNode failure), and may leave the file in an open state with a .tmp extension. If set to 0, the sink will try to rename the file until the file is eventually renamed (there is no limit on the number of times it would try). The file may still remain open if the close call fails but the data will be intact and in this case, the file will be closed only after a Flume restart.', 0,'0','text', 1
-'com.wipro.ats.bdre.flume.sink.hdfs.BDREHDFSEventSink_Sink','hdfs.retryInterval','Retry Interval','Time in seconds between consecutive attempts to close a file. Each close call costs multiple RPC round-trips to the Namenode, so setting this too low can cause a lot of load on the name node. If set to 0 or less, the sink will not attempt to close the file if the first attempt fails, and may leave the file open or with a ”.tmp” extension.', 0,'180','text', 1
+'com.wipro.ats.bdre.flume.sink.hdfs.BDREHDFSEventSink_Sink','hdfs.retryInterval','Retry Interval','Time in seconds between consecutive attempts to close a file. Each close call costs multiple RPC round-trips to the Namenode, so setting this too low can cause a lot of load on the name node. If set to 0 or less, the sink will not attempt to close the file if the first attempt fails, and may leave the file open or with a ?.tmp? extension.', 0,'180','text', 1
 'com.wipro.ats.bdre.flume.sink.hdfs.BDREHDFSEventSink_Sink','serializer','Serializer','Other possible options include avro_event or the fully-qualified class name of an implementation of the EventSerializer.Builder interface.', 0,'TEXT','text', 1
 'hive_Sink','hive.metastore','Hive MetaStore','Hive metastore URI ',1,'thrift://${thrift_hostname}:9083 ','text', 1
 'hive_Sink','hive.database','Hive Database','Hive Database name',1,'base','text', 1
@@ -133,9 +133,9 @@
 'hive_Sink','roundValue','Round Value','Rounded down to the highest multiple of this (in the unit configured using hive.roundUnit), less than current time', 0,'1','text', 1
 'hive_Sink','timeZone','Time Zone','Name of the timezone that should be used for resolving the escape sequences in partition', 0,'Local Time','text', 1
 'hive_Sink','useLocalTimeStamp','Use Local TimeStamp','Use the local time (instead of the timestamp from the event header) while replacing the escape sequences.', 0,'true','text', 1
-'hive_Sink','serializer.delimiter','Serializer Delimiter','(Type: string) The field delimiter in the incoming data. To use special characters, surround them with double quotes like “\t”', 0,',','text', 1
-'hive_Sink','serializer.fieldnames','Serializer Field Names','The mapping from input fields to columns in hive table. Specified as a comma separated list (no spaces) of hive table columns names, identifying the input fields in order of their occurrence. To skip fields leave the column name unspecified. Eg. ‘time,,ip,message’ indicates the 1st, 3rd and 4th fields in input map to time, ip and message columns in the hive table.', 0,null,'text', 1
-'hive_Sink','serializer.serdeSeparator','Serializer Serde Separator','(Type: character) Customizes the separator used by underlying serde. There can be a gain in efficiency if the fields in serializer.fieldnames are in same order as table columns, the serializer.delimiter is same as the serializer.serdeSeparator and number of fields in serializer.fieldnames is less than or equal to number of table columns, as the fields in incoming event body do not need to be reordered to match order of table columns. Use single quotes for special characters like ‘\t’. Ensure input fields do not contain this character. NOTE: If serializer.delimiter is a single character, preferably set this to the same character', 0,'Ctrl-A','text', 1
+'hive_Sink','serializer.delimiter','Serializer Delimiter','(Type: string) The field delimiter in the incoming data. To use special characters, surround them with double quotes like ?\t?', 0,',','text', 1
+'hive_Sink','serializer.fieldnames','Serializer Field Names','The mapping from input fields to columns in hive table. Specified as a comma separated list (no spaces) of hive table columns names, identifying the input fields in order of their occurrence. To skip fields leave the column name unspecified. Eg. ?time,,ip,message? indicates the 1st, 3rd and 4th fields in input map to time, ip and message columns in the hive table.', 0,null,'text', 1
+'hive_Sink','serializer.serdeSeparator','Serializer Serde Separator','(Type: character) Customizes the separator used by underlying serde. There can be a gain in efficiency if the fields in serializer.fieldnames are in same order as table columns, the serializer.delimiter is same as the serializer.serdeSeparator and number of fields in serializer.fieldnames is less than or equal to number of table columns, as the fields in incoming event body do not need to be reordered to match order of table columns. Use single quotes for special characters like ?\t?. Ensure input fields do not contain this character. NOTE: If serializer.delimiter is a single character, preferably set this to the same character', 0,'Ctrl-A','text', 1
 'logger_Sink','maxBytesToLog','Max Bytes To Log','Maximum number of bytes of the Event body to log ', 0,'16','text', 1
 'avro_Sink','hostname','Hostname','The hostname or IP address to bind to.', 1,'localhost','text', 1
 'avro_Sink','port','Port','The port -- to listen on.', 1,'8080','text', 1
@@ -143,13 +143,13 @@
 'avro_Sink','connect-timeout','Connect Timeout','Amount of time (ms) to allow for the first (handshake) request.', 0,'20000','text', 1
 'avro_Sink','request-timeout','Request Timeout','Amount of time (ms) to allow for requests after the first.', 0,'20000','text', 1
 'avro_Sink','reset-connection-interval','Reset Connection Interval','Amount of time (s) before the connection to the next hop is reset. This will force the Avro Sink to reconnect to the next hop. This will allow the sink to connect to hosts behind a hardware load-balancer when news hosts are added without having to restart the agent.', 0,'none','text', 1
-'avro_Sink','compression-type','Compression Type','This can be “none” or “deflate”. The compression-type must match the compression-type of matching AvroSource', 0,'none','text', 1
+'avro_Sink','compression-type','Compression Type','This can be ?none? or ?deflate?. The compression-type must match the compression-type of matching AvroSource', 0,'none','text', 1
 'avro_Sink','compression-level','Compression Level','The level of compression to compress event. 0 = no compression and 1-9 is compression. The higher the number the more compression', 0,'6','text', 1
-'avro_Sink','ssl','Ssl','Set to  1 to enable SSL for this AvroSink. When configuring SSL, you can optionally set a “truststore”, “truststore-password”, “truststore-type”, and specify whether to “trust-all-certs”.', 0,'false','text', 1
-'avro_Sink','trust-all-certs','Trust All Certs','If this is set to  1, SSL server certificates for remote servers (Avro Sources) will not be checked. This should NOT be used in production because it makes it easier for an attacker to execute a man-in-the-middle attack and “listen in” on the encrypted connection.', 0,'false','text', 1
-'avro_Sink','truststore','Truststore','The path to a custom Java truststore file. Flume uses the certificate authority information in this file to determine whether the remote Avro Source’s SSL authentication credentials should be trusted. If not specified, the default Java JSSE certificate authority files (typically “jssecacerts” or “cacerts” in the Oracle JRE) will be used.', 0,null,'text', 1
+'avro_Sink','ssl','Ssl','Set to  1 to enable SSL for this AvroSink. When configuring SSL, you can optionally set a ?truststore?, ?truststore-password?, ?truststore-type?, and specify whether to ?trust-all-certs?.', 0,'false','text', 1
+'avro_Sink','trust-all-certs','Trust All Certs','If this is set to  1, SSL server certificates for remote servers (Avro Sources) will not be checked. This should NOT be used in production because it makes it easier for an attacker to execute a man-in-the-middle attack and ?listen in? on the encrypted connection.', 0,'false','text', 1
+'avro_Sink','truststore','Truststore','The path to a custom Java truststore file. Flume uses the certificate authority information in this file to determine whether the remote Avro Source?s SSL authentication credentials should be trusted. If not specified, the default Java JSSE certificate authority files (typically ?jssecacerts? or ?cacerts? in the Oracle JRE) will be used.', 0,null,'text', 1
 'avro_Sink','truststore-password','Truststore Password','The password for the specified truststore.', 0,null,'text', 1
-'avro_Sink','truststore-type','Truststore Type','The type of the Java truststore. This can be “JKS” or other supported Java truststore type.', 0,'JKS','text', 1
+'avro_Sink','truststore-type','Truststore Type','The type of the Java truststore. This can be ?JKS? or other supported Java truststore type.', 0,'JKS','text', 1
 'avro_Sink','exclude-protocols','Exclud Protocols','Space-separated list of SSL/TLS protocols to exclude. SSLv3 will always be excluded in addition to the protocols specified.', 0,'SSLv3','text', 1
 'avro_Sink','maxIoWorkers','Max IO Workers','The maximum number of I/O worker threads. This is configured on the NettyAvroRpcClient NioClientSocketChannelFactory.', 0,'2 * the number of available processors in the machine','text', 1
 'thrift_Sink','hostname','Hostname','The hostname or IP address to bind to.', 1,'localhost','text', 1
@@ -158,10 +158,10 @@
 'thrift_Sink','connect-timeout','Connect Timeout','Amount of time (ms) to allow for the first (handshake) request.', 0,'20000','text', 1
 'thrift_Sink','request-timeout','Request Timeout','Amount of time (ms) to allow for requests after the first.', 0,'20000','text', 1
 'thrift_Sink','connection-reset-interval','Connection Reset Interval','Amount of time (s) before the connection to the next hop is reset. This will force the Thrift Sink to reconnect to the next hop. This will allow the sink to connect to hosts behind a hardware load-balancer when news hosts are added without having to restart the agent.', 0,'none','text', 1
-'thrift_Sink','ssl','Ssl','Set to  1 to enable SSL for this ThriftSink. When configuring SSL, you can optionally set a “truststore”, “truststore-password” and “truststore-type”', 0,'false','text', 1
-'thrift_Sink','truststore','Trust Store','The path to a custom Java truststore file. Flume uses the certificate authority information in this file to determine whether the remote Thrift Source’s SSL authentication credentials should be trusted. If not specified, the default Java JSSE certificate authority files (typically “jssecacerts” or “cacerts” in the Oracle JRE) will be used.', 0,null,'text', 1
+'thrift_Sink','ssl','Ssl','Set to  1 to enable SSL for this ThriftSink. When configuring SSL, you can optionally set a ?truststore?, ?truststore-password? and ?truststore-type?', 0,'false','text', 1
+'thrift_Sink','truststore','Trust Store','The path to a custom Java truststore file. Flume uses the certificate authority information in this file to determine whether the remote Thrift Source?s SSL authentication credentials should be trusted. If not specified, the default Java JSSE certificate authority files (typically ?jssecacerts? or ?cacerts? in the Oracle JRE) will be used.', 0,null,'text', 1
 'thrift_Sink','truststore-password','Truststore Password','The password for the specified truststore.', 0,null,'text', 1
-'thrift_Sink','truststore-type','Truststore Type','The type of the Java truststore. This can be “JKS” or other supported Java truststore type.', 0,'JKS','text', 1
+'thrift_Sink','truststore-type','Truststore Type','The type of the Java truststore. This can be ?JKS? or other supported Java truststore type.', 0,'JKS','text', 1
 'thrift_Sink','exclude-protocols','Exclude Protocols','Space-separated list of SSL/TLS protocols to exclude', 0,'SSLv3','text', 1
 'thrift_Sink','kerberos','Kerberos','Set to  1 to enable kerberos authentication. In kerberos mode, client-principal, client-keytab and server-principal are required for successful authentication and communication to a kerberos enabled Thrift Source.', 0,'FALSE','text', 1
 'thrift_Sink','client-principal','Client Principal','The kerberos principal used by the Thrift Sink to authenticate to the kerberos KDC.', 0,null,'text', 1
@@ -175,7 +175,7 @@
 'irc_Sink','chan','Chan','channel', 1,null,'text', 1
 'irc_Sink','name','Name',' ', 0,null,'text', 1
 'irc_Sink','splitlines','Split Lines','(boolean)', 0,null,'text', 1
-'irc_Sink','splitchars','Split Chars','line separator (if you were to enter the default value into the config file, then you would need to escape the backslash, like this: “\n”)', 0,'n','text', 1
+'irc_Sink','splitchars','Split Chars','line separator (if you were to enter the default value into the config file, then you would need to escape the backslash, like this: ?\n?)', 0,'n','text', 1
 'file_roll_Sink','sink.directory','Sink Directory','The directory where files will be stored', 1,'/home/${bdre_user_name}/file_roll','text', 1
 'file_roll_Sink','sink.rollInterval','Sink Rollinterval','Roll the file every 30 seconds. Specifying 0 will disable rolling and cause all events to be written to a single file.', 0,'30','text', 1
 'file_roll_Sink','sink.serializer','Sink Serializer','Other possible options include avro_event or the FQCN of an implementation of EventSerializer.Builder interface.', 0,'TEXT','text', 1
@@ -186,7 +186,7 @@
 'hbase_Sink','znodeParent','Z node parent','The base path for the znode for the -ROOT- region. Value of zookeeper.znode.parent in hbase-site.xml', 0,'hbase','text', 1
 'hbase_Sink','batchSize','Batch size','Number of events to be written per txn.', 0,'100','text', 1
 'hbase_Sink','coalesceIncrements','Coalesce increments','Should the sink coalesce multiple increments to a cell per batch. This might give better performance if there are multiple increments to a limited number of cells.', 0,'false','text', 1
-'hbase_Sink','serializer','Serializer','Default increment column = “iCol”, payload column = “pCol”.', 0,'org.apache.flume.sink.hbase.SimpleHbaseEventSerializer','text', 1
+'hbase_Sink','serializer','Serializer','Default increment column = ?iCol?, payload column = ?pCol?.', 0,'org.apache.flume.sink.hbase.SimpleHbaseEventSerializer','text', 1
 'hbase_Sink','serializer.*','Serializer','Properties to be passed to the serializer.', 0,null,'text', 1
 'hbase_Sink','kerberosPrincipal','Kerberos principal','Kerberos user principal for accessing secure HBase', 0,null,'text', 1
 'hbase_Sink','kerberosKeytab','Kerberos keytab','Kerberos keytab for accessing secure HBase', 0,null,'text', 1
@@ -207,9 +207,9 @@
 'org.apache.flume.sink.solr.morphline.MorphlineSolrSink_Sink','isProductionMode','Is production mode','This flag should be enabled for mission critical, large-scale online production systems that need to make progress without downtime when unrecoverable exceptions occur. Corrupt or malformed parser input data, parser bugs, and errors related to unknown Solr schema fields produce unrecoverable exceptions.', 0,'false','text', 1
 'org.apache.flume.sink.solr.morphline.MorphlineSolrSink_Sink','recoverableExceptionClasses','Recoverable exception classes','Comma separated list of recoverable exceptions that tend to be transient, in which case the corresponding task can be retried. Examples include network connection errors, timeouts, etc. When the production mode flag is set to  1, the recoverable exceptions configured using this parameter will not be ignored and hence will lead to retries.', 0,'org.apache.solr.client.solrj.SolrServerException','text', 1
 'org.apache.flume.sink.solr.morphline.MorphlineSolrSink_Sink','isIgnoringRecoverableExceptions','Is ignoringre coverable exceptions','This flag should be enabled, if an unrecoverable exception is accidentally misclassified as recoverable. This enables the sink to make progress and avoid retrying an event forever.', 0,'false','text', 1
-'org.apache.flume.sink.elasticsearch.ElasticSearchSink_Sink','hostNames','Hostnames','Comma separated list of hostname:port, if the port is not present the default port ‘9300’ will be used', 1,'localhost:9300','text', 1
-'org.apache.flume.sink.elasticsearch.ElasticSearchSink_Sink','indexName','Index name','The name of the index which the date will be appended to. Example ‘flume’ -> ‘flume-yyyy-MM-dd’ Arbitrary header substitution is supported, eg. %{header} replaces with value of named event header', 0,'flume','text', 1
-'org.apache.flume.sink.elasticsearch.ElasticSearchSink_Sink','indexType','Index type','The type to index the document to, defaults to ‘log’ Arbitrary header substitution is supported, eg. %{header} replaces with value of named event header', 0,'logs','text', 1
+'org.apache.flume.sink.elasticsearch.ElasticSearchSink_Sink','hostNames','Hostnames','Comma separated list of hostname:port, if the port is not present the default port ?9300? will be used', 1,'localhost:9300','text', 1
+'org.apache.flume.sink.elasticsearch.ElasticSearchSink_Sink','indexName','Index name','The name of the index which the date will be appended to. Example ?flume? -> ?flume-yyyy-MM-dd? Arbitrary header substitution is supported, eg. %{header} replaces with value of named event header', 0,'flume','text', 1
+'org.apache.flume.sink.elasticsearch.ElasticSearchSink_Sink','indexType','Index type','The type to index the document to, defaults to ?log? Arbitrary header substitution is supported, eg. %{header} replaces with value of named event header', 0,'logs','text', 1
 'org.apache.flume.sink.elasticsearch.ElasticSearchSink_Sink','clusterName','Cluster name','Name of the ElasticSearch cluster to connect to', 0,'elasticsearch','text', 1
 'org.apache.flume.sink.elasticsearch.ElasticSearchSink_Sink','batchSize','Batch size','Number of events to be written per txn.', 0,'100','text', 1
 'org.apache.flume.sink.elasticsearch.ElasticSearchSink_Sink','ttl','Ttl','TTL in days, when set will cause the expired documents to be deleted automatically, if not set documents will never be automatically deleted. TTL is accepted both in the earlier form of integer only e.g. a1.sinks.k1.ttl = 5 and also with a qualifier ms (millisecond), s (second), m (minute), h (hour), d (day) and w (week). Example a1.sinks.k1.ttl = 5d will set TTL to 5 days. Follow http://www.elasticsearch.org/guide/reference/mapping/ttl-field/ for more information.', 0,null,'text', 1
@@ -221,8 +221,8 @@
 'org.apache.flume.sink.kite.DatasetSink_Sink','kite.dataset.name','Kite Dataset Name','Name of the Dataset where records will be written (deprecated; use kite.dataset.uri instead)', 0,null,'text', 1
 'org.apache.flume.sink.kite.DatasetSink_Sink','kite.batchSize','Kite Batchsize','Number of records to process in each batch', 0,'100','text', 1
 'org.apache.flume.sink.kite.DatasetSink_Sink','kite.rollInterval','Kite Rollinterval','Maximum wait time (seconds) before data files are released', 0,'30','text', 1
-'org.apache.flume.sink.kite.DatasetSink_Sink','kite.flushable.commitOnBatch','Kite Flushable Commitonbatch','If  1, the Flume transaction will be commited and the writer will be flushed on each batch of kite.batchSize records. This setting only applies to flushable datasets. When  1, it’s possible for temp files with commited data to be left in the dataset directory. These files need to be recovered by hand for the data to be visible to DatasetReaders.', 0,'true','text', 1
-'org.apache.flume.sink.kite.DatasetSink_Sink','kite.syncable.syncOnBatch','Kite Syncable Synconbatch','Controls whether the sink will also sync data when committing the transaction. This setting only applies to syncable datasets. Syncing gaurentees that data will be written on stable storage on the remote system while flushing only gaurentees that data has left Flume’s client buffers. When the kite.flushable.commitOnBatch property is set to  0, this property must also be set to  0.', 0,'true','text', 1
+'org.apache.flume.sink.kite.DatasetSink_Sink','kite.flushable.commitOnBatch','Kite Flushable Commitonbatch','If  1, the Flume transaction will be commited and the writer will be flushed on each batch of kite.batchSize records. This setting only applies to flushable datasets. When  1, it?s possible for temp files with commited data to be left in the dataset directory. These files need to be recovered by hand for the data to be visible to DatasetReaders.', 0,'true','text', 1
+'org.apache.flume.sink.kite.DatasetSink_Sink','kite.syncable.syncOnBatch','Kite Syncable Synconbatch','Controls whether the sink will also sync data when committing the transaction. This setting only applies to syncable datasets. Syncing gaurentees that data will be written on stable storage on the remote system while flushing only gaurentees that data has left Flume?s client buffers. When the kite.flushable.commitOnBatch property is set to  0, this property must also be set to  0.', 0,'true','text', 1
 'org.apache.flume.sink.kite.DatasetSink_Sink','kite.entityParser','Kite Entityparser','Parser that turns Flume Events into Kite entities. Valid VALUES are avro and the fully-qualified class name of an implementation of the EntityParser.Builder interface.', 0,'avro','text', 1
 'org.apache.flume.sink.kite.DatasetSink_Sink','kite.failurePolicy','Kite  Failurepolicy','Policy that handles non-recoverable errors such as a missing Schema in the Event header. The default value, retry, will fail the current batch and try again which matches the old behavior. Other valid VALUES are save, which will write the raw Event to the kite.error.dataset.uri dataset, and the fully-qualified class name of an implementation of the FailurePolicy.Builder interface.', 0,'retry','text', 1
 'org.apache.flume.sink.kite.DatasetSink_Sink','kite.error.dataset.uri','Kite Error Dataset Uri','URI of the dataset where failed events are saved when kite.failurePolicy is set to save. Required when the kite.failurePolicy is set to save.', 0,null,'text', 1
@@ -230,12 +230,12 @@
 'org.apache.flume.sink.kite.DatasetSink_Sink','auth.kerberosKeytab','Auth Kerberoskeytab','Kerberos keytab location (local FS) for the principal', 0,null,'text', 1
 'org.apache.flume.sink.kite.DatasetSink_Sink','auth.proxyUser','Auth Proxyuser','The effective user for HDFS actions, if different from the kerberos principal', 0,null,'text', 1
 'org.apache.flume.sink.kafka.KafkaSink_Sink','brokerList','Broker list','List of brokers Kafka-Sink will connect to, to get the list of topic partitions This can be a partial list of brokers, but we recommend at least two for HA. The format is comma separated list of hostname:port', 1,'localhost:8080','text', 1
-'org.apache.flume.sink.kafka.KafkaSink_Sink','topic','Topic','The topic in Kafka to which the messages will be published. If this parameter is configured, messages will be published to this topic. If the event header contains a “topic” field, the event will be published to that topic overriding the topic configured here.', 0,'default-flume-topic','text', 1
+'org.apache.flume.sink.kafka.KafkaSink_Sink','topic','Topic','The topic in Kafka to which the messages will be published. If this parameter is configured, messages will be published to this topic. If the event header contains a ?topic? field, the event will be published to that topic overriding the topic configured here.', 0,'default-flume-topic','text', 1
 'org.apache.flume.sink.kafka.KafkaSink_Sink','batchSize','Batch size','How many messages to process in one batch. Larger batches improve throughput while adding latency.', 0,'100','text', 1
 'org.apache.flume.sink.kafka.KafkaSink_Sink','requiredAcks','Required acks','How many replicas must acknowledge a message before its considered successfully written. Accepted VALUES are 0 (Never wait for acknowledgement), 1 (wait for leader only), -1 (wait for all replicas) Set this to -1 to avoid data loss in some cases of leader failure.', 0,'1','text', 1
 'org.apache.flume.sink.kafka.KafkaSink_Sink','Other Kafka Producer Properties','Other Kafka Producer Properties','These properties are used to configure the Kafka Producer. Any producer property supported by Kafka can be used. The only requirement is to prepend the property name with the prefix kafka.. For example: kafka.producer.type', 0,null,'text', 1
-'Channel_Type','memory','Memory','The events are stored in an in-memory queue with configurable max size. It’s ideal for flows that need higher throughput and are prepared to lose the staged data in the event of a agent failures', 0,'memory','text', 1
-'Channel_Type','jdbc','JDBC','The events are stored in a persistent storage that’s backed by a database. The JDBC channel currently supports embedded Derby. This is a durable channel that is ideal for flows where recoverability is important', 0,'jdbc','text', 1
+'Channel_Type','memory','Memory','The events are stored in an in-memory queue with configurable max size. It?s ideal for flows that need higher throughput and are prepared to lose the staged data in the event of a agent failures', 0,'memory','text', 1
+'Channel_Type','jdbc','JDBC','The events are stored in a persistent storage that?s backed by a database. The JDBC channel currently supports embedded Derby. This is a durable channel that is ideal for flows where recoverability is important', 0,'jdbc','text', 1
 'Channel_Type','org.apache.flume.channel.kafka.KafkaChannel','Kafka','The events are stored in a Kafka cluster (must be installed separately). Kafka provides high availability and replication, so in case an agent or a kafka broker crashes, the events are immediately available to other sinks', 0,'org.apache.flume.channel.kafka.KafkaChannel','text', 1
 'Channel_Type','file','File','file channel', 0,'file','text', 1
 'Channel_Type','SPILLABLEMEMORY','Spillable Memory','The events are stored in an in-memory queue and on disk. The in-memory queue serves as the primary store and the disk as overflow', 0,'SPILLABLEMEMORY','text', 1
@@ -247,15 +247,15 @@
 'memory_Channel','byteCapacityBufferPercentage','Byte capacity buffer percentage','Defines the percent of buffer between byteCapacity and the estimated total size of all events in the channel, to account for data in headers. See below.', 0,'20','text', 1
 'memory_Channel','byteCapacity','Byte capacity','Maximum total bytes of memory allowed as a sum of all events in this channel. The implementation only counts the Event body, which is the reason for providing the byteCapacityBufferPercentage configuration parameter as well. Defaults to a computed value equal to 80% of the maximum memory available to the JVM (i.e. 80% of the -Xmx value passed on the command line). Note that if you have multiple memory channels on a single JVM, and they happen to hold the same physical events (i.e. if you are using a replicating channel selector from a single source) then those event sizes may be double-counted for channel byteCapacity purposes. Setting this value to 0 will cause this value to fall back to a hard internal limit of about 200 GB.', 0,'','text', 1
 'jdbc_Channel','db.type','Db Type','Database vendor, needs to be DERBY.', 0,'DERBY','text', 1
-'jdbc_Channel','driver.class','Driver Class','Class for vendor’s JDBC driver', 0,'org.apache.derby.jdbc.EmbeddedDriver','text', 1
+'jdbc_Channel','driver.class','Driver Class','Class for vendor?s JDBC driver', 0,'org.apache.derby.jdbc.EmbeddedDriver','text', 1
 'jdbc_Channel','driver.url','Driver Url','JDBC connection URL', 0,'(constructed from other properties)','text', 1
-'jdbc_Channel','db.username','Db Username','User id for db connection', 0,'“sa”','text', 1
+'jdbc_Channel','db.username','Db Username','User id for db connection', 0,'?sa?','text', 1
 'jdbc_Channel','db.password','Db Password','password for db connection', 0,null,'text', 1
 'jdbc_Channel','connection.properties.file','Connection Properties File','JDBC Connection property file path', 0,null,'text', 1
 'jdbc_Channel','create.schema','Create Schema','If  1, then creates db schema if not there', 0,'true','text', 1
 'jdbc_Channel','create.index','Create Index','Create indexes to speed up lookups', 0,'true','text', 1
 'jdbc_Channel','create.foreignkey','Create Foreignkey',' ', 0,'true','text', 1
-'jdbc_Channel','transaction.isolation','Transaction Isolation','Isolation level for db session READ_UNCOMMITTED, READ_COMMITTED, SERIALIZABLE, REPEATABLE_READ', 0,'“READ_COMMITTED”','text', 1
+'jdbc_Channel','transaction.isolation','Transaction Isolation','Isolation level for db session READ_UNCOMMITTED, READ_COMMITTED, SERIALIZABLE, REPEATABLE_READ', 0,'?READ_COMMITTED?','text', 1
 'jdbc_Channel','maximum.connections','Maximum Connections','Max connections allowed to db', 0,'10','text', 1
 'jdbc_Channel','maximum.capacity','Maximum Capacity','Max number of events in the channel', 0,'0','text', 1
 'jdbc_Channel','sysprop.*','Sysprop','DB Vendor specific properties', 0,null,'text', 1
@@ -265,7 +265,7 @@
 'org.apache.flume.channel.kafka.KafkaChannel_Channel','topic','Topic','Kafka topic which the channel will use', 0,'flume-channel','text', 1
 'org.apache.flume.channel.kafka.KafkaChannel_Channel','groupId','Group id','Consumer group ID the channel uses to register with Kafka. Multiple channels must use the same topic and group to ensure that when one agent fails another can get the data Note that having non-channel consumers with the same ID can lead to data loss.', 0,'flume','text', 1
 'org.apache.flume.channel.kafka.KafkaChannel_Channel','parseAsFlumeEvent','Parse as flume event','Expecting Avro datums with FlumeEvent schema in the channel. This should be  1 if Flume source is writing to the channel And  0 if other producers are writing into the topic that the channel is using Flume source messages to Kafka can be parsed outside of Flume by using org.apache.flume.source.avro.AvroFlumeEvent provided by the flume-ng-sdk artifact', 0,'true','text', 1
-'org.apache.flume.channel.kafka.KafkaChannel_Channel','readSmallestOffset','Read smallest offset','When set to  1, the channel will read all data in the topic, starting from the oldest event when  0, it will read only events written after the channel started When “parseAsFlumeEvent” is  1, this will be  0. Flume source will start prior to the sinks and this guarantees that events sent by source before sinks start will not be lost.', 0,'false','text', 1
+'org.apache.flume.channel.kafka.KafkaChannel_Channel','readSmallestOffset','Read smallest offset','When set to  1, the channel will read all data in the topic, starting from the oldest event when  0, it will read only events written after the channel started When ?parseAsFlumeEvent? is  1, this will be  0. Flume source will start prior to the sinks and this guarantees that events sent by source before sinks start will not be lost.', 0,'false','text', 1
 'org.apache.flume.channel.kafka.KafkaChannel_Channel','Other Kafka Properties','Other Kafka Properties','These properties are used to configure the Kafka Producer and Consumer used by the channel. Any property supported by Kafka can be used. The only requirement is to prepend the property name with the prefix kafka.. For example: kafka.producer.type', 0,null,'text', 1
 'file_Channel','checkpointDir','Checkpoint dir','The directory where checkpoint file will be stored', 0,'~/.flume/file-channel/checkpoint','text', 1
 'file_Channel','useDualCheckpoints','Use dual check points','Backup the checkpoint. If this is set to  1, backupCheckpointDir must be set', 0,'false','text', 1
@@ -293,7 +293,7 @@
 'SPILLABLEMEMORY_Channel','byteCapacityBufferPercentage','Byte capacity buffer percentage','Defines the percent of buffer between byteCapacity and the estimated total size of all events in the channel, to account for data in headers. See below.', 0,'20','text', 1
 'SPILLABLEMEMORY_Channel','byteCapacity','Byte capacity','Maximum bytes of memory allowed as a sum of all events in the memory queue. The implementation only counts the Event body, which is the reason for providing the byteCapacityBufferPercentage configuration parameter as well. Defaults to a computed value equal to 80% of the maximum memory available to the JVM (i.e. 80% of the -Xmx value passed on the command line). Note that if you have multiple memory channels on a single JVM, and they happen to hold the same physical events (i.e. if you are using a replicating channel selector from a single source) then those event sizes may be double-counted for channel byteCapacity purposes. Setting this value to 0 will cause this value to fall back to a hard internal limit of about 200 GB.', 0,'','text', 1
 'SPILLABLEMEMORY_Channel','avgEventSize','Avg event size','Estimated average size of events, in bytes, going into the channel', 0,'500','text', 1
-'SPILLABLEMEMORY_Channel','<file channel properties>','<File Channel Properties>','Any file channel property with the exception of ‘keep-alive’ and ‘capacity’ can be used. The keep-alive of file channel is managed by Spillable Memory Channel. Use ‘overflowCapacity’ to set the File channel’s capacity.', 0,'see file channel','text', 1
+'SPILLABLEMEMORY_Channel','<file channel properties>','<File Channel Properties>','Any file channel property with the exception of ?keep-alive? and ?capacity? can be used. The keep-alive of file channel is managed by Spillable Memory Channel. Use ?overflowCapacity? to set the File channel?s capacity.', 0,'see file channel','text', 1
 'org.apache.flume.channel.PseudoTxnMemoryChannel_Channel','capacity','Capacity','The max number of events stored in the channel', 0,'50','text', 1
 'org.apache.flume.channel.PseudoTxnMemoryChannel_Channel','keep-alive','Keep Alive','Timeout in seconds for adding or removing an event', 0,'3','text', 1
 'Source_Type','avro','Avro','Listens on Avro port and receives events from external Avro client streams', 0,'avro','text', 1
@@ -320,11 +320,11 @@
 'avro_Source','selector.*','Selector.*','Selectors', 0,null,'text', 1
 'avro_Source','interceptors','Interceptors','Space-separated list of interceptors', 0,null,'text', 1
 'avro_Source','interceptors.*','Interceptors.*','Interceptors', 0,null,'text', 1
-'avro_Source','compression-type','Compression-type','This can be “none” or “deflate”. The compression-type must match the compression-type of matching AvroSource', 0,'none','text', 1
-'avro_Source','ssl','SSL','Set this to  1 to enable SSL encryption. You must also specify a “keystore” and a “keystore-password”.', 0,'false','text', 1
+'avro_Source','compression-type','Compression-type','This can be ?none? or ?deflate?. The compression-type must match the compression-type of matching AvroSource', 0,'none','text', 1
+'avro_Source','ssl','SSL','Set this to  1 to enable SSL encryption. You must also specify a ?keystore? and a ?keystore-password?.', 0,'false','text', 1
 'avro_Source','keystore','Keystore','This is the path to a Java keystore file. Required for SSL.', 0,null,'text', 1
 'avro_Source','keystore-password','Keystore Password','The password for the Java keystore. Required for SSL.', 0,null,'text', 1
-'avro_Source','keystore-type','Keystore Type','The type of the Java keystore. This can be “JKS” or “PKCS12”.', 0,'JKS','text', 1
+'avro_Source','keystore-type','Keystore Type','The type of the Java keystore. This can be ?JKS? or ?PKCS12?.', 0,'JKS','text', 1
 'avro_Source','exclude-protocols','Exclude Protocols','Space-separated list of SSL/TLS protocols to exclude. SSLv3 will always be excluded in addition to the protocols specified.', 0,'SSLv3','text', 1
 'avro_Source','ipFilter','IP Filter','Set this to  1 to enable ipFiltering for netty', 0,'false','text', 1
 'avro_Source','ipFilterRules','IP Filter Rules','Define N netty ipFilter pattern rules with this config.', 0,null,'text', 1
@@ -335,10 +335,10 @@
 'thrift_Source','selector.*','Selector.*','Selectors', 0,null,'text', 1
 'thrift_Source','interceptors','Interceptors','Space separated list of interceptors', 0,null,'text', 1
 'thrift_Source','interceptors.*','Interceptors.*','Interceptors', 0,null,'text', 1
-'thrift_Source','ssl','SSL','Set this to  1 to enable SSL encryption. You must also specify a “keystore” and a “keystore-password”.', 0,'false','text', 1
+'thrift_Source','ssl','SSL','Set this to  1 to enable SSL encryption. You must also specify a ?keystore? and a ?keystore-password?.', 0,'false','text', 1
 'thrift_Source','keystore','Keystore','This is the path to a Java keystore file. Required for SSL.', 0,null,'text', 1
 'thrift_Source','keystore-password','Keystore Password','The password for the Java keystore. Required for SSL.', 0,null,'text', 1
-'thrift_Source','keystore-type','keystore Type','The type of the Java keystore. This can be “JKS” or “PKCS12”.', 0,'JKS','text', 1
+'thrift_Source','keystore-type','keystore Type','The type of the Java keystore. This can be ?JKS? or ?PKCS12?.', 0,'JKS','text', 1
 'thrift_Source','exclude-protocols','Exclude Protocols','Space-separated list of SSL/TLS protocols to exclude. SSLv3 will always be excluded in addition to the protocols specified.', 0,'SSLv3','text', 1
 'thrift_Source','kerberos','Kerberos','Set to  1 to enable kerberos authentication. In kerberos mode, agent-principal and agent-keytab are required for successful authentication. The Thrift source in secure mode, will accept connections only from Thrift clients that have kerberos enabled and are successfully authenticated to the kerberos KDC.', 0,'false','text', 1
 'thrift_Source','agent-principal','Agent Principal','The kerberos principal used by the Thrift Source to authenticate to the kerberos KDC.', 0,null,'text', 1
@@ -379,7 +379,7 @@
 'spooldir_Source','maxBackoff','Max Backoff','The maximum time (in millis) to wait between consecutive attempts to write to the channel(s) if the channel is full. The source will start at a low backoff and increase it exponentially each time the channel throws a ChannelException, upto the value specified by this parameter.', 0,'4000','text', 1
 'spooldir_Source','batchSize','Batch Size','Granularity at which to batch transfer to the channel', 0,'100','text', 1
 'spooldir_Source','inputCharset','Input Charset','Character set used by deserializers that treat the input file as text.', 0,'UTF-8','text', 1
-'spooldir_Source','decodeErrorPolicy','Decode Error Policy','What to do when we see a non-decodable character in the input file. FAIL: Throw an exception and fail to parse the file.REPLACE: Replace the unparseable character with the “replacement character” char, typically Unicode U+FFFD. IGNORE: Drop the unparseable character sequence.', 0,'FAIL','text', 1
+'spooldir_Source','decodeErrorPolicy','Decode Error Policy','What to do when we see a non-decodable character in the input file. FAIL: Throw an exception and fail to parse the file.REPLACE: Replace the unparseable character with the ?replacement character? char, typically Unicode U+FFFD. IGNORE: Drop the unparseable character sequence.', 0,'FAIL','text', 1
 'spooldir_Source','deserializer','Deserializer','Specify the deserializer used to parse the file into events. Defaults to parsing each line as an event. The class specified must implement EventDeserializer.Builder.', 0,'LINE','text', 1
 'spooldir_Source','deserializer.*','Deserializer.*','Varies per event deserializer.', 0,null,'text', 1
 'spooldir_Source','bufferMaxLines','Buffer Max Lines','(Obselete) This option is now ignored.', 0,null,'text', 1
@@ -405,7 +405,7 @@
 'netCat_Source','bind','Bind','Host name or IP address to bind to',1,'localhost','text', 1
 'netCat_Source','port','Port','Port -- to bind to',1,'8080','text', 1
 'netCat_Source','max-line-length','Max Line Length','Max line length per event body (in bytes)', 0,'512','text', 1
-'netCat_Source','ack-every-event','Ack Every Event','Respond with an “OK” for every event received', 0,'true','text', 1
+'netCat_Source','ack-every-event','Ack Every Event','Respond with an ?OK? for every event received', 0,'true','text', 1
 'netCat_Source','selector.type','Selector Type','replicating or multiplexing', 0,'replicating','text', 1
 'netCat_Source','selector.*','Selector.*','Depends on the selector.type value', 0,null,'text', 1
 'netCat_Source','interceptors','Interceptors','Space-separated list of interceptors', 0,null,'text', 1
@@ -761,5 +761,18 @@
 'HBase_PersistentStores_Connection','hbaseMasterAddress','HBase Master Address','HBase Master Address for hbase cluster.', 1,'','text', 1
 
 '84','default','LinearRegression','LinearRegression', 1,'true','linearRegression', 1
+
+'logisticRegression_Model','elasticNetParam','Elastic Net Param','Elastic Net Parameter', 1,'','text', 1
+'logisticRegression_Model','maxIter','Maximum Iterations','Maximum Iterations', 1,'','text', 1
+'logisticRegression_Model','regParam','Regularization Parameter','Regularization Parameter', 1,'','text', 1
+
+
+'linearRegression_Model','elasticNetParam','Elastic Net Param','Elastic Net Parameter', 1,'','text', 1
+'linearRegression_Model','maxIter','Maximum Iterations','Maximum Iterations', 1,'','text', 1
+'linearRegression_Model','regParam','Regularization Parameter','Regularization Parameter', 1,'','text', 1
+'linearRegression_Model','labelCol','Label Column','Label Column', 1,'','text', 1
+
+
+
 
 

@@ -31,8 +31,10 @@
         <script src="../js/jquery.jtable.js" type="text/javascript"></script>
         <script src="../js/bootstrap.js" type="text/javascript"></script>
         <script src="../js/angular.min.js" type="text/javascript"></script>
+
          <link href="../css/select2.min.css" rel="stylesheet" />
                         <script src="../js/select2.min.js"></script>
+
 
     </head>
 
@@ -49,29 +51,6 @@
     		enableCancelButton: true,
     		onStepChanging: function(event, currentIndex, newIndex) {
     			console.log(currentIndex + 'current ' + newIndex );
-    	  /*	    if(currentIndex == 0 && newIndex == 1) {
-    			console.log(document.getElementById('fileFormat').elements[1].value);
-
-    			console.log(document.getElementById('fileFormat'));
-               if((document.getElementById('fileformat').value=="Json" || document.getElementById('fileformat').value=="XML") && insert==1 && document.getElementById('isDefaultTemplate').value=="No"){
-               var content1="";
-               content1=content1+'<div class="form-group">';
-               content1=content1+'<label for = "fileUpload" >File Upload</label >';
-               content1=content1+'<input name = "regFile" id = "regFile" type = "file" class = "form-control" style="opacity: 100; position: inherit;" /></div>';
-               content1=content1+'<div class="form-group">';
-                content1=content1+'<div class="clearfix"></div>';
-                var format = document.getElementById('fileformat').value;
-               content1=content1+'<button class = "btn btn-default  btn-success" style="margin-top: 30px;background: lightsteelblue;" type = "button" onClick = "uploadFile(\''+format+'\')" href = "#" >Upload File</button >';
-               $('#bdre-data-load').steps('insert', 1, { title: "File Upload", content: content1 });
-               insert=insert+1;
-               }
-
-               if(insert==2 && document.getElementById('fileformat').value !="Json" && document.getElementById('fileformat').value !="XML" )
-               {
-               $('#bdre-data-load').steps('remove',1);
-               insert=insert-1;
-               }
-    			}*/
     			return true;
     		},
     		onStepChanged: function(event, currentIndex, priorIndex) {
@@ -82,7 +61,7 @@
                       //  $('#rawTableColumnDetails').jtable('load');
     		},
     		onFinished: function(event, currentIndex) {
-    		                      /*   formIntoMap('fileformat_', 'fileFormat');
+    		                         /* formIntoMap('fileformat_', 'fileFormat');
                                      jtableIntoMap('rawtablecolumn_', 'rawTableColumnDetails');
                                      console.log("$scope.connectionName is "+con_name);
                                      map["fileformat_connectionName"]=con_name;
@@ -126,7 +105,7 @@
             							}
 
             						});
-                                return false;  */
+                                return false; */
     		},
     		onCanceled: function(event) {
     			//location.href = '<c:url value="/pages/createModel.page"/>';
@@ -285,7 +264,7 @@
                                                   categoryValue=categoryValue.concat(s);
                                              }
                                              formIntoMap("Model_","modelDetail");
-                                             formIntoMap("ModelProperties_","modelParameter");
+                                             formIntoMap("ModelProperties_","modelRequiredFieldsForm");
                                              console.log(continuousValue);
                                              console.log("hiiii");
                                              //map["ModelProperties_filePath"]=document.getElementById("regFile").value;
@@ -372,6 +351,7 @@
 
 
 
+
   	<div id="bdre-data-load">
   	<h2>File Upload</h2>
                         			<section>
@@ -404,23 +384,22 @@
                                                     </form>
                                                 			</section>
   			<h2>Details</h2>
+
               			<section>
               <form class="form-horizontal" role="form" id="modelDetail">
 
+              <div id="dropdownModel">
+              <div class="form-group" >
+                            <label class="control-label col-sm-2" for="modelType">Model Type</label>
+                            <div class="col-sm-10">
+                             <select class="form-control" id="modelType" name="modelType" onclick="loadModelTypes();" onchange = "loadProperties();">
+                                         <option value="">Select an Option</option>
+                                     </select>
+                            </div>
+                        </div>
 
                       <!-- btn-group -->
-                      <div id="rawTablDetailsDB">
 
-                      <div class="form-group" >
-                      <label class="control-label col-sm-2" for="modelType">Model Type</label>
-                      <div class="col-sm-10">
-                          <select class="form-control" id="modelType" name="modelType">
-                            <option value="linearRegression">Linear Regression</option>
-                            <option value="logisticRegression">Logistic Regression</option>
-
-                          </select>
-                      </div>
-                  </div>
 
 
           <div class="form-group" >
@@ -431,6 +410,7 @@
                        </select>
               </div>
           </div>
+
 
              <div class="form-group" >
                                        <label class="control-label col-sm-2" for="continuousFeatures">Continuous Features</label>
@@ -444,6 +424,7 @@
                                    <script type="text/javascript">
                                     $(".js-example-basic-multiple1").select2();
                                     </script>
+
                     <div class="form-group" >
                    <label class="control-label col-sm-2" for="categoryFeatures">Category Features</label>
                    <div class="col-sm-10">
@@ -462,7 +443,6 @@
 
 
                       <div class="clearfix"></div>
-                      </div>
 
                       <!-- /btn-group -->
 
@@ -473,57 +453,15 @@
 
   			<h2>Parameters</h2>
   			<section>
-                          <form class="form-horizontal" role="form" id="modelParameter">
 
 
-                                  <!-- btn-group -->
-                                  <div id="rawTablDetailsDB">
+                          <div id="modelRequiredFields"></div>
 
-                                  <div class="form-group" >
-                                  <label class="control-label col-sm-2" for="elasticNetParam">Elastic Net Param</label>
-                                  <div class="col-sm-10">
-                                      <input type="text" class="form-control"  id="elasticNetParam" name="elasticNetParam">
-                                  </div>
-                              </div>
-
-
-                                  <div class="form-group" >
-                                      <label class="control-label col-sm-2" for="maxIter">Maximum Iterations</label>
-                                      <div class="col-sm-10">
-                                          <input type="text" class="form-control"  id="maxIter" name="maxIter">
-                                      </div>
-                                  </div>
-
-                                     <div class="form-group" >
-                                                               <label class="control-label col-sm-2" for="regParam">Regularization Parameter</label>
-                                                               <div class="col-sm-10">
-                                                                   <input type="text" class="form-control"  id="regParam"  name="regParam">
-                                                               </div>
-                                                           </div>
-                                <div class="form-group" >
-                               <label class="control-label col-sm-2" for="labelColumn">Label Column</label>
-                               <div class="col-sm-10">
-                                   <select class="form-control" id="labelColumn" name="labelColumn"  ng-model="labelColumn"   >
-                                                              <option  value="">Select the option</option>
-                                                          </select>
-                               </div>
-                           </div>
-
-
-
-
-
-                                  <div class="clearfix"></div>
-                                  </div>
-
-                                  <!-- /btn-group -->
-
-                              </form>
                           			</section>
 
                           			<h2>Confirm</h2>
                           			<section>
-                          			<form class="form-horizontal" role="form" id="modelParameter">
+                          			<form class="form-horizontal" role="form" id="modelConfirmation">
 
 
                                       <!-- btn-group -->
@@ -555,8 +493,63 @@
 
   </div>
 
-<script>
+  <script>
+  var i=0;
+  </script>
+                <script>
+                function loadModelTypes()
+                {
+                    if(i==0){
+                    var processId=41;
+                    $.ajax({
+                        type: "POST",
+                        url: "/mdrest/processtype/options_analytics/"+processId,
+                        dataType: 'json',
+                        success: function(data) {
+                        console.log(data);
+                        $.each(data.Options, function (i, v) {
+                            $('#modelType').append($('<option>', {
+                                value: v.value,
+                                text : v.DisplayText,
+                            }));
+                        });
+                        },
+                    });
+                    i=i+1;
+                    }
+                }
 
-</script>
+                function loadProperties() {
+                    var text = $('#modelType option:selected').text();
+                        buildForm(text + "_Model", 'modelRequiredFields');
+                        console.log(text);
+                        }
+                </script>
 
+
+        <script>
+        function buildForm(typeOf, typeDiv) {
+        	$.ajax({
+        		type: "GET",
+        		url: "/mdrest/genconfig/" + typeOf + "/?required=1",
+        		dataType: 'json',
+        		success: function(data) {
+        			var root = 'Records';
+        			var div = document.getElementById(typeDiv);
+        			var formHTML = '';
+        			formHTML = formHTML + '<form role="form" id = "' + typeDiv + 'Form">';
+        			console.log(data[root]);
+        			$.each(data[root], function(i, v) {
+        				formHTML = formHTML + '<div class="form-group"> <label for="' + v.key + '">' + v.value + '</label>';
+        				<!-- formHTML = formHTML + '<span class="glyphicon glyphicon-question-sign" title="' + v.description + '"></span>'; -->
+        				formHTML = formHTML + '<input name="' + v.key + '" value="' + v.defaultVal + '" placeholder="' + v.description + '" type="' + v.type + '" class="form-control" id="' + v.key + '"></div>';
+        			});
+        			formHTML = formHTML + '</form>';
+        			div.innerHTML = formHTML;
+        			console.log(div);
+        		}
+        	});
+        	return true;
+        }
+        </script>
 
