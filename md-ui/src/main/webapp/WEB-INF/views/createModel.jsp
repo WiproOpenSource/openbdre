@@ -129,18 +129,249 @@
                                 return false;  */
     		},
     		onCanceled: function(event) {
-    			location.href = '<c:url value="/pages/createModel.page"/>';
+    			//location.href = '<c:url value="/pages/createModel.page"/>';
     		}
     	});
     });
 
     		</script>
+  <script>
+  var map = new Object();
+  function formIntoMap(typeProp, typeOf) {
+  	var x = '';
+  	x = document.getElementById(typeOf);
+  	console.log(x);
+  	var text = "";
+  	var i;
+  	for(i = 0; i < x.length; i++) {
+  		map[typeProp + x.elements[i].name] = x.elements[i].value;
+  		//console.log(map[typeProp + x.elements[i].name]);
+  		//console.log(x.elements[i].value);
+  	}
+
+  }
+
+  function messageChange()
+                                 {
+
+                                 console.log("function messageChange is being called");
+                                 var message=document.getElementById("messageName").value;
+
+                                 console.log("value of messageName is "+message);
+                               angular.element(document.getElementById('preMessageDetails')).scope().change(message);
+
+
+
+                                 }
+  </script>
+  <script>
+                  var app = angular.module('app', []);
+                     app.controller('myCtrl',function($scope) {
+
+                      $scope.messageList={};
+
+
+                      $scope.columnList={};
+
+
+
+                     $.ajax({
+
+                         url: '/mdrest/message/optionslist',
+                             type: 'POST',
+                             dataType: 'json',
+                             async: false,
+                             success: function (data) {
+
+                                 $scope.messageList = data.Options;
+                                 console.log($scope.messageList);
+
+                             },
+                             error: function () {
+                                 alert('danger');
+                             }
+                         });
+                       $scope.change=function(message){
+                             $scope.continuousColumnList=[];
+                             $scope.categoryColumnList=[];
+                         $.ajax({
+
+                               url: '/mdrest/sparkstreaming/getmessagecolumns/'+ message,
+                                   type: 'GET',
+                                   dataType: 'json',
+                                   async: false,
+                                   success: function (data) {
+
+                                       $scope.columnList = data.Options;
+                                       console.log("message name  is ", message);
+                                       console.log("column list is ", data.Options);
+
+                                       for(i=0;i<$scope.columnList.length;i++){
+
+
+
+                                          var tmp=$scope.columnList[i].Value.split(":");
+
+
+                                          if(tmp[1]=="Integer" || tmp[1]=="Long" || tmp[1]=="Short" || tmp[1]=="Byte" || tmp[1]=="Float" || tmp[1]=="Double" || tmp[1]=="Decimal"){
+                                          console.log(tmp);
+                                            $scope.continuousColumnList.push($scope.columnList[i]);
+
+                                            }
+                                            else{
+                                            console.log(tmp);
+                                            $scope.categoryColumnList.push($scope.columnList[i]);
+                                            }
+
+                                       }
+                                       console.log($scope.continuousColumnList);
+                                       console.log($scope.categoryColumnList);
+                                       $('#continuousFeatures').find('option').remove();
+                                       $('#categoryFeatures').find('option').remove();
+                                       $('#labelColumn').find('option').remove();
+
+                                        var option=new Option("prem","prem");
+                                   $.each($scope.continuousColumnList, function (i, v) {
+                                   var option=new Option("prem","prem");
+                                                           $('#continuousFeatures').append($('<option>', {
+                                                               value: v.Value,
+                                                               text : v.DisplayText,
+                                                           }));
+                                                       });
+                                   $.each($scope.categoryColumnList, function (i, v) {
+                          var option=new Option("prem","prem");
+                                                  $('#categoryFeatures').append($('<option>', {
+                                                      value: v.Value,
+                                                      text : v.DisplayText,
+                                                  }));
+                                              });
+                                          $.each($scope.columnList, function (i, v) {
+                        var option=new Option("prem","prem");
+                                                $('#labelColumn').append($('<option>', {
+                                                    value: v.Value,
+                                                    text : v.DisplayText,
+                                                }));
+                                            });
+
+                                   },
+                                   error: function () {
+                                       alert('danger');
+                                   }
+                               });
+                           }
+
+
+
+
+                  });
+                   function saveModelProperties(){
+
+                                             console.log("saveModelProperties is being called");
+                                             var value1=$(".js-example-basic-multiple1").select2("val");
+                                             console.log("value1 ",value1);
+                                             var continuousValue=value1[0];
+                                             for(i=1;i<value1.length;i++)
+                                             {
+                                                  continuousValue=continuousValue.concat(",");
+                                                  var s=value1[i];
+                                                  continuousValue=continuousValue.concat(s);
+                                             }
+                                             var value2=$(".js-example-basic-multiple2").select2("val");
+                                             var categoryValue=value2[0];
+                                             for(i=1;i<value2.length;i++)
+                                             {
+                                                  categoryValue=categoryValue.concat(",");
+                                                  var s=value2[i];
+                                                  categoryValue=categoryValue.concat(s);
+                                             }
+                                             formIntoMap("Model_","modelDetail");
+                                             formIntoMap("ModelProperties_","modelParameter");
+                                             console.log(continuousValue);
+                                             console.log("hiiii");
+                                             //map["ModelProperties_filePath"]=document.getElementById("regFile").value;
+                                             map["Model_modelName"]=document.getElementById("modelName").value;
+                                             map["Model_continuousFeatures"]=continuousValue;
+                                             map["Model_categoryFeatures"]=categoryValue;
+                                             console.log(map);
+                                             $.ajax({
+                                                         type: "POST",
+                                                         url: "/mdrest/models/createModels",
+                                                         data: jQuery.param(map),
+                                                         success: function(data) {
+                                                             if(data.Result == "OK") {
+
+                                                                 alert("Model Created Successfully");
+
+                                               }
+
+                                                             else{
+                                                             alert("warning","Error occured");
+                                                             }
+                                                         }
+
+                                                     });
+                                             }
+
+                    function uploadZip (subDir,fileId){
+                                 var arg= [subDir,fileId];
+                                   var fd = new FormData();
+                                  		                var fileObj = $("#"+arg[1])[0].files[0];
+                                                          var fileName=fileObj.name;
+                                                          fd.append("file", fileObj);
+                                                          fd.append("name", fileName);
+                                                          $.ajax({
+                                                            url: '/mdrest/filehandler/uploadzip/'+arg[0],
+                                                            type: "POST",
+                                                            data: fd,
+                                                            async: false,
+                                                            enctype: 'multipart/form-data',
+                                                            processData: false,  // tell jQuery not to process the data
+                                                            contentType: false,  // tell jQuery not to set contentType
+                                                            success:function (data) {
+                                                                  uploadedFileName=data.Record.fileName;
+                                                                  console.log( data );
+                                                                  $("#div-dialog-warning").dialog({
+                                                                                  title: "",
+                                                                                  resizable: false,
+                                                                                  height: 'auto',
+                                                                                  modal: true,
+                                                                                  buttons: {
+                                                                                      "Ok" : function () {
+                                                                                          $(this).dialog("close");
+                                                                                      }
+                                                                                  }
+                                                                  }).html('<p><span class="jtable-confirm-message"><spring:message code="processimportwizard.page.upload_success"/>'+' ' + uploadedFileName + '</span></p>');
+                                                                  return false;
+                                  							},
+                                  						  error: function () {
+                                  							    $("#div-dialog-warning").dialog({
+                                                                              title: "",
+                                                                              resizable: false,
+                                                                              height: 'auto',
+                                                                              modal: true,
+                                                                              buttons: {
+                                                                                  "Ok" : function () {
+                                                                                      $(this).dialog("close");
+                                                                                  }
+                                                                              }
+                                                              }).html('<p><span class="jtable-confirm-message"><spring:message code="processimportwizard.page.upload_error"/></span></p>');
+                                                              return false;
+                                  							}
+                                  						 });
+
+                                  }
+
+
+
+
+
+          </script>
 
 
   <div  ng-app="app" id="preMessageDetails" ng-controller="myCtrl">
 
 
-   <div >
+
   	<div id="bdre-data-load">
   	<h2>File Upload</h2>
                         			<section>
@@ -156,7 +387,7 @@
             <input name = "regFile" id = "regFile" type = "file" class = "form-control" style="opacity: 100; position: inherit;" />
         </div>
     </div>
-    <button class = "btn btn-default  btn-success" style="margin-top: 30px;background: lightsteelblue;" type = "button" onClick = "uploadFile(\''+format+'\')" href = "#" >Upload File</button >
+    <button class = "btn btn-default  btn-success" style="margin-top: 30px;background: lightsteelblue;" type = "button" onClick = "uploadZip('model','regFile')" href = "#" >Upload File</button >
 
 
 
@@ -204,7 +435,7 @@
              <div class="form-group" >
                                        <label class="control-label col-sm-2" for="continuousFeatures">Continuous Features</label>
                                        <div class="col-sm-10">
-                                           <select class="js-example-basic-multiple1" id="continuousFeatures" name="continuousFeatures" ng-model="columnName" ng-options = "val.Value as val.Value for val in continuousColumnList track by val.Value   " multiple="multiple" >
+                                           <select class="js-example-basic-multiple1" id="continuousFeatures" name="continuousFeatures" ng-model="continuousColumnName"  multiple="multiple" >
                                                        <option  value="">Select the option</option>
                                                    </select>
                                        </div>
@@ -216,7 +447,7 @@
                     <div class="form-group" >
                    <label class="control-label col-sm-2" for="categoryFeatures">Category Features</label>
                    <div class="col-sm-10">
-                        <select class="js-example-basic-multiple2" id="categoryFeatures" name="categoryFeatures" ng-model="columnName" ng-options = "val.Value as val.Value for val in categoryColumnList track by val.Value" multiple="multiple">
+                        <select class="js-example-basic-multiple2" id="categoryFeatures" name="categoryFeatures" ng-model="categoryColumnName"  multiple="multiple">
                                                                               <option  value="">Select the option</option>
                         </select>
                    </div>
@@ -251,7 +482,7 @@
                                   <div class="form-group" >
                                   <label class="control-label col-sm-2" for="elasticNetParam">Elastic Net Param</label>
                                   <div class="col-sm-10">
-                                      <input type="text" class="form-control"  id="elastcNetParam">
+                                      <input type="text" class="form-control"  id="elasticNetParam" name="elasticNetParam">
                                   </div>
                               </div>
 
@@ -259,20 +490,22 @@
                                   <div class="form-group" >
                                       <label class="control-label col-sm-2" for="maxIter">Maximum Iterations</label>
                                       <div class="col-sm-10">
-                                          <input type="text" class="form-control"  id="maxIter" >
+                                          <input type="text" class="form-control"  id="maxIter" name="maxIter">
                                       </div>
                                   </div>
 
                                      <div class="form-group" >
                                                                <label class="control-label col-sm-2" for="regParam">Regularization Parameter</label>
                                                                <div class="col-sm-10">
-                                                                   <input type="text" class="form-control"  id="regParam"  >
+                                                                   <input type="text" class="form-control"  id="regParam"  name="regParam">
                                                                </div>
                                                            </div>
                                 <div class="form-group" >
                                <label class="control-label col-sm-2" for="labelColumn">Label Column</label>
                                <div class="col-sm-10">
-                                   <input type="text" class="form-control"  id="labelColumn"  >
+                                   <select class="form-control" id="labelColumn" name="labelColumn"  ng-model="labelColumn"   >
+                                                              <option  value="">Select the option</option>
+                                                          </select>
                                </div>
                            </div>
 
@@ -297,112 +530,33 @@
                                       <div id="rawTablDetailsDB">
                                       <div class="form-group" >
                                       <label class="control-label col-sm-2" for="modelName">Model Name</label>
-                                      <div class="col-sm-10">
+                                      <div class="col-sm-6">
                                           <input type="text" class="form-control"  id="modelName" >
                                       </div>
                                   </div>
+                                  <!--  <div class="form-group" >
+                                  <div class="col-sm-6">
+                                  <input type = "submit" class = "btn btn-warning" value = "Create Model" >
+                                  </div>
+                                  </div>  -->
+                                  <button class = "btn btn-default  btn-success" style="margin-top: 30px;background: lightsteelblue;" type = "button" onClick = "saveModelProperties()"  >Create Model</button >
                                   </form>
                           			</section>
+                          			<div style = "display:none" id = "div-dialog-warning" >
+                                                    				<p ><span class = "ui-icon ui-icon-alert" style = "float:left;" ></span >
+
+                                                    				</p>
+                                                    				</div >
 
 
 
   		</div>
-          </div>
+
 
   </div>
 
 <script>
-var columnList={};
-function messageChange()
-                               {
 
-                               console.log("function messageChange is being called");
-                               var message=document.getElementById("messageName").value;
-
-                               console.log("value of messageName is "+message);
-
-
-                               $.ajax({
-                                  url: '/mdrest/sparkstreaming/getmessagecolumns/'+message,
-                                      type: 'GET',
-                                      dataType: 'json',
-                                      async: false,
-                                      success: function (data) {
-
-                                          columnList = data.Options;
-                                          console.log("column list is ", data.Options);
-                                      },
-                                      error: function () {
-                                          alert('danger');
-                                      }
-                                  });
-
-
-                               }
 </script>
-<script>
-                var app = angular.module('app', []);
-                   app.controller('myCtrl',function($scope) {
 
-                    $scope.messageList={};
-
-
-                    $scope.columnList={};
-                    $scope.continuousColumnList=[];
-                    $scope.categoryColumnList=[];
-
-                   $.ajax({
-
-                       url: '/mdrest/message/optionslist',
-                           type: 'POST',
-                           dataType: 'json',
-                           async: false,
-                           success: function (data) {
-
-                               $scope.messageList = data.Options;
-                               console.log($scope.messageList);
-
-                           },
-                           error: function () {
-                               alert('danger');
-                           }
-                       });
-
-                       $.ajax({
-
-                             url: '/mdrest/sparkstreaming/getmessagecolumns/'+ "lr",
-                                 type: 'GET',
-                                 dataType: 'json',
-                                 async: false,
-                                 success: function (data) {
-
-                                     $scope.columnList = data.Options;
-                                     console.log("column list is ", data.Options);
-                                     for(i=0;i<$scope.columnList.length;i++){
-                                        var tmp=$scope.columnList[i].Value.split(":");
-
-
-                                        if(tmp[1]=="Integer" || tmp[1]=="Long" || tmp[1]=="Short" || tmp[1]=="Byte" || tmp[1]=="Float" || tmp[1]=="Double" || tmp[1]=="Decimal"){
-                                        console.log("yesssssssss");
-                                          $scope.continuousColumnList.push($scope.columnList[i]);
-
-                                          }
-                                          else{
-                                          $scope.categoryColumnList.push($scope.columnList[i]);
-                                          }
-
-                                     }
-                                 },
-                                 error: function () {
-                                     alert('danger');
-                                 }
-                             });
-
-
-
-                });
-
-
-
-        </script>
 
