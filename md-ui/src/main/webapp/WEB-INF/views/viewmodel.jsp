@@ -383,7 +383,7 @@
                                 Cancel: function() {
                                     $(this).dialog("close");
                                 },
-                                'Yes Kill': function() {
+                                'Yes Train': function() {
                                     $(this).dialog("close");
                                     return $.Deferred(function($dfd) {
                                         var processData = jQuery.param(data.record);
