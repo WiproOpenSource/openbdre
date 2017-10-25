@@ -389,7 +389,7 @@
                                         var processData = jQuery.param(data.record);
                                         console.log(processData);
                                         $.ajax({
-                                            url: '/mdrest/process/kill/',
+                                            url: '/mdrest/process/train/',
                                             type: 'POST',
                                             data: processData,
                                             dataType: 'json',
