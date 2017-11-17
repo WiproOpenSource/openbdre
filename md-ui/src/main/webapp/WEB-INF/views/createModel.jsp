@@ -37,6 +37,7 @@
 
 
     </head>
+    <body>
 
     <script>
     		var insert=1;
@@ -48,6 +49,7 @@
     		headerTag: "h2",
     		bodyTag: "section",
     		transitionEffect: "slide",
+    		stepsOrientation: "vertical",
     		enableCancelButton: true,
     		onStepChanging: function(event, currentIndex, newIndex) {
     			console.log(currentIndex + 'current ' + newIndex );
@@ -55,60 +57,23 @@
     		},
     		onStepChanged: function(event, currentIndex, priorIndex) {
     			        console.log(currentIndex + " " + priorIndex);
-    			       // if(insert==1 && priorIndex==0 && currentIndex==1)
-                      //  $('#rawTableColumnDetails').jtable('load');
-                     //   if(insert==2 && priorIndex==1 && currentIndex==2)
-                      //  $('#rawTableColumnDetails').jtable('load');
+
+    			     /*  if(priorIndex==1 && currentIndex==2){
+    			        var text = $('#persistentName option:selected').text();
+                            			         console.log("oooollllaaaa");
+                            			         console.log(text);
+                            			         console.log("oooollllaaaa");
+                            			         if(text=="hdfs"){
+                                                  console.log("helllooo beautiful");
+                                            $('#rawTableColumnDetails').jtable('load');
+                                            }
+                          }*/
     		},
     		onFinished: function(event, currentIndex) {
-    		                         /* formIntoMap('fileformat_', 'fileFormat');
-                                     jtableIntoMap('rawtablecolumn_', 'rawTableColumnDetails');
-                                     console.log("$scope.connectionName is "+con_name);
-                                     map["fileformat_connectionName"]=con_name;
-                                     console.log(map);
-            						$.ajax({
-            							type: "POST",
-            							url: "/mdrest/message/createjobs",
-            							data: jQuery.param(map),
-            							success: function(data) {
-            								if(data.Result == "OK") {
-            									created = 1;
-            									$("#div-dialog-warning").dialog({
-            										title: "",
-            										resizable: false,
-            										height: 'auto',
-            										modal: true,
-            										buttons: {
-            											"Ok": function() {
-            											    $('#Container').jtable('load');
-            												$(this).dialog("close");
-            												location.href = '<c:url value="/pages/premessageconfig.page"/>';
-            											}
-            										}
-            									}).html('<p><span class="jtable-confirm-message">Message successfully created </span></p>');
-            								}
 
-            							else{
-                                          $("#div-dialog-warning").dialog({
-                                            title: "",
-                                            resizable: false,
-                                            height: 'auto',
-                                            modal: true,
-                                            buttons: {
-                                                "Ok": function() {
-                                                    $(this).dialog("close");
-                                                }
-                                            }
-                                        }).html('<p><span class="jtable-confirm-message">Message is not created</span></p>');
-
-            								}
-            							}
-
-            						});
-                                return false; */
     		},
     		onCanceled: function(event) {
-    			//location.href = '<c:url value="/pages/createModel.page"/>';
+
     		}
     	});
     });
@@ -147,7 +112,7 @@
                   var app = angular.module('app', []);
                      app.controller('myCtrl',function($scope) {
 
-                      $scope.messageList={};
+                      $scope.persistentList={};
 
 
                       $scope.columnList={};
@@ -156,15 +121,16 @@
 
                      $.ajax({
 
-                         url: '/mdrest/message/optionslist',
+                         url: "/mdrest/genconfig/PersistentStores_Connection_Type/?required=2",
                              type: 'POST',
                              dataType: 'json',
                              async: false,
                              success: function (data) {
 
-                                 $scope.messageList = data.Options;
-                                 console.log($scope.messageList);
-
+                                 $scope.persistentList = data.Records;
+                                 console.log("hiiii");
+                                 console.log($scope.persistentList);
+                                 console.log("hiiii");
                              },
                              error: function () {
                                  alert('danger');
@@ -347,139 +313,51 @@
           </script>
 
 
-  <div  ng-app="app" id="preMessageDetails" ng-controller="myCtrl">
+  <div  ng-app="app" id="preModelDetails" ng-controller="myCtrl">
 
 
 
 
   	<div id="bdre-data-load">
-  	<h2>File Upload</h2>
+  	<h2><div class="number-circular">1</div>Select type of Persistent Store Type</h2>
                         			<section>
-                                                <form class="form-horizontal" role="form" id="modelData">
+                    <form class="form-horizontal" role="form" id="persistentStore">
+                    <div class="form-group" >
+                                  <label class="control-label col-sm-2" for="persistentName">Persistent Store</label>
+                                  <div class="col-sm-10">
+                                   <select class="form-control" id="persistentName" name="persistentName"  ng-model="persistentName"  onchange="loadProperties();" ng-options = "val.columnName as val.columnName for (file, val) in persistentList track by val.columnName"  >
+                                               <option  value="">Select the option</option>
+                                           </select>
+                                  </div>
+                              </div>
+
+                              </form>
+                              </section>
+
+  <h2><div class="number-circular">2</div>Persistent Store Configuration Type</h2>
+                          			<section>
+                      <form class="form-horizontal" role="form" id="persistentStoreDetails">
+                       <div id="persistentFieldsForm"></div>
+<div class="clearfix"></div>
 
 
-        <!-- btn-group -->
-        <div id="rawTablDetailsDB">
 
-        <div class="form-group" >
-        <label class="control-label col-sm-2" for="regFile">Data File</label>
-        <div class="col-sm-10">
-            <input name = "regFile" id = "regFile" type = "file" class = "form-control" style="opacity: 100; position: inherit;" />
-        </div>
-    </div>
-    <button class = "btn btn-default  btn-success" style="margin-top: 30px;background: lightsteelblue;" type = "button" onClick = "uploadZip('model','regFile')" href = "#" >Upload File</button >
-
-
-
-
-
-
-
-
-                                                        <div class="clearfix"></div>
-                                                        </div>
-
-                                                        <!-- /btn-group -->
 
                                                     </form>
                                                 			</section>
-  			<h2>Details</h2>
-
-              			<section>
-              <form class="form-horizontal" role="form" id="modelDetail">
-
-              <div id="dropdownModel">
-              <div class="form-group" >
-                            <label class="control-label col-sm-2" for="modelType">Model Type</label>
-                            <div class="col-sm-10">
-                             <select class="form-control" id="modelType" name="modelType" onclick="loadModelTypes();" onchange = "loadProperties();">
-                                         <option value="">Select an Option</option>
-                                     </select>
-                            </div>
-                        </div>
-
-                      <!-- btn-group -->
-
-
-
-          <div class="form-group" >
-              <label class="control-label col-sm-2" for="messageName">Message Name</label>
-              <div class="col-sm-10">
-               <select class="form-control" id="messageName" name="messageName" onchange="messageChange()" ng-model="messageName" ng-options = "val.Value as val.Value for (file, val) in messageList track by val.Value"  >
-                           <option  value="">Select the option</option>
-                       </select>
-              </div>
-          </div>
-
-
-             <div class="form-group" >
-                                       <label class="control-label col-sm-2" for="continuousFeatures">Continuous Features</label>
-                                       <div class="col-sm-10">
-                                           <select class="js-example-basic-multiple1" id="continuousFeatures" name="continuousFeatures" ng-model="continuousColumnName"  multiple="multiple" >
-                                                       <option  value="">Select the option</option>
-                                                   </select>
-                                       </div>
-                                   </div>
-
-                                   <script type="text/javascript">
-                                    $(".js-example-basic-multiple1").select2();
-                                    </script>
-
-                    <div class="form-group" >
-                   <label class="control-label col-sm-2" for="categoryFeatures">Category Features</label>
-                   <div class="col-sm-10">
-                        <select class="js-example-basic-multiple2" id="categoryFeatures" name="categoryFeatures" ng-model="categoryColumnName"  multiple="multiple">
-                                                                              <option  value="">Select the option</option>
-                        </select>
-                   </div>
-               </div>
-
-               <script type="text/javascript">
-                                                     $(".js-example-basic-multiple2").select2();
-                                                     </script>
+                                                			<h2><div class="number-circular">3</div>Data Schema</h2>
+                                                			<section>
+                                                			<form class="form-horizontal" role="form" id="schema">
+                                                            			    <div id="rawTableColumnDetails"></div>
+                                                            			    <div class="clearfix"></div>
+                                                            			    </form>
+                                                            			    </section>
 
 
 
 
 
-                      <div class="clearfix"></div>
 
-                      <!-- /btn-group -->
-
-                  </form>
-              			</section>
-
-
-
-  			<h2>Parameters</h2>
-  			<section>
-
-
-                          <div id="modelRequiredFields"></div>
-
-                          			</section>
-
-                          			<h2>Confirm</h2>
-                          			<section>
-                          			<form class="form-horizontal" role="form" id="modelConfirmation">
-
-
-                                      <!-- btn-group -->
-                                      <div id="rawTablDetailsDB">
-                                      <div class="form-group" >
-                                      <label class="control-label col-sm-2" for="modelName">Model Name</label>
-                                      <div class="col-sm-6">
-                                          <input type="text" class="form-control"  id="modelName" >
-                                      </div>
-                                  </div>
-                                  <!--  <div class="form-group" >
-                                  <div class="col-sm-6">
-                                  <input type = "submit" class = "btn btn-warning" value = "Create Model" >
-                                  </div>
-                                  </div>  -->
-                                  <button class = "btn btn-default  btn-success" style="margin-top: 30px;background: lightsteelblue;" type = "button" onClick = "saveModelProperties()"  >Create Model</button >
-                                  </form>
-                          			</section>
                           			<div style = "display:none" id = "div-dialog-warning" >
                                                     				<p ><span class = "ui-icon ui-icon-alert" style = "float:left;" ></span >
 
@@ -520,9 +398,132 @@
                 }
 
                 function loadProperties() {
-                    var text = $('#modelType option:selected').text();
-                        buildForm(text + "_Model", 'modelRequiredFields');
+
+                    var text = $('#persistentName option:selected').text();
+
+                        buildForm(text + "_PersistentStores_Connection", "persistentFieldsForm");
+                        $('#rawTableColumnDetails').empty();
+                        console.log("hiiiiiiii");
                         console.log(text);
+                        console.log("hiiiiiiii");
+                          if(text=="hdfs"){
+                        console.log(text);
+                        	$('#rawTableColumnDetails').jtable({
+                        		title: 'Schema column details',
+                        		paging: false,
+                        		sorting: false,
+                        		create: false,
+                        		edit: false,
+                        		actions: {
+
+                        			createAction: function(postData) {
+                                        console.log(postData);
+                                        var serialnumber = 1;
+                                        var rawSplitedPostData = postData.split("&");
+                                        var rawJSONedPostData = '{';
+                                        rawJSONedPostData += '"serialNumber":"';
+                                        rawJSONedPostData += serialnumber;
+                                        serialnumber += 1;
+                                        rawJSONedPostData += '"';
+                                        rawJSONedPostData += ',';
+                                        for (i=0; i < rawSplitedPostData.length ; i++)
+                                        {
+                                            console.log("data is " + rawSplitedPostData[i]);
+                                            rawJSONedPostData += '"';
+                                            rawJSONedPostData += rawSplitedPostData[i].split("=")[0];
+                                            rawJSONedPostData += '"';
+                                            rawJSONedPostData += ":";
+                                            rawJSONedPostData += '"';
+                                            rawJSONedPostData += rawSplitedPostData[i].split("=")[1];
+                                            rawJSONedPostData += '"';
+                                            rawJSONedPostData += ',';
+                                            console.log("json is" + rawJSONedPostData);
+                                        }
+                                        var rawLastIndex = rawJSONedPostData.lastIndexOf(",");
+                                        rawJSONedPostData = rawJSONedPostData.substring(0,rawLastIndex);
+                                        rawJSONedPostData +=  "}";
+                                        console.log(rawJSONedPostData);
+
+
+                                       var rawReturnObj='{"Result":"OK","Record":' + rawJSONedPostData + '}';
+                                       var rawJSONedReturn = $.parseJSON(rawReturnObj);
+
+                                       return $.Deferred(function($dfd) {
+                                                        console.log(rawJSONedReturn);
+                                                        $dfd.resolve(rawJSONedReturn);
+                                                    });
+
+                        				}
+
+
+                        		},
+                        		fields: {
+                        		    serialNumber:{
+                        		        key : true,
+                        		        list:false,
+                        		        create : false,
+                        		        edit:false
+                        		    },
+
+                        			columnName: {
+                        				title: '<spring:message code="dataload.page.title_col_name"/>',
+                        				width: '50%',
+                        				edit: true,
+                        				create:true
+                        			},
+                        			dataType: {
+
+                        				create: true,
+                        				title: 'Data Type',
+                        				edit: true,
+                        				options:{ 'String':'String',
+                                                  'Integer':'Integer',
+                                                  'Long':'Long',
+                                                  'Short':'Short',
+                                                  'Byte':'Byte',
+                                                  'Float':'Float',
+                                                  'Double':'Double',
+                                                  'Decimal':'Decimal',
+                                                  'Boolean':'Boolean',
+                                                  'Decimal':'Decimal',
+                                                  'Binary' : 'Binary',
+                                                  'Date':'Date',
+                                                  'TimeStamp':'TimeStamp'
+                                                  }
+                        			}
+                        		}
+
+                        	});
+                        	console.log($('#rawTableColumnDetails'));
+                        	$('#rawTableColumnDetails').jtable('load');
+                        	console.log($('#rawTableColumnDetails'));
+
+                        }
+                        else if(text=="hive")
+                        {
+                             console.log(text);
+                             $('#rawTableColumnDetails').jtable({
+                             title: 'Hive column details',
+                             });
+                             console.log($('#rawTableColumnDetails'));
+                             $('#rawTableColumnDetails').jtable('load');
+                             console.log($('#rawTableColumnDetails'));
+
+                        }
+                        else
+                        {
+                           console.log(text);
+                           $('#rawTableColumnDetails').jtable({
+                                                        title: 'HBase column details',
+                                                        });
+                                                        console.log($('#rawTableColumnDetails'));
+                                                        $('#rawTableColumnDetails').jtable('load');
+                                                        console.log($('#rawTableColumnDetails'));
+                        }
+
+                        console.log("This is the div");
+
+
                         }
                 </script>
 
@@ -552,4 +553,8 @@
         	return true;
         }
         </script>
+        <!--
+        onchange="loadProperties("persistentName","_PersistentStores_Connection","persistentFieldsForm");"
+        -->
 
+</body>
