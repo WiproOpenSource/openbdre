@@ -1,15 +1,35 @@
 package com.wipro.ats.bdre.md.rest.ext;
 
+import com.wipro.ats.bdre.md.dao.jpa.Properties;
+import com.wipro.ats.bdre.md.dao.jpa.Users;
 import com.wipro.ats.bdre.md.rest.RestWrapper;
 import com.wipro.ats.bdre.md.rest.RestWrapperOptions;
+import com.wipro.ats.bdre.md.rest.util.Dao2TableUtil;
+import com.wipro.ats.bdre.md.rest.util.DateConverter;
 import org.apache.log4j.Logger;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
+import com.wipro.ats.bdre.md.dao.ProcessDAO;
+import com.wipro.ats.bdre.md.dao.UserRolesDAO;
+import com.wipro.ats.bdre.md.dao.jpa.*;
+import com.wipro.ats.bdre.md.dao.jpa.Process;
+import com.wipro.ats.bdre.md.rest.RestWrapper;
+import com.wipro.ats.bdre.md.rest.util.Dao2TableUtil;
+import com.wipro.ats.bdre.md.rest.util.DateConverter;
+import org.apache.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.*;
 
+import java.security.Principal;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 import java.io.Serializable;
+import java.security.Principal;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
@@ -24,6 +44,7 @@ import java.util.Map;
  */
 
 class TableColumns implements Serializable{
+
     private String columnName;
     private String dataType;
     public void setColumnName(String c){
@@ -38,6 +59,11 @@ class TableColumns implements Serializable{
 @Controller
 @RequestMapping("/ml")
 public class MLAPI {
+    @Autowired
+    private ProcessDAO processDAO;
+    @Autowired
+    UserRolesDAO userRolesDAO;
+    private static final String EXPORTCONFIG = "ml";
     private static final Logger LOGGER = Logger.getLogger(MLAPI.class);
 
     private static Connection connection;
@@ -143,6 +169,67 @@ public class MLAPI {
             restWrapper = new RestWrapper(e.getMessage(), RestWrapper.ERROR);
         }
         return restWrapper;
+    }
+    @RequestMapping(value = "/createjobs/", method = RequestMethod.POST)
+    @ResponseBody
+    public RestWrapper createJob(@RequestParam Map<String, String> map, Principal principal) {
+        LOGGER.debug(" value of map is " + map.size());
+
+        com.wipro.ats.bdre.md.dao.jpa.Properties jpaProperties = null;
+        List<Properties> propertiesList = new ArrayList<Properties>();
+        String processName = null;
+        String processDesc = null;
+        Integer busDomainID = null;
+        RestWrapper restWrapper = null;
+
+        com.wipro.ats.bdre.md.dao.jpa.Process parentProcess = null;
+        Process childProcess = null;
+
+        for (String s : map.keySet()) {
+            if (map.get(s) == null || ("").equals(map.get(s))) {
+                continue;
+            }
+            LOGGER.info("String is" + s);
+            //(s.contains("modelBusDomain")) && !(s.contains("modelDescription")) && !(s.contains("modelName"))
+            if (s.contains("modelBusDomain")){
+                busDomainID=Integer.parseInt(map.get(s));
+            }
+            else if(s.contains("modelDescription")) {
+                processDesc=map.get(s);
+            }
+            else if(s.contains("modelName")) {
+                processName=map.get(s);
+            }
+            else {
+                jpaProperties = Dao2TableUtil.buildJPAProperties(EXPORTCONFIG, s, map.get(s), "Properties of ML model");
+                propertiesList.add(jpaProperties);
+            }
+
+        }
+
+
+        parentProcess = Dao2TableUtil.buildJPAProcess(86,processName, processDesc ,2,busDomainID);
+        Users users=new Users();
+        users.setUsername(principal.getName());
+        parentProcess.setUsers(users);
+        parentProcess.setUserRoles(userRolesDAO.minUserRoleId(principal.getName()));
+        childProcess = Dao2TableUtil.buildJPAProcess(87, "SubProcess of "+processName, processDesc, 0,busDomainID);
+        List<Process> processList = processDAO.createOneChildJob(parentProcess,childProcess,null,propertiesList);
+
+        List<com.wipro.ats.bdre.md.beans.table.Process>tableProcessList=Dao2TableUtil.jpaList2TableProcessList(processList);
+        Integer counter=tableProcessList.size();
+        for(com.wipro.ats.bdre.md.beans.table.Process process:tableProcessList){
+            process.setCounter(counter);
+            process.setTableAddTS(DateConverter.dateToString(process.getAddTS()));
+            process.setTableEditTS(DateConverter.dateToString(process.getEditTS()));
+        }
+        restWrapper = new RestWrapper(tableProcessList, RestWrapper.OK);
+        LOGGER.info("Process and Properties for data generation process inserted by" + principal.getName());
+        return restWrapper;
+
+
+
+
     }
 }
 

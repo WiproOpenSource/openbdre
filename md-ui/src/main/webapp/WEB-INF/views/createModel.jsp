@@ -40,6 +40,10 @@
     <body>
 
     <script>
+    var aggregationFinal ="";
+                   var intercept="";
+           var columns =[];
+           var map2=new Map();
     		var insert=1;
          var wizard = null;
          var finalJson;
@@ -48,12 +52,40 @@
     	$("#bdre-data-load").steps({
     		headerTag: "h2",
     		bodyTag: "section",
-    		transitionEffect: "slide",
+    		transitionEffect: "slideLeft",
     		stepsOrientation: "vertical",
     		enableCancelButton: true,
     		onStepChanging: function(event, currentIndex, newIndex) {
     			console.log(currentIndex + 'current ' + newIndex );
-    			return true;
+
+    		   if(currentIndex==4 && newIndex==5)
+    		   	{
+
+                   var x = '';
+                   x = document.getElementById("modelData");
+                   console.log(x);
+                   var text = "";
+                   var i;
+                   if(x.length>2){
+                   for(i = 0; i < x.length; i=i+2) {
+                         var column=x.elements[i].value;
+                         var val=x.elements[i+1].value;
+                         if(i==0)
+                         {
+                          intercept=x.elements[i+2].value;
+                          i=i+1;
+                          console.log("intercept is "+intercept);
+                         }
+                         if(val != "0" || val != "")
+                         text= text+column+"::"+val+",";
+                   }
+                   }
+
+                   console.log(text);
+                   aggregationFinal=text;
+
+    		   	}
+    		return true;
     		},
     		onStepChanged: function(event, currentIndex, priorIndex) {
     			        console.log(currentIndex + " " + priorIndex);
@@ -66,7 +98,7 @@
                                                         console.log("hiiiiiiii");
                                                         console.log(text);
                                                         console.log("hiiiiiiii");
-                                                          if(text=="hdfs"){
+                                                          if(text=="HDFS"){
                                                         console.log(text);
                                                         	$('#rawTableColumnDetails').jtable({
                                                         		title: 'Schema column details',
@@ -161,7 +193,7 @@
                                                         	console.log($('#rawTableColumnDetails'));
 
                                                         }
-                                                        else if(text=="hive")
+                                                        else if(text=="Hive")
                                                         {
                                                              console.log(text);
                                                              var srcDb=document.getElementById("dbName").value;
@@ -182,8 +214,15 @@
                                                                      dataType: 'json',
                                                                      async: false,
                                                                      success: function (data) {
-                                                                         console.log((data.Records));
+                                                                         var hiveColumns=data.Records;
+                                                                         console.log(hiveColumns);
 
+                                                                         for(var k in hiveColumns) {
+
+                                                                                     console.log(hiveColumns[k].columnName);
+                                                                                     columns.push(hiveColumns[k].columnName);
+
+                                                                             }
                                                                          $dfd.resolve(data);
 
                                                                      },
@@ -285,99 +324,46 @@
                   var app = angular.module('app', []);
                      app.controller('myCtrl',function($scope) {
 
+
+                      $scope.modelList={};
                       $scope.persistentList={};
 
 
                       $scope.columnList={};
 
-
+                        $scope.processId=86;
 
                      $.ajax({
 
-                         url: "/mdrest/genconfig/PersistentStores_Connection_Type/?required=2",
+                         url: "/mdrest/processtype/options_analytics/"+$scope.processId,
+
                              type: 'POST',
                              dataType: 'json',
                              async: false,
                              success: function (data) {
 
-                                 $scope.persistentList = data.Records;
-                                 console.log("hiiii");
-                                 console.log($scope.persistentList);
-                                 console.log("hiiii");
+                                 $scope.modelList = data.Options;
+                                 console.log($scope.modelList);
                              },
                              error: function () {
                                  alert('danger');
                              }
                          });
-                       $scope.change=function(message){
-                             $scope.continuousColumnList=[];
-                             $scope.categoryColumnList=[];
                          $.ajax({
-
-                               url: '/mdrest/sparkstreaming/getmessagecolumns/'+ message,
-                                   type: 'GET',
-                                   dataType: 'json',
-                                   async: false,
-                                   success: function (data) {
-
-                                       $scope.columnList = data.Options;
-                                       console.log("message name  is ", message);
-                                       console.log("column list is ", data.Options);
-
-                                       for(i=0;i<$scope.columnList.length;i++){
-
-
-
-                                          var tmp=$scope.columnList[i].Value.split(":");
-
-
-                                          if(tmp[1]=="Integer" || tmp[1]=="Long" || tmp[1]=="Short" || tmp[1]=="Byte" || tmp[1]=="Float" || tmp[1]=="Double" || tmp[1]=="Decimal"){
-                                          console.log(tmp);
-                                            $scope.continuousColumnList.push($scope.columnList[i]);
-
-                                            }
-                                            else{
-                                            console.log(tmp);
-                                            $scope.categoryColumnList.push($scope.columnList[i]);
-                                            }
-
-                                       }
-                                       console.log($scope.continuousColumnList);
-                                       console.log($scope.categoryColumnList);
-                                       $('#continuousFeatures').find('option').remove();
-                                       $('#categoryFeatures').find('option').remove();
-                                       $('#labelColumn').find('option').remove();
-
-                                        var option=new Option("prem","prem");
-                                   $.each($scope.continuousColumnList, function (i, v) {
-                                   var option=new Option("prem","prem");
-                                                           $('#continuousFeatures').append($('<option>', {
-                                                               value: v.Value,
-                                                               text : v.DisplayText,
-                                                           }));
-                                                       });
-                                   $.each($scope.categoryColumnList, function (i, v) {
-                          var option=new Option("prem","prem");
-                                                  $('#categoryFeatures').append($('<option>', {
-                                                      value: v.Value,
-                                                      text : v.DisplayText,
-                                                  }));
-                                              });
-                                          $.each($scope.columnList, function (i, v) {
-                        var option=new Option("prem","prem");
-                                                $('#labelColumn').append($('<option>', {
-                                                    value: v.Value,
-                                                    text : v.DisplayText,
-                                                }));
-                                            });
-
-                                   },
-                                   error: function () {
-                                       alert('danger');
-                                   }
-                               });
-                           }
-
+                         url: "/mdrest/genconfig/PersistentStores_Connection_Type/?required=2",
+                         type: 'POST',
+                          dataType: 'json',
+                          async: false,
+                          success: function (data) {
+                          $scope.persistentList = data.Records;
+                                                           console.log("hiiii");
+                                                           console.log($scope.persistentList);
+                                                           console.log("hiiii");
+                          },
+                                                       error: function () {
+                                                           alert('danger');
+                                                       }
+                         });
 
 
 
@@ -385,40 +371,58 @@
                    function saveModelProperties(){
 
                                              console.log("saveModelProperties is being called");
-                                             var value1=$(".js-example-basic-multiple1").select2("val");
-                                             console.log("value1 ",value1);
-                                             var continuousValue=value1[0];
-                                             for(i=1;i<value1.length;i++)
-                                             {
-                                                  continuousValue=continuousValue.concat(",");
-                                                  var s=value1[i];
-                                                  continuousValue=continuousValue.concat(s);
-                                             }
-                                             var value2=$(".js-example-basic-multiple2").select2("val");
-                                             var categoryValue=value2[0];
-                                             for(i=1;i<value2.length;i++)
-                                             {
-                                                  categoryValue=categoryValue.concat(",");
-                                                  var s=value2[i];
-                                                  categoryValue=categoryValue.concat(s);
-                                             }
-                                             formIntoMap("Model_","modelDetail");
-                                             formIntoMap("ModelProperties_","modelRequiredFieldsForm");
-                                             console.log(continuousValue);
-                                             console.log("hiiii");
-                                             //map["ModelProperties_filePath"]=document.getElementById("regFile").value;
-                                             map["Model_modelName"]=document.getElementById("modelName").value;
-                                             map["Model_continuousFeatures"]=continuousValue;
-                                             map["Model_categoryFeatures"]=categoryValue;
-                                             console.log(map);
+                                           formIntoMap("Model_","modelConfirmation");
+                                                                                       formIntoMap("ModelProperties_","persistentStore");
+                                                                                       formIntoMap("ModelProperties_","persistentFieldsForm");
+                                                                                       formIntoMap("ModelProperties_","modelDetail");
+                                                                                       var text2 = $('#loadOptions option:selected').text();
+                                                                                       console.log("THis is ksjdkjwdkjkd");
+                                                                                       console.log(text2);
+                                                                                       if(text2=="PMML File" || text2=="Serialized Model"){
+                                                                                       formIntoMap("ModelProperties_","modelData");
+                                                                                       }
+                                                                                       else{
+                                                                                            var features=aggregationFinal.slice(0,aggregationFinal.length-1);
+                                                                                            map["ModelProperties_features"]=features;
+                                                                                            map["ModelProperties_intercept"]=intercept;
+                                                                                       }
+                                                                                       map["ModelProperties_features"]=features;
+                                                                                       map["ModelProperties_intercept"]=intercept;
+
+                                                                                       console.log("hiiii");
+                                                                                       jtableIntoMap("", "rawTableColumnDetails");
+                                                                                        var columns="";
+                                                                                        var i=0;
+                                                                                        var key1=Object.keys(map1)[0];
+                                                                                        console.log(key1);
+                                                                                       for(i=0;i<map1.length;i++){
+                                                                                       var key=Object.keys(map1)[i];
+                                                                                       var value=map1[key];
+                                                                                       console.log("hiiiiiooooooo");
+                                                                                       console.log(key);
+                                                                                        console.log("hiiiiiooooooooo");
+                                                                                           columns.concat(key);
+                                                                                           columns.concat(":");
+                                                                                           columns.concat(value);
+                                                                                           if(i<map1.length-1)
+                                                                                           columns.concat(",");
+
+                                                                                       }
+
+                                                                                       console.log("Bhuvi bowled well today");
+                                                                                       map["ModelProperties_Columns"]=columns;
+
+
+
+                                                                                       console.log(map);
                                              $.ajax({
                                                          type: "POST",
-                                                         url: "/mdrest/models/createModels",
+                                                         url: "/mdrest/ml/createjobs/",
                                                          data: jQuery.param(map),
                                                          success: function(data) {
                                                              if(data.Result == "OK") {
 
-                                                                 alert("Model Created Successfully");
+                                                                 alert("Job Created Successfully");
 
                                                }
 
@@ -484,6 +488,72 @@
 
 
           </script>
+          <script>
+          function loadModelProperties(loadMethod) {
+              console.log(loadMethod);
+                      if(loadMethod=="serializedModel" || loadMethod=="pmmlFile"){
+                      var div = document.getElementById('modelRequiredFields');
+                      var formHTML='';
+                      formHTML=formHTML+'<form class="form-horizontal" role="form" id="modelData">';
+                      formHTML=formHTML+'<div id="rawTablDetailsDB">';
+                      formHTML=formHTML+'<div class="form-group" >';
+                      formHTML=formHTML+'<label class="control-label col-sm-2" for="regFile">Model File</label>';
+                      formHTML=formHTML+'<div class="col-sm-10">';
+                      formHTML=formHTML+'<input name = "regFile" id = "regFile" type = "file" class = "form-control" style="opacity: 100; position: inherit;" />';
+                      formHTML=formHTML+'</div>';
+                      formHTML=formHTML+'</div>';
+                      formHTML=formHTML+'<button class = "btn btn-default  btn-success" style="margin-top: 30px;background: lightsteelblue;" type = "button" onClick = "uploadZip(\''+"model"+'\',\''+"regFile"+'\')" href = "#" >Upload File</button >';
+                      formHTML=formHTML+'<div class="clearfix"></div>';
+                      formHTML=formHTML+'</div>';
+                      formHTML=formHTML+'</form>';
+                      div.innerHTML = formHTML;
+                      }
+                      else{
+                      console.log("do nothing");
+                      var div = document.getElementById('modelRequiredFields');
+                      var formHTML='';
+                       var next=1;
+                        formHTML=formHTML+'<div class="form-group col-md-12" >';
+                       formHTML=formHTML+'<div class="col-md-4">Column </div>';
+                       formHTML=formHTML+'<div class="col-md-4">Coefficient</div>';
+                       formHTML=formHTML+'<div class="col-md-4">Intercept</div>';
+                        formHTML=formHTML+'</div>';
+                      formHTML=formHTML+'<form class="form-horizontal" role="form" id="modelData">';
+
+                       for(var t=0;t<columns.length;t++){
+                       formHTML=formHTML+'<div class="form-group col-md-12" >';
+                       formHTML = formHTML +  '<div class="col-md-4">' ;
+                       formHTML = formHTML +  '<input class="form-control" id="column.' + next + '" value='+ columns[t] +' name="column.' + next + '">' ;
+                       formHTML = formHTML +  '</input>' ;
+                       formHTML = formHTML +  '</div>' ;
+                       formHTML = formHTML +  '<div class="col-md-4">' ;
+                       formHTML = formHTML +  '<input class="form-control" id="Coefficient.' + next + '"value='+ 0 +' name="Coefficient.' + next + '">' ;
+                       formHTML = formHTML +  '</input>' ;
+                       formHTML = formHTML +  '</div>' ;
+
+                       if(t==0){
+                       formHTML = formHTML +  '<div class="col-md-4">' ;
+                       formHTML = formHTML +  '<input class="form-control" id="Intercept.' + next + '"value='+ 0 +' name="Intercept.' + next + '">' ;
+                       formHTML = formHTML +  '</input>' ;
+                       formHTML = formHTML +  '</div>' ;
+                       formHTML=formHTML+'</div>';
+                       }
+                       else
+                       {
+                       formHTML = formHTML +  '<div class="col-md-4">' ;
+                       //formHTML = formHTML +  '<input class="form-control" id="Intercept.' + next + '"value='+ 0 +' name="Intercept.' + next + '">' ;
+                       //formHTML = formHTML +  '</input>' ;
+                        formHTML = formHTML +  '</div>' ;
+                       formHTML=formHTML+'</div>';
+                       }
+                       next++;
+                       }
+                        formHTML=formHTML+'<div class="clearfix"></div>';
+                        formHTML=formHTML+'</form>';
+                       div.innerHTML = formHTML;
+
+                      }}
+          </script>
 
 
   <div  ng-app="app" id="preModelDetails" ng-controller="myCtrl">
@@ -492,7 +562,8 @@
 
 
   	<div id="bdre-data-load">
-  	<h2><div class="number-circular">1</div>Select type of Persistent Store Type</h2>
+
+<h2><div class="number-circular">1</div>Select type of Persistent Store Type</h2>
                         			<section>
                     <form class="form-horizontal" role="form" id="persistentStore">
                     <div class="form-group" >
@@ -509,14 +580,13 @@
 
   <h2><div class="number-circular">2</div>Persistent Store Configuration Type</h2>
                           			<section>
-                      <form class="form-horizontal" role="form" id="persistentStoreDetails">
-                       <div id="persistentFieldsForm"></div>
+
+                       <div id="persistentFields"></div>
 <div class="clearfix"></div>
 
 
 
 
-                                                    </form>
                                                 			</section>
                                                 			<h2><div class="number-circular">3</div>Data Schema</h2>
                                                 			<section>
@@ -527,17 +597,64 @@
                                                             			    </section>
 
                                                          </section>
-                                                    <h2><div class="number-circular">4</div>Mddel Details</h2>
-                                                    <section>
-                                                    <form class="form-horizontal" role="form" id="modelDetails">
 
-                                                                    <div class="clearfix"></div>
-                                                                    </form>
-                                                                    </section>
+                  <h2><div class="number-circular">4</div>Model Type</h2>
+                  <section>
+                  <form class="form-horizontal" role="form" id="modelDetail">
 
+                  <div class="form-group" >
+                                <label class="control-label col-sm-2" for="modelType">Model Type</label>
+                                <div class="col-sm-10">
+                                 <select class="form-control" id="modelType" name="modelType" ng-model = "modelName" onchange="loadModelOptions(this.value);" ng-options = "val.DisplayText as val.DisplayText for (file,val) in modelList track by val.DisplayText"   >
+                                             <option  value="">Select option</option>
+                                         </select>
+                                </div>
+                            </div>
 
+                            <div class="form-group" >
+                                <label class="control-label col-sm-2" for="loadOptions">Load Method</label>
+                                <div class="col-sm-10">
+                                 <select class="form-control" id="loadOptions" name="loadOptions" onchange="loadModelProperties(this.value);" >
+                                             <option  value="">Select option</option>
+                                         </select>
+                                </div>
+                            </div>
 
+                  <div class="clearfix"></div>
+                  </form>
+                  </section>
 
+                  <h2><div class="number-circular">5</div>Model Configuration</h2>
+                  <section>
+                        <div id="modelRequiredFields"></div>
+                  </section>
+
+                  <h2><div class="number-circular">6</div>Create Model</h2>
+                  <section>
+                  <form class="form-horizontal" role="form" id="modelConfirmation">
+                  <div class="form-group" >
+                          <label class="control-label col-sm-2" for="modelName">Model Name</label>
+                          <div class="col-sm-10">
+                           <input type="text" class="form-control col-sm-2"  id="modelName" name="modelName">
+                          </div>
+                      </div>
+
+                   <div class="form-group" >
+                         <label class="control-label col-sm-2" for="modelDescription">Model Description</label>
+                         <div class="col-sm-10">
+                          <input type="text" class="form-control col-sm-2"  id="modelDescription" name="modelDescription">
+                         </div>
+                       </div>
+
+                       <div class="form-group" >
+                            <label class="control-label col-sm-2" for="modelBusDomain">Business DomainId</label>
+                            <div class="col-sm-10">
+                             <input type="text" class="form-control col-sm-2"  id="modelBusDomain" name="modelBusDomain">
+                            </div>
+                          </div>
+                   <button class = "btn btn-default  btn-success" style="margin-top: 30px;background: lightsteelblue;" type = "button" onClick = "saveModelProperties()"  >Create Job</button >
+                  </form>
+                  </section>
 
 
                           			<div style = "display:none" id = "div-dialog-warning" >
@@ -546,12 +663,10 @@
                                                     				</p>
                                                     				</div >
 
-
-
   		</div>
 
-
   </div>
+
 
   <script>
   var i=0;
@@ -579,11 +694,12 @@
                     }
                 }
 
+
                 function loadProperties() {
 
                     var text = $('#persistentName option:selected').text();
 
-                        buildForm(text + "_Model_Connection", "persistentFieldsForm");
+                        buildForm(text + "_Model_Connection", "persistentFields");
 
                         console.log("This is the div");
 
@@ -617,8 +733,52 @@
         	return true;
         }
         </script>
-        <!--
-        onchange="loadProperties("persistentName","_PersistentStores_Connection","persistentFieldsForm");"
-        -->
+        <script>
 
+        function loadModelOptions(modelType){
+        console.log(modelType);
+        var model = modelType+"_Model";
+        $.ajax({
+            type: "GET",
+            url: "/mdrest/genconfig/" + model + "/?required=1",
+            dataType: 'json',
+            success: function(data) {
+            console.log(data);
+            $('#loadOptions').find('option').remove();
+            $.each(data.Records, function (i, v) {
+                $('#loadOptions').append($('<option>', {
+                    value: v.key,
+                    text : v.value,
+                }));
+            });
+            },
+        });
+
+        }
+
+        </script>
+
+        <script>
+        var map1 = new Object();
+        function jtableIntoMap(typeProp, typeDiv) {
+        	var div = '';
+        	div = document.getElementById(typeDiv);
+        	$('div .jtable-data-row').each(function() {
+        		//console.log(this);
+        		$(this).addClass('jtable-row-selected');
+        		$(this).addClass('ui-state-highlight');
+        	});
+
+        	var $selectedRows = $(div).jtable('selectedRows');
+        	$selectedRows.each(function() {
+        		var record = $(this).data('record');
+        		var keys = typeProp + record.columnName;
+        		//console.log(keys);
+        		map1[keys] = record.dataType;
+        		//console.log(map1);
+        	});
+        	$('.jtable-row-selected').removeClass('jtable-row-selected');
+        }
+
+        		</script>
 </body>

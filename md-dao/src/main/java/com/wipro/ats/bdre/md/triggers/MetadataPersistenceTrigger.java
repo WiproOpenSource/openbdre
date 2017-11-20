@@ -119,11 +119,11 @@ public class MetadataPersistenceTrigger implements PreUpdateEventListener, PreIn
         processTypeMap.put(83,41);
         processTypeMap.put(84,41);
         processTypeMap.put(85,41);
-        processTypeMap.put(86,41);
-        processTypeMap.put(87,41);
-        processTypeMap.put(88,41);
-        processTypeMap.put(89,41);
-        processTypeMap.put(90,41);
+        processTypeMap.put(86,0);
+        processTypeMap.put(87,86);
+        processTypeMap.put(88,86);
+        processTypeMap.put(89,86);
+        processTypeMap.put(90,86);
 
 
     }
