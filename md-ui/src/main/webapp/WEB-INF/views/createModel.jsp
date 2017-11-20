@@ -47,7 +47,8 @@
     	$("#bdre-data-load").steps({
     		headerTag: "h2",
     		bodyTag: "section",
-    		transitionEffect: "slide",
+    		transitionEffect: "slideLeft",
+    		stepsOrientation: "vertical",
     		enableCancelButton: true,
     		onStepChanging: function(event, currentIndex, newIndex) {
     			console.log(currentIndex + 'current ' + newIndex );
@@ -147,23 +148,20 @@
                   var app = angular.module('app', []);
                      app.controller('myCtrl',function($scope) {
 
-                      $scope.messageList={};
+                      $scope.modelList={};
 
-
-                      $scope.columnList={};
-
-
+                        $scope.processId=86;
 
                      $.ajax({
 
-                         url: '/mdrest/message/optionslist',
+                         url: "/mdrest/processtype/options_analytics/"+$scope.processId,
                              type: 'POST',
                              dataType: 'json',
                              async: false,
                              success: function (data) {
 
-                                 $scope.messageList = data.Options;
-                                 console.log($scope.messageList);
+                                 $scope.modelList = data.Options;
+                                 console.log($scope.modelList);
 
                              },
                              error: function () {
@@ -345,6 +343,30 @@
 
 
           </script>
+          <script>
+          function loadModelProperties(loadMethod) {
+              console.log(loadMethod);
+                      if(loadMethod=="serializedModel" || loadMethod=="pmmlFile"){
+                      var div = document.getElementById('modelRequiredFields');
+                      var formHTML='';
+                      formHTML=formHTML+'<form class="form-horizontal" role="form" id="modelData">';
+                      formHTML=formHTML+'<div id="rawTablDetailsDB">';
+                      formHTML=formHTML+'<div class="form-group" >';
+                      formHTML=formHTML+'<label class="control-label col-sm-2" for="regFile">Model File</label>';
+                      formHTML=formHTML+'<div class="col-sm-10">';
+                      formHTML=formHTML+'<input name = "regFile" id = "regFile" type = "file" class = "form-control" style="opacity: 100; position: inherit;" />';
+                      formHTML=formHTML+'</div>';
+                      formHTML=formHTML+'</div>';
+                      formHTML=formHTML+'<button class = "btn btn-default  btn-success" style="margin-top: 30px;background: lightsteelblue;" type = "button" onClick = "uploadZip(\''+"model"+'\',\''+"regFile"+'\')" href = "#" >Upload File</button >';
+                      formHTML=formHTML+'<div class="clearfix"></div>';
+                      formHTML=formHTML+'</div>';
+                      formHTML=formHTML+'</form>';
+                      div.innerHTML = formHTML;
+                      }
+                      else{
+                      buildForm(loadMethod, 'modelRequiredFields');}
+                      }
+          </script>
 
 
   <div  ng-app="app" id="preMessageDetails" ng-controller="myCtrl">
@@ -353,145 +375,69 @@
 
 
   	<div id="bdre-data-load">
-  	<h2>File Upload</h2>
-                        			<section>
-                                                <form class="form-horizontal" role="form" id="modelData">
 
+                  <h2><div class="number-circular">4</div>Model Type</h2>
+                  <section>
+                  <form class="form-horizontal" role="form" id="modelDetail">
 
-        <!-- btn-group -->
-        <div id="rawTablDetailsDB">
-
-        <div class="form-group" >
-        <label class="control-label col-sm-2" for="regFile">Data File</label>
-        <div class="col-sm-10">
-            <input name = "regFile" id = "regFile" type = "file" class = "form-control" style="opacity: 100; position: inherit;" />
-        </div>
-    </div>
-    <button class = "btn btn-default  btn-success" style="margin-top: 30px;background: lightsteelblue;" type = "button" onClick = "uploadZip('model','regFile')" href = "#" >Upload File</button >
-
-
-
-
-
-
-
-
-                                                        <div class="clearfix"></div>
-                                                        </div>
-
-                                                        <!-- /btn-group -->
-
-                                                    </form>
-                                                			</section>
-  			<h2>Details</h2>
-
-              			<section>
-              <form class="form-horizontal" role="form" id="modelDetail">
-
-              <div id="dropdownModel">
-              <div class="form-group" >
-                            <label class="control-label col-sm-2" for="modelType">Model Type</label>
-                            <div class="col-sm-10">
-                             <select class="form-control" id="modelType" name="modelType" onclick="loadModelTypes();" onchange = "loadProperties();">
-                                         <option value="">Select an Option</option>
-                                     </select>
+                  <div class="form-group" >
+                                <label class="control-label col-sm-2" for="modelType">Model Type</label>
+                                <div class="col-sm-10">
+                                 <select class="form-control" id="modelType" name="modelType" ng-model = "modelName" onchange="loadModelOptions(this.value);" ng-options = "val.DisplayText as val.DisplayText for (file,val) in modelList track by val.DisplayText"   >
+                                             <option  value="">Select option</option>
+                                         </select>
+                                </div>
                             </div>
-                        </div>
 
-                      <!-- btn-group -->
+                            <div class="form-group" >
+                                <label class="control-label col-sm-2" for="loadOptions">Load Method</label>
+                                <div class="col-sm-10">
+                                 <select class="form-control" id="loadOptions" name="loadOptions" onchange="loadModelProperties(this.value);" >
+                                             <option  value="">Select option</option>
+                                         </select>
+                                </div>
+                            </div>
 
-
-
-          <div class="form-group" >
-              <label class="control-label col-sm-2" for="messageName">Message Name</label>
-              <div class="col-sm-10">
-               <select class="form-control" id="messageName" name="messageName" onchange="messageChange()" ng-model="messageName" ng-options = "val.Value as val.Value for (file, val) in messageList track by val.Value"  >
-                           <option  value="">Select the option</option>
-                       </select>
-              </div>
-          </div>
-
-
-             <div class="form-group" >
-                                       <label class="control-label col-sm-2" for="continuousFeatures">Continuous Features</label>
-                                       <div class="col-sm-10">
-                                           <select class="js-example-basic-multiple1" id="continuousFeatures" name="continuousFeatures" ng-model="continuousColumnName"  multiple="multiple" >
-                                                       <option  value="">Select the option</option>
-                                                   </select>
-                                       </div>
-                                   </div>
-
-                                   <script type="text/javascript">
-                                    $(".js-example-basic-multiple1").select2();
-                                    </script>
-
-                    <div class="form-group" >
-                   <label class="control-label col-sm-2" for="categoryFeatures">Category Features</label>
-                   <div class="col-sm-10">
-                        <select class="js-example-basic-multiple2" id="categoryFeatures" name="categoryFeatures" ng-model="categoryColumnName"  multiple="multiple">
-                                                                              <option  value="">Select the option</option>
-                        </select>
-                   </div>
-               </div>
-
-               <script type="text/javascript">
-                                                     $(".js-example-basic-multiple2").select2();
-                                                     </script>
-
-
-
-
-
-                      <div class="clearfix"></div>
-
-                      <!-- /btn-group -->
-
+                  <div class="clearfix"></div>
                   </form>
-              			</section>
+                  </section>
+
+                  <h2><div class="number-circular">5</div>Model Configuration</h2>
+                  <section>
+                        <div id="modelRequiredFields"></div>
+                  </section>
+
+                  <h2><div class="number-circular">6</div>Create Model</h2>
+                  <section>
+                  <form class="form-horizontal" role="form" id="modelConfirmation">
+                  <div class="form-group" >
+                          <label class="control-label col-sm-2" for="modelName">Model Name</label>
+                          <div class="col-sm-10">
+                           <input type="text" class="form-control"  id="modelName" >
+                          </div>
+                      </div>
+
+                   <div class="form-group" >
+                         <label class="control-label col-sm-2" for="modelDescription">Model Description</label>
+                         <div class="col-sm-10">
+                          <input type="text" class="form-control"  id="modelDescription" >
+                         </div>
+                       </div>
+                  <button class = "btn btn-default  btn-success" style="margin-top: 30px;background: lightsteelblue;" type = "button" onClick = "saveModelProperties()"  >Create Job</button >
+                  </form>
+                  </section>
 
 
-
-  			<h2>Parameters</h2>
-  			<section>
-
-
-                          <div id="modelRequiredFields"></div>
-
-                          			</section>
-
-                          			<h2>Confirm</h2>
-                          			<section>
-                          			<form class="form-horizontal" role="form" id="modelConfirmation">
-
-
-                                      <!-- btn-group -->
-                                      <div id="rawTablDetailsDB">
-                                      <div class="form-group" >
-                                      <label class="control-label col-sm-2" for="modelName">Model Name</label>
-                                      <div class="col-sm-6">
-                                          <input type="text" class="form-control"  id="modelName" >
-                                      </div>
-                                  </div>
-                                  <!--  <div class="form-group" >
-                                  <div class="col-sm-6">
-                                  <input type = "submit" class = "btn btn-warning" value = "Create Model" >
-                                  </div>
-                                  </div>  -->
-                                  <button class = "btn btn-default  btn-success" style="margin-top: 30px;background: lightsteelblue;" type = "button" onClick = "saveModelProperties()"  >Create Model</button >
-                                  </form>
-                          			</section>
                           			<div style = "display:none" id = "div-dialog-warning" >
                                                     				<p ><span class = "ui-icon ui-icon-alert" style = "float:left;" ></span >
 
                                                     				</p>
                                                     				</div >
 
-
-
   		</div>
 
-
   </div>
+
 
   <script>
   var i=0;
@@ -519,11 +465,7 @@
                     }
                 }
 
-                function loadProperties() {
-                    var text = $('#modelType option:selected').text();
-                        buildForm(text + "_Model", 'modelRequiredFields');
-                        console.log(text);
-                        }
+
                 </script>
 
 
@@ -553,3 +495,27 @@
         }
         </script>
 
+        <script>
+
+        function loadModelOptions(modelType){
+        console.log(modelType);
+        var model = modelType+"_Model";
+        $.ajax({
+            type: "GET",
+            url: "/mdrest/genconfig/" + model + "/?required=1",
+            dataType: 'json',
+            success: function(data) {
+            console.log(data);
+            $('#loadOptions').find('option').remove();
+            $.each(data.Records, function (i, v) {
+                $('#loadOptions').append($('<option>', {
+                    value: v.key,
+                    text : v.value,
+                }));
+            });
+            },
+        });
+
+        }
+
+        </script>
