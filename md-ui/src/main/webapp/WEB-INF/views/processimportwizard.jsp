@@ -471,7 +471,7 @@
                 </section>
                 <div style = "display:none" id = "div-dialog-warning" >
                 				<p ><span class = "ui-icon ui-icon-alert" style = "float:left;" ></span >
-                				<div />
+
                 				</p>
                 				</div >
 

@@ -80,3 +80,9 @@
 83,'analytics_LogisticRegression',41
 84,'analytics_LinearRegression',41
 85,'analytics_KMeansClustering',41
+86,'Ml Model',null
+87,'analytics_LogisticRegression',86
+88,'analytics_LinearRegression',86
+89,'analytics_DecisionTree',86
+
+

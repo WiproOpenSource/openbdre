@@ -493,8 +493,8 @@
                                                                             collapse: "1",
                                                                             url: "premessageconfig.page",
                                                                             children: []
-                            					}
-                            					, {
+                            					}, {
+
                                                                             label: "View Messages",
                                                                             collapse: "1",
                                                                             url: "streamingmessage.page",
@@ -541,7 +541,20 @@
 
                             					]
                                                                 },
+                                                   {
+                                                        label: "Machine Learning",
+                                                        collapse: "1",
+                                                        children: [{
 
+
+                                                           label: "Create ML Model",
+                                                                 collapse: "1",
+                                                                 url: "createModel.page",
+                                                                 children: []
+
+                                                 },
+                                                 ]
+                                                 },
                                                                 <security:authorize access = "hasRole('ROLE_ADMIN')"> {
                                                                     label: "Administration",
                                                                     collapse: "1",

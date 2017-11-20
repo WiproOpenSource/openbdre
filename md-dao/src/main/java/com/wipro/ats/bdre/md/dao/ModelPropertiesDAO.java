@@ -8,12 +8,16 @@ import org.hibernate.Criteria;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
 /**
  * Created by cloudera on 10/17/17.
  */
+@Transactional
+@Service
 public class ModelPropertiesDAO {
 
     private static final Logger LOGGER = Logger.getLogger(ModelPropertiesDAO.class);
