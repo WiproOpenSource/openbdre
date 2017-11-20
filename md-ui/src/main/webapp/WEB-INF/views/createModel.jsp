@@ -58,16 +58,186 @@
     		onStepChanged: function(event, currentIndex, priorIndex) {
     			        console.log(currentIndex + " " + priorIndex);
 
-    			     /*  if(priorIndex==1 && currentIndex==2){
+    			       if(priorIndex==1 && currentIndex==2){
     			        var text = $('#persistentName option:selected').text();
-                            			         console.log("oooollllaaaa");
-                            			         console.log(text);
-                            			         console.log("oooollllaaaa");
-                            			         if(text=="hdfs"){
-                                                  console.log("helllooo beautiful");
-                                            $('#rawTableColumnDetails').jtable('load');
-                                            }
-                          }*/
+                            	$('#rawTableColumnDetails').jtable({
+                                                        });
+                                                        $('#rawTableColumnDetails').jtable('destroy');
+                                                        console.log("hiiiiiiii");
+                                                        console.log(text);
+                                                        console.log("hiiiiiiii");
+                                                          if(text=="hdfs"){
+                                                        console.log(text);
+                                                        	$('#rawTableColumnDetails').jtable({
+                                                        		title: 'Schema column details',
+                                                        		paging: false,
+                                                        		sorting: false,
+                                                        		create: false,
+                                                        		edit: false,
+                                                        		actions: {
+
+                                                                    listAction: function(postData){
+                                                                    },
+                                                        			createAction: function(postData) {
+                                                                        console.log(postData);
+                                                                        var serialnumber = 1;
+                                                                        var rawSplitedPostData = postData.split("&");
+                                                                        var rawJSONedPostData = '{';
+                                                                        rawJSONedPostData += '"serialNumber":"';
+                                                                        rawJSONedPostData += serialnumber;
+                                                                        serialnumber += 1;
+                                                                        rawJSONedPostData += '"';
+                                                                        rawJSONedPostData += ',';
+                                                                        for (i=0; i < rawSplitedPostData.length ; i++)
+                                                                        {
+                                                                            console.log("data is " + rawSplitedPostData[i]);
+                                                                            rawJSONedPostData += '"';
+                                                                            rawJSONedPostData += rawSplitedPostData[i].split("=")[0];
+                                                                            rawJSONedPostData += '"';
+                                                                            rawJSONedPostData += ":";
+                                                                            rawJSONedPostData += '"';
+                                                                            rawJSONedPostData += rawSplitedPostData[i].split("=")[1];
+                                                                            rawJSONedPostData += '"';
+                                                                            rawJSONedPostData += ',';
+                                                                            console.log("json is" + rawJSONedPostData);
+                                                                        }
+                                                                        var rawLastIndex = rawJSONedPostData.lastIndexOf(",");
+                                                                        rawJSONedPostData = rawJSONedPostData.substring(0,rawLastIndex);
+                                                                        rawJSONedPostData +=  "}";
+                                                                        console.log(rawJSONedPostData);
+
+
+                                                                       var rawReturnObj='{"Result":"OK","Record":' + rawJSONedPostData + '}';
+                                                                       var rawJSONedReturn = $.parseJSON(rawReturnObj);
+
+                                                                       return $.Deferred(function($dfd) {
+                                                                                        console.log(rawJSONedReturn);
+                                                                                        $dfd.resolve(rawJSONedReturn);
+                                                                                    });
+
+                                                        				}
+
+
+                                                        		},
+
+                                                        		fields: {
+                                                        		    serialNumber:{
+                                                        		        key : true,
+                                                        		        list:false,
+                                                        		        create : false,
+                                                        		        edit:false
+                                                        		    },
+                                                        			columnName: {
+                                                        				title: '<spring:message code="dataload.page.title_col_name"/>',
+                                                        				width: '50%',
+                                                        				edit: true,
+                                                        				create:true
+                                                        			},
+                                                        			dataType: {
+
+                                                        				create: true,
+                                                        				title: 'Data Type',
+                                                        				edit: true,
+                                                        				options:{ 'String':'String',
+                                                                                  'Integer':'Integer',
+                                                                                  'Long':'Long',
+                                                                                  'Short':'Short',
+                                                                                  'Byte':'Byte',
+                                                                                  'Float':'Float',
+                                                                                  'Double':'Double',
+                                                                                  'Decimal':'Decimal',
+                                                                                  'Boolean':'Boolean',
+                                                                                  'Decimal':'Decimal',
+                                                                                  'Binary' : 'Binary',
+                                                                                  'Date':'Date',
+                                                                                  'TimeStamp':'TimeStamp'
+                                                                                  }
+                                                        			}
+                                                        		}
+
+                                                        	});
+                                                        	console.log($('#rawTableColumnDetails'));
+                                                        	$('#rawTableColumnDetails').jtable('load');
+                                                        	console.log($('#rawTableColumnDetails'));
+
+                                                        }
+                                                        else if(text=="hive")
+                                                        {
+                                                             console.log(text);
+                                                             var srcDb=document.getElementById("dbName").value;
+                                                             var tbl=document.getElementById("tblName").value;
+                                                             var srenv="localhost:10000";
+                                                             console.log(srcDb);
+                                                             console.log(tbl);
+                                                             console.log("i think this will work");
+                                                             $('#rawTableColumnDetails').jtable({
+                                                             title: 'Hive column details',
+                                                             actions: {
+                                                               listAction: function(postData){
+                                                               return $.Deferred(function ($dfd) {
+                                                               $.ajax({
+
+                                                                 url: "/mdrest/ml/columns/" + srenv + '/' + srcDb + '/' + tbl,
+                                                                     type: 'GET',
+                                                                     dataType: 'json',
+                                                                     async: false,
+                                                                     success: function (data) {
+                                                                         console.log((data.Records));
+
+                                                                         $dfd.resolve(data);
+
+                                                                     },
+                                                                     error: function () {
+                                                                         alert('danger');
+                                                                     }
+                                                                 });
+                                                                 });
+                                                              },
+                                                             updateAction: function(postData) {
+
+
+                                                                                      }
+                                                                                      },
+                                                fields: {
+
+                                                                    columnName: {
+                                                                        title: '<spring:message code="dataload.page.title_col_name"/>',
+                                                                        width: '50%',
+                                                                        edit: true,
+                                                                        create:true,
+                                                                        list:true,
+                                                                        key:true
+                                                                    },
+                                                                    dataType: {
+
+                                                                        create: true,
+                                                                        title: 'Data Type',
+                                                                        edit: true,
+                                                                        list:true,
+                                                                        key:false
+
+                                                                    }
+
+                                                                }
+                                                             });
+                                                             console.log("i think this will work");
+
+                                                             $('#rawTableColumnDetails').jtable('load');
+
+
+                                                        }
+                                                        else
+                                                        {
+                                                           console.log(text);
+                                                           $('#rawTableColumnDetails').jtable({
+                                                                                        title: 'HBase column details',
+                                                                                        });
+                                                                                        console.log($('#rawTableColumnDetails'));
+                                                                                        $('#rawTableColumnDetails').jtable('load');
+                                                                                        console.log($('#rawTableColumnDetails'));
+                                                        }
+
+                          }
     		},
     		onFinished: function(event, currentIndex) {
 
@@ -79,6 +249,9 @@
     });
 
     		</script>
+<script>
+
+</script>
   <script>
   var map = new Object();
   function formIntoMap(typeProp, typeOf) {
@@ -353,6 +526,15 @@
                                                             			    </form>
                                                             			    </section>
 
+                                                         </section>
+                                                    <h2><div class="number-circular">4</div>Mddel Details</h2>
+                                                    <section>
+                                                    <form class="form-horizontal" role="form" id="modelDetails">
+
+                                                                    <div class="clearfix"></div>
+                                                                    </form>
+                                                                    </section>
+
 
 
 
@@ -401,125 +583,7 @@
 
                     var text = $('#persistentName option:selected').text();
 
-                        buildForm(text + "_PersistentStores_Connection", "persistentFieldsForm");
-                        $('#rawTableColumnDetails').empty();
-                        console.log("hiiiiiiii");
-                        console.log(text);
-                        console.log("hiiiiiiii");
-                          if(text=="hdfs"){
-                        console.log(text);
-                        	$('#rawTableColumnDetails').jtable({
-                        		title: 'Schema column details',
-                        		paging: false,
-                        		sorting: false,
-                        		create: false,
-                        		edit: false,
-                        		actions: {
-
-                        			createAction: function(postData) {
-                                        console.log(postData);
-                                        var serialnumber = 1;
-                                        var rawSplitedPostData = postData.split("&");
-                                        var rawJSONedPostData = '{';
-                                        rawJSONedPostData += '"serialNumber":"';
-                                        rawJSONedPostData += serialnumber;
-                                        serialnumber += 1;
-                                        rawJSONedPostData += '"';
-                                        rawJSONedPostData += ',';
-                                        for (i=0; i < rawSplitedPostData.length ; i++)
-                                        {
-                                            console.log("data is " + rawSplitedPostData[i]);
-                                            rawJSONedPostData += '"';
-                                            rawJSONedPostData += rawSplitedPostData[i].split("=")[0];
-                                            rawJSONedPostData += '"';
-                                            rawJSONedPostData += ":";
-                                            rawJSONedPostData += '"';
-                                            rawJSONedPostData += rawSplitedPostData[i].split("=")[1];
-                                            rawJSONedPostData += '"';
-                                            rawJSONedPostData += ',';
-                                            console.log("json is" + rawJSONedPostData);
-                                        }
-                                        var rawLastIndex = rawJSONedPostData.lastIndexOf(",");
-                                        rawJSONedPostData = rawJSONedPostData.substring(0,rawLastIndex);
-                                        rawJSONedPostData +=  "}";
-                                        console.log(rawJSONedPostData);
-
-
-                                       var rawReturnObj='{"Result":"OK","Record":' + rawJSONedPostData + '}';
-                                       var rawJSONedReturn = $.parseJSON(rawReturnObj);
-
-                                       return $.Deferred(function($dfd) {
-                                                        console.log(rawJSONedReturn);
-                                                        $dfd.resolve(rawJSONedReturn);
-                                                    });
-
-                        				}
-
-
-                        		},
-                        		fields: {
-                        		    serialNumber:{
-                        		        key : true,
-                        		        list:false,
-                        		        create : false,
-                        		        edit:false
-                        		    },
-
-                        			columnName: {
-                        				title: '<spring:message code="dataload.page.title_col_name"/>',
-                        				width: '50%',
-                        				edit: true,
-                        				create:true
-                        			},
-                        			dataType: {
-
-                        				create: true,
-                        				title: 'Data Type',
-                        				edit: true,
-                        				options:{ 'String':'String',
-                                                  'Integer':'Integer',
-                                                  'Long':'Long',
-                                                  'Short':'Short',
-                                                  'Byte':'Byte',
-                                                  'Float':'Float',
-                                                  'Double':'Double',
-                                                  'Decimal':'Decimal',
-                                                  'Boolean':'Boolean',
-                                                  'Decimal':'Decimal',
-                                                  'Binary' : 'Binary',
-                                                  'Date':'Date',
-                                                  'TimeStamp':'TimeStamp'
-                                                  }
-                        			}
-                        		}
-
-                        	});
-                        	console.log($('#rawTableColumnDetails'));
-                        	$('#rawTableColumnDetails').jtable('load');
-                        	console.log($('#rawTableColumnDetails'));
-
-                        }
-                        else if(text=="hive")
-                        {
-                             console.log(text);
-                             $('#rawTableColumnDetails').jtable({
-                             title: 'Hive column details',
-                             });
-                             console.log($('#rawTableColumnDetails'));
-                             $('#rawTableColumnDetails').jtable('load');
-                             console.log($('#rawTableColumnDetails'));
-
-                        }
-                        else
-                        {
-                           console.log(text);
-                           $('#rawTableColumnDetails').jtable({
-                                                        title: 'HBase column details',
-                                                        });
-                                                        console.log($('#rawTableColumnDetails'));
-                                                        $('#rawTableColumnDetails').jtable('load');
-                                                        console.log($('#rawTableColumnDetails'));
-                        }
+                        buildForm(text + "_Model_Connection", "persistentFieldsForm");
 
                         console.log("This is the div");
 
