@@ -743,22 +743,37 @@
 'JDBC_Emitter_Connection','schema','Schema','', 1,'','text', 1
 'JDBC_Emitter_Connection','table','Table Name','config- ', 1,'','text', 1
 
-'PersistentStores_Connection_Type','hdfs','HDFS','', 0,'HDFS','text', 1
-'PersistentStores_Connection_Type','hive','Hive','', 0,'Hive','text', 1
-'PersistentStores_Connection_Type','hbase','HBase','', 0,'HBase','text', 1
+'PersistentStores_Connection_Type','HDFS','HDFS','', 0,'HDFS','text', 1
+'PersistentStores_Connection_Type','Hive','Hive','', 0,'Hive','text', 1
+'PersistentStores_Connection_Type','HBase','HBase','', 0,'HBase','text', 1
 
 'HDFS_PersistentStores_Connection','nameNodeHost','Name Node Host','', 1,'','text', 1
 'HDFS_PersistentStores_Connection','nameNodePort','Name Node Port','', 1,'','text', 1
 'HDFS_PersistentStores_Connection','hdfsPath','HDFS PATH','', 1,'','text', 1
 
+'HDFS_Model_Connection','nameNodeHost','Name Node Host','', 1,'','text', 1
+'HDFS_Model_Connection','nameNodePort','Name Node Port','', 1,'','text', 1
+'HDFS_Model_Connection','hdfsPath','HDFS PATH','', 1,'','text', 1
+
+
 'Hive_PersistentStores_Connection','metastoreURI','MetastoreURI','', 1,'thrift://localhost:9083','text', 1
 'Hive_PersistentStores_Connection','dbName','Database Name','', 1,'default','text', 1
 'Hive_PersistentStores_Connection','metastoreWarehouseDir','Metastore WarehouseDir','', 1,'/user/hive/warehouse','text', 1
+
+'Hive_Model_Connection','serverIP','Hive Server IP','', 1,'10000','text', 1
+'Hive_Model_Connection','dbName','Database Name','', 1,'base','text', 1
+'Hive_Model_Connection','tblName','Table Name','', 1,'','text', 1
+'Hive_Model_Connection','hostName','Hive Server Host Name','', 1,'localhost','text', 1
+
 
 
 'HBase_PersistentStores_Connection','zKHost','Zookeeper Host','Zookeeper host name for hbase cluster.', 1,'','text', 1
 'HBase_PersistentStores_Connection','zKPort','Zookeeper Port','Zookeeper port for hbase cluster.', 1,'','text', 1
 'HBase_PersistentStores_Connection','hbaseMasterAddress','HBase Master Address','HBase Master Address for hbase cluster.', 1,'','text', 1
+
+'HBase_Model_Connection','zKHost','Zookeeper Host','Zookeeper host name for hbase cluster.', 1,'','text', 1
+'HBase_Model_Connection','zKPort','Zookeeper Port','Zookeeper port for hbase cluster.', 1,'','text', 1
+'HBase_Model_Connection','hbaseMasterAddress','HBase Master Address','HBase Master Address for hbase cluster.', 1,'','text', 1
 
 '84','default','LinearRegression','LinearRegression', 1,'true','linearRegression', 1
 
@@ -772,7 +787,6 @@
 
 'decisionTree_Model','pmmlFile','PMML File','PMML File', 1,'','text', 1
 'decisionTree_Model','serializedModel','Serialized Model','Serialized Model', 1,'','text', 1
-
 
 
 
