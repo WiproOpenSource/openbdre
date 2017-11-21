@@ -82,6 +82,3 @@
 85,'analytics_KMeansClustering',41
 86,'Ml_Model',null
 87,'SubProcess_ML_Model',86
-88,'analytics_LogisticRegression',86
-89,'analytics_LinearRegression',86
-90,'analytics_DecisionTree',86

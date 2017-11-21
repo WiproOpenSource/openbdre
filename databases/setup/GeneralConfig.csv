@@ -760,11 +760,11 @@
 'Hive_PersistentStores_Connection','dbName','Database Name','', 1,'default','text', 1
 'Hive_PersistentStores_Connection','metastoreWarehouseDir','Metastore WarehouseDir','', 1,'/user/hive/warehouse','text', 1
 
-'Hive_Model_Connection','serverIP','Hive Server IP','', 1,'10000','text', 1
-'Hive_Model_Connection','dbName','Database Name','', 1,'base','text', 1
-'Hive_Model_Connection','tblName','Table Name','', 1,'','text', 1
-'Hive_Model_Connection','hostName','Hive Server Host Name','', 1,'localhost','text', 1
-
+'Hive_Model_Connection','2serverIP','HiveServer IP','', 1,'10000','text', 1
+'Hive_Model_Connection','3dbName','Database Name','', 1,'base','text', 1
+'Hive_Model_Connection','4tblName','Table Name','', 1,'','text', 1
+'Hive_Model_Connection','1hostName','HiveServer Host Name','', 1,'localhost','text', 1
+'Hive_Model_Connection','5metastoreURI','Hive MetaStore URI','', 1,'thrift://localhost:9083','text', 1
 
 
 'HBase_PersistentStores_Connection','zKHost','Zookeeper Host','Zookeeper host name for hbase cluster.', 1,'','text', 1
@@ -777,6 +777,15 @@
 
 '84','default','LinearRegression','LinearRegression', 1,'true','linearRegression', 1
 
+'Ml_Model','logisticRegression','Logistic Regression','Logistic Regression', 1,'','text', 1
+'Ml_Model','linearRegression','Linear Regression','Linear Regression', 1,'','text', 1
+'Ml_Model','decisionTree','Decision Tree','Decision Tree', 1,'','text', 1
+'Ml_Model','randomForest','Random Forest','Random Forest', 1,'','text', 1
+'Ml_Model','gradientBoostedTree','Gradient Boosted Tree','Gradient Boosted Tree', 1,'','text', 1
+'Ml_Model','multilayerPerceptron','Multilayer Perceptron','Multilayer Perceptron', 1,'','text', 1
+'Ml_Model','kmeansClustering','KMeans Clustering','KMeans Clustering', 1,'','text', 1
+'Ml_Model','naiveBayes','Naive Bayes','Naive Bayes', 1,'','text', 1
+
 'linearRegression_Model','modelInformation','Model Information','Model Information', 1,'','text', 1
 'linearRegression_Model','pmmlFile','PMML File','PMML File', 1,'','text', 1
 'linearRegression_Model','serializedModel','Serialized Model','Serialized Model', 1,'','text', 1
@@ -787,3 +796,30 @@
 
 'decisionTree_Model','pmmlFile','PMML File','PMML File', 1,'','text', 1
 'decisionTree_Model','serializedModel','Serialized Model','Serialized Model', 1,'','text', 1
+
+'randomForest_Model','modelInformation','Model Information','Model Information', 1,'','text', 1
+'randomForest_Model','pmmlFile','PMML File','PMML File', 1,'','text', 1
+'randomForest_Model','serializedModel','Serialized Model','Serialized Model', 1,'','text', 1
+
+'gradientBoostedTree_Model','modelInformation','Model Information','Model Information', 1,'','text', 1
+'gradientBoostedTree_Model','pmmlFile','PMML File','PMML File', 1,'','text', 1
+'gradientBoostedTree_Model','serializedModel','Serialized Model','Serialized Model', 1,'','text', 1
+
+'multilayerPerceptron_Model','modelInformation','Model Information','Model Information', 1,'','text', 1
+'multilayerPerceptron_Model','pmmlFile','PMML File','PMML File', 1,'','text', 1
+'multilayerPerceptron_Model','serializedModel','Serialized Model','Serialized Model', 1,'','text', 1
+
+'kmeansClustering_Model','modelInformation','Model Information','Model Information', 1,'','text', 1
+'kmeansClustering_Model','pmmlFile','PMML File','PMML File', 1,'','text', 1
+'kmeansClustering_Model','serializedModel','Serialized Model','Serialized Model', 1,'','text', 1
+
+'naiveBayes_Model','modelInformation','Model Information','Model Information', 1,'','text', 1
+'naiveBayes_Model','pmmlFile','PMML File','PMML File', 1,'','text', 1
+'naiveBayes_Model','serializedModel','Serialized Model','Serialized Model', 1,'','text', 1
+
+
+
+
+
+
+

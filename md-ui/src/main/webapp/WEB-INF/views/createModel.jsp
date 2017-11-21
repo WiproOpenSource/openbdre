@@ -48,7 +48,7 @@
          var wizard = null;
          var finalJson;
          wizard = $(document).ready(function() {
-
+        var created = 0;
     	$("#bdre-data-load").steps({
     		headerTag: "h2",
     		bodyTag: "section",
@@ -196,8 +196,8 @@
                                                         else if(text=="Hive")
                                                         {
                                                              console.log(text);
-                                                             var srcDb=document.getElementById("dbName").value;
-                                                             var tbl=document.getElementById("tblName").value;
+                                                             var srcDb=document.getElementById("3dbName").value;
+                                                             var tbl=document.getElementById("4tblName").value;
                                                              var srenv="localhost:10000";
                                                              console.log(srcDb);
                                                              console.log(tbl);
@@ -280,6 +280,8 @@
     		},
     		onFinished: function(event, currentIndex) {
 
+                location.href = '<c:url value="/pages/ViewModel.page"/>';
+
     		},
     		onCanceled: function(event) {
 
@@ -334,17 +336,15 @@
                                                       alert('danger');
                                                   }
                                               });
-
+                        $scope.model="ML_Model";
                      $.ajax({
-
-                         url: "/mdrest/processtype/options_analytics/"+$scope.processId,
-
-                             type: 'POST',
+                             type: "GET",
+                             url: "/mdrest/genconfig/" + $scope.model + "/?required=1",
                              dataType: 'json',
                              async: false,
                              success: function (data) {
 
-                                 $scope.modelList = data.Options;
+                                 $scope.modelList = data.Records;
                                  console.log($scope.modelList);
                              },
                              error: function () {
@@ -423,7 +423,7 @@
                                                          data: jQuery.param(map),
                                                          success: function(data) {
                                                              if(data.Result == "OK") {
-
+                                                                created = 1;
                                                                  alert("Job Created Successfully");
 
                                                }
@@ -565,11 +565,11 @@
 
   	<div id="bdre-data-load">
 
-<h2><div class="number-circular">1</div>Select type of Persistent Store Type</h2>
+<h2><div class="number-circular">1</div>Select Source</h2>
                         			<section>
                     <form class="form-horizontal" role="form" id="persistentStore">
                     <div class="form-group" >
-                                  <label class="control-label col-sm-2" for="persistentName">Persistent Store</label>
+                                  <label class="control-label col-sm-2" for="persistentName">Source</label>
                                   <div class="col-sm-10">
                                    <select class="form-control" id="persistentName" name="persistentName"  ng-model="persistentName"  onchange="loadProperties();" ng-options = "val.columnName as val.columnName for (file, val) in persistentList track by val.columnName"  >
                                                <option  value="">Select the option</option>
@@ -580,7 +580,7 @@
                               </form>
                               </section>
 
-  <h2><div class="number-circular">2</div>Persistent Store Configuration Type</h2>
+  <h2><div class="number-circular">2</div>Source Configuration Type</h2>
                           			<section>
 
                        <div id="persistentFields"></div>
@@ -607,7 +607,7 @@
                   <div class="form-group" >
                                 <label class="control-label col-sm-2" for="modelType">Model Type</label>
                                 <div class="col-sm-10">
-                                 <select class="form-control" id="modelType" name="modelType" ng-model = "modelName" onchange="loadModelOptions(this.value);" ng-options = "val.DisplayText as val.DisplayText for (file,val) in modelList track by val.DisplayText"   >
+                                 <select class="form-control" id="modelType" name="modelType" ng-model = "modelName" onchange="loadModelOptions(this.value);" ng-options = "val.key as val.value for (file,val) in modelList track by val.key" >
                                              <option  value="">Select option</option>
                                          </select>
                                 </div>
@@ -617,7 +617,7 @@
                                 <label class="control-label col-sm-2" for="loadOptions">Load Method</label>
                                 <div class="col-sm-10">
                                  <select class="form-control" id="loadOptions" name="loadOptions" onchange="loadModelProperties(this.value);" >
-                                             <option  value="">Select option</option>
+                                             //<option  value="">Select option</option>
                                          </select>
                                 </div>
                             </div>
@@ -657,8 +657,9 @@
                            </select>
                        </div>
                    </div>
-                   <button class = "btn btn-default  btn-success" style="margin-top: 30px;background: lightsteelblue;" type = "button" onClick = "saveModelProperties()"  >Create Job</button >
                   </form>
+                  <button class="btn btn-default  btn-success" style="margin-top: 200px;background: #F2B30B !important;padding-left: 0px;margin-left: 0px;left: -300px;" type="button" onclick="saveModelProperties()">Create Job</button>
+
                   </section>
 
 
@@ -750,6 +751,7 @@
             success: function(data) {
             console.log(data);
             $('#loadOptions').find('option').remove();
+            $('#loadOptions').append('<option  value="">Select option</option>');
             $.each(data.Records, function (i, v) {
                 $('#loadOptions').append($('<option>', {
                     value: v.key,
