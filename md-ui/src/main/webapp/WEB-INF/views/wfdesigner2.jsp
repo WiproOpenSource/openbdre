@@ -1186,7 +1186,7 @@
                       console.log(loadMethod);
                       var div = document.getElementById('modelRequiredFields');
                                             console.log($('[ng-controller="AppCtrl"]').scope().chartViewModel.columnList);
-                                            columns=$('[ng-controller="AppCtrl"]').scope().chartViewModel.columnList;
+                                            var columns=$('[ng-controller="AppCtrl"]').scope().chartViewModel.columnList;
 
 
 
@@ -1195,9 +1195,9 @@
                                             var formHTML='';
 
                                             formHTML=formHTML+'<div id="rawTablDetailsDB">';
-                                            formHTML=formHTML+'<div class="form-group" >';
+                                            formHTML=formHTML+'<div class="form-group" style="dispaly:inline-block" >';
                                             formHTML=formHTML+'<label class="control-label col-sm-3" for="regFile">Model File</label>';
-                                            //formHTML=formHTML+'<div class="col-sm-10">';
+                                            //formHTML=formHTML+'<div class="col-sm-10" style="dispaly:inline-block">';
                                             formHTML=formHTML+'<input name = "regFile" id = "regFile" type = "file" class = "form-control" style="opacity: 100; position: inherit;" />';
                                             formHTML=formHTML+'</div>';
                                             formHTML=formHTML+'</div>';
@@ -1212,15 +1212,15 @@
                                 else if(loadMethod=='modelInformation'){
                                     var formHTML='';
                                     var next=1;
-                               	    formHTML=formHTML+'<div class="form-group col-md-12" >';
+                               	    formHTML=formHTML+'<div class="col-md-12" >';
                                   formHTML=formHTML+'<div class="col-md-4">Column </div>';
                                   formHTML=formHTML+'<div class="col-md-4">Coefficient</div>';
                                   formHTML=formHTML+'<div class="col-md-4">Intercept</div>';
                                	formHTML=formHTML+'</div>';
-                                 formHTML=formHTML+'<form class="form-horizontal" role="form" id="modelData">';
+                                 <!--formHTML=formHTML+'<form class="form-horizontal" role="form" id="modelData">';-->
 
                                   for(var t=0;t<columns.length;t++){
-                                  formHTML=formHTML+'<div class="form-group col-md-12" >';
+                                  formHTML=formHTML+'<div class="col-md-12" >';
                                   formHTML = formHTML +  '<div class="col-md-4">' ;
                                   formHTML = formHTML +  '<input class="form-control" id="column.' + next + '" value='+ columns[t].Value +' name="column.' + next + '">' ;
                                   formHTML = formHTML +  '</input>' ;
@@ -1271,11 +1271,11 @@
                                                      <br>
                                                      <br>
                                                      <br>
-                                                     <!--&nbsp
                                                      &nbsp
                                                      &nbsp
                                                      &nbsp
-                                                     &nbsp-->
+                                                     &nbsp
+                                                     &nbsp
                                     <div id="modelRequiredFields"></div>
 
                           <div class="clearfix"></div>
