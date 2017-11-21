@@ -1172,8 +1172,7 @@ map["slide-duration"]=value3;
 
 $scope.insertMapToPairProp=function(processId){
 console.log(document.getElementById("keyFields"));
-var value2=$(".js-example-basic-multiple").select2("val");
-console.log("Selected value is: "+$(".js-example-basic-multiple").select2("val"))
+var value2=document.getElementById("keyFields").value;
 console.log("values are  "+value2);
 console.log("processId is "+processId);
 var map=new Object();
