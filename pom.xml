@@ -57,6 +57,7 @@
         <module>analytic-ui-generator</module>
         <module>semantic-core</module>
         <module>spark-streaming</module>
+        <module>ml-analytics</module>
     </modules>
 
     <dependencies>

@@ -95,9 +95,9 @@
                             	$('#rawTableColumnDetails').jtable({
                                                         });
                                                         $('#rawTableColumnDetails').jtable('destroy');
-                                                        console.log("hiiiiiiii");
+
                                                         console.log(text);
-                                                        console.log("hiiiiiiii");
+
                                                           if(text=="HDFS"){
                                                         console.log(text);
                                                         	$('#rawTableColumnDetails').jtable({
@@ -201,7 +201,7 @@
                                                              var srenv="localhost:10000";
                                                              console.log(srcDb);
                                                              console.log(tbl);
-                                                             console.log("i think this will work");
+
                                                              $('#rawTableColumnDetails').jtable({
                                                              title: 'Hive column details',
                                                              actions: {
@@ -259,7 +259,7 @@
 
                                                                 }
                                                              });
-                                                             console.log("i think this will work");
+
 
                                                              $('#rawTableColumnDetails').jtable('load');
 
@@ -307,18 +307,7 @@
 
   }
 
-  function messageChange()
-                                 {
 
-                                 console.log("function messageChange is being called");
-                                 var message=document.getElementById("messageName").value;
-
-                                 console.log("value of messageName is "+message);
-                               angular.element(document.getElementById('preMessageDetails')).scope().change(message);
-
-
-
-                                 }
   </script>
   <script>
                   var app = angular.module('app', []);
@@ -332,6 +321,19 @@
                       $scope.columnList={};
 
                         $scope.processId=86;
+                        $scope.busDomains = {};
+                                              $.ajax({
+                                              url: '/mdrest/busdomain/options/',
+                                                  type: 'POST',
+                                                  dataType: 'json',
+                                                  async: false,
+                                                  success: function (data) {
+                                                      $scope.busDomains = data;
+                                                  },
+                                                  error: function () {
+                                                      alert('danger');
+                                                  }
+                                              });
 
                      $.ajax({
 
@@ -376,7 +378,7 @@
                                                                                        formIntoMap("ModelProperties_","persistentFieldsForm");
                                                                                        formIntoMap("ModelProperties_","modelDetail");
                                                                                        var text2 = $('#loadOptions option:selected').text();
-                                                                                       console.log("THis is ksjdkjwdkjkd");
+
                                                                                        console.log(text2);
                                                                                        if(text2=="PMML File" || text2=="Serialized Model"){
                                                                                        formIntoMap("ModelProperties_","modelData");
@@ -389,7 +391,7 @@
                                                                                        map["ModelProperties_features"]=features;
                                                                                        map["ModelProperties_intercept"]=intercept;
 
-                                                                                       console.log("hiiii");
+
                                                                                        jtableIntoMap("", "rawTableColumnDetails");
                                                                                         var columns="";
                                                                                         var i=0;
@@ -409,8 +411,8 @@
 
                                                                                        }
 
-                                                                                       console.log("Bhuvi bowled well today");
-                                                                                       map["ModelProperties_Columns"]=columns;
+
+                                                                                       //map["ModelProperties_Columns"]=columns;
 
 
 
@@ -509,7 +511,7 @@
                       div.innerHTML = formHTML;
                       }
                       else{
-                      console.log("do nothing");
+
                       var div = document.getElementById('modelRequiredFields');
                       var formHTML='';
                        var next=1;
@@ -646,12 +648,15 @@
                          </div>
                        </div>
 
-                       <div class="form-group" >
-                            <label class="control-label col-sm-2" for="modelBusDomain">Business DomainId</label>
-                            <div class="col-sm-10">
-                             <input type="text" class="form-control col-sm-2"  id="modelBusDomain" name="modelBusDomain">
-                            </div>
-                          </div>
+                       <div class="form-group">
+                       <label class="control-label col-sm-2" for="modelBusDomain"><spring:message code="hivetablemigration.page.form_bus_domain_id"/></label>
+                       <div class="col-sm-10">
+                           <select class="form-control" id="modelBusDomain" name="modelBusDomain">
+                               <option ng-repeat="busDomain in busDomains.Options" value="{{busDomain.Value}}" name="modelBusDomain">{{busDomain.DisplayText}}</option>
+
+                           </select>
+                       </div>
+                   </div>
                    <button class = "btn btn-default  btn-success" style="margin-top: 30px;background: lightsteelblue;" type = "button" onClick = "saveModelProperties()"  >Create Job</button >
                   </form>
                   </section>
