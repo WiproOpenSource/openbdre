@@ -1181,76 +1181,102 @@
                                                         <button type="submit" ng-click="insertPersistentStoreProp(chartViewModel.selectedProcess.processId)" class="btn btn-primary  pull-right">Save</button>
                                                     </form>
 
+                      <script>
+                      function loadModelProperties(loadMethod) {
+                      console.log(loadMethod);
+                      var div = document.getElementById('modelRequiredFields');
+                                            console.log($('[ng-controller="AppCtrl"]').scope().chartViewModel.columnList);
+                                            var columns=$('[ng-controller="AppCtrl"]').scope().chartViewModel.columnList;
 
+
+
+                                            if(loadMethod=="serializedModel" || loadMethod=="pmmlFile"){
+
+                                            var formHTML='';
+
+                                            formHTML=formHTML+'<div id="rawTablDetailsDB">';
+                                            formHTML=formHTML+'<div class="form-group" style="dispaly:inline-block" >';
+                                            formHTML=formHTML+'<label class="control-label col-sm-3" for="regFile">Model File</label>';
+                                            //formHTML=formHTML+'<div class="col-sm-10" style="dispaly:inline-block">';
+                                            formHTML=formHTML+'<input name = "regFile" id = "regFile" type = "file" class = "form-control" style="opacity: 100; position: inherit;" />';
+                                            formHTML=formHTML+'</div>';
+                                            formHTML=formHTML+'</div>';
+                                            formHTML=formHTML+'<button class = "btn btn-default  btn-success" style="margin-top: 30px;background: lightsteelblue;" type = "button" onClick = "uploadZip(\''+"model"+'\',\''+"regFile"+'\')" href = "#" >Upload File</button >';
+
+
+                                            formHTML=formHTML+'</div>';
+
+                                            div.innerHTML = formHTML;
+                                            }
+
+                                else if(loadMethod=='modelInformation'){
+                                    var formHTML='';
+                                    var next=1;
+                               	    formHTML=formHTML+'<div class="col-md-12" >';
+                                  formHTML=formHTML+'<div class="col-md-4">Column </div>';
+                                  formHTML=formHTML+'<div class="col-md-4">Coefficient</div>';
+                                  formHTML=formHTML+'<div class="col-md-4">Intercept</div>';
+                               	formHTML=formHTML+'</div>';
+                                 <!--formHTML=formHTML+'<form class="form-horizontal" role="form" id="modelData">';-->
+
+                                  for(var t=0;t<columns.length;t++){
+                                  formHTML=formHTML+'<div class="col-md-12" >';
+                                  formHTML = formHTML +  '<div class="col-md-4">' ;
+                                  formHTML = formHTML +  '<input class="form-control" id="column.' + next + '" value='+ columns[t].Value +' name="column.' + next + '">' ;
+                                  formHTML = formHTML +  '</input>' ;
+                                  formHTML = formHTML +  '</div>' ;
+                                  formHTML = formHTML +  '<div class="col-md-4">' ;
+                                  formHTML = formHTML +  '<input class="form-control" id="Coefficient.' + next + '"value='+ 0 +' name="Coefficient.' + next + '">' ;
+                                  formHTML = formHTML +  '</input>' ;
+                                  formHTML = formHTML +  '</div>' ;
+
+                                  if(t==0){
+                                  formHTML = formHTML +  '<div class="col-md-4">' ;
+                                  formHTML = formHTML +  '<input class="form-control" id="Intercept.' + next + '"value='+ 0 +' name="Intercept.' + next + '">' ;
+                                  formHTML = formHTML +  '</input>' ;
+                                  formHTML = formHTML +  '</div>' ;
+                                  formHTML=formHTML+'</div>';
+                                  }
+                                  else
+                                  {
+                                  formHTML = formHTML +  '<div class="col-md-4">' ;
+                                  //formHTML = formHTML +  '<input class="form-control" id="Intercept.' + next + '"value='+ 0 +' name="Intercept.' + next + '">' ;
+                                  //formHTML = formHTML +  '</input>' ;
+                               	formHTML = formHTML +  '</div>' ;
+                                  formHTML=formHTML+'</div>';
+                                  }
+                                  next++;
+                                  }
+                                  div.innerHTML = formHTML;
+
+                                            }
+                                            else{
+                                            var formHTML='';
+                                            div.innerHTML = formHTML;
+                                            }
+                                            }
+                      </script>
                        <form class="form-horizontal" role="form" ng-if="genConfig.type == 'linearRegression'">
 
-                       <div  class=form-group>
-                           <label class="control-label col-sm-2" for="column">Continuous Features</label>
-                        <select class="js-example-basic-multiple1" id="continuousColumn" name="continuousColumn" multiple="multiple">
-                            <option ng-repeat="column in chartViewModel.columnList | filter: filterContinuous " id="{{$index}}" value="{{ column.Value }}">{{ column.DisplayText }}</option>
-                        </select>
-                    </div>
-
-                    <script type="text/javascript">
-                     $(".js-example-basic-multiple1").select2();
-                     </script>
-
-                            <div class=form-group>
-                        <label class="control-label col-sm-2" for="column">Category Features</label>
-                     <select class="js-example-basic-multiple2" id="stringColumn" name="stringColumn" multiple="multiple">
-                         <option ng-repeat="column in chartViewModel.columnList | filter: filterCategory " id="{{$index}}" value="{{ column.Value }}">{{ column.DisplayText }}</option>
-                     </select>
-                 </div>
-
-                 <script type="text/javascript">
-                                      $(".js-example-basic-multiple2").select2();
-                                      </script>
-
-
-                            <div class=form-group>
-                    <label class="control-label col-sm-3" for="labelColumn">Label</label>
-                 <select class="form-control" id="labelColumn" name="labelColumn">
-                     <option ng-repeat="column in chartViewModel.columnList " id="{{$index}}" value="{{ column.Value }}">{{ column.DisplayText }}</option>
-                 </select>
-             </div>
-
-                          <div class="form-group">
-                                <label class="control-label col-sm-10" for="maxIter">Maximum Iterations</label>
-                                 <input type="text" class="form-control col-sm-2" id="maxIter">
-                             </div>
-
-                          <div class="form-group">
-                             <label class="control-label col-sm-10" for="regParam">Regularization Parameter</label>
-                             <input type="text" class="form-control col-sm-2" id="regParam">
-                         </div>
-
-                         <div class="form-group">
-                          <label class="control-label col-sm-10" for="elasticNetParam">Elastic Net Parameter</label>
-                          <input type="text" class="form-control col-sm-2" id="elasticNetParam">
-                      </div>
-
-
-                      <div class="form-group">
-
-                          <input type="radio" id="trainingData"
-                           name="type-of-data" value="training" checked="checked">Training
-                           &nbsp
-                           &nbsp
-                           &nbsp
-                           &nbsp
-                          <input type="radio" id="testData"
-                           name="type-of-data" value="test">Test
-
-
-
-                        </div>
-
-                        <div class="form-group">
-                      <label class="control-label col-sm-10" for="modelName">Model Name</label>
-                      <input type="text" class="form-control col-sm-2" id="modelName">
-                  </div>
-
-
+                            <div class="form-group">
+                                                         <label class="control-label col-sm-3" for="modelImportType">Model Import Type</label>
+                                                         <select class="form-control" id="modelImportType" onchange="loadModelProperties(this.value);">
+                                                         <option value="s">Select the model</option>
+                                                             <option value="modelInformation">Model Information</option>
+                                                             <option value="pmmlFile">PMML File</option>
+                                                             <option value="serializedModel">Serialized Model File</option>
+                                                         </select>
+                                                     </div>
+                                                     <br>
+                                                     <br>
+                                                     <br>
+                                                     <br>
+                                                     &nbsp
+                                                     &nbsp
+                                                     &nbsp
+                                                     &nbsp
+                                                     &nbsp
+                                    <div id="modelRequiredFields"></div>
 
                           <div class="clearfix"></div>
                     <button type="submit" ng-click="insertRegressionProp(chartViewModel.selectedProcess.processId)" class="btn btn-primary  pull-right">Save</button>

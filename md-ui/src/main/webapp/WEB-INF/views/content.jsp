@@ -547,12 +547,17 @@
                                                         children: [{
 
 
-                                                           label: "Create ML Model",
+                                                           label: "ML Model Configuration",
                                                                  collapse: "1",
                                                                  url: "createModel.page",
                                                                  children: []
 
-                                                 },
+                                                 },{
+                                                                          label: "ML Jobs Registry",
+                                                                          collapse: "1",
+                                                                          url: "ViewModel.page",
+                                                                          children: []
+                                                    },
                                                  ]
                                                  },
                                                                 <security:authorize access = "hasRole('ROLE_ADMIN')"> {
