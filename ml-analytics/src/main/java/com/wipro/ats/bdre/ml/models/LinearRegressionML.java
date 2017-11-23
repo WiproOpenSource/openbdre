@@ -1,6 +1,7 @@
 package com.wipro.ats.bdre.ml.models;
 
 import org.apache.spark.api.java.JavaSparkContext;
+import org.apache.spark.ml.feature.VectorAssembler;
 import org.apache.spark.ml.regression.LinearRegressionModel;
 import org.apache.spark.mllib.linalg.SparseVector;
 import org.apache.spark.mllib.linalg.Vectors;
@@ -10,7 +11,7 @@ import scala.collection.JavaConverters;
 import scala.collection.Seq;
 
 import java.util.*;
-
+l
 /**
  * Created by cloudera on 11/19/17.
  */
@@ -19,9 +20,11 @@ public class LinearRegressionML {
         Set<String> columnsSet = columnCoefficientMap.keySet();
         List<String> columnsList = new LinkedList<>(columnsSet);
         Object[] coefficients = columnCoefficientMap.values().toArray();
-
+        String[] columnsArray = columnsSet.toArray(new String[columnsSet.size()]);
+        VectorAssembler assembler=new VectorAssembler().setInputCols(columnsArray).setOutputCol("features");
+        DataFrame testDataFrame=assembler.transform(dataFrame);
         Seq<String> seq = scala.collection.JavaConversions.asScalaBuffer(columnsList).toSeq();
-        dataFrame.selectExpr(seq);
+        testDataFrame.selectExpr(seq);
 
         double[] coeff = new double[coefficients.length];
         for(int i=0; i<coefficients.length; i++){
@@ -29,7 +32,7 @@ public class LinearRegressionML {
         }
 
         LinearRegressionModel linearRegressionModel = new LinearRegressionModel(UUID.randomUUID().toString(), Vectors.dense(coeff), intercept);
-        DataFrame predictionDF = linearRegressionModel.transform(dataFrame);
+        DataFrame predictionDF = linearRegressionModel.transform(testDataFrame);
         return predictionDF;
     }
 }

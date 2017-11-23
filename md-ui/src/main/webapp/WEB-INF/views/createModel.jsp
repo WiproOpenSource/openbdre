@@ -75,7 +75,7 @@
                           console.log("intercept is "+intercept);
                          }
                          if(val != "0" || val != "")
-                         text= text+column+"::"+val+",";
+                         text= text+column+":"+val+",";
                    }
                    }
                    console.log(text);
@@ -178,8 +178,8 @@
                                                         else if(text=="Hive")
                                                         {
                                                              console.log(text);
-                                                             var srcDb=document.getElementById("3dbName").value;
-                                                             var tbl=document.getElementById("4tblName").value;
+                                                             var srcDb=document.getElementById("hive-db").value;
+                                                             var tbl=document.getElementById("hive-table").value;
                                                              var srenv="localhost:10000";
                                                              console.log(srcDb);
                                                              console.log(tbl);
@@ -320,40 +320,59 @@
                   });
                    function saveModelProperties(){
                                              console.log("saveModelProperties is being called");
-                                           formIntoMap("Model_","modelConfirmation");
-                                                                                       formIntoMap("ModelProperties_","persistentStore");
-                                                                                       formIntoMap("ModelProperties_","persistentFieldsForm");
-                                                                                       formIntoMap("ModelProperties_","modelDetail");
+                                           formIntoMap("","modelConfirmation");
+                                                                                       formIntoMap("","persistentStore");
+                                                                                       formIntoMap("","persistentFieldsForm");
+                                                                                       formIntoMap("","modelDetail");
                                                                                        var text2 = $('#loadOptions option:selected').text();
                                                                                        console.log(text2);
                                                                                        if(text2=="PMML File" || text2=="Serialized Model"){
-                                                                                       formIntoMap("ModelProperties_","modelData");
+                                                                                       formIntoMap("","modelData");
                                                                                        }
                                                                                        else{
                                                                                             var features=aggregationFinal.slice(0,aggregationFinal.length-1);
-                                                                                            map["ModelProperties_features"]=features;
-                                                                                            map["ModelProperties_intercept"]=intercept;
+                                                                                            map["coefficients"]=features;
+                                                                                            map["intercept"]=intercept;
                                                                                        }
+
                                                                                        map["ModelProperties_features"]=features;
                                                                                        map["ModelProperties_intercept"]=intercept;
                                                                                        jtableIntoMap("", "rawTableColumnDetails");
                                                                                         var columns="";
                                                                                         var i=0;
-                                                                                        var key1=Object.keys(map1)[0];
-                                                                                        console.log(key1);
-                                                                                       for(i=0;i<map1.length;i++){
-                                                                                       var key=Object.keys(map1)[i];
-                                                                                       var value=map1[key];
-                                                                                       console.log("hiiiiiooooooo");
-                                                                                       console.log(key);
-                                                                                        console.log("hiiiiiooooooooo");
-                                                                                           columns.concat(key);
-                                                                                           columns.concat(":");
-                                                                                           columns.concat(value);
-                                                                                           if(i<map1.length-1)
-                                                                                           columns.concat(",");
-                                                                                       }
+
                                                                                        //map["ModelProperties_Columns"]=columns;
+
+                                                                                       //map["coefficients"]=features;
+                                                                                       //map["intercept"]=intercept;
+
+
+                                                                                       jtableIntoMap("", "rawTableColumnDetails");
+                                                                                       console.log("Printing the jtable map");
+                                                                                       console.log(map1);
+
+                                                                                        var attribute="";
+                                                                                        var i=1;
+
+                                                                                       for (var key in map1) {
+                                                                                           if (map1.hasOwnProperty(key)) {
+                                                                                           attribute=attribute.concat(key);
+
+                                                                                           attribute=attribute.concat(":");
+                                                                                           attribute=attribute.concat(map1[key]);
+
+                                                                                           if(i<Object.keys(map1).length){
+                                                                                           attribute=attribute.concat(",");}
+
+                                                                                           }
+                                                                                           i=i+1;
+                                                                                       }
+                                                                                       console.log(attribute);
+
+                                                                                       map["schema"]=attribute;
+
+
+                                                                                       console.log("Printing the map");
                                                                                        console.log(map);
                                              $.ajax({
                                                          type: "POST",
@@ -455,7 +474,7 @@
                       formHTML=formHTML+'<div class="form-group" >';
                       formHTML=formHTML+'<label class="control-label col-sm-2" for="regFile">Model File</label>';
                       formHTML=formHTML+'<div class="col-sm-10">';
-                      formHTML=formHTML+'<input name = "regFile" id = "regFile" type = "file" class = "form-control" style="opacity: 100; position: inherit;" />';
+                      formHTML=formHTML+'<input name = "pmml-file-path" id = "regFile" type = "file" class = "form-control" style="opacity: 100; position: inherit;" />';
                       formHTML=formHTML+'</div>';
                       formHTML=formHTML+'</div>';
                       formHTML=formHTML+'<button class = "btn btn-default  btn-success" style="margin-top: 30px;background: lightsteelblue;" type = "button" onClick = "uploadZip(\''+"model"+'\',\''+"regFile"+'\')" href = "#" >Upload File</button >';
@@ -521,7 +540,7 @@
                     <div class="form-group" >
                                   <label class="control-label col-sm-2" for="persistentName">Source</label>
                                   <div class="col-sm-10">
-                                   <select class="form-control" id="persistentName" name="persistentName"  ng-model="persistentName"  onchange="loadProperties();" ng-options = "val.columnName as val.columnName for (file, val) in persistentList track by val.columnName"  >
+                                   <select class="form-control" id="persistentName" name="source"  ng-model="persistentName"  onchange="loadProperties();" ng-options = "val.columnName as val.columnName for (file, val) in persistentList track by val.columnName"  >
                                                <option  value="">Select the option</option>
                                            </select>
                                   </div>
@@ -557,7 +576,7 @@
                   <div class="form-group" >
                                 <label class="control-label col-sm-2" for="modelType">Model Type</label>
                                 <div class="col-sm-10">
-                                 <select class="form-control" id="modelType" name="modelType" ng-model = "modelName" onchange="loadModelOptions(this.value);" ng-options = "val.key as val.value for (file,val) in modelList track by val.key" >
+                                 <select class="form-control" id="modelType" name="ml-algo" ng-model = "modelName" onchange="loadModelOptions(this.value);" ng-options = "val.key as val.value for (file,val) in modelList track by val.key" >
                                              <option  value="">Select option</option>
                                          </select>
                                 </div>
@@ -566,7 +585,7 @@
                             <div class="form-group" >
                                 <label class="control-label col-sm-2" for="loadOptions">Load Method</label>
                                 <div class="col-sm-10">
-                                 <select class="form-control" id="loadOptions" name="loadOptions" onchange="loadModelProperties(this.value);" >
+                                 <select class="form-control" id="loadOptions" name="model-input-method" onchange="loadModelProperties(this.value);" >
                                              //<option  value="">Select option</option>
                                          </select>
                                 </div>
@@ -632,27 +651,7 @@
   var i=0;
   </script>
                 <script>
-                function loadModelTypes()
-                {
-                    if(i==0){
-                    var processId=41;
-                    $.ajax({
-                        type: "POST",
-                        url: "/mdrest/processtype/options_analytics/"+processId,
-                        dataType: 'json',
-                        success: function(data) {
-                        console.log(data);
-                        $.each(data.Options, function (i, v) {
-                            $('#modelType').append($('<option>', {
-                                value: v.value,
-                                text : v.DisplayText,
-                            }));
-                        });
-                        },
-                    });
-                    i=i+1;
-                    }
-                }
+
                 function loadProperties() {
                     var text = $('#persistentName option:selected').text();
                         buildForm(text + "_Model_Connection", "persistentFields");
