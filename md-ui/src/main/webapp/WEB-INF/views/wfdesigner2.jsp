@@ -1180,24 +1180,26 @@
                                                         <div class="clearfix"></div>
                                                         <button type="submit" ng-click="insertPersistentStoreProp(chartViewModel.selectedProcess.processId)" class="btn btn-primary  pull-right">Save</button>
                                                     </form>
-
+                      <script>
+                      var count=0;
+                      </script>
                       <script>
                       function loadModelProperties(loadMethod) {
                       console.log(loadMethod);
                       var div = document.getElementById('modelRequiredFields');
                                             console.log($('[ng-controller="AppCtrl"]').scope().chartViewModel.columnList);
-                                            columns=$('[ng-controller="AppCtrl"]').scope().chartViewModel.columnList;
+                                            var columns=$('[ng-controller="AppCtrl"]').scope().chartViewModel.columnList;
 
 
 
                                             if(loadMethod=="serializedModel" || loadMethod=="pmmlFile"){
-
+                                            count=0;
                                             var formHTML='';
 
                                             formHTML=formHTML+'<div id="rawTablDetailsDB">';
-                                            formHTML=formHTML+'<div class="form-group" >';
+                                            formHTML=formHTML+'<div class="form-group" style="dispaly:inline-block" >';
                                             formHTML=formHTML+'<label class="control-label col-sm-3" for="regFile">Model File</label>';
-                                            //formHTML=formHTML+'<div class="col-sm-10">';
+                                            //formHTML=formHTML+'<div class="col-sm-10" style="dispaly:inline-block">';
                                             formHTML=formHTML+'<input name = "regFile" id = "regFile" type = "file" class = "form-control" style="opacity: 100; position: inherit;" />';
                                             formHTML=formHTML+'</div>';
                                             formHTML=formHTML+'</div>';
@@ -1212,18 +1214,21 @@
                                 else if(loadMethod=='modelInformation'){
                                     var formHTML='';
                                     var next=1;
-                               	    formHTML=formHTML+'<div class="form-group col-md-12" >';
+                               	    formHTML=formHTML+'<div class="col-md-12" >';
                                   formHTML=formHTML+'<div class="col-md-4">Column </div>';
                                   formHTML=formHTML+'<div class="col-md-4">Coefficient</div>';
                                   formHTML=formHTML+'<div class="col-md-4">Intercept</div>';
                                	formHTML=formHTML+'</div>';
-                                 formHTML=formHTML+'<form class="form-horizontal" role="form" id="modelData">';
+                                 //formHTML=formHTML+'<form class="form-horizontal" role="form" id="modelData">';
 
-                                  for(var t=0;t<columns.length;t++){
-                                  formHTML=formHTML+'<div class="form-group col-md-12" >';
+                                  for(var t=0;t<=count;t++){
+                                  formHTML=formHTML+'<div class="col-md-12" >';
                                   formHTML = formHTML +  '<div class="col-md-4">' ;
-                                  formHTML = formHTML +  '<input class="form-control" id="column.' + next + '" value='+ columns[t].Value +' name="column.' + next + '">' ;
-                                  formHTML = formHTML +  '</input>' ;
+                                  //formHTML = formHTML +  '<input class="form-control" id="column.' + next + '" value='+ columns[t].Value +' name="column.' + next + '">' ;
+                                  //formHTML = formHTML +  '</input>' ;
+                                  formHTML = formHTML + '  <select class="form-control" id="labelColumn" name="labelColumn" >';
+                                  formHTML = formHTML + ' <option ng-repeat="column in chartViewModel.columnList " id="{{$index}}" value="{{ column.Value }}">'+ columns[t].DisplayText  + '</option>';
+                                  formHTML = formHTML + '</select>';
                                   formHTML = formHTML +  '</div>' ;
                                   formHTML = formHTML +  '<div class="col-md-4">' ;
                                   formHTML = formHTML +  '<input class="form-control" id="Coefficient.' + next + '"value='+ 0 +' name="Coefficient.' + next + '">' ;
@@ -1246,11 +1251,15 @@
                                   formHTML=formHTML+'</div>';
                                   }
                                   next++;
+
                                   }
+                                  count++;
+                                  formHTML=formHTML+'<button class = "btn btn-default  btn-success" style="margin-top: 30px;background: lightsteelblue;" type = "button" onClick = loadModelProperties("modelInformation")  >Add Column</button >';
                                   div.innerHTML = formHTML;
 
                                             }
                                             else{
+                                            count=0;
                                             var formHTML='';
                                             div.innerHTML = formHTML;
                                             }
@@ -1271,11 +1280,11 @@
                                                      <br>
                                                      <br>
                                                      <br>
-                                                     <!--&nbsp
                                                      &nbsp
                                                      &nbsp
                                                      &nbsp
-                                                     &nbsp-->
+                                                     &nbsp
+                                                     &nbsp
                                     <div id="modelRequiredFields"></div>
 
                           <div class="clearfix"></div>
