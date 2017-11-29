@@ -1,5 +1,6 @@
 package driver;
 
+import analytics.Analytics;
 import com.wipro.ats.bdre.GetParentProcessType;
 import com.wipro.ats.bdre.md.api.*;
 import com.wipro.ats.bdre.md.beans.ProcessInfo;
@@ -53,11 +54,13 @@ public class StreamAnalyticsDriver implements Serializable {
     public static final String TRANSFORMATIONSPACKAGE = "transformations.";
     public static final String EMITTERPACKAGE = "emitters.";
     public static final String PERSISTENTSTOREPACKAGE = "persistentstores.";
+    public static final String MLMODELSPACKAGE = "analytics.";
 
     public static Map<Integer, Set<Integer>> prevMap = new HashMap<>();
     public static List<Integer> listOfSourcePids = new ArrayList<>();
     public static List<Integer> listOfTransformations = new ArrayList<>();
     public static List<Integer> listOfEmitters = new ArrayList<>();
+    public static List<Integer> listOfMLModels = new ArrayList<>();
     public static List<Integer> listOfPersistentStores = new ArrayList<>();
     public static Map<Integer, String> nextPidMap = new HashMap<Integer, String>();
     public static Map<Integer,String> pidMessageTypeMap = new HashMap<Integer, String>();
@@ -103,6 +106,10 @@ public class StreamAnalyticsDriver implements Serializable {
                 if (processTypeName.startsWith("persistentStore")) {
                     listOfPersistentStores.add(processInfo.getProcessId());
                 }
+                if (processTypeName.startsWith("analytics")) {
+                    listOfMLModels.add(processInfo.getProcessId());
+                }
+
 
             }
 
@@ -461,6 +468,26 @@ public class StreamAnalyticsDriver implements Serializable {
                                 emitterObject.persist(prevDStream, pid, prevPid,schema);
                         }
                     }
+
+                    if (listOfMLModels.contains(pid)) {
+                        //found emitter node, so get upstream pid and persist based on emitter
+                        Set<Integer> prevPids = prevMap.get(pid);
+                        for (Integer prevPid : prevPids) {
+                            System.out.println("currently trying to emit dstream of prevPid = " + prevPid);
+                            JavaPairDStream<String,WrapperMessage> prevDStream = transformedDStreamMap.get(prevPid);
+
+                            GetParentProcessType getParentProcessType = new GetParentProcessType();
+                            String MlType = getParentProcessType.processTypeName(pid).replace("analytics_", "");
+                            String modelClassName = MLMODELSPACKAGE + MlType;
+
+                            Class modelClass = Class.forName(modelClassName);
+                            Analytics modelObject = (Analytics) modelClass.newInstance();
+                            JavaPairDStream<String, WrapperMessage> dStreamPostTransformation = modelObject.transform(emptyRDD, transformedDStreamMap, prevMap, pid, schema,broadcastMap,ssc);
+
+                            transformedDStreamMap.put(pid, dStreamPostTransformation);
+                        }
+                    }
+
 
                     if (listOfPersistentStores.contains(pid)) {
                         System.out.println(" inside persistent store ");
