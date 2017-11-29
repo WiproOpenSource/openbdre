@@ -48,7 +48,7 @@
          var wizard = null;
          var finalJson;
          wizard = $(document).ready(function() {
-
+        var created = 0;
     	$("#bdre-data-load").steps({
     		headerTag: "h2",
     		bodyTag: "section",
@@ -57,10 +57,8 @@
     		enableCancelButton: true,
     		onStepChanging: function(event, currentIndex, newIndex) {
     			console.log(currentIndex + 'current ' + newIndex );
-
     		   if(currentIndex==4 && newIndex==5)
     		   	{
-
                    var x = '';
                    x = document.getElementById("modelData");
                    console.log(x);
@@ -77,27 +75,22 @@
                           console.log("intercept is "+intercept);
                          }
                          if(val != "0" || val != "")
-                         text= text+column+"::"+val+",";
+                         text= text+column+":"+val+",";
                    }
                    }
-
                    console.log(text);
                    aggregationFinal=text;
-
     		   	}
     		return true;
     		},
     		onStepChanged: function(event, currentIndex, priorIndex) {
     			        console.log(currentIndex + " " + priorIndex);
-
     			       if(priorIndex==1 && currentIndex==2){
     			        var text = $('#persistentName option:selected').text();
                             	$('#rawTableColumnDetails').jtable({
                                                         });
                                                         $('#rawTableColumnDetails').jtable('destroy');
-
                                                         console.log(text);
-
                                                           if(text=="HDFS"){
                                                         console.log(text);
                                                         	$('#rawTableColumnDetails').jtable({
@@ -107,7 +100,6 @@
                                                         		create: false,
                                                         		edit: false,
                                                         		actions: {
-
                                                                     listAction: function(postData){
                                                                     },
                                                         			createAction: function(postData) {
@@ -137,21 +129,14 @@
                                                                         rawJSONedPostData = rawJSONedPostData.substring(0,rawLastIndex);
                                                                         rawJSONedPostData +=  "}";
                                                                         console.log(rawJSONedPostData);
-
-
                                                                        var rawReturnObj='{"Result":"OK","Record":' + rawJSONedPostData + '}';
                                                                        var rawJSONedReturn = $.parseJSON(rawReturnObj);
-
                                                                        return $.Deferred(function($dfd) {
                                                                                         console.log(rawJSONedReturn);
                                                                                         $dfd.resolve(rawJSONedReturn);
                                                                                     });
-
                                                         				}
-
-
                                                         		},
-
                                                         		fields: {
                                                         		    serialNumber:{
                                                         		        key : true,
@@ -166,7 +151,6 @@
                                                         				create:true
                                                         			},
                                                         			dataType: {
-
                                                         				create: true,
                                                         				title: 'Data Type',
                                                         				edit: true,
@@ -186,29 +170,25 @@
                                                                                   }
                                                         			}
                                                         		}
-
                                                         	});
                                                         	console.log($('#rawTableColumnDetails'));
                                                         	$('#rawTableColumnDetails').jtable('load');
                                                         	console.log($('#rawTableColumnDetails'));
-
                                                         }
                                                         else if(text=="Hive")
                                                         {
                                                              console.log(text);
-                                                             var srcDb=document.getElementById("dbName").value;
-                                                             var tbl=document.getElementById("tblName").value;
+                                                             var srcDb=document.getElementById("hive-db").value;
+                                                             var tbl=document.getElementById("hive-table").value;
                                                              var srenv="localhost:10000";
                                                              console.log(srcDb);
                                                              console.log(tbl);
-
                                                              $('#rawTableColumnDetails').jtable({
                                                              title: 'Hive column details',
                                                              actions: {
                                                                listAction: function(postData){
                                                                return $.Deferred(function ($dfd) {
                                                                $.ajax({
-
                                                                  url: "/mdrest/ml/columns/" + srenv + '/' + srcDb + '/' + tbl,
                                                                      type: 'GET',
                                                                      dataType: 'json',
@@ -216,15 +196,11 @@
                                                                      success: function (data) {
                                                                          var hiveColumns=data.Records;
                                                                          console.log(hiveColumns);
-
                                                                          for(var k in hiveColumns) {
-
                                                                                      console.log(hiveColumns[k].columnName);
                                                                                      columns.push(hiveColumns[k].columnName);
-
                                                                              }
                                                                          $dfd.resolve(data);
-
                                                                      },
                                                                      error: function () {
                                                                          alert('danger');
@@ -233,12 +209,9 @@
                                                                  });
                                                               },
                                                              updateAction: function(postData) {
-
-
                                                                                       }
                                                                                       },
                                                 fields: {
-
                                                                     columnName: {
                                                                         title: '<spring:message code="dataload.page.title_col_name"/>',
                                                                         width: '50%',
@@ -248,22 +221,15 @@
                                                                         key:true
                                                                     },
                                                                     dataType: {
-
                                                                         create: true,
                                                                         title: 'Data Type',
                                                                         edit: true,
                                                                         list:true,
                                                                         key:false
-
                                                                     }
-
                                                                 }
                                                              });
-
-
                                                              $('#rawTableColumnDetails').jtable('load');
-
-
                                                         }
                                                         else
                                                         {
@@ -275,21 +241,17 @@
                                                                                         $('#rawTableColumnDetails').jtable('load');
                                                                                         console.log($('#rawTableColumnDetails'));
                                                         }
-
                           }
     		},
     		onFinished: function(event, currentIndex) {
-
+                location.href = '<c:url value="/pages/ViewModel.page"/>';
     		},
     		onCanceled: function(event) {
-
     		}
     	});
     });
-
     		</script>
 <script>
-
 </script>
   <script>
   var map = new Object();
@@ -304,22 +266,14 @@
   		//console.log(map[typeProp + x.elements[i].name]);
   		//console.log(x.elements[i].value);
   	}
-
   }
-
-
   </script>
   <script>
                   var app = angular.module('app', []);
                      app.controller('myCtrl',function($scope) {
-
-
                       $scope.modelList={};
                       $scope.persistentList={};
-
-
                       $scope.columnList={};
-
                         $scope.processId=86;
                         $scope.busDomains = {};
                                               $.ajax({
@@ -334,17 +288,14 @@
                                                       alert('danger');
                                                   }
                                               });
-
+                        $scope.model="ML_Model";
                      $.ajax({
-
-                         url: "/mdrest/processtype/options_analytics/"+$scope.processId,
-
-                             type: 'POST',
+                             type: "GET",
+                             url: "/mdrest/genconfig/" + $scope.model + "/?required=1",
                              dataType: 'json',
                              async: false,
                              success: function (data) {
-
-                                 $scope.modelList = data.Options;
+                                 $scope.modelList = data.Records;
                                  console.log($scope.modelList);
                              },
                              error: function () {
@@ -366,56 +317,62 @@
                                                            alert('danger');
                                                        }
                          });
-
-
-
                   });
                    function saveModelProperties(){
-
                                              console.log("saveModelProperties is being called");
-                                           formIntoMap("Model_","modelConfirmation");
-                                                                                       formIntoMap("ModelProperties_","persistentStore");
-                                                                                       formIntoMap("ModelProperties_","persistentFieldsForm");
-                                                                                       formIntoMap("ModelProperties_","modelDetail");
+                                           formIntoMap("","modelConfirmation");
+                                                                                       formIntoMap("","persistentStore");
+                                                                                       formIntoMap("","persistentFieldsForm");
+                                                                                       formIntoMap("","modelDetail");
                                                                                        var text2 = $('#loadOptions option:selected').text();
-
                                                                                        console.log(text2);
                                                                                        if(text2=="PMML File" || text2=="Serialized Model"){
-                                                                                       formIntoMap("ModelProperties_","modelData");
+                                                                                       formIntoMap("","modelData");
                                                                                        }
                                                                                        else{
                                                                                             var features=aggregationFinal.slice(0,aggregationFinal.length-1);
-                                                                                            map["ModelProperties_features"]=features;
-                                                                                            map["ModelProperties_intercept"]=intercept;
+                                                                                            map["coefficients"]=features;
+                                                                                            map["intercept"]=intercept;
                                                                                        }
+
                                                                                        map["ModelProperties_features"]=features;
                                                                                        map["ModelProperties_intercept"]=intercept;
-
-
                                                                                        jtableIntoMap("", "rawTableColumnDetails");
                                                                                         var columns="";
                                                                                         var i=0;
-                                                                                        var key1=Object.keys(map1)[0];
-                                                                                        console.log(key1);
-                                                                                       for(i=0;i<map1.length;i++){
-                                                                                       var key=Object.keys(map1)[i];
-                                                                                       var value=map1[key];
-                                                                                       console.log("hiiiiiooooooo");
-                                                                                       console.log(key);
-                                                                                        console.log("hiiiiiooooooooo");
-                                                                                           columns.concat(key);
-                                                                                           columns.concat(":");
-                                                                                           columns.concat(value);
-                                                                                           if(i<map1.length-1)
-                                                                                           columns.concat(",");
-
-                                                                                       }
-
 
                                                                                        //map["ModelProperties_Columns"]=columns;
 
+                                                                                       //map["coefficients"]=features;
+                                                                                       //map["intercept"]=intercept;
 
 
+                                                                                       jtableIntoMap("", "rawTableColumnDetails");
+                                                                                       console.log("Printing the jtable map");
+                                                                                       console.log(map1);
+
+                                                                                        var attribute="";
+                                                                                        var i=1;
+
+                                                                                       for (var key in map1) {
+                                                                                           if (map1.hasOwnProperty(key)) {
+                                                                                           attribute=attribute.concat(key);
+
+                                                                                           attribute=attribute.concat(":");
+                                                                                           attribute=attribute.concat(map1[key]);
+
+                                                                                           if(i<Object.keys(map1).length){
+                                                                                           attribute=attribute.concat(",");}
+
+                                                                                           }
+                                                                                           i=i+1;
+                                                                                       }
+                                                                                       console.log(attribute);
+
+                                                                                       map["schema"]=attribute;
+
+
+                                                                                       console.log("Printing the map");
                                                                                        console.log(map);
                                              $.ajax({
                                                          type: "POST",
@@ -423,19 +380,41 @@
                                                          data: jQuery.param(map),
                                                          success: function(data) {
                                                              if(data.Result == "OK") {
+                                                                created = 1;
+                                                              $("#div-dialog-warning").dialog({
+                                            					title: "",
+                                            					resizable: false,
+                                            					height: 'auto',
+                                            					modal: true,
+                                            					buttons: {
+                                            						"Ok": function() {
+                                            							$(this).dialog("close");
+                                            						}
+                                            					}
+                                            				}).html('<p><span class="jtable-confirm-message">Model Created Successfully</span></p>');
 
-                                                                 alert("Job Created Successfully");
+
+
 
                                                }
-
                                                              else{
-                                                             alert("warning","Error occured");
+
+                                                       $("#div-dialog-warning").dialog({
+                                                                title: "",
+                                                                resizable: false,
+                                                                height: 'auto',
+                                                                modal: true,
+                                                                buttons: {
+                                                                    "Ok": function() {
+                                                                        $(this).dialog("close");
+                                                                    }
+                                                                }
+                                                            }).html('<p><span class="jtable-confirm-message">Model Created Successfully</span></p>');
+
                                                              }
                                                          }
-
                                                      });
                                              }
-
                     function uploadZip (subDir,fileId){
                                  var arg= [subDir,fileId];
                                    var fd = new FormData();
@@ -482,13 +461,7 @@
                                                               return false;
                                   							}
                                   						 });
-
                                   }
-
-
-
-
-
           </script>
           <script>
           function loadModelProperties(loadMethod) {
@@ -501,7 +474,7 @@
                       formHTML=formHTML+'<div class="form-group" >';
                       formHTML=formHTML+'<label class="control-label col-sm-2" for="regFile">Model File</label>';
                       formHTML=formHTML+'<div class="col-sm-10">';
-                      formHTML=formHTML+'<input name = "regFile" id = "regFile" type = "file" class = "form-control" style="opacity: 100; position: inherit;" />';
+                      formHTML=formHTML+'<input name = "pmml-file-path" id = "regFile" type = "file" class = "form-control" style="opacity: 100; position: inherit;" />';
                       formHTML=formHTML+'</div>';
                       formHTML=formHTML+'</div>';
                       formHTML=formHTML+'<button class = "btn btn-default  btn-success" style="margin-top: 30px;background: lightsteelblue;" type = "button" onClick = "uploadZip(\''+"model"+'\',\''+"regFile"+'\')" href = "#" >Upload File</button >';
@@ -511,7 +484,6 @@
                       div.innerHTML = formHTML;
                       }
                       else{
-
                       var div = document.getElementById('modelRequiredFields');
                       var formHTML='';
                        var next=1;
@@ -521,7 +493,6 @@
                        formHTML=formHTML+'<div class="col-md-4">Intercept</div>';
                         formHTML=formHTML+'</div>';
                       formHTML=formHTML+'<form class="form-horizontal" role="form" id="modelData">';
-
                        for(var t=0;t<columns.length;t++){
                        formHTML=formHTML+'<div class="form-group col-md-12" >';
                        formHTML = formHTML +  '<div class="col-md-4">' ;
@@ -532,7 +503,6 @@
                        formHTML = formHTML +  '<input class="form-control" id="Coefficient.' + next + '"value='+ 0 +' name="Coefficient.' + next + '">' ;
                        formHTML = formHTML +  '</input>' ;
                        formHTML = formHTML +  '</div>' ;
-
                        if(t==0){
                        formHTML = formHTML +  '<div class="col-md-4">' ;
                        formHTML = formHTML +  '<input class="form-control" id="Intercept.' + next + '"value='+ 0 +' name="Intercept.' + next + '">' ;
@@ -553,7 +523,6 @@
                         formHTML=formHTML+'<div class="clearfix"></div>';
                         formHTML=formHTML+'</form>';
                        div.innerHTML = formHTML;
-
                       }}
           </script>
 
@@ -565,13 +534,13 @@
 
   	<div id="bdre-data-load">
 
-<h2><div class="number-circular">1</div>Select type of Persistent Store Type</h2>
+<h2><div class="number-circular">1</div>Select Source</h2>
                         			<section>
                     <form class="form-horizontal" role="form" id="persistentStore">
                     <div class="form-group" >
-                                  <label class="control-label col-sm-2" for="persistentName">Persistent Store</label>
+                                  <label class="control-label col-sm-2" for="persistentName">Source</label>
                                   <div class="col-sm-10">
-                                   <select class="form-control" id="persistentName" name="persistentName"  ng-model="persistentName"  onchange="loadProperties();" ng-options = "val.columnName as val.columnName for (file, val) in persistentList track by val.columnName"  >
+                                   <select class="form-control" id="persistentName" name="source"  ng-model="persistentName"  onchange="loadProperties();" ng-options = "val.columnName as val.columnName for (file, val) in persistentList track by val.columnName"  >
                                                <option  value="">Select the option</option>
                                            </select>
                                   </div>
@@ -580,7 +549,7 @@
                               </form>
                               </section>
 
-  <h2><div class="number-circular">2</div>Persistent Store Configuration Type</h2>
+  <h2><div class="number-circular">2</div>Source Configuration Type</h2>
                           			<section>
 
                        <div id="persistentFields"></div>
@@ -607,7 +576,7 @@
                   <div class="form-group" >
                                 <label class="control-label col-sm-2" for="modelType">Model Type</label>
                                 <div class="col-sm-10">
-                                 <select class="form-control" id="modelType" name="modelType" ng-model = "modelName" onchange="loadModelOptions(this.value);" ng-options = "val.DisplayText as val.DisplayText for (file,val) in modelList track by val.DisplayText"   >
+                                 <select class="form-control" id="modelType" name="ml-algo" ng-model = "modelName" onchange="loadModelOptions(this.value);" ng-options = "val.key as val.value for (file,val) in modelList track by val.key" >
                                              <option  value="">Select option</option>
                                          </select>
                                 </div>
@@ -616,8 +585,8 @@
                             <div class="form-group" >
                                 <label class="control-label col-sm-2" for="loadOptions">Load Method</label>
                                 <div class="col-sm-10">
-                                 <select class="form-control" id="loadOptions" name="loadOptions" onchange="loadModelProperties(this.value);" >
-                                             <option  value="">Select option</option>
+                                 <select class="form-control" id="loadOptions" name="model-input-method" onchange="loadModelProperties(this.value);" >
+                                             //<option  value="">Select option</option>
                                          </select>
                                 </div>
                             </div>
@@ -657,8 +626,9 @@
                            </select>
                        </div>
                    </div>
-                   <button class = "btn btn-default  btn-success" style="margin-top: 30px;background: lightsteelblue;" type = "button" onClick = "saveModelProperties()"  >Create Job</button >
                   </form>
+                  <button class="btn btn-default  btn-success" style="margin-top: 200px;background: #F2B30B !important;padding-left: 0px;margin-left: 0px;left: -300px;" type="button" onclick="saveModelProperties()">Create Model</button>
+
                   </section>
 
 
@@ -673,42 +643,19 @@
   </div>
 
 
+<div style="display:none" id="div-dialog-warning">
+			<p><span class="ui-icon ui-icon-alert" style="float:left;"></span></p>
+		</div>
+
   <script>
   var i=0;
   </script>
                 <script>
-                function loadModelTypes()
-                {
-                    if(i==0){
-                    var processId=41;
-                    $.ajax({
-                        type: "POST",
-                        url: "/mdrest/processtype/options_analytics/"+processId,
-                        dataType: 'json',
-                        success: function(data) {
-                        console.log(data);
-                        $.each(data.Options, function (i, v) {
-                            $('#modelType').append($('<option>', {
-                                value: v.value,
-                                text : v.DisplayText,
-                            }));
-                        });
-                        },
-                    });
-                    i=i+1;
-                    }
-                }
-
 
                 function loadProperties() {
-
                     var text = $('#persistentName option:selected').text();
-
                         buildForm(text + "_Model_Connection", "persistentFields");
-
                         console.log("This is the div");
-
-
                         }
                 </script>
 
@@ -739,7 +686,6 @@
         }
         </script>
         <script>
-
         function loadModelOptions(modelType){
         console.log(modelType);
         var model = modelType+"_Model";
@@ -750,6 +696,7 @@
             success: function(data) {
             console.log(data);
             $('#loadOptions').find('option').remove();
+            $('#loadOptions').append('<option  value="">Select option</option>');
             $.each(data.Records, function (i, v) {
                 $('#loadOptions').append($('<option>', {
                     value: v.key,
@@ -758,9 +705,7 @@
             });
             },
         });
-
         }
-
         </script>
 
         <script>
@@ -773,7 +718,6 @@
         		$(this).addClass('jtable-row-selected');
         		$(this).addClass('ui-state-highlight');
         	});
-
         	var $selectedRows = $(div).jtable('selectedRows');
         	$selectedRows.each(function() {
         		var record = $(this).data('record');
@@ -784,6 +728,5 @@
         	});
         	$('.jtable-row-selected').removeClass('jtable-row-selected');
         }
-
         		</script>
 </body>

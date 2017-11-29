@@ -30,8 +30,11 @@ public class MLMain {
         String[] processDetailsArgs = new String[]{"-p", args[0], "-u", username};
         List<ProcessInfo> subProcessList = getProcess.execute(processDetailsArgs);
 
-        ProcessInfo subProcessInfo = subProcessList.get(0);
+
+        ProcessInfo subProcessInfo = subProcessList.get(1);
         Integer processId = subProcessInfo.getProcessId();
+        System.out.println("processId = " + processId);
+
         GetProperties getProperties = new GetProperties();
         Properties properties = getProperties.getProperties(processId.toString(), "ml");
         String sourceType = properties.getProperty("source");
@@ -78,7 +81,7 @@ public class MLMain {
             }
             else if(mlAlgo.equalsIgnoreCase("LogisticRegression")){
                 LogisticRegressionML logisticRegressionML = new LogisticRegressionML();
-                logisticRegressionML.productionalizeModel(dataFrame,columnCoefficientMap,intercept,jsc);
+                predictionDF =logisticRegressionML.productionalizeModel(dataFrame,columnCoefficientMap,intercept,jsc);
             }
 
         }
@@ -93,8 +96,9 @@ public class MLMain {
             String progLanguage = properties.getProperty("prog-lang");
         }
 
-        predictionDF.show();
+        predictionDF.show(100);
 
 
     }
+
 }

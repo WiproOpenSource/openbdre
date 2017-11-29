@@ -1182,10 +1182,12 @@
                                                     </form>
                       <script>
                       var count=0;
+                      var coefficients;
                       </script>
                       <script>
                       function loadModelProperties(loadMethod) {
-                      console.log(loadMethod);
+
+
                       var div = document.getElementById('modelRequiredFields');
                                             console.log($('[ng-controller="AppCtrl"]').scope().chartViewModel.columnList);
                                             var columns=$('[ng-controller="AppCtrl"]').scope().chartViewModel.columnList;
@@ -1212,22 +1214,27 @@
                                             }
 
                                 else if(loadMethod=='modelInformation'){
+                                    //console.log(coefficients);
                                     var formHTML='';
+
                                     var next=1;
+                                    var column;
                                	    formHTML=formHTML+'<div class="col-md-12" >';
                                   formHTML=formHTML+'<div class="col-md-4">Column </div>';
                                   formHTML=formHTML+'<div class="col-md-4">Coefficient</div>';
                                   formHTML=formHTML+'<div class="col-md-4">Intercept</div>';
+
                                	formHTML=formHTML+'</div>';
-                                 //formHTML=formHTML+'<form class="form-horizontal" role="form" id="modelData">';
+
 
                                   for(var t=0;t<=count;t++){
+
+
                                   formHTML=formHTML+'<div class="col-md-12" >';
                                   formHTML = formHTML +  '<div class="col-md-4">' ;
-                                  //formHTML = formHTML +  '<input class="form-control" id="column.' + next + '" value='+ columns[t].Value +' name="column.' + next + '">' ;
-                                  //formHTML = formHTML +  '</input>' ;
-                                  formHTML = formHTML + '  <select class="form-control" id="labelColumn" name="labelColumn" >';
-                                  formHTML = formHTML + ' <option ng-repeat="column in chartViewModel.columnList " id="{{$index}}" value="{{ column.Value }}">'+ columns[t].DisplayText  + '</option>';
+
+                                  formHTML = formHTML + '  <select class="form-control" id="Column.' + next + '" name="Column.' + next + '" >';
+                                  formHTML = formHTML + ' <option ng-repeat="  column in columns " id="Column.' + next + '" value="' + columns[t].DisplayText + '">' + columns[t].DisplayText + '</option>';
                                   formHTML = formHTML + '</select>';
                                   formHTML = formHTML +  '</div>' ;
                                   formHTML = formHTML +  '<div class="col-md-4">' ;
@@ -1245,16 +1252,21 @@
                                   else
                                   {
                                   formHTML = formHTML +  '<div class="col-md-4">' ;
-                                  //formHTML = formHTML +  '<input class="form-control" id="Intercept.' + next + '"value='+ 0 +' name="Intercept.' + next + '">' ;
-                                  //formHTML = formHTML +  '</input>' ;
+
                                	formHTML = formHTML +  '</div>' ;
+
                                   formHTML=formHTML+'</div>';
+
                                   }
                                   next++;
 
                                   }
+
+
                                   count++;
+                                  formHTML=formHTML+'<div id="count" value="' + count + '"></div>';
                                   formHTML=formHTML+'<button class = "btn btn-default  btn-success" style="margin-top: 30px;background: lightsteelblue;" type = "button" onClick = loadModelProperties("modelInformation")  >Add Column</button >';
+
                                   div.innerHTML = formHTML;
 
                                             }
@@ -1269,7 +1281,7 @@
 
                             <div class="form-group">
                                                          <label class="control-label col-sm-3" for="modelImportType">Model Import Type</label>
-                                                         <select class="form-control" id="modelImportType" onchange="loadModelProperties(this.value);">
+                                                         <select class="form-control" id="modelImportType" name="modelImportType" onchange="loadModelProperties(this.value);">
                                                          <option value="s">Select the model</option>
                                                              <option value="modelInformation">Model Information</option>
                                                              <option value="pmmlFile">PMML File</option>
@@ -1288,9 +1300,121 @@
                                     <div id="modelRequiredFields"></div>
 
                           <div class="clearfix"></div>
-                    <button type="submit" ng-click="insertRegressionProp(chartViewModel.selectedProcess.processId)" class="btn btn-primary  pull-right">Save</button>
-                       </form>
+                    <div style = "display:none" id = "div-dialog-warning" >
+                                                                        				<p ><span class = "ui-icon ui-icon-alert" style = "float:left;" ></span >
 
+                                                                        				</p>
+                                                                        				</div >
+                    <button type="submit" onClick="insertLinearProp()" class="btn btn-primary  pull-right">Save</button>
+                       </form>
+                       <script>
+                       function insertLinearProp(){
+                       var map=new Object();
+                       var processId=$('[ng-controller="AppCtrl"]').scope().chartViewModel.selectedProcess.processId;
+                       value1=document.getElementById("modelImportType").value;
+                       //console.log(value1);
+                       if(value1=="serializedModel" || value1=="pmmlFile"){
+                       var value2=document.getElementById("regFile").value;
+                       console.log("hiiiii");
+                       console.log(value2);
+                       map["model-Import-Type"]=value1;
+                       map["filePath"]=value2;
+                       }
+                       else{
+
+
+
+
+
+                            intercept=document.getElementById("Intercept.1").value;
+
+
+                          var text=document.getElementById("Column.1").value;
+                          text=text.concat("|");
+                         text=text.concat(document.getElementById("Coefficient.1").value);
+                          for(i=2;i<=count;i++){
+
+                             text=text.concat(",");
+                              text=text.concat(document.getElementById("Column." + i).value);
+                              text=text.concat("|");
+                              text=text.concat(document.getElementById("Coefficient." + i).value);
+
+                          }
+                          console.log("hello");
+                          console.log(text);
+                          map["intercept"]=intercept;
+                          map["coefficients"]=text;
+                          }
+
+
+                           $.ajax({
+                                   type: "POST",
+                                   url: "/mdrest/properties/"+processId,
+                                   data: jQuery.param(map),
+                                   success: function(data) {
+                                       if(data.Result == "OK") {
+                                          var modal = document.getElementById('myModal');
+                                           modal.style.display = "none";
+                                           alertBox("info","Regression properties added");
+                                       }
+                                       else
+                                       alertBox("warning","Error occured");
+
+                                   }
+
+                               });
+
+                       }
+                       </script>
+                       <script>
+                       function uploadZip (subDir,fileId){
+                                                        var arg= [subDir,fileId];
+                                                          var fd = new FormData();
+                                                         		                var fileObj = $("#"+arg[1])[0].files[0];
+                                                                                 var fileName=fileObj.name;
+                                                                                 fd.append("file", fileObj);
+                                                                                 fd.append("name", fileName);
+                                                                                 $.ajax({
+                                                                                   url: '/mdrest/filehandler/uploadzip/'+arg[0],
+                                                                                   type: "POST",
+                                                                                   data: fd,
+                                                                                   async: false,
+                                                                                   enctype: 'multipart/form-data',
+                                                                                   processData: false,  // tell jQuery not to process the data
+                                                                                   contentType: false,  // tell jQuery not to set contentType
+                                                                                   success:function (data) {
+                                                                                         uploadedFileName=data.Record.fileName;
+                                                                                         console.log( data );
+                                                                                         $("#div-dialog-warning").dialog({
+                                                                                                         title: "",
+                                                                                                         resizable: false,
+                                                                                                         height: 'auto',
+                                                                                                         modal: true,
+                                                                                                         buttons: {
+                                                                                                             "Ok" : function () {
+                                                                                                                 $(this).dialog("close");
+                                                                                                             }
+                                                                                                         }
+                                                                                         }).html('<p><span class="jtable-confirm-message"><spring:message code="processimportwizard.page.upload_success"/>'+' ' + uploadedFileName + '</span></p>');
+                                                                                         return false;
+                                                         							},
+                                                         						  error: function () {
+                                                         							    $("#div-dialog-warning").dialog({
+                                                                                                     title: "",
+                                                                                                     resizable: false,
+                                                                                                     height: 'auto',
+                                                                                                     modal: true,
+                                                                                                     buttons: {
+                                                                                                         "Ok" : function () {
+                                                                                                             $(this).dialog("close");
+                                                                                                         }
+                                                                                                     }
+                                                                                     }).html('<p><span class="jtable-confirm-message"><spring:message code="processimportwizard.page.upload_error"/></span></p>');
+                                                                                     return false;
+                                                         							}
+                                                         						 });
+                                                         }
+                       </script>
 
                        <form class="form-horizontal" role="form" ng-if="genConfig.type == 'hive'">
 

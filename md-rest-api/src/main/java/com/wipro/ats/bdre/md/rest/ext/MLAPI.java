@@ -148,7 +148,7 @@ public class MLAPI {
 
             TableColumns[] tableColumns=new TableColumns[1000];
             for(int i=1; i<=metaData.getColumnCount();i++){
-                String colName = metaData.getColumnLabel(i).replaceFirst(tableName+".", "");
+                String colName = metaData.getColumnLabel(i).replaceFirst(tableName.toLowerCase()+".", "");
                 String datatype = metaData.getColumnTypeName(i);
                 TableColumns t=new TableColumns();
                 Map<String,String> m1=new HashMap<>();
