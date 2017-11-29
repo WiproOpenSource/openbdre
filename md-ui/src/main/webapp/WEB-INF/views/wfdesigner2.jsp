@@ -1213,7 +1213,7 @@
                                             div.innerHTML = formHTML;
                                             }
 
-                                else if(loadMethod=='modelInformation'){
+                                else if(loadMethod=='ModelInformation'){
                                     //console.log(coefficients);
                                     var formHTML='';
 
@@ -1283,7 +1283,7 @@
                                                          <label class="control-label col-sm-3" for="modelImportType">Model Import Type</label>
                                                          <select class="form-control" id="modelImportType" name="modelImportType" onchange="loadModelProperties(this.value);">
                                                          <option value="s">Select the model</option>
-                                                             <option value="modelInformation">Model Information</option>
+                                                             <option value="ModelInformation">Model Information</option>
                                                              <option value="pmmlFile">PMML File</option>
                                                              <option value="serializedModel">Serialized Model File</option>
                                                          </select>
@@ -1317,7 +1317,7 @@
                        var value2=document.getElementById("regFile").value;
                        console.log("hiiiii");
                        console.log(value2);
-                       map["model-Import-Type"]=value1;
+                       map["model-input-method"]=value1;
                        map["filePath"]=value2;
                        }
                        else{
@@ -1342,6 +1342,7 @@
                           }
                           console.log("hello");
                           console.log(text);
+                          map["model-input-method"]="ModelInformation";
                           map["intercept"]=intercept;
                           map["coefficients"]=text;
                           }
