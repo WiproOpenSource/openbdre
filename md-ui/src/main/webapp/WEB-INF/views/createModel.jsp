@@ -38,92 +38,9 @@
 
     </head>
     <body>
-<script>
-          var count=0;
-          function loadModelProperties(loadMethod) {
-              console.log(loadMethod);
-              var div = document.getElementById('modelRequiredFields');
-                      if (loadMethod=="serializedModel" || loadMethod=="pmmlFile") {
-                      count=0;
-                      var formHTML='';
-                      formHTML=formHTML+'<form class="form-horizontal" role="form" id="modelData">';
-                      formHTML=formHTML+'<div id="rawTablDetailsDB">';
-                      formHTML=formHTML+'<div class="form-group" >';
-                      formHTML=formHTML+'<label class="control-label col-sm-2" for="regFile">Model File</label>';
-                      formHTML=formHTML+'<div class="col-sm-10">';
-                      formHTML=formHTML+'<input name = "pmml-file-path" id = "regFile" type = "file" class = "form-control" style="opacity: 100; position: inherit;" />';
-                      formHTML=formHTML+'</div>';
-                      formHTML=formHTML+'</div>';
-                      formHTML=formHTML+'<button class = "btn btn-default  btn-success" style="margin-top: 30px;background: lightsteelblue;" type = "button" onClick = "uploadZip(\''+"model"+'\',\''+"regFile"+'\')" href = "#" >Upload File</button >';
-                      formHTML=formHTML+'<div class="clearfix"></div>';
-                      formHTML=formHTML+'</div>';
-                      formHTML=formHTML+'</form>';
-                      div.innerHTML = formHTML;
-                      } else if (loadMethod=="modelInformation")
-                      {
-                          console.log("Enter modelInformation");
-                          var formHTML='';
-
-                          var next=1;
-                          var column;
-                            formHTML=formHTML+'<div class="col-md-12" >';
-                        formHTML=formHTML+'<div class="col-md-4">Column</div>';
-                        formHTML=formHTML+'<div class="col-md-4">Coefficient</div>';
-                        formHTML=formHTML+'<div class="col-md-4">Intercept</div>';
-
-                        formHTML=formHTML+'</div>';
-
-
-                        for(var t=0;t<=count;t++){
-
-
-                        formHTML=formHTML+'<div class="col-md-12" >';
-                        formHTML = formHTML +  '<div class="col-md-4">' ;
-
-                        formHTML = formHTML + '  <select class="form-control" id="Column.' + next + '" name="Column.' + next + '" >';
-                        formHTML = formHTML + ' <option ng-repeat="  column in columns " id="Column.' + next + '" value="' + columns[t] + '">' + columns[t] + '</option>';
-                        formHTML = formHTML + '</select>';
-                        formHTML = formHTML +  '</div>' ;
-                        formHTML = formHTML +  '<div class="col-md-4">' ;
-                        formHTML = formHTML +  '<input class="form-control" id="Coefficient.' + next + '"value='+ 0 +' name="Coefficient.' + next + '">' ;
-                        formHTML = formHTML +  '</input>' ;
-                        formHTML = formHTML +  '</div>' ;
-
-                        if(t==0){
-                        formHTML = formHTML +  '<div class="col-md-4">' ;
-                        formHTML = formHTML +  '<input class="form-control" id="Intercept.' + next + '"value='+ 0 +' name="Intercept.' + next + '">' ;
-                        formHTML = formHTML +  '</input>' ;
-                        formHTML = formHTML +  '</div>' ;
-                        formHTML=formHTML+'</div>';
-                        }
-                        else
-                        {
-                        formHTML = formHTML +  '<div class="col-md-4">' ;
-
-                        formHTML = formHTML +  '</div>' ;
-
-                        formHTML=formHTML+'</div>';
-
-                        }
-                        next++;
-
-                        }
-                        count++;
-                        formHTML=formHTML+'<button class = "btn btn-default  btn-success" style="margin-top: 30px;background: lightsteelblue;" type = "button" onClick = loadModelProperties("modelInformation")  >Add Column</button >';
-
-                        div.innerHTML = formHTML;
-
-                                  } else {
-                                  console.log("Empty Div");
-                                  count=0;
-                                  var formHTML='';
-                                  div.innerHTML = formHTML;
-                                  }
-                      }
-          </script>
-
 
     <script>
+    var aggregationFinal ="";
                    var intercept="";
            var columns =[];
            var map2=new Map();
@@ -140,7 +57,30 @@
     		enableCancelButton: true,
     		onStepChanging: function(event, currentIndex, newIndex) {
     			console.log(currentIndex + 'current ' + newIndex );
-
+    		   if(currentIndex==4 && newIndex==5)
+    		   	{
+                   var x = '';
+                   x = document.getElementById("modelData");
+                   console.log(x);
+                   var text = "";
+                   var i;
+                   if(x.length>2){
+                   for(i = 0; i < x.length; i=i+2) {
+                         var column=x.elements[i].value;
+                         var val=x.elements[i+1].value;
+                         if(i==0)
+                         {
+                          intercept=x.elements[i+2].value;
+                          i=i+1;
+                          console.log("intercept is "+intercept);
+                         }
+                         if(val != "0" || val != "")
+                         text= text+column+":"+val+",";
+                   }
+                   }
+                   console.log(text);
+                   aggregationFinal=text;
+    		   	}
     		return true;
     		},
     		onStepChanged: function(event, currentIndex, priorIndex) {
@@ -336,18 +276,18 @@
                       $scope.columnList={};
                         $scope.processId=86;
                         $scope.busDomains = {};
-                              $.ajax({
-                              url: '/mdrest/busdomain/options/',
-                                  type: 'POST',
-                                  dataType: 'json',
-                                  async: false,
-                                  success: function (data) {
-                                      $scope.busDomains = data;
-                                  },
-                                  error: function () {
-                                      alert('danger');
-                                  }
-                              });
+                                              $.ajax({
+                                              url: '/mdrest/busdomain/options/',
+                                                  type: 'POST',
+                                                  dataType: 'json',
+                                                  async: false,
+                                                  success: function (data) {
+                                                      $scope.busDomains = data;
+                                                  },
+                                                  error: function () {
+                                                      alert('danger');
+                                                  }
+                                              });
                         $scope.model="ML_Model";
                      $.ajax({
                              type: "GET",
@@ -378,7 +318,6 @@
                                                        }
                          });
                   });
-
                    function saveModelProperties(){
                                              console.log("saveModelProperties is being called");
                                            formIntoMap("","modelConfirmation");
@@ -391,28 +330,21 @@
                                                                                        formIntoMap("","modelData");
                                                                                        }
                                                                                        else{
-                                                                                            intercept=document.getElementById("Intercept.1").value;
-
-
-                                                                                              var text=document.getElementById("Column.1").value;
-                                                                                              text=text.concat(":");
-                                                                                             text=text.concat(document.getElementById("Coefficient.1").value);
-                                                                                              for(i=2;i<=count;i++){
-
-                                                                                                 text=text.concat(",");
-                                                                                                  text=text.concat(document.getElementById("Column." + i).value);
-                                                                                                  text=text.concat(":");
-                                                                                                  text=text.concat(document.getElementById("Coefficient." + i).value);
-
-                                                                                              }
-                                                                                              console.log("hello");
-                                                                                              console.log(text);
-                                                                                              map["intercept"]=intercept;
-                                                                                              map["coefficients"]=text;
+                                                                                            var features=aggregationFinal.slice(0,aggregationFinal.length-1);
+                                                                                            map["coefficients"]=features;
+                                                                                            map["intercept"]=intercept;
                                                                                        }
-                                                                                        jtableIntoMap("", "rawTableColumnDetails");
+
+                                                                                       map["ModelProperties_features"]=features;
+                                                                                       map["ModelProperties_intercept"]=intercept;
+                                                                                       jtableIntoMap("", "rawTableColumnDetails");
                                                                                         var columns="";
                                                                                         var i=0;
+
+                                                                                       //map["ModelProperties_Columns"]=columns;
+
+                                                                                       //map["coefficients"]=features;
+                                                                                       //map["intercept"]=intercept;
 
 
                                                                                        jtableIntoMap("", "rawTableColumnDetails");
@@ -460,6 +392,10 @@
                                             						}
                                             					}
                                             				}).html('<p><span class="jtable-confirm-message">Model Created Successfully</span></p>');
+
+
+
+
                                                }
                                                              else{
 
@@ -479,7 +415,6 @@
                                                          }
                                                      });
                                              }
-
                     function uploadZip (subDir,fileId){
                                  var arg= [subDir,fileId];
                                    var fd = new FormData();
@@ -528,7 +463,68 @@
                                   						 });
                                   }
           </script>
-
+          <script>
+          function loadModelProperties(loadMethod) {
+              console.log(loadMethod);
+                      if(loadMethod=="serializedModel" || loadMethod=="pmmlFile"){
+                      var div = document.getElementById('modelRequiredFields');
+                      var formHTML='';
+                      formHTML=formHTML+'<form class="form-horizontal" role="form" id="modelData">';
+                      formHTML=formHTML+'<div id="rawTablDetailsDB">';
+                      formHTML=formHTML+'<div class="form-group" >';
+                      formHTML=formHTML+'<label class="control-label col-sm-2" for="regFile">Model File</label>';
+                      formHTML=formHTML+'<div class="col-sm-10">';
+                      formHTML=formHTML+'<input name = "pmml-file-path" id = "regFile" type = "file" class = "form-control" style="opacity: 100; position: inherit;" />';
+                      formHTML=formHTML+'</div>';
+                      formHTML=formHTML+'</div>';
+                      formHTML=formHTML+'<button class = "btn btn-default  btn-success" style="margin-top: 30px;background: lightsteelblue;" type = "button" onClick = "uploadZip(\''+"model"+'\',\''+"regFile"+'\')" href = "#" >Upload File</button >';
+                      formHTML=formHTML+'<div class="clearfix"></div>';
+                      formHTML=formHTML+'</div>';
+                      formHTML=formHTML+'</form>';
+                      div.innerHTML = formHTML;
+                      }
+                      else{
+                      var div = document.getElementById('modelRequiredFields');
+                      var formHTML='';
+                       var next=1;
+                        formHTML=formHTML+'<div class="form-group col-md-12" >';
+                       formHTML=formHTML+'<div class="col-md-4">Column </div>';
+                       formHTML=formHTML+'<div class="col-md-4">Coefficient</div>';
+                       formHTML=formHTML+'<div class="col-md-4">Intercept</div>';
+                        formHTML=formHTML+'</div>';
+                      formHTML=formHTML+'<form class="form-horizontal" role="form" id="modelData">';
+                       for(var t=0;t<columns.length;t++){
+                       formHTML=formHTML+'<div class="form-group col-md-12" >';
+                       formHTML = formHTML +  '<div class="col-md-4">' ;
+                       formHTML = formHTML +  '<input class="form-control" id="column.' + next + '" value='+ columns[t] +' name="column.' + next + '">' ;
+                       formHTML = formHTML +  '</input>' ;
+                       formHTML = formHTML +  '</div>' ;
+                       formHTML = formHTML +  '<div class="col-md-4">' ;
+                       formHTML = formHTML +  '<input class="form-control" id="Coefficient.' + next + '"value='+ 0 +' name="Coefficient.' + next + '">' ;
+                       formHTML = formHTML +  '</input>' ;
+                       formHTML = formHTML +  '</div>' ;
+                       if(t==0){
+                       formHTML = formHTML +  '<div class="col-md-4">' ;
+                       formHTML = formHTML +  '<input class="form-control" id="Intercept.' + next + '"value='+ 0 +' name="Intercept.' + next + '">' ;
+                       formHTML = formHTML +  '</input>' ;
+                       formHTML = formHTML +  '</div>' ;
+                       formHTML=formHTML+'</div>';
+                       }
+                       else
+                       {
+                       formHTML = formHTML +  '<div class="col-md-4">' ;
+                       //formHTML = formHTML +  '<input class="form-control" id="Intercept.' + next + '"value='+ 0 +' name="Intercept.' + next + '">' ;
+                       //formHTML = formHTML +  '</input>' ;
+                        formHTML = formHTML +  '</div>' ;
+                       formHTML=formHTML+'</div>';
+                       }
+                       next++;
+                       }
+                        formHTML=formHTML+'<div class="clearfix"></div>';
+                        formHTML=formHTML+'</form>';
+                       div.innerHTML = formHTML;
+                      }}
+          </script>
 
 
   <div  ng-app="app" id="preModelDetails" ng-controller="myCtrl">
@@ -734,4 +730,3 @@
         }
         		</script>
 </body>
-</html>
