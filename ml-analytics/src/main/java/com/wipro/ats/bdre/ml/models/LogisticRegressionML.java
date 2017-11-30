@@ -1,6 +1,5 @@
 package com.wipro.ats.bdre.ml.models;
 
-
 import org.apache.spark.ml.classification.LogisticRegressionModel;
 import org.apache.spark.api.java.JavaSparkContext;
 import org.apache.spark.ml.feature.VectorAssembler;
