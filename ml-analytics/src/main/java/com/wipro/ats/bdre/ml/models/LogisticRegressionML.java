@@ -31,8 +31,8 @@ public class LogisticRegressionML {
             coeff[i] = new Double(coefficients[i].toString());
         }
 
-        LogisticRegressionModel linearRegressionModel = new LogisticRegressionModel(UUID.randomUUID().toString(), Vectors.dense(coeff), intercept);
-        DataFrame predictionDF = linearRegressionModel.transform(testDataFrame);
+        LogisticRegressionModel logisticRegressionModel = new LogisticRegressionModel(UUID.randomUUID().toString(), Vectors.dense(coeff), intercept);
+        DataFrame predictionDF = logisticRegressionModel.transform(testDataFrame);
         return predictionDF;
     }
 }
