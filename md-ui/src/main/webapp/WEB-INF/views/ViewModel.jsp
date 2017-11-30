@@ -1173,7 +1173,7 @@
                                     sorting: false,
                                     edit: false,
                                     create: false,
-                                    title: '<spring:message code="process.page.title_run_job"/>',
+                                    title: 'Run Model',
                                     display: function(data) {
                                         var $img2 = $('<span title=<spring:message code="process.page.img_execute_process"/> class="label-icons label-execute" ></span>');
                                         $img2.click(function() {
@@ -1430,10 +1430,10 @@
 
 
                                 SLAMonitoring: {
-                                    title: '<spring:message code="process.page.title_sla_monitoring"/>',
+                                    title: 'View Result',
                                     width: '10%',
                                     sorting: false,
-                                    list: false,
+                                    list: true,
                                     create: false,
                                     edit: false,
                                     display: function(data) {
@@ -1634,22 +1634,19 @@
 
                      function goToSLAMonitoringPage(pid)
                                           {
-                                           $.ajax({
-                                                 url: '/mdrest/process/permission/'+pid,
-                                                 type: 'PUT',
-                                                 dataType: 'json',
-                                                  success: function(data) {
-                                                     if(data.Result == "OK") {
-                                                        location.href = '<c:url value="/pages/sla.page?processId="/>' + pid;                                                     }
-                                                     else
-                                                     {
-                                                      alert(data.Message);
-                                                     }
-                                                 },
-                                                 error: function() {
-                                                     $dfd.reject();
-                                                 }
-                                             });
+                            $("#execute-result").dialog({
+                                resizable: false,
+                                height: 'auto',
+                                modal: true,
+                                buttons: {
+                                    "OK": function() {
+                                        $(this).dialog("close");
+                                    }
+                                }
+                            }).html('<p><span class="jtable-confirm-message"><b>View prediction result in hdfs at /user/cloudera/ml-batch/'+ pid +'</b></span></p>');
+
+
+
                                          }
                 </script>
                 <%--  --%>

@@ -26,9 +26,11 @@ public class MLMain {
     public static void main(String[] args) {
 
         try {
+
             parentProcessId = Integer.parseInt(args[0]);
             String username = (args[1]);
-
+            com.wipro.ats.bdre.md.api.InstanceExecAPI instanceExecAPI = new com.wipro.ats.bdre.md.api.InstanceExecAPI();
+            instanceExecAPI.insertInstanceExec(parentProcessId, null);
             GetProcess getProcess = new GetProcess();
             String[] processDetailsArgs = new String[]{"-p", args[0], "-u", username};
             List<ProcessInfo> subProcessList = getProcess.execute(processDetailsArgs);
@@ -45,8 +47,8 @@ public class MLMain {
 
             String applicationId = jsc.sc().applicationId();
             System.out.println("applicationId = " + applicationId);
-            InstanceExecAPI instanceExecAPI = new InstanceExecAPI();
-            instanceExecAPI.updateInstanceExecToRunning(parentProcessId, applicationId);
+            InstanceExecAPI instanceExecAPI1 = new InstanceExecAPI();
+            instanceExecAPI1.updateInstanceExecToRunning(parentProcessId, applicationId);
 
 
             String schemaString = properties.getProperty("schema");
@@ -100,6 +102,12 @@ public class MLMain {
             }
 
             predictionDF.show();
+            System.out.println("data predicted");
+            InstanceExecAPI instanceExecAPI2 = new InstanceExecAPI();
+            instanceExecAPI2.updateInstanceExecToFinished(parentProcessId, applicationId);
+            System.out.println("status changed to success");
+            predictionDF.write().format("json").save("/user/cloudera/ml-batch/"+parentProcessId);
+           // predictionDF.write().saveAsTable("demo_table");
         }catch (Exception e){
             LOGGER.info("final exception = " + e);
             e.printStackTrace();
