@@ -89,7 +89,7 @@ public class MLMain {
                     predictionDF = linearRegressionML.productionalizeModel(dataFrame, columnCoefficientMap, intercept, jsc);
                 } else if (mlAlgo.equalsIgnoreCase("LogisticRegression")) {
                     LogisticRegressionML logisticRegressionML = new LogisticRegressionML();
-                    logisticRegressionML.productionalizeModel(dataFrame, columnCoefficientMap, intercept, jsc);
+                    predictionDF=logisticRegressionML.productionalizeModel(dataFrame, columnCoefficientMap, intercept, jsc);
                 }
 
             } else if (modelInputMethod.equalsIgnoreCase("PMML")) {
