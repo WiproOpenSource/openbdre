@@ -1,6 +1,8 @@
 package com.wipro.ats.bdre.ml.models;
 
 import org.apache.spark.api.java.JavaSparkContext;
+import org.apache.spark.ml.clustering.KMeansModel;
+import org.apache.spark.ml.classification.OneVsRest;
 import org.apache.spark.ml.feature.VectorAssembler;
 import org.apache.spark.ml.regression.LinearRegressionModel;
 import org.apache.spark.mllib.linalg.SparseVector;

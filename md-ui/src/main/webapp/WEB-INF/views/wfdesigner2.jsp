@@ -436,7 +436,7 @@
                                                     </div>
                                                 </div>
                                                 <hr/>
-                                                <form class="form-horizontal" role="form" ng-if="genConfig.type != 'hql'  && genConfig.type != 'hadoopstream' && genConfig.type != 'r'  && genConfig.type != 'spark' && genConfig.type != 'pig' && genConfig.type != 'shell' && genConfig.type != 'source' && genConfig.type != 'filter' && genConfig.type != 'sort' && genConfig.type != 'take' && genConfig.type != 'persist' && genConfig.type != 'repartition' && genConfig.type != 'hive' && genConfig.type!='join' && genConfig.type != 'MapToPair' && genConfig.type != 'Map' && genConfig.type != 'FlatMap' && genConfig.type != 'Reduce' && genConfig.type != 'ReduceByKey' && genConfig.type != 'window' && genConfig.type != 'GroupByKey' && genConfig.type != 'emitter' && genConfig.type != 'persistentStore' && genConfig.type != 'addFiles' && genConfig.type != 'aggregation'  && genConfig.type != 'deDuplication' && genConfig.type != 'Custom' && genConfig.type != 'enricher' && genConfig.type != 'linearRegression'">
+                                                <form class="form-horizontal" role="form" ng-if="genConfig.type != 'hql'  && genConfig.type != 'hadoopstream' && genConfig.type != 'r'  && genConfig.type != 'spark' && genConfig.type != 'pig' && genConfig.type != 'shell' && genConfig.type != 'source' && genConfig.type != 'filter' && genConfig.type != 'sort' && genConfig.type != 'take' && genConfig.type != 'persist' && genConfig.type != 'repartition' && genConfig.type != 'hive' && genConfig.type!='join' && genConfig.type != 'MapToPair' && genConfig.type != 'Map' && genConfig.type != 'FlatMap' && genConfig.type != 'Reduce' && genConfig.type != 'ReduceByKey' && genConfig.type != 'window' && genConfig.type != 'GroupByKey' && genConfig.type != 'emitter' && genConfig.type != 'persistentStore' && genConfig.type != 'addFiles' && genConfig.type != 'aggregation'  && genConfig.type != 'deDuplication' && genConfig.type != 'Custom' && genConfig.type != 'enricher' && genConfig.type != 'linearRegression' && genConfig.type != 'logisticRegression'">
 
                                                     <div class="form-group">
                                                         <label class="control-label col-sm-2" for="{{genConfig.key}}-propkey"><spring:message code="wfdesigner.page.propkey_name"/></label>
@@ -1180,18 +1180,28 @@
                                                         <div class="clearfix"></div>
                                                         <button type="submit" ng-click="insertPersistentStoreProp(chartViewModel.selectedProcess.processId)" class="btn btn-primary  pull-right">Save</button>
                                                     </form>
-
+                      <script>
+                      var count=0;
+                      var coefficients;
+                      </script>
                       <script>
                       function loadModelProperties(loadMethod) {
                       console.log(loadMethod);
+                       console.log($('[ng-controller="AppCtrl"]').scope().chartViewModel.selectedProcess.processTypeId);
+                       var model= $('[ng-controller="AppCtrl"]').scope().chartViewModel.selectedProcess.processTypeId;
+                      if(model==84)
                       var div = document.getElementById('modelRequiredFields');
+                      else
+                      var div = document.getElementById('modelRequiredFieldsLogistic');
+                      console.log(div);
+
                                             console.log($('[ng-controller="AppCtrl"]').scope().chartViewModel.columnList);
                                             var columns=$('[ng-controller="AppCtrl"]').scope().chartViewModel.columnList;
 
 
 
                                             if(loadMethod=="serializedModel" || loadMethod=="pmmlFile"){
-
+                                            count=0;
                                             var formHTML='';
 
                                             formHTML=formHTML+'<div id="rawTablDetailsDB">';
@@ -1209,21 +1219,30 @@
                                             div.innerHTML = formHTML;
                                             }
 
-                                else if(loadMethod=='modelInformation'){
+                                else if(loadMethod=='ModelInformation'){
+                                console.log("Enter ModelInformation");
+                                    //console.log(coefficients);
                                     var formHTML='';
+
                                     var next=1;
+                                    var column;
                                	    formHTML=formHTML+'<div class="col-md-12" >';
                                   formHTML=formHTML+'<div class="col-md-4">Column </div>';
                                   formHTML=formHTML+'<div class="col-md-4">Coefficient</div>';
                                   formHTML=formHTML+'<div class="col-md-4">Intercept</div>';
-                               	formHTML=formHTML+'</div>';
-                                 <!--formHTML=formHTML+'<form class="form-horizontal" role="form" id="modelData">';-->
 
-                                  for(var t=0;t<columns.length;t++){
+                               	formHTML=formHTML+'</div>';
+
+
+                                  for(var t=0;t<=count;t++){
+
+
                                   formHTML=formHTML+'<div class="col-md-12" >';
                                   formHTML = formHTML +  '<div class="col-md-4">' ;
-                                  formHTML = formHTML +  '<input class="form-control" id="column.' + next + '" value='+ columns[t].Value +' name="column.' + next + '">' ;
-                                  formHTML = formHTML +  '</input>' ;
+
+                                  formHTML = formHTML + '  <select class="form-control" id="Column.' + next + '" name="Column.' + next + '" >';
+                                  formHTML = formHTML + ' <option ng-repeat="  column in columns " id="Column.' + next + '" value="' + columns[t].DisplayText + '">' + columns[t].DisplayText + '</option>';
+                                  formHTML = formHTML + '</select>';
                                   formHTML = formHTML +  '</div>' ;
                                   formHTML = formHTML +  '<div class="col-md-4">' ;
                                   formHTML = formHTML +  '<input class="form-control" id="Coefficient.' + next + '"value='+ 0 +' name="Coefficient.' + next + '">' ;
@@ -1239,18 +1258,28 @@
                                   }
                                   else
                                   {
+                                  console.log("Wht's up");
                                   formHTML = formHTML +  '<div class="col-md-4">' ;
-                                  //formHTML = formHTML +  '<input class="form-control" id="Intercept.' + next + '"value='+ 0 +' name="Intercept.' + next + '">' ;
-                                  //formHTML = formHTML +  '</input>' ;
+
                                	formHTML = formHTML +  '</div>' ;
+
                                   formHTML=formHTML+'</div>';
+
                                   }
                                   next++;
+
                                   }
+
+
+                                  count++;
+                                  formHTML=formHTML+'<div id="count" value="' + count + '"></div>';
+                                  formHTML=formHTML+'<button class = "btn btn-default  btn-success" style="margin-top: 30px;background: lightsteelblue;" type = "button" onClick = loadModelProperties("ModelInformation")  >Add Column</button >';
+
                                   div.innerHTML = formHTML;
 
                                             }
                                             else{
+                                            count=0;
                                             var formHTML='';
                                             div.innerHTML = formHTML;
                                             }
@@ -1260,9 +1289,9 @@
 
                             <div class="form-group">
                                                          <label class="control-label col-sm-3" for="modelImportType">Model Import Type</label>
-                                                         <select class="form-control" id="modelImportType" onchange="loadModelProperties(this.value);">
+                                                         <select class="form-control" id="modelImportType" name="modelImportType" onchange="loadModelProperties(this.value);">
                                                          <option value="s">Select the model</option>
-                                                             <option value="modelInformation">Model Information</option>
+                                                             <option value="ModelInformation">Model Information</option>
                                                              <option value="pmmlFile">PMML File</option>
                                                              <option value="serializedModel">Serialized Model File</option>
                                                          </select>
@@ -1279,9 +1308,162 @@
                                     <div id="modelRequiredFields"></div>
 
                           <div class="clearfix"></div>
-                    <button type="submit" ng-click="insertRegressionProp(chartViewModel.selectedProcess.processId)" class="btn btn-primary  pull-right">Save</button>
+                    <div style = "display:none" id = "div-dialog-warning" >
+                                                                        				<p ><span class = "ui-icon ui-icon-alert" style = "float:left;" ></span >
+
+                                                                        				</p>
+                                                                        				</div >
+                    <button type="submit" onClick="insertModelProp()" class="btn btn-primary  pull-right">Save</button>
                        </form>
 
+                       <form class="form-horizontal" role="form" ng-if="genConfig.type == 'logisticRegression'">
+
+                           <div class="form-group">
+                                                        <label class="control-label col-sm-3" for="modelImportTypeLogistic">Model Import Type</label>
+                                                        <select class="form-control" id="modelImportTypeLogistic" name="modelImportTypeLogistic" onchange="loadModelProperties(this.value);">
+                                                        <option value="s">Select the model</option>
+                                                            <option value="ModelInformation">Model Information</option>
+                                                            <option value="pmmlFile">PMML File</option>
+                                                            <option value="serializedModel">Serialized Model File</option>
+                                                        </select>
+                                                    </div>
+                                                    <br>
+                                                    <br>
+                                                    <br>
+                                                    <br>
+                                                    &nbsp
+                                                    &nbsp
+                                                    &nbsp
+                                                    &nbsp
+                                                    &nbsp
+                                   <div id="modelRequiredFieldsLogistic"></div>
+
+                         <div class="clearfix"></div>
+                   <div style = "display:none" id = "div-dialog-warning" >
+                                                                                    <p ><span class = "ui-icon ui-icon-alert" style = "float:left;" ></span >
+
+                                                                                    </p>
+                                                                                    </div >
+                   <button type="submit" onClick="insertModelProp()" class="btn btn-primary  pull-right">Save</button>
+                      </form>
+
+                       <script>
+                       function insertModelProp(){
+                       var map=new Object();
+                       var processId=$('[ng-controller="AppCtrl"]').scope().chartViewModel.selectedProcess.processId;
+                       var model=$('[ng-controller="AppCtrl"]').scope().chartViewModel.selectedProcess.processTypeId;
+                       console.log(model);
+                       if(model==84)
+                       value1=document.getElementById("modelImportType").value;
+                       else
+                       value1=document.getElementById("modelImportTypeLogistic").value;
+                       console.log(value1);
+                       if(value1=="serializedModel" || value1=="pmmlFile"){
+                       var value2=document.getElementById("regFile").value;
+                       console.log("hiiiii");
+                       console.log(value2);
+                       map["model-input-method"]=value1;
+                       map["filePath"]=value2;
+                       }
+                       else{
+
+
+
+
+
+                      intercept=document.getElementById("Intercept.1").value;
+
+                      var s1=document.getElementById("Column.1").value;
+                      var s2=s1.split(":");
+                      var text=s2[0];
+                      text=text.concat(":");
+                     text=text.concat(document.getElementById("Coefficient.1").value);
+                      for(i=2;i<=count;i++){
+
+                         text=text.concat(",");
+                        s1=document.getElementById("Column." + i).value;
+                        s2=s1.split(":");
+                          text=text.concat(s2[0]);
+                          text=text.concat(":");
+                          text=text.concat(document.getElementById("Coefficient." + i).value);
+
+                      }
+                      console.log("hello");
+                      console.log(text);
+                      map["model-input-method"]="ModelInformation";
+                      map["intercept"]=intercept;
+                      map["coefficients"]=text;
+                          }
+
+
+                           $.ajax({
+                                   type: "POST",
+                                   url: "/mdrest/properties/"+processId,
+                                   data: jQuery.param(map),
+                                   success: function(data) {
+                                       if(data.Result == "OK") {
+                                          var modal = document.getElementById('myModal');
+                                           modal.style.display = "none";
+                                           alertBox("info","Regression properties added");
+                                       }
+                                       else
+                                       alertBox("warning","Error occured");
+
+                                   }
+
+                               });
+
+                       }
+                       </script>
+                       <script>
+                       function uploadZip (subDir,fileId){
+                                                        var arg= [subDir,fileId];
+                                                          var fd = new FormData();
+                                                         		                var fileObj = $("#"+arg[1])[0].files[0];
+                                                                                 var fileName=fileObj.name;
+                                                                                 fd.append("file", fileObj);
+                                                                                 fd.append("name", fileName);
+                                                                                 $.ajax({
+                                                                                   url: '/mdrest/filehandler/uploadzip/'+arg[0],
+                                                                                   type: "POST",
+                                                                                   data: fd,
+                                                                                   async: false,
+                                                                                   enctype: 'multipart/form-data',
+                                                                                   processData: false,  // tell jQuery not to process the data
+                                                                                   contentType: false,  // tell jQuery not to set contentType
+                                                                                   success:function (data) {
+                                                                                         uploadedFileName=data.Record.fileName;
+                                                                                         console.log( data );
+                                                                                         $("#div-dialog-warning").dialog({
+                                                                                                         title: "",
+                                                                                                         resizable: false,
+                                                                                                         height: 'auto',
+                                                                                                         modal: true,
+                                                                                                         buttons: {
+                                                                                                             "Ok" : function () {
+                                                                                                                 $(this).dialog("close");
+                                                                                                             }
+                                                                                                         }
+                                                                                         }).html('<p><span class="jtable-confirm-message"><spring:message code="processimportwizard.page.upload_success"/>'+' ' + uploadedFileName + '</span></p>');
+                                                                                         return false;
+                                                         							},
+                                                         						  error: function () {
+                                                         							    $("#div-dialog-warning").dialog({
+                                                                                                     title: "",
+                                                                                                     resizable: false,
+                                                                                                     height: 'auto',
+                                                                                                     modal: true,
+                                                                                                     buttons: {
+                                                                                                         "Ok" : function () {
+                                                                                                             $(this).dialog("close");
+                                                                                                         }
+                                                                                                     }
+                                                                                     }).html('<p><span class="jtable-confirm-message"><spring:message code="processimportwizard.page.upload_error"/></span></p>');
+                                                                                     return false;
+                                                         							}
+                                                         						 });
+                                                         }
+                       </script>
 
                        <form class="form-horizontal" role="form" ng-if="genConfig.type == 'hive'">
 

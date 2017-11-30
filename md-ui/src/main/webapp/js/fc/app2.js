@@ -1455,45 +1455,54 @@ $scope.filterCategory=function(column){
 
 
 $scope.insertRegressionProp=function(processId){
-var value1=$(".js-example-basic-multiple1").select2("val");
-console.log("value1 ",value1);
-var continuousValue=value1[0];
-for(i=1;i<value1.length;i++)
-{
-     continuousValue=continuousValue.concat(",");
-     var s=value1[i];
-     continuousValue=continuousValue.concat(s);
-}
-var value2=$(".js-example-basic-multiple2").select2("val");
-var categoryValue=value2[0];
-for(i=1;i<value2.length;i++)
-{
-     categoryValue=categoryValue.concat(",");
-     var s=value2[i];
-     categoryValue=categoryValue.concat(s);
-}
-var value3=document.getElementById("labelColumn").value;
-var value4=document.getElementById("maxIter").value;
-var value5=document.getElementById("regParam").value;
-var value6=document.getElementById("elasticNetParam").value;
-var v1=document.getElementById("trainingData").value;
-var v2=document.getElementById("testData").value;
-if(document.getElementById("trainingData").checked)
-value7=v1;
-else
-value7=v2;
-var value8=document.getElementById("modelName").value;
-console.log("values are "+value1+" "+value2+" "+value3+""+value7);
-console.log("processId is "+processId);
+//var value1=m;
 var map=new Object();
-map["continuous-columns"]=continuousValue;
-map["category-columns"]=categoryValue;
-map["label-column"]=value3;
-map["max-iterations"]=value4;
-map["reg-param"]=value5;
-map["elastic-net-param"]=value6;
-map["type-of-data"]=value7;
-map["model-name"]=value8;
+
+value1=document.getElementById("modelImportType").value;
+//console.log(value1);
+if(value1=="serializedModel" || value1=="pmmlFile"){
+var value2=document.getElementById("regFile").value;
+console.log("hiiiii");
+console.log(value2);
+map["model-Import-Type"]=value1;
+map["filePath"]=value2;
+}
+else{
+
+var x = document.getElementById("modelRequiredFields");
+           var i;
+           //console.log(x.length);
+          for(i = 0; i < x.length; i++) {
+          console.log("hiii");
+          console.log(x.elements[i].value);
+    }
+
+
+
+
+     intercept=document.getElementById("Intercept.1").value;
+     map["intercept"]=intercept;
+     var c;
+    c=document.getElementById("count").value;
+
+   console.log(c);
+
+   var text=document.getElementById("Column.1").value;
+   text=text.concat("|");
+  text=text.concat(document.getElementById("Coefficient.1").value);
+   for(i=2;i<=2;i++){
+
+      text=text.concat(",");
+       text=text.concat(document.getElementById("Column." + i).value);
+       text=text.concat("|");
+       text=text.concat(document.getElementById("Coefficient." + i).value);
+
+   }
+   console.log("hello");
+   console.log(text);
+   }
+
+
     $.ajax({
             type: "POST",
             url: "/mdrest/properties/"+processId,
