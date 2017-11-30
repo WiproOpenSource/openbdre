@@ -359,7 +359,7 @@
                                                                                            attribute=attribute.concat(key);
 
                                                                                            attribute=attribute.concat(":");
-                                                                                           attribute=attribute.concat(map1[key]);
+                                                                                           attribute=attribute.concat(map1[key].charAt(0).toUpperCase()+map1[key].slice(1));
 
                                                                                            if(i<Object.keys(map1).length){
                                                                                            attribute=attribute.concat(",");}

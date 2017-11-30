@@ -85,7 +85,7 @@ public class ProcessDAO {
                 if(processTypeId==null){
 
                 if(userRoleListOfLoggedUser.contains("ROLE_ADMIN")){
-                    Criteria criteria = session.createCriteria(Process.class).add(Restrictions.isNull(PARENTPROCESSID)).add(Restrictions.eq(DELETE_FLAG, false)).add(Restrictions.not(Restrictions.eq("processType.processTypeId",41)))
+                    Criteria criteria = session.createCriteria(Process.class).add(Restrictions.isNull(PARENTPROCESSID)).add(Restrictions.eq(DELETE_FLAG, false)).add(Restrictions.not(Restrictions.eq("processType.processTypeId",41))).add(Restrictions.not(Restrictions.eq("processType.processTypeId",86)))
                             .addOrder(Order.desc(PROCESSID));
                     criteria.setFirstResult(pageNum);
                     criteria.setMaxResults(numResults);
