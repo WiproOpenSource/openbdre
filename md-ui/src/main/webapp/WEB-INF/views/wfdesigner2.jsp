@@ -1265,7 +1265,7 @@
 
                                   count++;
                                   formHTML=formHTML+'<div id="count" value="' + count + '"></div>';
-                                  formHTML=formHTML+'<button class = "btn btn-default  btn-success" style="margin-top: 30px;background: lightsteelblue;" type = "button" onClick = loadModelProperties("modelInformation")  >Add Column</button >';
+                                  formHTML=formHTML+'<button class = "btn btn-default  btn-success" style="margin-top: 30px;background: lightsteelblue;" type = "button" onClick = loadModelProperties("ModelInformation")  >Add Column</button >';
 
                                   div.innerHTML = formHTML;
 
@@ -1328,15 +1328,18 @@
 
                             intercept=document.getElementById("Intercept.1").value;
 
-
-                          var text=document.getElementById("Column.1").value;
-                          text=text.concat("|");
+                          var s1=document.getElementById("Column.1").value;
+                          var s2=s1.split(":");
+                          var text=s2[0];
+                          text=text.concat(":");
                          text=text.concat(document.getElementById("Coefficient.1").value);
                           for(i=2;i<=count;i++){
 
                              text=text.concat(",");
-                              text=text.concat(document.getElementById("Column." + i).value);
-                              text=text.concat("|");
+                            s1=document.getElementById("Column." + i).value;
+                            s2=s1.split(":");
+                              text=text.concat(s2[0]);
+                              text=text.concat(":");
                               text=text.concat(document.getElementById("Coefficient." + i).value);
 
                           }
