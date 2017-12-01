@@ -436,7 +436,7 @@
                                                     </div>
                                                 </div>
                                                 <hr/>
-                                                <form class="form-horizontal" role="form" ng-if="genConfig.type != 'hql'  && genConfig.type != 'hadoopstream' && genConfig.type != 'r'  && genConfig.type != 'spark' && genConfig.type != 'pig' && genConfig.type != 'shell' && genConfig.type != 'source' && genConfig.type != 'filter' && genConfig.type != 'sort' && genConfig.type != 'take' && genConfig.type != 'persist' && genConfig.type != 'repartition' && genConfig.type != 'hive' && genConfig.type!='join' && genConfig.type != 'MapToPair' && genConfig.type != 'Map' && genConfig.type != 'FlatMap' && genConfig.type != 'Reduce' && genConfig.type != 'ReduceByKey' && genConfig.type != 'window' && genConfig.type != 'GroupByKey' && genConfig.type != 'emitter' && genConfig.type != 'persistentStore' && genConfig.type != 'addFiles' && genConfig.type != 'aggregation'  && genConfig.type != 'deDuplication' && genConfig.type != 'Custom' && genConfig.type != 'enricher' && genConfig.type != 'linearRegression'">
+                                                <form class="form-horizontal" role="form" ng-if="genConfig.type != 'hql'  && genConfig.type != 'hadoopstream' && genConfig.type != 'r'  && genConfig.type != 'spark' && genConfig.type != 'pig' && genConfig.type != 'shell' && genConfig.type != 'source' && genConfig.type != 'filter' && genConfig.type != 'sort' && genConfig.type != 'take' && genConfig.type != 'persist' && genConfig.type != 'repartition' && genConfig.type != 'hive' && genConfig.type!='join' && genConfig.type != 'MapToPair' && genConfig.type != 'Map' && genConfig.type != 'FlatMap' && genConfig.type != 'Reduce' && genConfig.type != 'ReduceByKey' && genConfig.type != 'window' && genConfig.type != 'GroupByKey' && genConfig.type != 'emitter' && genConfig.type != 'persistentStore' && genConfig.type != 'addFiles' && genConfig.type != 'aggregation'  && genConfig.type != 'deDuplication' && genConfig.type != 'Custom' && genConfig.type != 'enricher' && genConfig.type != 'linearRegression' && genConfig.type != 'logisticRegression'">
 
                                                     <div class="form-group">
                                                         <label class="control-label col-sm-2" for="{{genConfig.key}}-propkey"><spring:message code="wfdesigner.page.propkey_name"/></label>
@@ -1186,9 +1186,15 @@
                       </script>
                       <script>
                       function loadModelProperties(loadMethod) {
-
-
+                      console.log(loadMethod);
+                       console.log($('[ng-controller="AppCtrl"]').scope().chartViewModel.selectedProcess.processTypeId);
+                       var model= $('[ng-controller="AppCtrl"]').scope().chartViewModel.selectedProcess.processTypeId;
+                      if(model==84)
                       var div = document.getElementById('modelRequiredFields');
+                      else
+                      var div = document.getElementById('modelRequiredFieldsLogistic');
+                      console.log(div);
+
                                             console.log($('[ng-controller="AppCtrl"]').scope().chartViewModel.columnList);
                                             var columns=$('[ng-controller="AppCtrl"]').scope().chartViewModel.columnList;
 
@@ -1214,6 +1220,7 @@
                                             }
 
                                 else if(loadMethod=='ModelInformation'){
+                                console.log("Enter ModelInformation");
                                     //console.log(coefficients);
                                     var formHTML='';
 
@@ -1251,6 +1258,7 @@
                                   }
                                   else
                                   {
+                                  console.log("Wht's up");
                                   formHTML = formHTML +  '<div class="col-md-4">' ;
 
                                	formHTML = formHTML +  '</div>' ;
@@ -1305,14 +1313,51 @@
 
                                                                         				</p>
                                                                         				</div >
-                    <button type="submit" onClick="insertLinearProp()" class="btn btn-primary  pull-right">Save</button>
+                    <button type="submit" onClick="insertModelProp()" class="btn btn-primary  pull-right">Save</button>
                        </form>
+
+                       <form class="form-horizontal" role="form" ng-if="genConfig.type == 'logisticRegression'">
+
+                           <div class="form-group">
+                                                        <label class="control-label col-sm-3" for="modelImportTypeLogistic">Model Import Type</label>
+                                                        <select class="form-control" id="modelImportTypeLogistic" name="modelImportTypeLogistic" onchange="loadModelProperties(this.value);">
+                                                        <option value="s">Select the model</option>
+                                                            <option value="ModelInformation">Model Information</option>
+                                                            <option value="pmmlFile">PMML File</option>
+                                                            <option value="serializedModel">Serialized Model File</option>
+                                                        </select>
+                                                    </div>
+                                                    <br>
+                                                    <br>
+                                                    <br>
+                                                    <br>
+                                                    &nbsp
+                                                    &nbsp
+                                                    &nbsp
+                                                    &nbsp
+                                                    &nbsp
+                                   <div id="modelRequiredFieldsLogistic"></div>
+
+                         <div class="clearfix"></div>
+                   <div style = "display:none" id = "div-dialog-warning" >
+                                                                                    <p ><span class = "ui-icon ui-icon-alert" style = "float:left;" ></span >
+
+                                                                                    </p>
+                                                                                    </div >
+                   <button type="submit" onClick="insertModelProp()" class="btn btn-primary  pull-right">Save</button>
+                      </form>
+
                        <script>
-                       function insertLinearProp(){
+                       function insertModelProp(){
                        var map=new Object();
                        var processId=$('[ng-controller="AppCtrl"]').scope().chartViewModel.selectedProcess.processId;
+                       var model=$('[ng-controller="AppCtrl"]').scope().chartViewModel.selectedProcess.processTypeId;
+                       console.log(model);
+                       if(model==84)
                        value1=document.getElementById("modelImportType").value;
-                       //console.log(value1);
+                       else
+                       value1=document.getElementById("modelImportTypeLogistic").value;
+                       console.log(value1);
                        if(value1=="serializedModel" || value1=="pmmlFile"){
                        var value2=document.getElementById("regFile").value;
                        console.log("hiiiii");
@@ -1326,8 +1371,9 @@
 
 
 
-                            intercept=document.getElementById("Intercept.1").value;
+                      intercept=document.getElementById("Intercept.1").value;
 
+<<<<<<< HEAD
                           var s1=document.getElementById("Column.1").value;
                           var s2=s1.split(":");
                           var text=s2[0];
@@ -1348,6 +1394,28 @@
                           map["model-input-method"]="ModelInformation";
                           map["intercept"]=intercept;
                           map["coefficients"]=text;
+=======
+                      var s1=document.getElementById("Column.1").value;
+                      var s2=s1.split(":");
+                      var text=s2[0];
+                      text=text.concat(":");
+                     text=text.concat(document.getElementById("Coefficient.1").value);
+                      for(i=2;i<=count;i++){
+
+                         text=text.concat(",");
+                        s1=document.getElementById("Column." + i).value;
+                        s2=s1.split(":");
+                          text=text.concat(s2[0]);
+                          text=text.concat(":");
+                          text=text.concat(document.getElementById("Coefficient." + i).value);
+
+                      }
+                      console.log("hello");
+                      console.log(text);
+                      map["model-input-method"]="ModelInformation";
+                      map["intercept"]=intercept;
+                      map["coefficients"]=text;
+>>>>>>> 294da8bace8ff62b702f2846aa472fa102b15469
                           }
 
 

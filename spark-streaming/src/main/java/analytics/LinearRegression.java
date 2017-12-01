@@ -47,7 +47,7 @@ public class LinearRegression implements Analytics {
             String coefficientString = lrProperties.getProperty("coefficients");
             System.out.println("coefficients are "+coefficientString);
             for(String s : coefficientString.split(",")){
-                System.out.println(s);
+
                 String[] arr = s.split(":");
                 String columnName = arr[0];
                 System.out.println(arr[0]);
