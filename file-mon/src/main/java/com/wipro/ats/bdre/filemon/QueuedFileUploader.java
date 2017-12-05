@@ -49,6 +49,7 @@ public class QueuedFileUploader {
 
     private static void hdfsCopy(FileCopyInfo fileCopying) throws IOException {
         try {
+            LOGGER.info("in the hdfs copy method");
             // Copying file from local to HDFS overriding, if file already exists
             config.set("fs.defaultFS", FileMonRunnableMain.getDefaultFSName());
             if("true".equals(FileMonRunnableMain.getKerberosEnabled() )) {

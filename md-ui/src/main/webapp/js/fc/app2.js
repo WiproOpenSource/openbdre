@@ -1380,6 +1380,8 @@ map["connectionName"]=value1;
         });
 }
 
+
+
 $scope.insertCustomProp=function(parentProcessId,processId){
 var value=document.getElementById("executorPlugin").value;
 $scope.uploadJar(parentProcessId,processId,'customJar');
@@ -1429,6 +1431,96 @@ map["connectionName"]=value1;
 
         });
 }
+
+$scope.filterContinuous=function(column){
+
+  var tmp=column.Value.split(":");
+  console.log("column is ",column);
+  if(tmp[1]=="Integer" || tmp[1]=="Long" || tmp[1]=="Short" || tmp[1]=="Byte" || tmp[1]=="Float" || tmp[1]=="Double" || tmp[1]=="Decimal"){
+    return column;
+  }
+
+
+}
+$scope.filterCategory=function(column){
+
+  var tmp=column.Value.split(":");
+  console.log("column is ",column);
+  if(tmp[1]==("String") || tmp[1]==("Boolean") || tmp[1]==("Date") || tmp[1]==("Timestamp")){
+    return column;
+  }
+
+
+}
+
+
+$scope.insertRegressionProp=function(processId){
+//var value1=m;
+var map=new Object();
+
+value1=document.getElementById("modelImportType").value;
+//console.log(value1);
+if(value1=="serializedModel" || value1=="pmmlFile"){
+var value2=document.getElementById("regFile").value;
+console.log("hiiiii");
+console.log(value2);
+map["model-Import-Type"]=value1;
+map["filePath"]=value2;
+}
+else{
+
+var x = document.getElementById("modelRequiredFields");
+           var i;
+           //console.log(x.length);
+          for(i = 0; i < x.length; i++) {
+          console.log("hiii");
+          console.log(x.elements[i].value);
+    }
+
+
+
+
+     intercept=document.getElementById("Intercept.1").value;
+     map["intercept"]=intercept;
+     var c;
+    c=document.getElementById("count").value;
+
+   console.log(c);
+
+   var text=document.getElementById("Column.1").value;
+   text=text.concat("|");
+  text=text.concat(document.getElementById("Coefficient.1").value);
+   for(i=2;i<=2;i++){
+
+      text=text.concat(",");
+       text=text.concat(document.getElementById("Column." + i).value);
+       text=text.concat("|");
+       text=text.concat(document.getElementById("Coefficient." + i).value);
+
+   }
+   console.log("hello");
+   console.log(text);
+   }
+
+
+    $.ajax({
+            type: "POST",
+            url: "/mdrest/properties/"+processId,
+            data: jQuery.param(map),
+            success: function(data) {
+                if(data.Result == "OK") {
+                   var modal = document.getElementById('myModal');
+                    modal.style.display = "none";
+                    alertBox("info","Regression properties added");
+                }
+                else
+                alertBox("warning","Error occured");
+
+            }
+
+        });
+}
+
 
 
 
