@@ -817,6 +817,7 @@
 'MultilayerPerceptronClassifier_Model','pmmlFile','PMML File','PMML File', 1,'','text', 1
 'MultilayerPerceptronClassifier_Model','serializedModel','Serialized Model','Serialized Model', 1,'','text', 1
 
+'KMeans_Model','ModelInformation','Model Information','Model Information', 1,'','text', 1
 'KMeans_Model','pmmlFile','PMML File','PMML File', 1,'','text', 1
 'KMeans_Model','serializedModel','Serialized Model','Serialized Model', 1,'','text', 1
 

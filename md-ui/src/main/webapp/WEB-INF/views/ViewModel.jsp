@@ -1438,7 +1438,7 @@
                                     edit: false,
                                     display: function(data) {
 
-                                     return '<span class="label-icons slamonitor" onclick="goToSLAMonitoringPage(' + data.record.processId + ')"></span> ';
+                                     return '<span class="label-icons slamonitor" onclick="goTomlresultsPage(' + data.record.processId + ')"></span> ';
                                      },
 
                                 },
@@ -1632,19 +1632,9 @@
                                         });
                            }
 
-                     function goToSLAMonitoringPage(pid)
+                     function goTomlresultsPage(pid)
                                           {
-                            $("#execute-result").dialog({
-                                resizable: false,
-                                height: 'auto',
-                                modal: true,
-                                buttons: {
-                                    "OK": function() {
-                                        $(this).dialog("close");
-                                    }
-                                }
-                            }).html('<p><span class="jtable-confirm-message"><b>View prediction result in hdfs at /user/cloudera/ml-batch/'+ pid +'</b></span></p>');
-
+                            location.href = '<c:url value="/pages/mlresults.page?processId="/>' + pid;
 
 
                                          }
