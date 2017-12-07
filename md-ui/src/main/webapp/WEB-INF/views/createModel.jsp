@@ -279,6 +279,9 @@
                                  alert('danger');
                              }
                          });
+                         $scope.srenv="localhost:10000";
+
+
                          $.ajax({
                          url: "/mdrest/genconfig/PersistentStores_Connection_Type/?required=2",
                          type: 'POST',
@@ -512,7 +515,14 @@
                         formHTML = formHTML +  '<div class="col-md-4">' ;
 
                         formHTML = formHTML + '  <select class="form-control" id="Column.' + next + '" name="Column.' + next + '" >';
+
                         formHTML = formHTML + ' <option ng-repeat="  column in columns " id="Column.' + next + '" value="' + columns[t] + '">' + columns[t] + '</option>';
+
+                        //formHTML = formHTML + ' <option ng-repeat="  column in columns " id="Column.' + next + '" value="' + columns[t] + '">' + columns[t] + '</option>';
+                        for(var k=0;k<columns.length;k++){
+                        formHTML=formHTML+'<option value="'+ columns[k] + '">' + columns[k] + '</option>';
+                        }
+
                         formHTML = formHTML + '</select>';
                         formHTML = formHTML +  '</div>' ;
                         formHTML = formHTML +  '<div class="col-md-4">' ;
@@ -544,6 +554,10 @@
 
                         count++;
                         formHTML=formHTML+'<div id="count" value="' + count + '"></div>';
+
+
+                        if(count<columns.length)
+
                         formHTML=formHTML+'<button class = "btn btn-default  btn-success" style="margin-top: 30px;background: lightsteelblue;" type = "button" onClick = loadModelProperties("ModelInformation")  >Add Column</button >';
 
                         div.innerHTML = formHTML;}

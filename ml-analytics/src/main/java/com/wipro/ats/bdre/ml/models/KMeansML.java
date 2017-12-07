@@ -28,7 +28,10 @@ public class KMeansML {
         VectorAssembler assembler=new VectorAssembler().setInputCols(columnNames).setOutputCol("features");
         DataFrame testDataFrame=assembler.transform(dataFrame);
 
-        String[] cen=centers.split(";");
+
+
+        String[] cen=centers.split(":");
+
         org.apache.spark.mllib.linalg.Vector[] vector= new Vector[cen.length];
         for(int j=0;j<cen.length;j++){
             String[] c=cen[j].split(",");
@@ -51,7 +54,11 @@ public class KMeansML {
 
         }
         DataFrame predictionDF=model1.transform(testDataFrame);
+
         //predictionDF.show(20);
         return predictionDF;
     }
 }
+
+
+

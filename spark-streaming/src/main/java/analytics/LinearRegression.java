@@ -40,6 +40,7 @@ public class LinearRegression implements Analytics {
         JavaPairDStream<String,WrapperMessage> prevDStream = prevDStreamMap.get(prevPid);
 
         GetProperties getProperties = new GetProperties();
+        System.out.println(pid);
         Properties lrProperties = getProperties.getProperties(String.valueOf(pid), "default");
         String modelInputMethod = lrProperties.getProperty("model-input-method");
         columnCoefficientMap.clear();
