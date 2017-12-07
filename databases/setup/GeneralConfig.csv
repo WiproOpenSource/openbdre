@@ -778,6 +778,7 @@
 
 '84','default','LinearRegression','LinearRegression', 1,'true','linearRegression', 1
 '83','default','LogisticRegression','LogisticRegression', 1,'true','logisticRegression', 1
+'85','default','KMeans','KMeans', 1,'true','kMeans', 1
 
 'Ml_Model','LogisticRegression','Logistic Regression','Logistic Regression', 1,'','text', 1
 'Ml_Model','LinearRegression','Linear Regression','Linear Regression', 1,'','text', 1

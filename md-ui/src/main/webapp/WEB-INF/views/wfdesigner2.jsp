@@ -1373,7 +1373,7 @@
 
                       intercept=document.getElementById("Intercept.1").value;
 
-<<<<<<< HEAD
+
                           var s1=document.getElementById("Column.1").value;
                           var s2=s1.split(":");
                           var text=s2[0];
@@ -1394,7 +1394,6 @@
                           map["model-input-method"]="ModelInformation";
                           map["intercept"]=intercept;
                           map["coefficients"]=text;
-=======
                       var s1=document.getElementById("Column.1").value;
                       var s2=s1.split(":");
                       var text=s2[0];
@@ -1415,7 +1414,7 @@
                       map["model-input-method"]="ModelInformation";
                       map["intercept"]=intercept;
                       map["coefficients"]=text;
->>>>>>> 294da8bace8ff62b702f2846aa472fa102b15469
+
                           }
 
 

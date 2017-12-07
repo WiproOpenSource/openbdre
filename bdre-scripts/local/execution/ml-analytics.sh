@@ -18,8 +18,6 @@ OTHER_JARS=""
        OTHER_JARS=$eachjarinlib,$OTHER_JARS
    done
 
-<<<<<<< HEAD
-spark-submit --class com.wipro.ats.bdre.ml.driver.MLMain --master local[*]  --jars $OTHER_JARS /home/cloudera/openbdre/target/lib/ml-analytics/ml-analytics-1.1-SNAPSHOT.jar 52 admin > ~/log.txt
-=======
+
 spark-submit --class com.wipro.ats.bdre.ml.driver.MLMain --master local[*]  --jars $OTHER_JARS /home/cloudera/openbdre/target/lib/ml-analytics/ml-analytics-1.1-SNAPSHOT.jar $processId $userName > ~/log.txt
->>>>>>> 294da8bace8ff62b702f2846aa472fa102b15469
+

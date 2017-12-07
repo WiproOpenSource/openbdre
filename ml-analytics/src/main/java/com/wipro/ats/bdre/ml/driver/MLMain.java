@@ -4,6 +4,7 @@ import com.wipro.ats.bdre.md.api.GetProcess;
 import com.wipro.ats.bdre.md.api.GetProperties;
 import com.wipro.ats.bdre.md.api.InstanceExecAPI;
 import com.wipro.ats.bdre.md.beans.ProcessInfo;
+import com.wipro.ats.bdre.ml.models.KMeansML;
 import com.wipro.ats.bdre.ml.models.LinearRegressionML;
 import com.wipro.ats.bdre.ml.models.LogisticRegressionML;
 import com.wipro.ats.bdre.ml.schema.SchemaGeneration;
@@ -90,6 +91,13 @@ public class MLMain {
                 } else if (mlAlgo.equalsIgnoreCase("LogisticRegression")) {
                     LogisticRegressionML logisticRegressionML = new LogisticRegressionML();
                     predictionDF=logisticRegressionML.productionalizeModel(dataFrame, columnCoefficientMap, intercept, jsc);
+
+                }
+                else if (mlAlgo.equalsIgnoreCase("KMeans")){
+                    String centers = properties.getProperty("clusters");
+                    KMeansML kMeansML=new KMeansML();
+                    predictionDF=kMeansML.productionalizeModel(dataFrame, centers, schemaString, jsc);
+
                 }
 
             } else if (modelInputMethod.equalsIgnoreCase("PMML")) {
@@ -106,7 +114,8 @@ public class MLMain {
             InstanceExecAPI instanceExecAPI2 = new InstanceExecAPI();
             instanceExecAPI2.updateInstanceExecToFinished(parentProcessId, applicationId);
             System.out.println("status changed to success");
-            predictionDF.write().format("json").save("/user/cloudera/ml-batch/"+parentProcessId);
+            //predictionDF.write().format("json").save("/user/cloudera/ml-batch/"+parentProcessId);
+            predictionDF.write().mode("overwrite").saveAsTable("ML_" + parentProcessId );
            // predictionDF.write().saveAsTable("demo_table");
         }catch (Exception e){
             LOGGER.info("final exception = " + e);
@@ -116,12 +125,10 @@ public class MLMain {
             e.printStackTrace();
         }
 
-<<<<<<< HEAD
-        predictionDF.show(100);
 
 
 
-=======
->>>>>>> 294da8bace8ff62b702f2846aa472fa102b15469
+
+
     }
 }
