@@ -73,6 +73,7 @@
           }
       });
     $scope.gridOptions = {
+    enableFiltering: true,
     onRegisterApi: function (gridApi) {
     $scope.grid1Api = gridApi;
     }
