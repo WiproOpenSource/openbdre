@@ -42,7 +42,9 @@
             width: 1350px;
             height: 500px;
             }
-    </style>
+
+        </style>
+
 
     </head>
     <script>

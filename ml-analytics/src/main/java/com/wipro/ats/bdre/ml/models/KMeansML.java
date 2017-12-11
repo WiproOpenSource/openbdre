@@ -17,13 +17,8 @@ import java.util.*;
  * Created by cloudera on 12/05/17.
  */
 public class KMeansML {
-    public DataFrame productionalizeModel(DataFrame dataFrame, String centers, String schema,JavaSparkContext jsc){
-        String[] features=schema.split(",");
-        String[] columnNames=new String[features.length];
-        for(int i=0;i<features.length;i++){
-            String[] column=features[i].split(":");
-            columnNames[i]=column[0];
-        }
+    public DataFrame productionalizeModel(DataFrame dataFrame, String centers, String features,JavaSparkContext jsc){
+        String[] columnNames=features.split(",");
 
         VectorAssembler assembler=new VectorAssembler().setInputCols(columnNames).setOutputCol("features");
         DataFrame testDataFrame=assembler.transform(dataFrame);

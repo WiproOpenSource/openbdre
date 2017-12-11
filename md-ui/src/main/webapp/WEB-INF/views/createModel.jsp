@@ -185,6 +185,24 @@
                                                                  });
                                                                  });
                                                               },
+                                                              deleteAction: function(postData) {
+                                                           return $.Deferred(function ($dfd) {
+                                                                                                                          $.ajax({
+                                                                                                                            url: "/mdrest/ml/columns/" + srenv + '/' + srcDb + '/' + tbl,
+                                                                                                                                type: 'GET',
+                                                                                                                                dataType: 'json',
+                                                                                                                                async: false,
+                                                                                                                                success: function (data) {
+
+                                                                                                                                    $dfd.resolve(data);
+                                                                                                                                },
+                                                                                                                                error: function () {
+                                                                                                                                    alert('danger');
+                                                                                                                                }
+                                                                                                                            });
+                                                                                                                            });
+                                                               },
+
                                                              updateAction: function(postData) {
                                                                                       }
                                                                                       },
@@ -334,12 +352,22 @@
                                                                                               map["coefficients"]=text;
                                                                                        }
                                                                                        else{
+                                                                                       var value1=$(".js-example-basic-multiple").select2("val");
+                                                                                       console.log("value1 ",value1);
+                                                                                       var continuousValue=value1[0];
+                                                                                       for(var l=1;l<value1.length;l++)
+                                                                                       {
+                                                                                            continuousValue=continuousValue.concat(",");
+                                                                                            var s=value1[l];
+                                                                                            continuousValue=continuousValue.concat(s);
+                                                                                       }
                                                                                        var text=document.getElementById("Information.1").value;
                                                                                        for(i=2;i<=count1;i++){
                                                                                        text=text.concat(":");
                                                                                        text=text.concat(document.getElementById("Information."+i).value);
                                                                                        }
                                                                                        map["clusters"]=text;
+                                                                                       map["features"]=continuousValue;
                                                                                        }
 
                                                                                        jtableIntoMap("", "rawTableColumnDetails");
@@ -468,6 +496,27 @@
           </script>
           <script>
           function loadModelProperties(loadMethod) {
+          if(count1>0)
+          var selected=$(".js-example-basic-multiple").select2("val");
+          var inter=0;
+          var prevCoeffValues=[];
+          var prevClusterValues=[];
+          var prevColumnNames=[];
+          if(count>0){
+             inter=document.getElementById("Intercept.1").value;
+             for(var j=1;j<=count;j++){
+                prevCoeffValues.push(document.getElementById("Coefficient."+ j).value);
+                prevColumnNames.push(document.getElementById("Column."+ j).value);
+             }
+          }
+          if(count1>0){
+
+                       for(var j=1;j<=count1;j++){
+                          prevClusterValues.push(document.getElementById("Information."+ j).value);
+                       }
+                    }
+
+
               console.log(loadMethod);
               var div = document.getElementById('modelRequiredFields');
                       if(loadMethod=="serializedModel" || loadMethod=="pmmlFile"){
@@ -493,7 +542,7 @@
                       console.log(model);
                       if(model=="LogisticRegression" || model=="LinearRegression"){
                       count1=0;
-                      console.log(columns);
+
                       console.log("Enter ModelInformation");
                           //console.log(coefficients);
                           var formHTML='';
@@ -515,20 +564,32 @@
                         formHTML = formHTML +  '<div class="col-md-4">' ;
 
                         formHTML = formHTML + '  <select class="form-control" id="Column.' + next + '" name="Column.' + next + '" >';
+
+                        //formHTML = formHTML + ' <option ng-repeat="  column in columns " id="Column.' + next + '" value="' + columns[t] + '">' + columns[t] + '</option>';
+
                         //formHTML = formHTML + ' <option ng-repeat="  column in columns " id="Column.' + next + '" value="' + columns[t] + '">' + columns[t] + '</option>';
                         for(var k=0;k<columns.length;k++){
-                        formHTML=formHTML+'<option value="'+ columns[k] + '">' + columns[k] + '</option>';
+                         if(columns[k]==prevColumnNames[t]){
+                                                formHTML=formHTML+'<option value="'+ columns[k] + '" selected>' + columns[k] + '</option>';
+                                                }
+                                                else{
+                                                formHTML=formHTML+'<option value="'+ columns[k] + '">' + columns[k] + '</option>';}
                         }
+
                         formHTML = formHTML + '</select>';
                         formHTML = formHTML +  '</div>' ;
                         formHTML = formHTML +  '<div class="col-md-4">' ;
-                        formHTML = formHTML +  '<input class="form-control" id="Coefficient.' + next + '"value='+ 0 +' name="Coefficient.' + next + '">' ;
+                        if(t==count){
+                        formHTML = formHTML +  '<input class="form-control" id="Coefficient.' + next + '"value='+ 0 +' name="Coefficient.' + next + '">' ;}
+                        else{
+                        formHTML = formHTML +  '<input class="form-control" id="Coefficient.' + next + '"value='+ prevCoeffValues[t] +' name="Coefficient.' + next + '">' ;
+                        }
                         formHTML = formHTML +  '</input>' ;
                         formHTML = formHTML +  '</div>' ;
 
                         if(t==0){
                         formHTML = formHTML +  '<div class="col-md-4">' ;
-                        formHTML = formHTML +  '<input class="form-control" id="Intercept.' + next + '"value='+ 0 +' name="Intercept.' + next + '">' ;
+                        formHTML = formHTML +  '<input class="form-control" id="Intercept.' + next + '"value='+ inter +' name="Intercept.' + next + '">' ;
                         formHTML = formHTML +  '</input>' ;
                         formHTML = formHTML +  '</div>' ;
                         formHTML=formHTML+'</div>';
@@ -550,16 +611,46 @@
 
                         count++;
                         formHTML=formHTML+'<div id="count" value="' + count + '"></div>';
+
+
                         if(count<columns.length)
+
                         formHTML=formHTML+'<button class = "btn btn-default  btn-success" style="margin-top: 30px;background: lightsteelblue;" type = "button" onClick = loadModelProperties("ModelInformation")  >Add Column</button >';
 
                         div.innerHTML = formHTML;}
                         else{
                         count=0;
                         var formHTML='';
+                        if(count1==0){
+                        formHTML=formHTML+'<div id="clusterFeatures"';
+                        formHTML=formHTML + ' <label class="form-control" for="features">Select Features</label>';
+                       formHTML=formHTML + ' <select class="js-example-basic-multiple" id="features" name="features" multiple="multiple">';
+                       for(var k=0;k<columns.length;k++){
+                                               formHTML=formHTML+'<option value="'+ columns[k] + '">' + columns[k] + '</option>';
+                                               }
+                                               formHTML=formHTML+"</select>";
+                                               formHTML=formHTML+'</div>';
+                                               }
+                                               else{
+                                                    formHTML=formHTML+'<div id="clusterFeatures"';
+                                                                            formHTML=formHTML + ' <label class="form-control" for="features">Select Features</label>';
+                                                                           formHTML=formHTML + ' <select class="js-example-basic-multiple" id="features" name="features" multiple="multiple">';
+                                                                           for(var k=0;k<columns.length;k++){
+                                                                                                   formHTML=formHTML+'<option value="'+ columns[k] + '">' + columns[k] + '</option>';
+                                                                                                   }
+                                                                                                   formHTML=formHTML+"</select>";
+                                                                                                   formHTML=formHTML+'</div>';
+
+                                               }
 
                               var next=1;
                               var column;
+                              formHTML=formHTML+'<br>';
+                              formHTML=formHTML+'<br>';
+                              formHTML=formHTML+'<br>';
+                              formHTML=formHTML+'<br>';
+                              formHTML=formHTML+'<br>';
+                              formHTML=formHTML+'<div id="clusterCentres"';
                                 formHTML=formHTML+'<div class="col-md-12" >';
                             formHTML=formHTML+'<div class="col-md-4">Cluster No</div>';
                             formHTML=formHTML+'<div class="col-md-4">Cluster Centre</div>';
@@ -576,7 +667,10 @@
                             formHTML = formHTML +  '</input>' ;
                             formHTML = formHTML +  '</div>' ;
                             formHTML = formHTML +  '<div class="col-md-4">' ;
+                            if(t==count1)
                             formHTML = formHTML +  '<input class="form-control" id="Information.' + next + '"value='+ 0 +' name="Information.' + next + '">' ;
+                            else
+                            formHTML = formHTML +  '<input class="form-control" id="Information.' + next + '"value='+ prevClusterValues[t] +' name="Information.' + next + '">' ;
                             formHTML = formHTML +  '</input>' ;
                             formHTML = formHTML +  '</div>' ;
                             formHTML=formHTML+'</div>';
@@ -586,10 +680,19 @@
                             }
 
                             count1++;
-                            formHTML=formHTML+'<div id="count" value="' + count1 + '"></div>';
-                            formHTML=formHTML+'<button class = "btn btn-default  btn-success" style="margin-top: 30px;background: lightsteelblue;" type = "button" onClick = loadModelProperties("ModelInformation")  >Add Clusters</button >';
 
+                            formHTML=formHTML+'<button class = "btn btn-default  btn-success" style="margin-top: 30px;background: lightsteelblue;" type = "button" onClick = loadModelProperties("ModelInformation")  >Add Cluster</button >';
+                            formHTML=formHTML+'</div>';
                             div.innerHTML = formHTML;
+
+                            console.log("hhahahhahaha");
+                            $(".js-example-basic-multiple").select2();
+                            console.log("hhahahhahaha");
+                            if(count1>1){
+                            $('#features').val(selected);
+
+                            $('#features').trigger('change');
+                            }
                         }
 
                                   }
@@ -601,6 +704,7 @@
                                   }
                       }
           </script>
+
 
 
   <div  ng-app="app" id="preModelDetails" ng-controller="myCtrl">

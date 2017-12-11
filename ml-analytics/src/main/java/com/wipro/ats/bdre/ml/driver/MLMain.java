@@ -97,8 +97,9 @@ public class MLMain {
                 }
                 else if (mlAlgo.equalsIgnoreCase("KMeans")){
                     String centers = properties.getProperty("clusters");
+                    String features = properties.getProperty("features");
                     KMeansML kMeansML=new KMeansML();
-                    predictionDF=kMeansML.productionalizeModel(dataFrame, centers, schemaString, jsc);
+                    predictionDF=kMeansML.productionalizeModel(dataFrame, centers, features, jsc);
 
                 }
 
