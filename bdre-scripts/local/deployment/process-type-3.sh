@@ -1,4 +1,4 @@
-l#!/bin/sh
+#!/bin/sh
 
 . $(dirname $0)/../env.properties
 BDRE_HOME=~/bdre

@@ -20,13 +20,15 @@ import org.apache.commons.collections4.map.LinkedMap;
 import org.apache.commons.vfs2.*;
 import org.apache.log4j.Logger;
 
+import java.io.File;
+import java.io.FileInputStream;
 
 
 /**
  * Created by vishnu on 1/11/15.
  */
 public class FileMonitor implements FileListener {
-    private static final Logger LOGGER = Logger.getLogger(FileMonRunnableMain.class);
+    private static final Logger LOGGER = Logger.getLogger(FileMonitor.class);
     private static FileMonitor fileMonitor = null;
 
     private String monDir = null;
@@ -73,9 +75,9 @@ public class FileMonitor implements FileListener {
     @Override
     public void fileCreated(FileChangeEvent fileChangeEvent) throws Exception {
         FileObject obj = fileChangeEvent.getFile();
-        LOGGER.debug("File Created " + obj.getURL());
+        LOGGER.info("File Created " + obj.getURL());
         String dirPath = obj.getParent().getName().getPath();
-        LOGGER.debug("Full path "+obj.getName().getPath());
+        LOGGER.info("Full path "+obj.getName().getPath());
 
         //Don't process anything with _archive
         if(dirPath.startsWith(monDir+"/"+archiveDirName)){
@@ -90,8 +92,9 @@ public class FileMonitor implements FileListener {
 
         //Checking if the file name matches with the given pattern
         if (fileName.matches(filePattern)) {
+            LOGGER.info("file object content is open :"+obj.isContentOpen());
             FileContent fc = obj.getContent();
-            LOGGER.debug("Matched File Pattern by " + fileName);
+            LOGGER.info("Matched File Pattern by " + fileName);
             putEligibleFileInfoInMap(fileName, fc);
         }
     }
@@ -99,14 +102,43 @@ public class FileMonitor implements FileListener {
     private static void putEligibleFileInfoInMap(String fileName, FileContent fc) {
         // *Start*   Eligible files moved to data structure for ingestion to HDFS
         FileCopyInfo fileCopyInfo = new FileCopyInfo();
+        LOGGER.info("in putEligibleFileInfoInMap function");
         try {
             fileCopyInfo.setFileName(fileName);
             fileCopyInfo.setSubProcessId(FileMonRunnableMain.getSubProcessId());
             fileCopyInfo.setServerId(Integer.toString(123461));
             fileCopyInfo.setSrcLocation(fc.getFile().getName().getPath());
             fileCopyInfo.setDstLocation(new java.io.File(fileName).getParent().replace(FileMonRunnableMain.getMonitoredDirName(), FileMonRunnableMain.getHdfsUploadDir()));
-            fileCopyInfo.setFileHash(DigestUtils.md5Hex(fc.getInputStream()));
+            //fileCopyInfo.setFileHash(DigestUtils.md5Hex(fc.getInputStream()));
+            fileCopyInfo.setFileHash(fileName+fc.getLastModifiedTime());
             fileCopyInfo.setFileSize(fc.getSize());
+            Long prevSize=0L;
+            Long currentSize=0L;
+            while (true)
+            {
+                try {
+                    currentSize=new File(fileName).length();
+                    LOGGER.info("currentSize of file: "+fileName+" is "+currentSize);
+
+                } catch (Exception e) {
+                    LOGGER.info(e);
+
+                }
+                if(currentSize.equals(prevSize))
+                {
+                    break;
+
+                }
+                else
+                {
+                    prevSize=currentSize;
+                    Thread.sleep(1000);
+                    continue;
+                }
+
+            }
+
+
             fileCopyInfo.setTimeStamp(fc.getLastModifiedTime());
             // putting element to structure
            addToQueue(fileName,fileCopyInfo);
@@ -124,6 +156,7 @@ public class FileMonitor implements FileListener {
 
     @Override
     public void fileChanged(FileChangeEvent fileChangeEvent) throws Exception {
+        LOGGER.info("file is changing");
         //nothing to do
     }
 

@@ -73,9 +73,16 @@ public class Dao2TableUtil {
         ProcessType daoProcessType = new ProcessType();
         daoProcessType.setProcessTypeId(processTypeId);
         daoProcess.setProcessType(daoProcessType);
+        LOGGER.info("workflow type id is "+workflowTypeId);
         if (workflowTypeId != null) {
-            com.wipro.ats.bdre.md.dao.jpa.WorkflowType daoWorkflowType = new com.wipro.ats.bdre.md.dao.jpa.WorkflowType();
+            com.wipro.ats.bdre.md.dao.jpa.WorkflowType daoWorkflowType =new WorkflowType();
             daoWorkflowType.setWorkflowId(workflowTypeId);
+            daoProcess.setWorkflowType(daoWorkflowType);
+        }
+        else
+        {
+            com.wipro.ats.bdre.md.dao.jpa.WorkflowType daoWorkflowType =new WorkflowType();
+            daoWorkflowType.setWorkflowId(1);
             daoProcess.setWorkflowType(daoWorkflowType);
         }
         com.wipro.ats.bdre.md.dao.jpa.BusDomain daoBusDomain = new com.wipro.ats.bdre.md.dao.jpa.BusDomain();
@@ -114,6 +121,24 @@ public class Dao2TableUtil {
             properties.setConfigGroup(configGrp);
             properties.setPropValue(value);
             PropertiesId propertiesId = new PropertiesId();
+            propertiesId.setPropKey(key);
+            properties.setId(propertiesId);
+            properties.setDescription(desc);
+
+        } catch (Exception e) {
+            LOGGER.error(e);
+        }
+        return properties;
+    }
+
+    public static ConnectionProperties buildJPAConnectionProperties(String configGrp, String key, String value, String desc) {
+        ConnectionProperties properties = new ConnectionProperties();
+        try {
+            Connections connections = new Connections();
+            properties.setConnections(connections);
+            properties.setConfigGroup(configGrp);
+            properties.setPropValue(value);
+            ConnectionPropertiesId propertiesId = new ConnectionPropertiesId();
             propertiesId.setPropKey(key);
             properties.setId(propertiesId);
             properties.setDescription(desc);

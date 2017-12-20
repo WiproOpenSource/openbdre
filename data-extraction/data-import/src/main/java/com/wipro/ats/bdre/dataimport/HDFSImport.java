@@ -17,7 +17,9 @@ package com.wipro.ats.bdre.dataimport;
 import com.cloudera.sqoop.SqoopOptions;
 import com.wipro.ats.bdre.IMConfig;
 import com.wipro.ats.bdre.im.etl.api.exception.ETLException;
+import com.wipro.ats.bdre.md.api.GetProcess;
 import com.wipro.ats.bdre.md.api.ProcessLog;
+import com.wipro.ats.bdre.md.beans.ProcessInfo;
 import com.wipro.ats.bdre.md.beans.ProcessLogInfo;
 import com.wipro.ats.bdre.md.beans.RegisterFileInfo;
 import com.wipro.ats.bdre.util.OozieUtil;
@@ -31,7 +33,12 @@ import org.apache.hadoop.util.Tool;
 import org.apache.log4j.Logger;
 import org.apache.sqoop.tool.ImportTool;
 
+import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.sql.Timestamp;
 import java.util.Date;
 import java.util.Properties;
@@ -87,12 +94,22 @@ public class HDFSImport extends Configured implements Tool {
         Class.forName(driver).newInstance();
 
         try {
+            GetProcess getProcess = new GetProcess();
+            ProcessInfo parentProcessInfo = getProcess.getParentProcess(Integer.valueOf(processId));
+            Integer workflowTypeId = parentProcessInfo.getWorkflowId();
+            Integer parentProcessId = parentProcessInfo.getProcessId();
+            LOGGER.info("workflowTypeId is "+ workflowTypeId);
+            LOGGER.info("paretProcessId is "+ parentProcessId);
+
             SqoopOptions options = new SqoopOptions();
             options.setDriverClassName(driver);
 
             //reading properties from IMConfig file
             String targetDir = IMConfig.getProperty("data-import.target-dir");
-            String jarOutputDir = IMConfig.getProperty("data-import.jar-output-dir") + "/" + processId + "/" + batchId;
+            String jarOutputDir = IMConfig.getProperty("data-import.jar-output-dir-oozie") + "/" + processId + "/" + batchId;
+            if(workflowTypeId == 3)
+                jarOutputDir= IMConfig.getProperty("data-import.jar-output-dir-airflow") + "/" + processId + "/" + batchId;
+
             String hadoopHome = IMConfig.getProperty("data-import.hadoop-home");
             File jod=new File(jarOutputDir);
             //create if this directory does not exist
@@ -146,8 +163,8 @@ public class HDFSImport extends Configured implements Tool {
                         lastValue = processLogInfo.getMessage();
                         prevLastValue = lastValue;
                     }
-                    options.setIncrementalMode(SqoopOptions.IncrementalMode.valueOf(incrementMode));
-                    options.setIncrementalTestColumn(commonProperties.getProperty("check.col"));
+                    options.setIncrementalMode(SqoopOptions.IncrementalMode.valueOf(incrementMode.trim()));
+                    options.setIncrementalTestColumn(commonProperties.getProperty("incr.column"));
                     options.setIncrementalLastValue(lastValue);
 
                 }
@@ -160,8 +177,8 @@ public class HDFSImport extends Configured implements Tool {
             if (ret == 0) {
 
                 lastValue = options.getIncrementalLastValue();
-                LOGGER.debug(lastValue);
-                LOGGER.debug(prevLastValue);
+                LOGGER.info(lastValue);
+                LOGGER.info(prevLastValue);
 
                 //adding the process log
                 ProcessLog processLog = new ProcessLog();
@@ -206,7 +223,73 @@ public class HDFSImport extends Configured implements Tool {
                     registerFileInfo.setSubProcessId(Integer.parseInt(processId));
                     OozieUtil oozieUtil = new OozieUtil();
                     oozieUtil.persistBeanData(registerFileInfo, false);
+                    LOGGER.info("register file info "+registerFileInfo.toString());
 
+
+
+               if(workflowTypeId == 3) {
+                   try {
+                       String homeDir = System.getProperty("user.home");
+                       String path = homeDir + "/bdre/airflow/" + parentProcessId + "_jobInfo.txt";
+                       Files.deleteIfExists(Paths.get(path));
+                       FileWriter fw = new FileWriter(path);
+                       LOGGER.info("file name is : " + path);
+                       BufferedWriter bw = new BufferedWriter(fw);
+
+                       if (registerFileInfo.getSubProcessId() != null)
+                           bw.write("fileInfo.getSubProcessId()::" + registerFileInfo.getSubProcessId().toString() + "\n");
+                       else
+                           bw.write("fileInfo.getSubProcessId()::null\n");
+
+                       if (registerFileInfo.getServerId() != null)
+                           bw.write("fileInfo.getServerId()::" + registerFileInfo.getServerId().toString() + "\n");
+                       else
+                           bw.write("fileInfo.getServerId()::null\n");
+
+                       if (registerFileInfo.getPath() != null) {
+                           bw.write("fileInfo.getPath()::" + registerFileInfo.getPath() + "\n");
+                           LOGGER.info("\nfileInfo.getPath()::" + registerFileInfo.getPath() + "\n");
+                       } else
+                           bw.write("fileInfo.getPath()::null\n");
+
+                       if (registerFileInfo.getFileSize() != null)
+                           bw.write("fileInfo.getFileSize()::" + registerFileInfo.getFileSize().toString() + "\n");
+                       else
+                           bw.write("fileInfo.getFileSize()::null\n");
+
+                       if (registerFileInfo.getFileHash() != null)
+                           bw.write("fileInfo.getFileHash()::" + registerFileInfo.getFileHash().toString() + "\n");
+                       else
+                           bw.write("fileInfo.getFileHash()::null\n");
+
+                       if (registerFileInfo.getCreationTs() != null) {
+                           String creationTs = registerFileInfo.getCreationTs().toString().replace(" ", "__");//Recovered back in RegisterFile.java CreationTs has space(which splits parameter) and :(creates great problem while creating python dictionaries)
+                           LOGGER.info("Creation Ts modified is " + creationTs);
+                           bw.write("fileInfo.getCreationTs()::" + creationTs + "\n");
+                       } else
+                           bw.write("fileInfo.getCreationTs()::null\n");
+
+                       if (registerFileInfo.getBatchId() != null)
+                           bw.write("fileInfo.getBatchId()::" + registerFileInfo.getBatchId().toString() + "\n");
+                       else
+                           bw.write("fileInfo.getBatchId()::null\n");
+
+                       if (registerFileInfo.getParentProcessId() != null)
+                           bw.write("fileInfo.getParentProcessId()::" + registerFileInfo.getParentProcessId().toString() + "\n");
+                       else
+                           bw.write("fileInfo.getParentProcessId()::null\n");
+
+                       if (registerFileInfo.getBatchMarking() != null)
+                           bw.write("fileInfo.getBatchMarking()::" + registerFileInfo.getBatchMarking() + "\n");
+                       else
+                           bw.write("fileInfo.getBatchMarking()::null\n");
+
+                       bw.close();
+
+                   } catch (IOException i) {
+                       i.printStackTrace();
+                   }
+               }
                     if (null != commonProperties.getProperty(QUERY_STRING) && "" != commonProperties.getProperty(QUERY_STRING)) {
                         //adding log for import by query
                         processLogInfo.setLogCategory("ImpQuery");

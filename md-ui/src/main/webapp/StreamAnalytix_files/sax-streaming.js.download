@@ -1,0 +1,131 @@
+/**
+* Class
+* S-Ax Atmosphere WebSocket
+* Date - 2014-05-19
+**/
+var saxAtmosphereWS = function(c) {
+	var _this = this, saxSubSocket, transport = 'websocket';
+	c.transport = transport;
+	
+	/** define subset **/
+	var saxSocket = $.atmosphere;
+	
+	/** define some functions callback **/
+	request = c;
+	
+	/** invoked when the connection gets opened **/
+	request.onOpen = function(response) {
+		transport = response.transport;
+		_this.onOpen(response);
+	};
+	
+	/** invoked when the connection gets closed **/
+	request.onClose = function(response) {
+		saxSubSocket.push('browserClosed');
+		_this.onClose(response);
+	};
+	
+	/** invoked when a record gets delivered **/
+	request.onMessage = function (response) {
+		var record = response.responseBody;
+		_this.onMessage(record);
+	};
+	
+	/** invoked when an unexpected error occurs **/
+	request.onError = function(response) {
+		_this.onError(response);
+	};
+	
+	/** invoked when the client reconnect to the server **/
+	request.onReconnect = function(request, response) {
+		_this.onReconnect(request, response);
+	};
+	
+	/** invoked when the request.transport value is polling and a response was sent back by the server **/
+	request.onMessagePublished = function(request, response) {
+		_this.onMessagePublished(request, response);
+	};
+	
+	/** invoked when the request.timeout value expire. An application may decide to reconnect in that case **/
+	request.onClientTimeout = function(request) {
+		_this.onClientTimeout(request);
+	};
+	
+	/** invoked when the request.transport fail because it is not supported by the client or the server **/
+	request.onTransportFailure = function(error, request) {
+		_this.onTransportFailure(error, request);
+	};
+	
+	/** onOpen callback **/
+	_this.onOpen = function(response) { };
+	
+	/** onClose callback **/
+	_this.onClose = function(response) { };
+	
+	/** onMessage callback **/
+	_this.onMessage = function(response) { };
+	
+	/** onError callback **/
+	_this.onError = function(response) { };
+	
+	/** onReconnect callback **/
+	_this.onReconnect = function(request, response) { };
+	
+	/** onMessagePublished callback **/
+	_this.onMessagePublished = function(request, response) { };
+	
+	/** onClientTimeout callback **/
+	_this.onClientTimeout = function(request) { };
+	
+	/** onTransportFailure callback **/
+	_this.onTransportFailure = function(error, request) { };
+	
+	/** plblish data to server **/
+	_this.publishData = function(d) {
+		saxSubSocket.push(d);
+	};
+	
+	/** subscribe or connect to the remote server **/
+	_this.subscribe = function() {
+		saxSubSocket = saxSocket.subscribe(request);
+	};
+	
+	_this.subscribe();
+};
+
+
+/**
+request = {
+	url: (typeof c.url !== 'undefined') ? c.url : '',
+	connectTimeout: (typeof c.connectTimeout !== 'undefined') ? c.connectTimeout : -1,
+	reconnectInterval: (typeof c.reconnectInterval !== 'undefined') ? c.reconnectInterval : 0,
+	timeout: (typeof c.timeout !== 'undefined') ? c.timeout : 300000,
+	method: (typeof c.method !== 'undefined') ? c.method : 'GET',
+	headers: (typeof c.headers !== 'undefined') ? c.headers : {},
+	contentType: (typeof c.contentType !== 'undefined') ? c.contentType : '',
+	data: (typeof c.data !== 'undefined') ? c.data : '',
+	suspend: (typeof c.suspend !== 'undefined') ? c.suspend : 'true',
+	maxRequest: (typeof c.maxRequest !== 'undefined') ? c.maxRequest : '-1',
+	maxStreamingLength: (typeof c.maxStreamingLength !== 'undefined') ? c.maxStreamingLength : '10000000',
+	logLevel: (typeof c.logLevel !== 'undefined') ? c.logLevel : 'info',
+	transport: (typeof c.transport !== 'undefined') ? c.transport : 'long-polling',
+	fallbackTransport: (typeof c.fallbackTransport !== 'undefined') ? c.fallbackTransport : 'long-polling',
+	fallbackMethod: (typeof c.fallbackMethod !== 'undefined') ? c.fallbackMethod : 'GET',
+	webSocketImpl: (typeof c.webSocketImpl !== 'undefined') ? c.webSocketImpl : null,
+	webSocketUrl: (typeof c.webSocketUrl !== 'undefined') ? c.webSocketUrl : null,
+	webSocketPathDelimiter: (typeof c.webSocketPathDelimiter !== 'undefined') ? c.webSocketPathDelimiter : '@@',
+	enableXDR: (typeof c.enableXDR !== 'undefined') ? c.enableXDR : 'false',
+	rewriteURL: (typeof c.rewriteURL !== 'undefined') ? c.rewriteURL : 'false',
+	attachHeadersAsQueryString: (typeof c.attachHeadersAsQueryString !== 'undefined') ? c.attachHeadersAsQueryString : 'true',
+	dropHeaders: (typeof c.dropHeaders !== 'undefined') ? c.dropHeaders : 'true',
+	executeCallbackBeforeReconnect: (typeof c.executeCallbackBeforeReconnect !== 'undefined') ? c.executeCallbackBeforeReconnect : 'false',
+	withCredentials: (typeof c.withCredentials !== 'undefined') ? c.withCredentials : 'false',
+	trackMessageLength: (typeof c.trackMessageLength !== 'undefined') ? c.trackMessageLength : 'false',
+	messageDelimiter: (typeof c.messageDelimiter !== 'undefined') ? c.messageDelimiter : '|',
+	shared: (typeof c.shared !== 'undefined') ? c.shared : 'false',
+	enableProtocol: (typeof c.enableProtocol !== 'undefined') ? c.enableProtocol : true,
+	readResponseHeaders: (typeof c.readResponseHeaders !== 'undefined') ? c.readResponseHeaders : 'false',
+	maxReconnectOnClose: (typeof c.maxReconnectOnClose !== 'undefined') ? c.maxReconnectOnClose : '5',
+	pollingInterval: (typeof c.pollingInterval !== 'undefined') ? c.pollingInterval : '0'
+};
+**/

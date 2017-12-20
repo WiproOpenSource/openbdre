@@ -28,7 +28,7 @@
                 <oozie.version>4.1.0</oozie.version>
                 <storm.version>0.9.3</storm.version>
                 <kafka.version>0.8.1.1</kafka.version>
-                <pig.version>0.15.0</pig.version>
+                <pig.version>0.12.0-cdh5.2.0</pig.version>
                 <flume.version>1.6.0</flume.version>
                 <spark.core.version>1.5.2</spark.core.version>
                 <selected.profile>cdh52</selected.profile>
@@ -133,6 +133,7 @@
         <profile>
             <id>general</id>
             <properties>
+                <poi.version>3.10-FINAL</poi.version>
                 <junit.version>4.3.1</junit.version>
                 <org.codehaus.jackson.version>1.9.13</org.codehaus.jackson.version>
                 <commons-io.version>2.1</commons-io.version>
@@ -143,7 +144,7 @@
                 <jsch.version>0.1.51</jsch.version>
                 <automation.version>1.11-8</automation.version>
                 <jetty.servlet.version>9.2.2.v20140723</jetty.servlet.version>
-                <jetty.runner.version>7.5.4.v20111024</jetty.runner.version>
+                <jetty.runner.version>9.0.4.v20130625</jetty.runner.version>
                 <commons.cli.version>1.2</commons.cli.version>
                 <commons.io.version>2.4</commons.io.version>
                 <commons.fileupload.version>1.3</commons.fileupload.version>
@@ -211,6 +212,10 @@
                     <url>https://repository.cloudera.com/cloudera/repo/</url>
                 </repository>
                 <repository>
+                    <id>repository.jboss.org-public</id>
+                    <url>https://repository.jboss.org/nexus/content/groups/public</url>
+                </repository>
+                <repository>
                     <id>repo.hortonworks.com</id>
                     <name>Hortonworks HDP Maven Repository</name>
                     <url>http://repo.hortonworks.com/content/repositories/releases/</url>
@@ -234,6 +239,10 @@
                     <url>https://repository.cloudera.com/cloudera/repo/</url>
                 </pluginRepository>
                 <pluginRepository>
+                    <id>repository.jboss.org-public</id>
+                    <url>https://repository.jboss.org/nexus/content/groups/public</url>
+                </pluginRepository>
+                <pluginRepository>
                     <id>repo.hortonworks.com</id>
                     <name>Hortonworks HDP Maven Repository</name>
                     <url>http://repo.hortonworks.com/content/repositories/releases/</url>
@@ -252,6 +261,6 @@
         <activeProfile>databases</activeProfile>
         <activeProfile>repositories</activeProfile>
     </activeProfiles>
-	
+
 
 </settings>

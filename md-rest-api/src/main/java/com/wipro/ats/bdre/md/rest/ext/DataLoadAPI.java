@@ -27,6 +27,11 @@ import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
+
+import javax.servlet.http.HttpServletRequest;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.security.Principal;
 import java.util.*;
 
@@ -98,14 +103,44 @@ public class DataLoadAPI extends MetadataAPIBase {
     @RequestMapping(value = {"/createjobs"}, method = RequestMethod.POST)
 
     @ResponseBody public
-    RestWrapper createJob(@RequestParam Map<String, String> map, Principal principal) {
+    RestWrapper createJob( HttpServletRequest request, Principal principal) {
+        // Read from request
+        String query="";
+        String tmp1="";
+        StringBuilder buffer = null;
+        try {
+             buffer = new StringBuilder();
+            BufferedReader reader = request.getReader();
+            while ((tmp1 = reader.readLine()) != null) {
+                buffer.append(tmp1);
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        try {
+            query = java.net.URLDecoder.decode(new String(buffer), "UTF-8");
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
+        String[] linkedList=query.split("&");
+        LinkedHashMap<String, String> map=new LinkedHashMap<>();
+        for (int i=0;i<linkedList.length;i++)
+        {
+            String[] tmp=linkedList[i].split("=");
+            if (tmp.length==2)
+                map.put(tmp[0],tmp[1]);
+            else
+                map.put(tmp[0],"");
+        }
         LOGGER.debug(" value of map is " + map.size());
         RestWrapper restWrapper = null;
 
         String processName = null;
         String processDescription = null;
         Integer busDomainId = null;
+        Integer workflowTypeId=null;
         Integer enqId = null;
+        String filePath = null;
         Map<String,String> partitionCols = new TreeMap<String, String>();
         Map<String,String> partitionDataTypes = new TreeMap<String, String>();
 
@@ -181,6 +216,12 @@ public class DataLoadAPI extends MetadataAPIBase {
                     raw2StageProperties.add(jpaProperties);
                 }
             }else if (string.startsWith(TRANSFORM)) {
+                String column_name=string.replaceAll(TRANSFORM,"");
+                if(map.get(string).equals("no transformation")||map.get(string).equals("no+transformation"))
+                    map.put(string,column_name);
+                else
+                 map.put(string,map.get(string)+"("+column_name+")");
+                LOGGER.info("key is "+string +" updated value is "+map.get(string)+" column name is "+column_name);
                 if("".equals(map.get(string.replaceAll(TRANSFORM,PARTITION))) || map.get(string.replaceAll(TRANSFORM,PARTITION)) == null) {
                     jpaProperties = Dao2TableUtil.buildJPAProperties("base-columns", string, map.get(string), TRANSFORMCOMMENT);
                     raw2StageProperties.add(jpaProperties);
@@ -202,20 +243,41 @@ public class DataLoadAPI extends MetadataAPIBase {
                 }
             }
             else if (string.startsWith("process_processName")) {
-                LOGGER.debug("process_processName" + map.get(string));
+                LOGGER.info("process_processName" + map.get(string));
                 processName = map.get(string);
             }else if (string.startsWith("process_processDescription")) {
-                LOGGER.debug("process_processDescription" + map.get(string));
+                LOGGER.info("process_processDescription" + map.get(string));
                 processDescription = map.get(string);
             }else if (string.startsWith(BUSDOMAIN)) {
-                LOGGER.debug(BUSDOMAIN + map.get(string));
+                LOGGER.info(BUSDOMAIN + map.get(string));
                 busDomainId = new Integer(map.get(string));
             }else if (string.startsWith("process_enqueueId")) {
-                LOGGER.debug(BUSDOMAIN + map.get(string));
-                enqId = new Integer(map.get(string));
+                LOGGER.info("EnqueueId " + map.get(string));
+                if(! map.get(string).equals("null")) {
+                    enqId = new Integer(map.get(string));
+                    LOGGER.info("enqId is "+ enqId);
+                }
+                else {
+                    enqId = 0;
+                    LOGGER.info("enqId is "+ enqId);
+                }
             }
+            else if (string.startsWith("process_filePath")) {
+                LOGGER.info("filepath" + map.get(string));
+                filePath = map.get(string);
 
+                    jpaProperties = Dao2TableUtil.buildJPAProperties("raw-table", "filepath",filePath, "File Path");
+                    file2RawProperties.add(jpaProperties);
+
+            }
+            else if (string.startsWith("process_workflowTypeId")) {
+                LOGGER.info("process_workflowTypeId" + map.get(string));
+                workflowTypeId = new Integer(map.get(string));
+            }
         }
+
+
+
         StringBuilder partitionColListBuilder = new StringBuilder();
         for (String order : partitionCols.keySet()){
             partitionColListBuilder.append(partitionCols.get(order));
@@ -231,7 +293,7 @@ public class DataLoadAPI extends MetadataAPIBase {
             raw2StageProperties.add(jpaProperties);
         }
 
-        com.wipro.ats.bdre.md.dao.jpa.Process parentProcess = Dao2TableUtil.buildJPAProcess(5, processName, processDescription, 1,busDomainId);
+        com.wipro.ats.bdre.md.dao.jpa.Process parentProcess = Dao2TableUtil.buildJPAProcess(5, processName, processDescription, workflowTypeId,busDomainId);
         Users users=new Users();
         users.setUsername(principal.getName());
         parentProcess.setUsers(users);

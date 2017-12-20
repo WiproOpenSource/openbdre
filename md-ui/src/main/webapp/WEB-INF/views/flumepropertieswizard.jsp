@@ -909,7 +909,7 @@ function buildForm(typeOf, typeDiv) {
 			$.each(data[root], function(i, v) {
 				formHTML = formHTML + '<div class="form-group"> <label for="' + v.key + '">' + v.value + '</label>';
 				formHTML = formHTML + '<span class="glyphicon glyphicon-question-sign" title="' + v.description + '"></span>';
-				formHTML = formHTML + '<input name="' + v.key + '" value="' + v.defaultVal + '" placeholder="' + v.description + '" type="' + v.key + '" class="form-control" id="' + v.key + '"></div>';
+				formHTML = formHTML + '<input name="' + v.key + '" value="' + v.defaultVal + '" placeholder="' + v.description + '" type="' + v.type + '" class="form-control" id="' + v.key + '"></div>';
 			});
 			formHTML = formHTML + '</form>';
 			div.innerHTML = formHTML;

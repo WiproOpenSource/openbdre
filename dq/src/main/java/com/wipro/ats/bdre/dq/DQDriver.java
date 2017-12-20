@@ -13,8 +13,11 @@
  */
 package com.wipro.ats.bdre.dq;
 
+import com.wipro.ats.bdre.IMConfig;
+import com.wipro.ats.bdre.md.api.GetProcess;
 import com.wipro.ats.bdre.md.api.GetProperties;
 import com.wipro.ats.bdre.md.api.ProcessLog;
+import com.wipro.ats.bdre.md.beans.ProcessInfo;
 import com.wipro.ats.bdre.md.beans.ProcessLogInfo;
 import com.wipro.ats.bdre.md.beans.RegisterFileInfo;
 import com.wipro.ats.bdre.util.OozieUtil;
@@ -33,8 +36,12 @@ import org.apache.hadoop.mapreduce.lib.output.TextOutputFormat;
 import org.apache.hadoop.util.Tool;
 import org.apache.log4j.Logger;
 
+import java.io.BufferedWriter;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.sql.Timestamp;
 import java.util.Date;
 import java.util.Properties;
@@ -62,6 +69,7 @@ public class DQDriver extends Configured implements Tool {
         Configuration conf = getConf();
 
         conf.set("dq.process.id", processId);
+        conf.set("fs.defaultFS", IMConfig.getProperty("common.default-fs-name"));
         Job job = Job.getInstance(conf);
         job.setJobName("Data Quality " + processId);
         job.setJarByClass(DQDriver.class);
@@ -88,8 +96,8 @@ public class DQDriver extends Configured implements Tool {
 
 
         Path outputDir = new Path(destDir);
-        FileSystem srcFs = outputDir.getFileSystem(getConf());
-        FileSystem destFs = outputDir.getFileSystem(getConf());
+        FileSystem srcFs = outputDir.getFileSystem(conf);
+        FileSystem destFs = outputDir.getFileSystem(conf);
 
         //Valid Records
         Path goodFilesSrcDir = new Path(destDir + "/" + DQConstants.INTERMEDIATE_GOOD_RECORD_OUTPUT_DIR);
@@ -163,6 +171,78 @@ public class DQDriver extends Configured implements Tool {
         registerFileInfo.setSubProcessId(Integer.parseInt(processId));
         OozieUtil oozieUtil = new OozieUtil();
         oozieUtil.persistBeanData(registerFileInfo, false);
+
+
+        GetProcess getProcess = new GetProcess();
+        ProcessInfo parentProcessInfo = getProcess.getParentProcess(Integer.valueOf(processId));
+        Integer workflowTypeId = parentProcessInfo.getWorkflowId();
+        Integer parentProcessId = parentProcessInfo.getProcessId();
+        LOGGER.info("workflowTypeId is "+ workflowTypeId);
+        LOGGER.info("paretProcessId is "+ parentProcessId);
+
+        if(workflowTypeId == 3) {
+            try {
+                String homeDir = System.getProperty("user.home");
+                String path = homeDir + "/bdre/airflow/" + parentProcessId + "_jobInfo.txt";
+                Files.deleteIfExists(Paths.get(path));
+                FileWriter fw = new FileWriter(path);
+                LOGGER.info("file name is : " + path);
+                BufferedWriter bw = new BufferedWriter(fw);
+
+                if (registerFileInfo.getSubProcessId() != null)
+                    bw.write("fileInfo.getSubProcessId()::" + registerFileInfo.getSubProcessId().toString() + "\n");
+                else
+                    bw.write("fileInfo.getSubProcessId()::null\n");
+
+                if (registerFileInfo.getServerId() != null)
+                    bw.write("fileInfo.getServerId()::" + registerFileInfo.getServerId().toString() + "\n");
+                else
+                    bw.write("fileInfo.getServerId()::null\n");
+
+                if (registerFileInfo.getPath() != null) {
+                    bw.write("fileInfo.getPath()::" + registerFileInfo.getPath() + "\n");
+                    LOGGER.info("\nfileInfo.getPath()::" + registerFileInfo.getPath() + "\n");
+                } else
+                    bw.write("fileInfo.getPath()::null\n");
+
+                if (registerFileInfo.getFileSize() != null)
+                    bw.write("fileInfo.getFileSize()::" + registerFileInfo.getFileSize().toString() + "\n");
+                else
+                    bw.write("fileInfo.getFileSize()::null\n");
+
+                if (registerFileInfo.getFileHash() != null)
+                    bw.write("fileInfo.getFileHash()::" + registerFileInfo.getFileHash().toString() + "\n");
+                else
+                    bw.write("fileInfo.getFileHash()::null\n");
+
+                if (registerFileInfo.getCreationTs() != null) {
+                    String creationTs = registerFileInfo.getCreationTs().toString().replace(" ", "__");//Recovered back in RegisterFile.java CreationTs has space(which splits parameter) and :(creates great problem while creating python dictionaries)
+                    LOGGER.info("Creation Ts modified is " + creationTs);
+                    bw.write("fileInfo.getCreationTs()::" + creationTs + "\n");
+                } else
+                    bw.write("fileInfo.getCreationTs()::null\n");
+
+                if (registerFileInfo.getBatchId() != null)
+                    bw.write("fileInfo.getBatchId()::" + registerFileInfo.getBatchId().toString() + "\n");
+                else
+                    bw.write("fileInfo.getBatchId()::null\n");
+
+                if (registerFileInfo.getParentProcessId() != null)
+                    bw.write("fileInfo.getParentProcessId()::" + registerFileInfo.getParentProcessId().toString() + "\n");
+                else
+                    bw.write("fileInfo.getParentProcessId()::null\n");
+
+                if (registerFileInfo.getBatchMarking() != null)
+                    bw.write("fileInfo.getBatchMarking()::" + registerFileInfo.getBatchMarking() + "\n");
+                else
+                    bw.write("fileInfo.getBatchMarking()::null\n");
+
+                bw.close();
+
+            } catch (IOException i) {
+                i.printStackTrace();
+            }
+        }
 
         return 0;
     }

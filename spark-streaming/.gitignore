@@ -1,0 +1,6 @@
+.idea
+target
+*.iml
+*.bak
+*~*
+.idea/workspace.xml

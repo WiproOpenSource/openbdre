@@ -298,6 +298,32 @@ You should be able to do the same in Mac or Windows but note that setting up a H
 * Check the process in Oozie console *http://VM_IP:11000/oozie*
 * When the import job is complete start the *data load job*.
 
+# Optional Requisite
+## Airflow Integration
+* For Airflow installation.
+ - use http://repo.continuum.io/archive/Anaconda2-4.1.1-Linux-x86_64.sh link to download anaconda 4.1.
+ - Run this shell script file.
+* Running Airflow
+ - Initialize the database
+
+    ```shell
+    airflow initdb
+    ```
+
+ - Start the web server, default port is 8080
+
+    ```shell
+    airflow webserver -p 8080
+    ```
+ -  For starting the airflow UI use in the browser
+
+    ```shell
+    localhost:8080
+    ```
+* For more details about airflow read http://pythonhosted.org/airflow/
+
+
+
 # Operational Metadata Management System
 
 BDRE provides complete job/operational metadata management solution for Hadoop. At its core acts as a registry and tracker for different types of jobs running in different Hadoop clusters or as a standalone. It provides APIs to integrate with virtually any jobs.
@@ -363,7 +389,7 @@ git push myrepo mybranch
  - Please join the community https://groups.google.com/forum/#!forum/bdre. If you have any questions/suggestions please email to bdre-queries@googlegroups.com .
  - If you want to report a bug, see/request a feature or work on something. Please sign up at https://openbdre.atlassian.net
 
-Developed using Intellij Idea <a href="https://www.jetbrains.com/idea/" target="_blank"><img src="http://wiproopensourcepractice.github.io/openbdre/bdreimages/logo_JetBrains_1.png" 
-alt="Built with Intellij Idea" width="250" height="250" border="0" /></a> 
-
+### If you want to contribute as plugin developler [Click Here](https://github.com/BDREPlugins/BDREPluginStore/blob/master/README.md)
+Developed using Intellij Idea <a href="https://www.jetbrains.com/idea/" target="_blank"><img src="http://wiproopensourcepractice.github.io/openbdre/bdreimages/logo_JetBrains_1.png"
+alt="Built with Intellij Idea" width="250" height="250" border="0" /></a>
 [![Analytics](https://ga-beacon.appspot.com/UA-72345517-2/openbdre/README.md)](http://wiproopensourcepractice.github.io/openbdre/bdreimages/badge.svg)

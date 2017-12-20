@@ -49,6 +49,16 @@ public class FileMonitorInfo {
     @Min(value = 100)
     @Max(value = 10000)
     private int sleepTime;
+
+    public String getKerberosEnabled() {
+        return kerberosEnabled;
+    }
+
+    public void setKerberosEnabled(String kerberosEnabled) {
+        this.kerberosEnabled = kerberosEnabled;
+    }
+
+    private String kerberosEnabled;
     public String getProcessName() {
         return processName;
     }

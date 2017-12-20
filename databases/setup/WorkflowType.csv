@@ -1,3 +1,4 @@
 0, 'for steps only'
 1, 'oozie'
 2, 'stand alone'
+3, 'airflow'

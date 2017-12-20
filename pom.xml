@@ -55,6 +55,9 @@
         <module>dot-gen</module>
         <module>cluster-migration</module>
         <module>analytic-ui-generator</module>
+        <module>semantic-core</module>
+        <module>spark-streaming</module>
+        <module>ml-analytics</module>
     </modules>
 
     <dependencies>
@@ -113,8 +116,8 @@
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
                 <configuration>
-                    <source>1.7</source>
-                    <target>1.7</target>
+                    <source>1.8</source>
+                    <target>1.8</target>
                 </configuration>
             </plugin>
             <plugin>
@@ -512,7 +515,7 @@
                 <version>${jetty.servlet.version}</version>
             </dependency>
             <dependency>
-                <groupId>org.mortbay.jetty</groupId>
+                <groupId>org.eclipse.jetty</groupId>
                 <artifactId>jetty-runner</artifactId>
                 <version>${jetty.runner.version}</version>
             </dependency>
@@ -593,6 +596,7 @@
                 <artifactId>spark-core_2.10</artifactId>
                 <version>${spark.core.version}</version>
             </dependency>
+
 
 
             <!-- databases -->
