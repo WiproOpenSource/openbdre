@@ -28,18 +28,30 @@ import com.wipro.ats.bdre.md.dao.jpa.Servers;
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.Option;
 import org.apache.hadoop.conf.Configuration;
+import org.apache.hadoop.fs.FSDataOutputStream;
 import org.apache.hadoop.fs.FileSystem;
 import org.apache.hadoop.fs.FileUtil;
 import org.apache.hadoop.fs.Path;
 import org.apache.log4j.Logger;
+import org.apache.poi.ss.usermodel.DataFormatter;
+import org.apache.poi.xssf.usermodel.XSSFCell;
+import org.apache.poi.xssf.usermodel.XSSFRow;
+import org.apache.poi.xssf.usermodel.XSSFSheet;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.AutowireCapableBeanFactory;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.sql.Connection;
 import java.sql.Statement;
 import java.util.Date;
+import java.util.Iterator;
 
 /**
  * Created by vishnu on 12/14/14.
@@ -69,7 +81,7 @@ public class RawLoad extends ETLBase {
 
     };
 
-    public void execute(String[] params) {
+    public void execute(String[] params) throws IOException {
 
         //values of lof and lob parameters comes as null when filepath is choosen by user.
         //Null parameters are not handled by CommandLine class
@@ -109,8 +121,8 @@ public class RawLoad extends ETLBase {
 
         //If user selects enqueueId
         if( "null".equals(filePathString) || filePathString == null) {
-            listOfFiles = commandLine.getOptionValue("list-of-files");
-            listOfBatches = commandLine.getOptionValue("list-of-file-batchIds");
+            listOfFiles = commandLine.getOptionValue("list-of-files").replace("1234567890","");
+            listOfBatches = commandLine.getOptionValue("list-of-file-batchIds").replace("1234567890","");
         }
         //If user select filepath
         else {
@@ -130,8 +142,9 @@ public class RawLoad extends ETLBase {
                 fileId.setFileSize(1L);
                 fileId.setServerId(123461);
                 fileId.setFileHash("null");
-                fileId.setPath(fileString);
-
+                if(fileString.endsWith(".xlsx"))
+                    new RawLoad().readXLSXFile(fileString);
+                fileId.setPath(fileString.replace("xlsx","csv"));
                 file.setId(fileId);
                 file.setBatch(batch);
                 file.setServers(servers);
@@ -148,7 +161,7 @@ public class RawLoad extends ETLBase {
         createRawBaseTables.executeRawLoad(createTablesArgs);
 
         //Now load file to table
-        loadRawLoadTable(rawDbName, rawTableName, listOfFiles, listOfBatches);
+        loadRawLoadTable(rawDbName, rawTableName, listOfFiles.replaceAll("xlsx","csv"), listOfBatches);
 
     }
 
@@ -199,4 +212,144 @@ public class RawLoad extends ETLBase {
         }
         return outputFileList;
     }
+
+
+
+
+    public void readXLSXFile(String fileName) throws IOException {
+        InputStream XlsxFileToRead = null;
+        XSSFWorkbook workbook = null;
+        Configuration conf = new Configuration();
+        FileSystem fs = null;
+        String excelFileName=fileName.split("/")[fileName.split("/").length-1];
+        String csvFileName=excelFileName.split("\\.")[0]+".csv";
+        System.out.println("excelFileName is "+excelFileName);
+        System.out.println("csvFileName is "+csvFileName);
+        try {
+            try {
+                fs = FileSystem.get(new URI("hdfs://localhost:8020"),conf);
+            } catch (URISyntaxException e) {
+                e.printStackTrace();
+            }
+            Path dirPath = new Path(fileName);
+            if (fs.exists(dirPath)) {
+                // fs.delete(dirPath, true);
+                System.out.println("file found");
+            }else
+                System.out.println("no file found");
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        try {
+
+            // XlsxFileToRead = new FileInputStream(fileName);
+            XlsxFileToRead=fs.open(new Path(fileName));
+            //Getting the workbook instance for xlsx file
+            workbook = new XSSFWorkbook(XlsxFileToRead);
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        //getting the first sheet from the workbook using sheet name.
+        // We can also pass the index of the sheet which starts from '0'.
+        XSSFSheet sheet = workbook.getSheet("Sheet1");
+        XSSFRow row;
+        XSSFCell cell;
+
+        //Iterating all the rows in the sheet
+        Iterator rows = sheet.rowIterator();
+        String outputPath=fileName.replace("xlsx","csv");
+        System.out.println(outputPath);
+
+        try {
+            if (fs.exists(new Path(outputPath))) {
+                // fs.delete(dirPath, true);
+                System.out.println("output path found");
+            }else{
+                System.out.println("output path not found");
+                //fs.mkdirs(new Path(outputPath));
+            }
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        FSDataOutputStream fsDataOutputStream=null;
+        //BufferedWriter writer = new BufferedWriter(new FileWriter(path, true));
+        try {
+            fsDataOutputStream=fs.create(new Path(outputPath));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        while (rows.hasNext()) {
+            row = (XSSFRow) rows.next();
+            int n = row.getLastCellNum();
+            //System.out.println("no of cells "+n);
+            //Iterating all the cells of the current row
+            Iterator cells = row.cellIterator();
+            String tmpValue = null;
+            while (cells.hasNext()) {
+                cell = (XSSFCell) cells.next();
+                int tmp=cell.getColumnIndex();
+                DataFormatter fmt = new DataFormatter();
+                if (cell.getCellType() == XSSFCell.CELL_TYPE_STRING) {
+
+                    if (tmp==(n-1)){
+                        if (cell.getStringCellValue().contains(",")==true)
+                            tmpValue="\""+cell.getStringCellValue().replace("\n"," ")+"\"";
+                        else
+                            tmpValue=cell.getStringCellValue().replace("\n"," ");
+                    }
+                    else{
+                        if (cell.getStringCellValue().contains(",")==true)
+                            tmpValue="\""+cell.getStringCellValue().replace("\n"," ")+"\"" + ",";
+                        else
+                            tmpValue=cell.getStringCellValue().replace("\n"," ") + ",";
+                    }
+                    try {
+                        fsDataOutputStream.write(tmpValue.getBytes());
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                } else if (cell.getCellType() == XSSFCell.CELL_TYPE_NUMERIC) {
+                    if (tmp==(n-1))
+                        tmpValue= String.valueOf(fmt.formatCellValue(cell));
+                    else
+                        tmpValue=fmt.formatCellValue(cell) + ",";
+                    fsDataOutputStream.write(tmpValue.getBytes());
+                } else if (cell.getCellType() == XSSFCell.CELL_TYPE_BOOLEAN) {
+                    if (tmp==(n-1))
+                        tmpValue= String.valueOf(cell.getBooleanCellValue());
+                    else
+                        tmpValue=cell.getBooleanCellValue() + ",";
+                    fsDataOutputStream.write(tmpValue.getBytes());
+
+                } else { // //Here if require, we can also add below methods to
+                    // read the cell content
+                    // XSSFCell.CELL_TYPE_BLANK
+                    // XSSFCell.CELL_TYPE_FORMULA
+                    // XSSFCell.CELL_TYPE_ERROR
+                }
+
+                System.out.print(tmpValue);
+            }
+            System.out.println();
+            try {
+                XlsxFileToRead.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+            fsDataOutputStream.write("\n".getBytes());
+        }
+        fsDataOutputStream.close();
+    }
+
+
+
+
+
+
 }
