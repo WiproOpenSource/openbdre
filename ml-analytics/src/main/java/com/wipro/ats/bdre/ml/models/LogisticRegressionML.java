@@ -1,6 +1,7 @@
 package com.wipro.ats.bdre.ml.models;
 
 import org.apache.spark.ml.classification.LogisticRegressionModel;
+import org.apache.spark.ml.classification.OneVsRestModel;
 import org.apache.spark.api.java.JavaSparkContext;
 import org.apache.spark.ml.feature.VectorAssembler;
 import org.apache.spark.mllib.linalg.SparseVector;
@@ -36,5 +37,6 @@ public class LogisticRegressionML {
         LogisticRegressionModel logisticRegressionModel = new LogisticRegressionModel(UUID.randomUUID().toString(), Vectors.dense(coeff), intercept);
         DataFrame predictionDF = logisticRegressionModel.transform(testDataFrame);
         return predictionDF;
+
     }
 }

@@ -1182,107 +1182,127 @@
                                                     </form>
                       <script>
                       var count=0;
+                      var count1=0;
                       var coefficients;
                       </script>
                       <script>
                       function loadModelProperties(loadMethod) {
-                      console.log(loadMethod);
-                       console.log($('[ng-controller="AppCtrl"]').scope().chartViewModel.selectedProcess.processTypeId);
-                       var model= $('[ng-controller="AppCtrl"]').scope().chartViewModel.selectedProcess.processTypeId;
-                      if(model==84)
-                      var div = document.getElementById('modelRequiredFields');
-                      else
-                      var div = document.getElementById('modelRequiredFieldsLogistic');
-                      console.log(div);
-
-                                            console.log($('[ng-controller="AppCtrl"]').scope().chartViewModel.columnList);
-                                            var columns=$('[ng-controller="AppCtrl"]').scope().chartViewModel.columnList;
+                      var inter=0;
+                                var prevCoeffValues=[];
+                                if(count>0){
+                                   inter=document.getElementById("Intercept.1").value;
+                                   for(var j=1;j<=count;j++){
+                                      prevCoeffValues.push(document.getElementById("Coefficient."+ j).value);
+                                   }
+                                }
 
 
-
+                                  var columns=$('[ng-controller="AppCtrl"]').scope().chartViewModel.columnList;
+                                    console.log(loadMethod);
+                                    var div = document.getElementById('modelRequiredFields');
                                             if(loadMethod=="serializedModel" || loadMethod=="pmmlFile"){
                                             count=0;
+                                            count1=0;
                                             var formHTML='';
 
                                             formHTML=formHTML+'<div id="rawTablDetailsDB">';
-                                            formHTML=formHTML+'<div class="form-group" style="dispaly:inline-block" >';
-                                            formHTML=formHTML+'<label class="control-label col-sm-3" for="regFile">Model File</label>';
-                                            //formHTML=formHTML+'<div class="col-sm-10" style="dispaly:inline-block">';
-                                            formHTML=formHTML+'<input name = "regFile" id = "regFile" type = "file" class = "form-control" style="opacity: 100; position: inherit;" />';
+                                            formHTML=formHTML+'<div class="form-group" >';
+                                            formHTML=formHTML+'<label class="control-label col-sm-2" for="regFile">Model File</label>';
+                                            formHTML=formHTML+'<div class="col-sm-10">';
+                                            formHTML=formHTML+'<input name = "pmml-file-path" id = "regFile" type = "file" class = "form-control" style="opacity: 100; position: inherit;" />';
                                             formHTML=formHTML+'</div>';
                                             formHTML=formHTML+'</div>';
                                             formHTML=formHTML+'<button class = "btn btn-default  btn-success" style="margin-top: 30px;background: lightsteelblue;" type = "button" onClick = "uploadZip(\''+"model"+'\',\''+"regFile"+'\')" href = "#" >Upload File</button >';
-
-
+                                            formHTML=formHTML+'<div class="clearfix"></div>';
                                             formHTML=formHTML+'</div>';
 
                                             div.innerHTML = formHTML;
                                             }
-
-                                else if(loadMethod=='ModelInformation'){
-                                console.log("Enter ModelInformation");
-                                    //console.log(coefficients);
-                                    var formHTML='';
-
-                                    var next=1;
-                                    var column;
-                               	    formHTML=formHTML+'<div class="col-md-12" >';
-                                  formHTML=formHTML+'<div class="col-md-4">Column </div>';
-                                  formHTML=formHTML+'<div class="col-md-4">Coefficient</div>';
-                                  formHTML=formHTML+'<div class="col-md-4">Intercept</div>';
-
-                               	formHTML=formHTML+'</div>';
+                                            else if(loadMethod=='ModelInformation'){
 
 
-                                  for(var t=0;t<=count;t++){
+
+                                            console.log("Enter ModelInformation");
+                                                //console.log(coefficients);
+                                                var formHTML='';
+
+                                                var next=1;
+                                                var column;
+                                                  formHTML=formHTML+'<div class="col-md-12" >';
+                                              formHTML=formHTML+'<div class="col-md-4">Column </div>';
+                                              formHTML=formHTML+'<div class="col-md-4">Coefficient</div>';
+                                              formHTML=formHTML+'<div class="col-md-4">Intercept</div>';
+
+                                              formHTML=formHTML+'</div>';
 
 
-                                  formHTML=formHTML+'<div class="col-md-12" >';
-                                  formHTML = formHTML +  '<div class="col-md-4">' ;
-
-                                  formHTML = formHTML + '  <select class="form-control" id="Column.' + next + '" name="Column.' + next + '" >';
-                                  formHTML = formHTML + ' <option ng-repeat="  column in columns " id="Column.' + next + '" value="' + columns[t].DisplayText + '">' + columns[t].DisplayText + '</option>';
-                                  formHTML = formHTML + '</select>';
-                                  formHTML = formHTML +  '</div>' ;
-                                  formHTML = formHTML +  '<div class="col-md-4">' ;
-                                  formHTML = formHTML +  '<input class="form-control" id="Coefficient.' + next + '"value='+ 0 +' name="Coefficient.' + next + '">' ;
-                                  formHTML = formHTML +  '</input>' ;
-                                  formHTML = formHTML +  '</div>' ;
-
-                                  if(t==0){
-                                  formHTML = formHTML +  '<div class="col-md-4">' ;
-                                  formHTML = formHTML +  '<input class="form-control" id="Intercept.' + next + '"value='+ 0 +' name="Intercept.' + next + '">' ;
-                                  formHTML = formHTML +  '</input>' ;
-                                  formHTML = formHTML +  '</div>' ;
-                                  formHTML=formHTML+'</div>';
-                                  }
-                                  else
-                                  {
-                                  console.log("Wht's up");
-                                  formHTML = formHTML +  '<div class="col-md-4">' ;
-
-                               	formHTML = formHTML +  '</div>' ;
-
-                                  formHTML=formHTML+'</div>';
-
-                                  }
-                                  next++;
-
-                                  }
+                                              for(var t=0;t<=count;t++){
 
 
-                                  count++;
-                                  formHTML=formHTML+'<div id="count" value="' + count + '"></div>';
-                                  formHTML=formHTML+'<button class = "btn btn-default  btn-success" style="margin-top: 30px;background: lightsteelblue;" type = "button" onClick = loadModelProperties("ModelInformation")  >Add Column</button >';
+                                              formHTML=formHTML+'<div class="col-md-12" >';
+                                              formHTML = formHTML +  '<div class="col-md-4">' ;
 
-                                  div.innerHTML = formHTML;
+                                              formHTML = formHTML + '  <select class="form-control" id="Column.' + next + '" name="Column.' + next + '" >';
 
-                                            }
-                                            else{
-                                            count=0;
-                                            var formHTML='';
-                                            div.innerHTML = formHTML;
-                                            }
+                                              //formHTML = formHTML + ' <option ng-repeat="  column in columns " id="Column.' + next + '" value="' + columns[t] + '">' + columns[t] + '</option>';
+
+                                              //formHTML = formHTML + ' <option ng-repeat="  column in columns " id="Column.' + next + '" value="' + columns[t] + '">' + columns[t] + '</option>';
+                                              for(var k=0;k<columns.length;k++){
+                                              formHTML=formHTML+'<option value="'+ columns[k] + '">' + columns[k] + '</option>';
+                                              }
+
+                                              formHTML = formHTML + '</select>';
+                                              formHTML = formHTML +  '</div>' ;
+                                              formHTML = formHTML +  '<div class="col-md-4">' ;
+                                              if(t==count){
+                                              formHTML = formHTML +  '<input class="form-control" id="Coefficient.' + next + '"value='+ 0 +' name="Coefficient.' + next + '">' ;}
+                                              else{
+                                              formHTML = formHTML +  '<input class="form-control" id="Coefficient.' + next + '"value='+ prevCoeffValues[t] +' name="Coefficient.' + next + '">' ;
+                                              }
+                                              formHTML = formHTML +  '</input>' ;
+                                              formHTML = formHTML +  '</div>' ;
+
+                                              if(t==0){
+                                              formHTML = formHTML +  '<div class="col-md-4">' ;
+                                              formHTML = formHTML +  '<input class="form-control" id="Intercept.' + next + '"value='+ inter +' name="Intercept.' + next + '">' ;
+                                              formHTML = formHTML +  '</input>' ;
+                                              formHTML = formHTML +  '</div>' ;
+                                              formHTML=formHTML+'</div>';
+                                              }
+                                              else
+                                              {
+                                              console.log("Wht's up");
+                                              formHTML = formHTML +  '<div class="col-md-4">' ;
+
+                                              formHTML = formHTML +  '</div>' ;
+
+                                              formHTML=formHTML+'</div>';
+
+                                              }
+                                              next++;
+
+                                              }
+
+
+                                              count++;
+                                              formHTML=formHTML+'<div id="count" value="' + count + '"></div>';
+
+
+                                              if(count<columns.length)
+
+                                              formHTML=formHTML+'<button class = "btn btn-default  btn-success" style="margin-top: 30px;background: lightsteelblue;" type = "button" onClick = loadModelProperties("ModelInformation")  >Add Column</button >';
+
+                                              div.innerHTML = formHTML;}
+
+
+
+
+                                                        else{
+                                                        count=0;
+
+                                                        var formHTML='';
+                                                        div.innerHTML = formHTML;
+                                                        }
                                             }
                       </script>
                        <form class="form-horizontal" role="form" ng-if="genConfig.type == 'linearRegression'">

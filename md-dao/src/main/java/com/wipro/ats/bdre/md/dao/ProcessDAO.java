@@ -22,9 +22,11 @@ import org.apache.log4j.Logger;
 import org.hibernate.Criteria;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
+import org.hibernate.criterion.MatchMode;
 import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Restrictions;
+import org.hibernate.Query;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -1025,5 +1027,18 @@ public class ProcessDAO {
             }
 
         }
+    }
+    public List<com.wipro.ats.bdre.md.dao.jpa.Process> listByName(String processName){
+        Session session = sessionFactory.openSession();
+        List<com.wipro.ats.bdre.md.dao.jpa.Process> filterList=new ArrayList<>();
+        try{
+            session.beginTransaction();
+            Criteria criteria=session.createCriteria(Process.class).add(Restrictions.ilike("processName",processName, MatchMode.ANYWHERE)).add(Restrictions.isNull(PARENTPROCESSID));
+            filterList=(List<com.wipro.ats.bdre.md.dao.jpa.Process>)criteria.list();
+        }
+        catch (Exception e){
+            e.printStackTrace();
+        }
+        return filterList;
     }
 }
