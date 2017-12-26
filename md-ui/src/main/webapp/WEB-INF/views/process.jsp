@@ -164,6 +164,8 @@
                 <script src="../js/jquery.jtable.js" type="text/javascript"></script>
 
                 <script type="text/javascript">
+                var jtParamStart = 0;
+                var jtPage = 10;
                     $(document).ready(function() {
                     	$('#Container').jtable({
                             title: '<spring:message code="process.page.title_list"/>',
@@ -173,13 +175,17 @@
                             openChildAsAccordion: true,
                             actions: {
                                 listAction: function(postData, jtParams) {
+                                if(jtParams.jtStartIndex!=0){
+                                jtParamStart = jtParams.jtStartIndex;
+                                jtPage = jtParams.jtPageSize;}
                                     return $.Deferred(function($dfd) {
+                                    console.log(jtParams);
                                         $.ajax({
                                         <c:if test = "${param.pid==null}">
-                                                url: '/mdrest/process?page=' + jtParams.jtStartIndex + '&size='+jtParams.jtPageSize,
+                                                url: '/mdrest/process?page=' + jtParamStart + '&size='+jtPage,
                                         </c:if>
                                         <c:if test = "${param.pid!=null}">
-                                            url: '/mdrest/process?pid=${param.pid}&page=' + jtParams.jtStartIndex + '&size='+jtParams.jtPageSize,
+                                            url: '/mdrest/process?pid=${param.pid}&page=' + jtParamStart + '&size='+jtPage,
                                         </c:if>
                                             type: 'GET',
                                                 data: postData,

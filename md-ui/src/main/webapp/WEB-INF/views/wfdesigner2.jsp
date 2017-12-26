@@ -436,7 +436,7 @@
                                                     </div>
                                                 </div>
                                                 <hr/>
-                                                <form class="form-horizontal" role="form" ng-if="genConfig.type != 'hql'  && genConfig.type != 'hadoopstream' && genConfig.type != 'r'  && genConfig.type != 'spark' && genConfig.type != 'pig' && genConfig.type != 'shell' && genConfig.type != 'source' && genConfig.type != 'filter' && genConfig.type != 'sort' && genConfig.type != 'take' && genConfig.type != 'persist' && genConfig.type != 'repartition' && genConfig.type != 'hive' && genConfig.type!='join' && genConfig.type != 'MapToPair' && genConfig.type != 'Map' && genConfig.type != 'FlatMap' && genConfig.type != 'Reduce' && genConfig.type != 'ReduceByKey' && genConfig.type != 'window' && genConfig.type != 'GroupByKey' && genConfig.type != 'emitter' && genConfig.type != 'persistentStore' && genConfig.type != 'addFiles' && genConfig.type != 'aggregation'  && genConfig.type != 'deDuplication' && genConfig.type != 'Custom' && genConfig.type != 'enricher' && genConfig.type != 'linearRegression' && genConfig.type != 'logisticRegression'">
+                                                <form class="form-horizontal" role="form" ng-if="genConfig.type != 'hql'  && genConfig.type != 'hadoopstream' && genConfig.type != 'r'  && genConfig.type != 'spark' && genConfig.type != 'pig' && genConfig.type != 'shell' && genConfig.type != 'source' && genConfig.type != 'filter' && genConfig.type != 'sort' && genConfig.type != 'take' && genConfig.type != 'persist' && genConfig.type != 'repartition' && genConfig.type != 'hive' && genConfig.type!='join' && genConfig.type != 'MapToPair' && genConfig.type != 'Map' && genConfig.type != 'FlatMap' && genConfig.type != 'Reduce' && genConfig.type != 'ReduceByKey' && genConfig.type != 'window' && genConfig.type != 'GroupByKey' && genConfig.type != 'emitter' && genConfig.type != 'persistentStore' && genConfig.type != 'addFiles' && genConfig.type != 'aggregation'  && genConfig.type != 'deDuplication' && genConfig.type != 'Custom' && genConfig.type != 'enricher' && genConfig.type != 'linearRegression' && genConfig.type != 'logisticRegression' && genConfig.type != 'kMeans'">
 
                                                     <div class="form-group">
                                                         <label class="control-label col-sm-2" for="{{genConfig.key}}-propkey"><spring:message code="wfdesigner.page.propkey_name"/></label>
@@ -1195,96 +1195,172 @@
                       var div = document.getElementById('modelRequiredFieldsLogistic');
                       console.log(div);
 
-                                            console.log($('[ng-controller="AppCtrl"]').scope().chartViewModel.columnList);
-                                            var columns=$('[ng-controller="AppCtrl"]').scope().chartViewModel.columnList;
+                        console.log($('[ng-controller="AppCtrl"]').scope().chartViewModel.columnList);
+                        var columns=$('[ng-controller="AppCtrl"]').scope().chartViewModel.columnList;
 
 
 
-                                            if(loadMethod=="serializedModel" || loadMethod=="pmmlFile"){
-                                            count=0;
-                                            var formHTML='';
+                        if(loadMethod=="serializedModel" || loadMethod=="pmmlFile"){
+                        count=0;
+                        var formHTML='';
 
-                                            formHTML=formHTML+'<div id="rawTablDetailsDB">';
-                                            formHTML=formHTML+'<div class="form-group" style="dispaly:inline-block" >';
-                                            formHTML=formHTML+'<label class="control-label col-sm-3" for="regFile">Model File</label>';
-                                            //formHTML=formHTML+'<div class="col-sm-10" style="dispaly:inline-block">';
-                                            formHTML=formHTML+'<input name = "regFile" id = "regFile" type = "file" class = "form-control" style="opacity: 100; position: inherit;" />';
-                                            formHTML=formHTML+'</div>';
-                                            formHTML=formHTML+'</div>';
-                                            formHTML=formHTML+'<button class = "btn btn-default  btn-success" style="margin-top: 30px;background: lightsteelblue;" type = "button" onClick = "uploadZip(\''+"model"+'\',\''+"regFile"+'\')" href = "#" >Upload File</button >';
+                        formHTML=formHTML+'<div id="rawTablDetailsDB">';
+                        formHTML=formHTML+'<div class="form-group" style="dispaly:inline-block" >';
+                        formHTML=formHTML+'<label class="control-label col-sm-3" for="regFile">Model File</label>';
+                        //formHTML=formHTML+'<div class="col-sm-10" style="dispaly:inline-block">';
+                        formHTML=formHTML+'<input name = "regFile" id = "regFile" type = "file" class = "form-control" style="opacity: 100; position: inherit;" />';
+                        formHTML=formHTML+'</div>';
+                        formHTML=formHTML+'</div>';
+                        formHTML=formHTML+'<button class = "btn btn-default  btn-success" style="margin-top: 30px;background: lightsteelblue;" type = "button" onClick = "uploadZip(\''+"model"+'\',\''+"regFile"+'\')" href = "#" >Upload File</button >';
 
 
-                                            formHTML=formHTML+'</div>';
+                        formHTML=formHTML+'</div>';
 
-                                            div.innerHTML = formHTML;
-                                            }
+                        div.innerHTML = formHTML;
+                        }
 
-                                else if(loadMethod=='ModelInformation'){
-                                console.log("Enter ModelInformation");
-                                    //console.log(coefficients);
+                        else if(loadMethod=='ModelInformation'){
+                        console.log("Enter ModelInformation");
+                            //console.log(coefficients);
+                            var formHTML='';
+
+                            var next=1;
+                            var column;
+                            formHTML=formHTML+'<div class="col-md-12" >';
+                          formHTML=formHTML+'<div class="col-md-4">Column </div>';
+                          formHTML=formHTML+'<div class="col-md-4">Coefficient</div>';
+                          formHTML=formHTML+'<div class="col-md-4">Intercept</div>';
+
+                        formHTML=formHTML+'</div>';
+
+
+                          for(var t=0;t<=count;t++){
+
+
+                          formHTML=formHTML+'<div class="col-md-12" >';
+                          formHTML = formHTML +  '<div class="col-md-4">' ;
+
+                          formHTML = formHTML + '  <select class="form-control" id="Column.' + next + '" name="Column.' + next + '" >';
+                          formHTML = formHTML + ' <option ng-repeat="  column in columns " id="Column.' + next + '" value="' + columns[t].DisplayText + '">' + columns[t].DisplayText + '</option>';
+                          formHTML = formHTML + '</select>';
+                          formHTML = formHTML +  '</div>' ;
+                          formHTML = formHTML +  '<div class="col-md-4">' ;
+                          formHTML = formHTML +  '<input class="form-control" id="Coefficient.' + next + '"value='+ 0 +' name="Coefficient.' + next + '">' ;
+                          formHTML = formHTML +  '</input>' ;
+                          formHTML = formHTML +  '</div>' ;
+
+                          if(t==0){
+                          formHTML = formHTML +  '<div class="col-md-4">' ;
+                          formHTML = formHTML +  '<input class="form-control" id="Intercept.' + next + '"value='+ 0 +' name="Intercept.' + next + '">' ;
+                          formHTML = formHTML +  '</input>' ;
+                          formHTML = formHTML +  '</div>' ;
+                          formHTML=formHTML+'</div>';
+                          }
+                          else
+                          {
+                          console.log("Wht's up");
+                          formHTML = formHTML +  '<div class="col-md-4">' ;
+
+                        formHTML = formHTML +  '</div>' ;
+
+                          formHTML=formHTML+'</div>';
+
+                          }
+                          next++;
+
+                          }
+
+
+                          count++;
+                          formHTML=formHTML+'<div id="count" value="' + count + '"></div>';
+                          formHTML=formHTML+'<button class = "btn btn-default  btn-success" style="margin-top: 30px;background: lightsteelblue;" type = "button" onClick = loadModelProperties("ModelInformation")  >Add Column</button >';
+
+                          div.innerHTML = formHTML;
+
+                                    }
+                                    else{
+                                    count=0;
                                     var formHTML='';
-
-                                    var next=1;
-                                    var column;
-                               	    formHTML=formHTML+'<div class="col-md-12" >';
-                                  formHTML=formHTML+'<div class="col-md-4">Column </div>';
-                                  formHTML=formHTML+'<div class="col-md-4">Coefficient</div>';
-                                  formHTML=formHTML+'<div class="col-md-4">Intercept</div>';
-
-                               	formHTML=formHTML+'</div>';
-
-
-                                  for(var t=0;t<=count;t++){
-
-
-                                  formHTML=formHTML+'<div class="col-md-12" >';
-                                  formHTML = formHTML +  '<div class="col-md-4">' ;
-
-                                  formHTML = formHTML + '  <select class="form-control" id="Column.' + next + '" name="Column.' + next + '" >';
-                                  formHTML = formHTML + ' <option ng-repeat="  column in columns " id="Column.' + next + '" value="' + columns[t].DisplayText + '">' + columns[t].DisplayText + '</option>';
-                                  formHTML = formHTML + '</select>';
-                                  formHTML = formHTML +  '</div>' ;
-                                  formHTML = formHTML +  '<div class="col-md-4">' ;
-                                  formHTML = formHTML +  '<input class="form-control" id="Coefficient.' + next + '"value='+ 0 +' name="Coefficient.' + next + '">' ;
-                                  formHTML = formHTML +  '</input>' ;
-                                  formHTML = formHTML +  '</div>' ;
-
-                                  if(t==0){
-                                  formHTML = formHTML +  '<div class="col-md-4">' ;
-                                  formHTML = formHTML +  '<input class="form-control" id="Intercept.' + next + '"value='+ 0 +' name="Intercept.' + next + '">' ;
-                                  formHTML = formHTML +  '</input>' ;
-                                  formHTML = formHTML +  '</div>' ;
-                                  formHTML=formHTML+'</div>';
-                                  }
-                                  else
-                                  {
-                                  console.log("Wht's up");
-                                  formHTML = formHTML +  '<div class="col-md-4">' ;
-
-                               	formHTML = formHTML +  '</div>' ;
-
-                                  formHTML=formHTML+'</div>';
-
-                                  }
-                                  next++;
-
-                                  }
-
-
-                                  count++;
-                                  formHTML=formHTML+'<div id="count" value="' + count + '"></div>';
-                                  formHTML=formHTML+'<button class = "btn btn-default  btn-success" style="margin-top: 30px;background: lightsteelblue;" type = "button" onClick = loadModelProperties("ModelInformation")  >Add Column</button >';
-
-                                  div.innerHTML = formHTML;
-
-                                            }
-                                            else{
-                                            count=0;
-                                            var formHTML='';
-                                            div.innerHTML = formHTML;
-                                            }
-                                            }
+                                    div.innerHTML = formHTML;
+                                    }
+                                    }
                       </script>
+                      <script>
+                      var count1=0;
+                      </script>
+
+                      <script>
+                      function loadKMeansProperties(loadMethod){
+                      var div=document.getElementById("modelRequiredFieldsKMeans");
+                      if(loadMethod=="pmmlFile" || loadMethod=="serializedModel"){
+                      count1=0;
+                      var formHTML='';
+
+                      formHTML=formHTML+'<div id="rawTablDetailsDB">';
+                      formHTML=formHTML+'<div class="form-group" style="dispaly:inline-block" >';
+                      formHTML=formHTML+'<label class="control-label col-sm-3" for="regFile">Model File</label>';
+                      //formHTML=formHTML+'<div class="col-sm-10" style="dispaly:inline-block">';
+                      formHTML=formHTML+'<input name = "regFile" id = "regFile" type = "file" class = "form-control" style="opacity: 100; position: inherit;" />';
+                      formHTML=formHTML+'</div>';
+                      formHTML=formHTML+'</div>';
+                      formHTML=formHTML+'<button class = "btn btn-default  btn-success" style="margin-top: 30px;background: lightsteelblue;" type = "button" onClick = "uploadZip(\''+"model"+'\',\''+"regFile"+'\')" href = "#" >Upload File</button >';
+
+
+                      formHTML=formHTML+'</div>';
+
+                      div.innerHTML = formHTML;
+                      }
+                      else
+                      {
+                      var columns=$('[ng-controller="AppCtrl"]').scope().chartViewModel.columnList;
+                      console.log(columns);
+                      var formHTML='';
+                      if(count1==0)
+                      {div.innerHTML='';
+                      formHTML=formHTML+'<div id="clusterCentres" >';
+                      formHTML=formHTML+'<div id="clusterFeatures"';
+                          formHTML=formHTML + ' <label class="form-control" for="features">Select Features</label>';
+                         formHTML=formHTML + ' <select class="js-example-basic-multiple" id="features" name="features" multiple="multiple">';
+                         for(var k=0;k<columns.length;k++){
+                             formHTML=formHTML+'<option value="'+ columns[k].DisplayText.split(":")[0] + '">' + columns[k].DisplayText.split(":")[0] + '</option>';
+                             }
+                             formHTML=formHTML+"</select>";
+                             formHTML=formHTML+'</div>';
+                             formHTML=formHTML+'<br>';
+                             formHTML=formHTML+'<br>';
+                             formHTML=formHTML+'<br>';
+                             formHTML=formHTML+'<br>';
+
+                          formHTML=formHTML+'<div class="col-md-12" >';
+                      formHTML=formHTML+'<div class="col-md-4">Cluster No</div>';
+                      formHTML=formHTML+'<div class="col-md-4">Cluster Centre</div>';
+                      formHTML=formHTML+'</div>';}
+                      formHTML=formHTML+'<div class="col-md-12" >';
+                      formHTML = formHTML +  '<div class="col-md-4">' ;
+                      formHTML = formHTML +  '<input class="form-control" id="Cluster.' + (count1+1) + '"value='+ (count1+1) +' name="Cluster.' + (count1+1) + '">' ;
+                      formHTML = formHTML +  '</input>' ;
+                      formHTML = formHTML +  '</div>' ;
+                      formHTML = formHTML +  '<div class="col-md-4">' ;
+                      formHTML = formHTML +  '<input class="form-control" id="Information.' + (count1+1) + '"value='+ 0 +' name="Information.' + (count1+1) + '">' ;
+                      formHTML = formHTML +  '</input>' ;
+                      formHTML = formHTML +  '</div>' ;
+                      formHTML=formHTML+'</div>';
+                      if(count1==0)
+                      {formHTML=formHTML+'<button class = "btn btn-default  btn-success" id = "clusterButton" style="margin-top: 30px;background: lightsteelblue;" type = "button" onClick = loadKMeansProperties("ModelInformation")  >Add Cluster</button >';
+                      formHTML=formHTML+'</div>';
+                      div.innerHTML=formHTML;}
+                      else
+                      {formHTML=formHTML+'<button class = "btn btn-default  btn-success" id = "clusterButton" style="margin-top: 30px;background: lightsteelblue;" type = "button" onClick = loadKMeansProperties("ModelInformation")  >Add Cluster</button >';
+                      $("#clusterButton").remove();
+                      //formHTML=formHTML+'</div>';
+                      $("#clusterCentres").append(formHTML);
+                      }
+                      count1++;
+                      $(".js-example-basic-multiple").select2();
+                      }
+                      }
+                      </script>
+
                        <form class="form-horizontal" role="form" ng-if="genConfig.type == 'linearRegression'">
 
                             <div class="form-group">
@@ -1347,6 +1423,37 @@
                    <button type="submit" onClick="insertModelProp()" class="btn btn-primary  pull-right">Save</button>
                       </form>
 
+                      <form class="form-horizontal" role="form" ng-if="genConfig.type == 'kMeans'">
+
+                             <div class="form-group">
+                                                          <label class="control-label col-sm-3" for="modelImportTypeKMeans">Model Import Type</label>
+                                                          <select class="form-control" id="modelImportTypeKMeans" name="modelImportTypeKMeans" onchange="loadKMeansProperties(this.value);">
+                                                          <option value="s">Select the model</option>
+                                                              <option value="ModelInformation">Model Information</option>
+                                                              <option value="pmmlFile">PMML File</option>
+                                                              <option value="serializedModel">Serialized Model File</option>
+                                                          </select>
+                                                      </div>
+                                                      <br>
+                                                      <br>
+                                                      <br>
+                                                      <br>
+                                                      &nbsp
+                                                      &nbsp
+                                                      &nbsp
+                                                      &nbsp
+                                                      &nbsp
+                                     <div id="modelRequiredFieldsKMeans"></div>
+
+                           <div class="clearfix"></div>
+                     <div style = "display:none" id = "div-dialog-warning" >
+                                                                                      <p ><span class = "ui-icon ui-icon-alert" style = "float:left;" ></span >
+
+                                                                                      </p>
+                                                                                      </div >
+                     <button type="submit" onClick="insertKMeansModelProp()" class="btn btn-primary  pull-right">Save</button>
+                        </form>
+
                        <script>
                        function insertModelProp(){
                        var map=new Object();
@@ -1366,10 +1473,6 @@
                        map["filePath"]=value2;
                        }
                        else{
-
-
-
-
 
                       intercept=document.getElementById("Intercept.1").value;
 
@@ -1415,6 +1518,53 @@
 
                        }
                        </script>
+
+                       <script>
+                       function insertKMeansModelProp(){
+                       var map = new Object;
+                       var processId=$('[ng-controller="AppCtrl"]').scope().chartViewModel.selectedProcess.processId;
+                       var method = document.getElementById("modelImportTypeKMeans").value;
+                       if(method=="serializedModel" || method=="pmmlFile"){
+                       var path=document.getElementById("regFile").value;
+                       map["model-input-method"]=method;
+                       map["filePath"]=path;
+                       }
+                       else{
+                       map["model-input-method"]=method;
+                       var value1=$(".js-example-basic-multiple").select2("val");
+                       console.log(value1);
+                       features = value1[0];
+                       for(var i=1;i<value1.length;i++){
+                       features=features.concat(",");
+                       features=features.concat(value1[i]);
+                       }
+                       map["features"]= features;
+                       var clusters = document.getElementById("Information.1").value;
+                       for(var j=1;j<count1;j++){
+                       clusters=clusters.concat(";");
+                       clusters=clusters.concat(document.getElementById("Information."+(j+1)).value);
+                       }
+                       map["clusters"]= clusters;
+                       }
+                       $.ajax({
+                          type: "POST",
+                          url: "/mdrest/properties/"+processId,
+                          data: jQuery.param(map),
+                          success: function(data) {
+                              if(data.Result == "OK") {
+                                 var modal = document.getElementById('myModal');
+                                  modal.style.display = "none";
+                                  alertBox("info","KMeans properties added");
+                              }
+                              else
+                              alertBox("warning","Error occured");
+
+                          }
+
+                      });
+                       }
+                       </script>
+
                        <script>
                        function uploadZip (subDir,fileId){
                                                         var arg= [subDir,fileId];

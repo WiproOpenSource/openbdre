@@ -9,6 +9,8 @@ import org.apache.spark.ml.clustering.KMeansModel;
 import org.apache.spark.ml.feature.StringIndexer;
 import org.apache.spark.ml.feature.StringIndexerModel;
 import org.apache.spark.ml.feature.VectorAssembler;
+import org.apache.spark.mllib.linalg.Vector;
+import org.apache.spark.mllib.linalg.Vectors;
 import org.apache.spark.sql.DataFrame;
 import org.apache.spark.sql.Row;
 import org.apache.spark.sql.SQLContext;
@@ -33,29 +35,24 @@ public class KMeansClustering implements Analytics {
         JavaPairDStream<String,WrapperMessage> prevDStream = prevDStreamMap.get(prevPid);
 
         GetProperties getProperties = new GetProperties();
-        Properties lrProperties = getProperties.getProperties(String.valueOf(pid), "kmeans");
-        String continuousColumns = lrProperties.getProperty("continuous-columns");
-        String[] continuousColumnsArray = continuousColumns.split(",");
-        String categoryColumns = lrProperties.getProperty("category-columns");
-        String[] categoryColumnsArray = categoryColumns.split(",");
-        Integer numOfClusters = Integer.parseInt(lrProperties.getProperty("num-0f-clusters"));
-        Long seed = Long.parseLong(lrProperties.getProperty("seed"));
-        Long tol = Long.parseLong(lrProperties.getProperty("tol"));
-        Integer maxIter = Integer.parseInt(lrProperties.getProperty("max-iterations"));
-        Integer initSteps = Integer.parseInt(lrProperties.getProperty("init-steps"));
-        String check = lrProperties.getProperty("type-of-data");
-        String modelName = lrProperties.getProperty("model-name");
+        Properties kmProperties = getProperties.getProperties(String.valueOf(pid), "default");
+        String modelInputMethod = kmProperties.getProperty("model-input-method");
+        String features = kmProperties.getProperty("features");
+        String[] columnNames=features.split(",");
+        String centers = kmProperties.getProperty("clusters");
 
-        ArrayList<String> features = new ArrayList<String>(Arrays.asList(continuousColumnsArray));
-        for(String categoryCol : categoryColumnsArray) {
-            if(!categoryCol.equals(""))
-                features.add(categoryCol+"Index");
-        }
-        String[] featureColumns = new String[features.size()];
-        for(int i=0; i< features.size(); i++){
-            featureColumns[i] = features.get(i);
-        }
+        String[] cen=centers.split(";");
+        org.apache.spark.mllib.linalg.Vector[] vector= new Vector[cen.length];
+        for(int j=0;j<cen.length;j++){
+            String[] c=cen[j].split(",");
+            double[] d=new double[c.length];
+            for(int k=0;k<c.length;k++){
+                d[k]=Double.parseDouble(c[k]);
+            }
+            vector[j]= Vectors.dense(d);
 
+
+        }
 
         JavaPairDStream<String,WrapperMessage> lrDstream = prevDStream.transformToPair(new Function<JavaPairRDD<String, WrapperMessage>, JavaPairRDD<String, WrapperMessage>>() {
             @Override
@@ -68,38 +65,21 @@ public class KMeansClustering implements Analytics {
                 dataFrame.show();
                 DataFrame outputDF = null;
                 if(rddRow.count() > 0){
-                    StringIndexer[] strIndexArray = new StringIndexer[categoryColumnsArray.length];
-                    for(int i=0; i<categoryColumnsArray.length; i++) {
-                        StringIndexer indexer = new StringIndexer().setInputCol(categoryColumnsArray[i]).setOutputCol(categoryColumnsArray[i]+"Index");
-                        dataFrame = indexer.fit(dataFrame).transform(dataFrame);
-                        strIndexArray[i] = indexer;
-                    }
 
-                    VectorAssembler assembler = new VectorAssembler().setInputCols(featureColumns).setOutputCol("features");
+                    VectorAssembler assembler = new VectorAssembler().setInputCols(columnNames).setOutputCol("features");
                     DataFrame assembyDF = assembler.transform(dataFrame);
                     assembyDF.show(10);
+                    org.apache.spark.mllib.clustering.KMeansModel m=new org.apache.spark.mllib.clustering.KMeansModel(vector);
+                    KMeansModel kMeansModel=new KMeansModel(UUID.randomUUID().toString(),m);
+                    Vector[] centers1 = kMeansModel.clusterCenters();
+                    System.out.println("Cluster Centers: ");
 
-                    DataFrame newLabelDF = assembyDF;
+                    for (Object center: centers1) {
+                        System.out.println(center);
 
-                    newLabelDF.show(10);
-                    org.apache.spark.ml.clustering.KMeans kMeans = new org.apache.spark.ml.clustering.KMeans().setMaxIter(maxIter).setSeed(seed).setTol(tol).setInitSteps(initSteps).setFeaturesCol("features");
-
-                    if(check.equalsIgnoreCase("training")) {
-                        KMeansModel kMeansModel = null;
-                        kMeansModel = kMeans.fit(newLabelDF);
-                        kMeansModel.write().overwrite().save("/tmp/"+modelName);
                     }
-                    else {
-                        KMeansModel predictionLRModel = KMeansModel.load("/tmp/"+modelName);
-                        outputDF = predictionLRModel.transform(newLabelDF);
-                        outputDF.show();
-                    }
-
-                    /*if(labelColumnDatatype.equalsIgnoreCase("String")){
-                        IndexToString converter = new IndexToString().setInputCol(finalLabelColumn).setOutputCol(labelColumn+"Label").setLabels(labelIndexer.labels());
-                        outputDF = converter.transform(outputDF);
-                    }*/
-
+                    outputDF=kMeansModel.transform(assembyDF);
+                    outputDF.show(20);
 
                 }
                 System.out.println("End of KMeans regression = " + new Date().getTime() +"for pid = "+pid);

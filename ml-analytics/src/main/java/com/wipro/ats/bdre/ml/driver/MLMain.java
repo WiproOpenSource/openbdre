@@ -8,6 +8,7 @@ import com.wipro.ats.bdre.ml.models.KMeansML;
 import com.wipro.ats.bdre.ml.models.LinearRegressionML;
 import com.wipro.ats.bdre.ml.models.LogisticRegressionML;
 import com.wipro.ats.bdre.ml.schema.SchemaGeneration;
+import com.wipro.ats.bdre.ml.sources.HDFSSource;
 import com.wipro.ats.bdre.ml.sources.HiveSource;
 import org.apache.log4j.Logger;
 import org.apache.spark.SparkConf;
@@ -68,7 +69,22 @@ public class MLMain {
                 dataFrame = hiveSource.getDataFrame(jsc, metastoreURI, dbName, tableName, schema);
 
             } else if (sourceType.equalsIgnoreCase("HDFS")) {
-
+                String hdfsDirectory = properties.getProperty("hdfsPath");
+                String nameNodeHost = properties.getProperty("nameNodeHost");
+                String nameNodePort = properties.getProperty("nameNodePort");
+                String hdfsPath="hdfs://"+nameNodeHost+":"+nameNodePort+hdfsDirectory;
+                System.out.println("hdfsPath = " + hdfsPath);
+                String fileFormat = properties.getProperty("fileformat");
+                HDFSSource hdfsSource = new HDFSSource();
+                if(fileFormat.equalsIgnoreCase("Delimited")){
+                    String delimiter=properties.getProperty("Delimiter");
+                    dataFrame = hdfsSource.getDataFrame(jsc, hdfsPath, nameNodeHost, nameNodePort, fileFormat, delimiter, schema);
+                }
+                else if(fileFormat.equalsIgnoreCase("Json")){
+                    String schemaFilePath=properties.getProperty("schema-file-path");
+                    dataFrame = hdfsSource.getDataFrame(jsc, hdfsPath, nameNodeHost, nameNodePort, fileFormat, schemaFilePath, schema);
+                }
+                dataFrame.show();
             }
 
             String mlAlgo = properties.getProperty("ml-algo");
@@ -112,14 +128,17 @@ public class MLMain {
                 String progLanguage = properties.getProperty("prog-lang");
             }
 
-            predictionDF.show();
+            predictionDF.show(1000);
             System.out.println("data predicted");
-            InstanceExecAPI instanceExecAPI2 = new InstanceExecAPI();
-            instanceExecAPI2.updateInstanceExecToFinished(parentProcessId, applicationId);
-            System.out.println("status changed to success");
+
             //predictionDF.write().format("json").save("/user/cloudera/ml-batch/"+parentProcessId);
             predictionDF.write().saveAsTable("ML_"+parentProcessId);
             // predictionDF.write().saveAsTable("demo_table");
+
+            InstanceExecAPI instanceExecAPI2 = new InstanceExecAPI();
+            instanceExecAPI2.updateInstanceExecToFinished(parentProcessId, applicationId);
+            System.out.println("status changed to success");
+
         }catch (Exception e){
             LOGGER.info("final exception = " + e);
             e.printStackTrace();
@@ -127,11 +146,6 @@ public class MLMain {
             instanceExecAPI.updateInstanceExecToFailed(parentProcessId);
             e.printStackTrace();
         }
-
-
-
-
-
 
     }
 }

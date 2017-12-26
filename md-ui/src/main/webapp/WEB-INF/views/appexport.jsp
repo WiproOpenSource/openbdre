@@ -32,6 +32,8 @@
     <script src="../js/bootstrap.js" type="text/javascript"></script>
     <script src="../js/jquery.jtable.js" type="text/javascript"></script>
     <link href="../css/jtables-bdre.css" rel="stylesheet" type="text/css" />
+    <link href="../css/select2.min.css" rel="stylesheet" />
+    <script src="../js/select2.min.js"></script>
 
     <script src="../js/angular.min.js" type="text/javascript"></script>
     <style>
@@ -49,27 +51,51 @@
     </style>
   </head>
 
-  <body ng-app="myApp" ng-controller="myCtrl">
+  <body>
+  <script>
+  var app = angular.module('myApp',[]);
+                          app.controller('myCtrl',function($scope) {
+                          $scope.parentProcessList={};
+                          $.ajax({
+                                url: "/mdrest/process/processList",
+                                    type: 'GET',
+                                    dataType: 'json',
+                                    async: false,
+                                    success: function(data){
+                                        console.log(data.Records);
+                                        for(var i=0;i<data.Records.length;i++){
+                                        data.Records[i].processName=data.Records[i].processId+"_"+data.Records[i].processName;
+                                        }
+                                        $scope.parentProcessList=data.Records;
+                                        console.log($scope.parentProcessList);
+                                    },
+                                    error: function () {
+                                        alert('danger');
+                                    }
+                                });
+
+                          });
+  </script>
   <div class="page-header"><spring:message code="appexport.page.pannel_heading"/></div>
  <%
    String processId=request.getParameter("processId");
   %>
-                                         <div class="row">&nbsp;</div>
-                                         <div class="row">
-                                             <div class="col-md-3"> </div>
-                                             <div class="col-md-6" >
-                                                  	<div  class="col-md-3"></div>
-                                                       <div class="col-md-3 ">
-                                                           <div class="row">&nbsp;</div>
-                                                           <button type="button" width="20px" onclick="downloadZip(<%=processId %>)" class="btn btn-primary btn-large  pull-center"><spring:message code="appexport.page.download"/></button>
-                                                       </div>
-                                                       <div  class="col-md-3">
-                                                            <div class="row">&nbsp;</div>
-                                                            <button type="button" width="20px" onclick="showExportForm()" class="btn btn-primary btn-large pull-center"><spring:message code="appexport.page.export_to_appstore"/></button>
-                                                       </div>
-                                                  
-                                             </div>
-                                         </div>
+                         <div class="row">&nbsp;</div>
+                         <div class="row">
+                             <div class="col-md-3"> </div>
+                             <div class="col-md-6" >
+                                    <div  class="col-md-3"></div>
+                                       <div class="col-md-3 ">
+                                           <div class="row">&nbsp;</div>
+                                           <button type="button" width="20px" onclick="downloadZip(<%=processId %>)" class="btn btn-primary btn-large  pull-center"><spring:message code="appexport.page.download"/></button>
+                                       </div>
+                                       <div  class="col-md-3">
+                                            <div class="row">&nbsp;</div>
+                                            <button type="button" width="20px" onclick="showExportForm()" class="btn btn-primary btn-large pull-center"><spring:message code="appexport.page.export_to_appstore"/></button>
+                                       </div>
+
+                             </div>
+                         </div>
 
 
 
@@ -122,6 +148,19 @@
 
                         </div>
 
+
+                        <div id="batchProcesses" ng-app="myApp" ng-controller="myCtrl">
+                           <label class="form-control" for="features" style="width:20%">Select Processes</label>
+                           <select class="js-example-basic-multiple" id="processList" name="processList" multiple="multiple" style="width:20%" ng-model="processlist" ng-options = "parentProcess.processId as parentProcess.processName for parentProcess in parentProcessList track by parentProcess.processId">
+                           <option value="">Select the option</option>
+                           </select>
+                           </div>
+
+
+                        <script>
+                        $(".js-example-basic-multiple").select2();
+                        </script>
+
                <script>
                $("#export").hide();
                $("#successHeader").hide();
@@ -134,7 +173,16 @@
                                         success: function(data) {
                                         if (data.Result == "OK") {
                                         console.log(window.location.protocol);
-                                       var url = (window.location.protocol + "//" + window.location.host + "/mdrest/process/zippedexport/" + processId);
+                                        console.log(window.location.host);
+                                        var selectedProcess = $(".js-example-basic-multiple").select2("val");
+                                        console.log(selectedProcess);
+                                        var processString="";
+                                        processString=processString.concat(selectedProcess[0]);
+                                        for(var i=1;i<selectedProcess.length;i++){
+                                        processString=processString.concat("-");
+                                        processString=processString.concat(selectedProcess[i]);
+                                        }
+                                       var url = (window.location.protocol + "//" + window.location.host + "/mdrest/process/zippedexportMultiple/" + processString);
                                         window.location.href = url;
                                      }
                                   if (data.Result == "ERROR")
