@@ -1698,7 +1698,7 @@
                         function showProcessPage(pid) {
                             console.log('entered function');
                             console.log(${param.pid == null});
-                            location.href = '<c:url value="/pages/process.page?pid="/>' + pid;
+                            location.href = '<c:url value="/pages/process2.page?pid="/>' + pid;
                         }
 
                     </script>

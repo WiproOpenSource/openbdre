@@ -49,6 +49,7 @@
 49,'source_RabbitMQ',41
 50,'source_Socket',41
 51,'source_S3',41
+102,'source_HDFS',41
 52,'emitter_Kafka',41
 53,'emitter_Kinesis',41
 54,'emitter_MQTT',41

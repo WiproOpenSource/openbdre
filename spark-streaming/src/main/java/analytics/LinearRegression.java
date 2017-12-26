@@ -40,6 +40,7 @@ public class LinearRegression implements Analytics {
         JavaPairDStream<String,WrapperMessage> prevDStream = prevDStreamMap.get(prevPid);
 
         GetProperties getProperties = new GetProperties();
+        System.out.println(pid);
         Properties lrProperties = getProperties.getProperties(String.valueOf(pid), "default");
         String modelInputMethod = lrProperties.getProperty("model-input-method");
         columnCoefficientMap.clear();
@@ -47,8 +48,11 @@ public class LinearRegression implements Analytics {
             String coefficientString = lrProperties.getProperty("coefficients");
             System.out.println("coefficients are "+coefficientString);
             for(String s : coefficientString.split(",")){
+
                 String[] arr = s.split(":");
                 String columnName = arr[0];
+                System.out.println(arr[0]);
+                System.out.println(arr[1]);
                 Double coefficient = Double.parseDouble(arr[1]);
                 columnCoefficientMap.put(columnName,coefficient);
             }

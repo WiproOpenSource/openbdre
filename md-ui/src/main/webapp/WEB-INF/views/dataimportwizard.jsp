@@ -372,16 +372,16 @@
 
                                                  },
                                                  ProcessPipelineButton: {
-                                                                                                                      title: '<spring:message code="dataimportwizard.page.title_pipeline"/>',
-                                                                                                                      sorting: false,
-                                                                                                                      width: '2%',
-                                                                                                                      listClass: 'bdre-jtable-button',
-                                                                                                                      create: false,
-                                                                                                                      edit: false,
-                                                                                                                      display: function(data) {
-                                                                                                                           return '<span class="label label-primary" onclick="fetchPipelineInfo(' + data.record.processId + ')"><spring:message code="dataimportwizard.page.display"/></span> ';
-                                                                                                                      },
-                                                                                 }
+                                                  title: '<spring:message code="dataimportwizard.page.title_pipeline"/>',
+                                                  sorting: false,
+                                                  width: '2%',
+                                                  listClass: 'bdre-jtable-button',
+                                                  create: false,
+                                                  edit: false,
+                                                  display: function(data) {
+                                                       return '<span class="label label-primary" onclick="fetchPipelineInfo(' + data.record.processId + ')"><spring:message code="dataimportwizard.page.display"/></span> ';
+                                                      },
+                                         }
                                         }
                                     });
                                 $('#Container').jtable('load');

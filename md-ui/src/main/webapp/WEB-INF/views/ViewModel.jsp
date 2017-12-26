@@ -158,6 +158,15 @@
                     					.label-execute {
                     						background: url('../css/images/execute.png');
                     					}
+                    					.label-start {
+                                            background: url('../css/images/execute_started.png');
+                                        }
+                                        .label-fail {
+                                            background: url('../css/images/execute_failed.png');
+                                        }
+                                        .label-successful {
+                                            background: url('../css/images/execute_success.png');
+                                        }
 
                     					.slamonitor {
                     						background: url('../css/images/slamonitor.png');
@@ -227,7 +236,6 @@
                                                 success: function(data) {
                                                 if (data.Result == "OK"){
                                                     $dfd.resolve(data);
-
 
 				var processIdIndex;
 				var deployStatusIndex;
@@ -1175,6 +1183,15 @@
                                     create: false,
                                     title: 'Run Model',
                                     display: function(data) {
+                                    if(data.record.latestExecStatus=="FAILED")
+                                        var $img2 = $('<span title=<spring:message code="process.page.img_execute_process"/> class="label-icons label-fail" ></span>');
+                                        else if(data.record.latestExecStatus=="SUCCESS")
+                                        var $img2 = $('<span title=<spring:message code="process.page.img_execute_process"/> class="label-icons label-successful" ></span>');
+                                        else if(data.record.latestExecStatus=="STARTED")
+                                        var $img2 = $('<span title=<spring:message code="process.page.img_execute_process"/> class="label-icons label-start" ></span>');
+                                        else if(data.record.latestExecStatus=="RUNNING")
+                                        var $img2 = $('<span title=<spring:message code="process.page.img_execute_process"/> class="label-icons label-start" ></span>');
+                                        else
                                         var $img2 = $('<span title=<spring:message code="process.page.img_execute_process"/> class="label-icons label-execute" ></span>');
                                         $img2.click(function() {
                                             console.log(data);
@@ -1438,7 +1455,7 @@
                                     edit: false,
                                     display: function(data) {
 
-                                     return '<span class="label-icons slamonitor" onclick="goToSLAMonitoringPage(' + data.record.processId + ')"></span> ';
+                                     return '<span class="label-icons slamonitor" onclick="goTomlresultsPage(' + data.record.processId + ')"></span> ';
                                      },
 
                                 },
@@ -1632,19 +1649,9 @@
                                         });
                            }
 
-                     function goToSLAMonitoringPage(pid)
+                     function goTomlresultsPage(pid)
                                           {
-                            $("#execute-result").dialog({
-                                resizable: false,
-                                height: 'auto',
-                                modal: true,
-                                buttons: {
-                                    "OK": function() {
-                                        $(this).dialog("close");
-                                    }
-                                }
-                            }).html('<p><span class="jtable-confirm-message"><b>View prediction result in hdfs at /user/cloudera/ml-batch/'+ pid +'</b></span></p>');
-
+                            location.href = '<c:url value="/pages/mlresults.page?processId="/>' + pid;
 
 
                                          }

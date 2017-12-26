@@ -4,9 +4,11 @@ import com.wipro.ats.bdre.md.api.GetProcess;
 import com.wipro.ats.bdre.md.api.GetProperties;
 import com.wipro.ats.bdre.md.api.InstanceExecAPI;
 import com.wipro.ats.bdre.md.beans.ProcessInfo;
+import com.wipro.ats.bdre.ml.models.KMeansML;
 import com.wipro.ats.bdre.ml.models.LinearRegressionML;
 import com.wipro.ats.bdre.ml.models.LogisticRegressionML;
 import com.wipro.ats.bdre.ml.schema.SchemaGeneration;
+import com.wipro.ats.bdre.ml.sources.HDFSSource;
 import com.wipro.ats.bdre.ml.sources.HiveSource;
 import org.apache.log4j.Logger;
 import org.apache.spark.SparkConf;
@@ -67,29 +69,54 @@ public class MLMain {
                 dataFrame = hiveSource.getDataFrame(jsc, metastoreURI, dbName, tableName, schema);
 
             } else if (sourceType.equalsIgnoreCase("HDFS")) {
-
+                String hdfsDirectory = properties.getProperty("hdfsPath");
+                String nameNodeHost = properties.getProperty("nameNodeHost");
+                String nameNodePort = properties.getProperty("nameNodePort");
+                String hdfsPath="hdfs://"+nameNodeHost+":"+nameNodePort+hdfsDirectory;
+                System.out.println("hdfsPath = " + hdfsPath);
+                String fileFormat = properties.getProperty("fileformat");
+                HDFSSource hdfsSource = new HDFSSource();
+                if(fileFormat.equalsIgnoreCase("Delimited")){
+                    String delimiter=properties.getProperty("Delimiter");
+                    dataFrame = hdfsSource.getDataFrame(jsc, hdfsPath, nameNodeHost, nameNodePort, fileFormat, delimiter, schema);
+                }
+                else if(fileFormat.equalsIgnoreCase("Json")){
+                    String schemaFilePath=properties.getProperty("schema-file-path");
+                    dataFrame = hdfsSource.getDataFrame(jsc, hdfsPath, nameNodeHost, nameNodePort, fileFormat, schemaFilePath, schema);
+                }
+                dataFrame.show();
             }
 
             String mlAlgo = properties.getProperty("ml-algo");
             String modelInputMethod = properties.getProperty("model-input-method");
 
             if (modelInputMethod.equalsIgnoreCase("ModelInformation")) {
-                String coefficients = properties.getProperty("coefficients");
-                LinkedHashMap<String, Double> columnCoefficientMap = new LinkedHashMap<String, Double>();
-                for (String s : coefficients.split(",")) {
-                    String[] arr = s.split(":");
-                    String columnName = arr[0];
-                    Double coefficient = Double.parseDouble(arr[1]);
-                    columnCoefficientMap.put(columnName, coefficient);
-                }
-                double intercept = Double.parseDouble(properties.getProperty("intercept"));
+                if(mlAlgo.equalsIgnoreCase("LinearRegression") || mlAlgo.equalsIgnoreCase("LogisticRegression")) {
+                    String coefficients = properties.getProperty("coefficients");
+                    LinkedHashMap<String, Double> columnCoefficientMap = new LinkedHashMap<String, Double>();
+                    for (String s : coefficients.split(",")) {
+                        String[] arr = s.split(":");
+                        String columnName = arr[0];
+                        Double coefficient = Double.parseDouble(arr[1]);
+                        columnCoefficientMap.put(columnName, coefficient);
+                    }
+                    double intercept = Double.parseDouble(properties.getProperty("intercept"));
 
-                if (mlAlgo.equalsIgnoreCase("LinearRegression")) {
-                    LinearRegressionML linearRegressionML = new LinearRegressionML();
-                    predictionDF = linearRegressionML.productionalizeModel(dataFrame, columnCoefficientMap, intercept, jsc);
-                } else if (mlAlgo.equalsIgnoreCase("LogisticRegression")) {
-                    LogisticRegressionML logisticRegressionML = new LogisticRegressionML();
-                    predictionDF=logisticRegressionML.productionalizeModel(dataFrame, columnCoefficientMap, intercept, jsc);
+                    if (mlAlgo.equalsIgnoreCase("LinearRegression")) {
+                        LinearRegressionML linearRegressionML = new LinearRegressionML();
+                        predictionDF = linearRegressionML.productionalizeModel(dataFrame, columnCoefficientMap, intercept, jsc);
+                    } else if (mlAlgo.equalsIgnoreCase("LogisticRegression")) {
+                        LogisticRegressionML logisticRegressionML = new LogisticRegressionML();
+                        predictionDF = logisticRegressionML.productionalizeModel(dataFrame, columnCoefficientMap, intercept, jsc);
+
+                    }
+                }
+                else if (mlAlgo.equalsIgnoreCase("KMeans")){
+                    String centers = properties.getProperty("clusters");
+                    String features = properties.getProperty("features");
+                    KMeansML kMeansML=new KMeansML();
+                    predictionDF=kMeansML.productionalizeModel(dataFrame, centers, features, jsc);
+
                 }
 
             } else if (modelInputMethod.equalsIgnoreCase("PMML")) {
@@ -101,13 +128,17 @@ public class MLMain {
                 String progLanguage = properties.getProperty("prog-lang");
             }
 
-            predictionDF.show();
+            predictionDF.show(1000);
             System.out.println("data predicted");
+
+            //predictionDF.write().format("json").save("/user/cloudera/ml-batch/"+parentProcessId);
+            predictionDF.write().saveAsTable("ML_"+parentProcessId);
+            // predictionDF.write().saveAsTable("demo_table");
+
             InstanceExecAPI instanceExecAPI2 = new InstanceExecAPI();
             instanceExecAPI2.updateInstanceExecToFinished(parentProcessId, applicationId);
             System.out.println("status changed to success");
-            predictionDF.write().format("json").save("/user/cloudera/ml-batch/"+parentProcessId);
-           // predictionDF.write().saveAsTable("demo_table");
+
         }catch (Exception e){
             LOGGER.info("final exception = " + e);
             e.printStackTrace();

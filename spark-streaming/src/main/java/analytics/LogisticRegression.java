@@ -39,14 +39,14 @@ public class LogisticRegression implements Analytics {
         JavaPairDStream<String,WrapperMessage> prevDStream = prevDStreamMap.get(prevPid);
 
         GetProperties getProperties = new GetProperties();
-        Properties lrProperties = getProperties.getProperties(String.valueOf(pid), "ml");
+        Properties lrProperties = getProperties.getProperties(String.valueOf(pid), "default");
         String modelInputMethod = lrProperties.getProperty("model-input-method");
         columnCoefficientMap.clear();
         if(modelInputMethod.equalsIgnoreCase("ModelInformation")){
             String coefficientString = lrProperties.getProperty("coefficients");
             System.out.println("coefficients are "+coefficientString);
             for(String s : coefficientString.split(",")){
-                String[] arr = s.split("|");
+                String[] arr = s.split(":");
                 String columnName = arr[0];
                 Double coefficient = Double.parseDouble(arr[1]);
                 columnCoefficientMap.put(columnName,coefficient);
@@ -75,7 +75,7 @@ public class LogisticRegression implements Analytics {
         JavaPairDStream<String,WrapperMessage> lrDstream = prevDStream.transformToPair(new Function<JavaPairRDD<String, WrapperMessage>, JavaPairRDD<String, WrapperMessage>>() {
             @Override
             public JavaPairRDD<String, WrapperMessage> call(JavaPairRDD<String, WrapperMessage> rddPairWrapperMessage) throws Exception {
-                System.out.println("beginning of linear regression = " + new Date().getTime() +"for pid = "+pid);
+                System.out.println("beginning of logistic regression = " + new Date().getTime() +"for pid = "+pid);
                 JavaRDD<Row> rddRow = rddPairWrapperMessage.map(s -> s._2.getRow());
                 SQLContext sqlContext = SQLContext.getOrCreate(rddRow.context());
                 DataFrame dataFrame = sqlContext.createDataFrame(rddRow, schema);
@@ -103,7 +103,7 @@ public class LogisticRegression implements Analytics {
 
                 LogisticRegressionModel logisticRegressionModel = new LogisticRegressionModel(UUID.randomUUID().toString(), Vectors.dense(coeff), intercept);
                 outputDF = logisticRegressionModel.transform(testDataFrame);
-                System.out.println("End of linear regression = " + new Date().getTime() +"for pid = "+pid);
+                System.out.println("End of logistic regression = " + new Date().getTime() +"for pid = "+pid);
                 outputDF.show();
                 JavaPairRDD<String,WrapperMessage> finalRDD = null;
                 if (outputDF != null) {

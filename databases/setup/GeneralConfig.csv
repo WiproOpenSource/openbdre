@@ -613,6 +613,7 @@
 '49','message','RabbitMQ Properties','RabbitMQ', 1,'true','source', 1
 '50','message','Socket Properties','Socket', 1,'true','source', 1
 '51','message','S3 Properties','S3', 1,'true','source', 1
+'102','message','HDFS Properties','HDFS', 1,'true','source', 1
 
 '60','default','Take','Take', 1,'true','take', 1
 '61','default','Persist','Persist', 1,'true','persist', 1
@@ -655,6 +656,12 @@
 'Source_Connection_Type','RabbitMQ','RabbitMQ','', 0, 'RabbitMQ','text', 1
 'Source_Connection_Type','Socket','Socket','', 0, 'Socket','text', 1
 'Source_Connection_Type','S3','S3','', 0, 'S3','text', 1
+'Source_Connection_Type','HDFS','HDFS','', 0, 'HDFS','text', 1
+
+'HDFS_Source_Connection','nameNodeHost','Name Node Host','', 1,'','text', 1
+'HDFS_Source_Connection','nameNodePort','Name Node Port','', 1,'','text', 1
+'HDFS_Source_Connection','hdfsPath','HDFS Directory Path','', 1,'','text', 1
+
 
 'Kafka_Source_Connection','zookeeper.connect','Zookeeper URL','', 1,'','text', 1
 'Kafka_Source_Connection','bootstrap.servers','List of Kafka Brokers','', 1,'','text', 1
@@ -776,8 +783,10 @@
 'HBase_Model_Connection','zKPort','Zookeeper Port','Zookeeper port for hbase cluster.', 1,'','text', 1
 'HBase_Model_Connection','hbaseMasterAddress','HBase Master Address','HBase Master Address for hbase cluster.', 1,'','text', 1
 
+'85','default','KMeans','KMeans', 1,'true','kMeans', 1
 '84','default','LinearRegression','LinearRegression', 1,'true','linearRegression', 1
 '83','default','LogisticRegression','LogisticRegression', 1,'true','logisticRegression', 1
+'85','default','KMeans','KMeans', 1,'true','kMeans', 1
 
 'Ml_Model','LogisticRegression','Logistic Regression','Logistic Regression', 1,'','text', 1
 'Ml_Model','LinearRegression','Linear Regression','Linear Regression', 1,'','text', 1
@@ -817,6 +826,7 @@
 'MultilayerPerceptronClassifier_Model','pmmlFile','PMML File','PMML File', 1,'','text', 1
 'MultilayerPerceptronClassifier_Model','serializedModel','Serialized Model','Serialized Model', 1,'','text', 1
 
+'KMeans_Model','ModelInformation','Model Information','Model Information', 1,'','text', 1
 'KMeans_Model','pmmlFile','PMML File','PMML File', 1,'','text', 1
 'KMeans_Model','serializedModel','Serialized Model','Serialized Model', 1,'','text', 1
 
