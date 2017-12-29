@@ -22,9 +22,11 @@ import org.apache.log4j.Logger;
 import org.hibernate.Criteria;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
+import org.hibernate.criterion.MatchMode;
 import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Restrictions;
+import org.hibernate.Query;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -163,6 +165,17 @@ public class ProcessDAO {
         return processes;
     }
 
+    public List<com.wipro.ats.bdre.md.dao.jpa.Process> processList(){
+        Session session = sessionFactory.openSession();
+        session.beginTransaction();
+        Criteria listSubProcessCriteria = session.createCriteria(Process.class).add(Restrictions.isNull(PARENTPROCESSID)).add(Restrictions.eq(DELETE_FLAG, false)).add(Restrictions.not(Restrictions.eq("processType.processTypeId",41))).add(Restrictions.not(Restrictions.eq("processType.processTypeId",86)));
+        List<Process> subProcesses = listSubProcessCriteria.list();
+        LOGGER.info("Total number of sub processes:" + listSubProcessCriteria.list().size());
+        session.getTransaction().commit();
+        session.close();
+        return subProcesses;
+    }
+
     public Integer totalRecordCount(Integer pid,Integer processTypeId) {
         Session session = sessionFactory.openSession();
         Integer size = 0;
@@ -215,6 +228,16 @@ public class ProcessDAO {
         } finally {
             session.close();
         }
+        return size;
+    }
+    public Integer totalCount(){
+        Session session = sessionFactory.openSession();
+        Integer size = 0;
+        session.beginTransaction();
+        Criteria listSubProcessCriteria = session.createCriteria(Process.class).add(Restrictions.isNull(PARENTPROCESSID)).add(Restrictions.eq(DELETE_FLAG, false)).add(Restrictions.not(Restrictions.eq("processType.processTypeId",41))).add(Restrictions.not(Restrictions.eq("processType.processTypeId",86)));
+        size = listSubProcessCriteria.list().size();
+        session.getTransaction().commit();
+        session.close();
         return size;
     }
 
@@ -1025,5 +1048,18 @@ public class ProcessDAO {
             }
 
         }
+    }
+    public List<com.wipro.ats.bdre.md.dao.jpa.Process> listByName(String processName){
+        Session session = sessionFactory.openSession();
+        List<com.wipro.ats.bdre.md.dao.jpa.Process> filterList=new ArrayList<>();
+        try{
+            session.beginTransaction();
+            Criteria criteria=session.createCriteria(Process.class).add(Restrictions.ilike("processName",processName, MatchMode.ANYWHERE)).add(Restrictions.isNull(PARENTPROCESSID));
+            filterList=(List<com.wipro.ats.bdre.md.dao.jpa.Process>)criteria.list();
+        }
+        catch (Exception e){
+            e.printStackTrace();
+        }
+        return filterList;
     }
 }

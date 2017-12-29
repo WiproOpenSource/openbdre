@@ -21,7 +21,7 @@ echo spark-submit --class driver.StreamAnalyticsDriver --master yarn-client --co
 
 cd $BDRE_HOME/lib/md_api
 
-spark-submit --class driver.StreamAnalyticsDriver --master yarn-client  --conf spark.driver.cores=$5 --conf spark.driver.memory=$6M \
+spark-submit --class driver.StreamAnalyticsDriver --master local[*]  --conf spark.driver.cores=$5 --conf spark.driver.memory=$6M \
                                                                         --conf spark.executorEnv.JAVA_HOME=/usr/java/jdk1.8.0_131 \
                                                                         --conf spark.executor.cores=$7 --conf spark.executor.memory=$8M --conf spark.streaming.receiver.maxRate=$9  \
                                                                         --conf spark.task.maxFailures=${11} --conf spark.dynamicAllocation.enabled=${12} \

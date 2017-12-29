@@ -34,7 +34,7 @@ public class MetadataPersistenceTrigger implements PreUpdateEventListener, PreIn
     private static Map<Integer,Integer> processTypeMap=new HashMap<>();
     //TO DO:We have to populate this from DB
     static {
-         processTypeMap.put(1,0);
+        processTypeMap.put(1,0);
         processTypeMap.put(2,0);
         processTypeMap.put(3,0);
         processTypeMap.put(4,0);
@@ -124,7 +124,7 @@ public class MetadataPersistenceTrigger implements PreUpdateEventListener, PreIn
         processTypeMap.put(88,86);
         processTypeMap.put(89,86);
         processTypeMap.put(90,86);
-
+        processTypeMap.put(102,41);
 
     }
     private void processTypeValidator(Object object) {
