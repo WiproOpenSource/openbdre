@@ -8,7 +8,7 @@
 
 	<head>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-		<link rel="stylesheet" href="../css/jquery.steps.css" />
+		<!--<link rel="stylesheet" href="../css/jquery.steps.css" />
         <link rel="stylesheet" href="../css/jquery.steps.custom.css" />
         <link href="../css/css/bootstrap.min.css" rel="stylesheet" type="text/css" />
         <link href="../css/jtables-bdre.css" rel="stylesheet" type="text/css" />
@@ -35,58 +35,89 @@
         <link rel="stylesheet" href="http://ui-grid.info/release/ui-grid.css" type="text/css">
 
          <link href="../css/select2.min.css" rel="stylesheet" />
-                        <script src="../js/select2.min.js"></script>
+                        <script src="../js/select2.min.js"></script>-->
+
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.12.4/css/bootstrap-select.min.css">
+        <link rel="stylesheet" href="http://ui-grid.info/release/ui-grid.css" type="text/css">
+
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/js/bootstrap.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.12.4/js/bootstrap-select.min.js"></script>
+        <script src="../js/angular.min.js" type="text/javascript"></script>
+        <script src="http://ui-grid.info/release/ui-grid.js"></script>
+        <script src="https://cdn.plot.ly/plotly-1.31.2.min.js"></script>
+
+        <script src="../js/mlresults/app.js" type="text/javascript"></script>
+
 
         <style type="text/css">
             .myGrid {
-            width: 1350px;
-            height: 500px;
+            width: 1000px;
+            height: 300px;
+            }
+
+            .form-control{
+                width: 85%
             }
 
         </style>
 
+        <script type="text/javascript">
+            function goToViewModelPage(){
+                location.href = '<c:url value="/pages/ViewModel.page"/>';
+            }
+        </script>
+
 
     </head>
-    <script>
-    function goToViewModelPage(){
-    location.href = '<c:url value="/pages/ViewModel.page"/>';
-    }
-    </script>
 
-    <script type="text/javascript">
-    var app = angular.module("uigridApp", ["ui.grid"]);
-    app.controller("uigridCtrl", function ($scope) {
-    console.log(window.location.href);
-    $scope.str = window.location.href.split("=")[1];
-    $scope.users={};
-    $scope.srenv="localhost:10000";
-    $.ajax({
-      url: "/mdrest/ml/data/" + $scope.srenv + '/' + "default" + '/' + $scope.str,
-          type: 'GET',
-          dataType: 'json',
-          async: false,
-          success: function (data) {
-              console.log(data);
-             $scope.users= data.Records;
+    <body ng-app="uigridApp" ng-controller="uigridCtrl">
+    <div class="container">
+        <button class = "btn btn-default  btn-success" style="margin-top: 30px;background: lightsteelblue;" type = "button" onClick = goToViewModelPage("ModelInformation")  >Back</button >
+        <br/><br/>
+        <div>
+            <div ui-grid="gridOptions" ui-grid-pagination ui-grid-exporter class="myGrid"></div>
+        </div>
+        <br/><br/>
 
-          },
-          error: function () {
-              alert('danger');
-          }
-      });
-    $scope.gridOptions = {
-    enableFiltering: true,
-    onRegisterApi: function (gridApi) {
-    $scope.grid1Api = gridApi;
-    }
-    };
-    $scope.gridOptions.data = $scope.users;
-    });
-    </script>
+        <div class="row"><div class="col-sm-12 col-md-12"></div></div>
+        <div class="row">
+            <div class="col-sm-3 col-md-3">
+                <span>X Axis</span>
+                <select id="xAxis" class="selectpicker">
 
-    <body ng-app="uigridApp">
-    <button class = "btn btn-default  btn-success" style="margin-top: 30px;background: lightsteelblue;" type = "button" onClick = goToViewModelPage("ModelInformation")  >Back</button >
-    <div ng-controller="uigridCtrl">
-    <div ui-grid="gridOptions" class="myGrid"></div>
+                </select>
+            </div>
+            <div class="col-sm-3 col-md-3">
+                <span>Y Axis</span>
+                <select id="yAxis" class="selectpicker"></select>
+            </div>
+            <div class="col-sm-3 col-md-3">
+                <span>Graph Type</span>
+                <select id="plotType" class="selectpicker">
+                    <option>Scatter</option>
+
+                </select>
+
+            </div>
+            <div class="col-sm-3 col-md-3">
+                <span>&nbsp;</span>
+                <button type="button" class="btn btn-primary btn-md" ng-click="plotGraph()">Plot Graph</button>
+            </div>
+        </div>
+        <br/>
+        <div class="row" ng-show="mapLogisticPredictionFlag" ng-cloak>
+
+            <div class="col-sm-3 col-md-3" ng-repeat="classifier in classificationElements">
+                <span>{{classifier}}</span>
+                <input type="text" class="form-control" ng-model="predictionName[$index]"/>
+
+                </select>
+            </div>
+        </div>
+        <div id="modelGraph" style="width:700px;height:250px;"></div>
     </div>
+
+
     </body>
