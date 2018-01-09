@@ -156,7 +156,7 @@ public class HistoryDataImportDAO {
                 dataLoadParent.setProcessType(dataLoadProcessType);
                 dataLoadParent.setNextProcessId("0");
                 dataLoadParent.setCanRecover(false);
-                dataLoadParent.setEnqueuingProcessId(0);
+                dataLoadParent.setEnqueuingProcessId("0");
                 dataLoadParent.setBatchCutPattern(null);
                 dataLoadParent.setDeleteFlag(false);
                 if (workflowType!=null)
@@ -193,7 +193,7 @@ public class HistoryDataImportDAO {
                 dataImportProcess.setProcessType(dataImportProcessType);
                 dataImportProcess.setNextProcessId("0");
                 dataImportProcess.setCanRecover(false);
-                dataImportProcess.setEnqueuingProcessId(0);
+                dataImportProcess.setEnqueuingProcessId("0");
                 dataImportProcess.setBatchCutPattern(null);
                 if (workflowType!=null)
                 dataImportProcess.setWorkflowType(workflowType);
@@ -229,7 +229,7 @@ public class HistoryDataImportDAO {
                 childDataImportProcess.setProcess(dataImportProcess);
                 childDataImportProcess.setBusDomain(busDomain);
                 childDataImportProcess.setProcessType(childDataImportProcessType);
-                childDataImportProcess.setEnqueuingProcessId(0);
+                childDataImportProcess.setEnqueuingProcessId("0");
                 childDataImportProcess.setNextProcessId(dataImportProcess.getProcessId().toString());
                 childDataImportProcess.setWorkflowType(actionType);
                 childDataImportProcess.setDeleteFlag(false);
@@ -462,7 +462,7 @@ public class HistoryDataImportDAO {
                     file2Raw.setNextProcessId("0");
                     file2Raw.setProcess(dataLoadParent);
                     file2Raw.setCanRecover(false);
-                    file2Raw.setEnqueuingProcessId(dataImportProcess.getProcessId());
+                    file2Raw.setEnqueuingProcessId(dataImportProcess.getProcessId().toString());
                     file2Raw.setBatchCutPattern(null);
                     file2Raw.setDeleteFlag(false);
                     file2Raw.setWorkflowType(actionType);
@@ -480,7 +480,7 @@ public class HistoryDataImportDAO {
                     raw2Stage.setProcess(dataLoadParent);
                     raw2Stage.setCanRecover(false);
                     raw2Stage.setNextProcessId("0");
-                    raw2Stage.setEnqueuingProcessId(dataImportProcess.getProcessId());
+                    raw2Stage.setEnqueuingProcessId(dataImportProcess.getProcessId().toString());
                     raw2Stage.setBatchCutPattern(null);
                     raw2Stage.setDeleteFlag(false);
                     raw2Stage.setWorkflowType(actionType);
@@ -497,7 +497,7 @@ public class HistoryDataImportDAO {
                     stage2Base.setProcessType(stage2BaseType);
                     stage2Base.setProcess(dataLoadParent);
                     stage2Base.setCanRecover(false);
-                    stage2Base.setEnqueuingProcessId(0);
+                    stage2Base.setEnqueuingProcessId("0");
                     stage2Base.setBatchCutPattern(null);
                     stage2Base.setDeleteFlag(false);
                     stage2Base.setNextProcessId("0");

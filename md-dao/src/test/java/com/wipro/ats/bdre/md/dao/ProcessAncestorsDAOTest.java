@@ -40,9 +40,8 @@ public class ProcessAncestorsDAOTest {
     ProcessAncestorsDAO processAncestorsDAO;
 
     @Test
-    @Ignore
     public void testListUpstreams() throws Exception {
-        List<Process> upstreamProcessList = processAncestorsDAO.listUpstreams(10802);
+        List<Process> upstreamProcessList = processAncestorsDAO.listUpstreams(3);
         LOGGER.info("Total number of upstream processes:" + upstreamProcessList.size());
         for (Process process : upstreamProcessList) {
             LOGGER.info(process);

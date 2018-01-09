@@ -776,7 +776,7 @@ wizard = $(document).ready(function() {
             </div>
             <div class = "list-group" >
                 <span href = "#" class = "list-group-item" >
-                    <span class = "glyphicon glyphicon-export" ></span >For csv delimiter file, key is &quot;field.delim&quot; and value is &quot;,&quot;
+                    <span class = "glyphicon glyphicon-export" ></span >For csv delimiter file and xlsx file, key is &quot;field.delim&quot; and value is &quot;,&quot;
                 </span >
              </div>
     <form class="form-horizontal pull-none" role="form" id="serdeProperties">

@@ -139,7 +139,7 @@ public class DataLoadAPI extends MetadataAPIBase {
         String processDescription = null;
         Integer busDomainId = null;
         Integer workflowTypeId=null;
-        Integer enqId = null;
+        String enqId = null;
         String filePath = null;
         Map<String,String> partitionCols = new TreeMap<String, String>();
         Map<String,String> partitionDataTypes = new TreeMap<String, String>();
@@ -254,11 +254,11 @@ public class DataLoadAPI extends MetadataAPIBase {
             }else if (string.startsWith("process_enqueueId")) {
                 LOGGER.info("EnqueueId " + map.get(string));
                 if(! map.get(string).equals("null")) {
-                    enqId = new Integer(map.get(string));
+                    enqId = map.get(string);
                     LOGGER.info("enqId is "+ enqId);
                 }
                 else {
-                    enqId = 0;
+                    enqId = "0";
                     LOGGER.info("enqId is "+ enqId);
                 }
             }

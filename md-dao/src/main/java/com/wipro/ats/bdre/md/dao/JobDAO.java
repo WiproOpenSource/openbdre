@@ -67,9 +67,9 @@ public class JobDAO {
             Criteria maxBatchNullCheckCriteria = session.createCriteria(Process.class);
             Process parentProcess = new Process();
             parentProcess.setProcessId(processId);
-            maxBatchNullCheckCriteria.add(Restrictions.eq(PROCESS, parentProcess)).add(Restrictions.ne(ENQUEUINGPROCESSID, 0)).add(Restrictions.eq(DELETEFLAG, false));
+            maxBatchNullCheckCriteria.add(Restrictions.eq(PROCESS, parentProcess)).add(Restrictions.ne(ENQUEUINGPROCESSID, "0")).add(Restrictions.eq(DELETEFLAG, false));
             Integer countOfProcWithBCP = maxBatchNullCheckCriteria.list().size();
-            Criteria batchCutPatternCriteria= session.createCriteria(Process.class).add(Restrictions.eq(PROCESS, parentProcess)).add(Restrictions.ne(ENQUEUINGPROCESSID, 0)).add(Restrictions.eq(DELETEFLAG, false))
+            Criteria batchCutPatternCriteria= session.createCriteria(Process.class).add(Restrictions.eq(PROCESS, parentProcess)).add(Restrictions.ne(ENQUEUINGPROCESSID, "0")).add(Restrictions.eq(DELETEFLAG, false))
                     .add(Restrictions.isNotNull(BATCHCUTPATTERN));
             Integer countOfProcWithOutBCP = batchCutPatternCriteria.list().size();
             if (countOfProcWithOutBCP < countOfProcWithBCP && maxBatch == null) {
@@ -190,8 +190,20 @@ public class JobDAO {
             int processEntries = 0;
             Criteria bcqCriteria= session.createCriteria(BatchConsumpQueue.class).add(Restrictions.in(PROCESS, listOfSubProcesses));
             LOGGER.debug("bcqcriteria size= "+bcqCriteria.list().size());
-            Criteria processCriteria = session.createCriteria(Process.class).add(Restrictions.eq(PROCESS, parentProcess)).add(Restrictions.ne(ENQUEUINGPROCESSID, 0)).add(Restrictions.eq(DELETEFLAG, false)).add(Restrictions.isNull(BATCHCUTPATTERN));
-            processEntries=processCriteria.list().size();
+            Criteria processCriteria = session.createCriteria(Process.class).add(Restrictions.eq(PROCESS, parentProcess)).add(Restrictions.ne(ENQUEUINGPROCESSID, "0")).add(Restrictions.eq(DELETEFLAG, false)).add(Restrictions.isNull(BATCHCUTPATTERN));
+            //processEntries=processCriteria.list().size();
+            //adding code to support multiple enqProcessIds
+
+            List<Process> processHavingEnqIDs=processCriteria.list();
+            for(Process process:processHavingEnqIDs)
+            {
+                String enqString=process.getEnqueuingProcessId();
+                int enqIdsNum=enqString.split(",").length;
+                processEntries=processEntries+enqIdsNum;
+            }
+
+
+
             Set uniqueBatchEntries = new HashSet();
             for (Object batchCheckObjectBCQ : bcqCriteria.list()) {
                 BatchConsumpQueue bcq = (BatchConsumpQueue) batchCheckObjectBCQ;
@@ -209,7 +221,7 @@ public class JobDAO {
             // And There is no entry for the subprocess of this process
             Integer sumOfEnqProcessId = 0;
             for (Process enqProcess : listOfSubProcesses) {
-                sumOfEnqProcessId += enqProcess.getEnqueuingProcessId();
+                sumOfEnqProcessId += Integer.valueOf(enqProcess.getEnqueuingProcessId());
             }
             Boolean sumOfEnqQueueId = true;
             for (Process bcqEntryProcess : listOfSubProcesses) {
@@ -224,7 +236,7 @@ public class JobDAO {
             BatchStatus newBatchStatus = new BatchStatus();
             newBatchStatus.setBatchStateId(0);
             if (sumOfEnqProcessId == 0 && sumOfEnqQueueId) {
-                Criteria listOfSubProcessWithoutEnqCriteria = session.createCriteria(Process.class).add(Restrictions.eq(PROCESS, parentProcess)).add(Restrictions.eq(ENQUEUINGPROCESSID, 0)).add(Restrictions.eq(DELETEFLAG, false));
+                Criteria listOfSubProcessWithoutEnqCriteria = session.createCriteria(Process.class).add(Restrictions.eq(PROCESS, parentProcess)).add(Restrictions.eq(ENQUEUINGPROCESSID, "0")).add(Restrictions.eq(DELETEFLAG, false));
                 for (Object withoutEnqObject : listOfSubProcessWithoutEnqCriteria.list()) {
                     Process withoutEnqProcess = (Process) withoutEnqObject;
                     BatchConsumpQueue batchConsumpqueue = new BatchConsumpQueue();
@@ -290,7 +302,7 @@ public class JobDAO {
                 }
 
                 Criteria nullBCPCriteria = session.createCriteria(Process.class).add(Restrictions.eq(PROCESS, parentProcess))
-                        .add(Restrictions.eq(DELETEFLAG, false)).add(Restrictions.ne(ENQUEUINGPROCESSID, 0))
+                        .add(Restrictions.eq(DELETEFLAG, false)).add(Restrictions.ne(ENQUEUINGPROCESSID, "0"))
                         .add(Restrictions.isNull(BATCHCUTPATTERN));
                 for (Object nullBDPObject : nullBCPCriteria.list()) {
                     Process blankBCPProcess = (Process) nullBDPObject;
@@ -308,7 +320,7 @@ public class JobDAO {
                 }
 
                 Criteria notNullBCPCriteria = session.createCriteria(Process.class).add(Restrictions.eq(PROCESS, parentProcess))
-                        .add(Restrictions.eq(DELETEFLAG, false)).add(Restrictions.ne(ENQUEUINGPROCESSID, 0))
+                        .add(Restrictions.eq(DELETEFLAG, false)).add(Restrictions.ne(ENQUEUINGPROCESSID, "0"))
                         .add(Restrictions.isNotNull(BATCHCUTPATTERN));
                 for (Object notNullBCPObject : notNullBCPCriteria.list()) {
                     Long sourceBatchId = null;
@@ -459,7 +471,7 @@ public class JobDAO {
                 listOfSubProcesses.add(subProcess);
             }
             List<Process> listOfDownStreamSubProcessesWithEnqID = new ArrayList<Process>();
-            Criteria listOfDownStreamSubProcessesWithEnqIDCriteria = session.createCriteria(Process.class).add(Restrictions.eq(ENQUEUINGPROCESSID, parentProcessId.getProcessId())).add(Restrictions.eq(DELETEFLAG, false));
+            Criteria listOfDownStreamSubProcessesWithEnqIDCriteria = session.createCriteria(Process.class).add(Restrictions.eq(ENQUEUINGPROCESSID, parentProcessId.getProcessId().toString())).add(Restrictions.eq(DELETEFLAG, false));
             for (Object subProcessObject : listOfDownStreamSubProcessesWithEnqIDCriteria.list()) {
                 Process subProcess = (Process) subProcessObject;
                 listOfDownStreamSubProcessesWithEnqID.add(subProcess);

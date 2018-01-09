@@ -101,7 +101,7 @@ public class CreateRawBaseTables extends ETLBase {
         String rawColumnsWithDataTypes = rawColumnList.substring(0, rawColumnList.length() - 1);
 
         // fetching raw table serde-properties from properties table for a delimited file
-        if ("delimited".equalsIgnoreCase(fileType)) {
+        if ("delimited".equalsIgnoreCase(fileType) || "xlsx".equalsIgnoreCase(fileType)) {
             StringBuilder sList = new StringBuilder();
             GetProperties getSerdeProperties = new GetProperties();
             java.util.Properties listForRawSerdeProps = getSerdeProperties.getProperties(rawLoad, "raw-serde-props");
@@ -168,7 +168,7 @@ public class CreateRawBaseTables extends ETLBase {
         String rawTableDdl = "";
 
         //generating raw table ddl for a delimited file
-        if ("delimited".equalsIgnoreCase(fileType)) {
+        if ("delimited".equalsIgnoreCase(fileType) || "xlsx".equalsIgnoreCase(fileType) ) {
             if(!rawSerdeProperties.equals("")) {
                 rawTableDdl += "CREATE TABLE IF NOT EXISTS " + rawTableDbName + "." + rawTableName + " ( " + rawColumnsWithDataTypes + " ) " +
                         " partitioned by (batchid bigint) ROW FORMAT SERDE 'org.apache.hadoop.hive.serde2.lazy.LazySimpleSerDe'  WITH SERDEPROPERTIES (" + rawSerdeProperties + " ) STORED AS INPUTFORMAT 'org.apache.hadoop.mapred.TextInputFormat'" +
