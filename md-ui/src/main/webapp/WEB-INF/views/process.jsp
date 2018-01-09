@@ -1647,6 +1647,11 @@
 						<span class="jtable-confirm-message"><spring:message code="process.page.span_process_not_found"/></span>
 					</p>
 				</div>
+				 <div style="display:none" id="div-dialog-warning">
+                            			<p><span class="ui-icon ui-icon-alert" style="float:left;"></span></p>
+                            		</div>
+
+
 			</body>
 
             </html>
