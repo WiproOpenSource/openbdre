@@ -131,6 +131,30 @@ public class ProcessAPI extends MetadataAPIBase {
 
     }
 
+
+
+    @RequestMapping(value = "/checkProcess/{id}", method = RequestMethod.GET)
+    @ResponseBody
+    public RestWrapper checkParent(
+            @PathVariable("id") Integer processId, Principal principal
+    ) {
+
+        RestWrapper restWrapper = null;
+        try {
+            com.wipro.ats.bdre.md.dao.jpa.Process process=processDAO.getParent(processId);
+            LOGGER.info(process);
+            if (process!=null)
+                restWrapper = new RestWrapper("Present", RestWrapper.OK);
+            else
+                restWrapper = new RestWrapper("Not Present", RestWrapper.OK);
+        } catch (MetadataException e) {
+            LOGGER.error(e);
+            restWrapper = new RestWrapper(e.getMessage(), RestWrapper.ERROR);
+        }
+        return restWrapper;
+    }
+
+
     /**
      * This method calls proc DeleteProcess and deletes a record corresponding to processId passed.
      *
