@@ -563,9 +563,9 @@
 'xml', 'serdeClass', 'Serde Class','serde class to be used' , 1, 'com.wipro.ats.bdre.io.xml.XmlSerDe', 'text' , 1
 'xml', 'inputFormat', 'Input Format','input format to be used' , 1, 'com.wipro.ats.bdre.io.xml.XmlInputFormat', 'text' , 1
 'xml', 'outputFormat', 'Output Format','output format to be used' , 1, 'org.apache.hadoop.hive.ql.io.IgnoreKeyTextOutputFormat', 'text' , 1
-'json', 'serdeClass', 'Serde Class','serde class to be used' , 1, 'com.wipro.ats.bdre.io.xml.XmlSerDe', 'text' , 1
-'json', 'inputFormat', 'Input Format','input format to be used' , 1, 'com.wipro.ats.bdre.io.xml.XmlInputFormat', 'text' , 1
-'json', 'outputFormat', 'Output Format','output format to be used' , 1, 'org.apache.hadoop.hive.ql.io.IgnoreKeyTextOutputFormat', 'text' , 1
+'json', 'serdeClass', 'Serde Class','serde class to be used' , 1, 'org.apache.hive.hcatalog.data.JsonSerDe', 'text' , 1
+'json', 'inputFormat', 'Input Format','input format to be used' , 1, 'org.apache.hadoop.mapred.TextInputFormat', 'text' , 1
+'json', 'outputFormat', 'Output Format','output format to be used' , 1, 'org.apache.hadoop.hive.ql.io.HiveIgnoreKeyTextOutputFormat', 'text' , 1
 'mainframe', 'serdeClass', 'Serde Class','serde class to be used' , 1, ' ', 'text' , 1
 'mainframe', 'inputFormat', 'Input Format','input format to be used' , 1, 'com.cloudera.sa.copybook.mapred.CopybookInputFormat', 'text' , 1
 'mainframe', 'outputFormat', 'Output Format','output format to be used' , 1, 'org.apache.hadoop.hive.ql.io.HiveIgnoreKeyTextOutputFormat', 'text' , 1

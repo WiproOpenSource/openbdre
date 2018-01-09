@@ -16,7 +16,12 @@ package com.wipro.ats.bdre.im.etl.api;
 
 import com.wipro.ats.bdre.im.etl.api.base.ETLBase;
 import com.wipro.ats.bdre.im.etl.api.exception.ETLException;
+import com.wipro.ats.bdre.md.api.GetGeneralConfig;
+import com.wipro.ats.bdre.md.api.GetProcess;
 import com.wipro.ats.bdre.md.api.GetProperties;
+import com.wipro.ats.bdre.md.beans.ProcessInfo;
+import com.wipro.ats.bdre.md.beans.table.ProcessDeploymentQueue;
+import com.wipro.ats.bdre.md.dao.jpa.Process;
 import org.apache.commons.cli.CommandLine;
 import org.apache.log4j.Logger;
 
@@ -36,10 +41,14 @@ public class CreateRawBaseTables extends ETLBase {
             {"p", "process-id", " Process id of ETLDriver"},
             {"instExecId", "instance-exec-id", " instance exec id"},
     };
+    String fileTypeSelected;
+    String processIdSelected;
+
     public void executeRawLoad(String[] params) {
 
         CommandLine commandLine = getCommandLine(params, PARAMS_STRUCTURE);
         String processId = commandLine.getOptionValue(PROCESSID);
+        processIdSelected = processId;
         rawLoad=processId;
 
 
@@ -49,6 +58,7 @@ public class CreateRawBaseTables extends ETLBase {
         String rawTableName = rawPropertiesOfTable.getProperty("table_name");
         String rawTableDbName = rawPropertiesOfTable.getProperty("table_db");
         String fileType = rawPropertiesOfTable.getProperty("file_type");
+        fileTypeSelected = fileType;
         String rawSerdeProperties = "";
         String rawTableProperties = "";
         String rawColumnList = "";
@@ -135,6 +145,23 @@ public class CreateRawBaseTables extends ETLBase {
 
         }
 
+        //fetching raw table serde-properties from properties table for a json file
+        /*else if ("Json".equalsIgnoreCase(fileType)) {
+            StringBuilder sList = new StringBuilder();
+            GetProperties getSerdeProperties = new GetProperties();
+            java.util.Properties listForRawSerdeProps = getSerdeProperties.getProperties(rawLoad, "raw-serde-props");
+            Enumeration e = listForRawSerdeProps.propertyNames();
+            if (!listForRawSerdeProps.isEmpty()) {
+                while (e.hasMoreElements()) {
+                    String key = (String) e.nextElement();
+                    sList.append("\"" + key + "\" = \"" + listForRawSerdeProps.getProperty(key) + "\",");
+                }
+                rawSerdeProperties = sList.substring(0, sList.length() - 1);
+                LOGGER.debug("rawSerdeProperties = " + rawSerdeProperties);
+            }
+
+        }*/
+
         StringBuilder tList = new StringBuilder();
         // fetching raw table table-properties from properties table for xml
         if ("xml".equalsIgnoreCase(fileType)) {
@@ -164,6 +191,21 @@ public class CreateRawBaseTables extends ETLBase {
 
             }
         }
+        /*else if ("Json".equalsIgnoreCase(fileType)) {
+            // fetching raw table table-properties from properties table for json
+            tList = new StringBuilder();
+            GetProperties getTableProperties = new GetProperties();
+            java.util.Properties listForRawTableProps = getTableProperties.getProperties(rawLoad, "raw-table-props");
+            Enumeration e = listForRawTableProps.propertyNames();
+            if (!listForRawTableProps.isEmpty()) {
+                while (e.hasMoreElements()) {
+                    String key = (String) e.nextElement();
+                    tList.append("'" + key + "' = '" + listForRawTableProps.getProperty(key) + "',");
+                }
+
+            }
+        }*/
+
 
         String rawTableDdl = "";
 
@@ -213,6 +255,15 @@ public class CreateRawBaseTables extends ETLBase {
 
             LOGGER.debug("rawTableDdl= " + rawTableDdl);
         }
+        else if ("json".equalsIgnoreCase(fileType)) {
+
+                rawTableDdl += "CREATE TABLE IF NOT EXISTS " + rawTableDbName + "." + rawTableName + " ( " + rawColumnsWithDataTypes + " )" +
+                        " partitioned by (batchid bigint) ROW FORMAT SERDE 'org.apache.hive.hcatalog.data.JsonSerDe' " +
+                        "STORED AS INPUTFORMAT 'org.apache.hadoop.mapred.TextInputFormat' OUTPUTFORMAT 'org.apache.hadoop.hive.ql.io.HiveIgnoreKeyTextOutputFormat' ";
+
+            LOGGER.debug("rawTableDdl= " + rawTableDdl);
+        }
+
         if ("mainframe".equalsIgnoreCase(fileType)) {
             if(!rawTableProperties.equals("")) {
                 rawTableDdl += "CREATE TABLE IF NOT EXISTS " + rawTableDbName + "." + rawTableName + " ( " + rawColumnsWithDataTypes + " ) " +
@@ -237,9 +288,10 @@ public class CreateRawBaseTables extends ETLBase {
         String processId = commandLine.getOptionValue(PROCESSID);
         String instanceExecId = commandLine.getOptionValue("instance-exec-id");
         stgLoad = processId;
+        processIdSelected = processId;
 
 
-        //Getting raw table information from properties with raw-table as config group
+                //Getting raw table information from properties with raw-table as config group
         GetProperties getPropertiesOfRawTable = new GetProperties();
         java.util.Properties basePropertiesOfTable = getPropertiesOfRawTable.getProperties(stgLoad, "base-table");
         String baseTableName = basePropertiesOfTable.getProperty("table_name");
@@ -331,6 +383,16 @@ public class CreateRawBaseTables extends ETLBase {
             LOGGER.debug("Reading Hive Connection details from Properties File");
             Connection con = getHiveJDBCConnection(dbName);
             Statement stmt = con.createStatement();
+            //if("json".equalsIgnoreCase(fileTypeSelected)) {
+                GetGeneralConfig generalConfig = new GetGeneralConfig();
+                String hdfsURI = generalConfig.byConigGroupAndKey("imconfig", "common.default-fs-name").getDefaultVal();
+                String bdreLinuxUserName = generalConfig.byConigGroupAndKey("scripts_config", "bdreLinuxUserName").getDefaultVal();
+                ProcessInfo process = new GetProcess().getProcess(Integer.parseInt(processIdSelected));
+
+            String serdePath = hdfsURI+"/user/"+bdreLinuxUserName+"/wf/1/5/"+process.getParentProcessId()+"/lib/hive-hcatalog-core-0.13.1.jar";
+                String addSerde = "add jar "+serdePath;
+                stmt.execute(addSerde);
+            //}
             ResultSet rs = stmt.executeQuery(CreateRawBaseTables.getQuery(tableName));
             if (!rs.next()) {
                 LOGGER.info("Raw table does not exist Creating table " + tableName);
@@ -354,6 +416,15 @@ public class CreateRawBaseTables extends ETLBase {
             Statement stmt = con.createStatement();
             ResultSet rs = stmt.executeQuery(CreateRawBaseTables.getQuery(stageViewName));
             if (!rs.next()) {
+                GetGeneralConfig generalConfig = new GetGeneralConfig();
+                String hdfsURI = generalConfig.byConigGroupAndKey("imconfig", "common.default-fs-name").getDefaultVal();
+                String bdreLinuxUserName = generalConfig.byConigGroupAndKey("scripts_config", "bdreLinuxUserName").getDefaultVal();
+                ProcessInfo process = new GetProcess().getProcess(Integer.parseInt(processIdSelected));
+
+                String serdePath = hdfsURI+"/user/"+bdreLinuxUserName+"/wf/1/5/"+process.getParentProcessId()+"/lib/hive-hcatalog-core-0.13.1.jar";
+                String addSerde = "add jar "+serdePath;
+                stmt.execute(addSerde);
+
                 LOGGER.debug("View does not exist. Creating View " + stageViewName);
                 LOGGER.info("Creating view using " + ddl);
                 stmt.executeUpdate(ddl);
@@ -373,6 +444,15 @@ public class CreateRawBaseTables extends ETLBase {
             Statement stmt = con.createStatement();
             ResultSet rs = stmt.executeQuery(CreateRawBaseTables.getQuery(baseTable));
             if (!rs.next()) {
+                GetGeneralConfig generalConfig = new GetGeneralConfig();
+                String hdfsURI = generalConfig.byConigGroupAndKey("imconfig", "common.default-fs-name").getDefaultVal();
+                String bdreLinuxUserName = generalConfig.byConigGroupAndKey("scripts_config", "bdreLinuxUserName").getDefaultVal();
+                ProcessInfo process = new GetProcess().getProcess(Integer.parseInt(processIdSelected));
+
+                String serdePath = hdfsURI+"/user/"+bdreLinuxUserName+"/wf/1/5/"+process.getParentProcessId()+"/lib/hive-hcatalog-core-0.13.1.jar";
+                String addSerde = "add jar "+serdePath;
+                stmt.execute(addSerde);
+
                 LOGGER.info("Base table does not exist.Creating Table " + baseTable);
                 LOGGER.info("Creating base table using "+ddl);
                 stmt.executeUpdate(ddl);
@@ -392,6 +472,15 @@ public class CreateRawBaseTables extends ETLBase {
             Statement stmt = con.createStatement();
             ResultSet rs = stmt.executeQuery(CreateRawBaseTables.getQuery(baseTable));
             if (!rs.next()) {
+                GetGeneralConfig generalConfig = new GetGeneralConfig();
+                String hdfsURI = generalConfig.byConigGroupAndKey("imconfig", "common.default-fs-name").getDefaultVal();
+                String bdreLinuxUserName = generalConfig.byConigGroupAndKey("scripts_config", "bdreLinuxUserName").getDefaultVal();
+                ProcessInfo process = new GetProcess().getProcess(Integer.parseInt(processIdSelected));
+
+                String serdePath = hdfsURI+"/user/"+bdreLinuxUserName+"/wf/1/5/"+process.getParentProcessId()+"/lib/hive-hcatalog-core-0.13.1.jar";
+                String addSerde = "add jar "+serdePath;
+                stmt.execute(addSerde);
+
                 LOGGER.info("Stage table does not exist.Creating Table " + baseTable);
                 LOGGER.info("Creating stage table using "+ddl);
                 stmt.executeUpdate(ddl);

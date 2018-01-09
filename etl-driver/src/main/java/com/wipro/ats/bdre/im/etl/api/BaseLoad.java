@@ -17,6 +17,9 @@ package com.wipro.ats.bdre.im.etl.api;
 import com.wipro.ats.bdre.IMConfig;
 import com.wipro.ats.bdre.im.etl.api.base.ETLBase;
 import com.wipro.ats.bdre.im.etl.api.exception.ETLException;
+import com.wipro.ats.bdre.md.api.GetGeneralConfig;
+import com.wipro.ats.bdre.md.api.GetProcess;
+import com.wipro.ats.bdre.md.beans.ProcessInfo;
 import org.apache.commons.cli.CommandLine;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.FileSystem;
@@ -53,14 +56,14 @@ public class BaseLoad extends ETLBase {
         String baseTableName = baseTable;
         String baseTableDbName = baseDb;
 
-        processStage(baseTableDbName, baseTableName, instanceExecId);
+        processStage(baseTableDbName, baseTableName, instanceExecId, processId);
     }
 
 
     private static String getQuery(String name){
         return "show partitions "+name;
     }
-    private void processStage(String dbName, String baseTableName, String instanceExecId) {
+    private void processStage(String dbName, String baseTableName, String instanceExecId, String processId) {
         try {
 
             Configuration conf = new Configuration();
@@ -104,6 +107,16 @@ public class BaseLoad extends ETLBase {
                 fs.rename(srcPath,destPath);
                 Connection baseCon = getHiveJDBCConnection(dbName);
                 Statement baseConStatement = baseCon.createStatement();
+
+                GetGeneralConfig generalConfig = new GetGeneralConfig();
+                String hdfsURI = generalConfig.byConigGroupAndKey("imconfig", "common.default-fs-name").getDefaultVal();
+                String bdreLinuxUserName = generalConfig.byConigGroupAndKey("scripts_config", "bdreLinuxUserName").getDefaultVal();
+                ProcessInfo process = new GetProcess().getProcess(Integer.parseInt(processId));
+
+                String serdePath = hdfsURI+"/user/"+bdreLinuxUserName+"/wf/1/5/"+process.getParentProcessId()+"/lib/hive-hcatalog-core-0.13.1.jar";
+                String addSerde = "add jar "+serdePath;
+                baseConStatement.execute(addSerde);
+
                 String query="alter table "+ baseTableName+" add partition("+stagePartition.replace("/",",")+")";
                 LOGGER.info("query = " + query);
                 baseConStatement.executeUpdate(query);

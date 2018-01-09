@@ -17,7 +17,10 @@ package com.wipro.ats.bdre.im.etl.api;
 import com.wipro.ats.bdre.im.IMConstant;
 import com.wipro.ats.bdre.im.etl.api.base.ETLBase;
 import com.wipro.ats.bdre.im.etl.api.exception.ETLException;
+import com.wipro.ats.bdre.md.api.GetGeneralConfig;
+import com.wipro.ats.bdre.md.api.GetProcess;
 import com.wipro.ats.bdre.md.api.GetProperties;
+import com.wipro.ats.bdre.md.beans.ProcessInfo;
 import org.apache.commons.cli.CommandLine;
 import org.apache.log4j.Logger;
 
@@ -84,6 +87,16 @@ public class StageLoad extends ETLBase {
             /** partitionKeys will contain comma, so there is no need to
              * provide FILE_FIELD_SEPERATOR after partitionKeys in query
              */
+
+            GetGeneralConfig generalConfig = new GetGeneralConfig();
+            String hdfsURI = generalConfig.byConigGroupAndKey("imconfig", "common.default-fs-name").getDefaultVal();
+            String bdreLinuxUserName = generalConfig.byConigGroupAndKey("scripts_config", "bdreLinuxUserName").getDefaultVal();
+            ProcessInfo process = new GetProcess().getProcess(Integer.parseInt(stageLoadProcessId));
+
+            String serdePath = hdfsURI+"/user/"+bdreLinuxUserName+"/wf/1/5/"+process.getParentProcessId()+"/lib/hive-hcatalog-core-0.13.1.jar";
+            String addSerde = "add jar "+serdePath;
+            baseConStatement.execute(addSerde);
+
             String query = "INSERT OVERWRITE TABLE " + baseDbName +"."+ stageTableName +
                     " PARTITION ( " + partitionKeys + "instanceexecid) SELECT " +
             fieldNames + IMConstant.FILE_FIELD_SEPERATOR + partitionKeys + instanceExecId + " FROM " + stageDbName + "."+ viewName +
