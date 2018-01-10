@@ -471,7 +471,9 @@ public class JobDAO {
                 listOfSubProcesses.add(subProcess);
             }
             List<Process> listOfDownStreamSubProcessesWithEnqID = new ArrayList<Process>();
-            Criteria listOfDownStreamSubProcessesWithEnqIDCriteria = session.createCriteria(Process.class).add(Restrictions.eq(ENQUEUINGPROCESSID, parentProcessId.getProcessId().toString())).add(Restrictions.eq(DELETEFLAG, false));
+            Criteria listOfDownStreamSubProcessesWithEnqIDCriteria = session.createCriteria(Process.class).add(Restrictions.eq(DELETEFLAG, false))
+                    .add(Restrictions.or(Restrictions.eq(ENQUEUINGPROCESSID, parentProcessId.getProcessId().toString()),Restrictions.like(ENQUEUINGPROCESSID,"%,"+parentProcessId.getProcessId().toString()),Restrictions.like(ENQUEUINGPROCESSID,parentProcessId.getProcessId().toString()+",%"),Restrictions.like(ENQUEUINGPROCESSID,"%,"+parentProcessId.getProcessId().toString()+",%")));
+            LOGGER.info("total subproesses "+listOfDownStreamSubProcessesWithEnqIDCriteria.list());
             for (Object subProcessObject : listOfDownStreamSubProcessesWithEnqIDCriteria.list()) {
                 Process subProcess = (Process) subProcessObject;
                 listOfDownStreamSubProcessesWithEnqID.add(subProcess);

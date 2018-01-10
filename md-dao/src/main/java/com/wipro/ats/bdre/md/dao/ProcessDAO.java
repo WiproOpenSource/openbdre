@@ -227,6 +227,15 @@ public class ProcessDAO {
         return process;
     }
 
+    public Process getParent(Integer id) {
+        Session session = sessionFactory.openSession();
+        session.beginTransaction();
+        Process process = (Process) session.createCriteria(Process.class).add(Restrictions.isNull(PARENTPROCESSID)).add(Restrictions.eq(PROCESSID,id)).uniqueResult();
+        session.getTransaction().commit();
+        session.close();
+        return process;
+    }
+
     public Integer insert(Process process) {
         Session session = sessionFactory.openSession();
         Integer id = null;

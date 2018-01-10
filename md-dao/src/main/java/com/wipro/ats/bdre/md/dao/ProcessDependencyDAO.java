@@ -128,7 +128,9 @@ public class ProcessDependencyDAO {
                 for (String temp:upstreamParentProcessListString)
                 {
                     LOGGER.info(temp);
-                    upstreamParentProcessList.add(Integer.parseInt(temp));
+                    String[] arrayUp=temp.split(",");
+                    for (int i=0;i<arrayUp.length;i++)
+                     upstreamParentProcessList.add(Integer.parseInt(arrayUp[i]));
                 }
                 if (!upstreamParentProcessList.isEmpty()) {
                    // upstreamParentProcessList = checkUpstreamParentProcesses.list();
