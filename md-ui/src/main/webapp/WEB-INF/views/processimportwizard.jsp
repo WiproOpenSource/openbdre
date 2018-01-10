@@ -64,8 +64,13 @@
 		        }
 		    },
 		    onFinished: function (event, currentIndex) {
-                console.log(finalJson.Record.processList[0].processId);
-                location.href = '<c:url value="/pages/process.page?pid="/>' + finalJson.Record.processList[0].processId;
+                //console.log(finalJson.Record.processList[0].processId);
+                var importType=document.getElementById("importType").value;
+                                         if(importType=="single")
+                                         location.href = '<c:url value="/pages/process.page?pid="/>' + finalJson.Record.processList[0].processId;
+                                         else
+                                         location.href = '<c:url value="/pages/process.page"/>';
+
                              }
 			});
 
@@ -78,9 +83,14 @@
               function ImportFromJson(){
                   //var jsonText=document.getElementById("jsonTextArea").value;
                         var fileString=uploadedFileName;
-
+                         var importType=document.getElementById("importType").value;
+                         if(importType=="single")
+                         var u="/mdrest/process/import";
+                         else
+                         var u="/mdrest/process/importMultiple";
+                         console.log(importType);
               				$.ajax({
-                  		    url: "/mdrest/process/import",
+                  		    url: u,
                   		    type: "POST",
                   		    data: {'fileString': fileString},
                   		    success: function (getData) {
@@ -452,6 +462,15 @@
 				<div id = "bdre-dataload" ng-controller = "myCtrl" >
 				<h3 ><div class="number-circular">1</div><spring:message code="processimportwizard.page.zip_file_upload"/></h3 >
 				<section >
+				    <div class="form-group">
+                    <label class="control-label col-sm-2" for="importType">Process Import Type</label>
+                    <select class="form-control" id="importType" name="importType" >
+                    <option value="s">Select</option>
+                        <option value="single">Single Process Import</option>
+                        <option value="multiple">Multiple Process Import</option>
+
+                    </select>
+                </div>
 					<div class="col-sm-2">
 					<input type="file" name="file" class="form-control" id="zip-id" required>
 					<div ><br /></div >
@@ -471,7 +490,7 @@
                 </section>
                 <div style = "display:none" id = "div-dialog-warning" >
                 				<p ><span class = "ui-icon ui-icon-alert" style = "float:left;" ></span >
-                				<div />
+
                 				</p>
                 				</div >
 

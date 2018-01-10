@@ -49,6 +49,7 @@
 49,'source_RabbitMQ',41
 50,'source_Socket',41
 51,'source_S3',41
+102,'source_HDFS',41
 52,'emitter_Kafka',41
 53,'emitter_Kinesis',41
 54,'emitter_MQTT',41
@@ -80,3 +81,19 @@
 83,'analytics_LogisticRegression',41
 84,'analytics_LinearRegression',41
 85,'analytics_KMeansClustering',41
+86,'Ml_Model',null
+87,'SubProcess_ML_Model',86
+88,'analytics_DecisionTreeClassifier',41
+89,'analytics_RandomForestClassifier',41
+90,'analytics_GradientBoostedTreeClassifier',41
+91,'analytics_MultilayerPerceptronClassifier',41
+92,'analytics_NaiveBayes',41
+93,'analytics_OneVsRestClassifier',41
+94,'analytics_LinearSupportVectorMachine',41
+95,'analytics_BisectingKMeans',41
+96,'analytics_GaussianMixtureModel',41
+97,'analytics_LatentDirichletAllocation',41
+98,'analytics_SurvivalRegression',41
+99,'analytics_DecisionTreeRegression',41
+100,'analytics_RandomForestRegression',41
+101,'analytics_GradientBoostedTreeRegression',41

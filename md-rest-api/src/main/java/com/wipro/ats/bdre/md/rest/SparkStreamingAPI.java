@@ -3,7 +3,10 @@ package com.wipro.ats.bdre.md.rest;
 import com.wipro.ats.bdre.exception.MetadataException;
 import com.wipro.ats.bdre.md.api.GetMessageColumns;
 import com.wipro.ats.bdre.md.api.base.MetadataAPIBase;
+import com.wipro.ats.bdre.md.dao.MessagesDAO;
+import com.wipro.ats.bdre.md.dao.jpa.Messages;
 import org.apache.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -19,6 +22,8 @@ import java.util.*;
 @Controller
 @RequestMapping("/sparkstreaming")
 public class SparkStreamingAPI extends MetadataAPIBase {
+    @Autowired
+    MessagesDAO messagesDAO;
     private static final Logger LOGGER = Logger.getLogger(SparkStreamingAPI.class);
 
     @RequestMapping(value = "/getmessagecolumns/{id}", method = RequestMethod.POST)
@@ -45,7 +50,30 @@ public class SparkStreamingAPI extends MetadataAPIBase {
     }
 
 
+    @RequestMapping(value = "/getmessagecolumns/{messageName}", method = RequestMethod.GET)
+    @ResponseBody
+    public RestWrapperOptions listColumnOptions(@PathVariable("messageName") String messageName, Principal principal) {
 
+        RestWrapperOptions restWrapperOptions = null;
+        try{
+
+            Set<String> columnDetails = new LinkedHashSet<>();
+            Messages message = messagesDAO.get(messageName);
+            String schema = message.getMessageSchema();
+            List<RestWrapperOptions.Option> options = new ArrayList<RestWrapperOptions.Option>();
+            String columnAndDataTypes[]=schema.split(",");
+            for (String column : columnAndDataTypes) {
+                RestWrapperOptions.Option option = new RestWrapperOptions.Option(column,column);
+                options.add(option);
+            }
+            restWrapperOptions = new RestWrapperOptions(options, RestWrapperOptions.OK);
+        } catch (MetadataException e) {
+            LOGGER.error(e);
+            restWrapperOptions = new RestWrapperOptions(e.getMessage(), RestWrapper.ERROR);
+        }
+        return restWrapperOptions;
+
+    }
 
 
     @RequestMapping(value = "/getMessageList/{id}", method = RequestMethod.POST)

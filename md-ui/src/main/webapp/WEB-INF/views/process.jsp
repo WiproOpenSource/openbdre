@@ -51,6 +51,21 @@
 						cursor: pointer
 					}
 
+                    .input-box-button-filter1 {
+                        background: #4A4B4B;
+                        background: -webkit-linear-gradient(#4A4B4B 50%, #3A3B3B 50%);
+                        background: -o-linear-gradient(#4A4B4B 50%, #3A3B3B 50%);
+                        background: -moz-linear-gradient(#4A4B4B 50%, #3A3B3B 50%);
+                        background: -ms-linear-gradient(#4A4B4B 50%, #3A3B3B 50%);
+                        background: linear-gradient(#4A4B4B 50%, #3A3B3B 50%);
+                        position: absolute;
+                        top: 0;
+                        right: 268px;
+                        color: white;
+                        padding: 5px;
+                        cursor: pointer
+                    }
+
 					.filter-icon {
 						background-image: url('../css/images/filter_icon.png');
 						background-size: 100%;
@@ -79,6 +94,13 @@
 						right: 133px;
 						width: 129px;
 					}
+					.input-box-button1 {
+                    						display: none;
+                    						position: absolute;
+                    						top: 34px;
+                    						right: 266px;
+                    						width: 129px;
+                    					}
 
 					.subprocess-arrow-down {
 						-ms-transform: rotate(90deg); /* IE 9 */
@@ -164,7 +186,22 @@
                 <script src="../js/jquery.jtable.js" type="text/javascript"></script>
 
                 <script type="text/javascript">
+                var jtParamStart = 0;
+                var jtPage = 10;
                     $(document).ready(function() {
+                    var u=window.location.href;
+                    console.log(u);
+                    if(u.includes("pid")){
+                    console.log("pid is there");
+                    var ur="/mdrest/process?pid=" + u.split("=")[1] + "&page=";
+                    console.log(ur);
+                    }
+                    else if(u.includes("pName")){
+                       var ur="/mdrest/process?pName=" + u.split("=")[1] + "&page=";
+                    }
+                    else{
+                      var ur="/mdrest/process?page="
+                    }
                     	$('#Container').jtable({
                             title: '<spring:message code="process.page.title_list"/>',
                             paging: true,
@@ -173,14 +210,16 @@
                             openChildAsAccordion: true,
                             actions: {
                                 listAction: function(postData, jtParams) {
+                                if(jtParams.jtStartIndex!=0){
+                                jtParamStart = jtParams.jtStartIndex;
+                                jtPage = jtParams.jtPageSize;}
                                     return $.Deferred(function($dfd) {
+                                    console.log(jtParams);
                                         $.ajax({
-                                        <c:if test = "${param.pid==null}">
-                                                url: '/mdrest/process?page=' + jtParams.jtStartIndex + '&size='+jtParams.jtPageSize,
-                                        </c:if>
-                                        <c:if test = "${param.pid!=null}">
-                                            url: '/mdrest/process?pid=${param.pid}&page=' + jtParams.jtStartIndex + '&size='+jtParams.jtPageSize,
-                                        </c:if>
+
+                                                url: ur + jtParamStart + '&size='+jtPage,
+
+
                                             type: 'GET',
                                                 data: postData,
                                                 dataType: 'json',
@@ -1339,6 +1378,9 @@
                         $('#input-box-button-filter').click(function () {
                         	$('#input-box-button').toggle();
 						});
+						$('#input-box-button-filter1').click(function () {
+                          $('#input-box-button1').toggle();
+                        						});
                     });
 
                 </script>
@@ -1509,66 +1551,68 @@
                                          }
                 </script>
                 <%--  --%>
-                     <script>
-                                            function showProcessPage(pid) {
-                                                console.log('entered function');
-                                                console.log("pid is "+pid);
-                                                if(pid==""){
-                                                $("#div-dialog-warning").dialog({
-                                                    title: "",
-                                                    resizable: false,
-                                                    height: 'auto',
-                                                    modal: true,
-                                                    buttons: {
-                                                        "Ok" : function () {
-                                                            $(this).dialog("close");
-                                                        }
-                                                    }
-                                                    }).html('<p><span class="jtable-confirm-message">Process id can not be empty</span></p>');
-                                                  }
-                                                  else
-                                                  {
-                                                $.ajax({
-                                                        url: '/mdrest/process/checkProcess/'+pid,
-                                                        type: 'GET',
-                                                        dataType: 'json',
-                                                        success: function(data) {
-                                                        console.log(data);
-                                                            if(data.Result == "OK" && data.Records=="Present") {
-                                                            location.href = '<c:url value="/pages/process.page?pid="/>' + pid;
-                                                            }
-                                                            else
-                                                            {
+                    <script>
+                        function showProcessPage(pid) {
+                            console.log('entered function');
+                            console.log("pid is "+pid);
+                            if(pid==""){
+                            $("#div-dialog-warning").dialog({
+                                title: "",
+                                resizable: false,
+                                height: 'auto',
+                                modal: true,
+                                buttons: {
+                                    "Ok" : function () {
+                                        $(this).dialog("close");
+                                    }
+                                }
+                                }).html('<p><span class="jtable-confirm-message">Process id can not be empty</span></p>');
+                              }
+                              else
+                              {
+                            $.ajax({
+                                    url: '/mdrest/process/checkProcess/'+pid,
+                                    type: 'GET',
+                                    dataType: 'json',
+                                    success: function(data) {
+                                    console.log(data);
+                                        if(data.Result == "OK" && data.Records=="Present") {
+                                        location.href = '<c:url value="/pages/process.page?pid="/>' + pid;
+                                        }
+                                        else
+                                        {
 
-                                                     $("#div-dialog-warning").dialog({
-                                                      title: "",
-                                                      resizable: false,
-                                                      height: 'auto',
-                                                      modal: true,
-                                                      buttons: {
-                                                          "Ok" : function () {
-                                                              $(this).dialog("close");
-                                                          }
-                                                      }
-                                                    }).html('<p><span class="jtable-confirm-message">NO Parent process found with id ='+ pid +'</span></p>');
+                                 $("#div-dialog-warning").dialog({
+                                  title: "",
+                                  resizable: false,
+                                  height: 'auto',
+                                  modal: true,
+                                  buttons: {
+                                      "Ok" : function () {
+                                          $(this).dialog("close");
+                                      }
+                                  }
+                                }).html('<p><span class="jtable-confirm-message">NO Parent process found with id ='+ pid +'</span></p>');
 
-                                                            }
-                                                        },
-                                                        error: function() {
-                                                           console.log("in the error section");
-                                                        }
-                                                    });
+                                        }
+                                    },
+                                    error: function() {
+                                       console.log("in the error section");
+                                    }
+                                });
 
-                                                  }
-
-
-
+                              }
+                        }
 
 
+                    function showProcessPage1(pName) {
+                                        console.log('entered function');
 
-                                            }
+                                        location.href = '<c:url value="/pages/process.page?pName="/>' + pName;
 
-                                        </script>
+                                    }
+
+                    </script>
                     <script type="text/javascript">
                          var auto = setInterval(    function ()
                          {
@@ -1597,6 +1641,27 @@
                         </div>
                     </form>
                 </div>
+
+               <div id="input-box-button-filter1" class="input-box-button-filter1">
+                                       <span class="filter-icon"></span><span class="filter-text">Filter By Name</span>
+                                       </div>
+                                       <div id="input-box-button1" class="input-box-button1">
+                                           <form onsubmit="showProcessPage1(jQuery('#pName').val()); return false;">
+                                               <div class="input-group">
+                                                   <input class="form-control" type="text" name="pName" id="pName" value="" placeholder="Filter By Name"/> />
+                                                   <!-- <button  class="btn btn-default btn-lg btn-primary"><span id="sizing-addon2"><span class="glyphicon glyphicon-arrow-right" aria-hidden="true"></span> Show Lineage </button> -->
+                                                   <span class="input-group-btn">
+                           <button class="btn btn-default" type="submit" onClick="showProcessPage1(jQuery('#pName').val())"><span id="sizing-addon2"><span class="glyphicon glyphicon-arrow-right" aria-hidden="true"></span>&nbsp;</button>
+                                                   </span>
+                                               </div>
+                                           </form>
+                                       </div>
+
+
+
+
+
+
 				<div id="dialog-confirm" style="display: none;">
 					<p>
 						<span class="ui-icon-alert"></span>

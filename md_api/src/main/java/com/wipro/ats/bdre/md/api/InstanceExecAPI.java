@@ -62,6 +62,18 @@ public class InstanceExecAPI extends MetadataAPIBase {
 
     }
 
+
+    public void  updateInstanceExecToFinished(Integer processId, String applicationId){
+        InstanceExec instanceExec = instanceExecDAO.getLatestExecofProcess(processId);
+        ExecStatus execStatus = execStatusDAO.get(3);
+        if(instanceExec != null){
+            instanceExec.setExecStatus(execStatus);
+            instanceExec.setApplicationId(applicationId);
+            instanceExecDAO.update(instanceExec);
+        }
+
+    }
+
     @Override
     public Object execute(String[] params) {
         return null;
