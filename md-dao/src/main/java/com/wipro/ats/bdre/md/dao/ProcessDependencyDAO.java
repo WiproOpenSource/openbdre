@@ -84,7 +84,8 @@ public class ProcessDependencyDAO {
 
 
                 //Listing downstream processes
-                Criteria checkDownstreamParentProcesses = session.createCriteria(Process.class).add(Restrictions.eq("enqueuingProcessId", parentProcessId.toString())).add(Restrictions.eq(DELETEFLAG, false)).setProjection(Projections.property("process"));
+                Criteria checkDownstreamParentProcesses = session.createCriteria(Process.class).add(Restrictions.or(Restrictions.eq("enqueuingProcessId", parentProcessId.toString()),Restrictions.like("enqueuingProcessId","%,"+parentProcessId.toString()),Restrictions.like("enqueuingProcessId",parentProcessId.toString()+",%"),Restrictions.like("enqueuingProcessId","%,"+parentProcessId.toString()+",%")))
+                        .add(Restrictions.eq(DELETEFLAG, false)).setProjection(Projections.property("process"));
                 List<Integer> downstreamParentProcessIdList = new ArrayList<Integer>();
                 if (!checkDownstreamParentProcesses.list().isEmpty()) {
                     List<Process> downstreamParentProcessList = checkDownstreamParentProcesses.list();
