@@ -82,7 +82,7 @@ public class StepDAO {
             List<BatchConsumpQueue> batchConsumpQueueList = new ArrayList<BatchConsumpQueue>();
             Criteria checkSubProcessBCQ = session.createCriteria(BatchConsumpQueue.class).add(Restrictions.and(Restrictions.eq(PROCESS, subProcess), Restrictions.isNotNull(BATCHBYTARGETBATCHID)));
             batchConsumpQueueList = checkSubProcessBCQ.list();
-
+            LOGGER.info("batchConsumpQueueList is "+batchConsumpQueueList);
             //check valid sub process
             if (parentProcess == null) {
                 throw new MetadataException("Invalid sub-process. sub_pid =" + subPid);
