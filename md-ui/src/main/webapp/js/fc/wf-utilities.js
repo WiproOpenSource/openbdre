@@ -31,8 +31,15 @@ var goToPage = function (pageName) {
         case 'wfdesigner-page':
             location.href = '/mdui/pages/wfdesigner.page';
             break;
+
+        case 'wfdesigner-page2':
+              location.href = '/mdui/pages/wfdesigner2.page';
+              break;
         case 'process-page':
             location.href = '/mdui/pages/process.page';
+            break;
+        case 'process-page2':
+            location.href = '/mdui/pages/process2.page';
             break;
         default:
             console.log('pageName not found');

@@ -192,5 +192,36 @@ public class GetProcess extends MetadataAPIBase {
         return processInfo;
     }
 
+    public ProcessInfo getParentProcess(Integer pid) {
+        ProcessInfo processInfo = new ProcessInfo();
+        try {
+
+            com.wipro.ats.bdre.md.dao.jpa.Process jpaSubProcess= processDAO.get(pid);
+            Integer parentProcessId = jpaSubProcess.getProcess().getProcessId();
+
+            com.wipro.ats.bdre.md.dao.jpa.Process jpaProcess= processDAO.get(parentProcessId);
+            if(jpaProcess!=null) {
+                processInfo.setProcessId(jpaProcess.getProcessId());
+                processInfo.setBusDomainId(jpaProcess.getBusDomain().getBusDomainId());
+                processInfo.setProcessTypeId(jpaProcess.getProcessType().getProcessTypeId());
+                processInfo.setCanRecover(jpaProcess.getCanRecover());
+                processInfo.setDescription(jpaProcess.getDescription());
+                if (jpaProcess.getProcess() != null) {
+                    processInfo.setParentProcessId(jpaProcess.getProcess().getProcessId());
+                }
+                processInfo.setProcessName(jpaProcess.getProcessName());
+                processInfo.setEnqProcessId(jpaProcess.getEnqueuingProcessId());
+                processInfo.setNextProcessIds(jpaProcess.getNextProcessId());
+                processInfo.setWorkflowId(jpaProcess.getWorkflowType().getWorkflowId());
+                processInfo.setBatchCutPattern(jpaProcess.getBatchCutPattern());
+                processInfo.setDeleteFlag(jpaProcess.getDeleteFlag());
+            }
+        } catch (Exception e) {
+            LOGGER.error(e);
+            throw new MetadataException(e);
+        }
+        return processInfo;
+    }
+
 
 }

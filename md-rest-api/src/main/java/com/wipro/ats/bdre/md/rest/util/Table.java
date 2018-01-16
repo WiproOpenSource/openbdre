@@ -32,6 +32,7 @@ public class Table {
     private String ingestOrNot;
     private String primaryKeyColumn;
     private String incrementType;
+    private String incrementColumn;
     private Map<String, Column> columns = new LinkedHashMap<String, Column>();
 
     public Table(String srcTableName) {
@@ -52,6 +53,14 @@ public class Table {
 
     public void setIncrementType(String incrementType) {
         this.incrementType = incrementType;
+    }
+
+    public String getIncrementColumn() {
+        return incrementColumn;
+    }
+
+    public void setIncrementColumn(String incrementColumn) {
+        this.incrementColumn = incrementColumn;
     }
 
     public String getIngestOrNot() {

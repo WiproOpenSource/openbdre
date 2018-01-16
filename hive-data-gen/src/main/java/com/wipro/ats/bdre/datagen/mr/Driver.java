@@ -19,6 +19,8 @@ import com.wipro.ats.bdre.datagen.Table;
 import com.wipro.ats.bdre.datagen.util.Config;
 import com.wipro.ats.bdre.datagen.util.TableUtil;
 import com.wipro.ats.bdre.md.api.GetGeneralConfig;
+import com.wipro.ats.bdre.md.api.GetProcess;
+import com.wipro.ats.bdre.md.beans.ProcessInfo;
 import com.wipro.ats.bdre.md.beans.RegisterFileInfo;
 import com.wipro.ats.bdre.md.beans.table.GeneralConfig;
 import com.wipro.ats.bdre.util.OozieUtil;
@@ -34,7 +36,11 @@ import org.apache.hadoop.mapreduce.lib.output.TextOutputFormat;
 import org.apache.hadoop.util.Tool;
 import org.apache.log4j.Logger;
 
+import java.io.BufferedWriter;
+import java.io.FileWriter;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.sql.Timestamp;
 import java.util.Date;
 import java.util.Properties;
@@ -101,6 +107,77 @@ public class Driver extends Configured implements Tool {
         registerFileInfo.setSubProcessId(Integer.parseInt(processId));
         OozieUtil oozieUtil= new OozieUtil();
         oozieUtil.persistBeanData(registerFileInfo,false);
+
+        GetProcess getProcess = new GetProcess();
+        ProcessInfo parentProcessInfo = getProcess.getParentProcess(Integer.valueOf(processId));
+        Integer workflowTypeId = parentProcessInfo.getWorkflowId();
+        Integer parentProcessId = parentProcessInfo.getProcessId();
+        LOGGER.info("workflowTypeId is "+ workflowTypeId);
+        LOGGER.info("paretProcessId is "+ parentProcessId);
+
+        if(workflowTypeId == 3) {
+            try {
+                String homeDir = System.getProperty("user.home");
+                // String parentProcessId = String.valueOf(Integer.valueOf(processId) - 1);
+                String path = homeDir + "/bdre/airflow/" + parentProcessId + "_jobInfo.txt";
+                Files.deleteIfExists(Paths.get(path));
+                FileWriter fw = new FileWriter(path);
+                BufferedWriter bw = new BufferedWriter(fw);
+
+                if (registerFileInfo.getSubProcessId() != null)
+                    bw.write("fileInfo.getSubProcessId()::" + registerFileInfo.getSubProcessId().toString() + "\n");
+                else
+                    bw.write("fileInfo.getSubProcessId()::null\n");
+
+                if (registerFileInfo.getServerId() != null)
+                    bw.write("fileInfo.getServerId()::" + registerFileInfo.getServerId().toString() + "\n");
+                else
+                    bw.write("fileInfo.getServerId()::null\n");
+
+                if (registerFileInfo.getPath() != null)
+                    bw.write("fileInfo.getPath()::" + registerFileInfo.getPath() + "\n");
+                else
+                    bw.write("fileInfo.getPath()::null\n");
+
+                if (registerFileInfo.getFileSize() != null)
+                    bw.write("fileInfo.getFileSize()::" + registerFileInfo.getFileSize().toString() + "\n");
+                else
+                    bw.write("fileInfo.getFileSize()::null\n");
+
+                if (registerFileInfo.getFileHash() != null)
+                    bw.write("fileInfo.getFileHash()::" + registerFileInfo.getFileHash().toString() + "\n");
+                else
+                    bw.write("fileInfo.getFileHash()::null\n");
+
+                if (registerFileInfo.getCreationTs() != null) {
+                    String creationTs = registerFileInfo.getCreationTs().toString().replace(" ", "__");//Recovered back in RegisterFile.java.... CreationTs has space(which splits parameter) and ::(creates great problem while creating python dictionaries)
+                    LOGGER.info("Creation Ts modified is " + creationTs);
+                    bw.write("fileInfo.getCreationTs()::" + creationTs + "\n");
+                } else
+                    bw.write("fileInfo.getCreationTs()::null\n");
+
+                if (registerFileInfo.getBatchId() != null)
+                    bw.write("fileInfo.getBatchId()::" + registerFileInfo.getBatchId().toString() + "\n");
+                else
+                    bw.write("fileInfo.getBatchId()::null\n");
+
+                if (registerFileInfo.getParentProcessId() != null)
+                    bw.write("fileInfo.getParentProcessId()::" + registerFileInfo.getParentProcessId().toString() + "\n");
+                else
+                    bw.write("fileInfo.getParentProcessId()::null\n");
+
+                if (registerFileInfo.getBatchMarking() != null)
+                    bw.write("fileInfo.getBatchMarking()::" + registerFileInfo.getBatchMarking() + "\n");
+                else
+                    bw.write("fileInfo.getBatchMarking()::null\n");
+
+                bw.close();
+
+            } catch (IOException i) {
+                i.printStackTrace();
+            }
+
+        }
         return 0;
     }
 

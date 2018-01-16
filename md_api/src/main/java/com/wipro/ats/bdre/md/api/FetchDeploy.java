@@ -56,7 +56,7 @@ public class FetchDeploy extends MetadataAPIBase {
         try {
             CommandLine commandLine = getCommandLine(params, PARAMS_STRUCTURE);
             String fetchNum = commandLine.getOptionValue("fetch-num");
-            LOGGER.debug("fetch-num is " + fetchNum);
+            LOGGER.info("fetch-num is " + fetchNum);
 
             return fetchDeployDAO.fetchDeploy(Integer.parseInt(fetchNum));
         } catch (Exception e) {

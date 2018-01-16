@@ -715,8 +715,11 @@ $scope.createFirstProcess = function() {
     postData = $.param(postData),
     dataRecord = processAC('/mdrest/process', 'PUT', postData);
     if (dataRecord) {
-        location.href='/mdui/pages/wfdesigner.page?processId='+ dataRecord.processId;
-        console.log('info', 'Parent process created');
+         if(dataRecord.processTypeId==41)
+             location.href='/mdui/pages/wfdesigner2.page?processId='+ dataRecord.processId;
+         else
+             location.href='/mdui/pages/wfdesigner.page?processId='+ dataRecord.processId;
+                console.log('info', 'Parent process created');
     }
     else {
         console.log('Parent process not created');
