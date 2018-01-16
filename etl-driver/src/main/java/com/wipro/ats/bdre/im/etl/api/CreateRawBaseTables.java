@@ -16,6 +16,7 @@ package com.wipro.ats.bdre.im.etl.api;
 
 import com.wipro.ats.bdre.im.etl.api.base.ETLBase;
 import com.wipro.ats.bdre.im.etl.api.exception.ETLException;
+import com.wipro.ats.bdre.im.jsonschema.JsonSchemaReader;
 import com.wipro.ats.bdre.md.api.GetGeneralConfig;
 import com.wipro.ats.bdre.md.api.GetProcess;
 import com.wipro.ats.bdre.md.api.GetProperties;
@@ -257,7 +258,10 @@ public class CreateRawBaseTables extends ETLBase {
         }
         else if ("json".equalsIgnoreCase(fileType)) {
 
-                rawTableDdl += "CREATE TABLE IF NOT EXISTS " + rawTableDbName + "." + rawTableName + " ( " + rawColumnsWithDataTypes + " )" +
+                String hiveRawSchema = new JsonSchemaReader().generateJsonSchema(rawColumnsWithDataTypes);
+                LOGGER.info("rawColumnsWithDataTypes"+rawColumnsWithDataTypes);
+                LOGGER.info("hiveRawSchema"+hiveRawSchema);
+                rawTableDdl += "CREATE TABLE IF NOT EXISTS " + rawTableDbName + "." + rawTableName + " ( " + hiveRawSchema + " )" +
                         " partitioned by (batchid bigint) ROW FORMAT SERDE 'org.apache.hive.hcatalog.data.JsonSerDe' " +
                         "STORED AS INPUTFORMAT 'org.apache.hadoop.mapred.TextInputFormat' OUTPUTFORMAT 'org.apache.hadoop.hive.ql.io.HiveIgnoreKeyTextOutputFormat' ";
 
@@ -320,7 +324,21 @@ public class CreateRawBaseTables extends ETLBase {
         if (!viewPropertiesOfColumns.isEmpty()) {
             while (viewColumnsList.hasMoreElements()) {
                 String key = (String) viewColumnsList.nextElement();
-                viewColumns.append(viewPropertiesOfColumns.getProperty(key) + " AS " + key.replaceAll("transform_", "") + ",");
+                //if("json".equalsIgnoreCase(fileTypeSelected)){
+                    String columnName = viewPropertiesOfColumns.getProperty(key);
+                    LOGGER.info("columnName is "+columnName);
+                    if(columnName.contains(".")){
+                        String firstColumnName = columnName.split("\\.")[0];
+                        LOGGER.info("firstColumnName is "+ firstColumnName);
+                        if(!viewColumns.toString().contains(firstColumnName))
+                            viewColumns.append(firstColumnName + " AS " + firstColumnName + ",");
+                    }
+                    else
+                        viewColumns.append(viewPropertiesOfColumns.getProperty(key) + " AS " + key.replaceAll("transform_", "") + ",");
+                //}//
+                //else
+                //viewColumns.append(viewPropertiesOfColumns.getProperty(key) + " AS " + key.replaceAll("transform_", "") + ",");
+                LOGGER.info("viewColumns Details "+ viewColumns.toString());
             }
         }
 
@@ -338,12 +356,61 @@ public class CreateRawBaseTables extends ETLBase {
         String viewColumnsWithDataTypes = viewColumns + "batchid";
 
         rawViewDdl += "CREATE VIEW IF NOT EXISTS " + rawViewDbName + "." + rawViewName + "  AS SELECT " + viewColumnsWithDataTypes + " FROM " + rawTableDbName + "." + rawTableName;
+        LOGGER.info("rawViewDdl is"+rawViewDdl);
         LOGGER.debug(rawViewDdl);
 
 
         // generating stage table ddl
         // fetching column names list
+        String baseColumnList = "";
+
         GetProperties getPropertiesOfBaseColumns = new GetProperties();
+        java.util.Properties basePropertiesOfColumns = getPropertiesOfBaseColumns.getProperties(stgLoad, "base-cols");
+        Enumeration columns = basePropertiesOfColumns.propertyNames();
+        List<String> orderOfCloumns = Collections.list(columns);
+        Collections.sort(orderOfCloumns, new Comparator<String>() {
+            public int compare(String o1, String o2) {
+                int n1=Integer.valueOf(o1.split("\\.")[1]);
+                int n2=Integer.valueOf(o2.split("\\.")[1]);
+                return (n1 - n2);
+            }
+        });
+        List<String> baseColumns = new ArrayList<String>();
+        if (!basePropertiesOfColumns.isEmpty()) {
+            for (String columnOrder : orderOfCloumns) {
+                String key = columnOrder;
+                baseColumns.add(basePropertiesOfColumns.getProperty(key));
+            }
+        }
+
+        // fetching column datatypes in a string list from properties with raw-data-types as config group
+        GetProperties getPropertiesOfBaseDataTypes = new GetProperties();
+        java.util.Properties basePropertiesOfDataTypes = getPropertiesOfBaseDataTypes.getProperties(stgLoad, "base-data-type");
+        Enumeration dataTypes = basePropertiesOfDataTypes.propertyNames();
+        List<String> orderOfDataTypes = Collections.list(dataTypes);
+        Collections.sort(orderOfDataTypes, new Comparator<String>() {
+
+            public int compare(String o1, String o2) {
+                int n1=Integer.valueOf(o1.split("\\.")[1]);
+                int n2=Integer.valueOf(o2.split("\\.")[1]);
+                return (n1 - n2);
+            }
+        });
+        List<String> baseDataTypes = new ArrayList<String>();
+        if (!basePropertiesOfColumns.isEmpty()) {
+            for (String columnOrder : orderOfDataTypes) {
+                String key = columnOrder;
+                baseDataTypes.add(basePropertiesOfDataTypes.getProperty(key));
+            }
+        }
+
+        // forming a comma separated string in the form of col1 datatype1, col2 datatype2, col3 datatype3 etc.
+        for (int i = 0; i < baseColumns.size(); i++) {
+            baseColumnList += baseColumns.get(i) + " " + baseDataTypes.get(i) + ",";
+        }
+        String baseColumnsWithDataTypes = baseColumnList.substring(0, baseColumnList.length() - 1);
+
+        /*GetProperties getPropertiesOfBaseColumns = new GetProperties();
         java.util.Properties basePropertiesOfColumns = getPropertiesOfBaseColumns.getProperties(stgLoad, "base-columns");
         java.util.Properties basePropertiesOfDataTypes = getPropertiesOfBaseColumns.getProperties(stgLoad, "base-data-types");
         Enumeration baseColumnsList = basePropertiesOfColumns.propertyNames();
@@ -355,18 +422,33 @@ public class CreateRawBaseTables extends ETLBase {
             }
         }
         //removing trailing comma
+        LOGGER.info("Length of baseColumns"+baseColumns.length());
         String baseColumnsWithDataTypes = baseColumns.substring(0, baseColumns.length() - 1);
+        LOGGER.info("baseColumnsWithDataTypes is "+baseColumnsWithDataTypes);*/
         java.util.Properties partitionproperties = getPropertiesOfRawTable.getProperties(stgLoad, "partition");
         String partitionColumns = partitionproperties.getProperty("partition_columns");
         if (partitionColumns == null)
             partitionColumns = "";
-        baseTableDdl += "CREATE TABLE IF NOT EXISTS " + baseTableDbName + "." + baseTableName + " (" + baseColumnsWithDataTypes + ") partitioned by (" + partitionColumns + " instanceexecid bigint) stored as orc";
+        GetProperties getFileType = new GetProperties();
+        java.util.Properties baseProperties = getFileType.getProperties(stgLoad, "base-table");
+        String fileType = baseProperties.getProperty("file_type");
+        if("json".equalsIgnoreCase(fileType)){
+            String baseTableSchema = new JsonSchemaReader().generateJsonSchema(baseColumnsWithDataTypes);
+            baseTableDdl += "CREATE TABLE IF NOT EXISTS " + baseTableDbName + "." + baseTableName + " (" + baseTableSchema + ") partitioned by (" + partitionColumns + " instanceexecid bigint) stored as orc";
+        }
+        else
+            baseTableDdl += "CREATE TABLE IF NOT EXISTS " + baseTableDbName + "." + baseTableName + " (" + baseColumnsWithDataTypes + ") partitioned by (" + partitionColumns + " instanceexecid bigint) stored as orc";
 
         LOGGER.debug(baseTableDdl);
 
         String stgTableName = baseTableName + "_" + instanceExecId;
         String stgTableDdl = "";
-        stgTableDdl += "CREATE TABLE IF NOT EXISTS " + baseTableDbName + "." + stgTableName + " (" + baseColumnsWithDataTypes + ") partitioned by (" + partitionColumns + " instanceexecid bigint) stored as orc";
+        if("json".equalsIgnoreCase(fileType)){
+            String stageTableSchema = new JsonSchemaReader().generateJsonSchema(baseColumnsWithDataTypes);
+            stgTableDdl += "CREATE TABLE IF NOT EXISTS " + baseTableDbName + "." + stgTableName + " (" + stageTableSchema + ") partitioned by (" + partitionColumns + " instanceexecid bigint) stored as orc";
+        }
+        else
+            stgTableDdl += "CREATE TABLE IF NOT EXISTS " + baseTableDbName + "." + stgTableName + " (" + baseColumnsWithDataTypes + ") partitioned by (" + partitionColumns + " instanceexecid bigint) stored as orc";
 
         checkAndCreateRawView(rawViewDbName, rawViewName, rawViewDdl);
         checkAndCreateStageTable(baseTableDbName, stgTableName, stgTableDdl);

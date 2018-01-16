@@ -49,6 +49,7 @@ angular.module('app', ['flowChart', ])
 
         $scope.processTypes={};
         $scope.chartViewModel={};
+        $scope.parentProcessList={};
         //
         // Event handler for key-down on the flowchart.
         //
@@ -128,6 +129,19 @@ angular.module('app', ['flowChart', ])
             propertiesAC('/mdrest/properties/all/', 'GET', $scope.parentPidRecord);
             $scope.initProps();
             loadProgressBar(100);
+            var parentProcesslist1 = arrangePositionsAC('/mdrest/process/parentProcessList',  'GET', '');
+            if (parentProcesslist1) {
+            for(var i=0;i<parentProcesslist1.length;i++){
+                parentProcesslist1[i].processName=parentProcesslist1[i].processId+"_"+parentProcesslist1[i].processName;
+                }
+
+                $scope.parentProcessList = parentProcesslist1;
+                console.log("Printing parent process list");
+               console.log($scope.parentProcessList);
+            }
+            else {
+                console.log('parentProcesslist not loaded');
+            }
         }
 
         $scope.initProps = function() {

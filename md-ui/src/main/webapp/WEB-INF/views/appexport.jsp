@@ -57,7 +57,7 @@
                           app.controller('myCtrl',function($scope) {
                           $scope.parentProcessList={};
                           $.ajax({
-                                url: "/mdrest/process/processList",
+                                url: "/mdrest/process/parentProcessList",
                                     type: 'GET',
                                     dataType: 'json',
                                     async: false,

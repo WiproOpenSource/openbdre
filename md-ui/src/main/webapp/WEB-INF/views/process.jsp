@@ -1554,9 +1554,57 @@
                     <script>
                         function showProcessPage(pid) {
                             console.log('entered function');
-                            //console.log(${param.pid == null});
 
-                            location.href = '<c:url value="/pages/process.page/pid="/>' + pid;
+                            console.log("pid is "+pid);
+                            if(pid==""){
+                            $("#div-dialog-warning").dialog({
+                                title: "",
+                                resizable: false,
+                                height: 'auto',
+                                modal: true,
+                                buttons: {
+                                    "Ok" : function () {
+                                        $(this).dialog("close");
+                                    }
+                                }
+                                }).html('<p><span class="jtable-confirm-message">Process id can not be empty</span></p>');
+                              }
+                              else
+                              {
+                            $.ajax({
+                                    url: '/mdrest/process/checkProcess/'+pid,
+                                    type: 'GET',
+                                    dataType: 'json',
+                                    success: function(data) {
+                                    console.log(data);
+                                        if(data.Result == "OK" && data.Records=="Present") {
+                                        location.href = '<c:url value="/pages/process.page?pid="/>' + pid;
+                                        }
+                                        else
+                                        {
+
+                                 $("#div-dialog-warning").dialog({
+                                  title: "",
+                                  resizable: false,
+                                  height: 'auto',
+                                  modal: true,
+                                  buttons: {
+                                      "Ok" : function () {
+                                          $(this).dialog("close");
+                                      }
+                                  }
+                                }).html('<p><span class="jtable-confirm-message">NO Parent process found with id ='+ pid +'</span></p>');
+
+                                        }
+                                    },
+                                    error: function() {
+                                       console.log("in the error section");
+                                    }
+                                });
+
+                              }
+
+
 
 
 
@@ -1669,6 +1717,11 @@
 						<span class="jtable-confirm-message"><spring:message code="process.page.span_process_not_found"/></span>
 					</p>
 				</div>
+			          <div style="display:none" id="div-dialog-warning">
+            			<p><span class="ui-icon ui-icon-alert" style="float:left;"></span></p>
+            		</div>
+
+
 			</body>
 
             </html>

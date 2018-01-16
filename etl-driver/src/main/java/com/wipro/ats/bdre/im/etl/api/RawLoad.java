@@ -31,6 +31,7 @@ import com.wipro.ats.bdre.md.dao.jpa.Servers;
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.Option;
 import org.apache.hadoop.conf.Configuration;
+import org.apache.hadoop.fs.FileStatus;
 import org.apache.hadoop.fs.FileSystem;
 import org.apache.hadoop.fs.FileUtil;
 import org.apache.hadoop.fs.Path;
@@ -40,6 +41,7 @@ import org.springframework.beans.factory.config.AutowireCapableBeanFactory;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
+import java.io.IOException;
 import java.sql.Connection;
 import java.sql.Statement;
 import java.util.Date;
@@ -118,13 +120,34 @@ public class RawLoad extends ETLBase {
         }
         //If user select filepath or directoryPath
         else {
-
             userPathFlag = true;
-            /*Path givenPath = new Path(filePathString);
-            Configuration conf2 = new Configuration();
-            conf2.set("fs.defaultFS", IMConfig.getProperty("common.default-fs-name"));
-            FileSystem fs = FileSystem.get(conf2);*/
-            listOfFiles = filePathString;
+
+            Configuration conf = new Configuration();
+            conf.set("fs.defaultFS", IMConfig.getProperty("common.default-fs-name"));
+            FileSystem fs = null;
+            try {
+                fs = FileSystem.get(conf);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            Path givenPath = new Path(filePathString);
+            StringBuilder listOfFilesPath = new StringBuilder();
+
+            try {
+                if(!fs.isDirectory(givenPath)){
+                    listOfFilesPath.append(filePathString);
+                }
+                else{
+                    FileStatus[] fileStatus = fs.listStatus(givenPath);
+                    for (FileStatus fileStat : fileStatus) {
+                        listOfFilesPath.append(fileStat.getPath().toString()+",");
+                    }
+                }
+                listOfFilesPath.deleteCharAt(listOfFilesPath.length()-1);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            listOfFiles = listOfFilesPath.toString();
 
             listOfBatches = "0";
 
