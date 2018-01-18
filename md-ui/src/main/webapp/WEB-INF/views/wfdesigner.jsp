@@ -398,13 +398,14 @@
                                                             <label class="control-label col-sm-3" for="{{genConfig.key}}-propkey">Select Parent Process:</label>
                                                             <div class="col-sm-10">
                                                             <div id="batchProcesses">
-                                                                <select class="form-control" id="{{genConfig.key}}-propval" name="processList" ng-model="processlist" ng-options = "parentProcess.processId as parentProcess.processName for parentProcess in parentProcessList track by parentProcess.processId">
-                                                                   <option value="">Select the option</option>
+                                                                   <select class="form-control" id="{{genConfig.key}}-propval">
+                                                                       <option ng-repeat="parentProcess in parentProcessList" id="{{$index}}" value="{{ parentProcess.processId }}">{{ parentProcess.processName }}</option>
                                                                    </select>
                                                             </div>
                                                         </div>
                                                         </div>
                                                         <div class="clearfix"></div>
+                                                        <button type="submit" ng-click="saveProcessId(chartViewModel.selectedProcess.processId)" class="btn btn-primary  pull-right">Save</button>
                                                     </form>
 
                                                 <form class="form-horizontal" role="form" ng-if="genConfig.type == 'spark'">
