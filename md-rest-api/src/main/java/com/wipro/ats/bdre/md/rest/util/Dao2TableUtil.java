@@ -32,7 +32,7 @@ public class Dao2TableUtil {
     private Dao2TableUtil(){
 
     }
-    private static com.wipro.ats.bdre.md.beans.table.Process jpa2TableProcess(com.wipro.ats.bdre.md.dao.jpa.Process jpaProcess) {
+    public static com.wipro.ats.bdre.md.beans.table.Process jpa2TableProcess(com.wipro.ats.bdre.md.dao.jpa.Process jpaProcess) {
         com.wipro.ats.bdre.md.beans.table.Process tableProcess = new com.wipro.ats.bdre.md.beans.table.Process();
         tableProcess.setProcessId(jpaProcess.getProcessId());
         tableProcess.setProcessName(jpaProcess.getProcessName());
