@@ -18,6 +18,9 @@ import com.wipro.ats.bdre.IMConfig;
 import com.wipro.ats.bdre.im.IMConstant;
 import com.wipro.ats.bdre.im.etl.api.base.ETLBase;
 import com.wipro.ats.bdre.im.etl.api.exception.ETLException;
+import com.wipro.ats.bdre.md.api.GetGeneralConfig;
+import com.wipro.ats.bdre.md.api.GetProcess;
+import com.wipro.ats.bdre.md.beans.ProcessInfo;
 import com.wipro.ats.bdre.md.dao.BatchDAO;
 import com.wipro.ats.bdre.md.dao.FileDAO;
 import com.wipro.ats.bdre.md.dao.ServersDAO;
@@ -28,6 +31,7 @@ import com.wipro.ats.bdre.md.dao.jpa.Servers;
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.Option;
 import org.apache.hadoop.conf.Configuration;
+import org.apache.hadoop.fs.FileStatus;
 import org.apache.hadoop.fs.FileSystem;
 import org.apache.hadoop.fs.FileUtil;
 import org.apache.hadoop.fs.Path;
@@ -37,6 +41,7 @@ import org.springframework.beans.factory.config.AutowireCapableBeanFactory;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
+import java.io.IOException;
 import java.sql.Connection;
 import java.sql.Statement;
 import java.util.Date;
@@ -107,15 +112,43 @@ public class RawLoad extends ETLBase {
         String listOfFiles = "";
         String listOfBatches = "";
 
+        boolean userPathFlag = false;
         //If user selects enqueueId
         if( "null".equals(filePathString) || filePathString == null) {
             listOfFiles = commandLine.getOptionValue("list-of-files");
             listOfBatches = commandLine.getOptionValue("list-of-file-batchIds");
         }
-        //If user select filepath
+        //If user select filepath or directoryPath
         else {
+            userPathFlag = true;
 
-            listOfFiles = filePathString;
+            Configuration conf = new Configuration();
+            conf.set("fs.defaultFS", IMConfig.getProperty("common.default-fs-name"));
+            FileSystem fs = null;
+            try {
+                fs = FileSystem.get(conf);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            Path givenPath = new Path(filePathString);
+            StringBuilder listOfFilesPath = new StringBuilder();
+
+            try {
+                if(!fs.isDirectory(givenPath)){
+                    listOfFilesPath.append(filePathString);
+                }
+                else{
+                    FileStatus[] fileStatus = fs.listStatus(givenPath);
+                    for (FileStatus fileStat : fileStatus) {
+                        listOfFilesPath.append(fileStat.getPath().toString()+",");
+                    }
+                }
+                listOfFilesPath.deleteCharAt(listOfFilesPath.length()-1);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            listOfFiles = listOfFilesPath.toString();
+
             listOfBatches = "0";
 
             Batch batch = batchDAO.get(0L);
@@ -148,11 +181,11 @@ public class RawLoad extends ETLBase {
         createRawBaseTables.executeRawLoad(createTablesArgs);
 
         //Now load file to table
-        loadRawLoadTable(rawDbName, rawTableName, listOfFiles, listOfBatches);
+        loadRawLoadTable(rawDbName, rawTableName, listOfFiles, listOfBatches, userPathFlag, processId);
 
     }
 
-    private void loadRawLoadTable(String dbName, String tableName, String listOfFiles, String listOfBatches) {
+    private void loadRawLoadTable(String dbName, String tableName, String listOfFiles, String listOfBatches, Boolean userPathFlag, String processId) {
         try {
             LOGGER.debug("Reading Hive Connection details from Properties File");
             String[] files = listOfFiles.split(IMConstant.FILE_FIELD_SEPERATOR);
@@ -163,11 +196,30 @@ public class RawLoad extends ETLBase {
 
             LOGGER.debug("Inserting data into the table");
 
-            for (int i=0; i<tempFiles.length; i++) {
-                String query = "LOAD DATA INPATH '" + tempFiles[i] + "'OVERWRITE INTO TABLE " + tableName
-                        + " PARTITION (batchid='" + correspondingBatchIds[i] + "')";
-                LOGGER.info("Raw load query " + query);
-                stmt.executeUpdate(query);
+            if(userPathFlag){
+                String deleteRawTableEntriesQuery = "TRUNCATE TABLE "+ tableName;
+                GetGeneralConfig generalConfig = new GetGeneralConfig();
+                String hdfsURI = generalConfig.byConigGroupAndKey("imconfig", "common.default-fs-name").getDefaultVal();
+                String bdreLinuxUserName = generalConfig.byConigGroupAndKey("scripts_config", "bdreLinuxUserName").getDefaultVal();
+                ProcessInfo process = new GetProcess().getProcess(Integer.parseInt(processId));
+
+                String serdePath = hdfsURI+"/user/"+bdreLinuxUserName+"/wf/1/5/"+process.getParentProcessId()+"/lib/hive-hcatalog-core-0.13.1.jar";
+                String addSerde = "add jar "+serdePath;
+                stmt.execute(addSerde);
+                stmt.executeUpdate(deleteRawTableEntriesQuery);
+                for (int i = 0; i < tempFiles.length; i++) {
+                    String query = "LOAD DATA INPATH '" + tempFiles[i] + "' INTO TABLE " + tableName
+                            + " PARTITION (batchid='" + correspondingBatchIds[i] + "')";
+                    LOGGER.info("Raw load query " + query);
+                    stmt.executeUpdate(query);
+                }
+            }else {
+                for (int i = 0; i < tempFiles.length; i++) {
+                    String query = "LOAD DATA INPATH '" + tempFiles[i] + "'OVERWRITE INTO TABLE " + tableName
+                            + " PARTITION (batchid='" + correspondingBatchIds[i] + "')";
+                    LOGGER.info("Raw load query " + query);
+                    stmt.executeUpdate(query);
+                }
             }
             stmt.close();
             con.close();

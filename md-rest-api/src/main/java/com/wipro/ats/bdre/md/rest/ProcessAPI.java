@@ -133,23 +133,26 @@ public class ProcessAPI extends MetadataAPIBase {
 
     }
 
-    @RequestMapping(value = "/processList", method = RequestMethod.GET)
+    @RequestMapping(value = "/parentProcessList", method = RequestMethod.GET)
     @ResponseBody
     public RestWrapper parentProcessList() {
         RestWrapper restWrapper = null;
         try{
             List<com.wipro.ats.bdre.md.dao.jpa.Process> processList = processDAO.processList();
             Integer counter = processDAO.totalCount();
+            LOGGER.info("Total Count is "+counter);
             List<Process> subProcessList = new ArrayList<>();
             for(com.wipro.ats.bdre.md.dao.jpa.Process process: processList){
                 Process subProcess = new Process();
                 subProcess.setProcessId(process.getProcessId());
+                LOGGER.info("Process Id is "+process.getProcessId());
                 subProcess.setBusDomainId(process.getBusDomain().getBusDomainId());
                 if (process.getWorkflowType() != null) {
                     subProcess.setWorkflowId(process.getWorkflowType().getWorkflowId());
                 }
                 subProcess.setDescription(process.getDescription());
                 subProcess.setProcessName(process.getProcessName());
+                LOGGER.info("Process Name is "+process.getProcessName());
                 subProcess.setProcessTypeId(process.getProcessType().getProcessTypeId());
                 subProcess.setCanRecover(process.getCanRecover());
                 if (process.getProcessTemplate() != null) {
@@ -168,6 +171,28 @@ public class ProcessAPI extends MetadataAPIBase {
             restWrapper = new RestWrapper(subProcessList, RestWrapper.OK);
 
         }catch (MetadataException e) {
+            LOGGER.error(e);
+            restWrapper = new RestWrapper(e.getMessage(), RestWrapper.ERROR);
+        }
+        return restWrapper;
+    }
+
+
+    @RequestMapping(value = "/checkProcess/{id}", method = RequestMethod.GET)
+    @ResponseBody
+    public RestWrapper checkParent(
+            @PathVariable("id") Integer processId, Principal principal
+    ) {
+
+        RestWrapper restWrapper = null;
+        try {
+            com.wipro.ats.bdre.md.dao.jpa.Process process=processDAO.getParent(processId);
+            LOGGER.info(process);
+            if (process!=null)
+                restWrapper = new RestWrapper("Present", RestWrapper.OK);
+            else
+                restWrapper = new RestWrapper("Not Present", RestWrapper.OK);
+        } catch (MetadataException e) {
             LOGGER.error(e);
             restWrapper = new RestWrapper(e.getMessage(), RestWrapper.ERROR);
         }
