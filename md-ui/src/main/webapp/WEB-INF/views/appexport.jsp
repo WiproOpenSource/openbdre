@@ -51,7 +51,7 @@
     </style>
   </head>
 
-  <body>
+  <body ng-app="myApp" ng-controller="myCtrl">
   <script>
   var app = angular.module('myApp',[]);
                           app.controller('myCtrl',function($scope) {
@@ -149,7 +149,7 @@
                         </div>
 
 
-                        <div id="batchProcesses" ng-app="myApp" ng-controller="myCtrl">
+                        <div id="batchProcesses" >
                            <label class="form-control" for="features" style="width:20%">Select Processes</label>
                            <select class="js-example-basic-multiple" id="processList" name="processList" multiple="multiple" style="width:20%" ng-model="processlist" ng-options = "parentProcess.processId as parentProcess.processName for parentProcess in parentProcessList track by parentProcess.processId">
                            <option value="">Select the option</option>
