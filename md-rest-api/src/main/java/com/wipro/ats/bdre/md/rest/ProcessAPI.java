@@ -169,7 +169,7 @@ public class ProcessAPI extends MetadataAPIBase {
      */
 
 
-    @RequestMapping(value = "/processList", method = RequestMethod.GET)
+    @RequestMapping(value = "/parentProcessList", method = RequestMethod.GET)
     @ResponseBody
     public RestWrapper parentProcessList() {
         RestWrapper restWrapper = null;

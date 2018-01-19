@@ -17,13 +17,16 @@ package com.wipro.ats.bdre.im.etl.api;
 import com.wipro.ats.bdre.im.IMConstant;
 import com.wipro.ats.bdre.im.etl.api.base.ETLBase;
 import com.wipro.ats.bdre.im.etl.api.exception.ETLException;
+import com.wipro.ats.bdre.md.api.GetGeneralConfig;
+import com.wipro.ats.bdre.md.api.GetProcess;
 import com.wipro.ats.bdre.md.api.GetProperties;
+import com.wipro.ats.bdre.md.beans.ProcessInfo;
 import org.apache.commons.cli.CommandLine;
 import org.apache.log4j.Logger;
 
 import java.sql.Connection;
 import java.sql.Statement;
-import java.util.Enumeration;
+import java.util.*;
 
 /**
  * Created by vishnu on 12/17/14.
@@ -84,6 +87,16 @@ public class StageLoad extends ETLBase {
             /** partitionKeys will contain comma, so there is no need to
              * provide FILE_FIELD_SEPERATOR after partitionKeys in query
              */
+
+            GetGeneralConfig generalConfig = new GetGeneralConfig();
+            String hdfsURI = generalConfig.byConigGroupAndKey("imconfig", "common.default-fs-name").getDefaultVal();
+            String bdreLinuxUserName = generalConfig.byConigGroupAndKey("scripts_config", "bdreLinuxUserName").getDefaultVal();
+            ProcessInfo process = new GetProcess().getProcess(Integer.parseInt(stageLoadProcessId));
+
+            String serdePath = hdfsURI+"/user/"+bdreLinuxUserName+"/wf/1/5/"+process.getParentProcessId()+"/lib/hive-hcatalog-core-0.13.1.jar";
+            String addSerde = "add jar "+serdePath;
+            baseConStatement.execute(addSerde);
+
             String query = "INSERT OVERWRITE TABLE " + baseDbName +"."+ stageTableName +
                     " PARTITION ( " + partitionKeys + "instanceexecid) SELECT " +
             fieldNames + IMConstant.FILE_FIELD_SEPERATOR + partitionKeys + instanceExecId + " FROM " + stageDbName + "."+ viewName +
@@ -132,16 +145,54 @@ public class StageLoad extends ETLBase {
         GetProperties getPropertiesOfRawTable = new GetProperties();
         String result="";
         StringBuilder columnList = new StringBuilder();
-        java.util.Properties columnValues = getPropertiesOfRawTable.getProperties(stageLoadProcessId, "base-columns");
-        Enumeration e = columnValues.propertyNames();
-        if (!columnValues.isEmpty()) {
-            while (e.hasMoreElements()) {
-                String key = (String) e.nextElement();
-                columnList.append(key.replaceAll("transform_",""));
-                columnList.append(",");
+        GetProperties getFileType = new GetProperties();
+        java.util.Properties baseProperties = getFileType.getProperties(stgLoad, "base-table");
+        String fileType = baseProperties.getProperty("file_type");
+
+        if("json".equalsIgnoreCase(fileType)){
+            GetProperties getPropertiesOfBaseColumns = new GetProperties();
+            java.util.Properties basePropertiesOfColumns = getPropertiesOfBaseColumns.getProperties(stgLoad, "base-cols");
+            Enumeration columns = basePropertiesOfColumns.propertyNames();
+            List<String> orderOfCloumns = Collections.list(columns);
+            Collections.sort(orderOfCloumns, new Comparator<String>() {
+                public int compare(String o1, String o2) {
+                    int n1=Integer.valueOf(o1.split("\\.")[1]);
+                    int n2=Integer.valueOf(o2.split("\\.")[1]);
+                    return (n1 - n2);
+                }
+            });
+
+            List<String> baseColumns = new ArrayList<String>();
+            if (!basePropertiesOfColumns.isEmpty()) {
+                for (String columnOrder : orderOfCloumns) {
+                    String key = columnOrder;
+                    baseColumns.add(basePropertiesOfColumns.getProperty(key));
+                }
             }
-            result=columnList.substring(0, columnList.length() - 1);
+            for(String column:baseColumns){
+                if(column.contains(".")){
+                    String firstColumnName = column.split("\\.")[0];
+                    if(!columnList.toString().contains(firstColumnName))
+                        columnList.append(firstColumnName+",");
+                }
+                else
+                    columnList.append(column+",");
+            }
+            result = columnList.substring(0, columnList.length() - 1);
             LOGGER.debug("column list = " + result);
+        }
+        else {
+            java.util.Properties columnValues = getPropertiesOfRawTable.getProperties(stageLoadProcessId, "base-columns");
+            Enumeration e = columnValues.propertyNames();
+            if (!columnValues.isEmpty()) {
+                while (e.hasMoreElements()) {
+                    String key = (String) e.nextElement();
+                    columnList.append(key.replaceAll("transform_", ""));
+                    columnList.append(",");
+                }
+                result = columnList.substring(0, columnList.length() - 1);
+                LOGGER.debug("column list = " + result);
+            }
         }
 
 

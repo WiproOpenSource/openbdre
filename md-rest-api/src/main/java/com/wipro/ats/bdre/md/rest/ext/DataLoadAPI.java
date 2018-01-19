@@ -158,14 +158,21 @@ public class DataLoadAPI extends MetadataAPIBase {
                 continue;
             }
             if (string.startsWith("rawtablecolumn_")) {
+                Properties jpaProperties2 = null;
                 jpaProperties = Dao2TableUtil.buildJPAProperties("raw-cols", "raw_column_name." + rawColumnCounter, string.replaceAll("rawtablecolumn_", ""), "Column name for raw table");
+                jpaProperties2 = Dao2TableUtil.buildJPAProperties("base-cols", "base_column_name." + rawColumnCounter, string.replaceAll("rawtablecolumn_", ""), "Column name for base table");
                 file2RawProperties.add(jpaProperties);
+                raw2StageProperties.add(jpaProperties2);
                 jpaProperties = Dao2TableUtil.buildJPAProperties("raw-data-types", "raw_column_datatype." + rawColumnCounter, map.get(string), "Data Type for raw table");
+                jpaProperties2 = Dao2TableUtil.buildJPAProperties("base-data-type", "base_column_datatype." + rawColumnCounter, map.get(string), "Data Type for base table");
                 rawColumnCounter++;
                 file2RawProperties.add(jpaProperties);
+                raw2StageProperties.add(jpaProperties2);
             }else if (string.startsWith(FILEFORMAT)) {
                 if("fileformat".equals(string.replaceAll(FILEFORMAT, ""))){
                     jpaProperties = Dao2TableUtil.buildJPAProperties(RAWTABLE, "file_type", map.get(string), "file type");
+                     Properties jpaProperties1 = Dao2TableUtil.buildJPAProperties(BASETABLE, "file_type", map.get(string), "file type");
+                    raw2StageProperties.add(jpaProperties1);
                     file2RawProperties.add(jpaProperties);
                 }else if("rawDBName".equals(string.replaceAll(FILEFORMAT, ""))){
                     jpaProperties = Dao2TableUtil.buildJPAProperties(RAWTABLE, "table_db", map.get(string), "RAW DB Name");

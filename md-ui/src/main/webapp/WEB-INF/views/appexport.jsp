@@ -57,7 +57,7 @@
                           app.controller('myCtrl',function($scope) {
                           $scope.parentProcessList={};
                           $.ajax({
-                                url: "/mdrest/process/processList",
+                                url: "/mdrest/process/parentProcessList",
                                     type: 'GET',
                                     dataType: 'json',
                                     async: false,
@@ -87,12 +87,19 @@
                                     <div  class="col-md-3"></div>
                                        <div class="col-md-3 ">
                                            <div class="row">&nbsp;</div>
-                                           <button type="button" width="20px" onclick="downloadZip(<%=processId %>)" class="btn btn-primary btn-large  pull-center"><spring:message code="appexport.page.download"/></button>
+                                           <button type="button" width="20px" onclick="downloadZip(<%=processId %>)" class="btn btn-primary btn-large  pull-right">Download Multiple Zip</button>
                                        </div>
                                        <div  class="col-md-3">
                                             <div class="row">&nbsp;</div>
                                             <button type="button" width="20px" onclick="showExportForm()" class="btn btn-primary btn-large pull-center"><spring:message code="appexport.page.export_to_appstore"/></button>
                                        </div>
+<br>
+                                                      <br>
+                                                      <br>
+                                                      <br>
+                                       <div class="row"></div>
+                                          <button type="button" width="20px" onclick="downloadCurrentZip(<%=processId %>)" class="btn btn-primary btn-large  pull-center">Download Current Process Zip</button>
+                                      </div>
 
                              </div>
                          </div>
@@ -195,6 +202,11 @@
 
                                }
 
+                               downloadCurrentZip = function (processId){
+                               var url = (window.location.protocol + "//" + window.location.host + "/mdrest/process/zippedexport/" + processId);
+                               window.location.href = url;
+                               }
+
                                appstorePush =function (){
                                   uploadImg(<%=processId %> ,'img-id');
                                    event.preventDefault();
@@ -263,7 +275,6 @@
                                                                            return false;
                                                							}
                                                						 });
-
                                                }
 
 
