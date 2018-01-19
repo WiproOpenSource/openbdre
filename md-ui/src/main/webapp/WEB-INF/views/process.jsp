@@ -1158,6 +1158,17 @@
                                     title: '<spring:message code="process.page.title_deploy_job"/>',
 
                                 },
+                                ScheduleProcess: {
+                                    title: 'Schedule Job',
+                                    sorting: false,
+                                    width: '5%',
+                                    listClass: 'bdre-jtable-button',
+                                    create: false,
+                                    edit: false,
+                                    display: function(data) {
+                                        return '<span class="label label-primary" onclick="fetchScheduleInfo(' + data.record.processId + ')">Schedule</span> ';
+                                    },
+                                },
                                   
                                 RunProcess: {                    
                                 	width: '5%',
@@ -1485,6 +1496,27 @@
                             }
                         });
                     }
+
+                    function fetchScheduleInfo(pid) {
+                            $.ajax({
+                                    url: '/mdrest/process/permission/'+pid,
+                                    type: 'PUT',
+                                    dataType: 'json',
+                                     success: function(data) {
+                                        if(data.Result == "OK") {
+                                          location.href = '<c:url value="/pages/scheduler.page?pid="/>' + pid;
+                                        }
+                                        else
+                                        {
+                                         alert(data.Message);
+                                        }
+                                    },
+                                    error: function() {
+                                        $dfd.reject();
+                                    }
+                                });
+                            }
+
 					function goToEditGraphically(pid,pTypeId) {
                                       $.ajax({
                                                url: '/mdrest/process/permission/'+pid,

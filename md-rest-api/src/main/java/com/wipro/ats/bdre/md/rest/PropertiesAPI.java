@@ -943,6 +943,40 @@ public class PropertiesAPI extends MetadataAPIBase {
         return restWrapper;
     }
 
+    @RequestMapping(value = {"/{id}/{cg}/{key}", "/{id}/{cg}/{key}/"}, method = RequestMethod.GET)
+
+
+    @ResponseBody
+    public RestWrapper listValue(@PathVariable("id") Integer processId,
+                                 @PathVariable("cg") String configGroup,
+                                 @PathVariable("key") String key,
+                                 Principal principal) {
+
+        RestWrapper restWrapper = null;
+        try {
+            String value = null;
+            Process parentProcess=processDAO.get(processId);
+            if (parentProcess.getProcess()!=null)
+                processDAO.securityCheck(parentProcess.getProcess().getProcessId(),principal.getName(),"read");
+            else
+                processDAO.securityCheck(processId,principal.getName(),"read");
+
+            value=propertiesDAO.getPropertiesValueForConfigAndKey(processId,configGroup,key);
+
+            restWrapper = new RestWrapper(value, RestWrapper.OK);
+            LOGGER.info("Record with ID:" + processId + "and config group" + configGroup + "selected from Properties by User:" + principal.getName());
+
+        } catch (MetadataException e) {
+            LOGGER.error(e);
+            restWrapper = new RestWrapper(e.getMessage(), RestWrapper.ERROR);
+        }
+        catch (SecurityException e) {
+            LOGGER.error(e);
+            restWrapper = new RestWrapper(e.getMessage(), RestWrapper.ERROR);
+        }
+        return restWrapper;
+    }
+
     @Override
     public Object execute(String[] params) {
         return null;
