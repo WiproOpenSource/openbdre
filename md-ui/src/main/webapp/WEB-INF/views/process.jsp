@@ -10,6 +10,20 @@
                 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
                 <title><spring:message code="common.page.title_bdre_1"/></title>
                 <style>
+                .modelwindow {
+                   display: none; /* Hidden by default */
+                   position: fixed; /* Stay in place */
+                   z-index: 1; /* Sit on top */
+                   padding-top: 40px; /* Location of the box */
+                   left: 0;
+                   top: 0;
+                   width: 100%; /* Full width */
+                   height: 100%; /* Full height */
+                   overflow: auto; /* Enable scroll if needed */
+                   background-color: rgb(0,0,0); /* Fallback color */
+                   background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+                   }
+
 					div.jtable-main-container>table.jtable>tbody>tr.jtable-data-row>td:nth-child(2){
 						color: #F75C17;
 						font-size: 24px;
@@ -76,6 +90,23 @@
 						width: 16px;
 						height: 16px;
 					}
+
+					/* The Close Button */
+                   .closemodal {
+                       color: #aaaaaa;
+                       float: right;
+                       font-size: 28px;
+                       font-weight: bold;
+                   }
+
+                   /* Modal Content */
+                  .modal-content {
+                      background-color: #fefefe;
+                      margin: auto;
+                      padding: 20px;
+                      border: 1px solid #888;
+                      width: 60%;
+                  }
 
 					.filter-text {
 						display: inline-block;
@@ -210,6 +241,7 @@
                             openChildAsAccordion: true,
                             actions: {
                                 listAction: function(postData, jtParams) {
+                                $("#page-header").hide();
                                 if(jtParams.jtStartIndex!=0){
                                 jtParamStart = jtParams.jtStartIndex;
                                 jtPage = jtParams.jtPageSize;}
@@ -1158,17 +1190,7 @@
                                     title: '<spring:message code="process.page.title_deploy_job"/>',
 
                                 },
-                                ScheduleProcess: {
-                                    title: 'Schedule Job',
-                                    sorting: false,
-                                    width: '5%',
-                                    listClass: 'bdre-jtable-button',
-                                    create: false,
-                                    edit: false,
-                                    display: function(data) {
-                                        return '<span class="label label-primary" onclick="fetchScheduleInfo(' + data.record.processId + ')">Schedule</span> ';
-                                    },
-                                },
+
                                   
                                 RunProcess: {                    
                                 	width: '5%',
@@ -1241,6 +1263,18 @@
                                 		});
                                 		return $img2;
                                 	}
+                                },
+
+                                ScheduleProcess: {
+                                    title: 'Schedule Job',
+                                    sorting: false,
+                                    width: '5%',
+                                    listClass: 'bdre-jtable-button',
+                                    create: false,
+                                    edit: false,
+                                    display: function(data) {
+                                        return '<span class="label label-primary" onclick="fetchScheduleInfo(' + data.record.processId + ')">Schedule</span> ';
+                                    },
                                 },
 
 
@@ -1402,6 +1436,25 @@
 
                 </script>
 
+                <script>
+
+                         var map = new Object();
+                          var createJobResult;
+                             var requiredProperties;
+                             var sourceFlag;
+                             var created = 0;
+                        function formIntoMap(typeProp, typeOf) {
+                         var x = '';
+                         x = document.getElementById(typeOf);
+                         console.log(x);
+                         var text = "";
+                         var i;
+                         for(i = 0; i < x.length; i++) {
+                                     map[typeProp + x.elements[i].name] = x.elements[i].value;
+                         }
+                        }
+                 </script>
+
 
                 <script>
                     function fetchDeployPage(processId) {
@@ -1497,25 +1550,86 @@
                         });
                     }
 
+                    var processId;
+
                     function fetchScheduleInfo(pid) {
-                            $.ajax({
-                                    url: '/mdrest/process/permission/'+pid,
-                                    type: 'PUT',
-                                    dataType: 'json',
-                                     success: function(data) {
-                                        if(data.Result == "OK") {
-                                          location.href = '<c:url value="/pages/scheduler.page?pid="/>' + pid;
-                                        }
-                                        else
-                                        {
-                                         alert(data.Message);
-                                        }
-                                    },
-                                    error: function() {
-                                        $dfd.reject();
-                                    }
-                                });
+                    processId=pid;
+                    $.ajax({
+                            url: '/mdrest/process/permission/'+pid,
+                            type: 'PUT',
+                            dataType: 'json',
+                             success: function(data) {
+                                if(data.Result == "OK") {
+                                  var frequency = getPropValue("schedule-frequency",pid);
+                                  var startTime = getPropValue("schedule-start-time",pid);
+                                  var endTime = getPropValue("schedule-end-time",pid);
+                                  var timeZone = getPropValue("schedule-time-zone",pid);
+
+                                  document.getElementById("frequency").defaultValue = frequency["Record"];
+                                  document.getElementById("startTime").defaultValue = startTime["Record"];
+                                  document.getElementById("endTime").defaultValue = endTime["Record"];
+                                  document.getElementById("timeZone").defaultValue = timeZone["Record"];
+                                  var modal = document.getElementById('myModal');
+                                  var span = document.getElementsByClassName("closemodal")[0];
+                                  modal.style.display = "block";
+
+                                  span.onclick = function() {
+                                   modal.style.display = "none";
+                                  }
+                                }
+                                else
+                                {
+                                 alert(data.Message);
+                                }
+                            },
+                            error: function() {
+                                $dfd.reject();
                             }
+                        });
+                    }
+
+                    function getPropValue(key,pid){
+                    var property;
+                      $.ajax({
+                      url: '/mdrest/properties/' +pid+ '/schedule/'+key ,
+                          type: 'GET',
+                          dataType: 'json',
+                          async: false,
+                          success: function (data) {
+                              property = data;
+                              console.log("properties from ajax"+ property);
+                          },
+                          error: function () {
+                              alert('danger'+key);
+                          }
+                      });
+                      return property
+                      }
+
+
+                      function scheduleJob(){
+                      formIntoMap('scheduleProperties_','propertiesFieldsForm');
+                        $.ajax({
+                              url: "/mdrest/scheduler/schedulejob/"+processId,
+                              type: 'POST',
+                              data: jQuery.param(map),
+
+                                 success: function(data) {
+                                    if(data.Result == "OK") {
+                                        console.log("OK");
+                                        location.href = '<c:url value="/pages/process.page?pid="/>' + processId;
+                                    }
+                                    else
+                                    {
+                                     alert('danger');
+                                    }
+                                },
+                                error: function() {
+                                     alert('danger');
+                                }
+                            });
+                       }
+
 
 					function goToEditGraphically(pid,pTypeId) {
                                       $.ajax({
@@ -1646,12 +1760,12 @@
 
                     </script>
                     <script>
-                                            function showProcessPage1(pName) {
-                                                console.log('entered function');
+                    function showProcessPage1(pName) {
+                        console.log('entered function');
 
-                                                location.href = '<c:url value="/pages/process.page?pName="/>' + pName;
+                        location.href = '<c:url value="/pages/process.page?pName="/>' + pName;
 
-                                            }
+                    }
 
                                         </script>
                     <script type="text/javascript">
@@ -1664,6 +1778,7 @@
             </head>
 
             <body>
+
 
                 <section style="width:100%;text-align:center;">
                     <div id="Container"></div>
@@ -1749,9 +1864,58 @@
 						<span class="jtable-confirm-message"><spring:message code="process.page.span_process_not_found"/></span>
 					</p>
 				</div>
+
+				<div id="myModal" class="modelwindow">
+
+				<div class="modal-content" style="background-color:#F8F9FB;">
+				<span class="closemodal">&times;</span>
+                             <div class="row" >&nbsp;</div>
+                             <div class="row" >
+
+                                 <div class="col-md-2"></div>
+
+                                 <div class="col-md-8" id="divEncloseHeading" >
+                                     <div class="panel panel-primary">
+
+                                         <div class="panel-body">
+                                             <form role="form" id="propertiesFieldsForm">
+
+                                                 <div class="form-group">
+                                                     <label >Frequency (in minutes)</label>
+                                                     <input type="text" class="form-control" id="frequency" name="frequency" required>
+                                                 </div>
+
+                                                 <div class="form-group">
+                                                     <label >Start Time (yyyy-mm-ddThh:mmZ)</label>
+                                                     <input type="text" class="form-control" id="startTime" name="startTime" required>
+                                                 </div>
+
+                                                 <div class="form-group">
+                                                         <label >End Time (yyyy-mm-ddThh:mmZ)</label>
+                                                         <input type="text" class="form-control" id="endTime" name="endTime" required>
+                                                     </div>
+
+                                                  <div class="form-group">
+                                                      <label >Time Zone</label>
+                                                      <input type="text" class="form-control" id="timeZone" name="timeZone" required>
+                                                  </div>
+
+                                                  <div class="actions text-center" >
+                                                     <button type="button" id="schedulejobs" class="btn btn-primary btn-lg" onclick="scheduleJob()">Schedule Jobs</button>
+                                                  </div>
+                                             </form>
+                                        </div>
+                                     </div>
+                                 </div>
+                                 <div class="col-md-2"> </div>
+                     <div class="row" >&nbsp;</div>
+                     </div>
+                     </div>
+
 			          <div style="display:none" id="div-dialog-warning">
             			<p><span class="ui-icon ui-icon-alert" style="float:left;"></span></p>
             		</div>
+
 
 
 			</body>

@@ -142,8 +142,9 @@ public class RawLoad extends ETLBase {
                     for (FileStatus fileStat : fileStatus) {
                         listOfFilesPath.append(fileStat.getPath().toString()+",");
                     }
+                    listOfFilesPath.deleteCharAt(listOfFilesPath.length()-1);
                 }
-                listOfFilesPath.deleteCharAt(listOfFilesPath.length()-1);
+
             } catch (IOException e) {
                 e.printStackTrace();
             }
