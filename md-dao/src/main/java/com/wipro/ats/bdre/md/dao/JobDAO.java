@@ -596,6 +596,17 @@ public class JobDAO {
                 }
             }
 
+
+            Criteria deleteBCQCriteria = session.createCriteria(BatchConsumpQueue.class).add(Restrictions.eq("sourceProcessId", processId));
+            List<BatchConsumpQueue> deleteBCQList=deleteBCQCriteria.list();
+            for(int i=0;i<deleteBCQList.size();i++)
+            {
+                BatchConsumpQueue batchConsumpQueue=deleteBCQList.get(i);
+                session.delete(batchConsumpQueue);
+            }
+
+
+
             for (Process subProcess : listOfDownStreamSubProcessesWithEnqID) {
                 if (batchMarkingPassed == null) {
                     BatchConsumpQueue insertBatchConsumpQueue = new BatchConsumpQueue();
