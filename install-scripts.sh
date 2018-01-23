@@ -69,6 +69,10 @@ chmod +x $BDRE_HOME/bdre-scripts/bin/*
 echo " installing crontab for $BDRE_HOME/bdre-scripts/deployment/process-deploy.sh"
 (crontab -l ; echo "* * * * * $BDRE_HOME/bdre-scripts/deployment/process-deploy.sh") 2>&1 | grep -v "no crontab" | sort | uniq | crontab -
 
+#Install crontab for execution daemon * * * * * - every min
+echo " installing crontab for $BDRE_HOME/bdre-scripts/deployment/process-execution.sh"
+(crontab -l ; echo "* * * * * $BDRE_HOME/bdre-scripts/deployment/process-execution.sh") 2>&1 | grep -v "no crontab" | sort | uniq | crontab -
+
 
 #Create log dir
 bdre_user=`whoami`

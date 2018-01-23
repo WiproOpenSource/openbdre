@@ -15,7 +15,9 @@
 package com.wipro.ats.bdre.filemon;
 
 import com.wipro.ats.bdre.ResolvePath;
+import com.wipro.ats.bdre.md.api.FileMonJobTrigger;
 import com.wipro.ats.bdre.exception.BDREException;
+import com.wipro.ats.bdre.md.api.JobTrigger;
 import com.wipro.ats.bdre.md.api.RegisterFile;
 import org.apache.commons.io.FileUtils;
 import org.apache.hadoop.conf.Configuration;
@@ -24,8 +26,7 @@ import org.apache.hadoop.fs.Path;
 import org.apache.hadoop.security.UserGroupInformation;
 import org.apache.log4j.Logger;
 import org.apache.commons.io.FilenameUtils;
-
-
+import org.springframework.beans.factory.annotation.Autowired;
 import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.Method;
@@ -94,9 +95,13 @@ public class QueuedFileUploader {
         if (FileMonitor.getQueueSize() > 0) {
             FileCopyInfo fileCopying = FileMonitor.getFileInfoFromQueue();
             try {
+                LOGGER.info("Inside executeCopyProcess");
                 hdfsCopy(fileCopying);
+
                 // calling register file
                 executeRegisterFiles(fileCopying);
+                // a function which will create a batch
+                new QueuedFileUploader().executeDownStream();
             } catch (Exception err) {
                 LOGGER.error("Error in execute copy process ", err);
                 throw new BDREException(err);
@@ -122,5 +127,11 @@ public class QueuedFileUploader {
             throw new BDREException(err);
         }
     }
+    //
 
+    private void executeDownStream(){
+        LOGGER.info("Inside executeDownStream");
+        Integer parentProcessId=Integer.parseInt(FileMonRunnableMain.getParentProcessId());
+        new JobTrigger().runDownStream(parentProcessId);
+    }
 }
