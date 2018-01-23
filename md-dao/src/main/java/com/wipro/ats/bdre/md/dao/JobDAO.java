@@ -435,6 +435,18 @@ public class JobDAO {
 
             session.getTransaction().commit();
         } catch (MetadataException e) {
+            Session session1=sessionFactory.openSession();
+            session1.beginTransaction();
+            Criteria criteria=session1.createCriteria(ProcessExecutionQueue.class).add(Restrictions.eq("process.processId",processId));
+            if(!criteria.list().isEmpty()){
+                ExecStatus execStatus=new ExecStatus();
+                execStatus.setExecStateId(6);
+                ProcessExecutionQueue processExecutionQueue=(ProcessExecutionQueue)criteria.list().get(0);
+                processExecutionQueue.setExecStatus(execStatus);
+                session1.update(processExecutionQueue);
+            }
+            session1.getTransaction().commit();
+            session1.close();
             session.getTransaction().rollback();
             LOGGER.error(e);
             throw e;

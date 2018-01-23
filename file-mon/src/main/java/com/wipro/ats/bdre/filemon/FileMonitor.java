@@ -48,6 +48,8 @@ public class FileMonitor implements FileListener {
     }
 
     public static synchronized void addToQueue(String fileName, FileCopyInfo fileCopyInfo) {
+
+        LOGGER.info("add to queue called");
         fileToCopyMap.put(fileName, fileCopyInfo);
     }
     public static synchronized int getQueueSize(){

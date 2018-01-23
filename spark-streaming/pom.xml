@@ -35,21 +35,21 @@
         <dependency>
             <groupId>org.apache.spark</groupId>
             <artifactId>spark-core_2.10</artifactId>
-            <version>1.6.0</version>
+            <version>${spark.core.version}</version>
         </dependency>
 
         <!-- https://mvnrepository.com/artifact/org.apache.spark/spark-mllib_2.10 -->
         <dependency>
             <groupId>org.apache.spark</groupId>
             <artifactId>spark-mllib_2.10</artifactId>
-            <version>1.6.0</version>
+            <version>${spark.core.version}</version>
         </dependency>
 
         <!-- https://mvnrepository.com/artifact/org.apache.spark/spark-hive_2.10 -->
         <dependency>
             <groupId>org.apache.spark</groupId>
             <artifactId>spark-hive_2.10</artifactId>
-            <version>1.5.0</version>
+            <version>${spark.core.version}</version>
         </dependency>
 
 
@@ -69,7 +69,7 @@
         <dependency>
             <groupId>org.apache.spark</groupId>
             <artifactId>spark-streaming_2.10</artifactId>
-            <version>1.6.0</version>
+            <version>${spark.core.version}</version>
         </dependency>
 
         <!-- https://mvnrepository.com/artifact/org.apache.hbase/hbase-spark -->
@@ -83,13 +83,13 @@
         <dependency>
             <groupId>org.apache.spark</groupId>
             <artifactId>spark-streaming-kafka_2.10</artifactId>
-            <version>1.6.0</version>
+            <version>${spark.core.version}</version>
         </dependency>
 
         <dependency>
             <groupId>org.apache.spark</groupId>
             <artifactId>spark-streaming-twitter_2.10</artifactId>
-            <version>1.6.0</version>
+            <version>${spark.core.version}</version>
         </dependency>
 
 
@@ -103,7 +103,7 @@
         <dependency>
             <groupId>org.apache.spark</groupId>
             <artifactId>spark-sql_2.10</artifactId>
-            <version>1.6.0</version>
+            <version>${spark.core.version}</version>
         </dependency>
         <dependency>
             <groupId>com.jcraft</groupId>
