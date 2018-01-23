@@ -47,7 +47,7 @@ public class Export {
         process.setDeleteFlag(false);
         process.setDescription("des");
         process.setEditTS(new Date());
-        process.setEnqProcessId(1);
+        process.setEnqProcessId("1");
 
         processList.add(process);
 

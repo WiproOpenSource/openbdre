@@ -15,7 +15,6 @@
 package com.wipro.ats.bdre.filemon;
 
 import com.wipro.ats.bdre.ResolvePath;
-import com.wipro.ats.bdre.md.api.FileMonJobTrigger;
 import com.wipro.ats.bdre.exception.BDREException;
 import com.wipro.ats.bdre.md.api.JobTrigger;
 import com.wipro.ats.bdre.md.api.RegisterFile;

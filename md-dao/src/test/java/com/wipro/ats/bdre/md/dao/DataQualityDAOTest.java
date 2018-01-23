@@ -51,7 +51,7 @@ public class DataQualityDAOTest {
         dqSetupInfo.setConfigGroup("cg");
         dqSetupInfo.setBusDomainId(1);
         dqSetupInfo.setCanRecover(true);
-        dqSetupInfo.setEnqId(1);
+        dqSetupInfo.setEnqId("1");
         dqSetupInfo.setFileDelimiterRegexValue(",");
         dqSetupInfo.setMinPassThresholdPercentValue("90");
         //dqSetupInfo.setSubProcessId(10901);

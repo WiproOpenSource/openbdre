@@ -7,7 +7,6 @@ import com.wipro.ats.bdre.md.beans.ProcessInfo;
 import com.wipro.ats.bdre.md.dao.JobTriggerDAO;
 import com.wipro.ats.bdre.md.dao.ProcessDAO;
 import com.wipro.ats.bdre.md.dao.ProcessExecutionQueueDAO;
-import com.wipro.ats.bdre.md.dao.ProcessPipelineDAO;
 import com.wipro.ats.bdre.md.dao.jpa.Process;
 import com.wipro.ats.bdre.md.dao.jpa.ProcessExecutionQueue;
 import com.wipro.ats.bdre.md.dao.jpa.ProcessType;

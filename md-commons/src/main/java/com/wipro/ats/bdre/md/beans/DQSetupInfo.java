@@ -60,7 +60,7 @@ public class DQSetupInfo {
     private Integer workflowTypeId;
     private Boolean canRecover;
     private Boolean deleteFlag;
-    private Integer enqId;
+    private String enqId;
     private Integer page;
     private Integer counter;
     private Integer pageSize;
@@ -243,11 +243,11 @@ public class DQSetupInfo {
     }
 
 
-    public Integer getEnqId() {
+    public String getEnqId() {
         return enqId;
     }
 
-    public void setEnqId(Integer enqId) {
+    public void setEnqId(String enqId) {
         this.enqId = enqId;
     }
 
