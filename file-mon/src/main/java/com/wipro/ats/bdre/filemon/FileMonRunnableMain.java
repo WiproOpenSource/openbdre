@@ -48,6 +48,7 @@ public class FileMonRunnableMain extends BaseStructure {
     private static String kerberosUserName;
     private static String kerberosKeytabFileLocation;
     private static String kerberosEnabled;
+    private static String parentProcessId="";
 
     public static long getSleepTime() {
         return sleepTime;
@@ -110,6 +111,8 @@ public class FileMonRunnableMain extends BaseStructure {
         return defaultFSName;
     }
 
+    public static String getParentProcessId(){return parentProcessId;};
+
 
     public static void main(String[] args) {
         FileMonRunnableMain f2SFileMonitorMain = new FileMonRunnableMain();
@@ -122,6 +125,7 @@ public class FileMonRunnableMain extends BaseStructure {
 
     private void execute(String[] params) {
         try {
+            parentProcessId=params[1];
             GetProcess getProcess = new GetProcess();
             List<ProcessInfo> subProcessList = getProcess.getSubProcesses(params);
             subProcessId = subProcessList.get(0).getProcessId().toString();
