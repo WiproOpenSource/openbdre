@@ -364,74 +364,84 @@ public class CreateRawBaseTables extends ETLBase {
         // fetching column names list
         String baseColumnList = "";
 
-        GetProperties getPropertiesOfBaseColumns = new GetProperties();
-        java.util.Properties basePropertiesOfColumns = getPropertiesOfBaseColumns.getProperties(stgLoad, "base-cols");
-        Enumeration columns = basePropertiesOfColumns.propertyNames();
-        List<String> orderOfCloumns = Collections.list(columns);
-        Collections.sort(orderOfCloumns, new Comparator<String>() {
-            public int compare(String o1, String o2) {
-                int n1=Integer.valueOf(o1.split("\\.")[1]);
-                int n2=Integer.valueOf(o2.split("\\.")[1]);
-                return (n1 - n2);
+        GetProperties getFileType = new GetProperties();
+        java.util.Properties baseProperties = getFileType.getProperties(stgLoad, "base-table");
+        String fileType = baseProperties.getProperty("file_type");
+
+        String baseColumnsWithDataTypes=null;
+
+        if("json".equalsIgnoreCase(fileType)) {
+
+            GetProperties getPropertiesOfBaseColumns = new GetProperties();
+            java.util.Properties basePropertiesOfColumns = getPropertiesOfBaseColumns.getProperties(stgLoad, "base-cols");
+            Enumeration columns = basePropertiesOfColumns.propertyNames();
+            List<String> orderOfCloumns = Collections.list(columns);
+            Collections.sort(orderOfCloumns, new Comparator<String>() {
+                public int compare(String o1, String o2) {
+                    int n1 = Integer.valueOf(o1.split("\\.")[1]);
+                    int n2 = Integer.valueOf(o2.split("\\.")[1]);
+                    return (n1 - n2);
+                }
+            });
+            List<String> baseColumns = new ArrayList<String>();
+            if (!basePropertiesOfColumns.isEmpty()) {
+                for (String columnOrder : orderOfCloumns) {
+                    String key = columnOrder;
+                    baseColumns.add(basePropertiesOfColumns.getProperty(key));
+                }
             }
-        });
-        List<String> baseColumns = new ArrayList<String>();
-        if (!basePropertiesOfColumns.isEmpty()) {
-            for (String columnOrder : orderOfCloumns) {
-                String key = columnOrder;
-                baseColumns.add(basePropertiesOfColumns.getProperty(key));
+
+            // fetching column datatypes in a string list from properties with raw-data-types as config group
+            GetProperties getPropertiesOfBaseDataTypes = new GetProperties();
+            java.util.Properties basePropertiesOfDataTypes = getPropertiesOfBaseDataTypes.getProperties(stgLoad, "base-data-type");
+            Enumeration dataTypes = basePropertiesOfDataTypes.propertyNames();
+            List<String> orderOfDataTypes = Collections.list(dataTypes);
+            Collections.sort(orderOfDataTypes, new Comparator<String>() {
+
+                public int compare(String o1, String o2) {
+                    int n1 = Integer.valueOf(o1.split("\\.")[1]);
+                    int n2 = Integer.valueOf(o2.split("\\.")[1]);
+                    return (n1 - n2);
+                }
+            });
+            List<String> baseDataTypes = new ArrayList<String>();
+            if (!basePropertiesOfColumns.isEmpty()) {
+                for (String columnOrder : orderOfDataTypes) {
+                    String key = columnOrder;
+                    baseDataTypes.add(basePropertiesOfDataTypes.getProperty(key));
+                }
             }
+
+            // forming a comma separated string in the form of col1 datatype1, col2 datatype2, col3 datatype3 etc.
+            for (int i = 0; i < baseColumns.size(); i++) {
+                baseColumnList += baseColumns.get(i) + " " + baseDataTypes.get(i) + ",";
+            }
+            baseColumnsWithDataTypes = baseColumnList.substring(0, baseColumnList.length() - 1);
+        }
+        else {
+
+            GetProperties getPropertiesOfBaseColumns = new GetProperties();
+            java.util.Properties basePropertiesOfColumns = getPropertiesOfBaseColumns.getProperties(stgLoad, "base-columns");
+            java.util.Properties basePropertiesOfDataTypes = getPropertiesOfBaseColumns.getProperties(stgLoad, "base-data-types");
+            Enumeration baseColumnsList = basePropertiesOfColumns.propertyNames();
+            StringBuilder baseColumns = new StringBuilder();
+            if (!basePropertiesOfColumns.isEmpty()) {
+                while (baseColumnsList.hasMoreElements()) {
+                    String key = (String) baseColumnsList.nextElement();
+                    baseColumns.append(key.replaceAll("transform_", "") + " " + basePropertiesOfDataTypes.getProperty(key.replaceAll("transform_", "")) + ",");
+                }
+            }
+            //removing trailing comma
+            LOGGER.info("Length of baseColumns" + baseColumns.length());
+            baseColumnsWithDataTypes = baseColumns.substring(0, baseColumns.length() - 1);
+            LOGGER.info("baseColumnsWithDataTypes is " + baseColumnsWithDataTypes);
         }
 
-        // fetching column datatypes in a string list from properties with raw-data-types as config group
-        GetProperties getPropertiesOfBaseDataTypes = new GetProperties();
-        java.util.Properties basePropertiesOfDataTypes = getPropertiesOfBaseDataTypes.getProperties(stgLoad, "base-data-type");
-        Enumeration dataTypes = basePropertiesOfDataTypes.propertyNames();
-        List<String> orderOfDataTypes = Collections.list(dataTypes);
-        Collections.sort(orderOfDataTypes, new Comparator<String>() {
-
-            public int compare(String o1, String o2) {
-                int n1=Integer.valueOf(o1.split("\\.")[1]);
-                int n2=Integer.valueOf(o2.split("\\.")[1]);
-                return (n1 - n2);
-            }
-        });
-        List<String> baseDataTypes = new ArrayList<String>();
-        if (!basePropertiesOfColumns.isEmpty()) {
-            for (String columnOrder : orderOfDataTypes) {
-                String key = columnOrder;
-                baseDataTypes.add(basePropertiesOfDataTypes.getProperty(key));
-            }
-        }
-
-        // forming a comma separated string in the form of col1 datatype1, col2 datatype2, col3 datatype3 etc.
-        for (int i = 0; i < baseColumns.size(); i++) {
-            baseColumnList += baseColumns.get(i) + " " + baseDataTypes.get(i) + ",";
-        }
-        String baseColumnsWithDataTypes = baseColumnList.substring(0, baseColumnList.length() - 1);
-
-        /*GetProperties getPropertiesOfBaseColumns = new GetProperties();
-        java.util.Properties basePropertiesOfColumns = getPropertiesOfBaseColumns.getProperties(stgLoad, "base-columns");
-        java.util.Properties basePropertiesOfDataTypes = getPropertiesOfBaseColumns.getProperties(stgLoad, "base-data-types");
-        Enumeration baseColumnsList = basePropertiesOfColumns.propertyNames();
-        StringBuilder baseColumns = new StringBuilder();
-        if (!basePropertiesOfColumns.isEmpty()) {
-            while (baseColumnsList.hasMoreElements()) {
-                String key = (String) baseColumnsList.nextElement();
-                baseColumns.append(key.replaceAll("transform_","") + " " + basePropertiesOfDataTypes .getProperty(key.replaceAll("transform_","")) + ",");
-            }
-        }
-        //removing trailing comma
-        LOGGER.info("Length of baseColumns"+baseColumns.length());
-        String baseColumnsWithDataTypes = baseColumns.substring(0, baseColumns.length() - 1);
-        LOGGER.info("baseColumnsWithDataTypes is "+baseColumnsWithDataTypes);*/
         java.util.Properties partitionproperties = getPropertiesOfRawTable.getProperties(stgLoad, "partition");
         String partitionColumns = partitionproperties.getProperty("partition_columns");
         if (partitionColumns == null)
             partitionColumns = "";
-        GetProperties getFileType = new GetProperties();
-        java.util.Properties baseProperties = getFileType.getProperties(stgLoad, "base-table");
-        String fileType = baseProperties.getProperty("file_type");
+
         if("json".equalsIgnoreCase(fileType)){
             String baseTableSchema = new JsonSchemaReader().generateJsonSchema(baseColumnsWithDataTypes);
             baseTableDdl += "CREATE TABLE IF NOT EXISTS " + baseTableDbName + "." + baseTableName + " (" + baseTableSchema + ") partitioned by (" + partitionColumns + " instanceexecid bigint) stored as orc";

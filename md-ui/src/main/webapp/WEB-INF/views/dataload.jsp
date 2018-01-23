@@ -378,12 +378,15 @@ wizard = $(document).ready(function() {
                     }).html('<p><span class="jtable-confirm-message">Please select a file</span></p>');
                     return false;
                     }
-                    else
+                    else if(checked1=="yes" && !$("#fileName").val()== "")
                      {
 
                      var schemaMessageFormat=document.getElementById('schemafileformat').value;
                      console.log("schemaMessageFormat is "+schemaMessageFormat);
                      uploadFile(schemaMessageFormat);
+                     }
+                     else
+                     {
                      }
 
                 }
@@ -1210,12 +1213,12 @@ wizard = $(document).ready(function() {
 				           'Integer':'Integer',
                           'SmallInt':'SmallInt',
                           'Float':'Float',
-                          'Number':'Double',
+                          'Double':'Double',
                           'Decimal':'Decimal',
                           'Timestamp':'Timestamp',
                           'Date':'Date',
                           'String':'String',
-                          'Integer':'Int'}
+                          'Int':'Int'}
 			}
 		},
 
@@ -1385,12 +1388,12 @@ wizard = $(document).ready(function() {
                                        'Integer':'Integer',
 									  'SmallInt':'SmallInt',
 									  'Float':'Float',
-									  'Number':'Double',
+									  'Double':'Double',
 									  'Decimal':'Decimal',
 									  'Timestamp':'Timestamp',
 									  'Date':'Date',
 									  'String':'String',
-									  'Integer':'Int'}
+									  'Int':'Int'}
 
                         },
                          transformations: {
