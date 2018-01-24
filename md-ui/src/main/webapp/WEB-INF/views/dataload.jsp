@@ -26,20 +26,6 @@
                 }
         		</script >
 		<script>
-		var checked1="no";
-        		function handleClick(cb) {
-                  console.log("Clicked, new value = " + cb.checked);
-                   console.log(document.getElementById('isSchema').value);
-                  if(cb.checked==true){
-                  document.getElementById('schemaDetailsDB').style.display='block';
-                  checked1="yes";
-                  }
-                  else{
-                  document.getElementById('schemaDetailsDB').style.display='none';
-                  checked1="yes";
-                }
-                }
-
 
 var jsonObj = {"Result":"OK","Records":[],"Message":null,"TotalRecordCount":0,"Record":[]};
 var map = new Object();
@@ -803,13 +789,13 @@ wizard = $(document).ready(function() {
                                         <!-- /btn-group -->
                                         <div class="form-group1" style="padding-left: 8%;" >
                                         <div class="col-sm-12">
-                                        <input type="checkbox" id="isSchema" value="yes" onclick='handleClick(this);'> Do you have schema file?</input>
+                                        <input type="checkbox" id="isSchema" value="yes" onclick='handleClick(this);'> Do you have Sample file?</input>
                                         </div>
                                         </div>
                                         <div id="schemaDetailsDB" style="display:none;">
 
                                         <div class="form-group">
-                                            <label class="control-label col-sm-2" for="fileformat">Schema File Format</label>
+                                            <label class="control-label col-sm-2" for="fileformat">Sample File Format</label>
                                             <div class="col-sm-10">
                                             <select class="form-control" id="schemafileformat" name="schemafileformat" >
                                                 <option value="XML" name="schemafileformat">XML</option>
@@ -1038,7 +1024,84 @@ wizard = $(document).ready(function() {
 
 
 
+
+               <script>
+                          var restWrapper=new Object();
+                                   var uploadedFileName ="";
+                                    function uploadFile(msgformat){
+                                   var arg= ["fileName"];
+                                     var fd = new FormData();
+                                    var fileObj = $("#"+arg[0])[0].files[0];
+                                    var fileName=fileObj.name;
+                                    fd.append("file", fileObj);
+                                    fd.append("name", fileName);
+                                    console.log("message format : "+msgformat);
+                                    $.ajax({
+                                      url: '/mdrest/filehandler/uploadFile/'+msgformat,
+                                      type: "POST",
+                                      data: fd,
+                                      async: false,
+                                      enctype: 'multipart/form-data',
+                                      processData: false,  // tell jQuery not to process the data
+                                      contentType: false,  // tell jQuery not to set contentType
+                                      success:function (data) {
+                                            uploadedFileName=data.Record.fileName;
+                                            console.log( data );
+                                            restWrapper=data.Record.restWrapper;
+                                            console.log(restWrapper);
+                                            $("#div-dialog-warning").dialog({
+                                                            title: "",
+                                                            resizable: false,
+                                                            height: 'auto',
+                                                            modal: true,
+                                                            buttons: {
+                                                                "Ok" : function () {
+                                                                    $('#rawTableColumnDetails').jtable('load');
+                                                                    $('#baseTableColumnDetails').jtable('load');
+                                                                    $(this).dialog("close");
+                                                                }
+                                                            }
+                                            }).html('<p><span class="jtable-confirm-message"><spring:message code="processimportwizard.page.upload_success"/>'+' ' + uploadedFileName + '</span></p>');
+                                            return false;
+                                        },
+                                      error: function () {
+                                            $("#div-dialog-warning").dialog({
+                                                        title: "",
+                                                        resizable: false,
+                                                        height: 'auto',
+                                                        modal: true,
+                                                        buttons: {
+                                                            "Ok" : function () {
+                                                                $(this).dialog("close");
+                                                            }
+                                                        }
+                                        }).html('<p><span class="jtable-confirm-message"><spring:message code="processimportwizard.page.upload_error"/></span></p>');
+                                        return false;
+                                        }
+                                     });
+
+                                    }
+                </script>
+
+
+
+
+
+
 		<script type="text/javascript">
+         var checked1="no";
+		function handleClick(cb) {
+          console.log("Clicked, new value = " + cb.checked);
+           console.log(document.getElementById('isSchema').value);
+          if(cb.checked==true){
+          document.getElementById('schemaDetailsDB').style.display='block';
+          checked1="yes";
+          }
+          else{
+          document.getElementById('schemaDetailsDB').style.display='none';
+          checked1="yes";
+        }
+        }
 
 
 
@@ -1147,6 +1210,7 @@ wizard = $(document).ready(function() {
 				title: 'Data Type',
 				edit: true,
 				options:{ 'BigInt':'BigInt',
+				           'Integer':'Integer',
                           'SmallInt':'SmallInt',
                           'Float':'Float',
                           'Double':'Double',
@@ -1212,11 +1276,12 @@ wizard = $(document).ready(function() {
 
                                if(checked1=="yes")
                                 {
+
                                 for(var i=0;i<restWrapper.Records.length;i++){
-                                restWrapper.Records[i]["transformations"]="no transformation";
-                                restWrapper.Record[i]["transformations"]="no transformation";
+                                    restWrapper.Records[i]["transformations"]="no transformation";
+                                    restWrapper.Record[i]["transformations"]="no transformation" ;
+                                    console.log(restWrapper);
                                 }
-                                console.log(restWrapper);
                                 $dfd.resolve(restWrapper);
                                 }
 
@@ -1320,6 +1385,7 @@ wizard = $(document).ready(function() {
                             title: '<spring:message code="dataload.page.title_data_type"/>',
                             edit: true,
                             options:{ 'BigInt':'BigInt',
+                                       'Integer':'Integer',
 									  'SmallInt':'SmallInt',
 									  'Float':'Float',
 									  'Double':'Double',

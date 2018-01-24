@@ -1424,7 +1424,7 @@
                         	$('#input-box-button').toggle();
 						});
 						$('#input-box-button-filter1').click(function () {
-                                                	$('#input-box-button1').toggle();
+                          $('#input-box-button1').toggle();
                         						});
                     });
 
@@ -1701,7 +1701,6 @@
                     <script>
                         function showProcessPage(pid) {
                             console.log('entered function');
-
                             console.log("pid is "+pid);
                             if(pid==""){
                             $("#div-dialog-warning").dialog({
@@ -1750,25 +1749,17 @@
                                 });
 
                               }
-
-
-
-
-
-
                         }
 
 
-                    </script>
-                    <script>
                     function showProcessPage1(pName) {
-                        console.log('entered function');
+                                        console.log('entered function');
 
-                        location.href = '<c:url value="/pages/process.page?pName="/>' + pName;
+                                        location.href = '<c:url value="/pages/process.page?pName="/>' + pName;
 
-                    }
+                                    }
 
-                                        </script>
+                    </script>
                     <script type="text/javascript">
                          var auto = setInterval(    function ()
                          {
@@ -1780,7 +1771,6 @@
 
             <body>
 
-
                 <section style="width:100%;text-align:center;">
                     <div id="Container"></div>
                 </section>
@@ -1788,30 +1778,34 @@
                 	<span class="filter-icon"></span><span class="filter-text"><spring:message code="process.page.span_filter"/></span>
                 </div>
                 <div id="input-box-button" class="input-box-button">
-                    <form >
+                    <form onsubmit="showProcessPage(jQuery('#pid').val()); return false;">
                         <div class="input-group">
                             <input class="form-control" type="number" name="pid" id="pid" value="" placeholder=<spring:message code="process.page.pid_placeholder"/> />
                             <!-- <button  class="btn btn-default btn-lg btn-primary"><span id="sizing-addon2"><span class="glyphicon glyphicon-arrow-right" aria-hidden="true"></span> Show Lineage </button> -->
                             <span class="input-group-btn">
-		    <button class="btn btn-default" type="submit" onClick="showProcessPage(jQuery('#pid').val())" id="filterIdButton" ><span id="sizing-addon2"><span class="glyphicon glyphicon-arrow-right" aria-hidden="true"></span>&nbsp;</button>
+		    <button class="btn btn-default" type="submit" onClick="showProcessPage(jQuery('#pid').val())"><span id="sizing-addon2"><span class="glyphicon glyphicon-arrow-right" aria-hidden="true"></span>&nbsp;</button>
                             </span>
                         </div>
                     </form>
                 </div>
-        <div id="input-box-button-filter1" class="input-box-button-filter1">
-                        <span class="filter-icon"></span><span class="filter-text">Filter By Name</span>
-                        </div>
-                        <div id="input-box-button1" class="input-box-button1">
-                            <form >
-                                <div class="input-group">
-                                    <input class="form-control" type="text" name="pName" id="pName" value="" placeholder="Filter By Name"/> />
-                                    <!-- <button  class="btn btn-default btn-lg btn-primary"><span id="sizing-addon2"><span class="glyphicon glyphicon-arrow-right" aria-hidden="true"></span> Show Lineage </button> -->
-                                    <span class="input-group-btn">
-            <button class="btn btn-default" type="submit" onClick="showProcessPage1(jQuery('#pName').val())"><span id="sizing-addon2"><span class="glyphicon glyphicon-arrow-right" aria-hidden="true"></span>&nbsp;</button>
-                                    </span>
-                                </div>
-                            </form>
-                        </div>
+
+               <div id="input-box-button-filter1" class="input-box-button-filter1">
+                                       <span class="filter-icon"></span><span class="filter-text">Filter By Name</span>
+                                       </div>
+                                       <div id="input-box-button1" class="input-box-button1">
+                                           <form onsubmit="showProcessPage1(jQuery('#pName').val()); return false;">
+                                               <div class="input-group">
+                                                   <input class="form-control" type="text" name="pName" id="pName" value="" placeholder="Filter By Name"/> />
+                                                   <!-- <button  class="btn btn-default btn-lg btn-primary"><span id="sizing-addon2"><span class="glyphicon glyphicon-arrow-right" aria-hidden="true"></span> Show Lineage </button> -->
+                                                   <span class="input-group-btn">
+                           <button class="btn btn-default" type="submit" onClick="showProcessPage1(jQuery('#pName').val())"><span id="sizing-addon2"><span class="glyphicon glyphicon-arrow-right" aria-hidden="true"></span>&nbsp;</button>
+                                                   </span>
+                                               </div>
+                                           </form>
+                                       </div>
+
+
+
 
 
 
@@ -1866,6 +1860,11 @@
 					</p>
 				</div>
 
+				 <div style="display:none" id="div-dialog-warning">
+                            			<p><span class="ui-icon ui-icon-alert" style="float:left;"></span></p>
+                            		</div>
+
+
 				<div id="myModal" class="modelwindow">
 
 				<div class="modal-content" style="background-color:#F8F9FB;">
@@ -1916,6 +1915,7 @@
 			          <div style="display:none" id="div-dialog-warning">
             			<p><span class="ui-icon ui-icon-alert" style="float:left;"></span></p>
             		</div>
+
 
 
 

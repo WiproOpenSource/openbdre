@@ -425,7 +425,7 @@ public class ProcessTemplateAPI extends MetadataAPIBase {
                 if(processTemplate1.getEnqProcessId()!=null)
                 insertDaoProcess.setEnqueuingProcessId(processTemplate1.getEnqProcessId());
                 else
-                    insertDaoProcess.setEnqueuingProcessId(0);
+                    insertDaoProcess.setEnqueuingProcessId("0");
                 if (processTemplate1.getBatchPattern() != null) {
                     insertDaoProcess.setBatchCutPattern(processTemplate1.getBatchPattern());
                 }
@@ -452,7 +452,7 @@ public class ProcessTemplateAPI extends MetadataAPIBase {
                 process.setBusDomainId(processTemplate1.getBusDomainId());
                 process.setCanRecover(processTemplate1.getCanRecover());
                 process.setDeleteFlag(processTemplate1.getDeleteFlag());
-                process.setEnqProcessId(0);
+                process.setEnqProcessId("0");
                 process.setProcessName(processTemplate1.getProcessName());
                 process.setDescription(processTemplate1.getDescription());
                 process.setProcessTemplateId(processTemplate1.getProcessTemplateId());
@@ -467,7 +467,7 @@ public class ProcessTemplateAPI extends MetadataAPIBase {
             }
              LOGGER.info("size of processes "+processes.size());
             for (ProcessTemplate processTempInfo : processTemplateInfos) {
-                processTempInfo.setEnqProcessId(0);
+                processTempInfo.setEnqProcessId("0");
                 processTempInfo.setNextProcessIds("");
                 // Inserting properties for newly created process from template
                 List<PropertiesTemplate> propertiesTemplateList = propertiesTemplateDAO.listPropertiesTemplateBean(processTempInfo.getProcessTemplateId());
@@ -559,7 +559,7 @@ public class ProcessTemplateAPI extends MetadataAPIBase {
                 List<ProcessTemplate> processTemplates = processTemplateDAO.selectMissingSubTList(processTemplate.getProcessId(), processTemplate.getProcessTemplateId());
                 for (ProcessTemplate processTemplate1 : processTemplates) {
                     processTemplate1.setParentProcessId(process.getProcessId());
-                    processTemplate1.setEnqProcessId(0);
+                    processTemplate1.setEnqProcessId("0");
                     processTemplate1.setNextProcessIds("");
 
                     com.wipro.ats.bdre.md.dao.jpa.Process insertDaoProcess = new com.wipro.ats.bdre.md.dao.jpa.Process();

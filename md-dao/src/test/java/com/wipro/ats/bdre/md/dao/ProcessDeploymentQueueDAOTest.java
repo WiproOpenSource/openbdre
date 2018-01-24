@@ -91,7 +91,7 @@ public class ProcessDeploymentQueueDAOTest {
         process.setProcessType(processType);
         process.setAddTs(new Date());
         process.setCanRecover(true);
-        process.setEnqueuingProcessId(0);
+        process.setEnqueuingProcessId("0");
         process.setNextProcessId("10802");
         process.setDeleteFlag(false);
         process.setEditTs(new Date());

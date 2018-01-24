@@ -67,9 +67,9 @@ public class JobDAO {
             Criteria maxBatchNullCheckCriteria = session.createCriteria(Process.class);
             Process parentProcess = new Process();
             parentProcess.setProcessId(processId);
-            maxBatchNullCheckCriteria.add(Restrictions.eq(PROCESS, parentProcess)).add(Restrictions.ne(ENQUEUINGPROCESSID, 0)).add(Restrictions.eq(DELETEFLAG, false));
+            maxBatchNullCheckCriteria.add(Restrictions.eq(PROCESS, parentProcess)).add(Restrictions.ne(ENQUEUINGPROCESSID, "0")).add(Restrictions.eq(DELETEFLAG, false));
             Integer countOfProcWithBCP = maxBatchNullCheckCriteria.list().size();
-            Criteria batchCutPatternCriteria= session.createCriteria(Process.class).add(Restrictions.eq(PROCESS, parentProcess)).add(Restrictions.ne(ENQUEUINGPROCESSID, 0)).add(Restrictions.eq(DELETEFLAG, false))
+            Criteria batchCutPatternCriteria= session.createCriteria(Process.class).add(Restrictions.eq(PROCESS, parentProcess)).add(Restrictions.ne(ENQUEUINGPROCESSID, "0")).add(Restrictions.eq(DELETEFLAG, false))
                     .add(Restrictions.isNotNull(BATCHCUTPATTERN));
             Integer countOfProcWithOutBCP = batchCutPatternCriteria.list().size();
             if (countOfProcWithOutBCP < countOfProcWithBCP && maxBatch == null) {
@@ -189,17 +189,31 @@ public class JobDAO {
             int bcqEntries = 0;
             int processEntries = 0;
             Criteria bcqCriteria= session.createCriteria(BatchConsumpQueue.class).add(Restrictions.in(PROCESS, listOfSubProcesses));
-            LOGGER.debug("bcqcriteria size= "+bcqCriteria.list().size());
-            Criteria processCriteria = session.createCriteria(Process.class).add(Restrictions.eq(PROCESS, parentProcess)).add(Restrictions.ne(ENQUEUINGPROCESSID, 0)).add(Restrictions.eq(DELETEFLAG, false)).add(Restrictions.isNull(BATCHCUTPATTERN));
-            processEntries=processCriteria.list().size();
-            Set uniqueBatchEntries = new HashSet();
+            LOGGER.info("bcqcriteria size= "+bcqCriteria.list().size());
+            Criteria processCriteria = session.createCriteria(Process.class).add(Restrictions.eq(PROCESS, parentProcess)).add(Restrictions.ne(ENQUEUINGPROCESSID, "0")).add(Restrictions.eq(DELETEFLAG, false)).add(Restrictions.isNull(BATCHCUTPATTERN));
+            //processEntries=processCriteria.list().size();
+            //adding code to support multiple enqProcessIds
+
+            List<Process> processHavingEnqIDs=processCriteria.list();
+            for(Process process:processHavingEnqIDs)
+            {
+                String enqString=process.getEnqueuingProcessId();
+                int enqIdsNum=enqString.split(",").length;
+                processEntries=processEntries+enqIdsNum;
+            }
+
+
+
+            /*Set uniqueBatchEntries = new HashSet();
             for (Object batchCheckObjectBCQ : bcqCriteria.list()) {
                 BatchConsumpQueue bcq = (BatchConsumpQueue) batchCheckObjectBCQ;
                 uniqueBatchEntries.add(bcq.getProcess().getProcessId());
             }
-            bcqEntries=uniqueBatchEntries.size();
-            LOGGER.debug("no.of processes with non zero enq id and null bcp= "+processEntries);
-            LOGGER.debug("size of unique processes set = "+bcqEntries);
+            bcqEntries=uniqueBatchEntries.size();*/
+            bcqEntries=bcqCriteria.list().size();
+
+            LOGGER.info("no.of processes with non zero enq id and null bcp= "+processEntries);
+            LOGGER.info("size of unique processes set = "+bcqEntries);
             if (bcqEntries < processEntries) {
                 LOGGER.error("No batches present for one of the sub processes");
                 throw new MetadataException("No batches present for one of the sub processes");
@@ -209,7 +223,9 @@ public class JobDAO {
             // And There is no entry for the subprocess of this process
             Integer sumOfEnqProcessId = 0;
             for (Process enqProcess : listOfSubProcesses) {
-                sumOfEnqProcessId += enqProcess.getEnqueuingProcessId();
+                 String[] temp=enqProcess.getEnqueuingProcessId().split(",");
+                for (int i=0;i<temp.length;i++)
+                sumOfEnqProcessId += Integer.parseInt(temp[i]);
             }
             Boolean sumOfEnqQueueId = true;
             for (Process bcqEntryProcess : listOfSubProcesses) {
@@ -223,8 +239,9 @@ public class JobDAO {
             initialBatch.setBatchId(0L);
             BatchStatus newBatchStatus = new BatchStatus();
             newBatchStatus.setBatchStateId(0);
+            LOGGER.info("sumOfEnqProcessId is "+sumOfEnqProcessId +"sumOfEnqQueueId is "+sumOfEnqQueueId);
             if (sumOfEnqProcessId == 0 && sumOfEnqQueueId) {
-                Criteria listOfSubProcessWithoutEnqCriteria = session.createCriteria(Process.class).add(Restrictions.eq(PROCESS, parentProcess)).add(Restrictions.eq(ENQUEUINGPROCESSID, 0)).add(Restrictions.eq(DELETEFLAG, false));
+                Criteria listOfSubProcessWithoutEnqCriteria = session.createCriteria(Process.class).add(Restrictions.eq(PROCESS, parentProcess)).add(Restrictions.eq(ENQUEUINGPROCESSID, "0")).add(Restrictions.eq(DELETEFLAG, false));
                 for (Object withoutEnqObject : listOfSubProcessWithoutEnqCriteria.list()) {
                     Process withoutEnqProcess = (Process) withoutEnqObject;
                     BatchConsumpQueue batchConsumpqueue = new BatchConsumpQueue();
@@ -249,7 +266,7 @@ public class JobDAO {
                     notNullTargetBatches += notNullTargetBatchCriteria.list().size();
                 }
             }
-
+             LOGGER.info("notNullTargetBatches is "+notNullTargetBatches);
             if (notNullTargetBatches == 0) {
                 InstanceExec instanceExec = new InstanceExec();
                 instanceExec.setProcess(parentProcess);
@@ -277,8 +294,15 @@ public class JobDAO {
                 for (Object blankBDPObject : blankBCPCriteria.list()) {
                     Process blankBCPProcess = (Process) blankBDPObject;
                     Criteria entriesForBlankBCPCriteria = session.createCriteria(BatchConsumpQueue.class).add(Restrictions.eq(PROCESS, blankBCPProcess));
+
                     if (!entriesForBlankBCPCriteria.list().isEmpty()) {
-                        for (int i = 0; i < maxBatch; i++) {
+
+                        LOGGER.info(" entriesForBlankBCPCriteria no of queued batches for process id "+blankBCPProcess.getProcessId()+ " is "+entriesForBlankBCPCriteria.list().size());
+                        int currentMaxBatch=blankBCPProcess.getEnqueuingProcessId().split(",").length;
+                        LOGGER.info("currentMaxBatch is "+currentMaxBatch+"blankBCPProcess.getEnqueuingProcessId() "+blankBCPProcess.getEnqueuingProcessId());
+                        if (currentMaxBatch<=1)
+                            currentMaxBatch=maxBatch;
+                        for (int i = 0; i < currentMaxBatch; i++) {
                             BatchConsumpQueue batchConsumpQueueWithNullTBId = new BatchConsumpQueue();
                             batchConsumpQueueWithNullTBId = (BatchConsumpQueue) entriesForBlankBCPCriteria.list().get(i);
                             Criteria updateTargetBatchCriteria = session.createCriteria(BatchConsumpQueue.class).add(Restrictions.eq("queueId", batchConsumpQueueWithNullTBId.getQueueId()));
@@ -290,13 +314,20 @@ public class JobDAO {
                 }
 
                 Criteria nullBCPCriteria = session.createCriteria(Process.class).add(Restrictions.eq(PROCESS, parentProcess))
-                        .add(Restrictions.eq(DELETEFLAG, false)).add(Restrictions.ne(ENQUEUINGPROCESSID, 0))
+                        .add(Restrictions.eq(DELETEFLAG, false)).add(Restrictions.ne(ENQUEUINGPROCESSID, "0"))
                         .add(Restrictions.isNull(BATCHCUTPATTERN));
+                if (nullBCPCriteria.list()!=null)
+                LOGGER.info("nullBCPCriteria size is" + nullBCPCriteria.list().size());
                 for (Object nullBDPObject : nullBCPCriteria.list()) {
                     Process blankBCPProcess = (Process) nullBDPObject;
                     Criteria entriesForNullBCPCriteria = session.createCriteria(BatchConsumpQueue.class).add(Restrictions.eq(PROCESS, blankBCPProcess));
                     if (!entriesForNullBCPCriteria.list().isEmpty()) {
-                        for (int i = 0; i < maxBatch; i++) {
+                        int currentMaxBatch=blankBCPProcess.getEnqueuingProcessId().split(",").length;
+                        LOGGER.info(" entriesForNullBCPCriteria no of queued batches for process id "+blankBCPProcess.getProcessId()+ " is "+entriesForNullBCPCriteria.list().size());
+                        LOGGER.info("currentMaxBatch is "+currentMaxBatch+"blankBCPProcess.getEnqueuingProcessId() "+blankBCPProcess.getEnqueuingProcessId());
+                        if (currentMaxBatch<=1)
+                            currentMaxBatch=maxBatch;
+                        for (int i = 0; i < currentMaxBatch; i++) {
                             BatchConsumpQueue batchConsumpQueueWithNewBS = new BatchConsumpQueue();
                             batchConsumpQueueWithNewBS = (BatchConsumpQueue) entriesForNullBCPCriteria.list().get(i);
                             Criteria updateBatchStatusCriteria = session.createCriteria(BatchConsumpQueue.class).add(Restrictions.eq("queueId", batchConsumpQueueWithNewBS.getQueueId()));
@@ -308,8 +339,10 @@ public class JobDAO {
                 }
 
                 Criteria notNullBCPCriteria = session.createCriteria(Process.class).add(Restrictions.eq(PROCESS, parentProcess))
-                        .add(Restrictions.eq(DELETEFLAG, false)).add(Restrictions.ne(ENQUEUINGPROCESSID, 0))
+                        .add(Restrictions.eq(DELETEFLAG, false)).add(Restrictions.ne(ENQUEUINGPROCESSID, "0"))
                         .add(Restrictions.isNotNull(BATCHCUTPATTERN));
+                if (notNullBCPCriteria.list()!=null)
+                    LOGGER.info("notNullBCPCriteria size is" + notNullBCPCriteria.list().size());
                 for (Object notNullBCPObject : notNullBCPCriteria.list()) {
                     Long sourceBatchId = null;
                     Process notNullBCPProcess = (Process) notNullBCPObject;
@@ -317,13 +350,15 @@ public class JobDAO {
                     Criteria likeBCPCriteria = session.createCriteria(BatchConsumpQueue.class).add(Restrictions.like("batchMarking", "%" + batchCutPattern + "%"))
                             .add(Restrictions.eq(PROCESS, notNullBCPProcess)).addOrder(Order.asc(BATCHBYSOURCEBATCHID)).setMaxResults(1);
                     if (!likeBCPCriteria.list().isEmpty()) {
+                        LOGGER.info("likeBCPCriteria is "+likeBCPCriteria.list().size());
                         BatchConsumpQueue batchConsumpQueue = (BatchConsumpQueue) likeBCPCriteria.list().get(0);
                         sourceBatchId = batchConsumpQueue.getBatchBySourceBatchId().getBatchId();
                     }
 
                     Criteria updateTargetBatchCriteriaWithBM = session.createCriteria(BatchConsumpQueue.class)
                             .add(Restrictions.le(BATCHBYSOURCEBATCHID, sourceBatchId)).add(Restrictions.eq(PROCESS, notNullBCPProcess));
-
+                    if (updateTargetBatchCriteriaWithBM!=null)
+                    LOGGER.info("updateTargetBatchCriteriaWithBM is "+updateTargetBatchCriteriaWithBM.list().size());
                     for (Object updateBCQObject : updateTargetBatchCriteriaWithBM.list()) {
                         BatchConsumpQueue updateBCQ = (BatchConsumpQueue) updateBCQObject;
                         updateBCQ.setBatchByTargetBatchId(batch);
@@ -336,6 +371,8 @@ public class JobDAO {
 
 
             } else {
+
+                LOGGER.info("in else block");
                 //creating a new instance exec which corresponds to the re-run of previously failed run
                 InstanceExec instanceExec = new InstanceExec();
                 instanceExec.setProcess(parentProcess);
@@ -373,6 +410,7 @@ public class JobDAO {
                     Criteria listOfTargetBatchIdCriteria = session.createCriteria(BatchConsumpQueue.class)
                             .add(Restrictions.eq(PROCESS, subProcess));
                     if (!listOfTargetBatchIdCriteria.list().isEmpty()) {
+                        LOGGER.info("listOfTargetBatchIdCriteria.list() is "+listOfTargetBatchIdCriteria.list().size());
                         BatchConsumpQueue targetBatchOfBCQ = (BatchConsumpQueue) listOfTargetBatchIdCriteria.list().get(0);
                         listOfTargetBatchId.add(targetBatchOfBCQ.getBatchByTargetBatchId().getBatchId());
                     }
@@ -397,7 +435,7 @@ public class JobDAO {
             if (!listOfSubProcesses.isEmpty()) {
                 Criteria resultBCQCriteria = session.createCriteria(BatchConsumpQueue.class).add(Restrictions.in(PROCESS, listOfSubProcesses))
                         .add(Restrictions.isNotNull(BATCHBYTARGETBATCHID)).addOrder(Order.asc(PROCESS)).addOrder(Order.asc(BATCHBYSOURCEBATCHID));
-
+                LOGGER.info("resultBCQCriteria is "+resultBCQCriteria.list().size());
                 for (Object resultBCQObject : resultBCQCriteria.list()) {
                     BatchConsumpQueue resultBCQ = (BatchConsumpQueue) resultBCQObject;
                     InitJobRowInfo initJobRowInfo = new InitJobRowInfo();
@@ -426,6 +464,8 @@ public class JobDAO {
                             fileList.append(file.getId().getPath()+",");
                             batchList.append(file.getId().getBatchId()+",");
                         }
+                        LOGGER.info("fileList is "+fileList);
+                        LOGGER.info("batchList is "+batchList);
                         initJobRowInfo.setFileList(fileList.substring(0,fileList.length()-1).toString());
                         initJobRowInfo.setBatchList(batchList.substring(0,batchList.length()-1).toString());
                     }
@@ -435,6 +475,18 @@ public class JobDAO {
 
             session.getTransaction().commit();
         } catch (MetadataException e) {
+            Session session1=sessionFactory.openSession();
+            session1.beginTransaction();
+            Criteria criteria=session1.createCriteria(ProcessExecutionQueue.class).add(Restrictions.eq("process.processId",processId));
+            if(!criteria.list().isEmpty()){
+                ExecStatus execStatus=new ExecStatus();
+                execStatus.setExecStateId(6);
+                ProcessExecutionQueue processExecutionQueue=(ProcessExecutionQueue)criteria.list().get(0);
+                processExecutionQueue.setExecStatus(execStatus);
+                session1.update(processExecutionQueue);
+            }
+            session1.getTransaction().commit();
+            session1.close();
             session.getTransaction().rollback();
             LOGGER.error(e);
             throw e;
@@ -459,7 +511,9 @@ public class JobDAO {
                 listOfSubProcesses.add(subProcess);
             }
             List<Process> listOfDownStreamSubProcessesWithEnqID = new ArrayList<Process>();
-            Criteria listOfDownStreamSubProcessesWithEnqIDCriteria = session.createCriteria(Process.class).add(Restrictions.eq(ENQUEUINGPROCESSID, parentProcessId.getProcessId())).add(Restrictions.eq(DELETEFLAG, false));
+            Criteria listOfDownStreamSubProcessesWithEnqIDCriteria = session.createCriteria(Process.class).add(Restrictions.eq(DELETEFLAG, false))
+                    .add(Restrictions.or(Restrictions.eq(ENQUEUINGPROCESSID, parentProcessId.getProcessId().toString()),Restrictions.like(ENQUEUINGPROCESSID,"%,"+parentProcessId.getProcessId().toString()),Restrictions.like(ENQUEUINGPROCESSID,parentProcessId.getProcessId().toString()+",%"),Restrictions.like(ENQUEUINGPROCESSID,"%,"+parentProcessId.getProcessId().toString()+",%")));
+            LOGGER.info("total subproesses "+listOfDownStreamSubProcessesWithEnqIDCriteria.list());
             for (Object subProcessObject : listOfDownStreamSubProcessesWithEnqIDCriteria.list()) {
                 Process subProcess = (Process) subProcessObject;
                 listOfDownStreamSubProcessesWithEnqID.add(subProcess);
@@ -553,6 +607,17 @@ public class JobDAO {
                     targetBatchId = batchConsumpQueue.getBatchByTargetBatchId();
                 }
             }
+
+
+            Criteria deleteBCQCriteria = session.createCriteria(BatchConsumpQueue.class).add(Restrictions.eq("sourceProcessId", processId));
+            List<BatchConsumpQueue> deleteBCQList=deleteBCQCriteria.list();
+            for(int i=0;i<deleteBCQList.size();i++)
+            {
+                BatchConsumpQueue batchConsumpQueue=deleteBCQList.get(i);
+                session.delete(batchConsumpQueue);
+            }
+
+
 
             for (Process subProcess : listOfDownStreamSubProcessesWithEnqID) {
                 if (batchMarkingPassed == null) {

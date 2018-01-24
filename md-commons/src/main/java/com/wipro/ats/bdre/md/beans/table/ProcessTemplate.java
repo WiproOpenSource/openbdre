@@ -58,7 +58,7 @@ public class ProcessTemplate {
     private Integer page;
     private Integer pageSize;
     private String nextProcessIds;
-    private Integer enqProcessId;
+    private String enqProcessId;
     private Integer counter;
     private Boolean deleteFlag;
 
@@ -234,11 +234,11 @@ public class ProcessTemplate {
         this.nextProcessIds = nextProcessIds;
     }
 
-    public Integer getEnqProcessId() {
+    public String getEnqProcessId() {
         return enqProcessId;
     }
 
-    public void setEnqProcessId(Integer enqProcessId) {
+    public void setEnqProcessId(String enqProcessId) {
         this.enqProcessId = enqProcessId;
     }
 

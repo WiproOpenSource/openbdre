@@ -97,7 +97,7 @@ public class Dao2TableUtil {
         daoProcess.setProcessName(name);
         daoProcess.setCanRecover(true);
         daoProcess.setDeleteFlag(false);
-        daoProcess.setEnqueuingProcessId(0);
+        daoProcess.setEnqueuingProcessId("0");
         daoProcess.setAddTs(new Date());
         daoProcess.setEditTs(new Date());
         PermissionType permissionType=new PermissionType();

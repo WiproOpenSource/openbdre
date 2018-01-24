@@ -35,7 +35,7 @@ public class ProcessInfo {
     //To avoid NPE during parent row processing
     private Integer parentProcessId = new Integer(0);
     private Boolean canRecover;
-    private Integer enqProcessId;
+    private String enqProcessId;
     private String nextProcessIds;
     private String batchCutPattern;
     private Boolean deleteFlag;
@@ -114,7 +114,7 @@ public class ProcessInfo {
      * @param enqProcessId    Id of parent process whose batch this process is enquing
      * @param nextProcessIds  ids of next processes
      */
-    public ProcessInfo(Integer processId, String description, String processName, Integer busDomainId, Integer processTypeId, Integer parentProcessId, Boolean canRecover, Integer enqProcessId, String nextProcessIds) {
+    public ProcessInfo(Integer processId, String description, String processName, Integer busDomainId, Integer processTypeId, Integer parentProcessId, Boolean canRecover, String enqProcessId, String nextProcessIds) {
         this.processId = processId;
         this.description = description;
         this.processName = processName;
@@ -182,11 +182,11 @@ public class ProcessInfo {
         this.canRecover = canRecover;
     }
 
-    public Integer getEnqProcessId() {
+    public String getEnqProcessId() {
         return enqProcessId;
     }
 
-    public void setEnqProcessId(Integer enqProcessId) {
+    public void setEnqProcessId(String enqProcessId) {
         this.enqProcessId = enqProcessId;
     }
 

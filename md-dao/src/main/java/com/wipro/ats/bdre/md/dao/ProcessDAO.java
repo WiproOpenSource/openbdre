@@ -259,7 +259,6 @@ public class ProcessDAO {
         return process;
     }
 
-
     public Integer insert(Process process) {
         Session session = sessionFactory.openSession();
         Integer id = null;
@@ -492,7 +491,7 @@ public class ProcessDAO {
             Integer newProcessId = null;
             if (!fetchReferenceProcess.list().isEmpty()) {
                 newProcess.setProcessName(referencedProcess.getProcessName() + "-copy");
-                newProcess.setEnqueuingProcessId(0);
+                newProcess.setEnqueuingProcessId("0");
                 newProcess.setNextProcessId("0");
                 newProcess.setProcessType(referencedProcess.getProcessType());
                 newProcess.setWorkflowType(referencedProcess.getWorkflowType());

@@ -84,7 +84,8 @@ public class ProcessDependencyDAO {
 
 
                 //Listing downstream processes
-                Criteria checkDownstreamParentProcesses = session.createCriteria(Process.class).add(Restrictions.eq("enqueuingProcessId", parentProcessId)).add(Restrictions.eq(DELETEFLAG, false)).setProjection(Projections.property("process"));
+                Criteria checkDownstreamParentProcesses = session.createCriteria(Process.class).add(Restrictions.or(Restrictions.eq("enqueuingProcessId", parentProcessId.toString()),Restrictions.like("enqueuingProcessId","%,"+parentProcessId.toString()),Restrictions.like("enqueuingProcessId",parentProcessId.toString()+",%"),Restrictions.like("enqueuingProcessId","%,"+parentProcessId.toString()+",%")))
+                        .add(Restrictions.eq(DELETEFLAG, false)).setProjection(Projections.property("process"));
                 List<Integer> downstreamParentProcessIdList = new ArrayList<Integer>();
                 if (!checkDownstreamParentProcesses.list().isEmpty()) {
                     List<Process> downstreamParentProcessList = checkDownstreamParentProcesses.list();
@@ -121,9 +122,19 @@ public class ProcessDependencyDAO {
                 }
                 //Listing upstream processes
                 Criteria checkUpstreamParentProcesses = session.createCriteria(Process.class).add(Restrictions.eq("process", passedProcess)).add(Restrictions.eq(DELETEFLAG, false)).setProjection(Projections.property("enqueuingProcessId"));
+
+                List<String> upstreamParentProcessListString=checkUpstreamParentProcesses.list();
+
                 List<Integer> upstreamParentProcessList = new ArrayList<Integer>();
-                if (!checkUpstreamParentProcesses.list().isEmpty()) {
-                    upstreamParentProcessList = checkUpstreamParentProcesses.list();
+                for (String temp:upstreamParentProcessListString)
+                {
+                    LOGGER.info(temp);
+                    String[] arrayUp=temp.split(",");
+                    for (int i=0;i<arrayUp.length;i++)
+                     upstreamParentProcessList.add(Integer.parseInt(arrayUp[i]));
+                }
+                if (!upstreamParentProcessList.isEmpty()) {
+                   // upstreamParentProcessList = checkUpstreamParentProcesses.list();
 
                     Criteria checkUpstreamProcesses = session.createCriteria(Process.class).add(Restrictions.in("processId", upstreamParentProcessList)).add(Restrictions.eq(DELETEFLAG, false));
                     List<Process> upstreamProcessList = new ArrayList<Process>();

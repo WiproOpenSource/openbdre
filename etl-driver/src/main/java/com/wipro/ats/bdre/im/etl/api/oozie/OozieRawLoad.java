@@ -16,6 +16,8 @@ package com.wipro.ats.bdre.im.etl.api.oozie;
 
 import com.wipro.ats.bdre.im.etl.api.RawLoad;
 
+import java.io.IOException;
+
 /**
  * Created by vishnu on 12/24/14.
  */
@@ -25,6 +27,10 @@ public class OozieRawLoad {
 
     public static void main(String[] args) {
         RawLoad rawLoad = new RawLoad();
-        rawLoad.execute(args);
+        try {
+            rawLoad.execute(args);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 }
