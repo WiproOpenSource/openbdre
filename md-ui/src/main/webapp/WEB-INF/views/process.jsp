@@ -1564,6 +1564,7 @@
                                   var startTime = getPropValue("schedule-start-time",pid);
                                   var endTime = getPropValue("schedule-end-time",pid);
                                   var timeZone = getPropValue("schedule-time-zone",pid);
+                                  if(frequency["Record"]==null)
 
                                   document.getElementById("frequency").defaultValue = frequency["Record"];
                                   document.getElementById("startTime").defaultValue = startTime["Record"];
@@ -1874,28 +1875,28 @@
 
                                  <div class="col-md-2"></div>
 
-                                 <div class="col-md-8" id="divEncloseHeading" >
-                                     <div class="panel panel-primary">
+
+                                     <div class="panel panel-primary" style="border: none; padding-top:1% !important;">
 
                                          <div class="panel-body">
                                              <form role="form" id="propertiesFieldsForm">
 
-                                                 <div class="form-group">
+                                                 <div class="form-group" >
                                                      <label >Frequency (in minutes)</label>
                                                      <input type="text" class="form-control" id="frequency" name="frequency" required>
                                                  </div>
 
-                                                 <div class="form-group">
+                                                 <div class="form-group" >
                                                      <label >Start Time (yyyy-mm-ddThh:mmZ)</label>
                                                      <input type="text" class="form-control" id="startTime" name="startTime" required>
                                                  </div>
 
-                                                 <div class="form-group">
+                                                 <div class="form-group" >
                                                          <label >End Time (yyyy-mm-ddThh:mmZ)</label>
                                                          <input type="text" class="form-control" id="endTime" name="endTime" required>
                                                      </div>
 
-                                                  <div class="form-group">
+                                                  <div class="form-group" >
                                                       <label >Time Zone</label>
                                                       <input type="text" class="form-control" id="timeZone" name="timeZone" required>
                                                   </div>
@@ -1906,7 +1907,7 @@
                                              </form>
                                         </div>
                                      </div>
-                                 </div>
+
                                  <div class="col-md-2"> </div>
                      <div class="row" >&nbsp;</div>
                      </div>
