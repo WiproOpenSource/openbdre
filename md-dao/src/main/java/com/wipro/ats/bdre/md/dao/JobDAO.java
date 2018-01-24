@@ -456,6 +456,7 @@ public class JobDAO {
                         initJobRowInfo.setSourceInstanceExecId(null);
                     }
                     Criteria fileBatchCriteria = session.createCriteria(File.class).add(Restrictions.eq("id.batchId", resultBCQ.getBatchBySourceBatchId().getBatchId()));
+                    LOGGER.info("The value of source batch id is " + resultBCQ.getBatchBySourceBatchId().getBatchId());
                     if (!fileBatchCriteria.list().isEmpty()) {
                         StringBuilder fileList=new StringBuilder();
                         StringBuilder batchList=new StringBuilder();

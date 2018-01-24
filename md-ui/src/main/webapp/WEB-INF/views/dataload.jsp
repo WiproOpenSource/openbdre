@@ -1210,15 +1210,14 @@ wizard = $(document).ready(function() {
 				title: 'Data Type',
 				edit: true,
 				options:{ 'BigInt':'BigInt',
-				           'Integer':'Integer',
+				           'Int':'Int',
                           'SmallInt':'SmallInt',
                           'Float':'Float',
                           'Double':'Double',
                           'Decimal':'Decimal',
                           'Timestamp':'Timestamp',
                           'Date':'Date',
-                          'String':'String',
-                          'Int':'Int'}
+                          'String':'String'}
 			}
 		},
 
@@ -1385,15 +1384,15 @@ wizard = $(document).ready(function() {
                             title: '<spring:message code="dataload.page.title_data_type"/>',
                             edit: true,
                             options:{ 'BigInt':'BigInt',
-                                       'Integer':'Integer',
+                                       'Int':'Int',
 									  'SmallInt':'SmallInt',
 									  'Float':'Float',
 									  'Double':'Double',
 									  'Decimal':'Decimal',
 									  'Timestamp':'Timestamp',
 									  'Date':'Date',
-									  'String':'String',
-									  'Int':'Int'}
+									  'String':'String'
+									  }
 
                         },
                          transformations: {
