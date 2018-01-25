@@ -209,12 +209,17 @@
                 <link href="../css/jtables-bdre.css" rel="stylesheet" type="text/css" />
                 <link href="../css/jquery-ui-1.10.3.custom.css" rel="stylesheet" type="text/css" />
                 <link href="../css/bootstrap.custom.css" rel="stylesheet" />
+                <link rel="stylesheet" type="text/css" href="../css/jquery.datetimepicker.css"/>
+
+
 
 
                 <!-- Include jTable script file. -->
                 <script src="../js/jquery.min.js" type="text/javascript"></script>
                 <script src="../js/jquery-ui-1.10.3.custom.js" type="text/javascript"></script>
                 <script src="../js/jquery.jtable.js" type="text/javascript"></script>
+                <script src="../js/jquery.datetimepicker.full.js"></script>
+                <script src="../js/angular.min.js" type="text/javascript"></script>
 
                 <script type="text/javascript">
                 var jtParamStart = 0;
@@ -1514,6 +1519,29 @@
                 </script>
 
                 <script>
+
+                    var app = angular.module('app', []);
+                    app.controller('myCtrl', function($scope) {
+                    $scope.timeZones={};
+                    $.ajax({
+                      url: "/mdrest/scheduler/",
+                          type: 'GET',
+                          dataType: 'json',
+                          async: false,
+                          success: function (data) {
+                              $scope.timeZones = data.Record;
+                              console.log("Printing the timezones");
+                              console.log($scope.timeZones);
+                          },
+                          error: function () {
+                              alert('danger');
+                          }
+                      });
+
+                     });
+                </script>
+
+                <script>
                     function fetchPipelineInfo(pid) {
                     $.ajax({
                             url: '/mdrest/process/permission/'+pid,
@@ -1564,11 +1592,22 @@
                                   var startTime = getPropValue("schedule-start-time",pid);
                                   var endTime = getPropValue("schedule-end-time",pid);
                                   var timeZone = getPropValue("schedule-time-zone",pid);
-                                  if(frequency["Record"]==null)
 
+                                  if(frequency["Record"]==null)
+                                  document.getElementById("frequency").defaultValue = "30";
+                                  else
                                   document.getElementById("frequency").defaultValue = frequency["Record"];
+                                  if(startTime["Record"]==null)
+                                  document.getElementById("startTime").defaultValue = "2018-01-24 15:05";
+                                  else
                                   document.getElementById("startTime").defaultValue = startTime["Record"];
+                                  if(endTime["Record"]==null)
+                                  document.getElementById("endTime").defaultValue = "2018-01-24 18:05";
+                                  else
                                   document.getElementById("endTime").defaultValue = endTime["Record"];
+                                  if(timeZone["Record"]==null)
+                                  document.getElementById("timeZone").defaultValue = "UTC";
+                                  else
                                   document.getElementById("timeZone").defaultValue = timeZone["Record"];
                                   var modal = document.getElementById('myModal');
                                   var span = document.getElementsByClassName("closemodal")[0];
@@ -1588,6 +1627,22 @@
                             }
                         });
                     }
+
+                    function dateTimePicker(){
+                    $('#startTime').datetimepicker({
+                        format:'Y-m-d H:i',
+                        step:15
+
+                    });
+
+                    $('#endTime').datetimepicker({
+                        format:'Y-m-d H:i',
+                        step:15
+
+                    });
+                    }
+
+
 
                     function getPropValue(key,pid){
                     var property;
@@ -1864,7 +1919,7 @@
                             			<p><span class="ui-icon ui-icon-alert" style="float:left;"></span></p>
                             		</div>
 
-
+                <div  ng-app="app" id="preModelDetails" ng-controller="myCtrl">
 				<div id="myModal" class="modelwindow">
 
 				<div class="modal-content" style="background-color:#F8F9FB;">
@@ -1886,19 +1941,22 @@
                                                  </div>
 
                                                  <div class="form-group" >
-                                                     <label >Start Time (yyyy-mm-ddThh:mmZ)</label>
-                                                     <input type="text" class="form-control" id="startTime" name="startTime" required>
+                                                     <label >Start Time (yyyy-mm-dd hh:mm)</label>
+                                                     <input type="text" class="form-control" id="startTime" name="startTime" required onclick="dateTimePicker()">
                                                  </div>
 
                                                  <div class="form-group" >
-                                                         <label >End Time (yyyy-mm-ddThh:mmZ)</label>
-                                                         <input type="text" class="form-control" id="endTime" name="endTime" required>
+                                                         <label >End Time (yyyy-mm-dd hh:mm)</label>
+                                                         <input type="text" class="form-control" id="endTime" name="endTime" required onclick="dateTimePicker()">
                                                      </div>
 
                                                   <div class="form-group" >
                                                       <label >Time Zone</label>
-                                                      <input type="text" class="form-control" id="timeZone" name="timeZone" required>
-                                                  </div>
+
+                                                      <select class="form-control" id="timeZone" name="timeZone" ng-model = "timeZone" ng-options = "zone for zone in timeZones track by zone">
+                                                           <option  value="">Select option</option>
+                                                       </select>
+                                                   </div>
 
                                                   <div class="actions text-center" >
                                                      <button type="button" id="schedulejobs" class="btn btn-primary btn-lg" onclick="scheduleJob()">Schedule Jobs</button>
@@ -1909,6 +1967,7 @@
 
                                  <div class="col-md-2"> </div>
                      <div class="row" >&nbsp;</div>
+                     </div>
                      </div>
                      </div>
 

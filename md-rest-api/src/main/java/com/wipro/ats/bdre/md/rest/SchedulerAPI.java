@@ -21,10 +21,7 @@ import java.io.File;
 import java.io.InputStreamReader;
 import java.lang.reflect.Field;
 import java.security.Principal;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * Created by su324335 on 8/2/16.
@@ -80,15 +77,25 @@ public class SchedulerAPI {
 
             else if (string.startsWith("scheduleProperties_startTime")) {
                 LOGGER.info(string + " : starttime");
-                jpaProperties = Dao2TableUtil.buildJPAProperties("schedule", "schedule-start-time", map.get(string), "Start Time of scheduling");
+                String utcTime=null;
+                if(map.get(string).contains(" "))
+                    utcTime = map.get(string).replace(" ","T")+"Z";
+                else
+                    utcTime=map.get(string);
+                jpaProperties = Dao2TableUtil.buildJPAProperties("schedule", "schedule-start-time", utcTime, "Start Time of scheduling");
                 propertiesList.add(jpaProperties);
-                startTime =  map.get(string);
+                startTime =  utcTime;
             }
             else if (string.startsWith("scheduleProperties_endTime")) {
                 LOGGER.info(string + " : endtime");
-                jpaProperties = Dao2TableUtil.buildJPAProperties("schedule", "schedule-end-time", map.get(string), "End Time of scheduling");
+                String utcTime=null;
+                if(map.get(string).contains(" "))
+                    utcTime = map.get(string).replace(" ","T")+"Z";
+                else
+                    utcTime=map.get(string);
+                jpaProperties = Dao2TableUtil.buildJPAProperties("schedule", "schedule-end-time", utcTime, "End Time of scheduling");
                 propertiesList.add(jpaProperties);
-                endTime =  map.get(string);
+                endTime =  utcTime;
             }
             else if (string.startsWith("scheduleProperties_timeZone")) {
                 LOGGER.info(string + " : timezone");
@@ -197,6 +204,19 @@ public class SchedulerAPI {
         return restWrapper;
 
 
+    }
+
+    @RequestMapping(value = {"/"}, method = RequestMethod.GET)
+    @ResponseBody
+    public RestWrapper getTimeZones(Principal principal) {
+        RestWrapper restWrapper = null;
+        String[] ids = TimeZone.getAvailableIDs();
+        List<String> timeZones = new LinkedList<String>();
+        for(String id:ids){
+            timeZones.add(id);
+        }
+        restWrapper = new RestWrapper(timeZones, RestWrapper.OK);
+        return restWrapper;
     }
 
 
