@@ -86,6 +86,14 @@ public class JobTriggerDAO {
             Criteria criteria=session.createCriteria(Process.class).add(Restrictions.or(Restrictions.eq(ENQUEUINGPROCESSID, parentProcessId.toString()),Restrictions.like(ENQUEUINGPROCESSID,"%,"+parentProcessId.toString()),Restrictions.like(ENQUEUINGPROCESSID,parentProcessId.toString()+",%"),Restrictions.like(ENQUEUINGPROCESSID,"%,"+parentProcessId.toString()+",%"))).add(Restrictions.eq("deleteFlag",false));
             subProcessList=(List<Process>) criteria.list();
 
+            Criteria deleteBCQCriteria = session.createCriteria(BatchConsumpQueue.class).add(Restrictions.eq("sourceProcessId", parentProcessId));
+            List<BatchConsumpQueue> deleteBCQList=deleteBCQCriteria.list();
+            for(int i=0;i<deleteBCQList.size();i++)
+            {
+                BatchConsumpQueue batchConsumpQueue=deleteBCQList.get(i);
+                session.delete(batchConsumpQueue);
+            }
+
             for(Process process: subProcessList){
                 LOGGER.info(process.getProcessId() + " is the downstream sub process for the file monitoring job");
                 LOGGER.info("adding a batch for the downstream process");
