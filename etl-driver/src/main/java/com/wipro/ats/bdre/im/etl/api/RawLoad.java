@@ -128,6 +128,7 @@ public class RawLoad extends ETLBase {
         //If user selects enqueueId
         if( "null".equals(filePathString) || filePathString == null) {
             listOfFiles = commandLine.getOptionValue("list-of-files").replace("1234567890","");
+            LOGGER.info("list of files is "+ listOfFiles);
             listOfBatches = commandLine.getOptionValue("list-of-file-batchIds").replace("1234567890","");
         }
         //If user select filepath or directoryPath

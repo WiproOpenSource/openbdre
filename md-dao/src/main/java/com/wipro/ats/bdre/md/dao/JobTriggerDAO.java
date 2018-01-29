@@ -50,14 +50,16 @@ public class JobTriggerDAO {
     ProcessDeploymentQueueDAO processDeploymentQueueDAO;
     @Autowired
     static ProcessDAO processDAO;
-
-    public int checkDownStream(Integer parentProcessId){
+    private static final String ENQUEUINGPROCESSID="enqueuingProcessId";
+    public String checkDownStream(Integer parentProcessId){
         LOGGER.info("inside checkDownStream");
         int flag=1;
         Session session=sessionFactory.openSession();
 
         List<Process> subProcessList=new ArrayList<>();
         List<Integer> downStreamProcessList=new ArrayList<>();
+        Long batchId=new Long(0);
+        String flag_batchId=null;
         try {
             session.beginTransaction();
 
@@ -77,10 +79,11 @@ public class JobTriggerDAO {
             Batch batch = new Batch();
             batch.setInstanceExec(instanceExec);
             batch.setBatchType("Type 1");
-            session.save(batch);
+             batchId=(Long)session.save(batch);
+             LOGGER.info("The batch id generated is " + batchId);
             //Fetching the list of all the sub-processes which enqueue the file monitoring process
 
-            Criteria criteria=session.createCriteria(Process.class).add(Restrictions.eq("enqueuingProcessId",parentProcessId));
+            Criteria criteria=session.createCriteria(Process.class).add(Restrictions.or(Restrictions.eq(ENQUEUINGPROCESSID, parentProcessId.toString()),Restrictions.like(ENQUEUINGPROCESSID,"%,"+parentProcessId.toString()),Restrictions.like(ENQUEUINGPROCESSID,parentProcessId.toString()+",%"),Restrictions.like(ENQUEUINGPROCESSID,"%,"+parentProcessId.toString()+",%"))).add(Restrictions.eq("deleteFlag",false));
             subProcessList=(List<Process>) criteria.list();
 
             for(Process process: subProcessList){
@@ -141,6 +144,7 @@ public class JobTriggerDAO {
                     }
                 }
             }
+            flag_batchId=flag+","+ batchId;
             session.getTransaction().commit();
         }
         catch(MetadataException m){
@@ -156,7 +160,7 @@ public class JobTriggerDAO {
         }
 
 
-        return flag;
+        return flag_batchId;
     }
     public Process getDownStreamProcess(Integer upStreamId){
         Session session=sessionFactory.openSession();
@@ -167,8 +171,7 @@ public class JobTriggerDAO {
             session.beginTransaction();
             List<Process> subProcessList = new ArrayList<>();
             List<Integer> downStreamProcessList = new ArrayList<>();
-
-            Criteria criteria = session.createCriteria(Process.class).add(Restrictions.eq("enqueuingProcessId", upStreamId));
+            Criteria criteria=session.createCriteria(Process.class).add(Restrictions.or(Restrictions.eq(ENQUEUINGPROCESSID, upStreamId.toString()),Restrictions.like(ENQUEUINGPROCESSID,"%,"+upStreamId.toString()),Restrictions.like(ENQUEUINGPROCESSID,upStreamId.toString()+",%"),Restrictions.like(ENQUEUINGPROCESSID,"%,"+upStreamId.toString()+",%")));
             subProcessList = (List<Process>) criteria.list();
             int ppid = subProcessList.get(0).getProcess().getProcessId();
             LOGGER.info("The parent process id of downstream process is : " + ppid);
@@ -193,7 +196,7 @@ public class JobTriggerDAO {
         try {
             session.beginTransaction();
             List<Process> listOfDownStreamSubProcessesWithEnqID = new ArrayList<Process>();
-            Criteria listOfDownStreamSubProcessesWithEnqIDCriteria = session.createCriteria(Process.class).add(Restrictions.eq("enqueuingProcessId", processId));
+            Criteria listOfDownStreamSubProcessesWithEnqIDCriteria=session.createCriteria(Process.class).add(Restrictions.or(Restrictions.eq(ENQUEUINGPROCESSID, processId.toString()),Restrictions.like(ENQUEUINGPROCESSID,"%,"+processId.toString()),Restrictions.like(ENQUEUINGPROCESSID,processId.toString()+",%"),Restrictions.like(ENQUEUINGPROCESSID,"%,"+processId.toString()+",%")));
             listOfDownStreamSubProcessesWithEnqID=(List<Process>)listOfDownStreamSubProcessesWithEnqIDCriteria.list();
             Integer[] a=new Integer[100];
             int count=0;

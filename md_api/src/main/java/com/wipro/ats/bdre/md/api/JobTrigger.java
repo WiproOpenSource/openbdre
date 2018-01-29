@@ -37,12 +37,15 @@ public class JobTrigger extends MetadataAPIBase {
         AutowireCapableBeanFactory acbFactory = getAutowireCapableBeanFactory();
         acbFactory.autowireBean(this);
     }
-    public  void runDownStream(Integer processId){
+    public  Long runDownStream(Integer processId){
+        Long batchId=new Long(0);
         try {
             LOGGER.info("inside runDownStream");
-            int flag = jobTriggerDAO.checkDownStream(processId);
+            String flag_batchId = jobTriggerDAO.checkDownStream(processId);
+            int flag=Integer.parseInt(flag_batchId.split(",")[0]);
+             batchId=Long.parseLong(flag_batchId.split(",")[1]);
             LOGGER.info("The value of flag is : " + flag);
-            //new ProcessPipelineDAO().createPipeline();
+            LOGGER.info("The value of batch id is " + batchId);
             if (flag == 0) {
                 Process pProcess = jobTriggerDAO.getDownStreamProcess(processId);
                 execute(pProcess, "admin");
@@ -51,6 +54,7 @@ public class JobTrigger extends MetadataAPIBase {
         catch (Exception e){
             LOGGER.error(e);
         }
+        return batchId;
     }
 
     public void runOozieDownStream(){

@@ -98,9 +98,10 @@ public class QueuedFileUploader {
                 hdfsCopy(fileCopying);
 
                 // calling register file
-                executeRegisterFiles(fileCopying);
+
                 // a function which will create a batch
-                new QueuedFileUploader().executeDownStream();
+                String batchId=new QueuedFileUploader().executeDownStream().toString();
+                executeRegisterFiles(fileCopying,batchId);
             } catch (Exception err) {
                 LOGGER.error("Error in execute copy process ", err);
                 throw new BDREException(err);
@@ -108,7 +109,7 @@ public class QueuedFileUploader {
         }
     }
 
-    private static void executeRegisterFiles(FileCopyInfo fileCopying) {
+    private static void executeRegisterFiles(FileCopyInfo fileCopying,String batchId) {
         try {
             String subProcessId = fileCopying.getSubProcessId();
             String serverId = fileCopying.getServerId();
@@ -118,7 +119,7 @@ public class QueuedFileUploader {
             long timeStamp = fileCopying.getTimeStamp();
             Date dt = new Date(timeStamp);
             String strDate = sdf.format(dt);
-            String[] params = {"-p", subProcessId, "-sId", serverId, "-path", path, "-fs", fileSize, "-fh", fileHash, "-cTS", strDate, "-bid", "0"};
+            String[] params = {"-p", subProcessId, "-sId", serverId, "-path", path, "-fs", fileSize, "-fh", fileHash, "-cTS", strDate, "-bid", batchId};
             LOGGER.debug("executeRegisterFiles Invoked for " + path);
             new RegisterFile().execute(params);
         } catch (Exception err) {
@@ -128,9 +129,10 @@ public class QueuedFileUploader {
     }
     //
 
-    private void executeDownStream(){
+    private Long executeDownStream(){
         LOGGER.info("Inside executeDownStream");
         Integer parentProcessId=Integer.parseInt(FileMonRunnableMain.getParentProcessId());
-        new JobTrigger().runDownStream(parentProcessId);
+        Long batchId=new JobTrigger().runDownStream(parentProcessId);
+        return batchId;
     }
 }
