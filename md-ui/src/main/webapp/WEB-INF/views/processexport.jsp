@@ -84,7 +84,7 @@
             <div  class="col-md-3"></div>
                <div class="col-md-3 ">
                    <div class="row">&nbsp;</div>
-                   <button type="button" width="20px" onclick="downloadZip(<%=processId %>)" class="btn btn-primary btn-large  pull-right">Download Multiple Zip</button>
+                   <button type="button" width="20px" onclick="downloadZip()" class="btn btn-primary btn-large  pull-right">Download Multiple Zip</button>
                </div>
             </div>
          </div>
@@ -101,34 +101,18 @@
      $(".js-example-basic-multiple").select2();
      </script>
      <script>
-     downloadZip =function(processId){
+     downloadZip =function(){
 
-             $.ajax({
-                   url: '/mdrest/process/export/' + processId,
-                    type: 'GET',
-                    dataType: 'json',
-                     success: function(data) {
-                     if (data.Result == "OK") {
-                     console.log(window.location.protocol);
-                     console.log(window.location.host);
-                     var selectedProcess = $(".js-example-basic-multiple").select2("val");
-                     console.log(selectedProcess);
-                     var processString="";
-                     processString=processString.concat(selectedProcess[0]);
-                     for(var i=1;i<selectedProcess.length;i++){
-                     processString=processString.concat("-");
-                     processString=processString.concat(selectedProcess[i]);
-                     }
-                    var url = (window.location.protocol + "//" + window.location.host + "/mdrest/process/zippedexportMultiple/" + processString);
-                     window.location.href = url;
-                  }
-               if (data.Result == "ERROR")
-                 alert(data.Message);
-            },
-             error: function() {
-             alert('<spring:message code="appexport.page.alert_error_zip"/>');
-         }
-     });
+      var selectedProcess = $(".js-example-basic-multiple").select2("val");
+      console.log(selectedProcess);
+      var processString="";
+      processString=processString.concat(selectedProcess[0]);
+      for(var i=1;i<selectedProcess.length;i++){
+      processString=processString.concat("-");
+      processString=processString.concat(selectedProcess[i]);
+      }
+      var url = (window.location.protocol + "//" + window.location.host + "/mdrest/process/zippedexportMultiple/" + processString);
+      window.location.href = url;
 
             }
          </script>
