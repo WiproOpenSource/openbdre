@@ -35,6 +35,7 @@ echo startTime=$startTime >> $BDRE_APPS_HOME/$busDomainId/$processTypeId/$proces
 echo endTime=$endTime >> $BDRE_APPS_HOME/$busDomainId/$processTypeId/$processId/coordinatorjob-$processId.properties
 echo timezone=$timezone >> $BDRE_APPS_HOME/$busDomainId/$processTypeId/$processId/coordinatorjob-$processId.properties
 echo workflowPath=$hdfsPath/wf/$busDomainId/$processTypeId/$processId/workflow-$processId.xml >> $BDRE_APPS_HOME/$busDomainId/$processTypeId/$processId/coordinatorjob-$processId.properties
+echo baseAppPath=$hdfsPath/wf >> $BDRE_APPS_HOME/$busDomainId/$processTypeId/$processId/coordinatorjob-$processId.properties
 
 #if [ "$jobId" != "null" ]
 #then
