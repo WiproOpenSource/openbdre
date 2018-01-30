@@ -91,7 +91,7 @@
                                        </div>
                                        <div  class="col-md-3">
                                             <div class="row">&nbsp;</div>
-                                            <button type="button" width="20px" onclick="showExportForm()" class="btn btn-primary btn-large pull-center"><spring:message code="appexport.page.export_to_appstore"/></button>
+                                            <button type="button" width="20px"  class="btn btn-primary btn-large pull-center"><spring:message code="appexport.page.export_to_appstore"/></button>
                                        </div>
 <br>
                                                       <br>
@@ -109,52 +109,7 @@
                         <div class="row">&nbsp;</div>
                         <div class="row">
                             <div class="col-md-3"> </div>
-                            <div class="col-md-6" id="divEncloseHeading">
-
-
-                                <div class="panel panel-primary" id="export">
-
-                                    <div id="exportForm" class="panel-body">
-
-                                        <form role="form" id="exportToAppStoreForm"  >
-                                             <div class="form-group">
-                                                <label ><spring:message code="appexport.page.application_name"/></label>
-                                                <input type="text" class="form-control" name="appName"  placeholder= <spring:message code="appexport.page.appname_placeholder"/> required>
-                                            </div>
-                                            <div class="form-group">
-                                                <label ><spring:message code="appexport.page.select_business_domain"/></label>
-                                                <select class="form-control" name="appDomain">
-                                                    <option value="banking">Banking</option>
-                                                    <option value="retail"> Retail</option>
-                                                    <option value="telecom">Telecom</option>
-                                                    <option value="insurance">Insurance </option>
-                                                    <option value="hc">Healthcare</option>
-                                                    <option value="enu">Energy And Utilities </option>
-
-                                                </select>
-                                            </div>
-
-                                            <div class="form-group">
-                                                  <label ><spring:message code="appexport.page.upload_app_img"/></label>
-                                                  <spring:message code="appexport.page.upload_app_img_placeholder" var="placeholder"/>
-                                                  <input type="file" name="appImage" class="form-control" placeholder='${placeholder}' id="img-id" required>
-
-                                            </div>
-                                            <div class="form-group">
-                                               <label></label>
-                                               <input type="hidden" class="form-control" name="processId"  value="<%=processId %>" required>
-                                            </div>
-											<div class="actions text-center pull-right">
-                                            	<input type="submit" id="submitButton" class="btn btn-primary" onclick="appstorePush();"/>
-                                            </div>
-                                        </form>
-
-                                    </div>
-                                </div>
-                            </div>
-
-                        </div>
-
+                          </div>
 
                         <div id="batchProcesses" >
                            <label class="form-control" for="features" style="width:20%">Select Processes</label>
