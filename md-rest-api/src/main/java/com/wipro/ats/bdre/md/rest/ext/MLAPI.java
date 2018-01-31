@@ -143,7 +143,7 @@ public class MLAPI {
                 for(int j=1;j<=metaData.getColumnCount();j++){
 
                     String colName = metaData.getColumnLabel(j).replaceFirst(tableName.toLowerCase()+".", "");
-                    if(!colName.equals("features")){
+                    if(!colName.equals("features") && !colName.equals("rawprediction") && !colName.equals("probability")){
                     Object colValue=rs.getObject(j);
                     m.put(colName,colValue);}
                 }

@@ -776,7 +776,7 @@
 'Hive_PersistentStores_Connection','dbName','Database Name','', 1,'default','text', 1
 'Hive_PersistentStores_Connection','metastoreWarehouseDir','Metastore WarehouseDir','', 1,'/user/hive/warehouse','text', 1
 
-'Hive_Model_Connection','serverIP','HiveServer IP','', 1,'10000','text', 1
+'Hive_Model_Connection','serverIP','HiveServer Port','', 1,'10000','text', 1
 'Hive_Model_Connection','hive-db','Database Name','', 1,'base','text', 1
 'Hive_Model_Connection','hive-table','Table Name','', 1,'','text', 1
 'Hive_Model_Connection','hostName','HiveServer Host Name','', 1,'localhost','text', 1

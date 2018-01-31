@@ -817,7 +817,7 @@ public class ProcessAPI extends MetadataAPIBase {
             in.close();
             finalOutput.close();*/
 
-            restWrapper = new RestWrapper("SUCCESS", RestWrapper.OK);
+            restWrapper = new RestWrapper(processExportList, RestWrapper.OK);
         } catch (MetadataException e) {
             LOGGER.error(e);
             restWrapper = new RestWrapper(e.getMessage(), RestWrapper.ERROR);
