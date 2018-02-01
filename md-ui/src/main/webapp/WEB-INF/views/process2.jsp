@@ -1755,7 +1755,7 @@
                 </section>
 
                 <div id="refresh-icon" class="refresh-icon" style="left: 150px !important;">
-                <button class="btn btn-default" type="submit" style="background-color: #c3beb5;" onClick="refreshPage()"><span id="sizing-addon2"><span class="glyphicon glyphicon-refresh" aria-hidden="true"></span>&nbsp;</button>
+                <button class="btn btn-default" type="submit" style="background-color: #c3beb5;" onClick="refreshPage()"><span id="sizing-addon2"><span class="glyphicon glyphicon-refresh" aria-hidden="true"></span> Refresh </button>
                 </div>
 
                 <div id="input-box-button-filter" class="input-box-button-filter">

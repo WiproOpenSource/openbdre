@@ -856,8 +856,36 @@
                                                         enqProcessId: {
                                                             title: '<spring:message code="process.page.title_enqueued_by"/>',
                                                             defaultValue: '0',
+                                                            options:function() {
+                                                            var parentProcessList = [];
+                                                                $.ajax({
+                                                                url: "/mdrest/process/parentProcessList",
+                                                                    type: 'GET',
+                                                                    dataType: 'json',
+                                                                    async: false,
+                                                                    success: function(data){
+                                                                        console.log(data.Records);
+                                                                        for(var i=0;i<data.Records.length;i++){
+                                                                        data.Records[i].processName=data.Records[i].processId+"_"+data.Records[i].processName;
+                                                                        }
+
+                                                                       for(var i in data.Records) {
+                                                                           var item = data.Records[i];
+                                                                          parentProcessList.push({
+                                                                               "Value" : item.processId,
+                                                                               "DisplayText"  : item.processName
+                                                                           });
+                                                                       }
+                                                                    }
+                                                                    });
+                                                                    console.log(parentProcessList);
+                                                                    return parentProcessList;
+                                                                    },
+
+
                                                             edit: true
                                                         },
+
                                                         busDomainId: {
                                                             type: 'hidden',
                                                             defaultValue: item.record.busDomainId,
@@ -1838,7 +1866,7 @@
                     <script type="text/javascript">
                          var auto = setInterval(    function ()
                          {
-                               $('div#Container').jtable('load',{jtParams.jtStartIndex:20, jtParams.jtPageSize:10});
+                               $('div#Container').jtable('load');
                          }, 60000);
                     </script>
 
@@ -1865,7 +1893,7 @@
                 </div>
 
                 <div id="refresh-icon" class="refresh-icon" style="left: 150px !important;">
-                <button class="btn btn-default" type="submit" style="background-color: #c3beb5;" onClick="refreshPage()"><span class="glyphicon glyphicon-refresh" aria-hidden="true"></span>&nbsp;</button>
+                <button class="btn btn-default" type="submit" style="background-color: #c3beb5;" onClick="refreshPage()"><span class="glyphicon glyphicon-refresh" aria-hidden="true"></span> Refresh </button>
                 </div>
 
                <div id="input-box-button-filter1" class="input-box-button-filter1">
