@@ -45,6 +45,8 @@
            var columns =[];
            var map2=new Map();
     		var insert=1;
+    		var hiveInsert=0;
+    		var databaseList={};
          var wizard = null;
          var finalJson;
          wizard = $(document).ready(function() {
@@ -57,6 +59,13 @@
     		enableCancelButton: true,
     		onStepChanging: function(event, currentIndex, newIndex) {
     			console.log(currentIndex + 'current ' + newIndex );
+    			if(currentIndex==0 && newIndex==1){
+               if(hiveInsert==1 && document.getElementById("persistentName").value !="Hive")
+                      {
+                      $('#bdre-data-load').steps('remove',2);
+                      hiveInsert=0;
+                      }
+                        }
     			if(currentIndex==1 && newIndex==2){
     			var source = document.getElementById("persistentName").value;
     			console.log(source);
@@ -88,7 +97,58 @@
                    $('#bdre-data-load').steps('remove',2);
                    insert=insert-1;
                    }
-    			}
+                   if(source=="Hive" && hiveInsert==0){
+                      console.log("Adding new section for databse and table");
+                            $.ajax({
+                                                   type: "GET",
+                                                   url: "/mdrest/hivemigration/databases/localhost:10000",
+                                                   dataType: 'json',
+                                                   async: false,
+                                                   success: function (data) {
+                                                       databaseList = data.Options;
+                                                       console.log(databaseList);
+                                                   },
+                                                   error: function () {
+                                                       alert('danger');
+                                                   }
+                                               });
+
+
+                  var formHTML="";
+                  formHTML=formHTML+'<section>';
+                  formHTML=formHTML+'<form class="form-horizontal" role="form" id="hiveDBTable">';
+                  formHTML=formHTML+'<div class="form-group" >';
+
+               formHTML = formHTML + '<label class="control-label col-sm-2" for="hive-db">Database Name</label>';
+                   formHTML = formHTML +  '<div class="col-md-4">' ;
+               formHTML = formHTML + '  <select class="form-control" id="hive-db" name="hive-db" onchange="loadTableOptions(this.value)">';
+               //
+               formHTML=formHTML+'<option value="select">Select Option</option>';
+               for(var k=0;k<databaseList.length;k++){
+
+                                       formHTML=formHTML+'<option value="'+ databaseList[k].Value + '">' + databaseList[k].DisplayText + '</option>';
+
+
+               }
+
+               formHTML = formHTML + '</select>';
+               formHTML = formHTML +  '</div>' ;
+               formHTML = formHTML +  '</div>' ;
+               formHTML=formHTML+'<div class="form-group" >';
+               formHTML = formHTML + '<label class="control-label col-sm-2" for="hive-table">Table Name</label>';
+                 formHTML = formHTML +  '<div class="col-md-4">' ;
+
+                          formHTML = formHTML + '  <select class="form-control" id="hive-table" name="hive-table" >';
+
+                          formHTML = formHTML + '</select>';
+                          formHTML = formHTML +  '</div>' ;
+                          formHTML = formHTML +  '</div>' ;
+               formHTML = formHTML +  '</form>' ;
+               formHTML = formHTML +  '</section>' ;
+               $('#bdre-data-load').steps('insert', 2, { title: 'Database and Table', content: formHTML });
+                      hiveInsert=1;
+                   }
+            }
 
     		return true;
     		},
@@ -210,7 +270,7 @@
                                     $('#rawTableColumnDetails').jtable('load');
                                     console.log($('#rawTableColumnDetails'));
                                 }
-                                if(priorIndex==1 && currentIndex==2 && document.getElementById("persistentName").value=="Hive")
+                                if(priorIndex==2 && currentIndex==3 && document.getElementById("persistentName").value=="Hive")
                                 {
                                 $('#rawTableColumnDetails').jtable({});
                                      $('#rawTableColumnDetails').jtable('destroy');
@@ -306,6 +366,28 @@
     });
     		</script>
 <script>
+ function loadTableOptions(dbName){
+            $.ajax({
+                type: "GET",
+                url: "/mdrest/hivemigration/tables/localhost:10000/" + dbName ,
+                dataType: 'json',
+                async: false,
+                success: function (data) {
+                    console.log(data);
+                    $('#hive-table').find('option').remove();
+                                $('#hive-table').append('<option  value="">Select option</option>');
+                                $.each(data.Options, function (i, v) {
+                                    $('#hive-table').append($('<option>', {
+                                        value: v.Value,
+                                        text : v.DisplayText,
+                                    }));
+                                });
+                },
+                error: function () {
+                    alert('danger');
+                }
+            });
+ }
 </script>
   <script>
   var map = new Object();
@@ -382,6 +464,7 @@
                                            formIntoMap("","persistentStore");
                                            formIntoMap("","persistentFieldsForm");
                                            formIntoMap("","modelDetail");
+                                           formIntoMap("","hiveDBTable");
                                            var text2 = $('#loadOptions option:selected').text();
                                            var model_Type=document.getElementById("modelType").value;
                                            console.log(text2);
@@ -694,9 +777,7 @@
 
                         formHTML = formHTML + '  <select class="form-control" id="Column.' + next + '" name="Column.' + next + '" >';
 
-                        //formHTML = formHTML + ' <option ng-repeat="  column in columns " id="Column.' + next + '" value="' + columns[t] + '">' + columns[t] + '</option>';
 
-                        //formHTML = formHTML + ' <option ng-repeat="  column in columns " id="Column.' + next + '" value="' + columns[t] + '">' + columns[t] + '</option>';
                         for(var k=0;k<columnNames.length;k++){
                          if(columnNames[k]==prevColumnNames[t]){
                                                 formHTML=formHTML+'<option value="'+ columnNames[k] + '" selected>' + columnNames[k] + '</option>';
@@ -858,7 +939,7 @@
                               </form>
                               </section>
 
-  <h2><div class="number-circular">2</div>Source Configuration Type</h2>
+  <h2><div class="number-circular">2</div>Source Configuration</h2>
                           			<section>
 
                        <div id="persistentFields"></div>
@@ -983,8 +1064,8 @@
         			console.log(data[root]);
         			$.each(data[root], function(i, v) {
         				formHTML = formHTML + '<div class="form-group"> <label for="' + v.key + '">' + v.value + '</label>';
-        				<!-- formHTML = formHTML + '<span class="glyphicon glyphicon-question-sign" title="' + v.description + '"></span>'; -->
-        				formHTML = formHTML + '<input name="' + v.key + '" value="' + v.defaultVal + '" placeholder="' + v.description + '" type="' + v.type + '" class="form-control" id="' + v.key + '"></div>';
+
+        			    formHTML = formHTML + '<input name="' + v.key + '" value="' + v.defaultVal + '" placeholder="' + v.description + '" type="' + v.type + '" class="form-control" id="' + v.key + '"></div>';
         			});
         			formHTML = formHTML + '</form>';
         			div.innerHTML = formHTML;
