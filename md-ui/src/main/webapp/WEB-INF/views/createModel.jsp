@@ -1017,7 +1017,7 @@
                        </div>
                    </div>
                   </form>
-                  <button class="btn btn-default  btn-success" style="margin-top: 200px;background: #F2B30B !important;padding-left: 0px;margin-left: 0px;left: -300px;" type="button" onclick="saveModelProperties()">Create Model</button>
+                  <button class="btn btn-default  btn-success" style="margin-top: 200px;background: #F2B30B !important;padding-left: 0px;margin-left: 0px;left: -400px;" type="button" onclick="saveModelProperties()">Create Model</button>
 
                   </section>
 

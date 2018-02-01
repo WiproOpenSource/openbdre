@@ -776,7 +776,8 @@
 'Hive_PersistentStores_Connection','dbName','Database Name','', 1,'default','text', 1
 'Hive_PersistentStores_Connection','metastoreWarehouseDir','Metastore WarehouseDir','', 1,'/user/hive/warehouse','text', 1
 
-'Hive_Model_Connection','serverIP','HiveServer IP','', 1,'10000','text', 1
+
+'Hive_Model_Connection','serverIP','HiveServer Port','', 1,'10000','text', 1
 'Hive_Model_Connection','hostName','HiveServer Host Name','', 1,'localhost','text', 1
 'Hive_Model_Connection','metastoreURI','Hive MetaStore URI','', 1,'thrift://localhost:9083','text', 1
 

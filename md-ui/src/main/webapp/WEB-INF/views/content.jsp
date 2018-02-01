@@ -400,6 +400,11 @@
                                                                         collapse: "1",
                                                                         url: "processimportwizard.page",
                                                                         children: []
+                                                                                                        },{
+                                                                        label: "Job Export Wizard",
+                                                                        collapse: "1",
+                                                                        url: "processexport.page",
+                                                                        children: []
                                                                                      					}, {
                                                                         label: "Process Template",
                                                                         collapse: "1",

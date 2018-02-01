@@ -80,6 +80,19 @@
                         cursor: pointer
                     }
 
+                    .refresh-icon {
+                        background: #4A4B4B;
+                        background: -webkit-linear-gradient(#4A4B4B 50%, #3A3B3B 50%);
+                        background: -o-linear-gradient(#4A4B4B 50%, #3A3B3B 50%);
+                        background: -moz-linear-gradient(#4A4B4B 50%, #3A3B3B 50%);
+                        background: -ms-linear-gradient(#4A4B4B 50%, #3A3B3B 50%);
+                        background: linear-gradient(#4A4B4B 50%, #3A3B3B 50%);
+                        position: absolute;
+                        top: 0;
+                        color: white;
+                        cursor: pointer
+                    }
+
 					.filter-icon {
 						background-image: url('../css/images/filter_icon.png');
 						background-size: 100%;
@@ -209,12 +222,17 @@
                 <link href="../css/jtables-bdre.css" rel="stylesheet" type="text/css" />
                 <link href="../css/jquery-ui-1.10.3.custom.css" rel="stylesheet" type="text/css" />
                 <link href="../css/bootstrap.custom.css" rel="stylesheet" />
+                <link rel="stylesheet" type="text/css" href="../css/jquery.datetimepicker.css"/>
+
+
 
 
                 <!-- Include jTable script file. -->
                 <script src="../js/jquery.min.js" type="text/javascript"></script>
                 <script src="../js/jquery-ui-1.10.3.custom.js" type="text/javascript"></script>
                 <script src="../js/jquery.jtable.js" type="text/javascript"></script>
+                <script src="../js/jquery.datetimepicker.full.js"></script>
+                <script src="../js/angular.min.js" type="text/javascript"></script>
 
                 <script type="text/javascript">
                 var jtParamStart = 0;
@@ -243,8 +261,10 @@
                                 listAction: function(postData, jtParams) {
                                 $("#page-header").hide();
                                 if(jtParams.jtStartIndex!=0){
-                                jtParamStart = jtParams.jtStartIndex;
-                                jtPage = jtParams.jtPageSize;}
+                                    jtParamStart = jtParams.jtStartIndex;
+                                    jtPage = jtParams.jtPageSize;
+                                }
+
                                     return $.Deferred(function($dfd) {
                                     console.log(jtParams);
                                         $.ajax({
@@ -1514,6 +1534,34 @@
                 </script>
 
                 <script>
+
+                    var app = angular.module('app', []);
+                    app.controller('myCtrl', function($scope) {
+                    $scope.timeZones={};
+                    $.ajax({
+                      url: "/mdrest/scheduler/",
+                          type: 'GET',
+                          dataType: 'json',
+                          async: false,
+                          success: function (data) {
+                              $scope.timeZones = data.Record;
+                              console.log("Printing the timezones");
+                              console.log($scope.timeZones);
+                          },
+                          error: function () {
+                              alert('danger');
+                          }
+                      });
+
+                     });
+
+                     function refreshPage(){
+                         $('div#Container').jtable('load');
+                     }
+
+                </script>
+
+                <script>
                     function fetchPipelineInfo(pid) {
                     $.ajax({
                             url: '/mdrest/process/permission/'+pid,
@@ -1565,9 +1613,21 @@
                                   var endTime = getPropValue("schedule-end-time",pid);
                                   var timeZone = getPropValue("schedule-time-zone",pid);
 
+                                  if(frequency["Record"]==null)
+                                  document.getElementById("frequency").defaultValue = "30";
+                                  else
                                   document.getElementById("frequency").defaultValue = frequency["Record"];
+                                  if(startTime["Record"]==null)
+                                  document.getElementById("startTime").defaultValue = "2018-01-24 15:05";
+                                  else
                                   document.getElementById("startTime").defaultValue = startTime["Record"];
+                                  if(endTime["Record"]==null)
+                                  document.getElementById("endTime").defaultValue = "2018-01-24 18:05";
+                                  else
                                   document.getElementById("endTime").defaultValue = endTime["Record"];
+                                  if(timeZone["Record"]==null)
+                                  document.getElementById("timeZone").defaultValue = "UTC";
+                                  else
                                   document.getElementById("timeZone").defaultValue = timeZone["Record"];
                                   var modal = document.getElementById('myModal');
                                   var span = document.getElementsByClassName("closemodal")[0];
@@ -1587,6 +1647,22 @@
                             }
                         });
                     }
+
+                    function dateTimePicker(){
+                    $('#startTime').datetimepicker({
+                        format:'Y-m-d H:i',
+                        step:15
+
+                    });
+
+                    $('#endTime').datetimepicker({
+                        format:'Y-m-d H:i',
+                        step:15
+
+                    });
+                    }
+
+
 
                     function getPropValue(key,pid){
                     var property;
@@ -1762,7 +1838,7 @@
                     <script type="text/javascript">
                          var auto = setInterval(    function ()
                          {
-                               $('div#Container').jtable('load');
+                               $('div#Container').jtable('load',{jtParams.jtStartIndex:20, jtParams.jtPageSize:10});
                          }, 60000);
                     </script>
 
@@ -1788,6 +1864,10 @@
                     </form>
                 </div>
 
+                <div id="refresh-icon" class="refresh-icon" style="left: 150px !important;">
+                <button class="btn btn-default" type="submit" style="background-color: #c3beb5;" onClick="refreshPage()"><span class="glyphicon glyphicon-refresh" aria-hidden="true"></span>&nbsp;</button>
+                </div>
+
                <div id="input-box-button-filter1" class="input-box-button-filter1">
                                        <span class="filter-icon"></span><span class="filter-text">Filter By Name</span>
                                        </div>
@@ -1802,10 +1882,6 @@
                                                </div>
                                            </form>
                                        </div>
-
-
-
-
 
 
 				<div id="dialog-confirm" style="display: none;">
@@ -1863,7 +1939,7 @@
                             			<p><span class="ui-icon ui-icon-alert" style="float:left;"></span></p>
                             		</div>
 
-
+                <div  ng-app="app" id="preModelDetails" ng-controller="myCtrl">
 				<div id="myModal" class="modelwindow">
 
 				<div class="modal-content" style="background-color:#F8F9FB;">
@@ -1873,31 +1949,34 @@
 
                                  <div class="col-md-2"></div>
 
-                                 <div class="col-md-8" id="divEncloseHeading" >
-                                     <div class="panel panel-primary">
+
+                                     <div class="panel panel-primary" style="border: none; padding-top:1% !important;">
 
                                          <div class="panel-body">
                                              <form role="form" id="propertiesFieldsForm">
 
-                                                 <div class="form-group">
+                                                 <div class="form-group" >
                                                      <label >Frequency (in minutes)</label>
                                                      <input type="text" class="form-control" id="frequency" name="frequency" required>
                                                  </div>
 
-                                                 <div class="form-group">
-                                                     <label >Start Time (yyyy-mm-ddThh:mmZ)</label>
-                                                     <input type="text" class="form-control" id="startTime" name="startTime" required>
+                                                 <div class="form-group" >
+                                                     <label >Start Time (yyyy-mm-dd hh:mm)</label>
+                                                     <input type="text" class="form-control" id="startTime" name="startTime" required onclick="dateTimePicker()">
                                                  </div>
 
-                                                 <div class="form-group">
-                                                         <label >End Time (yyyy-mm-ddThh:mmZ)</label>
-                                                         <input type="text" class="form-control" id="endTime" name="endTime" required>
+                                                 <div class="form-group" >
+                                                         <label >End Time (yyyy-mm-dd hh:mm)</label>
+                                                         <input type="text" class="form-control" id="endTime" name="endTime" required onclick="dateTimePicker()">
                                                      </div>
 
-                                                  <div class="form-group">
+                                                  <div class="form-group" >
                                                       <label >Time Zone</label>
-                                                      <input type="text" class="form-control" id="timeZone" name="timeZone" required>
-                                                  </div>
+
+                                                      <select class="form-control" id="timeZone" name="timeZone" ng-model = "timeZone" ng-options = "zone for zone in timeZones track by zone">
+                                                           <option  value="">Select option</option>
+                                                       </select>
+                                                   </div>
 
                                                   <div class="actions text-center" >
                                                      <button type="button" id="schedulejobs" class="btn btn-primary btn-lg" onclick="scheduleJob()">Schedule Jobs</button>
@@ -1905,9 +1984,10 @@
                                              </form>
                                         </div>
                                      </div>
-                                 </div>
+
                                  <div class="col-md-2"> </div>
                      <div class="row" >&nbsp;</div>
+                     </div>
                      </div>
                      </div>
 
