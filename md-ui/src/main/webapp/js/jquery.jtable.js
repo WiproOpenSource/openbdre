@@ -752,6 +752,12 @@ THE SOFTWARE.
             } else { //other types
                 return fieldValue;
             }
+
+            if(field.type == 'multiselectddl'){
+                 return this._findOptionDisplayTextByValueMultiselect(options, fieldValue);
+             } else {
+                 return this._findOptionByValue(options, fieldValue).DisplayText;
+             }
         },
 
         /* Creates and returns an object that's properties are depended values of a record.
@@ -780,6 +786,19 @@ THE SOFTWARE.
 
             return {}; //no option found
         },
+
+        /* Finds options object by given value for multiselectddl field and returns their DisplayText
+                 *************************************************************************/
+         _findOptionDisplayTextByValueMultiselect: function (options, value) {
+             var values = value.split(",");
+             if(values.length == 1) return this._findOptionByValue(options, value).DisplayText;
+             var result = "";
+             for (var i = 0; i < values.length; i++) {
+                 if( i > 0) result += ", ";
+                 result += this._findOptionByValue(options, values[i]).DisplayText;
+             }
+             return result;
+         },
 
         /* Gets text for a date field.
         *************************************************************************/
@@ -1556,6 +1575,8 @@ THE SOFTWARE.
                 return this._createPasswordInputForField(field, fieldName, value);
             } else if (field.type == 'checkbox') {
                 return this._createCheckboxForField(field, fieldName, value);
+            }else if (field.type == 'multiselectddl') {
+                return this._createDropDownListMultiForField(field, fieldName, value);
             } else if (field.options) {
                 if (field.type == 'radiobutton') {
                     return this._createRadioButtonListForField(field, fieldName, value, record, formType);
@@ -1690,6 +1711,23 @@ THE SOFTWARE.
 
             return $containerDiv;
         },
+
+         _createDropDownListMultiForField: function (field, fieldName, value) {
+             //Create a container div
+                 var $containerDiv = $('<div class="jtable-input jtable-multi-dropdown-input"></div>');
+
+                 //Create multi-select element
+                 var $select = $('<select multiple="multiple" class="' + field.inputClass + '" id="Edit-' + fieldName + '" name=' + fieldName + '></select>').appendTo($containerDiv);
+
+                 //add options
+                 var options = this._getOptionsWithCaching(fieldName);
+                 $.each(options, function (propName, propValue) {
+                     $select.append('<option value="' + propName + '"' + (propName == value ? ' selected="selected"' : '') + '>' + propValue + '</option>');
+                 });
+
+                 return $containerDiv;
+         },
+
 
         /* Creates a drop down list (combobox) input element for a field.
         *************************************************************************/

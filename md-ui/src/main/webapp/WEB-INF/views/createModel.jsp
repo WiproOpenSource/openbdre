@@ -895,9 +895,9 @@
                             formHTML=formHTML+'</div>';
                             div.innerHTML = formHTML;
 
-                            console.log("hhahahhahaha");
+
                             $(".js-example-basic-multiple").select2();
-                            console.log("hhahahhahaha");
+
                             if(count1>1){
                             $('#features').val(selected);
 
