@@ -4,6 +4,7 @@
 <html>
     <head>
 	<link href="../../css/bootstrap.min.css" rel="stylesheet" type="text/css" />
+	<link rel="shortcut icon" href="../../css/images/favicon.ico" type="image/x-icon" />
 	<title><spring:message code="login.page.title"/></title>
 	<style>
 	     body{background-image: url("../../css/images/BDRE_BG.jpg");width: 100%;height: 100%;background-size: cover;overflow: hidden;}
