@@ -469,7 +469,10 @@
                                            var model_Type=document.getElementById("modelType").value;
                                            console.log(text2);
                                            if(text2=="PMML File" || text2=="Serialized Model"){
-                                           formIntoMap("","modelData");
+                                           //formIntoMap("","modelData");
+                                           var fileName=document.getElementById("regFile").value;
+                                           console.log(fileName.split("\\")[2]);
+                                           map["pmml-file-path"]=fileName.split("\\")[2];
                                            }
                                            else if (model_Type=="LogisticRegression" || model_Type=="LinearRegression"){
                                                 intercept=document.getElementById("Intercept.1").value;

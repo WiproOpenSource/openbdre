@@ -1466,7 +1466,7 @@
                        value1=document.getElementById("modelImportTypeLogistic").value;
                        console.log(value1);
                        if(value1=="serializedModel" || value1=="pmmlFile"){
-                       var value2=document.getElementById("regFile").value;
+                       var value2=document.getElementById("regFile").value.split("\\")[2];
                        console.log("hiiiii");
                        console.log(value2);
                        map["model-input-method"]=value1;
@@ -1525,7 +1525,7 @@
                        var processId=$('[ng-controller="AppCtrl"]').scope().chartViewModel.selectedProcess.processId;
                        var method = document.getElementById("modelImportTypeKMeans").value;
                        if(method=="serializedModel" || method=="pmmlFile"){
-                       var path=document.getElementById("regFile").value;
+                       var path=document.getElementById("regFile").value.split("\\")[2];
                        map["model-input-method"]=method;
                        map["filePath"]=path;
                        }
