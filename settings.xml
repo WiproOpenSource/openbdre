@@ -30,7 +30,7 @@
                 <kafka.version>0.8.1.1</kafka.version>
                 <pig.version>0.12.0-cdh5.2.0</pig.version>
                 <flume.version>1.6.0</flume.version>
-                <spark.core.version>1.6.0</spark.core.version>
+                <spark.core.version>1.6.3</spark.core.version>
                 <selected.profile>cdh52</selected.profile>
             </properties>
         </profile>

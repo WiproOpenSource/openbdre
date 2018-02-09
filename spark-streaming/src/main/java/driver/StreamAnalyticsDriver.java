@@ -404,7 +404,7 @@ public class StreamAnalyticsDriver implements Serializable {
                     if (nextPidInts[i].equals(parentProcessId)) {
                         countEmitterCovered++;
                         System.out.println("No.of Emitters covered =" + countEmitterCovered);
-                        if (countEmitterCovered >= listOfEmitters.size()) {
+                        if (countEmitterCovered >= listOfEmitters.size()+ listOfPersistentStores.size()) {
                             System.out.println("clearing contents of transformedDStreamMap before clearing= " + transformedDStreamMap);
                             transformedDStreamMap.clear();
                             System.out.println("clearing contents of transformedDStreamMap before clearing= " + transformedDStreamMap);
