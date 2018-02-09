@@ -22,37 +22,108 @@
             <groupId>org.apache.hadoop</groupId>
             <artifactId>hadoop-client</artifactId>
             <version>${hadoop.version}</version>
+
+            <exclusions>
+
+                <exclusion>
+                    <groupId>com.google</groupId>
+                    <artifactId>guava</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
 
         <dependency>
             <groupId>org.apache.spark</groupId>
             <artifactId>spark-core_2.10</artifactId>
             <version>${spark.core.version}</version>
+
+            <exclusions>
+
+                <exclusion>
+                    <groupId>com.google</groupId>
+                    <artifactId>guava</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
 
         <dependency>
             <groupId>org.apache.spark</groupId>
             <artifactId>spark-sql_2.10</artifactId>
             <version>${spark.core.version}</version>
+
+            <exclusions>
+
+                <exclusion>
+                    <groupId>com.google</groupId>
+                    <artifactId>guava</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
 
-        <dependency>
-            <groupId>org.apache.spark</groupId>
-            <artifactId>spark-mllib_2.10</artifactId>
-            <version>${spark.core.version}</version>
-        </dependency>
+
 
         <!-- https://mvnrepository.com/artifact/org.apache.spark/spark-hive_2.10 -->
         <dependency>
             <groupId>org.apache.spark</groupId>
             <artifactId>spark-hive_2.10</artifactId>
             <version>${spark.core.version}</version>
+
+            <exclusions>
+
+                <exclusion>
+                    <groupId>com.google</groupId>
+                    <artifactId>guava</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
+
+        <dependency>
+            <groupId>org.jpmml</groupId>
+            <artifactId>pmml-model</artifactId>
+            <version>1.3.6</version>
+        </dependency>
+
         <dependency>
             <groupId>org.apache.spark</groupId>
             <artifactId>spark-mllib_2.10</artifactId>
             <version>${spark.core.version}</version>
+             <exclusions>
+
+             <exclusion>
+                 <groupId>org.jpmml</groupId>
+                 <artifactId>pmml-model</artifactId>
+             </exclusion>
+
+                 <exclusion>
+                     <groupId>com.google</groupId>
+                     <artifactId>guava</artifactId>
+                 </exclusion>
+         </exclusions>
         </dependency>
+        <dependency>
+            <groupId>org.jpmml</groupId>
+            <artifactId>jpmml-evaluator-spark</artifactId>
+            <version>1.0.0</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>joda-time</groupId>
+                    <artifactId>joda-time</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>com.google</groupId>
+                    <artifactId>guava</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+
+        <dependency>
+            <groupId>com.google.guava</groupId>
+            <artifactId>guava</artifactId>
+            <version>19.0</version>
+
+        </dependency>
+
+
 
 
     </dependencies>
@@ -68,35 +139,67 @@
                 </configuration>
             </plugin>
 
-            <!--        <plugin>
-                        <groupId>org.apache.maven.plugins</groupId>
-                        <artifactId>maven-shade-plugin</artifactId>
-                        <version>2.4.2</version>
-                        <executions>
-                            <execution>
-                               <phase>package</phase>
-                                <goals>
-                                    <goal>shade</goal>
-                                </goals>
-                                <configuration>
-                                    <filters>
-                                        <filter>
-                                            <artifact>*:*</artifact>
-                                            <excludes>
-                                                <exclude>META-INF/**</exclude>
-                                            </excludes>
-                                        </filter>
-                                    </filters>
-                                    <transformers>
-                                        <transformer implementation="org.apache.maven.plugins.shade.resource.AppendingTransformer">
-                                            <resource>reference.conf</resource>
-                                        </transformer>
-                                    </transformers>
-                                    <outputDirectory>${project.parent.build.directory}/lib/${project.artifactId}</outputDirectory>
-                                </configuration>
-                            </execution>
-                        </executions>
-                    </plugin>-->
+
+
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-shade-plugin</artifactId>
+                <version>3.1.0</version>
+                <configuration>
+                    <!-- get all project dependencies -->
+
+
+                </configuration>
+
+                <executions>
+                    <execution>
+                        <id>make-assembly</id>
+                        <!-- bind to the packaging phase -->
+                        <phase>package</phase>
+                        <goals>
+                            <goal>shade</goal>
+                        </goals>
+                        <configuration>
+                            <relocations>
+                                <relocation>
+                                    <pattern>org.dmg.pmml</pattern>
+                                    <shadedPattern>org.shaded.dmg.pmml</shadedPattern>
+                                </relocation>
+                                <relocation>
+                                    <pattern>org.jpmml</pattern>
+                                    <shadedPattern>org.shaded.jpmml</shadedPattern>
+                                </relocation>
+                                <relocation>
+                                    <pattern>com.google</pattern>
+                                    <shadedPattern>com.shaded.google</shadedPattern>
+                                </relocation>
+                            </relocations>
+                            <filters>
+                                <filter>
+                                    <artifact>*:*</artifact>
+                                    <excludes>
+                                        <exclude>META-INF/*.SF</exclude>
+                                        <exclude>META-INF/*.DSA</exclude>
+                                        <exclude>META-INF/*.RSA</exclude>
+                                    </excludes>
+                                </filter>
+                            </filters>
+                            <transformers>
+                                <transformer implementation="org.apache.maven.plugins.shade.resource.AppendingTransformer">
+                                    <resource>META-INF/spring.handlers</resource>
+                                </transformer>
+                                <transformer implementation="org.apache.maven.plugins.shade.resource.AppendingTransformer">
+                                    <resource>META-INF/spring.schemas</resource>
+                                </transformer>
+                            </transformers>
+
+                            <outputDirectory>${project.parent.build.directory}/lib/${project.artifactId}</outputDirectory>
+                            <finalName>ml-analytics-${project.version}-jar-with-dependencies</finalName>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+
             <plugin>
                 <artifactId>maven-dependency-plugin</artifactId>
                 <executions>

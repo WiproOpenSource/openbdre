@@ -1,5 +1,6 @@
 package persistentstores;
 
+import com.wipro.ats.bdre.GetParentProcessType;
 import com.wipro.ats.bdre.md.api.GetConnectionProperties;
 import com.wipro.ats.bdre.md.api.GetMessageColumns;
 import com.wipro.ats.bdre.md.api.GetProperties;
@@ -10,6 +11,7 @@ import org.apache.spark.api.java.function.Function;
 import org.apache.spark.broadcast.Broadcast;
 import org.apache.spark.sql.DataFrame;
 import org.apache.spark.sql.Row;
+import org.apache.spark.sql.SQLContext;
 import org.apache.spark.sql.SaveMode;
 import org.apache.spark.sql.hive.HiveContext;
 import org.apache.spark.sql.types.DataType;
@@ -39,7 +41,11 @@ public class HivePersistentStore implements PersistentStore {
         for(String columnDatatype: columnsDataTypesSet){
             String[] columnDatatypeArray = columnDatatype.split(":");
             StructField field = DataTypes.createStructField(columnDatatypeArray[0], dataTypesMap.get(columnDatatypeArray[1]), true);
+
             fields.add(field);
+        }
+        if(new GetParentProcessType().processTypeName(prevPid).startsWith("analytics")){
+            fields.add(DataTypes.createStructField("target",DataTypes.DoubleType,true));
         }
         StructType schema1 = DataTypes.createStructType(fields);
 
@@ -64,10 +70,17 @@ public class HivePersistentStore implements PersistentStore {
             public Void call(JavaPairRDD<String, WrapperMessage> pairRDD) throws Exception {
 
                 JavaRDD<Row> inputRowRDD = pairRDD.map(s -> s._2.getRow());
+                //inputRowRDD.take(10);
+                System.out.println("printing the rdd");
+                inputRowRDD.foreach(s -> System.out.println("row = " + s));
+                SQLContext sqlContext = SQLContext.getOrCreate(inputRowRDD.context());
                 if(inputRowRDD.count() != 0) {
                     System.out.println("schema1 = " + schema1);
-                    DataFrame df = hiveContext.createDataFrame(inputRowRDD, schema);
+                    System.out.println("schema = " + schema);
+                    DataFrame df = sqlContext.createDataFrame(inputRowRDD, schema1);
+                    df.show();
                     df.write().format(format).mode(SaveMode.Append).saveAsTable(hiveDBName+"."+hiveTableName);
+                    //df.write().mode(SaveMode.Append).saveAsTable(hiveTableName);
                 }
                 return null;
             }
