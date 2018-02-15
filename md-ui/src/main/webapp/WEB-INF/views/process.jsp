@@ -1641,12 +1641,19 @@
                                   var endTime = getPropValue("schedule-end-time",pid);
                                   var timeZone = getPropValue("schedule-time-zone",pid);
 
+                                  var currentDate = new Date();
+                                  var dateTime = currentDate.getFullYear() + "-"
+                                                  + (currentDate.getMonth()+1)  + "-"
+                                                  + currentDate.getDate() + " "
+                                                  + currentDate.getHours() + ":"
+                                                  + currentDate.getMinutes();
+
                                   if(frequency["Record"]==null)
                                   document.getElementById("frequency").defaultValue = "30";
                                   else
                                   document.getElementById("frequency").defaultValue = frequency["Record"];
                                   if(startTime["Record"]==null)
-                                  document.getElementById("startTime").defaultValue = "2018-01-24 15:05";
+                                  document.getElementById("startTime").defaultValue = dateTime;
                                   else
                                   document.getElementById("startTime").defaultValue = startTime["Record"];
                                   if(endTime["Record"]==null)
