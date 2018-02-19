@@ -8,7 +8,7 @@ fi
 processId=$3
 userName=$4
 echo $0
-uploadedJarsDir=$BDRE_HOME/lib/stream-analytics
+uploadedJarsDir=$BDRE_HOME/lib/stream-analytics/
 
 JARS=`find $uploadedJarsDir -name '*.jar'`
 OTHER_JARS=""
@@ -22,7 +22,6 @@ echo spark-submit --class driver.StreamAnalyticsDriver --master yarn-client --co
 
 
 spark-submit --class driver.StreamAnalyticsDriver --master local[*]  --conf spark.driver.cores=$5 --conf spark.driver.memory=$6M \
-                                                                        --conf spark.executorEnv.JAVA_HOME=/home/cloudera/Desktop/jdk1.8.0_144 \
                                                                         --conf spark.executor.cores=$7 --conf spark.executor.memory=$8M --conf spark.streaming.receiver.maxRate=$9  \
                                                                         --conf spark.task.maxFailures=${11} --conf spark.dynamicAllocation.enabled=${12} \
-                                                                          /home/cloudera/bdre/lib/stream-analytics/spark-streaming-1.1-SNAPSHOT-jar-with-dependencies.jar $processId $userName > ~/log.txt
+                                                                          $BDRE_HOME/lib/stream-analytics/spark-streaming-1.1-SNAPSHOT-jar-with-dependencies.jar $processId $userName > ~/log.txt

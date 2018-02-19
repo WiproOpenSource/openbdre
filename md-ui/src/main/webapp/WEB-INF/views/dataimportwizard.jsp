@@ -92,7 +92,7 @@
          if(incrType == "AppendRows")
            {
          for(i=0;i<size;i++){
-          if(filteredColumns[i].dtype == "INT" || filteredColumns[i].dtype == "BIGINT")
+          if(filteredColumns[i].dtype == "INT" || filteredColumns[i].dtype == "BIGINT" || filteredColumns[i].dtype == "NUMBER")
           integralColumns.push(filteredColumns[i].title);
           }
            var len=integralColumns.length;
@@ -110,7 +110,7 @@
           {
            for(i=0;i<size;i++){
            console.log(filteredColumns[i].dtype);
-            if(filteredColumns[i].dtype == "TIMESTAMP")
+            if(filteredColumns[i].dtype == "TIMESTAMP" || "TIMESTAMP(6)")
             timestampColumns.push(filteredColumns[i].title);
             }
 
@@ -139,7 +139,10 @@
     BIT: "Boolean",
     SMALLINT: "SmallInt",
     INTEGER: "Int",
-    TINYINT: "tinyInt"
+    TINYINT: "tinyInt",
+    VARCHAR2: "String",
+    NUMBER: "Int",
+    "TIMESTAMP(6)": "Timestamp"
 };
     var created=0;
 		function displayProcess (records){

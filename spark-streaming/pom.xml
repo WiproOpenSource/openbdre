@@ -3,10 +3,10 @@
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <parent>
-    <artifactId>bdre-app</artifactId>
-    <groupId>com.wipro.ats.bdre</groupId>
-    <version>1.1-SNAPSHOT</version>
-</parent>
+        <artifactId>bdre-app</artifactId>
+        <groupId>com.wipro.ats.bdre</groupId>
+        <version>1.1-SNAPSHOT</version>
+    </parent>
     <modelVersion>4.0.0</modelVersion>
     <artifactId>stream-analytics</artifactId>
 
@@ -174,11 +174,11 @@
         </dependency>
 
 
-      <!--  <dependency>
-            <groupId>com.stratio.receiver</groupId>
-            <artifactId>spark-rabbitmq</artifactId>
-            <version>LATEST</version>
-        </dependency> -->
+        <dependency>
+              <groupId>com.stratio.receiver</groupId>
+              <artifactId>spark-rabbitmq</artifactId>
+              <version>0.5.1</version>
+        </dependency>
 
         <!-- https://mvnrepository.com/artifact/org.apache.spark/spark-sql_2.10 -->
         <dependency>
@@ -362,7 +362,35 @@
                     <target>1.8</target>
                 </configuration>
             </plugin>
-
+            <!--        <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-shade-plugin</artifactId>
+                        <version>2.4.2</version>
+                        <executions>
+                            <execution>
+                               <phase>package</phase>
+                                <goals>
+                                    <goal>shade</goal>
+                                </goals>
+                                <configuration>
+                                    <filters>
+                                        <filter>
+                                            <artifact>*:*</artifact>
+                                            <excludes>
+                                                <exclude>META-INF/**</exclude>
+                                            </excludes>
+                                        </filter>
+                                    </filters>
+                                    <transformers>
+                                        <transformer implementation="org.apache.maven.plugins.shade.resource.AppendingTransformer">
+                                            <resource>reference.conf</resource>
+                                        </transformer>
+                                    </transformers>
+                                    <outputDirectory>${project.parent.build.directory}/lib/${project.artifactId}</outputDirectory>
+                                </configuration>
+                            </execution>
+                        </executions>
+                    </plugin>-->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-shade-plugin</artifactId>

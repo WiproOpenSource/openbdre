@@ -1965,9 +1965,9 @@
                                                 <!-- Split button -->
                                                 <div class="btn-group">
                                                     <button type="button" class="btn btn-default">Source</button>
-                                                    <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                                    <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="width: 20px;">
                                                         <span class="sr-only"><spring:message code="wfdesigner.page.button_dropdown"/></span>&nbsp;
-                                                        <span class="caret"></span>
+                                                        <span class="caret" style="margin-left: -10px;"></span>
                                                     </button>
                                                     <ul class="dropdown-menu">
                                                         <li ng-repeat="pType in source_processTypes.Options">
@@ -1978,9 +1978,9 @@
                                                 <!-- Split button -->
                                                 <div class="btn-group">
                                                 <button type="button" class="btn btn-default">Transformation</button>
-                                                <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                                <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="width: 20px;">
                                                     <span class="sr-only"><spring:message code="wfdesigner.page.button_dropdown"/></span>&nbsp;
-                                                    <span class="caret"></span>
+                                                    <span class="caret" style="margin-left: -10px;"></span>
                                                 </button>
                                                 <ul class="dropdown-menu">
                                                     <li ng-repeat="pType in operator_processTypes.Options">
@@ -1992,9 +1992,9 @@
                                                 <!-- Split button -->
                                                 <div class="btn-group">
                                                 <button type="button" class="btn btn-default">Analytics</button>
-                                                <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                                <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="width: 20px;">
                                                     <span class="sr-only"><spring:message code="wfdesigner.page.button_dropdown"/></span>&nbsp;
-                                                    <span class="caret"></span>
+                                                    <span class="caret" style="margin-left: -10px;"></span>
                                                 </button>
                                                 <ul class="dropdown-menu">
                                                      <li ng-repeat="pType in analytics_processTypes.Options">
@@ -2007,9 +2007,9 @@
                                             <!-- Split button -->
                                                         <div class="btn-group">
                                                         <button type="button" class="btn btn-default">Emitter</button>
-                                                        <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                                        <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="width: 20px;">
                                                             <span class="sr-only"><spring:message code="wfdesigner.page.button_dropdown"/></span>&nbsp;
-                                                            <span class="caret"></span>
+                                                            <span class="caret" style="margin-left: -10px;"></span>
                                                         </button>
                                                         <ul class="dropdown-menu">
                                                             <li ng-repeat="pType in emitter_processTypes.Options">
@@ -2022,9 +2022,9 @@
                                                  <!-- Split button -->
                                                     <div class="btn-group">
                                                     <button type="button" class="btn btn-default">Persistent Store</button>
-                                                    <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                                    <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="width: 20px;">
                                                         <span class="sr-only"><spring:message code="wfdesigner.page.button_dropdown"/></span>&nbsp;
-                                                        <span class="caret"></span>
+                                                        <span class="caret" style="margin-left: -10px;"></span>
                                                     </button>
                                                     <ul class="dropdown-menu">
                                                         <li ng-repeat="pType in persistentStore_processTypes.Options">
@@ -2038,9 +2038,9 @@
 
                                                 <div class="btn-group">
                                                     <button type="button" class="btn btn-default"><spring:message code="wfdesigner.page.button_action"/></button>
-                                                    <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                                    <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="width: 20px;">
                                                         <span class="sr-only"><spring:message code="wfdesigner.page.button_dropdown"/></span>&nbsp;
-                                                        <span class="caret"></span>
+                                                        <span class="caret" style="margin-left: -10px;"></span>
                                                     </button>
                                                     <ul class="dropdown-menu">
                                                         <li><a ng-click='confirmDialog(<spring:message code="wfdesigner.page.dropdown_confirm_msg"/>, "deleteSelected")'><spring:message code="wfdesigner.page.dropdown_delete"/></a></li>
