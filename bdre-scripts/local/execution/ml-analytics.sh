@@ -10,7 +10,7 @@ processId=$3
 userName=$4
 echo $0
 
-uploadedJarsDir=/home/cloudera/bdre/lib/ml-analytics
+uploadedJarsDir=$BDRE_HOME/lib/ml-analytics
 
 JARS=`find $uploadedJarsDir -name '*.jar'`
 OTHER_JARS=""
@@ -19,5 +19,5 @@ OTHER_JARS=""
    done
 
 
-spark-submit --class com.wipro.ats.bdre.ml.driver.MLMain --master local[*]  --jars $OTHER_JARS /home/cloudera/bdre/lib/ml-analytics/ml-analytics-1.1-SNAPSHOT-jar-with-dependencies.jar $processId $userName > ~/log.txt
+spark-submit --class com.wipro.ats.bdre.ml.driver.MLMain --master local[*]  --jars $OTHER_JARS $BDRE_HOME/lib/ml-analytics/ml-analytics-1.1-SNAPSHOT-jar-with-dependencies.jar $processId $userName > ~/log.txt
 

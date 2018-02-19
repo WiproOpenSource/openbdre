@@ -155,6 +155,9 @@ public class DataImportAPI extends MetadataAPIBase {
         try {
             Class.forName(driverClass);
             conn = DriverManager.getConnection(connectionURL, dbUser, dbPassword);
+            if(driverClass.contains("oracle")){
+                dbSchema = dbSchema.toUpperCase();
+            }
 
             ResultSet result = conn.getMetaData().getTables(null,dbSchema, null, new String[]{"TABLE","VIEW"} );
 
