@@ -15,7 +15,7 @@ import org.springframework.beans.factory.config.AutowireCapableBeanFactory;
  * Created by cloudera on 6/18/17.
  */
 public class InstanceExecAPI extends MetadataAPIBase {
-    private static final Logger LOGGER = Logger.getLogger(StreamingMessagesAPI.class);
+    private static final Logger LOGGER = Logger.getLogger(InstanceExecAPI.class);
     @Autowired
     InstanceExecDAO instanceExecDAO;
     @Autowired

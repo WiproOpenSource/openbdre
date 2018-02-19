@@ -275,17 +275,15 @@ public class RawLoad extends ETLBase {
         InputStream XlsxFileToRead = null;
         XSSFWorkbook workbook = null;
         Configuration conf = new Configuration();
+        conf.set("fs.defaultFS", IMConfig.getProperty("common.default-fs-name"));
         FileSystem fs = null;
         String excelFileName=fileName.split("/")[fileName.split("/").length-1];
         String csvFileName=excelFileName.split("\\.")[0]+".csv";
+        System.out.println("absolute path is "+fileName);
         System.out.println("excelFileName is "+excelFileName);
         System.out.println("csvFileName is "+csvFileName);
         try {
-            try {
-                fs = FileSystem.get(new URI("hdfs://localhost:8020"),conf);
-            } catch (URISyntaxException e) {
-                e.printStackTrace();
-            }
+            fs = FileSystem.get(conf);
             Path dirPath = new Path(fileName);
             if (fs.exists(dirPath)) {
                 // fs.delete(dirPath, true);

@@ -9,6 +9,7 @@
         var dataArray = [];
         var kMeansClusterMap ={};
         var predictionEncodeMap ={};
+        var linearEquation = "";
         //var intercept;
         //var mLModel;
         app.controller("uigridCtrl", function ($scope) {
@@ -336,8 +337,9 @@
         slopeCoefficient = slopeCoefficientMap[xAxis];
         xAxisArray = parsedParamArray[xAxis];
         yAxisArray = parsedParamArray[yAxis];
-        computeBestFitValues(xAxisArray,xAxis,ml_intercept,slopeCoefficient);
-        drawLinearGraph(xAxisArray,yAxisArray,plotType,xAxis);
+        linearEquation = "";
+        computeBestFitValues(xAxisArray,yAxisArray,xAxis);
+        drawLinearGraph(xAxisArray,yAxisArray,plotType,xAxis,linearEquation);
     }
 
     function drawLinearGraph(xAxisArray,yAxisArray,plotType,xAxis){
@@ -356,7 +358,7 @@
             y: bestFitYArray,
             mode: 'line',
             type: plotType,
-            name: 'BestFit',
+            name: 'BestFit : '+linearEquation,
             marker: { size: 3 }
         };
 
@@ -385,12 +387,48 @@
     }
 
 
-    function computeBestFitValues(xAxisArray,xAxis,intercept,slopeCoefficient){
+    function computeBestFitValues(xAxisArray,xAxis){
         bestFitYArray=[];
+        //Compute xAvg and yAvg
+        var xAvg = 0;
+        var yAvg = 0;
+        var temp = 0;
+        var xMinusXAvg = 0;
+        var yMinusyAvg = 0;
+        var productMean = 0;
+        var squaredMean = 0;
+        var calculatedSlope = 0;
+        var calculatedYIntercept = 0;
+        //https://www.varsitytutors.com/hotmath/hotmath_help/topics/line-of-best-fit
+
         $.each(xAxisArray, function( index, value ) {
-            var temp = (value * slopeCoefficient) + parseFloat(intercept);
-            bestFitYArray.push(parseFloat(temp));
+        	temp += value;
+
         });
+        xAvg = temp/(xAxisArray.length);
+        temp = 0;
+        $.each(yAxisArray, function( index, value ) {
+        	temp += value;
+
+        });
+        yAvg = temp/(yAxisArray.length);
+
+        //Compute slope
+        for(i=0;i<xAxisArray.length;i++){
+        	xMinusXAvg = xAxisArray[i] - xAvg;
+        	yMinusXAvg = yAxisArray[i] - yAvg;
+        	productMean = productMean + (xMinusXAvg * yMinusXAvg);
+        	squaredMean = squaredMean + (xMinusXAvg * xMinusXAvg);
+        }
+        calculatedSlope = (productMean/squaredMean);
+        calculatedYIntercept = yAvg - (calculatedSlope * xAvg);
+        //alert("xAvg : "+xAvg+" yAvg : "+yAvg+" productMean : "+productMean+" squareMean : "+squaredMean+" slope : "+calculatedSlope+" ::: y intercept "+calculatedYIntercept + ":: sample length - "+xAxisArray.length);
+        temp = 0;
+        $.each(xAxisArray, function( index, value ) {
+        	temp = (value * calculatedSlope) + calculatedYIntercept;
+        	bestFitYArray.push(temp);
+        });
+        linearEquation= "Y = ("+calculatedSlope+") X + "+calculatedYIntercept;
 
     }
 

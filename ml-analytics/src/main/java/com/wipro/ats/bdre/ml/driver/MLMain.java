@@ -7,6 +7,7 @@ import com.wipro.ats.bdre.md.beans.ProcessInfo;
 import com.wipro.ats.bdre.ml.models.KMeansML;
 import com.wipro.ats.bdre.ml.models.LinearRegressionML;
 import com.wipro.ats.bdre.ml.models.LogisticRegressionML;
+import com.wipro.ats.bdre.ml.models.PMMLModel;
 import com.wipro.ats.bdre.ml.schema.SchemaGeneration;
 import com.wipro.ats.bdre.ml.sources.HDFSSource;
 import com.wipro.ats.bdre.ml.sources.HiveSource;
@@ -14,9 +15,11 @@ import org.apache.log4j.Logger;
 import org.apache.spark.SparkConf;
 import org.apache.spark.api.java.JavaSparkContext;
 import org.apache.spark.sql.DataFrame;
+import org.apache.spark.sql.SaveMode;
 import org.apache.spark.sql.types.StructType;
-
+import java.sql.*;
 import java.util.*;
+import java.util.regex.Pattern;
 
 /**
  * Created by cloudera on 11/19/17.
@@ -55,7 +58,6 @@ public class MLMain {
 
             String schemaString = properties.getProperty("schema");
             System.out.println("schemaString = "+schemaString);
-            //schemaString = "label:Double,feature_1:Double,feature_2:Double,feature_3:Double,feature_4:Double";
             StructType schema = new SchemaGeneration().generateSchemaFromString(schemaString);
             DataFrame dataFrame = null;
             DataFrame predictionDF = null;
@@ -119,8 +121,10 @@ public class MLMain {
 
                 }
 
-            } else if (modelInputMethod.equalsIgnoreCase("PMML")) {
+            } else if (modelInputMethod.equalsIgnoreCase("pmmlFile")) {
                 String pmmlPath = properties.getProperty("pmml-file-path");
+                String pmmlFilePath="/home/cloudera/bdre-wfd/model/" + pmmlPath ;
+                predictionDF=new PMMLModel().productionalizeModel(dataFrame,pmmlFilePath);
 
 
             } else if (modelInputMethod.equalsIgnoreCase("Serialized")) {
@@ -131,9 +135,9 @@ public class MLMain {
             predictionDF.show(1000);
             System.out.println("data predicted");
 
-            //predictionDF.write().format("json").save("/user/cloudera/ml-batch/"+parentProcessId);
-            predictionDF.write().saveAsTable("ML_"+parentProcessId);
-            // predictionDF.write().saveAsTable("demo_table");
+
+            predictionDF.write().mode(SaveMode.Overwrite).saveAsTable("ML_"+parentProcessId);
+
 
             InstanceExecAPI instanceExecAPI2 = new InstanceExecAPI();
             instanceExecAPI2.updateInstanceExecToFinished(parentProcessId, applicationId);
@@ -148,4 +152,29 @@ public class MLMain {
         }
 
     }
+    // this method checks if hive table exists for the parent process id and deletes it if present
+    public static void checkTable(int parentProcessId) {
+        String driverName = "org.apache.hive.jdbc.HiveDriver";
+        Connection connection;
+        String srcEnv="localhost:10000";
+        String srcDB="default";
+        try {
+            Class.forName(driverName);
+            connection = DriverManager.getConnection("jdbc:hive2://" + srcEnv + "/" + srcDB.toLowerCase(), "", "");
+            ResultSet rs=connection.createStatement().executeQuery("DROP TABLE IF EXISTS ML_" + parentProcessId);
+
+    /*        List<String> tables = new ArrayList<String>();
+            while (rs.next()) {
+                String tableName = rs.getString(1);
+                tables.add(tableName.toUpperCase());
+            }
+            if(tables.contains("ML_" + parentProcessId)){
+
+            }*/
+        }
+        catch (Exception e){
+            e.printStackTrace();
+        }
+        }
+
 }
