@@ -856,33 +856,6 @@
                                                         enqProcessId: {
                                                             title: '<spring:message code="process.page.title_enqueued_by"/>',
                                                             defaultValue: '0',
-                                                            options:function() {
-                                                            var parentProcessList = [];
-                                                                $.ajax({
-                                                                url: "/mdrest/process/parentProcessList",
-                                                                    type: 'GET',
-                                                                    dataType: 'json',
-                                                                    async: false,
-                                                                    success: function(data){
-                                                                        console.log(data.Records);
-                                                                        for(var i=0;i<data.Records.length;i++){
-                                                                        data.Records[i].processName=data.Records[i].processId+"_"+data.Records[i].processName;
-                                                                        }
-
-                                                                       for(var i in data.Records) {
-                                                                           var item = data.Records[i];
-                                                                          parentProcessList.push({
-                                                                               "Value" : item.processId,
-                                                                               "DisplayText"  : item.processName
-                                                                           });
-                                                                       }
-                                                                    }
-                                                                    });
-                                                                    console.log(parentProcessList);
-                                                                    return parentProcessList;
-                                                                    },
-
-
                                                             edit: true
                                                         },
 
