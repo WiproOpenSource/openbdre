@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 .idea
 target
 logs/
@@ -39,3 +40,11 @@ spark-core/dependency-reduced-pom.xml
 /analytic-ui/src/main/webapp/css/*
 /analytic-ui/src/main/webapp/js/*
 /bin/
+=======
+target
+logs/
+*.iml
+*.bak
+*~*
+/.idea/
+>>>>>>> 2ce49b33531f29d9428e09505607fcdcfa3ee785

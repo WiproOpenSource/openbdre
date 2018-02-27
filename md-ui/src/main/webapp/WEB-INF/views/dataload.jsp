@@ -1099,7 +1099,7 @@ wizard = $(document).ready(function() {
           }
           else{
           document.getElementById('schemaDetailsDB').style.display='none';
-          checked1="yes";
+          checked1="no";
         }
         }
 

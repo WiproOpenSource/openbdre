@@ -1,0 +1,10 @@
+CREATE TABLE IF NOT EXISTS FINISHED_JOBS_USED_PER_ALLOCATED ( id string, usedMemory double, usedPerAllocatedMemory double, usedCPU double, usedPerAllocatedCPU double, gcTimePerTotalTime double, finishdate date)
+ROW FORMAT DELIMITED
+FIELDS TERMINATED BY '\t'
+LINES TERMINATED BY '\n'
+STORED AS TEXTFILE;
+
+
+INSERT INTO FINISHED_JOBS_USED_PER_ALLOCATED
+SELECT id,  occupiedMemory ,usedPerAllocatedMemory,cpuTimeSpentTotal, usedPerAllocatedCPU, gcTime/(timeMaps+timeReducers),to_date(from_unixtime(floor(finishTime/1000)))
+FROM FINISHED_JOBS

@@ -1,0 +1,56 @@
+current_timestamp=`date +%s`
+generate_post_data()
+{
+cat <<EOF
+    [{
+        "metric": "cluster.host.user.application.task.cpu",
+        "timestamp": $current_timestamp,
+        "value": $CPU_USAGE,
+        "tags": {
+           "host": "$HOST",
+           "user": $USER,
+           "application":"$APPLICATION_ID",
+           "task":"$TASK_ATTEMPT_ID"
+        }
+    },
+    {
+        "metric": "cluster.host.user.application.task.memory",
+        "timestamp": $current_timestamp,
+        "value": $MEMORY,
+        "tags": {
+           "host": "$HOST",
+           "user": $USER,
+           "application":"$APPLICATION_ID",
+           "task":"$TASK_ATTEMPT_ID"
+        }
+    }]
+EOF
+}
+
+CONTAINER_PID_LIST=`sudo jps | grep YarnChild | awk '{print $1}'`
+#echo $CONTAINER_PID_LIST
+TOTAL_MEMORY=$(free | awk '/^Mem:/{print $2}')
+HOST=`hostname -i`
+for i in $CONTAINER_PID_LIST
+do
+    TOP_COMMAND=`top -b -p $i -n 1 | tail -n 2`
+    CPU_JSON=''
+    CPU_USAGE=`echo $TOP_COMMAND | awk '{print $9/100.0}'`
+    #USER=$TOP_COMMAND  | awk '{print $2}'
+    MEMORY_PERCENT=`echo $TOP_COMMAND  | awk '{print $10/100.0}'`
+    MEMORY=$(echo "$MEMORY_PERCENT * $TOTAL_MEMORY"|bc)
+
+    for j in `sudo ps -ef | grep $i | awk '{print $(NF-1)}'`
+    do
+      if  [[ $j == attempt* ]]
+      then
+        REPLACED_STR="${j/attempt/application}"
+        APPLICATION_ID="$(echo $REPLACED_STR | cut -d "_" -f 1-3)"
+	USER=`curl -i -H "Accept: application/json" -H "Content-Type: application/json" -X GET http://localhost:8088/ws/v1/cluster/apps/$APPLICATION_ID | grep -Po '"user": *\K"[^"]*"'`
+        TASK_ATTEMPT_ID="$(echo $j | cut -d '_' -f 4-$NF)"
+        CPU_JSON="$(generate_post_data)"
+        echo $CPU_JSON
+        curl -H "Accept: application/json" -H "Content-Type:application/json" -X POST -d "$CPU_JSON" http://localhost:4242/api/put/
+      fi
+    done
+done

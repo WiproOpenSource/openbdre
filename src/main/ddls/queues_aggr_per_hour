@@ -1,0 +1,17 @@
+CREATE TABLE IF NOT EXISTS QUEUES_AGGREGATE_PER_HOUR (absoluteAllocatedCapacity double, absoluteUsedCapacity double, usedMemory int, usedCores int, numContainers int, maxApplications int, numApplications int, numActiveApplications int, numPendingApplications int , queueName string, fetchdate string, fetchhour string)
+ROW FORMAT DELIMITED
+FIELDS TERMINATED BY '\t'
+LINES TERMINATED BY '\n'
+STORED AS TEXTFILE;
+
+
+INSERT INTO QUEUES_AGGREGATE_PER_HOUR
+SELECT avg(absoluteAllocatedCapacity) , avg(absoluteUsedCapacity), avg(usedMemory), avg(usedCores),avg(spaceConsumed),avg(numContainers),avg(maxApplications),avg(numApplications),avg(numActiveApplications),avg(numPendingApplications), queueName, fetchdate, fetchhour
+FROM QUEUES
+GROUP BY queueName, fetchdate, fetchhour
+
+//mysql create table
+CREATE TABLE QUEUES_AGGREGATE_PER_HOUR (absoluteAllocatedCapacity double, absoluteUsedCapacity double, usedMemory int, usedCores int, numContainers int, maxApplications int, numApplications int, numActiveApplications int, numPendingApplications int , queueName varchar(100), fetchdate varchar(11), fetchhour varchar(3))
+
+//sqoop export from hive table hdfs location to mysql
+sqoop-export --connect jdbc:mysql://localhost:3306/bdre --username root --password cloudera --table QUEUES_AGGREGATE_PER_HOUR  --input-fields-terminated-by '\t' --input-lines-terminated-by '\n' --export-dir '/user/hive/warehouse/monitor.db/queues_aggregate_per_hour'
