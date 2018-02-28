@@ -44,6 +44,8 @@ public class ProcessDependencyDAO {
     SessionFactory sessionFactory;
     private static final String DELETEFLAG="deleteFlag";
 
+
+
     public List<ProcessDependencyInfo> listUD(Integer parentProcessId) {
         List<ProcessDependencyInfo> upstreamDownstreamProcessList = new ArrayList<ProcessDependencyInfo>();
         Session session = sessionFactory.openSession();
@@ -90,6 +92,7 @@ public class ProcessDependencyDAO {
                 if (!checkDownstreamParentProcesses.list().isEmpty()) {
                     List<Process> downstreamParentProcessList = checkDownstreamParentProcesses.list();
                     for (Process p : downstreamParentProcessList) {
+                        if (p!=null)
                         downstreamParentProcessIdList.add(p.getProcessId());
                     }
                     Criteria checkDownstreamProcesses = session.createCriteria(Process.class).add(Restrictions.in("processId", downstreamParentProcessIdList));
