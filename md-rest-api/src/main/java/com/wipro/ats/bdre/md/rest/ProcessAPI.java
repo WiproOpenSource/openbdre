@@ -1587,6 +1587,7 @@ public class ProcessAPI extends MetadataAPIBase {
                         propertiesId.setProcessId(process.getProcessId());
                         propertiesId.setPropKey("workflow_pid");
                         com.wipro.ats.bdre.md.dao.jpa.Properties properties=propertiesDAO.get(propertiesId);
+                        if (OldNewParentProcessMap.get(properties.getPropValue())!=null)
                         properties.setPropValue(OldNewParentProcessMap.get(properties.getPropValue()));
                         propertiesDAO.update(properties);
                     }
