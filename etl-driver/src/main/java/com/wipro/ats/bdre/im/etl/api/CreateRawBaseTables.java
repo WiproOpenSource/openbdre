@@ -210,6 +210,7 @@ public class CreateRawBaseTables extends ETLBase {
 
         String rawTableDdl = "";
 
+
         //generating raw table ddl for a delimited file
         if ("delimited".equalsIgnoreCase(fileType) || "xlsx".equalsIgnoreCase(fileType) ) {
             if(!rawSerdeProperties.equals("")) {
@@ -485,6 +486,8 @@ public class CreateRawBaseTables extends ETLBase {
                 String addSerde = "add jar "+serdePath;
                 stmt.execute(addSerde);
             //}
+            String deleteQuery="DROP TABLE IF EXISTS " + dbName + "." + tableName;
+            stmt.executeUpdate(deleteQuery);
             ResultSet rs = stmt.executeQuery(CreateRawBaseTables.getQuery(tableName));
             if (!rs.next()) {
                 LOGGER.info("Raw table does not exist Creating table " + tableName);
@@ -506,6 +509,8 @@ public class CreateRawBaseTables extends ETLBase {
 
             Connection con = getHiveJDBCConnection(dbName);
             Statement stmt = con.createStatement();
+            String deleteQuery="DROP VIEW IF EXISTS " + dbName + "." + stageViewName;
+            stmt.executeUpdate(deleteQuery);
             ResultSet rs = stmt.executeQuery(CreateRawBaseTables.getQuery(stageViewName));
             if (!rs.next()) {
                 GetGeneralConfig generalConfig = new GetGeneralConfig();
@@ -548,6 +553,9 @@ public class CreateRawBaseTables extends ETLBase {
                 LOGGER.info("Base table does not exist.Creating Table " + baseTable);
                 LOGGER.info("Creating base table using "+ddl);
                 stmt.executeUpdate(ddl);
+            }
+            else{
+
             }
             stmt.close();
             con.close();
