@@ -647,7 +647,7 @@ public class HistoryDataImportDAO {
 
                         PropertiesId baseTableColumnPropertiesId = new PropertiesId();
                         baseTableColumnPropertiesId.setProcessId(raw2Stage.getProcessId());
-                        baseTableColumnPropertiesId.setPropKey("transform_" + rawTableColumn[columnCounter-1].split(" ")[0]);
+                        baseTableColumnPropertiesId.setPropKey("transform_" + rawTableColumn[columnCounter-1].split(" ")[0]+"."+columnCounter);
                         Properties baseTableColumnProperties = new Properties();
                         baseTableColumnProperties.setId(baseTableColumnPropertiesId);
                         baseTableColumnProperties.setConfigGroup("base-columns");

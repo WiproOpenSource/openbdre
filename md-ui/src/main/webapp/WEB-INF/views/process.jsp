@@ -1846,10 +1846,10 @@
 
                     </script>
                     <script type="text/javascript">
-                         var auto = setInterval(    function ()
+                         /*var auto = setInterval(    function ()
                          {
                                $('div#Container').jtable('reload');
-                         }, 60000);
+                         }, 60000);*/
                     </script>
 
             </head>

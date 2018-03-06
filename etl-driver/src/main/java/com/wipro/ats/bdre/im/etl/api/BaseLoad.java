@@ -20,6 +20,7 @@ import com.wipro.ats.bdre.im.etl.api.exception.ETLException;
 import com.wipro.ats.bdre.md.api.GetGeneralConfig;
 import com.wipro.ats.bdre.md.api.GetProcess;
 import com.wipro.ats.bdre.md.api.GetProperties;
+import com.wipro.ats.bdre.md.api.HiveSchemaEvolution;
 import com.wipro.ats.bdre.md.beans.ProcessInfo;
 import org.apache.commons.cli.CommandLine;
 import org.apache.hadoop.conf.Configuration;
@@ -114,9 +115,9 @@ public class BaseLoad extends ETLBase {
                 String bdreLinuxUserName = generalConfig.byConigGroupAndKey("scripts_config", "bdreLinuxUserName").getDefaultVal();
                 ProcessInfo process = new GetProcess().getProcess(Integer.parseInt(processId));
 
-                String serdePath = hdfsURI+"/user/"+bdreLinuxUserName+"/wf/1/5/"+process.getParentProcessId()+"/lib/hive-hcatalog-core-0.13.1.jar";
+                /*String serdePath = hdfsURI+"/user/"+bdreLinuxUserName+"/wf/1/5/"+process.getParentProcessId()+"/lib/hive-hcatalog-core-0.13.1.jar";
                 String addSerde = "add jar "+serdePath;
-                baseConStatement.execute(addSerde);
+                baseConStatement.execute(addSerde);*/
 
                 String query="alter table "+ baseTableName+" add partition("+stagePartition.replace("/",",")+")";
                 LOGGER.info("query = " + query);
@@ -144,6 +145,11 @@ public class BaseLoad extends ETLBase {
             List<String> deletedColumns= Collections.list(deletedColumnList);
             System.out.println(appendedColumnProperties.isEmpty());
             System.out.println("Number of columns to be deleted are "+deletedColumnProperties.size());
+            System.out.println("size of deletedColumns is "+deletedColumns.size());
+            for(String s : deletedColumns){
+                System.out.println("hiiieee");
+                System.out.println("column in deleted column list is "+s);
+            }
             while(deletedColumnList.hasMoreElements()) {
                 System.out.println("hiiieee");
                 String column = (String) deletedColumnList.nextElement();
@@ -171,15 +177,16 @@ public class BaseLoad extends ETLBase {
                     String columnName = metaData.getColumnLabel(i).replaceFirst(tableName.toLowerCase() + ".", "");
                     String datatype = metaData.getColumnTypeName(i);
                     System.out.println("column in table is " + columnName);
-                    while(deletedColumnList.hasMoreElements()){
-                        String column=(String)deletedColumnList.nextElement();
+                    for(String column:deletedColumns){
+                        System.out.println("I am using list and not enumeration");
                         System.out.println(column);
                       if(columnName.equalsIgnoreCase(column)) {
                           System.out.println("column to be deleted is " + column + "::" + columnName);
                           flag = 1;
                       }
                     }
-                    if(flag==0){
+
+                    if(flag==0 && !columnName.equalsIgnoreCase("instanceexecid")){
                         LOGGER.info("column name is " + columnName + " and its data type is " + datatype);
                         deleteDdl.append(columnName + " " + datatype + ", ");
                     }
@@ -189,6 +196,7 @@ public class BaseLoad extends ETLBase {
                 System.out.println("query is " + deleteDdl);
                 stmt.executeUpdate(deleteDdl.toString());
             }
+            new HiveSchemaEvolution().updateBaseTableProperties(processId);
         }
         catch (Exception e){
             e.printStackTrace();
