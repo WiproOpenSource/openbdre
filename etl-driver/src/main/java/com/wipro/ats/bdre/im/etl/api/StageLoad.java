@@ -184,10 +184,19 @@ public class StageLoad extends ETLBase {
         else {
             java.util.Properties columnValues = getPropertiesOfRawTable.getProperties(stageLoadProcessId, "base-columns");
             Enumeration e = columnValues.propertyNames();
+            List<String> baseColumns1=Collections.list(e);
+            Collections.sort(baseColumns1, new Comparator<String>() {
+
+                public int compare(String o1, String o2) {
+                    int n1 = Integer.valueOf(o1.split("\\.")[1]);
+                    int n2 = Integer.valueOf(o2.split("\\.")[1]);
+                    return (n1 - n2);
+                }
+            });
             if (!columnValues.isEmpty()) {
-                while (e.hasMoreElements()) {
-                    String key = (String) e.nextElement();
-                    columnList.append(key.replaceAll("transform_", ""));
+                for (String key : baseColumns1) {
+                    //String key = (String) e.nextElement();
+                    columnList.append(key.split("\\.")[0].replaceAll("transform_", ""));
                     columnList.append(",");
                 }
                 result = columnList.substring(0, columnList.length() - 1);
