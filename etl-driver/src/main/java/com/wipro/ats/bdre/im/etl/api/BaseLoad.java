@@ -185,7 +185,7 @@ public class BaseLoad extends ETLBase {
                           flag = 1;
                       }
                     }
-                    if(flag==0){
+                    if(flag==0 && !columnName.equalsIgnoreCase("instanceexecid")){
                         LOGGER.info("column name is " + columnName + " and its data type is " + datatype);
                         deleteDdl.append(columnName + " " + datatype + ", ");
                     }

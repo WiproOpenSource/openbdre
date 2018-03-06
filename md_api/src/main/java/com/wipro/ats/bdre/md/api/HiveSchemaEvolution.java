@@ -27,7 +27,7 @@ public class HiveSchemaEvolution extends MetadataAPIBase {
     public void updateBaseTableProperties(Integer processId){
         System.out.println("inside update base table properties");
         GetProperties getProperties = new GetProperties();
-        Properties appendedColumnProperties = getProperties.getProperties(processId.toString(), "appended_columns");
+        Properties appendedColumnProperties = getProperties.getProperties(processId.toString(), "appended-columns");
         Enumeration appendedColumnList = appendedColumnProperties.propertyNames();
         Properties deletedColumnProperties = getProperties.getProperties(processId.toString(), "deleted-columns");
         Enumeration deletedColumnList = deletedColumnProperties.propertyNames();
@@ -46,6 +46,15 @@ public class HiveSchemaEvolution extends MetadataAPIBase {
             properties.setPropValue((String) appendedColumnProperties.getProperty(column));
             properties.setProcess(processDAO.get(processId));
             propertiesDAO.update(properties);
+        }
+        for(String column:deletedColumns){
+            System.out.println("column being deleted is " + column);
+            PropertiesId propertiesId=new PropertiesId();
+            propertiesId.setProcessId(processId);
+            propertiesId.setPropKey(column);
+            com.wipro.ats.bdre.md.dao.jpa.Properties properties=new com.wipro.ats.bdre.md.dao.jpa.Properties();
+            properties.setId(propertiesId);
+            propertiesDAO.delete(propertiesId);
         }
     }
     @Override
