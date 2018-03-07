@@ -864,7 +864,7 @@ public class ProcessAPI extends MetadataAPIBase {
             Process parentProcess = processExport.getProcessList().get(0);
 
 
-            List<com.wipro.ats.bdre.md.dao.jpa.Process> sameProcessCodeList=processDAO.returnProcesses(parentProcess.getProcessCode());
+          /*  List<com.wipro.ats.bdre.md.dao.jpa.Process> sameProcessCodeList=processDAO.returnProcesses(parentProcess.getProcessCode());
             List<SameProcessCodeProcess> sameProcessCodeParentProcessList=new ArrayList<>();
             for (com.wipro.ats.bdre.md.dao.jpa.Process process:sameProcessCodeList)
             {
@@ -875,7 +875,7 @@ public class ProcessAPI extends MetadataAPIBase {
                 sameProcessCodeParentProcessList.add(sameProcessCodeProcess);
             }
 
-            restWrapper = new RestWrapper(sameProcessCodeParentProcessList, RestWrapper.OK);
+            restWrapper = new RestWrapper(sameProcessCodeParentProcessList, RestWrapper.OK);*/
 
 
             List<Process> dbList = new ArrayList<Process>();
@@ -1233,6 +1233,7 @@ public class ProcessAPI extends MetadataAPIBase {
 
 
             int j=1;
+            Map<String,String> OldNewParentProcessMap=new HashMap<>();
             for(String fileName: fileList) {
                 LOGGER.info("filename is"+fileName);
                 String outputDir = homeDir + "/bdre-wfd/intermediateDir_" + j;
@@ -1250,9 +1251,9 @@ public class ProcessAPI extends MetadataAPIBase {
 
                 }
                 Process parentProcess = processExport.getProcessList().get(0);
+                String oldParentProcessId=parentProcess.getProcessId().toString();
 
-
-                List<com.wipro.ats.bdre.md.dao.jpa.Process> sameProcessCodeList = processDAO.returnProcesses(parentProcess.getProcessCode());
+               /* List<com.wipro.ats.bdre.md.dao.jpa.Process> sameProcessCodeList = processDAO.returnProcesses(parentProcess.getProcessCode());
                 List<SameProcessCodeProcess> sameProcessCodeParentProcessList = new ArrayList<>();
                 for (com.wipro.ats.bdre.md.dao.jpa.Process process : sameProcessCodeList) {
                     SameProcessCodeProcess sameProcessCodeProcess = new SameProcessCodeProcess();
@@ -1262,7 +1263,7 @@ public class ProcessAPI extends MetadataAPIBase {
                     sameProcessCodeParentProcessList.add(sameProcessCodeProcess);
                 }
 
-                restWrapper = new RestWrapper(sameProcessCodeParentProcessList, RestWrapper.OK);
+                restWrapper = new RestWrapper(sameProcessCodeParentProcessList, RestWrapper.OK);*/
 
 
                 List<Process> dbList = new ArrayList<Process>();
@@ -1323,12 +1324,16 @@ public class ProcessAPI extends MetadataAPIBase {
                     users.setUsername(principal.getName());
                     insertDaoProcess.setUsers(users);
                     parentProcessId = processDAO.insert(insertDaoProcess);
+                    String newParentProcessId=parentProcessId.toString();
                     parentProcess.setProcessId(parentProcessId);
                     processExport.getProcessList().get(0).setProcessId(parentProcessId);
                     parentProcess.setTableAddTS(DateConverter.dateToString(insertDaoProcess.getAddTs()));
                     parentProcess.setTableEditTS(DateConverter.dateToString(insertDaoProcess.getEditTs()));
+                    OldNewParentProcessMap.put(oldParentProcessId,newParentProcessId);
                 } else {
                     processExport.getProcessList().get(0).setProcessId(dbParentProcess.getProcessId());
+                    String newParentProcessId=dbParentProcess.getProcessId().toString();
+                    OldNewParentProcessMap.put(oldParentProcessId,newParentProcessId);
                 }
                 List<com.wipro.ats.bdre.md.dao.jpa.Process> daoProcessList = processDAO.selectProcessList(parentProcess.getProcessCode(), principal.getName());
                 for (com.wipro.ats.bdre.md.dao.jpa.Process daoProcess : daoProcessList) {
@@ -1556,6 +1561,41 @@ public class ProcessAPI extends MetadataAPIBase {
             finalProcessExport.setProcessList(finalProcessList);
             finalProcessExport.setPropertiesList(finalPropertiesList);
             restWrapper = new RestWrapper(finalProcessExport, RestWrapper.OK);
+            LOGGER.info("OldNewParentProcessMap is "+OldNewParentProcessMap);
+            for (Map.Entry<String,String> entry : OldNewParentProcessMap.entrySet())
+            {
+                LOGGER.info("Key = " + entry.getKey() + ", Value = " + entry.getValue());
+                List<com.wipro.ats.bdre.md.dao.jpa.Process> subProcesses=processDAO.subProcesslist(Integer.parseInt(entry.getValue()));
+                for (com.wipro.ats.bdre.md.dao.jpa.Process process:subProcesses)
+                {
+                    if (!process.getEnqueuingProcessId().equals("0"))
+                    {
+                        String[] enqProcessArray=process.getEnqueuingProcessId().split(",");
+                        String updatedEnqId="";
+                        for (String enqId:enqProcessArray)
+                        {
+                            if (OldNewParentProcessMap.get(enqId)!=null)
+                            updatedEnqId=updatedEnqId+OldNewParentProcessMap.get(enqId)+",";
+                        }
+                        String finalUpdatedEnqId=updatedEnqId.substring(0,updatedEnqId.length()-1);
+                        process.setEnqueuingProcessId(finalUpdatedEnqId);
+                        processDAO.update(process);
+                    }
+                    if (process.getProcessType().getProcessTypeId()==40)
+                    {
+                        PropertiesId propertiesId=new PropertiesId();
+                        propertiesId.setProcessId(process.getProcessId());
+                        propertiesId.setPropKey("workflow_pid");
+                        com.wipro.ats.bdre.md.dao.jpa.Properties properties=propertiesDAO.get(propertiesId);
+                        if (OldNewParentProcessMap.get(properties.getPropValue())!=null)
+                        properties.setPropValue(OldNewParentProcessMap.get(properties.getPropValue()));
+                        propertiesDAO.update(properties);
+                    }
+
+
+                }
+            }
+
         } catch (MetadataException e) {
             LOGGER.error(e);
             restWrapper = new RestWrapper(e.getMessage(), RestWrapper.ERROR);

@@ -210,6 +210,7 @@ public class CreateRawBaseTables extends ETLBase {
 
         String rawTableDdl = "";
 
+
         //generating raw table ddl for a delimited file
         if ("delimited".equalsIgnoreCase(fileType) || "xlsx".equalsIgnoreCase(fileType) ) {
             if(!rawSerdeProperties.equals("")) {
@@ -287,7 +288,7 @@ public class CreateRawBaseTables extends ETLBase {
     }
 
     public void executeStageLoad(String[] params) {
-
+        System.out.println("Hiieee.. I am using viewColumns1 and baseColumns1");
         CommandLine commandLine = getCommandLine(params, PARAMS_STRUCTURE);
         String processId = commandLine.getOptionValue(PROCESSID);
         String instanceExecId = commandLine.getOptionValue("instance-exec-id");
@@ -320,10 +321,19 @@ public class CreateRawBaseTables extends ETLBase {
         GetProperties getPropertiesOfViewColumns = new GetProperties();
         java.util.Properties viewPropertiesOfColumns = getPropertiesOfViewColumns.getProperties(stgLoad, "base-columns");
         Enumeration viewColumnsList = viewPropertiesOfColumns.propertyNames();
+        List<String> viewColumns1=Collections.list(viewColumnsList);
+        Collections.sort(viewColumns1, new Comparator<String>() {
+
+            public int compare(String o1, String o2) {
+                int n1 = Integer.valueOf(o1.split("\\.")[1]);
+                int n2 = Integer.valueOf(o2.split("\\.")[1]);
+                return (n1 - n2);
+            }
+        });
         StringBuilder viewColumns = new StringBuilder();
         if (!viewPropertiesOfColumns.isEmpty()) {
-            while (viewColumnsList.hasMoreElements()) {
-                String key = (String) viewColumnsList.nextElement();
+            for (String key : viewColumns1) {
+                //String key = (String) viewColumnsList.nextElement();
                 //if("json".equalsIgnoreCase(fileTypeSelected)){
                     String columnName = viewPropertiesOfColumns.getProperty(key);
                     LOGGER.info("columnName is "+columnName);
@@ -334,7 +344,7 @@ public class CreateRawBaseTables extends ETLBase {
                             viewColumns.append(firstColumnName + " AS " + firstColumnName + ",");
                     }
                     else
-                        viewColumns.append(viewPropertiesOfColumns.getProperty(key) + " AS " + key.replaceAll("transform_", "") + ",");
+                        viewColumns.append(viewPropertiesOfColumns.getProperty(key) + " AS " + key.split("\\.")[0].replaceAll("transform_", "") + ",");
                 //}//
                 //else
                 //viewColumns.append(viewPropertiesOfColumns.getProperty(key) + " AS " + key.replaceAll("transform_", "") + ",");
@@ -424,11 +434,22 @@ public class CreateRawBaseTables extends ETLBase {
             java.util.Properties basePropertiesOfColumns = getPropertiesOfBaseColumns.getProperties(stgLoad, "base-columns");
             java.util.Properties basePropertiesOfDataTypes = getPropertiesOfBaseColumns.getProperties(stgLoad, "base-data-types");
             Enumeration baseColumnsList = basePropertiesOfColumns.propertyNames();
+            List<String> baseColumns1=Collections.list(baseColumnsList);
+            Collections.sort(baseColumns1, new Comparator<String>() {
+
+                public int compare(String o1, String o2) {
+                    int n1 = Integer.valueOf(o1.split("\\.")[1]);
+                    int n2 = Integer.valueOf(o2.split("\\.")[1]);
+                    return (n1 - n2);
+                }
+            });
+
+
             StringBuilder baseColumns = new StringBuilder();
             if (!basePropertiesOfColumns.isEmpty()) {
-                while (baseColumnsList.hasMoreElements()) {
-                    String key = (String) baseColumnsList.nextElement();
-                    baseColumns.append(key.replaceAll("transform_", "") + " " + basePropertiesOfDataTypes.getProperty(key.replaceAll("transform_", "")) + ",");
+                for (String key : baseColumns1) {
+                    //String key = (String) baseColumnsList.nextElement();
+                    baseColumns.append(key.split("\\.")[0].replaceAll("transform_", "") + " " + basePropertiesOfDataTypes.getProperty(key.split("\\.")[0].replaceAll("transform_", "")) + ",");
                 }
             }
             //removing trailing comma
@@ -444,25 +465,27 @@ public class CreateRawBaseTables extends ETLBase {
 
         if("json".equalsIgnoreCase(fileType)){
             String baseTableSchema = new JsonSchemaReader().generateJsonSchema(baseColumnsWithDataTypes);
-            baseTableDdl += "CREATE TABLE IF NOT EXISTS " + baseTableDbName + "." + baseTableName + " (" + baseTableSchema + ") partitioned by (" + partitionColumns + " instanceexecid bigint) stored as orc";
+            //orc format removed for schema evolution for stage and base table
+            baseTableDdl += "CREATE TABLE IF NOT EXISTS " + baseTableDbName + "." + baseTableName + " (" + baseTableSchema + ") partitioned by (" + partitionColumns + " instanceexecid bigint)  ";
         }
-        else
-            baseTableDdl += "CREATE TABLE IF NOT EXISTS " + baseTableDbName + "." + baseTableName + " (" + baseColumnsWithDataTypes + ") partitioned by (" + partitionColumns + " instanceexecid bigint) stored as orc";
-
+        else {
+            System.out.println("orc not used");
+            baseTableDdl += "CREATE TABLE IF NOT EXISTS " + baseTableDbName + "." + baseTableName + " (" + baseColumnsWithDataTypes + ") partitioned by (" + partitionColumns + " instanceexecid bigint) ";
+        }
         LOGGER.debug(baseTableDdl);
 
         String stgTableName = baseTableName + "_" + instanceExecId;
         String stgTableDdl = "";
         if("json".equalsIgnoreCase(fileType)){
             String stageTableSchema = new JsonSchemaReader().generateJsonSchema(baseColumnsWithDataTypes);
-            stgTableDdl += "CREATE TABLE IF NOT EXISTS " + baseTableDbName + "." + stgTableName + " (" + stageTableSchema + ") partitioned by (" + partitionColumns + " instanceexecid bigint) stored as orc";
+            stgTableDdl += "CREATE TABLE IF NOT EXISTS " + baseTableDbName + "." + stgTableName + " (" + stageTableSchema + ") partitioned by (" + partitionColumns + " instanceexecid bigint) ";
         }
         else
-            stgTableDdl += "CREATE TABLE IF NOT EXISTS " + baseTableDbName + "." + stgTableName + " (" + baseColumnsWithDataTypes + ") partitioned by (" + partitionColumns + " instanceexecid bigint) stored as orc";
+            stgTableDdl += "CREATE TABLE IF NOT EXISTS " + baseTableDbName + "." + stgTableName + " (" + baseColumnsWithDataTypes + ") partitioned by (" + partitionColumns + " instanceexecid bigint) ";
 
         checkAndCreateRawView(rawViewDbName, rawViewName, rawViewDdl);
         checkAndCreateStageTable(baseTableDbName, stgTableName, stgTableDdl);
-        checkAndCreateBaseTable(baseTableDbName, baseTableName, baseTableDdl);
+        checkAndCreateBaseTable(baseTableDbName, baseTableName, baseTableDdl,fileType);
     }
 
 
@@ -485,6 +508,8 @@ public class CreateRawBaseTables extends ETLBase {
                 String addSerde = "add jar "+serdePath;
                 stmt.execute(addSerde);
             //}
+            String deleteQuery="DROP TABLE IF EXISTS " + dbName + "." + tableName;
+            stmt.executeUpdate(deleteQuery);
             ResultSet rs = stmt.executeQuery(CreateRawBaseTables.getQuery(tableName));
             if (!rs.next()) {
                 LOGGER.info("Raw table does not exist Creating table " + tableName);
@@ -506,6 +531,8 @@ public class CreateRawBaseTables extends ETLBase {
 
             Connection con = getHiveJDBCConnection(dbName);
             Statement stmt = con.createStatement();
+            String deleteQuery="DROP VIEW IF EXISTS " + dbName + "." + stageViewName;
+            stmt.executeUpdate(deleteQuery);
             ResultSet rs = stmt.executeQuery(CreateRawBaseTables.getQuery(stageViewName));
             if (!rs.next()) {
                 GetGeneralConfig generalConfig = new GetGeneralConfig();
@@ -529,25 +556,30 @@ public class CreateRawBaseTables extends ETLBase {
         }
     }
 
-    private void checkAndCreateBaseTable(String dbName, String baseTable, String ddl) {
+    private void checkAndCreateBaseTable(String dbName, String baseTable, String ddl,String fileType) {
         try {
 
             Connection con = getHiveJDBCConnection(dbName);
             Statement stmt = con.createStatement();
             ResultSet rs = stmt.executeQuery(CreateRawBaseTables.getQuery(baseTable));
             if (!rs.next()) {
-                GetGeneralConfig generalConfig = new GetGeneralConfig();
-                String hdfsURI = generalConfig.byConigGroupAndKey("imconfig", "common.default-fs-name").getDefaultVal();
-                String bdreLinuxUserName = generalConfig.byConigGroupAndKey("scripts_config", "bdreLinuxUserName").getDefaultVal();
-                ProcessInfo process = new GetProcess().getProcess(Integer.parseInt(processIdSelected));
+                if("json".equalsIgnoreCase(fileType)) {
+                    LOGGER.info("file type is json");
+                    GetGeneralConfig generalConfig = new GetGeneralConfig();
+                    String hdfsURI = generalConfig.byConigGroupAndKey("imconfig", "common.default-fs-name").getDefaultVal();
+                    String bdreLinuxUserName = generalConfig.byConigGroupAndKey("scripts_config", "bdreLinuxUserName").getDefaultVal();
+                    ProcessInfo process = new GetProcess().getProcess(Integer.parseInt(processIdSelected));
 
-                String serdePath = hdfsURI+"/user/"+bdreLinuxUserName+"/wf/1/5/"+process.getParentProcessId()+"/lib/hive-hcatalog-core-0.13.1.jar";
-                String addSerde = "add jar "+serdePath;
-                stmt.execute(addSerde);
-
+                    String serdePath = hdfsURI + "/user/" + bdreLinuxUserName + "/wf/1/5/" + process.getParentProcessId() + "/lib/hive-hcatalog-core-0.13.1.jar";
+                    String addSerde = "add jar " + serdePath;
+                    stmt.execute(addSerde);
+                }
                 LOGGER.info("Base table does not exist.Creating Table " + baseTable);
                 LOGGER.info("Creating base table using "+ddl);
                 stmt.executeUpdate(ddl);
+            }
+            else{
+
             }
             stmt.close();
             con.close();

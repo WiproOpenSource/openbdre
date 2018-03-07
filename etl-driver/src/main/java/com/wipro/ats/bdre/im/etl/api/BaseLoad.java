@@ -19,6 +19,8 @@ import com.wipro.ats.bdre.im.etl.api.base.ETLBase;
 import com.wipro.ats.bdre.im.etl.api.exception.ETLException;
 import com.wipro.ats.bdre.md.api.GetGeneralConfig;
 import com.wipro.ats.bdre.md.api.GetProcess;
+import com.wipro.ats.bdre.md.api.GetProperties;
+import com.wipro.ats.bdre.md.api.HiveSchemaEvolution;
 import com.wipro.ats.bdre.md.beans.ProcessInfo;
 import org.apache.commons.cli.CommandLine;
 import org.apache.hadoop.conf.Configuration;
@@ -28,9 +30,9 @@ import org.apache.log4j.Logger;
 
 import java.sql.Connection;
 import java.sql.ResultSet;
+import java.sql.ResultSetMetaData;
 import java.sql.Statement;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 /**
  * Created by vishnu on 12/17/14.
@@ -65,7 +67,7 @@ public class BaseLoad extends ETLBase {
     }
     private void processStage(String dbName, String baseTableName, String instanceExecId, String processId) {
         try {
-
+            checkHiveSchemaEvolution(Integer.parseInt(processId),dbName,baseTableName);
             Configuration conf = new Configuration();
             conf.set("fs.defaultFS", IMConfig.getProperty(DEFAULTFSNAME));
             FileSystem fs = FileSystem.get(conf);
@@ -113,9 +115,9 @@ public class BaseLoad extends ETLBase {
                 String bdreLinuxUserName = generalConfig.byConigGroupAndKey("scripts_config", "bdreLinuxUserName").getDefaultVal();
                 ProcessInfo process = new GetProcess().getProcess(Integer.parseInt(processId));
 
-                String serdePath = hdfsURI+"/user/"+bdreLinuxUserName+"/wf/1/5/"+process.getParentProcessId()+"/lib/hive-hcatalog-core-0.13.1.jar";
+                /*String serdePath = hdfsURI+"/user/"+bdreLinuxUserName+"/wf/1/5/"+process.getParentProcessId()+"/lib/hive-hcatalog-core-0.13.1.jar";
                 String addSerde = "add jar "+serdePath;
-                baseConStatement.execute(addSerde);
+                baseConStatement.execute(addSerde);*/
 
                 String query="alter table "+ baseTableName+" add partition("+stagePartition.replace("/",",")+")";
                 LOGGER.info("query = " + query);
@@ -128,6 +130,77 @@ public class BaseLoad extends ETLBase {
             throw new ETLException(e);
         }
 
+    }
+
+    private void checkHiveSchemaEvolution(Integer processId,String dbName,String tableName) {
+        try {
+            LOGGER.info("inside checkHiveSchemaEvolution");
+            Connection con = getHiveJDBCConnection(dbName);
+            Statement stmt = con.createStatement();
+            GetProperties getProperties = new GetProperties();
+            Properties appendedColumnProperties = getProperties.getProperties(processId.toString(), "appended-columns");
+            Enumeration appendedColumnList = appendedColumnProperties.propertyNames();
+            Properties deletedColumnProperties = getProperties.getProperties(processId.toString(), "deleted-columns");
+            Enumeration deletedColumnList = deletedColumnProperties.propertyNames();
+            List<String> deletedColumns= Collections.list(deletedColumnList);
+            System.out.println(appendedColumnProperties.isEmpty());
+            System.out.println("Number of columns to be deleted are "+deletedColumnProperties.size());
+            System.out.println("size of deletedColumns is "+deletedColumns.size());
+            for(String s : deletedColumns){
+                System.out.println("hiiieee");
+                System.out.println("column in deleted column list is "+s);
+            }
+            while(deletedColumnList.hasMoreElements()) {
+                System.out.println("hiiieee");
+                String column = (String) deletedColumnList.nextElement();
+                System.out.println("column in deleted column list is"+column);
+            }
+            if (!appendedColumnProperties.isEmpty()) {
+                StringBuilder appendDdl = new StringBuilder("ALTER TABLE " + tableName + " ADD COLUMNS ( ");
+                while (appendedColumnList.hasMoreElements()) {
+                    String key = (String) appendedColumnList.nextElement();
+                    String value = appendedColumnProperties.getProperty(key);
+                    LOGGER.info("column name is " + key + " and its data type is " + value);
+                    appendDdl.append(key + " " + value + ", ");
+                }
+                appendDdl.deleteCharAt(appendDdl.length() - 2);
+                appendDdl.append(")");
+                System.out.println("query is " + appendDdl);
+                stmt.executeUpdate(appendDdl.toString());
+            }
+            if(!deletedColumnProperties.isEmpty()){
+                StringBuilder deleteDdl = new StringBuilder("ALTER TABLE " + tableName + " REPLACE COLUMNS ( ");
+                ResultSet rs = stmt.executeQuery("select * from " + dbName + "." + tableName +"  limit 1");
+                ResultSetMetaData metaData = rs.getMetaData();
+                for(int i=1; i<=metaData.getColumnCount();i++) {
+                    int flag=0;
+                    String columnName = metaData.getColumnLabel(i).replaceFirst(tableName.toLowerCase() + ".", "");
+                    String datatype = metaData.getColumnTypeName(i);
+                    System.out.println("column in table is " + columnName);
+                    for(String column:deletedColumns){
+                        System.out.println("I am using list and not enumeration");
+                        System.out.println(column);
+                      if(columnName.equalsIgnoreCase(column)) {
+                          System.out.println("column to be deleted is " + column + "::" + columnName);
+                          flag = 1;
+                      }
+                    }
+
+                    if(flag==0 && !columnName.equalsIgnoreCase("instanceexecid")){
+                        LOGGER.info("column name is " + columnName + " and its data type is " + datatype);
+                        deleteDdl.append(columnName + " " + datatype + ", ");
+                    }
+                }
+                deleteDdl.deleteCharAt(deleteDdl.length() - 2);
+                deleteDdl.append(")");
+                System.out.println("query is " + deleteDdl);
+                stmt.executeUpdate(deleteDdl.toString());
+            }
+            new HiveSchemaEvolution().updateBaseTableProperties(processId);
+        }
+        catch (Exception e){
+            e.printStackTrace();
+        }
     }
 
 }

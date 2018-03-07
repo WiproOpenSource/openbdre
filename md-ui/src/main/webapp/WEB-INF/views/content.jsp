@@ -308,13 +308,7 @@
                             						}, {
                                                                         label: "Job Definitions",
                                                                         collapse: "1",
-                                                                        children: [{
-                                                                                label: "Batch Jobs Registry",
-                                                                                collapse: "1",
-                                                                                url: "process.page",
-                                                                                children: []
-                            								},
-
+                                                                        children: [
                                                                             {
                                                                                 label: "Workflow Creator",
                                                                                 collapse: "1",
@@ -477,7 +471,13 @@
                                                                           collapse: "1",
                                                                           url: "hivetablemigration.page",
                                                                           children: []
-                                                 },]
+                                                 },{
+                                                                                                                                   label: "Batch Jobs Registry",
+                                                                                                                                   collapse: "1",
+                                                                                                                                   url: "process.page",
+                                                                                                                                   children: []
+                                                                               								},
+                                                                          ]
                                                             },
 
 

@@ -237,6 +237,7 @@
                 <script type="text/javascript">
                 var jtParamStart = 0;
                 var jtPage = 10;
+                var flag=0;
                     $(document).ready(function() {
                     var u=window.location.href;
                     console.log(u);
@@ -260,16 +261,17 @@
                             actions: {
                                 listAction: function(postData, jtParams) {
                                 $("#page-header").hide();
-                                if(jtParams.jtStartIndex!=0){
+                                console.log("Debugging jt params");
+                                console.log(jtParams);
+                                if(jtParams.jtStartIndex!=0 || jtParams.jtPageSize!=10){
                                     jtParamStart = jtParams.jtStartIndex;
                                     jtPage = jtParams.jtPageSize;
                                 }
-
                                     return $.Deferred(function($dfd) {
                                     console.log(jtParams);
                                         $.ajax({
 
-                                                url: ur + jtParamStart + '&size='+jtPage,
+                                                url: ur + jtParams.jtStartIndex + '&size='+jtParams.jtPageSize,
 
 
                                             type: 'GET',
@@ -1557,7 +1559,7 @@
                      });
 
                      function refreshPage(){
-                         $('div#Container').jtable('load');
+                         $('div#Container').jtable('reload');
                      }
 
                 </script>
@@ -1844,10 +1846,10 @@
 
                     </script>
                     <script type="text/javascript">
-                         var auto = setInterval(    function ()
+                         /*var auto = setInterval(    function ()
                          {
-                               $('div#Container').jtable('load');
-                         }, 60000);
+                               $('div#Container').jtable('reload');
+                         }, 60000);*/
                     </script>
 
             </head>

@@ -1591,7 +1591,7 @@
                     }
 
                     function refreshPage(){
-                        $('div#Container').jtable('load');
+                        $('div#Container').jtable('reload');
                     }
 
                 </script>
@@ -1722,7 +1722,7 @@
                     <script type="text/javascript">
                          var auto = setInterval(    function ()
                          {
-                               $('div#Container').jtable('load');
+                               $('div#Container').jtable('reload');
                          }, 60000);
                     </script>
 

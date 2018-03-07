@@ -1130,6 +1130,13 @@ wizard = $(document).ready(function() {
                if(checked1=="yes")
                 {
                 console.log(restWrapper);
+                 for(var i=0;i<restWrapper.Records.length;i++){
+                        if(restWrapper.Record[i]["dataType"]=="Integer"){
+                        restWrapper.Records[i]["dataType"]="Int";
+                        restWrapper.Record[i]["dataType"]="Int" ;
+                        }
+                    }
+                  console.log(restWrapper);
                 $dfd.resolve(restWrapper);
                 }
 
