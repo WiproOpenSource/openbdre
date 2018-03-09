@@ -169,7 +169,8 @@ public class BaseLoad extends ETLBase {
                 stmt.executeUpdate(appendDdl.toString());
             }
             if(!deletedColumnProperties.isEmpty()){
-                StringBuilder deleteDdl = new StringBuilder("ALTER TABLE " + tableName + " REPLACE COLUMNS ( ");
+                String columnNames="";
+                StringBuilder deleteDdl = new StringBuilder("CREATE TABLE " + tableName + " ( ");
                 ResultSet rs = stmt.executeQuery("select * from " + dbName + "." + tableName +"  limit 1");
                 ResultSetMetaData metaData = rs.getMetaData();
                 for(int i=1; i<=metaData.getColumnCount();i++) {
@@ -178,7 +179,6 @@ public class BaseLoad extends ETLBase {
                     String datatype = metaData.getColumnTypeName(i);
                     System.out.println("column in table is " + columnName);
                     for(String column:deletedColumns){
-                        System.out.println("I am using list and not enumeration");
                         System.out.println(column);
                       if(columnName.equalsIgnoreCase(column)) {
                           System.out.println("column to be deleted is " + column + "::" + columnName);
@@ -186,15 +186,30 @@ public class BaseLoad extends ETLBase {
                       }
                     }
 
-                    if(flag==0 && !columnName.equalsIgnoreCase("instanceexecid")){
-                        LOGGER.info("column name is " + columnName + " and its data type is " + datatype);
-                        deleteDdl.append(columnName + " " + datatype + ", ");
-                    }
+                    if(flag==0  ){
+                        if(!columnName.equalsIgnoreCase("instanceexecid"))
+                            deleteDdl.append(columnName + " " + datatype + ", ");
+                        LOGGER.info("column name in new table is " + columnName + " and its data type is " + datatype);
+                        columnNames+=tableName + "_temp." + columnName + ",";
+                        }
                 }
+                columnNames=columnNames.substring(0,columnNames.length()-1);
+                System.out.println(columnNames);
                 deleteDdl.deleteCharAt(deleteDdl.length() - 2);
                 deleteDdl.append(")");
-                System.out.println("query is " + deleteDdl);
+                deleteDdl.append(" PARTITIONED BY (");
+                Integer stgLoad=(processId-1);
+                java.util.Properties partitionproperties = getProperties.getProperties(stgLoad.toString(), "partition");
+                String partitionColumns = partitionproperties.getProperty("partition_columns");
+                if (partitionColumns == null)
+                    partitionColumns = "";
+                deleteDdl.append(partitionColumns + " instanceexecid bigint) ");
+                System.out.println("create query is " + deleteDdl);
+                System.out.println("insert query is : insert into " + tableName + " partition (instanceexecid) select " + columnNames + " from " + tableName + "_temp");
+                stmt.executeUpdate("ALTER TABLE " + tableName + " RENAME TO " + tableName + "_temp");
                 stmt.executeUpdate(deleteDdl.toString());
+                stmt.executeUpdate("insert into " + tableName + " partition (instanceexecid) select " + columnNames + " from " + tableName + "_temp");
+                stmt.executeUpdate("DROP TABLE " + tableName + "_temp");
             }
             new HiveSchemaEvolution().updateBaseTableProperties(processId);
         }
