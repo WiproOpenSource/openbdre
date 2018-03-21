@@ -43,67 +43,72 @@ public class SchemaEvolutionAPI {
             LOGGER.info("inside getSchemaDetails");
             String dbName = null, tableName = null, columns = null, username = null, password = null;
             List<String> schemaList = new ArrayList<>();
-            GetProperties getProperties = new GetProperties();
-            java.util.Properties importProperties = getProperties.getProperties(subPid, "imp-common");
-            Enumeration e = importProperties.propertyNames();
-            List<String> importPropertyList= Collections.list(e);
-            if(!importProperties.isEmpty()) {
-                for (String key : importPropertyList) {
-                    //String key = (String) e.nextElement();
-                    if (key.equalsIgnoreCase("db")) {
-                        dbName = importProperties.getProperty(key);
-                        LOGGER.info("dbName is " + dbName);
+            String processType=processDAO.getProcessTypeName(subProcessId);
+            System.out.println("process type is : " + processType);
+            if(processType.contains("Data Import")) {
+                GetProperties getProperties = new GetProperties();
+                java.util.Properties importProperties = getProperties.getProperties(subPid, "imp-common");
+                Enumeration e = importProperties.propertyNames();
+                List<String> importPropertyList = Collections.list(e);
+                if (!importProperties.isEmpty()) {
+                    for (String key : importPropertyList) {
+                        //String key = (String) e.nextElement();
+                        if (key.equalsIgnoreCase("db")) {
+                            dbName = importProperties.getProperty(key);
+                            LOGGER.info("dbName is " + dbName);
+                        }
+                        if (key.equalsIgnoreCase("table")) {
+                            tableName = importProperties.getProperty(key);
+                            LOGGER.info("tableName is " + tableName);
+                        }
+                        if (key.equalsIgnoreCase("columns")) {
+                            columns = importProperties.getProperty(key);
+                            LOGGER.info("columns are " + columns);
+                        }
+                        if (key.equalsIgnoreCase("password")) {
+                            password = importProperties.getProperty(key);
+                            LOGGER.info("password is " + password);
+                        }
+                        if (key.equalsIgnoreCase("username")) {
+                            username = importProperties.getProperty(key);
+                            LOGGER.info("username is " + username);
+                        }
                     }
-                    if (key.equalsIgnoreCase("table")) {
-                        tableName = importProperties.getProperty(key);
-                        LOGGER.info("tableName is " + tableName);
+                } else {
+                    LOGGER.warn("import properties empty");
+                }
+                String[] columnNames = columns.split(",");
+                columnsList = Arrays.asList(columnNames);
+                Class.forName(driverName);
+                Connection con = DriverManager.getConnection(
+                        dbName, username, password);
+                Statement stmt = con.createStatement();
+                ResultSet rs = stmt.executeQuery("select * from " + tableName + "  limit 1");
+                ResultSetMetaData metaData = rs.getMetaData();
+                Map<String, String> sourceTableColumnsAndDataTypes = new LinkedHashMap<>();
+                for (int i = 1; i <= metaData.getColumnCount(); i++) {
+                    String columnName = metaData.getColumnLabel(i);
+                    String datatype = metaData.getColumnTypeName(i);
+                    sourceTableColumnsAndDataTypes.put(columnName, datatype);
+                }
+                for (String c : columnsList) {
+                    if (sourceTableColumnsAndDataTypes.containsKey(c)) {
+                        LOGGER.info(c + " is already present in import");
+                        schemaList.add(c + ":" + sourceTableColumnsAndDataTypes.get(c) + ":" + getHiveDataType(sourceTableColumnsAndDataTypes.get(c)) + ".1");
+                    } else {
+                        LOGGER.info(c + " is deleted from source table");
+                        schemaList.add(c + ":NA:NA.3");
                     }
-                    if (key.equalsIgnoreCase("columns")) {
-                        columns = importProperties.getProperty(key);
-                        LOGGER.info("columns are " + columns);
-                    }
-                    if (key.equalsIgnoreCase("password")) {
-                        password = importProperties.getProperty(key);
-                        LOGGER.info("password is " + password);
-                    }
-                    if (key.equalsIgnoreCase("username")) {
-                        username = importProperties.getProperty(key);
-                        LOGGER.info("username is " + username);
+                }
+                for (String columnName : sourceTableColumnsAndDataTypes.keySet()) {
+                    if (!columnsList.contains(columnName)) {
+                        schemaList.add(columnName + ":" + sourceTableColumnsAndDataTypes.get(columnName) + ":" + getHiveDataType(sourceTableColumnsAndDataTypes.get(columnName)) + ".2");
+                        LOGGER.info(columnName + " is currently not present in import");
                     }
                 }
             }
             else{
-                LOGGER.warn("import properties empty");
-            }
-            String[] columnNames=columns.split(",");
-            columnsList= Arrays.asList(columnNames);
-            Class.forName(driverName);
-            Connection con = DriverManager.getConnection(
-                    dbName, username, password);
-            Statement stmt = con.createStatement();
-            ResultSet rs = stmt.executeQuery("select * from " + tableName + "  limit 1");
-            ResultSetMetaData metaData = rs.getMetaData();
-            Map<String,String> sourceTableColumnsAndDataTypes=new LinkedHashMap<>();
-            for (int i = 1; i <= metaData.getColumnCount(); i++) {
-                String columnName = metaData.getColumnLabel(i);
-                String datatype = metaData.getColumnTypeName(i);
-                sourceTableColumnsAndDataTypes.put(columnName,datatype);
-            }
-            for(String c : columnsList){
-                if(sourceTableColumnsAndDataTypes.containsKey(c)){
-                    LOGGER.info(c + " is already present in import");
-                    schemaList.add(c+":" + sourceTableColumnsAndDataTypes.get(c) + ":" + getHiveDataType(sourceTableColumnsAndDataTypes.get(c)) + ".1");
-                }
-                else{
-                    LOGGER.info(c + " is deleted from source table");
-                    schemaList.add(c+":NA:NA.3");
-                }
-            }
-            for(String columnName : sourceTableColumnsAndDataTypes.keySet()){
-                if(!columnsList.contains(columnName)){
-                    schemaList.add(columnName+":" + sourceTableColumnsAndDataTypes.get(columnName) + ":" + getHiveDataType(sourceTableColumnsAndDataTypes.get(columnName)) + ".2");
-                    LOGGER.info(columnName + " is currently not present in import");
-                }
+               schemaList.add("InvalidProcess");
             }
             restWrapper=new RestWrapper(schemaList,RestWrapper.OK);
         }
@@ -209,7 +214,7 @@ public class SchemaEvolutionAPI {
                 id1.setProcessId(processId);
                 id1.setPropKey("raw_column_name." + i);
                 columnProperty.setConfigGroup("raw-cols");
-                columnProperty.setDescription("");
+                columnProperty.setDescription("Raw Table Columns");
                 columnProperty.setId(id1);
                 columnProperty.setPropValue(column);
                 columnProperty.setProcess(processDAO.get(processId));
@@ -220,7 +225,7 @@ public class SchemaEvolutionAPI {
                 id2.setProcessId(processId);
                 id2.setPropKey("raw_column_datatype." + i);
                 dataTypeProperty.setConfigGroup("raw-data-types");
-                dataTypeProperty.setDescription("");
+                dataTypeProperty.setDescription("Raw Table Data Types");
                 dataTypeProperty.setId(id2);
                 dataTypeProperty.setPropValue(propertiesMap.get(column));
                 dataTypeProperty.setProcess(processDAO.get(processId));
@@ -270,7 +275,7 @@ public class SchemaEvolutionAPI {
                 id1.setProcessId(processId);
                 Properties dataTypeProperty=new Properties();
                 dataTypeProperty.setConfigGroup("base-data-types");
-                dataTypeProperty.setDescription("");
+                dataTypeProperty.setDescription("Base Table data types");
                 dataTypeProperty.setId(id1);
                 dataTypeProperty.setPropValue(propertiesMap.get(column));
                 dataTypeProperty.setProcess(processDAO.get(processId));
@@ -281,7 +286,7 @@ public class SchemaEvolutionAPI {
                 id2.setProcessId(processId);
                 Properties columnProperty=new Properties();
                 columnProperty.setConfigGroup("base-columns");
-                columnProperty.setDescription("");
+                columnProperty.setDescription("Base Table Columns");
                 columnProperty.setId(id2);
                 if(existingColumns.containsKey(column)){
                     columnProperty.setPropValue(existingColumns.get(column));
@@ -317,7 +322,7 @@ public class SchemaEvolutionAPI {
                     deleteProperty.setProcess(processDAO.get(processId));
                     deleteProperty.setPropValue(baseColumnAndDataTypes.getProperty(column));
                     deleteProperty.setId(id);
-                    deleteProperty.setDescription("");
+                    deleteProperty.setDescription("column to be deleted");
                     deleteProperty.setConfigGroup("deleted-columns");
                     propertiesDAO.update(deleteProperty);
                 }
@@ -332,7 +337,7 @@ public class SchemaEvolutionAPI {
                     appendProperty.setProcess(processDAO.get(processId));
                     appendProperty.setPropValue(propertiesMap.get(column));
                     appendProperty.setId(id);
-                    appendProperty.setDescription("");
+                    appendProperty.setDescription("column to be appended");
                     appendProperty.setConfigGroup("appended-columns");
                     propertiesDAO.insert(appendProperty);
                 }

@@ -204,6 +204,12 @@
 					.label-icons.label-danger {
 						background: url('../css/images/label-danger.png');
 					}
+					.my_text
+                                {
+                                    font-family:    Arial, Helvetica, sans-serif;
+                                    font-size:      20px;
+                                    font-weight:    bold;
+                                }
 					</style>
 
 	<script>
@@ -2044,16 +2050,43 @@
                                                      alert('danger');
                                                  }
                                              });
+                        if(columns[0]=="InvalidProcess"){
+                        console.log("invalid process selected");
+                          var div=document.getElementById("myRDBMSModel");
+                          var formHtml="";
+                          formHtml=formHtml+'<div class="modal-content">';
+                          formHtml=formHtml+'<span class="closemodal">&times;</span>';
+                          formHtml=formHtml+'<h3  style="margin-left:300px;font-size:25px;font-weight:bold;">Please Select Data Import Job</h3>';
+
+                          formHtml=formHtml+'<button   style="margin-left:45%;background: lightsteelblue;" id="cancel" class="btn btn-default">Cancel</button>';
+                          formHtml=formHtml+'</div>';
+                          div.innerHTML=formHtml;
+                          var modal = document.getElementById('myRDBMSModel');
+                                               var span = document.getElementsByClassName("closemodal")[0];
+                                               modal.style.display = "block";
+
+                                               span.onclick = function() {
+                                                modal.style.display = "none";
+                                               }
+                                               var cancel=document.getElementById('cancel');
+
+                                           cancel.onclick = function() {
+                                            modal.style.display = "none";
+                                           }
+                        }
+                        else{
                         var div=document.getElementById("myRDBMSModel");
                         var formHtml="";
                         formHtml=formHtml+'<div class="modal-content">';
                         formHtml=formHtml+'<span class="closemodal">&times;</span>';
-                        formHtml=formHtml+'<h3 style="margin-left:350px;">Schema details</h3>';
-                        formHtml=formHtml+'<div class="col-md-12" >';
-                        formHtml=formHtml+'<div class="col-md-3">Selected</div>';
-                        formHtml=formHtml+'<div class="col-md-3">Column Name</div>';
-                        formHtml=formHtml+'<div class="col-md-3">MySQL Data Type</div>';
-                        formHtml=formHtml+'<div class="col-md-3">Hive Data Type</div>';
+                        formHtml=formHtml+'<h3  style="margin-left:375px;font-size:25px;font-weight:bold;">Schema Details</h3>';
+                        formHtml=formHtml+'<div class="col-md-12" style="padding-left : 50px; padding-right : 20px;padding-bottom : 10px;">';
+                        formHtml=formHtml+'</div>';
+                        formHtml=formHtml+'<div class="col-md-12" style="padding-left : 50px; padding-right : 20px;padding-bottom : 10px;" >';
+                        formHtml=formHtml+'<div class="col-md-3 my_text">Selected</div>';
+                        formHtml=formHtml+'<div class="col-md-3 my_text" style="padding-left : 0px;">Column Name</div>';
+                        formHtml=formHtml+'<div class="col-md-3 my_text" style="padding-left : 25px;">MySQL Data Type</div>';
+                        formHtml=formHtml+'<div class="col-md-3 my_text" style="padding-left : 35px;">Hive Data Type</div>';
                         formHtml=formHtml+'</div>';
                         for(var i=0;i<columns.length;i++){
                         var isChecked=columns[i].split(".")[1];
@@ -2062,38 +2095,46 @@
                         var mysqlDataType=columnAndDataTypes.split(":")[1];
                         var hiveDataType=columnAndDataTypes.split(":")[2];
                         if(isChecked==1){
-                        formHtml=formHtml+'<div class="col-md-12" >';
+                        formHtml=formHtml+'<div class="col-md-12" style="padding-left : 50px; padding-right : 20px;padding-bottom : 10px;">';
                         formHtml=formHtml+'<div class="col-md-3">';
                         formHtml=formHtml+'<input type="checkbox" class="schema" value=' + columnName + ":" + hiveDataType + ' checked >';
                         formHtml=formHtml+'</div>';
-                        formHtml=formHtml+'<div class="col-md-3">' + columnName + '</div>';
-                        formHtml=formHtml+'<div class="col-md-3">' + mysqlDataType + '</div>';
-                        formHtml=formHtml+'<div class="col-md-3">' + hiveDataType + '</div>';
+                        formHtml=formHtml+'<div class="col-md-3" style="padding-left : 0px;">' + columnName + '</div>';
+                        formHtml=formHtml+'<div class="col-md-3" style="padding-left : 25px;">' + mysqlDataType + '</div>';
+                        formHtml=formHtml+'<div class="col-md-3" style="padding-left : 35px;">' + hiveDataType + '</div>';
                         formHtml=formHtml+'</div>';
+
                         }
                         else if(isChecked==2){
-                        formHtml=formHtml+'<div class="col-md-12" >';
+                        formHtml=formHtml+'<div class="col-md-12" style="padding-left : 50px; padding-right : 20px;padding-bottom : 10px;">';
                         formHtml=formHtml+'<div class="col-md-3">';
                         formHtml=formHtml+'<input type="checkbox" class="schema" value=' + columnName + ":" + hiveDataType + ' >';
                         formHtml=formHtml+'</div>';
-                        formHtml=formHtml+'<div class="col-md-3">' + columnName + '</div>';
-                        formHtml=formHtml+'<div class="col-md-3">' + mysqlDataType + '</div>';
-                        formHtml=formHtml+'<div class="col-md-3">' + hiveDataType + '</div>';
+                        formHtml=formHtml+'<div class="col-md-3" style="padding-left : 0px;">' + columnName + '</div>';
+                        formHtml=formHtml+'<div class="col-md-3" style="padding-left : 25px;">' + mysqlDataType + '</div>';
+                        formHtml=formHtml+'<div class="col-md-3" style="padding-left : 35px;">' + hiveDataType + '</div>';
                         formHtml=formHtml+'</div>';
+
                         }
                         else{
-                        formHtml=formHtml+'<div class="col-md-12" >';
+                        formHtml=formHtml+'<div class="col-md-12" style="padding-left : 50px; padding-right : 20px;padding-bottom : 10px;">';
                         formHtml=formHtml+'<div class="col-md-3">';
                         formHtml=formHtml+'<input type="checkbox" class="schema" value=' + columnName + ":" + hiveDataType + ' disabled >';
                         formHtml=formHtml+'</div>';
-                        formHtml=formHtml+'<div class="col-md-3">' + columnName + '</div>';
-                        formHtml=formHtml+'<div class="col-md-3">' + mysqlDataType + '</div>';
-                        formHtml=formHtml+'<div class="col-md-3">' + hiveDataType + '</div>';
+                        formHtml=formHtml+'<div class="col-md-3" style="padding-left : 0px;">' + columnName + '</div>';
+                        formHtml=formHtml+'<div class="col-md-3" style="padding-left : 25px;">' + mysqlDataType + '</div>';
+                        formHtml=formHtml+'<div class="col-md-3" style="padding-left : 35px;">' + hiveDataType + '</div>';
+
                         formHtml=formHtml+'</div>';
+
+
                         }
                         }
-                        formHtml=formHtml+'<button  style="margin-left:38%" id="submit" class="btn btn-default">Submit</button>';
-                        formHtml=formHtml+'<button   style="margin-left:6%;" id="cancel" class="btn btn-default">Cancel</button>';
+
+                        formHtml=formHtml+'<div class="col-md-12" style="padding-left : 50px; padding-right : 20px;padding-bottom : 10px;">';
+                        formHtml=formHtml+'</div>';
+                        formHtml=formHtml+'<button  style="margin-left:38%;background: lightsteelblue;" id="submit" class="btn btn-default">Submit</button>';
+                        formHtml=formHtml+'<button   style="margin-left:6%;background: lightsteelblue;" id="cancel" class="btn btn-default">Cancel</button>';
                         formHtml=formHtml+'</div>';
                         formHtml=formHtml+'</div>';
                         div.innerHTML=formHtml;
@@ -2138,6 +2179,7 @@
                                           alert('danger');
                                       }
                                   });
+                 }
                  }
 
                     }
