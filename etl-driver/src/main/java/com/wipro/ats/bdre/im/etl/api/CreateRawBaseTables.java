@@ -320,6 +320,7 @@ public class CreateRawBaseTables extends ETLBase {
         // fetching column names and aliases as a string from properties with base-columns as config group
         GetProperties getPropertiesOfViewColumns = new GetProperties();
         java.util.Properties viewPropertiesOfColumns = getPropertiesOfViewColumns.getProperties(stgLoad, "base-columns");
+        java.util.Properties viewPropertiesOfDataTypes = getPropertiesOfViewColumns.getProperties(stgLoad, "base-data-types");
         Enumeration viewColumnsList = viewPropertiesOfColumns.propertyNames();
         List<String> viewColumns1=Collections.list(viewColumnsList);
         Collections.sort(viewColumns1, new Comparator<String>() {
@@ -331,6 +332,7 @@ public class CreateRawBaseTables extends ETLBase {
             }
         });
         StringBuilder viewColumns = new StringBuilder();
+        int tokenize = 0;
         if (!viewPropertiesOfColumns.isEmpty()) {
             for (String key : viewColumns1) {
                 //String key = (String) viewColumnsList.nextElement();
@@ -343,8 +345,19 @@ public class CreateRawBaseTables extends ETLBase {
                         if(!viewColumns.toString().contains(firstColumnName))
                             viewColumns.append(firstColumnName + " AS " + firstColumnName + ",");
                     }
-                    else
-                        viewColumns.append(viewPropertiesOfColumns.getProperty(key) + " AS " + key.split("\\.")[0].replaceAll("transform_", "") + ",");
+                    else {
+                        if(viewPropertiesOfColumns.getProperty(key).contains("tokenize"))
+                            tokenize = 1;
+                        /*if (columnName.contains("tokenize")){
+                            if(viewPropertiesOfDataTypes.getProperty(key.split("\\.")[0].replaceAll("transform_", "")).equals("Timestamp"))
+                                viewColumns.append("CAST("+"from_unixtime(unix_timestamp("+viewPropertiesOfColumns.getProperty(key)+",'yyyyMMddHHmmss')) AS "+viewPropertiesOfDataTypes.getProperty(key.split("\\.")[0].replaceAll("transform_", ""))+") AS "+key.split("\\.")[0].replaceAll("transform_", "")+",");
+                            else
+                                viewColumns.append("CAST("+viewPropertiesOfColumns.getProperty(key)+" AS "+viewPropertiesOfDataTypes.getProperty(key.split("\\.")[0].replaceAll("transform_", ""))+") AS "+key.split("\\.")[0].replaceAll("transform_", "")+",");
+                        }*/
+                        //else
+                            //viewColumns.append(viewPropertiesOfColumns.getProperty(key) + " AS " + key.split("\\.")[0].replaceAll("transform_", "") + ",");
+                        viewColumns.append( key.split("\\.")[0].replaceAll("transform_", "")+ " AS " + key.split("\\.")[0].replaceAll("transform_", "") + ",");
+                    }
                 //}//
                 //else
                 //viewColumns.append(viewPropertiesOfColumns.getProperty(key) + " AS " + key.replaceAll("transform_", "") + ",");
@@ -486,6 +499,45 @@ public class CreateRawBaseTables extends ETLBase {
         checkAndCreateRawView(rawViewDbName, rawViewName, rawViewDdl);
         checkAndCreateStageTable(baseTableDbName, stgTableName, stgTableDdl);
         checkAndCreateBaseTable(baseTableDbName, baseTableName, baseTableDdl,fileType);
+
+        if(tokenize == 1){
+            String tokenizeTableName = baseTableName+"_tokenize";
+
+            String tokenizeColumnsWithDataTypes=null;
+
+            //creating schema for tokenized table in base database
+            GetProperties getPropertiesOfBaseColumns = new GetProperties();
+            java.util.Properties basePropertiesOfColumns = getPropertiesOfBaseColumns.getProperties(stgLoad, "base-columns");
+            java.util.Properties basePropertiesOfDataTypes = getPropertiesOfBaseColumns.getProperties(stgLoad, "base-data-types");
+            Enumeration baseColumnsList = basePropertiesOfColumns.propertyNames();
+            List<String> baseColumns1=Collections.list(baseColumnsList);
+            Collections.sort(baseColumns1, new Comparator<String>() {
+
+                public int compare(String o1, String o2) {
+                    int n1 = Integer.valueOf(o1.split("\\.")[1]);
+                    int n2 = Integer.valueOf(o2.split("\\.")[1]);
+                    return (n1 - n2);
+                }
+            });
+
+
+            StringBuilder tokenizeColumns = new StringBuilder();
+            if (!basePropertiesOfColumns.isEmpty()) {
+                for (String key : baseColumns1) {
+                    //String key = (String) baseColumnsList.nextElement();
+                    tokenizeColumns.append(key.split("\\.")[0].replaceAll("transform_", "") + " " + basePropertiesOfDataTypes.getProperty(key.split("\\.")[0].replaceAll("transform_", "")) + ",");
+                    if(basePropertiesOfColumns.getProperty(key).contains("tokenize"))
+                        tokenizeColumns.append(key.split("\\.")[0].replaceAll("transform_", "")+"_actual" + " " + basePropertiesOfDataTypes.getProperty(key.split("\\.")[0].replaceAll("transform_", "")) + ",");
+                }
+            }
+            //removing trailing comma
+            LOGGER.info("Length of tokenizedTableColumn" + tokenizeColumns.length());
+            tokenizeColumnsWithDataTypes = tokenizeColumns.substring(0, tokenizeColumns.length() - 1);
+            LOGGER.info("tokenizeColumnsWithDataTypes is " + tokenizeColumnsWithDataTypes);
+            String tokenizeTableDdl = "CREATE TABLE IF NOT EXISTS " + baseTableDbName + "." + tokenizeTableName + " (" + tokenizeColumnsWithDataTypes + ") partitioned by (" + partitionColumns + " instanceexecid bigint) ";
+
+            checkAndCreateTokenizedTable(baseTableDbName,tokenizeTableName,tokenizeTableDdl);
+        }
     }
 
 
@@ -543,6 +595,15 @@ public class CreateRawBaseTables extends ETLBase {
                 String serdePath = hdfsURI+"/user/"+bdreLinuxUserName+"/wf/1/5/"+process.getParentProcessId()+"/lib/hive-hcatalog-core-0.13.1.jar";
                 String addSerde = "add jar "+serdePath;
                 stmt.execute(addSerde);
+
+                if(ddl.contains("tokenize")){
+                    String customUDFPath = hdfsURI+"/user/"+bdreLinuxUserName+"/wf/1/5/"+process.getParentProcessId()+"/lib/etl-driver-1.1-SNAPSHOT.jar";
+                    String addUDF = "add jar "+customUDFPath;
+                    stmt.execute(addUDF);
+                    String tempFunction = "create temporary function tokenize as \'com.wipro.ats.bdre.im.HiveUDF\'";
+                    LOGGER.info("Temporary function creation "+tempFunction);
+                    stmt.execute(tempFunction);
+                }
 
                 LOGGER.debug("View does not exist. Creating View " + stageViewName);
                 LOGGER.info("Creating view using " + ddl);
@@ -613,6 +674,34 @@ public class CreateRawBaseTables extends ETLBase {
             con.close();
         } catch (Exception e) {
             LOGGER.error("Error while creating base table" + e);
+            throw new ETLException(e);
+        }
+    }
+
+    private void checkAndCreateTokenizedTable(String dbName, String tokenizeTable, String ddl){
+        try {
+
+            Connection con = getHiveJDBCConnection(dbName);
+            Statement stmt = con.createStatement();
+            ResultSet rs = stmt.executeQuery(CreateRawBaseTables.getQuery(tokenizeTable));
+            if (!rs.next()) {
+                GetGeneralConfig generalConfig = new GetGeneralConfig();
+                String hdfsURI = generalConfig.byConigGroupAndKey("imconfig", "common.default-fs-name").getDefaultVal();
+                String bdreLinuxUserName = generalConfig.byConigGroupAndKey("scripts_config", "bdreLinuxUserName").getDefaultVal();
+                ProcessInfo process = new GetProcess().getProcess(Integer.parseInt(processIdSelected));
+
+                String serdePath = hdfsURI+"/user/"+bdreLinuxUserName+"/wf/1/5/"+process.getParentProcessId()+"/lib/hive-hcatalog-core-0.13.1.jar";
+                String addSerde = "add jar "+serdePath;
+                stmt.execute(addSerde);
+
+                LOGGER.info("Tokenize table does not exist.Creating Table " + tokenizeTable);
+                LOGGER.info("Creating tokenize table using "+ddl);
+                stmt.executeUpdate(ddl);
+            }
+            stmt.close();
+            con.close();
+        } catch (Exception e) {
+            LOGGER.error("Error while creating tokenize table" + e);
             throw new ETLException(e);
         }
     }

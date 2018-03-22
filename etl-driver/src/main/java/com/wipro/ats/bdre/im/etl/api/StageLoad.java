@@ -25,6 +25,7 @@ import org.apache.commons.cli.CommandLine;
 import org.apache.log4j.Logger;
 
 import java.sql.Connection;
+import java.sql.ResultSet;
 import java.sql.Statement;
 import java.util.*;
 
@@ -102,12 +103,42 @@ public class StageLoad extends ETLBase {
             fieldNames + IMConstant.FILE_FIELD_SEPERATOR + partitionKeys + instanceExecId + " FROM " + stageDbName + "."+ viewName +
                     " where batchid>=" + minBatchId + " and " + " batchid<=" + maxBatchId;
 
+            String customUDFPath = hdfsURI+"/user/"+bdreLinuxUserName+"/wf/1/5/"+process.getParentProcessId()+"/lib/etl-driver-1.1-SNAPSHOT.jar";
+            String addUDF = "add jar "+customUDFPath;
+            baseConStatement.execute(addUDF);
+            String tempFunction = "create temporary function tokenize as \'com.wipro.ats.bdre.im.HiveUDF\'";
+            LOGGER.info("Temporary function creation "+tempFunction);
+            baseConStatement.execute(tempFunction);
+
             LOGGER.info(query);
             baseConStatement.execute("set hive.exec.dynamic.partition.mode=nonstrict");
             baseConStatement.execute("set hive.exec.dynamic.partition=true");
             baseConStatement.execute("set hive.exec.max.dynamic.partitions.pernode=1000");
 
             baseConStatement.executeUpdate(query);
+
+            //checking if tokenization is required
+            GetProperties getPropertiesOfRawTable = new GetProperties();
+            java.util.Properties columnValues = getPropertiesOfRawTable.getProperties(stageLoadProcessId, "base-columns");
+            Enumeration e = columnValues.propertyNames();
+            List<String> baseColumns1=Collections.list(e);
+            Collections.sort(baseColumns1, new Comparator<String>() {
+
+                public int compare(String o1, String o2) {
+                    int n1 = Integer.valueOf(o1.split("\\.")[1]);
+                    int n2 = Integer.valueOf(o2.split("\\.")[1]);
+                    return (n1 - n2);
+                }
+            });
+            if (!columnValues.isEmpty()) {
+                for (String key : baseColumns1) {
+                    if(columnValues.getProperty(key).contains("tokenize")){
+                        loadTokenizeTable(baseTableName, stageLoadProcessId, baseDbName, stageDbName, stageTableName, partitionKeys, instanceExecId, baseConStatement);
+                        break;
+                    }
+                }
+            }
+
             LOGGER.debug("StageLoad Completed...");
 
         } catch (Exception e) {
@@ -183,6 +214,8 @@ public class StageLoad extends ETLBase {
         }
         else {
             java.util.Properties columnValues = getPropertiesOfRawTable.getProperties(stageLoadProcessId, "base-columns");
+            java.util.Properties columnDataTypes = getPropertiesOfRawTable.getProperties(stageLoadProcessId,"base-data-types");
+
             Enumeration e = columnValues.propertyNames();
             List<String> baseColumns1=Collections.list(e);
             Collections.sort(baseColumns1, new Comparator<String>() {
@@ -196,8 +229,18 @@ public class StageLoad extends ETLBase {
             if (!columnValues.isEmpty()) {
                 for (String key : baseColumns1) {
                     //String key = (String) e.nextElement();
-                    columnList.append(key.split("\\.")[0].replaceAll("transform_", ""));
-                    columnList.append(",");
+                    if(columnValues.getProperty(key).contains("tokenize")){
+                        if(columnDataTypes.getProperty(key.split("\\.")[0].replaceAll("transform_", "")).equals("Timestamp"))
+                            columnList.append("CAST(from_unixtime(unix_timestamp("+columnValues.getProperty(key)+",'yyyyMMddHHmmss')) AS "+columnDataTypes.getProperty(key.split("\\.")[0].replaceAll("transform_", ""))+")");
+                        else
+                            columnList.append("CAST("+columnValues.getProperty(key)+" AS "+columnDataTypes.getProperty(key.split("\\.")[0].replaceAll("transform_", ""))+")");
+
+                        columnList.append(",");
+                    }
+                    else {
+                        columnList.append(columnValues.getProperty(key));
+                        columnList.append(",");
+                    }
                 }
                 result = columnList.substring(0, columnList.length() - 1);
                 LOGGER.debug("column list = " + result);
@@ -206,5 +249,69 @@ public class StageLoad extends ETLBase {
 
 
         return result;
+    }
+
+    private void loadTokenizeTable(String baseTableName, String stageLoadProcessId, String baseDbName, String stageDbName, String stageTableName, String partitionKeys, String instanceExecId, Statement baseConStatement){
+
+        try {
+
+            String tokenizeTableColumns = null;
+            String tokenizeMergeCondition = null;
+            String rawTableColumns = null;
+
+            StringBuilder tokenizeColumns = new StringBuilder("");
+            StringBuilder tokenizeJoinCondition = new StringBuilder("");
+            StringBuilder rawTableColumnsModified = new StringBuilder("");
+
+            String secondTable = "raw_" + baseTableName;
+            String firstTable = stageTableName;
+            String tokenizeTable = baseTableName + "_tokenize";
+
+            GetProperties getPropertiesOfRawTable = new GetProperties();
+            java.util.Properties columnValues = getPropertiesOfRawTable.getProperties(stageLoadProcessId, "base-columns");
+            Enumeration e = columnValues.propertyNames();
+            List<String> baseColumns1 = Collections.list(e);
+            Collections.sort(baseColumns1, new Comparator<String>() {
+
+                public int compare(String o1, String o2) {
+                    int n1 = Integer.valueOf(o1.split("\\.")[1]);
+                    int n2 = Integer.valueOf(o2.split("\\.")[1]);
+                    return (n1 - n2);
+                }
+            });
+
+            if (!columnValues.isEmpty()) {
+                for (String key : baseColumns1) {
+                    tokenizeColumns.append("A." + key.split("\\.")[0].replaceAll("transform_", "") + " AS " + key.split("\\.")[0].replaceAll("transform_", ""));
+                    rawTableColumnsModified.append(key.split("\\.")[0].replaceAll("transform_", "")+" AS "+key.split("\\.")[0].replaceAll("transform_", "")+"_t");
+                    tokenizeColumns.append(",");
+                    rawTableColumnsModified.append(",");
+                    if (columnValues.getProperty(key).contains("tokenize")) {
+                        tokenizeColumns.append("B." + key.split("\\.")[0].replaceAll("transform_", "")+"_t" + " AS " + key.split("\\.")[0].replaceAll("transform_", "") + "_actual");
+                        tokenizeColumns.append(",");
+                    }
+                    if (!columnValues.getProperty(key).contains("tokenize")) {
+                        tokenizeJoinCondition.append(" A." + key.split("\\.")[0].replaceAll("transform_", "") + " = B." + key.split("\\.")[0].replaceAll("transform_", "")+"_t");
+                        tokenizeJoinCondition.append(" AND");
+                    }
+                }
+                tokenizeTableColumns = tokenizeColumns.substring(0, tokenizeColumns.length() - 1);
+                LOGGER.info("Columns of tokenize table "+tokenizeTableColumns);
+                tokenizeMergeCondition = tokenizeJoinCondition.substring(0, tokenizeJoinCondition.length() - 3);
+                LOGGER.info("Merge condition of tokenize table "+tokenizeMergeCondition);
+                rawTableColumns = rawTableColumnsModified.substring(0, rawTableColumnsModified.length() - 1);
+                LOGGER.info("Modified columns of raw table"+rawTableColumns);
+            }
+
+            baseConStatement.execute("SET hive.auto.convert.join=false");
+
+            String tokenizeTableQuery = "INSERT INTO TABLE " + baseDbName + "." + tokenizeTable + " PARTITION ( " + partitionKeys + "instanceexecid) SELECT " + tokenizeTableColumns + IMConstant.FILE_FIELD_SEPERATOR + partitionKeys + instanceExecId + " FROM " + baseDbName + "." + firstTable + " A JOIN ( SELECT " + rawTableColumns+ " FROM " +stageDbName+ "." + secondTable + ") B ON (" + tokenizeMergeCondition + ")";
+            LOGGER.info("Query for insertion into tokenize table "+tokenizeTableQuery);
+            baseConStatement.execute(tokenizeTableQuery);
+        } catch(Exception e) {
+
+            LOGGER.error(e);
+            throw new ETLException(e);
+        }
     }
 }

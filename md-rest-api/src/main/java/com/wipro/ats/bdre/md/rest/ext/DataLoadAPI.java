@@ -150,6 +150,7 @@ public class DataLoadAPI extends MetadataAPIBase {
         List<com.wipro.ats.bdre.md.dao.jpa.Properties> stage2BaseProperties=new ArrayList<Properties>();
         Map<Process,List<Properties>> processPropertiesMap = new HashMap<Process, List<Properties>>();
         int rawColumnCounter = 1;
+        int columnCounter = 1;
 
         com.wipro.ats.bdre.md.dao.jpa.Properties jpaProperties=null;
         for (String string : map.keySet()) {
@@ -224,17 +225,24 @@ public class DataLoadAPI extends MetadataAPIBase {
                 }
             }else if (string.startsWith(TRANSFORM)) {
                 String column_name=string.replaceAll(TRANSFORM,"");
-                if(map.get(string).equals("no transformation")||map.get(string).equals("no+transformation"))
-                    map.put(string,column_name);
-                else
-                 map.put(string,map.get(string)+"("+column_name+")");
+                LinkedHashMap<String, String> map2=new LinkedHashMap<>();
+                if(map.get(string).equals("no transformation")||map.get(string).equals("no+transformation")){
+                    map2.put(string+"."+columnCounter,column_name);
+                    //map.put(string+"."+columnCounter,column_name);
+                }
+                else{
+                    //map.put(string+"."+columnCounter,map.get(string)+"("+column_name+")");
+                    map2.put(string+"."+columnCounter,map.get(string)+"("+column_name+")");
+                }
                 LOGGER.info("key is "+string +" updated value is "+map.get(string)+" column name is "+column_name);
                 if("".equals(map.get(string.replaceAll(TRANSFORM,PARTITION))) || map.get(string.replaceAll(TRANSFORM,PARTITION)) == null) {
-                    jpaProperties = Dao2TableUtil.buildJPAProperties("base-columns", string, map.get(string), TRANSFORMCOMMENT);
+                    jpaProperties = Dao2TableUtil.buildJPAProperties("base-columns", string+"."+columnCounter, map2.get(string+"."+columnCounter), TRANSFORMCOMMENT);
+                    LOGGER.info("Saved property key = "+string+"."+columnCounter+" value is "+map2.get(string+"."+columnCounter));
                     raw2StageProperties.add(jpaProperties);
                 }else{
                     partitionCols.put(map.get(string.replaceAll(TRANSFORM,PARTITION)),string.replaceAll(TRANSFORM,""));
                 }
+                columnCounter++;
             }else if (string.startsWith(STAGEDATATYPE)) {
                 if("".equals(map.get(string.replaceAll(STAGEDATATYPE,PARTITION))) || map.get(string.replaceAll(STAGEDATATYPE,PARTITION)) == null) {
                     jpaProperties = Dao2TableUtil.buildJPAProperties("base-data-types", string.replaceAll(STAGEDATATYPE,"") , map.get(string) , "data type of column");
