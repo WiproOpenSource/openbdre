@@ -207,7 +207,7 @@
 					.my_text
                                 {
                                     font-family:    Arial, Helvetica, sans-serif;
-                                    font-size:      20px;
+                                    font-size:      17px;
                                     font-weight:    bold;
                                 }
 					</style>
@@ -2077,12 +2077,12 @@
                         else{
                         var div=document.getElementById("myRDBMSModel");
                         var formHtml="";
-                        formHtml=formHtml+'<div class="modal-content">';
-                        formHtml=formHtml+'<span class="closemodal">&times;</span>';
+                        formHtml=formHtml+'<div class="modal-content" style="background-color:#e6f2ff; ">';
+                        //formHtml=formHtml+'<span class="closemodal">&times;</span>';
                         formHtml=formHtml+'<h3  style="margin-left:375px;font-size:25px;font-weight:bold;">Schema Details</h3>';
                         formHtml=formHtml+'<div class="col-md-12" style="padding-left : 50px; padding-right : 20px;padding-bottom : 10px;">';
                         formHtml=formHtml+'</div>';
-                        formHtml=formHtml+'<div class="col-md-12" style="padding-left : 50px; padding-right : 20px;padding-bottom : 10px;" >';
+                        formHtml=formHtml+'<div class="col-md-12" style="padding-left : 50px; padding-right : 20px;padding-bottom : 10px;background-color:#b3b3e6" >';
                         formHtml=formHtml+'<div class="col-md-3 my_text">Selected</div>';
                         formHtml=formHtml+'<div class="col-md-3 my_text" style="padding-left : 0px;">Column Name</div>';
                         formHtml=formHtml+'<div class="col-md-3 my_text" style="padding-left : 25px;">MySQL Data Type</div>';
@@ -2094,36 +2094,41 @@
                         var columnName=columnAndDataTypes.split(":")[0];
                         var mysqlDataType=columnAndDataTypes.split(":")[1];
                         var hiveDataType=columnAndDataTypes.split(":")[2];
+                        if(i%2==0)
+                        color="#e6f2ff";
+                        else
+                        color="#b3d9ff";
+                        console.log("color is " + color);
                         if(isChecked==1){
-                        formHtml=formHtml+'<div class="col-md-12" style="padding-left : 50px; padding-right : 20px;padding-bottom : 10px;">';
+                        formHtml=formHtml+'<div class="col-md-12" style="padding-left : 50px; padding-right : 20px;padding-bottom : 10px;background-color:' + color + ';">';
                         formHtml=formHtml+'<div class="col-md-3">';
                         formHtml=formHtml+'<input type="checkbox" class="schema" value=' + columnName + ":" + hiveDataType + ' checked >';
                         formHtml=formHtml+'</div>';
-                        formHtml=formHtml+'<div class="col-md-3" style="padding-left : 0px;">' + columnName + '</div>';
-                        formHtml=formHtml+'<div class="col-md-3" style="padding-left : 25px;">' + mysqlDataType + '</div>';
-                        formHtml=formHtml+'<div class="col-md-3" style="padding-left : 35px;">' + hiveDataType + '</div>';
+                        formHtml=formHtml+'<div class="col-md-3" style="padding-left : 0px;font-weight:bold;">' + columnName + '</div>';
+                        formHtml=formHtml+'<div class="col-md-3" style="padding-left : 25px;font-weight:bold;">' + mysqlDataType + '</div>';
+                        formHtml=formHtml+'<div class="col-md-3" style="padding-left : 35px;font-weight:bold;">' + hiveDataType + '</div>';
                         formHtml=formHtml+'</div>';
 
                         }
                         else if(isChecked==2){
-                        formHtml=formHtml+'<div class="col-md-12" style="padding-left : 50px; padding-right : 20px;padding-bottom : 10px;">';
+                        formHtml=formHtml+'<div class="col-md-12" style="padding-left : 50px; padding-right : 20px;padding-bottom : 10px;background-color:' + color + ';">';
                         formHtml=formHtml+'<div class="col-md-3">';
                         formHtml=formHtml+'<input type="checkbox" class="schema" value=' + columnName + ":" + hiveDataType + ' >';
                         formHtml=formHtml+'</div>';
-                        formHtml=formHtml+'<div class="col-md-3" style="padding-left : 0px;">' + columnName + '</div>';
-                        formHtml=formHtml+'<div class="col-md-3" style="padding-left : 25px;">' + mysqlDataType + '</div>';
-                        formHtml=formHtml+'<div class="col-md-3" style="padding-left : 35px;">' + hiveDataType + '</div>';
+                        formHtml=formHtml+'<div class="col-md-3" style="padding-left : 0px;font-weight:bold;">' + columnName + '</div>';
+                        formHtml=formHtml+'<div class="col-md-3" style="padding-left : 25px;font-weight:bold;">' + mysqlDataType + '</div>';
+                        formHtml=formHtml+'<div class="col-md-3" style="padding-left : 35px;font-weight:bold;">' + hiveDataType + '</div>';
                         formHtml=formHtml+'</div>';
 
                         }
                         else{
-                        formHtml=formHtml+'<div class="col-md-12" style="padding-left : 50px; padding-right : 20px;padding-bottom : 10px;">';
+                        formHtml=formHtml+'<div class="col-md-12" style="padding-left : 50px; padding-right : 20px;padding-bottom : 10px;background-color:' + color + ';">';
                         formHtml=formHtml+'<div class="col-md-3">';
                         formHtml=formHtml+'<input type="checkbox" class="schema" value=' + columnName + ":" + hiveDataType + ' disabled >';
                         formHtml=formHtml+'</div>';
-                        formHtml=formHtml+'<div class="col-md-3" style="padding-left : 0px;">' + columnName + '</div>';
-                        formHtml=formHtml+'<div class="col-md-3" style="padding-left : 25px;">' + mysqlDataType + '</div>';
-                        formHtml=formHtml+'<div class="col-md-3" style="padding-left : 35px;">' + hiveDataType + '</div>';
+                        formHtml=formHtml+'<div class="col-md-3" style="padding-left : 0px;font-weight:bold;">' + columnName + '</div>';
+                        formHtml=formHtml+'<div class="col-md-3" style="padding-left : 25px;font-weight:bold;">' + mysqlDataType + '</div>';
+                        formHtml=formHtml+'<div class="col-md-3" style="padding-left : 35px;font-weight:bold;">' + hiveDataType + '</div>';
 
                         formHtml=formHtml+'</div>';
 
