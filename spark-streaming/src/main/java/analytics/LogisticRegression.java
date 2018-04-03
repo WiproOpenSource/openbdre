@@ -20,9 +20,6 @@ import org.apache.spark.sql.types.DataTypes;
 import org.apache.spark.sql.types.StructType;
 import org.apache.spark.streaming.api.java.JavaPairDStream;
 import org.apache.spark.streaming.api.java.JavaStreamingContext;
-import org.jpmml.evaluator.Evaluator;
-import org.jpmml.evaluator.spark.EvaluatorUtil;
-import org.jpmml.evaluator.spark.TransformerBuilder;
 import scala.Tuple2;
 import scala.collection.Seq;
 import util.WrapperMessage;
@@ -106,7 +103,7 @@ public class LogisticRegression implements Analytics {
                     outputDF.show();
                 }
                 else if(modelInputMethod.equalsIgnoreCase("pmmlFile")){
-                    String pmmlPath = lrProperties.getProperty("filePath");
+/*                    String pmmlPath = lrProperties.getProperty("filePath");
                     String pmmlFilePath="/home/cloudera/bdre-wfd/model/" + pmmlPath ;
                     File pmmlFile = new File(pmmlFilePath);
                     System.out.println("pmml file location is : " + pmmlFilePath);
@@ -117,7 +114,7 @@ public class LogisticRegression implements Analytics {
                     Transformer pmmlTransformer = pmmlTransformerBuilder.build();
 
                     outputDF = pmmlTransformer.transform(dataFrame);
-                    outputDF.show();
+                    outputDF.show();*/
                 }
                 JavaPairRDD<String,WrapperMessage> finalRDD = null;
                 if (outputDF != null) {

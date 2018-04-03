@@ -175,9 +175,9 @@
 
 
         <dependency>
-              <groupId>com.stratio.receiver</groupId>
-              <artifactId>spark-rabbitmq</artifactId>
-              <version>0.5.1</version>
+            <groupId>com.stratio.receiver</groupId>
+            <artifactId>spark-rabbitmq</artifactId>
+            <version>0.5.1</version>
         </dependency>
 
         <!-- https://mvnrepository.com/artifact/org.apache.spark/spark-sql_2.10 -->
@@ -315,34 +315,8 @@
             </exclusions>
         </dependency>
 
-        <dependency>
-            <groupId>org.jpmml</groupId>
-            <artifactId>pmml-model</artifactId>
-            <version>1.3.6</version>
-            <exclusions>
 
-                <exclusion>
-                    <groupId>com.google</groupId>
-                    <artifactId>guava</artifactId>
-                </exclusion>
-            </exclusions>
-        </dependency>
 
-        <dependency>
-            <groupId>org.jpmml</groupId>
-            <artifactId>jpmml-evaluator-spark</artifactId>
-            <version>1.0.0</version>
-            <exclusions>
-                <exclusion>
-                    <groupId>joda-time</groupId>
-                    <artifactId>joda-time</artifactId>
-                </exclusion>
-                <exclusion>
-                    <groupId>com.google</groupId>
-                    <artifactId>guava</artifactId>
-                </exclusion>
-            </exclusions>
-        </dependency>
 
         <dependency>
             <groupId>com.google.guava</groupId>
@@ -411,14 +385,6 @@
                         </goals>
                         <configuration>
                             <relocations>
-                                <relocation>
-                                    <pattern>org.dmg.pmml</pattern>
-                                    <shadedPattern>org.shaded.dmg.pmml</shadedPattern>
-                                </relocation>
-                                <relocation>
-                                    <pattern>org.jpmml</pattern>
-                                    <shadedPattern>org.shaded.jpmml</shadedPattern>
-                                </relocation>
                                 <relocation>
                                     <pattern>com.google</pattern>
                                     <shadedPattern>com.shaded.google</shadedPattern>

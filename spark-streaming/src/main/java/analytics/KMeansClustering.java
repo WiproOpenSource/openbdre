@@ -19,9 +19,6 @@ import org.apache.spark.sql.types.DataTypes;
 import org.apache.spark.sql.types.StructType;
 import org.apache.spark.streaming.api.java.JavaPairDStream;
 import org.apache.spark.streaming.api.java.JavaStreamingContext;
-import org.jpmml.evaluator.Evaluator;
-import org.jpmml.evaluator.spark.EvaluatorUtil;
-import org.jpmml.evaluator.spark.TransformerBuilder;
 import scala.Tuple2;
 import util.WrapperMessage;
 
@@ -94,7 +91,7 @@ public class KMeansClustering implements Analytics {
                     }
                 }
                 else if(modelInputMethod.equalsIgnoreCase("pmmlFile")){
-                    String pmmlPath = kmProperties.getProperty("filePath");
+/*                    String pmmlPath = kmProperties.getProperty("filePath");
                     String pmmlFilePath="/home/cloudera/bdre-wfd/model/" + pmmlPath ;
                     File pmmlFile = new File(pmmlFilePath);
                     System.out.println("pmml file location is : " + pmmlFilePath);
@@ -105,7 +102,7 @@ public class KMeansClustering implements Analytics {
                     Transformer pmmlTransformer = pmmlTransformerBuilder.build();
 
                     outputDF = pmmlTransformer.transform(dataFrame);
-                    outputDF.show();
+                    outputDF.show();*/
                 }
                 System.out.println("End of KMeans regression = " + new Date().getTime() +"for pid = "+pid);
                 JavaPairRDD<String,WrapperMessage> finalRDD = null;

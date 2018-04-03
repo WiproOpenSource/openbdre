@@ -11,9 +11,6 @@ import org.apache.spark.sql.SQLContext;
 import org.apache.spark.sql.types.DataTypes;
 import org.apache.spark.sql.types.StructField;
 import org.apache.spark.sql.types.StructType;
-import org.jpmml.evaluator.Evaluator;
-import org.jpmml.evaluator.spark.EvaluatorUtil;
-import org.jpmml.evaluator.spark.TransformerBuilder;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -27,15 +24,15 @@ public class PMMLModel {
     public DataFrame productionalizeModel(DataFrame dataFrame,String filePath){
         DataFrame output=null;
         try {
-            File pmmlFile = new File(filePath);
+/*            File pmmlFile = new File(filePath);
             System.out.println("pmml file location is : " + filePath);
             Evaluator evaluator = EvaluatorUtil.createEvaluator(pmmlFile);
             TransformerBuilder pmmlTransformerBuilder = new TransformerBuilder(evaluator)
                     .withLabelCol("target") // Double column
                     .exploded(true);
-            Transformer pmmlTransformer = pmmlTransformerBuilder.build();
+            Transformer pmmlTransformer = pmmlTransformerBuilder.build();*//*
 
-             output = pmmlTransformer.transform(dataFrame);
+             output = pmmlTransformer.transform(dataFrame);*/
         }
         catch (Exception e){
             e.printStackTrace();
