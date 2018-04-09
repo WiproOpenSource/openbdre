@@ -615,6 +615,7 @@
         $ingestSelect = $("<select name='ingestOnly_" + data.node.key +"' />"),
         $incrementSelect = $("<select name='incrementType_" + data.node.key +"' id='incrementType_" + data.node.key +"' onchange='columnsPopup(&quot;"+ data.node.key +"&quot;)'/>"),
         $incrementColumn = $("<select disabled name='incrementColumn_" + data.node.key +"' id='incrementColumn_" + data.node.key +"'/>"),
+        $transform = $("<select name='destTransform_"+ data.node.key+"'/>"),
 
         $tdList = $(node.tr).find(">td");
       // (Index #0 is rendered by fancytree by adding the checkbox)
@@ -665,6 +666,18 @@
                   $select.addClass("form-control");
                   $tdList.eq(4).html($select);
                   $select.val(datatypeMap[data.node.data.dtype]);
+
+            $("<option />", {text: "floor", value: "floor"}).appendTo($transform);
+            $("<option />", {text: "lower", value: "lower"}).appendTo($transform);
+            $("<option />", {text: "no transformation", value: "no transformation"}).appendTo($transform);
+            $("<option />", {text: "round", value: "round"}).appendTo($transform);
+            $("<option />", {text: "tokenize", value: "tokenize"}).appendTo($transform);
+            $("<option />", {text: "trim", value: "trim"}).appendTo($transform);
+            $("<option />", {text: "upper", value: "upper"}).appendTo($transform);
+            $transform.addClass("form-control");
+            $tdList.eq(5).html($transform);
+            $transform.val("no transformation");
+
       }
 
 
@@ -828,6 +841,7 @@ isInit=true;
 							<th >Datatype</th >
 							<th >Hive Column Name</th >
 							<th >Hive Datatype</th >
+							<th >Tokenize Columns</th >
 							<th> Options</th>
 							<th> Increment Type</th>
 							<th> Increment Column</th>

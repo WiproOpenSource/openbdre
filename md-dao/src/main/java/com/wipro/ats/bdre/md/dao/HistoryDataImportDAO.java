@@ -354,23 +354,6 @@ public class HistoryDataImportDAO {
                 columnListProperties.setDescription(DATAIMPORTPROPERTIES);
                 session.save(columnListProperties);
 
-                // increment type
-                IntermediateId intermediateIdIncrementType = new IntermediateId();
-                intermediateIdIncrementType.setUuid(intermediateInfo.getUuid());
-                intermediateIdIncrementType.setInterKey("incrementType_" + i);
-
-                Criteria incrementTypeValueCriteria = session.createCriteria(Intermediate.class).add(Restrictions.eq("id", intermediateIdIncrementType));
-                Intermediate incrementTypeValue = (Intermediate) incrementTypeValueCriteria.list().get(0);
-
-                PropertiesId propertiesIdIncrementType = new PropertiesId();
-                propertiesIdIncrementType.setProcessId(childDataImportProcess.getProcessId());
-                propertiesIdIncrementType.setPropKey("incr.mode");
-                Properties incrementTypeProperties = new Properties();
-                incrementTypeProperties.setId(propertiesIdIncrementType);
-                incrementTypeProperties.setConfigGroup(IMPCOMMON);
-                incrementTypeProperties.setPropValue(incrementTypeValue.getInterValue());
-                incrementTypeProperties.setDescription(DATAIMPORTPROPERTIES);
-                session.save(incrementTypeProperties);
 
                 // increment Column
                 IntermediateId intermediateIdIncrementColumn = new IntermediateId();
@@ -614,11 +597,22 @@ public class HistoryDataImportDAO {
                     rawTableDBPropertiesForStage.setDescription(RAW_TABLE_NAME);
                     session.save(rawTableDBPropertiesForStage);
 
-                    //cloumns and datyptes
+                    //columns and datatypes
                     IntermediateId intermediateIdRawTableColumns = new IntermediateId();
                     intermediateIdRawTableColumns.setUuid(intermediateInfo.getUuid());
                     intermediateIdRawTableColumns.setInterKey("rawColumnsAndDataTypes_" +  i);
                     LOGGER.info("key is : " + i);
+
+                    //fetching transformations
+                    IntermediateId intermediateIdTransformations = new IntermediateId();
+                    intermediateIdTransformations.setUuid(intermediateInfo.getUuid());
+                    intermediateIdTransformations.setInterKey("transformationList_" + i);
+
+                    Criteria transformationCriteria = session.createCriteria(Intermediate.class).add(Restrictions.eq("id", intermediateIdTransformations));
+                    Intermediate transformations = (Intermediate) transformationCriteria.list().get(0);
+                    String[] columnTransformations = transformations.getInterValue().split(",");
+                    LOGGER.info("list of transformations is : " + transformations.getInterValue());
+                    // done with fetching transformations
 
                     Criteria rawTableColumnsCriteria = session.createCriteria(Intermediate.class).add(Restrictions.eq("id", intermediateIdRawTableColumns));
                     Intermediate rawTableColumns = (Intermediate) rawTableColumnsCriteria.list().get(0);
@@ -652,7 +646,12 @@ public class HistoryDataImportDAO {
                         Properties baseTableColumnProperties = new Properties();
                         baseTableColumnProperties.setId(baseTableColumnPropertiesId);
                         baseTableColumnProperties.setConfigGroup("base-columns");
-                        baseTableColumnProperties.setPropValue(rawTableColumn[columnCounter-1].split(" ")[0]);
+                        if(columnTransformations[columnCounter-1].equals("no transformation")) {
+                            baseTableColumnProperties.setPropValue(rawTableColumn[columnCounter - 1].split(" ")[0]);
+                        }
+                        else {
+                            baseTableColumnProperties.setPropValue(columnTransformations[columnCounter - 1] + "(" + rawTableColumn[columnCounter - 1].split(" ")[0] + ")");
+                        }
                         baseTableColumnProperties.setDescription("Base Table Columns");
                         session.save(baseTableColumnProperties);
 
