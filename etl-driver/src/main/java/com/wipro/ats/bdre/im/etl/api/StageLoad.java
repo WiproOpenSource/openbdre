@@ -98,17 +98,17 @@ public class StageLoad extends ETLBase {
             String addSerde = "add jar "+serdePath;
             baseConStatement.execute(addSerde);
 
-            String query = "INSERT OVERWRITE TABLE " + baseDbName +"."+ stageTableName +
-                    " PARTITION ( " + partitionKeys + "instanceexecid) SELECT " +
-            fieldNames + IMConstant.FILE_FIELD_SEPERATOR + partitionKeys + instanceExecId + " FROM " + stageDbName + "."+ viewName +
-                    " where batchid>=" + minBatchId + " and " + " batchid<=" + maxBatchId;
-
             String customUDFPath = hdfsURI+"/user/"+bdreLinuxUserName+"/wf/1/5/"+process.getParentProcessId()+"/lib/etl-driver-1.1-SNAPSHOT.jar";
             String addUDF = "add jar "+customUDFPath;
             baseConStatement.execute(addUDF);
             String tempFunction = "create temporary function tokenize as \'com.wipro.ats.bdre.im.HiveUDF\'";
             LOGGER.info("Temporary function creation "+tempFunction);
             baseConStatement.execute(tempFunction);
+
+            String query = "INSERT OVERWRITE TABLE " + baseDbName +"."+ stageTableName +
+                    " PARTITION ( " + partitionKeys + "instanceexecid) SELECT " +
+            fieldNames + IMConstant.FILE_FIELD_SEPERATOR + partitionKeys + instanceExecId + " FROM " + stageDbName + "."+ viewName +
+                    " where batchid>=" + minBatchId + " and " + " batchid<=" + maxBatchId;
 
             LOGGER.info(query);
             baseConStatement.execute("set hive.exec.dynamic.partition.mode=nonstrict");
@@ -133,6 +133,15 @@ public class StageLoad extends ETLBase {
             if (!columnValues.isEmpty()) {
                 for (String key : baseColumns1) {
                     if(columnValues.getProperty(key).contains("tokenize")){
+
+                        String incrFunctionPath = hdfsURI+"/user/"+bdreLinuxUserName+"/hive-contrib-1.1.0.jar;";
+                        String addincrFunction = "add jar "+incrFunctionPath;
+                        baseConStatement.execute(addincrFunction);
+                        String tempIncrFunction = "CREATE TEMPORARY FUNCTION row_sequence as \'org.apache.hadoop.hive.contrib.udf.UDFRowSequence\'";
+                        LOGGER.info("Temporary incremental function creation "+tempIncrFunction);
+                        baseConStatement.execute(tempIncrFunction);
+
+                        loadRawAndStageIntermediateTable(baseTableName, stageLoadProcessId, baseDbName, stageDbName, stageTableName, baseConStatement);
                         loadTokenizeTable(baseTableName, stageLoadProcessId, baseDbName, stageDbName, stageTableName, partitionKeys, instanceExecId, baseConStatement);
                         break;
                     }
@@ -256,15 +265,15 @@ public class StageLoad extends ETLBase {
         try {
 
             String tokenizeTableColumns = null;
-            String tokenizeMergeCondition = null;
+            //String tokenizeMergeCondition = "";
             String rawTableColumns = null;
 
             StringBuilder tokenizeColumns = new StringBuilder("");
-            StringBuilder tokenizeJoinCondition = new StringBuilder("");
+            //StringBuilder tokenizeJoinCondition = new StringBuilder("");
             StringBuilder rawTableColumnsModified = new StringBuilder("");
 
-            String secondTable = "raw_" + baseTableName;
-            String firstTable = stageTableName;
+            String secondTable = "raw_" + baseTableName + "_intermediate";
+            String firstTable = stageTableName+"_intermediate";
             String tokenizeTable = baseTableName + "_tokenize";
 
             GetProperties getPropertiesOfRawTable = new GetProperties();
@@ -290,28 +299,68 @@ public class StageLoad extends ETLBase {
                         tokenizeColumns.append("B." + key.split("\\.")[0].replaceAll("transform_", "")+"_t" + " AS " + key.split("\\.")[0].replaceAll("transform_", "") + "_actual");
                         tokenizeColumns.append(",");
                     }
-                    if (!columnValues.getProperty(key).contains("tokenize")) {
+                    /*if (!columnValues.getProperty(key).contains("tokenize")) {
                         tokenizeJoinCondition.append(" A." + key.split("\\.")[0].replaceAll("transform_", "") + " = B." + key.split("\\.")[0].replaceAll("transform_", "")+"_t");
                         tokenizeJoinCondition.append(" AND");
-                    }
+                    }*/
                 }
                 tokenizeTableColumns = tokenizeColumns.substring(0, tokenizeColumns.length() - 1);
                 LOGGER.info("Columns of tokenize table "+tokenizeTableColumns);
+                /*if(!tokenizeJoinCondition.equals(""))
                 tokenizeMergeCondition = tokenizeJoinCondition.substring(0, tokenizeJoinCondition.length() - 3);
-                LOGGER.info("Merge condition of tokenize table "+tokenizeMergeCondition);
+                LOGGER.info("Merge condition of tokenize table "+tokenizeMergeCondition);*/
                 rawTableColumns = rawTableColumnsModified.substring(0, rawTableColumnsModified.length() - 1);
                 LOGGER.info("Modified columns of raw table"+rawTableColumns);
             }
 
             baseConStatement.execute("SET hive.auto.convert.join=false");
 
-            String tokenizeTableQuery = "INSERT INTO TABLE " + baseDbName + "." + tokenizeTable + " PARTITION ( " + partitionKeys + "instanceexecid) SELECT " + tokenizeTableColumns + IMConstant.FILE_FIELD_SEPERATOR + partitionKeys + instanceExecId + " FROM " + baseDbName + "." + firstTable + " A JOIN ( SELECT " + rawTableColumns+ " FROM " +stageDbName+ "." + secondTable + ") B ON (" + tokenizeMergeCondition + ")";
+            String tokenizeTableQuery = "INSERT INTO TABLE " + baseDbName + "." + tokenizeTable + " PARTITION ( " + partitionKeys + "instanceexecid) SELECT " + tokenizeTableColumns + IMConstant.FILE_FIELD_SEPERATOR + partitionKeys + instanceExecId + " FROM " + baseDbName + "." + firstTable + " A JOIN ( SELECT incr_id AS incr_id_t," + rawTableColumns+ " FROM " +stageDbName+ "." + secondTable + ") B ON (A.incr_id=B.incr_id_t)";
             LOGGER.info("Query for insertion into tokenize table "+tokenizeTableQuery);
             baseConStatement.execute(tokenizeTableQuery);
         } catch(Exception e) {
 
             LOGGER.error(e);
-            throw new ETLException(e);
+        }
+    }
+
+    private void loadRawAndStageIntermediateTable(String baseTableName, String stageLoadProcessId, String baseDbName, String stageDbName, String stageTableName,Statement baseConStatement){
+        try{
+            GetProperties getPropertiesOfRawTable = new GetProperties();
+            java.util.Properties columnValues = getPropertiesOfRawTable.getProperties(stageLoadProcessId, "base-columns");
+            Enumeration e = columnValues.propertyNames();
+            List<String> baseColumns1 = Collections.list(e);
+            Collections.sort(baseColumns1, new Comparator<String>() {
+
+                public int compare(String o1, String o2) {
+                    int n1 = Integer.valueOf(o1.split("\\.")[1]);
+                    int n2 = Integer.valueOf(o2.split("\\.")[1]);
+                    return (n1 - n2);
+                }
+            });
+
+             StringBuilder rawAndStageIntermediateColumns = new StringBuilder("");
+             String rawAndStageIntermediateTableColumns = null;
+             String rawTableName = "raw_"+baseTableName;
+             String rawIntermediateTableName = rawTableName+"_intermediate";
+             String stageIntermediateTableName = stageTableName+"_intermediate";
+
+            if (!columnValues.isEmpty()) {
+                for (String key : baseColumns1) {
+                    rawAndStageIntermediateColumns.append(key.split("\\.")[0].replaceAll("transform_", "")+",");
+                }
+            }
+            rawAndStageIntermediateTableColumns = rawAndStageIntermediateColumns.substring(0, rawAndStageIntermediateColumns.length() - 1);
+
+            String rawIntermediateTableQuery = "INSERT OVERWRITE TABLE " + stageDbName + "." + rawIntermediateTableName + " SELECT row_sequence()," + rawAndStageIntermediateTableColumns + " FROM " + stageDbName + "." + rawTableName;
+            String stageIntermediateTableQuery = "INSERT OVERWRITE TABLE " + baseDbName + "." + stageIntermediateTableName + " SELECT row_sequence()," + rawAndStageIntermediateTableColumns + " FROM " + baseDbName + "." + stageTableName;
+            baseConStatement.execute(rawIntermediateTableQuery);
+            baseConStatement.execute(stageIntermediateTableQuery);
+
+
+        }catch(Exception e) {
+
+            LOGGER.error(e);
         }
     }
 }

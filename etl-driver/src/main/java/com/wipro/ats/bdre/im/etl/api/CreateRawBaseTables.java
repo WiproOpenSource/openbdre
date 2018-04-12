@@ -502,8 +502,11 @@ public class CreateRawBaseTables extends ETLBase {
 
         if(tokenize == 1){
             String tokenizeTableName = baseTableName+"_tokenize";
+            String rawIntermediateTableName = rawTableName+"_intermediate";
+            String stageIntermediateTableName = stgTableName+"_intermediate";
 
-            String tokenizeColumnsWithDataTypes=null;
+            String tokenizeColumnsWithDataTypes= null;
+            String rawIntermediateColumnsWithDataTypes = null;
 
             //creating schema for tokenized table in base database
             GetProperties getPropertiesOfBaseColumns = new GetProperties();
@@ -522,10 +525,12 @@ public class CreateRawBaseTables extends ETLBase {
 
 
             StringBuilder tokenizeColumns = new StringBuilder();
+            StringBuilder rawIntermediateColumns = new StringBuilder();
             if (!basePropertiesOfColumns.isEmpty()) {
                 for (String key : baseColumns1) {
                     //String key = (String) baseColumnsList.nextElement();
                     tokenizeColumns.append(key.split("\\.")[0].replaceAll("transform_", "") + " " + basePropertiesOfDataTypes.getProperty(key.split("\\.")[0].replaceAll("transform_", "")) + ",");
+                    rawIntermediateColumns.append(key.split("\\.")[0].replaceAll("transform_", "") + " " + basePropertiesOfDataTypes.getProperty(key.split("\\.")[0].replaceAll("transform_", ""))+ ",");
                     if(basePropertiesOfColumns.getProperty(key).contains("tokenize"))
                         tokenizeColumns.append(key.split("\\.")[0].replaceAll("transform_", "")+"_actual" + " " + basePropertiesOfDataTypes.getProperty(key.split("\\.")[0].replaceAll("transform_", "")) + ",");
                 }
@@ -537,6 +542,14 @@ public class CreateRawBaseTables extends ETLBase {
             String tokenizeTableDdl = "CREATE TABLE IF NOT EXISTS " + baseTableDbName + "." + tokenizeTableName + " (" + tokenizeColumnsWithDataTypes + ") partitioned by (" + partitionColumns + " instanceexecid bigint) ";
 
             checkAndCreateTokenizedTable(baseTableDbName,tokenizeTableName,tokenizeTableDdl);
+
+            rawIntermediateColumnsWithDataTypes = rawIntermediateColumns.substring(0, rawIntermediateColumns.length() - 1);
+            String rawIntermediateDdl = "CREATE TABLE IF NOT EXISTS " + rawTableDbName + "." + rawIntermediateTableName + " (incr_id INT,"+rawIntermediateColumnsWithDataTypes + ")";
+            String stageIntermediateDdl = "CREATE TABLE IF NOT EXISTS " + baseTableDbName + "." + stageIntermediateTableName + " (incr_id INT,"+rawIntermediateColumnsWithDataTypes + ")";
+
+            checkAndCreateRawIntermediateTable(rawTableDbName,rawIntermediateTableName,rawIntermediateDdl);
+            checkAndCreateStageIntermediateTable(baseTableDbName, stageIntermediateTableName, stageIntermediateDdl);
+
         }
     }
 
@@ -573,6 +586,39 @@ public class CreateRawBaseTables extends ETLBase {
             con.close();
         } catch (Exception e) {
             LOGGER.error("Error while creating raw table" + e);
+            throw new ETLException(e);
+        }
+
+    }
+
+    private void checkAndCreateRawIntermediateTable(String dbName, String tableName, String ddl) {
+        try {
+            LOGGER.debug("Reading Hive Connection details from Properties File");
+            Connection con = getHiveJDBCConnection(dbName);
+            Statement stmt = con.createStatement();
+            //if("json".equalsIgnoreCase(fileTypeSelected)) {
+            GetGeneralConfig generalConfig = new GetGeneralConfig();
+            String hdfsURI = generalConfig.byConigGroupAndKey("imconfig", "common.default-fs-name").getDefaultVal();
+            String bdreLinuxUserName = generalConfig.byConigGroupAndKey("scripts_config", "bdreLinuxUserName").getDefaultVal();
+            ProcessInfo process = new GetProcess().getProcess(Integer.parseInt(processIdSelected));
+
+            String serdePath = hdfsURI+"/user/"+bdreLinuxUserName+"/wf/1/5/"+process.getParentProcessId()+"/lib/hive-hcatalog-core-0.13.1.jar";
+            String addSerde = "add jar "+serdePath;
+            stmt.execute(addSerde);
+            //}
+            String deleteQuery="DROP TABLE IF EXISTS " + dbName + "." + tableName;
+            stmt.executeUpdate(deleteQuery);
+            ResultSet rs = stmt.executeQuery(CreateRawBaseTables.getQuery(tableName));
+            if (!rs.next()) {
+                LOGGER.info("Raw intermediate table does not exist Creating table " + tableName);
+                LOGGER.info("Creating raw intermediate table using " + ddl);
+                stmt.executeUpdate(ddl);
+                LOGGER.info("Raw intermediate table created.");
+            }
+            stmt.close();
+            con.close();
+        } catch (Exception e) {
+            LOGGER.error("Error while creating raw intermediate table" + e);
             throw new ETLException(e);
         }
 
@@ -650,6 +696,34 @@ public class CreateRawBaseTables extends ETLBase {
         }
     }
 
+    private void checkAndCreateStageIntermediateTable(String dbName, String baseTable, String ddl) {
+        try {
+
+            Connection con = getHiveJDBCConnection(dbName);
+            Statement stmt = con.createStatement();
+            ResultSet rs = stmt.executeQuery(CreateRawBaseTables.getQuery(baseTable));
+            if (!rs.next()) {
+                GetGeneralConfig generalConfig = new GetGeneralConfig();
+                String hdfsURI = generalConfig.byConigGroupAndKey("imconfig", "common.default-fs-name").getDefaultVal();
+                String bdreLinuxUserName = generalConfig.byConigGroupAndKey("scripts_config", "bdreLinuxUserName").getDefaultVal();
+                ProcessInfo process = new GetProcess().getProcess(Integer.parseInt(processIdSelected));
+
+                String serdePath = hdfsURI+"/user/"+bdreLinuxUserName+"/wf/1/5/"+process.getParentProcessId()+"/lib/hive-hcatalog-core-0.13.1.jar";
+                String addSerde = "add jar "+serdePath;
+                stmt.execute(addSerde);
+
+                LOGGER.info("Stage intermediate table does not exist.Creating Table " + baseTable);
+                LOGGER.info("Creating stage intermediate table using "+ddl);
+                stmt.executeUpdate(ddl);
+            }
+            stmt.close();
+            con.close();
+        } catch (Exception e) {
+            LOGGER.error("Error while creating stage intermediate table" + e);
+            throw new ETLException(e);
+        }
+    }
+
     private void checkAndCreateStageTable(String dbName, String baseTable, String ddl) {
         try {
 
@@ -677,6 +751,9 @@ public class CreateRawBaseTables extends ETLBase {
             throw new ETLException(e);
         }
     }
+
+
+
 
     private void checkAndCreateTokenizedTable(String dbName, String tokenizeTable, String ddl){
         try {
