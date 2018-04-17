@@ -633,17 +633,17 @@
                   $("<option />", {text: "Ingest Only", value: "true"}).appendTo($ingestSelect);
                   $("<option />", {text: "Ingest and HiveLoad", value: "false"}).appendTo($ingestSelect);
                   $ingestSelect.addClass("form-control");
-                  $tdList.eq(4).html($ingestSelect);
+                  $tdList.eq(5).html($ingestSelect);
 
                   $("<option />", {text: "None", value: "None"}).appendTo($incrementSelect);
                   $("<option />", {text: "Append Rows", value: "AppendRows"}).appendTo($incrementSelect);
                   $("<option />", {text: "Last Moified", value: "DateLastModified"}).appendTo($incrementSelect);
                   $incrementSelect.addClass("form-control");
-                  $tdList.eq(5).html($incrementSelect);
+                  $tdList.eq(6).html($incrementSelect);
 
                   $("<option />", {text: "None", value: "None"}).appendTo($incrementColumn);
                   $incrementColumn.addClass("form-control");
-                   $tdList.eq(6).html($incrementColumn);
+                   $tdList.eq(7).html($incrementColumn);
 
       }else{
             $tdList.eq(2).html(data.node.data.dtype+
