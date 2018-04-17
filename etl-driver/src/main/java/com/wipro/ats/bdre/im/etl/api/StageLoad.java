@@ -134,8 +134,9 @@ public class StageLoad extends ETLBase {
                 for (String key : baseColumns1) {
                     if(columnValues.getProperty(key).contains("tokenize")){
 
-                        String incrFunctionPath = hdfsURI+"/user/"+bdreLinuxUserName+"/hive-contrib-1.1.0.jar;";
+                        String incrFunctionPath = hdfsURI+"/user/"+bdreLinuxUserName+"/wf/1/5/"+process.getParentProcessId()+"/lib/hive-contrib-1.1.0.jar";
                         String addincrFunction = "add jar "+incrFunctionPath;
+                        LOGGER.info("add jar query = "+addincrFunction);
                         baseConStatement.execute(addincrFunction);
                         String tempIncrFunction = "CREATE TEMPORARY FUNCTION row_sequence as \'org.apache.hadoop.hive.contrib.udf.UDFRowSequence\'";
                         LOGGER.info("Temporary incremental function creation "+tempIncrFunction);
