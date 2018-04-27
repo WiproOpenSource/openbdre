@@ -191,11 +191,27 @@ public class JAASLoginModule implements LoginModule {
         UserRoleFetcher userRoleFetcher = new UserRoleFetcher();
         Users user = userRoleFetcher.getUser(username);
         if (user != null) {
+            //if(ACCOUNT_LOCK table does not have an entry for the current username){
             String passwordStr = new String(password);
             if (user.getPassword().equals(passwordStr)) {
                 LOGGER.info("Authentication success for " + username);
                 return true;
             }
+            //else{
+            //create an entry for the username with 1 attempt and status as not locked
+            //}
+            //}
+            //else{
+            //if(status is locked){
+            //increase no. of attempts by 1
+            //}
+            //else{
+            //check if password is correct.
+            // if it is correct, delete the entry from the table for the user
+            // if it is not correct, increase the no. of attempts by 1. check if attemts are equal to k.
+            // if attempts have become k, change status to locked
+            //}
+            //}
         }
         LOGGER.error("Authentication failed for " + username);
         return false;
