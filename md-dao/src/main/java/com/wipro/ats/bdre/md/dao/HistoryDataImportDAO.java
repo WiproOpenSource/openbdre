@@ -147,40 +147,7 @@ public class HistoryDataImportDAO {
             String nextProcessForR2S = "";
 
             // adding data laod parent
-            if (flag == 1) {
-                dataLoadParent.setDescription(processDescription+"_Load");
-                dataLoadParent.setAddTs(new Date());
-                dataLoadParent.setEditTs(new Date());
-                dataLoadParent.setProcessName(processName+"_Load");
-                dataLoadParent.setBusDomain(busDomain);
-                dataLoadParent.setProcessType(dataLoadProcessType);
-                dataLoadParent.setNextProcessId("0");
-                dataLoadParent.setCanRecover(false);
-                dataLoadParent.setEnqueuingProcessId("0");
-                dataLoadParent.setBatchCutPattern(null);
-                dataLoadParent.setDeleteFlag(false);
-                if (workflowType!=null)
-                dataLoadParent.setWorkflowType(workflowType);
-                else
-                dataLoadParent.setWorkflowType(oozieType);
-                PermissionType permissionType=new PermissionType();
-                permissionType.setPermissionTypeId(7);
-                dataLoadParent.setPermissionTypeByUserAccessId(permissionType);
-                PermissionType permissionType1=new PermissionType();
-                permissionType1.setPermissionTypeId(4);
-                dataLoadParent.setPermissionTypeByGroupAccessId(permissionType1);
-                PermissionType permissionType2=new PermissionType();
-                permissionType2.setPermissionTypeId(0);
-                dataLoadParent.setPermissionTypeByOthersAccessId(permissionType2);
-                dataLoadParent.setUserRoles(userRoles);
-                Users users=new Users();
-                users.setUsername(username);
-                dataLoadParent.setUsers(users);
-                session.save(dataLoadParent);
 
-                LOGGER.info("the inserted data load parent is " + dataLoadParent.getProcessId());
-                parentProcessIdList.add(dataLoadParent.getProcessId());
-            }
             // looping for each table and creating subsequent data import and data load processes with required properties
             for (int i = 1; i <= numOfTable; i++) {
                 //data import process
@@ -450,6 +417,40 @@ public class HistoryDataImportDAO {
                 Criteria loadOrNotCriteria = session.createCriteria(Intermediate.class).add(Restrictions.eq("id", intermediateIdLoadOrNot));
                 Intermediate loadOrNotValue = (Intermediate) loadOrNotCriteria.list().get(0);
                 LOGGER.debug("loadOrNotValue " + loadOrNotValue.getInterValue());
+                if (flag == 1) {
+                    dataLoadParent.setDescription(processDescription+"_Load");
+                    dataLoadParent.setAddTs(new Date());
+                    dataLoadParent.setEditTs(new Date());
+                    dataLoadParent.setProcessName(processName+"_Load");
+                    dataLoadParent.setBusDomain(busDomain);
+                    dataLoadParent.setProcessType(dataLoadProcessType);
+                    dataLoadParent.setNextProcessId("0");
+                    dataLoadParent.setCanRecover(false);
+                    dataLoadParent.setEnqueuingProcessId("0");
+                    dataLoadParent.setBatchCutPattern(null);
+                    dataLoadParent.setDeleteFlag(false);
+                    if (workflowType!=null)
+                        dataLoadParent.setWorkflowType(workflowType);
+                    else
+                        dataLoadParent.setWorkflowType(oozieType);
+                    PermissionType permissionType3=new PermissionType();
+                    permissionType3.setPermissionTypeId(7);
+                    dataLoadParent.setPermissionTypeByUserAccessId(permissionType3);
+                    PermissionType permissionType4=new PermissionType();
+                    permissionType4.setPermissionTypeId(4);
+                    dataLoadParent.setPermissionTypeByGroupAccessId(permissionType4);
+                    PermissionType permissionType5=new PermissionType();
+                    permissionType5.setPermissionTypeId(0);
+                    dataLoadParent.setPermissionTypeByOthersAccessId(permissionType5);
+                    dataLoadParent.setUserRoles(userRoles);
+                    Users users1=new Users();
+                    users1.setUsername(username);
+                    dataLoadParent.setUsers(users1);
+                    session.save(dataLoadParent);
+
+                    LOGGER.info("the inserted data load parent is " + dataLoadParent.getProcessId());
+                    parentProcessIdList.add(dataLoadParent.getProcessId());
+                }
                 if ("false".equals(loadOrNotValue.getInterValue())) {
                     // file2Raw process
                     Process file2Raw = new Process();

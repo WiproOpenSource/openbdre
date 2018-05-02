@@ -204,6 +204,12 @@
 					.label-icons.label-danger {
 						background: url('../css/images/label-danger.png');
 					}
+					.my_text
+                                {
+                                    font-family:    Arial, Helvetica, sans-serif;
+                                    font-size:      17px;
+                                    font-weight:    bold;
+                                }
 					</style>
 
 	<script>
@@ -1288,6 +1294,18 @@
                                 	}
                                 },
 
+                                UpdateProcess : {
+                                      width: '5%',
+                                      sorting: false,
+                                      edit: false,
+                                      create: false,
+                                      title: 'Update Job',
+                                      display: function(data) {
+                                           return '<span class="label label-primary" onclick="fetchSchemaInfo(' + data.record.processId + ')">Update</span> ';
+                                     },
+
+                                },
+
                                 ScheduleProcess: {
                                     title: 'Schedule Job',
                                     sorting: false,
@@ -2006,7 +2024,171 @@
             		</div>
 
 
+				<div id="myRDBMSModel" class="modelwindow">
 
+
+                 </div>
+
+                 <script>
+                 var processId;
+                 var columns;
+
+                 function fetchSchemaInfo(pid) {
+                 var finalColumns=[];
+                          processId=pid;
+                          console.log(processId);
+                          $.ajax({
+                                                 type: "GET",
+                                                 url: "/mdrest/schema/" + processId,
+                                                 dataType: 'json',
+                                                 async: false,
+                                                 success: function (data) {
+                                                   columns=data.Records;
+                                                   console.log(data);
+                                                 },
+                                                 error: function () {
+                                                     alert('danger');
+                                                 }
+                                             });
+                        if(columns[0]=="InvalidProcess"){
+                        console.log("invalid process selected");
+                          var div=document.getElementById("myRDBMSModel");
+                          var formHtml="";
+                          formHtml=formHtml+'<div class="modal-content">';
+                          formHtml=formHtml+'<span class="closemodal">&times;</span>';
+                          formHtml=formHtml+'<h3  style="margin-left:300px;font-size:25px;font-weight:bold;">Please Select Data Import Job</h3>';
+
+                          formHtml=formHtml+'<button   style="margin-left:45%;background: lightsteelblue;" id="cancel" class="btn btn-default">Cancel</button>';
+                          formHtml=formHtml+'</div>';
+                          div.innerHTML=formHtml;
+                          var modal = document.getElementById('myRDBMSModel');
+                                               var span = document.getElementsByClassName("closemodal")[0];
+                                               modal.style.display = "block";
+
+                                               span.onclick = function() {
+                                                modal.style.display = "none";
+                                               }
+                                               var cancel=document.getElementById('cancel');
+
+                                           cancel.onclick = function() {
+                                            modal.style.display = "none";
+                                           }
+                        }
+                        else{
+                        var div=document.getElementById("myRDBMSModel");
+                        var formHtml="";
+                        formHtml=formHtml+'<div class="modal-content" style="background-color:#e6f2ff; ">';
+                        //formHtml=formHtml+'<span class="closemodal">&times;</span>';
+                        formHtml=formHtml+'<h3  style="margin-left:375px;font-size:25px;font-weight:bold;">Schema Details</h3>';
+                        formHtml=formHtml+'<div class="col-md-12" style="padding-left : 50px; padding-right : 20px;padding-bottom : 10px;">';
+                        formHtml=formHtml+'</div>';
+                        formHtml=formHtml+'<div class="col-md-12" style="padding-left : 50px; padding-right : 20px;padding-bottom : 10px;background-color:#b3b3e6" >';
+                        formHtml=formHtml+'<div class="col-md-3 my_text">Selected</div>';
+                        formHtml=formHtml+'<div class="col-md-3 my_text" style="padding-left : 0px;">Column Name</div>';
+                        formHtml=formHtml+'<div class="col-md-3 my_text" style="padding-left : 25px;">MySQL Data Type</div>';
+                        formHtml=formHtml+'<div class="col-md-3 my_text" style="padding-left : 35px;">Hive Data Type</div>';
+                        formHtml=formHtml+'</div>';
+                        for(var i=0;i<columns.length;i++){
+                        var isChecked=columns[i].split(".")[1];
+                        var columnAndDataTypes=columns[i].split(".")[0];
+                        var columnName=columnAndDataTypes.split(":")[0];
+                        var mysqlDataType=columnAndDataTypes.split(":")[1];
+                        var hiveDataType=columnAndDataTypes.split(":")[2];
+                        if(i%2==0)
+                        color="#e6f2ff";
+                        else
+                        color="#b3d9ff";
+                        console.log("color is " + color);
+                        if(isChecked==1){
+                        formHtml=formHtml+'<div class="col-md-12" style="padding-left : 50px; padding-right : 20px;padding-bottom : 10px;background-color:' + color + ';">';
+                        formHtml=formHtml+'<div class="col-md-3">';
+                        formHtml=formHtml+'<input type="checkbox" class="schema" value=' + columnName + ":" + hiveDataType + ' checked >';
+                        formHtml=formHtml+'</div>';
+                        formHtml=formHtml+'<div class="col-md-3" style="padding-left : 0px;font-weight:bold;">' + columnName + '</div>';
+                        formHtml=formHtml+'<div class="col-md-3" style="padding-left : 25px;font-weight:bold;">' + mysqlDataType + '</div>';
+                        formHtml=formHtml+'<div class="col-md-3" style="padding-left : 35px;font-weight:bold;">' + hiveDataType + '</div>';
+                        formHtml=formHtml+'</div>';
+
+                        }
+                        else if(isChecked==2){
+                        formHtml=formHtml+'<div class="col-md-12" style="padding-left : 50px; padding-right : 20px;padding-bottom : 10px;background-color:' + color + ';">';
+                        formHtml=formHtml+'<div class="col-md-3">';
+                        formHtml=formHtml+'<input type="checkbox" class="schema" value=' + columnName + ":" + hiveDataType + ' >';
+                        formHtml=formHtml+'</div>';
+                        formHtml=formHtml+'<div class="col-md-3" style="padding-left : 0px;font-weight:bold;">' + columnName + '</div>';
+                        formHtml=formHtml+'<div class="col-md-3" style="padding-left : 25px;font-weight:bold;">' + mysqlDataType + '</div>';
+                        formHtml=formHtml+'<div class="col-md-3" style="padding-left : 35px;font-weight:bold;">' + hiveDataType + '</div>';
+                        formHtml=formHtml+'</div>';
+
+                        }
+                        else{
+                        formHtml=formHtml+'<div class="col-md-12" style="padding-left : 50px; padding-right : 20px;padding-bottom : 10px;background-color:' + color + ';">';
+                        formHtml=formHtml+'<div class="col-md-3">';
+                        formHtml=formHtml+'<input type="checkbox" class="schema" value=' + columnName + ":" + hiveDataType + ' disabled >';
+                        formHtml=formHtml+'</div>';
+                        formHtml=formHtml+'<div class="col-md-3" style="padding-left : 0px;font-weight:bold;">' + columnName + '</div>';
+                        formHtml=formHtml+'<div class="col-md-3" style="padding-left : 25px;font-weight:bold;">' + mysqlDataType + '</div>';
+                        formHtml=formHtml+'<div class="col-md-3" style="padding-left : 35px;font-weight:bold;">' + hiveDataType + '</div>';
+
+                        formHtml=formHtml+'</div>';
+
+
+                        }
+                        }
+
+                        formHtml=formHtml+'<div class="col-md-12" style="padding-left : 50px; padding-right : 20px;padding-bottom : 10px;">';
+                        formHtml=formHtml+'</div>';
+                        formHtml=formHtml+'<button  style="margin-left:38%;background: lightsteelblue;" id="submit" class="btn btn-default">Submit</button>';
+                        formHtml=formHtml+'<button   style="margin-left:6%;background: lightsteelblue;" id="cancel" class="btn btn-default">Cancel</button>';
+                        formHtml=formHtml+'</div>';
+                        formHtml=formHtml+'</div>';
+                        div.innerHTML=formHtml;
+                       var modal = document.getElementById('myRDBMSModel');
+                     var span = document.getElementsByClassName("closemodal")[0];
+                     modal.style.display = "block";
+
+                     span.onclick = function() {
+                      modal.style.display = "none";
+                     }
+                     var cancel=document.getElementById('cancel');
+                     var submit=document.getElementById('submit');
+                 cancel.onclick = function() {
+                  modal.style.display = "none";
+                 }
+                 submit.onclick= function(){
+
+                 var inputElements = document.getElementsByClassName('schema');
+                 console.log(inputElements);
+                 var count=0;
+                 var final="";
+                 for(var i=0; i<inputElements.length; ++i){
+                       if(inputElements[i].checked){
+                             finalColumns.push(inputElements[i].value);
+                             final=final+inputElements[i].value+",";
+                       }
+                 }
+
+                 console.log("final columns selected by user are "+ finalColumns);
+                 final=final.substring(0,final.length-1)
+                 console.log("final string is " + final);
+                 modal.style.display = "none";
+               $.ajax({
+                                      type: "POST",
+                                      url: "/mdrest/schema/" + final + "/" + processId,
+                                      dataType: 'json',
+                                      async: false,
+                                      success: function (data) {
+
+                                      },
+                                      error: function () {
+                                          alert('danger');
+                                      }
+                                  });
+                 }
+                 }
+
+                    }
+                 </script>
 
 			</body>
 
