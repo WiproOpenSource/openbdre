@@ -343,7 +343,7 @@ wizard = $(document).ready(function() {
 		onStepChanging: function(event, currentIndex, newIndex) {
 			console.log(currentIndex + 'current ' + newIndex );
 			if(currentIndex == 0 && newIndex == 1 && document.getElementById('processFieldsForm1').elements[0].value == "" && document.getElementById('processFieldsForm1').elements[1].value == "") {
-			    jTableForBaseColumns();
+			    //jTableForBaseColumns();
 				$("#div-dialog-warning").dialog({
 					title: "",
 					resizable: false,
@@ -357,6 +357,42 @@ wizard = $(document).ready(function() {
 				}).html('<p><span class="jtable-confirm-message"><spring:message code="dataload.page.process_dialog"/></span></p>');
 				return false;
 			}
+
+
+                if(currentIndex == 1 && newIndex == 2) {
+                    //jTableForBaseColumns();
+                    //var fileObj = $("#filename")[0].files[0];
+                   // console.log(fileObj);
+                    console.log($("#fileName").val());
+                    if(checked1 == "yes" && $("#fileName").val()== ""){
+                    $("#div-dialog-warning").dialog({
+                        title: "",
+                        resizable: false,
+                        height: 'auto',
+                        modal: true,
+                        buttons: {
+                            "Ok": function() {
+                                $(this).dialog("close");
+                            }
+                        }
+                    }).html('<p><span class="jtable-confirm-message">Please select a file</span></p>');
+                    return false;
+                    }
+                    else if(checked1=="yes" && !$("#fileName").val()== "")
+                     {
+
+                     var schemaMessageFormat=document.getElementById('schemafileformat').value;
+                     console.log("schemaMessageFormat is "+schemaMessageFormat);
+                     uploadFile(schemaMessageFormat);
+                     }
+                     else
+                     {
+                     }
+
+                }
+
+
+
 			if(currentIndex == 3 && newIndex == 4 ) {
 				testNullValues('formatFields');
                 				console.log('source flag is ' + sourceFlag);
@@ -742,7 +778,7 @@ wizard = $(document).ready(function() {
                                         <div class="form-group">
                                             <label class="control-label col-sm-2" for="fileformat"><spring:message code="dataload.page.file_format"/></label>
                                             <div class="col-sm-10">
-                                                <select class="form-control" id="fileformat" name="fileformat" >
+                                                <select class="form-control" id="fileformat" name="fileformat" onchange='hideFileUpload(this.value)'>
                                                     <option ng-repeat="fileformat in fileformats" value="{{fileformat.defaultVal}}" name="fileformat">{{fileformat.value}}</option>
 
                                                 </select>
@@ -750,8 +786,34 @@ wizard = $(document).ready(function() {
                                         </div>
                                         <div class="clearfix"></div>
                                         </div>
-
                                         <!-- /btn-group -->
+                                        <div class="form-group1" style="padding-left: 8%;" >
+                                        <div class="col-sm-12">
+                                        <input type="checkbox" id="isSchema" value="yes" onclick='handleClick(this);'> Do you have Sample file?</input>
+                                        </div>
+                                        </div>
+                                        <div id="schemaDetailsDB" style="display:none;">
+
+                                        <div class="form-group">
+                                            <label class="control-label col-sm-2" for="fileformat">Sample File Format</label>
+                                            <div class="col-sm-10">
+                                            <select class="form-control" id="schemafileformat" name="schemafileformat" >
+                                                <option value="XML" name="schemafileformat">XML</option>
+                                                <option value="json" name="schemafileformat">JSON</option>
+                                            </select>
+                                            </div>
+                                        </div>
+
+                                        <div class="form-group" >
+                                            <label class="control-label col-sm-2" for="fileName">Upload File</label>
+                                            <div class="col-sm-10">
+                                                <input type="file" class="form-control"  id="fileName" name="fileName" required/>
+                                            </div>
+                                        </div>
+
+                                        <div class="clearfix"></div>
+                                        </div>
+
 
                                     </form>
             			</section>
@@ -885,8 +947,174 @@ wizard = $(document).ready(function() {
 		<div style="display:none" id="div-dialog-warning">
 			<p><span class="ui-icon ui-icon-alert" style="float:left;"></span></p>
 		</div>
+		<script>
+		function hideFileUpload(fileFormat){
+		console.log(fileFormat);
+		if(fileFormat=="Delimited" || fileFormat=="mainframe" || fileFormat=="Regex"){
+		document.getElementById("isSchema").style.display = "none";}
+		else{
+        		if(document.getElementById("isSchema").style.display =="none"){
+        		document.getElementById("isSchema").style.display = "block";}
+        		}
+
+		}
+		</script>
+
+
+               <script>
+                          var restWrapper=new Object();
+                                   var uploadedFileName ="";
+                                    function uploadFile(msgformat){
+                                   var arg= ["fileName"];
+                                     var fd = new FormData();
+                                    var fileObj = $("#"+arg[0])[0].files[0];
+                                    var fileName=fileObj.name;
+                                    fd.append("file", fileObj);
+                                    fd.append("name", fileName);
+                                    console.log("message format : "+msgformat);
+                                    $.ajax({
+                                      url: '/mdrest/filehandler/uploadFile/'+msgformat,
+                                      type: "POST",
+                                      data: fd,
+                                      async: false,
+                                      enctype: 'multipart/form-data',
+                                      processData: false,  // tell jQuery not to process the data
+                                      contentType: false,  // tell jQuery not to set contentType
+                                      success:function (data) {
+                                            uploadedFileName=data.Record.fileName;
+                                            console.log( data );
+                                            restWrapper=data.Record.restWrapper;
+                                            console.log(restWrapper);
+                                            $("#div-dialog-warning").dialog({
+                                                            title: "",
+                                                            resizable: false,
+                                                            height: 'auto',
+                                                            modal: true,
+                                                            buttons: {
+                                                                "Ok" : function () {
+                                                                    $('#rawTableColumnDetails').jtable('load');
+                                                                    $('#baseTableColumnDetails').jtable('load');
+                                                                    $(this).dialog("close");
+                                                                }
+                                                            }
+                                            }).html('<p><span class="jtable-confirm-message"><spring:message code="processimportwizard.page.upload_success"/>'+' ' + uploadedFileName + '</span></p>');
+                                            return false;
+                                        },
+                                      error: function () {
+                                            $("#div-dialog-warning").dialog({
+                                                        title: "",
+                                                        resizable: false,
+                                                        height: 'auto',
+                                                        modal: true,
+                                                        buttons: {
+                                                            "Ok" : function () {
+                                                                $(this).dialog("close");
+                                                            }
+                                                        }
+                                        }).html('<p><span class="jtable-confirm-message"><spring:message code="processimportwizard.page.upload_error"/></span></p>');
+                                        return false;
+                                        }
+                                     });
+
+                                    }
+                </script>
+
+
+
+
+
+
+
+               <script>
+                          var restWrapper=new Object();
+                                   var uploadedFileName ="";
+                                    function uploadFile(msgformat){
+                                   var arg= ["fileName"];
+                                     var fd = new FormData();
+                                    var fileObj = $("#"+arg[0])[0].files[0];
+                                    var fileName=fileObj.name;
+                                    fd.append("file", fileObj);
+                                    fd.append("name", fileName);
+                                    console.log("message format : "+msgformat);
+                                    $.ajax({
+                                      url: '/mdrest/filehandler/uploadFile/'+msgformat,
+                                      type: "POST",
+                                      data: fd,
+                                      async: false,
+                                      enctype: 'multipart/form-data',
+                                      processData: false,  // tell jQuery not to process the data
+                                      contentType: false,  // tell jQuery not to set contentType
+                                      success:function (data) {
+                                            uploadedFileName=data.Record.fileName;
+                                            console.log( data );
+                                            restWrapper=data.Record.restWrapper;
+                                            console.log(restWrapper);
+                                            $("#div-dialog-warning").dialog({
+                                                            title: "",
+                                                            resizable: false,
+                                                            height: 'auto',
+                                                            modal: true,
+                                                            buttons: {
+                                                                "Ok" : function () {
+                                                                    $('#rawTableColumnDetails').jtable('load');
+                                                                    $('#baseTableColumnDetails').jtable('load');
+                                                                    $(this).dialog("close");
+                                                                }
+                                                            }
+                                            }).html('<p><span class="jtable-confirm-message"><spring:message code="processimportwizard.page.upload_success"/>'+' ' + uploadedFileName + '</span></p>');
+                                            return false;
+                                        },
+                                      error: function () {
+                                            $("#div-dialog-warning").dialog({
+                                                        title: "",
+                                                        resizable: false,
+                                                        height: 'auto',
+                                                        modal: true,
+                                                        buttons: {
+                                                            "Ok" : function () {
+                                                                $(this).dialog("close");
+                                                            }
+                                                        }
+                                        }).html('<p><span class="jtable-confirm-message"><spring:message code="processimportwizard.page.upload_error"/></span></p>');
+                                        return false;
+                                        }
+                                     });
+
+                                    }
+                </script>
+
+
+
+
+
 
 		<script type="text/javascript">
+         var checked1="no";
+		function handleClick(cb) {
+          console.log("Clicked, new value = " + cb.checked);
+           console.log(document.getElementById('isSchema').value);
+          if(cb.checked==true){
+          document.getElementById('schemaDetailsDB').style.display='block';
+          checked1="yes";
+          }
+          else{
+          document.getElementById('schemaDetailsDB').style.display='none';
+          checked1="no";
+        }
+        }
+
+
+
+
+
+
+
+
+
+
+
+
+
 	$(document).ready(function () {
 	$('#rawTableColumnDetails').jtable({
 		title: '<spring:message code="dataload.page.title_raw_table"/>',
@@ -896,8 +1124,25 @@ wizard = $(document).ready(function() {
 		edit: false,
 		actions: {
 			listAction: function(postData, jtParams) {
-				return jsonObj;
-			},
+               return $.Deferred(function ($dfd) {
+                  console.log("value of checked1 is "+checked1);
+
+               if(checked1=="yes")
+                {
+                console.log(restWrapper);
+                 for(var i=0;i<restWrapper.Records.length;i++){
+                        if(restWrapper.Record[i]["dataType"]=="Integer"){
+                        restWrapper.Records[i]["dataType"]="Int";
+                        restWrapper.Record[i]["dataType"]="Int" ;
+                        }
+                    }
+                  console.log(restWrapper);
+                $dfd.resolve(restWrapper);
+                }
+
+                });
+
+            },
 			createAction: function(postData) {
                 console.log(postData);
                 var serialnumber = 1;
@@ -972,6 +1217,7 @@ wizard = $(document).ready(function() {
 				title: 'Data Type',
 				edit: true,
 				options:{ 'BigInt':'BigInt',
+				           'Int':'Int',
                           'SmallInt':'SmallInt',
                           'Float':'Float',
                           'Double':'Double',
@@ -1013,7 +1259,7 @@ wizard = $(document).ready(function() {
 
 
 
-	$('#rawTableColumnDetails').jtable('load');
+	//$('#rawTableColumnDetails').jtable('load');
 
 });
 
@@ -1030,7 +1276,22 @@ wizard = $(document).ready(function() {
                     edit: false,
         		    actions: {
                         listAction: function (postData, jtParams) {
-                            return jsonObj;
+
+                            return $.Deferred(function ($dfd) {
+                                  console.log("value of checked1 is "+checked1);
+
+                               if(checked1=="yes")
+                                {
+
+                                for(var i=0;i<restWrapper.Records.length;i++){
+                                    restWrapper.Records[i]["transformations"]="no transformation";
+                                    restWrapper.Record[i]["transformations"]="no transformation" ;
+                                    console.log(restWrapper);
+                                }
+                                $dfd.resolve(restWrapper);
+                                }
+
+                                });
                         },
 
                         createAction:function (postData, jtParams) {
@@ -1130,13 +1391,15 @@ wizard = $(document).ready(function() {
                             title: '<spring:message code="dataload.page.title_data_type"/>',
                             edit: true,
                             options:{ 'BigInt':'BigInt',
+                                       'Int':'Int',
 									  'SmallInt':'SmallInt',
 									  'Float':'Float',
 									  'Double':'Double',
 									  'Decimal':'Decimal',
 									  'Timestamp':'Timestamp',
 									  'Date':'Date',
-									  'String':'String'}
+									  'String':'String'
+									  }
 
                         },
                          transformations: {
@@ -1158,7 +1421,7 @@ wizard = $(document).ready(function() {
                                                 }
         		    }
         	    });
-        		    $('#baseTableColumnDetails').jtable('load');
+        		   // $('#baseTableColumnDetails').jtable('load');
         	    });
 
         	</script>

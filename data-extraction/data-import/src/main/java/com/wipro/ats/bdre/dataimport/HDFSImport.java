@@ -122,6 +122,7 @@ public class HDFSImport extends Configured implements Tool {
 
             //setting the parameters of sqoopOption
             options.setHadoopHome(hadoopHome);
+            //options.setHadoopMapRedHome(hadoopHome);
             options.setJarOutputDir(jarOutputDir);
             String outputDir = targetDir + "/" + processId + "/tmp";
             options.setTargetDir(outputDir);
@@ -145,29 +146,66 @@ public class HDFSImport extends Configured implements Tool {
                 options.setSqlQuery(query);//import using the query
 
             } else {
-                if (null != commonProperties.getProperty("columns") && size != 0) {
+
+                if(driver.contains("oracle"))
+                {
+                    String columns = "";
+                    for(String column: cols){
+                        columns = columns + "t."+column+",";
+                    }
+                    columns = columns.substring(0,columns.length()-1);
+
+                    String tmpQuery="SELECT "+columns+" FROM "+ tableName + " t WHERE 1!=0 AND $CONDITIONS";
+                    options.setSqlQuery(tmpQuery);
+
+                    if (!("None".equalsIgnoreCase(incrementMode)) && incrementMode != null) {
+                        ProcessLog processLog = new ProcessLog();
+                        ProcessLogInfo processLogInfo = new ProcessLogInfo();
+                        String logCategory;
+                        logCategory = LOG_CATEGORY;
+                        String msgId = "last value";
+                        processLogInfo = processLog.getLastValue(processId, msgId, logCategory);
+                        if (processLogInfo != null) {
+                            lastValue = processLogInfo.getMessage();
+                            prevLastValue = lastValue;
+                        }
+                        options.setIncrementalMode(SqoopOptions.IncrementalMode.valueOf(incrementMode.trim()));
+                        options.setIncrementalTestColumn(commonProperties.getProperty("incr.column"));
+                        options.setIncrementalLastValue(lastValue);
+
+                    }
+
+                }
+
+                else {
+
+                    if (null != commonProperties.getProperty("columns") && size != 0) {
 
                         options.setTableName(tableName);
                         options.setColumns(cols);        //importing table or columns
 
-                }
-
-                if (!("None".equalsIgnoreCase(incrementMode)) && incrementMode != null) {
-                    ProcessLog processLog = new ProcessLog();
-                    ProcessLogInfo processLogInfo = new ProcessLogInfo();
-                    String logCategory;
-                    logCategory = LOG_CATEGORY;
-                    String msgId = "last value";
-                    processLogInfo = processLog.getLastValue(processId, msgId, logCategory);
-                    if (processLogInfo != null) {
-                        lastValue = processLogInfo.getMessage();
-                        prevLastValue = lastValue;
                     }
-                    options.setIncrementalMode(SqoopOptions.IncrementalMode.valueOf(incrementMode.trim()));
-                    options.setIncrementalTestColumn(commonProperties.getProperty("incr.column"));
-                    options.setIncrementalLastValue(lastValue);
+
+                    if (!("None".equalsIgnoreCase(incrementMode)) && incrementMode != null) {
+                        ProcessLog processLog = new ProcessLog();
+                        ProcessLogInfo processLogInfo = new ProcessLogInfo();
+                        String logCategory;
+                        logCategory = LOG_CATEGORY;
+                        String msgId = "last value";
+                        processLogInfo = processLog.getLastValue(processId, msgId, logCategory);
+                        if (processLogInfo != null) {
+                            lastValue = processLogInfo.getMessage();
+                            prevLastValue = lastValue;
+                        }
+                        options.setIncrementalMode(SqoopOptions.IncrementalMode.valueOf(incrementMode.trim()));
+                        options.setIncrementalTestColumn(commonProperties.getProperty("incr.column"));
+                        options.setIncrementalLastValue(lastValue);
+
+                    }
 
                 }
+
+
 
             }
 

@@ -306,4 +306,24 @@ public class PropertiesDAO {
         }
     }
 
+    public String getPropertiesValueForConfigAndKey(int processId, String configGroup, String key) {
+        String value = null;
+        Session session = sessionFactory.openSession();
+        try {
+
+            session.beginTransaction();
+            Criteria cr = session.createCriteria(Properties.class).add(Restrictions.eq("process.processId", processId)).add(Restrictions.eq("configGroup", configGroup)).add(Restrictions.eq("id.propKey",key)).setProjection(Projections.property("propValue"));
+            value = cr.list().get(0).toString();
+            session.getTransaction().commit();
+
+        } catch (Exception e) {
+            session.getTransaction().rollback();
+            LOGGER.info("Error " + e);
+            return value;
+        } finally {
+            session.close();
+        }
+        return value;
+    }
+
 }

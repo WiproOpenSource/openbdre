@@ -71,6 +71,8 @@ public class WorkflowGenerator extends MetadataAPIBase {
         List<ProcessInfo> processInfos = new GetProcess().execute(new String[]{"--parent-process-id", pid , "--username",username});
         LOGGER.info("Workflow Type Id is " + processInfos.get(0).getWorkflowId() + " for pid=" + processInfos.get(0).getProcessId());
         Workflow workflow = new WorkflowPrinter().execute(processInfos, "workflow-" + pid);
+        String schedulerWorkflow = new SchedulerPrinter().execute("coordinator-workflow-" + pid);
+
         if (processInfos.get(0).getWorkflowId() == 1) {
 
             String workflowXML = workflow.getXml().toString();
@@ -78,14 +80,19 @@ public class WorkflowGenerator extends MetadataAPIBase {
 
             PrintWriter xmlOut = new PrintWriter(outputFile);
             PrintWriter dotOut = new PrintWriter(outputFile + ".dot");
+            PrintWriter coordinatorOut = new PrintWriter("coordinator-"+outputFile);
+
             xmlOut.println(workflowXML);
             dotOut.println(workflowdot);
+            coordinatorOut.println(schedulerWorkflow);
             xmlOut.close();
             dotOut.close();
+            coordinatorOut.close();
             OozieCLI oozieCLI = new OozieCLI();
             oozieCLI.run(new String[]{"validate", outputFile});
             LOGGER.info("XML is written to " + outputFile);
             LOGGER.info("DOT is written to " + outputFile + ".dot");
+            LOGGER.info("COORDINATOR XML is written to " + "coordinator-" +outputFile);
         } else {
             LOGGER.debug("This is not a Oozie process, hence no xml representation needed");
             String workflowdot = workflow.getDot().toString();

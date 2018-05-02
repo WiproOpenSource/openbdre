@@ -6,6 +6,7 @@
 
         <head>
             <title><spring:message code="common.page.title_bdre_2"/></title>
+            <link rel="shortcut icon" href="../css/images/favicon.ico" type="image/x-icon" />
 	<script>
 	  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
 	  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
@@ -307,13 +308,7 @@
                             						}, {
                                                                         label: "Job Definitions",
                                                                         collapse: "1",
-                                                                        children: [{
-                                                                                label: "Batch Jobs Registry",
-                                                                                collapse: "1",
-                                                                                url: "process.page",
-                                                                                children: []
-                            								},
-
+                                                                        children: [
                                                                             {
                                                                                 label: "Workflow Creator",
                                                                                 collapse: "1",
@@ -400,6 +395,11 @@
                                                                         collapse: "1",
                                                                         url: "processimportwizard.page",
                                                                         children: []
+                                                                                                        },{
+                                                                        label: "Job Export Wizard",
+                                                                        collapse: "1",
+                                                                        url: "processexport.page",
+                                                                        children: []
                                                                                      					}, {
                                                                         label: "Process Template",
                                                                         collapse: "1",
@@ -471,7 +471,13 @@
                                                                           collapse: "1",
                                                                           url: "hivetablemigration.page",
                                                                           children: []
-                                                 },]
+                                                 },{
+                                                                                                                                   label: "Batch Jobs Registry",
+                                                                                                                                   collapse: "1",
+                                                                                                                                   url: "process.page",
+                                                                                                                                   children: []
+                                                                               								},
+                                                                          ]
                                                             },
 
 
@@ -515,21 +521,29 @@
                                                                          children: []
                                             },
 						{
-                                                                     label: "Monitoring",
-                                                                     collapse: "1",
-                                                                     children: [
-                                                                     {
-                                                                              label: "History server",
-                                                                              collapse: "1",
-									                                          url:"history-server.page",
-                                                                              children: []
+                                     label: "Monitoring",
+                                     collapse: "1",
+                                     children: [
+                                                 {
+                                                              label: "Platform Monitor",
+                                                              collapse: "1",
+                                                              url:"platformMonitor.page",
+                                                              children: []
+                                                     },
+
+
+                                                 {
+                                                          label: "History server",
+                                                          collapse: "1",
+                                                          url:"history-server.page",
+                                                          children: []
                                                  },
-                                            {
-                                                            label: "Dr-Elephant",
-                                                            collapse: "1",
-							                                url:"dr-elephant.page",
-                                                            children: []
-                               }
+                                                {
+                                                         label: "Dr-Elephant",
+                                                         collapse: "1",
+                                                         url:"dr-elephant.page",
+                                                         children: []
+                                                 }
 
 
 

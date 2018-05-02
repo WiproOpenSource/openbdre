@@ -39,6 +39,7 @@ public class HDFSPersistentStore implements PersistentStore {
             JavaDStream<WrapperMessage> finalDStream =  dStream.transform(new Function<JavaRDD<WrapperMessage>,JavaRDD<WrapperMessage>>() {
                 @Override
                 public JavaRDD<WrapperMessage> call(JavaRDD<WrapperMessage> wrapperMessageJavaRDD) throws Exception {
+                    System.out.println(" inside hdfs ");
                     //JavaRDD<Row> rowJavaRDD = wrapperMessageJavaRDD.map(record->WrapperMessage.convertToRow(record));
                     JavaRDD<Row> rowJavaRDD = wrapperMessageJavaRDD.map(s -> s.getRow());
                     SQLContext sqlContext = SQLContext.getOrCreate(rowJavaRDD.context());
@@ -67,6 +68,7 @@ public class HDFSPersistentStore implements PersistentStore {
             dStream.foreachRDD(new Function<JavaRDD<WrapperMessage>, Void>() {
                 @Override
                 public Void call(JavaRDD<WrapperMessage> rowJavaRDD) throws Exception {
+                    System.out.println(" For each testing ");
                     return null;
                 }
             });

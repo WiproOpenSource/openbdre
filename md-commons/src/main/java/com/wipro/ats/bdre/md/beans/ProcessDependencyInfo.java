@@ -32,7 +32,7 @@ public class ProcessDependencyInfo {
     private Integer processTypeId;
     private Integer parentProcessId = new Integer(0); //To avoid NPE during parent row processing
     private Boolean canRecover;
-    private Integer enqProcessId;
+    private String enqProcessId;
     private String nextProcessIds;
     private String batchPattern;
     private String rowType;
@@ -125,11 +125,11 @@ public class ProcessDependencyInfo {
         this.canRecover = canRecover;
     }
 
-    public Integer getEnqProcessId() {
+    public String getEnqProcessId() {
         return enqProcessId;
     }
 
-    public void setEnqProcessId(Integer enqProcessId) {
+    public void setEnqProcessId(String enqProcessId) {
         this.enqProcessId = enqProcessId;
     }
 

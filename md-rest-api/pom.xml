@@ -120,6 +120,12 @@
             <artifactId>commons-fileupload</artifactId>
         </dependency>
 
+        <dependency>
+            <groupId>com.oracle</groupId>
+            <artifactId>ojdbc6</artifactId>
+            <version>${oracle.version}</version>
+        </dependency>
+
     </dependencies>
 
     <build>

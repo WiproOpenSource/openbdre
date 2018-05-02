@@ -34,6 +34,19 @@
                        width: 60%;
                    }
 
+                   .refresh-icon {
+                       background: #4A4B4B;
+                       background: -webkit-linear-gradient(#4A4B4B 50%, #3A3B3B 50%);
+                       background: -o-linear-gradient(#4A4B4B 50%, #3A3B3B 50%);
+                       background: -moz-linear-gradient(#4A4B4B 50%, #3A3B3B 50%);
+                       background: -ms-linear-gradient(#4A4B4B 50%, #3A3B3B 50%);
+                       background: linear-gradient(#4A4B4B 50%, #3A3B3B 50%);
+                       position: absolute;
+                       top: 0;
+                       color: white;
+                       cursor: pointer
+                   }
+
                    /* The Close Button */
                    .closemodal {
                        color: #aaaaaa;
@@ -1577,6 +1590,10 @@
                         });
                     }
 
+                    function refreshPage(){
+                        $('div#Container').jtable('reload');
+                    }
+
                 </script>
 
                 <script>
@@ -1705,7 +1722,7 @@
                     <script type="text/javascript">
                          var auto = setInterval(    function ()
                          {
-                               $('div#Container').jtable('load');
+                               $('div#Container').jtable('reload');
                          }, 60000);
                     </script>
 
@@ -1736,6 +1753,11 @@
                 <section style="width:100%;text-align:center;">
                     <div id="Container"></div>
                 </section>
+
+                <div id="refresh-icon" class="refresh-icon" style="left: 150px !important;">
+                <button class="btn btn-default" type="submit" style="background-color: #c3beb5;" onClick="refreshPage()"><span id="sizing-addon2"><span class="glyphicon glyphicon-refresh" aria-hidden="true"></span> Refresh </button>
+                </div>
+
                 <div id="input-box-button-filter" class="input-box-button-filter">
                 	<span class="filter-icon"></span><span class="filter-text search"><spring:message code="process.page.span_filter"/></span>
                 </div>

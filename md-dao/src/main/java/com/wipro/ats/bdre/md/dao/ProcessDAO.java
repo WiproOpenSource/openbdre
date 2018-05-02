@@ -53,6 +53,7 @@ public class ProcessDAO {
     private static final String PROCESSCODE="processCode";
     private static final String ACCESSGRANTED="ACCESS GRANTED";
     private static final String ACCESSDENIED="ACCESS DENIED";
+    private static final String ENQUEUINGPROCESSID="enqueuingProcessId";
 
     public List<com.wipro.ats.bdre.md.dao.jpa.Process> list(Integer pid, Integer processTypeId,Integer pageNum, Integer numResults,String userName) {
         Session session = sessionFactory.openSession();
@@ -245,6 +246,15 @@ public class ProcessDAO {
         Session session = sessionFactory.openSession();
         session.beginTransaction();
         Process process = (Process) session.get(Process.class, id);
+        session.getTransaction().commit();
+        session.close();
+        return process;
+    }
+
+    public Process getParent(Integer id) {
+        Session session = sessionFactory.openSession();
+        session.beginTransaction();
+        Process process = (Process) session.createCriteria(Process.class).add(Restrictions.isNull(PARENTPROCESSID)).add(Restrictions.eq(PROCESSID,id)).uniqueResult();
         session.getTransaction().commit();
         session.close();
         return process;
@@ -482,7 +492,7 @@ public class ProcessDAO {
             Integer newProcessId = null;
             if (!fetchReferenceProcess.list().isEmpty()) {
                 newProcess.setProcessName(referencedProcess.getProcessName() + "-copy");
-                newProcess.setEnqueuingProcessId(0);
+                newProcess.setEnqueuingProcessId("0");
                 newProcess.setNextProcessId("0");
                 newProcess.setProcessType(referencedProcess.getProcessType());
                 newProcess.setWorkflowType(referencedProcess.getWorkflowType());
@@ -1054,12 +1064,31 @@ public class ProcessDAO {
         List<com.wipro.ats.bdre.md.dao.jpa.Process> filterList=new ArrayList<>();
         try{
             session.beginTransaction();
-            Criteria criteria=session.createCriteria(Process.class).add(Restrictions.ilike("processName",processName, MatchMode.ANYWHERE)).add(Restrictions.isNull(PARENTPROCESSID));
+            Criteria criteria=session.createCriteria(Process.class).add(Restrictions.ilike("processName",processName, MatchMode.ANYWHERE)).add(Restrictions.isNull(PARENTPROCESSID)).add(Restrictions.eq("deleteFlag",false));
             filterList=(List<com.wipro.ats.bdre.md.dao.jpa.Process>)criteria.list();
         }
         catch (Exception e){
             e.printStackTrace();
         }
         return filterList;
+    }
+    public List<Process> getDownStreamProcess(Integer pid){
+        List<Process> processList=new ArrayList<>();
+        Session session = sessionFactory.openSession();
+        try{
+            LOGGER.info("inside getDownStreamProcess");
+            session.beginTransaction();
+            Criteria listOfDownStreamSubProcessesWithEnqIDCriteria=session.createCriteria(Process.class).add(Restrictions.or(Restrictions.eq(ENQUEUINGPROCESSID, pid.toString()),Restrictions.like(ENQUEUINGPROCESSID,"%,"+pid.toString()),Restrictions.like(ENQUEUINGPROCESSID,pid.toString()+",%"),Restrictions.like(ENQUEUINGPROCESSID,"%,"+pid.toString()+",%"))).add(Restrictions.eq("deleteFlag",false));
+            processList=(List<Process>)listOfDownStreamSubProcessesWithEnqIDCriteria.list();
+            session.getTransaction().commit();
+        }
+        catch (Exception e){
+            session.getTransaction().rollback();
+            e.printStackTrace();
+        }
+        finally {
+            session.close();
+        }
+        return processList;
     }
 }

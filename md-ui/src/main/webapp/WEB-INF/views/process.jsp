@@ -10,6 +10,20 @@
                 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
                 <title><spring:message code="common.page.title_bdre_1"/></title>
                 <style>
+                .modelwindow {
+                   display: none; /* Hidden by default */
+                   position: fixed; /* Stay in place */
+                   z-index: 1; /* Sit on top */
+                   padding-top: 40px; /* Location of the box */
+                   left: 0;
+                   top: 0;
+                   width: 100%; /* Full width */
+                   height: 100%; /* Full height */
+                   overflow: auto; /* Enable scroll if needed */
+                   background-color: rgb(0,0,0); /* Fallback color */
+                   background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+                   }
+
 					div.jtable-main-container>table.jtable>tbody>tr.jtable-data-row>td:nth-child(2){
 						color: #F75C17;
 						font-size: 24px;
@@ -66,6 +80,19 @@
                         cursor: pointer
                     }
 
+                    .refresh-icon {
+                        background: #4A4B4B;
+                        background: -webkit-linear-gradient(#4A4B4B 50%, #3A3B3B 50%);
+                        background: -o-linear-gradient(#4A4B4B 50%, #3A3B3B 50%);
+                        background: -moz-linear-gradient(#4A4B4B 50%, #3A3B3B 50%);
+                        background: -ms-linear-gradient(#4A4B4B 50%, #3A3B3B 50%);
+                        background: linear-gradient(#4A4B4B 50%, #3A3B3B 50%);
+                        position: absolute;
+                        top: 0;
+                        color: white;
+                        cursor: pointer
+                    }
+
 					.filter-icon {
 						background-image: url('../css/images/filter_icon.png');
 						background-size: 100%;
@@ -76,6 +103,23 @@
 						width: 16px;
 						height: 16px;
 					}
+
+					/* The Close Button */
+                   .closemodal {
+                       color: #aaaaaa;
+                       float: right;
+                       font-size: 28px;
+                       font-weight: bold;
+                   }
+
+                   /* Modal Content */
+                  .modal-content {
+                      background-color: #fefefe;
+                      margin: auto;
+                      padding: 20px;
+                      border: 1px solid #888;
+                      width: 60%;
+                  }
 
 					.filter-text {
 						display: inline-block;
@@ -160,6 +204,12 @@
 					.label-icons.label-danger {
 						background: url('../css/images/label-danger.png');
 					}
+					.my_text
+                                {
+                                    font-family:    Arial, Helvetica, sans-serif;
+                                    font-size:      17px;
+                                    font-weight:    bold;
+                                }
 					</style>
 
 	<script>
@@ -178,16 +228,22 @@
                 <link href="../css/jtables-bdre.css" rel="stylesheet" type="text/css" />
                 <link href="../css/jquery-ui-1.10.3.custom.css" rel="stylesheet" type="text/css" />
                 <link href="../css/bootstrap.custom.css" rel="stylesheet" />
+                <link rel="stylesheet" type="text/css" href="../css/jquery.datetimepicker.css"/>
+
+
 
 
                 <!-- Include jTable script file. -->
                 <script src="../js/jquery.min.js" type="text/javascript"></script>
                 <script src="../js/jquery-ui-1.10.3.custom.js" type="text/javascript"></script>
                 <script src="../js/jquery.jtable.js" type="text/javascript"></script>
+                <script src="../js/jquery.datetimepicker.full.js"></script>
+                <script src="../js/angular.min.js" type="text/javascript"></script>
 
                 <script type="text/javascript">
                 var jtParamStart = 0;
                 var jtPage = 10;
+                var flag=0;
                     $(document).ready(function() {
                     var u=window.location.href;
                     console.log(u);
@@ -210,14 +266,18 @@
                             openChildAsAccordion: true,
                             actions: {
                                 listAction: function(postData, jtParams) {
-                                if(jtParams.jtStartIndex!=0){
-                                jtParamStart = jtParams.jtStartIndex;
-                                jtPage = jtParams.jtPageSize;}
+                                $("#page-header").hide();
+                                console.log("Debugging jt params");
+                                console.log(jtParams);
+                                if(jtParams.jtStartIndex!=0 || jtParams.jtPageSize!=10){
+                                    jtParamStart = jtParams.jtStartIndex;
+                                    jtPage = jtParams.jtPageSize;
+                                }
                                     return $.Deferred(function($dfd) {
                                     console.log(jtParams);
                                         $.ajax({
 
-                                                url: ur + jtParamStart + '&size='+jtPage,
+                                                url: ur + jtParams.jtStartIndex + '&size='+jtParams.jtPageSize,
 
 
                                             type: 'GET',
@@ -806,6 +866,7 @@
                                                             defaultValue: '0',
                                                             edit: true
                                                         },
+
                                                         busDomainId: {
                                                             type: 'hidden',
                                                             defaultValue: item.record.busDomainId,
@@ -1158,6 +1219,7 @@
                                     title: '<spring:message code="process.page.title_deploy_job"/>',
 
                                 },
+
                                   
                                 RunProcess: {                    
                                 	width: '5%',
@@ -1230,6 +1292,30 @@
                                 		});
                                 		return $img2;
                                 	}
+                                },
+
+                                UpdateProcess : {
+                                      width: '5%',
+                                      sorting: false,
+                                      edit: false,
+                                      create: false,
+                                      title: 'Update Job',
+                                      display: function(data) {
+                                           return '<span class="label label-primary" onclick="fetchSchemaInfo(' + data.record.processId + ')">Update</span> ';
+                                     },
+
+                                },
+
+                                ScheduleProcess: {
+                                    title: 'Schedule Job',
+                                    sorting: false,
+                                    width: '5%',
+                                    listClass: 'bdre-jtable-button',
+                                    create: false,
+                                    edit: false,
+                                    display: function(data) {
+                                        return '<span class="label label-primary" onclick="fetchScheduleInfo(' + data.record.processId + ')">Schedule</span> ';
+                                    },
                                 },
 
 
@@ -1379,7 +1465,7 @@
                         	$('#input-box-button').toggle();
 						});
 						$('#input-box-button-filter1').click(function () {
-                                                	$('#input-box-button1').toggle();
+                          $('#input-box-button1').toggle();
                         						});
                     });
 
@@ -1390,6 +1476,25 @@
                     }
 
                 </script>
+
+                <script>
+
+                         var map = new Object();
+                          var createJobResult;
+                             var requiredProperties;
+                             var sourceFlag;
+                             var created = 0;
+                        function formIntoMap(typeProp, typeOf) {
+                         var x = '';
+                         x = document.getElementById(typeOf);
+                         console.log(x);
+                         var text = "";
+                         var i;
+                         for(i = 0; i < x.length; i++) {
+                                     map[typeProp + x.elements[i].name] = x.elements[i].value;
+                         }
+                        }
+                 </script>
 
 
                 <script>
@@ -1450,6 +1555,34 @@
                 </script>
 
                 <script>
+
+                    var app = angular.module('app', []);
+                    app.controller('myCtrl', function($scope) {
+                    $scope.timeZones={};
+                    $.ajax({
+                      url: "/mdrest/scheduler/",
+                          type: 'GET',
+                          dataType: 'json',
+                          async: false,
+                          success: function (data) {
+                              $scope.timeZones = data.Record;
+                              console.log("Printing the timezones");
+                              console.log($scope.timeZones);
+                          },
+                          error: function () {
+                              alert('danger');
+                          }
+                      });
+
+                     });
+
+                     function refreshPage(){
+                         $('div#Container').jtable('reload');
+                     }
+
+                </script>
+
+                <script>
                     function fetchPipelineInfo(pid) {
                     $.ajax({
                             url: '/mdrest/process/permission/'+pid,
@@ -1485,6 +1618,123 @@
                             }
                         });
                     }
+
+                    var processId;
+
+                    function fetchScheduleInfo(pid) {
+                    processId=pid;
+                    $.ajax({
+                            url: '/mdrest/process/permission/'+pid,
+                            type: 'PUT',
+                            dataType: 'json',
+                             success: function(data) {
+                                if(data.Result == "OK") {
+                                  var frequency = getPropValue("schedule-frequency",pid);
+                                  var startTime = getPropValue("schedule-start-time",pid);
+                                  var endTime = getPropValue("schedule-end-time",pid);
+                                  var timeZone = getPropValue("schedule-time-zone",pid);
+
+                                  var currentDate = new Date();
+                                  var dateTime = currentDate.getFullYear() + "-"
+                                                  + (currentDate.getMonth()+1)  + "-"
+                                                  + currentDate.getDate() + " "
+                                                  + currentDate.getHours() + ":"
+                                                  + currentDate.getMinutes();
+
+                                  if(frequency["Record"]==null)
+                                  document.getElementById("frequency").defaultValue = "30";
+                                  else
+                                  document.getElementById("frequency").defaultValue = frequency["Record"];
+                                  if(startTime["Record"]==null)
+                                  document.getElementById("startTime").defaultValue = dateTime;
+                                  else
+                                  document.getElementById("startTime").defaultValue = startTime["Record"];
+                                  if(endTime["Record"]==null)
+                                  document.getElementById("endTime").defaultValue = "2018-01-24 18:05";
+                                  else
+                                  document.getElementById("endTime").defaultValue = endTime["Record"];
+                                  if(timeZone["Record"]==null)
+                                  document.getElementById("timeZone").defaultValue = "UTC";
+                                  else
+                                  document.getElementById("timeZone").defaultValue = timeZone["Record"];
+                                  var modal = document.getElementById('myModal');
+                                  var span = document.getElementsByClassName("closemodal")[0];
+                                  modal.style.display = "block";
+
+                                  span.onclick = function() {
+                                   modal.style.display = "none";
+                                  }
+                                }
+                                else
+                                {
+                                 alert(data.Message);
+                                }
+                            },
+                            error: function() {
+                                $dfd.reject();
+                            }
+                        });
+                    }
+
+                    function dateTimePicker(){
+                    $('#startTime').datetimepicker({
+                        format:'Y-m-d H:i',
+                        step:15
+
+                    });
+
+                    $('#endTime').datetimepicker({
+                        format:'Y-m-d H:i',
+                        step:15
+
+                    });
+                    }
+
+
+
+                    function getPropValue(key,pid){
+                    var property;
+                      $.ajax({
+                      url: '/mdrest/properties/' +pid+ '/schedule/'+key ,
+                          type: 'GET',
+                          dataType: 'json',
+                          async: false,
+                          success: function (data) {
+                              property = data;
+                              console.log("properties from ajax"+ property);
+                          },
+                          error: function () {
+                              alert('danger'+key);
+                          }
+                      });
+                      return property
+                      }
+
+
+                      function scheduleJob(){
+                      formIntoMap('scheduleProperties_','propertiesFieldsForm');
+                        $.ajax({
+                              url: "/mdrest/scheduler/schedulejob/"+processId,
+                              type: 'POST',
+                              data: jQuery.param(map),
+
+                                 success: function(data) {
+                                    if(data.Result == "OK") {
+                                        console.log("OK");
+                                        location.href = '<c:url value="/pages/process.page?pid="/>' + processId;
+                                    }
+                                    else
+                                    {
+                                     alert('danger');
+                                    }
+                                },
+                                error: function() {
+                                     alert('danger');
+                                }
+                            });
+                       }
+
+
 					function goToEditGraphically(pid,pTypeId) {
                                       $.ajax({
                                                url: '/mdrest/process/permission/'+pid,
@@ -1554,31 +1804,70 @@
                     <script>
                         function showProcessPage(pid) {
                             console.log('entered function');
-                            //console.log(${param.pid == null});
+                            console.log("pid is "+pid);
+                            if(pid==""){
+                            $("#div-dialog-warning").dialog({
+                                title: "",
+                                resizable: false,
+                                height: 'auto',
+                                modal: true,
+                                buttons: {
+                                    "Ok" : function () {
+                                        $(this).dialog("close");
+                                    }
+                                }
+                                }).html('<p><span class="jtable-confirm-message">Process id can not be empty</span></p>');
+                              }
+                              else
+                              {
+                            $.ajax({
+                                    url: '/mdrest/process/checkProcess/'+pid,
+                                    type: 'GET',
+                                    dataType: 'json',
+                                    success: function(data) {
+                                    console.log(data);
+                                        if(data.Result == "OK" && data.Records=="Present") {
+                                        location.href = '<c:url value="/pages/process.page?pid="/>' + pid;
+                                        }
+                                        else
+                                        {
 
-                            location.href = '<c:url value="/pages/process.page/pid="/>' + pid;
+                                 $("#div-dialog-warning").dialog({
+                                  title: "",
+                                  resizable: false,
+                                  height: 'auto',
+                                  modal: true,
+                                  buttons: {
+                                      "Ok" : function () {
+                                          $(this).dialog("close");
+                                      }
+                                  }
+                                }).html('<p><span class="jtable-confirm-message">NO Parent process found with id ='+ pid +'</span></p>');
 
+                                        }
+                                    },
+                                    error: function() {
+                                       console.log("in the error section");
+                                    }
+                                });
 
-
-
+                              }
                         }
 
 
+                    function showProcessPage1(pName) {
+                                        console.log('entered function');
+
+                                        location.href = '<c:url value="/pages/process.page?pName="/>' + pName;
+
+                                    }
+
                     </script>
-                    <script>
-                                            function showProcessPage1(pName) {
-                                                console.log('entered function');
-
-                                                location.href = '<c:url value="/pages/process.page?pName="/>' + pName;
-
-                                            }
-
-                                        </script>
                     <script type="text/javascript">
-                         var auto = setInterval(    function ()
+                         /*var auto = setInterval(    function ()
                          {
-                               $('div#Container').jtable('load');
-                         }, 60000);
+                               $('div#Container').jtable('reload');
+                         }, 60000);*/
                     </script>
 
             </head>
@@ -1592,31 +1881,35 @@
                 	<span class="filter-icon"></span><span class="filter-text"><spring:message code="process.page.span_filter"/></span>
                 </div>
                 <div id="input-box-button" class="input-box-button">
-                    <form >
+                    <form onsubmit="showProcessPage(jQuery('#pid').val()); return false;">
                         <div class="input-group">
                             <input class="form-control" type="number" name="pid" id="pid" value="" placeholder=<spring:message code="process.page.pid_placeholder"/> />
                             <!-- <button  class="btn btn-default btn-lg btn-primary"><span id="sizing-addon2"><span class="glyphicon glyphicon-arrow-right" aria-hidden="true"></span> Show Lineage </button> -->
                             <span class="input-group-btn">
-		    <button class="btn btn-default" type="submit" onClick="showProcessPage(jQuery('#pid').val())" id="filterIdButton" ><span id="sizing-addon2"><span class="glyphicon glyphicon-arrow-right" aria-hidden="true"></span>&nbsp;</button>
+		    <button class="btn btn-default" type="submit" onClick="showProcessPage(jQuery('#pid').val())"><span id="sizing-addon2"><span class="glyphicon glyphicon-arrow-right" aria-hidden="true"></span>&nbsp;</button>
                             </span>
                         </div>
                     </form>
                 </div>
-        <div id="input-box-button-filter1" class="input-box-button-filter1">
-                        <span class="filter-icon"></span><span class="filter-text">Filter By Name</span>
-                        </div>
-                        <div id="input-box-button1" class="input-box-button1">
-                            <form >
-                                <div class="input-group">
-                                    <input class="form-control" type="text" name="pName" id="pName" value="" placeholder="Filter By Name"/> />
-                                    <!-- <button  class="btn btn-default btn-lg btn-primary"><span id="sizing-addon2"><span class="glyphicon glyphicon-arrow-right" aria-hidden="true"></span> Show Lineage </button> -->
-                                    <span class="input-group-btn">
-            <button class="btn btn-default" type="submit" onClick="showProcessPage1(jQuery('#pName').val())"><span id="sizing-addon2"><span class="glyphicon glyphicon-arrow-right" aria-hidden="true"></span>&nbsp;</button>
-                                    </span>
-                                </div>
-                            </form>
-                        </div>
 
+                <div id="refresh-icon" class="refresh-icon" style="left: 150px !important;">
+                <button class="btn btn-default" type="submit" style="background-color: #c3beb5;" onClick="refreshPage()"><span class="glyphicon glyphicon-refresh" aria-hidden="true"></span> Refresh </button>
+                </div>
+
+               <div id="input-box-button-filter1" class="input-box-button-filter1">
+                                       <span class="filter-icon"></span><span class="filter-text">Filter By Name</span>
+                                       </div>
+                                       <div id="input-box-button1" class="input-box-button1">
+                                           <form onsubmit="showProcessPage1(jQuery('#pName').val()); return false;">
+                                               <div class="input-group">
+                                                   <input class="form-control" type="text" name="pName" id="pName" value="" placeholder="Filter By Name"/> />
+                                                   <!-- <button  class="btn btn-default btn-lg btn-primary"><span id="sizing-addon2"><span class="glyphicon glyphicon-arrow-right" aria-hidden="true"></span> Show Lineage </button> -->
+                                                   <span class="input-group-btn">
+                           <button class="btn btn-default" type="submit" onClick="showProcessPage1(jQuery('#pName').val())"><span id="sizing-addon2"><span class="glyphicon glyphicon-arrow-right" aria-hidden="true"></span>&nbsp;</button>
+                                                   </span>
+                                               </div>
+                                           </form>
+                                       </div>
 
 
 				<div id="dialog-confirm" style="display: none;">
@@ -1669,6 +1962,234 @@
 						<span class="jtable-confirm-message"><spring:message code="process.page.span_process_not_found"/></span>
 					</p>
 				</div>
+
+				 <div style="display:none" id="div-dialog-warning">
+                            			<p><span class="ui-icon ui-icon-alert" style="float:left;"></span></p>
+                            		</div>
+
+                <div  ng-app="app" id="preModelDetails" ng-controller="myCtrl">
+				<div id="myModal" class="modelwindow">
+
+				<div class="modal-content" style="background-color:#F8F9FB;">
+				<span class="closemodal">&times;</span>
+                             <div class="row" >&nbsp;</div>
+                             <div class="row" >
+
+                                 <div class="col-md-2"></div>
+
+
+                                     <div class="panel panel-primary" style="border: none; padding-top:1% !important;">
+
+                                         <div class="panel-body">
+                                             <form role="form" id="propertiesFieldsForm">
+
+                                                 <div class="form-group" >
+                                                     <label >Frequency (in minutes)</label>
+                                                     <input type="text" class="form-control" id="frequency" name="frequency" required>
+                                                 </div>
+
+                                                 <div class="form-group" >
+                                                     <label >Start Time (yyyy-mm-dd hh:mm)</label>
+                                                     <input type="text" class="form-control" id="startTime" name="startTime" required onclick="dateTimePicker()">
+                                                 </div>
+
+                                                 <div class="form-group" >
+                                                         <label >End Time (yyyy-mm-dd hh:mm)</label>
+                                                         <input type="text" class="form-control" id="endTime" name="endTime" required onclick="dateTimePicker()">
+                                                     </div>
+
+                                                  <div class="form-group" >
+                                                      <label >Time Zone</label>
+
+                                                      <select class="form-control" id="timeZone" name="timeZone" ng-model = "timeZone" ng-options = "zone for zone in timeZones track by zone">
+                                                           <option  value="">Select option</option>
+                                                       </select>
+                                                   </div>
+
+                                                  <div class="actions text-center" >
+                                                     <button type="button" id="schedulejobs" class="btn btn-primary btn-lg" onclick="scheduleJob()">Schedule Jobs</button>
+                                                  </div>
+                                             </form>
+                                        </div>
+                                     </div>
+
+                                 <div class="col-md-2"> </div>
+                     <div class="row" >&nbsp;</div>
+                     </div>
+                     </div>
+                     </div>
+
+			          <div style="display:none" id="div-dialog-warning">
+            			<p><span class="ui-icon ui-icon-alert" style="float:left;"></span></p>
+            		</div>
+
+
+				<div id="myRDBMSModel" class="modelwindow">
+
+
+                 </div>
+
+                 <script>
+                 var processId;
+                 var columns;
+
+                 function fetchSchemaInfo(pid) {
+                 var finalColumns=[];
+                          processId=pid;
+                          console.log(processId);
+                          $.ajax({
+                                                 type: "GET",
+                                                 url: "/mdrest/schema/" + processId,
+                                                 dataType: 'json',
+                                                 async: false,
+                                                 success: function (data) {
+                                                   columns=data.Records;
+                                                   console.log(data);
+                                                 },
+                                                 error: function () {
+                                                     alert('danger');
+                                                 }
+                                             });
+                        if(columns[0]=="InvalidProcess"){
+                        console.log("invalid process selected");
+                          var div=document.getElementById("myRDBMSModel");
+                          var formHtml="";
+                          formHtml=formHtml+'<div class="modal-content">';
+                          formHtml=formHtml+'<span class="closemodal">&times;</span>';
+                          formHtml=formHtml+'<h3  style="margin-left:300px;font-size:25px;font-weight:bold;">Please Select Data Import Job</h3>';
+
+                          formHtml=formHtml+'<button   style="margin-left:45%;background: lightsteelblue;" id="cancel" class="btn btn-default">Cancel</button>';
+                          formHtml=formHtml+'</div>';
+                          div.innerHTML=formHtml;
+                          var modal = document.getElementById('myRDBMSModel');
+                                               var span = document.getElementsByClassName("closemodal")[0];
+                                               modal.style.display = "block";
+
+                                               span.onclick = function() {
+                                                modal.style.display = "none";
+                                               }
+                                               var cancel=document.getElementById('cancel');
+
+                                           cancel.onclick = function() {
+                                            modal.style.display = "none";
+                                           }
+                        }
+                        else{
+                        var div=document.getElementById("myRDBMSModel");
+                        var formHtml="";
+                        formHtml=formHtml+'<div class="modal-content" style="background-color:#e6f2ff; ">';
+                        //formHtml=formHtml+'<span class="closemodal">&times;</span>';
+                        formHtml=formHtml+'<h3  style="margin-left:375px;font-size:25px;font-weight:bold;">Schema Details</h3>';
+                        formHtml=formHtml+'<div class="col-md-12" style="padding-left : 50px; padding-right : 20px;padding-bottom : 10px;">';
+                        formHtml=formHtml+'</div>';
+                        formHtml=formHtml+'<div class="col-md-12" style="padding-left : 50px; padding-right : 20px;padding-bottom : 10px;background-color:#b3b3e6" >';
+                        formHtml=formHtml+'<div class="col-md-3 my_text">Selected</div>';
+                        formHtml=formHtml+'<div class="col-md-3 my_text" style="padding-left : 0px;">Column Name</div>';
+                        formHtml=formHtml+'<div class="col-md-3 my_text" style="padding-left : 25px;">MySQL Data Type</div>';
+                        formHtml=formHtml+'<div class="col-md-3 my_text" style="padding-left : 35px;">Hive Data Type</div>';
+                        formHtml=formHtml+'</div>';
+                        for(var i=0;i<columns.length;i++){
+                        var isChecked=columns[i].split(".")[1];
+                        var columnAndDataTypes=columns[i].split(".")[0];
+                        var columnName=columnAndDataTypes.split(":")[0];
+                        var mysqlDataType=columnAndDataTypes.split(":")[1];
+                        var hiveDataType=columnAndDataTypes.split(":")[2];
+                        if(i%2==0)
+                        color="#e6f2ff";
+                        else
+                        color="#b3d9ff";
+                        console.log("color is " + color);
+                        if(isChecked==1){
+                        formHtml=formHtml+'<div class="col-md-12" style="padding-left : 50px; padding-right : 20px;padding-bottom : 10px;background-color:' + color + ';">';
+                        formHtml=formHtml+'<div class="col-md-3">';
+                        formHtml=formHtml+'<input type="checkbox" class="schema" value=' + columnName + ":" + hiveDataType + ' checked >';
+                        formHtml=formHtml+'</div>';
+                        formHtml=formHtml+'<div class="col-md-3" style="padding-left : 0px;font-weight:bold;">' + columnName + '</div>';
+                        formHtml=formHtml+'<div class="col-md-3" style="padding-left : 25px;font-weight:bold;">' + mysqlDataType + '</div>';
+                        formHtml=formHtml+'<div class="col-md-3" style="padding-left : 35px;font-weight:bold;">' + hiveDataType + '</div>';
+                        formHtml=formHtml+'</div>';
+
+                        }
+                        else if(isChecked==2){
+                        formHtml=formHtml+'<div class="col-md-12" style="padding-left : 50px; padding-right : 20px;padding-bottom : 10px;background-color:' + color + ';">';
+                        formHtml=formHtml+'<div class="col-md-3">';
+                        formHtml=formHtml+'<input type="checkbox" class="schema" value=' + columnName + ":" + hiveDataType + ' >';
+                        formHtml=formHtml+'</div>';
+                        formHtml=formHtml+'<div class="col-md-3" style="padding-left : 0px;font-weight:bold;">' + columnName + '</div>';
+                        formHtml=formHtml+'<div class="col-md-3" style="padding-left : 25px;font-weight:bold;">' + mysqlDataType + '</div>';
+                        formHtml=formHtml+'<div class="col-md-3" style="padding-left : 35px;font-weight:bold;">' + hiveDataType + '</div>';
+                        formHtml=formHtml+'</div>';
+
+                        }
+                        else{
+                        formHtml=formHtml+'<div class="col-md-12" style="padding-left : 50px; padding-right : 20px;padding-bottom : 10px;background-color:' + color + ';">';
+                        formHtml=formHtml+'<div class="col-md-3">';
+                        formHtml=formHtml+'<input type="checkbox" class="schema" value=' + columnName + ":" + hiveDataType + ' disabled >';
+                        formHtml=formHtml+'</div>';
+                        formHtml=formHtml+'<div class="col-md-3" style="padding-left : 0px;font-weight:bold;">' + columnName + '</div>';
+                        formHtml=formHtml+'<div class="col-md-3" style="padding-left : 25px;font-weight:bold;">' + mysqlDataType + '</div>';
+                        formHtml=formHtml+'<div class="col-md-3" style="padding-left : 35px;font-weight:bold;">' + hiveDataType + '</div>';
+
+                        formHtml=formHtml+'</div>';
+
+
+                        }
+                        }
+
+                        formHtml=formHtml+'<div class="col-md-12" style="padding-left : 50px; padding-right : 20px;padding-bottom : 10px;">';
+                        formHtml=formHtml+'</div>';
+                        formHtml=formHtml+'<button  style="margin-left:38%;background: lightsteelblue;" id="submit" class="btn btn-default">Submit</button>';
+                        formHtml=formHtml+'<button   style="margin-left:6%;background: lightsteelblue;" id="cancel" class="btn btn-default">Cancel</button>';
+                        formHtml=formHtml+'</div>';
+                        formHtml=formHtml+'</div>';
+                        div.innerHTML=formHtml;
+                       var modal = document.getElementById('myRDBMSModel');
+                     var span = document.getElementsByClassName("closemodal")[0];
+                     modal.style.display = "block";
+
+                     span.onclick = function() {
+                      modal.style.display = "none";
+                     }
+                     var cancel=document.getElementById('cancel');
+                     var submit=document.getElementById('submit');
+                 cancel.onclick = function() {
+                  modal.style.display = "none";
+                 }
+                 submit.onclick= function(){
+
+                 var inputElements = document.getElementsByClassName('schema');
+                 console.log(inputElements);
+                 var count=0;
+                 var final="";
+                 for(var i=0; i<inputElements.length; ++i){
+                       if(inputElements[i].checked){
+                             finalColumns.push(inputElements[i].value);
+                             final=final+inputElements[i].value+",";
+                       }
+                 }
+
+                 console.log("final columns selected by user are "+ finalColumns);
+                 final=final.substring(0,final.length-1)
+                 console.log("final string is " + final);
+                 modal.style.display = "none";
+               $.ajax({
+                                      type: "POST",
+                                      url: "/mdrest/schema/" + final + "/" + processId,
+                                      dataType: 'json',
+                                      async: false,
+                                      success: function (data) {
+
+                                      },
+                                      error: function () {
+                                          alert('danger');
+                                      }
+                                  });
+                 }
+                 }
+
+                    }
+                 </script>
+
 			</body>
 
             </html>

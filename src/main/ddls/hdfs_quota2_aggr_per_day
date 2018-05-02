@@ -1,0 +1,17 @@
+CREATE TABLE IF NOT EXISTS HDFS_QUOTA2_AGGREGATE_PER_DAY ( parentNameQuota double, parentDirNumFiles double, subdirNumfiles double, parentSpaceQuota double, parentDirSize double, subdirSize double , subDir String,parentDir String, fetchdate string)
+ROW FORMAT DELIMITED
+FIELDS TERMINATED BY '\t'
+LINES TERMINATED BY '\n'
+STORED AS TEXTFILE;
+
+
+INSERT INTO HDFS_QUOTA2_AGGREGATE_PER_DAY
+SELECT avg(parentNameQuota) , avg(parentDirNumFiles), avg(subdirNumfiles), avg(parentSpaceQuota),avg(parentDirSize),avg(subdirSize), subDir, parentDir, fetchdate
+FROM HDFS_QUOTA
+GROUP BY subDir,parentDir, fetchdate
+
+//mysql create table
+CREATE TABLE HDFS_QUOTA2_AGGREGATE_PER_DAY ( parentNameQuota double, parentDirNumFiles double, subdirNumfiles double, parentSpaceQuota double, parentDirSize double, subdirSize double , subDir varchar(100),parentDir varchar(100), fetchdate varchar(11))
+
+//sqoop export from hive table hdfs location to mysql
+sqoop-export --connect jdbc:mysql://localhost:3306/bdre --username root --password cloudera --table HDFS_QUOTA2_AGGREGATE_PER_DAY  --input-fields-terminated-by '\t' --input-lines-terminated-by '\n' --export-dir '/user/hive/warehouse/monitor.db/hdfs_quota2_aggregate_per_day'
