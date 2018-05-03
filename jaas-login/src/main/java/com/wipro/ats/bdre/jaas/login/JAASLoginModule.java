@@ -19,7 +19,7 @@ import com.wipro.ats.bdre.md.beans.table.Users;
 import com.wipro.ats.bdre.security.UserRoleFetcher;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.log4j.Logger;
-
+import com.wipro.ats.bdre.md.api.*;
 import javax.security.auth.Subject;
 import javax.security.auth.callback.*;
 import javax.security.auth.login.LoginException;
@@ -183,6 +183,7 @@ public class JAASLoginModule implements LoginModule {
 
     private boolean isValidUser() throws LoginException {
         LOGGER.debug("Checking user validity");
+        LOGGER.info("checking if login is possible");
         if (password == null || new String(password).trim().isEmpty()) {
             LOGGER.error("Cannot authenticate because of empty password");
             return false;
@@ -190,28 +191,56 @@ public class JAASLoginModule implements LoginModule {
         }
         UserRoleFetcher userRoleFetcher = new UserRoleFetcher();
         Users user = userRoleFetcher.getUser(username);
-        if (user != null) {
-            //if(ACCOUNT_LOCK table does not have an entry for the current username){
-            String passwordStr = new String(password);
-            if (user.getPassword().equals(passwordStr)) {
-                LOGGER.info("Authentication success for " + username);
-                return true;
-            }
-            //else{
+        try {
+            AccountLockout accountLockout = new AccountLockout();
+            List<com.wipro.ats.bdre.md.dao.jpa.AccountLockout> accountLockoutList = accountLockout.get(username);
+
+            LOGGER.info("list obtained has size of " + accountLockoutList.size());
+            if (user != null) {
+                LOGGER.info("valid username entered");
+            if(accountLockoutList.isEmpty()){
+                LOGGER.info(username + " not present in account lockout table");
+                String passwordStr = new String(password);
+                if (user.getPassword().equals(passwordStr)) {
+                    LOGGER.info("Authentication success for " + username);
+                    return true;
+                }
+            else{
             //create an entry for the username with 1 attempt and status as not locked
-            //}
-            //}
-            //else{
-            //if(status is locked){
+                LOGGER.info("wrong password entered for "+ username);
+                accountLockout.insert(username);
+            }
+            }
+            else{
+                LOGGER.info(username + " already present in account lockout table");
+                com.wipro.ats.bdre.md.dao.jpa.AccountLockout a=accountLockoutList.get(0);
+                String status=a.getLockStatus();
+            if(status.equalsIgnoreCase("Locked")){
             //increase no. of attempts by 1
-            //}
-            //else{
+                LOGGER.info(username + " is already locked... cannot login");
+                accountLockout.update(username);
+            }
+            else{
             //check if password is correct.
             // if it is correct, delete the entry from the table for the user
+                String passwordStr = new String(password);
+                if (user.getPassword().equals(passwordStr)) {
+                    LOGGER.info("Authentication success for " + username);
+                    accountLockout.delete(username);
+                    return true;
+                }
             // if it is not correct, increase the no. of attempts by 1. check if attemts are equal to k.
             // if attempts have become k, change status to locked
-            //}
-            //}
+                else {
+                    LOGGER.info("wrong pasword entered");
+                    accountLockout.update(username);
+                }
+            }
+            }
+            }
+        }
+        catch (Exception e){
+            e.printStackTrace();
         }
         LOGGER.error("Authentication failed for " + username);
         return false;

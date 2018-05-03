@@ -981,7 +981,9 @@ wizard = $(document).ready(function() {
                                       processData: false,  // tell jQuery not to process the data
                                       contentType: false,  // tell jQuery not to set contentType
                                       success:function (data) {
+                                            console.log(data);
                                             uploadedFileName=data.Record.fileName;
+                                            console.log("Printing data");
                                             console.log( data );
                                             restWrapper=data.Record.restWrapper;
                                             console.log(restWrapper);
@@ -1001,6 +1003,7 @@ wizard = $(document).ready(function() {
                                             return false;
                                         },
                                       error: function () {
+                                      console.log("Inside the error function");
                                             $("#div-dialog-warning").dialog({
                                                         title: "",
                                                         resizable: false,
