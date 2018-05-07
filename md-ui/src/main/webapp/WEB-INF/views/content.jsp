@@ -519,37 +519,7 @@
                                                                          collapse: "1",
                                                                          url: "wfdesigner2.page",
                                                                          children: []
-                                            },
-						{
-                                     label: "Monitoring",
-                                     collapse: "1",
-                                     children: [
-                                                 {
-                                                              label: "Platform Monitor",
-                                                              collapse: "1",
-                                                              url:"platformMonitor.page",
-                                                              children: []
-                                                     },
-
-
-                                                 {
-                                                          label: "History server",
-                                                          collapse: "1",
-                                                          url:"history-server.page",
-                                                          children: []
-                                                 },
-                                                {
-                                                         label: "Dr-Elephant",
-                                                         collapse: "1",
-                                                         url:"dr-elephant.page",
-                                                         children: []
-                                                 }
-
-
-
-
-                                                                     ]
-                                        }
+                                            }
 
 
 
@@ -592,7 +562,38 @@
                                                                             collapse: "1",
                                                                             url: "settings.page",
                                                                             children: []
-                            					}
+                            					},
+                            					{
+                                                                                     label: "Monitoring",
+                                                                                     collapse: "1",
+                                                                                     children: [
+                                                                                                 {
+                                                                                                              label: "Platform Monitor",
+                                                                                                              collapse: "1",
+                                                                                                              url:"platformMonitorGrafana.page",
+                                                                                                              children: []
+                                                                                                     },
+
+
+                                                                                                 {
+                                                                                                          label: "History server",
+                                                                                                          collapse: "1",
+                                                                                                          url:"history-server.page",
+                                                                                                          children: []
+                                                                                                 },
+                                                                                                {
+                                                                                                         label: "Dr-Elephant",
+                                                                                                         collapse: "1",
+                                                                                                         url:"dr-elephant.page",
+                                                                                                         children: []
+                                                                                                 }
+
+
+
+
+                                                                                                                     ]
+                                                                                        }
+
                             					]
                                                                 },
                                                                 </security:authorize>
