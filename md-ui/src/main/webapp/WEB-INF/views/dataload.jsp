@@ -960,7 +960,6 @@ wizard = $(document).ready(function() {
 		}
 		</script>
 
-
                <script>
                           var restWrapper=new Object();
                                    var uploadedFileName ="";
@@ -981,10 +980,11 @@ wizard = $(document).ready(function() {
                                       processData: false,  // tell jQuery not to process the data
                                       contentType: false,  // tell jQuery not to set contentType
                                       success:function (data) {
-                                            uploadedFileName=data.Record.fileName;
+                                            console.log("Printing data");
                                             console.log( data );
+                                            if(data.Result == "OK"){
+                                            uploadedFileName=data.Record.fileName;
                                             restWrapper=data.Record.restWrapper;
-                                            console.log(restWrapper);
                                             $("#div-dialog-warning").dialog({
                                                             title: "",
                                                             resizable: false,
@@ -998,57 +998,9 @@ wizard = $(document).ready(function() {
                                                                 }
                                                             }
                                             }).html('<p><span class="jtable-confirm-message"><spring:message code="processimportwizard.page.upload_success"/>'+' ' + uploadedFileName + '</span></p>');
-                                            return false;
-                                        },
-                                      error: function () {
-                                            $("#div-dialog-warning").dialog({
-                                                        title: "",
-                                                        resizable: false,
-                                                        height: 'auto',
-                                                        modal: true,
-                                                        buttons: {
-                                                            "Ok" : function () {
-                                                                $(this).dialog("close");
-                                                            }
-                                                        }
-                                        }).html('<p><span class="jtable-confirm-message"><spring:message code="processimportwizard.page.upload_error"/></span></p>');
-                                        return false;
-                                        }
-                                     });
-
-                                    }
-                </script>
-
-
-
-
-
-
-
-               <script>
-                          var restWrapper=new Object();
-                                   var uploadedFileName ="";
-                                    function uploadFile(msgformat){
-                                   var arg= ["fileName"];
-                                     var fd = new FormData();
-                                    var fileObj = $("#"+arg[0])[0].files[0];
-                                    var fileName=fileObj.name;
-                                    fd.append("file", fileObj);
-                                    fd.append("name", fileName);
-                                    console.log("message format : "+msgformat);
-                                    $.ajax({
-                                      url: '/mdrest/filehandler/uploadFile/'+msgformat,
-                                      type: "POST",
-                                      data: fd,
-                                      async: false,
-                                      enctype: 'multipart/form-data',
-                                      processData: false,  // tell jQuery not to process the data
-                                      contentType: false,  // tell jQuery not to set contentType
-                                      success:function (data) {
-                                            uploadedFileName=data.Record.fileName;
-                                            console.log( data );
-                                            restWrapper=data.Record.restWrapper;
-                                            console.log(restWrapper);
+                                            }
+                                            else
+                                            {
                                             $("#div-dialog-warning").dialog({
                                                             title: "",
                                                             resizable: false,
@@ -1056,15 +1008,15 @@ wizard = $(document).ready(function() {
                                                             modal: true,
                                                             buttons: {
                                                                 "Ok" : function () {
-                                                                    $('#rawTableColumnDetails').jtable('load');
-                                                                    $('#baseTableColumnDetails').jtable('load');
                                                                     $(this).dialog("close");
                                                                 }
                                                             }
-                                            }).html('<p><span class="jtable-confirm-message"><spring:message code="processimportwizard.page.upload_success"/>'+' ' + uploadedFileName + '</span></p>');
+                                            }).html('<p><span class="jtable-confirm-message"><spring:message code="processimportwizard.page.upload_error"/></span></p>');
+                                            }
                                             return false;
                                         },
                                       error: function () {
+                                      console.log("Inside error function");
                                             $("#div-dialog-warning").dialog({
                                                         title: "",
                                                         resizable: false,
