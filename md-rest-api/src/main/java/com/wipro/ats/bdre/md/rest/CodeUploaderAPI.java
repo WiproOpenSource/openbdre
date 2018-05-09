@@ -23,6 +23,7 @@ import com.wipro.ats.bdre.md.beans.DefaultMessageSchema;
 import com.wipro.ats.bdre.md.rest.util.JSONObject;
 import com.wipro.ats.bdre.md.rest.util.XMLParser;
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.io.IOUtils;
 import org.apache.log4j.Logger;
 import org.jsonschema2pojo.SchemaGenerator;
@@ -203,7 +204,7 @@ public class CodeUploaderAPI extends MetadataAPIBase {
     @RequestMapping(value = "/uploadFile/{msgformat}", method = RequestMethod.POST)
     @ResponseBody public
     RestWrapper fileUpload(@PathVariable("msgformat") String msgFormat,@RequestParam("file") MultipartFile file, Principal principal) {
-        if (!file.isEmpty()) {
+        if (!file.isEmpty() && (FilenameUtils.getExtension(file.getOriginalFilename()).equals("xml") || FilenameUtils.getExtension(file.getOriginalFilename()).equals("json"))) {
             try {
 
                 String name = file.getOriginalFilename();
@@ -292,9 +293,11 @@ public class CodeUploaderAPI extends MetadataAPIBase {
                 LOGGER.error("error occurred while uploading file", e);
                 return new RestWrapper(e.getMessage(), RestWrapper.ERROR);
             }
-        } else {
-            return new RestWrapper("You failed to upload because the file was empty.", RestWrapper.ERROR);
+        }else if(!FilenameUtils.getExtension(file.getOriginalFilename()).equals("xml") && !FilenameUtils.getExtension(file.getOriginalFilename()).equals("json")){
+            return new RestWrapper("You failed to upload because the file format was not supported", RestWrapper.ERROR);
 
+        }else{
+            return new RestWrapper("You failed to upload because the file was empty.", RestWrapper.ERROR);
         }
 
 
