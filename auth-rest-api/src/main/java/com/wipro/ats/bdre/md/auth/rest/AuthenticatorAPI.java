@@ -84,6 +84,7 @@ public class AuthenticatorAPI extends MetadataAPIBase {
                 //Add a new token
                 UUID uuid = UUID.randomUUID();
                 authResult.setAuthToken(uuid.toString());
+                System.out.println("auth token is " + authResult.getAuthToken());
 
                 //Set start ts
                 authResult.setStartTime(new Timestamp(session.getCreationTime()));
@@ -158,6 +159,7 @@ public class AuthenticatorAPI extends MetadataAPIBase {
 
     @ResponseBody
     public RestWrapper logoutByToken(@PathVariable("authtoken") String token, HttpSession session) throws LoginException {
+        LOGGER.info("logging out current user");
         RestWrapper restWrapper = null;
         if (token != null) {
             try {
@@ -173,7 +175,6 @@ public class AuthenticatorAPI extends MetadataAPIBase {
                 restWrapper = new RestWrapper(null, RestWrapper.OK);
                 return restWrapper;
             }
-
             HttpSession otherUserSession = authResult.getHttpSession();
             otherUserSession.invalidate();
 

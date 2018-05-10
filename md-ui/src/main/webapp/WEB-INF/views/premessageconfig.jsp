@@ -768,40 +768,57 @@ function addDataToJson(properties) {
                                       processData: false,  // tell jQuery not to process the data
                                       contentType: false,  // tell jQuery not to set contentType
                                       success:function (data) {
-                                            uploadedFileName=data.Record.fileName;
-                                            console.log( data );
-                                            restWrapper=data.Record.restWrapper;
-                                            console.log(restWrapper);
-                                            $("#div-dialog-warning").dialog({
-                                                            title: "",
-                                                            resizable: false,
-                                                            height: 'auto',
-                                                            modal: true,
-                                                            buttons: {
-                                                                "Ok" : function () {
-                                                                    $(this).dialog("close");
-                                                                }
-                                                            }
-                                            }).html('<p><span class="jtable-confirm-message"><spring:message code="processimportwizard.page.upload_success"/>'+' ' + uploadedFileName + '</span></p>');
-                                            return false;
-                                        },
-                                      error: function () {
-                                            $("#div-dialog-warning").dialog({
-                                                        title: "",
-                                                        resizable: false,
-                                                        height: 'auto',
-                                                        modal: true,
-                                                        buttons: {
-                                                            "Ok" : function () {
-                                                                $(this).dialog("close");
-                                                            }
-                                                        }
-                                        }).html('<p><span class="jtable-confirm-message"><spring:message code="processimportwizard.page.upload_error"/></span></p>');
-                                        return false;
-                                        }
-                                     });
+                                      console.log("Printing data");
+                                      console.log( data );
+                                      if(data.Result == "OK"){
+                                      uploadedFileName=data.Record.fileName;
+                                      restWrapper=data.Record.restWrapper;
+                                      $("#div-dialog-warning").dialog({
+                                                      title: "",
+                                                      resizable: false,
+                                                      height: 'auto',
+                                                      modal: true,
+                                                      buttons: {
+                                                          "Ok" : function () {
+                                                              $(this).dialog("close");
+                                                          }
+                                                      }
+                                      }).html('<p><span class="jtable-confirm-message"><spring:message code="processimportwizard.page.upload_success"/>'+' ' + uploadedFileName + '</span></p>');
+                                      }
+                                      else
+                                      {
+                                      $("#div-dialog-warning").dialog({
+                                                      title: "",
+                                                      resizable: false,
+                                                      height: 'auto',
+                                                      modal: true,
+                                                      buttons: {
+                                                          "Ok" : function () {
+                                                              $(this).dialog("close");
+                                                          }
+                                                      }
+                                      }).html('<p><span class="jtable-confirm-message"><spring:message code="processimportwizard.page.upload_error"/></span></p>');
+                                      }
+                                      return false;
+                                  },
+                                error: function () {
+                                console.log("Inside error function");
+                                      $("#div-dialog-warning").dialog({
+                                                  title: "",
+                                                  resizable: false,
+                                                  height: 'auto',
+                                                  modal: true,
+                                                  buttons: {
+                                                      "Ok" : function () {
+                                                          $(this).dialog("close");
+                                                      }
+                                                  }
+                                  }).html('<p><span class="jtable-confirm-message"><spring:message code="processimportwizard.page.upload_error"/></span></p>');
+                                  return false;
+                                  }
+                               });
 
-                                    }
+                              }
                 </script>
         <script type="text/javascript">
                     $(document).ready(function(){

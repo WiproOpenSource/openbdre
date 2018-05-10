@@ -1,8 +1,15 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@taglib uri="http://www.springframework.org/tags" prefix="spring"%>
 <%@page session="true"%>
+<META Http-Equiv="Cache-Control" Content="no-cache">
+    <META Http-Equiv="Pragma" Content="no-cache">
+    <META Http-Equiv="Expires" Content="0">
 <html>
     <head>
+     <script src="../js/jquery.min.js" type="text/javascript"></script>
+             <script src="../js/jquery-ui-1.10.3.custom.js" type="text/javascript"></script>
+             <script src="../js/jquery.steps.min.js" type="text/javascript"></script>
+             <script src="../js/jquery.jtable.js" type="text/javascript"></script>
 	<link href="../../css/bootstrap.min.css" rel="stylesheet" type="text/css" />
 	<link rel="shortcut icon" href="../../css/images/favicon.ico" type="image/x-icon" />
 	<title><spring:message code="login.page.title"/></title>
@@ -33,6 +40,7 @@
       }
     })(this);
 	</script>
+
     </head>
     <body onload='document.loginForm.username.focus();'>
 	<div class="text-center text-info"><spring:message code="login.page.title_bdre"/></div>
@@ -54,22 +62,39 @@
 		</div>
 	    </c:if>
 		<form name='loginForm' class="loginForm"
-		  action="<c:url value='/j_spring_security_check' />" method='POST'>
-		<div class="form-group-pdiv">
-			<div class="form-group">
-			    <div class="icon-circle usericon"></div><input type="text" class="form-control" id="InputEmail" name='username' placeholder=<spring:message code="login.page.username"/> >
-			</div>
-			<div class="form-group">
-			    <div class="icon-circle pwordicon"></div><input type="password" class="form-control" id="password" name='password' placeholder=<spring:message code="login.page.password"/> >
-			</div>
-		</div>
-		<div class="login-links">
-			<div class="login-fp"><spring:message code="login.page.forgot_password"/></div>
-			<button type="submit" class="btn btn-default btn-lg btn-primary btn-signin"><span id="sizing-addon2"><spring:message code="login.page.sign_button"/></span></button>
-			<div class="clearfix"></div>
-		</div>
-		<input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}" />
- 		</form>
-	</div>
+
+          action="<c:url value='/j_spring_security_check' />" onsubmit="return validateForm()" method='POST'>
+        <div class="form-group-pdiv">
+        <div class="form-group">
+            <div class="icon-circle usericon"></div><input type="text" class="form-control" id="InputEmail" name='username' placeholder=<spring:message code="login.page.username"/> >
+        </div>
+        <div class="form-group">
+            <div class="icon-circle pwordicon"></div><input type="password" class="form-control" id="password" name='password' placeholder=<spring:message code="login.page.password"/> >
+        </div>
+        </div>
+        <div class="login-links">
+        <div class="login-fp"><spring:message code="login.page.forgot_password"/></div>
+        <button type="submit" class="btn btn-default btn-lg btn-primary btn-signin"><span id="sizing-addon2"><spring:message code="login.page.sign_button"/></span></button>
+        <div class="clearfix"></div>
+        </div>
+        <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}" />
+          </form>
+        </div>
+        <script>
+           function validateForm() {
+                   var username = document.forms["loginForm"]["username"].value;
+                   var password=document.forms["loginForm"]["password"].value;
+                   var letterNumber = /^[0-9a-zA-Z]+$/;
+                   if (username.match(letterNumber)  && password.match(letterNumber)) {
+                       console.log(CryptoJS.SHA1(password).toString());
+                       document.forms["loginForm"]["password"].value = CryptoJS.SHA1(password).toString();
+                       return true;
+                   }
+                   else{
+                     alert("Please enter valid characters");
+                                    return false;
+                   }
+               }
+        </script>
     </body>
 </html>

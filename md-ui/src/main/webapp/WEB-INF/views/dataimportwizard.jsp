@@ -776,7 +776,7 @@ isInit=true;
 						</div>
 						<div class="form-group">
 						<label for = "dbPassword" ><spring:message code="dataimportwizard.page.db_psswd"/></label >
-						<input id = "dbPassword" onchange = "treeData=null;" name = "common_dbPassword" type = "password" class = "form-control" value = "<fmt:message key='hibernate.connection.password' />" />
+						<input id = "dbPassword" onchange = "treeData=null;" name = "common_dbPassword" type = "password" class = "form-control" />
 						</div>
 						<div class="form-group">
 						<label for = "dbDriver" ><spring:message code="dataimportwizard.page.db_driver"/></label >
@@ -841,7 +841,7 @@ isInit=true;
 							<th >Datatype</th >
 							<th >Hive Column Name</th >
 							<th >Hive Datatype</th >
-							<th >Tokenize Columns</th >
+							<th >Column Transformation</th >
 							<th> Options</th>
 							<th> Increment Type</th>
 							<th> Increment Column</th>
