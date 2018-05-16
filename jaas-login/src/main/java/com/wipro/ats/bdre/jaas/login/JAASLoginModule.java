@@ -90,7 +90,9 @@ public class JAASLoginModule implements LoginModule {
 
             callbackHandler.handle(callbacks);
             username = ((NameCallback) callbacks[0]).getName();
-            password = DigestUtils.sha1Hex(new String(((PasswordCallback) callbacks[1]).getPassword())).toCharArray();
+            //password = DigestUtils.sha1Hex(new String(((PasswordCallback) callbacks[1]).getPassword())).toCharArray();
+            password = ((PasswordCallback) callbacks[1]).getPassword();
+            LOGGER.info("The form password is: "+password);
 
 
             if (username == null || password == null) {
@@ -192,6 +194,7 @@ public class JAASLoginModule implements LoginModule {
         Users user = userRoleFetcher.getUser(username);
         if (user != null) {
             String passwordStr = new String(password);
+            LOGGER.info("The SQL password is: "+passwordStr);
             if (user.getPassword().equals(passwordStr)) {
                 LOGGER.info("Authentication success for " + username);
                 return true;
