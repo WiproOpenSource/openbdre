@@ -158,11 +158,12 @@
 					padding-top: 9px !important;
 				}
 			</style>
+
 		</head>
 
         <body class="container-fluid" ng-app="myApp" ng-controller="myCtrl">
             <nav class="navbar navbar-inverse">
-                <div class="container-fluid">
+                <div class="container-fluid" id='mycontrol'>
                     <!-- Brand and toggle get grouped for better mobile display -->
                     <div class="navbar-header">
                         <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
@@ -519,37 +520,7 @@
                                                                          collapse: "1",
                                                                          url: "wfdesigner2.page",
                                                                          children: []
-                                            },
-						{
-                                     label: "Monitoring",
-                                     collapse: "1",
-                                     children: [
-                                                 {
-                                                              label: "Platform Monitor",
-                                                              collapse: "1",
-                                                              url:"platformMonitor.page",
-                                                              children: []
-                                                     },
-
-
-                                                 {
-                                                          label: "History server",
-                                                          collapse: "1",
-                                                          url:"history-server.page",
-                                                          children: []
-                                                 },
-                                                {
-                                                         label: "Dr-Elephant",
-                                                         collapse: "1",
-                                                         url:"dr-elephant.page",
-                                                         children: []
-                                                 }
-
-
-
-
-                                                                     ]
-                                        }
+                                            }
 
 
 
@@ -592,7 +563,38 @@
                                                                             collapse: "1",
                                                                             url: "settings.page",
                                                                             children: []
-                            					}
+                            					},
+                            					{
+                                                                                     label: "Monitoring",
+                                                                                     collapse: "1",
+                                                                                     children: [
+                                                                                                 {
+                                                                                                              label: "Platform Monitor",
+                                                                                                              collapse: "1",
+                                                                                                              url:"platformMonitorGrafana.page",
+                                                                                                              children: []
+                                                                                                     },
+
+
+                                                                                                 {
+                                                                                                          label: "History server",
+                                                                                                          collapse: "1",
+                                                                                                          url:"history-server.page",
+                                                                                                          children: []
+                                                                                                 },
+                                                                                                {
+                                                                                                         label: "Dr-Elephant",
+                                                                                                         collapse: "1",
+                                                                                                         url:"dr-elephant.page",
+                                                                                                         children: []
+                                                                                                 }
+
+
+
+
+                                                                                                                     ]
+                                                                                        }
+
                             					]
                                                                 },
                                                                 </security:authorize>
