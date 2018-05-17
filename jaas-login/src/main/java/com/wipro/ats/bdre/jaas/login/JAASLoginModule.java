@@ -90,7 +90,8 @@ public class JAASLoginModule implements LoginModule {
 
             callbackHandler.handle(callbacks);
             username = ((NameCallback) callbacks[0]).getName();
-            password = DigestUtils.sha1Hex(new String(((PasswordCallback) callbacks[1]).getPassword())).toCharArray();
+            //password = DigestUtils.sha1Hex(new String(((PasswordCallback) callbacks[1]).getPassword())).toCharArray();
+            password = ((PasswordCallback) callbacks[1]).getPassword();
 
 
             if (username == null || password == null) {
@@ -198,45 +199,45 @@ public class JAASLoginModule implements LoginModule {
             LOGGER.info("list obtained has size of " + accountLockoutList.size());
             if (user != null) {
                 LOGGER.info("valid username entered");
-            if(accountLockoutList.isEmpty()){
-                LOGGER.info(username + " not present in account lockout table");
-                String passwordStr = new String(password);
-                if (user.getPassword().equals(passwordStr)) {
-                    LOGGER.info("Authentication success for " + username);
-                    return true;
+                if(accountLockoutList.isEmpty()){
+                    LOGGER.info(username + " not present in account lockout table");
+                    String passwordStr = new String(password);
+                    if (user.getPassword().equals(passwordStr)) {
+                        LOGGER.info("Authentication success for " + username);
+                        return true;
+                    }
+                    else{
+                        //create an entry for the username with 1 attempt and status as not locked
+                        LOGGER.info("wrong password entered for "+ username);
+                        accountLockout.insert(username);
+                    }
                 }
-            else{
-            //create an entry for the username with 1 attempt and status as not locked
-                LOGGER.info("wrong password entered for "+ username);
-                accountLockout.insert(username);
-            }
-            }
-            else{
-                LOGGER.info(username + " already present in account lockout table");
-                com.wipro.ats.bdre.md.dao.jpa.AccountLockout a=accountLockoutList.get(0);
-                String status=a.getLockStatus();
-            if(status.equalsIgnoreCase("Locked")){
-            //increase no. of attempts by 1
-                LOGGER.info(username + " is already locked... cannot login");
-                accountLockout.update(username);
-            }
-            else{
-            //check if password is correct.
-            // if it is correct, delete the entry from the table for the user
-                String passwordStr = new String(password);
-                if (user.getPassword().equals(passwordStr)) {
-                    LOGGER.info("Authentication success for " + username);
-                    accountLockout.delete(username);
-                    return true;
+                else{
+                    LOGGER.info(username + " already present in account lockout table");
+                    com.wipro.ats.bdre.md.dao.jpa.AccountLockout a=accountLockoutList.get(0);
+                    String status=a.getLockStatus();
+                    if(status.equalsIgnoreCase("Locked")){
+                        //increase no. of attempts by 1
+                        LOGGER.info(username + " is already locked... cannot login");
+                        accountLockout.update(username);
+                    }
+                    else{
+                        //check if password is correct.
+                        // if it is correct, delete the entry from the table for the user
+                        String passwordStr = new String(password);
+                        if (user.getPassword().equals(passwordStr)) {
+                            LOGGER.info("Authentication success for " + username);
+                            accountLockout.delete(username);
+                            return true;
+                        }
+                        // if it is not correct, increase the no. of attempts by 1. check if attemts are equal to k.
+                        // if attempts have become k, change status to locked
+                        else {
+                            LOGGER.info("wrong pasword entered");
+                            accountLockout.update(username);
+                        }
+                    }
                 }
-            // if it is not correct, increase the no. of attempts by 1. check if attemts are equal to k.
-            // if attempts have become k, change status to locked
-                else {
-                    LOGGER.info("wrong pasword entered");
-                    accountLockout.update(username);
-                }
-            }
-            }
             }
         }
         catch (Exception e){
