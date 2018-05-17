@@ -84,6 +84,187 @@
 			location.href = '<c:url value="/pages/lineage.page?pid="/>' + pid;
         }
 </script >
+ <script>
+                var uploadedFileName ="";
+              function uploadZip (subDir,fileId){
+             var arg= [subDir,fileId];
+               var fd = new FormData();
+              		                var fileObj = $("#"+arg[1])[0].files[0];
+                                      var fileName=fileObj.name;
+                                      fd.append("file", fileObj);
+                                      fd.append("name", fileName);
+                                      $.ajax({
+                                        url: '/mdrest/filehandler/uploadzip/'+arg[0],
+                                        type: "POST",
+                                        data: fd,
+                                        async: false,
+                                        enctype: 'multipart/form-data',
+                                        processData: false,  // tell jQuery not to process the data
+                                        contentType: false,  // tell jQuery not to set contentType
+                                        success:function (data) {
+                                              uploadedFileName=data.Record.fileName;
+                                              console.log( data );
+                                              $("#div-dialog-warning").dialog({
+                                                              title: "",
+                                                              resizable: false,
+                                                              height: 'auto',
+                                                              modal: true,
+                                                              buttons: {
+                                                                  "Ok" : function () {
+                                                                      $(this).dialog("close");
+                                                                  }
+                                                              }
+                                              }).html('<p><span class="jtable-confirm-message"><spring:message code="processimportwizard.page.upload_success"/>'+' ' + uploadedFileName + '</span></p>');
+                                              return false;
+              							},
+              						  error: function () {
+              							    $("#div-dialog-warning").dialog({
+                                                          title: "",
+                                                          resizable: false,
+                                                          height: 'auto',
+                                                          modal: true,
+                                                          buttons: {
+                                                              "Ok" : function () {
+                                                                  $(this).dialog("close");
+                                                              }
+                                                          }
+                                          }).html('<p><span class="jtable-confirm-message"><spring:message code="processimportwizard.page.upload_error"/></span></p>');
+                                          return false;
+              							}
+              						 });
+
+              }
+
+
+
+              </script>
+    <script type="text/javascript">
+
+        var next = 1;
+            function addrow(column,dataType,generator){
+            var addto = "#deletediv";
+            var addRemove = "#formGroup" + (next);
+            next = next + 1;
+            var removeBtn = '<button id="remove' + (next) + '" class="btn btn-danger remove-me" ><span class="glyphicon glyphicon-trash" ></span></button></div><div id="field">';
+            var newIn = '';
+            newIn = newIn +  '<div class="form-group" id="formGroup' + next + '">' ;
+            newIn = newIn +  '<div class="col-md-3">' ;
+            newIn = newIn +  '<input type="text" class="form-control input-sm" id="fieldName.' + next + '"  name="fieldName.' + next + '" value='+column+' />' ;
+            newIn = newIn +  '</div>' ;
+            newIn = newIn +  '<div class="col-md-3">' ;
+            newIn = newIn +  '<select class="form-control input-sm" id="generatedType.' + next + '" name="generatedType.' + next + '">' ;
+            newIn = newIn +  getGenType(dataType) ;
+            newIn = newIn +  '</select>' ;
+            newIn = newIn +  '</div>' ;
+            newIn = newIn +  '<div class="col-md-4">' ;
+            newIn = newIn +  '<input type="text" class="form-control input-sm" id="genArg.' + next + '"  name="genArg.' + next + '" value='+generator+' />' ;
+            newIn = newIn +  '</div>' ;
+            newIn = newIn + removeBtn;
+            newIn = newIn +  '</div>' ;
+
+            var newInput = $(newIn);
+            var removeButton = $(removeBtn);
+            $(addto).before(newInput);
+
+            $("#formGroup" + next).attr('data-source',$(addto).attr('data-source'));
+            $("#count").val(next);
+
+                $('.remove-me').click(function(e){
+                    e.preventDefault();
+                    var fieldNum = this.id.charAt(this.id.length-1);
+                    var fieldID = "#formGroup" + fieldNum;
+                    console.log($(this));
+                    //$(this).remove();
+                    $(fieldID).remove();
+                });
+        }
+
+
+
+
+
+    function getGenType(types){
+        var opt='';
+        $.ajax({
+                url: '/mdrest/genconfig/testDataGen/',
+                    type: 'GET',
+                    dataType: 'json',
+                    async: false,
+                    success: function (data) {
+                       $.each(data.Record,function(index,record){
+                           if(record.description == types)
+                           opt=opt+'<option value="'+record.defaultVal+'" name="generatedType" selected="selected" >'+record.description+'</option>' ;
+                           else
+                           opt=opt+'<option value="'+record.defaultVal+'" name="generatedType">'+record.description+'</option>' ;
+                       });
+                    },
+                    error: function () {
+                        alert('danger');
+                    }
+              });
+        return opt;
+    }
+        </script>
+               <script>
+                            var finalJson=[];
+                            var noOfColumns=0;
+                            function ImportFromExel(){
+                                //var jsonText=document.getElementById("jsonTextArea").value;
+                                      var fileString=uploadedFileName;
+
+                            				$.ajax({
+                                		    url: "/mdrest/datagenproperties/import",
+                                		    type: "POST",
+                                		    data: {'fileString': fileString},
+                                		    success: function (getData) {
+                                		        if( getData.Result =="OK" ){
+                                		            finalJson=getData.Record;
+                                                  console.log(finalJson);
+                                                   noOfColumns=getData.Record.length;
+                                                  console.log(noOfColumns);
+                                                  $("#div-dialog-warning").dialog({
+                                                               title: "",
+                                                               resizable: false,
+                                                               height: 'auto',
+                                                               modal: true,
+                                                               buttons: {
+                                                                   "Ok" : function () {
+                                                                       $(this).dialog("close");
+                                                                       $("#formGroup1").remove();
+
+                                                                        for(i=0;i<noOfColumns;i++)
+                                                                       {
+                                                                       addrow(finalJson[i][0],finalJson[i][1],finalJson[i][2]);
+                                                                       }
+
+
+
+
+                                                                   }
+                                                               }
+                                                  }).html('<p><span class="jtable-confirm-message"><spring:message code="processimportwizard.page.insert_success"/></span></p>');
+                                                  return false;
+                                              }
+                                		        if(getData.Result =="ERROR"){
+                                		            $("#div-dialog-warning").dialog({
+                                                           title: "",
+                                                           resizable: false,
+                                                           height: 'auto',
+                                                           modal: true,
+                                                           buttons: {
+                                                               "Ok" : function () {
+                                                                   $(this).dialog("close");
+                                                               }
+                                                           }
+                                                  }).html('<p><span class="jtable-confirm-message"><spring:message code="processimportwizard.page.import_error"/>'+' '+getData.Message + '</span></p>');
+                                                  return false;
+
+                                              }
+                                          }
+                                		});
+                            }
+                            </script>
+
 
 <script>
 function formIntoMap(typeProp, typeOf) {
@@ -122,7 +303,7 @@ function formIntoMap(typeProp, typeOf) {
                 	<!-- btn-group -->
                     <div class="form-group" id="formGroup1" >
                         <div class="col-md-3">
-                            <input type="text" class="form-control input-sm" id="fieldName.1" value="" name="fieldName" placeholder=<spring:message code="datagen.page.colname_type_placeholder"/> />
+                            <input type="text" class="form-control input-sm" id="fieldName.1" value="" name="fieldName.1" placeholder=<spring:message code="datagen.page.colname_type_placeholder"/> />
                         </div>
                         <div class="col-md-3">
                             <select class="form-control input-sm" id="generatedType.1" name="generatedType.1">
@@ -136,15 +317,56 @@ function formIntoMap(typeProp, typeOf) {
                         
                         
                     </div>
+
+                    <!-- btn-group -->
+                                        <div class="form-group" id="formGroup2" ng-repeat="x in finalJson">
+                                            <div class="col-md-3">
+                                                <input type="text" class="form-control input-sm" id="fieldName.1" value="" name="fieldName.1" placeholder=<spring:message code="datagen.page.colname_type_placeholder"/> />
+                                            </div>
+                                            <div class="col-md-3">
+                                                <select class="form-control input-sm" id="generatedType.1" name="generatedType.1">
+                                                    <option ng-repeat="generatedTypes in generatedType.Record" value="{{generatedTypes.defaultVal}}" name="generatedType">{{generatedTypes.description}}</option>
+                                                </select>
+                                            </div>
+                                            <div class="col-md-4">
+                                                <input type="text" class="form-control input-sm" id="genArg.1" value="" name="genArg.1" placeholder=<spring:message code="datagen.page.generator_argument_placeholder"/> />
+                                            </div>
+                                            <button id="remove1" class="btn btn-danger remove-me"><span class="glyphicon glyphicon-trash"></span></button>
+
+
+                                        </div>
+
+                      <!-- /btn-group -->
+
                     <!-- /btn-group -->
+                <!--    <div class="form-group" id="formGroup16" > -->
                <div class="col-md-2" id="deletediv">
                             <button id="b1" class="btn add-more">
                                 <span class="glyphicon glyphicon-plus" style="font-size:large"></span>
                             </button>
                 </div>
-                
+
+              <!--   </div>
+                <div class="form-group" id="formGroup15" >
+              <div class="col-md-3">
+                  <h5><strong>You can also upload exel file of the data</strong></h5><br>
+                <input type="file" name="file" class="form-control" id="exel-id" required>
+                   <br>
+                  <button type="button" class="btn btn-sm btn-primary pull-left" onClick="uploadZip('exel','exel-id')">Upload Exel</button>
+                   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                   <button class = "btn btn-sm btn-primary" type = "button" onClick = "ImportFromExel()" href = "#" >
+                                                                          Submit
+                                                                      </button >
+                </div >
+                <div>
+
+                </div>
+                </div>    -->
+
             </form>
-                
+
+
+
             </section>
 
             <h3><div class="number-circular">2</div><spring:message code="datagen.page.table_types"/></h3>
@@ -216,6 +438,15 @@ function formIntoMap(typeProp, typeOf) {
                                                     <input type="text" class="form-control" id="outputPath" name="outputPath" placeholder=<spring:message code="datagen.page.hdfs_op_path_placeholder"/> required>
                                                 </div>
                                             </div>
+                                             <div class="form-group">
+                                                <label class="control-label col-sm-6" for="workflowTypeId"><spring:message code="process.page.title_wf_type"/></label>
+                                                <div class="col-sm-8">
+                                                    <select class="form-control" id="workflowTypeId" name="workflowTypeId">
+                                                        <option ng-repeat="workflowType in workflowTypes.Options" value="{{workflowType.Value}}" name="workflowTypeId">{{workflowType.DisplayText}}</option>
+
+                                                    </select>
+                                                </div>
+                                            </div>
                                             <div class="form-group">
                                                 <label class="control-label col-sm-2" for="busDomainId"><spring:message code="datagen.page.bus_domain_id"/></label>
                                                 <div class="col-sm-10">
@@ -254,7 +485,7 @@ function formIntoMap(typeProp, typeOf) {
         var newIn = '';
         newIn = newIn +  '<div class="form-group" id="formGroup' + next + '">' ;
         newIn = newIn +  '<div class="col-md-3">' ;
-        newIn = newIn +  '<input type="text" class="form-control input-sm" id="fieldName.' + next + '" value="" name="fieldName.' + next + '" placeholder="Column Name : Column Type" />' ;
+        newIn = newIn +  '<input type="text" class="form-control input-sm" id="fieldName.' + next + '" value="" name="fieldName.' + next + '" placeholder="Column Name" />' ;
         newIn = newIn +  '</div>' ;
         newIn = newIn +  '<div class="col-md-3">' ;
         newIn = newIn +  '<select class="form-control input-sm" id="generatedType.' + next + '" name="generatedType.' + next + '">' ;
@@ -325,6 +556,11 @@ function getGenTypes(){
                                 alert('danger');
                             }
                         });
+
+             $scope.noOfColumns=noOfColumns;
+             console.log(noOfColumns);
+             $scope.finalJson=finalJson;
+             console.log(finalJson);
             $scope.busDomains={};
             $.ajax({
                         url: '/mdrest/busdomain/options/',
@@ -338,6 +574,21 @@ function getGenTypes(){
                                 alert('danger');
                             }
                         });
+
+
+            $scope.workflowTypes = {};
+                                $.ajax({
+                                url: '/mdrest/workflowtype/optionslist',
+                                    type: 'POST',
+                                    dataType: 'json',
+                                    async: false,
+                                    success: function (data) {
+                                        $scope.workflowTypes = data;
+                                    },
+                                    error: function () {
+                                        alert('danger');
+                                    }
+                                });
 
             $scope.createJob =function (){
                 formIntoMap('type_','processFieldsForm1');

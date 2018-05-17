@@ -69,7 +69,7 @@ public class GetLineageByBatch extends MetadataAPIBase {
             //calling LineageByBatch
 
             lineageByBatchInfos = lineageByBatchDAO.lineageByBatch(getLineageByBatchInfo);
-            LOGGER.debug("Details of batch is " + lineageByBatchInfos);
+            LOGGER.info("Details of batch is " + lineageByBatchInfos);
             return lineageByBatchInfos;
         } catch (Exception e) {
             LOGGER.error("Error occurred", e);

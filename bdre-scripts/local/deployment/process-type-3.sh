@@ -1,4 +1,4 @@
-l#!/bin/sh
+#!/bin/sh
 
 . $(dirname $0)/../env.properties
 BDRE_HOME=~/bdre
@@ -52,9 +52,13 @@ fi
 
 #move generated workflow to edge node process dir
 mv  workflow-${processId}.xml $BDRE_APPS_HOME/${busDomainId}/${processTypeId}/${processId}/
-if [ $? -eq 1 ]
+mv  coordinator-workflow-$processId.xml $BDRE_APPS_HOME/$busDomainId/$processTypeId/$processId
+if [ $? -ne 0 ]
 then exit 1
 fi
+#if [ $? -eq 1 ]
+#then exit 1
+#fi
 
 mv  workflow-${processId}.xml.dot $BDRE_APPS_HOME/${busDomainId}/${processTypeId}/${processId}/
 if [ $? -eq 1 ]

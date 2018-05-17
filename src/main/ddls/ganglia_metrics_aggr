@@ -1,0 +1,20 @@
+CREATE TABLE IF NOT EXISTS GANGLIA_METRICS_AGG (clusterName string, nodeHostName string, metric string, metricValue double, metricValueTime string)
+ROW FORMAT DELIMITED
+FIELDS TERMINATED BY '\t'
+LINES TERMINATED BY '\n'
+STORED AS TEXTFILE;
+
+
+INSERT INTO GANGLIA_METRICS_AGG
+SELECT clusterName , nodeHostName,metric, metricValue, from_unixtime(metricValueTime)
+FROM GANGLIA_METRICS
+WHERE metricValueTime BETWEEN unix_timestamp()-604800 AND unix_timestamp();
+
+INSERT INTO GANGLIA_METRICS_AGG
+SELECT clusterName , nodeHostName, metric, avg(metricValue), from_unixtime(max(metricValueTime))
+FROM GANGLIA_METRICS
+GROUP BY clusterName, nodeHostName, metric, hour(from_unixtime(metricValueTime))
+
+CREATE TABLE GANGLIA_METRICS_AGG (clusterName varchar(100), nodeHostName varchar(100), metric varchar(100), metricValue double, metricValueTime varchar(30))
+
+sqoop-export --connect jdbc:mysql://localhost:3306/bdre --username root --password cloudera --table GANGLIA_METRICS_AGG  --input-fields-terminated-by '\t' --input-lines-terminated-by '\n' --export-dir '/user/hive/warehouse/monitor.db/ganglia_metrics_agg'

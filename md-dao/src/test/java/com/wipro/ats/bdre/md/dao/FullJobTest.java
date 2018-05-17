@@ -106,7 +106,7 @@ public class FullJobTest {
         firstParentProcess.setProcessType(parentProcessType);
         firstParentProcess.setAddTs(new Date());
         firstParentProcess.setCanRecover(true);
-        firstParentProcess.setEnqueuingProcessId(0);
+        firstParentProcess.setEnqueuingProcessId("0");
         firstParentProcess.setProcess(null);
         firstParentProcess.setNextProcessId("1");
         firstParentProcess.setDeleteFlag(false);
@@ -123,7 +123,7 @@ public class FullJobTest {
         firstChildOfParentProcess1.setProcessType(childProcessType);
         firstChildOfParentProcess1.setAddTs(new Date());
         firstChildOfParentProcess1.setCanRecover(true);
-        firstChildOfParentProcess1.setEnqueuingProcessId(0);
+        firstChildOfParentProcess1.setEnqueuingProcessId("0");
         firstChildOfParentProcess1.setProcess(firstParentProcess);
         firstChildOfParentProcess1.setNextProcessId(firstParentProcessId.toString());
         firstChildOfParentProcess1.setDeleteFlag(false);
@@ -145,7 +145,7 @@ public class FullJobTest {
         secondChildOfParentProcess1.setProcessType(childProcessType);
         secondChildOfParentProcess1.setAddTs(new Date());
         secondChildOfParentProcess1.setCanRecover(true);
-        secondChildOfParentProcess1.setEnqueuingProcessId(0);
+        secondChildOfParentProcess1.setEnqueuingProcessId("0");
         secondChildOfParentProcess1.setProcess(firstParentProcess);
         secondChildOfParentProcess1.setNextProcessId(firstParentProcessId.toString());
         secondChildOfParentProcess1.setDeleteFlag(false);
@@ -168,7 +168,7 @@ public class FullJobTest {
         secondParentProcess.setProcessType(parentProcessType);
         secondParentProcess.setAddTs(new Date());
         secondParentProcess.setCanRecover(true);
-        secondParentProcess.setEnqueuingProcessId(0);
+        secondParentProcess.setEnqueuingProcessId("0");
         secondParentProcess.setProcess(null);
         secondParentProcess.setNextProcessId("1");
         secondParentProcess.setDeleteFlag(false);
@@ -184,7 +184,7 @@ public class FullJobTest {
         firstChildOfParentProcess2.setProcessType(childProcessType);
         firstChildOfParentProcess2.setAddTs(new Date());
         firstChildOfParentProcess2.setCanRecover(true);
-        firstChildOfParentProcess2.setEnqueuingProcessId(firstParentProcessId);
+        firstChildOfParentProcess2.setEnqueuingProcessId(firstParentProcessId.toString());
         firstChildOfParentProcess2.setProcess(secondParentProcess);
         firstChildOfParentProcess2.setNextProcessId("1");
         firstChildOfParentProcess2.setDeleteFlag(false);
@@ -200,7 +200,7 @@ public class FullJobTest {
         secondChildOfParentProcess2.setProcessType(childProcessType);
         secondChildOfParentProcess2.setAddTs(new Date());
         secondChildOfParentProcess2.setCanRecover(true);
-        secondChildOfParentProcess2.setEnqueuingProcessId(firstParentProcessId);
+        secondChildOfParentProcess2.setEnqueuingProcessId(firstParentProcessId.toString());
         secondChildOfParentProcess2.setProcess(secondParentProcess);
         secondChildOfParentProcess2.setNextProcessId(secondParentProcessId.toString());
         secondChildOfParentProcess2.setDeleteFlag(false);

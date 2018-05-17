@@ -24,6 +24,7 @@ import org.hibernate.Criteria;
 import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
+import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Restrictions;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -46,7 +47,7 @@ public class PropertiesDAO {
     public List<Integer> list(Integer pageNum, Integer numResults) {
         Session session = sessionFactory.openSession();
         session.beginTransaction();
-        Criteria criteria = session.createCriteria(Properties.class);
+        Criteria criteria = session.createCriteria(Properties.class).addOrder(Order.desc("id.processId"));
 
         LOGGER.info("number of entries in properties table" + criteria.list().size());
         criteria.setProjection(Projections.distinct(Projections.property("id.processId")));
@@ -157,6 +158,29 @@ public class PropertiesDAO {
         return propertiesList;
     }
 
+
+    public List<Properties> getPropertiesForBroadcast(int processId) {
+        List<Properties> propertiesList = new ArrayList<Properties>();
+        Session session = sessionFactory.openSession();
+        try {
+
+            session.beginTransaction();
+            Criteria cr = session.createCriteria(Properties.class).add(Restrictions.eq("process.processId", processId)).add(Restrictions.like("id.propKey","broadcastIdentifier%"));
+            propertiesList = cr.list();
+            session.getTransaction().commit();
+
+        } catch (Exception e) {
+            session.getTransaction().rollback();
+            LOGGER.info("Error " + e);
+            return propertiesList;
+        } finally {
+            session.close();
+        }
+        return propertiesList;
+    }
+
+
+
     public void deleteByProcessId(com.wipro.ats.bdre.md.dao.jpa.Process process) {
         Session session = sessionFactory.openSession();
         try {
@@ -184,6 +208,38 @@ public class PropertiesDAO {
         session.close();
         return propertiesList;
     }
+
+    public List<Properties> getByProcessIdCopy(com.wipro.ats.bdre.md.dao.jpa.Process process, Integer pageNum, Integer numResults) {
+        Session session = sessionFactory.openSession();
+        session.beginTransaction();
+        Criteria propertiesByProcessId = session.createCriteria(Properties.class).add(Restrictions.eq("process", process));
+        propertiesByProcessId.setFirstResult(pageNum);
+        propertiesByProcessId.setMaxResults(numResults);
+        List<Properties> propertiesList = propertiesByProcessId.list();
+        session.getTransaction().commit();
+        session.close();
+        return propertiesList;
+    }
+
+    public Integer totalRecordCount(com.wipro.ats.bdre.md.dao.jpa.Process process) {
+        Session session = sessionFactory.openSession();
+        Integer size = 0;
+        try {
+            session.beginTransaction();
+            Criteria propertiesByProcessId = session.createCriteria(Properties.class).add(Restrictions.eq("process", process));
+            List<Properties> propertiesList = propertiesByProcessId.list();
+            size=propertiesList.size();
+            session.getTransaction().commit();
+        } catch (MetadataException e) {
+            session.getTransaction().rollback();
+            LOGGER.error(e);
+        } finally {
+            session.close();
+        }
+        return size;
+    }
+
+
 
     public void updateArrangePositions(Integer parentPid, List<PositionsInfo> positionsInfoList) {
         Session session = sessionFactory.openSession();
@@ -248,6 +304,26 @@ public class PropertiesDAO {
             LOGGER.info("closing time" + date);
             session.close();
         }
+    }
+
+    public String getPropertiesValueForConfigAndKey(int processId, String configGroup, String key) {
+        String value = null;
+        Session session = sessionFactory.openSession();
+        try {
+
+            session.beginTransaction();
+            Criteria cr = session.createCriteria(Properties.class).add(Restrictions.eq("process.processId", processId)).add(Restrictions.eq("configGroup", configGroup)).add(Restrictions.eq("id.propKey",key)).setProjection(Projections.property("propValue"));
+            value = cr.list().get(0).toString();
+            session.getTransaction().commit();
+
+        } catch (Exception e) {
+            session.getTransaction().rollback();
+            LOGGER.info("Error " + e);
+            return value;
+        } finally {
+            session.close();
+        }
+        return value;
     }
 
 }

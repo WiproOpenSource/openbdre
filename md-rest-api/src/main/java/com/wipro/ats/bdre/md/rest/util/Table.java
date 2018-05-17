@@ -32,6 +32,7 @@ public class Table {
     private String ingestOrNot;
     private String primaryKeyColumn;
     private String incrementType;
+    private String incrementColumn;
     private Map<String, Column> columns = new LinkedHashMap<String, Column>();
 
     public Table(String srcTableName) {
@@ -52,6 +53,14 @@ public class Table {
 
     public void setIncrementType(String incrementType) {
         this.incrementType = incrementType;
+    }
+
+    public String getIncrementColumn() {
+        return incrementColumn;
+    }
+
+    public void setIncrementColumn(String incrementColumn) {
+        this.incrementColumn = incrementColumn;
     }
 
     public String getIngestOrNot() {
@@ -129,6 +138,19 @@ public class Table {
 
         return columnList.substring(0, columnList.length() - 1);
 
+    }
+
+    public String getTransformationList(){
+        String transformationList="";
+        Map<String, String> columnMap = new TreeMap<String, String>();
+        for(Column column : columns.values()){
+            columnMap.put(column.getSrcColumnIndex(), column.getTransformationName());
+        }
+        for (String columnString : columnMap.values()) {
+            transformationList += columnString;
+            transformationList += ",";
+        }
+        return transformationList.substring(0,transformationList.length()-1);
     }
 
 }

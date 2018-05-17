@@ -26,10 +26,13 @@ busDomainId=$1
 processTypeId=$2
 processId=$3
 userName=$4
+
 echo "busDomainId=$1 , processTypeId=$2 , processId=$3 userName=$4"
 if [ $processTypeId -eq 1 ]; then
     sh $(dirname $0)/flume.sh $busDomainId $processTypeId $processId
 elif [ $processTypeId -eq 2 ]; then
+    python $(dirname $0)/Workflow.py $busDomainId $processTypeId $processId
+elif [ $processTypeId -eq 3 ]; then
     python $(dirname $0)/Workflow.py $busDomainId $processTypeId $processId
 elif [ $processTypeId -eq 4 ]; then
     python $(dirname $0)/Workflow.py $busDomainId $processTypeId $processId
@@ -45,9 +48,13 @@ elif [ $processTypeId -eq 31 ]; then
         python $(dirname $0)/Workflow.py $busDomainId $processTypeId $processId
 elif [ $processTypeId -eq 26 ]; then
     sh $(dirname $0)/filemonitor.sh $processId $userName
+elif [ $processTypeId -eq 41 ]; then
+    sh $(dirname $0)/spark-streaming.sh $busDomainId $processTypeId $processId $userName $5 $6 $7 $8 $9 ${10} ${11} ${12}
 elif [ $processTypeId -eq 39 ]; then
     python $(dirname $0)/Workflow.py $busDomainId $processTypeId $processId
+elif [ $processTypeId -eq 86 ]; then
+    sh $(dirname $0)/ml-analytics.sh $busDomainId $processTypeId $processId $userName
+
 else
     echo "Don't know how to execute busDomainId=$1 , processTypeId=$2 , processId=$3 by userName=$4"
 fi
-

@@ -15,6 +15,7 @@
 package com.wipro.ats.bdre.wgen;
 
 import com.wipro.ats.bdre.md.beans.ProcessInfo;
+import org.apache.log4j.Logger;
 import org.apache.oozie.cli.OozieCLI;
 import org.junit.Ignore;
 import org.junit.Test;
@@ -24,16 +25,17 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class WorkflowPrinterTest {
+    private static final Logger LOGGER = Logger.getLogger(WorkflowPrinterTest.class);
     private static List<ProcessInfo> getProcessBeans1() {
         //Unit test with test data
         List<ProcessInfo> processInfos = new ArrayList<ProcessInfo>();
-        ProcessInfo parent = new ProcessInfo(1, "sample parent", "Semantic Process", 1, 2, 0, false, 0, "2");
-        ProcessInfo sub1 = new ProcessInfo(2, "sample sub", "Semantic Process", 1, 9, 1, false, 0, "3");
-        ProcessInfo sub2 = new ProcessInfo(3, "sample sub", "Semantic Process", 1, 9, 1, false, 0, "4");
-        ProcessInfo sub3 = new ProcessInfo(4, "sample sub", "Semantic Process", 1, 9, 1, false, 0, "5");
-        ProcessInfo sub4 = new ProcessInfo(5, "sample sub", "Semantic Process", 1, 9, 1, false, 0, "6");
-        ProcessInfo sub5 = new ProcessInfo(6, "sample sub", "Semantic Process", 1, 9, 1, false, 0, "7");
-        ProcessInfo sub6 = new ProcessInfo(7, "sample sub", "Semantic Process", 1, 9, 1, false, 0, "1");
+        ProcessInfo parent = new ProcessInfo(1, "sample parent", "Semantic Process", 1, 2, 0, false, "0", "2");
+        ProcessInfo sub1 = new ProcessInfo(2, "sample sub", "Semantic Process", 1, 9, 1, false, "0", "3");
+        ProcessInfo sub2 = new ProcessInfo(3, "sample sub", "Semantic Process", 1, 9, 1, false, "0", "4");
+        ProcessInfo sub3 = new ProcessInfo(4, "sample sub", "Semantic Process", 1, 9, 1, false, "0", "5");
+        ProcessInfo sub4 = new ProcessInfo(5, "sample sub", "Semantic Process", 1, 9, 1, false, "0", "6");
+        ProcessInfo sub5 = new ProcessInfo(6, "sample sub", "Semantic Process", 1, 9, 1, false, "0", "7");
+        ProcessInfo sub6 = new ProcessInfo(7, "sample sub", "Semantic Process", 1, 9, 1, false, "0", "1");
         processInfos.add(parent);
         processInfos.add(sub1);
         processInfos.add(sub2);
@@ -47,10 +49,10 @@ public class WorkflowPrinterTest {
     private static List<ProcessInfo> getProcessBeans2() {
         //Unit test with test data
         List<ProcessInfo> processInfos = new ArrayList<ProcessInfo>();
-        ProcessInfo parent = new ProcessInfo(1, "sample parent", "ETL Process", 1, 5, 0, false, 0, "2");
-        ProcessInfo sub1 = new ProcessInfo(2, "sample sub", "RAW_LOAD_ACTION Process", 1, 6, 1, false, 0, "3,4");
-        ProcessInfo sub2 = new ProcessInfo(3, "sample sub", "STAGE_LOAD_ACTION Process", 1, 7, 1, false, 0, "1");
-        ProcessInfo sub3 = new ProcessInfo(4, "sample sub", "BASE_LOAD_ACTION Process", 1, 8, 1, false, 0, "1");
+        ProcessInfo parent = new ProcessInfo(1, "sample parent", "ETL Process", 1, 5, 0, false, "0", "2");
+        ProcessInfo sub1 = new ProcessInfo(2, "sample sub", "RAW_LOAD_ACTION Process", 1, 6, 1, false, "0", "3,4");
+        ProcessInfo sub2 = new ProcessInfo(3, "sample sub", "STAGE_LOAD_ACTION Process", 1, 7, 1, false, "0", "1");
+        ProcessInfo sub3 = new ProcessInfo(4, "sample sub", "BASE_LOAD_ACTION Process", 1, 8, 1, false, "0", "1");
         //ProcessInfo sub4 = new ProcessInfo(5, "sample sub", "Semantic Process", 1, 1, 1, false, 0, "6");
         // ProcessInfo sub5 = new ProcessInfo(6, "sample sub", "Semantic Process", 1, 1, 1, false, 0, "7");
         //ProcessInfo sub6 = new ProcessInfo(7, "sample sub", "Semantic Process", 1, 1, 1, false, 0, "1");
@@ -69,6 +71,7 @@ public class WorkflowPrinterTest {
     public void testExecute1() throws Exception {
         List<ProcessInfo> processInfos = getProcessBeans1();
         String workflowXML = new WorkflowPrinter().execute(processInfos, "test-workflow").getXml().toString();
+        LOGGER.info("workflowxml is "+workflowXML);
         PrintWriter out = new PrintWriter("unitTest1.workflow.xml");
         out.println(workflowXML);
         out.close();

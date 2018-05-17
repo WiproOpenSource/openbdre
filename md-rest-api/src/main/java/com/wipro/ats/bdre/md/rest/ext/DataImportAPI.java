@@ -55,6 +55,7 @@ public class DataImportAPI extends MetadataAPIBase {
     private static final Logger LOGGER = Logger.getLogger(DataImportAPI.class);
     private static final String INGESTONLY = "ingestOnly_";
     private static final String INCREMENTTYPE = "incrementType_";
+    private static final String INCREMENTCOLUMN = "incrementColumn_";
     private static final String PRIMARYKEYCOLUMN = "primaryKeyColumn_";
     private static final String ESCAPESEQ = "\\..+";
     private Connection conn;
@@ -74,6 +75,7 @@ public class DataImportAPI extends MetadataAPIBase {
         String dbPassword = request.getParameter("common_dbPassword");
         String dbSchema = request.getParameter("common_dbSchema");
         String busDomainId = request.getParameter("common_busDomainId");
+        String workflowTypeId = request.getParameter("common_workflowTypeId");
         String processName = request.getParameter("common_processName");
         String processDescription = request.getParameter("common_processDescription");
 
@@ -89,6 +91,7 @@ public class DataImportAPI extends MetadataAPIBase {
         pushToIntermediate(uuid, "password", dbPassword);
         pushToIntermediate(uuid, "dbSchema", dbSchema);
         pushToIntermediate(uuid, "busdomainid", busDomainId);
+        pushToIntermediate(uuid, "workflowTypeId", workflowTypeId);
         pushToIntermediate(uuid, "processName",processName);
         pushToIntermediate(uuid, "processDescription",processDescription);
 
@@ -106,10 +109,12 @@ public class DataImportAPI extends MetadataAPIBase {
             pushToIntermediate(uuid, "baseTableName_" + count, table.getDestTableName() );
             pushToIntermediate(uuid, "rawTableName_" + count, table.getSrcTableName());
             pushToIntermediate(uuid, "columnList_" + count, table.getColumnList());
+            pushToIntermediate(uuid, "transformationList_" + count, table.getTransformationList());
 
             LOGGER.info("value is " + table.getIngestOrNot());
             pushToIntermediate(uuid, INGESTONLY + count, table.getIngestOrNot());
             pushToIntermediate(uuid, INCREMENTTYPE + count, table.getIncrementType());
+            pushToIntermediate(uuid, INCREMENTCOLUMN + count, table.getIncrementColumn());
             pushToIntermediate(uuid, PRIMARYKEYCOLUMN + count, table.getPrimaryKeyColumn());
 
 
@@ -123,7 +128,12 @@ public class DataImportAPI extends MetadataAPIBase {
             LOGGER.info("uuid is = " + uuid);
             //Calling proc HistoryDataImport which creates the data import job and data load job
             List<Process> process = historyDataImportDAO.historyDataImport(intermediateInfo,principal.getName());
-            LOGGER.debug("process ids are :" + process.size());
+            int numProcesses=process.size();
+            LOGGER.debug("process ids are :" + numProcesses);
+            if(numProcesses==0){
+                restWrapper = new RestWrapper("No jobs created",RestWrapper.ERROR);
+                return restWrapper;
+            }
             restWrapper = new RestWrapper(process, RestWrapper.OK);
 
         } catch (Exception e) {
@@ -146,6 +156,9 @@ public class DataImportAPI extends MetadataAPIBase {
         try {
             Class.forName(driverClass);
             conn = DriverManager.getConnection(connectionURL, dbUser, dbPassword);
+            if(driverClass.contains("oracle")){
+                dbSchema = dbSchema.toUpperCase();
+            }
 
             ResultSet result = conn.getMetaData().getTables(null,dbSchema, null, new String[]{"TABLE","VIEW"} );
 
@@ -269,7 +282,6 @@ public class DataImportAPI extends MetadataAPIBase {
         public void setDtype(String dtype) {
             this.dtype = dtype;
         }
-
         public void setParentEntityName(String parentEntityName) {
             this.parentEntityName = parentEntityName;
         }
@@ -297,6 +309,10 @@ public class DataImportAPI extends MetadataAPIBase {
         Collections.reverse(keyList);
 
         // build table
+        for(String key : keyList){
+            String value = params.get(key)[0];
+            LOGGER.debug("key = " + key + " value=" + value);
+        }
 
         for (String key : keyList) {
             String value = params.get(key)[0];
@@ -316,6 +332,10 @@ public class DataImportAPI extends MetadataAPIBase {
                 String srcTableName = key.replaceAll(INCREMENTTYPE, "");
                 Table table = tables.get(srcTableName);
                 table.setIncrementType(value);
+            } else if (key.startsWith(INCREMENTCOLUMN)) {
+                String srcTableName = key.replaceAll(INCREMENTCOLUMN, "");
+                Table table = tables.get(srcTableName);
+                table.setIncrementColumn(value);
             } else if (key.startsWith("destTableName_")) {
                 String srcTableName = key.replaceAll("destTableName_", "");
                 Table table = tables.get(srcTableName);
@@ -355,6 +375,16 @@ public class DataImportAPI extends MetadataAPIBase {
                 Table table = tables.get(srcTableName);
                 Column column = table.getColumnByName(srcColName);
                 column.setDestColumnName(destColName);
+            }
+            else if (key.startsWith("destTransform_")) {
+                String transformation = value;
+                String srcTableName = key.replaceAll("destTransform_", "").replaceAll(ESCAPESEQ, "");
+                String srcColName = key.replaceAll("destTransform_.+\\.", "");
+                System.out.println("column name is " + srcColName);
+                System.out.println("table name is " + srcTableName);
+                Table table = tables.get(srcTableName);
+                Column column = table.getColumnByName(srcColName);
+                column.setTransformationName(transformation);
             }
 
         }

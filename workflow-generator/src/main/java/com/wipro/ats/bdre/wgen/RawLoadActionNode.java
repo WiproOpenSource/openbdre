@@ -79,9 +79,9 @@ public class RawLoadActionNode extends GenericActionNode {
                 "            <arg>--instance-exec-id</arg>\n" +
                 "            <arg>${wf:actionData(\"init-job\")[\"instance-exec-id\"]}</arg>\n" +
                 "            <arg>--list-of-files</arg>\n" +
-                "            <arg>${wf:actionData(\"init-job\")[\"file-list-map.FileList." + getId() + "\"]}</arg>\n" +
+                "            <arg>${concat('1234567890',wf:actionData(\"init-job\")[\"file-list-map.FileList." + getId() + "\"])}</arg>\n" +
                 "            <arg>--list-of-file-batchIds</arg>\n" +
-                "            <arg>${wf:actionData(\"init-job\")[\"batch-list-map.FileBatchList." + getId() + "\"]}</arg>\n" +
+                "            <arg>${concat('1234567890',wf:actionData(\"init-job\")[\"batch-list-map.FileBatchList." + getId() + "\"])}</arg>\n" +
                 "            <capture-output/>\n" +
                 "        </java>\n" +
                 "        <ok to=\"" + getToNode().getName() + "\"/>\n" +

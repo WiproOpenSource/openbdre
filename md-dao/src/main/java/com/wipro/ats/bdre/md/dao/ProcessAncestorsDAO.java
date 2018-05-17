@@ -57,10 +57,33 @@ public class ProcessAncestorsDAO {
             }
 
             Criteria checkEnqueuingProcesses = session.createCriteria(com.wipro.ats.bdre.md.dao.jpa.Process.class).add(Restrictions.eq(PARENTPROCESSID, processId)).add(Restrictions.eq("deleteFlag", false)).setProjection(Projections.distinct(Projections.property("enqueuingProcessId")));
-            List<Integer> enqueuingProcessIdList = checkEnqueuingProcesses.list();
+            List<Integer> enqueuingProcessIdList = new ArrayList<>();
+            //adding code to support multiple upstrem process
+            List<String> enqueuingProcessIdListString=checkEnqueuingProcesses.list();
+            for (String enqString:enqueuingProcessIdListString)
+            {
+               String[] tmp=enqString.split(",");
+                //LOGGER.info("enquiue id is "+ tmp.toString());
+               for (String a:tmp){
+               LOGGER.info("a is "+a);
+               //if (!a.equals("0"))
+                   try
+                   {
+                       enqueuingProcessIdList.add(new Integer(a));
+                   }
+                   catch (NullPointerException e){
+                       LOGGER.info(e);
+                   }
+
+
+               }
+            }
+
+
 
             LOGGER.info("Number of enqueuing process count:" + checkEnqueuingProcesses.list().size());
-            if (!enqueuingProcessIdList.isEmpty()) {
+
+            if (enqueuingProcessIdList!=null && !enqueuingProcessIdList.isEmpty()) {
                 Criteria fetchEnqueuingProcessList = session.createCriteria(com.wipro.ats.bdre.md.dao.jpa.Process.class).add(Restrictions.eq("deleteFlag", false)).add(Restrictions.in(PROCESSID, enqueuingProcessIdList));
                 List<com.wipro.ats.bdre.md.dao.jpa.Process> enqueuingProcessList = fetchEnqueuingProcessList.list();
                 Integer enqProcessListCount = fetchEnqueuingProcessList.list().size();

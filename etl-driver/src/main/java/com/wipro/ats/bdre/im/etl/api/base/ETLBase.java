@@ -35,6 +35,7 @@ public abstract class ETLBase extends BaseStructure{
     private static final Logger LOGGER = Logger.getLogger(ETLBase.class);
     private static final String TABLEDB = "table_db";
     private static final String TABLENAME = "table_name";
+    private static final String FILEPATH = "filepath";
 
 
     protected String rawLoad;
@@ -42,6 +43,7 @@ public abstract class ETLBase extends BaseStructure{
     protected String baseLoad;
     protected String rawTable;
     protected String rawDb;
+    protected String filePath;
     protected String stgView;
     protected String stgDb;
     protected String baseTable;
@@ -54,6 +56,7 @@ public abstract class ETLBase extends BaseStructure{
         java.util.Properties rawPropertiesOfTable = getPropertiesOfRawTable.getProperties(rawLoad, "raw-table");
         rawTable = rawPropertiesOfTable.getProperty(TABLENAME);
         rawDb = rawPropertiesOfTable.getProperty(TABLEDB);
+        filePath = rawPropertiesOfTable.getProperty(FILEPATH);
     }
     protected void loadStageHiveTableInfo(String processId){
         stgLoad = processId;

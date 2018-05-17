@@ -82,7 +82,7 @@ public class StepDAO {
             List<BatchConsumpQueue> batchConsumpQueueList = new ArrayList<BatchConsumpQueue>();
             Criteria checkSubProcessBCQ = session.createCriteria(BatchConsumpQueue.class).add(Restrictions.and(Restrictions.eq(PROCESS, subProcess), Restrictions.isNotNull(BATCHBYTARGETBATCHID)));
             batchConsumpQueueList = checkSubProcessBCQ.list();
-
+            LOGGER.info("batchConsumpQueueList is "+batchConsumpQueueList);
             //check valid sub process
             if (parentProcess == null) {
                 throw new MetadataException("Invalid sub-process. sub_pid =" + subPid);
@@ -251,8 +251,20 @@ public class StepDAO {
             subProcessExec = checkSubProcessExec.list();
 
             // querying existence of enqueuing processes to update the BCQ entry
-            Criteria checkEnqProcessId = session.createCriteria(Process.class).add(Restrictions.eq("processId", subPid)).setProjection(Projections.sum("enqueuingProcessId"));
-            Long enqProcessIdSum = (Long) checkEnqProcessId.uniqueResult();
+            //Criteria checkEnqProcessId = session.createCriteria(Process.class).add(Restrictions.eq("processId", subPid)).setProjection(Projections.sum("enqueuingProcessId"));
+            //updating for support of multiple enq processes
+            Criteria checkEnqProcessId = session.createCriteria(Process.class).add(Restrictions.eq("processId", subPid)).setProjection(Projections.property("enqueuingProcessId"));
+            String enqProcessIdString= (String) checkEnqProcessId.list().get(0);
+            LOGGER.info("enqProcessIdString is "+enqProcessIdString);
+            Long enqProcessIdSum=0L;
+            if (!enqProcessIdString.equals("0")) {
+                String[] stringArray = enqProcessIdString.split(",");
+                for (String tmp : stringArray)
+                     System.out.println(tmp);
+                for (String tmp : stringArray)
+                    enqProcessIdSum = enqProcessIdSum + Long.parseLong(tmp);
+            }
+            //Long enqProcessIdSum = (Long) checkEnqProcessId.uniqueResult();
             LOGGER.info("The sum of enqueuing ids of the sub process in BCQ :" + enqProcessIdSum);
 
             List<BatchConsumpQueue> batchConsumpQueueList = new ArrayList<BatchConsumpQueue>();

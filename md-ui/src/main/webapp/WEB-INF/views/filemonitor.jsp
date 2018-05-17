@@ -101,6 +101,13 @@
                                                     <option ng-repeat="busDomain in busDomains.Options" value="{{busDomain.Value}}" name="busDomainId">{{busDomain.DisplayText}}</option>
                                                     </select>
                                              </div>
+                                             <div class="form-group">
+                                                 <label><spring:message code="filemonitor.page.property_form_field_kerberos"/></label>
+                                                 <select class="form-control" name="kerberosEnabled">
+                                                     <option value="false">Disabled</option>
+                                                     <option value="true">Enabled</option>
+                                                 </select>
+                                             </div>
                                              <div class="actions text-center pull-right">
                                              	<input type="submit" id="createJobButton" class="btn btn-primary" ng-click="createJob()"/>
                                              </div>

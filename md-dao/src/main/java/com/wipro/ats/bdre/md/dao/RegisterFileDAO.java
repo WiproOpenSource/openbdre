@@ -88,19 +88,19 @@ public class RegisterFileDAO {
 
                 Process subProcess = (Process) session.get(Process.class, registerFileInfo.getSubProcessId());
 
-                Process parentProcess = subProcess.getProcess();
-                Criteria criteria = session.createCriteria(Process.class).add(Restrictions.eq("enqueuingProcessId",parentProcess.getProcessId()));
-                List<Process> processList = criteria.list();
-                for(Process process: processList) {
-                    BatchConsumpQueue batchConsumpQueueObj = new BatchConsumpQueue();
-                    batchConsumpQueueObj.setBatchBySourceBatchId(batchObj);
-                    batchConsumpQueueObj.setSourceProcessId(registerFileInfo.getSubProcessId());
-                    batchConsumpQueueObj.setInsertTs(registerFileInfo.getCreationTs());
-                    batchConsumpQueueObj.setBatchStatus(batchStatusObj);
-                    batchConsumpQueueObj.setBatchMarking(registerFileInfo.getBatchMarking());
-                    batchConsumpQueueObj.setProcess(process);
-                    session.save(batchConsumpQueueObj);
-                }
+//                Process parentProcess = subProcess.getProcess();
+//                Criteria criteria = session.createCriteria(Process.class).add(Restrictions.eq("enqueuingProcessId",parentProcess.getProcessId()));
+//                List<Process> processList = criteria.list();
+//                for(Process process: processList) {
+//                    BatchConsumpQueue batchConsumpQueueObj = new BatchConsumpQueue();
+//                    batchConsumpQueueObj.setBatchBySourceBatchId(batchObj);
+//                    batchConsumpQueueObj.setSourceProcessId(registerFileInfo.getSubProcessId());
+//                    batchConsumpQueueObj.setInsertTs(registerFileInfo.getCreationTs());
+//                    batchConsumpQueueObj.setBatchStatus(batchStatusObj);
+//                    batchConsumpQueueObj.setBatchMarking(registerFileInfo.getBatchMarking());
+//                    batchConsumpQueueObj.setProcess(process);
+//                    session.save(batchConsumpQueueObj);
+//                }
             }
             session.getTransaction().commit();
 
