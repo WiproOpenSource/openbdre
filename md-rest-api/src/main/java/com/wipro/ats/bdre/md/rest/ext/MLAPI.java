@@ -25,17 +25,11 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
+import java.sql.*;
+import java.util.*;
 import java.io.Serializable;
 import java.security.Principal;
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.ResultSet;
-import java.sql.ResultSetMetaData;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -129,6 +123,41 @@ public class MLAPI {
         return restWrapperOptions;
     }
 
+    //Fetching data from a Hive table
+    @RequestMapping(value = "/data/{srcEnv}/{srcDB}/{pid}", method = {RequestMethod.GET})
+    @ResponseBody
+    public RestWrapper getTableData(@PathVariable("srcEnv") String srcEnv, @PathVariable("srcDB") String srcDB, @PathVariable("pid") String pid) {
+        RestWrapper restWrapper = null;
+        LOGGER.info(srcEnv + "srcEnvi");
+        LOGGER.info(srcDB + "srcDB");
+        try {
+            Class.forName(driverName);
+            connection = DriverManager.getConnection("jdbc:hive2://" + srcEnv + "/" + srcDB.toLowerCase(), "", "");
+            String tableName="ML_"+pid;
+            ResultSet rs = connection.createStatement().executeQuery("select * from " + srcDB + "." + tableName);
+
+            ResultSetMetaData metaData = rs.getMetaData();
+            List<Map<String, Object>> tables = new ArrayList<Map<String, Object>>();
+            while (rs.next()) {
+                Map<String,Object> m=new LinkedHashMap<>();
+                for(int j=1;j<=metaData.getColumnCount();j++){
+
+                    String colName = metaData.getColumnLabel(j).replaceFirst(tableName.toLowerCase()+".", "");
+                    if(!colName.equals("features") && !colName.equals("rawprediction") && !colName.equals("probability")){
+                    Object colValue=rs.getObject(j);
+                    m.put(colName,colValue);}
+                }
+                tables.add(m);
+            }
+            restWrapper = new RestWrapper(tables, RestWrapperOptions.OK);
+
+        } catch (Exception e) {
+            LOGGER.error("error occured " + e);
+            restWrapper = new RestWrapper(e.getMessage(), RestWrapper.ERROR);
+        }
+        return restWrapper;
+    }
+
 
     //Fetching all columns from hive tables
     @RequestMapping(value = "columns/{srcEnv}/{srcDB}/{table}", method = {RequestMethod.GET})
@@ -170,6 +199,7 @@ public class MLAPI {
         }
         return restWrapper;
     }
+
     @RequestMapping(value = "/createjobs/", method = RequestMethod.POST)
     @ResponseBody
     public RestWrapper createJob(@RequestParam Map<String, String> map, Principal principal) {

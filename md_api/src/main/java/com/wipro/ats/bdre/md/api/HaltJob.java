@@ -21,7 +21,10 @@ import com.wipro.ats.bdre.md.api.util.StatusNotification;
 import com.wipro.ats.bdre.md.beans.HaltJobInfo;
 import com.wipro.ats.bdre.md.beans.ProcessInfo;
 import com.wipro.ats.bdre.md.dao.JobDAO;
+import com.wipro.ats.bdre.md.dao.JobTriggerDAO;
 import com.wipro.ats.bdre.md.dao.ProcessDAO;
+import com.wipro.ats.bdre.md.dao.ProcessExecutionQueueDAO;
+import com.wipro.ats.bdre.md.dao.jpa.Process;
 import org.apache.commons.cli.CommandLine;
 import org.apache.log4j.BasicConfigurator;
 import org.apache.log4j.Logger;
@@ -30,7 +33,9 @@ import org.springframework.beans.factory.config.AutowireCapableBeanFactory;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 /**
  * Created by arijit on 12/8/14.
@@ -47,6 +52,10 @@ public class HaltJob extends MetadataAPIBase {
     private JobDAO jobDAO;
     @Autowired
     private ProcessDAO processDAO;
+    @Autowired
+    JobTriggerDAO jobTriggerDAO;
+    @Autowired
+    ProcessExecutionQueueDAO processExecutionQueueDAO;
     public HaltJob() {
         AutowireCapableBeanFactory acbFactory = getAutowireCapableBeanFactory();
         acbFactory.autowireBean(this);
@@ -67,6 +76,7 @@ public class HaltJob extends MetadataAPIBase {
     @Override
     public HaltJobInfo execute(String[] params) {
         try {
+            List<Process> downStreamList=new ArrayList<>();
             HaltJobInfo haltJobInfo = new HaltJobInfo();
             CommandLine commandLine = getCommandLine(params, PARAMS_STRUCTURE);
             String pid = commandLine.getOptionValue("process-id");
@@ -77,6 +87,13 @@ public class HaltJob extends MetadataAPIBase {
             haltJobInfo.setProcessId(Integer.parseInt(pid));
             haltJobInfo.setBatchMarking(batchMarking);
             jobDAO.haltJob(haltJobInfo.getProcessId(), haltJobInfo.getBatchMarking());
+            downStreamList=jobTriggerDAO.getOozieDownstream(haltJobInfo.getProcessId());
+            for(Process process:downStreamList){
+                LOGGER.info("adding " + process.getProcessId() + " to process execution queue");
+                processExecutionQueueDAO.insert(process.getProcessId(),"admin");
+            }
+            // changing status of the process in process execution queue (if present ) to success
+            processExecutionQueueDAO.updateStatusToSuccess(haltJobInfo.getProcessId());
             ProcessInfo processInfo = new ProcessInfo();
             com.wipro.ats.bdre.md.dao.jpa.Process process = new com.wipro.ats.bdre.md.dao.jpa.Process();
             process.setProcessId(Integer.parseInt(pid));

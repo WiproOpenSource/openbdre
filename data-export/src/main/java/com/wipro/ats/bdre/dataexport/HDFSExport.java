@@ -67,6 +67,7 @@ public class HDFSExport extends Configured implements Tool {
             
             //setting the parameters of sqoopOption
             options.setHadoopHome(hadoopHome);
+            //options.setHadoopMapRedHome(hadoopHome);
             options.setJarOutputDir(jarOutputDir);
 
             options.setConnManagerClassName("org.apache.sqoop.manager.GenericJdbcManager");

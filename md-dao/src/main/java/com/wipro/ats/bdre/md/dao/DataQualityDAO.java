@@ -138,7 +138,7 @@ public class DataQualityDAO {
             jpaProcess.setProcessType(processType);
             jpaProcess.setCanRecover(false);
             jpaProcess.setDeleteFlag(false);
-            jpaProcess.setEnqueuingProcessId(dqSetupInfo.getEnqId());
+            jpaProcess.setEnqueuingProcessId("0");
             jpaProcess.setNextProcessId(" ");
             if (dqSetupInfo.getWorkflowTypeId()!=null){
             WorkflowType workflowType = (WorkflowType) session.get(WorkflowType.class, dqSetupInfo.getWorkflowTypeId());

@@ -55,7 +55,7 @@ public class LineageDotGen extends BaseStructure {
         List<LineageQuery> lineageQueryList = getLineageQueryByProcessId.execute(args);
 
         for (LineageQuery lineageQuery:lineageQueryList) {
-            LOGGER.debug("Query extracted from LineageQuery Table: " + lineageQuery.getQueryString());
+            LOGGER.info("Query extracted from LineageQuery Table: " + lineageQuery.getQueryString());
         }
 
         for (LineageQuery lineageQuery:lineageQueryList) {

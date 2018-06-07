@@ -26,6 +26,7 @@ import org.springframework.web.client.RestTemplate;
 import javax.servlet.*;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.security.KeyManagementException;
 import java.security.KeyStoreException;
@@ -121,7 +122,13 @@ public class SessionCheckPerRequestFilter implements Filter {
             LOGGER.error("bdre-auth-token cookie not found in request.");
             ((HttpServletRequest) servletRequest).getSession().invalidate();
         }
-        filterChain.doFilter(servletRequest, servletResponse);
+        if(((HttpServletRequest)servletRequest).getRequestURI().endsWith(".page")) {
+            ((HttpServletResponse) servletResponse).setHeader("Cache-Control", "no-store");
+            ((HttpServletResponse) servletResponse).setHeader("Pragma", "no-cache");
+            ((HttpServletResponse) servletResponse).setDateHeader("Expires", 0);
+        }
+            filterChain.doFilter(servletRequest, servletResponse);
+
     }
 
     @Override

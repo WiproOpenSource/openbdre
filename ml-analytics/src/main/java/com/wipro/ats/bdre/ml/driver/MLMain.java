@@ -4,17 +4,22 @@ import com.wipro.ats.bdre.md.api.GetProcess;
 import com.wipro.ats.bdre.md.api.GetProperties;
 import com.wipro.ats.bdre.md.api.InstanceExecAPI;
 import com.wipro.ats.bdre.md.beans.ProcessInfo;
+import com.wipro.ats.bdre.ml.models.KMeansML;
 import com.wipro.ats.bdre.ml.models.LinearRegressionML;
 import com.wipro.ats.bdre.ml.models.LogisticRegressionML;
+import com.wipro.ats.bdre.ml.models.PMMLModel;
 import com.wipro.ats.bdre.ml.schema.SchemaGeneration;
+import com.wipro.ats.bdre.ml.sources.HDFSSource;
 import com.wipro.ats.bdre.ml.sources.HiveSource;
 import org.apache.log4j.Logger;
 import org.apache.spark.SparkConf;
 import org.apache.spark.api.java.JavaSparkContext;
 import org.apache.spark.sql.DataFrame;
+import org.apache.spark.sql.SaveMode;
 import org.apache.spark.sql.types.StructType;
-
+import java.sql.*;
 import java.util.*;
+import java.util.regex.Pattern;
 
 /**
  * Created by cloudera on 11/19/17.
@@ -53,7 +58,6 @@ public class MLMain {
 
             String schemaString = properties.getProperty("schema");
             System.out.println("schemaString = "+schemaString);
-            //schemaString = "label:Double,feature_1:Double,feature_2:Double,feature_3:Double,feature_4:Double";
             StructType schema = new SchemaGeneration().generateSchemaFromString(schemaString);
             DataFrame dataFrame = null;
             DataFrame predictionDF = null;
@@ -67,33 +71,60 @@ public class MLMain {
                 dataFrame = hiveSource.getDataFrame(jsc, metastoreURI, dbName, tableName, schema);
 
             } else if (sourceType.equalsIgnoreCase("HDFS")) {
-
+                String hdfsDirectory = properties.getProperty("hdfsPath");
+                String nameNodeHost = properties.getProperty("nameNodeHost");
+                String nameNodePort = properties.getProperty("nameNodePort");
+                String hdfsPath="hdfs://"+nameNodeHost+":"+nameNodePort+hdfsDirectory;
+                System.out.println("hdfsPath = " + hdfsPath);
+                String fileFormat = properties.getProperty("fileformat");
+                HDFSSource hdfsSource = new HDFSSource();
+                if(fileFormat.equalsIgnoreCase("Delimited")){
+                    String delimiter=properties.getProperty("Delimiter");
+                    dataFrame = hdfsSource.getDataFrame(jsc, hdfsPath, nameNodeHost, nameNodePort, fileFormat, delimiter, schema);
+                }
+                else if(fileFormat.equalsIgnoreCase("Json")){
+                    String schemaFilePath=properties.getProperty("schema-file-path");
+                    dataFrame = hdfsSource.getDataFrame(jsc, hdfsPath, nameNodeHost, nameNodePort, fileFormat, schemaFilePath, schema);
+                }
+                dataFrame.show();
             }
 
             String mlAlgo = properties.getProperty("ml-algo");
             String modelInputMethod = properties.getProperty("model-input-method");
 
             if (modelInputMethod.equalsIgnoreCase("ModelInformation")) {
-                String coefficients = properties.getProperty("coefficients");
-                LinkedHashMap<String, Double> columnCoefficientMap = new LinkedHashMap<String, Double>();
-                for (String s : coefficients.split(",")) {
-                    String[] arr = s.split(":");
-                    String columnName = arr[0];
-                    Double coefficient = Double.parseDouble(arr[1]);
-                    columnCoefficientMap.put(columnName, coefficient);
-                }
-                double intercept = Double.parseDouble(properties.getProperty("intercept"));
+                if(mlAlgo.equalsIgnoreCase("LinearRegression") || mlAlgo.equalsIgnoreCase("LogisticRegression")) {
+                    String coefficients = properties.getProperty("coefficients");
+                    LinkedHashMap<String, Double> columnCoefficientMap = new LinkedHashMap<String, Double>();
+                    for (String s : coefficients.split(",")) {
+                        String[] arr = s.split(":");
+                        String columnName = arr[0];
+                        Double coefficient = Double.parseDouble(arr[1]);
+                        columnCoefficientMap.put(columnName, coefficient);
+                    }
+                    double intercept = Double.parseDouble(properties.getProperty("intercept"));
 
-                if (mlAlgo.equalsIgnoreCase("LinearRegression")) {
-                    LinearRegressionML linearRegressionML = new LinearRegressionML();
-                    predictionDF = linearRegressionML.productionalizeModel(dataFrame, columnCoefficientMap, intercept, jsc);
-                } else if (mlAlgo.equalsIgnoreCase("LogisticRegression")) {
-                    LogisticRegressionML logisticRegressionML = new LogisticRegressionML();
-                    predictionDF=logisticRegressionML.productionalizeModel(dataFrame, columnCoefficientMap, intercept, jsc);
+                    if (mlAlgo.equalsIgnoreCase("LinearRegression")) {
+                        LinearRegressionML linearRegressionML = new LinearRegressionML();
+                        predictionDF = linearRegressionML.productionalizeModel(dataFrame, columnCoefficientMap, intercept, jsc);
+                    } else if (mlAlgo.equalsIgnoreCase("LogisticRegression")) {
+                        LogisticRegressionML logisticRegressionML = new LogisticRegressionML();
+                        predictionDF = logisticRegressionML.productionalizeModel(dataFrame, columnCoefficientMap, intercept, jsc);
+
+                    }
+                }
+                else if (mlAlgo.equalsIgnoreCase("KMeans")){
+                    String centers = properties.getProperty("clusters");
+                    String features = properties.getProperty("features");
+                    KMeansML kMeansML=new KMeansML();
+                    predictionDF=kMeansML.productionalizeModel(dataFrame, centers, features, jsc);
+
                 }
 
-            } else if (modelInputMethod.equalsIgnoreCase("PMML")) {
+            } else if (modelInputMethod.equalsIgnoreCase("pmmlFile")) {
                 String pmmlPath = properties.getProperty("pmml-file-path");
+                String pmmlFilePath="/home/cloudera/bdre-wfd/model/" + pmmlPath ;
+                predictionDF=new PMMLModel().productionalizeModel(dataFrame,pmmlFilePath);
 
 
             } else if (modelInputMethod.equalsIgnoreCase("Serialized")) {
@@ -101,13 +132,17 @@ public class MLMain {
                 String progLanguage = properties.getProperty("prog-lang");
             }
 
-            predictionDF.show();
+            predictionDF.show(1000);
             System.out.println("data predicted");
+
+
+            predictionDF.write().mode(SaveMode.Overwrite).saveAsTable("ML_"+parentProcessId);
+
+
             InstanceExecAPI instanceExecAPI2 = new InstanceExecAPI();
             instanceExecAPI2.updateInstanceExecToFinished(parentProcessId, applicationId);
             System.out.println("status changed to success");
-            predictionDF.write().format("json").save("/user/cloudera/ml-batch/"+parentProcessId);
-           // predictionDF.write().saveAsTable("demo_table");
+
         }catch (Exception e){
             LOGGER.info("final exception = " + e);
             e.printStackTrace();
@@ -117,4 +152,29 @@ public class MLMain {
         }
 
     }
+    // this method checks if hive table exists for the parent process id and deletes it if present
+    public static void checkTable(int parentProcessId) {
+        String driverName = "org.apache.hive.jdbc.HiveDriver";
+        Connection connection;
+        String srcEnv="localhost:10000";
+        String srcDB="default";
+        try {
+            Class.forName(driverName);
+            connection = DriverManager.getConnection("jdbc:hive2://" + srcEnv + "/" + srcDB.toLowerCase(), "", "");
+            ResultSet rs=connection.createStatement().executeQuery("DROP TABLE IF EXISTS ML_" + parentProcessId);
+
+    /*        List<String> tables = new ArrayList<String>();
+            while (rs.next()) {
+                String tableName = rs.getString(1);
+                tables.add(tableName.toUpperCase());
+            }
+            if(tables.contains("ML_" + parentProcessId)){
+
+            }*/
+        }
+        catch (Exception e){
+            e.printStackTrace();
+        }
+        }
+
 }

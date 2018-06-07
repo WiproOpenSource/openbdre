@@ -22,6 +22,7 @@ import com.wipro.ats.bdre.md.beans.ProcessInfo;
 import com.wipro.ats.bdre.md.beans.TermJobInfo;
 import com.wipro.ats.bdre.md.dao.JobDAO;
 import com.wipro.ats.bdre.md.dao.ProcessDAO;
+import com.wipro.ats.bdre.md.dao.ProcessExecutionQueueDAO;
 import org.apache.commons.cli.CommandLine;
 import org.apache.log4j.BasicConfigurator;
 import org.apache.log4j.Logger;
@@ -46,6 +47,8 @@ public class TermJob extends MetadataAPIBase {
     private JobDAO jobDAO;
     @Autowired
     private ProcessDAO processDAO;
+    @Autowired
+    ProcessExecutionQueueDAO processExecutionQueueDAO;
     public TermJob() {
         AutowireCapableBeanFactory acbFactory = getAutowireCapableBeanFactory();
         acbFactory.autowireBean(this);
@@ -74,6 +77,8 @@ public class TermJob extends MetadataAPIBase {
             termJobInfo.setProcessId(Integer.parseInt(pid));
 
             jobDAO.termJob(termJobInfo.getProcessId());
+            // changing status of the process in process execution queue (if present ) to failed
+            processExecutionQueueDAO.updateStatusToFailed(termJobInfo.getProcessId());
             ProcessInfo processInfo = new ProcessInfo();
             com.wipro.ats.bdre.md.dao.jpa.Process process = new com.wipro.ats.bdre.md.dao.jpa.Process();
             process.setProcessId(Integer.parseInt(pid));

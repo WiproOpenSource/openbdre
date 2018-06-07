@@ -25,6 +25,19 @@
                        background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
                    }
 
+                   .refresh-icon {
+                       background: #4A4B4B;
+                       background: -webkit-linear-gradient(#4A4B4B 50%, #3A3B3B 50%);
+                       background: -o-linear-gradient(#4A4B4B 50%, #3A3B3B 50%);
+                       background: -moz-linear-gradient(#4A4B4B 50%, #3A3B3B 50%);
+                       background: -ms-linear-gradient(#4A4B4B 50%, #3A3B3B 50%);
+                       background: linear-gradient(#4A4B4B 50%, #3A3B3B 50%);
+                       position: absolute;
+                       top: 0;
+                       color: white;
+                       cursor: pointer
+                   }
+
                    /* Modal Content */
                    .modal-content {
                        background-color: #fefefe;
@@ -158,6 +171,15 @@
                     					.label-execute {
                     						background: url('../css/images/execute.png');
                     					}
+                    					.label-start {
+                                            background: url('../css/images/execute_started.png');
+                                        }
+                                        .label-fail {
+                                            background: url('../css/images/execute_failed.png');
+                                        }
+                                        .label-successful {
+                                            background: url('../css/images/execute_success.png');
+                                        }
 
                     					.slamonitor {
                     						background: url('../css/images/slamonitor.png');
@@ -227,7 +249,6 @@
                                                 success: function(data) {
                                                 if (data.Result == "OK"){
                                                     $dfd.resolve(data);
-
 
 				var processIdIndex;
 				var deployStatusIndex;
@@ -1175,6 +1196,15 @@
                                     create: false,
                                     title: 'Run Model',
                                     display: function(data) {
+                                    if(data.record.latestExecStatus=="FAILED")
+                                        var $img2 = $('<span title=<spring:message code="process.page.img_execute_process"/> class="label-icons label-fail" ></span>');
+                                        else if(data.record.latestExecStatus=="SUCCESS")
+                                        var $img2 = $('<span title=<spring:message code="process.page.img_execute_process"/> class="label-icons label-successful" ></span>');
+                                        else if(data.record.latestExecStatus=="STARTED")
+                                        var $img2 = $('<span title=<spring:message code="process.page.img_execute_process"/> class="label-icons label-start" ></span>');
+                                        else if(data.record.latestExecStatus=="RUNNING")
+                                        var $img2 = $('<span title=<spring:message code="process.page.img_execute_process"/> class="label-icons label-start" ></span>');
+                                        else
                                         var $img2 = $('<span title=<spring:message code="process.page.img_execute_process"/> class="label-icons label-execute" ></span>');
                                         $img2.click(function() {
                                             console.log(data);
@@ -1438,7 +1468,7 @@
                                     edit: false,
                                     display: function(data) {
 
-                                     return '<span class="label-icons slamonitor" onclick="goToSLAMonitoringPage(' + data.record.processId + ')"></span> ';
+                                     return '<span class="label-icons slamonitor" onclick="goTomlresultsPage(' + data.record.processId + ')"></span> ';
                                      },
 
                                 },
@@ -1611,6 +1641,10 @@
                                            });
                     }
 
+                    function refreshPage(){
+                        $('div#Container').jtable('reload');
+                    }
+
                      function goToExportPage(pid)
                            {
                                $.ajax({
@@ -1632,19 +1666,9 @@
                                         });
                            }
 
-                     function goToSLAMonitoringPage(pid)
+                     function goTomlresultsPage(pid)
                                           {
-                            $("#execute-result").dialog({
-                                resizable: false,
-                                height: 'auto',
-                                modal: true,
-                                buttons: {
-                                    "OK": function() {
-                                        $(this).dialog("close");
-                                    }
-                                }
-                            }).html('<p><span class="jtable-confirm-message"><b>View prediction result in hdfs at /user/cloudera/ml-batch/'+ pid +'</b></span></p>');
-
+                            location.href = '<c:url value="/pages/mlresults.page?processId="/>' + pid;
 
 
                                          }
@@ -1675,7 +1699,7 @@
                     <script type="text/javascript">
                          var auto = setInterval(    function ()
                          {
-                               $('div#Container').jtable('load');
+                               $('div#Container').jtable('reload');
                          }, 60000);
                     </script>
 
@@ -1709,6 +1733,11 @@
                 <div id="input-box-button-filter" class="input-box-button-filter">
                 	<span class="filter-icon"></span><span class="filter-text search"><spring:message code="process.page.span_filter"/></span>
                 </div>
+
+                <div id="refresh-icon" class="refresh-icon" style="left: 150px !important;">
+                <button class="btn btn-default" type="submit" style="background-color: #c3beb5;" onClick="refreshPage()"><span id="sizing-addon2"><span class="glyphicon glyphicon-refresh" aria-hidden="true"></span> Refresh </button>
+                </div>
+
                 <div id="input-box-button" class="input-box-button search" >
                     <form onsubmit="showProcessPage(jQuery('#pid').val()); return false;">
                         <div class="input-group">

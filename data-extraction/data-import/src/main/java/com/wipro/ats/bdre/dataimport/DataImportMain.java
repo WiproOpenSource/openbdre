@@ -60,6 +60,7 @@ public class DataImportMain extends BaseStructure {
 
             //fetching columns
 
+
             String[] columns = null;
             if (commonProperties.getProperty("columns") != null) {
                 String colList=commonProperties.getProperty("columns");

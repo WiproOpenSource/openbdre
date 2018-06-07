@@ -63,25 +63,27 @@ public class LineageProcessor {
 					int commentStart = query.indexOf("--");
 					int commentEnd = query.indexOf("\n", commentStart+2);
 					String comment = query.substring(commentStart, commentEnd);
-					LOGGER.debug("comment found = " + comment);
+					LOGGER.info("comment found = " + comment);
 					query = query.replaceAll(comment, " ");
 				}
 				// remove line breaks
 				query = query.replaceAll("[\\r\\n]", " ").trim();
-				LOGGER.debug("\nLineageProcessor: Processing query # " + (i + 1) + ": \"" + query + "\"");
+				LOGGER.info("\nLineageProcessor: Processing query # " + (i + 1) + ": \"" + query + "\"");
 
 				if (query.toLowerCase().startsWith("use")) {
 					// ignore 'use db' line for lineage
 					// use last split to determine the db
 					String[] splits = query.split(" ");
 					defaultHiveDbName = splits[splits.length-1].toUpperCase();
-					LOGGER.debug("DefaulHiveDbName is set to " + defaultHiveDbName);
+					LOGGER.info("DefaulHiveDbName is set to " + defaultHiveDbName);
 
 				}
 				//Writing queries having "use" "insert" & "update" clauses to the DB to be later used by DotGen class
+				LOGGER.info("final query is "+query);
 				if (query.toLowerCase().startsWith("use")
 						|| query.toLowerCase().startsWith("insert")
-						|| query.toLowerCase().startsWith("select")) {              // process only insert and select statements
+						|| query.toLowerCase().startsWith("select")
+						|| query.toLowerCase().startsWith("create")) {              // process only insert and select statements
 					//insert the query into DB using its DAO
 					LineageQuery lineageQuery = new LineageQuery();
 					lineageQuery.setQueryString(query);

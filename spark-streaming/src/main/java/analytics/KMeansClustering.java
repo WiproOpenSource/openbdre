@@ -5,10 +5,13 @@ import org.apache.spark.api.java.JavaPairRDD;
 import org.apache.spark.api.java.JavaRDD;
 import org.apache.spark.api.java.function.Function;
 import org.apache.spark.broadcast.Broadcast;
+import org.apache.spark.ml.Transformer;
 import org.apache.spark.ml.clustering.KMeansModel;
 import org.apache.spark.ml.feature.StringIndexer;
 import org.apache.spark.ml.feature.StringIndexerModel;
 import org.apache.spark.ml.feature.VectorAssembler;
+import org.apache.spark.mllib.linalg.Vector;
+import org.apache.spark.mllib.linalg.Vectors;
 import org.apache.spark.sql.DataFrame;
 import org.apache.spark.sql.Row;
 import org.apache.spark.sql.SQLContext;
@@ -19,12 +22,15 @@ import org.apache.spark.streaming.api.java.JavaStreamingContext;
 import scala.Tuple2;
 import util.WrapperMessage;
 
+import java.io.File;
 import java.util.*;
 
 /**
  * Created by cloudera on 10/16/17.
  */
 public class KMeansClustering implements Analytics {
+     String[] columnNames=null;
+    org.apache.spark.mllib.linalg.Vector[] vector=null;
     @Override
     public JavaPairDStream<String, WrapperMessage> transform(JavaRDD emptyRDD, Map<Integer, JavaPairDStream<String, WrapperMessage>> prevDStreamMap, Map<Integer, Set<Integer>> prevMap, Integer pid, StructType schema, Map<String, Broadcast<HashMap<String, String>>> broadcastMap, JavaStreamingContext jssc) {
         List<Integer> prevPidList = new ArrayList<>();
@@ -33,29 +39,26 @@ public class KMeansClustering implements Analytics {
         JavaPairDStream<String,WrapperMessage> prevDStream = prevDStreamMap.get(prevPid);
 
         GetProperties getProperties = new GetProperties();
-        Properties lrProperties = getProperties.getProperties(String.valueOf(pid), "kmeans");
-        String continuousColumns = lrProperties.getProperty("continuous-columns");
-        String[] continuousColumnsArray = continuousColumns.split(",");
-        String categoryColumns = lrProperties.getProperty("category-columns");
-        String[] categoryColumnsArray = categoryColumns.split(",");
-        Integer numOfClusters = Integer.parseInt(lrProperties.getProperty("num-0f-clusters"));
-        Long seed = Long.parseLong(lrProperties.getProperty("seed"));
-        Long tol = Long.parseLong(lrProperties.getProperty("tol"));
-        Integer maxIter = Integer.parseInt(lrProperties.getProperty("max-iterations"));
-        Integer initSteps = Integer.parseInt(lrProperties.getProperty("init-steps"));
-        String check = lrProperties.getProperty("type-of-data");
-        String modelName = lrProperties.getProperty("model-name");
+        Properties kmProperties = getProperties.getProperties(String.valueOf(pid), "default");
+        String modelInputMethod = kmProperties.getProperty("model-input-method");
+        if(modelInputMethod.equalsIgnoreCase("ModelInformation")) {
+            String features = kmProperties.getProperty("features");
+            columnNames = features.split(",");
+            String centers = kmProperties.getProperty("clusters");
 
-        ArrayList<String> features = new ArrayList<String>(Arrays.asList(continuousColumnsArray));
-        for(String categoryCol : categoryColumnsArray) {
-            if(!categoryCol.equals(""))
-                features.add(categoryCol+"Index");
-        }
-        String[] featureColumns = new String[features.size()];
-        for(int i=0; i< features.size(); i++){
-            featureColumns[i] = features.get(i);
-        }
+            String[] cen = centers.split(";");
+            vector = new Vector[cen.length];
+            for (int j = 0; j < cen.length; j++) {
+                String[] c = cen[j].split(",");
+                double[] d = new double[c.length];
+                for (int k = 0; k < c.length; k++) {
+                    d[k] = Double.parseDouble(c[k]);
+                }
+                vector[j] = Vectors.dense(d);
 
+
+            }
+        }
 
         JavaPairDStream<String,WrapperMessage> lrDstream = prevDStream.transformToPair(new Function<JavaPairRDD<String, WrapperMessage>, JavaPairRDD<String, WrapperMessage>>() {
             @Override
@@ -67,40 +70,39 @@ public class KMeansClustering implements Analytics {
                 System.out.println("dataFrame lr= " + dataFrame);
                 dataFrame.show();
                 DataFrame outputDF = null;
-                if(rddRow.count() > 0){
-                    StringIndexer[] strIndexArray = new StringIndexer[categoryColumnsArray.length];
-                    for(int i=0; i<categoryColumnsArray.length; i++) {
-                        StringIndexer indexer = new StringIndexer().setInputCol(categoryColumnsArray[i]).setOutputCol(categoryColumnsArray[i]+"Index");
-                        dataFrame = indexer.fit(dataFrame).transform(dataFrame);
-                        strIndexArray[i] = indexer;
+                if(modelInputMethod.equalsIgnoreCase("ModelInformation")) {
+                    if (rddRow.count() > 0) {
+
+                        VectorAssembler assembler = new VectorAssembler().setInputCols(columnNames).setOutputCol("features");
+                        DataFrame assembyDF = assembler.transform(dataFrame);
+                        assembyDF.show(10);
+                        org.apache.spark.mllib.clustering.KMeansModel m = new org.apache.spark.mllib.clustering.KMeansModel(vector);
+                        KMeansModel kMeansModel = new KMeansModel(UUID.randomUUID().toString(), m);
+                        Vector[] centers1 = kMeansModel.clusterCenters();
+                        System.out.println("Cluster Centers: ");
+
+                        for (Object center : centers1) {
+                            System.out.println(center);
+
+                        }
+                        outputDF = kMeansModel.transform(assembyDF);
+                        outputDF.show(20);
+
                     }
+                }
+                else if(modelInputMethod.equalsIgnoreCase("pmmlFile")){
+/*                    String pmmlPath = kmProperties.getProperty("filePath");
+                    String pmmlFilePath="/home/cloudera/bdre-wfd/model/" + pmmlPath ;
+                    File pmmlFile = new File(pmmlFilePath);
+                    System.out.println("pmml file location is : " + pmmlFilePath);
+                    Evaluator evaluator = EvaluatorUtil.createEvaluator(pmmlFile);
+                    TransformerBuilder pmmlTransformerBuilder = new TransformerBuilder(evaluator)
+                            .withLabelCol("target") // Double column
+                            .exploded(true);
+                    Transformer pmmlTransformer = pmmlTransformerBuilder.build();
 
-                    VectorAssembler assembler = new VectorAssembler().setInputCols(featureColumns).setOutputCol("features");
-                    DataFrame assembyDF = assembler.transform(dataFrame);
-                    assembyDF.show(10);
-
-                    DataFrame newLabelDF = assembyDF;
-
-                    newLabelDF.show(10);
-                    org.apache.spark.ml.clustering.KMeans kMeans = new org.apache.spark.ml.clustering.KMeans().setMaxIter(maxIter).setSeed(seed).setTol(tol).setInitSteps(initSteps).setFeaturesCol("features");
-
-                    if(check.equalsIgnoreCase("training")) {
-                        KMeansModel kMeansModel = null;
-                        kMeansModel = kMeans.fit(newLabelDF);
-                        kMeansModel.write().overwrite().save("/tmp/"+modelName);
-                    }
-                    else {
-                        KMeansModel predictionLRModel = KMeansModel.load("/tmp/"+modelName);
-                        outputDF = predictionLRModel.transform(newLabelDF);
-                        outputDF.show();
-                    }
-
-                    /*if(labelColumnDatatype.equalsIgnoreCase("String")){
-                        IndexToString converter = new IndexToString().setInputCol(finalLabelColumn).setOutputCol(labelColumn+"Label").setLabels(labelIndexer.labels());
-                        outputDF = converter.transform(outputDF);
-                    }*/
-
-
+                    outputDF = pmmlTransformer.transform(dataFrame);
+                    outputDF.show();*/
                 }
                 System.out.println("End of KMeans regression = " + new Date().getTime() +"for pid = "+pid);
                 JavaPairRDD<String,WrapperMessage> finalRDD = null;

@@ -49,6 +49,7 @@ angular.module('app', ['flowChart', ])
 
         $scope.processTypes={};
         $scope.chartViewModel={};
+        $scope.parentProcessList={};
         //
         // Event handler for key-down on the flowchart.
         //
@@ -128,7 +129,22 @@ angular.module('app', ['flowChart', ])
             propertiesAC('/mdrest/properties/all/', 'GET', $scope.parentPidRecord);
             $scope.initProps();
             loadProgressBar(100);
+            var parentProcesslist1 = arrangePositionsAC('/mdrest/process/parentProcessList',  'GET', '');
+            if (parentProcesslist1) {
+            for(var i=0;i<parentProcesslist1.length;i++){
+                parentProcesslist1[i].processName=parentProcesslist1[i].processId+"_"+parentProcesslist1[i].processName;
+                }
+
+                $scope.parentProcessList = parentProcesslist1;
+                console.log("Printing parent process list");
+               console.log($scope.parentProcessList);
+            }
+            else {
+                console.log('parentProcesslist not loaded');
+            }
+
         }
+
 
         $scope.initProps = function() {
                 var nodeMap = {},
@@ -456,6 +472,28 @@ $scope.uploadFile = function(processId,parentProcessId,subDir,cg) {
         alertBox('warning', 'File upload failed');
     }
 }
+
+$scope.saveProcessId = function(processId) {
+var value1=document.getElementById("ppid-propval").value;
+console.log("processId is "+processId);
+var cfg="param";
+var key="workflow_pid";
+var desc="parent process Id";
+        var putData = "configGroup="+cfg+"&key="+key+"&value="+value1+"&description="+desc+"&processId="+processId;
+
+            var dataRecord = propertiesAC('/mdrest/properties/', 'PUT', putData);
+            if (dataRecord) {
+                $.get('/mdrest/properties/'+processId, function(getdata) {
+                    $scope.chartViewModel.selectedProcessProps = getdata.Record;
+                });
+
+                alertBox('info', 'New property added');
+            }
+            else {
+                alertBox('warning', 'Duplicate key not allowed');
+            }
+}
+
 
 $scope.uploadJar = function(parentProcessId,subDir,fileId) {
 

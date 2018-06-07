@@ -19,6 +19,7 @@ import com.wipro.ats.bdre.md.api.base.MetadataAPIBase;
 import com.wipro.ats.bdre.md.beans.InitJobInfo;
 import com.wipro.ats.bdre.md.beans.InitJobRowInfo;
 import com.wipro.ats.bdre.md.dao.JobDAO;
+import com.wipro.ats.bdre.md.dao.ProcessExecutionQueueDAO;
 import org.apache.commons.cli.CommandLine;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -40,6 +41,8 @@ public class InitJob extends MetadataAPIBase {
     };
     @Autowired
     private JobDAO jobDAO;
+    @Autowired
+    ProcessExecutionQueueDAO processExecutionQueueDAO;
 
     public InitJob() {
         AutowireCapableBeanFactory acbFactory = getAutowireCapableBeanFactory();
@@ -230,6 +233,8 @@ public class InitJob extends MetadataAPIBase {
             initJobInfo.setProcessId(Integer.parseInt(pid));
             initJobInfo.setMaxBatch(Integer.parseInt(maxBId));
             initJobRowInfos = jobDAO.initJob(initJobInfo.getProcessId(), initJobInfo.getMaxBatch());
+            // changing status of the process in process execution queue (if present ) to running
+            processExecutionQueueDAO.updateStatusToRunning(initJobInfo.getProcessId());
             return initJobRowInfos;
         } catch (Exception e) {
             LOGGER.error("Error occurred", e);

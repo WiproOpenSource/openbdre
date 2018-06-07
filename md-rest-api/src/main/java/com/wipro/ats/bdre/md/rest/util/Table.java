@@ -140,4 +140,17 @@ public class Table {
 
     }
 
+    public String getTransformationList(){
+        String transformationList="";
+        Map<String, String> columnMap = new TreeMap<String, String>();
+        for(Column column : columns.values()){
+            columnMap.put(column.getSrcColumnIndex(), column.getTransformationName());
+        }
+        for (String columnString : columnMap.values()) {
+            transformationList += columnString;
+            transformationList += ",";
+        }
+        return transformationList.substring(0,transformationList.length()-1);
+    }
+
 }

@@ -7,6 +7,7 @@ import java.util.List;
  * Created by cloudera on 7/18/17.
  */
 public class Node {
+    private static final org.apache.log4j.Logger LOGGER = org.apache.log4j.Logger.getLogger(Node.class);
     private String column;
     private String dataType;
     private List<Node> childNodes;
@@ -37,7 +38,7 @@ public class Node {
             printTree(each);
         }
         if(!node.getColumn().equals("")){
-            System.out.println("node.column = " + node.column);
+            LOGGER.info("node.column = " + node.column);
         }
     }
 

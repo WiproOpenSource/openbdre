@@ -135,8 +135,12 @@
 			</style>
 
             </head>
+
             <div class="page-header"><spring:message code="wfdesigner.page.create_new_workflow"/></div>
+
+
             <c:choose>
+
                 <c:when test="${not empty param.processId}">
 
                     <body ng-app="app" data-ng-init="init(${param.processId})" ng-controller="AppCtrl" mouse-capture ng-keydown="keyDown($event)" ng-keyup="keyUp($event)">
@@ -297,7 +301,7 @@
                                                     </div>
                                                 </div>
                                                 <hr/>
-                                                <form class="form-horizontal" role="form" ng-if="genConfig.type != 'hql'  && genConfig.type != 'hadoopstream' && genConfig.type != 'r'  && genConfig.type != 'spark' && genConfig.type != 'pig' && genConfig.type != 'shell' && genConfig.type != 'addFiles'">
+                                                <form class="form-horizontal" role="form" ng-if="genConfig.type != 'hql'  && genConfig.type != 'hadoopstream' && genConfig.type != 'r'  && genConfig.type != 'spark' && genConfig.type != 'pig' && genConfig.type != 'subworkflow' && genConfig.type != 'shell' && genConfig.type != 'addFiles'">
                                                     <div class="form-group">
                                                         <label class="control-label col-sm-2" for="{{genConfig.key}}-propkey"><spring:message code="wfdesigner.page.propkey_name"/></label>
                                                         <div class="col-sm-10">
@@ -387,6 +391,23 @@
                                                     </div>
                                                     <div class="clearfix"></div>
                                                 </form>
+
+                                                <form class="form-horizontal" role="form" ng-if="genConfig.type == 'subworkflow'">
+
+                                                        <div class="form-group form-group-file">
+                                                            <label class="control-label col-sm-3" for="{{genConfig.key}}-propkey">Select Parent Process:</label>
+                                                            <div class="col-sm-10">
+                                                            <div id="batchProcesses">
+                                                                   <select class="form-control" id="{{genConfig.key}}-propval">
+                                                                       <option ng-repeat="parentProcess in parentProcessList" id="{{$index}}" value="{{ parentProcess.processId }}">{{ parentProcess.processName }}</option>
+                                                                   </select>
+                                                            </div>
+                                                        </div>
+                                                        </div>
+                                                        <div class="clearfix"></div>
+                                                        <button type="submit" ng-click="saveProcessId(chartViewModel.selectedProcess.processId)" class="btn btn-primary  pull-right">Save</button>
+                                                    </form>
+
                                                 <form class="form-horizontal" role="form" ng-if="genConfig.type == 'spark'">
                                                     <div class="form-group form-group-file">
                                                         <label class="control-label col-sm-3" for="{{genConfig.key}}-propkey"><spring:message code="wfdesigner.page.select_spark_jar"/></label>
@@ -519,6 +540,8 @@
                                 </div>
                             </div>
                             <div class="col-md-2"> </div>
+
+
                     </body>
                 </c:otherwise>
             </c:choose>

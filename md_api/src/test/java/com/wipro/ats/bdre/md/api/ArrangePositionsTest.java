@@ -82,7 +82,7 @@ public class ArrangePositionsTest {
             firstParentProcess.setProcessType(parentProcessType);
             firstParentProcess.setAddTs(new Date());
             firstParentProcess.setCanRecover(true);
-            firstParentProcess.setEnqueuingProcessId(0);
+            firstParentProcess.setEnqueuingProcessId("0");
             firstParentProcess.setProcess(null);
             firstParentProcess.setNextProcessId("1");
             firstParentProcess.setDeleteFlag(false);
@@ -98,7 +98,7 @@ public class ArrangePositionsTest {
             firstChildOfParentProcess1.setProcessType(childProcessType);
             firstChildOfParentProcess1.setAddTs(new Date());
             firstChildOfParentProcess1.setCanRecover(true);
-            firstChildOfParentProcess1.setEnqueuingProcessId(0);
+            firstChildOfParentProcess1.setEnqueuingProcessId("0");
             firstChildOfParentProcess1.setProcess(firstParentProcess);
             firstChildOfParentProcess1.setNextProcessId("0");
             firstChildOfParentProcess1.setDeleteFlag(false);
@@ -118,7 +118,7 @@ public class ArrangePositionsTest {
             secondChildOfParentProcess1.setProcessType(childProcessType);
             secondChildOfParentProcess1.setAddTs(new Date());
             secondChildOfParentProcess1.setCanRecover(true);
-            secondChildOfParentProcess1.setEnqueuingProcessId(0);
+            secondChildOfParentProcess1.setEnqueuingProcessId("0");
             secondChildOfParentProcess1.setProcess(firstParentProcess);
             secondChildOfParentProcess1.setNextProcessId("0");
             secondChildOfParentProcess1.setDeleteFlag(false);
@@ -134,7 +134,7 @@ public class ArrangePositionsTest {
             thirdChildOfParentProcess1.setProcessType(childProcessType);
             thirdChildOfParentProcess1.setAddTs(new Date());
             thirdChildOfParentProcess1.setCanRecover(true);
-            thirdChildOfParentProcess1.setEnqueuingProcessId(0);
+            thirdChildOfParentProcess1.setEnqueuingProcessId("0");
             thirdChildOfParentProcess1.setProcess(firstParentProcess);
             thirdChildOfParentProcess1.setNextProcessId("0");
             thirdChildOfParentProcess1.setDeleteFlag(false);
@@ -151,7 +151,7 @@ public class ArrangePositionsTest {
             fourthChildOfParentProcess1.setProcessType(childProcessType);
             fourthChildOfParentProcess1.setAddTs(new Date());
             fourthChildOfParentProcess1.setCanRecover(true);
-            fourthChildOfParentProcess1.setEnqueuingProcessId(0);
+            fourthChildOfParentProcess1.setEnqueuingProcessId("0");
             fourthChildOfParentProcess1.setProcess(firstParentProcess);
             fourthChildOfParentProcess1.setNextProcessId("0");
             fourthChildOfParentProcess1.setDeleteFlag(false);
@@ -171,7 +171,7 @@ public class ArrangePositionsTest {
             fifthChildOfParentProcess1.setProcessType(childProcessType);
             fifthChildOfParentProcess1.setAddTs(new Date());
             fifthChildOfParentProcess1.setCanRecover(true);
-            fifthChildOfParentProcess1.setEnqueuingProcessId(0);
+            fifthChildOfParentProcess1.setEnqueuingProcessId("0");
             fifthChildOfParentProcess1.setProcess(firstParentProcess);
             fifthChildOfParentProcess1.setNextProcessId("0");
             fifthChildOfParentProcess1.setDeleteFlag(false);
@@ -187,7 +187,7 @@ public class ArrangePositionsTest {
             sixthChildOfParentProcess1.setProcessType(childProcessType);
             sixthChildOfParentProcess1.setAddTs(new Date());
             sixthChildOfParentProcess1.setCanRecover(true);
-            sixthChildOfParentProcess1.setEnqueuingProcessId(0);
+            sixthChildOfParentProcess1.setEnqueuingProcessId("0");
             sixthChildOfParentProcess1.setProcess(firstParentProcess);
             sixthChildOfParentProcess1.setNextProcessId("0");
             sixthChildOfParentProcess1.setDeleteFlag(false);
@@ -215,7 +215,7 @@ public class ArrangePositionsTest {
             seventhChildOfParentProcess1.setProcessType(childProcessType);
             seventhChildOfParentProcess1.setAddTs(new Date());
             seventhChildOfParentProcess1.setCanRecover(true);
-            seventhChildOfParentProcess1.setEnqueuingProcessId(0);
+            seventhChildOfParentProcess1.setEnqueuingProcessId("0");
             seventhChildOfParentProcess1.setProcess(firstParentProcess);
             seventhChildOfParentProcess1.setNextProcessId("0");
             seventhChildOfParentProcess1.setDeleteFlag(false);

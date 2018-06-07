@@ -650,18 +650,31 @@ public class PropertiesAPI extends MetadataAPIBase {
                 processDAO.securityCheck(parentProcess.getProcess().getProcessId(),principal.getName(),WRITE);
             else
                 processDAO.securityCheck(properties.getProcessId(),principal.getName(),WRITE);
-            com.wipro.ats.bdre.md.dao.jpa.Properties insertProperties = new com.wipro.ats.bdre.md.dao.jpa.Properties();
+
+
             PropertiesId propertiesId = new PropertiesId();
             propertiesId.setPropKey(properties.getKey());
             propertiesId.setProcessId(properties.getProcessId());
-            insertProperties.setId(propertiesId);
-            Process process = new Process();
-            process.setProcessId(properties.getProcessId());
-            insertProperties.setProcess(process);
-            insertProperties.setConfigGroup(properties.getConfigGroup());
-            insertProperties.setPropValue(properties.getValue());
-            insertProperties.setDescription(properties.getDescription());
-            propertiesDAO.insert(insertProperties);
+            com.wipro.ats.bdre.md.dao.jpa.Properties insertProperties = propertiesDAO.get(propertiesId);
+            if(insertProperties!=null)
+            {
+                insertProperties.setPropValue(properties.getValue());
+                insertProperties.setConfigGroup(properties.getConfigGroup());
+                insertProperties.setPropValue(properties.getValue());
+                insertProperties.setDescription(properties.getDescription());
+                propertiesDAO.update(insertProperties);
+            }
+            else {
+                insertProperties=new com.wipro.ats.bdre.md.dao.jpa.Properties();
+                insertProperties.setId(propertiesId);
+                Process process = new Process();
+                process.setProcessId(properties.getProcessId());
+                insertProperties.setProcess(process);
+                insertProperties.setConfigGroup(properties.getConfigGroup());
+                insertProperties.setPropValue(properties.getValue());
+                insertProperties.setDescription(properties.getDescription());
+                propertiesDAO.insert(insertProperties);
+            }
             restWrapper = new RestWrapper(properties, RestWrapper.OK);
             LOGGER.info("Record with ID:" + properties.getProcessId() + " inserted in Properties by User:" + principal.getName() + properties);
 
@@ -932,6 +945,40 @@ public class PropertiesAPI extends MetadataAPIBase {
                 propertiesDAO.insert(jpaProperties);
             }
             restWrapper = new RestWrapper(null, RestWrapper.OK);
+        } catch (MetadataException e) {
+            LOGGER.error(e);
+            restWrapper = new RestWrapper(e.getMessage(), RestWrapper.ERROR);
+        }
+        catch (SecurityException e) {
+            LOGGER.error(e);
+            restWrapper = new RestWrapper(e.getMessage(), RestWrapper.ERROR);
+        }
+        return restWrapper;
+    }
+
+    @RequestMapping(value = {"/{id}/{cg}/{key}", "/{id}/{cg}/{key}/"}, method = RequestMethod.GET)
+
+
+    @ResponseBody
+    public RestWrapper listValue(@PathVariable("id") Integer processId,
+                                 @PathVariable("cg") String configGroup,
+                                 @PathVariable("key") String key,
+                                 Principal principal) {
+
+        RestWrapper restWrapper = null;
+        try {
+            String value = null;
+            Process parentProcess=processDAO.get(processId);
+            if (parentProcess.getProcess()!=null)
+                processDAO.securityCheck(parentProcess.getProcess().getProcessId(),principal.getName(),"read");
+            else
+                processDAO.securityCheck(processId,principal.getName(),"read");
+
+            value=propertiesDAO.getPropertiesValueForConfigAndKey(processId,configGroup,key);
+
+            restWrapper = new RestWrapper(value, RestWrapper.OK);
+            LOGGER.info("Record with ID:" + processId + "and config group" + configGroup + "selected from Properties by User:" + principal.getName());
+
         } catch (MetadataException e) {
             LOGGER.error(e);
             restWrapper = new RestWrapper(e.getMessage(), RestWrapper.ERROR);
