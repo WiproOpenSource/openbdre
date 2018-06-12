@@ -44,7 +44,8 @@
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
         <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/js/bootstrap.min.js"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.12.4/js/bootstrap-select.min.js"></script>
-        <script src="../js/angular.min.js" type="text/javascript"></script>
+       <!--  <script src="../js/angular.min.js" type="text/javascript"></script> -->
+        <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.10/angular.min.js"></script>
         <script src="https://ui-grid.info/release/ui-grid.js"></script>
         <script src="https://cdn.plot.ly/plotly-1.31.2.min.js"></script>
 
