@@ -165,7 +165,7 @@ You should be able to do the same in Mac or Windows but note that setting up a H
  * Pull BDRE source from this git repository. To find out your repository link navigate to the repository in this website and copy the https repo URL.
 
     ```shell
-    [openbdre@sandbox ~]# git clone https://github.com/WiproOpenSourcePractice/openbdre.git
+    [openbdre@sandbox ~]# git clone -b predevelop https://github.com/WiproOpenSourcePractice/openbdre.git
     ```
 
  * cd to the cloned source dir (so you can be in /home/openbdre/openbdre)
