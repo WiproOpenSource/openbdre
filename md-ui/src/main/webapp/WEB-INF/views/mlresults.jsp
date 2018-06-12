@@ -32,20 +32,20 @@
         <script src="../js/bootstrap.js" type="text/javascript"></script>
         <script src="../js/angular.min.js" type="text/javascript"></script>
         <script src="http://ui-grid.info/release/ui-grid.js"></script>
-        <link rel="stylesheet" href="http://ui-grid.info/release/ui-grid.css" type="text/css">
+        <link rel="stylesheet" href="https://ui-grid.info/release/ui-grid.css" type="text/css">
 
          <link href="../css/select2.min.css" rel="stylesheet" />
                         <script src="../js/select2.min.js"></script>-->
 
         <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css">
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.12.4/css/bootstrap-select.min.css">
-        <link rel="stylesheet" href="http://ui-grid.info/release/ui-grid.css" type="text/css">
+        <link rel="stylesheet" href="https://ui-grid.info/release/ui-grid.css" type="text/css">
 
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
         <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/js/bootstrap.min.js"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.12.4/js/bootstrap-select.min.js"></script>
         <script src="../js/angular.min.js" type="text/javascript"></script>
-        <script src="http://ui-grid.info/release/ui-grid.js"></script>
+        <script src="https://ui-grid.info/release/ui-grid.js"></script>
         <script src="https://cdn.plot.ly/plotly-1.31.2.min.js"></script>
 
         <script src="../js/mlresults/app.js" type="text/javascript"></script>
