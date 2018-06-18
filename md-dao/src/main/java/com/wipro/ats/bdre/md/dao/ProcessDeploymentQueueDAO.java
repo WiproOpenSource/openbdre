@@ -21,6 +21,7 @@ import org.apache.log4j.Logger;
 import org.hibernate.Criteria;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
+import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Restrictions;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -44,7 +45,7 @@ public class ProcessDeploymentQueueDAO {
     public List<ProcessDeploymentQueue> list(Integer pageNum, Integer numResults) {
         Session session = sessionFactory.openSession();
         session.beginTransaction();
-        Criteria criteria = session.createCriteria(ProcessDeploymentQueue.class);
+        Criteria criteria = session.createCriteria(ProcessDeploymentQueue.class).addOrder(Order.desc("deploymentId"));
         criteria.setFirstResult(pageNum);
         criteria.setMaxResults(numResults);
         List<ProcessDeploymentQueue> processDeploymentQueues = criteria.list();

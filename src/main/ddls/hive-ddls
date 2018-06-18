@@ -1,0 +1,113 @@
+CREATE TABLE IF NOT EXISTS FINISHED_JOBS_STG (id String,name String, queue String, username String, state String, submitTime
+bigint, startTime bigint, finishTime bigint,avgMapTime bigint, avgReduceTime bigint, avgShuffleTime bigint, avgMergeTime bigint,
+gcTime bigint, usedPhysicalMemory bigint, cpuTimeSpentMaps bigint, cpuTimeSpentReducers bigint, cpuTimeSpentTotal bigint, vCoreSecondsMaps bigint,
+vCoreSecondsReducers bigint, memorySecondsMaps bigint, memorySecondsReducers bigint, slotsTimeMaps bigint, slotsTimeReducers bigint,
+timeMaps bigint, timeReducers bigint, noOfMaps int, noOfReducers int, occupiedMemory double, allocatedMemory double, usedPerAllocatedMemory double,usedPerAllocatedCPU double,
+totalFileBytesRead   bigint ,totalFileBytesWritten  bigint ,totalFileReadOps  bigint ,totalFileLargeReadOps  bigint
+,totalFileWriteOps  bigint ,totalHDFSBytesRead  bigint ,totalHDFSBytesWritten  bigint ,totalHDFSReadOps  bigint
+,totalHDFSLargeReadOps  bigint ,totalHDFSWriteOps bigint, actionId string, workflowId string, fetchTime TIMESTAMP)
+ROW FORMAT DELIMITED
+FIELDS TERMINATED BY '\t'
+LINES TERMINATED BY '\n'
+STORED AS TEXTFILE;
+
+
+
+
+CREATE TABLE IF NOT EXISTS FINISHED_JOBS (id String,name String, queue String, username String, state String, submitTime
+bigint, startTime bigint, finishTime bigint,avgMapTime bigint, avgReduceTime bigint, avgShuffleTime bigint, avgMergeTime bigint,
+gcTime bigint, usedPhysicalMemory bigint, cpuTimeSpentMaps bigint, cpuTimeSpentReducers bigint, cpuTimeSpentTotal bigint, vCoreSecondsMaps bigint,
+vCoreSecondsReducers bigint, memorySecondsMaps bigint, memorySecondsReducers bigint, slotsTimeMaps bigint, slotsTimeReducers bigint,
+timeMaps bigint, timeReducers bigint, noOfMaps int, noOfReducers int, occupiedMemory double, allocatedMemory double, usedPerAllocatedMemory double,usedPerAllocatedCPU double,
+totalFileBytesRead   bigint ,totalFileBytesWritten  bigint ,totalFileReadOps  bigint ,totalFileLargeReadOps  bigint
+,totalFileWriteOps  bigint ,totalHDFSBytesRead  bigint ,totalHDFSBytesWritten  bigint ,totalHDFSReadOps  bigint
+,totalHDFSLargeReadOps  bigint ,totalHDFSWriteOps bigint, actionId string, workflowId string, fetchTime TIMESTAMP )
+PARTITIONED BY (fetchdate string, fetchhour string)
+ROW FORMAT DELIMITED
+FIELDS TERMINATED BY '\t'
+LINES TERMINATED BY '\n'
+STORED AS TEXTFILE;
+
+
+
+CREATE TABLE IF NOT EXISTS RUNNING_JOBS_STG (applicationId String,applicationName String, applicationState String, applicationType String, finalState String, progress String, username String, queueName String , startTime bigint, elapsedTime bigint, finishTime bigint, trackingUrl String, numContainers int, allocatedMB int, allocatedVCores int, memorySeconds bigint, vcoreSeconds bigint ,appMasterNodeId String, appMasterContainerId String, fetchTime TIMESTAMP)
+ROW FORMAT DELIMITED
+FIELDS TERMINATED BY '\t'
+LINES TERMINATED BY '\n'
+STORED AS TEXTFILE;
+
+CREATE TABLE IF NOT EXISTS RUNNING_JOBS (applicationId String,applicationName String, applicationState String, applicationType String, finalState String, progress String, username String, queueName String , startTime bigint, elapsedTime bigint, finishTime bigint, trackingUrl String, numContainers int, allocatedMB int, allocatedVCores int, memorySeconds bigint, vcoreSeconds bigint ,appMasterNodeId String, appMasterContainerId String, fetchTime TIMESTAMP)
+PARTITIONED BY (fetchdate string, fetchhour string)
+ROW FORMAT DELIMITED
+FIELDS TERMINATED BY '\t'
+LINES TERMINATED BY '\n'
+STORED AS TEXTFILE;
+
+
+
+CREATE TABLE IF NOT EXISTS QUEUES_STG (queueName String, absoluteAllocatedCapacity double, absoluteUsedCapacity double, usedMemory int, usedCores int, numContainers int, queueState String, maxApplications int, numApplications int, numActiveApplications int, numPendingApplications int , queueType String, users String, fetchTime TIMESTAMP)
+ROW FORMAT DELIMITED
+FIELDS TERMINATED BY '\t'
+LINES TERMINATED BY '\n'
+STORED AS TEXTFILE;
+
+CREATE TABLE IF NOT EXISTS QUEUES (queueName String, absoluteAllocatedCapacity double, absoluteUsedCapacity double, usedMemory int, usedCores int, numContainers int, queueState String, maxApplications int, numApplications int, numActiveApplications int, numPendingApplications int , queueType String, users String, fetchTime TIMESTAMP)
+PARTITIONED BY (fetchdate string, fetchhour string)
+ROW FORMAT DELIMITED
+FIELDS TERMINATED BY '\t'
+LINES TERMINATED BY '\n'
+STORED AS TEXTFILE;
+
+
+CREATE TABLE IF NOT EXISTS HDFS_QUOTA_STG_1 (hdfspath String, quota double, numFiles double, spaceQuota double, spaceConsumed double,isMonitorDirectory boolean,parentMonitorDirectory string, fetchTime TIMESTAMP)
+ROW FORMAT DELIMITED
+FIELDS TERMINATED BY '\t'
+LINES TERMINATED BY '\n'
+STORED AS TEXTFILE;
+
+CREATE TABLE IF NOT EXISTS HDFS_QUOTA_1 (hdfspath String, quota double, numFiles double, spaceQuota double, spaceConsumed double,isMonitorDirectory boolean,parentMonitorDirectory string, fetchTime TIMESTAMP)
+PARTITIONED BY (fetchdate string, fetchhour string)
+ROW FORMAT DELIMITED
+FIELDS TERMINATED BY '\t'
+LINES TERMINATED BY '\n'
+STORED AS TEXTFILE;
+
+CREATE TABLE IF NOT EXISTS HDFS_QUOTA_STG (parentDir String,subDir String, parentNameQuota bigint, parentDirNumFiles bigint, subdirNumfiles bigint, parentSpaceQuota double, parentDirSize double, subdirSize double, fetchTime TIMESTAMP)
+ROW FORMAT DELIMITED
+FIELDS TERMINATED BY '\t'
+LINES TERMINATED BY '\n'
+STORED AS TEXTFILE;
+
+CREATE TABLE IF NOT EXISTS HDFS_QUOTA (parentDir String,subDir String, parentNameQuota bigint, parentDirNumFiles bigint, subdirNumfiles bigint, parentSpaceQuota double, parentDirSize double, subdirSize double, fetchTime TIMESTAMP)
+PARTITIONED BY (fetchdate string, fetchhour string)
+ROW FORMAT DELIMITED
+FIELDS TERMINATED BY '\t'
+LINES TERMINATED BY '\n'
+STORED AS TEXTFILE;
+
+CREATE TABLE IF NOT EXISTS MR_TASKS_STG (applicationId String,taskId String,taskProgress double,taskState String, taskType String, taskStartTime bigint,taskFinishTime bigint, taskElapsedTime bigint, runningTaskAttemptId String,  taskAttemptState String, assignedContainerId String, nodeHttpAddress String, nodeId String,containerState String, containerUsername String, containerTotalMemoryNeededMB bigint,containerTotalVCoresNeeded bigint  , fetchTime TIMESTAMP)
+ROW FORMAT DELIMITED
+FIELDS TERMINATED BY '\t'
+LINES TERMINATED BY '\n'
+STORED AS TEXTFILE;
+
+
+CREATE TABLE IF NOT EXISTS MR_TASKS (applicationId String,taskId String, taskProgress double,taskState String, taskType String, taskStartTime bigint,taskFinishTime bigint, taskElapsedTime bigint, runningTaskAttemptId String,  taskAttemptState String, assignedContainerId String, nodeHttpAddress String, nodeId String,containerState String, containerUsername String, containerTotalMemoryNeededMB bigint,containerTotalVCoresNeeded bigint  , fetchTime TIMESTAMP)
+PARTITIONED BY (fetchdate string, fetchhour string)
+ROW FORMAT DELIMITED
+FIELDS TERMINATED BY '\t'
+LINES TERMINATED BY '\n'
+STORED AS TEXTFILE;
+
+CREATE TABLE IF NOT EXISTS GANGLIA_METRICS_STG(clusterName string, nodeHostName string, metric string, metricValue double, metricValueTime bigint,fetchTime TIMESTAMP )
+ROW FORMAT DELIMITED
+FIELDS TERMINATED BY '\t'
+LINES TERMINATED BY '\n'
+STORED AS TEXTFILE;
+
+CREATE TABLE IF NOT EXISTS GANGLIA_METRICS(clusterName string, nodeHostName string, metric string, metricValue double, metricValueTime bigint,fetchTime TIMESTAMP)
+PARTITIONED BY (fetchdate string, fetchhour string)
+ROW FORMAT DELIMITED
+FIELDS TERMINATED BY '\t'
+LINES TERMINATED BY '\n'
+STORED AS TEXTFILE;

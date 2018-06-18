@@ -343,7 +343,7 @@ CREATE TABLE process_log (
   log_id number(19,0) NOT NULL,
   add_ts timestamp,
   process_id number(10,0) NOT NULL,
-  log_category varchar2(10) NOT NULL,
+  log_category varchar2(2048) NOT NULL,
   message_id varchar2(128) NOT NULL,
   message varchar2(1024) NOT NULL,
   instance_ref number(19,0),

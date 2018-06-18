@@ -44,6 +44,11 @@ public class FileMonRunnableMain extends BaseStructure {
     private static String subProcessId = "";
     private static long sleepTime;
     private static String defaultFSName;
+    private static String hadoopConfDir;
+    private static String kerberosUserName;
+    private static String kerberosKeytabFileLocation;
+    private static String kerberosEnabled;
+    private static String parentProcessId="";
 
     public static long getSleepTime() {
         return sleepTime;
@@ -74,6 +79,18 @@ public class FileMonRunnableMain extends BaseStructure {
         return deleteCopiedSrc;
     }
 
+    public static String getKerberosKeytabFileLocation() {
+        return kerberosKeytabFileLocation;
+    }
+
+    public static String getKerberosUserName() {
+        return kerberosUserName;
+    }
+
+    public static String getHadoopConfDir() {
+        return hadoopConfDir;
+    }
+
     public static void setDeleteCopiedSrc(boolean deleteCopiedSrc) {
         FileMonRunnableMain.deleteCopiedSrc = deleteCopiedSrc;
     }
@@ -94,14 +111,21 @@ public class FileMonRunnableMain extends BaseStructure {
         return defaultFSName;
     }
 
+    public static String getParentProcessId(){return parentProcessId;};
+
 
     public static void main(String[] args) {
         FileMonRunnableMain f2SFileMonitorMain = new FileMonRunnableMain();
         f2SFileMonitorMain.execute(args);
     }
 
+    public static String getKerberosEnabled() {
+        return kerberosEnabled;
+    }
+
     private void execute(String[] params) {
         try {
+            parentProcessId=params[1];
             GetProcess getProcess = new GetProcess();
             List<ProcessInfo> subProcessList = getProcess.getSubProcesses(params);
             subProcessId = subProcessList.get(0).getProcessId().toString();
@@ -113,9 +137,20 @@ public class FileMonRunnableMain extends BaseStructure {
             GeneralConfig gc = generalConfig.byConigGroupAndKey("imconfig", "common.default-fs-name");
 
             defaultFSName = gc.getDefaultVal();
+            gc = generalConfig.byConigGroupAndKey("imconfig","hadoop-conf-dir");
+            hadoopConfDir = gc.getDefaultVal();
+
+            gc = generalConfig.byConigGroupAndKey("imconfig","kerberos-user-name");
+            kerberosUserName = gc.getDefaultVal();
+
+            gc = generalConfig.byConigGroupAndKey("imconfig","kerberos-keytab-file-location");
+            kerberosKeytabFileLocation = gc.getDefaultVal();
+
             monitoredDirName = properties.getProperty("monitoredDirName");
             filePattern = properties.getProperty("filePattern");
             hdfsUploadDir = properties.getProperty("hdfsUploadDir");
+            kerberosEnabled = properties.getProperty("kerberos");
+
 
             deleteCopiedSrc = Boolean.parseBoolean(properties.getProperty("deleteCopiedSrc"));
             sleepTime = Long.parseLong(properties.getProperty("sleepTime"));

@@ -210,50 +210,31 @@ public class ProcessLogDAO {
         Session session = sessionFactory.openSession();
         session.beginTransaction();
         List<ProcessLogInfo> processLogInfoList = new ArrayList<ProcessLogInfo>();
-
         try {
-            Criteria listProcessLogCriteria = session.createCriteria(ProcessLog.class).setProjection(Projections.distinct(Projections.property(PARENTPROCESSID)));
+            Criteria listProcessLogCriteria = session.createCriteria(ProcessLog.class).setProjection(Projections.distinct(Projections.property("process")));
             int counter = listProcessLogCriteria.list().size();
             LOGGER.info("number of distinct processid is " + counter);
-            List<Integer> processList = new ArrayList<Integer>();
-            Criteria processLogListCriteria = session.createCriteria(ProcessLog.class).setProjection(Projections.distinct(Projections.property(PARENTPROCESSID)));
+            List<Process> processList = new ArrayList<Process>();
+            Criteria processLogListCriteria = session.createCriteria(ProcessLog.class).setProjection(Projections.distinct(Projections.property("process")));
+            processLogListCriteria.addOrder(Order.desc("process")).setFirstResult(processLogInfo.getPage()).setMaxResults(processLogInfo.getPageSize());
             processList = processLogListCriteria.list();
-            LOGGER.info("size of processlog " + processList.size() +" and list contains:"+ processList);
-
-            if(processLogInfo.getProcessId()==null){
-                if (!processList.isEmpty()) {
-                    Criteria distintPProcessId = session.createCriteria(Process.class).add(Restrictions.in("processId",processList)).setProjection(Projections.distinct(Projections.property(PARENTPROCESSID)));
-                    distintPProcessId.addOrder(Order.desc(PARENTPROCESSID)).setFirstResult(processLogInfo.getPage()).setMaxResults(processLogInfo.getPageSize());
-
-                    List<Integer>distinctPPidList=distintPProcessId.list();
-                    for(Integer pPid:distinctPPidList){
-                        ProcessLogInfo processLogInfo1 = new ProcessLogInfo();
-                        processLogInfo1.setParentProcessId(pPid);
-                        processLogInfo1.setCounter(distinctPPidList.size());
-                        processLogInfoList.add(processLogInfo1);
-                    }
-
-                }
-                }else {
-                if (!processList.isEmpty()) {
-                    for (Integer processId : processList) {
-                        Criteria pProcessId = session.createCriteria(Process.class).setProjection(Projections.property(PARENTPROCESSID)).add(Restrictions.eq("processId", processId));
-                        Integer parentProcessId = (Integer) pProcessId.uniqueResult();
-
-
-                        ProcessLogInfo processLogInfo1 = new ProcessLogInfo();
-                        processLogInfo1.setParentProcessId(parentProcessId);
-                        processLogInfo1.setProcessId(processId);
-                        processLogInfo1.setCounter(counter);
-                        processLogInfoList.add(processLogInfo1);
-                        LOGGER.info(" ppID is " + parentProcessId);
-                        LOGGER.info("process Id is :" + processId);
-
-                    }
-                }
-
+            LOGGER.info("size of processlog " + processList.size() + processList);
+            Iterator<Process> iterator = processList.iterator();
+            while (iterator.hasNext()) {
+                Process process = iterator.next();
+                ProcessLogInfo processLogInfo1 = new ProcessLogInfo();
+                processLogInfo1.setProcessId(process.getProcessId());
+                LOGGER.info("processid is " + process.getProcessId());
+                //Process process= (Process) session.get(Process.class, processLog.getProcess().getProcessId());
+                LOGGER.info("parentprocessid is " + process.getProcess());
+                if (process != null)
+                    processLogInfo1.setParentProcessId(process.getProcess().getProcessId());
+                else
+                    processLogInfo1.setParentProcessId(null);
+                processLogInfo1.setCounter(counter);
+                processLogInfoList.add(processLogInfo1);
             }
-
+            LOGGER.info("processLogInfoList is "+processLogInfoList);
             session.getTransaction().commit();
         } catch (MetadataException e) {
             session.getTransaction().rollback();
@@ -263,7 +244,6 @@ public class ProcessLogDAO {
         }
         return processLogInfoList;
     }
-
 
 
     public List<ProcessLogInfo> getProcessLog(ProcessLogInfo processLogInfo) {

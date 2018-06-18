@@ -40,6 +40,17 @@ public class Process {
     private Integer permissionTypeByGroupAccessId;
     private String userName;
     private Integer ownerRoleId;
+    private String latestExecStatus;
+
+    public String getLatestExecStatus() {
+        return latestExecStatus;
+    }
+
+    public void setLatestExecStatus(String latestExecStatus) {
+        this.latestExecStatus = latestExecStatus;
+    }
+
+
 
     @NotNull
     @Size(min = 1, max = 256)
@@ -60,9 +71,8 @@ public class Process {
     @NotNull
     private Boolean canRecover;
     private Integer processTemplateId;
-    @Min(value = 0)
-    @Max(value = Integer.MAX_VALUE)
-    private Integer enqProcessId;
+    @Size(max = 255)
+    private String enqProcessId;
     @NotNull
     @Pattern(regexp = "^[0-9]+(,[0-9]+)*$")
     private String nextProcessIds;
@@ -259,11 +269,11 @@ public class Process {
         this.canRecover = canRecover;
     }
 
-    public Integer getEnqProcessId() {
+    public String getEnqProcessId() {
         return enqProcessId;
     }
 
-    public void setEnqProcessId(Integer enqProcessId) {
+    public void setEnqProcessId(String enqProcessId) {
         this.enqProcessId = enqProcessId;
     }
 

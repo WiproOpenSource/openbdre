@@ -74,7 +74,7 @@ public class RegisterFileDAOTest {
         parentProcess.setBusDomain(busDomain);
         parentProcess.setProcessType(processType);
         parentProcess.setCanRecover(false);
-        parentProcess.setEnqueuingProcessId(0);
+        parentProcess.setEnqueuingProcessId("0");
         parentProcess.setNextProcessId(" ");
         parentProcess.setWorkflowType(workflowType);
         parentProcess.setDeleteFlag(false);
@@ -92,7 +92,7 @@ public class RegisterFileDAOTest {
         childProcess.setBusDomain(busDomain);
         childProcess.setProcessType(processType);
         childProcess.setCanRecover(false);
-        childProcess.setEnqueuingProcessId(0);
+        childProcess.setEnqueuingProcessId("0");
         childProcess.setNextProcessId("1");
         childProcess.setWorkflowType(workflowType);
         childProcess.setDeleteFlag(false);

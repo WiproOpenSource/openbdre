@@ -38,6 +38,7 @@
 		<script src = "../js/jquery.fancytree.gridnav.js" type = "text/javascript" ></script >
 		<script src = "../js/jquery.fancytree.table.js" type = "text/javascript" ></script >
 		<script src = "../js/jquery.jtable.js" type = "text/javascript" ></script >
+		<script src="../js/angular.min.js" type="text/javascript"></script>
 		<link href = "../css/jtables-bdre.css" rel = "stylesheet" type = "text/css" />
 		<style>
 		.btn-success{
@@ -49,7 +50,86 @@
 			location.href = '<c:url value="/pages/lineage.page?pid="/>' + pid;
         }
 		</script >
+		<style type="text/css">
+            select {
+                width:300px;
+                height:34px;
+            }
+        </style>
 		<script >
+	function columnsPopup(tableName){
+
+             var incrType = $("#incrementType_"+tableName).val();
+             	    console.log(incrType);
+             	    console.log($("#incrementColumn_"+tableName).html());
+             	    if(incrType != "None"){
+             	        $("#incrementColumn_"+tableName).addClass('form-control');
+             	        $("#incrementColumn_"+tableName).prop('disabled', false);
+
+             	    }
+             	    else{
+             	     $("#incrementColumn_"+tableName).prop('disabled', true);
+             	    }
+
+
+	                 var filteredColumns= [];
+                     $.ajax({
+                          url: "/mdrest/dataimport/tables/"+tableName,
+                              type: 'GET',
+                              dataType: 'json',
+                              async: false,
+                              success: function (data) {
+                                filteredColumns = data;
+                              },
+                              error: function () {
+                                  alert('danger');
+                              }
+                          });
+
+
+         var size=filteredColumns.length;
+         var integralColumns=[];
+         if(incrType == "AppendRows")
+           {
+         for(i=0;i<size;i++){
+          if(filteredColumns[i].dtype == "INT" || filteredColumns[i].dtype == "BIGINT" || filteredColumns[i].dtype == "NUMBER")
+          integralColumns.push(filteredColumns[i].title);
+          }
+           var len=integralColumns.length;
+          var temp="<select class="+'"form-control"' +" name='incrementColumn_" + tableName +"' id='incrementColumn_" + tableName +"'>";
+          for(j=0;j<len;j++)
+          {
+          temp=temp + "<option value="+integralColumns[j]+">"+integralColumns[j]+"</option>";
+          }
+          temp=temp + "</select>";
+          $("#incrementColumn_"+tableName).replaceWith(temp);
+          }
+
+          var timestampColumns=[];
+          if(incrType == "DateLastModified")
+          {
+           for(i=0;i<size;i++){
+           console.log(filteredColumns[i].dtype);
+            if(filteredColumns[i].dtype == "TIMESTAMP" || "TIMESTAMP(6)")
+            timestampColumns.push(filteredColumns[i].title);
+            }
+
+             var lent=timestampColumns.length;
+                     var temp="<select class="+'"form-control"' +" name='incrementColumn_" + tableName +"' id='incrementColumn_" + tableName +"'>";
+                      for(j=0;j<lent;j++)
+                      {
+                      temp=temp + "<option value="+timestampColumns[j]+">"+timestampColumns[j]+"</option>";
+                      }
+                      temp=temp + "</select>";
+                      $("#incrementColumn_"+tableName).replaceWith(temp);
+
+            }
+
+	 }
+
+	function submitfunction (){
+        $("#incrementalform").hide();
+     }
 
     var datatypeMap = {
     INT: "Int",
@@ -59,7 +139,10 @@
     BIT: "Boolean",
     SMALLINT: "SmallInt",
     INTEGER: "Int",
-    TINYINT: "tinyInt"
+    TINYINT: "tinyInt",
+    VARCHAR2: "String",
+    NUMBER: "Int",
+    "TIMESTAMP(6)": "Timestamp"
 };
     var created=0;
 		function displayProcess (records){
@@ -292,16 +375,16 @@
 
                                                  },
                                                  ProcessPipelineButton: {
-                                                                                                                      title: '<spring:message code="dataimportwizard.page.title_pipeline"/>',
-                                                                                                                      sorting: false,
-                                                                                                                      width: '2%',
-                                                                                                                      listClass: 'bdre-jtable-button',
-                                                                                                                      create: false,
-                                                                                                                      edit: false,
-                                                                                                                      display: function(data) {
-                                                                                                                           return '<span class="label label-primary" onclick="fetchPipelineInfo(' + data.record.processId + ')"><spring:message code="dataimportwizard.page.display"/></span> ';
-                                                                                                                      },
-                                                                                 }
+                                                  title: '<spring:message code="dataimportwizard.page.title_pipeline"/>',
+                                                  sorting: false,
+                                                  width: '2%',
+                                                  listClass: 'bdre-jtable-button',
+                                                  create: false,
+                                                  edit: false,
+                                                  display: function(data) {
+                                                       return '<span class="label label-primary" onclick="fetchPipelineInfo(' + data.record.processId + ')"><spring:message code="dataimportwizard.page.display"/></span> ';
+                                                      },
+                                         }
                                         }
                                     });
                                 $('#Container').jtable('load');
@@ -313,6 +396,7 @@
 
 		var wizard=null;
 		wizard=$(document).ready(function() {
+
 			$("#bdre-dataload").steps({
 		    headerTag: "h3",
 		    bodyTag: "section",
@@ -454,14 +538,19 @@
             list.push(myObject);
 
           var myObject = new Object();
-                    myObject.name=$("#processName")[0].name;
-                    myObject.value=$("#processName")[0].value;
-                    list.push(myObject);
+            myObject.name=$("#processName")[0].name;
+            myObject.value=$("#processName")[0].value;
+            list.push(myObject);
 
           var myObject = new Object();
                     myObject.name=$("#processDescription")[0].name;
                     myObject.value=$("#processDescription")[0].value;
                     list.push(myObject);
+          var myObject = new Object();
+                  myObject.name=$("#workflowTypeId")[0].name;
+                  myObject.value=$("#workflowTypeId")[0].value;
+                  list.push(myObject);
+
 
 
 
@@ -523,8 +612,11 @@
     renderColumns: function(event, data) {
       var node = data.node,
         $select = $("<select name='hiveDataType_" + data.node.key +"'/>"),
-        $ingestSelect = $("<select name='ingestOnly_" + data.node.key +"'/>"),
-        $incrementSelect = $("<select name='incrementType_" + data.node.key +"'/>"),
+        $ingestSelect = $("<select name='ingestOnly_" + data.node.key +"' />"),
+        $incrementSelect = $("<select name='incrementType_" + data.node.key +"' id='incrementType_" + data.node.key +"' onchange='columnsPopup(&quot;"+ data.node.key +"&quot;)'/>"),
+        $incrementColumn = $("<select disabled name='incrementColumn_" + data.node.key +"' id='incrementColumn_" + data.node.key +"'/>"),
+        $transform = $("<select name='destTransform_"+ data.node.key+"'/>"),
+
         $tdList = $(node.tr).find(">td");
       // (Index #0 is rendered by fancytree by adding the checkbox)
       //$tdList.eq(1).text(node.getIndexHier()).addClass("alignRight");
@@ -541,13 +633,17 @@
                   $("<option />", {text: "Ingest Only", value: "true"}).appendTo($ingestSelect);
                   $("<option />", {text: "Ingest and HiveLoad", value: "false"}).appendTo($ingestSelect);
                   $ingestSelect.addClass("form-control");
-                  $tdList.eq(4).html($ingestSelect);
+                  $tdList.eq(5).html($ingestSelect);
 
                   $("<option />", {text: "None", value: "None"}).appendTo($incrementSelect);
                   $("<option />", {text: "Append Rows", value: "AppendRows"}).appendTo($incrementSelect);
-                  $("<option />", {text: "Last Moified", value: "DateLastModified "}).appendTo($incrementSelect);
+                  $("<option />", {text: "Last Moified", value: "DateLastModified"}).appendTo($incrementSelect);
                   $incrementSelect.addClass("form-control");
-                  $tdList.eq(5).html($incrementSelect);
+                  $tdList.eq(6).html($incrementSelect);
+
+                  $("<option />", {text: "None", value: "None"}).appendTo($incrementColumn);
+                  $incrementColumn.addClass("form-control");
+                   $tdList.eq(7).html($incrementColumn);
 
       }else{
             $tdList.eq(2).html(data.node.data.dtype+
@@ -570,6 +666,18 @@
                   $select.addClass("form-control");
                   $tdList.eq(4).html($select);
                   $select.val(datatypeMap[data.node.data.dtype]);
+
+            $("<option />", {text: "floor", value: "floor"}).appendTo($transform);
+            $("<option />", {text: "lower", value: "lower"}).appendTo($transform);
+            $("<option />", {text: "no transformation", value: "no transformation"}).appendTo($transform);
+            $("<option />", {text: "round", value: "round"}).appendTo($transform);
+            $("<option />", {text: "tokenize", value: "tokenize"}).appendTo($transform);
+            $("<option />", {text: "trim", value: "trim"}).appendTo($transform);
+            $("<option />", {text: "upper", value: "upper"}).appendTo($transform);
+            $transform.addClass("form-control");
+            $tdList.eq(5).html($transform);
+            $transform.val("no transformation");
+
       }
 
 
@@ -640,17 +748,20 @@ isInit=true;
                           }
                   });
 
-
+           $('[id~="increment"]').hide();
           }
 
 		</script >
 
 	</head >
-	<body >
+	<body>
 	
 		<form action = "#" method = "POST" id = "wizardform" >
 			<div class="page-header"><spring:message code="dataimportwizard.page.panel_heading"/></div>
-			<div id="bdre-dataload" ng-controller = "myCtrl" >
+			<div id="bdre-dataload" >
+
+
+
 				<h3 ><div class="number-circular">1</div><spring:message code="dataimportwizard.page.db"/></h3 >
 				<section >
 					<div >
@@ -665,7 +776,7 @@ isInit=true;
 						</div>
 						<div class="form-group">
 						<label for = "dbPassword" ><spring:message code="dataimportwizard.page.db_psswd"/></label >
-						<input id = "dbPassword" onchange = "treeData=null;" name = "common_dbPassword" type = "password" class = "form-control" value = "<fmt:message key='hibernate.connection.password' />" />
+						<input id = "dbPassword" onchange = "treeData=null;" name = "common_dbPassword" type = "password" class = "form-control" />
 						</div>
 						<div class="form-group">
 						<label for = "dbDriver" ><spring:message code="dataimportwizard.page.db_driver"/></label >
@@ -684,6 +795,7 @@ isInit=true;
 				</section >
 				<h3 ><div class="number-circular">2</div><spring:message code="dataimportwizard.page.table_and_cols"/></h3 >
 				<section style = "display: block; overflow: scroll;" >
+
 					<table id = "tree0" class = "table-striped" width = "290px" >
 						<thead >
 						<tr >
@@ -729,8 +841,10 @@ isInit=true;
 							<th >Datatype</th >
 							<th >Hive Column Name</th >
 							<th >Hive Datatype</th >
+							<th >Column Transformation</th >
 							<th> Options</th>
 							<th> Increment Type</th>
+							<th> Increment Column</th>
 						</tr >
 						</thead >
 						<tbody >
@@ -744,17 +858,34 @@ isInit=true;
 
 				<section >
 					<table id = "tree0" class = "table-striped" width = "290px" >
-
+					        <thead>
+                            <tr>
                                 <th ><label for = "busDomainId" ><spring:message code="dataimportwizard.page.business_domain_id"/></label ></th >
                             </tr >
                             </thead >
                             <tbody >
                             <tr >
                                 <td >
-                                    <input id = "busDomainId" name = "common_busDomainId" type = "text" class = "form-control" size = "180" value = "1" />
+                                    <select id="busDomainId" name = "common_busDomainId" width= "180"></select>
                                 </td >
                             </tr >
                             </tbody >
+
+
+                            <thead>
+                            <tr>
+                                <th ><label for = "workflowTypeId" ><spring:message code="process.page.title_wf_type"/></label ></th >
+                            </tr >
+                            </thead >
+                            <tbody >
+                            <tr >
+                                <td >
+                                    <select id="workflowTypeId" name = "common_workflowTypeId" width= "180"></select>
+                                </td >
+                            </tr >
+                            </tbody >
+
+
 
                              <th ><label for = "processName" ><spring:message code="dataimportwizard.page.process_name"/></label ></th >
                                                         </tr >
@@ -813,6 +944,65 @@ isInit=true;
 			<div />
 			</p>
 		</div >
+
+
+
+<script type = "text/javascript" >
+	                       workflowTypes = {};
+                            $.ajax({
+                            url: '/mdrest/workflowtype/optionslist',
+                                type: 'POST',
+                                dataType: 'json',
+                                async: false,
+                                success: function (data) {
+                                    console.log("data is "+data.Options);
+                                    workflowTypes = data.Options;
+                                },
+                                error: function () {
+                                    alert('danger');
+                                }
+                            });
+
+                            var output = [];
+                             var length = workflowTypes.length;
+                             for(var i=0; i < length; i++)
+                             {
+                                 var valu=workflowTypes[i].Value;
+                                 var txt=workflowTypes[i].DisplayText;
+                                output[i] = '<option value="' + valu + '">' + txt + '</option>';
+                             }
+                             console.log("output is "+output);
+                             document.getElementById('workflowTypeId').innerHTML=output.join('');
+
+		</script>
+
+                   <script>
+                   busDomains = {};
+                                           $.ajax({
+                                                    url: '/mdrest/busdomain/options/',
+                                                        type: 'POST',
+                                                        dataType: 'json',
+                                                        async: false,
+                                                        success: function (data) {
+                                                            busDomains = data.Options;
+                                                        },
+                                                        error: function () {
+                                                            alert('danger');
+                                                        }
+                                                    });
+                            var output = [];
+                             var length = busDomains.length;
+                             for(var i=0; i < length; i++)
+                             {
+                                 var valu=busDomains[i].Value;
+                                 var txt=busDomains[i].DisplayText;
+                                output[i] = '<option value="' + valu + '">' + txt + '</option>';
+                             }
+                             console.log("output is "+output);
+                             document.getElementById('busDomainId').innerHTML=output.join('');
+
+                   </script>
+
 
 	</body >
 </html >

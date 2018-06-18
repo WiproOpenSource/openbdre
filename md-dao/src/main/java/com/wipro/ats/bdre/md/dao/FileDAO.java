@@ -46,7 +46,7 @@ public class FileDAO {
     public List<File> list(Integer pageNum, Integer numResults) {
         Session session = sessionFactory.openSession();
         session.beginTransaction();
-        Criteria criteria = session.createCriteria(File.class);
+        Criteria criteria = session.createCriteria(File.class).addOrder(Order.desc("id.batchId"));
         criteria.setFirstResult(pageNum);
         criteria.setMaxResults(numResults);
         List<File> files = criteria.list();

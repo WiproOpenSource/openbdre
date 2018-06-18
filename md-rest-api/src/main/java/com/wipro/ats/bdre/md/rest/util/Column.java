@@ -27,6 +27,7 @@ public class Column {
     private String srcDataType;
     private String destDataType;
     private String srcColumnIndex;
+    private String transformationName;
 
     public Column(String srcColumnName) {
         this.srcColumnName = srcColumnName;
@@ -70,6 +71,12 @@ public class Column {
 
     public void setDestDataType(String destDataType) {
         this.destDataType = destDataType;
+    }
+    public void setTransformationName(String transformationName){
+        this.transformationName=transformationName;
+    }
+    public String getTransformationName(){
+        return this.transformationName;
     }
 
 }

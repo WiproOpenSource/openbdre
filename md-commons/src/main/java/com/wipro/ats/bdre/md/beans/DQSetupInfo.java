@@ -48,9 +48,19 @@ public class DQSetupInfo {
     @Size(min = 1, max = 45)
     private String processName;
     private Integer busDomainId;
+
+    public Integer getWorkflowTypeId() {
+        return workflowTypeId;
+    }
+
+    public void setWorkflowTypeId(Integer workflowTypeId) {
+        this.workflowTypeId = workflowTypeId;
+    }
+
+    private Integer workflowTypeId;
     private Boolean canRecover;
     private Boolean deleteFlag;
-    private Integer enqId;
+    private String enqId;
     private Integer page;
     private Integer counter;
     private Integer pageSize;
@@ -233,11 +243,11 @@ public class DQSetupInfo {
     }
 
 
-    public Integer getEnqId() {
+    public String getEnqId() {
         return enqId;
     }
 
-    public void setEnqId(Integer enqId) {
+    public void setEnqId(String enqId) {
         this.enqId = enqId;
     }
 

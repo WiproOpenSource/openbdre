@@ -111,6 +111,30 @@
 	    }
 	</script>
 	<style>
+
+	    .hljs-string{
+	          color: green;
+              font-weight: bold;
+            }
+         .hljs-keyword{
+            color:blue;
+            font-weight: bold;
+            }
+           .hljs-title
+           {
+           color: black;
+           font-weight: bold;
+           }
+        .hljs-section,
+        .hljs-selector-class{
+              color: yellow;
+            }
+        .hljs-template-variable,
+        .hljs-deletion {
+          color: blue;
+        }
+
+
 	    * {
 		margin:0;
 		padding:0;
@@ -260,9 +284,32 @@
 		    }
 		});
 	    }
+
+	     function popModalDag(pid) {
+        		$.get('airflowdag/' + pid + '.page', function (data) {
+        		 if(data=="not allowed")
+                		     alert("ACCESS DENIED");
+                		     else{
+        		    modal.open({content: "<b>Loading</b>"});
+        		    showXML(data);
+        		    $('#content').each(function (i, block) {
+        			hljs.highlightBlock(block);
+        			console.log(block);
+        		    });
+        		    modal.center();
+        		    }
+        		});
+        	    }
+
+         function GotoProcesses() {
+                		location.href = '<c:url value="/pages/process.page" />';
+                	    }
+
 	    function GotoProcess(pid) {
 		location.href = '<c:url value="/pages/process.page?pid="/>' + pid;
 	    }
+
+
 
 	    <c:if test="${not empty param.pid}">
 	    $(document).ready(function () {
@@ -274,8 +321,11 @@
     </head>
     <body>
 	<br/>
+	    <button style="margin-left:15px;" type='button' class='btn btn-primary' aria-label='Left Align' onClick='GotoProcesses()'><span aria-hidden='true'></span><spring:message code="lineage.page.button_gotoProcessPage"/></button>
+
 		<button type='button' class='btn btn-primary' aria-label='Left Align' onClick='saveSVG("pipeline",0)'><span class='glyphicon glyphicon-save' aria-hidden='true'></span><spring:message code="lineage.page.button_save"/></button>
-	<c:if test="${empty param.pid}">
+
+         	<c:if test="${empty param.pid}">
 
 	    <div id="input-box-button" >
 		<form>

@@ -37,7 +37,9 @@ import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
 import java.security.Principal;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by arijit on 1/9/15.
@@ -60,7 +62,12 @@ public class ProcessTemplateAPI extends MetadataAPIBase {
     ProcessDAO processDAO;
     @Autowired
     PropertiesDAO propertiesDAO;
-
+    @Autowired
+    PermissionTypeDAO appPermissionDAO;
+    @Autowired
+    UserRolesDAO userRolesDAO;
+    @Autowired
+    UsersDAO usersDAO;
     @RequestMapping(value = "/{id}", method = RequestMethod.GET)
     @ResponseBody public
     RestWrapper get(
@@ -81,6 +88,11 @@ public class ProcessTemplateAPI extends MetadataAPIBase {
                 if (jpaProcessTemplate.getProcessTemplate() != null)
                     processTemplate.setParentProcessId(jpaProcessTemplate.getProcessTemplate().getProcessTemplateId());
                 processTemplate.setCanRecover(jpaProcessTemplate.getCanRecover());
+                processTemplate.setWorkflowId(jpaProcessTemplate.getWorkflowType().getWorkflowId());
+                processTemplate.setOwnerRoleId(jpaProcessTemplate.getUserRoles().getUserRoleId());
+                processTemplate.setPermissionTypeByUserAccessId(jpaProcessTemplate.getPermissionTypeByUserAccessId().getPermissionTypeId());
+                processTemplate.setPermissionTypeByGroupAccessId(jpaProcessTemplate.getPermissionTypeByUserAccessId().getPermissionTypeId());
+                processTemplate.setPermissionTypeByOthersAccessId(jpaProcessTemplate.getPermissionTypeByOthersAccessId().getPermissionTypeId());
                 processTemplate.setBatchPattern(jpaProcessTemplate.getBatchCutPattern());
                 processTemplate.setNextProcessTemplateId(jpaProcessTemplate.getNextProcessTemplateId());
             }
@@ -207,7 +219,10 @@ public class ProcessTemplateAPI extends MetadataAPIBase {
 
             WorkflowType workflowType = workflowTypeDAO.get(processTemplate.getWorkflowId());
             jpaProcessTemplate.setWorkflowType(workflowType);
-
+            jpaProcessTemplate.setUserRoles(userRolesDAO.get(processTemplate.getOwnerRoleId()));
+            jpaProcessTemplate.setPermissionTypeByUserAccessId(appPermissionDAO.get(processTemplate.getPermissionTypeByUserAccessId()));
+            jpaProcessTemplate.setPermissionTypeByGroupAccessId(appPermissionDAO.get(processTemplate.getPermissionTypeByGroupAccessId()));
+            jpaProcessTemplate.setPermissionTypeByOthersAccessId(appPermissionDAO.get(processTemplate.getPermissionTypeByOthersAccessId()));
             BusDomain busDomain = busDomainDAO.get(processTemplate.getBusDomainId());
             jpaProcessTemplate.setBusDomain(busDomain);
 
@@ -280,7 +295,23 @@ public class ProcessTemplateAPI extends MetadataAPIBase {
 
             WorkflowType workflowType = workflowTypeDAO.get(processTemplate.getWorkflowId());
             jpaProcessTemplate.setWorkflowType(workflowType);
+            if (processTemplate.getOwnerRoleId() != null)
+                jpaProcessTemplate.setUserRoles(userRolesDAO.get(processTemplate.getOwnerRoleId()));
+            else
+                jpaProcessTemplate.setUserRoles(userRolesDAO.minUserRoleId(principal.getName()));
 
+            if (processTemplate.getPermissionTypeByUserAccessId() != null)
+                jpaProcessTemplate.setPermissionTypeByUserAccessId(appPermissionDAO.get(processTemplate.getPermissionTypeByUserAccessId()));
+            else
+                jpaProcessTemplate.setPermissionTypeByUserAccessId(appPermissionDAO.get(7));
+            if (processTemplate.getPermissionTypeByGroupAccessId() != null)
+                jpaProcessTemplate.setPermissionTypeByGroupAccessId(appPermissionDAO.get(processTemplate.getPermissionTypeByGroupAccessId()));
+            else
+                jpaProcessTemplate.setPermissionTypeByGroupAccessId(appPermissionDAO.get(4));
+            if (processTemplate.getPermissionTypeByOthersAccessId() != null)
+                jpaProcessTemplate.setPermissionTypeByOthersAccessId(appPermissionDAO.get(processTemplate.getPermissionTypeByOthersAccessId()));
+            else
+                jpaProcessTemplate.setPermissionTypeByOthersAccessId(appPermissionDAO.get(0));
             BusDomain busDomain = busDomainDAO.get(processTemplate.getBusDomainId());
             jpaProcessTemplate.setBusDomain(busDomain);
 
@@ -310,7 +341,7 @@ public class ProcessTemplateAPI extends MetadataAPIBase {
     @RequestMapping(value = {"/create", "/create/"}, method = RequestMethod.PUT)
     @ResponseBody public
     RestWrapper create(@ModelAttribute("processtemplate")
-                       @Valid ProcessTemplate processTemplate, BindingResult bindingResult) {
+                       @Valid ProcessTemplate processTemplate,Principal principal, BindingResult bindingResult) {
 
         RestWrapper restWrapper = null;
         List<Process> processes = new ArrayList<Process>();
@@ -318,43 +349,152 @@ public class ProcessTemplateAPI extends MetadataAPIBase {
             BindingResultError bindingResultError = new BindingResultError();
             return bindingResultError.errorMessage(bindingResult);
         }
+        Map<Integer,Integer> idMap=new HashMap<>();
         try {
-            LOGGER.debug("process.id = " + processTemplate.getProcessName() + " " + processTemplate.getDescription());
 
-            LOGGER.debug("processTemplate id is " + processTemplate.getProcessTemplateId());
+            LOGGER.info("process.id = " + processTemplate.getProcessName() + " " + processTemplate.getDescription());
+            LOGGER.info("processTemplate id is " + processTemplate.getProcessTemplateId());
             List<ProcessTemplate> processTemplateInfos = processTemplateDAO.selectPTList(processTemplate.getProcessTemplateId());
-            int index = 0;
-            int pid = 0;
-            processTemplateInfos.get(0).setProcessName(processTemplate.getProcessName());
-            processTemplateInfos.get(0).setDescription(processTemplate.getDescription());
-            for (ProcessTemplate processTempInfo : processTemplateInfos) {
-                processTempInfo.setEnqProcessId(0);
-                processTempInfo.setNextProcessIds("");
-
-                if (index > 0) {
-                    processTempInfo.setParentProcessId(pid);
+            LOGGER.info("size of processTemplateInfos "+processTemplateInfos.size());
+            int tmp=0;
+            int ppid=0;
+            for (ProcessTemplate processTemplate1:processTemplateInfos)
+            {
+                LOGGER.info("process template id is "+processTemplate1.getProcessTemplateId());
+                com.wipro.ats.bdre.md.dao.jpa.Process insertDaoProcess = new com.wipro.ats.bdre.md.dao.jpa.Process();
+                com.wipro.ats.bdre.md.dao.jpa.ProcessType daoProcessType = new com.wipro.ats.bdre.md.dao.jpa.ProcessType();
+                daoProcessType.setProcessTypeId(processTemplate1.getProcessTypeId());
+                insertDaoProcess.setProcessType(daoProcessType);
+                if (processTemplate1.getWorkflowId() != null) {
+                    WorkflowType daoWorkflowType = new WorkflowType();
+                    daoWorkflowType.setWorkflowId(processTemplate1.getWorkflowId());
+                    insertDaoProcess.setWorkflowType(daoWorkflowType);
                 }
-                pid = processes.get(0).getProcessId();
-                LOGGER.debug("index= " + index + "processTempInfo.processtempid=" + processTempInfo.getProcessTemplateId() + "processes.(0)name= " + processes.get(index).getProcessId());
+                BusDomain daoBusDomain = new BusDomain();
+                daoBusDomain.setBusDomainId(processTemplate1.getBusDomainId());
+                insertDaoProcess.setBusDomain(daoBusDomain);
+                LOGGER.info("processTemplate.getOwnerRoleId() is "+processTemplate1.getOwnerRoleId()+" username is "+principal.getName());
+                if (processTemplate1.getOwnerRoleId() != null)
+                    insertDaoProcess.setUserRoles(userRolesDAO.get(processTemplate1.getOwnerRoleId()));
+                else {
+                    insertDaoProcess.setUserRoles(userRolesDAO.minUserRoleId(principal.getName()));
+                    LOGGER.info("userRolesDAO.minUserRoleId(principal.getName() "+userRolesDAO.minUserRoleId(principal.getName()));
+                }
+                if (processTemplate1.getPermissionTypeByUserAccessId() != null)
+                    insertDaoProcess.setPermissionTypeByUserAccessId(appPermissionDAO.get(processTemplate1.getPermissionTypeByUserAccessId()));
+                else
+                    insertDaoProcess.setPermissionTypeByUserAccessId(appPermissionDAO.get(7));
+                if (processTemplate1.getPermissionTypeByGroupAccessId() != null)
+                    insertDaoProcess.setPermissionTypeByGroupAccessId(appPermissionDAO.get(processTemplate1.getPermissionTypeByGroupAccessId()));
+                else
+                    insertDaoProcess.setPermissionTypeByGroupAccessId(appPermissionDAO.get(4));
+                if (processTemplate1.getPermissionTypeByOthersAccessId() != null)
+                    insertDaoProcess.setPermissionTypeByOthersAccessId(appPermissionDAO.get(processTemplate1.getPermissionTypeByOthersAccessId()));
+                else
+                    insertDaoProcess.setPermissionTypeByOthersAccessId(appPermissionDAO.get(0));
+                if (processTemplate1.getProcessTemplateId() != null) {
+                    com.wipro.ats.bdre.md.dao.jpa.ProcessTemplate daoProcessTemplate = new com.wipro.ats.bdre.md.dao.jpa.ProcessTemplate();
+                    daoProcessTemplate.setProcessTemplateId(processTemplate1.getProcessTemplateId());
+                    insertDaoProcess.setProcessTemplate(daoProcessTemplate);
+                }
+                if (tmp!=0) {
+                    LOGGER.info("ppid is "+ppid);
+                    insertDaoProcess.setProcess(processDAO.get(ppid));
+                }
+                else
+                {
+                    insertDaoProcess.setProcess(null);
+                }
+                if (tmp==0)
+                insertDaoProcess.setDescription(processTemplate.getDescription());
+                else
+                    insertDaoProcess.setDescription(processTemplate1.getDescription());
+                insertDaoProcess.setAddTs(processTemplate1.getAddTS());
+                if (tmp==0)
+                insertDaoProcess.setProcessName(processTemplate.getProcessName());
+                else
+                  insertDaoProcess.setProcessName(processTemplate1.getProcessName());
+                if (processTemplate1.getCanRecover() == null)
+                    insertDaoProcess.setCanRecover(true);
+                else
+                    insertDaoProcess.setCanRecover(processTemplate1.getCanRecover());
+                if (processTemplate1.getDeleteFlag() == null)
+                    insertDaoProcess.setDeleteFlag(false);
+                else
+                    insertDaoProcess.setDeleteFlag(processTemplate1.getDeleteFlag());
+                if(processTemplate1.getEnqProcessId()!=null)
+                insertDaoProcess.setEnqueuingProcessId(processTemplate1.getEnqProcessId());
+                else
+                    insertDaoProcess.setEnqueuingProcessId("0");
+                if (processTemplate1.getBatchPattern() != null) {
+                    insertDaoProcess.setBatchCutPattern(processTemplate1.getBatchPattern());
+                }
+                if (processTemplate1.getNextProcessTemplateId()!=null)
+                insertDaoProcess.setNextProcessId(processTemplate1.getNextProcessTemplateId());
+                else
+                insertDaoProcess.setNextProcessId("");
+                insertDaoProcess.setUsers(usersDAO.get(principal.getName()));
+                Integer processId = processDAO.insert(insertDaoProcess);
+                if(tmp==0)
+                    ppid=processId;
+                idMap.put(processTemplate1.getProcessTemplateId(),processId);
+                processTemplate1.setProcessId(processId);
+                processTemplate1.setTableAddTS(DateConverter.dateToString(processTemplate1.getAddTS()));
 
+
+                Process process = new Process();
+                process.setProcessId(processId);
+                process.setPermissionTypeByOthersAccessId(processTemplate1.getPermissionTypeByOthersAccessId());
+                process.setPermissionTypeByGroupAccessId(processTemplate1.getPermissionTypeByGroupAccessId());
+                process.setPermissionTypeByUserAccessId(processTemplate1.getPermissionTypeByUserAccessId());
+                process.setAddTS(processTemplate1.getAddTS());
+                process.setBatchPattern(processTemplate1.getBatchPattern());
+                process.setBusDomainId(processTemplate1.getBusDomainId());
+                process.setCanRecover(processTemplate1.getCanRecover());
+                process.setDeleteFlag(processTemplate1.getDeleteFlag());
+                process.setEnqProcessId("0");
+                process.setProcessName(processTemplate1.getProcessName());
+                process.setDescription(processTemplate1.getDescription());
+                process.setProcessTemplateId(processTemplate1.getProcessTemplateId());
+                process.setProcessTypeId(processTemplate1.getProcessTypeId());
+                if (tmp==0)
+                    process.setParentProcessId(null);
+                else
+                    process.setParentProcessId(ppid);
+                LOGGER.info("loop no "+tmp+1);
+                processes.add(process);
+                tmp++;
+            }
+             LOGGER.info("size of processes "+processes.size());
+            for (ProcessTemplate processTempInfo : processTemplateInfos) {
+                processTempInfo.setEnqProcessId("0");
+                processTempInfo.setNextProcessIds("");
                 // Inserting properties for newly created process from template
                 List<PropertiesTemplate> propertiesTemplateList = propertiesTemplateDAO.listPropertiesTemplateBean(processTempInfo.getProcessTemplateId());
                 for (PropertiesTemplate propertiesTemplate : propertiesTemplateList) {
-                    if (propertiesTemplateList.isEmpty()) {
-                        propertiesTemplate.setProcessId(processes.get(index).getProcessId());
-                    }
+                    com.wipro.ats.bdre.md.dao.jpa.Properties properties=new com.wipro.ats.bdre.md.dao.jpa.Properties();
+                   PropertiesId propertiesId=new PropertiesId();
+                    propertiesId.setProcessId(processTempInfo.getProcessId());
+                    propertiesId.setPropKey(propertiesTemplate.getKey());
+
+                    properties.setId(propertiesId);
+                    properties.setConfigGroup(propertiesTemplate.getConfigGroup());
+                    properties.setPropValue(propertiesTemplate.getValue());
+                    properties.setDescription(propertiesTemplate.getDescription());
+
+                    propertiesDAO.insert(properties);
+
                 }
-                index++;
             }
-            LOGGER.debug("process count" + processes.size());
-
-
+            LOGGER.info("process count" + processes.size());
+            LOGGER.info("size of map element"+idMap.size());
             restWrapper = new RestWrapper(processTemplate, RestWrapper.OK);
         } catch (MetadataException e) {
+            LOGGER.info("Medadata exception occured ");
             LOGGER.error(e);
             restWrapper = new RestWrapper(e.getMessage(), RestWrapper.ERROR);
         }finally {
-            adjustNextIdsForInsert(processTemplate, processes);
+            adjustNextIdsForInsert(idMap, processes);
         }
         return restWrapper;
     }
@@ -369,7 +509,7 @@ public class ProcessTemplateAPI extends MetadataAPIBase {
     @RequestMapping(value = {"/apply", "/apply/"}, method = RequestMethod.POST)
     @ResponseBody public
     RestWrapper apply(@ModelAttribute("processtemplate")
-                      @Valid ProcessTemplate processTemplate, BindingResult bindingResult) {
+                      @Valid ProcessTemplate processTemplate, Principal principal, BindingResult bindingResult) {
 
         RestWrapper restWrapper = null;
         if (bindingResult.hasErrors()) {
@@ -377,7 +517,7 @@ public class ProcessTemplateAPI extends MetadataAPIBase {
             return bindingResultError.errorMessage(bindingResult);
         }
         try {
-            LOGGER.debug("parent.process.id = " + processTemplate.getParentProcessId());
+            LOGGER.info("parent.process.id = " + processTemplate.getParentProcessId());
 
             // Updating existing processes with changes made in template
             List<ProcessTemplate> processTemplateInfos = new ArrayList<ProcessTemplate>();
@@ -386,16 +526,16 @@ public class ProcessTemplateAPI extends MetadataAPIBase {
                 List<Process> processInfos = new ArrayList<Process>();
                 processInfos = processTemplateDAO.selectPListForTemplate(processTemplate.getProcessTemplateId());
                 for (Process processInfo : processInfos) {
-                    LOGGER.debug("Entered update");
+                    LOGGER.info("Entered update");
                     processTempInfo.setProcessId(processInfo.getProcessId());
                     processTempInfo.setParentProcessId(processInfo.getParentProcessId());
                     processTempInfo.setEnqProcessId(processInfo.getEnqProcessId());
                     processTempInfo.setProcessName(processInfo.getProcessName());
                     processTempInfo.setDescription(processInfo.getDescription());
-                    LOGGER.debug("processtempinfo.batchmarking= " + processTempInfo.getBatchPattern());
-                    LOGGER.debug("processtempinfo.type= " + processTempInfo.getProcessTypeId());
-                    LOGGER.debug("processtempinfo.canrecover= " + processTempInfo.getCanRecover());
-                    LOGGER.debug("processInfo next process id is " + processInfo.getNextProcessIds());
+                    LOGGER.info("processtempinfo.batchmarking= " + processTempInfo.getBatchPattern());
+                    LOGGER.info("processtempinfo.type= " + processTempInfo.getProcessTypeId());
+                    LOGGER.info("processtempinfo.canrecover= " + processTempInfo.getCanRecover());
+                    LOGGER.info("processInfo next process id is " + processInfo.getNextProcessIds());
                     processTempInfo.setNextProcessIds(processInfo.getNextProcessIds());
                 }
             }
@@ -415,11 +555,11 @@ public class ProcessTemplateAPI extends MetadataAPIBase {
             List<Process> processesForInsert = processTemplateDAO.selectPPListForTemplateId(processTemplate.getProcessTemplateId());
             for (Process process : processesForInsert) {
                 processTemplate.setProcessId(process.getProcessId());
-                LOGGER.debug("ProcessId= " + process.getProcessId());
+                LOGGER.info("ProcessId= " + process.getProcessId());
                 List<ProcessTemplate> processTemplates = processTemplateDAO.selectMissingSubTList(processTemplate.getProcessId(), processTemplate.getProcessTemplateId());
                 for (ProcessTemplate processTemplate1 : processTemplates) {
                     processTemplate1.setParentProcessId(process.getProcessId());
-                    processTemplate1.setEnqProcessId(0);
+                    processTemplate1.setEnqProcessId("0");
                     processTemplate1.setNextProcessIds("");
 
                     com.wipro.ats.bdre.md.dao.jpa.Process insertDaoProcess = new com.wipro.ats.bdre.md.dao.jpa.Process();
@@ -434,6 +574,23 @@ public class ProcessTemplateAPI extends MetadataAPIBase {
                     BusDomain daoBusDomain = new BusDomain();
                     daoBusDomain.setBusDomainId(processTemplate1.getBusDomainId());
                     insertDaoProcess.setBusDomain(daoBusDomain);
+                    if (processTemplate.getOwnerRoleId() != null)
+                        insertDaoProcess.setUserRoles(userRolesDAO.get(processTemplate.getOwnerRoleId()));
+                    else
+                        insertDaoProcess.setUserRoles(userRolesDAO.minUserRoleId(principal.getName()));
+
+                    if (processTemplate.getPermissionTypeByUserAccessId() != null)
+                        insertDaoProcess.setPermissionTypeByUserAccessId(appPermissionDAO.get(processTemplate.getPermissionTypeByUserAccessId()));
+                    else
+                        insertDaoProcess.setPermissionTypeByUserAccessId(appPermissionDAO.get(7));
+                    if (processTemplate.getPermissionTypeByGroupAccessId() != null)
+                        insertDaoProcess.setPermissionTypeByGroupAccessId(appPermissionDAO.get(processTemplate.getPermissionTypeByGroupAccessId()));
+                    else
+                        insertDaoProcess.setPermissionTypeByGroupAccessId(appPermissionDAO.get(4));
+                    if (processTemplate.getPermissionTypeByOthersAccessId() != null)
+                        insertDaoProcess.setPermissionTypeByOthersAccessId(appPermissionDAO.get(processTemplate.getPermissionTypeByOthersAccessId()));
+                    else
+                        insertDaoProcess.setPermissionTypeByOthersAccessId(appPermissionDAO.get(0));
                     if (processTemplate1.getProcessTemplateId() != null) {
                         com.wipro.ats.bdre.md.dao.jpa.ProcessTemplate daoProcessTemplate = new com.wipro.ats.bdre.md.dao.jpa.ProcessTemplate();
                         daoProcessTemplate.setProcessTemplateId(processTemplate1.getProcessTemplateId());
@@ -471,7 +628,7 @@ public class ProcessTemplateAPI extends MetadataAPIBase {
 
             for (Process process : processesForDelete) {
                 processTemplate.setProcessId(process.getProcessId());
-                LOGGER.debug("ProcessId= " + process.getProcessId());
+                LOGGER.info("ProcessId= " + process.getProcessId());
                 List<ProcessTemplate> processTemplates = processTemplateDAO.selectMissingSubPList(processTemplate.getProcessId(), processTemplate.getProcessTemplateId());
 
                 for (ProcessTemplate processTemplate1 : processTemplates) {
@@ -483,21 +640,21 @@ public class ProcessTemplateAPI extends MetadataAPIBase {
             List<ProcessTemplate> processTemplatesForInsert = processTemplateDAO.selectPTList(processTemplate.getProcessTemplateId());
 
             for (ProcessTemplate processTemplateForInsert : processTemplatesForInsert) {
-                LOGGER.debug("HERE processTemplateForInsertid= " + processTemplateForInsert.getProcessTemplateId());
+                LOGGER.info("HERE processTemplateForInsertid= " + processTemplateForInsert.getProcessTemplateId());
 
                 List<Process> processesForPropInsert = processTemplateDAO.selectPListForTemplate(processTemplateForInsert.getProcessTemplateId());
                 for (Process processForPropInsert : processesForPropInsert) {
-                    LOGGER.debug("HERE processForPropInsertid= " + processForPropInsert.getProcessId());
+                    LOGGER.info("HERE processForPropInsertid= " + processForPropInsert.getProcessId());
                     ProcessTemplate procTemplate = new ProcessTemplate();
                     procTemplate.setParentProcessId(processTemplatesForInsert.get(0).getProcessTemplateId());
-                    LOGGER.debug("procTemplate.setParentProcessId = " + procTemplate.getParentProcessId());
+                    LOGGER.info("procTemplate.setParentProcessId = " + procTemplate.getParentProcessId());
                     procTemplate.setProcessId(processForPropInsert.getProcessId());
-                    LOGGER.debug("procTemplate.setProcessId= " + procTemplate.getProcessId());
+                    LOGGER.info("procTemplate.setProcessId= " + procTemplate.getProcessId());
                     procTemplate.setProcessTemplateId(processTemplateForInsert.getProcessTemplateId());
-                    LOGGER.debug("procTemplate.setProcessTemplateId= " + procTemplate.getProcessTemplateId());
+                    LOGGER.info("procTemplate.setProcessTemplateId= " + procTemplate.getProcessTemplateId());
                     List<PropertiesTemplate> propertiesTemplates = processTemplateDAO.selectMissingPropListForT(procTemplate.getProcessId(), procTemplate.getParentProcessId(), procTemplate.getProcessTemplateId());
                     for (PropertiesTemplate propertyTemplates : propertiesTemplates) {
-                        LOGGER.debug("HERE property to be inserted = " + propertyTemplates.getProcessId() + "property config= " + propertyTemplates.getConfigGroup());
+                        LOGGER.info("HERE property to be inserted = " + propertyTemplates.getProcessId() + "property config= " + propertyTemplates.getConfigGroup());
                         com.wipro.ats.bdre.md.dao.jpa.Properties jpaPropertyTemplate = new com.wipro.ats.bdre.md.dao.jpa.Properties();
                         PropertiesId propertiesId = new PropertiesId();
                         propertiesId.setProcessId(propertyTemplates.getProcessId());
@@ -518,7 +675,7 @@ public class ProcessTemplateAPI extends MetadataAPIBase {
 
             // Deleting from existing properties if any properties are deleted in the properties template
 
-            LOGGER.debug("checking proctemplate before using it= " + processTemplate.getProcessTemplateId());
+            LOGGER.info("checking proctemplate before using it= " + processTemplate.getProcessTemplateId());
             List<ProcessTemplate> processTemplatesForDelete = processTemplateDAO.selectPTList(processTemplate.getProcessTemplateId());
             for (ProcessTemplate processTemplateForDelete : processTemplatesForDelete) {
                 List<Process> processesForPropDelete = processTemplateDAO.selectPListForTemplate(processTemplateForDelete.getProcessTemplateId());
@@ -526,7 +683,7 @@ public class ProcessTemplateAPI extends MetadataAPIBase {
                     List<Properties> propertiesForDelete = processTemplateDAO.selectMissingPropListForP(processForPropDelete.getProcessId(), processForPropDelete.getProcessTemplateId());
                     for (Properties propertyForDelete : propertiesForDelete) {
 
-                        LOGGER.debug("prperty to be deleted  = " + propertyForDelete.getProcessId() + " " + propertyForDelete.getKey());
+                        LOGGER.info("prperty to be deleted  = " + propertyForDelete.getProcessId() + " " + propertyForDelete.getKey());
                         PropertiesId propertiesId = new PropertiesId();
                         propertiesId.setProcessId(propertyForDelete.getProcessId());
                         propertiesId.setPropKey(propertyForDelete.getKey());
@@ -557,39 +714,39 @@ public class ProcessTemplateAPI extends MetadataAPIBase {
             List<Integer> parentProcessList = new ArrayList<Integer>();
             for (Process p : processesForParentList) {
                 parentProcessList.add(p.getProcessId());
-                LOGGER.debug("parentProcessList= " + p.getProcessId());
+                LOGGER.info("parentProcessList= " + p.getProcessId());
             }
             int count_outer = 0;
             for (ProcessTemplate processTemplateForNext : processTemplatesForNext) {
-                LOGGER.debug("processTemplate id= " + processTemplateForNext.getProcessTemplateId());
+                LOGGER.info("processTemplate id= " + processTemplateForNext.getProcessTemplateId());
                 String[] nextTemplateList = processTemplateForNext.getNextProcessTemplateId().split(",");
-                LOGGER.debug("nextTemplateList= " + nextTemplateList[0]);
+                LOGGER.info("nextTemplateList= " + nextTemplateList[0]);
 
                 processTemplate2 = new ProcessTemplate();
-                LOGGER.debug("processTemplatesForNext.get(count)= " + processTemplateForNext.getProcessId());
+                //LOGGER.info("processTemplatesForNext.get(count)= " + processTemplateForNext.getProcessId());
                 int countInner = 0;
                 List<Process> processesForNext = processTemplateDAO.selectPListForTemplate(processTemplatesForNext.get(count_outer).getProcessTemplateId());
                 for (Process processForNext : processesForNext) {
 
-                    LOGGER.debug("processesForNext= " + processForNext.getProcessId());
+                    LOGGER.info("processesForNext= " + processForNext.getProcessId());
                     String nextProcessList = "";
-                    LOGGER.debug("countInner= " + countInner);
+                    LOGGER.info("countInner= " + countInner);
                     processTemplate2.setParentProcessId(parentProcessList.get(countInner));
                     for (int i = 0; i < nextTemplateList.length; i++) {
 
-                        LOGGER.debug("nextTemplate item" + i + "  " + nextTemplateList[i]);
+                        LOGGER.info("nextTemplate item" + i + "  " + nextTemplateList[i]);
                         processTemplate2.setProcessId(Integer.parseInt(nextTemplateList[i]));
-                        LOGGER.debug("processTemplate2.setProcessId= " + processTemplate2.getProcessId());
+                        LOGGER.info("processTemplate2.setProcessId= " + processTemplate2.getProcessId());
 
-                        LOGGER.debug("processTemplate2.setParentProcessId= " + processTemplate2.getParentProcessId());
+                        LOGGER.info("processTemplate2.setParentProcessId= " + processTemplate2.getParentProcessId());
                         Process processForNext1 = processTemplateDAO.selectNextForPid(processTemplate2.getProcessId(), processTemplate2.getParentProcessId());
-                        LOGGER.debug("processForNext1  id=" + processForNext1.getProcessId());
+                        LOGGER.info("processForNext1  id=" + processForNext1.getProcessId());
                         nextProcessList = nextProcessList + processForNext1.getProcessId() + ",";
-                        LOGGER.debug("nextProcessList in this=" + nextProcessList);
+                        LOGGER.info("nextProcessList in this=" + nextProcessList);
                     }
                     processForNext.setNextProcessIds(nextProcessList.substring(0, nextProcessList.length() - 1));
-                    LOGGER.debug("before updating processForNext = " + processForNext.getProcessId() + " NAME= " + processForNext.getProcessName());
-                    LOGGER.debug("processfornext.batchmarking= " + processForNext.getBatchPattern() + "processfornext.can reover= " + processForNext.getCanRecover() + "type= " + processForNext.getProcessTypeId());
+                    LOGGER.info("before updating processForNext = " + processForNext.getProcessId() + " NAME= " + processForNext.getProcessName());
+                    LOGGER.info("processfornext.batchmarking= " + processForNext.getBatchPattern() + "processfornext.can reover= " + processForNext.getCanRecover() + "type= " + processForNext.getProcessTypeId());
 
 
                     com.wipro.ats.bdre.md.dao.jpa.Process updateDaoProcess = new com.wipro.ats.bdre.md.dao.jpa.Process();
@@ -599,8 +756,12 @@ public class ProcessTemplateAPI extends MetadataAPIBase {
                     updateDaoProcess.setProcessType(daoProcessType);
                     if (processForNext.getWorkflowId() != null) {
                         WorkflowType daoWorkflowType = new WorkflowType();
-                        daoWorkflowType.setWorkflowId(processForNext.getWorkflowId());
                         updateDaoProcess.setWorkflowType(daoWorkflowType);
+                        updateDaoProcess.setUserRoles(userRolesDAO.get(processForNext.getOwnerRoleId()));
+                        updateDaoProcess.setPermissionTypeByUserAccessId(appPermissionDAO.get(processForNext.getPermissionTypeByUserAccessId()));
+                        updateDaoProcess.setPermissionTypeByGroupAccessId(appPermissionDAO.get(processForNext.getPermissionTypeByGroupAccessId()));
+                        updateDaoProcess.setPermissionTypeByOthersAccessId(appPermissionDAO.get(processForNext.getPermissionTypeByOthersAccessId()));
+
                     }
                     BusDomain daoBusDomain = new BusDomain();
                     daoBusDomain.setBusDomainId(processForNext.getBusDomainId());
@@ -644,85 +805,28 @@ public class ProcessTemplateAPI extends MetadataAPIBase {
 
     }
 
-    public void adjustNextIdsForInsert(ProcessTemplate processTemplate, List<Process> processes) {
+    public void adjustNextIdsForInsert(Map<Integer,Integer> idMap, List<Process> processes) {
         // Updating the next process ids to maintain the workflow structure defined in the template
-
-
+            LOGGER.info("size of passed processed "+processes.size());
         try {
-            List<ProcessTemplate> processTemplatesForNext = processTemplateDAO.selectPTList(processTemplate.getProcessTemplateId());
-            ProcessTemplate processTemplate2;
-            int count = 0;
-            for (ProcessTemplate processTemplateForNext : processTemplatesForNext) {
-                LOGGER.debug("processTemplate id= " + processTemplateForNext.getProcessTemplateId());
-                String nextTemplateList[] = processTemplateForNext.getNextProcessTemplateId().split(",");
-                LOGGER.debug("nextTemplateList's first value= " + nextTemplateList[0]);
-
-                processTemplate2 = new ProcessTemplate();
-                LOGGER.debug("processTemplatesForNext.get(count)= " + processTemplateForNext.getProcessId());
-                LOGGER.debug("processesForNext= " + processes.get(count).getProcessId());
-                String nextProcessList = "";
-
-                processTemplate2.setParentProcessId(processes.get(0).getProcessId());
-                for (int i = 0; i < nextTemplateList.length; i++) {
-
-                    LOGGER.debug("nextTemplate item" + i + "  " + nextTemplateList[i]);
-                    processTemplate2.setProcessId(Integer.parseInt(nextTemplateList[i]));
-                    LOGGER.debug("processTemplate2.setProcessId= " + processTemplate2.getProcessId());
-
-                    LOGGER.debug("processTemplate2.setParentProcessId= " + processTemplate2.getParentProcessId());
-                    Process processForNext1 = processTemplateDAO.selectNextForPid(processTemplate2.getProcessId(), processTemplate2.getParentProcessId());
-                    LOGGER.debug("processForNext1  id=" + processForNext1.getProcessId());
-                    nextProcessList = nextProcessList + processForNext1.getProcessId() + ",";
-                    LOGGER.debug("nextProcessList in this=" + nextProcessList);
+            List<com.wipro.ats.bdre.md.dao.jpa.Process> subProcessList=processDAO.selectProcessList(processes.get(0).getProcessId());
+            for(com.wipro.ats.bdre.md.dao.jpa.Process subProcess:subProcessList)
+            {
+                String oldNextProcessId=subProcess.getNextProcessId();
+                if(oldNextProcessId.equals("0"))
+                    continue;
+                String updatedNextProcessId="";
+                String[] nextProcessList=oldNextProcessId.split(",");
+                for (int i=0;i<nextProcessList.length;i++)
+                {
+                    LOGGER.info("nextProcessList key is "+nextProcessList[i]+" value is "+idMap.get(Integer.parseInt(nextProcessList[i])));
+                    updatedNextProcessId=updatedNextProcessId+idMap.get(Integer.parseInt(nextProcessList[i]))+",";
                 }
-                processes.get(count).setNextProcessIds(nextProcessList.substring(0, nextProcessList.length() - 1));
-                LOGGER.debug("before updating processes.get(count) = " + processes.get(count).getProcessId() + " NAME= " + processes.get(count).getProcessName());
-                LOGGER.debug("processes.get(count).batchmarking= " + processes.get(count).getBatchPattern() + "processes.get(count).can reover= " + processes.get(count).getCanRecover() + "type= " + processes.get(count).getProcessTypeId());
-
-
-                com.wipro.ats.bdre.md.dao.jpa.Process updateDaoProcess = new com.wipro.ats.bdre.md.dao.jpa.Process();
-                updateDaoProcess.setProcessId(processes.get(count).getProcessId());
-                com.wipro.ats.bdre.md.dao.jpa.ProcessType daoProcessType = new com.wipro.ats.bdre.md.dao.jpa.ProcessType();
-                daoProcessType.setProcessTypeId(processes.get(count).getProcessTypeId());
-                updateDaoProcess.setProcessType(daoProcessType);
-                if (processes.get(count).getWorkflowId() != null) {
-                    WorkflowType daoWorkflowType = new WorkflowType();
-                    daoWorkflowType.setWorkflowId(processes.get(count).getWorkflowId());
-                    updateDaoProcess.setWorkflowType(daoWorkflowType);
-                }
-                BusDomain daoBusDomain = new BusDomain();
-                daoBusDomain.setBusDomainId(processes.get(count).getBusDomainId());
-                updateDaoProcess.setBusDomain(daoBusDomain);
-                if (processes.get(count).getProcessTemplateId() != null) {
-                    com.wipro.ats.bdre.md.dao.jpa.ProcessTemplate daoProcessTemplate = new com.wipro.ats.bdre.md.dao.jpa.ProcessTemplate();
-                    daoProcessTemplate.setProcessTemplateId(processes.get(count).getProcessTemplateId());
-                    updateDaoProcess.setProcessTemplate(daoProcessTemplate);
-                }
-                if (processes.get(count).getParentProcessId() != null) {
-                    com.wipro.ats.bdre.md.dao.jpa.Process parentProcess = new com.wipro.ats.bdre.md.dao.jpa.Process();
-                    parentProcess.setProcessId(processes.get(count).getParentProcessId());
-                    updateDaoProcess.setProcess(parentProcess);
-                }
-                updateDaoProcess.setDescription(processes.get(count).getDescription());
-                updateDaoProcess.setAddTs(DateConverter.stringToDate(processes.get(count).getTableAddTS()));
-                updateDaoProcess.setProcessName(processes.get(count).getProcessName());
-                if (processes.get(count).getCanRecover() == null)
-                    updateDaoProcess.setCanRecover(true);
-                else
-                    updateDaoProcess.setCanRecover(processes.get(count).getCanRecover());
-                updateDaoProcess.setEnqueuingProcessId(processes.get(count).getEnqProcessId());
-                if (processes.get(count).getBatchPattern() != null) {
-                    updateDaoProcess.setBatchCutPattern(processes.get(count).getBatchPattern());
-                }
-                updateDaoProcess.setNextProcessId(processes.get(count).getNextProcessIds());
-                if (processes.get(count).getDeleteFlag() == null)
-                    updateDaoProcess.setDeleteFlag(false);
-                else
-                    updateDaoProcess.setDeleteFlag(processes.get(count).getDeleteFlag());
-                updateDaoProcess.setEditTs(DateConverter.stringToDate(processes.get(count).getTableEditTS()));
-                processDAO.update(updateDaoProcess);
-                count++;
+                LOGGER.info("oldNextProcessId is "+oldNextProcessId+" updatedNextProcessId is "+updatedNextProcessId);
+                subProcess.setNextProcessId(updatedNextProcessId.substring(0,updatedNextProcessId.length()-1));
+                processDAO.update(subProcess);
             }
+
         } catch (MetadataException e) {
             LOGGER.error(e);
         }

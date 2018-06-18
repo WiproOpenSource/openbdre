@@ -27,6 +27,18 @@
     <packaging>war</packaging>
 
     <dependencies>
+        <dependency>
+            <groupId>org.apache.poi</groupId>
+            <artifactId>poi</artifactId>
+            <version>${poi.version}</version>
+            <type>jar</type>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.poi</groupId>
+            <artifactId>poi-ooxml</artifactId>
+            <version>${poi.version}</version>
+            <type>jar</type>
+        </dependency>
         <!-- Jackson -->
         <dependency>
             <groupId>org.codehaus.jackson</groupId>
@@ -108,6 +120,12 @@
             <artifactId>commons-fileupload</artifactId>
         </dependency>
 
+        <dependency>
+            <groupId>com.oracle</groupId>
+            <artifactId>ojdbc6</artifactId>
+            <version>${oracle.version}</version>
+        </dependency>
+
     </dependencies>
 
     <build>
@@ -124,12 +142,12 @@
                         <configuration>
                             <artifactItems>
                                 <artifactItem>
-                                    <groupId>org.mortbay.jetty</groupId>
+                                    <groupId>org.eclipse.jetty</groupId>
                                     <artifactId>jetty-runner</artifactId>
                                     <destFileName>jetty-runner.jar</destFileName>
                                 </artifactItem>
                                 <artifactItem>
- -                                    <groupId>org.mortbay.jetty</groupId>
+ -                                    <groupId>org.eclipse.jetty</groupId>
  -                                    <artifactId>jetty-runner</artifactId>
  -                                    <outputDirectory>${project.parent.build.directory}/lib/webapps</outputDirectory>
  -                                    <destFileName>jetty-runner.jar</destFileName>
