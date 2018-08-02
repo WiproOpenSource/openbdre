@@ -4,7 +4,7 @@ import org.apache.spark.api.java.JavaRDD;
 import org.apache.spark.api.java.function.Function;
 import org.apache.spark.api.java.function.Function3;
 import org.apache.spark.broadcast.Broadcast;
-import org.apache.spark.sql.DataFrame;
+import org.apache.spark.sql.Dataset;
 import org.apache.spark.sql.Row;
 import org.apache.spark.sql.SQLContext;
 import org.apache.spark.sql.types.StructType;
@@ -62,12 +62,12 @@ public class Intersection implements Transformation {
 
 
                         SQLContext sqlContext1 = SQLContext.getOrCreate(rddWrapperMessage1.context());
-                        DataFrame dataFrame1 = sqlContext1.createDataFrame(rddRow1, schema);
+                        Dataset<Row> dataFrame1 = sqlContext1.createDataFrame(rddRow1, schema);
 
                         SQLContext sqlContext2 = SQLContext.getOrCreate(rddWrapperMessage2.context());
-                        DataFrame dataFrame2 = sqlContext2.createDataFrame(rddRow2, schema);
+                        Dataset<Row> dataFrame2 = sqlContext2.createDataFrame(rddRow2, schema);
 
-                        DataFrame returnDF = null;
+                        Dataset<Row> returnDF = null;
 
                         if(dataFrame1!=null && !dataFrame1.rdd().isEmpty() && dataFrame2!=null && !dataFrame2.rdd().isEmpty()){
                             System.out.println("showing dataframe before intersect ");

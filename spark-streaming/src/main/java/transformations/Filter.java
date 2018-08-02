@@ -6,7 +6,7 @@ import org.apache.spark.api.java.JavaRDD;
 import org.apache.spark.api.java.function.Function;
 import org.apache.spark.broadcast.Broadcast;
 import org.apache.spark.sql.Column;
-import org.apache.spark.sql.DataFrame;
+import org.apache.spark.sql.Dataset;
 import org.apache.spark.sql.Row;
 import org.apache.spark.sql.SQLContext;
 import org.apache.spark.sql.types.StructType;
@@ -41,8 +41,8 @@ public class Filter implements Transformation {
                 System.out.println("beginning of filter/validation = " + new Date().getTime() +"for pid = "+pid);
                 JavaRDD<Row> rddRow = rddPairWrapperMessage.map(s -> s._2.getRow());
                 SQLContext sqlContext = SQLContext.getOrCreate(rddRow.context());
-                DataFrame dataFrame = sqlContext.createDataFrame(rddRow, schema);
-                DataFrame filteredDF = null;
+                Dataset<Row> dataFrame = sqlContext.createDataFrame(rddRow, schema);
+                Dataset<Row> filteredDF = null;
 
                 if (dataFrame != null ) {
                     System.out.println("showing dataframe before filter ");

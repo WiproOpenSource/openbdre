@@ -66,8 +66,8 @@ public class HDFSExport extends Configured implements Tool {
             String hadoopHome = IMConfig.getProperty("data-export.hadoop-home");
             
             //setting the parameters of sqoopOption
-            options.setHadoopHome(hadoopHome);
-            //options.setHadoopMapRedHome(hadoopHome);
+            //options.setHadoopHome(hadoopHome);
+            options.setHadoopMapRedHome(hadoopHome);
             options.setJarOutputDir(jarOutputDir);
 
             options.setConnManagerClassName("org.apache.sqoop.manager.GenericJdbcManager");

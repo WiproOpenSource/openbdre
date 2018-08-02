@@ -7,7 +7,7 @@ import org.apache.spark.api.java.JavaPairRDD;
 import org.apache.spark.api.java.JavaRDD;
 import org.apache.spark.api.java.JavaSparkContext;
 import org.apache.spark.api.java.function.Function;
-import org.apache.spark.sql.DataFrame;
+import org.apache.spark.sql.Dataset;
 import org.apache.spark.sql.Row;
 import org.apache.spark.sql.SQLContext;
 import scala.Tuple2;
@@ -71,9 +71,9 @@ public final class Test {
         JavaSparkContext sc = new JavaSparkContext(sparkConf);
 
         SQLContext sqlContext = new org.apache.spark.sql.SQLContext(sc);
-        DataFrame df1 = sqlContext.read().json("hdfs://localhost:8020/user/cloudera/json1.json");
+        Dataset<Row> df1 = sqlContext.read().json("hdfs://localhost:8020/user/cloudera/json1.json");
         df1.show();
-        DataFrame df2 = sqlContext.read().json("hdfs://localhost:8020/user/cloudera/json2.json");
+        Dataset<Row> df2 = sqlContext.read().json("hdfs://localhost:8020/user/cloudera/json2.json");
        // df2.show();
 
 
@@ -129,7 +129,7 @@ class transformToWrapper implements Function<JavaPairRDD<String, String>, JavaPa
     public JavaPairRDD<String, WrapperMessage> call(JavaPairRDD<String, String> inputPairRDD) throws Exception {
         JavaPairRDD<String, WrapperMessage> outputPairRdd = null;
         JavaRDD<String> javaRDD = inputPairRDD.map(s -> s._2);
-        DataFrame df = new XmlReader().xmlRdd(sqlContext, javaRDD.rdd());
+        Dataset<Row> df = new XmlReader().xmlRdd(sqlContext, javaRDD.rdd());
         System.out.println("df.schema() = " + df.schema());
         JavaRDD<Row> rowJavaRDD = df.javaRDD();
         rowJavaRDD.take(15);
@@ -137,7 +137,6 @@ class transformToWrapper implements Function<JavaPairRDD<String, String>, JavaPa
         return outputPairRdd ;
     }
 }
-
 
 
 

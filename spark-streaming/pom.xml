@@ -55,7 +55,7 @@
 
         <dependency>
             <groupId>org.apache.spark</groupId>
-            <artifactId>spark-core_2.10</artifactId>
+            <artifactId>spark-core_2.11</artifactId>
             <version>${spark.core.version}</version>
             <exclusions>
 
@@ -69,7 +69,7 @@
         <!-- https://mvnrepository.com/artifact/org.apache.spark/spark-mllib_2.10 -->
         <dependency>
             <groupId>org.apache.spark</groupId>
-            <artifactId>spark-mllib_2.10</artifactId>
+            <artifactId>spark-mllib_2.11</artifactId>
             <version>${spark.core.version}</version>
             <exclusions>
 
@@ -87,7 +87,7 @@
         <!-- https://mvnrepository.com/artifact/org.apache.spark/spark-hive_2.10 -->
         <dependency>
             <groupId>org.apache.spark</groupId>
-            <artifactId>spark-hive_2.10</artifactId>
+            <artifactId>spark-hive_2.11</artifactId>
             <version>${spark.core.version}</version>
             <exclusions>
 
@@ -121,7 +121,7 @@
 
         <dependency>
             <groupId>org.apache.spark</groupId>
-            <artifactId>spark-streaming_2.10</artifactId>
+            <artifactId>spark-streaming_2.11</artifactId>
             <version>${spark.core.version}</version>
             <exclusions>
 
@@ -150,8 +150,8 @@
         <dependency>
             <groupId>org.apache.spark</groupId>
             <artifactId>spark-streaming-kafka_2.10</artifactId>
-            <version>${spark.core.version}</version>
-            <exclusions>
+            <version>1.6.3.2.6.5.3000-28</version>
+        <exclusions>
 
                 <exclusion>
                     <groupId>com.google</groupId>
@@ -163,7 +163,7 @@
         <dependency>
             <groupId>org.apache.spark</groupId>
             <artifactId>spark-streaming-twitter_2.10</artifactId>
-            <version>${spark.core.version}</version>
+            <version>1.6.3.2.6.5.3000-28</version>
             <exclusions>
 
                 <exclusion>
@@ -183,7 +183,7 @@
         <!-- https://mvnrepository.com/artifact/org.apache.spark/spark-sql_2.10 -->
         <dependency>
             <groupId>org.apache.spark</groupId>
-            <artifactId>spark-sql_2.10</artifactId>
+            <artifactId>spark-sql_2.11</artifactId>
             <version>${spark.core.version}</version>
             <exclusions>
 
@@ -304,8 +304,8 @@
 
         <dependency>
             <groupId>com.databricks</groupId>
-            <artifactId>spark-xml_2.10</artifactId>
-            <version>0.3.5</version>
+            <artifactId>spark-xml_2.11</artifactId>
+            <version>0.4.1</version>
             <exclusions>
 
                 <exclusion>
@@ -323,6 +323,11 @@
             <artifactId>guava</artifactId>
             <version>19.0</version>
 
+        </dependency>
+        <dependency>
+            <groupId>org.scala-lang</groupId>
+            <artifactId>scala-reflect</artifactId>
+            <version>2.11.8</version>
         </dependency>
 
     </dependencies>

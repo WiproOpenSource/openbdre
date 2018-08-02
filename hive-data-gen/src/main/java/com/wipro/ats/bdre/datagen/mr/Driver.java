@@ -95,8 +95,8 @@ public class Driver extends Configured implements Tool {
 
         Path srcDir = mrOutputPath;
         Path destFile = new Path(outputDir.toString() + "/" + table.getTableName());
-        FileUtil.copyMerge(fs, srcDir, fs, destFile, true, conf, "");
-
+        //FileUtil.copyMerge(fs, srcDir, fs, destFile, true, conf, "");
+        FileUtil.copy(fs, srcDir, fs, destFile, true, conf);
         //Return file info oozie params
         RegisterFileInfo registerFileInfo=new RegisterFileInfo();
         registerFileInfo.setBatchId(null);

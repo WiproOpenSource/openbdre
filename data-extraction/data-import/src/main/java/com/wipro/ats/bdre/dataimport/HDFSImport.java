@@ -121,8 +121,8 @@ public class HDFSImport extends Configured implements Tool {
             }
 
             //setting the parameters of sqoopOption
-            options.setHadoopHome(hadoopHome);
-            //options.setHadoopMapRedHome(hadoopHome);
+           // options.setHadoopHome(hadoopHome);
+            options.setHadoopMapRedHome(hadoopHome);
             options.setJarOutputDir(jarOutputDir);
             String outputDir = targetDir + "/" + processId + "/tmp";
             options.setTargetDir(outputDir);
@@ -245,7 +245,9 @@ public class HDFSImport extends Configured implements Tool {
                     //merging output files to one target file
                     Path targetFile = new Path(targetDir + "/" + processId + "/" + batchId);
                     if (srcFs.exists(tmpDir)) {
-                        FileUtil.copyMerge(srcFs, tmpDir, destFs, targetFile, true, conf, "");
+                        FileUtil.copy(srcFs, tmpDir, destFs, targetFile, true, conf);
+                       // FileUtil.copyMerge(srcFs, tmpDir, destFs, targetFile, true, conf, "");
+
                     }
 
 

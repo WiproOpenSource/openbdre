@@ -10,14 +10,13 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Iterator;
-import java.util.List;
 
 /**
  * Created by cloudera on 7/13/17.
  */
 public class FlatMapFunctionEg implements FlatMapFunction,Serializable {
     @Override
-    public Iterable call(Object inputRecord) throws Exception {
+    public Iterator<Tuple2> call(Object inputRecord) throws Exception {
         Tuple2<String,WrapperMessage> input = (Tuple2<String,WrapperMessage>) inputRecord;
         ArrayList<WrapperMessage> wrapperMessageArrayList = new ArrayList<>();
 
@@ -35,7 +34,7 @@ public class FlatMapFunctionEg implements FlatMapFunction,Serializable {
         WrapperMessage wrapperMessage = new WrapperMessage(outputRow);
         wrapperMessageArrayList.add(wrapperMessage);
 
-        return Arrays.asList(wrapperMessageArrayList);
+        return (Iterator<Tuple2>) wrapperMessageArrayList;
 
     }
 }

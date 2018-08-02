@@ -4,7 +4,7 @@ import com.wipro.ats.bdre.md.api.GetProperties;
 import org.apache.spark.api.java.JavaRDD;
 import org.apache.spark.api.java.function.Function;
 import org.apache.spark.broadcast.Broadcast;
-import org.apache.spark.sql.DataFrame;
+import org.apache.spark.sql.Dataset;
 import org.apache.spark.sql.Row;
 import org.apache.spark.sql.SQLContext;
 import org.apache.spark.sql.types.StructType;
@@ -53,8 +53,8 @@ public class Sort implements Transformation {
 
 
                 SQLContext sqlContext = SQLContext.getOrCreate(rddWrapperMessage.context());
-                DataFrame prevDataFrame = sqlContext.createDataFrame(rddRow, schema);
-                DataFrame sortedDF = null;
+                Dataset<Row> prevDataFrame = sqlContext.createDataFrame(rddRow, schema);
+                Dataset<Row> sortedDF = null;
 
 
                 if(prevDataFrame!=null && !prevDataFrame.rdd().isEmpty()){

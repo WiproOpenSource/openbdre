@@ -104,13 +104,15 @@ public class DQDriver extends Configured implements Tool {
         //Input and quality filtered file should have same name (but different path)
         Path goodDestFile = new Path(destDir + "/" + inputFilePath.getName());
         if(srcFs.exists(goodFilesSrcDir)) {
-            FileUtil.copyMerge(srcFs, goodFilesSrcDir, destFs, goodDestFile, true, conf, "");
+            //FileUtil.copyMerge(srcFs, goodFilesSrcDir, destFs, goodDestFile, true, conf, "");
+            FileUtil.copy(srcFs, goodFilesSrcDir, destFs, goodDestFile, true, conf);
         }
         // Invalid Records
         Path badFilesSrcDir = new Path(destDir + "/" + DQConstants.INTERMEDIATE_BAD_RECORD_OUTPUT_DIR);
         Path badDestFile = new Path(destDir + "/" + DQConstants.BAD_RECORDS_FILE);
         if(srcFs.exists(badFilesSrcDir)) {
-            FileUtil.copyMerge(srcFs, badFilesSrcDir, destFs, badDestFile, true, conf, "");
+            //FileUtil.copyMerge(srcFs, badFilesSrcDir, destFs, badDestFile, true, conf, "");
+            FileUtil.copy(srcFs, badFilesSrcDir, destFs, badDestFile, true, conf);
         }
 
         // Preparing report aggregation job
@@ -141,8 +143,8 @@ public class DQDriver extends Configured implements Tool {
         // Merge Report Records MR stuffs
         Path reportsSrcDir = new Path(destDir + "/" + DQConstants.AGGREGATED_REPORT_PLACEHOLDER_FOLDER);
         Path reportsDestFile = new Path(destDir + "/" + DQConstants.FILE_REPORT_FILE);
-        FileUtil.copyMerge(srcFs, reportsSrcDir, destFs, reportsDestFile, true, conf, "");
-
+        //FileUtil.copyMerge(srcFs, reportsSrcDir, destFs, reportsDestFile, true, conf, "");
+        FileUtil.copy(srcFs, reportsSrcDir, destFs, reportsDestFile, true, conf);
         Path reportDestFile = new Path(outputDir.toString() + "/"
                 + DQConstants.FILE_REPORT_FILE);
         //Read the report file from HDFS and report the percentage

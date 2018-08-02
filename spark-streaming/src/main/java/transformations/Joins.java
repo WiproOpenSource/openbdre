@@ -7,7 +7,7 @@ import org.apache.spark.api.java.JavaRDD;
 import org.apache.spark.api.java.function.Function;
 import org.apache.spark.api.java.function.Function3;
 import org.apache.spark.broadcast.Broadcast;
-import org.apache.spark.sql.DataFrame;
+import org.apache.spark.sql.Dataset;
 import org.apache.spark.sql.Row;
 import org.apache.spark.sql.SQLContext;
 import org.apache.spark.sql.types.DataType;
@@ -111,7 +111,7 @@ public class Joins implements Transformation {
 
 
                         SQLContext sqlContext1 = SQLContext.getOrCreate(rddWrapperMessage1.context());
-                        DataFrame dataFrame1=null;
+                        Dataset<Row> dataFrame1=null;
                         try{
                             if(rddRow1.count()>0)
                              dataFrame1 = sqlContext1.createDataFrame(rddRow1, rddRow1.take(1).get(0).schema());
@@ -120,12 +120,12 @@ public class Joins implements Transformation {
                             System.out.println("Exception while inferring schema from RDD = " + e);
                              dataFrame1 = sqlContext1.createDataFrame(rddRow1, schema1);
                         }
-                        //DataFrame dataFrame1 = sqlContext1.createDataFrame(rddRow1, schema1);
+                        //Dataset<Row> dataFrame1 = sqlContext1.createDataFrame(rddRow1, schema1);
 
                         SQLContext sqlContext2 = SQLContext.getOrCreate(rddWrapperMessage2.context());
-                        DataFrame dataFrame2 = sqlContext2.createDataFrame(rddRow2, schema2);
+                        Dataset<Row> dataFrame2 = sqlContext2.createDataFrame(rddRow2, schema2);
 
-                        DataFrame returnDF = null;
+                        Dataset<Row> returnDF = null;
 
                         if(dataFrame1!=null && !dataFrame1.rdd().isEmpty() && dataFrame2!=null && !dataFrame2.rdd().isEmpty()){
                             System.out.println("showing dataframe before intersect ");

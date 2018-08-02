@@ -13,8 +13,8 @@ import org.apache.spark.ml.feature.StringIndexer;
 import org.apache.spark.ml.feature.StringIndexerModel;
 import org.apache.spark.ml.feature.VectorAssembler;
 import org.apache.spark.ml.regression.LinearRegressionModel;
-import org.apache.spark.mllib.linalg.Vectors;
-import org.apache.spark.sql.DataFrame;
+import org.apache.spark.ml.linalg.Vectors;
+import org.apache.spark.sql.Dataset;
 import org.apache.spark.sql.Row;
 import org.apache.spark.sql.SQLContext;
 import org.apache.spark.sql.types.DataTypes;
@@ -82,19 +82,19 @@ public class LinearRegression implements Analytics {
                 System.out.println("beginning of linear regression = " + new Date().getTime() +"for pid = "+pid);
                 JavaRDD<Row> rddRow = rddPairWrapperMessage.map(s -> s._2.getRow());
                 SQLContext sqlContext = SQLContext.getOrCreate(rddRow.context());
-                DataFrame dataFrame = sqlContext.createDataFrame(rddRow, schema);
+                Dataset<Row> dataFrame = sqlContext.createDataFrame(rddRow, schema);
                 System.out.println("dataFrame lr= " + dataFrame);
                //dataFrame.withColumn("",dataFrame.column)
 
                 dataFrame.show();
-                DataFrame outputDF = null;
+                Dataset<Row> outputDF = null;
                 if(modelInputMethod.equalsIgnoreCase("ModelInformation")){
                     Set<String> columnsSet = columnCoefficientMap.keySet();
                     List<String> columnsList = new LinkedList<>(columnsSet);
                     Object[] coefficients = columnCoefficientMap.values().toArray();
                     String[] columnsArray = columnsSet.toArray(new String[columnsSet.size()]);
                     VectorAssembler assembler = new VectorAssembler().setInputCols(columnsArray).setOutputCol("features");
-                    DataFrame testDataFrame = assembler.transform(dataFrame);
+                    Dataset<Row> testDataFrame = assembler.transform(dataFrame);
 
 
                     Seq<String> seq = scala.collection.JavaConversions.asScalaBuffer(columnsList).toSeq();
