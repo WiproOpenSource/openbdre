@@ -4,7 +4,7 @@ import org.apache.spark.api.java.JavaRDD;
 import org.apache.spark.api.java.JavaSparkContext;
 import org.apache.spark.api.java.function.Function;
 import org.apache.spark.ml.Transformer;
-import org.apache.spark.sql.DataFrame;
+import org.apache.spark.sql.Dataset;
 import org.apache.spark.sql.Row;
 import org.apache.spark.sql.RowFactory;
 import org.apache.spark.sql.SQLContext;
@@ -21,8 +21,8 @@ import java.util.List;
  */
 
 public class PMMLModel {
-    public DataFrame productionalizeModel(DataFrame dataFrame,String filePath){
-        DataFrame output=null;
+    public Dataset<Row> productionalizeModel(Dataset<Row> dataFrame,String filePath){
+        Dataset<Row> output=null;
         try {
 /*            File pmmlFile = new File(filePath);
             System.out.println("pmml file location is : " + filePath);

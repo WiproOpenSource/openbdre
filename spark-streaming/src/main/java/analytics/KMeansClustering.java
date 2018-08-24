@@ -10,9 +10,9 @@ import org.apache.spark.ml.clustering.KMeansModel;
 import org.apache.spark.ml.feature.StringIndexer;
 import org.apache.spark.ml.feature.StringIndexerModel;
 import org.apache.spark.ml.feature.VectorAssembler;
-import org.apache.spark.mllib.linalg.Vector;
-import org.apache.spark.mllib.linalg.Vectors;
-import org.apache.spark.sql.DataFrame;
+import org.apache.spark.ml.linalg.Vector;
+import org.apache.spark.ml.linalg.Vectors;
+import org.apache.spark.sql.Dataset;
 import org.apache.spark.sql.Row;
 import org.apache.spark.sql.SQLContext;
 import org.apache.spark.sql.types.DataTypes;
@@ -30,7 +30,7 @@ import java.util.*;
  */
 public class KMeansClustering implements Analytics {
      String[] columnNames=null;
-    org.apache.spark.mllib.linalg.Vector[] vector=null;
+    org.apache.spark.ml.linalg.Vector[] vector=null;
     @Override
     public JavaPairDStream<String, WrapperMessage> transform(JavaRDD emptyRDD, Map<Integer, JavaPairDStream<String, WrapperMessage>> prevDStreamMap, Map<Integer, Set<Integer>> prevMap, Integer pid, StructType schema, Map<String, Broadcast<HashMap<String, String>>> broadcastMap, JavaStreamingContext jssc) {
         List<Integer> prevPidList = new ArrayList<>();
@@ -66,17 +66,17 @@ public class KMeansClustering implements Analytics {
                 System.out.println("beginning of kmeans = " + new Date().getTime() +"for pid = "+pid);
                 JavaRDD<Row> rddRow = rddPairWrapperMessage.map(s -> s._2.getRow());
                 SQLContext sqlContext = SQLContext.getOrCreate(rddRow.context());
-                DataFrame dataFrame = sqlContext.createDataFrame(rddRow, schema);
+                Dataset<Row> dataFrame = sqlContext.createDataFrame(rddRow, schema);
                 System.out.println("dataFrame lr= " + dataFrame);
                 dataFrame.show();
-                DataFrame outputDF = null;
+                Dataset<Row> outputDF = null;
                 if(modelInputMethod.equalsIgnoreCase("ModelInformation")) {
                     if (rddRow.count() > 0) {
 
                         VectorAssembler assembler = new VectorAssembler().setInputCols(columnNames).setOutputCol("features");
-                        DataFrame assembyDF = assembler.transform(dataFrame);
+                        Dataset<Row> assembyDF = assembler.transform(dataFrame);
                         assembyDF.show(10);
-                        org.apache.spark.mllib.clustering.KMeansModel m = new org.apache.spark.mllib.clustering.KMeansModel(vector);
+                        org.apache.spark.mllib.clustering.KMeansModel m = new org.apache.spark.mllib.clustering.KMeansModel((org.apache.spark.mllib.linalg.Vector[]) vector);
                         KMeansModel kMeansModel = new KMeansModel(UUID.randomUUID().toString(), m);
                         Vector[] centers1 = kMeansModel.clusterCenters();
                         System.out.println("Cluster Centers: ");

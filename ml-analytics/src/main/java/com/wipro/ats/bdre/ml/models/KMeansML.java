@@ -4,9 +4,10 @@ import org.apache.spark.ml.classification.LogisticRegressionModel;
 import org.apache.spark.api.java.JavaSparkContext;
 import org.apache.spark.ml.feature.VectorAssembler;
 import org.apache.spark.mllib.linalg.SparseVector;
-import org.apache.spark.mllib.linalg.Vector;
-import org.apache.spark.mllib.linalg.Vectors;
-import org.apache.spark.sql.DataFrame;
+import org.apache.spark.ml.linalg.Vector;
+import org.apache.spark.ml.linalg.Vectors;
+import org.apache.spark.sql.Dataset;
+import org.apache.spark.sql.Row;
 import org.apache.spark.sql.SQLContext;
 import scala.collection.JavaConverters;
 import scala.collection.Seq;
@@ -17,14 +18,14 @@ import java.util.*;
  * Created by cloudera on 12/05/17.
  */
 public class KMeansML {
-    public DataFrame productionalizeModel(DataFrame dataFrame, String centers, String features,JavaSparkContext jsc){
+    public Dataset<Row> productionalizeModel(Dataset<Row> dataFrame, String centers, String features, JavaSparkContext jsc){
         String[] columnNames=features.split(",");
 
         VectorAssembler assembler=new VectorAssembler().setInputCols(columnNames).setOutputCol("features");
-        DataFrame testDataFrame=assembler.transform(dataFrame);
+        Dataset<Row> testDataFrame=assembler.transform(dataFrame);
 
         String[] cen=centers.split(":");
-        org.apache.spark.mllib.linalg.Vector[] vector= new Vector[cen.length];
+        org.apache.spark.ml.linalg.Vector[] vector= new Vector[cen.length];
         for(int j=0;j<cen.length;j++){
             String[] c=cen[j].split(",");
             double[] d=new double[c.length];
@@ -35,7 +36,7 @@ public class KMeansML {
 
 
         }
-        org.apache.spark.mllib.clustering.KMeansModel m=new org.apache.spark.mllib.clustering.KMeansModel(vector);
+        org.apache.spark.mllib.clustering.KMeansModel m=new org.apache.spark.mllib.clustering.KMeansModel((org.apache.spark.mllib.linalg.Vector[]) vector);
         KMeansModel model1=new KMeansModel(UUID.randomUUID().toString(),m);
         Vector[] centers1 = model1.clusterCenters();
         System.out.println("Cluster Centers: ");
@@ -45,7 +46,7 @@ public class KMeansML {
             System.out.println(center);
 
         }
-        DataFrame predictionDF=model1.transform(testDataFrame);
+        Dataset<Row> predictionDF=model1.transform(testDataFrame);
         predictionDF.show(20);
         return predictionDF;
     }

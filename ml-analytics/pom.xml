@@ -34,7 +34,7 @@
 
         <dependency>
             <groupId>org.apache.spark</groupId>
-            <artifactId>spark-core_2.10</artifactId>
+            <artifactId>spark-core_2.11</artifactId>
             <version>${spark.core.version}</version>
 
             <exclusions>
@@ -48,7 +48,7 @@
 
         <dependency>
             <groupId>org.apache.spark</groupId>
-            <artifactId>spark-sql_2.10</artifactId>
+            <artifactId>spark-sql_2.11</artifactId>
             <version>${spark.core.version}</version>
 
             <exclusions>
@@ -65,7 +65,7 @@
         <!-- https://mvnrepository.com/artifact/org.apache.spark/spark-hive_2.10 -->
         <dependency>
             <groupId>org.apache.spark</groupId>
-            <artifactId>spark-hive_2.10</artifactId>
+            <artifactId>spark-hive_2.11</artifactId>
             <version>${spark.core.version}</version>
 
             <exclusions>
@@ -81,7 +81,7 @@
 
         <dependency>
             <groupId>org.apache.spark</groupId>
-            <artifactId>spark-mllib_2.10</artifactId>
+            <artifactId>spark-mllib_2.11</artifactId>
             <version>${spark.core.version}</version>
             <exclusions>
 

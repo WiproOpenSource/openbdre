@@ -3,7 +3,7 @@ package transformations;
 import org.apache.spark.api.java.JavaRDD;
 import org.apache.spark.api.java.function.Function;
 import org.apache.spark.broadcast.Broadcast;
-import org.apache.spark.sql.DataFrame;
+import org.apache.spark.sql.Dataset;
 import org.apache.spark.sql.Row;
 import org.apache.spark.sql.SQLContext;
 import org.apache.spark.sql.types.StructType;
@@ -42,8 +42,8 @@ public class Distinct implements Transformation {
 
 
                 SQLContext sqlContext = SQLContext.getOrCreate(rddWrapperMessage.context());
-                DataFrame dataFrame = sqlContext.createDataFrame(rddRow, schema);
-                DataFrame filteredDF = null;
+                Dataset<Row> dataFrame = sqlContext.createDataFrame(rddRow, schema);
+                Dataset<Row> filteredDF = null;
 
                 if(dataFrame!=null && !dataFrame.rdd().isEmpty()){
                     System.out.println("showing dataframe before distinct ");

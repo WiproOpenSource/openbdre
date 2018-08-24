@@ -7,8 +7,8 @@ import scala.Tuple2;
 import util.WrapperMessage;
 
 import java.io.Serializable;
-import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Iterator;
 
 /**
  * Created by cloudera on 7/13/17.
@@ -16,7 +16,7 @@ import java.util.Arrays;
 public class PairFlatMapFunctionEg implements PairFlatMapFunction,Serializable{
 
     @Override
-    public Iterable<Tuple2> call(Object inputRecord) throws Exception {
+    public Iterator<Tuple2> call(Object inputRecord) throws Exception {
         Tuple2<String, WrapperMessage> input = (Tuple2<String,WrapperMessage>) inputRecord;
 
         Row inputRow = input._2.getRow();
@@ -31,6 +31,6 @@ public class PairFlatMapFunctionEg implements PairFlatMapFunction,Serializable{
         Row outputRow = RowFactory.create(attributes);
         WrapperMessage wrapperMessage = new WrapperMessage(outputRow);
 
-        return Arrays.asList(new Tuple2<String,WrapperMessage>(((Tuple2<String, WrapperMessage>) inputRecord)._1,wrapperMessage));
+        return (Iterator<Tuple2>) new Tuple2<String,WrapperMessage>(((Tuple2<String, WrapperMessage>) inputRecord)._1,wrapperMessage);
     }
 }

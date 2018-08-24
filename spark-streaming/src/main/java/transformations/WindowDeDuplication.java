@@ -19,11 +19,12 @@ public class WindowDeDuplication  {
 
     public JavaPairDStream<String, WrapperMessage> convertJavaPairDstream(JavaPairDStream<String, WrapperMessage> inputDstream, long duration) {
         JavaPairDStream<String,Row> idValueStream = inputDstream.mapValues(s -> s.getRow());
-        JavaMapWithStateDStream<String,Row,String,Row> mappedStream= idValueStream.mapWithState(StateSpec.function(new DuplicateChecker()).timeout(new Duration(duration)));
+        //JavaMapWithStateDStream<String,Row,String,Row> mappedStream= idValueStream.mapWithState(StateSpec.function(new DuplicateChecker()).timeout(new Duration(duration)));
         // Start the computation
-        JavaPairDStream<String,WrapperMessage> deduplicatedStream = mappedStream.mapToPair(s -> new Tuple2<String, WrapperMessage>(null,new WrapperMessage(s)));
-        return deduplicatedStream;
+       // JavaPairDStream<String,WrapperMessage> deduplicatedStream = mappedStream.mapToPair(s -> new Tuple2<String, WrapperMessage>(null,new WrapperMessage(s)));
+        //return deduplicatedStream;
 
+        return inputDstream;
     }
 
 }

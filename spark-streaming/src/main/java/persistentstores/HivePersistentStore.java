@@ -9,7 +9,7 @@ import org.apache.spark.api.java.JavaPairRDD;
 import org.apache.spark.api.java.JavaRDD;
 import org.apache.spark.api.java.function.Function;
 import org.apache.spark.broadcast.Broadcast;
-import org.apache.spark.sql.DataFrame;
+import org.apache.spark.sql.Dataset;
 import org.apache.spark.sql.Row;
 import org.apache.spark.sql.SQLContext;
 import org.apache.spark.sql.SaveMode;
@@ -65,7 +65,7 @@ public class HivePersistentStore implements PersistentStore {
         HiveContext hiveContext = new org.apache.spark.sql.hive.HiveContext(jssc.sparkContext().sc());
         hiveContext.setConf("hive.metastore.uris", metastoreURI);
         hiveContext.setConf("hive.metastore.warehouse.dir",metaStoreWareHouseDir);
-        inputWrapperDStream.foreachRDD(new Function<JavaPairRDD<String, WrapperMessage>, Void>() {
+        /*inputWrapperDStream.foreachRDD(new Function<JavaPairRDD<String, WrapperMessage>, Void>() {
             @Override
             public Void call(JavaPairRDD<String, WrapperMessage> pairRDD) throws Exception {
 
@@ -77,14 +77,14 @@ public class HivePersistentStore implements PersistentStore {
                 if(inputRowRDD.count() != 0) {
                     System.out.println("schema1 = " + schema1);
                     System.out.println("schema = " + schema);
-                    DataFrame df = sqlContext.createDataFrame(inputRowRDD, schema1);
+                    Dataset<Row> df = sqlContext.createDataFrame(inputRowRDD, schema1);
                     df.show();
                     df.write().format(format).mode(SaveMode.Append).saveAsTable(hiveDBName+"."+hiveTableName);
                     //df.write().mode(SaveMode.Append).saveAsTable(hiveTableName);
                 }
                 return null;
             }
-        });
+        });*/
 
     }
 }

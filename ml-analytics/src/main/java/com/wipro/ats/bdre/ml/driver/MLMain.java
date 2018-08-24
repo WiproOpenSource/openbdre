@@ -14,7 +14,8 @@ import com.wipro.ats.bdre.ml.sources.HiveSource;
 import org.apache.log4j.Logger;
 import org.apache.spark.SparkConf;
 import org.apache.spark.api.java.JavaSparkContext;
-import org.apache.spark.sql.DataFrame;
+import org.apache.spark.sql.Dataset;
+import org.apache.spark.sql.Row;
 import org.apache.spark.sql.SaveMode;
 import org.apache.spark.sql.types.StructType;
 import java.sql.*;
@@ -59,8 +60,8 @@ public class MLMain {
             String schemaString = properties.getProperty("schema");
             System.out.println("schemaString = "+schemaString);
             StructType schema = new SchemaGeneration().generateSchemaFromString(schemaString);
-            DataFrame dataFrame = null;
-            DataFrame predictionDF = null;
+            Dataset<Row> dataFrame = null;
+            Dataset<Row> predictionDF = null;
 
             if (sourceType.equalsIgnoreCase("Hive")) {
                 String metastoreURI = properties.getProperty("metastoreURI");

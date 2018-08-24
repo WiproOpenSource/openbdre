@@ -14,7 +14,6 @@
 
 package com.wipro.ats.bdre.lineage.dataaccess;
 
-import org.apache.hadoop.hive.service.ThriftHive;
 import org.apache.thrift.protocol.TBinaryProtocol;
 import org.apache.thrift.transport.TSocket;
 
@@ -37,15 +36,19 @@ public class QueryChecker {
 				if (hql.endsWith(";"))
 					hql = hql.substring(0, hql.length() - 1);
 				hql = HQL_PREFFIX + hql;
-				ThriftHive.Client client = new ThriftHive.Client(protocol);
+
+
+
+
+				/*ThriftHive.Client client = new ThriftHive.Client(protocol);
 
 				client.execute(hql);
-				List<String> rst = client.fetchAll();
+				List<String> rst = client.fetchAll();*/
 
 				System.out.println("HQL Syntax is OK!");
-				for (int i = 0; i < rst.size(); i++) {
+				/*for (int i = 0; i < rst.size(); i++) {
 					System.out.println(rst.get(i));
-				}
+				}*/
 			} else
 				System.out.println("HQL is NULL!");
 

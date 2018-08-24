@@ -3,8 +3,9 @@ package persistentstores;
 import com.wipro.ats.bdre.md.api.GetProperties;
 import org.apache.spark.api.java.JavaRDD;
 import org.apache.spark.api.java.function.Function;
+import org.apache.spark.api.java.function.VoidFunction;
 import org.apache.spark.broadcast.Broadcast;
-import org.apache.spark.sql.DataFrame;
+import org.apache.spark.sql.Dataset;
 import org.apache.spark.sql.Row;
 import org.apache.spark.sql.SQLContext;
 import org.apache.spark.sql.types.StructType;
@@ -43,7 +44,7 @@ public class HDFSPersistentStore implements PersistentStore {
                     //JavaRDD<Row> rowJavaRDD = wrapperMessageJavaRDD.map(record->WrapperMessage.convertToRow(record));
                     JavaRDD<Row> rowJavaRDD = wrapperMessageJavaRDD.map(s -> s.getRow());
                     SQLContext sqlContext = SQLContext.getOrCreate(rowJavaRDD.context());
-                    DataFrame df = sqlContext.createDataFrame(rowJavaRDD, schema);
+                    Dataset<Row> df = sqlContext.createDataFrame(rowJavaRDD, schema);
                     if (!df.rdd().isEmpty() && !rowJavaRDD.isEmpty()) {
                         System.out.println("showing dataframe df before writing to hdfs  ");
                         df.show(100);
@@ -65,11 +66,10 @@ public class HDFSPersistentStore implements PersistentStore {
             });
 
             //adding empty output operation to finish flow, else spark would never execute the DAG
-            dStream.foreachRDD(new Function<JavaRDD<WrapperMessage>, Void>() {
+            dStream.foreachRDD(new VoidFunction<JavaRDD<WrapperMessage>>() {
                 @Override
-                public Void call(JavaRDD<WrapperMessage> rowJavaRDD) throws Exception {
+                public void call(JavaRDD<WrapperMessage> rowJavaRDD) throws Exception {
                     System.out.println(" For each testing ");
-                    return null;
                 }
             });
 

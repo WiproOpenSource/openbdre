@@ -1,14 +1,11 @@
 package com.wipro.ats.bdre.ml.models;
 
 import org.apache.spark.ml.classification.LogisticRegressionModel;
-import org.apache.spark.ml.classification.OneVsRestModel;
 import org.apache.spark.api.java.JavaSparkContext;
 import org.apache.spark.ml.feature.VectorAssembler;
-import org.apache.spark.mllib.linalg.SparseVector;
-import org.apache.spark.mllib.linalg.Vectors;
-import org.apache.spark.sql.DataFrame;
-import org.apache.spark.sql.SQLContext;
-import scala.collection.JavaConverters;
+import org.apache.spark.ml.linalg.Vectors;
+import org.apache.spark.sql.Dataset;
+import org.apache.spark.sql.Row;
 import scala.collection.Seq;
 
 import java.util.*;
@@ -17,7 +14,7 @@ import java.util.*;
  * Created by cloudera on 11/20/17.
  */
 public class LogisticRegressionML {
-    public DataFrame productionalizeModel(DataFrame dataFrame, LinkedHashMap<String,Double> columnCoefficientMap, double intercept, JavaSparkContext jsc){
+    public Dataset<Row> productionalizeModel(Dataset<Row> dataFrame, LinkedHashMap<String,Double> columnCoefficientMap, double intercept, JavaSparkContext jsc){
         dataFrame.show();
         Set<String> columnsSet = columnCoefficientMap.keySet();
         List<String> columnsList = new LinkedList<>(columnsSet);
@@ -25,7 +22,7 @@ public class LogisticRegressionML {
         System.out.println("coefficients is "+coefficients);
         String[] columnsArray = columnsSet.toArray(new String[columnsSet.size()]);
         VectorAssembler assembler=new VectorAssembler().setInputCols(columnsArray).setOutputCol("features");
-        DataFrame testDataFrame=assembler.transform(dataFrame);
+        Dataset<Row> testDataFrame=assembler.transform(dataFrame);
         Seq<String> seq = scala.collection.JavaConversions.asScalaBuffer(columnsList).toSeq();
         dataFrame.selectExpr(seq);
 
@@ -35,7 +32,7 @@ public class LogisticRegressionML {
         }
 
         LogisticRegressionModel logisticRegressionModel = new LogisticRegressionModel(UUID.randomUUID().toString(), Vectors.dense(coeff), intercept);
-        DataFrame predictionDF = logisticRegressionModel.transform(testDataFrame);
+        Dataset<Row> predictionDF = logisticRegressionModel.transform(testDataFrame);
         return predictionDF;
 
     }

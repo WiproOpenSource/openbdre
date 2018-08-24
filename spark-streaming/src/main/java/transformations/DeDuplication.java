@@ -4,6 +4,7 @@ import com.wipro.ats.bdre.md.api.GetProperties;
 import org.apache.spark.api.java.JavaPairRDD;
 import org.apache.spark.api.java.JavaRDD;
 import org.apache.spark.api.java.function.Function2;
+import org.apache.spark.api.java.function.VoidFunction2;
 import org.apache.spark.broadcast.Broadcast;
 import org.apache.spark.sql.types.StructType;
 import org.apache.spark.streaming.Time;
@@ -29,16 +30,36 @@ public class DeDuplication implements Transformation {
         GetProperties getProperties = new GetProperties();
         Properties dupProperties = getProperties.getProperties(String.valueOf(pid), "deduplication");
         String type = dupProperties.getProperty("type");
-        prevDStream.foreachRDD(new Function2<JavaPairRDD<String, WrapperMessage>, Time, Void>() {
+
+        /*prevDStream.foreachRDD((stringWrapperMessageJavaPairRDD, time) -> {
+            if(type.equalsIgnoreCase("WindowDeduplication")) {
+                System.out.println("Beginning of Window deduplication = " + new Date().getTime() + "for pid = " + pid);
+            } else if(type.equalsIgnoreCase("HbaseDeduplication")) {
+                System.out.println("Beginning of Hbase deduplication = " + new Date().getTime() + "for pid = " + pid);
+            }
+        });*/
+
+        prevDStream.foreachRDD(new VoidFunction2<JavaPairRDD<String, WrapperMessage>, Time>() {
             @Override
-            public Void call(JavaPairRDD<String, WrapperMessage> stringWrapperMessageJavaPairRDD, Time time) throws Exception {
+            public void call(JavaPairRDD<String, WrapperMessage> stringWrapperMessageJavaPairRDD, Time time) throws Exception {
+                if(type.equalsIgnoreCase("WindowDeduplication")) {
+                    System.out.println("Beginning of Window deduplication = " + new Date().getTime() + "for pid = " + pid);
+                } else if(type.equalsIgnoreCase("HbaseDeduplication")) {
+                    System.out.println("Beginning of Hbase deduplication = " + new Date().getTime() + "for pid = " + pid);
+                }
+            }
+        });
+
+        /*prevDStream.foreachRDD(new VoidFunction2<JavaPairRDD<String, WrapperMessage>, Time, Void>() {
+            @Override
+            public void call(JavaPairRDD<String, WrapperMessage> stringWrapperMessageJavaPairRDD, Time time) throws Exception {
                 if(type.equalsIgnoreCase("WindowDeduplication"))
                     System.out.println("Beginning of Window deduplication = " + new Date().getTime() +"for pid = "+pid);
                 else if(type.equalsIgnoreCase("HbaseDeduplication"))
                     System.out.println("Beginning of Hbase deduplication = " + new Date().getTime() +"for pid = "+pid);
                 return null;
             }
-        });
+        });*/
         JavaDStream<WrapperMessage> dStream = prevDStream.map(s -> s._2);
 
         JavaPairDStream<String, WrapperMessage> deDupPairDstream= null;
@@ -63,14 +84,14 @@ public class DeDuplication implements Transformation {
             HBaseDeDuplication hBaseDeDuplication = new HBaseDeDuplication();
             deDupPairDstream = hBaseDeDuplication.convertJavaPairDstream(pairedDstream,jssc,hbaseConnectionName,hbaseTableName,schema);
         }
-        deDupPairDstream.foreachRDD(new Function2<JavaPairRDD<String, WrapperMessage>, Time, Void>() {
+        deDupPairDstream.foreachRDD(new VoidFunction2<JavaPairRDD<String, WrapperMessage>, Time>() {
             @Override
-            public Void call(JavaPairRDD<String, WrapperMessage> stringWrapperMessageJavaPairRDD, Time time) throws Exception {
+            public void call(JavaPairRDD<String, WrapperMessage> stringWrapperMessageJavaPairRDD, Time time) throws Exception {
                 if(type.equalsIgnoreCase("WindowDeduplication"))
                     System.out.println("End of Window deduplication = " + new Date().getTime() +"for pid = "+pid);
                 else if(type.equalsIgnoreCase("HbaseDeduplication"))
                     System.out.println("End of Hbase deduplication = " + new Date().getTime() +"for pid = "+pid);
-                return null;
+
             }
         });
         deDupPairDstream.print();
