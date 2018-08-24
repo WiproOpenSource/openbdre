@@ -1,8 +1,9 @@
 language: java
 jdk:
-  - oraclejdk7
+  - oraclejdk8
+services:
+  - mysql
 before_install:
-    - sudo apt-get install mysql-server -y
     - sudo apt-get install curl -y
     - sudo service mysql restart
     - echo hibernate.current_session_context_class=thread > md-dao/src/main/resources/db.properties
@@ -31,4 +32,3 @@ after_success:
     - echo "Looks like success !"
 after_failure:
     - cat /var/log/BDRE/daemon.log
-    
