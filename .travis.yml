@@ -4,7 +4,6 @@ jdk:
 before_install:
     - sudo wget https://dev.mysql.com/get/mysql-apt-config_0.8.9-1_all.deb
     - sudo dpkg -i mysql-apt-config_0.8.9-1_all.deb
-    - apt-get update -y
     - sudo apt-get install mysql-community-server -y
     - sudo apt-get install curl -y
     - sudo service mysql restart
