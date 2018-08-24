@@ -2,8 +2,10 @@ language: java
 jdk:
   - oraclejdk7
 before_install:
-    - sudo apt-get install aptitude -y
-    - sudo aptitude install mysql-server -y
+    - sudo wget https://dev.mysql.com/get/mysql-apt-config_0.8.9-1_all.deb
+    - sudo dpkg -i mysql-apt-config_0.8.9-1_all.deb
+    - apt-get update -y
+    - sudo apt-get install mysql-community-server -y
     - sudo apt-get install curl -y
     - sudo service mysql restart
     - echo hibernate.current_session_context_class=thread > md-dao/src/main/resources/db.properties
