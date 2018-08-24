@@ -27,6 +27,11 @@ import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
+
+import javax.servlet.http.HttpServletRequest;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.security.Principal;
 import java.util.*;
 
@@ -98,7 +103,35 @@ public class DataLoadAPI extends MetadataAPIBase {
     @RequestMapping(value = {"/createjobs"}, method = RequestMethod.POST)
 
     @ResponseBody public
-    RestWrapper createJob(@RequestParam Map<String, String> map, Principal principal) {
+    RestWrapper createJob( HttpServletRequest request, Principal principal) {
+        // Read from request
+        String query="";
+        String tmp1="";
+        StringBuilder buffer = null;
+        try {
+             buffer = new StringBuilder();
+            BufferedReader reader = request.getReader();
+            while ((tmp1 = reader.readLine()) != null) {
+                buffer.append(tmp1);
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        try {
+            query = java.net.URLDecoder.decode(new String(buffer), "UTF-8");
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
+        String[] linkedList=query.split("&");
+        LinkedHashMap<String, String> map=new LinkedHashMap<>();
+        for (int i=0;i<linkedList.length;i++)
+        {
+            String[] tmp=linkedList[i].split("=");
+            if (tmp.length==2)
+                map.put(tmp[0],tmp[1]);
+            else
+                map.put(tmp[0],"");
+        }
         LOGGER.debug(" value of map is " + map.size());
         RestWrapper restWrapper = null;
 
@@ -106,7 +139,7 @@ public class DataLoadAPI extends MetadataAPIBase {
         String processDescription = null;
         Integer busDomainId = null;
         Integer workflowTypeId=null;
-        Integer enqId = null;
+        String enqId = null;
         String filePath = null;
         Map<String,String> partitionCols = new TreeMap<String, String>();
         Map<String,String> partitionDataTypes = new TreeMap<String, String>();
@@ -117,6 +150,7 @@ public class DataLoadAPI extends MetadataAPIBase {
         List<com.wipro.ats.bdre.md.dao.jpa.Properties> stage2BaseProperties=new ArrayList<Properties>();
         Map<Process,List<Properties>> processPropertiesMap = new HashMap<Process, List<Properties>>();
         int rawColumnCounter = 1;
+        int columnCounter = 1;
 
         com.wipro.ats.bdre.md.dao.jpa.Properties jpaProperties=null;
         for (String string : map.keySet()) {
@@ -125,14 +159,21 @@ public class DataLoadAPI extends MetadataAPIBase {
                 continue;
             }
             if (string.startsWith("rawtablecolumn_")) {
+                Properties jpaProperties2 = null;
                 jpaProperties = Dao2TableUtil.buildJPAProperties("raw-cols", "raw_column_name." + rawColumnCounter, string.replaceAll("rawtablecolumn_", ""), "Column name for raw table");
+                jpaProperties2 = Dao2TableUtil.buildJPAProperties("base-cols", "base_column_name." + rawColumnCounter, string.replaceAll("rawtablecolumn_", ""), "Column name for base table");
                 file2RawProperties.add(jpaProperties);
+                raw2StageProperties.add(jpaProperties2);
                 jpaProperties = Dao2TableUtil.buildJPAProperties("raw-data-types", "raw_column_datatype." + rawColumnCounter, map.get(string), "Data Type for raw table");
+                jpaProperties2 = Dao2TableUtil.buildJPAProperties("base-data-type", "base_column_datatype." + rawColumnCounter, map.get(string), "Data Type for base table");
                 rawColumnCounter++;
                 file2RawProperties.add(jpaProperties);
+                raw2StageProperties.add(jpaProperties2);
             }else if (string.startsWith(FILEFORMAT)) {
                 if("fileformat".equals(string.replaceAll(FILEFORMAT, ""))){
                     jpaProperties = Dao2TableUtil.buildJPAProperties(RAWTABLE, "file_type", map.get(string), "file type");
+                     Properties jpaProperties1 = Dao2TableUtil.buildJPAProperties(BASETABLE, "file_type", map.get(string), "file type");
+                    raw2StageProperties.add(jpaProperties1);
                     file2RawProperties.add(jpaProperties);
                 }else if("rawDBName".equals(string.replaceAll(FILEFORMAT, ""))){
                     jpaProperties = Dao2TableUtil.buildJPAProperties(RAWTABLE, "table_db", map.get(string), "RAW DB Name");
@@ -184,17 +225,24 @@ public class DataLoadAPI extends MetadataAPIBase {
                 }
             }else if (string.startsWith(TRANSFORM)) {
                 String column_name=string.replaceAll(TRANSFORM,"");
-                if(map.get(string).equals("no transformation"))
-                    map.put(string,column_name);
-                else
-                 map.put(string,map.get(string)+"("+column_name+")");
+                LinkedHashMap<String, String> map2=new LinkedHashMap<>();
+                if(map.get(string).equals("no transformation")||map.get(string).equals("no+transformation")){
+                    map2.put(string+"."+columnCounter,column_name);
+                    //map.put(string+"."+columnCounter,column_name);
+                }
+                else{
+                    //map.put(string+"."+columnCounter,map.get(string)+"("+column_name+")");
+                    map2.put(string+"."+columnCounter,map.get(string)+"("+column_name+")");
+                }
                 LOGGER.info("key is "+string +" updated value is "+map.get(string)+" column name is "+column_name);
                 if("".equals(map.get(string.replaceAll(TRANSFORM,PARTITION))) || map.get(string.replaceAll(TRANSFORM,PARTITION)) == null) {
-                    jpaProperties = Dao2TableUtil.buildJPAProperties("base-columns", string, map.get(string), TRANSFORMCOMMENT);
+                    jpaProperties = Dao2TableUtil.buildJPAProperties("base-columns", string+"."+columnCounter, map2.get(string+"."+columnCounter), TRANSFORMCOMMENT);
+                    LOGGER.info("Saved property key = "+string+"."+columnCounter+" value is "+map2.get(string+"."+columnCounter));
                     raw2StageProperties.add(jpaProperties);
                 }else{
                     partitionCols.put(map.get(string.replaceAll(TRANSFORM,PARTITION)),string.replaceAll(TRANSFORM,""));
                 }
+                columnCounter++;
             }else if (string.startsWith(STAGEDATATYPE)) {
                 if("".equals(map.get(string.replaceAll(STAGEDATATYPE,PARTITION))) || map.get(string.replaceAll(STAGEDATATYPE,PARTITION)) == null) {
                     jpaProperties = Dao2TableUtil.buildJPAProperties("base-data-types", string.replaceAll(STAGEDATATYPE,"") , map.get(string) , "data type of column");
@@ -221,11 +269,11 @@ public class DataLoadAPI extends MetadataAPIBase {
             }else if (string.startsWith("process_enqueueId")) {
                 LOGGER.info("EnqueueId " + map.get(string));
                 if(! map.get(string).equals("null")) {
-                    enqId = new Integer(map.get(string));
+                    enqId = map.get(string);
                     LOGGER.info("enqId is "+ enqId);
                 }
                 else {
-                    enqId = 0;
+                    enqId = "0";
                     LOGGER.info("enqId is "+ enqId);
                 }
             }

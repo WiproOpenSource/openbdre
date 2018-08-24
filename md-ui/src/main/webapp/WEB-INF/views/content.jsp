@@ -6,6 +6,7 @@
 
         <head>
             <title><spring:message code="common.page.title_bdre_2"/></title>
+            <link rel="shortcut icon" href="../css/images/favicon.ico" type="image/x-icon" />
 	<script>
 	  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
 	  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
@@ -157,11 +158,12 @@
 					padding-top: 9px !important;
 				}
 			</style>
+
 		</head>
 
         <body class="container-fluid" ng-app="myApp" ng-controller="myCtrl">
             <nav class="navbar navbar-inverse">
-                <div class="container-fluid">
+                <div class="container-fluid" id='mycontrol'>
                     <!-- Brand and toggle get grouped for better mobile display -->
                     <div class="navbar-header">
                         <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
@@ -258,242 +260,346 @@
                                     }
                                 }
                             }
-                            $scope.menu = [{
-                                    label: "About",
-                                    collapse: "1",
-                                    active: "1",
-                                    url: "welcome.page",
-                                    children: []
-				}, {
-                                    label: "Metadata Management",
-                                    collapse: "1",
-                                    children: [{
-                                            label: "Master",
-                                            collapse: "1",
-                                            children: [{
-                                                label: "Batch Status",
-                                                collapse: "1",
-                                                url: "batchstatus.page",
-                                                children: []
-							}, {
-                                                label: "App Type",
-                                                collapse: "1",
-                                                url: "processtype.page",
-                                                children: []
-							}, {
-                                                label: "Execution Status",
-                                                collapse: "1",
-                                                url: "execstatus.page",
-                                                children: []
-							}, {
-                                                label: "Deployment Status",
-                                                collapse: "1",
-                                                url: "deploystatus.page",
-                                                children: []
-							},
-							{
-                                                label: "App Deployment Status",
-                                                collapse: "1",
-                                                url: "adqstatus.page",
-                                                children: []
-                            },{
-                                                label: "Workflow Type",
-                                                collapse: "1",
-                                                url: "workflowtype.page",
-                                                children: []
-							}]
-						}, {
-                                            label: "Job Definitions",
-                                            collapse: "1",
-                                            children: [{
-                                                    label: "Processes",
-                                                    collapse: "1",
-                                                    url: "process.page",
-                                                    children: []
-								},
+
+
+                              $scope.menu = [{
+                                                                label: "About",
+                                                                collapse: "1",
+                                                                active: "1",
+                                                                url: "welcome.page",
+                                                                children: []
+                            				}, {
+                                                                label: "Metadata Management",
+                                                                collapse: "1",
+                                                                children: [{
+                                                                        label: "Master",
+                                                                        collapse: "1",
+                                                                        children: [{
+                                                                            label: "Batch Status",
+                                                                            collapse: "1",
+                                                                            url: "batchstatus.page",
+                                                                            children: []
+                            							}, {
+                                                                            label: "App Type",
+                                                                            collapse: "1",
+                                                                            url: "processtype.page",
+                                                                            children: []
+                            							}, {
+                                                                            label: "Execution Status",
+                                                                            collapse: "1",
+                                                                            url: "execstatus.page",
+                                                                            children: []
+                            							}, {
+                                                                            label: "Deployment Status",
+                                                                            collapse: "1",
+                                                                            url: "deploystatus.page",
+                                                                            children: []
+                            							},
+                            							{
+                                                                            label: "App Deployment Status",
+                                                                            collapse: "1",
+                                                                            url: "adqstatus.page",
+                                                                            children: []
+                                                        },{
+                                                                            label: "Workflow Type",
+                                                                            collapse: "1",
+                                                                            url: "workflowtype.page",
+                                                                            children: []
+                            							}]
+                            						}, {
+                                                                        label: "Job Definitions",
+                                                                        collapse: "1",
+                                                                        children: [
+                                                                            {
+                                                                                label: "Workflow Creator",
+                                                                                collapse: "1",
+                                                                                url: "wfdesigner.page",
+                                                                                children: []
+                            								}, {
+                                                                                label: "Process Domains",
+                                                                                collapse: "1",
+                                                                                url: "busdomain.page",
+                                                                                children: []
+                            								}, {
+                                                                                label: "Servers",
+                                                                                collapse: "1",
+                                                                                url: "servers.page",
+                                                                                children: []
+                            								}, {
+                                                                                label: "Process Logs",
+                                                                                collapse: "1",
+                                                                                url: "processlog.page",
+                                                                                children: []
+                            								}, {
+                                                                                label: "Properties",
+                                                                                collapse: "1",
+                                                                                url: "properties.page",
+                                                                                children: []
+                            								}
+                            							]
+                            						},
+                                                                    {
+                                                                        label: "Run Control",
+
+                                                                        collapse: "1",
+                                                                        children: [{
+                                                                                label: "Batches",
+                                                                                collapse: "1",
+                                                                                url: "batch.page",
+                                                                                children: []
+                            								}, {
+                                                                                label: "Files Batches",
+                                                                                collapse: "1",
+                                                                                url: "file.page",
+                                                                                children: []
+                            								}, {
+                                                                                label: "Queued Batches",
+                                                                                collapse: "1",
+                                                                                url: "bcq.page",
+                                                                                children: []
+                            								}, {
+                                                                                label: "Instance Execution",
+                                                                                collapse: "1",
+                                                                                url: "instanceexec.page",
+                                                                                children: []
+                            								}, {
+                                                                                label: "Processed Batches",
+                                                                                collapse: "1",
+                                                                                url: "acq.page",
+                                                                                children: []
+                            								}
+                            							]
+                            						}
+                            					]
+                            				}, {
+                                                                label: "Job Management",
+                                                                collapse: "1",
+                                                                children: [
+                                                                    {
+                                                                        label: "Process Deployment",
+                                                                        collapse: "1",
+                                                                        url: "pdq.page",
+                                                                        children: []
+                            						}, {
+                                                                   label: "Table Column Lineage",
+                                                                   collapse: "1",
+                                                                   url: "tablecolumnlineage.page",
+                                                                   children: []
+                                                    },
+                                                                                                          {
+                                                                        label: "App Deployment",
+                                                                        collapse: "1",
+                                                                        url: "adq.page",
+                                                                        children: []
+                                                                                                        },{
+                                                                        label: "Job Import Wizard",
+                                                                        collapse: "1",
+                                                                        url: "processimportwizard.page",
+                                                                        children: []
+                                                                                                        },{
+                                                                        label: "Job Export Wizard",
+                                                                        collapse: "1",
+                                                                        url: "processexport.page",
+                                                                        children: []
+                                                                                     					}, {
+                                                                        label: "Process Template",
+                                                                        collapse: "1",
+                                                                        url: "processtemplate.page",
+                                                                        children: []
+                                                                                     					},{
+                                                                          label: "App Store",
+                                                                          collapse: "1",
+                                                                          url: "appstore.page",
+                                                                          children: []
+                                                                                                        }
+                            					]
+                            				}, {
+                                                                label: "Data Ingestion",
+                                                                collapse: "1",
+                                                                children: [{
+                                                                        label: "Load File in Hive",
+                                                                        collapse: "1",
+                                                                        url: "dataload.page",
+                                                                        children: []
+                            					}, {
+                                                                        label: "Import from RDBMS",
+                                                                        collapse: "1",
+                                                                        url: "dataimportwizard.page",
+                                                                        children: []
+                            					}, {
+                                                                        label: "Export to RDBMS",
+                                                                        collapse: "1",
+                                                                        url: "dataexportwizard.page",
+                                                                        children: []
+                                                 },
+                                                    {
+                                                                        label: "Web Crawl and Ingest",
+                                                                        collapse: "1",
+                                                                        url: "crawler.page",
+                                                                        children: []
+                            					}, {
+                                                                           label: "Monitor Directory & Ingest",
+                                                                           collapse: "1",
+                                                                           url: "filemonitor.page",
+                                                                           children: []
+                                                },  {
+                                                                        label: "Generate Bulk Data",
+                                                                        collapse: "1",
+                                                                        url: "datagen.page",
+                                                                        children: []
+                            					}, {
+                                                                        label: "New DQ Job",
+                                                                        collapse: "1",
+                                                                        url: "dqprocess.page",
+                                                                        children: []
+                            					}, {
+                                                                        label: "Ingest from Streams",
+                                                                        collapse: "1",
+                                                                        url: "flumepropertieswizard.page",
+                                                                        children: []
+                            	                }, {
+                                                                         label: "Analytics App",
+                                                                         collapse: "1",
+                                                                         url: "analyticsui.page",
+                                                                         children: []
+                                                },{
+                                                                           label: "Analytics UI",
+                                                                           collapse: "1",
+                                                                           url: "/aui/pages/menu.page",
+                                                                           children: []
+                                                  },{
+                                                                          label: "Hive Table Migration",
+                                                                          collapse: "1",
+                                                                          url: "hivetablemigration.page",
+                                                                          children: []
+                                                 },{
+                                                                                                                                   label: "Batch Jobs Registry",
+                                                                                                                                   collapse: "1",
+                                                                                                                                   url: "process.page",
+                                                                                                                                   children: []
+                                                                               								},
+                                                                          ]
+                                                            },
+
+
+                            								 {
+                                                                    label: "Stream jobs",
+                                                                    collapse: "1",
+                                                                    children: [{
+                                                                            label: "Source Configuration",
+                                                                            collapse: "1",
+                                                                            url: "connections.page?type=source",
+                                                                            children: []
+                            					}, {
+                                                                            label: "Sink Configuration",
+                                                                            collapse: "1",
+                                                                            url: "connections.page?type=persistance",
+                                                                            children: []
+                            					}, {
+                                                                            label: "Create Messages",
+                                                                            collapse: "1",
+                                                                            url: "premessageconfig.page",
+                                                                            children: []
+                            					}, {
+
+                                                                            label: "View Messages",
+                                                                            collapse: "1",
+                                                                            url: "streamingmessage.page",
+                                                                            children: []
+                                                },
+
                                                 {
-                                                    label: "Workflow Creator",
-                                                    collapse: "1",
-                                                    url: "wfdesigner.page",
-                                                    children: []
-								}, {
-                                                    label: "Process Domains",
-                                                    collapse: "1",
-                                                    url: "busdomain.page",
-                                                    children: []
-								}, {
-                                                    label: "Servers",
-                                                    collapse: "1",
-                                                    url: "servers.page",
-                                                    children: []
-								}, {
-                                                    label: "Process Logs",
-                                                    collapse: "1",
-                                                    url: "processlog.page",
-                                                    children: []
-								}, {
-                                                    label: "Properties",
-                                                    collapse: "1",
-                                                    url: "properties.page",
-                                                    children: []
-								}
-							]
-						},
-                                        {
-                                            label: "Run Control",
+                                                                                label: "Stream Jobs Registry",
+                                                                                collapse: "1",
+                                                                                url: "process2.page",
+                                                                                children: []
+                                                            },
 
-                                            collapse: "1",
-                                            children: [{
-                                                    label: "Batches",
-                                                    collapse: "1",
-                                                    url: "batch.page",
-                                                    children: []
-								}, {
-                                                    label: "Files Batches",
-                                                    collapse: "1",
-                                                    url: "file.page",
-                                                    children: []
-								}, {
-                                                    label: "Queued Batches",
-                                                    collapse: "1",
-                                                    url: "bcq.page",
-                                                    children: []
-								}, {
-                                                    label: "Instance Execution",
-                                                    collapse: "1",
-                                                    url: "instanceexec.page",
-                                                    children: []
-								}, {
-                                                    label: "Processed Batches",
-                                                    collapse: "1",
-                                                    url: "acq.page",
-                                                    children: []
-								}
-							]
-						}
-					]
-				}, {
-                                    label: "Job Management",
-                                    collapse: "1",
-                                    children: [
-                                        {
-                                            label: "Process Deployment",
-                                            collapse: "1",
-                                            url: "pdq.page",
-                                            children: []
-						}, {
-                                       label: "Table Column Lineage",
-                                       collapse: "1",
-                                       url: "tablecolumnlineage.page",
-                                       children: []
-                        },
-                                                                              {
-                                            label: "App Deployment",
-                                            collapse: "1",
-                                            url: "adq.page",
-                                            children: []
-                                                                            },{
-                                            label: "Job Import Wizard",
-                                            collapse: "1",
-                                            url: "processimportwizard.page",
-                                            children: []
-                                                         					}, {
-                                            label: "Process Template",
-                                            collapse: "1",
-                                            url: "processtemplate.page",
-                                            children: []
-                                                         					},{
-                                              label: "App Store",
-                                              collapse: "1",
-                                              url: "appstore.page",
-                                              children: []
-                                                                            }
-					]
-				}, {
-                                    label: "Data Ingestion",
-                                    collapse: "1",
-                                    children: [{
-                                            label: "Load File in Hive",
-                                            collapse: "1",
-                                            url: "dataload.page",
-                                            children: []
-					}, {
-                                            label: "Import from RDBMS",
-                                            collapse: "1",
-                                            url: "dataimportwizard.page",
-                                            children: []
-					}, {
-                                            label: "Export to RDBMS",
-                                            collapse: "1",
-                                            url: "dataexportwizard.page",
-                                            children: []
-                     },
-                        {
-                                            label: "Web Crawl and Ingest",
-                                            collapse: "1",
-                                            url: "crawler.page",
-                                            children: []
-					}, {
-                                               label: "Monitor Directory & Ingest",
-                                               collapse: "1",
-                                               url: "filemonitor.page",
-                                               children: []
-                    },  {
-                                            label: "Generate Bulk Data",
-                                            collapse: "1",
-                                            url: "datagen.page",
-                                            children: []
-					}, {
-                                            label: "New DQ Job",
-                                            collapse: "1",
-                                            url: "dqprocess.page",
-                                            children: []
-					}, {
-                                            label: "Ingest from Streams",
-                                            collapse: "1",
-                                            url: "flumepropertieswizard.page",
-                                            children: []
-	                }, {
-                                             label: "Analytics App",
-                                             collapse: "1",
-                                             url: "analyticsui.page",
-                                             children: []
-                    },{
-                                               label: "Analytics UI",
-                                               collapse: "1",
-                                               url: "/aui/pages/menu.page",
-                                               children: []
-                      },{
-                                              label: "Hive Table Migration",
-                                              collapse: "1",
-                                              url: "hivetablemigration.page",
-                                              children: []
-                     },]
-                                },
+                                                 {
+                                                                         label: "Create Workflow",
+                                                                         collapse: "1",
+                                                                         url: "wfdesigner2.page",
+                                                                         children: []
+                                            }
 
-                                    <security:authorize access = "hasRole('ROLE_ADMIN')"> {
-                                        label: "Administration",
-                                        collapse: "1",
-                                        children: [{
-                                                label: "Security",
-                                                collapse: "1",
-                                                url: "users.page",
-                                                children: []
-					}, {
-                                                label: "Sessions",
-                                                collapse: "1",
-                                                url: "sessions.page",
-                                                children: []
-					}, {
-                                                label: "Settings",
-                                                collapse: "1",
-                                                url: "settings.page",
-                                                children: []
-					}
-					]
-                                    },
-                                    </security:authorize>
-                                    ];
+
+
+                            					]
+                                                                },
+                                                   {
+                                                        label: "Machine Learning",
+                                                        collapse: "1",
+                                                        children: [{
+
+
+                                                           label: "ML Model Configuration",
+                                                                 collapse: "1",
+                                                                 url: "createModel.page",
+                                                                 children: []
+
+                                                 },{
+                                                                          label: "ML Jobs Registry",
+                                                                          collapse: "1",
+                                                                          url: "ViewModel.page",
+                                                                          children: []
+                                                    },
+                                                 ]
+                                                 },
+                                                                <security:authorize access = "hasRole('ROLE_ADMIN')"> {
+                                                                    label: "Administration",
+                                                                    collapse: "1",
+                                                                    children: [{
+                                                                            label: "Security",
+                                                                            collapse: "1",
+                                                                            url: "users.page",
+                                                                            children: []
+                            					}, {
+                                                                            label: "Sessions",
+                                                                            collapse: "1",
+                                                                            url: "sessions.page",
+                                                                            children: []
+                            					}, {
+                                                                            label: "Settings",
+                                                                            collapse: "1",
+                                                                            url: "settings.page",
+                                                                            children: []
+                            					},
+                            					{
+                                                                                     label: "Monitoring",
+                                                                                     collapse: "1",
+                                                                                     children: [
+                                                                                                 {
+                                                                                                              label: "Platform Monitor",
+                                                                                                              collapse: "1",
+                                                                                                              url:"platformMonitorGrafana.page",
+                                                                                                              children: []
+                                                                                                     },
+
+
+                                                                                                 {
+                                                                                                          label: "History server",
+                                                                                                          collapse: "1",
+                                                                                                          url:"history-server.page",
+                                                                                                          children: []
+                                                                                                 },
+                                                                                                {
+                                                                                                         label: "Dr-Elephant",
+                                                                                                         collapse: "1",
+                                                                                                         url:"dr-elephant.page",
+                                                                                                         children: []
+                                                                                                 }
+
+
+
+
+                                                                                                                     ]
+                                                                                        }
+
+                            					]
+                                                                },
+                                                                </security:authorize>
+                                                                ];
+
             $scope.createLinearMenu($scope.menu); //For creating linear menu
 			$scope.openlink = function (event, url) {
                                     $(".activ").removeClass("activ");
@@ -515,11 +621,14 @@
                                         elem.addClass("B1");
                                         elem.parent().parent().addClass("activ");
                                     }
-                                    if (url != "") {
+					if(url=="history-server.page"){
+					window.open('http://52.207.210.207:18088','_blank')
+}
+                                    if (url != "" && url!="history-server.page") {
                                         $("#dframe").attr('src', url);
                                         console.log(url, url != "");
                                     } else
-                                        alert("TBD")
+                                        console.log('Page not accessible');
 			};
 			$scope.reset = function (target, index) {
                                     //console.log(target,index);

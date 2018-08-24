@@ -66,6 +66,7 @@ if [ "$workflowTypeId" == "1" ]; then
 echo 'generated workflow xml to edge node process dir'
 #move generated workflow to edge node process dir
 mv  workflow-$processId.xml $BDRE_APPS_HOME/$busDomainId/$processTypeId/$processId
+mv  coordinator-workflow-$processId.xml $BDRE_APPS_HOME/$busDomainId/$processTypeId/$processId
 if [ $? -ne 0 ]
 then exit 1
 fi

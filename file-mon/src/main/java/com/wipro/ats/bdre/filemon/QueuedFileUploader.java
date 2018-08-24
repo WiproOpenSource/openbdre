@@ -16,6 +16,7 @@ package com.wipro.ats.bdre.filemon;
 
 import com.wipro.ats.bdre.ResolvePath;
 import com.wipro.ats.bdre.exception.BDREException;
+import com.wipro.ats.bdre.md.api.JobTrigger;
 import com.wipro.ats.bdre.md.api.RegisterFile;
 import org.apache.commons.io.FileUtils;
 import org.apache.hadoop.conf.Configuration;
@@ -24,8 +25,7 @@ import org.apache.hadoop.fs.Path;
 import org.apache.hadoop.security.UserGroupInformation;
 import org.apache.log4j.Logger;
 import org.apache.commons.io.FilenameUtils;
-
-
+import org.springframework.beans.factory.annotation.Autowired;
 import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.Method;
@@ -49,6 +49,7 @@ public class QueuedFileUploader {
 
     private static void hdfsCopy(FileCopyInfo fileCopying) throws IOException {
         try {
+            LOGGER.info("in the hdfs copy method");
             // Copying file from local to HDFS overriding, if file already exists
             config.set("fs.defaultFS", FileMonRunnableMain.getDefaultFSName());
             if("true".equals(FileMonRunnableMain.getKerberosEnabled() )) {
@@ -93,9 +94,14 @@ public class QueuedFileUploader {
         if (FileMonitor.getQueueSize() > 0) {
             FileCopyInfo fileCopying = FileMonitor.getFileInfoFromQueue();
             try {
+                LOGGER.info("Inside executeCopyProcess");
                 hdfsCopy(fileCopying);
+
                 // calling register file
-                executeRegisterFiles(fileCopying);
+
+                // a function which will create a batch
+                String batchId=new QueuedFileUploader().executeDownStream().toString();
+                executeRegisterFiles(fileCopying,batchId);
             } catch (Exception err) {
                 LOGGER.error("Error in execute copy process ", err);
                 throw new BDREException(err);
@@ -103,7 +109,7 @@ public class QueuedFileUploader {
         }
     }
 
-    private static void executeRegisterFiles(FileCopyInfo fileCopying) {
+    private static void executeRegisterFiles(FileCopyInfo fileCopying,String batchId) {
         try {
             String subProcessId = fileCopying.getSubProcessId();
             String serverId = fileCopying.getServerId();
@@ -113,7 +119,7 @@ public class QueuedFileUploader {
             long timeStamp = fileCopying.getTimeStamp();
             Date dt = new Date(timeStamp);
             String strDate = sdf.format(dt);
-            String[] params = {"-p", subProcessId, "-sId", serverId, "-path", path, "-fs", fileSize, "-fh", fileHash, "-cTS", strDate, "-bid", "0"};
+            String[] params = {"-p", subProcessId, "-sId", serverId, "-path", path, "-fs", fileSize, "-fh", fileHash, "-cTS", strDate, "-bid", batchId};
             LOGGER.debug("executeRegisterFiles Invoked for " + path);
             new RegisterFile().execute(params);
         } catch (Exception err) {
@@ -121,5 +127,12 @@ public class QueuedFileUploader {
             throw new BDREException(err);
         }
     }
+    //
 
+    private Long executeDownStream(){
+        LOGGER.info("Inside executeDownStream");
+        Integer parentProcessId=Integer.parseInt(FileMonRunnableMain.getParentProcessId());
+        Long batchId=new JobTrigger().runDownStream(parentProcessId);
+        return batchId;
+    }
 }

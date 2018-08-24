@@ -1,0 +1,32 @@
+#!/usr/bin/env bash
+while read line; do
+ if  [[ $line == Kernel* ]] || [[ $line == Iface* ]] ;
+then
+     continue;
+fi
+echo $line;
+array=($line)
+gmetric --name=${array[0]}_rx_ok --value=${array[3]} --type=int32
+gmetric --name=${array[0]}_rx_error --value=${array[4]} --type=int32
+gmetric --name=${array[0]}_rx_drop --value=${array[5]} --type=int32
+gmetric --name=${array[0]}_rx_overrun --value=${array[6]} --type=int32
+gmetric --name=${array[0]}_tx_ok --value=${array[7]} --type=int32
+gmetric --name=${array[0]}_tx_error --value=${array[8]} --type=int32
+gmetric --name=${array[0]}_tx_drop --value=${array[9]} --type=int32
+gmetric --name=${array[0]}_tx_overrun --value=${array[10]} --type=int32
+done << EOF
+$(netstat -i)
+EOF
+
+while read line; do
+ if  [[ $line == Linux* ]] || [[ $line == avg* ]] || [[ $line == Device* ]] || [[ $line == "" ]]  || [[ $line == [0-9]* ]];
+then
+     continue;
+fi
+echo $line;
+array=($line)
+gmetric --name=${array[0]}_read_throughput --value=${array[2]} --type=int32
+gmetric --name=${array[0]}_write_throughput --value=${array[3]} --type=int32
+done << EOF
+$(iostat -m)
+EOF

@@ -1,0 +1,598 @@
+/*
+ * Class
+ * StreamAnalytix Dashboard
+ * Date - 2016-06-07
+ * 
+ */
+/*This class is containing all functions used in StreamAnalytix Dashboard */
+var saxDashboardClass = new function() {
+    var _this = this, refreshInterval=0, interval;
+	var pipelinesUrl = baseUrl+'/widget/pipeline/list';
+	var connectionsUrl = baseUrl+'/widget/connection/list';
+	var licenseDetailsUrl = baseUrl+'/widget/license/details';
+	var alertsUrl = baseUrl+'/widget/alert/list?iDisplayLength=5&iDisplayStart=0&sSortDir_0=desc&sSearch=&sortBy=date_created&alertDefType=';
+	var metricsUrl = baseUrl+'/widget/metrics/info';
+	var webHealthUrl = baseUrl+'/widget/saxwebhealth';
+	var inspectPipelinesListUrl = baseUrl+'/datafabric/inspect/pipelines';
+	var subSystemDeleteUrl = baseUrl+'/datafabric/subsystem/delete';
+	var clusterUtilizationUrl = baseUrl+'';
+	var setStausUrl = baseUrl+'/datafabric/subsystem/action';
+
+	var tempPipelinesUrl = pipelinesUrl;
+	var tempAlertsUrl = alertsUrl;
+	var tempMetricsUrl = metricsUrl;
+	
+	var saxColors = ["#e51361","#412fe4","#7ca322","#b971b4","#56c2d6","#29eef1","#fc68cc","#c5c164","#609c2f","#e5ce17","#905fe6","#e093a0","#91666e","#7ec81d","#412fe4","#d73759","#8a6c86","#888708","#9860c0","#4b6ceb","#11c610","#d6b130","#f66ff7","#8c3d3d","#703afe","#45b315","#75b1ac","#a69eb5","#a94a98","#aa6de6","#b9ce42","#1c5ba2","#875c24","#484f60","#206fcd","#b971b4","#589115","#ebdf52","#84da81","#eb6ad8","#dc391b","#b3c866","#eda962","#ab695e","#e34171","#8aa024","#eb8596","#fe2475","#b4b3fa","#277bcd","#76beec","#7c6447","#9d5ee0","#a68b39","#55a93a","#b327ad","#c7a8e1","#519cb1","#8a8058","#90df58","#2e6a88","#a0ebf3","#4a468c","#b94434","#94b6c7","#a71073","#ff4c0c","#4bdb8b","#f0566f","#2c6a78","#af8fea","#c8a64c","#bb438a","#8fb52d","#e9d92e","#e31108","#1f693e","#24979c","#845e3b","#92121c","#a14de7","#d96496","#517100","#81b4ca","#bbcd1d","#3ed40c","#c73974","#615ecf","#16ef9d","#948b65","#dbe010","#de8ff6","#da4f12","#3750a7","#25879c","#6b45a8","#f0220b","#7a53a3","#93e0f8","#6b988f","#eadc6b","#742922"];
+	
+	_this.init = function () {
+		
+		if ( currentTenantId == 0 ) {
+			$('.inpect-pipe-count').closest('.col-md-6').addClass('hidden');
+			$('#sxWidgetAlertTypeDD').find('li a[data-type="application"]').closest('li').addClass('hidden');
+		} else {
+			$('.inpect-pipe-count').closest('.col-md-6').removeClass('hidden');
+			$('#sxWidgetAlertTypeDD').find('li a[data-type="application"]').closest('li').removeClass('hidden');
+		}
+		
+		var timeoutUrl = _this.getCookie("STREAM_ANALYTIX_TIMEOUT_URL");
+		if(timeoutUrl != ''){
+			_this.setCookie("STREAM_ANALYTIX_TIMEOUT_URL", null, 0);
+			//window.location = timeoutUrl;			
+		}
+		
+		// Refresh Interval
+		$("#spinner").attr({"max" : 10, "min": 0});
+		
+		$('#intervalType').on('change', function() {
+			var type = $(this).val();
+			var max = (type == 'minutes') ? 10 : 59;
+			$("#spinner").attr({"max" : max}).val(0);
+
+			var stepVal = (type == 'minutes') ? 1 : 5;
+			$("#spinner").attr({"step" : stepVal});
+			_this.changeSpinnerValue(type);
+		});
+		
+		$("#spinner").on('change', function(){
+			var val = $(this).val();
+			var type = $('#intervalType').val();
+			_this.changeSpinnerValue(type);
+		});
+		$("#intervalType").select2();
+		// Refresh Interval
+		
+		$('#sxWidgetEngineTypeDD a').on('click', function() {
+			var type = $(this).data('type');
+			var txt = $(this).text();
+			$('#sxWidgetEngineType').text(txt);
+			if ( type == 'spark' ) {
+				$('#stormPipelineDetails').addClass('hidden');
+				$('#sparkPipelineDetails').removeClass('hidden');
+			} else {
+				$('#stormPipelineDetails').removeClass('hidden');
+				$('#sparkPipelineDetails').addClass('hidden');
+			}
+		});
+		
+		$('#sxWidgetAlertTypeDD a').on('click', function() {
+			var type = $(this).data('type');
+			var txt = $(this).text();
+			$('#sxWidgetAlertType').text(txt);
+			if ( type == 'system' ) {
+				$('#applicationAlerts').addClass('hidden');
+				$('#systemAlerts').removeClass('hidden');
+			} else {
+				$('#applicationAlerts').removeClass('hidden');
+				$('#systemAlerts').addClass('hidden');
+			}
+		});
+		
+		$('#sxWidgetLicenseDD a').on('click', function() {
+			var type = $(this).data('type');
+			var txt = $(this).text();
+			$('#sxWidgetLicense').text(txt);
+			if ( type == 'details' ) {
+				$('#licenseViolation').addClass('hidden');
+				$('#licenseDetails').removeClass('hidden');
+			} else {
+				$('#licenseViolation').removeClass('hidden');
+				$('#licenseDetails').addClass('hidden');
+			}
+		});
+		
+		$('#sxWidgetWHTypeDD a').on('click', function() {
+			var type = $(this).data('type');
+			var txt = $(this).text();
+			$('#sxWidgetWHType').text(txt);
+			if ( type == 'system' ) {
+				$('#appWebHealth').addClass('hidden');
+				$('#sysWebHealth').removeClass('hidden');
+			} else {
+				$('#appWebHealth').removeClass('hidden');
+				$('#sysWebHealth').addClass('hidden');
+			}
+		});
+		
+		// Delete Pipeline
+		$(document).on("click", ".ico-del", function(e) {
+			e.preventDefault();
+			var elem = $(this);
+			var selTen = $('select#tenantList').val();
+			selTen = (typeof selTen == 'undefined' ) ? currentTenantId : selTen;
+			$('.msg-failure, .msg-success').hide();
+			bootbox.confirm(i18N['sax.notification.delete'], function(confirmation) {
+				if ( confirmation ) {
+					var ssId = elem.closest('tr').find('.margin-ts.margin-bs').text();
+					var params = '/'+selTen+'/'+ssId+'?engine=spark';
+					var response = saxApp.ajaxPOSTSync(subSystemDeleteUrl + params);
+					if ( response ) {
+						bootbox.alert(response.record);
+						if ( response.status == 'SUCCESS' ) {
+							var params = selTen + '/?engineType=spark';
+							_this.ajaxGETASync('inspect', inspectPipelinesListUrl+'/'+params, ["#inspectPipelineList"], ["#inspectPipelineListError"]);
+						}
+					}
+				}
+			});
+		});
+		
+		// Stop Pipeline
+		$(document).on("click", ".ico-stop", function(e) {
+			e.preventDefault();
+			var elem = $(this);
+			var selTen = $('select#tenantList').val();
+			selTen = (typeof selTen == 'undefined' ) ? currentTenantId : selTen;
+			bootbox.confirm(i18N['sax.notification.stoppipeline'], function(confirmation) {
+				if ( confirmation ) {
+					var ssId = elem.closest('tr').find('.pipeline-name').text();
+					var param = "?name="+ssId+"&engine=spark&action=kill";
+					var response = saxApp.ajaxPOSTSync(setStausUrl+'/'+ selTen + param);
+					if ( response ) {
+						bootbox.alert(response.record);
+						if ( response.status == 'SUCCESS' ) {
+							var params = selTen+'?engineType=spark';
+							_this.ajaxGETASync('inspect', inspectPipelinesListUrl+'/'+params, ["#inspectPipelineList"], ["#inspectPipelineListError"]);
+						}
+					}
+				}
+			});
+		});
+		
+		$(document).on("change", "select#tenantList", function(e) {
+			var _val = $(this).val();
+			tempPipelinesUrl = pipelinesUrl+'/'+_val;
+			tempAlertsUrl = alertsUrl+'/'+_val;
+			tempMetricsUrl = metricsUrl+'/'+_val;
+			var params = _val+'?engineType=spark';
+			if ( _val == 0 ) {
+				$('#licenseSummaryWrap, #connectionSummaryWrap, #saxWebHealthWrap').removeClass('hidden');
+				$('.inpect-pipe-count').closest('.col-md-6').addClass('hidden');
+				$('#sxWidgetAlertTypeDD').find('li a[data-type="application"]').closest('li').addClass('hidden');
+			} else {
+				$('#licenseSummaryWrap, #connectionSummaryWrap, #saxWebHealthWrap').addClass('hidden');
+				$('.inpect-pipe-count').closest('.col-md-6').removeClass('hidden');
+				/* INSPECT PIPELINES */
+				_this.ajaxGETASync('inspect', inspectPipelinesListUrl+'/'+params, ["#inspectPipelineList"], ["#inspectPipelineListError"]);
+				$('#sxWidgetAlertTypeDD').find('li a[data-type="application"]').closest('li').removeClass('hidden');
+			}
+			
+			/* PIPELINE SUMMARY */
+			_this.ajaxGETASync('pipelineSummary', tempPipelinesUrl, ['#sparkPipelineDetailsCont', '#stormPipelineDetailsCont'], ['#sparkPipelineDetailsError', '#stormPipelineDetailsError']);
+			
+			/* METRICS */
+			_this.ajaxGETASync('metrics', tempMetricsUrl, ['#metricsCont'], ['#metricsError']);
+			
+			/* ALERTS */
+			_this.ajaxGETASync('alerts', tempAlertsUrl, ['#systemAlertsCont', '#applicationAlertsCont'], ['#systemAlertsError', '#applicationAlertsError']);
+			
+			
+		});
+		
+		$('#coresEasyPie').easyPieChart({
+			trackColor: '#e6e6e6',
+			barColor: '#f0ad4e',
+			lineWidth: 12,
+			scaleLength: 0,
+			size: 90
+		});
+		
+		$('#workersEasyPie').easyPieChart({
+			trackColor: '#e6e6e6',
+			barColor: '#5bc0de',
+			lineWidth: 12,
+			scaleLength: 0,
+			size: 90
+		});
+		
+		var resizeInt;
+		$(window).on("resize", function() {
+			clearTimeout(resizeInt);
+			resizeInt = setTimeout(function() {
+				_this.getWidgetData();
+			}, 500);
+		});
+		
+		_this.getWidgetData();
+		//_this.createClusterUtilizationPie();
+		$('#sxWidgetEngineTypeDD li:first').find('a').trigger('click');
+		
+		setTimeout(function(){
+			var tenantListOptn = '';
+			tenantListOptn = '<option value="0">Superuser</option>';
+			if ( allTenantData.length > 0 ) {
+				for( var i = 0; i < allTenantData.length; i++ ) {
+					tenantListOptn += '<option value="'+allTenantData[i].tenantId+'">'+allTenantData[i].tenantName+'</option>';
+				}
+			}
+			$('select#tenantList').html(tenantListOptn).select2({"width":"150px"});			
+		}, 300);
+	};
+	
+	_this.getCookie = function (cname) {
+			var name = cname + "=";
+			var ca = document.cookie.split(';');
+			for(var i=0; i<ca.length; i++) {
+				var c = ca[i].trim();
+				if (c.indexOf(name)==0) return c.substring(name.length,c.length);
+			}
+			return "";
+	};
+	
+	_this.setCookie = function (cname, cvalue, exdays) {
+			var d = new Date();
+			d.setTime(d.getTime()+(exdays*24*60*60*1000));
+			var expires = "expires="+d.toGMTString();
+			document.cookie = cname + "=" + cvalue + "; " + expires + ";path="+contextPath + "/";
+	};
+	
+	_this.ajaxGETASync = function(type, url, dataConts, errConts) {
+		$.ajax({
+            type: "GET",
+            dataType: "text",
+			contentType: "application/text; charset=utf-8",
+			url: url,
+            beforeSend: function (xhr) {},
+            success: function (data, status, xhr) {
+            	userAuthorization.chechAuthorizationStatus(xhr, this.url);
+                data = (data == '') ? {}: JSON.parse(data);
+				if ( type == 'inspect' ) {
+					$('.inpect-pipe-count').text('');
+				}
+				if ( $.isEmptyObject(data) ) {
+					var i=0;
+					for ( ; i<dataConts.length; i++ ) {
+						$(dataConts[i]).addClass('hidden');
+						$(errConts[i]).html('<div class="text-center gray-txt">' + errorObj.NO_DATA + '</div>');
+					}
+				} else {
+					var i=0;
+					for ( ; i<dataConts.length; i++ ) {
+						$(dataConts[i]).removeClass('hidden');
+						$(errConts[i]).empty();
+					}
+					
+					switch (type) {
+						case 'connections':
+							_this.connectionWidget(data);
+							break;
+						
+						case 'pipelineSummary':
+							_this.pipelineWidget(data);
+							break;
+							
+						case 'metrics':
+							_this.metricsWidget(data);
+							break;
+
+						case 'inspect':
+							_this.inspectWidget(data);
+							break;
+							
+						case 'webHealth':
+							_this.webHealthWidget(data);
+							break;
+							
+						case 'alerts':
+							_this.alertsWidget(data);
+							break;
+							
+						case 'license':
+							_this.licenseWidget(data);
+							break;
+					}
+				}
+            },
+            error: function (xhr, ajaxOptions, thrownError) {
+            	userAuth.chechAuthStatus(xhr);
+				userAuthorization.chechAuthorizationStatus(xhr, this.url);  
+                var i=0;
+				for ( ; i<dataConts.length; i++ ) {
+					$(dataConts[i]).addClass('hidden');
+					$(errConts[i]).html('<div class="text-center alert red-txt">' + errorObj.TABLE_RENDERING + '</div>');
+				}
+            }
+        });
+	};
+	
+	_this.changeSpinnerValue = function(type){
+		var val = $("#spinner").val();
+		val = (type == 'minutes') ? val*60*1000 : val*1000;
+		refreshInterval = parseInt(val);
+		clearInterval(interval);
+		_this.startTimer();
+	};
+	
+	_this.startTimer = function() {
+		if ( refreshInterval > 0 ) {
+			interval = setInterval(function() {
+				_this.getWidgetData();
+			}, refreshInterval);
+		} else {
+			clearInterval(interval);
+		}
+	};
+	
+	_this.getWidgetData = function() {
+		var selTen = $('select#tenantList').val();
+		selTen = (typeof selTen == 'undefined' ) ? currentTenantId : selTen;
+		var params = selTen+'?engineType=spark';
+		/* CONNECTIONS */
+		_this.ajaxGETASync('connections', connectionsUrl, ['#connectionsWrap'], ['#connectionsError']);
+		
+		/* PIPELINE SUMMARY */
+		_this.ajaxGETASync('pipelineSummary', tempPipelinesUrl, ['#sparkPipelineDetailsCont', '#stormPipelineDetailsCont'], ['#sparkPipelineDetailsError', '#stormPipelineDetailsError']);
+		
+		/* METRICS */
+		_this.ajaxGETASync('metrics', tempMetricsUrl, ['#metricsCont'], ['#metricsError']);
+		
+		/* INSPECT PIPELINES */
+		_this.ajaxGETASync('inspect', inspectPipelinesListUrl+'/'+params, ["#inspectPipelineList"], ["#inspectPipelineListError"]);
+		
+		/* SAX WEB HEALTH */
+		_this.ajaxGETASync('webHealth', webHealthUrl, ['#sysWebHealthCont', '#appWebHealthCont'], ['#sysWebHealthError', '#appWebHealthError']);
+		
+		/* ALERTS */
+		_this.ajaxGETASync('alerts', tempAlertsUrl, ['#systemAlertsCont', '#applicationAlertsCont'], ['#systemAlertsError', '#applicationAlertsError']);
+		
+		/* LICENSE DETAILS */
+		_this.ajaxGETASync('license', licenseDetailsUrl, ['#licenseDetailsCont'], ['#licenseDetailsError']);
+		
+	};
+	
+	_this.connectionWidget = function(_d) {
+		var $wrap = $('#connectionsWrap .sx-widget-tbl');
+		$wrap.empty();		
+		var totalConn=0;
+		$.each(_d, function(key, val) {
+			totalConn += val;
+		});
+		$('#totalConn').text(totalConn);
+		
+		$.each(_d, function(key, val) {
+			$wrap.append('<tr>' +
+				'<td>' + key + '</td>' +
+				'<td class="text-right">' + val + '</td>' +
+			'</tr>');
+		});
+	};
+	
+	_this.pipelineWidget = function(_d) {
+		/* SPARK */
+		if ( typeof _d.spark === 'undefined' ) {
+			$('#sparkPipelineDetailsCont').addClass('hidden');
+			$('#sparkPipelineDetailsError').html('<div class="text-center gray-txt">' + errorObj.NO_DATA + '</div>');
+		} else {
+			var spPipes = 0;
+			var sparkPipelines = {'ACTIVE': 0, 'ERROR': 0, 'STOPPED': 0, 'STARTING': 0};
+			$.each(_d.spark.pipelines, function(status, count) {
+				status = status.toUpperCase();
+				sparkPipelines[status] = count;
+				spPipes += count;
+			});
+			
+			$('#sparkTotalPipeline').text(spPipes);
+			$('#sparkPipelineDetailsCont .status-txt.active').text(sparkPipelines.ACTIVE);
+			$('#sparkPipelineDetailsCont .status-txt.errored').text(sparkPipelines.ERROR);
+			$('#sparkPipelineDetailsCont .status-txt.stopped').text(sparkPipelines.STOPPED);
+			$('#sparkPipelineDetailsCont .status-txt.starting').text(sparkPipelines.STARTING);
+			
+			var spCluster = _d.spark.cluster;
+			$('#sparkTotalWorkers').text(spCluster.workers);
+			
+			if ( sparkClusterManager == 'standalone' ) {
+				$('#sparkTotalWorkers').text(spCluster.workers);
+			} else if ( sparkClusterManager == 'yarn' ) {
+				$('#sparkTotalWorkers').text(spCluster.nodeManagers);
+			}
+			
+			var coresPerc = (spCluster.coresused == 0 && spCluster.cores == 0) ? '0%' : (((spCluster.coresused*100)/spCluster.cores).toFixed(1) + '%');
+			$('#sparkCoresUsage').text(spCluster.coresused + '/' + spCluster.cores);
+			$('#sparkCoresProgress').css('width', coresPerc);
+			
+			var memoryPerc = (spCluster.memoryused == 0 && spCluster.memory == 0) ? '0%' : (((spCluster.memoryused*100)/spCluster.memory).toFixed(1) + '%');
+			$('#sparkMemoryUsage').text(spCluster.memoryused + '/' + spCluster.memory);
+			$('#sparkMemoryProgress').css('width', memoryPerc);
+		}
+		
+		/* STORM */
+		if ( typeof _d.storm === 'undefined' ) {
+			$('#stormPipelineDetailsCont').addClass('hidden');
+			$('#stormPipelineDetailsError').html('<div class="text-center gray-txt">' + errorObj.NO_DATA + '</div>');
+		} else {
+			var stPipes = 0;
+			var stormPipelines = {'ACTIVE': 0, 'INACTIVE': 0, 'STOPPED': 0};
+			$.each(_d.storm.pipelines, function(status, count) {
+				stormPipelines[status] = count;
+				stPipes += count;
+			});
+			
+			$('#stormTotalPipeline').text(stPipes);
+			$('#stormPipelineDetailsCont .status-txt.active').text(stormPipelines.ACTIVE);
+			$('#stormPipelineDetailsCont .status-txt.inactive').text(stormPipelines.INACTIVE);
+			$('#stormPipelineDetailsCont .status-txt.stopped').text(stormPipelines.STOPPED);
+			
+			var stCluster = _d.storm.cluster;
+			$('#stormTotalSlaves').text(stCluster.supervisors);
+			
+			var slotsPerc = (stCluster.slotsUsed == 0 && stCluster.slotsTotal == 0) ? '0%' : (((stCluster.slotsUsed*100)/stCluster.slotsTotal).toFixed(1) + '%');
+			$('#stormSlotsUsage').text(stCluster.slotsUsed + '/' + stCluster.slotsTotal);
+			$('#stormSlotsProgress').css('width', slotsPerc);
+			$('#stormSlotsProgress span').text(slotsPerc);
+		}
+	};
+	
+	_this.licenseWidget = function(_d) {
+		/* DETAILS */
+		if ( typeof _d.license === 'undefined' || _d.license == null || _d.license == 'null' || _d.license == '' ) {
+			$('#licenseDetailsCont').addClass('hidden');
+			$('#licenseDetailsError').html('<div class="text-center gray-txt">' + errorObj.NO_DATA + '</div>');
+		} else {
+			var _dtl = JSON.parse(_d.license);
+			_dtl.licVersion = (_dtl.licVersion == "null" || _dtl.licVersion == null) ? '' : _dtl.licVersion;
+			_dtl.expiration = (_dtl.expiration == "null" || _dtl.expiration == null || _dtl.expiration == '' ) ? i18N['sax.label.licenseLifetime'] : moment(_dtl.expiration).format('MMMM DD YYYY');
+			_dtl.maxCores = (_dtl.coreRestriction) ? _dtl.maxCores : i18N['sax.label.noRestriction'];
+			_dtl.maxNodes = (_dtl.nodeRestriction) ? _dtl.maxNodes : i18N['sax.label.noRestriction'];
+			_dtl.maxCoresPerNode = (_dtl.nodeRestriction) ? _dtl.maxCoresPerNode : i18N['sax.label.noRestriction'];
+			
+			$("#expiration").text(_dtl.expiration);
+			$("#licVersion").text(_dtl.licVersion);
+			$("#owner").text(_dtl.name);
+			$("#email").text(_dtl.email);
+			$("#licenseType").text(_dtl.licenseType);
+			$("#startDate").text( moment(_dtl.startDate).format('MMMM DD YYYY') );
+			$("#maxCoresVal").text(_dtl.maxCores);
+			$("#maxNodesVal").text(_dtl.maxNodes);
+			$("#maxCoresPerNodeVal").text(_dtl.maxCoresPerNode);
+			$("#supportedModules").text(_dtl.enginesSupported);
+		}
+		
+		/* VIOLATION */
+		if ( typeof _d.violations === 'undefined' || _d.violations == null || _d.violations == 'null' || _d.violations == '' ) {
+			$('#licenseViolationCont').addClass('hidden');
+			$('#licenseViolationError').html('<div class="text-center gray-txt">' + errorObj.NO_DATA + '</div>');
+		} else {
+			var _vio = JSON.parse(_d.violations);
+			if ( typeof _d.FailType !== 'undefined' && 
+				(_vio.FailType == 'MAX_VIOLATION' ||
+				_vio.FailType == 'GRACE' ||
+				_vio.FailType == 'EXPIRED' ||
+				_vio.FailType == 'VIOLATED' ||
+				_vio.FailType == 'GRACE_TO_EXP')
+			) {
+				$("#licenseViolationCont").text(_vio.record.replace("<br/>","")+' '+_vio.SupportEmail);
+			} else {
+				$("#licenseViolationCont").text(_vio.FailType);
+			}
+		}
+	};
+	
+	_this.metricsWidget = function(_d) {
+		$.each(_d, function(_metric, _count) {
+			$('#'+ _metric +'Metric').text(_count);
+		});
+	};
+	
+	_this.inspectWidget = function(data) {
+		var $sBody = $('#inspectPipelineList table tbody');
+		$sBody.empty();
+		$('.inpect-pipe-count').text('['+ data.length +']');
+		
+		$.each(data, function(id, subsystem) {
+			var actions = '';
+			subsystem.status = subsystem.status.toLowerCase();
+			
+			if ( subsystem.status != "stopped" ) {
+				actions = '<td><div class="action-wrap text-right margin-ts margin-bs"><a class="ico-stop tt btn btn-default sx-btn sx-btn-36" title="'+i18N['sax.label.stop']+'" href="javascript:void(0)" data-container="body"><i class="mdi mdi-stop-circle mdi-24px"></i></a><a class="ico-del tt btn btn-default sx-btn sx-btn-36" title="'+i18N['sax.label.delete']+'" href="javascript:void(0)" data-container="body"><i class="mdi mdi-delete mdi-24px"></i></a></div></td>' + actions;
+			} else {
+				actions = '<td><div class="action-wrap text-right margin-ts margin-bs"><a class="ico-del tt btn btn-default sx-btn sx-btn-36" title="'+i18N['sax.label.delete']+'" href="javascript:void(0)" data-container="body"><i class="mdi mdi-delete mdi-24px"></i></a></div></td>' + actions;
+			}
+			
+			$sBody.append('<tr>' +
+					'<td class="elips-txt" width="50%"><div class="margin-ts margin-bs pipeline-name">'+ subsystem.name +'</div></td>' +
+					'<td class="elips-txt"><span class="label tile-status margin-lm '+ subsystem.status +'">'+ subsystem.status +'</span></td>' + actions +
+				'</tr>');
+		});
+		
+		$('#inspectPipelineList .tt').tooltip();
+	};
+	
+	_this.alertsWidget = function(_d) {
+		/* SYSTEM */
+		var sAlerts = _d.SAX_SYSTEM_ALERT.aaData;
+		if ( typeof sAlerts === 'undefined' || sAlerts.length == 0 ) {
+			$('#systemAlertsCont').addClass('hidden');
+			$('#systemAlertsError').html('<div class="text-center gray-txt">' + errorObj.NO_DATA + '</div>');
+		} else {
+			var $sBody = $('#systemAlertsCont table tbody');
+			$sBody.empty();
+			var s=0;
+			for ( ; s<sAlerts.length; s++ ) {
+				var flag = (sAlerts[s].gridData.Type == 'critical') ? 'flag-danger' : 'flag-success';
+				$sBody.append('<tr>' +
+					'<td class="elips-txt" width="60%"><span class="'+ flag +'"></span>'+ sAlerts[s].gridData.Message +'</td>' +
+					'<td class="gray-txt text-right small">'+ saxApp.timeFormatFull(sAlerts[s].gridData.Date) +'</td>' +
+				'</tr>');
+			}
+		}
+		
+		/* APPLICATION */
+		var aAlerts = _d.SAX_APPLICATION_ALERT.aaData;
+		if ( typeof aAlerts === 'undefined' || aAlerts.length == 0 ) {
+			$('#applicationAlertsCont').addClass('hidden');
+			$('#applicationAlertsError').html('<div class="text-center gray-txt">' + errorObj.NO_DATA + '</div>');
+		} else {
+			var $sBody = $('#applicationAlertsCont table tbody');
+			$sBody.empty();
+			var s=0;
+			for ( ; s<aAlerts.length; s++ ) {
+				var flag = (aAlerts[s].gridData.Type == 'critical') ? 'flag-danger' : 'flag-success';
+				$sBody.append('<tr>' +
+					'<td class="elips-txt" width="60%"><span class="'+ flag +'"></span>'+ aAlerts[s].gridData.Message +'</td>' +
+					'<td class="gray-txt text-right small">'+ saxApp.timeFormatFull(aAlerts[s].gridData.Date) +'</td>' +
+				'</tr>');
+			}
+		}
+	};
+	
+	_this.webHealthWidget = function(_d) {
+		/* SYSTEM */
+		if ( typeof _d.cpuUsageCombined === 'undefined' && typeof _d.memoryUsage === 'undefined' ) {
+			$('#sysWebHealthCont').addClass('hidden');
+			$('#sysWebHealthError').html('<div class="text-center gray-txt">' + errorObj.NO_DATA + '</div>');
+		} else {
+			$('#sysWebHealthCont').removeClass('hidden');
+			var cpu = (_d.cpuUsageCombined != null && _d.cpuUsageCombined != 'null') ? (_d.cpuUsageCombined+'%') : '0%';
+			$('#sysWHCPUProgress').css('width', cpu);
+			$('#sysWHCPUUsage').text(cpu);
+			
+			var memory = (_d.memoryUsage != null && _d.memoryUsage != 'null') ? (_d.memoryUsage+'%') : '0%';
+			$('#sysWHMemoryProgress').css('width', memory);
+			$('#sysWHMemoryUsage').text(memory);
+		}
+		
+		/* APPLICATION */
+		if ( typeof _d.SaxProcess._Bootstrap.cpu === 'undefined' && typeof _d.SaxProcess._Bootstrap.memUtil === 'undefined' ) {
+			$('#appWebHealthCont').addClass('hidden');
+			$('#appWebHealthError').html('<div class="text-center gray-txt">' + errorObj.NO_DATA + '</div>');
+		} else {
+			$('#appWebHealthCont').removeClass('hidden');
+			var cpu = (_d.SaxProcess._Bootstrap.cpu != null && _d.SaxProcess._Bootstrap.cpu != 'null') ? (_d.SaxProcess._Bootstrap.cpu) : 0;
+			var cpuPerc = (cpu > 100) ? 100 : cpu;
+			$('#appWHCPUProgress').css('width', cpuPerc+'%');
+			$('#appWHCPUUsage').text(cpu+'%');
+			
+			var memory = (_d.SaxProcess._Bootstrap.memUtil != null && _d.SaxProcess._Bootstrap.memUtil != 'null') ? (_d.SaxProcess._Bootstrap.memUtil+'%') : '0%';
+			$('#appWHMemoryProgress').css('width', memory);
+			$('#appWHMemoryUsage').text(memory);
+		}
+	};
+	
+	_this.createClusterUtilizationPie = function() {
+		$('#coresEasyPie').data('easyPieChart').update(70);
+		$('#workersEasyPie').data('easyPieChart').update(30);
+	};
+	
+	window.onload = function() {
+		_this.init();
+	}
+};

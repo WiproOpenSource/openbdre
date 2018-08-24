@@ -462,29 +462,49 @@ angular.module('flowChart', ['dragging'] )
                      var destPid=$scope.mouseOverConnector.parentNode().data.pid;
                      //-parentId is start node
                      if(sourcePid<0)sourcePid=-sourcePid;
-                     var dataRecord = processAC('/mdrest/process/', 'GET', sourcePid);
-                     if (dataRecord) {
-                     	if(dataRecord.nextProcessIds=='0'){
-                     		dataRecord.nextProcessIds=destPid;
-                     	}
-                     	else{
-                     		dataRecord.nextProcessIds = dataRecord.nextProcessIds + "," + destPid;
-                     	}
-                     	//TS fields cause exception due to time format
-                     	delete dataRecord["addTS"];
-                     	delete dataRecord["editTS"];
-                     	var jsonToPost = dataRecord;
-                     	var dataRecord1 = processAC('/mdrest/process/', 'POST', $.param(jsonToPost));
-                     	if (dataRecord1) {
-                     		alertBox('info','Next process updated');
-                     	}
-                     	else {
-                     		alertBox('danger','Next process not updated');
-                     	}
-                     }
-                     else {
-                     	alertBox('danger','Next process not updated');
-                     }
+                      $.ajax({
+                                type: "GET",
+                                url: "/mdrest/process/"+sourcePid,
+                                success: function(data) {
+                                    if(data.Result == "OK") {
+                                       var dataRecord=data.Record;
+
+                               if (dataRecord) {
+                                        console.log("nextProcessIds before addition "+dataRecord.nextProcessIds);
+                                        if(dataRecord.nextProcessIds=='0'){
+                                            dataRecord.nextProcessIds=destPid;
+                                        }
+                                        else{
+                                            dataRecord.nextProcessIds = dataRecord.nextProcessIds + "," + destPid;
+                                        }
+                                        console.log("nextProcessIds after addition "+dataRecord.nextProcessIds);
+                                        //TS fields cause exception due to time format
+                                        delete dataRecord["addTS"];
+                                        delete dataRecord["editTS"];
+                                        var jsonToPost = dataRecord;
+                                        var dataRecord1 = processAC('/mdrest/process/', 'POST', $.param(jsonToPost));
+                                        if (dataRecord1) {
+                                            alertBox('info','Next process updated');
+                                        }
+                                        else {
+                                            alertBox('danger','Next process not updated');
+                                        }
+                                    }
+                                    else {
+                                        alertBox('danger','Next process not updated');
+                                    }
+
+
+
+                                    }
+                                    else
+                                    alertBox("warning","Error occured");
+
+                                }
+
+                            });
+
+
 				}
 
 				$scope.draggingConnection = false;

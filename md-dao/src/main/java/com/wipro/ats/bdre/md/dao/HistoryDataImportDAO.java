@@ -147,40 +147,7 @@ public class HistoryDataImportDAO {
             String nextProcessForR2S = "";
 
             // adding data laod parent
-            if (flag == 1) {
-                dataLoadParent.setDescription(processDescription+"_Load");
-                dataLoadParent.setAddTs(new Date());
-                dataLoadParent.setEditTs(new Date());
-                dataLoadParent.setProcessName(processName+"_Load");
-                dataLoadParent.setBusDomain(busDomain);
-                dataLoadParent.setProcessType(dataLoadProcessType);
-                dataLoadParent.setNextProcessId("0");
-                dataLoadParent.setCanRecover(false);
-                dataLoadParent.setEnqueuingProcessId(0);
-                dataLoadParent.setBatchCutPattern(null);
-                dataLoadParent.setDeleteFlag(false);
-                if (workflowType!=null)
-                dataLoadParent.setWorkflowType(workflowType);
-                else
-                dataLoadParent.setWorkflowType(oozieType);
-                PermissionType permissionType=new PermissionType();
-                permissionType.setPermissionTypeId(7);
-                dataLoadParent.setPermissionTypeByUserAccessId(permissionType);
-                PermissionType permissionType1=new PermissionType();
-                permissionType1.setPermissionTypeId(4);
-                dataLoadParent.setPermissionTypeByGroupAccessId(permissionType1);
-                PermissionType permissionType2=new PermissionType();
-                permissionType2.setPermissionTypeId(0);
-                dataLoadParent.setPermissionTypeByOthersAccessId(permissionType2);
-                dataLoadParent.setUserRoles(userRoles);
-                Users users=new Users();
-                users.setUsername(username);
-                dataLoadParent.setUsers(users);
-                session.save(dataLoadParent);
 
-                LOGGER.info("the inserted data load parent is " + dataLoadParent.getProcessId());
-                parentProcessIdList.add(dataLoadParent.getProcessId());
-            }
             // looping for each table and creating subsequent data import and data load processes with required properties
             for (int i = 1; i <= numOfTable; i++) {
                 //data import process
@@ -193,7 +160,7 @@ public class HistoryDataImportDAO {
                 dataImportProcess.setProcessType(dataImportProcessType);
                 dataImportProcess.setNextProcessId("0");
                 dataImportProcess.setCanRecover(false);
-                dataImportProcess.setEnqueuingProcessId(0);
+                dataImportProcess.setEnqueuingProcessId("0");
                 dataImportProcess.setBatchCutPattern(null);
                 if (workflowType!=null)
                 dataImportProcess.setWorkflowType(workflowType);
@@ -229,7 +196,7 @@ public class HistoryDataImportDAO {
                 childDataImportProcess.setProcess(dataImportProcess);
                 childDataImportProcess.setBusDomain(busDomain);
                 childDataImportProcess.setProcessType(childDataImportProcessType);
-                childDataImportProcess.setEnqueuingProcessId(0);
+                childDataImportProcess.setEnqueuingProcessId("0");
                 childDataImportProcess.setNextProcessId(dataImportProcess.getProcessId().toString());
                 childDataImportProcess.setWorkflowType(actionType);
                 childDataImportProcess.setDeleteFlag(false);
@@ -387,23 +354,6 @@ public class HistoryDataImportDAO {
                 columnListProperties.setDescription(DATAIMPORTPROPERTIES);
                 session.save(columnListProperties);
 
-                // increment type
-                IntermediateId intermediateIdIncrementType = new IntermediateId();
-                intermediateIdIncrementType.setUuid(intermediateInfo.getUuid());
-                intermediateIdIncrementType.setInterKey("incrementType_" + i);
-
-                Criteria incrementTypeValueCriteria = session.createCriteria(Intermediate.class).add(Restrictions.eq("id", intermediateIdIncrementType));
-                Intermediate incrementTypeValue = (Intermediate) incrementTypeValueCriteria.list().get(0);
-
-                PropertiesId propertiesIdIncrementType = new PropertiesId();
-                propertiesIdIncrementType.setProcessId(childDataImportProcess.getProcessId());
-                propertiesIdIncrementType.setPropKey("incr.mode");
-                Properties incrementTypeProperties = new Properties();
-                incrementTypeProperties.setId(propertiesIdIncrementType);
-                incrementTypeProperties.setConfigGroup(IMPCOMMON);
-                incrementTypeProperties.setPropValue(incrementTypeValue.getInterValue());
-                incrementTypeProperties.setDescription(DATAIMPORTPROPERTIES);
-                session.save(incrementTypeProperties);
 
                 // increment Column
                 IntermediateId intermediateIdIncrementColumn = new IntermediateId();
@@ -450,6 +400,40 @@ public class HistoryDataImportDAO {
                 Criteria loadOrNotCriteria = session.createCriteria(Intermediate.class).add(Restrictions.eq("id", intermediateIdLoadOrNot));
                 Intermediate loadOrNotValue = (Intermediate) loadOrNotCriteria.list().get(0);
                 LOGGER.debug("loadOrNotValue " + loadOrNotValue.getInterValue());
+                if (flag == 1) {
+                    dataLoadParent.setDescription(processDescription+"_Load");
+                    dataLoadParent.setAddTs(new Date());
+                    dataLoadParent.setEditTs(new Date());
+                    dataLoadParent.setProcessName(processName+"_Load");
+                    dataLoadParent.setBusDomain(busDomain);
+                    dataLoadParent.setProcessType(dataLoadProcessType);
+                    dataLoadParent.setNextProcessId("0");
+                    dataLoadParent.setCanRecover(false);
+                    dataLoadParent.setEnqueuingProcessId("0");
+                    dataLoadParent.setBatchCutPattern(null);
+                    dataLoadParent.setDeleteFlag(false);
+                    if (workflowType!=null)
+                        dataLoadParent.setWorkflowType(workflowType);
+                    else
+                        dataLoadParent.setWorkflowType(oozieType);
+                    PermissionType permissionType3=new PermissionType();
+                    permissionType3.setPermissionTypeId(7);
+                    dataLoadParent.setPermissionTypeByUserAccessId(permissionType3);
+                    PermissionType permissionType4=new PermissionType();
+                    permissionType4.setPermissionTypeId(4);
+                    dataLoadParent.setPermissionTypeByGroupAccessId(permissionType4);
+                    PermissionType permissionType5=new PermissionType();
+                    permissionType5.setPermissionTypeId(0);
+                    dataLoadParent.setPermissionTypeByOthersAccessId(permissionType5);
+                    dataLoadParent.setUserRoles(userRoles);
+                    Users users1=new Users();
+                    users1.setUsername(username);
+                    dataLoadParent.setUsers(users1);
+                    session.save(dataLoadParent);
+
+                    LOGGER.info("the inserted data load parent is " + dataLoadParent.getProcessId());
+                    parentProcessIdList.add(dataLoadParent.getProcessId());
+                }
                 if ("false".equals(loadOrNotValue.getInterValue())) {
                     // file2Raw process
                     Process file2Raw = new Process();
@@ -462,7 +446,7 @@ public class HistoryDataImportDAO {
                     file2Raw.setNextProcessId("0");
                     file2Raw.setProcess(dataLoadParent);
                     file2Raw.setCanRecover(false);
-                    file2Raw.setEnqueuingProcessId(dataImportProcess.getProcessId());
+                    file2Raw.setEnqueuingProcessId(dataImportProcess.getProcessId().toString());
                     file2Raw.setBatchCutPattern(null);
                     file2Raw.setDeleteFlag(false);
                     file2Raw.setWorkflowType(actionType);
@@ -480,7 +464,7 @@ public class HistoryDataImportDAO {
                     raw2Stage.setProcess(dataLoadParent);
                     raw2Stage.setCanRecover(false);
                     raw2Stage.setNextProcessId("0");
-                    raw2Stage.setEnqueuingProcessId(dataImportProcess.getProcessId());
+                    raw2Stage.setEnqueuingProcessId(dataImportProcess.getProcessId().toString());
                     raw2Stage.setBatchCutPattern(null);
                     raw2Stage.setDeleteFlag(false);
                     raw2Stage.setWorkflowType(actionType);
@@ -497,7 +481,7 @@ public class HistoryDataImportDAO {
                     stage2Base.setProcessType(stage2BaseType);
                     stage2Base.setProcess(dataLoadParent);
                     stage2Base.setCanRecover(false);
-                    stage2Base.setEnqueuingProcessId(0);
+                    stage2Base.setEnqueuingProcessId("0");
                     stage2Base.setBatchCutPattern(null);
                     stage2Base.setDeleteFlag(false);
                     stage2Base.setNextProcessId("0");
@@ -613,11 +597,22 @@ public class HistoryDataImportDAO {
                     rawTableDBPropertiesForStage.setDescription(RAW_TABLE_NAME);
                     session.save(rawTableDBPropertiesForStage);
 
-                    //cloumns and datyptes
+                    //columns and datatypes
                     IntermediateId intermediateIdRawTableColumns = new IntermediateId();
                     intermediateIdRawTableColumns.setUuid(intermediateInfo.getUuid());
                     intermediateIdRawTableColumns.setInterKey("rawColumnsAndDataTypes_" +  i);
                     LOGGER.info("key is : " + i);
+
+                    //fetching transformations
+                    IntermediateId intermediateIdTransformations = new IntermediateId();
+                    intermediateIdTransformations.setUuid(intermediateInfo.getUuid());
+                    intermediateIdTransformations.setInterKey("transformationList_" + i);
+
+                    Criteria transformationCriteria = session.createCriteria(Intermediate.class).add(Restrictions.eq("id", intermediateIdTransformations));
+                    Intermediate transformations = (Intermediate) transformationCriteria.list().get(0);
+                    String[] columnTransformations = transformations.getInterValue().split(",");
+                    LOGGER.info("list of transformations is : " + transformations.getInterValue());
+                    // done with fetching transformations
 
                     Criteria rawTableColumnsCriteria = session.createCriteria(Intermediate.class).add(Restrictions.eq("id", intermediateIdRawTableColumns));
                     Intermediate rawTableColumns = (Intermediate) rawTableColumnsCriteria.list().get(0);
@@ -647,11 +642,16 @@ public class HistoryDataImportDAO {
 
                         PropertiesId baseTableColumnPropertiesId = new PropertiesId();
                         baseTableColumnPropertiesId.setProcessId(raw2Stage.getProcessId());
-                        baseTableColumnPropertiesId.setPropKey("transform_" + rawTableColumn[columnCounter-1].split(" ")[0]);
+                        baseTableColumnPropertiesId.setPropKey("transform_" + rawTableColumn[columnCounter-1].split(" ")[0]+"."+columnCounter);
                         Properties baseTableColumnProperties = new Properties();
                         baseTableColumnProperties.setId(baseTableColumnPropertiesId);
                         baseTableColumnProperties.setConfigGroup("base-columns");
-                        baseTableColumnProperties.setPropValue(rawTableColumn[columnCounter-1].split(" ")[0]);
+                        if(columnTransformations[columnCounter-1].equals("no transformation")) {
+                            baseTableColumnProperties.setPropValue(rawTableColumn[columnCounter - 1].split(" ")[0]);
+                        }
+                        else {
+                            baseTableColumnProperties.setPropValue(columnTransformations[columnCounter - 1] + "(" + rawTableColumn[columnCounter - 1].split(" ")[0] + ")");
+                        }
                         baseTableColumnProperties.setDescription("Base Table Columns");
                         session.save(baseTableColumnProperties);
 

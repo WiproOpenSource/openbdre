@@ -61,8 +61,35 @@ public class FileScan {
                 fileCopyInfo.setSrcLocation(file.getAbsolutePath());
                 fileCopyInfo.setDstLocation(file.getParent().replace(FileMonRunnableMain.getMonitoredDirName(), FileMonRunnableMain.getHdfsUploadDir()));
                 FileInputStream fis = new FileInputStream(file);
-                fileCopyInfo.setFileHash(DigestUtils.md5Hex(fis));
-                fis.close();
+                //fileCopyInfo.setFileHash(DigestUtils.md5Hex(fis));
+                //fis.close();
+                fileCopyInfo.setFileHash(fileName+file.lastModified());
+                Long prevSize=0L;
+                Long currentSize=0L;
+                while (true)
+                {
+                    try {
+
+                        currentSize=file.length();
+                        LOGGER.info(currentSize);
+
+                    } catch (Exception e) {
+                        LOGGER.info(e);
+
+                    }
+                    if(currentSize.equals(prevSize))
+                    {
+                        break;
+
+                    }
+                    else
+                    {
+                        prevSize=currentSize;
+                        Thread.sleep(1000);
+                        continue;
+                    }
+
+                }
                 fileCopyInfo.setFileSize(file.length());
                 fileCopyInfo.setTimeStamp(file.lastModified());
                 FileMonitor.addToQueue(fileName, fileCopyInfo);

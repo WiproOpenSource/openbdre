@@ -47,7 +47,7 @@ public class Export {
         process.setDeleteFlag(false);
         process.setDescription("des");
         process.setEditTS(new Date());
-        process.setEnqProcessId(1);
+        process.setEnqProcessId("1");
 
         processList.add(process);
 
@@ -191,5 +191,4 @@ public class Export {
     public String generateZipEntry(String file){
         return file.substring(sourceDir.length()+1, file.length());
     }
-    
 }

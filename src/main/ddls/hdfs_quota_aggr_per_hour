@@ -1,0 +1,17 @@
+CREATE TABLE IF NOT EXISTS HDFS_QUOTA_AGGREGATE_PER_HOUR (quota bigint, numFiles bigint, spaceQuota bigint, spaceConsumed bigint , hdfsPath string, fetchdate string, fetchhour string)
+ROW FORMAT DELIMITED
+FIELDS TERMINATED BY '\t'
+LINES TERMINATED BY '\n'
+STORED AS TEXTFILE;
+
+
+INSERT INTO HDFS_QUOTA_AGGREGATE_PER_HOUR
+SELECT avg(quota) , avg(numFiles), avg(spaceQuota), avg(spaceConsumed), hdfsPath, fetchdate, fetchhour
+FROM HDFS_QUOTA
+GROUP BY hdfsPath, fetchdate, fetchhour
+
+//mysql create table
+CREATE TABLE HDFS_QUOTA_AGGREGATE_PER_HOUR (quota bigint, numFiles bigint, spaceQuota bigint, spaceConsumed bigint , hdfsPath varchar(100), fetchdate varchar(11), fetchhour varchar(3))
+
+//sqoop export from hive table hdfs location to mysql
+sqoop-export --connect jdbc:mysql://localhost:3306/bdre --username root --password cloudera --table HDFS_QUOTA_AGGREGATE_PER_HOUR  --input-fields-terminated-by '\t' --input-lines-terminated-by '\n' --export-dir '/user/hive/warehouse/monitor.db/hdfs_quota_aggregate_per_hour'

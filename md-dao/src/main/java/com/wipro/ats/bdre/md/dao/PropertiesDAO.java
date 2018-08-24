@@ -158,6 +158,29 @@ public class PropertiesDAO {
         return propertiesList;
     }
 
+
+    public List<Properties> getPropertiesForBroadcast(int processId) {
+        List<Properties> propertiesList = new ArrayList<Properties>();
+        Session session = sessionFactory.openSession();
+        try {
+
+            session.beginTransaction();
+            Criteria cr = session.createCriteria(Properties.class).add(Restrictions.eq("process.processId", processId)).add(Restrictions.like("id.propKey","broadcastIdentifier%"));
+            propertiesList = cr.list();
+            session.getTransaction().commit();
+
+        } catch (Exception e) {
+            session.getTransaction().rollback();
+            LOGGER.info("Error " + e);
+            return propertiesList;
+        } finally {
+            session.close();
+        }
+        return propertiesList;
+    }
+
+
+
     public void deleteByProcessId(com.wipro.ats.bdre.md.dao.jpa.Process process) {
         Session session = sessionFactory.openSession();
         try {
@@ -281,6 +304,26 @@ public class PropertiesDAO {
             LOGGER.info("closing time" + date);
             session.close();
         }
+    }
+
+    public String getPropertiesValueForConfigAndKey(int processId, String configGroup, String key) {
+        String value = null;
+        Session session = sessionFactory.openSession();
+        try {
+
+            session.beginTransaction();
+            Criteria cr = session.createCriteria(Properties.class).add(Restrictions.eq("process.processId", processId)).add(Restrictions.eq("configGroup", configGroup)).add(Restrictions.eq("id.propKey",key)).setProjection(Projections.property("propValue"));
+            value = cr.list().get(0).toString();
+            session.getTransaction().commit();
+
+        } catch (Exception e) {
+            session.getTransaction().rollback();
+            LOGGER.info("Error " + e);
+            return value;
+        } finally {
+            session.close();
+        }
+        return value;
     }
 
 }

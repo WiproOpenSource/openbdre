@@ -109,6 +109,7 @@ public class DataImportAPI extends MetadataAPIBase {
             pushToIntermediate(uuid, "baseTableName_" + count, table.getDestTableName() );
             pushToIntermediate(uuid, "rawTableName_" + count, table.getSrcTableName());
             pushToIntermediate(uuid, "columnList_" + count, table.getColumnList());
+            pushToIntermediate(uuid, "transformationList_" + count, table.getTransformationList());
 
             LOGGER.info("value is " + table.getIngestOrNot());
             pushToIntermediate(uuid, INGESTONLY + count, table.getIngestOrNot());
@@ -127,7 +128,12 @@ public class DataImportAPI extends MetadataAPIBase {
             LOGGER.info("uuid is = " + uuid);
             //Calling proc HistoryDataImport which creates the data import job and data load job
             List<Process> process = historyDataImportDAO.historyDataImport(intermediateInfo,principal.getName());
-            LOGGER.debug("process ids are :" + process.size());
+            int numProcesses=process.size();
+            LOGGER.debug("process ids are :" + numProcesses);
+            if(numProcesses==0){
+                restWrapper = new RestWrapper("No jobs created",RestWrapper.ERROR);
+                return restWrapper;
+            }
             restWrapper = new RestWrapper(process, RestWrapper.OK);
 
         } catch (Exception e) {
@@ -150,6 +156,9 @@ public class DataImportAPI extends MetadataAPIBase {
         try {
             Class.forName(driverClass);
             conn = DriverManager.getConnection(connectionURL, dbUser, dbPassword);
+            if(driverClass.contains("oracle")){
+                dbSchema = dbSchema.toUpperCase();
+            }
 
             ResultSet result = conn.getMetaData().getTables(null,dbSchema, null, new String[]{"TABLE","VIEW"} );
 
@@ -273,7 +282,6 @@ public class DataImportAPI extends MetadataAPIBase {
         public void setDtype(String dtype) {
             this.dtype = dtype;
         }
-
         public void setParentEntityName(String parentEntityName) {
             this.parentEntityName = parentEntityName;
         }
@@ -301,6 +309,10 @@ public class DataImportAPI extends MetadataAPIBase {
         Collections.reverse(keyList);
 
         // build table
+        for(String key : keyList){
+            String value = params.get(key)[0];
+            LOGGER.debug("key = " + key + " value=" + value);
+        }
 
         for (String key : keyList) {
             String value = params.get(key)[0];
@@ -363,6 +375,16 @@ public class DataImportAPI extends MetadataAPIBase {
                 Table table = tables.get(srcTableName);
                 Column column = table.getColumnByName(srcColName);
                 column.setDestColumnName(destColName);
+            }
+            else if (key.startsWith("destTransform_")) {
+                String transformation = value;
+                String srcTableName = key.replaceAll("destTransform_", "").replaceAll(ESCAPESEQ, "");
+                String srcColName = key.replaceAll("destTransform_.+\\.", "");
+                System.out.println("column name is " + srcColName);
+                System.out.println("table name is " + srcTableName);
+                Table table = tables.get(srcTableName);
+                Column column = table.getColumnByName(srcColName);
+                column.setTransformationName(transformation);
             }
 
         }

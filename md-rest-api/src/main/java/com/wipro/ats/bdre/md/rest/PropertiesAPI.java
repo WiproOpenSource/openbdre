@@ -29,10 +29,16 @@ import org.springframework.validation.BindingResult;
 
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.security.Principal;
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by arijit on 1/9/15.
@@ -57,17 +63,16 @@ public class PropertiesAPI extends MetadataAPIBase {
      * @return nothing.
      */
     @RequestMapping(value = "/{id}", method = RequestMethod.DELETE)
-
     @ResponseBody
     public RestWrapper delete(@PathVariable("id") Integer processId, Principal principal) {
         RestWrapper restWrapper = null;
         try {
             Process parentProcess=processDAO.get(processId);
             if (parentProcess.getProcess()!=null)
-                  processDAO.securityCheck(parentProcess.getProcess().getProcessId(),principal.getName(),WRITE);
+                processDAO.securityCheck(parentProcess.getProcess().getProcessId(),principal.getName(),WRITE);
             else
-               processDAO.securityCheck(processId,principal.getName(),WRITE);
-                    com.wipro.ats.bdre.md.dao.jpa.Process process = new Process();
+                processDAO.securityCheck(processId,principal.getName(),WRITE);
+            com.wipro.ats.bdre.md.dao.jpa.Process process = new Process();
             process.setProcessId(processId);
             propertiesDAO.deleteByProcessId(process);
             restWrapper = new RestWrapper(null, RestWrapper.OK);
@@ -83,6 +88,313 @@ public class PropertiesAPI extends MetadataAPIBase {
         return restWrapper;
     }
 
+    @RequestMapping(value = "/{id}", method = RequestMethod.POST)
+    @ResponseBody
+    public RestWrapper addStremingProperties(@PathVariable("id") Integer processId, HttpServletRequest request, Principal principal) {
+        RestWrapper restWrapper = null;
+        try {
+
+            LOGGER.info("id is "+processId);
+            // Read from request
+            String query="";
+            String tmp1="";
+            StringBuilder buffer = null;
+            try {
+                buffer = new StringBuilder();
+                BufferedReader reader = request.getReader();
+                while ((tmp1 = reader.readLine()) != null) {
+                    buffer.append(tmp1);
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            try {
+                query = java.net.URLDecoder.decode(new String(buffer), "UTF-8");
+            } catch (UnsupportedEncodingException e) {
+                e.printStackTrace();
+            }
+            String[] linkedList=query.split("&");
+            LinkedHashMap<String, String> map=new LinkedHashMap<>();
+            for (int i=0;i<linkedList.length;i++)
+            {
+                String[] tmp=linkedList[i].split("=");
+                if (tmp.length==2)
+                    map.put(tmp[0],tmp[1]);
+                else
+                    map.put(tmp[0],"");
+            }
+            LOGGER.info(" value of map is " + map.toString());
+            Process process=processDAO.get(processId);
+            for (String string : map.keySet()) {
+                System.out.println("string = " + string);
+                com.wipro.ats.bdre.md.dao.jpa.Properties properties=new com.wipro.ats.bdre.md.dao.jpa.Properties();
+                PropertiesId propertiesId=new PropertiesId();
+                propertiesId.setProcessId(processId);
+                propertiesId.setPropKey(string);
+                com.wipro.ats.bdre.md.dao.jpa.Properties alreadyPresentProperties=propertiesDAO.get(propertiesId);
+                if(alreadyPresentProperties==null){
+                    properties.setId(propertiesId);
+                    properties.setConfigGroup("default");
+                    if (string.equals("messageName"))
+                        properties.setConfigGroup("message");
+                    else if(string.equals("connectionName"))
+                        properties.setConfigGroup("connection");
+                    properties.setProcess(process);
+                    properties.setPropValue(map.get(string));
+                    properties.setDescription("addition of kafka properties");
+                    propertiesDAO.insert(properties);
+                }
+                else
+                {
+                    alreadyPresentProperties.setPropValue(map.get(string));
+                    propertiesDAO.update(alreadyPresentProperties);
+                }
+
+            }
+
+            restWrapper = new RestWrapper(null, RestWrapper.OK);
+            LOGGER.info("Record with ID:" + processId + " deleted from Properties by User:" + principal.getName());
+
+        } catch (MetadataException e) {
+            LOGGER.error(e);
+            restWrapper = new RestWrapper(e.getMessage(), RestWrapper.ERROR);
+        }catch (SecurityException e) {
+            LOGGER.error(e);
+            restWrapper = new RestWrapper(e.getMessage(), RestWrapper.ERROR);
+        }
+        return restWrapper;
+    }
+
+
+
+
+
+
+
+
+    @RequestMapping(value = "/addBroadcastProperties/{id}", method = RequestMethod.POST)
+    @ResponseBody
+    public RestWrapper addBroadcastProperties(@PathVariable("id") Integer processId, HttpServletRequest request, Principal principal) {
+        RestWrapper restWrapper = null;
+        try {
+            String broadcastString=request.getParameter("connectionName:tableName:columnFamily:columnName:broadcastIdentifier");
+            LOGGER.info("processId is "+processId);
+            LOGGER.info("broadcastString is "+broadcastString);
+            String[] broadcastArray=broadcastString.split(",");
+            LOGGER.info(broadcastArray.toString());
+            int count=1;
+            Process process=processDAO.get(processId);
+            LOGGER.info(process.toString());
+            for(int i=0;i<broadcastArray.length;i++)
+            {
+                String[] tmpArray=broadcastArray[i].split(":::");
+
+                com.wipro.ats.bdre.md.dao.jpa.Properties jpaProperties = new com.wipro.ats.bdre.md.dao.jpa.Properties();
+
+                PropertiesId jpaPropertiesId=new PropertiesId();
+                jpaPropertiesId.setProcessId(processId);
+                jpaPropertiesId.setPropKey("connectionName_"+count);
+
+                jpaProperties.setId(jpaPropertiesId);
+                jpaProperties.setConfigGroup("broadcast");
+                jpaProperties.setDescription("Connection Name");
+                jpaProperties.setProcess(process);
+                jpaProperties.setPropValue(tmpArray[0]);
+
+
+                com.wipro.ats.bdre.md.dao.jpa.Properties jpaProperties1 = new com.wipro.ats.bdre.md.dao.jpa.Properties();
+                PropertiesId jpaPropertiesId1=new PropertiesId();
+                jpaPropertiesId1.setProcessId(processId);
+                jpaPropertiesId1.setPropKey("tableName_"+count);
+
+                jpaProperties1.setId(jpaPropertiesId1);
+                jpaProperties1.setConfigGroup("broadcast");
+                jpaProperties1.setDescription("Table Name");
+                jpaProperties1.setProcess(process);
+                jpaProperties1.setPropValue(tmpArray[1]);
+
+
+
+                com.wipro.ats.bdre.md.dao.jpa.Properties jpaProperties2 = new com.wipro.ats.bdre.md.dao.jpa.Properties();
+                PropertiesId jpaPropertiesId2=new PropertiesId();
+                jpaPropertiesId2.setProcessId(processId);
+                jpaPropertiesId2.setPropKey("columnFamily_"+count);
+
+                jpaProperties2.setId(jpaPropertiesId2);
+                jpaProperties2.setConfigGroup("broadcast");
+                jpaProperties2.setDescription("Column Family");
+                jpaProperties2.setProcess(process);
+                jpaProperties2.setPropValue(tmpArray[2]);
+
+
+
+                com.wipro.ats.bdre.md.dao.jpa.Properties jpaProperties3= new com.wipro.ats.bdre.md.dao.jpa.Properties();
+                PropertiesId jpaPropertiesId3=new PropertiesId();
+                jpaPropertiesId3.setProcessId(processId);
+                jpaPropertiesId3.setPropKey("columnName_"+count);
+
+                jpaProperties3.setId(jpaPropertiesId3);
+                jpaProperties3.setProcess(process);
+                jpaProperties3.setConfigGroup("broadcast");
+                jpaProperties3.setDescription("Column Name");
+                jpaProperties3.setPropValue(tmpArray[3]);
+
+
+
+                com.wipro.ats.bdre.md.dao.jpa.Properties jpaProperties4 = new com.wipro.ats.bdre.md.dao.jpa.Properties();
+                PropertiesId jpaPropertiesId4=new PropertiesId();
+                jpaPropertiesId4.setProcessId(processId);
+                jpaPropertiesId4.setPropKey("broadcastIdentifier_"+count);
+
+                jpaProperties4.setId(jpaPropertiesId4);
+                jpaProperties4.setConfigGroup("broadcast");
+                jpaProperties4.setDescription("Broadcast Identifier");
+                jpaProperties4.setProcess(process);
+                jpaProperties4.setPropValue(tmpArray[4]);
+
+                propertiesDAO.insert(jpaProperties);
+                propertiesDAO.insert(jpaProperties1);
+                propertiesDAO.insert(jpaProperties2);
+                propertiesDAO.insert(jpaProperties3);
+                propertiesDAO.insert(jpaProperties4);
+                count++;
+            }
+
+            com.wipro.ats.bdre.md.dao.jpa.Properties countProperties = new com.wipro.ats.bdre.md.dao.jpa.Properties();
+            PropertiesId countPropertiesId=new PropertiesId();
+            countPropertiesId.setProcessId(processId);
+            countPropertiesId.setPropKey("broadcastCount");
+            countProperties.setId(countPropertiesId);
+            countProperties.setConfigGroup("broadcast");
+            countProperties.setDescription("Broadcast Count");
+            countProperties.setProcess(process);
+            countProperties.setPropValue(String.valueOf(count-1));
+            propertiesDAO.insert(countProperties);
+
+            restWrapper = new RestWrapper(null, RestWrapper.OK);
+            LOGGER.info("Record with ID:" + processId + " deleted from Properties by User:" + principal.getName());
+
+        } catch (MetadataException e) {
+            LOGGER.error(e);
+            restWrapper = new RestWrapper(e.getMessage(), RestWrapper.ERROR);
+        }catch (SecurityException e) {
+            LOGGER.error(e);
+            restWrapper = new RestWrapper(e.getMessage(), RestWrapper.ERROR);
+        }
+        return restWrapper;
+    }
+
+
+
+
+
+    @RequestMapping(value = "/addFilterProperties/{id}", method = RequestMethod.POST)
+    @ResponseBody
+    public RestWrapper addFilterProperties(@PathVariable("id") Integer processId, HttpServletRequest request, Principal principal) {
+        RestWrapper restWrapper = null;
+        try {
+            String broadcastString=request.getParameter("filterData");
+            LOGGER.info("processId is "+processId);
+            LOGGER.info("broadcastString is "+broadcastString);
+            String[] filterArray=broadcastString.split(",");
+            LOGGER.info(filterArray.toString());
+            int count=1;
+            Process process=processDAO.get(processId);
+            LOGGER.info(process.toString());
+            for(int i=0;i<filterArray.length;i++)
+            {
+                String[] tmpArray=filterArray[i].split("::");
+
+                com.wipro.ats.bdre.md.dao.jpa.Properties jpaProperties = new com.wipro.ats.bdre.md.dao.jpa.Properties();
+
+                PropertiesId jpaPropertiesId=new PropertiesId();
+                jpaPropertiesId.setProcessId(processId);
+                jpaPropertiesId.setPropKey("logicalOperator_"+count);
+
+                jpaProperties.setId(jpaPropertiesId);
+                jpaProperties.setConfigGroup("filter");
+                jpaProperties.setDescription("Logical Operator");
+                jpaProperties.setProcess(process);
+                jpaProperties.setPropValue(tmpArray[0]);
+
+
+                com.wipro.ats.bdre.md.dao.jpa.Properties jpaProperties1 = new com.wipro.ats.bdre.md.dao.jpa.Properties();
+                PropertiesId jpaPropertiesId1=new PropertiesId();
+                jpaPropertiesId1.setProcessId(processId);
+                jpaPropertiesId1.setPropKey("column_"+count);
+
+                jpaProperties1.setId(jpaPropertiesId1);
+                jpaProperties1.setConfigGroup("filter");
+                jpaProperties1.setDescription("Column Name");
+                jpaProperties1.setProcess(process);
+                jpaProperties1.setPropValue(tmpArray[1]);
+
+
+
+                com.wipro.ats.bdre.md.dao.jpa.Properties jpaProperties2 = new com.wipro.ats.bdre.md.dao.jpa.Properties();
+                PropertiesId jpaPropertiesId2=new PropertiesId();
+                jpaPropertiesId2.setProcessId(processId);
+                jpaPropertiesId2.setPropKey("operator_"+count);
+
+                jpaProperties2.setId(jpaPropertiesId2);
+                jpaProperties2.setConfigGroup("filter");
+                jpaProperties2.setDescription("Operator");
+                jpaProperties2.setProcess(process);
+                jpaProperties2.setPropValue(tmpArray[2]);
+
+                propertiesDAO.insert(jpaProperties);
+                propertiesDAO.insert(jpaProperties1);
+                propertiesDAO.insert(jpaProperties2);
+
+
+                if (tmpArray.length>=4){
+                  LOGGER.info("tmpArray[3] is "+tmpArray[3]);
+                com.wipro.ats.bdre.md.dao.jpa.Properties jpaProperties3= new com.wipro.ats.bdre.md.dao.jpa.Properties();
+                PropertiesId jpaPropertiesId3=new PropertiesId();
+                jpaPropertiesId3.setProcessId(processId);
+                jpaPropertiesId3.setPropKey("filterValue_"+count);
+
+                jpaProperties3.setId(jpaPropertiesId3);
+                jpaProperties3.setProcess(process);
+                jpaProperties3.setConfigGroup("filter");
+                jpaProperties3.setDescription("Filter Value");
+                jpaProperties3.setPropValue(tmpArray[3]);
+                propertiesDAO.insert(jpaProperties3);
+                }
+
+                count++;
+            }
+
+            com.wipro.ats.bdre.md.dao.jpa.Properties jpaProperties4= new com.wipro.ats.bdre.md.dao.jpa.Properties();
+            PropertiesId jpaPropertiesId4=new PropertiesId();
+            jpaPropertiesId4.setProcessId(processId);
+            jpaPropertiesId4.setPropKey("count");
+
+            jpaProperties4.setId(jpaPropertiesId4);
+            jpaProperties4.setProcess(process);
+            jpaProperties4.setConfigGroup("filter");
+            jpaProperties4.setDescription("Count Value");
+            jpaProperties4.setPropValue(String.valueOf(count-1));
+            propertiesDAO.insert(jpaProperties4);
+
+
+            restWrapper = new RestWrapper(null, RestWrapper.OK);
+            LOGGER.info("Record with ID:" + processId + " deleted from Properties by User:" + principal.getName());
+
+        } catch (MetadataException e) {
+            LOGGER.error(e);
+            restWrapper = new RestWrapper(e.getMessage(), RestWrapper.ERROR);
+        }catch (SecurityException e) {
+            LOGGER.error(e);
+            restWrapper = new RestWrapper(e.getMessage(), RestWrapper.ERROR);
+        }
+        return restWrapper;
+    }
+
+
+
+
+
     /**
      * This method calls proc ListProperty and fetches a list of instances of Properties.
      *
@@ -94,7 +406,7 @@ public class PropertiesAPI extends MetadataAPIBase {
 
     @ResponseBody
     public RestWrapper list(@RequestParam(value = "page", defaultValue = "0") int startPage,
-                     @RequestParam(value = "size", defaultValue = "10") int pageSize, Principal principal) {
+                            @RequestParam(value = "size", defaultValue = "10") int pageSize, Principal principal) {
 
         RestWrapper restWrapper = null;
         try {
@@ -185,7 +497,7 @@ public class PropertiesAPI extends MetadataAPIBase {
             process.setProcessId(processId);
 
             List<com.wipro.ats.bdre.md.dao.jpa.Properties> propertiesList1=new ArrayList<com.wipro.ats.bdre.md.dao.jpa.Properties>();
-                    propertiesList1=propertiesDAO.getByProcessIdCopy(process,startPage,pageSize);
+            propertiesList1=propertiesDAO.getByProcessIdCopy(process,startPage,pageSize);
             Integer counter=propertiesDAO.totalRecordCount(process);
             for (com.wipro.ats.bdre.md.dao.jpa.Properties properties : propertiesList1) {
                 com.wipro.ats.bdre.md.beans.table.Properties returnProperties = new com.wipro.ats.bdre.md.beans.table.Properties();
@@ -225,8 +537,8 @@ public class PropertiesAPI extends MetadataAPIBase {
 
     @ResponseBody
     public RestWrapper listConfigGroup(@PathVariable("id") Integer processId,
-                                @PathVariable("cg") String configGroup,
-                                Principal principal) {
+                                       @PathVariable("cg") String configGroup,
+                                       Principal principal) {
 
         RestWrapper restWrapper = null;
         try {
@@ -237,7 +549,7 @@ public class PropertiesAPI extends MetadataAPIBase {
                 processDAO.securityCheck(processId,principal.getName(),"read");
             List<Properties> propertiesList = new ArrayList<Properties>();
             List<com.wipro.ats.bdre.md.dao.jpa.Properties>jpaPropertiesList=new ArrayList<com.wipro.ats.bdre.md.dao.jpa.Properties>();
-                    jpaPropertiesList=propertiesDAO.getPropertiesForConfig(processId, configGroup);
+            jpaPropertiesList=propertiesDAO.getPropertiesForConfig(processId, configGroup);
             Integer counter=jpaPropertiesList.size();
             for (com.wipro.ats.bdre.md.dao.jpa.Properties properties : jpaPropertiesList) {
                 com.wipro.ats.bdre.md.beans.table.Properties returnProperties = new com.wipro.ats.bdre.md.beans.table.Properties();
@@ -274,7 +586,7 @@ public class PropertiesAPI extends MetadataAPIBase {
 
     @ResponseBody
     public RestWrapper update(@ModelAttribute("properties")
-                       @Valid Properties properties, BindingResult bindingResult, Principal principal) {
+                              @Valid Properties properties, BindingResult bindingResult, Principal principal) {
 
         RestWrapper restWrapper = null;
         if (bindingResult.hasErrors()) {
@@ -325,7 +637,7 @@ public class PropertiesAPI extends MetadataAPIBase {
 
     @ResponseBody
     public RestWrapper insert(@ModelAttribute("properties")
-                       @Valid Properties properties, BindingResult bindingResult, Principal principal) {
+                              @Valid Properties properties, BindingResult bindingResult, Principal principal) {
 
         RestWrapper restWrapper = null;
         if (bindingResult.hasErrors()) {
@@ -338,18 +650,31 @@ public class PropertiesAPI extends MetadataAPIBase {
                 processDAO.securityCheck(parentProcess.getProcess().getProcessId(),principal.getName(),WRITE);
             else
                 processDAO.securityCheck(properties.getProcessId(),principal.getName(),WRITE);
-            com.wipro.ats.bdre.md.dao.jpa.Properties insertProperties = new com.wipro.ats.bdre.md.dao.jpa.Properties();
+
+
             PropertiesId propertiesId = new PropertiesId();
             propertiesId.setPropKey(properties.getKey());
             propertiesId.setProcessId(properties.getProcessId());
-            insertProperties.setId(propertiesId);
-            Process process = new Process();
-            process.setProcessId(properties.getProcessId());
-            insertProperties.setProcess(process);
-            insertProperties.setConfigGroup(properties.getConfigGroup());
-            insertProperties.setPropValue(properties.getValue());
-            insertProperties.setDescription(properties.getDescription());
-            propertiesDAO.insert(insertProperties);
+            com.wipro.ats.bdre.md.dao.jpa.Properties insertProperties = propertiesDAO.get(propertiesId);
+            if(insertProperties!=null)
+            {
+                insertProperties.setPropValue(properties.getValue());
+                insertProperties.setConfigGroup(properties.getConfigGroup());
+                insertProperties.setPropValue(properties.getValue());
+                insertProperties.setDescription(properties.getDescription());
+                propertiesDAO.update(insertProperties);
+            }
+            else {
+                insertProperties=new com.wipro.ats.bdre.md.dao.jpa.Properties();
+                insertProperties.setId(propertiesId);
+                Process process = new Process();
+                process.setProcessId(properties.getProcessId());
+                insertProperties.setProcess(process);
+                insertProperties.setConfigGroup(properties.getConfigGroup());
+                insertProperties.setPropValue(properties.getValue());
+                insertProperties.setDescription(properties.getDescription());
+                propertiesDAO.insert(insertProperties);
+            }
             restWrapper = new RestWrapper(properties, RestWrapper.OK);
             LOGGER.info("Record with ID:" + properties.getProcessId() + " inserted in Properties by User:" + principal.getName() + properties);
 
@@ -403,6 +728,256 @@ public class PropertiesAPI extends MetadataAPIBase {
             restWrapper = new RestWrapper(propertiesList, RestWrapper.OK);
             LOGGER.debug("Records fetched:" + propertiesList);
             LOGGER.info("All records with parent process ID:" + parentProcessId + " selected from Properties by User:" + principal.getName());
+
+        } catch (MetadataException e) {
+            LOGGER.error(e);
+            restWrapper = new RestWrapper(e.getMessage(), RestWrapper.ERROR);
+        }
+        catch (SecurityException e) {
+            LOGGER.error(e);
+            restWrapper = new RestWrapper(e.getMessage(), RestWrapper.ERROR);
+        }
+        return restWrapper;
+    }
+
+    @RequestMapping(value = "/addDeDuplicationProperties/{id}", method = RequestMethod.POST)
+    @ResponseBody
+    public RestWrapper addDeDuplicationProperties(@PathVariable("id") Integer processId, @RequestParam Map<String,String> map,HttpServletRequest request, Principal principal) {
+        RestWrapper restWrapper = null;
+        try {
+            LOGGER.info("processId is "+processId);
+            LOGGER.info("map data is "+map);
+            Process process=processDAO.get(processId);
+            for (Map.Entry<String, String> entry : map.entrySet())
+            {
+
+                com.wipro.ats.bdre.md.dao.jpa.Properties jpaProperties= new com.wipro.ats.bdre.md.dao.jpa.Properties();
+                PropertiesId jpaPropertiesId=new PropertiesId();
+                jpaPropertiesId.setProcessId(processId);
+                jpaPropertiesId.setPropKey(entry.getKey());
+
+                jpaProperties.setId(jpaPropertiesId);
+                jpaProperties.setProcess(process);
+                jpaProperties.setConfigGroup("deduplication");
+                jpaProperties.setDescription("deduplication properties");
+                jpaProperties.setPropValue(entry.getValue());
+                propertiesDAO.insert(jpaProperties);
+            }
+            restWrapper = new RestWrapper(null, RestWrapper.OK);
+        } catch (MetadataException e) {
+            LOGGER.error(e);
+            restWrapper = new RestWrapper(e.getMessage(), RestWrapper.ERROR);
+        }
+        catch (SecurityException e) {
+            LOGGER.error(e);
+            restWrapper = new RestWrapper(e.getMessage(), RestWrapper.ERROR);
+        }
+        return restWrapper;
+    }
+
+
+    @RequestMapping(value = "/addHiveProperties/{id}", method = RequestMethod.POST)
+    @ResponseBody
+    public RestWrapper addHiveProperties(@PathVariable("id") Integer processId, @RequestParam Map<String,String> map, Principal principal) {
+        RestWrapper restWrapper = null;
+        try {
+            LOGGER.info("processId is "+processId);
+            LOGGER.info("map data is "+map);
+            Process process=processDAO.get(processId);
+            for (Map.Entry<String, String> entry : map.entrySet())
+            {
+
+                com.wipro.ats.bdre.md.dao.jpa.Properties jpaProperties= new com.wipro.ats.bdre.md.dao.jpa.Properties();
+                PropertiesId jpaPropertiesId=new PropertiesId();
+                jpaPropertiesId.setProcessId(processId);
+                jpaPropertiesId.setPropKey(entry.getKey());
+
+                jpaProperties.setId(jpaPropertiesId);
+                jpaProperties.setProcess(process);
+                jpaProperties.setConfigGroup("hive");
+                jpaProperties.setDescription("hive properties");
+                jpaProperties.setPropValue(entry.getValue());
+                propertiesDAO.insert(jpaProperties);
+            }
+            restWrapper = new RestWrapper(null, RestWrapper.OK);
+        } catch (MetadataException e) {
+            LOGGER.error(e);
+            restWrapper = new RestWrapper(e.getMessage(), RestWrapper.ERROR);
+        }
+        catch (SecurityException e) {
+            LOGGER.error(e);
+            restWrapper = new RestWrapper(e.getMessage(), RestWrapper.ERROR);
+        }
+        return restWrapper;
+    }
+
+
+
+    @RequestMapping(value = "/getIdentifiers/{id}", method = RequestMethod.GET)
+
+    @ResponseBody
+    public RestWrapperOptions getIdentifiers(@PathVariable("id") Integer processId, Principal principal) {
+
+        RestWrapperOptions restWrapperOptions = null;
+
+        try {
+            LOGGER.info("process id is "+processId);
+            Process process=processDAO.get(processId);
+            List<com.wipro.ats.bdre.md.dao.jpa.Properties>jpaPropertiesList=new ArrayList<com.wipro.ats.bdre.md.dao.jpa.Properties>();
+            jpaPropertiesList=propertiesDAO.getPropertiesForBroadcast(process.getProcess().getProcessId());
+            List<RestWrapperOptions.Option> options = new ArrayList<RestWrapperOptions.Option>();
+            for (com.wipro.ats.bdre.md.dao.jpa.Properties properties:jpaPropertiesList)
+            {
+                RestWrapperOptions.Option option = new RestWrapperOptions.Option(properties.getPropValue(), properties.getPropValue());
+                options.add(option);
+                LOGGER.debug(option.getDisplayText());
+            }
+
+        restWrapperOptions = new RestWrapperOptions(options, RestWrapperOptions.OK);
+        } catch (MetadataException e) {
+            LOGGER.error(e);
+            restWrapperOptions = new RestWrapperOptions(e.getMessage(), RestWrapperOptions.ERROR);
+        }
+        catch (SecurityException e) {
+            LOGGER.error(e);
+            restWrapperOptions = new RestWrapperOptions(e.getMessage(), RestWrapperOptions.ERROR);
+        }
+        return restWrapperOptions;
+    }
+
+
+
+    @RequestMapping(value = "/addEnricherProperties/{id}", method = RequestMethod.POST)
+    @ResponseBody
+    public RestWrapper addEnricherProperties(@PathVariable("id") Integer processId, @RequestParam Map<String,String> map,HttpServletRequest request, Principal principal) {
+        RestWrapper restWrapper = null;
+        try {
+            LOGGER.info("processId is "+processId);
+            LOGGER.info("map data is "+map);
+            String enricherString=map.get("enricherData");
+            String[] enricherArray=enricherString.split(",");
+
+            LOGGER.info(enricherArray.toString());
+            int count=1;
+            Process process=processDAO.get(processId);
+            LOGGER.info(process.toString());
+            for(int i=0;i<enricherArray.length;i++)
+            {
+                String[] tmpArray=enricherArray[i].split("::");
+                com.wipro.ats.bdre.md.dao.jpa.Properties jpaProperties= new com.wipro.ats.bdre.md.dao.jpa.Properties();
+                PropertiesId jpaPropertiesId=new PropertiesId();
+                jpaPropertiesId.setProcessId(processId);
+                jpaPropertiesId.setPropKey("enricherColumn_"+count);
+
+                jpaProperties.setId(jpaPropertiesId);
+                jpaProperties.setProcess(process);
+                jpaProperties.setConfigGroup("enricher");
+                jpaProperties.setDescription("enricher properties");
+                jpaProperties.setPropValue(tmpArray[0]);
+                propertiesDAO.insert(jpaProperties);
+
+
+                com.wipro.ats.bdre.md.dao.jpa.Properties jpaProperties1= new com.wipro.ats.bdre.md.dao.jpa.Properties();
+                PropertiesId jpaPropertiesId1=new PropertiesId();
+                jpaPropertiesId1.setProcessId(processId);
+                jpaPropertiesId1.setPropKey("enricherBroadcastIdentifier_"+count);
+
+                jpaProperties1.setId(jpaPropertiesId1);
+                jpaProperties1.setProcess(process);
+                jpaProperties1.setConfigGroup("enricher");
+                jpaProperties1.setDescription("enricher properties");
+                jpaProperties1.setPropValue(tmpArray[1]);
+                propertiesDAO.insert(jpaProperties1);
+
+                count++;
+
+            }
+
+
+            com.wipro.ats.bdre.md.dao.jpa.Properties jpaProperties4= new com.wipro.ats.bdre.md.dao.jpa.Properties();
+            PropertiesId jpaPropertiesId4=new PropertiesId();
+            jpaPropertiesId4.setProcessId(processId);
+            jpaPropertiesId4.setPropKey("count");
+
+            jpaProperties4.setId(jpaPropertiesId4);
+            jpaProperties4.setProcess(process);
+            jpaProperties4.setConfigGroup("enricher");
+            jpaProperties4.setDescription("enricher properties");
+            jpaProperties4.setPropValue(String.valueOf(count-1));
+            propertiesDAO.insert(jpaProperties4);
+
+
+            restWrapper = new RestWrapper(null, RestWrapper.OK);
+        } catch (MetadataException e) {
+            LOGGER.error(e);
+            restWrapper = new RestWrapper(e.getMessage(), RestWrapper.ERROR);
+        }
+        catch (SecurityException e) {
+            LOGGER.error(e);
+            restWrapper = new RestWrapper(e.getMessage(), RestWrapper.ERROR);
+        }
+        return restWrapper;
+    }
+
+
+
+    @RequestMapping(value = "/addJoinProperties/{id}", method = RequestMethod.POST)
+    @ResponseBody
+    public RestWrapper addJoinProperties(@PathVariable("id") Integer processId, @RequestParam Map<String,String> map) {
+        RestWrapper restWrapper = null;
+        try {
+            LOGGER.info("processId is "+processId);
+            LOGGER.info("map data is "+map);
+            Process process=processDAO.get(processId);
+            for (Map.Entry<String, String> entry : map.entrySet())
+            {
+
+                com.wipro.ats.bdre.md.dao.jpa.Properties jpaProperties= new com.wipro.ats.bdre.md.dao.jpa.Properties();
+                PropertiesId jpaPropertiesId=new PropertiesId();
+                jpaPropertiesId.setProcessId(processId);
+                jpaPropertiesId.setPropKey(entry.getKey());
+
+                jpaProperties.setId(jpaPropertiesId);
+                jpaProperties.setProcess(process);
+                jpaProperties.setConfigGroup("join_prop");
+                jpaProperties.setDescription("join properties");
+                jpaProperties.setPropValue(entry.getValue());
+                propertiesDAO.insert(jpaProperties);
+            }
+            restWrapper = new RestWrapper(null, RestWrapper.OK);
+        } catch (MetadataException e) {
+            LOGGER.error(e);
+            restWrapper = new RestWrapper(e.getMessage(), RestWrapper.ERROR);
+        }
+        catch (SecurityException e) {
+            LOGGER.error(e);
+            restWrapper = new RestWrapper(e.getMessage(), RestWrapper.ERROR);
+        }
+        return restWrapper;
+    }
+
+    @RequestMapping(value = {"/{id}/{cg}/{key}", "/{id}/{cg}/{key}/"}, method = RequestMethod.GET)
+
+
+    @ResponseBody
+    public RestWrapper listValue(@PathVariable("id") Integer processId,
+                                 @PathVariable("cg") String configGroup,
+                                 @PathVariable("key") String key,
+                                 Principal principal) {
+
+        RestWrapper restWrapper = null;
+        try {
+            String value = null;
+            Process parentProcess=processDAO.get(processId);
+            if (parentProcess.getProcess()!=null)
+                processDAO.securityCheck(parentProcess.getProcess().getProcessId(),principal.getName(),"read");
+            else
+                processDAO.securityCheck(processId,principal.getName(),"read");
+
+            value=propertiesDAO.getPropertiesValueForConfigAndKey(processId,configGroup,key);
+
+            restWrapper = new RestWrapper(value, RestWrapper.OK);
+            LOGGER.info("Record with ID:" + processId + "and config group" + configGroup + "selected from Properties by User:" + principal.getName());
 
         } catch (MetadataException e) {
             LOGGER.error(e);

@@ -95,4 +95,12 @@ public class PropertiesDAOTest {
             LOGGER.info("Properties fetched:" + property.getConfigGroup() + " " + property.getId().getPropKey() + " " + property.getId().getProcessId() + " " + property.getPropValue());
         }
     }
+    @Ignore
+    @Test
+    public void testBroadcastIdentifierList() {
+
+        LOGGER.info("Description of propertiesId(10805) is:" + propertiesDAO.getPropertiesForBroadcast(22).get(0).getDescription());
+
+    }
+
 }

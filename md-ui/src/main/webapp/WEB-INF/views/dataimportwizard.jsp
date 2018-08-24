@@ -92,7 +92,7 @@
          if(incrType == "AppendRows")
            {
          for(i=0;i<size;i++){
-          if(filteredColumns[i].dtype == "INT" || filteredColumns[i].dtype == "BIGINT")
+          if(filteredColumns[i].dtype == "INT" || filteredColumns[i].dtype == "BIGINT" || filteredColumns[i].dtype == "NUMBER")
           integralColumns.push(filteredColumns[i].title);
           }
            var len=integralColumns.length;
@@ -110,7 +110,7 @@
           {
            for(i=0;i<size;i++){
            console.log(filteredColumns[i].dtype);
-            if(filteredColumns[i].dtype == "TIMESTAMP")
+            if(filteredColumns[i].dtype == "TIMESTAMP" || "TIMESTAMP(6)")
             timestampColumns.push(filteredColumns[i].title);
             }
 
@@ -139,7 +139,10 @@
     BIT: "Boolean",
     SMALLINT: "SmallInt",
     INTEGER: "Int",
-    TINYINT: "tinyInt"
+    TINYINT: "tinyInt",
+    VARCHAR2: "String",
+    NUMBER: "Int",
+    "TIMESTAMP(6)": "Timestamp"
 };
     var created=0;
 		function displayProcess (records){
@@ -372,16 +375,16 @@
 
                                                  },
                                                  ProcessPipelineButton: {
-                                                                                                                      title: '<spring:message code="dataimportwizard.page.title_pipeline"/>',
-                                                                                                                      sorting: false,
-                                                                                                                      width: '2%',
-                                                                                                                      listClass: 'bdre-jtable-button',
-                                                                                                                      create: false,
-                                                                                                                      edit: false,
-                                                                                                                      display: function(data) {
-                                                                                                                           return '<span class="label label-primary" onclick="fetchPipelineInfo(' + data.record.processId + ')"><spring:message code="dataimportwizard.page.display"/></span> ';
-                                                                                                                      },
-                                                                                 }
+                                                  title: '<spring:message code="dataimportwizard.page.title_pipeline"/>',
+                                                  sorting: false,
+                                                  width: '2%',
+                                                  listClass: 'bdre-jtable-button',
+                                                  create: false,
+                                                  edit: false,
+                                                  display: function(data) {
+                                                       return '<span class="label label-primary" onclick="fetchPipelineInfo(' + data.record.processId + ')"><spring:message code="dataimportwizard.page.display"/></span> ';
+                                                      },
+                                         }
                                         }
                                     });
                                 $('#Container').jtable('load');
@@ -612,6 +615,7 @@
         $ingestSelect = $("<select name='ingestOnly_" + data.node.key +"' />"),
         $incrementSelect = $("<select name='incrementType_" + data.node.key +"' id='incrementType_" + data.node.key +"' onchange='columnsPopup(&quot;"+ data.node.key +"&quot;)'/>"),
         $incrementColumn = $("<select disabled name='incrementColumn_" + data.node.key +"' id='incrementColumn_" + data.node.key +"'/>"),
+        $transform = $("<select name='destTransform_"+ data.node.key+"'/>"),
 
         $tdList = $(node.tr).find(">td");
       // (Index #0 is rendered by fancytree by adding the checkbox)
@@ -629,17 +633,17 @@
                   $("<option />", {text: "Ingest Only", value: "true"}).appendTo($ingestSelect);
                   $("<option />", {text: "Ingest and HiveLoad", value: "false"}).appendTo($ingestSelect);
                   $ingestSelect.addClass("form-control");
-                  $tdList.eq(4).html($ingestSelect);
+                  $tdList.eq(5).html($ingestSelect);
 
                   $("<option />", {text: "None", value: "None"}).appendTo($incrementSelect);
                   $("<option />", {text: "Append Rows", value: "AppendRows"}).appendTo($incrementSelect);
                   $("<option />", {text: "Last Moified", value: "DateLastModified"}).appendTo($incrementSelect);
                   $incrementSelect.addClass("form-control");
-                  $tdList.eq(5).html($incrementSelect);
+                  $tdList.eq(6).html($incrementSelect);
 
                   $("<option />", {text: "None", value: "None"}).appendTo($incrementColumn);
                   $incrementColumn.addClass("form-control");
-                   $tdList.eq(6).html($incrementColumn);
+                   $tdList.eq(7).html($incrementColumn);
 
       }else{
             $tdList.eq(2).html(data.node.data.dtype+
@@ -662,6 +666,18 @@
                   $select.addClass("form-control");
                   $tdList.eq(4).html($select);
                   $select.val(datatypeMap[data.node.data.dtype]);
+
+            $("<option />", {text: "floor", value: "floor"}).appendTo($transform);
+            $("<option />", {text: "lower", value: "lower"}).appendTo($transform);
+            $("<option />", {text: "no transformation", value: "no transformation"}).appendTo($transform);
+            $("<option />", {text: "round", value: "round"}).appendTo($transform);
+            $("<option />", {text: "tokenize", value: "tokenize"}).appendTo($transform);
+            $("<option />", {text: "trim", value: "trim"}).appendTo($transform);
+            $("<option />", {text: "upper", value: "upper"}).appendTo($transform);
+            $transform.addClass("form-control");
+            $tdList.eq(5).html($transform);
+            $transform.val("no transformation");
+
       }
 
 
@@ -760,7 +776,7 @@ isInit=true;
 						</div>
 						<div class="form-group">
 						<label for = "dbPassword" ><spring:message code="dataimportwizard.page.db_psswd"/></label >
-						<input id = "dbPassword" onchange = "treeData=null;" name = "common_dbPassword" type = "password" class = "form-control" value = "<fmt:message key='hibernate.connection.password' />" />
+						<input id = "dbPassword" onchange = "treeData=null;" name = "common_dbPassword" type = "password" class = "form-control" />
 						</div>
 						<div class="form-group">
 						<label for = "dbDriver" ><spring:message code="dataimportwizard.page.db_driver"/></label >
@@ -825,6 +841,7 @@ isInit=true;
 							<th >Datatype</th >
 							<th >Hive Column Name</th >
 							<th >Hive Datatype</th >
+							<th >Column Transformation</th >
 							<th> Options</th>
 							<th> Increment Type</th>
 							<th> Increment Column</th>
