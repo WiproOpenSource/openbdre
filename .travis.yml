@@ -3,11 +3,7 @@ jdk:
   - oraclejdk7
 before_install:
     - sudo apt-get install aptitude -y
-    - sudo apt-get purge mysql-client-core-5.6
-    - sudo apt-get autoremove
-    - sudo apt-get autoclean
-    - sudo apt install mysql-client-core-5.5
-    - sudo apt install mysql-server -y
+    - sudo aptitude install mysql-server -y
     - sudo apt-get install curl -y
     - sudo service mysql restart
     - echo hibernate.current_session_context_class=thread > md-dao/src/main/resources/db.properties
