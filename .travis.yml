@@ -25,7 +25,7 @@ before_install:
     - export M2_HOME=$PWD/apache-maven-3.3.9
 install: /bin/true
 script:
-    - - mvn -s settings.xml clean install -P hdp22 -pl '!im-crawler' --quiet
+    - mvn -s settings.xml clean install -P hdp22 -pl '!im-crawler' --quiet
     - sh install-scripts.sh local
     - sudo service bdre start
 after_success:
