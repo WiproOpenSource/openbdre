@@ -10,7 +10,8 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- */
+ *//*
+
 
 package com.wipro.ats.bdre.md.dao;
 
@@ -30,9 +31,11 @@ import java.util.List;
 
 import static org.junit.Assert.*;
 
+*/
 /**
  * Created by PR324290 on 12/17/2015.
- */
+ *//*
+
 public class FullJobTest {
     private static final Logger LOGGER = Logger.getLogger(FullJobTest.class);
 
@@ -367,3 +370,4 @@ public class FullJobTest {
     }
 }
 
+*/

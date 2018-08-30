@@ -46,7 +46,7 @@
                 <kafka.version>0.8.1.1</kafka.version>
                 <pig.version>0.15.0</pig.version>
                 <flume.version>1.6.0</flume.version>
-                <spark.core.version>1.5.2</spark.core.version>
+                <spark.core.version>1.6.3</spark.core.version>
                 <selected.profile>hdp22</selected.profile>
             </properties>
         </profile>
