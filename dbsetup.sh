@@ -194,9 +194,10 @@ var_user_pwd="-p$var_password -u$var_username"
     if [ -z $var_password ];then
         var_user_pwd="-u$var_username"
     fi
-    mysql  $var_user_pwd -e "create database if not exists $var_dbname"
-    mysql  $var_user_pwd $var_dbname < $(dirname $0)/databases/mysql/ddls/drop_tables.sql
-    mysql  $var_user_pwd $var_dbname < $(dirname $0)/databases/mysql/ddls/create_tables.sql
+    echo  mysql -h $var_host $var_user_pwd -e "create database if not exists $var_dbname"
+    mysql -h $var_host $var_user_pwd -e "create database if not exists $var_dbname"
+    mysql -h $var_host $var_user_pwd $var_dbname < $(dirname $0)/databases/mysql/ddls/drop_tables.sql
+    mysql -h $var_host $var_user_pwd $var_dbname < $(dirname $0)/databases/mysql/ddls/create_tables.sql
     if [ $? -eq 0 ]; then
         echo "Tables created successfully in MySQL $var_dbname DB"
     fi

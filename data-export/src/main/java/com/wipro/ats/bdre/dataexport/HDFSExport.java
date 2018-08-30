@@ -9,7 +9,7 @@
  * limitations under the License.*/
 
 package com.wipro.ats.bdre.dataexport;
-import com.cloudera.sqoop.SqoopOptions;
+import org.apache.sqoop.SqoopOptions;
 import com.wipro.ats.bdre.IMConfig;
 import com.wipro.ats.bdre.im.etl.api.exception.ETLException;
 import com.wipro.ats.bdre.md.api.ProcessLog;

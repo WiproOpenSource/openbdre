@@ -4,6 +4,7 @@ import org.apache.spark.api.java.JavaSparkContext;
 import org.apache.spark.ml.clustering.KMeansModel;
 import org.apache.spark.ml.classification.OneVsRest;
 import org.apache.spark.ml.feature.VectorAssembler;
+import org.apache.spark.ml.param.Param;
 import org.apache.spark.ml.linalg.Vectors;
 import org.apache.spark.ml.regression.LinearRegressionModel;
 import org.apache.spark.sql.Dataset;
@@ -30,8 +31,12 @@ public class LinearRegressionML {
         for(int i=0; i<coefficients.length; i++){
             coeff[i] = new Double(coefficients[i].toString());
         }
-
-        LinearRegressionModel linearRegressionModel = new LinearRegressionModel(UUID.randomUUID().toString(),Vectors.dense(coeff), intercept);
+        String uid=UUID.randomUUID().toString();
+        LinearRegressionModel linearRegressionModel = new LinearRegressionModel(uid,Vectors.dense(coeff), intercept);
+        Param<String> param=new Param(uid,"loss","logistic");
+        linearRegressionModel.set(param,"logistic");
+        System.out.println("checking something......");
+        System.out.println(linearRegressionModel.getLoss());
         Dataset<Row> predictionDF = linearRegressionModel.transform(testDataFrame);
         return predictionDF;
     }

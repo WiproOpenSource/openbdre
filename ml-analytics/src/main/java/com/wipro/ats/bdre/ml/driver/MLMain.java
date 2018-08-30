@@ -70,6 +70,7 @@ public class MLMain {
 
                 HiveSource hiveSource = new HiveSource();
                 dataFrame = hiveSource.getDataFrame(jsc, metastoreURI, dbName, tableName, schema);
+                dataFrame.show();
 
             } else if (sourceType.equalsIgnoreCase("HDFS")) {
                 String hdfsDirectory = properties.getProperty("hdfsPath");
@@ -133,7 +134,7 @@ public class MLMain {
                 String progLanguage = properties.getProperty("prog-lang");
             }
 
-            predictionDF.show(1000);
+            predictionDF.show();
             System.out.println("data predicted");
 
 

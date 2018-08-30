@@ -66,7 +66,7 @@ body {
 <body>
 
 <div >
-    <iframe id="iframe1" src="http://54.172.192.247:3000" width="1000" height="200"></iframe>
+    <iframe id="iframe1" src="http://ec2-52-204-70-138.compute-1.amazonaws.com:3000" width="1000" height="200"></iframe>
 
 
   </div>

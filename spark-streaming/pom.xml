@@ -149,8 +149,8 @@
 
         <dependency>
             <groupId>org.apache.spark</groupId>
-            <artifactId>spark-streaming-kafka_2.10</artifactId>
-            <version>1.6.3.2.6.5.3000-28</version>
+            <artifactId>spark-streaming-kafka_2.11</artifactId>
+            <version>1.6.3</version>
         <exclusions>
 
                 <exclusion>

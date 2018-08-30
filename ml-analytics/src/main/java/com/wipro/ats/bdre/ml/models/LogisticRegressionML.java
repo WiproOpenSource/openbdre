@@ -32,6 +32,7 @@ public class LogisticRegressionML {
         }
 
         LogisticRegressionModel logisticRegressionModel = new LogisticRegressionModel(UUID.randomUUID().toString(), Vectors.dense(coeff), intercept);
+        logisticRegressionModel = logisticRegressionModel.setThreshold(0.5);
         Dataset<Row> predictionDF = logisticRegressionModel.transform(testDataFrame);
         return predictionDF;
 
