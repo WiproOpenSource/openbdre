@@ -72,7 +72,7 @@ public class MLAPI {
         LOGGER.info(sourceEnv + "srcEnv");
         try {
             Class.forName(driverName);
-            connection = DriverManager.getConnection("jdbc:hive2://" + sourceEnv + "/default", "", "");
+            connection = DriverManager.getConnection("jdbc:hive2://" + sourceEnv + "/default", "hive", "");
             ResultSet rs = connection.createStatement().executeQuery("SHOW DATABASES");
 
             List<String> databases = new ArrayList<String>();
@@ -102,7 +102,7 @@ public class MLAPI {
         LOGGER.info(srcDB + "srcDB");
         try {
             Class.forName(driverName);
-            connection = DriverManager.getConnection("jdbc:hive2://" + srcEnv + "/" + srcDB.toLowerCase(), "", "");
+            connection = DriverManager.getConnection("jdbc:hive2://" + srcEnv + "/" + srcDB.toLowerCase(), "hive", "");
             ResultSet rs = connection.createStatement().executeQuery("SHOW TABLES");
 
             List<String> tables = new ArrayList<String>();
@@ -132,7 +132,7 @@ public class MLAPI {
         LOGGER.info(srcDB + "srcDB");
         try {
             Class.forName(driverName);
-            connection = DriverManager.getConnection("jdbc:hive2://" + srcEnv + "/" + srcDB.toLowerCase(), "", "");
+            connection = DriverManager.getConnection("jdbc:hive2://" + srcEnv + "/" + srcDB.toLowerCase(), "hive", "");
             String tableName="ML_"+pid;
             ResultSet rs = connection.createStatement().executeQuery("select * from " + srcDB + "." + tableName);
 
@@ -169,7 +169,7 @@ public class MLAPI {
         LOGGER.info(tableName + "tableName");
         try {
             Class.forName(driverName);
-            connection = DriverManager.getConnection("jdbc:hive2://" + srcEnv + "/" + srcDB.toLowerCase(), "", "");
+            connection = DriverManager.getConnection("jdbc:hive2://" + srcEnv + "/" + srcDB.toLowerCase(), "hive", "");
             ResultSet rs = connection.createStatement().executeQuery("select * from " + srcDB + "." + tableName +"  limit 1");
             ResultSetMetaData metaData = rs.getMetaData();
             Map<String, String> databases = new HashMap<String, String>();

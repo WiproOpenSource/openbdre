@@ -121,8 +121,8 @@ public class HDFSImport extends Configured implements Tool {
             }
 
             //setting the parameters of sqoopOption
-            options.setHadoopHome(hadoopHome);
-            //options.setHadoopMapRedHome(hadoopHome);
+            //options.setHadoopHome(hadoopHome);
+            options.setHadoopMapRedHome(hadoopHome);
             options.setJarOutputDir(jarOutputDir);
             String outputDir = targetDir + "/" + processId + "/tmp";
             options.setTargetDir(outputDir);

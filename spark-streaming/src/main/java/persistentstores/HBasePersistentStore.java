@@ -1,4 +1,3 @@
-/*
 package persistentstores;
 
 import com.wipro.ats.bdre.md.api.GetProperties;
@@ -18,6 +17,7 @@ import org.apache.spark.api.java.JavaPairRDD;
 import org.apache.spark.api.java.JavaRDD;
 import org.apache.spark.api.java.function.Function;
 import org.apache.spark.api.java.function.PairFunction;
+import org.apache.spark.streaming.api.java.JavaStreamingContext;
 import org.apache.spark.sql.DataFrame;
 import org.apache.spark.sql.Row;
 import org.apache.spark.sql.SQLContext;
@@ -30,11 +30,14 @@ import util.WrapperMessage;
 
 import java.util.Date;
 import java.util.Properties;
+import java.util.HashMap;
+import java.util.Map;
+import org.apache.spark.broadcast.Broadcast;
 
-*/
+
 /**
  * Created by cloudera on 5/21/17.
- *//*
+ */
 
 public class HBasePersistentStore implements PersistentStore {
     @Override
@@ -113,4 +116,3 @@ public class HBasePersistentStore implements PersistentStore {
         }
     }
 }
-*/

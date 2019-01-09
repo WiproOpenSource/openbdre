@@ -321,7 +321,7 @@
         <dependency>
             <groupId>com.google.guava</groupId>
             <artifactId>guava</artifactId>
-            <version>19.0</version>
+            <version>14.0</version>
 
         </dependency>
 
@@ -384,12 +384,12 @@
                             <goal>shade</goal>
                         </goals>
                         <configuration>
-                            <relocations>
+                          <!--  <relocations>
                                 <relocation>
                                     <pattern>com.google</pattern>
                                     <shadedPattern>com.shaded.google</shadedPattern>
                                 </relocation>
-                            </relocations>
+                            </relocations> -->
                             <filters>
                                 <filter>
                                     <artifact>*:*</artifact>

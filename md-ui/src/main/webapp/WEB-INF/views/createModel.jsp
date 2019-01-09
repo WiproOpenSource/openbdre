@@ -99,9 +99,13 @@
                    }
                    if(source=="Hive" && hiveInsert==0){
                       console.log("Adding new section for databse and table");
+					  var hostName=document.getElementById("hostName").value;
+									 var port =document.getElementById("serverIP").value;
+                                     var srenv=hostName+":"+port;
+									 console.log(srenv);
                             $.ajax({
                                                    type: "GET",
-                                                   url: "/mdrest/hivemigration/databases/localhost:10000",
+                                                   url: "/mdrest/ml/databases/" + srenv,
                                                    dataType: 'json',
                                                    async: false,
                                                    success: function (data) {
@@ -112,34 +116,25 @@
                                                        alert('danger');
                                                    }
                                                });
-
-
                   var formHTML="";
                   formHTML=formHTML+'<section>';
                   formHTML=formHTML+'<form class="form-horizontal" role="form" id="hiveDBTable">';
                   formHTML=formHTML+'<div class="form-group" >';
-
                formHTML = formHTML + '<label class="control-label col-sm-2" for="hive-db">Database Name</label>';
                    formHTML = formHTML +  '<div class="col-md-4">' ;
                formHTML = formHTML + '  <select class="form-control" id="hive-db" name="hive-db" onchange="loadTableOptions(this.value)">';
                //
                formHTML=formHTML+'<option value="select">Select Option</option>';
                for(var k=0;k<databaseList.length;k++){
-
                                        formHTML=formHTML+'<option value="'+ databaseList[k].Value + '">' + databaseList[k].DisplayText + '</option>';
-
-
                }
-
                formHTML = formHTML + '</select>';
                formHTML = formHTML +  '</div>' ;
                formHTML = formHTML +  '</div>' ;
                formHTML=formHTML+'<div class="form-group" >';
                formHTML = formHTML + '<label class="control-label col-sm-2" for="hive-table">Table Name</label>';
                  formHTML = formHTML +  '<div class="col-md-4">' ;
-
                           formHTML = formHTML + '  <select class="form-control" id="hive-table" name="hive-table" >';
-
                           formHTML = formHTML + '</select>';
                           formHTML = formHTML +  '</div>' ;
                           formHTML = formHTML +  '</div>' ;
@@ -149,7 +144,6 @@
                       hiveInsert=1;
                    }
             }
-
     		return true;
     		},
     		onStepChanged: function(event, currentIndex, priorIndex) {
@@ -157,7 +151,6 @@
     			       if(priorIndex==2 && currentIndex==3 && document.getElementById("persistentName").value=="HDFS"){
     			       console.log("Printing the fileformat");
     			       console.log(document.getElementById("fileformat").value);
-
                             	$('#rawTableColumnDetails').jtable({});
                                 $('#rawTableColumnDetails').jtable('destroy');
                                     $('#rawTableColumnDetails').jtable({
@@ -218,7 +211,6 @@
                                                             });
                                                 },
                                                updateAction: function(postData) {
-
                                                 return $.Deferred(function($dfd) {
                                                     console.log(postData);
                                                     $dfd.resolve(jsonObj);
@@ -230,7 +222,6 @@
                                                         $dfd.resolve(jsonObj);
                                                     });
                                                 }
-
                                             },
                                         fields: {
                                             serialNumber:{
@@ -276,7 +267,10 @@
                                      $('#rawTableColumnDetails').jtable('destroy');
                                      var srcDb=document.getElementById("hive-db").value;
                                      var tbl=document.getElementById("hive-table").value;
-                                     var srenv="localhost:10000";
+									 var hostName=document.getElementById("hostName").value;
+									 var port =document.getElementById("serverIP").value;
+                                     var srenv=hostName+":"+port;
+									 console.log("srenv");
                                      console.log(srcDb);
                                      console.log(tbl);
                                      $('#rawTableColumnDetails').jtable({
@@ -312,7 +306,6 @@
                                                 dataType: 'json',
                                                 async: false,
                                                 success: function (data) {
-
                                                     $dfd.resolve(data);
                                                 },
                                                 error: function () {
@@ -321,7 +314,6 @@
                                             });
                                             });
                                        },
-
                                      updateAction: function(postData) {
                                                               }
                                                               },
@@ -367,9 +359,13 @@
     		</script>
 <script>
  function loadTableOptions(dbName){
+ var hostName=document.getElementById("hostName").value;
+									 var port =document.getElementById("serverIP").value;
+                                     var srenv=hostName+":"+port;
+									 console.log("srenv");
             $.ajax({
                 type: "GET",
-                url: "/mdrest/hivemigration/tables/localhost:10000/" + dbName ,
+                url: "/mdrest/ml/tables/" + srenv + "/" + dbName ,
                 dataType: 'json',
                 async: false,
                 success: function (data) {
@@ -439,9 +435,11 @@
                                  alert('danger');
                              }
                          });
+						 //$scope.hostName=document.getElementById("hostName").value;
+						//		$scope.port =document.getElementById("serverIP").value;
+                                    
                          $scope.srenv="localhost:10000";
-
-
+						// console.log($scope.srenv);
                          $.ajax({
                          url: "/mdrest/genconfig/PersistentStores_Connection_Type/?required=2",
                          type: 'POST',
@@ -476,24 +474,18 @@
                                            }
                                            else if (model_Type=="LogisticRegression" || model_Type=="LinearRegression"){
                                                 intercept=document.getElementById("Intercept.1").value;
-
                                                   var text=document.getElementById("Column.1").value;
-
                                                   text=text.concat(":");
                                                  text=text.concat(document.getElementById("Coefficient.1").value);
                                                   for(i=2;i<=count;i++){
-
                                                      text=text.concat(",");
                                                     s1=document.getElementById("Column." + i).value;
-
                                                       text=text.concat(s1);
                                                       text=text.concat(":");
                                                       text=text.concat(document.getElementById("Coefficient." + i).value);
-
                                                   }
                                                   console.log("hello");
                                                   console.log(text);
-
                                                   map["intercept"]=intercept;
                                                   map["coefficients"]=text;
                                            }
@@ -515,42 +507,31 @@
                                            map["clusters"]=text;
                                            map["features"]=continuousValue;
                                            }
-
                                            jtableIntoMap("", "rawTableColumnDetails");
                                             var columns="";
                                             var i=0;
-
                                            jtableIntoMap("", "rawTableColumnDetails");
                                            console.log("Printing the jtable map");
                                            console.log(map1);
-
                                             var attribute="";
                                             var i=1;
-
                                            for (var key in map1) {
                                                if (map1.hasOwnProperty(key)) {
                                                attribute=attribute.concat(key);
-
                                                attribute=attribute.concat(":");
                                                attribute=attribute.concat(map1[key].charAt(0).toUpperCase()+map1[key].slice(1));
-
                                                if(i<Object.keys(map1).length){
                                                attribute=attribute.concat(",");}
-
                                                }
                                                i=i+1;
                                            }
                                            console.log(attribute);
-
                                            map["schema"]=attribute;
-
                                            if(document.getElementById("persistentName").value=="HDFS"){
                                            map["fileformat"]=document.getElementById("fileformat").value;
                                            if(document.getElementById("fileformat").value=="Delimited"){map["Delimiter"]=document.getElementById("delimiter").value;}
                                            else{map["schema-file-path"]=document.getElementById("formatFile").value;}
                                            }
-
-
                                            console.log("Printing the map");
                                            console.log(map);
                                              $.ajax({
@@ -571,13 +552,8 @@
                                             						}
                                             					}
                                             				}).html('<p><span class="jtable-confirm-message">Model Created Successfully</span></p>');
-
-
-
-
                                                }
                                                              else{
-
                                                        $("#div-dialog-warning").dialog({
                                                                 title: "",
                                                                 resizable: false,
@@ -589,7 +565,6 @@
                                                                     }
                                                                 }
                                                             }).html('<p><span class="jtable-confirm-message">Model Created Successfully</span></p>');
-
                                                              }
                                                          }
                                                      });
@@ -695,7 +670,6 @@
                                                   return false;
                                                   }
                                                });
-
                                               }
                           </script>
           <script>
@@ -725,13 +699,10 @@
              }
           }
           if(count1>0){
-
                        for(var j=1;j<=count1;j++){
                           prevClusterValues.push(document.getElementById("Information."+ j).value);
                        }
                     }
-
-
               console.log(loadMethod);
               var div = document.getElementById('modelRequiredFields');
                       if(loadMethod=="serializedModel" || loadMethod=="pmmlFile"){
@@ -757,30 +728,20 @@
                       console.log(model);
                       if(model=="LogisticRegression" || model=="LinearRegression"){
                       count1=0;
-
                       console.log("Enter ModelInformation");
                           //console.log(coefficients);
                           var formHTML='';
-
                           var next=1;
                           var column;
                             formHTML=formHTML+'<div class="col-md-12" >';
                         formHTML=formHTML+'<div class="col-md-4">Column </div>';
                         formHTML=formHTML+'<div class="col-md-4">Coefficient</div>';
                         formHTML=formHTML+'<div class="col-md-4">Intercept</div>';
-
                         formHTML=formHTML+'</div>';
-
-
                         for(var t=0;t<=count;t++){
-
-
                         formHTML=formHTML+'<div class="col-md-12" >';
                         formHTML = formHTML +  '<div class="col-md-4">' ;
-
                         formHTML = formHTML + '  <select class="form-control" id="Column.' + next + '" name="Column.' + next + '" >';
-
-
                         for(var k=0;k<columnNames.length;k++){
                          if(columnNames[k]==prevColumnNames[t]){
                                                 formHTML=formHTML+'<option value="'+ columnNames[k] + '" selected>' + columnNames[k] + '</option>';
@@ -788,7 +749,6 @@
                                                 else{
                                                 formHTML=formHTML+'<option value="'+ columnNames[k] + '">' + columnNames[k] + '</option>';}
                         }
-
                         formHTML = formHTML + '</select>';
                         formHTML = formHTML +  '</div>' ;
                         formHTML = formHTML +  '<div class="col-md-4">' ;
@@ -799,7 +759,6 @@
                         }
                         formHTML = formHTML +  '</input>' ;
                         formHTML = formHTML +  '</div>' ;
-
                         if(t==0){
                         formHTML = formHTML +  '<div class="col-md-4">' ;
                         formHTML = formHTML +  '<input class="form-control" id="Intercept.' + next + '"value='+ inter +' name="Intercept.' + next + '">' ;
@@ -811,25 +770,15 @@
                         {
                         console.log("Wht's up");
                         formHTML = formHTML +  '<div class="col-md-4">' ;
-
                         formHTML = formHTML +  '</div>' ;
-
                         formHTML=formHTML+'</div>';
-
                         }
                         next++;
-
                         }
-
-
                         count++;
                         formHTML=formHTML+'<div id="count" value="' + count + '"></div>';
-
-
                         if(count<columnNames.length)
-
                         formHTML=formHTML+'<button class = "btn btn-default  btn-success" style="margin-top: 30px;background: lightsteelblue;" type = "button" onClick = loadModelProperties("ModelInformation")  >Add Column</button >';
-
                         div.innerHTML = formHTML;}
                         else{
                         count=0;
@@ -853,9 +802,7 @@
                                    }
                                    formHTML=formHTML+"</select>";
                                    formHTML=formHTML+'</div>';
-
                                                }
-
                               var next=1;
                               var column;
                               formHTML=formHTML+'<br>';
@@ -867,13 +814,8 @@
                                 formHTML=formHTML+'<div class="col-md-12" >';
                             formHTML=formHTML+'<div class="col-md-4">Cluster No</div>';
                             formHTML=formHTML+'<div class="col-md-4">Cluster Centre</div>';
-
                             formHTML=formHTML+'</div>';
-
-
                             for(var t=0;t<=count1;t++){
-
-
                             formHTML=formHTML+'<div class="col-md-12" >';
                             formHTML = formHTML +  '<div class="col-md-4">' ;
                             formHTML = formHTML +  '<input class="form-control" id="Cluster.' + next + '"value='+ next +' name="Cluster.' + next + '">' ;
@@ -887,27 +829,18 @@
                             formHTML = formHTML +  '</input>' ;
                             formHTML = formHTML +  '</div>' ;
                             formHTML=formHTML+'</div>';
-
                             next++;
-
                             }
-
                             count1++;
-
                             formHTML=formHTML+'<button class = "btn btn-default  btn-success" style="margin-top: 30px;background: lightsteelblue;" type = "button" onClick = loadModelProperties("ModelInformation")  >Add Cluster</button >';
                             formHTML=formHTML+'</div>';
                             div.innerHTML = formHTML;
-
-
                             $(".js-example-basic-multiple").select2();
-
                             if(count1>1){
                             $('#features').val(selected);
-
                             $('#features').trigger('change');
                             }
                         }
-
                                   }
                                   else{
                                   count=0;
@@ -1044,7 +977,6 @@
   var i=0;
   </script>
                 <script>
-
                 function loadProperties() {
                     var text = $('#persistentName option:selected').text();
                         buildForm(text + "_Model_Connection", "persistentFields");
@@ -1067,7 +999,6 @@
         			console.log(data[root]);
         			$.each(data[root], function(i, v) {
         				formHTML = formHTML + '<div class="form-group"> <label for="' + v.key + '">' + v.value + '</label>';
-
         			    formHTML = formHTML + '<input name="' + v.key + '" value="' + v.defaultVal + '" placeholder="' + v.description + '" type="' + v.type + '" class="form-control" id="' + v.key + '"></div>';
         			});
         			formHTML = formHTML + '</form>';
@@ -1132,22 +1063,17 @@
                         dataType: 'json',
                         async: false,
                         success: function(data) {
-
                             var root = 'Records';
                             $.each(data[root], function(i, v) {
                                 map[v.key] = v;
                             });
-
                         },
                         error : function(data){
                             console.log(data);
                         }
-
                     });
                 return map;
-
                 };
-
                 function changeme(fileformat){
                 console.log(fileformat);
                 var div = document.getElementById("sourceDataSchema");
@@ -1187,6 +1113,5 @@
                 }
                 div.innerHTML=formHTML;
                 }
-
         		</script>
 </body>

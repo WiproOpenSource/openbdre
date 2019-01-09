@@ -60,7 +60,7 @@ public class MapToPair implements Transformation{
                             String key = "";
                             if (row != null) {
                                 for (String keyField : keyFields) {
-                                    // System.out.println(keyField + " index is " + schema.fieldIndex(keyField));
+                                    System.out.println(" keyfields are " + keyField);
                                     String[] fields = keyField.split("\\.");
                                     int i=0;
                                     Row row2 = row;

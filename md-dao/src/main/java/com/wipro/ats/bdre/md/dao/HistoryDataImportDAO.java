@@ -373,6 +373,25 @@ public class HistoryDataImportDAO {
                 incrementColumnProperties.setDescription(DATAIMPORTPROPERTIES);
                 session.save(incrementColumnProperties);
 
+                // increment mode .......
+                IntermediateId intermediateIdIncrementMode = new IntermediateId();
+                intermediateIdIncrementMode.setUuid(intermediateInfo.getUuid());
+                intermediateIdIncrementMode.setInterKey("incrementType_" + i);
+
+                Criteria incrementModeValueCriteria = session.createCriteria(Intermediate.class).add(Restrictions.eq("id", intermediateIdIncrementMode));
+                Intermediate incrementModeValue = (Intermediate) incrementModeValueCriteria.list().get(0);
+
+                PropertiesId propertiesIdIncrementMode = new PropertiesId();
+                propertiesIdIncrementMode.setProcessId(childDataImportProcess.getProcessId());
+                propertiesIdIncrementMode.setPropKey("incr.mode");
+                Properties incrementModeProperties = new Properties();
+                incrementModeProperties.setId(propertiesIdIncrementMode);
+                incrementModeProperties.setConfigGroup(IMPCOMMON);
+                incrementModeProperties.setPropValue(incrementModeValue.getInterValue());
+                incrementModeProperties.setDescription(DATAIMPORTPROPERTIES);
+                session.save(incrementModeProperties);
+
+
                 //primary key column
                 IntermediateId intermediateIdCheckCol = new IntermediateId();
                 intermediateIdCheckCol.setUuid(intermediateInfo.getUuid());

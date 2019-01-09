@@ -83,6 +83,23 @@
                             <shadedClassifierName>executable</shadedClassifierName>
                             <finalName>hive-data-gen-${project.version}</finalName>
                             <outputDirectory>${project.parent.build.directory}/lib/${project.artifactId}</outputDirectory>
+
+
+                        
+                            <filters>
+                                <filter>
+                                    <artifact>*:*</artifact>
+                                    <excludes>
+                                        <exclude>META-INF/*.SF</exclude>
+                                        <exclude>META-INF/*.DSA</exclude>
+                                        <exclude>META-INF/*.RSA</exclude>
+                                    </excludes>
+                                </filter>
+                            </filters>
+
+
+
+
                         </configuration>
                     </execution>
                 </executions>
@@ -118,6 +135,9 @@
                                 </artifactItem>
                             </artifactItems>
                             <outputDirectory>${project.parent.build.directory}/lib/${project.artifactId}</outputDirectory>
+
+ 
+
                         </configuration>
                     </execution>
 

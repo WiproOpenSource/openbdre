@@ -79,8 +79,20 @@
                             </transformers>
                             <shadedArtifactAttached>true</shadedArtifactAttached>
                             <shadedClassifierName>executable</shadedClassifierName>
+                              
+                                            <filters>
+                                <filter>
+                                    <artifact>*:*</artifact>
+                                    <excludes>
+                                        <exclude>META-INF/*.SF</exclude>
+                                        <exclude>META-INF/*.DSA</exclude>
+                                        <exclude>META-INF/*.RSA</exclude>
+                                    </excludes>
+                                </filter>
+                            </filters>
+
                             <outputDirectory>${project.parent.build.directory}/lib/${project.artifactId}</outputDirectory>
-                            <finalName>data-export-${project.version}-jar-with-dependencies</finalName>
+                            <finalName>data-export-${project.version}-jar-with-dependencies</finalName> 
                         </configuration>
                     </execution>
                 </executions>
