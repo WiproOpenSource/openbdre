@@ -1,5 +1,5 @@
 package com.wipro.ats.bdre.ml.sources;
-
+import org.apache.spark.sql.SparkSession;
 import org.apache.spark.api.java.JavaRDD;
 import org.apache.spark.api.java.JavaSparkContext;
 import org.apache.spark.api.java.function.Function;
@@ -17,10 +17,10 @@ import java.util.Arrays;
  * Created by cloudera on 11/20/17.
  */
 public class HDFSSource implements Serializable{
-    public Dataset<Row> getDataFrame(JavaSparkContext jsc, String hdfsPath, String nameNodeHost, String nameNodePort, String fileFormat, String delimiter, StructType schema){
-        HiveContext sqlContext = new org.apache.spark.sql.hive.HiveContext(jsc);
+    public Dataset<Row> getDataFrame(SparkSession sparkSession, String hdfsPath, String nameNodeHost, String nameNodePort, String fileFormat, String delimiter, StructType schema){
+      //  HiveContext sqlContext = new org.apache.spark.sql.hive.HiveContext(jsc);
         Dataset<Row> df = null;
-        if(fileFormat.equalsIgnoreCase("Delimited")){
+       /* if(fileFormat.equalsIgnoreCase("Delimited")){
             JavaRDD<String> data= jsc.textFile(hdfsPath);
             System.out.println("hdfsPath2 = " + hdfsPath);
             JavaRDD<Row> dataMain = data.map(new Function<String,Row>(){
@@ -42,7 +42,7 @@ public class HDFSSource implements Serializable{
         }
         else if(fileFormat.equalsIgnoreCase("Json")){
             df = sqlContext.read().json(hdfsPath);
-        }
+        } */
         return df;
     }
 }

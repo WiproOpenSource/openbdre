@@ -132,9 +132,9 @@ public class MLAPI {
         LOGGER.info(srcDB + "srcDB");
         try {
             Class.forName(driverName);
-            connection = DriverManager.getConnection("jdbc:hive2://" + srcEnv + "/" + srcDB.toLowerCase(), "", "");
+            connection = DriverManager.getConnection("jdbc:mysql://ip-172-31-28-247.ec2.internal:3306/bdre_edgenode", "root", "bdre@1234");
             String tableName="ML_"+pid;
-            ResultSet rs = connection.createStatement().executeQuery("select * from " + srcDB + "." + tableName);
+            ResultSet rs = connection.createStatement().executeQuery("select * from bdre_edgenode" + "." + tableName);
 
             ResultSetMetaData metaData = rs.getMetaData();
             List<Map<String, Object>> tables = new ArrayList<Map<String, Object>>();

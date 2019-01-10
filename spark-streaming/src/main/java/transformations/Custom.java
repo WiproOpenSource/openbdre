@@ -30,10 +30,12 @@ public abstract class Custom  {
             Class customClass = Class.forName(executorPlugin);
             Custom customClassObject = (Custom) customClass.newInstance();
 
-            if(prevPidList.size() == 1)
-                dStreamPostTransformation =  customClassObject.convertJavaPairDstream(prevDStream,broadcastMap,jssc);
-            else
-                dStreamPostTransformation = customClassObject.convertMultiplePairDstream(prevDStreamMap,prevMap,pid,schema,broadcastMap,jssc);
+            if(prevPidList.size() == 1){
+System.out.println("Inside custom and prevPid is one");
+                dStreamPostTransformation =  customClassObject.convertJavaPairDstream(prevDStream,broadcastMap,jssc);}
+            else{
+System.out.println("Inside custom and previd is not one");
+                dStreamPostTransformation = customClassObject.convertMultiplePairDstream(prevDStreamMap,prevMap,pid,schema,broadcastMap,jssc);}
 
         }catch (Exception e){
             e.printStackTrace();

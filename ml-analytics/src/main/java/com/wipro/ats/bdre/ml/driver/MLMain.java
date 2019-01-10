@@ -1,5 +1,6 @@
-package com.wipro.ats.bdre.ml.driver;
 
+
+package com.wipro.ats.bdre.ml.driver;
 import com.wipro.ats.bdre.md.api.GetProcess;
 import com.wipro.ats.bdre.md.api.GetProperties;
 import com.wipro.ats.bdre.md.api.InstanceExecAPI;
@@ -17,7 +18,10 @@ import org.apache.spark.api.java.JavaSparkContext;
 import org.apache.spark.sql.Dataset;
 import org.apache.spark.sql.Row;
 import org.apache.spark.sql.SaveMode;
+import org.apache.spark.sql.SparkSession;
 import org.apache.spark.sql.types.StructType;
+
+import java.io.File;
 import java.sql.*;
 import java.util.*;
 import java.util.regex.Pattern;
@@ -48,10 +52,18 @@ public class MLMain {
             Properties properties = getProperties.getProperties(processId.toString(), "ml");
             String sourceType = properties.getProperty("source");
 
-            SparkConf conf = new SparkConf().setAppName("BDRE-ML-" + parentProcessId);
-            JavaSparkContext jsc = new JavaSparkContext(conf);
+           // SparkConf conf = new SparkConf().setAppName("BDRE-ML-" + parentProcessId);
+            //JavaSparkContext jsc = new JavaSparkContext(conf);
 
-            String applicationId = jsc.sc().applicationId();
+           // String applicationId = jsc.sc().applicationId();
+            String warehouseLocation = new File("spark-warehouse").getAbsolutePath();
+            SparkSession sparkSession = SparkSession
+                    .builder()
+                    .appName("test application")
+                    .config("spark.sql.warehouse.dir", warehouseLocation)
+                    .enableHiveSupport()
+                    .getOrCreate();
+            String applicationId=sparkSession.logName();
             System.out.println("applicationId = " + applicationId);
             InstanceExecAPI instanceExecAPI1 = new InstanceExecAPI();
             instanceExecAPI1.updateInstanceExecToRunning(parentProcessId, applicationId);
@@ -69,7 +81,7 @@ public class MLMain {
                 String tableName = properties.getProperty("hive-table");
 
                 HiveSource hiveSource = new HiveSource();
-                dataFrame = hiveSource.getDataFrame(jsc, metastoreURI, dbName, tableName, schema);
+                dataFrame = hiveSource.getDataFrame(sparkSession, metastoreURI, dbName, tableName, schema);
                 dataFrame.show();
 
             } else if (sourceType.equalsIgnoreCase("HDFS")) {
@@ -82,11 +94,11 @@ public class MLMain {
                 HDFSSource hdfsSource = new HDFSSource();
                 if(fileFormat.equalsIgnoreCase("Delimited")){
                     String delimiter=properties.getProperty("Delimiter");
-                    dataFrame = hdfsSource.getDataFrame(jsc, hdfsPath, nameNodeHost, nameNodePort, fileFormat, delimiter, schema);
+                    dataFrame = hdfsSource.getDataFrame(sparkSession, hdfsPath, nameNodeHost, nameNodePort, fileFormat, delimiter, schema);
                 }
                 else if(fileFormat.equalsIgnoreCase("Json")){
                     String schemaFilePath=properties.getProperty("schema-file-path");
-                    dataFrame = hdfsSource.getDataFrame(jsc, hdfsPath, nameNodeHost, nameNodePort, fileFormat, schemaFilePath, schema);
+                    dataFrame = hdfsSource.getDataFrame(sparkSession, hdfsPath, nameNodeHost, nameNodePort, fileFormat, schemaFilePath, schema);
                 }
                 dataFrame.show();
             }
@@ -108,10 +120,10 @@ public class MLMain {
 
                     if (mlAlgo.equalsIgnoreCase("LinearRegression")) {
                         LinearRegressionML linearRegressionML = new LinearRegressionML();
-                        predictionDF = linearRegressionML.productionalizeModel(dataFrame, columnCoefficientMap, intercept, jsc);
+                        predictionDF = linearRegressionML.productionalizeModel(dataFrame, columnCoefficientMap, intercept, sparkSession);
                     } else if (mlAlgo.equalsIgnoreCase("LogisticRegression")) {
                         LogisticRegressionML logisticRegressionML = new LogisticRegressionML();
-                        predictionDF = logisticRegressionML.productionalizeModel(dataFrame, columnCoefficientMap, intercept, jsc);
+                        predictionDF = logisticRegressionML.productionalizeModel(dataFrame, columnCoefficientMap, intercept, sparkSession);
 
                     }
                 }
@@ -119,7 +131,7 @@ public class MLMain {
                     String centers = properties.getProperty("clusters");
                     String features = properties.getProperty("features");
                     KMeansML kMeansML=new KMeansML();
-                    predictionDF=kMeansML.productionalizeModel(dataFrame, centers, features, jsc);
+                    predictionDF=kMeansML.productionalizeModel(dataFrame, centers, features, sparkSession);
 
                 }
 
@@ -138,7 +150,19 @@ public class MLMain {
             System.out.println("data predicted");
 
 
-            predictionDF.write().mode(SaveMode.Overwrite).saveAsTable("ML_"+parentProcessId);
+            //predictionDF.write().mode(SaveMode.Overwrite).saveAsTable("ML_"+parentProcessId);
+            //predictionDF.write().format("orc").mode("overwrite").saveAsTable("ML_"+parentProcessId);
+
+Properties prop = new java.util.Properties();
+prop.setProperty("driver", "com.mysql.jdbc.Driver");
+prop.setProperty("user", "root");
+prop.setProperty("password", "bdre@1234");
+String url = "jdbc:mysql://ip-172-31-28-247.ec2.internal:3306/bdre_edgenode";
+String table = "ML_"+parentProcessId;
+predictionDF = predictionDF.drop("features").drop("rawPrediction").drop("probability");
+System.out.println("data to be sent to mysql");
+predictionDF.show();
+predictionDF.write().mode("overwrite").jdbc(url, table, prop);
 
 
             InstanceExecAPI instanceExecAPI2 = new InstanceExecAPI();
@@ -180,3 +204,4 @@ public class MLMain {
         }
 
 }
+

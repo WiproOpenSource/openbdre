@@ -15,6 +15,7 @@ import org.apache.spark.api.java.JavaRDD;
 import org.apache.spark.api.java.JavaSparkContext;
 import org.apache.spark.api.java.function.Function;
 import org.apache.spark.api.java.function.Function2;
+import org.apache.spark.api.java.function.Function3;
 import org.apache.spark.api.java.function.Function4;
 import org.apache.spark.api.java.function.PairFunction;
 import org.apache.spark.broadcast.Broadcast;
@@ -44,7 +45,8 @@ public class LinkResolution extends Custom{
 
     @Override
     public JavaPairDStream<String, WrapperMessage> convertJavaPairDstream(JavaPairDStream<String, WrapperMessage> inputDstream, Map<String, Broadcast<HashMap<String, String>>> broadcastMap, JavaStreamingContext ssc) {
-        return null;
+System.out.println("Inside convertJavaPairDStream");        
+return null;
     }
 
    /* public  static String printTuple2(Tuple2<String,Row> s, String type) {
@@ -54,20 +56,20 @@ public class LinkResolution extends Custom{
 
     @Override
     public JavaPairDStream<String, WrapperMessage> convertMultiplePairDstream(Map<Integer, JavaPairDStream<String, WrapperMessage>> prevDStreamMap, Map<Integer, Set<Integer>> prevMap, Integer pid, StructType schema, Map<String, Broadcast<HashMap<String, String>>> broadcastMap, JavaStreamingContext jssc) {
-        /*List<Integer> prevPidList = new ArrayList<>();
+        List<Integer> prevPidList = new ArrayList<>();
         prevPidList.addAll(prevMap.get(pid));
         System.out.println("prevPidList in custom join= " + prevPidList);
-        *//*JavaPairDStream<String, WrapperMessage> prevDStream =prevDStreamMap.get(prevPidList.get(0));
+        /*JavaPairDStream<String, WrapperMessage> prevDStream =prevDStreamMap.get(prevPidList.get(0));
         prevDStream.foreachRDD(new Function2<JavaPairRDD<String, WrapperMessage>, Time, Void>() {
             @Override
             public Void call(JavaPairRDD<String, WrapperMessage> stringWrapperMessageJavaPairRDD, Time time) throws Exception {
                 System.out.println("Beginning of Link Resolution = " + new Date());
                 return null;
             }
-        });*//*
+        });*/
         MapToPair mapToPair = new MapToPair();
         JavaPairDStream<String,Row> dealDStream = mapToPair.mapToPair(prevDStreamMap.get(prevPidList.get(0)).map(s -> s._2), "Deal.Header.BusinessKey:String").mapValues(s -> s.getRow());
-        *//*dealDStream.transform(new Function2<JavaPairRDD<String, Row>, Time, JavaRDD<Object>>() {
+        /*dealDStream.transform(new Function2<JavaPairRDD<String, Row>, Time, JavaRDD<Object>>() {
             @Override
             public JavaRDD<Object> call(JavaPairRDD<String, Row> stringRowJavaPairRDD, Time time) throws Exception {
                 System.out.println("Beginning of Link Resolution = " + new Date().getTime());
@@ -80,7 +82,7 @@ public class LinkResolution extends Custom{
                 System.out.println("Beginning of Link Resolution = " + new Date().getTime());
                 return null;
             }
-        });*//*
+        });*/
         dealDStream.map(s -> new Tuple2<String,String>(s._1,s._2.toString())).transform(new BulkPutMessage(getHBaseContext(jssc.sparkContext()) , "Deal")).print();
 
         JavaPairDStream<String,Row> transactionDStream = mapToPair.mapToPair(prevDStreamMap.get(prevPidList.get(1)).map(s -> s._2), "Transaction.Header.BusinessKey:String").mapValues(s -> s.getRow());
@@ -88,6 +90,7 @@ public class LinkResolution extends Custom{
 
         JavaPairDStream<String,Row> trnxElementDStream = mapToPair.mapToPair(prevDStreamMap.get(prevPidList.get(2)).map(s -> s._2), "TransactionElement.Header.BusinessKey:String").mapValues(s -> s.getRow());
         trnxElementDStream.map(s -> new Tuple2<String,String>(s._1,s._2.toString())).transform(new BulkPutMessage(getHBaseContext(jssc.sparkContext()) , "TransactionElement")).print();
+/*
 
         JavaPairDStream<String, Tuple2<Row,Row>> dealTransactionJoinDstream = dealDStream.fullOuterJoin(transactionDStream)
                                                                                                .mapValues(tpl -> new Tuple2<Row, Row>(tpl._1.orNull(),tpl._2.orNull()));
@@ -117,7 +120,7 @@ public class LinkResolution extends Custom{
         JavaPairDStream<String, Tuple3<Row,Row,Row>>  inMemoryResolvedDstream = inMemoryDstream.filter(tpl -> (tpl._2._1() != null && tpl._2._2()!= null && tpl._2._3()!= null));
         JavaPairDStream<String, Tuple3<Row,Row,Row>>  inMemoryUnResolvedDstream = inMemoryDstream.filter(tpl -> (tpl._2._1() == null || tpl._2._2()== null || tpl._2._3()== null));
 
-     *//*   inMemoryResolvedDstream.print();
+    *//*   inMemoryResolvedDstream.print();
         inMemoryUnResolvedDstream.print();*//*
         
         JavaPairDStream<String, Tuple3<String,String,String>> existingDataInHBase = inMemoryUnResolvedDstream.transformToPair(new  BulkGetRowKeyByKey2(getHBaseContext(jssc.sparkContext()), "Unresolved"));
@@ -138,19 +141,17 @@ public class LinkResolution extends Custom{
         fullyResolvedWithHBase.map(s-> new Tuple4(s._1,s._2._1(),s._2._2(),s._2._3())).transform(new BulkPut(getHBaseContext(jssc.sparkContext()) , "Resolved")).print();
         unResolvedWithHBase.map(s-> new Tuple4(s._1,s._2._1(),s._2._2(),s._2._3())).transform(new BulkPut(getHBaseContext(jssc.sparkContext()) , "Unresolved")).print();
         unResolvedWithHBase2.map(s-> new Tuple4(s._1,s._2._1(),s._2._2(),s._2._3())).transform(new BulkPut(getHBaseContext(jssc.sparkContext()) , "Unresolved")).print();
-*/
 
 
+        return dealDStream.mapValues(s -> new WrapperMessage(s));*/
 
-
-        //return dealDStream.mapValues(s -> new WrapperMessage(s));
-        return null;
+	return null;
     }
 
 
 
     protected static JavaHBaseContext getHBaseContext(JavaSparkContext jsc) {
-        JavaHBaseContext hbaseContext = new JavaHBaseContext(jsc, HbaseUtils.getConfiguration("localhost", "2181", "localhost", "60000"));
+        JavaHBaseContext hbaseContext = new JavaHBaseContext(jsc, HbaseUtils.getConfiguration("172.31.31.241,172.31.28.247,172.31.29.55", "2181", "172.31.28.247", "16000"));
         return hbaseContext;
     }
 }

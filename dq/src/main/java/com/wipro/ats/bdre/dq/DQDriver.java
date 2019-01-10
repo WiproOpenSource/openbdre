@@ -45,6 +45,15 @@ import java.nio.file.Paths;
 import java.sql.Timestamp;
 import java.util.Date;
 import java.util.Properties;
+import org.apache.hadoop.fs.*;
+import org.apache.hadoop.io.*;
+import java.io.*;
+import java.util.Arrays;
+
+
+
+
+
 
 /**
  * @author Satish Kumar
@@ -105,14 +114,16 @@ public class DQDriver extends Configured implements Tool {
         Path goodDestFile = new Path(destDir + "/" + inputFilePath.getName());
         if(srcFs.exists(goodFilesSrcDir)) {
             //FileUtil.copyMerge(srcFs, goodFilesSrcDir, destFs, goodDestFile, true, conf, "");
-            FileUtil.copy(srcFs, goodFilesSrcDir, destFs, goodDestFile, true, conf);
+            DQDriver.copyMerge(srcFs, goodFilesSrcDir, destFs, goodDestFile, true, conf, "");
+             //FileUtil.copy(srcFs, goodFilesSrcDir, destFs, goodDestFile, true, conf);
         }
         // Invalid Records
         Path badFilesSrcDir = new Path(destDir + "/" + DQConstants.INTERMEDIATE_BAD_RECORD_OUTPUT_DIR);
         Path badDestFile = new Path(destDir + "/" + DQConstants.BAD_RECORDS_FILE);
         if(srcFs.exists(badFilesSrcDir)) {
             //FileUtil.copyMerge(srcFs, badFilesSrcDir, destFs, badDestFile, true, conf, "");
-            FileUtil.copy(srcFs, badFilesSrcDir, destFs, badDestFile, true, conf);
+           DQDriver.copyMerge(srcFs, badFilesSrcDir, destFs, badDestFile, true, conf, ""); 
+           //FileUtil.copy(srcFs, badFilesSrcDir, destFs, badDestFile, true, conf);
         }
 
         // Preparing report aggregation job
@@ -144,7 +155,8 @@ public class DQDriver extends Configured implements Tool {
         Path reportsSrcDir = new Path(destDir + "/" + DQConstants.AGGREGATED_REPORT_PLACEHOLDER_FOLDER);
         Path reportsDestFile = new Path(destDir + "/" + DQConstants.FILE_REPORT_FILE);
         //FileUtil.copyMerge(srcFs, reportsSrcDir, destFs, reportsDestFile, true, conf, "");
-        FileUtil.copy(srcFs, reportsSrcDir, destFs, reportsDestFile, true, conf);
+         DQDriver.copyMerge(srcFs, reportsSrcDir, destFs, reportsDestFile, true, conf, "");
+        //FileUtil.copy(srcFs, reportsSrcDir, destFs, reportsDestFile, true, conf);
         Path reportDestFile = new Path(outputDir.toString() + "/"
                 + DQConstants.FILE_REPORT_FILE);
         //Read the report file from HDFS and report the percentage
@@ -325,4 +337,69 @@ public class DQDriver extends Configured implements Tool {
         processLog.log(processLogInfo);
 
     }
+
+
+private static Path checkDest(String srcName, FileSystem dstFS, Path dst,
+                                  boolean overwrite) throws IOException {
+        if (dstFS.exists(dst)) {
+            FileStatus sdst = dstFS.getFileStatus(dst);
+            if (sdst.isDirectory()) {
+                if (null == srcName) {
+                    throw new IOException("Target " + dst + " is a directory");
+                }
+                return checkDest(null, dstFS, new Path(dst, srcName), overwrite);
+            } else if (!overwrite) {
+                throw new IOException("Target " + dst + " already exists");
+            }
+        }
+        return dst;
+    }
+
+
+
+    
+
+
+    /** Copy all files in a directory to one output file (merge). */
+    public static boolean copyMerge(FileSystem srcFS, Path srcDir,
+                                    FileSystem dstFS, Path dstFile,
+                                    boolean deleteSource,
+                                    Configuration conf, String addString) throws IOException {
+        dstFile = checkDest(srcDir.getName(), dstFS, dstFile,false);
+
+        if (!srcFS.getFileStatus(srcDir).isDirectory())
+            return false;
+
+        OutputStream out = dstFS.create(dstFile);
+
+        try {
+            FileStatus contents[] = srcFS.listStatus(srcDir);
+            Arrays.sort(contents);
+            for (int i = 0; i < contents.length; i++) {
+                if (contents[i].isFile()) {
+                    InputStream in = srcFS.open(contents[i].getPath());
+                    try {
+                        IOUtils.copyBytes(in, out, conf, false);
+                        if (addString!=null)
+                            out.write(addString.getBytes("UTF-8"));
+
+                    } finally {
+                        in.close();
+                    }
+                }
+            }
+        } finally {
+            out.close();
+        }
+
+
+        if (deleteSource) {
+            return srcFS.delete(srcDir, true);
+        } else {
+            return true;
+        }
+    }
+
+
+
 }

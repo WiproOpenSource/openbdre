@@ -1,5 +1,5 @@
 package com.wipro.ats.bdre.ml.models;
-
+import org.apache.spark.sql.SparkSession;
 import org.apache.spark.ml.classification.LogisticRegressionModel;
 import org.apache.spark.api.java.JavaSparkContext;
 import org.apache.spark.ml.feature.VectorAssembler;
@@ -18,7 +18,7 @@ import java.util.*;
  * Created by cloudera on 12/05/17.
  */
 public class KMeansML {
-    public Dataset<Row> productionalizeModel(Dataset<Row> dataFrame, String centers, String features, JavaSparkContext jsc){
+    public Dataset<Row> productionalizeModel(Dataset<Row> dataFrame, String centers, String features, SparkSession sparkSession){
         String[] columnNames=features.split(",");
 
         VectorAssembler assembler=new VectorAssembler().setInputCols(columnNames).setOutputCol("features");

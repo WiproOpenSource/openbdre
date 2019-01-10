@@ -22,6 +22,8 @@ import org.apache.commons.io.FileUtils;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.FileSystem;
 import org.apache.hadoop.fs.Path;
+import org.apache.hadoop.hdfs.DistributedFileSystem;
+import org.apache.hadoop.fs.LocalFileSystem;
 import org.apache.hadoop.security.UserGroupInformation;
 import org.apache.log4j.Logger;
 import org.apache.commons.io.FilenameUtils;
@@ -52,6 +54,8 @@ public class QueuedFileUploader {
             LOGGER.info("in the hdfs copy method");
             // Copying file from local to HDFS overriding, if file already exists
             config.set("fs.defaultFS", FileMonRunnableMain.getDefaultFSName());
+config.set("fs.hdfs.impl", DistributedFileSystem.class.getName());
+config.set("fs.file.impl", LocalFileSystem.class.getName());
             if("true".equals(FileMonRunnableMain.getKerberosEnabled() )) {
                 File f = new File(FileMonRunnableMain.getHadoopConfDir());
                 URL u = f.toURL();

@@ -42,6 +42,14 @@ import java.nio.file.Paths;
 import java.sql.Timestamp;
 import java.util.Date;
 import java.util.Properties;
+import org.apache.hadoop.fs.*;
+import org.apache.hadoop.io.*;
+import java.io.*;
+import java.util.Arrays;
+
+
+
+
 
 /**
  * Created by MI294210 on 05-02-2015.
@@ -245,8 +253,9 @@ public class HDFSImport extends Configured implements Tool {
                     //merging output files to one target file
                     Path targetFile = new Path(targetDir + "/" + processId + "/" + batchId);
                     if (srcFs.exists(tmpDir)) {
-                        FileUtil.copy(srcFs, tmpDir, destFs, targetFile, true, conf);
-                       // FileUtil.copyMerge(srcFs, tmpDir, destFs, targetFile, true, conf, "");
+                        //FileUtil.copy(srcFs, tmpDir, destFs, targetFile, true, conf);
+                       HDFSImport.copyMerge(srcFs, tmpDir, destFs, targetFile, true, conf, "");
+                        // FileUtil.copyMerge(srcFs, tmpDir, destFs, targetFile, true, conf, "");
 
                     }
 
@@ -367,5 +376,77 @@ public class HDFSImport extends Configured implements Tool {
         }
         return 0;
     }
+
+
+
+
+
+private static Path checkDest(String srcName, FileSystem dstFS, Path dst,
+                                  boolean overwrite) throws IOException {
+        if (dstFS.exists(dst)) {
+            FileStatus sdst = dstFS.getFileStatus(dst);
+            if (sdst.isDirectory()) {
+                if (null == srcName) {
+                    throw new IOException("Target " + dst + " is a directory");
+                }
+                return checkDest(null, dstFS, new Path(dst, srcName), overwrite);
+            } else if (!overwrite) {
+                throw new IOException("Target " + dst + " already exists");
+            }
+        }
+        return dst;
+    }
+
+
+
+    
+
+
+    /** Copy all files in a directory to one output file (merge). */
+    public static boolean copyMerge(FileSystem srcFS, Path srcDir,
+                                    FileSystem dstFS, Path dstFile,
+                                    boolean deleteSource,
+                                    Configuration conf, String addString) throws IOException {
+        dstFile = checkDest(srcDir.getName(), dstFS, dstFile, false);
+
+        if (!srcFS.getFileStatus(srcDir).isDirectory())
+            return false;
+
+        OutputStream out = dstFS.create(dstFile);
+
+        try {
+            FileStatus contents[] = srcFS.listStatus(srcDir);
+            Arrays.sort(contents);
+            for (int i = 0; i < contents.length; i++) {
+                if (contents[i].isFile()) {
+                    InputStream in = srcFS.open(contents[i].getPath());
+                    try {
+                        IOUtils.copyBytes(in, out, conf, false);
+                        if (addString!=null)
+                            out.write(addString.getBytes("UTF-8"));
+
+                    } finally {
+                        in.close();
+                    }
+                }
+            }
+        } finally {
+            out.close();
+        }
+
+
+        if (deleteSource) {
+            return srcFS.delete(srcDir, true);
+        } else {
+            return true;
+        }
+    }
+
+
+
+
+
+
+
 }
 

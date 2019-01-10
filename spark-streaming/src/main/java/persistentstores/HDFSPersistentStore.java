@@ -27,7 +27,7 @@ public class HDFSPersistentStore implements PersistentStore {
     @Override
     public void persist(JavaRDD emptyRDD, JavaPairDStream<String,WrapperMessage> inputDStream, Integer pid, Integer prevPid, StructType schema, Map<String,Broadcast<HashMap<String,String>>> broadcastMap, JavaStreamingContext jssc) throws Exception {
         try {
-            final String hdfsPath = "/user/cloudera/spark-streaming-data/";
+            final String hdfsPath = "/user/ec2-user/spark-streaming-data/";
             System.out.println("Inside emitter hdfs, persisting");
             GetProperties getProperties = new GetProperties();
             Properties hdfsProperties = getProperties.getProperties(String.valueOf(pid), "persistentStore");
@@ -66,7 +66,7 @@ public class HDFSPersistentStore implements PersistentStore {
             });
 
             //adding empty output operation to finish flow, else spark would never execute the DAG
-            dStream.foreachRDD(new VoidFunction<JavaRDD<WrapperMessage>>() {
+            finalDStream.foreachRDD(new VoidFunction<JavaRDD<WrapperMessage>>() {
                 @Override
                 public void call(JavaRDD<WrapperMessage> rowJavaRDD) throws Exception {
                     System.out.println(" For each testing ");

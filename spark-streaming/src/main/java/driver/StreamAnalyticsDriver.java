@@ -1,6 +1,9 @@
 package driver;
 
 import analytics.Analytics;
+import org.apache.hadoop.hbase.client.Connection;
+import org.apache.hadoop.hbase.client.ConnectionFactory;
+import org.apache.hadoop.hbase.TableName;
 import com.wipro.ats.bdre.GetParentProcessType;
 import com.wipro.ats.bdre.md.api.*;
 import com.wipro.ats.bdre.md.beans.ProcessInfo;
@@ -156,20 +159,21 @@ public class StreamAnalyticsDriver implements Serializable {
 
                         config = HBaseConfiguration.create();
                         GetConnections getConnections = new GetConnections();
-                        Connections conn = getConnections.getConnection(connectionName);
+                        //Connections conn = getConnections.getConnection(connectionName);
                         GetConnectionProperties getConnectionProperties = new GetConnectionProperties();
                         Properties hbaseProperties=  getConnectionProperties.getConnectionProperties(connectionName,"persistentStore");
 
                         config.set("hbase.zookeeper.quorum", hbaseProperties.getProperty("zKHost"));
                         config.set("hbase.zookeeper.property.clientPort", hbaseProperties.getProperty("zKPort"));
                         config.set("hbase.master", hbaseProperties.getProperty("hbaseMasterAddress"));
-                        HBaseAdmin.checkHBaseAvailable(config);
-                        System.out.println("HBase is running!");
+                        //HBaseAdmin.checkHBaseAvailable(config);
+                        Connection connection = ConnectionFactory.createConnection(config);
                         String tableName = broadcastProperties.getProperty("tableName_"+i);
                         String columnFamily = broadcastProperties.getProperty("columnFamily_"+i);
                         String column = broadcastProperties.getProperty("columnName_"+i);
                         String broadcastIdentifier = broadcastProperties.getProperty("broadcastIdentifier_"+i);
-                        HTable table = new HTable(config, tableName);
+                        Table table = connection.getTable(TableName.valueOf(tableName));
+                        //HTable table = new HTable(config, tableName);
                         Scan scan = new Scan();
                         scan.addColumn(Bytes.toBytes(columnFamily), Bytes.toBytes(column));
                         ResultScanner scanner = table.getScanner(scan);
@@ -177,12 +181,14 @@ public class StreamAnalyticsDriver implements Serializable {
                         // Reading values from scan result
                         for (Result result = scanner.next(); result != null; result = scanner.next()) {
                             String key = Bytes.toString(result.getRow());
+System.out.println("key is "+key);
                             String value = Bytes.toString(result.value());
                             map.put(key, value);
                         }
                         scanner.close();
                         Broadcast broadcast = sc.broadcast(map);
                         broadcastMap.put(broadcastIdentifier ,broadcast);
+//System.out.println("HBase is running!");
 
                     } catch (MasterNotRunningException e) {
                         System.out.println("HBase is not running!");
@@ -440,10 +446,12 @@ public class StreamAnalyticsDriver implements Serializable {
                         String transformationClassName = TRANSFORMATIONSPACKAGE + transformationType;
 
                         if(transformationType.equalsIgnoreCase("Custom")){
+System.out.println("Inside custom invoking of main driver");
                             JavaPairDStream<String, WrapperMessage> dStreamPostTransformation = Custom.transform(emptyRDD, transformedDStreamMap, prevMap, pid, schema,broadcastMap,ssc);
                             transformedDStreamMap.put(pid, dStreamPostTransformation);
                         }
                         else {
+System.out.println("Inside invoking of normal transformation");
                             Class transformationClass = Class.forName(transformationClassName);
                             Transformation transformationObject = (Transformation) transformationClass.newInstance();
                             JavaPairDStream<String, WrapperMessage> dStreamPostTransformation = transformationObject.transform(emptyRDD, transformedDStreamMap, prevMap, pid, schema,broadcastMap,ssc);

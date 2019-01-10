@@ -1,5 +1,5 @@
 package com.wipro.ats.bdre.ml.models;
-
+import org.apache.spark.sql.SparkSession;
 import org.apache.spark.api.java.JavaSparkContext;
 import org.apache.spark.ml.clustering.KMeansModel;
 import org.apache.spark.ml.classification.OneVsRest;
@@ -17,7 +17,7 @@ import java.util.*;
  * Created by cloudera on 11/19/17.
  */
 public class LinearRegressionML {
-    public Dataset<Row> productionalizeModel(Dataset<Row> dataFrame, LinkedHashMap<String,Double> columnCoefficientMap, double intercept, JavaSparkContext jsc){
+    public Dataset<Row> productionalizeModel(Dataset<Row> dataFrame, LinkedHashMap<String,Double> columnCoefficientMap, double intercept, SparkSession sparkSession){
         Set<String> columnsSet = columnCoefficientMap.keySet();
         List<String> columnsList = new LinkedList<>(columnsSet);
         Object[] coefficients = columnCoefficientMap.values().toArray();
