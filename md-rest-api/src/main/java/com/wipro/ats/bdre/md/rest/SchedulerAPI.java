@@ -133,7 +133,7 @@ public class SchedulerAPI {
 
             command[0]=MDConfig.getProperty("execute.script-path") + "/scheduler.sh";
             command[1]=process.getBusDomain().getBusDomainId().toString();
-            command[2]=process.getProcessType().getProcessTypeId().toString();
+            command[2]=Integer.toString(process.getProcessType().getProcessTypeId());
             command[3]=process.getProcessId().toString();
             command[4]=frequency;
             command[5]=startTime;

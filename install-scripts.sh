@@ -81,8 +81,8 @@ sudo chown $bdre_user:$bdre_user /var/log/BDRE
 
 
 #Update java softlink
-right_java=`which java`
-sudo ln -s -f $right_java /usr/bin/java
+#right_java=`which java`
+#sudo ln -s -f $right_java /usr/bin/java
 
 #add bdre as a service
 sed s/%USER%/$bdre_user/ $BDRE_HOME/bdre-scripts/bin/bdre > bdre.service

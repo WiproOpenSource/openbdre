@@ -92,7 +92,7 @@
          if(incrType == "AppendRows")
            {
          for(i=0;i<size;i++){
-          if(filteredColumns[i].dtype == "INT" || filteredColumns[i].dtype == "BIGINT" || filteredColumns[i].dtype == "NUMBER")
+          if(filteredColumns[i].dtype == "INT" || filteredColumns[i].dtype == "BIGINT" || filteredColumns[i].dtype == "NUMBER" || (filteredColumns[i].dtype == "TIMESTAMP" || "TIMESTAMP(6)") )
           integralColumns.push(filteredColumns[i].title);
           }
            var len=integralColumns.length;
