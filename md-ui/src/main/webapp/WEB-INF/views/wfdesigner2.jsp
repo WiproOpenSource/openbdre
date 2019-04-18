@@ -898,7 +898,7 @@
 
 
                                                    <div class="clearfix"></div>
-                                                     <button type="submit" ng-click="insertReduceByKeyProp(chartViewModel.selectedProcess.parentProcessId,chartViewModel.selectedProcess.processId)" class="btn btn-primary  pull-right">Save</button>
+                                                     <button type="submit" ng-click="insertReduceByKeyProp(chartViewModel.selectedProcess.parentProcessId,app2.selectedProcess.processId)" class="btn btn-primary  pull-right">Save</button>
                                                 </form>
 
 

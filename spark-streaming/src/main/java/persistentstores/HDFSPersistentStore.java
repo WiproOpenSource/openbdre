@@ -65,7 +65,7 @@ public class HDFSPersistentStore implements PersistentStore {
             });
 
             //adding empty output operation to finish flow, else spark would never execute the DAG
-            dStream.foreachRDD(new Function<JavaRDD<WrapperMessage>, Void>() {
+            finalDStream.foreachRDD(new Function<JavaRDD<WrapperMessage>, Void>() {
                 @Override
                 public Void call(JavaRDD<WrapperMessage> rowJavaRDD) throws Exception {
                     System.out.println(" For each testing ");
