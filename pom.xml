@@ -58,6 +58,7 @@
         <module>semantic-core</module>
         <module>spark-streaming</module>
         <module>ml-analytics</module>
+        <module>batch-analytics</module>
     </modules>
 
     <dependencies>

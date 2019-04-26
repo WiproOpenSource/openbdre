@@ -97,3 +97,4 @@
 99,'analytics_DecisionTreeRegression',41
 100,'analytics_RandomForestRegression',41
 101,'analytics_GradientBoostedTreeRegression',41
+102,'Batch Transformation',null

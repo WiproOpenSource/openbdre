@@ -51,6 +51,8 @@
                 </script>
 
 
+
+
                 <link rel="stylesheet" type="text/css" href="../js/fc/wf.css">
 
                 <!-- Library code. -->
@@ -257,10 +259,16 @@
                          </script>
 
             <div class="page-header"><spring:message code="wfdesigner.page.create_new_workflow"/></div>
+            <c:set var="sj" value="${42}"/>
             <c:choose>
-                <c:when test="${not empty param.processId}">
+                <c:when test="${not empty param.processId }">
+
+
+
+
 
                     <body ng-app="app" data-ng-init="init(${param.processId})" ng-controller="AppCtrl" mouse-capture ng-keydown="keyDown($event)" ng-keyup="keyUp($event)">
+
                         <div id="nanobardiv"></div>
                         <div class="row">
                             <div class="col-md-3">&nbsp;</div>
@@ -333,6 +341,8 @@
                                             </div>
                                         </div>
                                     </div>
+
+
 
 
 
@@ -903,6 +913,18 @@
 
 
                                 <form class="form-horizontal" role="form" id="processFieldsForm1" ng-if="genConfig.type == 'aggregation'">
+
+
+                                <h3>Grouping Columns</h3>
+                                <div class="" >
+                                                                                  <!-- <label class="col-md-4 control-label" for="groupColumns">Group Columns style="width: 350px ! important;"</label>-->
+                                                                                       <select id="groupColumns" class="js-example-basic-multiple form-control" multiple="multiple">
+                                                                                           <option ng-repeat="column in chartViewModel.columnList" id="{{$index}}" value="{{ column.Value }}">{{ column.DisplayText }}</option>
+                                                                                       </select>
+                                                                                   </div>
+                                <script type="text/javascript">
+                                                                                       $(".js-example-basic-multiple").select2();
+                                                                                   </script>
                                            <h3>Choose column level aggregations</h3>
 
                                             <div class="" id="formGroup1" >
@@ -2005,6 +2027,9 @@
 
 
                                             <!-- Split button -->
+                                            <c:set var="number1" value="${222}"/>
+                                            <c:set var="number2" value="${42}"/>
+
                                                         <div class="btn-group">
                                                         <button type="button" class="btn btn-default">Emitter</button>
                                                         <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="width: 20px;">
@@ -2017,6 +2042,7 @@
                                                             </li>
                                                         </ul>
                                                     </div>
+
                                                 <!-- Split button -->
 
                                                  <!-- Split button -->
@@ -2032,8 +2058,14 @@
                                                         </li>
                                                     </ul>
                                                 </div>
-
-
+                                            <!--
+                                            <div class="form-group">
+                                                                                        <label for="jobType">Workflow Type</label>
+                                                                                        <select class="form-control" id="workflowType">
+                                                                                            <option value="batch">{{parentProcessTypeId}}</option>
+                                                                                            <option value="stream">{{parentProcessTypeId}}</option>
+                                                                                        </select>
+                                                                                    </div>-->
                                             <!-- Split button -->
 
                                                 <div class="btn-group">
@@ -2260,6 +2292,7 @@
                         <div id="modalCover"></div>
                         <script type="text/javascript" src="../js/fc/wf-utilities.js"></script>
                     </body>
+
                 </c:when>
                 <c:otherwise>
 
@@ -2284,6 +2317,13 @@
                                             <label for="application"><spring:message code="wfdesigner.page.domain"/></label>
                                             <select class="form-control" id="domain">
                                                 <option ng-repeat="busdomain in newPageBusDomain" id="{{$index}}" value="{{ busdomain.Value }}">{{ busdomain.DisplayText }}</option>
+                                            </select>
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="jobType">Workflow Type</label>
+                                            <select class="form-control" id="workflowType">
+                                                <option value="batch">Batch</option>
+                                                <option value="stream">stream</option>
                                             </select>
                                         </div>
                                             <div class="actions text-center pull-right">
