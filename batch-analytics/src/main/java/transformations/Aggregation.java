@@ -37,19 +37,27 @@ public class Aggregation implements Transformation{
         Properties groupProperties=getProperties.getProperties(String.valueOf(pid),"default");
         String gc=groupProperties.getProperty("groupingColumns");
         List<Column> groupColumns=new ArrayList<>();
+        StringBuilder s1=new StringBuilder("");
         if(!gc.equals("None")){
             for(String s :gc.split(",")){
+                System.out.println("columnn for grouping is " + s.split(":")[0]);;
                 groupColumns.add(new Column(s.split(":")[0]));
+                s1.append(s.split(":")[0]+",");
             }
         }
-        Seq<Column> g=JavaConverters.asScalaIterableConverter(groupColumns).asScala().toSeq();
+        String group=s1.toString().substring(0,s1.length()-1);
+        //Seq<Column> g=JavaConverters.asScalaIterableConverter(groupColumns).asScala().toSeq();
         Properties aggProperties = getProperties.getProperties(String.valueOf(pid), "default");
         String columnAggr = aggProperties.getProperty("column:aggType");
         String[] columnsAggrArray = columnAggr.split(",");
+        StringBuilder s2=new StringBuilder("");
         for(String s: columnsAggrArray){
             String[] sArray = s.split(":::");
             fieldAggrMap.put(sArray[0].substring(0,sArray[0].indexOf(":")),sArray[1]);
+            s2.append(sArray[1]+"(" + sArray[0].substring(0,sArray[0].indexOf(":"))+"),");
         }
+        String agg=s2.toString().substring(0,s2.length()-1);
+        System.out.println("aggregation map is " + fieldAggrMap.toString());
         //TODO: In ui, map should be of this format: Map("col1" -> "max", "col2" -> "avg", "col3" -> "sum", "col4" -> "min")
 
         JavaRDD<WrapperMessage> rdd = prevRDD.map(s -> s._2);
@@ -65,7 +73,11 @@ public class Aggregation implements Transformation{
                     System.out.println("showing dataframe before filter ");
                     dataFrame.show(100);
                     if(!gc.equals("None")){
-                        aggregatedDF=dataFrame.groupBy(g).agg(fieldAggrMap);
+                        String query="select " + group + "," + agg + " from table1 group by " + group;
+                        System.out.println("sql query is " + query);
+                        //aggregatedDF=dataFrame.select(r).groupBy(g).agg(fieldAggrMap);
+                        dataFrame.registerTempTable("table1");
+                        aggregatedDF= sqlContext.sql(query);
                     }
                     else {
                         aggregatedDF = dataFrame.agg(fieldAggrMap);
