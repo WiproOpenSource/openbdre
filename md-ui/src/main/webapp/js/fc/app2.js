@@ -59,9 +59,11 @@ angular.module('app', ['flowChart', ])
         $scope.emitter_processTypes={};
         $scope.persistentStore_processTypes={};
         $scope.analytics_processTypes={};
+        $scope.batchSource_processTypes={};
+        $scope.batchOperator_processTypes={};
         $scope.chartViewModel={};
         $scope.newMessagesList = {};
-        $scope.parentProcessTypeId;
+        $scope.parentProcessTypeId=103;
 
         //
         // Event handler for key-down on the flowchart.
@@ -110,6 +112,9 @@ angular.module('app', ['flowChart', ])
         var parentName;
         var parentDesc;
         var hot;
+        //var parentType1;
+        var batchSourceOptions=[{"DisplayText":"HDFS","Value":102}]
+        var batcOperatorOptions=[]
         $scope.init = function(pid) {
             loadProgressBar(2);
             $scope.parentPidRecord = pid;
@@ -118,7 +123,9 @@ angular.module('app', ['flowChart', ])
                 parentPid = dataRecord.processList[0].processId;
                 busDomainId = dataRecord.processList[0].busDomainId;
                 parentType = dataRecord.processList[0].processTypeId;
-                $scope.parentProcessTypeId=parentType;
+                //$scope.parentProcessTypeId=parentType;
+
+                console.log("parent process type id is : " + $scope.parentProcessTypeId)
                 parentName = 'parent';
                 parentDesc = 'parent desc';
 
@@ -135,6 +142,9 @@ angular.module('app', ['flowChart', ])
             jQuery.post('/mdrest/processtype/options/'+parentType,function(data){$scope.processTypes=data});
             jQuery.post('/mdrest/processtype/options_source/'+parentType,function(data){$scope.source_processTypes=data});
             jQuery.post('/mdrest/processtype/options_operator/'+parentType,function(data){$scope.operator_processTypes=data});
+            jQuery.post('/mdrest/processtype/options_batchSource/'+parentType,function(data){$scope.batchSource_processTypes=data});
+            jQuery.post('/mdrest/processtype/options_batchOperator/'+parentType,function(data){$scope.batchOperator_processTypes=data});
+
             var messagesOptionslist = workflowtypeOptionslistAC('/mdrest/message/optionslist',  'POST', '');
                 if (messagesOptionslist) {
                     $scope.newMessagesList = messagesOptionslist;
@@ -347,7 +357,7 @@ angular.module('app', ['flowChart', ])
             var nodeType = processTypeName.substr(0,index);
             var nodename = processTypeName.substr(index+1, processTypeName.length);
 
-            if(parentType==41)
+            if(parentType==41 || parentType==103)
             {
             //
                         //create new process
@@ -1918,15 +1928,15 @@ var workflowType=document.getElementById("workflowType").value;
 console.log("workflow type is " + workflowType);
 var workflowTypeId;
 if(workflowType=="batch"){
- workflowTypeId=102;
- $scope.parentProcessTypeId=102;
+ workflowTypeId=103;
+ $scope.parentProcessTypeId=103;
 }
 else{
  workflowTypeId=41;
  $scope.parentProcessTypeId=41;
 }
 
-
+console.log("workflow type id : " + workflowTypeId);
     var postData = {
         'processName': $('#processname').val(),
         'description': $('#description').val(),
@@ -1938,14 +1948,14 @@ else{
          'permissionTypeByUserAccessId': $('#permissionTypeByUserAccessId').val(),
          'permissionTypeByGroupAccessId': $('#permissionTypeByGroupAccessId').val(),
          'permissionTypeByOthersAccessId': $('#permissionTypeByOthersAccessId').val(),
-        'processTypeId': 41,
+        'processTypeId': workflowTypeId,
         'processTemplateId': '',
         'workflowId': '2'
     };
     postData = $.param(postData),
     dataRecord = processAC('/mdrest/process', 'PUT', postData);
     if (dataRecord) {
-        if(dataRecord.processTypeId==41 || dataRecord.processTypeId==102)
+        if(dataRecord.processTypeId==41 || dataRecord.processTypeId==103)
         location.href='/mdui/pages/wfdesigner2.page?processId='+ dataRecord.processId;
         else
         location.href='/mdui/pages/wfdesigner.page?processId='+ dataRecord.processId;

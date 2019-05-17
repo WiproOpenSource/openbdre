@@ -1639,7 +1639,7 @@
                                                dataType: 'json',
                                                 success: function(data) {
                                                    if(data.Result == "OK") {
-                                                   if(pTypeId==41)
+                                                   if(pTypeId==41 || pTypeId==103)
                                                    location.href = '<c:url value="/pages/wfdesigner2.page?processId="/>' + pid;
                                                    else
                                                 location.href = '<c:url value="/pages/wfdesigner.page?processId="/>' + pid;

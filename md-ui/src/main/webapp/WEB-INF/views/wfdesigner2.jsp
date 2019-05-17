@@ -1985,7 +1985,7 @@
                                         <div class="panel-body">
                                             <div class="col-md-8">
                                                 <!-- Split button -->
-                                                <div class="btn-group">
+                                                <div class="btn-group" ng-if="parentProcessTypeId==41">
                                                     <button type="button" class="btn btn-default">Source</button>
                                                     <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="width: 20px;">
                                                         <span class="sr-only"><spring:message code="wfdesigner.page.button_dropdown"/></span>&nbsp;
@@ -1997,6 +1997,21 @@
                                                         </li>
                                                     </ul>
                                                 </div>
+
+                                   <!-- Split button -->
+                                            <div class="btn-group" ng-if="parentProcessTypeId==103">
+                                                <button type="button" class="btn btn-default">Source</button>
+                                                <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="width: 20px;">
+                                                    <span class="sr-only"><spring:message code="wfdesigner.page.button_dropdown"/></span>&nbsp;
+                                                    <span class="caret" style="margin-left: -10px;"></span>
+                                                </button>
+                                                <ul class="dropdown-menu">
+                                                    <li ng-repeat="pType in batchSource_processTypes.Options">
+                                                        <a href="#" ng-click="addNewNode(pType.Value, pType.DisplayText)">{{pType.DisplayText}}</a>
+                                                    </li>
+                                                </ul>
+                                            </div>
+
                                                 <!-- Split button -->
                                                 <div class="btn-group">
                                                 <button type="button" class="btn btn-default">Transformation</button>
@@ -2030,7 +2045,7 @@
                                             <c:set var="number1" value="${222}"/>
                                             <c:set var="number2" value="${42}"/>
 
-                                                        <div class="btn-group">
+                                                        <div class="btn-group" ng-if="parentProcessTypeId==41">
                                                         <button type="button" class="btn btn-default">Emitter</button>
                                                         <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="width: 20px;">
                                                             <span class="sr-only"><spring:message code="wfdesigner.page.button_dropdown"/></span>&nbsp;
