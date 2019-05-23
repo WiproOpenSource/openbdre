@@ -63,7 +63,7 @@ angular.module('app', ['flowChart', ])
         $scope.batchOperator_processTypes={};
         $scope.chartViewModel={};
         $scope.newMessagesList = {};
-        $scope.parentProcessTypeId=103;
+        $scope.parentProcessTypeId;
 
         //
         // Event handler for key-down on the flowchart.
@@ -123,7 +123,7 @@ angular.module('app', ['flowChart', ])
                 parentPid = dataRecord.processList[0].processId;
                 busDomainId = dataRecord.processList[0].busDomainId;
                 parentType = dataRecord.processList[0].processTypeId;
-                //$scope.parentProcessTypeId=parentType;
+                $scope.parentProcessTypeId=parentType;
 
                 console.log("parent process type id is : " + $scope.parentProcessTypeId)
                 parentName = 'parent';
@@ -142,8 +142,8 @@ angular.module('app', ['flowChart', ])
             jQuery.post('/mdrest/processtype/options/'+parentType,function(data){$scope.processTypes=data});
             jQuery.post('/mdrest/processtype/options_source/'+parentType,function(data){$scope.source_processTypes=data});
             jQuery.post('/mdrest/processtype/options_operator/'+parentType,function(data){$scope.operator_processTypes=data});
-            jQuery.post('/mdrest/processtype/options_batchSource/'+parentType,function(data){$scope.batchSource_processTypes=data});
-            jQuery.post('/mdrest/processtype/options_batchOperator/'+parentType,function(data){$scope.batchOperator_processTypes=data});
+            //jQuery.post('/mdrest/processtype/options_batchSource/'+parentType,function(data){$scope.batchSource_processTypes=data});
+            //jQuery.post('/mdrest/processtype/options_batchOperator/'+parentType,function(data){$scope.batchOperator_processTypes=data});
 
             var messagesOptionslist = workflowtypeOptionslistAC('/mdrest/message/optionslist',  'POST', '');
                 if (messagesOptionslist) {
@@ -1929,11 +1929,11 @@ console.log("workflow type is " + workflowType);
 var workflowTypeId;
 if(workflowType=="batch"){
  workflowTypeId=103;
- $scope.parentProcessTypeId=103;
+ //$scope.parentProcessTypeId=103;
 }
 else{
  workflowTypeId=41;
- $scope.parentProcessTypeId=41;
+ //$scope.parentProcessTypeId=41;
 }
 
 console.log("workflow type id : " + workflowTypeId);

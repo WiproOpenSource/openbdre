@@ -1985,7 +1985,7 @@
                                         <div class="panel-body">
                                             <div class="col-md-8">
                                                 <!-- Split button -->
-                                                <div class="btn-group" ng-if="parentProcessTypeId==41">
+                                                <div class="btn-group" >
                                                     <button type="button" class="btn btn-default">Source</button>
                                                     <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="width: 20px;">
                                                         <span class="sr-only"><spring:message code="wfdesigner.page.button_dropdown"/></span>&nbsp;
@@ -1998,19 +1998,7 @@
                                                     </ul>
                                                 </div>
 
-                                   <!-- Split button -->
-                                            <div class="btn-group" ng-if="parentProcessTypeId==103">
-                                                <button type="button" class="btn btn-default">Source</button>
-                                                <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="width: 20px;">
-                                                    <span class="sr-only"><spring:message code="wfdesigner.page.button_dropdown"/></span>&nbsp;
-                                                    <span class="caret" style="margin-left: -10px;"></span>
-                                                </button>
-                                                <ul class="dropdown-menu">
-                                                    <li ng-repeat="pType in batchSource_processTypes.Options">
-                                                        <a href="#" ng-click="addNewNode(pType.Value, pType.DisplayText)">{{pType.DisplayText}}</a>
-                                                    </li>
-                                                </ul>
-                                            </div>
+
 
                                                 <!-- Split button -->
                                                 <div class="btn-group">
@@ -2027,7 +2015,7 @@
                                             </div>
 
                                                 <!-- Split button -->
-                                                <div class="btn-group">
+                                                <div class="btn-group" ng-if="parentProcessTypeId==41">
                                                 <button type="button" class="btn btn-default">Analytics</button>
                                                 <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="width: 20px;">
                                                     <span class="sr-only"><spring:message code="wfdesigner.page.button_dropdown"/></span>&nbsp;
@@ -2073,14 +2061,7 @@
                                                         </li>
                                                     </ul>
                                                 </div>
-                                            <!--
-                                            <div class="form-group">
-                                                                                        <label for="jobType">Workflow Type</label>
-                                                                                        <select class="form-control" id="workflowType">
-                                                                                            <option value="batch">{{parentProcessTypeId}}</option>
-                                                                                            <option value="stream">{{parentProcessTypeId}}</option>
-                                                                                        </select>
-                                                                                    </div>-->
+
                                             <!-- Split button -->
 
                                                 <div class="btn-group">

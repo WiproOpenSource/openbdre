@@ -654,7 +654,11 @@
 
 '44','connection','HDFS Properties','hdfs',1,'true','persistentStore',1
 
+'113','connection','HDFS Properties','hdfs',1,'true','persistentStore',1
+
 '58','connection','Hive Properties','Hive',1,'true','hive',1
+
+'114','connection','Hive Properties','Hive',1,'true','hive',1
 
 '59','connection','HBase Properties','HBase',1,'true','persistentStore',1
 

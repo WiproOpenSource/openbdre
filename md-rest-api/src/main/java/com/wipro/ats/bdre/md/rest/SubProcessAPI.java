@@ -249,7 +249,7 @@ public class SubProcessAPI extends MetadataAPIBase {
             com.wipro.ats.bdre.md.dao.jpa.ProcessType parentProcessType = processTypeDAO.get(process.getProcessTypeId());
             LOGGER.info("parentProcessTypeId is "+parentProcessType.getParentProcessTypeId());
 
-            if(parentProcessType.getParentProcessTypeId()!=41) {
+            if(parentProcessType.getParentProcessTypeId()!=41 && parentProcessType.getParentProcessTypeId()!=103) {
                 processDAO.securityCheck(process.getParentProcessId(), principal.getName(), WRITE);
                 com.wipro.ats.bdre.md.dao.jpa.Process insertDaoProcess = new com.wipro.ats.bdre.md.dao.jpa.Process();
                 com.wipro.ats.bdre.md.dao.jpa.ProcessType daoProcessType = processTypeDAO.get(process.getProcessTypeId());

@@ -107,3 +107,5 @@
 110,'operator_Joins',103
 111,'operator_Aggregation',103
 112,'operator_Sort',103
+113,'persistentStore_HDFS',103
+114,'persistentStore_Hive',103
