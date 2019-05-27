@@ -28,7 +28,7 @@ import persistentstores.PersistentStore;
 import scala.Tuple2;
 import transformations.Transformation;
 import util.WrapperMessage;
-
+import com.wipro.ats.bdre.md.api.InstanceExecAPI;
 import java.io.Serializable;
 import java.util.*;
 
@@ -69,6 +69,8 @@ public class StreamAnalyticsDriver implements Serializable {
         parentProcessId = Integer.parseInt(args[0]);
         try {
             String username = (args[1]);
+            com.wipro.ats.bdre.md.api.InstanceExecAPI instanceExecAPI = new com.wipro.ats.bdre.md.api.InstanceExecAPI();
+            instanceExecAPI.insertInstanceExec(parentProcessId, null);
             GetProcess getProcess = new GetProcess();
             String[] processDetailsArgs = new String[]{"-p", args[0], "-u", username};
             List<ProcessInfo> subProcessList = getProcess.execute(processDetailsArgs);
@@ -119,8 +121,8 @@ public class StreamAnalyticsDriver implements Serializable {
             //Broadcast<Map<Integer, String>> broadcastVar = sc.broadcast(pidMessageTypeMap);
             String applicationId = sc.sc().applicationId();
             System.out.println("applicationId = " + applicationId);
-            InstanceExecAPI instanceExecAPI = new InstanceExecAPI();
-            instanceExecAPI.updateInstanceExecToRunning(parentProcessId, applicationId);
+            InstanceExecAPI instanceExecAPI1 = new InstanceExecAPI();
+            instanceExecAPI1.updateInstanceExecToRunning(parentProcessId, applicationId);
 
             long batchDuration = 30000;
 
@@ -201,6 +203,8 @@ public class StreamAnalyticsDriver implements Serializable {
 
             //ssc.start();
             //ssc.awaitTermination();
+            InstanceExecAPI instanceExecAPI2 = new InstanceExecAPI();
+            instanceExecAPI2.updateInstanceExecToFinished(parentProcessId, applicationId);
 
 
         }catch (Exception e){

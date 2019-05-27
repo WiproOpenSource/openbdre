@@ -126,6 +126,7 @@ public class Joins implements Transformation {
                             dataFrame1.show(100);
                             dataFrame2.show(100);
                             returnDF = dataFrame1.join(dataFrame2, dataFrame1.col(joinColumn1).equalTo(dataFrame2.col(joinColumn2)), joinType);
+                           returnDF = returnDF.drop(joinColumn2);
                             String col1="";
                             String col2="";
                             System.out.println("showing dataframe after intersect ");
