@@ -32,7 +32,7 @@ public class Sort implements Transformation {
         GetProperties getProperties = new GetProperties();
         Properties sortProperties=  getProperties.getProperties(String.valueOf(pid),"default");
 
-        String colName=sortProperties.getProperty("column");
+        String colName=sortProperties.getProperty("column").split(":")[0];
         String order = sortProperties.getProperty("order");
 
 

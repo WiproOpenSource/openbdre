@@ -312,6 +312,14 @@ public class ProcessAPI extends MetadataAPIBase {
                     processList = processDAO.list(processId, processTypeId, startPage, pageSize, principal.getName());
                     processList1 = processDAO.list(processId, 103, startPage, pageSize, principal.getName());
                     processList.addAll(processList1);
+                    Collections.sort(processList, new Comparator<com.wipro.ats.bdre.md.dao.jpa.Process>() {
+                        @Override
+                        public int compare(com.wipro.ats.bdre.md.dao.jpa.Process o1, com.wipro.ats.bdre.md.dao.jpa.Process o2) {
+                            int r1=o1.getProcessId();
+                            int r2=o2.getProcessId();
+                            return r2-r1;
+                        }
+                    });
                 }
                 else {
                     processList = processDAO.list(processId, processTypeId, startPage, pageSize, principal.getName());
