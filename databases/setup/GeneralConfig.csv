@@ -608,10 +608,14 @@
 
 
 '41','param','Parameters','Additional parameters', 1,'true','text', 1
-'43','default','Filter','Filter', 1,'true','filter', 1
+'103','param','Parameters','Additional parameters', 1,'true','text', 1
+'106','default','Filter','Filter', 1,'true','filter', 1
 '65','join','Join','Join', 1,'true','join', 1
+'110','join','Join','Join', 1,'true','join', 1
 '66','Sort','Sort','Sort', 1,'true','sort', 1
+'112','Sort','Sort','Sort', 1,'true','sort', 1
 '67','aggregation','Aggregation','Aggregation', 1,'true','aggregation', 1
+'111','aggregation','Aggregation','Aggregation', 1,'true','aggregation', 1
 '80','deduplication','DeDuplication','DeDuplication', 1,'true','deDuplication', 1
 '82','enricher','Enricher','Enricher', 1,'true','enricher', 1
 
@@ -624,12 +628,14 @@
 '50','message','Socket Properties','Socket', 1,'true','source', 1
 '51','message','S3 Properties','S3', 1,'true','source', 1
 '102','message','HDFS Properties','HDFS', 1,'true','source', 1
+'104','message','HDFS Properties','HDFS', 1,'true','source', 1
 
 '60','default','Take','Take', 1,'true','take', 1
 '61','default','Persist','Persist', 1,'true','persist', 1
 '62','default','Repartition','Repartition', 1,'true','repartition', 1
 '70','default','Window','Window', 1,'true','window', 1
 '66','default','Sort','Sort', 1,'true','sort', 1
+'112','default','Sort','Sort', 1,'true','sort', 1
 '73','default','MapToPair','MapToPair', 1,'true','MapToPair', 1
 '74','default','Map','Map', 1,'true','Map', 1
 '75','default','FlatMap','FlatMap', 1,'true','FlatMap', 1
@@ -648,7 +654,11 @@
 
 '44','connection','HDFS Properties','hdfs',1,'true','persistentStore',1
 
+'113','connection','HDFS Properties','hdfs',1,'true','persistentStore',1
+
 '58','connection','Hive Properties','Hive',1,'true','hive',1
+
+'114','connection','Hive Properties','Hive',1,'true','hive',1
 
 '59','connection','HBase Properties','HBase',1,'true','persistentStore',1
 

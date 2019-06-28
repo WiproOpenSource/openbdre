@@ -88,7 +88,7 @@ public class ProcessDAO {
                 if(processTypeId==null){
 
                 if(userRoleListOfLoggedUser.contains("ROLE_ADMIN")){
-                    Criteria criteria = session.createCriteria(Process.class).add(Restrictions.isNull(PARENTPROCESSID)).add(Restrictions.eq(DELETE_FLAG, false)).add(Restrictions.not(Restrictions.eq("processType.processTypeId",41))).add(Restrictions.not(Restrictions.eq("processType.processTypeId",86)))
+                    Criteria criteria = session.createCriteria(Process.class).add(Restrictions.isNull(PARENTPROCESSID)).add(Restrictions.eq(DELETE_FLAG, false)).add(Restrictions.not(Restrictions.eq("processType.processTypeId",41))).add(Restrictions.not(Restrictions.eq("processType.processTypeId",86))).add(Restrictions.not(Restrictions.eq("processType.processTypeId",103)))
                             .addOrder(Order.desc(PROCESSID));
                     criteria.setFirstResult(pageNum);
                     criteria.setMaxResults(numResults);
@@ -100,7 +100,7 @@ public class ProcessDAO {
                             add(Restrictions.eq(DELETE_FLAG, false)).
                             addOrder(Order.desc(PROCESSID)).
                             add(Restrictions.disjunction().
-                                    add(Restrictions.and(Restrictions.eq("users.username",userName),Restrictions.gt("permissionTypeByUserAccessId.permissionTypeId",3))).add(Restrictions.not(Restrictions.eq("processType.processTypeId",41))).
+                                    add(Restrictions.and(Restrictions.eq("users.username",userName),Restrictions.gt("permissionTypeByUserAccessId.permissionTypeId",3))).add(Restrictions.not(Restrictions.eq("processType.processTypeId",41))).add(Restrictions.not(Restrictions.eq("processType.processTypeId",103))).
                                     add(Restrictions.and(Restrictions.in("userRoles.userRoleId",userRoleIdListOfLoggedUser),Restrictions.gt("permissionTypeByGroupAccessId.permissionTypeId",3))).
                                     add(Restrictions.and(Restrictions.not(Restrictions.in("userRoles.userRoleId",userRoleIdListOfLoggedUser)),Restrictions.gt("permissionTypeByOthersAccessId.permissionTypeId",3))));
                     criteria.setFirstResult(pageNum);
@@ -169,7 +169,7 @@ public class ProcessDAO {
     public List<com.wipro.ats.bdre.md.dao.jpa.Process> processList(){
         Session session = sessionFactory.openSession();
         session.beginTransaction();
-        Criteria listSubProcessCriteria = session.createCriteria(Process.class).add(Restrictions.isNull(PARENTPROCESSID)).add(Restrictions.eq(DELETE_FLAG, false)).add(Restrictions.not(Restrictions.eq("processType.processTypeId",41))).add(Restrictions.not(Restrictions.eq("processType.processTypeId",86)));
+        Criteria listSubProcessCriteria = session.createCriteria(Process.class).add(Restrictions.isNull(PARENTPROCESSID)).add(Restrictions.eq(DELETE_FLAG, false)).add(Restrictions.not(Restrictions.eq("processType.processTypeId",41))).add(Restrictions.not(Restrictions.eq("processType.processTypeId",86))).add(Restrictions.not(Restrictions.eq("processType.processTypeId",103)));
         List<Process> subProcesses = listSubProcessCriteria.list();
         LOGGER.info("Total number of sub processes:" + listSubProcessCriteria.list().size());
         session.getTransaction().commit();
@@ -195,7 +195,7 @@ public class ProcessDAO {
 
 
                 if(processTypeId==null) {
-                    Criteria criteria = session.createCriteria(Process.class).add(Restrictions.isNull(PARENTPROCESSID)).add(Restrictions.eq(DELETE_FLAG, false)).add(Restrictions.not(Restrictions.eq("processType.processTypeId",41)));
+                    Criteria criteria = session.createCriteria(Process.class).add(Restrictions.isNull(PARENTPROCESSID)).add(Restrictions.eq(DELETE_FLAG, false)).add(Restrictions.not(Restrictions.eq("processType.processTypeId",41))).add(Restrictions.not(Restrictions.eq("processType.processTypeId",103)));
                     size = criteria.list().size();
                 }
                 else
@@ -235,7 +235,7 @@ public class ProcessDAO {
         Session session = sessionFactory.openSession();
         Integer size = 0;
         session.beginTransaction();
-        Criteria listSubProcessCriteria = session.createCriteria(Process.class).add(Restrictions.isNull(PARENTPROCESSID)).add(Restrictions.eq(DELETE_FLAG, false)).add(Restrictions.not(Restrictions.eq("processType.processTypeId",41))).add(Restrictions.not(Restrictions.eq("processType.processTypeId",86)));
+        Criteria listSubProcessCriteria = session.createCriteria(Process.class).add(Restrictions.isNull(PARENTPROCESSID)).add(Restrictions.eq(DELETE_FLAG, false)).add(Restrictions.not(Restrictions.eq("processType.processTypeId",41))).add(Restrictions.not(Restrictions.eq("processType.processTypeId",86))).add(Restrictions.not(Restrictions.eq("processType.processTypeId",103)));
         size = listSubProcessCriteria.list().size();
         session.getTransaction().commit();
         session.close();

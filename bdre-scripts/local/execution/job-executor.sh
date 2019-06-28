@@ -50,6 +50,9 @@ elif [ $processTypeId -eq 26 ]; then
     sh $(dirname $0)/filemonitor.sh $processId $userName
 elif [ $processTypeId -eq 41 ]; then
     sh $(dirname $0)/spark-streaming.sh $busDomainId $processTypeId $processId $userName $5 $6 $7 $8 $9 ${10} ${11} ${12}
+
+elif [ $processTypeId -eq 103 ]; then
+    sh $(dirname $0)/batch-analytics.sh $busDomainId $processTypeId $processId $userName $5 $6 $7 $8 $9 ${10} ${11} ${12}
 elif [ $processTypeId -eq 39 ]; then
     python $(dirname $0)/Workflow.py $busDomainId $processTypeId $processId
 elif [ $processTypeId -eq 86 ]; then

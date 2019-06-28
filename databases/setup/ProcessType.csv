@@ -97,3 +97,15 @@
 99,'analytics_DecisionTreeRegression',41
 100,'analytics_RandomForestRegression',41
 101,'analytics_GradientBoostedTreeRegression',41
+103,'Batch Transformation',null
+104,'source_HDFS',103
+105,'source_Hive',103
+106,'operator_Filter',103
+107,'operator_Union',103
+108,'operator_Count',103
+109,'operator_Distinct',103
+110,'operator_Joins',103
+111,'operator_Aggregation',103
+112,'operator_Sort',103
+113,'persistentStore_HDFS',103
+114,'persistentStore_Hive',103

@@ -8,11 +8,9 @@ import org.apache.spark.sql.DataFrame;
 import org.apache.spark.sql.Row;
 import org.apache.spark.sql.SQLContext;
 import org.apache.spark.sql.types.StructType;
-import org.apache.spark.streaming.api.java.JavaDStream;
-import org.apache.spark.streaming.api.java.JavaPairDStream;
-import org.apache.spark.streaming.api.java.JavaStreamingContext;
 import util.WrapperMessage;
-
+import org.apache.spark.api.java.JavaPairRDD;
+import org.apache.spark.api.java.JavaSparkContext;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -24,25 +22,26 @@ import java.util.Properties;
 public class HDFSPersistentStore implements PersistentStore {
 
     @Override
-    public void persist(JavaRDD emptyRDD, JavaPairDStream<String,WrapperMessage> inputDStream, Integer pid, Integer prevPid, StructType schema, Map<String,Broadcast<HashMap<String,String>>> broadcastMap, JavaStreamingContext jssc) throws Exception {
+    public void persist(JavaRDD emptyRDD, JavaPairRDD<String,WrapperMessage> inputRDD, Integer pid, Integer prevPid, StructType schema, Map<String,Broadcast<HashMap<String,String>>> broadcastMap, JavaSparkContext jsc) throws Exception {
         try {
             final String hdfsPath = "/user/cloudera/spark-streaming-data/";
             System.out.println("Inside emitter hdfs, persisting");
             GetProperties getProperties = new GetProperties();
             Properties hdfsProperties = getProperties.getProperties(String.valueOf(pid), "persistentStore");
-            System.out.println(" Printing Pair dstream" );
-            inputDStream.print();
+            //System.out.println(" Printing Pair dstream" );
+            //inputDStream.print();
 
             //inputDStream.dstream().saveAsTextFiles(hdfsPath,"stream");
-            JavaDStream<WrapperMessage> dStream = inputDStream.map(s -> s._2);
+            JavaRDD<WrapperMessage> rdd = inputRDD.map(s -> s._2);
 
-            JavaDStream<WrapperMessage> finalDStream =  dStream.transform(new Function<JavaRDD<WrapperMessage>,JavaRDD<WrapperMessage>>() {
-                @Override
-                public JavaRDD<WrapperMessage> call(JavaRDD<WrapperMessage> wrapperMessageJavaRDD) throws Exception {
+
                     System.out.println(" inside hdfs ");
                     //JavaRDD<Row> rowJavaRDD = wrapperMessageJavaRDD.map(record->WrapperMessage.convertToRow(record));
-                    JavaRDD<Row> rowJavaRDD = wrapperMessageJavaRDD.map(s -> s.getRow());
-                    SQLContext sqlContext = SQLContext.getOrCreate(rowJavaRDD.context());
+                    JavaRDD<Row> rowJavaRDD = rdd.map(s -> s.getRow());
+                    if(!rowJavaRDD.isEmpty()){
+                        rowJavaRDD.saveAsTextFile(hdfsPath+"/"+pid.toString()+"_"+new Date().getTime());
+                    }
+                    /*SQLContext sqlContext = SQLContext.getOrCreate(rowJavaRDD.context());
                     DataFrame df = sqlContext.createDataFrame(rowJavaRDD, schema);
                     if (!df.rdd().isEmpty() && !rowJavaRDD.isEmpty()) {
                         System.out.println("showing dataframe df before writing to hdfs  ");
@@ -55,23 +54,7 @@ public class HDFSPersistentStore implements PersistentStore {
                         System.out.println("showing dataframe df after writing to hdfs  ");
                         df.show(100);
 
-                    }
-                    /*JavaRDD<WrapperMessage> finalRDD = emptyRDD;
-                    if (df != null) {
-                        finalRDD = df.javaRDD().map(record->WrapperMessage.convertToWrapperMessage(record));
                     }*/
-                    return wrapperMessageJavaRDD;
-                }
-            });
-
-            //adding empty output operation to finish flow, else spark would never execute the DAG
-            finalDStream.foreachRDD(new Function<JavaRDD<WrapperMessage>, Void>() {
-                @Override
-                public Void call(JavaRDD<WrapperMessage> rowJavaRDD) throws Exception {
-                    System.out.println(" For each testing ");
-                    return null;
-                }
-            });
 
         } catch (Exception e) {
             e.printStackTrace();
