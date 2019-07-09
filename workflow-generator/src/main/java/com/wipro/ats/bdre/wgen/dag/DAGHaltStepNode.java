@@ -29,7 +29,7 @@ public class DAGHaltStepNode extends DAGNode {
             System.out.println("e = " + e);
         }
         return "\ndef "+getName()+"_pc():\n" +
-                "\tcommand='java -cp "+homeDir+"/bdre/lib/md_api/md_api-1.1-SNAPSHOT-executable.jar:"+homeDir+"/bdre/lib/*/*  com.wipro.ats.bdre.md.api.airflow.AirflowHaltStep --sub-process-id "+ getSid()+"'\n" +
+                "\tcommand='java -cp \""+homeDir+"/bdre/lib/airflow_lib/*\"  com.wipro.ats.bdre.md.api.airflow.AirflowHaltStep --sub-process-id "+ getSid()+"'\n" +
                 "\tbash_output = subprocess.Popen(command,shell=True, stdin=subprocess.PIPE, stdout=subprocess.PIPE )\n" +
                 "\tout,err = bash_output.communicate()\n"+
                 "\tlogger.info(\"out is \"+str(out))\n"+

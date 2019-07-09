@@ -50,7 +50,7 @@ public class DAGDataGenerationTaskNode  extends GenericActionNode {
         StringBuilder ret = new StringBuilder();
 
         ret.append(      "\ndef "+ getName()+"_pc(**kwargs):\n" +
-                        "\tcommand='java -cp "+homeDir+"/bdre/lib/hive-data-gen/*:"+homeDir+"/bdre/lib/*/*  com.wipro.ats.bdre.datagen.GeneratorMain --sub-process-id "+ getId().toString() +" '\n"+
+                        "\tcommand='java -cp \""+homeDir+"/bdre/lib/airflow_lib*\" com.wipro.ats.bdre.datagen.GeneratorMain --sub-process-id "+ getId().toString() +" '\n"+
                         "\tbash_output = subprocess.Popen(command,shell=True, stdin=subprocess.PIPE, stdout=subprocess.PIPE )\n" +
                         "\tout,err = bash_output.communicate()\n"+
                         "\tlogger.info(\"out is \"+str(out))\n"+

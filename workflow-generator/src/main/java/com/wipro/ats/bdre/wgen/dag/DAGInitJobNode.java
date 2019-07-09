@@ -29,7 +29,7 @@ public class DAGInitJobNode extends DAGNode {
             System.out.println("e = " + e);
         }
         return "\ndef "+ getName()+"_pc(**kwargs):\n" +
-                "\tcommand='java -cp "+homeDir+"/bdre/lib/md_api/md_api-1.1-SNAPSHOT-executable.jar:"+homeDir+"/bdre/lib/*/*  com.wipro.ats.bdre.md.api.airflow.AirflowInitJob -p "+ getId().toString() +" -bmax 1'\n" +
+                "\tcommand='java -cp \""+homeDir+"/bdre/lib/airflow_lib/*\"  com.wipro.ats.bdre.md.api.airflow.AirflowInitJob -p "+ getId().toString() +" -bmax 1'\n" +
                 "\tbash_output = subprocess.Popen(command,shell=True, stdin=subprocess.PIPE, stdout=subprocess.PIPE )\n" +
                 "\tout,err = bash_output.communicate()\n"+
                 "\tlogger.info(\"out is \"+str(out))\n"+

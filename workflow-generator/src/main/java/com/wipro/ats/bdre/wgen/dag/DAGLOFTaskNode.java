@@ -48,7 +48,7 @@ public class DAGLOFTaskNode extends GenericActionNode {
 
         ret.append(      "\ndef "+ getName().replace('-','_')+"_pc(**kwargs):\n" +
                         "\tjobInfoDict = kwargs['task_instance'].xcom_pull(task_ids='init_job',key='initjobInfo')\n"+
-                        "\tcommand='java -cp "+homeDir+"/bdre/lib/md_api/*:"+homeDir+"/bdre/lib/*/*  com.wipro.ats.bdre.md.api.airflow.AirflowGetETLDriver  --min-batch-id   \'+str(ast.literal_eval(str(jobInfoDict[\"initJobInfo.getMinBatchIdMap()\"]).replace('=',':'))["+getId()+ "]) +\'  --max-batch-id  '+str(ast.literal_eval(str(jobInfoDict[\"initJobInfo.getMaxBatchIdMap()\"]).replace('=',':'))["+getId()+ "]) \n"+
+                        "\tcommand='java -cp \""+homeDir+"/bdre/lib/airflow_lib/*\"  com.wipro.ats.bdre.md.api.airflow.AirflowGetETLDriver  --min-batch-id   \'+str(ast.literal_eval(str(jobInfoDict[\"initJobInfo.getMinBatchIdMap()\"]).replace('=',':'))["+getId()+ "]) +\'  --max-batch-id  '+str(ast.literal_eval(str(jobInfoDict[\"initJobInfo.getMaxBatchIdMap()\"]).replace('=',':'))["+getId()+ "]) \n"+
                         "\tbash_output = subprocess.Popen(command,shell=True, stdin=subprocess.PIPE, stdout=subprocess.PIPE )\n" +
                         "\tout,err = bash_output.communicate()\n"+
                         "\tlogger.info(\"out is \"+str(out))\n"+
