@@ -58,7 +58,7 @@ public class DAGDataQualityTaskNode extends GenericActionNode {
                         "\ndef "+ getName()+"_pc(**kwargs):\n" +
                         "\tjobInfoDict = kwargs['task_instance'].xcom_pull(task_ids='init_job',key='initjobInfo')\n"+
                         "\tetlFileInfoDict = kwargs['task_instance'].xcom_pull(task_ids=None,key='etlFileInfo')\n"+
-                        "\tcommand='java -cp "+homeDir+"/bdre/lib/dq/*:"+homeDir+"/bdre/lib/*/*  com.wipro.ats.bdre.dq.DQMain --process-id "+ getId().toString()+"  --source-file-path  \'+etlFileInfoDict[\"getETLDriverInfo.getFileList()\"]+\'  --destination-directory /raw/\'+jobInfoDict[\"initJobInfo.getInstanceExecId()\"]  \n"+
+                        "\tcommand='java -cp \""+homeDir+"/bdre/lib/airflow_lib/*\"  com.wipro.ats.bdre.dq.DQMain --process-id "+ getId().toString()+"  --source-file-path  \'+etlFileInfoDict[\"getETLDriverInfo.getFileList()\"]+\'  --destination-directory /raw/\'+jobInfoDict[\"initJobInfo.getInstanceExecId()\"]  \n"+
                         "\tbash_output = subprocess.Popen(command,shell=True, stdin=subprocess.PIPE, stdout=subprocess.PIPE )\n" +
                         "\tout,err = bash_output.communicate()\n"+
                         "\tlogger.info(\"out is \"+str(out))\n"+

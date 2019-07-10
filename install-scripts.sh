@@ -35,6 +35,9 @@ codeDir=`pwd`
 echo $codeDir
 
 cp -r -f target/lib/* $BDRE_HOME/lib
+mkdir $BDRE_HOME/lib/airflow_lib
+cp target/lib/*/*.jar $BDRE_HOME/lib/airflow_lib
+rm $BDRE_HOME/lib/airflow_lib/*jar-with-dependencies.jar
 cd $BDRE_HOME/lib/webapps
 mkdir analyticui
 cd analyticui

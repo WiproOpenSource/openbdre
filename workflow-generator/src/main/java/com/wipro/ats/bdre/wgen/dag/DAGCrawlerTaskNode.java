@@ -47,7 +47,7 @@ public class DAGCrawlerTaskNode extends GenericActionNode {
         StringBuilder ret = new StringBuilder();
 
         ret.append(     "\ndef "+ getName()+"_pc(**kwargs):\n" +
-                        "\tcommand='java -cp "+homeDir+"/bdre/lib/im-crawler/*:"+homeDir+"/bdre/lib/*/*  com.wipro.ats.bdre.imcrawler.mr.MRMain --sub-process-id "+ getId().toString()+" --instance-exec-id \'+kwargs['task_instance'].xcom_pull(task_ids='init_job',key='initjobInfo').get(\"initJobInfo.getInstanceExecId()\")  \n"+
+                        "\tcommand='java -cp "+homeDir+"/bdre/lib/airflow_lib/im-crawler-1.1-SNAPSHOT-shaded.jar:"+"\""+homeDir+"/bdre/lib/airflow_lib/*\" com.wipro.ats.bdre.imcrawler.mr.MRMain --sub-process-id "+ getId().toString()+" --instance-exec-id \'+kwargs['task_instance'].xcom_pull(task_ids='init_job',key='initjobInfo').get(\"initJobInfo.getInstanceExecId()\")  \n"+
                         "\tbash_output = subprocess.Popen(command,shell=True, stdin=subprocess.PIPE, stdout=subprocess.PIPE )\n" +
                         "\tout,err = bash_output.communicate()\n"+
                          "\tlogger.info(\"out is \"+str(out))\n"+

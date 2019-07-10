@@ -66,7 +66,7 @@ public class DAGImportTaskNode extends GenericActionNode {
         ret.append(
                 "\ndef "+ getName()+"_pc(**kwargs):\n" +
                 "\tjobInfoDict = kwargs['task_instance'].xcom_pull(task_ids='init_job',key='initjobInfo')\n"+
-                "\tcommand='java -cp "+homeDir+"/bdre/lib/data-import/*:"+homeDir+"/bdre/lib/*/*  com.wipro.ats.bdre.dataimport.DataImportMain --process-id "+ getId().toString()+"  --batch-id  \'+jobInfoDict[\"initJobInfo.getTargetBatchId()\"]+\'  --config-group imp-common  --instance-exec-id \'+jobInfoDict[\"initJobInfo.getInstanceExecId()\"]  \n"+
+                "\tcommand='java -cp \""+homeDir+"/bdre/lib/airflow_lib/*\"  com.wipro.ats.bdre.dataimport.DataImportMain --process-id "+ getId().toString()+"  --batch-id  \'+jobInfoDict[\"initJobInfo.getTargetBatchId()\"]+\'  --config-group imp-common  --instance-exec-id \'+jobInfoDict[\"initJobInfo.getInstanceExecId()\"]  \n"+
                 "\tbash_output = subprocess.Popen(command,shell=True, stdin=subprocess.PIPE, stdout=subprocess.PIPE )\n" +
                 "\tout,err = bash_output.communicate()\n"+
                 "\tlogger.info(\"out is \"+str(out))\n"+

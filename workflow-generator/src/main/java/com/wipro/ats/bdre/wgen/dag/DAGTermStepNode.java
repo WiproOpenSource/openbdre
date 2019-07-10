@@ -26,7 +26,7 @@ public class DAGTermStepNode extends DAGNode {
                 "\t"+ getName()+".set_downstream("+ getToNode().getName()+")\n" +
                 getName() +"=BashOperator(\n" +
                 "    task_id='"+getName()+"',\n" +
-                "    bash_command='java -cp "+homeDir+"/bdre/lib/md_api/md_api-1.1-SNAPSHOT-executable.jar:"+homeDir+"/bdre/lib/*/*  com.wipro.ats.bdre.md.api.airflow.AirflowTermStep --sub-process-id "+getId().toString() +" ' ,\n" +
+                "    bash_command='java -cp \""+homeDir+"/bdre/lib/airflow_lib/*\"  com.wipro.ats.bdre.md.api.airflow.AirflowTermStep --sub-process-id "+getId().toString() +" ' ,\n" +
                 "    dag=dag,\n" +
                 "    trigger_rule='one_success')\n");
         try {

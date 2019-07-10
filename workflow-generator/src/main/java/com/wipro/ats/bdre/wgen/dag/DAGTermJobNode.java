@@ -19,7 +19,7 @@ public class DAGTermJobNode extends DAGNode {
         StringBuilder ret = new StringBuilder();
         ret.append("\n"+getName() +"= BashOperator(\n"+
                 "    task_id='"+getName()+"',\n"+
-                "    bash_command='java -cp "+homeDir+"/bdre/lib/md_api/md_api-1.1-SNAPSHOT-executable.jar:"+homeDir+"/home/cloudera/bdre/lib/*/*  com.wipro.ats.bdre.md.api.airflow.AirflowTermJob --process-id "+ getId().toString()+"',\n"+
+                "    bash_command='java -cp \""+homeDir+"/bdre/lib/airflow_lib/*\" com.wipro.ats.bdre.md.api.airflow.AirflowTermJob --process-id "+ getId().toString()+"',\n"+
                 "    dag=dag,\n" +
                 "    trigger_rule='one_success')\n");
         return ret.toString();
