@@ -8,6 +8,20 @@
     <head>
 	<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
 	<title><spring:message code="common.page.title_bdre_1"/></title>
+	 <style>
+	    .refresh-icon {
+                                background: #4A4B4B;
+                                background: -webkit-linear-gradient(#4A4B4B 50%, #3A3B3B 50%);
+                                background: -o-linear-gradient(#4A4B4B 50%, #3A3B3B 50%);
+                                background: -moz-linear-gradient(#4A4B4B 50%, #3A3B3B 50%);
+                                background: -ms-linear-gradient(#4A4B4B 50%, #3A3B3B 50%);
+                                background: linear-gradient(#4A4B4B 50%, #3A3B3B 50%);
+                                position: absolute;
+                                top: 0;
+                                color: white;
+                                cursor: pointer
+                            }
+	 </style>
 	<script>
 	  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
 	  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
@@ -150,6 +164,11 @@
 	    });
 		    $('#Container').jtable('load');
 	    });
+
+	    function refreshPage(){
+
+                      $('#Container').jtable('reload');
+                    }
 	</script>
     </head>
     <body>
@@ -157,6 +176,10 @@
     <section style="width:100%;text-align:center;">
 	<div id="Container"></div>
     </section>
+
+    <div id="refresh-icon" class="refresh-icon" style="left: 325px !important;">
+        <button class="btn btn-default" type="submit" style="background-color: #c3beb5;" onClick="refreshPage()"><span class="glyphicon glyphicon-refresh" aria-hidden="true"></span> Refresh </button>
+    </div>
 
 
 </body>
