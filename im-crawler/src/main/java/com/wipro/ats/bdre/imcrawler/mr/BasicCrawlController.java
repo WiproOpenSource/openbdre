@@ -25,6 +25,11 @@ import com.wipro.ats.bdre.imcrawler.robotstxt.RobotstxtConfig;
 import com.wipro.ats.bdre.imcrawler.robotstxt.RobotstxtServer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import com.wipro.ats.bdre.imcrawler.frontier.DocIDServer;
+import org.springframework.beans.factory.annotation.Autowired;
+import com.wipro.ats.bdre.imcrawler.model.DocidsDBDao;
+
+
 
 /**
  * @author Yasser Ganjisaffar
@@ -37,7 +42,6 @@ public class BasicCrawlController implements Runnable {
     long instanceExecid;
     boolean ignoreImages;
     String imageExtensions;
-
 
     public BasicCrawlController(int pid, long instanceExecid, int numThread) {
         this.numThread = numThread;
@@ -55,16 +59,16 @@ public class BasicCrawlController implements Runnable {
 
     public void run() {
 
-    /*
-     * crawlStorageFolder is a folder where intermediate crawl data is
-     * stored.
-     */
+        /*
+         * crawlStorageFolder is a folder where intermediate crawl data is
+         * stored.
+         */
         //String crawlStorageFolder = "intermediate";
 
-    /*
-     * numberOfCrawlers shows the number of concurrent threads that should
-     * be initiated for crawling.
-     */
+        /*
+         * numberOfCrawlers shows the number of concurrent threads that should
+         * be initiated for crawling.
+         */
         int numberOfCrawlers = numThread;
         PropertyConfig propertyConfig = PropertyConfig.getPropertyConfig(pid);
 
@@ -73,22 +77,22 @@ public class BasicCrawlController implements Runnable {
         config.setCrawlStorageFolder("intermediate");
 //      PropertyConfig.setParams(pid, "crawlConfig");
 
-    /*
-     * Be polite: Make sure that we don't send more than 1 request per
-     * second (1000 milliseconds between requests).
-     */
+        /*
+         * Be polite: Make sure that we don't send more than 1 request per
+         * second (1000 milliseconds between requests).
+         */
         config.setPolitenessDelay(propertyConfig.getPolitenessDelay());
 
-    /*
-     * You can set the maximum crawl depth here. The default value is -1 for
-     * unlimited depth
-     */
+        /*
+         * You can set the maximum crawl depth here. The default value is -1 for
+         * unlimited depth
+         */
         config.setMaxDepthOfCrawling(propertyConfig.getMaxDepthOfCrawling());
 
-    /*
-     * You can set the maximum number of pages to crawl. The default value
-     * is -1 for unlimited number of pages
-     */
+        /*
+         * You can set the maximum number of pages to crawl. The default value
+         * is -1 for unlimited number of pages
+         */
         config.setMaxPagesToFetch(propertyConfig.getMaxPagesToFetch());
 
         /**
@@ -100,14 +104,14 @@ public class BasicCrawlController implements Runnable {
         else
             config.setIncludeBinaryContentInCrawling(true);
 
-    /*
-     * Do you need to set a proxy? If so, you can use:
-     * config.setProxyHost("proxyserver.example.com");
-     * config.setProxyPort(8080);
-     *
-     * If your proxy also needs authentication:
-     * config.setProxyUsername(username); config.getProxyPassword(password);
-     */
+        /*
+         * Do you need to set a proxy? If so, you can use:
+         * config.setProxyHost("proxyserver.example.com");
+         * config.setProxyPort(8080);
+         *
+         * If your proxy also needs authentication:
+         * config.setProxyUsername(username); config.getProxyPassword(password);
+         */
         if (propertyConfig.getProxyHost() != null) {
             config.setProxyHost(propertyConfig.getProxyHost());
             if (propertyConfig.getProxyPort() != 0) {
@@ -120,13 +124,13 @@ public class BasicCrawlController implements Runnable {
                 }
             }
         }
-    /*
-     * This config parameter can be used to set your crawl to be resumable
-     * (meaning that you can resume the crawl from a previously
-     * interrupted/crashed crawl). Note: if you enable resuming feature and
-     * want to start a fresh crawl, you need to delete the contents of
-     * rootFolder manually.
-     */
+        /*
+         * This config parameter can be used to set your crawl to be resumable
+         * (meaning that you can resume the crawl from a previously
+         * interrupted/crashed crawl). Note: if you enable resuming feature and
+         * want to start a fresh crawl, you need to delete the contents of
+         * rootFolder manually.
+         */
         if(propertyConfig.isResumableCrawling() == 0)
             config.setResumableCrawling(false);
         else
@@ -134,17 +138,17 @@ public class BasicCrawlController implements Runnable {
 
         config.setOnlineTldListUpdate(false);
         config.setUserAgentString(propertyConfig.getUserAgentString());
-    /*
-    * Set whether to crawl images or not
-    * and what image extensions to crawl
-    * */
+        /*
+         * Set whether to crawl images or not
+         * and what image extensions to crawl
+         * */
 
         BasicCrawler basicCrawler = new BasicCrawler(pid);
 
 
-    /*
-     * Instantiate the controller for this crawl.
-     */
+        /*
+         * Instantiate the controller for this crawl.
+         */
         PageFetcher pageFetcher = new PageFetcher(config);
         RobotstxtConfig robotstxtConfig = new RobotstxtConfig();
         RobotstxtServer robotstxtServer = new RobotstxtServer(robotstxtConfig, pageFetcher);
@@ -156,11 +160,11 @@ public class BasicCrawlController implements Runnable {
             throw new RuntimeException("unable to create CrawlController object"+e);
         }
 
-    /*
-     * For each crawl, you need to add some seed urls. These are the first
-     * URLs that are fetched and then the crawler starts following links
-     * which are found in these pages
-     */
+        /*
+         * For each crawl, you need to add some seed urls. These are the first
+         * URLs that are fetched and then the crawler starts following links
+         * which are found in these pages
+         */
 //    controller.addSeed("https://www.zomato.com/bangalore");
         String[] urlToCrawl = propertyConfig.getUrl().split(",");
         for (int linksToCrawl = 0; linksToCrawl < urlToCrawl.length; linksToCrawl++) {
@@ -169,10 +173,14 @@ public class BasicCrawlController implements Runnable {
 
 
 
-    /*
-     * Start the crawl. This is a blocking operation, meaning that your code
-     * will reach the line after this only when crawling is finished.
-     */
+        /*
+         * Start the crawl. This is a blocking operation, meaning that your code
+         * will reach the line after this only when crawling is finished.
+         */
         controller.start(BasicCrawler.class, numberOfCrawlers);
+
+        controller.getDocIdServer().clearDb();
+        //DocIDServer docIdServer = new DocIDServer(config);
+        //docIdServer.clearDb();
     }
 }

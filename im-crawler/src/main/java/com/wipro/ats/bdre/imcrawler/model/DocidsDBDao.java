@@ -95,7 +95,15 @@ public class DocidsDBDao {
         Docidsdb docidsdb=(Docidsdb)session.get(Docidsdb.class,longid);
         //delete only if it is present from before i.e. not deleted by other mapper
         //if(docidsdb != null)
-            session.delete(docidsdb);
+        session.delete(docidsdb);
+        session.getTransaction().commit();
+    }
+    public void deleteAll() {
+        Session session = sessionFactory.getCurrentSession();
+        session.beginTransaction();
+        String query="delete from Docidsdb";
+        Query q = session.createQuery(query);
+        q.executeUpdate();
         session.getTransaction().commit();
     }
 }

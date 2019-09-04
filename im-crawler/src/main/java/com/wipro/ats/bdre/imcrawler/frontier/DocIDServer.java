@@ -165,6 +165,13 @@ public class DocIDServer extends Configurable {
         return totalSize.intValue();
     }
 
+    public void clearDb() {
+        synchronized (mutex) {
+            docidsDBDao.deleteAll();
+
+        }
+    }
+
     public final int getLastDocID() {
         //get lastDocid
 
@@ -185,6 +192,6 @@ public class DocIDServer extends Configurable {
     }
     @Deprecated
     public void close() {
-    //deprecated
+        //deprecated
     }
 }

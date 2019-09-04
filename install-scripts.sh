@@ -21,6 +21,7 @@ mkdir -p $BDRE_HOME/lib
 mkdir -p $BDRE_HOME/airflow
 mkdir -p $BDRE_APPS_HOME
 mkdir -p $BDRE_HOME-wfd
+mkdir $BDRE_HOME/lib/airflow_lib
 
 BDRE_CODE=`pwd`
 
@@ -35,8 +36,7 @@ codeDir=`pwd`
 echo $codeDir
 
 cp -r -f target/lib/* $BDRE_HOME/lib
-mkdir $BDRE_HOME/lib/airflow_lib
-cp target/lib/*/*.jar $BDRE_HOME/lib/airflow_lib
+cp -r -f target/lib/*/*.jar $BDRE_HOME/lib/airflow_lib
 rm $BDRE_HOME/lib/airflow_lib/*jar-with-dependencies.jar
 cd $BDRE_HOME/lib/webapps
 mkdir analyticui

@@ -33,11 +33,12 @@ public class HDFSPersistentStore implements PersistentStore {
 
             //inputDStream.dstream().saveAsTextFiles(hdfsPath,"stream");
             JavaRDD<WrapperMessage> rdd = inputRDD.map(s -> s._2);
-
+            System.out.println(rdd.count()+"  "+rdd.toString());
 
                     System.out.println(" inside hdfs ");
                     //JavaRDD<Row> rowJavaRDD = wrapperMessageJavaRDD.map(record->WrapperMessage.convertToRow(record));
                     JavaRDD<Row> rowJavaRDD = rdd.map(s -> s.getRow());
+                    System.out.println(rowJavaRDD.count()+" "+rowJavaRDD.toString());
                     if(!rowJavaRDD.isEmpty()){
                         rowJavaRDD.saveAsTextFile(hdfsPath+"/"+pid.toString()+"_"+new Date().getTime());
                     }
