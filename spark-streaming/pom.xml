@@ -305,7 +305,7 @@
         <dependency>
             <groupId>com.databricks</groupId>
             <artifactId>spark-xml_2.10</artifactId>
-            <version>0.3.5</version>
+            <version>0.4.1</version>
             <exclusions>
 
                 <exclusion>
