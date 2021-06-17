@@ -30,7 +30,7 @@
         <dependency>
             <groupId>org.jsonschema2pojo</groupId>
             <artifactId>jsonschema2pojo-maven-plugin</artifactId>
-            <version>0.4.0</version>
+            <version>0.4.3</version>
             <exclusions>
 
                 <exclusion>
@@ -196,7 +196,7 @@
         <dependency>
             <groupId>com.jcraft</groupId>
             <artifactId>jsch</artifactId>
-            <version>0.1.51</version>
+            <version>0.1.54</version>
             <exclusions>
 
                 <exclusion>
@@ -221,7 +221,7 @@
         <dependency>
             <groupId>org.apache.hbase</groupId>
             <artifactId>hbase-client</artifactId>
-            <version>1.0.0-cdh5.5.0</version>
+            <version>1.0.1.1</version>
             <exclusions>
 
                 <exclusion>
